@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'tsunami_list_item.dart';
+import 'tsunami_state.dart';
 
 part 'tsunami_list_response.freezed.dart';
 part 'tsunami_list_response.g.dart';
@@ -12,7 +12,7 @@ part 'tsunami_list_response.g.dart';
 @Freezed()
 abstract class TsunamiListResponse with _$TsunamiListResponse {
   const factory TsunamiListResponse({
-    required List<TsunamiListItem> items,
+    required List<TsunamiState> items,
 
     /// カーソル情報（base64エンコード）
     @JsonKey(includeIfNull: false,name: 'next_token')

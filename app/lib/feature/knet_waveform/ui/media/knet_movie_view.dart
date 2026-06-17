@@ -22,7 +22,8 @@ class KnetMovieView extends HookConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => _ErrorView(
         message: 'クライアント初期化エラー: $e',
-        onRetry: () => ref.invalidate(knetDownloadClientProvider, asReload: true),
+        onRetry: () =>
+            ref.invalidate(knetDownloadClientProvider, asReload: true),
       ),
       data: (client) {
         if (client == null) {
@@ -59,7 +60,9 @@ class _MovieContent extends HookWidget {
         final url = knetAllMovieUrl(eventTime, type);
         final ctrl = VideoPlayerController.networkUrl(
           url,
-          httpHeaders: {HttpHeaders.authorizationHeader: client.authorizationHeader},
+          httpHeaders: {
+            HttpHeaders.authorizationHeader: client.authorizationHeader,
+          },
         );
         controller.value = ctrl;
         await ctrl.initialize();

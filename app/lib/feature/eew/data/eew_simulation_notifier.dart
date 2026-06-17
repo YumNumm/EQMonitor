@@ -24,12 +24,11 @@ class EewSimulationState {
     List<EewTelegramItem>? reports,
     int? currentIndex,
     bool? isPlaying,
-  }) =>
-      EewSimulationState(
-        reports: reports ?? this.reports,
-        currentIndex: currentIndex ?? this.currentIndex,
-        isPlaying: isPlaying ?? this.isPlaying,
-      );
+  }) => EewSimulationState(
+    reports: reports ?? this.reports,
+    currentIndex: currentIndex ?? this.currentIndex,
+    isPlaying: isPlaying ?? this.isPlaying,
+  );
 }
 
 @riverpod
@@ -69,8 +68,9 @@ class EewSimulation extends _$EewSimulation {
     }
 
     final next = s.currentIndex + 1;
-    final delay = s.reports[next].reportTime
-        .difference(s.reports[s.currentIndex].reportTime);
+    final delay = s.reports[next].reportTime.difference(
+      s.reports[s.currentIndex].reportTime,
+    );
     // Clamp: at least 500ms, at most 5 seconds
     final clamped = Duration(
       milliseconds: delay.inMilliseconds.clamp(500, 5000),

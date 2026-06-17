@@ -43,11 +43,13 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
       });
     });
 
-    final initialPhase = ref.read(eqmonitorWebSocketProvider).when(
-      data: (_) => WsPhase.connected,
-      loading: () => WsPhase.connecting,
-      error: (e, s) => WsPhase.disconnected,
-    );
+    final initialPhase = ref
+        .read(eqmonitorWebSocketProvider)
+        .when(
+          data: (_) => WsPhase.connected,
+          loading: () => WsPhase.connecting,
+          error: (e, s) => WsPhase.disconnected,
+        );
     final initialTicket = switch (ref.read(eqmonitorWebSocketTicketProvider)) {
       AsyncData(:final value) => value,
       _ => null,

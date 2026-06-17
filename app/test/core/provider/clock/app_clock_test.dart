@@ -57,7 +57,10 @@ void main() {
         final clock = container.read(appClockProvider.notifier)
           ..enterTimeShift(const Duration(minutes: -5));
 
-        expect(clock.now(), fixedWallClock.subtract(const Duration(minutes: 5)));
+        expect(
+          clock.now(),
+          fixedWallClock.subtract(const Duration(minutes: 5)),
+        );
       });
     });
 

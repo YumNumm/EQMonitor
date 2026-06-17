@@ -234,8 +234,14 @@ class _DetailSheet extends StatelessWidget {
                 _Section(
                   title: '基本情報',
                   children: [
-                    _InfoRow(label: '緯度', value: '${event.latitude.toStringAsFixed(4)}°'),
-                    _InfoRow(label: '経度', value: '${event.longitude.toStringAsFixed(4)}°'),
+                    _InfoRow(
+                      label: '緯度',
+                      value: '${event.latitude.toStringAsFixed(4)}°',
+                    ),
+                    _InfoRow(
+                      label: '経度',
+                      value: '${event.longitude.toStringAsFixed(4)}°',
+                    ),
                     _InfoRow(
                       label: 'JMA震源深さ',
                       value: '${event.jmaDepth.toStringAsFixed(2)} km',
@@ -254,7 +260,8 @@ class _DetailSheet extends StatelessWidget {
                     ),
                     _InfoRow(
                       label: '地震モーメント',
-                      value: '${event.seismicMoment.toStringAsExponential(2)} Nm',
+                      value:
+                          '${event.seismicMoment.toStringAsExponential(2)} Nm',
                     ),
                     _InfoRow(
                       label: 'バリアンス・リダクション',
@@ -272,15 +279,18 @@ class _DetailSheet extends StatelessWidget {
                   children: [
                     _InfoRow(
                       label: '走向 (Strike)',
-                      value: '${event.strike.plane1.toStringAsFixed(0)}° / ${event.strike.plane2.toStringAsFixed(0)}°',
+                      value:
+                          '${event.strike.plane1.toStringAsFixed(0)}° / ${event.strike.plane2.toStringAsFixed(0)}°',
                     ),
                     _InfoRow(
                       label: '傾斜角 (Dip)',
-                      value: '${event.dip.plane1.toStringAsFixed(0)}° / ${event.dip.plane2.toStringAsFixed(0)}°',
+                      value:
+                          '${event.dip.plane1.toStringAsFixed(0)}° / ${event.dip.plane2.toStringAsFixed(0)}°',
                     ),
                     _InfoRow(
                       label: 'すべり角 (Rake)',
-                      value: '${event.rake.plane1.toStringAsFixed(0)}° / ${event.rake.plane2.toStringAsFixed(0)}°',
+                      value:
+                          '${event.rake.plane1.toStringAsFixed(0)}° / ${event.rake.plane2.toStringAsFixed(0)}°',
                     ),
                   ],
                 ),
@@ -290,27 +300,33 @@ class _DetailSheet extends StatelessWidget {
                   children: [
                     _InfoRow(
                       label: 'Mxx',
-                      value: '${event.momentTensor.mxx.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                      value:
+                          '${event.momentTensor.mxx.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
                     ),
                     _InfoRow(
                       label: 'Mxy',
-                      value: '${event.momentTensor.mxy.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                      value:
+                          '${event.momentTensor.mxy.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
                     ),
                     _InfoRow(
                       label: 'Mxz',
-                      value: '${event.momentTensor.mxz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                      value:
+                          '${event.momentTensor.mxz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
                     ),
                     _InfoRow(
                       label: 'Myy',
-                      value: '${event.momentTensor.myy.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                      value:
+                          '${event.momentTensor.myy.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
                     ),
                     _InfoRow(
                       label: 'Myz',
-                      value: '${event.momentTensor.myz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                      value:
+                          '${event.momentTensor.myz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
                     ),
                     _InfoRow(
                       label: 'Mzz',
-                      value: '${event.momentTensor.mzz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                      value:
+                          '${event.momentTensor.mzz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
                     ),
                   ],
                 ),

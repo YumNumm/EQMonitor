@@ -11,13 +11,11 @@ Future<Map<String, TelegramDetailResponse>> telegramDetails(
   String eventId,
 ) async {
   final client = await ref.read(apiClientProvider.future);
-  final response =
-      await client.telegram.getV2TelegramEventIdEventIdDetails(
+  final response = await client.telegram.getV2TelegramEventIdEventIdDetails(
     eventId: eventId,
   );
 
   return {
-    for (final item in response.data.items)
-      item.telegram.id: item,
+    for (final item in response.data.items) item.telegram.id: item,
   };
 }

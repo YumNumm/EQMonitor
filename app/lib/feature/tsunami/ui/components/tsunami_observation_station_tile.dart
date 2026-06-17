@@ -41,8 +41,7 @@ class TsunamiObservationStationTile extends StatelessWidget {
               _formatMaxHeight(maxHeight),
               style: TextStyle(
                 fontSize: 13,
-                fontWeight:
-                    _isImportant(maxHeight) ? FontWeight.bold : null,
+                fontWeight: _isImportant(maxHeight) ? FontWeight.bold : null,
                 color: _isImportant(maxHeight)
                     ? const Color(0xFFB31A1A)
                     : designSystem.textColor.secondary,
@@ -55,8 +54,7 @@ class TsunamiObservationStationTile extends StatelessWidget {
 
   static bool _isFirstHeightMissing(
     TsunamiObservationStationFirstHeight fh,
-  ) =>
-      fh.isMissing ?? false;
+  ) => fh.isMissing ?? false;
 
   static String _formatFirstHeight(
     TsunamiObservationStationFirstHeight fh,

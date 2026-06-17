@@ -71,8 +71,10 @@ void main() {
       },
     );
     addTearDown(() {
-      messenger.defaultBinaryMessenger
-          .setMockMethodCallHandler(SystemChannels.platform, null);
+      messenger.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      );
     });
 
     final exportButton = find.text('クリップボードへエクスポート');

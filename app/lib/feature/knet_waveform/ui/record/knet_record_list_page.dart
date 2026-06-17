@@ -138,7 +138,6 @@ class _DownloadProgressView extends ConsumerWidget {
   }
 }
 
-
 class _ErrorView extends StatelessWidget {
   const _ErrorView({required this.message});
 

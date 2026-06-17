@@ -25,8 +25,10 @@ class PrefectureSelector extends ConsumerWidget {
     if (parameterSet == null) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
-    final prefectures =
-        parameterSet.jmaCodeTable.codeTables.areaInformationPrefectureEarthquake;
+    final prefectures = parameterSet
+        .jmaCodeTable
+        .codeTables
+        .areaInformationPrefectureEarthquake;
 
     return DropdownMenu<String>(
       expandedInsets: EdgeInsets.zero,
@@ -34,8 +36,9 @@ class PrefectureSelector extends ConsumerWidget {
       hintText: hintText,
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
-          final prefecture = prefectures
-              .firstWhereOrNull((p) => p.code == code);
+          final prefecture = prefectures.firstWhereOrNull(
+            (p) => p.code == code,
+          );
           if (prefecture == null) {
             return;
           }
@@ -50,8 +53,7 @@ class PrefectureSelector extends ConsumerWidget {
           label: '選択してください',
         ),
         ...prefectures.map(
-          (e) =>
-              DropdownMenuEntry(value: e.code, label: e.name.ja),
+          (e) => DropdownMenuEntry(value: e.code, label: e.name.ja),
         ),
       ],
     );

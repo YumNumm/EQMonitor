@@ -69,7 +69,8 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
     final headerBg = TsunamiWarningColor.headerColor(region.kind);
     final distanceKm = nearest.distanceToCoastlineKm;
 
-    final observedStations = region.observation?.stations
+    final observedStations =
+        region.observation?.stations
             .where((s) => !(s.firstHeight.isMissing ?? false))
             .toList() ??
         [];

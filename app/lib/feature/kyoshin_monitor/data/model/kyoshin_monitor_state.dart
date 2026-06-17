@@ -13,8 +13,10 @@ abstract class KyoshinMonitorState with _$KyoshinMonitorState {
     DateTime? lastUpdatedAt,
     DateTime? lastImageFetchTargetTime,
     Duration? lastImageFetchDuration,
+
     /// Worker Isolate で生成した GeoJSON 文字列（観測点レイヤー用）
     String? geoJson,
+
     /// [geoJson] に含まれる観測点 Feature 数
     int? analyzedPointsCount,
     List<int>? currentImageRaw,

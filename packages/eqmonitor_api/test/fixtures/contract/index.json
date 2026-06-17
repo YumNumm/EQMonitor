@@ -67,6 +67,15 @@
     "fixture": "tohoku-type"
   },
   {
+    "key": "GET /v2/earthquake/epicenter/:code",
+    "file": "get__v2_earthquake_epicenter_code__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/earthquake/epicenter/:code",
+    "file": "get__v2_earthquake_epicenter_code.json"
+  },
+  {
     "key": "GET /v2/earthquake/:eventId",
     "file": "get__v2_earthquake_eventId__canceled.json",
     "fixture": "canceled"

@@ -68,8 +68,7 @@ abstract class KyoshinMonitorSettingsApiModel
 @JsonEnum(valueField: 'url')
 enum KyoshinMonitorEndpoint {
   kmoni('http://www.kmoni.bosai.go.jp'),
-  lmoniexp('https://smi.lmoniexp.bosai.go.jp')
-  ;
+  lmoniexp('https://smi.lmoniexp.bosai.go.jp');
 
   const KyoshinMonitorEndpoint(this.url);
 

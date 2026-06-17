@@ -20,15 +20,14 @@ class TsunamiWarningStatusCard extends StatelessWidget {
     final isCanceled = tsunami.isCanceled;
     final isExpired = !tsunami.isActive && !tsunami.isCanceled;
     final showStripe =
-        !isCanceled &&
-        !isExpired &&
-        maxKind != TsunamiWarningKind.forecast;
+        !isCanceled && !isExpired && maxKind != TsunamiWarningKind.forecast;
 
     final headerBg = isCanceled || isExpired
         ? color.surfaceRaised
         : TsunamiWarningColor.headerColor(maxKind);
-    final headerFg =
-        isCanceled || isExpired ? designSystem.textColor.primary : Colors.white;
+    final headerFg = isCanceled || isExpired
+        ? designSystem.textColor.primary
+        : Colors.white;
     final headline = _resolveHeadline(tsunami.latestTelegrams);
 
     return Padding(

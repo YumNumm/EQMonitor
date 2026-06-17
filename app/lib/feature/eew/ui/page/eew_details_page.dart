@@ -66,8 +66,10 @@ class _EewDetailsPageSkeleton extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('第${i + 1}報',
-                        style: Theme.of(context).textTheme.titleLarge),
+                    Text(
+                      '第${i + 1}報',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                     const SizedBox(height: 8),
                     const Text('発生時刻: 2026/04/21 12:34:56'),
                     const Text('報告時刻: 2026/04/21 12:34:58'),

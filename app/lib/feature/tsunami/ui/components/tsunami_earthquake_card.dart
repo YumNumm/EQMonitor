@@ -41,8 +41,8 @@ class TsunamiEarthquakeCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           onTap: eventIds.isNotEmpty
               ? () => EarthquakeHistoryDetailsRoute(
-                    eventId: eventIds.first,
-                  ).push<void>(context)
+                  eventId: eventIds.first,
+                ).push<void>(context)
               : null,
           child: Padding(
             padding: const EdgeInsets.all(16),

@@ -31,7 +31,9 @@ final class ParameterJsonParser {
     );
     final earthquake = parseEarthquake(
       parameterJsonByType[ParameterType.earthquakeStations] ??
-          (throw const FormatException('Missing earthquake_stations parameter')),
+          (throw const FormatException(
+            'Missing earthquake_stations parameter',
+          )),
     );
     final tsunami = parseTsunami(
       parameterJsonByType[ParameterType.tsunamiStations] ??
@@ -51,8 +53,7 @@ final class ParameterJsonParser {
 
   KyoshinObservationPointsParameter parseKyoshinObservationPoints(
     String source,
-  ) =>
-      KyoshinObservationPointsParameter.fromJson(decodeObject(source));
+  ) => KyoshinObservationPointsParameter.fromJson(decodeObject(source));
 
   EarthquakeParameter parseEarthquake(String source) =>
       EarthquakeParameter.fromJson(decodeObject(source));

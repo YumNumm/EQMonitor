@@ -125,7 +125,10 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                           ),
                           if (event.isReplay) ...[
                             const SizedBox(width: 6),
-                            _TagChip(label: 'リプレイ', color: ds.color.surfaceEmphasis),
+                            _TagChip(
+                              label: 'リプレイ',
+                              color: ds.color.surfaceEmphasis,
+                            ),
                           ],
                           if (event.mergedEewEventId != null) ...[
                             const SizedBox(width: 6),

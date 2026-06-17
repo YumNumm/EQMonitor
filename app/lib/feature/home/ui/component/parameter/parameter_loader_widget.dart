@@ -37,7 +37,8 @@ class ParameterLoaderWidget extends HookConsumerWidget {
             else
               FilledButton(
                 child: const Text('再取得'),
-                onPressed: () async => ref.invalidate(jmaParameterProvider, asReload: true),
+                onPressed: () async =>
+                    ref.invalidate(jmaParameterProvider, asReload: true),
               ),
           ],
         ),

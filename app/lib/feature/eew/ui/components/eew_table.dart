@@ -97,8 +97,7 @@ enum _EewTableColumn {
   magnitude(name: 'M', isNumeric: true),
   maxIntensity(name: '予想最大震度', isNumeric: true),
   maxLongPeriodIntensity(name: '予想最大長周期\n地震動階級', isNumeric: true),
-  accuracy(name: '精度', isNumeric: false)
-  ;
+  accuracy(name: '精度', isNumeric: false);
 
   const _EewTableColumn({
     required this.name,

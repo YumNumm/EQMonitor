@@ -18,10 +18,9 @@ Stream<NotificationToken> notificationTokenStream(Ref ref) async* {
 
   final fcmToken = ref.watch(_firebaseMessagingTokenStreamProvider).value;
   final apnsToken = ref.watch(_apnsTokenStreamProvider).value;
-  final apnsPushToStartToken =
-      (!kIsWeb && (Platform.isIOS || Platform.isMacOS))
-          ? ref.watch(_apnsPushToStartTokenStreamProvider).value
-          : null;
+  final apnsPushToStartToken = (!kIsWeb && (Platform.isIOS || Platform.isMacOS))
+      ? ref.watch(_apnsPushToStartTokenStreamProvider).value
+      : null;
 
   yield NotificationToken(
     fcmToken: fcmToken,

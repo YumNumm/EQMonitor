@@ -42,8 +42,7 @@ class _StripePainter extends CustomPainter {
         ..lineTo(x + h + stripeWidth, 0)
         ..lineTo(x + h, 0)
         ..close();
-      final colorIndex =
-          ((x + h) / stripeWidth).floor().abs() % colors.length;
+      final colorIndex = ((x + h) / stripeWidth).floor().abs() % colors.length;
       final paint = Paint()..color = colors[colorIndex];
       canvas.drawPath(path, paint);
       x += stripeWidth;

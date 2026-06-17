@@ -67,8 +67,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
             ),
             IconButton(
               icon: const Icon(Icons.stop),
-              onPressed: () =>
-                  ref.read(eewSimulationProvider.notifier).stop(),
+              onPressed: () => ref.read(eewSimulationProvider.notifier).stop(),
             ),
           ] else
             _DisplayModeSelector(
@@ -90,9 +89,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
           );
 
           final displayedEews = simulation != null
-              ? sortedEews
-                    .take(simulation.currentIndex + 1)
-                    .toList()
+              ? sortedEews.take(simulation.currentIndex + 1).toList()
               : sortedEews;
 
           final idx = selectedIndex.value;

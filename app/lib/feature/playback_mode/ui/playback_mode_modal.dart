@@ -135,9 +135,8 @@ class _AutoReturnToggle extends ConsumerWidget {
       title: const Text('リアルタイムイベントで通常再生に戻る'),
       subtitle: const Text('再生中にEEW・揺れ検知が発生したら自動で現在へ復帰します'),
       value: enabled,
-      onChanged: (value) async => ref
-          .read(autoReturnToRealtimeProvider.notifier)
-          .set(value: value),
+      onChanged: (value) async =>
+          ref.read(autoReturnToRealtimeProvider.notifier).set(value: value),
     );
   }
 }
@@ -199,8 +198,7 @@ class _ReplayControls extends ConsumerWidget {
         ),
         Slider(
           value: replay.progress.clamp(0.0, 1.0),
-          onChanged: (value) async =>
-              notifier.seekToProgress(value),
+          onChanged: (value) async => notifier.seekToProgress(value),
         ),
         Row(
           children: [
@@ -213,8 +211,10 @@ class _ReplayControls extends ConsumerWidget {
               onPressed: notifier.togglePlayPause,
             ),
             SizedBox(width: spacing.sm),
-            Text('${replay.currentIndex + 1} / ${replay.totalFrames}',
-                style: typography.labelSmall),
+            Text(
+              '${replay.currentIndex + 1} / ${replay.totalFrames}',
+              style: typography.labelSmall,
+            ),
             const Spacer(),
             DropdownButton<double>(
               value: replay.playbackSpeed,

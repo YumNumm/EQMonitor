@@ -37,8 +37,10 @@ class LiveActivityTestState {
 
 @riverpod
 class LiveActivityTestNotifier extends _$LiveActivityTestNotifier {
-  static final runEewMutation = Mutation<api.LiveActivityTestScenarioResponse>();
-  static final runShakeMutation = Mutation<api.LiveActivityTestScenarioResponse>();
+  static final runEewMutation =
+      Mutation<api.LiveActivityTestScenarioResponse>();
+  static final runShakeMutation =
+      Mutation<api.LiveActivityTestScenarioResponse>();
 
   @override
   LiveActivityTestState build() => const LiveActivityTestState();

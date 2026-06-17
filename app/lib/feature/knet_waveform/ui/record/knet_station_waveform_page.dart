@@ -122,9 +122,7 @@ class KnetStationWaveformPage extends HookConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(child: Text('解析エラー: $e')),
       data: (analysis) {
-        final data = waveType == 1
-            ? analysis.velocity
-            : analysis.displacement;
+        final data = waveType == 1 ? analysis.velocity : analysis.displacement;
         final unit = waveType == 1 ? 'cm/s' : 'cm';
         if (ch >= data.length) {
           return const Center(child: Text('データなし'));
@@ -209,8 +207,7 @@ class _MetricsHeader extends StatelessWidget {
                         ),
                         _MetricChip(
                           label: 'SI',
-                          value:
-                              '${analysis!.siValue.toStringAsFixed(2)} cm/s',
+                          value: '${analysis!.siValue.toStringAsFixed(2)} cm/s',
                         ),
                       ] else
                         const _MetricChip(
@@ -533,9 +530,7 @@ class _SpectrumChart extends HookWidget {
                       getTitlesWidget: (v, _) {
                         final t = pow(10, v);
                         return Text(
-                          t < 1.0
-                              ? t.toStringAsFixed(2)
-                              : t.toStringAsFixed(1),
+                          t < 1.0 ? t.toStringAsFixed(2) : t.toStringAsFixed(1),
                           style: const TextStyle(fontSize: 8),
                         );
                       },
@@ -659,7 +654,9 @@ class _FourierChart extends StatelessWidget {
                       getTitlesWidget: (v, _) {
                         final f = pow(10, v);
                         return Text(
-                          f < 10.0 ? f.toStringAsFixed(1) : f.toStringAsFixed(0),
+                          f < 10.0
+                              ? f.toStringAsFixed(1)
+                              : f.toStringAsFixed(0),
                           style: const TextStyle(fontSize: 8),
                         );
                       },

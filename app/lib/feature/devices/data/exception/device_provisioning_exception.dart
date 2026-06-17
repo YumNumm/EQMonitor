@@ -10,7 +10,8 @@ sealed class DeviceProvisioningException implements Exception {
   bool get isRetryable;
 
   @override
-  String toString() => 'DeviceProvisioningException(isRetryable: $isRetryable, cause: $cause)';
+  String toString() =>
+      'DeviceProvisioningException(isRetryable: $isRetryable, cause: $cause)';
 }
 
 /// ネットワーク不通・タイムアウト・TLS エラー。
@@ -133,8 +134,7 @@ final class PushTokenUnavailableException extends DeviceProvisioningException {
   @override
   bool get isRetryable => switch (reason) {
     PushTokenFailureReason.serviceUnavailable ||
-    PushTokenFailureReason.unknown =>
-      true,
+    PushTokenFailureReason.unknown => true,
     _ => false,
   };
 }
@@ -151,7 +151,8 @@ final class LocalStorageException extends DeviceProvisioningException {
 }
 
 /// 上記に分類できない予期しないエラー。
-final class UnexpectedProvisioningException extends DeviceProvisioningException {
+final class UnexpectedProvisioningException
+    extends DeviceProvisioningException {
   const UnexpectedProvisioningException({super.cause, super.stackTrace});
 
   @override

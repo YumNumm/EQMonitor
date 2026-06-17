@@ -62,7 +62,10 @@ class TelegramUrl extends _$TelegramUrl {
     required String restApiUrl,
     required String wsApiUrl,
   }) async {
-    final updated = TelegramUrlModel(restApiUrl: restApiUrl, wsApiUrl: wsApiUrl);
+    final updated = TelegramUrlModel(
+      restApiUrl: restApiUrl,
+      wsApiUrl: wsApiUrl,
+    );
     state = AsyncValue.data(updated);
     await _save(updated);
   }

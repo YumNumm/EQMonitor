@@ -22,6 +22,9 @@ enum MinJmaIntensity {
   value5minus('5-'),
   @JsonValue('5+')
   value5plus('5+'),
+  /// Incorrect name has been replaced. Original name: `!6-`.
+  @JsonValue('!6-')
+  undefined1('!6-'),
   @JsonValue('6-')
   value6minus('6-'),
   @JsonValue('6+')

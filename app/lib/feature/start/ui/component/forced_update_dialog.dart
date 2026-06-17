@@ -100,8 +100,7 @@ class _ForcedUpdateWrapperState extends ConsumerState<ForcedUpdateWrapper> {
         child: AlertDialog(
           title: const Text('アップデートが必要です'),
           content: Text(
-            req.message ??
-                '最新バージョンへのアップデートが必要です。ストアよりアップデートを行ってください。',
+            req.message ?? '最新バージョンへのアップデートが必要です。ストアよりアップデートを行ってください。',
           ),
           actions: [
             FilledButton(

@@ -13,8 +13,7 @@ enum JmaIntensity {
   fiveUpper,
   sixLower,
   sixUpper,
-  seven
-  ;
+  seven;
 
   String get label => switch (this) {
     .unknown => '不明',

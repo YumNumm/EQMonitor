@@ -57,7 +57,8 @@ void main() {
       container.read(shakeDetectionHistoryProvider);
 
       final stub =
-          container.read(shakeDetectionProvider.notifier) as _StubShakeDetection;
+          container.read(shakeDetectionProvider.notifier)
+              as _StubShakeDetection;
       stub.publish([_ev('e1')]);
 
       final state = container.read(shakeDetectionHistoryProvider);
@@ -69,7 +70,8 @@ void main() {
       container.read(shakeDetectionHistoryProvider);
 
       final stub =
-          container.read(shakeDetectionProvider.notifier) as _StubShakeDetection;
+          container.read(shakeDetectionProvider.notifier)
+              as _StubShakeDetection;
       stub.publish([_ev('e1')]);
       stub.publish([_ev('e1'), _ev('e2')]);
       stub.publish([_ev('e1'), _ev('e2'), _ev('e3')]);
@@ -84,7 +86,8 @@ void main() {
       container.read(shakeDetectionHistoryProvider);
 
       final stub =
-          container.read(shakeDetectionProvider.notifier) as _StubShakeDetection;
+          container.read(shakeDetectionProvider.notifier)
+              as _StubShakeDetection;
       stub.publish([_ev('e1')]);
       // 同じ eventId だが pointCount が変わる
       stub.publish([_ev('e1', pointCount: 10)]);
@@ -99,7 +102,8 @@ void main() {
       container.read(shakeDetectionHistoryProvider);
 
       final stub =
-          container.read(shakeDetectionProvider.notifier) as _StubShakeDetection;
+          container.read(shakeDetectionProvider.notifier)
+              as _StubShakeDetection;
       stub.publish([_ev('e1'), _ev('e2')]);
       // 揺れ検知プロバイダから削除されても、履歴側は保持される
       stub.publish([]);
@@ -113,7 +117,8 @@ void main() {
       container.read(shakeDetectionHistoryProvider);
 
       final stub =
-          container.read(shakeDetectionProvider.notifier) as _StubShakeDetection;
+          container.read(shakeDetectionProvider.notifier)
+              as _StubShakeDetection;
       stub.publish([_ev('e1')]);
       // 完全に同一の event を再度
       stub.publish([_ev('e1')]);

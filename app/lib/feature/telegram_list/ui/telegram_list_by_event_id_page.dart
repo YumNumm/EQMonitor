@@ -68,32 +68,35 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
       appBar: AppBar(title: const Text('電文一覧')),
       body: RefreshIndicator(
         onRefresh: () async {
-          ref.invalidate(telegramListByEventIdProvider(eventId), asReload: true);
+          ref.invalidate(
+            telegramListByEventIdProvider(eventId),
+            asReload: true,
+          );
           ref.invalidate(telegramDetailsProvider(eventId), asReload: true);
         },
         child: switch (asyncState) {
           AsyncData(:final value) => _SectionedList(
-              items: value.items,
-              hasNext: value.hasNext,
-              isLoading: asyncState.isLoading,
-              scrollController: scrollController,
-              details: asyncDetails.value ?? const {},
-            ),
+            items: value.items,
+            hasNext: value.hasNext,
+            isLoading: asyncState.isLoading,
+            scrollController: scrollController,
+            details: asyncDetails.value ?? const {},
+          ),
           AsyncError(:final error, :final value?) => _SectionedList(
-              items: value.items,
-              hasNext: value.hasNext,
-              isLoading: false,
-              scrollController: scrollController,
-              details: asyncDetails.value ?? const {},
-              error: error,
-              onReload: () async =>
-                  ref.refresh(telegramListByEventIdProvider(eventId)),
-            ),
+            items: value.items,
+            hasNext: value.hasNext,
+            isLoading: false,
+            scrollController: scrollController,
+            details: asyncDetails.value ?? const {},
+            error: error,
+            onReload: () async =>
+                ref.refresh(telegramListByEventIdProvider(eventId)),
+          ),
           AsyncError(:final error) => ErrorCard(
-              error: error,
-              onReload: () async =>
-                  ref.refresh(telegramListByEventIdProvider(eventId)),
-            ),
+            error: error,
+            onReload: () async =>
+                ref.refresh(telegramListByEventIdProvider(eventId)),
+          ),
           _ => const _TelegramListSkeleton(),
         },
       ),
@@ -137,11 +140,13 @@ class _SectionedList extends StatelessWidget {
 
     // Split items into sections (preserve original sort order within each).
     final eewItems = items.where((t) => _eewTypes.contains(t.type)).toList();
-    final earthquakeItems =
-        items.where((t) => _earthquakeTypes.contains(t.type)).toList();
+    final earthquakeItems = items
+        .where((t) => _earthquakeTypes.contains(t.type))
+        .toList();
     final otherItems = items
         .where(
-          (t) => !_eewTypes.contains(t.type) && !_earthquakeTypes.contains(t.type),
+          (t) =>
+              !_eewTypes.contains(t.type) && !_earthquakeTypes.contains(t.type),
         )
         .toList();
 

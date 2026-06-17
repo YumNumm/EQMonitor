@@ -33,7 +33,7 @@ class TsunamiRegionList extends StatelessWidget {
   }
 
   static Map<TsunamiWarningKind, List<MergedForecastRegion>>
-      _groupByWarningKind(List<MergedForecastRegion> regions) {
+  _groupByWarningKind(List<MergedForecastRegion> regions) {
     final grouped = <TsunamiWarningKind, List<MergedForecastRegion>>{};
     const order = [
       TsunamiWarningKind.majorWarning,
@@ -92,8 +92,8 @@ class _ForecastRegionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final color = designSystem.color;
-    final hasObservation = region.observation != null &&
-        region.observation!.stations.isNotEmpty;
+    final hasObservation =
+        region.observation != null && region.observation!.stations.isNotEmpty;
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 2),

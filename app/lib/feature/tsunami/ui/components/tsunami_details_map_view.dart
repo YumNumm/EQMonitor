@@ -218,11 +218,12 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
 
             for (final kind in kindOrder) {
               if (disposed) {
-              return;
-            }
+                return;
+              }
 
-              final color =
-                  TsunamiWarningColor.mapBorderColor(kind).toHexStringRGB();
+              final color = TsunamiWarningColor.mapBorderColor(
+                kind,
+              ).toHexStringRGB();
               final layerId =
                   '${_MapContent._tsunamiLineLayerIdPrefix}${kind.name}';
               await styleController.addLayer(
@@ -569,13 +570,14 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
           unawaited(() async {
             try {
               if (labelLayerAdded) {
-                await styleController
-                    .removeLayer(_MapContent._stationLabelLayerId);
+                await styleController.removeLayer(
+                  _MapContent._stationLabelLayerId,
+                );
               }
-              await styleController
-                  .removeLayer(_MapContent._stationCircleLayerId);
-              await styleController
-                  .removeSource(_MapContent._stationSourceId);
+              await styleController.removeLayer(
+                _MapContent._stationCircleLayerId,
+              );
+              await styleController.removeSource(_MapContent._stationSourceId);
             } on Exception catch (e) {
               talker.log(e);
             }

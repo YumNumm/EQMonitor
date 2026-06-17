@@ -98,9 +98,12 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
                       'interpolate',
                       ['linear'],
                       ['zoom'],
-                      3, 5,
-                      7, 10,
-                      10, 14,
+                      3,
+                      5,
+                      7,
+                      10,
+                      10,
+                      14,
                     ],
                     'circle-color': ['get', 'centerColor'],
                     'circle-opacity': 1,
@@ -257,8 +260,7 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
       final (r, g, b) = _rgbForLevel(event.level);
       final fillColor =
           'rgba($r, $g, $b, ${(opacity * 0.3).toStringAsFixed(3)})';
-      final lineColor =
-          'rgba($r, $g, $b, ${opacity.toStringAsFixed(3)})';
+      final lineColor = 'rgba($r, $g, $b, ${opacity.toStringAsFixed(3)})';
       final polygons = switch (displayMode) {
         HomeShakeDetectionDisplayMode.boundingBox => [
           _boundingBoxPolygon(event),
@@ -289,8 +291,7 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
         'properties': {
           'centerColor':
               'rgba($r, $g, $b, ${(opacity * 0.8).toStringAsFixed(3)})',
-          'strokeColor':
-              'rgba(255, 255, 255, ${opacity.toStringAsFixed(3)})',
+          'strokeColor': 'rgba(255, 255, 255, ${opacity.toStringAsFixed(3)})',
         },
       });
     }

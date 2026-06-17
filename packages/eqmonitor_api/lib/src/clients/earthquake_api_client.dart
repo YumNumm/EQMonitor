@@ -9,7 +9,6 @@ import '../models/earthquake_datasource.dart';
 import '../models/earthquake_detail_response.dart';
 import '../models/earthquake_list_response.dart';
 import '../models/earthquake_sort_by.dart';
-import '../models/earthquake_telegram_type.dart';
 import '../models/earthquake_type.dart';
 import '../models/intensity_city_search_response.dart';
 import '../models/intensity_prefecture_search_response.dart';
@@ -20,6 +19,8 @@ import '../models/jma_lpgm_intensity.dart';
 import '../models/sort_order.dart';
 
 import '../models/telegram_status.dart';
+
+import '../models/earthquake_telegram_type.dart';
 
 part 'earthquake_api_client.g.dart';
 

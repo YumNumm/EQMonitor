@@ -31,17 +31,19 @@ class DeviceProvisioningBanner extends ConsumerWidget {
     final syncRetry = syncNotifier.retryState;
 
     // アクティブなリトライ状態（provisioning 優先）
-    final activeRetry =
-        provisionRetry is! RetryIdle ? provisionRetry : syncRetry;
+    final activeRetry = provisionRetry is! RetryIdle
+        ? provisionRetry
+        : syncRetry;
 
-    final isLoading = provisionMutation is MutationPending ||
-        syncMutation is MutationPending;
+    final isLoading =
+        provisionMutation is MutationPending || syncMutation is MutationPending;
 
     // 表示不要ケース
     final isProvisionDone =
         provisionStatus.value == DeviceProvisioningStatus.notRequired &&
         provisionMutation is MutationIdle;
-    final isAllDone = isProvisionDone &&
+    final isAllDone =
+        isProvisionDone &&
         syncMutation is MutationIdle &&
         activeRetry is RetryIdle;
     if (isAllDone) {
@@ -53,21 +55,25 @@ class DeviceProvisioningBanner extends ConsumerWidget {
       activeRetry: activeRetry,
       isLoading: isLoading,
       onRetry: () {
-          if (provisionStatus.value == DeviceProvisioningStatus.required) {
-            notifier.reset();
-            unawaited(DeviceProvisioningNotifier.provisionMutation.run(
+        if (provisionStatus.value == DeviceProvisioningStatus.required) {
+          notifier.reset();
+          unawaited(
+            DeviceProvisioningNotifier.provisionMutation.run(
               ref,
               (tsx) async =>
                   tsx.get(deviceProvisioningProvider.notifier).provision(),
-            ));
-          } else {
-            syncNotifier.reset();
-            unawaited(PushTokenSyncNotifier.syncMutation.run(
+            ),
+          );
+        } else {
+          syncNotifier.reset();
+          unawaited(
+            PushTokenSyncNotifier.syncMutation.run(
               ref,
               (tsx) async => tsx.get(pushTokenSyncProvider.notifier).sync(),
-            ));
-          }
-        },
+            ),
+          );
+        }
+      },
     );
   }
 }
@@ -100,8 +106,10 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
           child: const Text('再試行'),
         ),
       ),
-      RetryWaiting(:final resumeAt, :final lastError) =>
-        _WaitingBanner(resumeAt: resumeAt, error: lastError),
+      RetryWaiting(:final resumeAt, :final lastError) => _WaitingBanner(
+        resumeAt: resumeAt,
+        error: lastError,
+      ),
       RetryRunning(:final attempt) => _BannerTile(
         icon: Icons.sync,
         backgroundColor: colorScheme.secondaryContainer,

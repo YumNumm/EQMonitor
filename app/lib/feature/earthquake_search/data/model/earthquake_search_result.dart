@@ -58,7 +58,6 @@ extension EarthquakeSearchResultItemEx on EarthquakeSearchResultItem {
     EarthquakeSearchResultItemPrefecture(:final prefecture) =>
       prefecture.lpgmIntensity,
     EarthquakeSearchResultItemCity(:final city) => city.lpgmIntensity,
-    EarthquakeSearchResultItemStation(:final station) =>
-      station.lpgmIntensity,
+    EarthquakeSearchResultItemStation(:final station) => station.lpgmIntensity,
   };
 }

@@ -120,10 +120,11 @@ class _HistoryOverlay extends StatelessWidget {
   static List<_WarningTimelineEntry> _buildTimelineEntries(
     TsunamiState tsunami,
   ) {
-    final vtse41Telegrams = tsunami.latestTelegrams
-        .where((t) => t.type == TelegramType.vtse41)
-        .toList()
-      ..sort((a, b) => a.pressAt.compareTo(b.pressAt));
+    final vtse41Telegrams =
+        tsunami.latestTelegrams
+            .where((t) => t.type == TelegramType.vtse41)
+            .toList()
+          ..sort((a, b) => a.pressAt.compareTo(b.pressAt));
 
     if (vtse41Telegrams.isEmpty) {
       return [];

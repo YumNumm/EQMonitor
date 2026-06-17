@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiTelegramsResponse {
 
- List<TsunamiTelegramItem> get telegrams;
+ List<TsunamiTelegramWithState> get telegrams;
 /// Create a copy of TsunamiTelegramsResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TsunamiTelegramsResponseCopyWith<$Res>  {
   factory $TsunamiTelegramsResponseCopyWith(TsunamiTelegramsResponse value, $Res Function(TsunamiTelegramsResponse) _then) = _$TsunamiTelegramsResponseCopyWithImpl;
 @useResult
 $Res call({
- List<TsunamiTelegramItem> telegrams
+ List<TsunamiTelegramWithState> telegrams
 });
 
 
@@ -68,7 +68,7 @@ class _$TsunamiTelegramsResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? telegrams = null,}) {
   return _then(_self.copyWith(
 telegrams: null == telegrams ? _self.telegrams : telegrams // ignore: cast_nullable_to_non_nullable
-as List<TsunamiTelegramItem>,
+as List<TsunamiTelegramWithState>,
   ));
 }
 
@@ -153,7 +153,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TsunamiTelegramItem> telegrams)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TsunamiTelegramWithState> telegrams)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramsResponse() when $default != null:
 return $default(_that.telegrams);case _:
@@ -174,7 +174,7 @@ return $default(_that.telegrams);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TsunamiTelegramItem> telegrams)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TsunamiTelegramWithState> telegrams)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramsResponse():
 return $default(_that.telegrams);case _:
@@ -194,7 +194,7 @@ return $default(_that.telegrams);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TsunamiTelegramItem> telegrams)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TsunamiTelegramWithState> telegrams)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramsResponse() when $default != null:
 return $default(_that.telegrams);case _:
@@ -209,11 +209,11 @@ return $default(_that.telegrams);case _:
 @JsonSerializable()
 
 class _TsunamiTelegramsResponse implements TsunamiTelegramsResponse {
-  const _TsunamiTelegramsResponse({required final  List<TsunamiTelegramItem> telegrams}): _telegrams = telegrams;
+  const _TsunamiTelegramsResponse({required final  List<TsunamiTelegramWithState> telegrams}): _telegrams = telegrams;
   factory _TsunamiTelegramsResponse.fromJson(Map<String, dynamic> json) => _$TsunamiTelegramsResponseFromJson(json);
 
- final  List<TsunamiTelegramItem> _telegrams;
-@override List<TsunamiTelegramItem> get telegrams {
+ final  List<TsunamiTelegramWithState> _telegrams;
+@override List<TsunamiTelegramWithState> get telegrams {
   if (_telegrams is EqualUnmodifiableListView) return _telegrams;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_telegrams);
@@ -253,7 +253,7 @@ abstract mixin class _$TsunamiTelegramsResponseCopyWith<$Res> implements $Tsunam
   factory _$TsunamiTelegramsResponseCopyWith(_TsunamiTelegramsResponse value, $Res Function(_TsunamiTelegramsResponse) _then) = __$TsunamiTelegramsResponseCopyWithImpl;
 @override @useResult
 $Res call({
- List<TsunamiTelegramItem> telegrams
+ List<TsunamiTelegramWithState> telegrams
 });
 
 
@@ -273,7 +273,7 @@ class __$TsunamiTelegramsResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? telegrams = null,}) {
   return _then(_TsunamiTelegramsResponse(
 telegrams: null == telegrams ? _self._telegrams : telegrams // ignore: cast_nullable_to_non_nullable
-as List<TsunamiTelegramItem>,
+as List<TsunamiTelegramWithState>,
   ));
 }
 
