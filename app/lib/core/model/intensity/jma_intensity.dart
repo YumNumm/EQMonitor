@@ -67,6 +67,7 @@ enum JmaIntensity {
 
 extension ApiJmaIntensityConverter on api.JmaIntensity {
   JmaIntensity get toJmaIntensity => switch (this) {
+    .undefined1 => .unknown,
     .value0 => .zero,
     .value1 => .one,
     .value2 => .two,
@@ -134,33 +135,34 @@ extension JmaIntensityFromRawKnetInt on JmaIntensity {
 
 extension ApiMinJmaIntensityConverter on api.MinJmaIntensity {
   JmaIntensity get toJmaIntensity => switch (this) {
-    api.MinJmaIntensity.value0 => JmaIntensity.zero,
-    api.MinJmaIntensity.value1 => JmaIntensity.one,
-    api.MinJmaIntensity.value2 => JmaIntensity.two,
-    api.MinJmaIntensity.value3 => JmaIntensity.three,
-    api.MinJmaIntensity.value4 => JmaIntensity.four,
-    api.MinJmaIntensity.value5unknown => JmaIntensity.fiveUnknown,
-    api.MinJmaIntensity.value5minus => JmaIntensity.fiveLower,
-    api.MinJmaIntensity.value5plus => JmaIntensity.fiveUpper,
-    api.MinJmaIntensity.value6minus => JmaIntensity.sixLower,
-    api.MinJmaIntensity.value6plus => JmaIntensity.sixUpper,
-    api.MinJmaIntensity.value7 => JmaIntensity.seven,
+    .undefined1 => .unknown,
+    .value0 => .zero,
+    .value1 => .one,
+    .value2 => .two,
+    .value3 => .three,
+    .value4 => .four,
+    .value5unknown => .fiveUnknown,
+    .value5minus => .fiveLower,
+    .value5plus => .fiveUpper,
+    .value6minus => .sixLower,
+    .value6plus => .sixUpper,
+    .value7 => .seven,
   };
 }
 
 extension JmaIntensityToApiMin on JmaIntensity {
   api.MinJmaIntensity? get toApiMinJmaIntensity => switch (this) {
     JmaIntensity.unknown => null,
-    JmaIntensity.zero => api.MinJmaIntensity.value0,
-    JmaIntensity.one => api.MinJmaIntensity.value1,
-    JmaIntensity.two => api.MinJmaIntensity.value2,
-    JmaIntensity.three => api.MinJmaIntensity.value3,
-    JmaIntensity.four => api.MinJmaIntensity.value4,
-    JmaIntensity.fiveUnknown => api.MinJmaIntensity.value5unknown,
-    JmaIntensity.fiveLower => api.MinJmaIntensity.value5minus,
-    JmaIntensity.fiveUpper => api.MinJmaIntensity.value5plus,
-    JmaIntensity.sixLower => api.MinJmaIntensity.value6minus,
-    JmaIntensity.sixUpper => api.MinJmaIntensity.value6plus,
-    JmaIntensity.seven => api.MinJmaIntensity.value7,
+    JmaIntensity.zero => .value0,
+    JmaIntensity.one => .value1,
+    JmaIntensity.two => .value2,
+    JmaIntensity.three => .value3,
+    JmaIntensity.four => .value4,
+    JmaIntensity.fiveUnknown => .value5unknown,
+    JmaIntensity.fiveLower => .value5minus,
+    JmaIntensity.fiveUpper => .value5plus,
+    JmaIntensity.sixLower => .value6minus,
+    JmaIntensity.sixUpper => .value6plus,
+    JmaIntensity.seven => .value7,
   };
 }
