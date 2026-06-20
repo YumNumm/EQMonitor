@@ -48,6 +48,7 @@ void main(List<String> args) async {
   /// `5-` と `5+` が両方 `value5` になり重複エラーが起きる。
   /// ここで以下の置換を行う:
   ///   - `!5-`  (undefined0)  → value5unknown
+  ///   - `!6-`  (undefined1)  → value6unknown
   ///   - `{N}-` (value{N})    → value{N}minus
   ///   - `{N}+` (value{N})    → value{N}plus
   await _step('震度 enum メンバー名をパッチ', () async {
@@ -71,6 +72,15 @@ void main(List<String> args) async {
         '',
       );
       content = content.replaceAll("undefined0('!5-')", "value5unknown('!5-')");
+
+      // `!6-` の自動生成コメントを除去し undefined1 → value6unknown に置換
+      content = content.replaceAll(
+        RegExp(
+          r"  /// Incorrect name has been replaced\. Original name: `!6-`\.\n",
+        ),
+        '',
+      );
+      content = content.replaceAll("undefined1('!6-')", "value6unknown('!6-')");
 
       // value{N}('{N}-') → value{N}minus('{N}-')
       content = content.replaceAllMapped(

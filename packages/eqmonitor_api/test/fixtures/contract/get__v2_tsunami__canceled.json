@@ -5,12 +5,13 @@
       "event_ids": [
         "20251215120000"
       ],
+      "is_active": false,
       "is_canceled": true,
-      "forecast_region_count": 0,
-      "telegram_count": 1,
-      "telegram_types": [
-        "VTSE41"
-      ]
+      "updated_at": "2025-12-15T12:15:00.000Z",
+      "earthquakes": [],
+      "latest_telegrams": [],
+      "forecast_regions": [],
+      "offshore_observations": []
     }
   ]
 }

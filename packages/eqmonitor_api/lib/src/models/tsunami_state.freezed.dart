@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiState {
 
- String get id;@JsonKey(name: 'event_ids') List<String> get eventIds;@JsonKey(name: 'is_active') bool get isActive;@JsonKey(name: 'is_canceled') bool get isCanceled;@JsonKey(name: 'updated_at') DateTime get updatedAt;@JsonKey(includeIfNull: true) TsunamiStateEarthquake? get earthquake;@JsonKey(name: 'latest_telegrams') List<LatestTelegram> get latestTelegrams;@JsonKey(name: 'forecast_regions') List<MergedForecastRegion> get forecastRegions;@JsonKey(name: 'offshore_observations') List<MergedOffshoreObservation> get offshoreObservations;
+ String get id;@JsonKey(name: 'event_ids') List<String> get eventIds;@JsonKey(name: 'is_active') bool get isActive;@JsonKey(name: 'is_canceled') bool get isCanceled;@JsonKey(name: 'updated_at') DateTime get updatedAt; List<TsunamiStateEarthquake> get earthquakes;@JsonKey(name: 'latest_telegrams') List<LatestTelegram> get latestTelegrams;@JsonKey(name: 'forecast_regions') List<MergedForecastRegion> get forecastRegions;@JsonKey(name: 'offshore_observations') List<MergedOffshoreObservation> get offshoreObservations;
 /// Create a copy of TsunamiState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TsunamiStateCopyWith<TsunamiState> get copyWith => _$TsunamiStateCopyWithImpl<T
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiState&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.eventIds, eventIds)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&const DeepCollectionEquality().equals(other.latestTelegrams, latestTelegrams)&&const DeepCollectionEquality().equals(other.forecastRegions, forecastRegions)&&const DeepCollectionEquality().equals(other.offshoreObservations, offshoreObservations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiState&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.eventIds, eventIds)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.earthquakes, earthquakes)&&const DeepCollectionEquality().equals(other.latestTelegrams, latestTelegrams)&&const DeepCollectionEquality().equals(other.forecastRegions, forecastRegions)&&const DeepCollectionEquality().equals(other.offshoreObservations, offshoreObservations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(eventIds),isActive,isCanceled,updatedAt,earthquake,const DeepCollectionEquality().hash(latestTelegrams),const DeepCollectionEquality().hash(forecastRegions),const DeepCollectionEquality().hash(offshoreObservations));
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(eventIds),isActive,isCanceled,updatedAt,const DeepCollectionEquality().hash(earthquakes),const DeepCollectionEquality().hash(latestTelegrams),const DeepCollectionEquality().hash(forecastRegions),const DeepCollectionEquality().hash(offshoreObservations));
 
 @override
 String toString() {
-  return 'TsunamiState(id: $id, eventIds: $eventIds, isActive: $isActive, isCanceled: $isCanceled, updatedAt: $updatedAt, earthquake: $earthquake, latestTelegrams: $latestTelegrams, forecastRegions: $forecastRegions, offshoreObservations: $offshoreObservations)';
+  return 'TsunamiState(id: $id, eventIds: $eventIds, isActive: $isActive, isCanceled: $isCanceled, updatedAt: $updatedAt, earthquakes: $earthquakes, latestTelegrams: $latestTelegrams, forecastRegions: $forecastRegions, offshoreObservations: $offshoreObservations)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $TsunamiStateCopyWith<$Res>  {
   factory $TsunamiStateCopyWith(TsunamiState value, $Res Function(TsunamiState) _then) = _$TsunamiStateCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'event_ids') List<String> eventIds,@JsonKey(name: 'is_active') bool isActive,@JsonKey(name: 'is_canceled') bool isCanceled,@JsonKey(name: 'updated_at') DateTime updatedAt,@JsonKey(includeIfNull: true) TsunamiStateEarthquake? earthquake,@JsonKey(name: 'latest_telegrams') List<LatestTelegram> latestTelegrams,@JsonKey(name: 'forecast_regions') List<MergedForecastRegion> forecastRegions,@JsonKey(name: 'offshore_observations') List<MergedOffshoreObservation> offshoreObservations
+ String id,@JsonKey(name: 'event_ids') List<String> eventIds,@JsonKey(name: 'is_active') bool isActive,@JsonKey(name: 'is_canceled') bool isCanceled,@JsonKey(name: 'updated_at') DateTime updatedAt, List<TsunamiStateEarthquake> earthquakes,@JsonKey(name: 'latest_telegrams') List<LatestTelegram> latestTelegrams,@JsonKey(name: 'forecast_regions') List<MergedForecastRegion> forecastRegions,@JsonKey(name: 'offshore_observations') List<MergedOffshoreObservation> offshoreObservations
 });
 
 
-$TsunamiStateEarthquakeCopyWith<$Res>? get earthquake;
+
 
 }
 /// @nodoc
@@ -65,33 +65,21 @@ class _$TsunamiStateCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventIds = null,Object? isActive = null,Object? isCanceled = null,Object? updatedAt = null,Object? earthquake = freezed,Object? latestTelegrams = null,Object? forecastRegions = null,Object? offshoreObservations = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventIds = null,Object? isActive = null,Object? isCanceled = null,Object? updatedAt = null,Object? earthquakes = null,Object? latestTelegrams = null,Object? forecastRegions = null,Object? offshoreObservations = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventIds: null == eventIds ? _self.eventIds : eventIds // ignore: cast_nullable_to_non_nullable
 as List<String>,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
 as bool,isCanceled: null == isCanceled ? _self.isCanceled : isCanceled // ignore: cast_nullable_to_non_nullable
 as bool,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,earthquake: freezed == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
-as TsunamiStateEarthquake?,latestTelegrams: null == latestTelegrams ? _self.latestTelegrams : latestTelegrams // ignore: cast_nullable_to_non_nullable
+as DateTime,earthquakes: null == earthquakes ? _self.earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
+as List<TsunamiStateEarthquake>,latestTelegrams: null == latestTelegrams ? _self.latestTelegrams : latestTelegrams // ignore: cast_nullable_to_non_nullable
 as List<LatestTelegram>,forecastRegions: null == forecastRegions ? _self.forecastRegions : forecastRegions // ignore: cast_nullable_to_non_nullable
 as List<MergedForecastRegion>,offshoreObservations: null == offshoreObservations ? _self.offshoreObservations : offshoreObservations // ignore: cast_nullable_to_non_nullable
 as List<MergedOffshoreObservation>,
   ));
 }
-/// Create a copy of TsunamiState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$TsunamiStateEarthquakeCopyWith<$Res>? get earthquake {
-    if (_self.earthquake == null) {
-    return null;
-  }
 
-  return $TsunamiStateEarthquakeCopyWith<$Res>(_self.earthquake!, (value) {
-    return _then(_self.copyWith(earthquake: value));
-  });
-}
 }
 
 
@@ -173,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds, @JsonKey(name: 'is_active')  bool isActive, @JsonKey(name: 'is_canceled')  bool isCanceled, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(includeIfNull: true)  TsunamiStateEarthquake? earthquake, @JsonKey(name: 'latest_telegrams')  List<LatestTelegram> latestTelegrams, @JsonKey(name: 'forecast_regions')  List<MergedForecastRegion> forecastRegions, @JsonKey(name: 'offshore_observations')  List<MergedOffshoreObservation> offshoreObservations)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds, @JsonKey(name: 'is_active')  bool isActive, @JsonKey(name: 'is_canceled')  bool isCanceled, @JsonKey(name: 'updated_at')  DateTime updatedAt,  List<TsunamiStateEarthquake> earthquakes, @JsonKey(name: 'latest_telegrams')  List<LatestTelegram> latestTelegrams, @JsonKey(name: 'forecast_regions')  List<MergedForecastRegion> forecastRegions, @JsonKey(name: 'offshore_observations')  List<MergedOffshoreObservation> offshoreObservations)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiState() when $default != null:
-return $default(_that.id,_that.eventIds,_that.isActive,_that.isCanceled,_that.updatedAt,_that.earthquake,_that.latestTelegrams,_that.forecastRegions,_that.offshoreObservations);case _:
+return $default(_that.id,_that.eventIds,_that.isActive,_that.isCanceled,_that.updatedAt,_that.earthquakes,_that.latestTelegrams,_that.forecastRegions,_that.offshoreObservations);case _:
   return orElse();
 
 }
@@ -194,10 +182,10 @@ return $default(_that.id,_that.eventIds,_that.isActive,_that.isCanceled,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds, @JsonKey(name: 'is_active')  bool isActive, @JsonKey(name: 'is_canceled')  bool isCanceled, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(includeIfNull: true)  TsunamiStateEarthquake? earthquake, @JsonKey(name: 'latest_telegrams')  List<LatestTelegram> latestTelegrams, @JsonKey(name: 'forecast_regions')  List<MergedForecastRegion> forecastRegions, @JsonKey(name: 'offshore_observations')  List<MergedOffshoreObservation> offshoreObservations)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds, @JsonKey(name: 'is_active')  bool isActive, @JsonKey(name: 'is_canceled')  bool isCanceled, @JsonKey(name: 'updated_at')  DateTime updatedAt,  List<TsunamiStateEarthquake> earthquakes, @JsonKey(name: 'latest_telegrams')  List<LatestTelegram> latestTelegrams, @JsonKey(name: 'forecast_regions')  List<MergedForecastRegion> forecastRegions, @JsonKey(name: 'offshore_observations')  List<MergedOffshoreObservation> offshoreObservations)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiState():
-return $default(_that.id,_that.eventIds,_that.isActive,_that.isCanceled,_that.updatedAt,_that.earthquake,_that.latestTelegrams,_that.forecastRegions,_that.offshoreObservations);case _:
+return $default(_that.id,_that.eventIds,_that.isActive,_that.isCanceled,_that.updatedAt,_that.earthquakes,_that.latestTelegrams,_that.forecastRegions,_that.offshoreObservations);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -214,10 +202,10 @@ return $default(_that.id,_that.eventIds,_that.isActive,_that.isCanceled,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds, @JsonKey(name: 'is_active')  bool isActive, @JsonKey(name: 'is_canceled')  bool isCanceled, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(includeIfNull: true)  TsunamiStateEarthquake? earthquake, @JsonKey(name: 'latest_telegrams')  List<LatestTelegram> latestTelegrams, @JsonKey(name: 'forecast_regions')  List<MergedForecastRegion> forecastRegions, @JsonKey(name: 'offshore_observations')  List<MergedOffshoreObservation> offshoreObservations)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds, @JsonKey(name: 'is_active')  bool isActive, @JsonKey(name: 'is_canceled')  bool isCanceled, @JsonKey(name: 'updated_at')  DateTime updatedAt,  List<TsunamiStateEarthquake> earthquakes, @JsonKey(name: 'latest_telegrams')  List<LatestTelegram> latestTelegrams, @JsonKey(name: 'forecast_regions')  List<MergedForecastRegion> forecastRegions, @JsonKey(name: 'offshore_observations')  List<MergedOffshoreObservation> offshoreObservations)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiState() when $default != null:
-return $default(_that.id,_that.eventIds,_that.isActive,_that.isCanceled,_that.updatedAt,_that.earthquake,_that.latestTelegrams,_that.forecastRegions,_that.offshoreObservations);case _:
+return $default(_that.id,_that.eventIds,_that.isActive,_that.isCanceled,_that.updatedAt,_that.earthquakes,_that.latestTelegrams,_that.forecastRegions,_that.offshoreObservations);case _:
   return null;
 
 }
@@ -229,7 +217,7 @@ return $default(_that.id,_that.eventIds,_that.isActive,_that.isCanceled,_that.up
 @JsonSerializable()
 
 class _TsunamiState implements TsunamiState {
-  const _TsunamiState({required this.id, @JsonKey(name: 'event_ids') required final  List<String> eventIds, @JsonKey(name: 'is_active') required this.isActive, @JsonKey(name: 'is_canceled') required this.isCanceled, @JsonKey(name: 'updated_at') required this.updatedAt, @JsonKey(includeIfNull: true) required this.earthquake, @JsonKey(name: 'latest_telegrams') required final  List<LatestTelegram> latestTelegrams, @JsonKey(name: 'forecast_regions') required final  List<MergedForecastRegion> forecastRegions, @JsonKey(name: 'offshore_observations') required final  List<MergedOffshoreObservation> offshoreObservations}): _eventIds = eventIds,_latestTelegrams = latestTelegrams,_forecastRegions = forecastRegions,_offshoreObservations = offshoreObservations;
+  const _TsunamiState({required this.id, @JsonKey(name: 'event_ids') required final  List<String> eventIds, @JsonKey(name: 'is_active') required this.isActive, @JsonKey(name: 'is_canceled') required this.isCanceled, @JsonKey(name: 'updated_at') required this.updatedAt, required final  List<TsunamiStateEarthquake> earthquakes, @JsonKey(name: 'latest_telegrams') required final  List<LatestTelegram> latestTelegrams, @JsonKey(name: 'forecast_regions') required final  List<MergedForecastRegion> forecastRegions, @JsonKey(name: 'offshore_observations') required final  List<MergedOffshoreObservation> offshoreObservations}): _eventIds = eventIds,_earthquakes = earthquakes,_latestTelegrams = latestTelegrams,_forecastRegions = forecastRegions,_offshoreObservations = offshoreObservations;
   factory _TsunamiState.fromJson(Map<String, dynamic> json) => _$TsunamiStateFromJson(json);
 
 @override final  String id;
@@ -243,7 +231,13 @@ class _TsunamiState implements TsunamiState {
 @override@JsonKey(name: 'is_active') final  bool isActive;
 @override@JsonKey(name: 'is_canceled') final  bool isCanceled;
 @override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
-@override@JsonKey(includeIfNull: true) final  TsunamiStateEarthquake? earthquake;
+ final  List<TsunamiStateEarthquake> _earthquakes;
+@override List<TsunamiStateEarthquake> get earthquakes {
+  if (_earthquakes is EqualUnmodifiableListView) return _earthquakes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_earthquakes);
+}
+
  final  List<LatestTelegram> _latestTelegrams;
 @override@JsonKey(name: 'latest_telegrams') List<LatestTelegram> get latestTelegrams {
   if (_latestTelegrams is EqualUnmodifiableListView) return _latestTelegrams;
@@ -279,16 +273,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiState&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._eventIds, _eventIds)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&const DeepCollectionEquality().equals(other._latestTelegrams, _latestTelegrams)&&const DeepCollectionEquality().equals(other._forecastRegions, _forecastRegions)&&const DeepCollectionEquality().equals(other._offshoreObservations, _offshoreObservations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiState&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._eventIds, _eventIds)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._earthquakes, _earthquakes)&&const DeepCollectionEquality().equals(other._latestTelegrams, _latestTelegrams)&&const DeepCollectionEquality().equals(other._forecastRegions, _forecastRegions)&&const DeepCollectionEquality().equals(other._offshoreObservations, _offshoreObservations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_eventIds),isActive,isCanceled,updatedAt,earthquake,const DeepCollectionEquality().hash(_latestTelegrams),const DeepCollectionEquality().hash(_forecastRegions),const DeepCollectionEquality().hash(_offshoreObservations));
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_eventIds),isActive,isCanceled,updatedAt,const DeepCollectionEquality().hash(_earthquakes),const DeepCollectionEquality().hash(_latestTelegrams),const DeepCollectionEquality().hash(_forecastRegions),const DeepCollectionEquality().hash(_offshoreObservations));
 
 @override
 String toString() {
-  return 'TsunamiState(id: $id, eventIds: $eventIds, isActive: $isActive, isCanceled: $isCanceled, updatedAt: $updatedAt, earthquake: $earthquake, latestTelegrams: $latestTelegrams, forecastRegions: $forecastRegions, offshoreObservations: $offshoreObservations)';
+  return 'TsunamiState(id: $id, eventIds: $eventIds, isActive: $isActive, isCanceled: $isCanceled, updatedAt: $updatedAt, earthquakes: $earthquakes, latestTelegrams: $latestTelegrams, forecastRegions: $forecastRegions, offshoreObservations: $offshoreObservations)';
 }
 
 
@@ -299,11 +293,11 @@ abstract mixin class _$TsunamiStateCopyWith<$Res> implements $TsunamiStateCopyWi
   factory _$TsunamiStateCopyWith(_TsunamiState value, $Res Function(_TsunamiState) _then) = __$TsunamiStateCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'event_ids') List<String> eventIds,@JsonKey(name: 'is_active') bool isActive,@JsonKey(name: 'is_canceled') bool isCanceled,@JsonKey(name: 'updated_at') DateTime updatedAt,@JsonKey(includeIfNull: true) TsunamiStateEarthquake? earthquake,@JsonKey(name: 'latest_telegrams') List<LatestTelegram> latestTelegrams,@JsonKey(name: 'forecast_regions') List<MergedForecastRegion> forecastRegions,@JsonKey(name: 'offshore_observations') List<MergedOffshoreObservation> offshoreObservations
+ String id,@JsonKey(name: 'event_ids') List<String> eventIds,@JsonKey(name: 'is_active') bool isActive,@JsonKey(name: 'is_canceled') bool isCanceled,@JsonKey(name: 'updated_at') DateTime updatedAt, List<TsunamiStateEarthquake> earthquakes,@JsonKey(name: 'latest_telegrams') List<LatestTelegram> latestTelegrams,@JsonKey(name: 'forecast_regions') List<MergedForecastRegion> forecastRegions,@JsonKey(name: 'offshore_observations') List<MergedOffshoreObservation> offshoreObservations
 });
 
 
-@override $TsunamiStateEarthquakeCopyWith<$Res>? get earthquake;
+
 
 }
 /// @nodoc
@@ -316,34 +310,22 @@ class __$TsunamiStateCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventIds = null,Object? isActive = null,Object? isCanceled = null,Object? updatedAt = null,Object? earthquake = freezed,Object? latestTelegrams = null,Object? forecastRegions = null,Object? offshoreObservations = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventIds = null,Object? isActive = null,Object? isCanceled = null,Object? updatedAt = null,Object? earthquakes = null,Object? latestTelegrams = null,Object? forecastRegions = null,Object? offshoreObservations = null,}) {
   return _then(_TsunamiState(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventIds: null == eventIds ? _self._eventIds : eventIds // ignore: cast_nullable_to_non_nullable
 as List<String>,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
 as bool,isCanceled: null == isCanceled ? _self.isCanceled : isCanceled // ignore: cast_nullable_to_non_nullable
 as bool,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,earthquake: freezed == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
-as TsunamiStateEarthquake?,latestTelegrams: null == latestTelegrams ? _self._latestTelegrams : latestTelegrams // ignore: cast_nullable_to_non_nullable
+as DateTime,earthquakes: null == earthquakes ? _self._earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
+as List<TsunamiStateEarthquake>,latestTelegrams: null == latestTelegrams ? _self._latestTelegrams : latestTelegrams // ignore: cast_nullable_to_non_nullable
 as List<LatestTelegram>,forecastRegions: null == forecastRegions ? _self._forecastRegions : forecastRegions // ignore: cast_nullable_to_non_nullable
 as List<MergedForecastRegion>,offshoreObservations: null == offshoreObservations ? _self._offshoreObservations : offshoreObservations // ignore: cast_nullable_to_non_nullable
 as List<MergedOffshoreObservation>,
   ));
 }
 
-/// Create a copy of TsunamiState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$TsunamiStateEarthquakeCopyWith<$Res>? get earthquake {
-    if (_self.earthquake == null) {
-    return null;
-  }
 
-  return $TsunamiStateEarthquakeCopyWith<$Res>(_self.earthquake!, (value) {
-    return _then(_self.copyWith(earthquake: value));
-  });
-}
 }
 
 // dart format on

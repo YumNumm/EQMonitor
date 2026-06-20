@@ -12,9 +12,12 @@ class TsunamiDetailsNotifier extends _$TsunamiDetailsNotifier {
 
   @override
   Future<TsunamiState> build(String tsunamiId) async {
-    _startPolling();
     ref.onDispose(() => _refreshTimer?.cancel());
-    return _fetch();
+    final result = await _fetch();
+    if (result.isActive) {
+      _startPolling();
+    }
+    return result;
   }
 
   Future<TsunamiState> _fetch() async {
@@ -29,7 +32,12 @@ class TsunamiDetailsNotifier extends _$TsunamiDetailsNotifier {
     _refreshTimer?.cancel();
     _refreshTimer = Timer.periodic(
       const Duration(seconds: 30),
-      (_) => ref.invalidateSelf(),
+      (_) async {
+        state = await AsyncValue.guard(() => _fetch());
+        if (state case AsyncData(value: final tsunami) when !tsunami.isActive) {
+          _refreshTimer?.cancel();
+        }
+      },
     );
   }
 }

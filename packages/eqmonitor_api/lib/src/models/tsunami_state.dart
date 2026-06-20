@@ -24,8 +24,7 @@ abstract class TsunamiState with _$TsunamiState {
     required bool isCanceled,
     @JsonKey(name: 'updated_at')
     required DateTime updatedAt,
-    @JsonKey(includeIfNull: true)
-    required TsunamiStateEarthquake? earthquake,
+    required List<TsunamiStateEarthquake> earthquakes,
     @JsonKey(name: 'latest_telegrams')
     required List<LatestTelegram> latestTelegrams,
     @JsonKey(name: 'forecast_regions')

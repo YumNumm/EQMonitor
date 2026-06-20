@@ -42,9 +42,9 @@ abstract class EarthquakeApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - 日付 (例: 2024-01-01).
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
-  /// [originTimeLte] - 日付 (例: 2024-01-01).
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
@@ -98,9 +98,9 @@ abstract class EarthquakeApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - 日付 (例: 2024-01-01).
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
-  /// [originTimeLte] - 日付 (例: 2024-01-01).
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
@@ -150,9 +150,9 @@ abstract class EarthquakeApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - 日付 (例: 2024-01-01).
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
-  /// [originTimeLte] - 日付 (例: 2024-01-01).
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
@@ -202,9 +202,9 @@ abstract class EarthquakeApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - 日付 (例: 2024-01-01).
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
-  /// [originTimeLte] - 日付 (例: 2024-01-01).
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
@@ -254,9 +254,9 @@ abstract class EarthquakeApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - 日付 (例: 2024-01-01).
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
-  /// [originTimeLte] - 日付 (例: 2024-01-01).
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///

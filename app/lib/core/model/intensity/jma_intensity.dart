@@ -67,7 +67,6 @@ enum JmaIntensity {
 
 extension ApiJmaIntensityConverter on api.JmaIntensity {
   JmaIntensity get toJmaIntensity => switch (this) {
-    .undefined1 => .unknown,
     .value0 => .zero,
     .value1 => .one,
     .value2 => .two,
@@ -76,6 +75,7 @@ extension ApiJmaIntensityConverter on api.JmaIntensity {
     .value5unknown => .fiveUnknown,
     .value5minus => .fiveLower,
     .value5plus => .fiveUpper,
+    .value6unknown => .sixLower,
     .value6minus => .sixLower,
     .value6plus => .sixUpper,
     .value7 => .seven,
@@ -135,7 +135,7 @@ extension JmaIntensityFromRawKnetInt on JmaIntensity {
 
 extension ApiMinJmaIntensityConverter on api.MinJmaIntensity {
   JmaIntensity get toJmaIntensity => switch (this) {
-    .undefined1 => .unknown,
+    .value6unknown => .sixLower,
     .value0 => .zero,
     .value1 => .one,
     .value2 => .two,

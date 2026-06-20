@@ -54,7 +54,7 @@ final class TsunamiDetailsNotifierProvider
 }
 
 String _$tsunamiDetailsNotifierHash() =>
-    r'4c1ebe74e01670ab6a06f899a8a07d4111a538c3';
+    r'8a7183a163f1b170b806fef7a82642f28b42f122';
 
 final class TsunamiDetailsNotifierFamily extends $Family
     with

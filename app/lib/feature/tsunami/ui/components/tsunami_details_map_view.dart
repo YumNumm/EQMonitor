@@ -119,7 +119,7 @@ class _MapContent extends HookConsumerWidget {
   }
 
   Geographic _initialCenter() {
-    final coords = tsunami.earthquake?.hypocenter.coordinates;
+    final coords = tsunami.earthquakes.firstOrNull?.hypocenter.coordinates;
     if (coords != null) {
       return Geographic(
         lon: coords.longitude.toDouble(),
@@ -138,7 +138,7 @@ class _MapContent extends HookConsumerWidget {
     final points = <Geographic>[];
 
     // 震源
-    final coords = tsunami.earthquake?.hypocenter.coordinates;
+    final coords = tsunami.earthquakes.firstOrNull?.hypocenter.coordinates;
     if (coords != null) {
       points.add(
         Geographic(
@@ -379,7 +379,7 @@ class _TsunamiHypocenterLayer extends HookConsumerWidget {
           return null;
         }
 
-        final coords = tsunami.earthquake?.hypocenter.coordinates;
+        final coords = tsunami.earthquakes.firstOrNull?.hypocenter.coordinates;
         if (coords == null) {
           return null;
         }
@@ -453,7 +453,7 @@ class _TsunamiHypocenterLayer extends HookConsumerWidget {
           }());
         };
       },
-      [styleController, tsunami.earthquake],
+      [styleController, tsunami.earthquakes],
     );
 
     return const SizedBox.shrink();
