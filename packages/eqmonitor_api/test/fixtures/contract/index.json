@@ -376,8 +376,8 @@
   },
   {
     "key": "GET /v2/tsunami/by-event-id/:eventId",
-    "file": "get__v2_tsunami_byeventid_eventId__with-telegrams.json",
-    "fixture": "with-telegrams"
+    "file": "get__v2_tsunami_byeventid_eventId__active-warning.json",
+    "fixture": "active-warning"
   },
   {
     "key": "GET /v2/tsunami/by-event-id/:eventId",

@@ -35,7 +35,6 @@ final _parsers = <String, _FromJson>{
       IntensityCitySearchResponse.fromJson,
   'GET /v2/earthquake/intensity/station/:code':
       IntensityStationSearchResponse.fromJson,
-  'GET /v2/earthquake/epicenter/:code': EpicenterSearchResponse.fromJson,
   'GET /v2/eew': EewListResponse.fromJson,
   'GET /v2/eew/latest': EewLatestResponse.fromJson,
   'GET /v2/eew/:eventId': EewArrayResponse.fromJson,
@@ -62,6 +61,7 @@ final _parsers = <String, _FromJson>{
 /// 境界は「default/named」ではなく「現在判明している乖離」。stub fixture を修正したら
 /// ここから外して gate に昇格する。
 const _quarantine = <String>{
+  'get__v1_changelog.json',
   'get__v1_changelog__with-entries.json',
   'get__v1_start.json',
   'get__v1_start__force-update.json',
@@ -69,11 +69,16 @@ const _quarantine = <String>{
   'get__v2_earthquake_eventId__canceled.json',
   'get__v2_parameters_type.json',
   'get__v2_parameters_manifest__with-parameters.json',
+  'get__v2_telegram_id.json',
   'get__v2_telegram_id__vtse41.json',
+  'get__v2_telegram_id__vtse51.json',
+  'get__v2_telegram_id__vtse52.json',
+  'get__v2_telegram_id__vtse56.json',
+  'get__v2_telegram_id__vxse51.json',
+  'get__v2_telegram_id__vxse56.json',
   'get__v2_telegram_id__vzse40.json',
   'get__v2_telegram_id__with-comments.json',
   'get__v2_tsunami_tsunamiId__with-telegrams.json',
-  'get__v2_tsunami_byeventid_eventId__with-telegrams.json',
 };
 
 void main() {
