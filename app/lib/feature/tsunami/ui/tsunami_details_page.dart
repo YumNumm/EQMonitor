@@ -58,9 +58,9 @@ class TsunamiDetailsPage extends HookConsumerWidget {
                                 .abs() >
                             const Duration(hours: 24))
                           const AdBanner(),
-                        if (tsunami.earthquake != null)
+                        for (final earthquake in tsunami.earthquakes)
                           TsunamiEarthquakeCard(
-                            earthquake: tsunami.earthquake!,
+                            earthquake: earthquake,
                             eventIds: tsunami.eventIds,
                           ),
                       ],
