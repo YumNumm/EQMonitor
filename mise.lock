@@ -177,7 +177,7 @@ checksum = "sha256:ff880b6f1d5f38053de34bfd73991932529b936b8b1b7541368dda371b16f
 url = "https://github.com/firebase/firebase-tools/releases/download/v15.19.0/firebase-tools-win.exe"
 
 [[tools.flutter]]
-version = "3.44.0-stable"
+version = "3.44.2-stable"
 backend = "asdf:flutter"
 
 [[tools.gcloud]]
@@ -411,37 +411,6 @@ url = "https://github.com/jdx/hk/releases/download/v1.46.0/hk-x86_64-pc-windows-
 [[tools.java]]
 version = "17.0.2"
 backend = "core:java"
-
-[tools.java.options]
-shorthand_vendor = "openjdk"
-
-[tools.java."platforms.linux-arm64"]
-checksum = "sha256:13bfd976acf8803f862e82c7113fb0e9311ca5458b1decaef8a09ffd91119fa4"
-url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-aarch64_bin.tar.gz"
-
-[tools.java."platforms.linux-x64"]
-checksum = "sha256:0022753d0cceecacdd3a795dd4cea2bd7ffdf9dc06e22ffd1be98411742fbb44"
-url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz"
-
-[tools.java."platforms.linux-x64-baseline"]
-checksum = "sha256:0022753d0cceecacdd3a795dd4cea2bd7ffdf9dc06e22ffd1be98411742fbb44"
-url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz"
-
-[tools.java."platforms.macos-arm64"]
-checksum = "sha256:602d7de72526368bb3f80d95c4427696ea639d2e0cc40455f53ff0bbb18c27c8"
-url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"
-
-[tools.java."platforms.macos-x64"]
-checksum = "sha256:b85c4aaf7b141825ad3a0ea34b965e45c15d5963677e9b27235aa05f65c6df06"
-url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-x64_bin.tar.gz"
-
-[tools.java."platforms.macos-x64-baseline"]
-checksum = "sha256:b85c4aaf7b141825ad3a0ea34b965e45c15d5963677e9b27235aa05f65c6df06"
-url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-x64_bin.tar.gz"
-
-[tools.java."platforms.windows-x64"]
-checksum = "sha256:b2208206bda47f2e0c971a39e057a5ec32c40b503d71e486790cb728d926b615"
-url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_windows-x64_bin.zip"
 
 [[tools.node]]
 version = "24.16.0"
@@ -690,59 +659,6 @@ checksum = "blake3:7c85377fa6d9bdbeec3f6724522835c59d31483906d5bee41ec41807eff0a
 [[tools.swiftformat]]
 version = "0.61.1"
 backend = "github:nicklockwood/SwiftFormat"
-
-[tools.swiftformat.options]
-no_app = "true"
-
-[tools.swiftformat."platforms.linux-arm64"]
-checksum = "sha256:42a35b557a6d56975fba3a48e78d39ab5388c8faac65d4819f25d3e20c7504c0"
-url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/swiftformat_linux_aarch64.zip"
-url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406639845"
-
-[tools.swiftformat."platforms.linux-arm64-musl"]
-checksum = "sha256:42a35b557a6d56975fba3a48e78d39ab5388c8faac65d4819f25d3e20c7504c0"
-url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/swiftformat_linux_aarch64.zip"
-url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406639845"
-
-[tools.swiftformat."platforms.linux-x64"]
-checksum = "sha256:7bc8706e3fd51963f1f29eb99098ebdf482f3497fa527c68e6cf75cbee29c77a"
-url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/swiftformat_linux.zip"
-url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406639796"
-
-[tools.swiftformat."platforms.linux-x64-baseline"]
-checksum = "sha256:7bc8706e3fd51963f1f29eb99098ebdf482f3497fa527c68e6cf75cbee29c77a"
-url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/swiftformat_linux.zip"
-url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406639796"
-
-[tools.swiftformat."platforms.linux-x64-musl"]
-checksum = "sha256:7bc8706e3fd51963f1f29eb99098ebdf482f3497fa527c68e6cf75cbee29c77a"
-url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/swiftformat_linux.zip"
-url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406639796"
-
-[tools.swiftformat."platforms.linux-x64-musl-baseline"]
-checksum = "sha256:7bc8706e3fd51963f1f29eb99098ebdf482f3497fa527c68e6cf75cbee29c77a"
-url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/swiftformat_linux.zip"
-url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406639796"
-
-[tools.swiftformat."platforms.macos-arm64"]
-checksum = "sha256:b990400779aceb7d7020796eb9ba814d4480543f671d38fc0ff48cb72f04c584"
-url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/swiftformat.zip"
-url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406639783"
-
-[tools.swiftformat."platforms.macos-x64"]
-checksum = "sha256:b990400779aceb7d7020796eb9ba814d4480543f671d38fc0ff48cb72f04c584"
-url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/swiftformat.zip"
-url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406639783"
-
-[tools.swiftformat."platforms.macos-x64-baseline"]
-checksum = "sha256:b990400779aceb7d7020796eb9ba814d4480543f671d38fc0ff48cb72f04c584"
-url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/swiftformat.zip"
-url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406639783"
-
-[tools.swiftformat."platforms.windows-x64"]
-checksum = "sha256:709779781c37d0f4020b5e3fa8ade4070340c37b980f3826b84d61c35ccb6a25"
-url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/SwiftFormat.amd64.msi"
-url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406642521"
 
 [[tools.terraform]]
 version = "1.15.5"

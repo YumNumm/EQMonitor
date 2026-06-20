@@ -176,8 +176,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-hybrid-common.git",
       "state" : {
-        "revision" : "a9d25f3d300cdb515b0cce464b59ebb29ad9ec14",
-        "version" : "18.10.0"
+        "revision" : "643a7a3ca21a37470beb07143223207c2243c545",
+        "version" : "18.4.0"
       }
     },
     {
@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios-spm",
       "state" : {
-        "revision" : "92e2804a6b84b3b7ce60bfe7e9ff63dc9524ef5b",
-        "version" : "5.76.0"
+        "revision" : "8f5f5e1b95506f89524cdbb70bcaf096a6f6fcc2",
+        "version" : "5.70.0"
       }
     },
     {
@@ -203,8 +203,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "a0cb0954ecb21e4e31b0070e6ed5674e8556685a",
-        "version" : "1.6.0"
+        "revision" : "6675bc0ff86e61436e615df6fc5174e043e57924",
+        "version" : "1.4.1"
       }
     },
     {
@@ -232,24 +232,6 @@
       "state" : {
         "revision" : "576a65b4ffb8c12ddad4950dc21eea2ef071bec2",
         "version" : "1.3.0"
-      }
-    },
-    {
-      "identity" : "swift-package-manager-google-mobile-ads",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/googleads/swift-package-manager-google-mobile-ads",
-      "state" : {
-        "revision" : "e2b1c31cdf11cb4b57b4e70ae4c313d4e48c444a",
-        "version" : "13.3.0"
-      }
-    },
-    {
-      "identity" : "swift-package-manager-google-user-messaging-platform",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git",
-      "state" : {
-        "revision" : "13b248eaa73b7826f0efb1bcf455e251d65ecb1b",
-        "version" : "3.1.0"
       }
     },
     {

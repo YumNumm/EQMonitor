@@ -1,0 +1,9 @@
+{
+  "id" : "d823d145-6300-4f6a-8f9e-8cfc27ba075f",
+  "targets" : [
+    {
+      "id" : "4A8A345E-522B-4EDB-BB74-E565AFF6A788",
+      "name" : "eqmonitor"
+    }
+  ]
+}
