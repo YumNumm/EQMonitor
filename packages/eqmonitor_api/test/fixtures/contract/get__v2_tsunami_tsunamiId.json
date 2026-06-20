@@ -6,7 +6,8 @@
   "is_active": false,
   "is_canceled": false,
   "updated_at": "2025-12-15T12:10:00.000Z",
-  "earthquake": null,
+  "earthquakes": [],
+  "latest_telegrams": [],
   "forecast_regions": [],
   "offshore_observations": []
 }

@@ -6,27 +6,40 @@
   "is_active": true,
   "is_canceled": false,
   "updated_at": "2011-03-11T06:00:05.000Z",
-  "earthquake": {
-    "origin_time": "2011-03-11T05:46:18.000Z",
-    "hypocenter": {
-      "value": {
-        "code": "288",
-        "name": "三陸沖"
-      },
-      "coordinates": {
-        "latitude": 38.1,
-        "longitude": 142.9
-      },
-      "depth": {
-        "type": "NORMAL",
-        "value": 24
-      },
-      "magnitude": {
-        "type": "NORMAL",
-        "value": 9
+  "earthquakes": [
+    {
+      "origin_time": "2011-03-11T05:46:18.000Z",
+      "hypocenter": {
+        "value": {
+          "code": "288",
+          "name": "三陸沖"
+        },
+        "coordinates": {
+          "latitude": 38.1,
+          "longitude": 142.9
+        },
+        "depth": {
+          "type": "NORMAL",
+          "value": 24
+        },
+        "magnitude": {
+          "type": "NORMAL",
+          "value": 9
+        }
       }
     }
-  },
+  ],
+  "latest_telegrams": [
+    {
+      "type": "VTSE41",
+      "title": "大津波警報・津波警報・津波注意報",
+      "press_at": "2011-03-11T05:49:00.000Z",
+      "report_at": "2011-03-11T05:49:02.000Z",
+      "info_kind": "津波警報・注意報・予報a",
+      "serial_no": 1,
+      "headline": "大津波警報を発表しました"
+    }
+  ],
   "forecast_regions": [
     {
       "code": "201",
