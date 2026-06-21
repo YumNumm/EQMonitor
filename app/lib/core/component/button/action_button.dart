@@ -87,7 +87,6 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ripple effectは必要ないので`GesutreDetector`
     final enabledWidget = BorderedContainer(
       accentColor: accentColor ?? Colors.blue[800]!,
       onPressed: onPressed,

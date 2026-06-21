@@ -60,7 +60,7 @@ Future<void> main() async {
           fatal: true,
         );
       } on Object {
-        // 起動失敗時のフォールバック表示を優先する。
+        talker.error(error, stackTrace);
       }
     }());
     runApp(
@@ -232,10 +232,7 @@ Future<void> _main() async {
 
   container.read(eqMonitorWsStatusProvider);
   container.read(realtimeEventsProvider);
-  // リプレイ/タイムシフト中にライブイベントが来たら通常再生へ戻すウォッチャを常駐させる。
   container.read(autoReturnWatcherProvider);
-  // killed状態で永続化された位置情報の反映と、live位置更新の購読を開始する。
-  // backgroundLocationServiceProvider は keepAlive: true で常駐させる。
   container.listen(backgroundLocationServiceProvider, (_, _) {});
   unawaited(container.read(pushTokenSyncWiringProvider.future));
 

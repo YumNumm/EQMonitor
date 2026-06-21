@@ -51,23 +51,16 @@ class EarthquakeHistoryMapLayerModeResolver {
       showingLpgmIntensity: config.showingLpgmIntensity,
     );
     return switch (config.fillMode) {
-      EarthquakeHistoryFillMode.none => EarthquakeHistoryMapLayerMode.none,
-      EarthquakeHistoryFillMode.auto
-          when availability.region && availability.city =>
-        EarthquakeHistoryMapLayerMode.auto,
-      EarthquakeHistoryFillMode.auto when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
-      EarthquakeHistoryFillMode.auto when availability.city =>
-        EarthquakeHistoryMapLayerMode.city,
-      EarthquakeHistoryFillMode.auto => EarthquakeHistoryMapLayerMode.none,
-      EarthquakeHistoryFillMode.region when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
-      EarthquakeHistoryFillMode.region => EarthquakeHistoryMapLayerMode.none,
-      EarthquakeHistoryFillMode.city when availability.city =>
-        EarthquakeHistoryMapLayerMode.city,
-      EarthquakeHistoryFillMode.city when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
-      EarthquakeHistoryFillMode.city => EarthquakeHistoryMapLayerMode.none,
+      .none => .none,
+      .auto when availability.region && availability.city => .auto,
+      .auto when availability.region => .region,
+      .auto when availability.city => .city,
+      .auto => .none,
+      .region when availability.region => .region,
+      .region => .none,
+      .city when availability.city => .city,
+      .city when availability.region => .region,
+      .city => .none,
     };
   }
 
@@ -95,7 +88,7 @@ class EarthquakeHistoryMapLayerModeResolver {
     required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
     required double visibleOpacity,
   }) {
-    if (mode != EarthquakeHistoryMapLayerMode.auto) {
+    if (mode != .auto) {
       return visibleOpacity;
     }
     return [
@@ -112,7 +105,7 @@ class EarthquakeHistoryMapLayerModeResolver {
     required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
     required double visibleOpacity,
   }) {
-    if (mode != EarthquakeHistoryMapLayerMode.auto) {
+    if (mode != .auto) {
       return visibleOpacity;
     }
     return [
@@ -125,12 +118,10 @@ class EarthquakeHistoryMapLayerModeResolver {
   }
 
   bool showsRegionFill(EarthquakeHistoryMapLayerMode mode) =>
-      mode == EarthquakeHistoryMapLayerMode.auto ||
-      mode == EarthquakeHistoryMapLayerMode.region;
+      mode == .auto || mode == .region;
 
   bool showsCityFill(EarthquakeHistoryMapLayerMode mode) =>
-      mode == EarthquakeHistoryMapLayerMode.auto ||
-      mode == EarthquakeHistoryMapLayerMode.city;
+      mode == .auto || mode == .city;
 
   EarthquakeHistoryMapLayerAvailability resolveJmaAvailability(
     EarthquakeIntensity intensity,

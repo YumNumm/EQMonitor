@@ -69,8 +69,6 @@ class _MapContent extends HookConsumerWidget {
   final Earthquake earthquake;
 
   static const _stationLayerId = 'eq-history-station-intensity-circle';
-  // Fill layers are created per intensity level (e.g. 'eq-history-jma-one-region-fill'),
-  // so we detect taps by source layer ID instead of individual layer IDs.
   static const _regionSourceLayerId = 'areaForecastLocalE';
   static const _citySourceLayerId = 'areaInformationCityQuake';
 
@@ -420,7 +418,9 @@ class _MapControllerCard extends StatelessWidget {
       color: colorScheme.surfaceContainerHighest,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
-      shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: IntrinsicWidth(
         child: Column(
           mainAxisSize: MainAxisSize.min,

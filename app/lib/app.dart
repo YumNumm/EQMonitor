@@ -24,7 +24,6 @@ class App extends HookConsumerWidget {
 
     final app = DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
-        // Fictitious brand color.
         const brandBlue = Color(0xFF1E88E5);
 
         var lightCustomColors = const CustomColors(danger: Color(0xFFE53935));
@@ -34,23 +33,14 @@ class App extends HookConsumerWidget {
         ColorScheme darkColorScheme;
 
         if (lightDynamic != null && darkDynamic != null) {
-          // On Android S+ devices, use the provided dynamic color scheme.
-          // (Recommended) Harmonize the dynamic color scheme'
-          // built-in semantic colors.
           lightColorScheme = lightDynamic.harmonized();
-          // (Optional) Customize the scheme as desired. For example,
-          // one might want to use a brand color to override the dynamic
-          // [ColorScheme.secondary].
           lightColorScheme = lightColorScheme.copyWith(secondary: brandBlue);
-          // (Optional) If applicable, harmonize custom colors.
           lightCustomColors = lightCustomColors.harmonized(lightColorScheme);
 
-          // Repeat for the dark color scheme.
           darkColorScheme = darkDynamic.harmonized();
           darkColorScheme = darkColorScheme.copyWith(secondary: brandBlue);
           darkCustomColors = darkCustomColors.harmonized(darkColorScheme);
         } else {
-          // Otherwise, use fallback schemes.
           lightColorScheme = ColorScheme.fromSeed(seedColor: brandBlue);
           darkColorScheme = ColorScheme.fromSeed(
             seedColor: brandBlue,
@@ -82,11 +72,25 @@ class App extends HookConsumerWidget {
         );
       },
     );
-    final buildCfg = ref.read(buildConfigProvider);
-    Widget result = ForcedUpdateWrapper(child: app);
+    final buildConfig = ref.watch(buildConfigProvider);
+    Widget result = ForcedUpdateWrapper(
+      child: app,
+    );
 
-    if (buildCfg.isBetaTesting) {
-      final packageInfo = ref.watch(packageInfoProvider);
+    final packageInfo = ref.watch(packageInfoProvider);
+    final versionBanner = Banner(
+      message: 'v${packageInfo.version}+${packageInfo.buildNumber}',
+      location: BannerLocation.bottomEnd,
+      color: const Color(0xFFF4C75E),
+      textStyle: const TextStyle(
+        color: Color(0xFF0F141A),
+        fontSize: 8,
+        fontWeight: FontWeight.w600,
+      ),
+      child: result,
+    );
+
+    if (buildConfig.isBetaTesting) {
       result = Directionality(
         textDirection: TextDirection.ltr,
         child: Banner(
@@ -99,29 +103,19 @@ class App extends HookConsumerWidget {
             fontWeight: FontWeight.w700,
             letterSpacing: 0.5,
           ),
-          child: Banner(
-            message: 'v${packageInfo.version}+${packageInfo.buildNumber}',
-            location: BannerLocation.bottomEnd,
-            color: const Color(0xFFF4C75E),
-            textStyle: const TextStyle(
-              color: Color(0xFF0F141A),
-              fontSize: 8,
-              fontWeight: FontWeight.w600,
-            ),
-            child: result,
-          ),
+          child: versionBanner,
         ),
       );
     }
 
-    if (kDebugMode && !buildCfg.isBetaTesting) {
+    if (kDebugMode && !buildConfig.isBetaTesting) {
       final packageInfo = ref.watch(packageInfoProvider);
       result = Directionality(
         textDirection: TextDirection.ltr,
         child: Banner(
           message: 'v${packageInfo.version}-${packageInfo.buildNumber}',
           location: BannerLocation.bottomStart,
-          child: result,
+          child: versionBanner,
         ),
       );
     }
