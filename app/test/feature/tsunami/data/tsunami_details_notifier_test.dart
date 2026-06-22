@@ -24,10 +24,14 @@ void main() {
       final subscription = container.listen(provider, (_, _) {});
 
       async.flushMicrotasks();
+      async.elapse(Duration.zero);
+      async.flushMicrotasks();
 
       expect(container.read(provider).requireValue.id, 'tsunami-1');
 
       async.elapse(const Duration(seconds: 30));
+      async.flushMicrotasks();
+      async.elapse(Duration.zero);
       async.flushMicrotasks();
 
       final state = container.read(provider);

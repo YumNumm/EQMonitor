@@ -49,9 +49,6 @@ class TsunamiDetailsNotifier extends _$TsunamiDetailsNotifier {
       } finally {
         _isPollingRefreshInProgress = false;
       }
-      if (state case AsyncData(value: final tsunami) when !tsunami.isActive) {
-        _refreshTimer?.cancel();
-      }
     });
   }
 }
