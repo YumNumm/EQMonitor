@@ -50,7 +50,7 @@ class TsunamiEarthquakeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hypo.value.name,
+                  hypo.name,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,

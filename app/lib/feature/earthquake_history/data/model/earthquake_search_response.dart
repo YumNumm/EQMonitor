@@ -63,7 +63,7 @@ extension IntensityRegionSearchResponseToApp
     items: items
         .map(
           (e) => IntensityAreaSearchItem(
-            eventId: e.eventId,
+            eventId: e.earthquake.eventId,
             area: IntensityAreaInfo(
               code: areaCode,
               name: areaName,
@@ -88,7 +88,7 @@ extension IntensityPrefectureSearchResponseToApp
     items: items
         .map(
           (e) => IntensityAreaSearchItem(
-            eventId: e.eventId,
+            eventId: e.earthquake.eventId,
             area: IntensityAreaInfo(
               code: areaCode,
               name: areaName,
@@ -112,7 +112,7 @@ extension IntensityCitySearchResponseToApp on api.IntensityCitySearchResponse {
     items: items
         .map(
           (e) => IntensityAreaSearchItem(
-            eventId: e.eventId,
+            eventId: e.earthquake.eventId,
             area: IntensityAreaInfo(
               code: areaCode,
               name: areaName,
@@ -137,7 +137,7 @@ extension IntensityStationSearchResponseToApp
     items: items
         .map(
           (e) => StationSearchItem(
-            eventId: e.eventId,
+            eventId: e.earthquake.eventId,
             station: StationSearchInfo(
               code: stationCode,
               name: stationName,

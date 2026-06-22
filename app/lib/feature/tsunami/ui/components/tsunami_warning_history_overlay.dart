@@ -65,7 +65,7 @@ class _HistoryOverlay extends StatelessWidget {
     final color = designSystem.color;
 
     final entries = _buildTimelineEntries(tsunami);
-    final maxKind = TsunamiWarningColor.resolveMaxKind(tsunami.forecastRegions);
+    final maxKind = TsunamiWarningColor.resolveMaxKind(tsunami.regions);
     final title = tsunami.isCanceled
         ? '${TsunamiWarningColor.displayName(maxKind)} 解除済み'
         : '${TsunamiWarningColor.displayName(maxKind)} が発表中';
@@ -124,7 +124,7 @@ class _HistoryOverlay extends StatelessWidget {
         tsunami.latestTelegrams
             .where((t) => t.type == TelegramType.vtse41)
             .toList()
-          ..sort((a, b) => a.pressAt.compareTo(b.pressAt));
+          ..sort((a, b) => a.pressedAt.compareTo(b.pressedAt));
 
     if (vtse41Telegrams.isEmpty) {
       return [];
@@ -133,7 +133,7 @@ class _HistoryOverlay extends StatelessWidget {
     final entries = <_WarningTimelineEntry>[];
 
     for (final telegram in vtse41Telegrams) {
-      final pressAt = telegram.pressAt;
+      final pressAt = telegram.pressedAt;
       final description = telegram.headline ?? telegram.title;
 
       entries.add(

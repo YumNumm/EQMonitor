@@ -615,14 +615,12 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
 
     final features = <Map<String, dynamic>>[];
 
-    // forecastRegions 内の observation stations
+    // regions 内の observation stations
     for (final region in tsunami.regions) {
-      final observation = region.observation;
-      if (observation == null) {
-        continue;
-      }
-
-      for (final station in observation.stations) {
+      for (final station in region.stations) {
+        if (station.observation == null) {
+          continue;
+        }
         final location = stationLocations[station.code];
         if (location == null) {
           continue;
@@ -644,9 +642,9 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
       }
     }
 
-    // offshoreObservations（沖合観測点）
-    for (final obs in tsunami.offshoreObservations) {
-      final location = stationLocations[obs.stationCode];
+    // offshoreStations（沖合観測点）
+    for (final obs in tsunami.offshoreStations) {
+      final location = stationLocations[obs.code];
       if (location == null) {
         continue;
       }
@@ -659,9 +657,9 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
           'coordinates': [location.lon, location.lat],
         },
         'properties': {
-          'name': obs.stationName,
+          'name': obs.name,
           'color': color,
-          'code': obs.stationCode,
+          'code': obs.code,
         },
       });
     }
@@ -678,8 +676,8 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
   /// - OBSERVING or isRising → オレンジ
   /// - MINOR or < 1.0m → 黄
   /// - データなし → グレー
-  String _stationColor(TsunamiObservationStation station) {
-    final maxHeight = station.maxHeight;
+  String _stationColor(TsunamiRegionStation station) {
+    final maxHeight = station.observation?.maxHeight;
     if (maxHeight == null) {
       return '#9E9E9E'; // grey
     }
@@ -690,7 +688,7 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
     }
 
     if (maxHeight.condition == ObservationMaxHeightCondition.observing ||
-        (maxHeight.isRising ?? false)) {
+        ((maxHeight.isRising as bool?) ?? false)) {
       return '#FF9800'; // orange
     }
 
@@ -703,7 +701,7 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
   }
 
   /// 沖合観測点の色を同様のロジックで決定する。
-  String _offshoreStationColor(MergedOffshoreObservation obs) {
+  String _offshoreStationColor(TsunamiOffshoreStation obs) {
     final maxHeight = obs.maxHeight;
     if (maxHeight == null) {
       return '#9E9E9E'; // grey
@@ -715,7 +713,7 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
     }
 
     if (maxHeight.condition == ObservationMaxHeightCondition.observing ||
-        (maxHeight.isRising ?? false)) {
+        ((maxHeight.isRising as bool?) ?? false)) {
       return '#FF9800'; // orange
     }
 

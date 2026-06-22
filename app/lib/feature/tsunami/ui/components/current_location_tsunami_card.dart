@@ -53,11 +53,11 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final region = tsunami.regions.firstWhere(
-      (r) => r.code == regionCode,
+    final region = tsunami.regions.cast<TsunamiRegion?>().firstWhere(
+      (r) => r?.code == regionCode,
       orElse: () => null,
     );
-    if (region.kind == .) {
+    if (region == null || region.kind == TsunamiWarningKind.none) {
       return const SizedBox.shrink();
     }
 
@@ -67,11 +67,13 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
     final headerBg = TsunamiWarningColor.headerColor(region.kind);
     final distanceKm = nearest.distanceToCoastlineKm;
 
-    final observedStations =
-        region.observation?.stations
-            .where((s) => !(s.firstHeight.isMissing ?? false))
-            .toList() ??
-        [];
+    final observedStations = region.stations
+        .where(
+          (s) =>
+              s.observation != null &&
+              !((s.observation!.firstHeight.isMissing as bool?) ?? false),
+        )
+        .toList();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
