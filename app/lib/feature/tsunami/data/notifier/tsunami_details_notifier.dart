@@ -9,6 +9,7 @@ part 'tsunami_details_notifier.g.dart';
 @riverpod
 class TsunamiDetailsNotifier extends _$TsunamiDetailsNotifier {
   Timer? _refreshTimer;
+  bool _isPollingRefreshInProgress = false;
 
   @override
   Future<TsunamiState> build(String tsunamiId) async {
@@ -30,14 +31,27 @@ class TsunamiDetailsNotifier extends _$TsunamiDetailsNotifier {
 
   void _startPolling() {
     _refreshTimer?.cancel();
-    _refreshTimer = Timer.periodic(
-      const Duration(seconds: 30),
-      (_) async {
-        state = await AsyncValue.guard(() => _fetch());
-        if (state case AsyncData(value: final tsunami) when !tsunami.isActive) {
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
+      if (_isPollingRefreshInProgress) {
+        return;
+      }
+      _isPollingRefreshInProgress = true;
+      try {
+        final tsunami = await _fetch();
+        state = AsyncValue.data(tsunami);
+        if (!tsunami.isActive) {
           _refreshTimer?.cancel();
         }
-      },
-    );
+      } on Exception catch (error, stackTrace) {
+        if (!state.hasValue) {
+          state = AsyncValue.error(error, stackTrace);
+        }
+      } finally {
+        _isPollingRefreshInProgress = false;
+      }
+      if (state case AsyncData(value: final tsunami) when !tsunami.isActive) {
+        _refreshTimer?.cancel();
+      }
+    });
   }
 }
