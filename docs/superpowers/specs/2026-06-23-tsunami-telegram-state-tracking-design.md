@@ -63,23 +63,37 @@
 
 ```dart
 /// {value: T, telegramId}[] を表す追跡履歴。
-typedef Tracked<T> = List<TrackedPoint<T>>;
+typedef Tracked<T> = List<TrackedValue<T>>;
 
 @freezed
-abstract class TrackedPoint<T> with _$TrackedPoint<T> {
-  const factory TrackedPoint({
+abstract class TrackedValue<T> with _$TrackedValue<T> {
+  const factory TrackedValue({
     required T value,
     required String telegramId,
-  }) = _TrackedPoint<T>;
+  }) = _TrackedValue<T>;
 }
 ```
 
 - **変化点のみ**を保持する（電文を時系列順に走査し、`value` が直前と等しい場合は追加しない）。
   等価判定は freezed のドメイン型の値等価による。
-- 追跡粒度 `T` は **concern 単位**（オブジェクト単位）。
+- 追跡粒度 `T` は **追跡項目単位**（kind / first_height / max_height / observation などの
+  論理的な項目をオブジェクト単位で扱う）。
   例: `Tracked<TsunamiForecastFirstHeight?>` は `arrival_time / condition / revise` を
   まとめて 1 つの値として扱い、いずれかが変われば変化点になる。
   scalar 単位の独立追跡は採らない（公開表示型と一致しシンプルなため）。
+
+#### entity 階層リストは追跡しない（重要）
+
+`regions[]` / `stations[]` という階層リスト自体は時系列追跡しない。**全電文の和集合を
+`code` でキーにした安定した入れ物**として扱い、時系列追跡するのは各 entity 配下の
+**追跡項目（leaf）だけ**。したがって `List<TrackedRegionStation>` の中に
+`Tracked<...>` がぶら下がる入れ子構造になるが、責務は一貫している
+（追跡しないリスト × 追跡する leaf）。中間表現は `fromJson` 不要のため、
+ジェネリクス × json_serializable の問題も生じない。
+
+**entity の出現/消失はメンバーシップとして追跡しない。** ある電文に登場しない
+entity は、その電文において各追跡項目を **null 扱い**とする（タイムラインでは
+「データなし」セル）。「いつ登場したか」を明示する presence 追跡は行わない。
 
 #### 追跡対象 entity（中間表現、API 型を持たない）
 
@@ -111,7 +125,7 @@ abstract class TrackedPoint<T> with _$TrackedPoint<T> {
 （変化を追わない）。entity が途中で出現/消失する場合は、出現する電文以降のみ
 変化点を持つ（消失は「直前と異なる null/欠落」として扱うかは実装時に確定）。
 
-#### concern ドメイン型（API からの変換、`feature/tsunami/data/model/`）
+#### 追跡項目のドメイン型（API からの変換、`feature/tsunami/data/model/`）
 
 API のサブオブジェクトをミラーした freezed 型。各々 `toDomain()` 変換 extension を持つ。
 
@@ -158,14 +172,14 @@ abstract class TsunamiTelegramMeta with _$TsunamiTelegramMeta {
 
 #### (B) 公開表示型 — Notifier が UI へ渡す型
 
-中間表現を、concern のフィールド＋電文メタをフラット化した「タイムライン行」へ変換する。
+中間表現を、追跡項目のフィールド＋電文メタをフラット化した「タイムライン行」へ変換する。
 UI（横スクロール）はこの行リストを電文（＝列）順に並べる。
 
 ```dart
 @freezed
 abstract class FirstHeightTimelineEntry with _$FirstHeightTimelineEntry {
   const factory FirstHeightTimelineEntry({
-    // concern fields
+    // 追跡項目のフィールド
     DateTime? arrivalTime,
     FirstHeightCondition? condition,
     Revise? revise,
@@ -179,15 +193,15 @@ abstract class FirstHeightTimelineEntry with _$FirstHeightTimelineEntry {
 }
 ```
 
-- concern ごとに対応する `*TimelineEntry` 型と `typedef *Timeline = List<*TimelineEntry>` を定義。
+- 追跡項目ごとに対応する `*TimelineEntry` 型と `typedef *Timeline = List<*TimelineEntry>` を定義。
 - 各 entry は「その変化点の電文」のメタを含み、UI で列ヘッダ（発表時刻・タイトル等）に使う。
 
 ### データフロー
 
 1. Notifier が `client.tsunami.getV2TsunamiTsunamiIdTelegrams(tsunamiId)` を呼ぶ。
 2. `telegrams` を `publishedAt`（press_at）昇順にソート（同時刻は `serialNo` で安定化）。
-3. 各電文の `state` を走査し、entity（code をキー）ごとに concern 値を `toDomain()` 変換、
-   直前の変化点と値が異なる場合のみ `TrackedPoint` を追加 → 中間表現を構築。
+3. 各電文の `state` を走査し、entity（code をキー）ごとに追跡項目の値を `toDomain()` 変換、
+   直前の変化点と値が異なる場合のみ `TrackedValue` を追加 → 中間表現を構築。
 4. 中間表現を公開表示型（`*Timeline`）へ変換して返す。
 5. UI は公開型のみを参照して横スクロールタイムラインを描画。
 
@@ -201,9 +215,9 @@ abstract class FirstHeightTimelineEntry with _$FirstHeightTimelineEntry {
 ### debug タイムライン UI
 
 - 配置: `feature/settings/children/config/debug/tsunami/`。
-- entity（予報区・予報区内観測点・沖合観測点）を縦に並べ、各 concern を
+- entity（予報区・予報区内観測点・沖合観測点）を縦に並べ、各追跡項目を
   **`Row` ＋横方向 `SingleChildScrollView`** で電文（列）順に表示。
-- 列ヘッダに電文メタ（発表時刻 / タイトル / serialNo 等）、各セルに concern 値を表示。
+- 列ヘッダに電文メタ（発表時刻 / タイトル / serialNo 等）、各セルに追跡項目の値を表示。
 - API 型は import せず、公開ドメイン型のみ参照する。
 
 ---
@@ -233,7 +247,7 @@ abstract class FirstHeightTimelineEntry with _$FirstHeightTimelineEntry {
 ## エラーハンドリング
 
 - API 失敗は `AsyncValue` のエラーとして UI（debug 画面）の ErrorCard 相当で表示。
-- entity が一部電文に存在しない場合でも null 安全に処理（変化点が空の concern は
+- entity が一部電文に存在しない場合でも null 安全に処理（変化点が空の追跡項目は
   タイムラインで「データなし」を表示）。
 - 一意 ID が（再生成前で）取得できない段階では、Notifier は明示的に未対応エラーを返すか、
   該当フィールドが API に現れるまで実装をブロックする（合成 ID は使わない）。
@@ -251,8 +265,8 @@ abstract class FirstHeightTimelineEntry with _$FirstHeightTimelineEntry {
 ## 段階的な実装順序（概略）
 
 1. lint ルール `avoid_eqmonitor_api_in_ui` 追加 ＋ 既存違反へ `ignore_for_file` 付与。
-2. concern ドメイン型 ＋ `toDomain()` 変換 extension（値のみ enum ミラー含む）。
-3. 中間表現（`Tracked<T>` / `TrackedPoint` / `Tracked*` entity）＋変換ロジック。
+2. 追跡項目のドメイン型 ＋ `toDomain()` 変換 extension（値のみ enum ミラー含む）。
+3. 中間表現（`Tracked<T>` / `TrackedValue` / `Tracked*` entity）＋変換ロジック。
 4. 公開表示型 ＋ Notifier。
 5. 変換ロジック・lint ルールの unit テスト。
 6. debug 横スクロールタイムライン UI。
@@ -262,5 +276,5 @@ abstract class FirstHeightTimelineEntry with _$FirstHeightTimelineEntry {
 
 - 電文一意 ID の正確なフィールド名・場所（`TsunamiTelegramWithState.id` か
   `telegram.id` か）は、別 Agent のバックエンド対応＋スキーマ再生成の結果に従う。
-- entity の「消失」をタイムライン上どう表現するか（空セル / 明示的 cancel 値）は
-  実装時に fixture を見て確定。
+
+（entity の出現/消失の扱いは「追跡項目を null として表現／メンバーシップは追跡しない」で確定。）
