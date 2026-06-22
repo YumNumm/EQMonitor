@@ -63,16 +63,16 @@ final class _TsunamiDetailsAdapter implements HttpClientAdapter {
     }
 
     return ResponseBody.fromString(
-      jsonEncode({
+      jsonEncode(<String, dynamic>{
         'id': 'tsunami-1',
         'event_ids': ['event-1'],
         'is_active': true,
         'is_canceled': false,
         'updated_at': '2026-06-22T00:00:00Z',
-        'earthquakes': [],
-        'latest_telegrams': [],
-        'forecast_regions': [],
-        'offshore_observations': [],
+        'earthquakes': <Map<String, dynamic>>[],
+        'latest_telegrams': <Map<String, dynamic>>[],
+        'forecast_regions': <Map<String, dynamic>>[],
+        'offshore_observations': <Map<String, dynamic>>[],
       }),
       200,
       headers: {

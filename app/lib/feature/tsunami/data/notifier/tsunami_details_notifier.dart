@@ -9,7 +9,7 @@ part 'tsunami_details_notifier.g.dart';
 @riverpod
 class TsunamiDetailsNotifier extends _$TsunamiDetailsNotifier {
   Timer? _refreshTimer;
-  bool _isPollingRefreshInProgress = false;
+  var _isPollingRefreshInProgress = false;
 
   @override
   Future<TsunamiState> build(String tsunamiId) async {
