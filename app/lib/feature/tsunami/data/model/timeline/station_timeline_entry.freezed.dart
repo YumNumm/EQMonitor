@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 mixin _$StationForecastTimelineEntry {
 
 // 追跡項目のフィールド
- DateTime get highTideAt; DateTime? get firstHeightArrivalTime; FirstHeightCondition? get firstHeightCondition; Revise? get firstHeightRevise;// 電文メタ
+ DateTime? get highTideAt; DateTime? get firstHeightArrivalTime; FirstHeightCondition? get firstHeightCondition; Revise? get firstHeightRevise;// 電文メタ
  String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
 /// Create a copy of StationForecastTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -47,7 +47,7 @@ abstract mixin class $StationForecastTimelineEntryCopyWith<$Res>  {
   factory $StationForecastTimelineEntryCopyWith(StationForecastTimelineEntry value, $Res Function(StationForecastTimelineEntry) _then) = _$StationForecastTimelineEntryCopyWithImpl;
 @useResult
 $Res call({
- DateTime highTideAt, DateTime? firstHeightArrivalTime, FirstHeightCondition? firstHeightCondition, Revise? firstHeightRevise, String telegramId, String? headline, String title, DateTime publishedAt, DateTime? revokedAt
+ DateTime? highTideAt, DateTime? firstHeightArrivalTime, FirstHeightCondition? firstHeightCondition, Revise? firstHeightRevise, String telegramId, String? headline, String title, DateTime publishedAt, DateTime? revokedAt
 });
 
 
@@ -64,10 +64,10 @@ class _$StationForecastTimelineEntryCopyWithImpl<$Res>
 
 /// Create a copy of StationForecastTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? highTideAt = null,Object? firstHeightArrivalTime = freezed,Object? firstHeightCondition = freezed,Object? firstHeightRevise = freezed,Object? telegramId = null,Object? headline = freezed,Object? title = null,Object? publishedAt = null,Object? revokedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? highTideAt = freezed,Object? firstHeightArrivalTime = freezed,Object? firstHeightCondition = freezed,Object? firstHeightRevise = freezed,Object? telegramId = null,Object? headline = freezed,Object? title = null,Object? publishedAt = null,Object? revokedAt = freezed,}) {
   return _then(_self.copyWith(
-highTideAt: null == highTideAt ? _self.highTideAt : highTideAt // ignore: cast_nullable_to_non_nullable
-as DateTime,firstHeightArrivalTime: freezed == firstHeightArrivalTime ? _self.firstHeightArrivalTime : firstHeightArrivalTime // ignore: cast_nullable_to_non_nullable
+highTideAt: freezed == highTideAt ? _self.highTideAt : highTideAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,firstHeightArrivalTime: freezed == firstHeightArrivalTime ? _self.firstHeightArrivalTime : firstHeightArrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,firstHeightCondition: freezed == firstHeightCondition ? _self.firstHeightCondition : firstHeightCondition // ignore: cast_nullable_to_non_nullable
 as FirstHeightCondition?,firstHeightRevise: freezed == firstHeightRevise ? _self.firstHeightRevise : firstHeightRevise // ignore: cast_nullable_to_non_nullable
 as Revise?,telegramId: null == telegramId ? _self.telegramId : telegramId // ignore: cast_nullable_to_non_nullable
@@ -160,7 +160,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime highTideAt,  DateTime? firstHeightArrivalTime,  FirstHeightCondition? firstHeightCondition,  Revise? firstHeightRevise,  String telegramId,  String? headline,  String title,  DateTime publishedAt,  DateTime? revokedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime? highTideAt,  DateTime? firstHeightArrivalTime,  FirstHeightCondition? firstHeightCondition,  Revise? firstHeightRevise,  String telegramId,  String? headline,  String title,  DateTime publishedAt,  DateTime? revokedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StationForecastTimelineEntry() when $default != null:
 return $default(_that.highTideAt,_that.firstHeightArrivalTime,_that.firstHeightCondition,_that.firstHeightRevise,_that.telegramId,_that.headline,_that.title,_that.publishedAt,_that.revokedAt);case _:
@@ -181,7 +181,7 @@ return $default(_that.highTideAt,_that.firstHeightArrivalTime,_that.firstHeightC
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime highTideAt,  DateTime? firstHeightArrivalTime,  FirstHeightCondition? firstHeightCondition,  Revise? firstHeightRevise,  String telegramId,  String? headline,  String title,  DateTime publishedAt,  DateTime? revokedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime? highTideAt,  DateTime? firstHeightArrivalTime,  FirstHeightCondition? firstHeightCondition,  Revise? firstHeightRevise,  String telegramId,  String? headline,  String title,  DateTime publishedAt,  DateTime? revokedAt)  $default,) {final _that = this;
 switch (_that) {
 case _StationForecastTimelineEntry():
 return $default(_that.highTideAt,_that.firstHeightArrivalTime,_that.firstHeightCondition,_that.firstHeightRevise,_that.telegramId,_that.headline,_that.title,_that.publishedAt,_that.revokedAt);case _:
@@ -201,7 +201,7 @@ return $default(_that.highTideAt,_that.firstHeightArrivalTime,_that.firstHeightC
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime highTideAt,  DateTime? firstHeightArrivalTime,  FirstHeightCondition? firstHeightCondition,  Revise? firstHeightRevise,  String telegramId,  String? headline,  String title,  DateTime publishedAt,  DateTime? revokedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime? highTideAt,  DateTime? firstHeightArrivalTime,  FirstHeightCondition? firstHeightCondition,  Revise? firstHeightRevise,  String telegramId,  String? headline,  String title,  DateTime publishedAt,  DateTime? revokedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _StationForecastTimelineEntry() when $default != null:
 return $default(_that.highTideAt,_that.firstHeightArrivalTime,_that.firstHeightCondition,_that.firstHeightRevise,_that.telegramId,_that.headline,_that.title,_that.publishedAt,_that.revokedAt);case _:
@@ -220,7 +220,7 @@ class _StationForecastTimelineEntry implements StationForecastTimelineEntry {
   
 
 // 追跡項目のフィールド
-@override final  DateTime highTideAt;
+@override final  DateTime? highTideAt;
 @override final  DateTime? firstHeightArrivalTime;
 @override final  FirstHeightCondition? firstHeightCondition;
 @override final  Revise? firstHeightRevise;
@@ -261,7 +261,7 @@ abstract mixin class _$StationForecastTimelineEntryCopyWith<$Res> implements $St
   factory _$StationForecastTimelineEntryCopyWith(_StationForecastTimelineEntry value, $Res Function(_StationForecastTimelineEntry) _then) = __$StationForecastTimelineEntryCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime highTideAt, DateTime? firstHeightArrivalTime, FirstHeightCondition? firstHeightCondition, Revise? firstHeightRevise, String telegramId, String? headline, String title, DateTime publishedAt, DateTime? revokedAt
+ DateTime? highTideAt, DateTime? firstHeightArrivalTime, FirstHeightCondition? firstHeightCondition, Revise? firstHeightRevise, String telegramId, String? headline, String title, DateTime publishedAt, DateTime? revokedAt
 });
 
 
@@ -278,10 +278,10 @@ class __$StationForecastTimelineEntryCopyWithImpl<$Res>
 
 /// Create a copy of StationForecastTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? highTideAt = null,Object? firstHeightArrivalTime = freezed,Object? firstHeightCondition = freezed,Object? firstHeightRevise = freezed,Object? telegramId = null,Object? headline = freezed,Object? title = null,Object? publishedAt = null,Object? revokedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? highTideAt = freezed,Object? firstHeightArrivalTime = freezed,Object? firstHeightCondition = freezed,Object? firstHeightRevise = freezed,Object? telegramId = null,Object? headline = freezed,Object? title = null,Object? publishedAt = null,Object? revokedAt = freezed,}) {
   return _then(_StationForecastTimelineEntry(
-highTideAt: null == highTideAt ? _self.highTideAt : highTideAt // ignore: cast_nullable_to_non_nullable
-as DateTime,firstHeightArrivalTime: freezed == firstHeightArrivalTime ? _self.firstHeightArrivalTime : firstHeightArrivalTime // ignore: cast_nullable_to_non_nullable
+highTideAt: freezed == highTideAt ? _self.highTideAt : highTideAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,firstHeightArrivalTime: freezed == firstHeightArrivalTime ? _self.firstHeightArrivalTime : firstHeightArrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,firstHeightCondition: freezed == firstHeightCondition ? _self.firstHeightCondition : firstHeightCondition // ignore: cast_nullable_to_non_nullable
 as FirstHeightCondition?,firstHeightRevise: freezed == firstHeightRevise ? _self.firstHeightRevise : firstHeightRevise // ignore: cast_nullable_to_non_nullable
 as Revise?,telegramId: null == telegramId ? _self.telegramId : telegramId // ignore: cast_nullable_to_non_nullable

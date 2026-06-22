@@ -15,7 +15,7 @@ abstract class StationForecastTimelineEntry
     with _$StationForecastTimelineEntry {
   const factory StationForecastTimelineEntry({
     // 追跡項目のフィールド
-    required DateTime highTideAt,
+    required DateTime? highTideAt,
     required DateTime? firstHeightArrivalTime,
     required FirstHeightCondition? firstHeightCondition,
     required Revise? firstHeightRevise,

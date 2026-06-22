@@ -5,10 +5,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'observation_timeline_entry.freezed.dart';
 
-typedef ObservationFirstHeightTimeline
-    = List<ObservationFirstHeightTimelineEntry>;
-typedef ObservationMaxHeightTimeline
-    = List<ObservationMaxHeightTimelineEntry>;
+typedef ObservationFirstHeightTimeline =
+    List<ObservationFirstHeightTimelineEntry>;
+typedef ObservationMaxHeightTimeline = List<ObservationMaxHeightTimelineEntry>;
 
 /// 観測到達第1波（地域/沖合局）のタイムライン行。
 @freezed

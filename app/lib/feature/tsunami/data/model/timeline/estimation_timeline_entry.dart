@@ -4,7 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'estimation_timeline_entry.freezed.dart';
 
-typedef EstimationFirstHeightTimeline = List<EstimationFirstHeightTimelineEntry>;
+typedef EstimationFirstHeightTimeline =
+    List<EstimationFirstHeightTimelineEntry>;
 typedef EstimationMaxHeightTimeline = List<EstimationMaxHeightTimelineEntry>;
 
 /// 推定到達第1波のタイムライン行。
