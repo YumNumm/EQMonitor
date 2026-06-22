@@ -14,10 +14,8 @@ _EewIntensityItem _$EewIntensityItemFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _EewIntensityItem(
-          value: $checkedConvert(
-            'value',
-            (v) => CodeName.fromJson(v as Map<String, dynamic>),
-          ),
+          code: $checkedConvert('code', (v) => v as String),
+          name: $checkedConvert('name', (v) => v as String),
           isPlum: $checkedConvert('is_plum', (v) => v as bool),
           isWarning: $checkedConvert('is_warning', (v) => v as bool),
           intensity: $checkedConvert(
@@ -49,7 +47,8 @@ _EewIntensityItem _$EewIntensityItemFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$EewIntensityItemToJson(_EewIntensityItem instance) =>
     <String, dynamic>{
-      'value': instance.value,
+      'code': instance.code,
+      'name': instance.name,
       'is_plum': instance.isPlum,
       'is_warning': instance.isWarning,
       'intensity': instance.intensity,

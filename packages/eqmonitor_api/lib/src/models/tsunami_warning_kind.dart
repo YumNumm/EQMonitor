@@ -4,31 +4,12 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-@JsonEnum()
-enum TsunamiWarningKind {
-  @JsonValue('MAJOR_WARNING')
-  majorWarning('MAJOR_WARNING'),
-  @JsonValue('WARNING')
-  warning('WARNING'),
-  @JsonValue('ADVISORY')
-  advisory('ADVISORY'),
-  @JsonValue('FORECAST')
-  forecast('FORECAST'),
-  @JsonValue('NONE')
-  none('NONE');
+part 'tsunami_warning_kind.freezed.dart';
+part 'tsunami_warning_kind.g.dart';
 
-  const TsunamiWarningKind(this.json);
-
-  final String? json;
-  String toJson() {
-    final value = json;
-    if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
-    }
-    return value as String;
-  }
-
-  @override
-  String toString() => json?.toString() ?? super.toString();
+@Freezed()
+abstract class TsunamiWarningKind with _$TsunamiWarningKind {
+  const factory TsunamiWarningKind() = _TsunamiWarningKind;
+  
+  factory TsunamiWarningKind.fromJson(Map<String, Object?> json) => _$TsunamiWarningKindFromJson(json);
 }

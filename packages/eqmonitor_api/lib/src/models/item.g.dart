@@ -26,10 +26,12 @@ _Item _$ItemFromJson(Map<String, dynamic> json) => $checkedCreate(
       failedFcm: $checkedConvert('failedFcm', (v) => v as num),
       successApns: $checkedConvert('successApns', (v) => v as num),
       failedApns: $checkedConvert('failedApns', (v) => v as num),
-      createdAt: $checkedConvert('createdAt', (v) => v as String),
-      updatedAt: $checkedConvert('updatedAt', (v) => v as String),
       headline: $checkedConvert('headline', (v) => v as String?),
       resolverDelayMs: $checkedConvert('resolverDelayMs', (v) => v as num?),
+      proxyReceivedAt: $checkedConvert('proxyReceivedAt', (v) => v as String?),
+      resolverDoneAt: $checkedConvert('resolverDoneAt', (v) => v as String?),
+      sendStartedAt: $checkedConvert('sendStartedAt', (v) => v as String?),
+      sendCompletedAt: $checkedConvert('sendCompletedAt', (v) => v as String?),
     );
     return val;
   },
@@ -49,8 +51,10 @@ Map<String, dynamic> _$ItemToJson(_Item instance) => <String, dynamic>{
   'failedFcm': instance.failedFcm,
   'successApns': instance.successApns,
   'failedApns': instance.failedApns,
-  'createdAt': instance.createdAt,
-  'updatedAt': instance.updatedAt,
   'headline': ?instance.headline,
   'resolverDelayMs': ?instance.resolverDelayMs,
+  'proxyReceivedAt': ?instance.proxyReceivedAt,
+  'resolverDoneAt': ?instance.resolverDoneAt,
+  'sendStartedAt': ?instance.sendStartedAt,
+  'sendCompletedAt': ?instance.sendCompletedAt,
 };

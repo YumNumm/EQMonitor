@@ -11,10 +11,8 @@ part of 'eew_warning_zone_item.dart';
 _EewWarningZoneItem _$EewWarningZoneItemFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_EewWarningZoneItem', json, ($checkedConvert) {
       final val = _EewWarningZoneItem(
-        value: $checkedConvert(
-          'value',
-          (v) => CodeName.fromJson(v as Map<String, dynamic>),
-        ),
+        code: $checkedConvert('code', (v) => v as String),
+        name: $checkedConvert('name', (v) => v as String),
         hadWarning: $checkedConvert('had_warning', (v) => v as bool),
       );
       return val;
@@ -22,6 +20,7 @@ _EewWarningZoneItem _$EewWarningZoneItemFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$EewWarningZoneItemToJson(_EewWarningZoneItem instance) =>
     <String, dynamic>{
-      'value': instance.value,
+      'code': instance.code,
+      'name': instance.name,
       'had_warning': instance.hadWarning,
     };

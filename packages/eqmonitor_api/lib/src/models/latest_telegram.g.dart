@@ -8,55 +8,50 @@ part of 'latest_telegram.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_LatestTelegram _$LatestTelegramFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      '_LatestTelegram',
-      json,
-      ($checkedConvert) {
-        final val = _LatestTelegram(
-          type: $checkedConvert(
-            'type',
-            (v) => $enumDecode(_$TelegramTypeEnumMap, v),
-          ),
-          title: $checkedConvert('title', (v) => v as String),
-          pressAt: $checkedConvert(
-            'press_at',
-            (v) => DateTime.parse(v as String),
-          ),
-          reportAt: $checkedConvert(
-            'report_at',
-            (v) => DateTime.parse(v as String),
-          ),
-          infoKind: $checkedConvert('info_kind', (v) => v as String),
-          serialNo: $checkedConvert('serial_no', (v) => v as num?),
-          targetAt: $checkedConvert(
-            'target_at',
-            (v) => v == null ? null : DateTime.parse(v as String),
-          ),
-          revokeAt: $checkedConvert(
-            'revoke_at',
-            (v) => v == null ? null : DateTime.parse(v as String),
-          ),
-          headline: $checkedConvert('headline', (v) => v as String?),
-          comments: $checkedConvert(
-            'comments',
-            (v) => v == null
-                ? null
-                : TsunamiComments.fromJson(v as Map<String, dynamic>),
-          ),
-          text: $checkedConvert('text', (v) => v as String?),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'pressAt': 'press_at',
-        'reportAt': 'report_at',
-        'infoKind': 'info_kind',
-        'serialNo': 'serial_no',
-        'targetAt': 'target_at',
-        'revokeAt': 'revoke_at',
-      },
+_LatestTelegram _$LatestTelegramFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_LatestTelegram',
+  json,
+  ($checkedConvert) {
+    final val = _LatestTelegram(
+      type: $checkedConvert(
+        'type',
+        (v) => $enumDecode(_$TelegramTypeEnumMap, v),
+      ),
+      title: $checkedConvert('title', (v) => v as String),
+      pressAt: $checkedConvert('press_at', (v) => DateTime.parse(v as String)),
+      reportAt: $checkedConvert(
+        'report_at',
+        (v) => DateTime.parse(v as String),
+      ),
+      infoKind: $checkedConvert('info_kind', (v) => v as String),
+      serialNo: $checkedConvert('serial_no', (v) => v as num?),
+      targetAt: $checkedConvert(
+        'target_at',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      revokeAt: $checkedConvert(
+        'revoke_at',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      headline: $checkedConvert('headline', (v) => v as String?),
+      comments: $checkedConvert(
+        'comments',
+        (v) => v == null ? null : Comments3.fromJson(v as Map<String, dynamic>),
+      ),
     );
+    return val;
+  },
+  fieldKeyMap: const {
+    'pressAt': 'press_at',
+    'reportAt': 'report_at',
+    'infoKind': 'info_kind',
+    'serialNo': 'serial_no',
+    'targetAt': 'target_at',
+    'revokeAt': 'revoke_at',
+  },
+);
 
 Map<String, dynamic> _$LatestTelegramToJson(_LatestTelegram instance) =>
     <String, dynamic>{
@@ -70,7 +65,6 @@ Map<String, dynamic> _$LatestTelegramToJson(_LatestTelegram instance) =>
       'revoke_at': ?instance.revokeAt?.toIso8601String(),
       'headline': ?instance.headline,
       'comments': ?instance.comments,
-      'text': ?instance.text,
     };
 
 const _$TelegramTypeEnumMap = {

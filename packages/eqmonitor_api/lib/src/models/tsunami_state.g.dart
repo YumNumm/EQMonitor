@@ -40,20 +40,17 @@ _TsunamiState _$TsunamiStateFromJson(
             .map((e) => LatestTelegram.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
-      forecastRegions: $checkedConvert(
-        'forecast_regions',
+      regions: $checkedConvert(
+        'regions',
         (v) => (v as List<dynamic>)
-            .map(
-              (e) => MergedForecastRegion.fromJson(e as Map<String, dynamic>),
-            )
+            .map((e) => TsunamiRegion.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
-      offshoreObservations: $checkedConvert(
-        'offshore_observations',
+      offshoreStations: $checkedConvert(
+        'offshore_stations',
         (v) => (v as List<dynamic>)
             .map(
-              (e) =>
-                  MergedOffshoreObservation.fromJson(e as Map<String, dynamic>),
+              (e) => TsunamiOffshoreStation.fromJson(e as Map<String, dynamic>),
             )
             .toList(),
       ),
@@ -66,8 +63,7 @@ _TsunamiState _$TsunamiStateFromJson(
     'isCanceled': 'is_canceled',
     'updatedAt': 'updated_at',
     'latestTelegrams': 'latest_telegrams',
-    'forecastRegions': 'forecast_regions',
-    'offshoreObservations': 'offshore_observations',
+    'offshoreStations': 'offshore_stations',
   },
 );
 
@@ -80,6 +76,6 @@ Map<String, dynamic> _$TsunamiStateToJson(_TsunamiState instance) =>
       'updated_at': instance.updatedAt.toIso8601String(),
       'earthquakes': instance.earthquakes,
       'latest_telegrams': instance.latestTelegrams,
-      'forecast_regions': instance.forecastRegions,
-      'offshore_observations': instance.offshoreObservations,
+      'regions': instance.regions,
+      'offshore_stations': instance.offshoreStations,
     };

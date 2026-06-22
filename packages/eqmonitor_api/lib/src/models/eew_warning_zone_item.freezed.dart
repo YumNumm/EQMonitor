@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewWarningZoneItem {
 
- CodeName get value;/// 前回の情報において、警報だったかどうか
+/// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
+ String get code; String get name;/// 前回の情報において、警報だったかどうか
 @JsonKey(name: 'had_warning') bool get hadWarning;
 /// Create a copy of EewWarningZoneItem
 /// with the given fields replaced by the non-null parameter values.
@@ -29,16 +30,16 @@ $EewWarningZoneItemCopyWith<EewWarningZoneItem> get copyWith => _$EewWarningZone
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewWarningZoneItem&&(identical(other.value, value) || other.value == value)&&(identical(other.hadWarning, hadWarning) || other.hadWarning == hadWarning));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewWarningZoneItem&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.hadWarning, hadWarning) || other.hadWarning == hadWarning));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,hadWarning);
+int get hashCode => Object.hash(runtimeType,code,name,hadWarning);
 
 @override
 String toString() {
-  return 'EewWarningZoneItem(value: $value, hadWarning: $hadWarning)';
+  return 'EewWarningZoneItem(code: $code, name: $name, hadWarning: $hadWarning)';
 }
 
 
@@ -49,11 +50,11 @@ abstract mixin class $EewWarningZoneItemCopyWith<$Res>  {
   factory $EewWarningZoneItemCopyWith(EewWarningZoneItem value, $Res Function(EewWarningZoneItem) _then) = _$EewWarningZoneItemCopyWithImpl;
 @useResult
 $Res call({
- CodeName value,@JsonKey(name: 'had_warning') bool hadWarning
+ String code, String name,@JsonKey(name: 'had_warning') bool hadWarning
 });
 
 
-$CodeNameCopyWith<$Res> get value;
+
 
 }
 /// @nodoc
@@ -66,23 +67,15 @@ class _$EewWarningZoneItemCopyWithImpl<$Res>
 
 /// Create a copy of EewWarningZoneItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? hadWarning = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? hadWarning = null,}) {
   return _then(_self.copyWith(
-value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as CodeName,hadWarning: null == hadWarning ? _self.hadWarning : hadWarning // ignore: cast_nullable_to_non_nullable
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,hadWarning: null == hadWarning ? _self.hadWarning : hadWarning // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
-/// Create a copy of EewWarningZoneItem
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$CodeNameCopyWith<$Res> get value {
-  
-  return $CodeNameCopyWith<$Res>(_self.value, (value) {
-    return _then(_self.copyWith(value: value));
-  });
-}
+
 }
 
 
@@ -164,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(name: 'had_warning')  bool hadWarning)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(name: 'had_warning')  bool hadWarning)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewWarningZoneItem() when $default != null:
-return $default(_that.value,_that.hadWarning);case _:
+return $default(_that.code,_that.name,_that.hadWarning);case _:
   return orElse();
 
 }
@@ -185,10 +178,10 @@ return $default(_that.value,_that.hadWarning);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(name: 'had_warning')  bool hadWarning)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(name: 'had_warning')  bool hadWarning)  $default,) {final _that = this;
 switch (_that) {
 case _EewWarningZoneItem():
-return $default(_that.value,_that.hadWarning);case _:
+return $default(_that.code,_that.name,_that.hadWarning);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +198,10 @@ return $default(_that.value,_that.hadWarning);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value, @JsonKey(name: 'had_warning')  bool hadWarning)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name, @JsonKey(name: 'had_warning')  bool hadWarning)?  $default,) {final _that = this;
 switch (_that) {
 case _EewWarningZoneItem() when $default != null:
-return $default(_that.value,_that.hadWarning);case _:
+return $default(_that.code,_that.name,_that.hadWarning);case _:
   return null;
 
 }
@@ -220,10 +213,12 @@ return $default(_that.value,_that.hadWarning);case _:
 @JsonSerializable()
 
 class _EewWarningZoneItem implements EewWarningZoneItem {
-  const _EewWarningZoneItem({required this.value, @JsonKey(name: 'had_warning') required this.hadWarning});
+  const _EewWarningZoneItem({required this.code, required this.name, @JsonKey(name: 'had_warning') required this.hadWarning});
   factory _EewWarningZoneItem.fromJson(Map<String, dynamic> json) => _$EewWarningZoneItemFromJson(json);
 
-@override final  CodeName value;
+/// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
+@override final  String code;
+@override final  String name;
 /// 前回の情報において、警報だったかどうか
 @override@JsonKey(name: 'had_warning') final  bool hadWarning;
 
@@ -240,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewWarningZoneItem&&(identical(other.value, value) || other.value == value)&&(identical(other.hadWarning, hadWarning) || other.hadWarning == hadWarning));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewWarningZoneItem&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.hadWarning, hadWarning) || other.hadWarning == hadWarning));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,hadWarning);
+int get hashCode => Object.hash(runtimeType,code,name,hadWarning);
 
 @override
 String toString() {
-  return 'EewWarningZoneItem(value: $value, hadWarning: $hadWarning)';
+  return 'EewWarningZoneItem(code: $code, name: $name, hadWarning: $hadWarning)';
 }
 
 
@@ -260,11 +255,11 @@ abstract mixin class _$EewWarningZoneItemCopyWith<$Res> implements $EewWarningZo
   factory _$EewWarningZoneItemCopyWith(_EewWarningZoneItem value, $Res Function(_EewWarningZoneItem) _then) = __$EewWarningZoneItemCopyWithImpl;
 @override @useResult
 $Res call({
- CodeName value,@JsonKey(name: 'had_warning') bool hadWarning
+ String code, String name,@JsonKey(name: 'had_warning') bool hadWarning
 });
 
 
-@override $CodeNameCopyWith<$Res> get value;
+
 
 }
 /// @nodoc
@@ -277,24 +272,16 @@ class __$EewWarningZoneItemCopyWithImpl<$Res>
 
 /// Create a copy of EewWarningZoneItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? hadWarning = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? hadWarning = null,}) {
   return _then(_EewWarningZoneItem(
-value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as CodeName,hadWarning: null == hadWarning ? _self.hadWarning : hadWarning // ignore: cast_nullable_to_non_nullable
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,hadWarning: null == hadWarning ? _self.hadWarning : hadWarning // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
 
-/// Create a copy of EewWarningZoneItem
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$CodeNameCopyWith<$Res> get value {
-  
-  return $CodeNameCopyWith<$Res>(_self.value, (value) {
-    return _then(_self.copyWith(value: value));
-  });
-}
+
 }
 
 // dart format on

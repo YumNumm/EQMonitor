@@ -4,25 +4,12 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-@JsonEnum()
-enum QualitativeHeight {
-  @JsonValue('ENORMOUS')
-  enormous('ENORMOUS'),
-  @JsonValue('HIGH')
-  high('HIGH');
+part 'qualitative_height.freezed.dart';
+part 'qualitative_height.g.dart';
 
-  const QualitativeHeight(this.json);
-
-  final String? json;
-  String toJson() {
-    final value = json;
-    if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
-    }
-    return value as String;
-  }
-
-  @override
-  String toString() => json?.toString() ?? super.toString();
+@Freezed()
+abstract class QualitativeHeight with _$QualitativeHeight {
+  const factory QualitativeHeight() = _QualitativeHeight;
+  
+  factory QualitativeHeight.fromJson(Map<String, Object?> json) => _$QualitativeHeightFromJson(json);
 }

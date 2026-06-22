@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'comments3.dart';
 import 'telegram_type.dart';
-import 'tsunami_comments.dart';
 
 part 'latest_telegram.freezed.dart';
 part 'latest_telegram.g.dart';
@@ -30,9 +30,7 @@ abstract class LatestTelegram with _$LatestTelegram {
     @JsonKey(includeIfNull: false)
     String? headline,
     @JsonKey(includeIfNull: false)
-    TsunamiComments? comments,
-    @JsonKey(includeIfNull: false)
-    String? text,
+    Comments3? comments,
   }) = _LatestTelegram;
   
   factory LatestTelegram.fromJson(Map<String, Object?> json) => _$LatestTelegramFromJson(json);

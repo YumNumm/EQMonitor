@@ -15,6 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CodeName {
 
+/// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
  String get code; String get name;
 /// Create a copy of CodeName
 /// with the given fields replaced by the non-null parameter values.
@@ -213,6 +214,7 @@ class _CodeName implements CodeName {
   const _CodeName({required this.code, required this.name});
   factory _CodeName.fromJson(Map<String, dynamic> json) => _$CodeNameFromJson(json);
 
+/// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
 @override final  String code;
 @override final  String name;
 

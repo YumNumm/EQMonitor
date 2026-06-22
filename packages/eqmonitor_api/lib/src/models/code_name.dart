@@ -11,6 +11,7 @@ part 'code_name.g.dart';
 @Freezed()
 abstract class CodeName with _$CodeName {
   const factory CodeName({
+    /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
     required String code,
     required String name,
   }) = _CodeName;

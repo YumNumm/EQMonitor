@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiStateEarthquake {
 
-@JsonKey(name: 'origin_time') DateTime get originTime; TsunamiStateHypocenter get hypocenter;@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;
+@JsonKey(name: 'origin_time') DateTime get originTime; Hypocenter get hypocenter;@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;
 /// Create a copy of TsunamiStateEarthquake
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $TsunamiStateEarthquakeCopyWith<$Res>  {
   factory $TsunamiStateEarthquakeCopyWith(TsunamiStateEarthquake value, $Res Function(TsunamiStateEarthquake) _then) = _$TsunamiStateEarthquakeCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'origin_time') DateTime originTime, TsunamiStateHypocenter hypocenter,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime
+@JsonKey(name: 'origin_time') DateTime originTime, Hypocenter hypocenter,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime
 });
 
 
-$TsunamiStateHypocenterCopyWith<$Res> get hypocenter;
+$HypocenterCopyWith<$Res> get hypocenter;
 
 }
 /// @nodoc
@@ -69,7 +69,7 @@ class _$TsunamiStateEarthquakeCopyWithImpl<$Res>
   return _then(_self.copyWith(
 originTime: null == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
 as DateTime,hypocenter: null == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
-as TsunamiStateHypocenter,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as Hypocenter,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -77,9 +77,9 @@ as DateTime?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$TsunamiStateHypocenterCopyWith<$Res> get hypocenter {
+$HypocenterCopyWith<$Res> get hypocenter {
   
-  return $TsunamiStateHypocenterCopyWith<$Res>(_self.hypocenter, (value) {
+  return $HypocenterCopyWith<$Res>(_self.hypocenter, (value) {
     return _then(_self.copyWith(hypocenter: value));
   });
 }
@@ -164,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'origin_time')  DateTime originTime,  TsunamiStateHypocenter hypocenter, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'origin_time')  DateTime originTime,  Hypocenter hypocenter, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiStateEarthquake() when $default != null:
 return $default(_that.originTime,_that.hypocenter,_that.arrivalTime);case _:
@@ -185,7 +185,7 @@ return $default(_that.originTime,_that.hypocenter,_that.arrivalTime);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'origin_time')  DateTime originTime,  TsunamiStateHypocenter hypocenter, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'origin_time')  DateTime originTime,  Hypocenter hypocenter, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiStateEarthquake():
 return $default(_that.originTime,_that.hypocenter,_that.arrivalTime);case _:
@@ -205,7 +205,7 @@ return $default(_that.originTime,_that.hypocenter,_that.arrivalTime);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'origin_time')  DateTime originTime,  TsunamiStateHypocenter hypocenter, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'origin_time')  DateTime originTime,  Hypocenter hypocenter, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiStateEarthquake() when $default != null:
 return $default(_that.originTime,_that.hypocenter,_that.arrivalTime);case _:
@@ -224,7 +224,7 @@ class _TsunamiStateEarthquake implements TsunamiStateEarthquake {
   factory _TsunamiStateEarthquake.fromJson(Map<String, dynamic> json) => _$TsunamiStateEarthquakeFromJson(json);
 
 @override@JsonKey(name: 'origin_time') final  DateTime originTime;
-@override final  TsunamiStateHypocenter hypocenter;
+@override final  Hypocenter hypocenter;
 @override@JsonKey(includeIfNull: false, name: 'arrival_time') final  DateTime? arrivalTime;
 
 /// Create a copy of TsunamiStateEarthquake
@@ -260,11 +260,11 @@ abstract mixin class _$TsunamiStateEarthquakeCopyWith<$Res> implements $TsunamiS
   factory _$TsunamiStateEarthquakeCopyWith(_TsunamiStateEarthquake value, $Res Function(_TsunamiStateEarthquake) _then) = __$TsunamiStateEarthquakeCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'origin_time') DateTime originTime, TsunamiStateHypocenter hypocenter,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime
+@JsonKey(name: 'origin_time') DateTime originTime, Hypocenter hypocenter,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime
 });
 
 
-@override $TsunamiStateHypocenterCopyWith<$Res> get hypocenter;
+@override $HypocenterCopyWith<$Res> get hypocenter;
 
 }
 /// @nodoc
@@ -281,7 +281,7 @@ class __$TsunamiStateEarthquakeCopyWithImpl<$Res>
   return _then(_TsunamiStateEarthquake(
 originTime: null == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
 as DateTime,hypocenter: null == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
-as TsunamiStateHypocenter,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as Hypocenter,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -290,9 +290,9 @@ as DateTime?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$TsunamiStateHypocenterCopyWith<$Res> get hypocenter {
+$HypocenterCopyWith<$Res> get hypocenter {
   
-  return $TsunamiStateHypocenterCopyWith<$Res>(_self.hypocenter, (value) {
+  return $HypocenterCopyWith<$Res>(_self.hypocenter, (value) {
     return _then(_self.copyWith(hypocenter: value));
   });
 }
