@@ -14,8 +14,8 @@ part 'tsunami_station_observation_max_height.g.dart';
 abstract class TsunamiStationObservationMaxHeight with _$TsunamiStationObservationMaxHeight {
   const factory TsunamiStationObservationMaxHeight({
     /// 津波の最大波を観測した日時
-    @JsonKey(includeIfNull: false,name: 'date_time')
-    DateTime? dateTime,
+    @JsonKey(includeIfNull: false,name: 'observed_at')
+    DateTime? observedAt,
     @JsonKey(includeIfNull: false)
     num? value,
 

@@ -66,7 +66,7 @@ Map<String, dynamic> _$KyoshinObservationPointToJson(
 };
 
 const _$KyoshinObservationPointTypeEnumMap = {
-  KyoshinObservationPointType.kNet: 'k_net',
-  KyoshinObservationPointType.kikNet: 'kik_net',
-  KyoshinObservationPointType.unknown: 'unknown',
+  KyoshinObservationPointType.kNet: 'K_NET',
+  KyoshinObservationPointType.kikNet: 'KIK_NET',
+  KyoshinObservationPointType.unknown: 'UNKNOWN',
 };

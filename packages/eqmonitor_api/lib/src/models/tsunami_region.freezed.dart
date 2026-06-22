@@ -53,7 +53,7 @@ $Res call({
 });
 
 
-$TsunamiWarningKindCopyWith<$Res> get kind;$TsunamiWarningKindCopyWith<$Res> get lastKind;$TsunamiRegionForecastCopyWith<$Res>? get forecast;$TsunamiRegionEstimationCopyWith<$Res>? get estimation;
+$TsunamiRegionForecastCopyWith<$Res>? get forecast;$TsunamiRegionEstimationCopyWith<$Res>? get estimation;
 
 }
 /// @nodoc
@@ -79,24 +79,6 @@ as TsunamiRegionEstimation?,
   ));
 }
 /// Create a copy of TsunamiRegion
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$TsunamiWarningKindCopyWith<$Res> get kind {
-  
-  return $TsunamiWarningKindCopyWith<$Res>(_self.kind, (value) {
-    return _then(_self.copyWith(kind: value));
-  });
-}/// Create a copy of TsunamiRegion
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$TsunamiWarningKindCopyWith<$Res> get lastKind {
-  
-  return $TsunamiWarningKindCopyWith<$Res>(_self.lastKind, (value) {
-    return _then(_self.copyWith(lastKind: value));
-  });
-}/// Create a copy of TsunamiRegion
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -313,7 +295,7 @@ $Res call({
 });
 
 
-@override $TsunamiWarningKindCopyWith<$Res> get kind;@override $TsunamiWarningKindCopyWith<$Res> get lastKind;@override $TsunamiRegionForecastCopyWith<$Res>? get forecast;@override $TsunamiRegionEstimationCopyWith<$Res>? get estimation;
+@override $TsunamiRegionForecastCopyWith<$Res>? get forecast;@override $TsunamiRegionEstimationCopyWith<$Res>? get estimation;
 
 }
 /// @nodoc
@@ -340,24 +322,6 @@ as TsunamiRegionEstimation?,
 }
 
 /// Create a copy of TsunamiRegion
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$TsunamiWarningKindCopyWith<$Res> get kind {
-  
-  return $TsunamiWarningKindCopyWith<$Res>(_self.kind, (value) {
-    return _then(_self.copyWith(kind: value));
-  });
-}/// Create a copy of TsunamiRegion
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$TsunamiWarningKindCopyWith<$Res> get lastKind {
-  
-  return $TsunamiWarningKindCopyWith<$Res>(_self.lastKind, (value) {
-    return _then(_self.copyWith(lastKind: value));
-  });
-}/// Create a copy of TsunamiRegion
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

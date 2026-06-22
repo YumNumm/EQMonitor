@@ -7,10 +7,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 /// Live Activity開始トリガー
 @JsonEnum()
 enum LiveActivityStartTrigger {
-  @JsonValue('shake_detection')
-  shakeDetection('shake_detection'),
-  @JsonValue('eew')
-  eew('eew');
+  @JsonValue('SHAKE_DETECTION')
+  shakeDetection('SHAKE_DETECTION'),
+  @JsonValue('EEW')
+  eew('EEW');
 
   const LiveActivityStartTrigger(this.json);
 

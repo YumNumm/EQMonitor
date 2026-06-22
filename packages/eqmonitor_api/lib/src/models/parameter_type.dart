@@ -6,14 +6,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
 enum ParameterType {
-  @JsonValue('jma_code_table')
-  jmaCodeTable('jma_code_table'),
-  @JsonValue('kyoshin_observation_points')
-  kyoshinObservationPoints('kyoshin_observation_points'),
-  @JsonValue('earthquake_stations')
-  earthquakeStations('earthquake_stations'),
-  @JsonValue('tsunami_stations')
-  tsunamiStations('tsunami_stations');
+  @JsonValue('JMA_CODE_TABLE')
+  jmaCodeTable('JMA_CODE_TABLE'),
+  @JsonValue('KYOSHIN_OBSERVATION_POINTS')
+  kyoshinObservationPoints('KYOSHIN_OBSERVATION_POINTS'),
+  @JsonValue('EARTHQUAKE_STATIONS')
+  earthquakeStations('EARTHQUAKE_STATIONS'),
+  @JsonValue('TSUNAMI_STATIONS')
+  tsunamiStations('TSUNAMI_STATIONS');
 
   const ParameterType(this.json);
 

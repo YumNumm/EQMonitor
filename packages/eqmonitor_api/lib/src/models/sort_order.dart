@@ -7,10 +7,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 /// ソート順
 @JsonEnum()
 enum SortOrder {
-  @JsonValue('asc')
-  asc('asc'),
-  @JsonValue('desc')
-  desc('desc');
+  @JsonValue('ASC')
+  asc('ASC'),
+  @JsonValue('DESC')
+  desc('DESC');
 
   const SortOrder(this.json);
 

@@ -33,9 +33,12 @@ _Items4 _$Items4FromJson(Map<String, dynamic> json) => $checkedCreate(
         'publishing_office',
         (v) => (v as List<dynamic>).map((e) => e as String).toList(),
       ),
-      pressAt: $checkedConvert('press_at', (v) => DateTime.parse(v as String)),
-      reportAt: $checkedConvert(
-        'report_at',
+      pressedAt: $checkedConvert(
+        'pressed_at',
+        (v) => DateTime.parse(v as String),
+      ),
+      reportedAt: $checkedConvert(
+        'reported_at',
         (v) => DateTime.parse(v as String),
       ),
       infoKind: $checkedConvert('info_kind', (v) => v as String),
@@ -46,12 +49,12 @@ _Items4 _$Items4FromJson(Map<String, dynamic> json) => $checkedCreate(
         (v) => DateTime.parse(v as String),
       ),
       serialNo: $checkedConvert('serial_no', (v) => v as num?),
-      targetAt: $checkedConvert(
-        'target_at',
+      targetedAt: $checkedConvert(
+        'targeted_at',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
-      revokeAt: $checkedConvert(
-        'revoke_at',
+      revokedAt: $checkedConvert(
+        'revoked_at',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
       headline: $checkedConvert('headline', (v) => v as String?),
@@ -63,14 +66,14 @@ _Items4 _$Items4FromJson(Map<String, dynamic> json) => $checkedCreate(
     'infoType': 'info_type',
     'editorialOffice': 'editorial_office',
     'publishingOffice': 'publishing_office',
-    'pressAt': 'press_at',
-    'reportAt': 'report_at',
+    'pressedAt': 'pressed_at',
+    'reportedAt': 'reported_at',
     'infoKind': 'info_kind',
     'infoKindVersion': 'info_kind_version',
     'createdAt': 'created_at',
     'serialNo': 'serial_no',
-    'targetAt': 'target_at',
-    'revokeAt': 'revoke_at',
+    'targetedAt': 'targeted_at',
+    'revokedAt': 'revoked_at',
   },
 );
 
@@ -83,15 +86,15 @@ Map<String, dynamic> _$Items4ToJson(_Items4 instance) => <String, dynamic>{
   'info_type': instance.infoType,
   'editorial_office': instance.editorialOffice,
   'publishing_office': instance.publishingOffice,
-  'press_at': instance.pressAt.toIso8601String(),
-  'report_at': instance.reportAt.toIso8601String(),
+  'pressed_at': instance.pressedAt.toIso8601String(),
+  'reported_at': instance.reportedAt.toIso8601String(),
   'info_kind': instance.infoKind,
   'info_kind_version': instance.infoKindVersion,
   'hash': instance.hash,
   'created_at': instance.createdAt.toIso8601String(),
   'serial_no': ?instance.serialNo,
-  'target_at': ?instance.targetAt?.toIso8601String(),
-  'revoke_at': ?instance.revokeAt?.toIso8601String(),
+  'targeted_at': ?instance.targetedAt?.toIso8601String(),
+  'revoked_at': ?instance.revokedAt?.toIso8601String(),
   'headline': ?instance.headline,
 };
 

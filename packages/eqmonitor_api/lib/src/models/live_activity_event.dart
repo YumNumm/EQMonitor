@@ -6,12 +6,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
 enum LiveActivityEvent {
-  @JsonValue('start')
-  start('start'),
-  @JsonValue('update')
-  update('update'),
-  @JsonValue('end')
-  end('end');
+  @JsonValue('START')
+  start('START'),
+  @JsonValue('UPDATE')
+  update('UPDATE'),
+  @JsonValue('END')
+  end('END');
 
   const LiveActivityEvent(this.json);
 

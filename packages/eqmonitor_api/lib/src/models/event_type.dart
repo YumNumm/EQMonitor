@@ -6,10 +6,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
 enum EventType {
-  @JsonValue('eew')
-  eew('eew'),
-  @JsonValue('shake_detection')
-  shakeDetection('shake_detection');
+  @JsonValue('EEW')
+  eew('EEW'),
+  @JsonValue('SHAKE_DETECTION')
+  shakeDetection('SHAKE_DETECTION');
 
   const EventType(this.json);
 

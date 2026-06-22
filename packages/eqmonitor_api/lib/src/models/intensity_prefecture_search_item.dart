@@ -13,8 +13,6 @@ part 'intensity_prefecture_search_item.g.dart';
 @Freezed()
 abstract class IntensityPrefectureSearchItem with _$IntensityPrefectureSearchItem {
   const factory IntensityPrefectureSearchItem({
-    @JsonKey(name: 'event_id')
-    required String eventId,
     required JmaIntensity intensity,
     required EarthquakePartial earthquake,
   }) = _IntensityPrefectureSearchItem;

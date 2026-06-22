@@ -25,7 +25,7 @@ Map<String, dynamic> _$TestNotificationRequestToJson(
 ) => <String, dynamic>{'type': instance.type};
 
 const _$TestNotificationTypeEnumMap = {
-  TestNotificationType.silent: 'silent',
-  TestNotificationType.normal: 'normal',
-  TestNotificationType.critical: 'critical',
+  TestNotificationType.silent: 'SILENT',
+  TestNotificationType.normal: 'NORMAL',
+  TestNotificationType.critical: 'CRITICAL',
 };

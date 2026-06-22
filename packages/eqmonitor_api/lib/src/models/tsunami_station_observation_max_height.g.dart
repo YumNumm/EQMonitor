@@ -15,8 +15,8 @@ _$TsunamiStationObservationMaxHeightFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _TsunamiStationObservationMaxHeight(
-          dateTime: $checkedConvert(
-            'date_time',
+          observedAt: $checkedConvert(
+            'observed_at',
             (v) => v == null ? null : DateTime.parse(v as String),
           ),
           value: $checkedConvert('value', (v) => v as num?),
@@ -24,23 +24,19 @@ _$TsunamiStationObservationMaxHeightFromJson(Map<String, dynamic> json) =>
           isRising: $checkedConvert('is_rising', (v) => v),
           condition: $checkedConvert(
             'condition',
-            (v) => v == null
-                ? null
-                : ObservationMaxHeightCondition.fromJson(
-                    v as Map<String, dynamic>,
-                  ),
+            (v) =>
+                $enumDecodeNullable(_$ObservationMaxHeightConditionEnumMap, v),
           ),
           isMissing: $checkedConvert('is_missing', (v) => v),
           revise: $checkedConvert(
             'revise',
-            (v) =>
-                v == null ? null : Revise.fromJson(v as Map<String, dynamic>),
+            (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
           ),
         );
         return val;
       },
       fieldKeyMap: const {
-        'dateTime': 'date_time',
+        'observedAt': 'observed_at',
         'isOver': 'is_over',
         'isRising': 'is_rising',
         'isMissing': 'is_missing',
@@ -50,7 +46,7 @@ _$TsunamiStationObservationMaxHeightFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$TsunamiStationObservationMaxHeightToJson(
   _TsunamiStationObservationMaxHeight instance,
 ) => <String, dynamic>{
-  'date_time': ?instance.dateTime?.toIso8601String(),
+  'observed_at': ?instance.observedAt?.toIso8601String(),
   'value': ?instance.value,
   'is_over': ?instance.isOver,
   'is_rising': ?instance.isRising,
@@ -58,3 +54,11 @@ Map<String, dynamic> _$TsunamiStationObservationMaxHeightToJson(
   'is_missing': ?instance.isMissing,
   'revise': ?instance.revise,
 };
+
+const _$ObservationMaxHeightConditionEnumMap = {
+  ObservationMaxHeightCondition.minor: 'MINOR',
+  ObservationMaxHeightCondition.observing: 'OBSERVING',
+  ObservationMaxHeightCondition.important: 'IMPORTANT',
+};
+
+const _$ReviseEnumMap = {Revise.addition: 'ADDITION', Revise.update: 'UPDATE'};

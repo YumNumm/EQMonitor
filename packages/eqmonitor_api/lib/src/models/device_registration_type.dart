@@ -6,10 +6,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
 enum DeviceRegistrationType {
-  @JsonValue('app_check')
-  appCheck('app_check'),
-  @JsonValue('challenge')
-  challenge('challenge');
+  @JsonValue('APP_CHECK')
+  appCheck('APP_CHECK'),
+  @JsonValue('CHALLENGE')
+  challenge('CHALLENGE');
 
   const DeviceRegistrationType(this.json);
 

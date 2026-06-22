@@ -51,7 +51,7 @@ abstract class TsunamiApiClient {
     @Path('eventId') required String eventId,
   });
 
-  /// 津波情報の電文履歴（press_at 降順）
+  /// 津波情報の電文履歴（pressed_at 降順）
   @GET(TsunamiApiClientUrls.getV2TsunamiTsunamiIdTelegrams)
   Future<HttpResponse<TsunamiTelegramsResponse>> getV2TsunamiTsunamiIdTelegrams({
     @Path('tsunamiId') required String tsunamiId,

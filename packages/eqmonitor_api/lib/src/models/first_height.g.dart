@@ -20,7 +20,7 @@ _FirstHeight _$FirstHeightFromJson(Map<String, dynamic> json) => $checkedCreate(
       isAlreadyArrived: $checkedConvert('is_already_arrived', (v) => v),
       revise: $checkedConvert(
         'revise',
-        (v) => v == null ? null : Revise.fromJson(v as Map<String, dynamic>),
+        (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
       ),
     );
     return val;
@@ -37,3 +37,5 @@ Map<String, dynamic> _$FirstHeightToJson(_FirstHeight instance) =>
       'is_already_arrived': ?instance.isAlreadyArrived,
       'revise': ?instance.revise,
     };
+
+const _$ReviseEnumMap = {Revise.addition: 'ADDITION', Revise.update: 'UPDATE'};

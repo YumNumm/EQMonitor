@@ -55,7 +55,7 @@ $Res call({
 });
 
 
-$WaveInitialCopyWith<$Res>? get initial;$ReviseCopyWith<$Res>? get revise;
+
 
 }
 /// @nodoc
@@ -78,31 +78,7 @@ as dynamic,revise: freezed == revise ? _self.revise : revise // ignore: cast_nul
 as Revise?,
   ));
 }
-/// Create a copy of TsunamiStationObservationFirstHeight
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$WaveInitialCopyWith<$Res>? get initial {
-    if (_self.initial == null) {
-    return null;
-  }
 
-  return $WaveInitialCopyWith<$Res>(_self.initial!, (value) {
-    return _then(_self.copyWith(initial: value));
-  });
-}/// Create a copy of TsunamiStationObservationFirstHeight
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ReviseCopyWith<$Res>? get revise {
-    if (_self.revise == null) {
-    return null;
-  }
-
-  return $ReviseCopyWith<$Res>(_self.revise!, (value) {
-    return _then(_self.copyWith(revise: value));
-  });
-}
 }
 
 
@@ -289,7 +265,7 @@ $Res call({
 });
 
 
-@override $WaveInitialCopyWith<$Res>? get initial;@override $ReviseCopyWith<$Res>? get revise;
+
 
 }
 /// @nodoc
@@ -313,31 +289,7 @@ as Revise?,
   ));
 }
 
-/// Create a copy of TsunamiStationObservationFirstHeight
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$WaveInitialCopyWith<$Res>? get initial {
-    if (_self.initial == null) {
-    return null;
-  }
 
-  return $WaveInitialCopyWith<$Res>(_self.initial!, (value) {
-    return _then(_self.copyWith(initial: value));
-  });
-}/// Create a copy of TsunamiStationObservationFirstHeight
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ReviseCopyWith<$Res>? get revise {
-    if (_self.revise == null) {
-    return null;
-  }
-
-  return $ReviseCopyWith<$Res>(_self.revise!, (value) {
-    return _then(_self.copyWith(revise: value));
-  });
-}
 }
 
 // dart format on

@@ -17,13 +17,11 @@ _FirstHeight2 _$FirstHeight2FromJson(Map<String, dynamic> json) =>
         ),
         condition: $checkedConvert(
           'condition',
-          (v) => v == null
-              ? null
-              : FirstHeightCondition.fromJson(v as Map<String, dynamic>),
+          (v) => $enumDecodeNullable(_$FirstHeightConditionEnumMap, v),
         ),
         revise: $checkedConvert(
           'revise',
-          (v) => v == null ? null : Revise.fromJson(v as Map<String, dynamic>),
+          (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
         ),
       );
       return val;
@@ -35,3 +33,11 @@ Map<String, dynamic> _$FirstHeight2ToJson(_FirstHeight2 instance) =>
       'condition': ?instance.condition,
       'revise': ?instance.revise,
     };
+
+const _$FirstHeightConditionEnumMap = {
+  FirstHeightCondition.arriving: 'ARRIVING',
+  FirstHeightCondition.firstWaveConfirmed: 'FIRST_WAVE_CONFIRMED',
+  FirstHeightCondition.imminent: 'IMMINENT',
+};
+
+const _$ReviseEnumMap = {Revise.addition: 'ADDITION', Revise.update: 'UPDATE'};

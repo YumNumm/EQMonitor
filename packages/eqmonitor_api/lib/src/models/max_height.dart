@@ -13,8 +13,8 @@ part 'max_height.g.dart';
 @Freezed()
 abstract class MaxHeight with _$MaxHeight {
   const factory MaxHeight({
-    @JsonKey(includeIfNull: false,name: 'date_time')
-    DateTime? dateTime,
+    @JsonKey(includeIfNull: false,name: 'observed_at')
+    DateTime? observedAt,
 
     /// 津波警報以上でまだ津波の観測値が小さい場合は出現しない
     @JsonKey(includeIfNull: false)

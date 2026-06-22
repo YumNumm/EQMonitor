@@ -53,7 +53,7 @@ $Res call({
 });
 
 
-$FirstHeightConditionCopyWith<$Res>? get condition;$ReviseCopyWith<$Res>? get revise;
+
 
 }
 /// @nodoc
@@ -74,31 +74,7 @@ as FirstHeightCondition?,revise: freezed == revise ? _self.revise : revise // ig
 as Revise?,
   ));
 }
-/// Create a copy of FirstHeight2
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$FirstHeightConditionCopyWith<$Res>? get condition {
-    if (_self.condition == null) {
-    return null;
-  }
 
-  return $FirstHeightConditionCopyWith<$Res>(_self.condition!, (value) {
-    return _then(_self.copyWith(condition: value));
-  });
-}/// Create a copy of FirstHeight2
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ReviseCopyWith<$Res>? get revise {
-    if (_self.revise == null) {
-    return null;
-  }
-
-  return $ReviseCopyWith<$Res>(_self.revise!, (value) {
-    return _then(_self.copyWith(revise: value));
-  });
-}
 }
 
 
@@ -281,7 +257,7 @@ $Res call({
 });
 
 
-@override $FirstHeightConditionCopyWith<$Res>? get condition;@override $ReviseCopyWith<$Res>? get revise;
+
 
 }
 /// @nodoc
@@ -303,31 +279,7 @@ as Revise?,
   ));
 }
 
-/// Create a copy of FirstHeight2
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$FirstHeightConditionCopyWith<$Res>? get condition {
-    if (_self.condition == null) {
-    return null;
-  }
 
-  return $FirstHeightConditionCopyWith<$Res>(_self.condition!, (value) {
-    return _then(_self.copyWith(condition: value));
-  });
-}/// Create a copy of FirstHeight2
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ReviseCopyWith<$Res>? get revise {
-    if (_self.revise == null) {
-    return null;
-  }
-
-  return $ReviseCopyWith<$Res>(_self.revise!, (value) {
-    return _then(_self.copyWith(revise: value));
-  });
-}
 }
 
 // dart format on

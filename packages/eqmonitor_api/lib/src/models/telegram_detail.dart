@@ -27,10 +27,10 @@ abstract class TelegramDetail with _$TelegramDetail {
     required String editorialOffice,
     @JsonKey(name: 'publishing_office')
     required List<String> publishingOffice,
-    @JsonKey(name: 'press_at')
-    required DateTime pressAt,
-    @JsonKey(name: 'report_at')
-    required DateTime reportAt,
+    @JsonKey(name: 'pressed_at')
+    required DateTime pressedAt,
+    @JsonKey(name: 'reported_at')
+    required DateTime reportedAt,
     @JsonKey(name: 'info_kind')
     required String infoKind,
     @JsonKey(name: 'info_kind_version')
@@ -41,10 +41,10 @@ abstract class TelegramDetail with _$TelegramDetail {
     required TelegramBodyUnion body,
     @JsonKey(includeIfNull: false,name: 'serial_no')
     num? serialNo,
-    @JsonKey(includeIfNull: false,name: 'target_at')
-    DateTime? targetAt,
-    @JsonKey(includeIfNull: false,name: 'revoke_at')
-    DateTime? revokeAt,
+    @JsonKey(includeIfNull: false,name: 'targeted_at')
+    DateTime? targetedAt,
+    @JsonKey(includeIfNull: false,name: 'revoked_at')
+    DateTime? revokedAt,
     @JsonKey(includeIfNull: false)
     String? headline,
   }) = _TelegramDetail;

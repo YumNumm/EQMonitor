@@ -12,7 +12,6 @@ _IntensityRegionSearchItem _$IntensityRegionSearchItemFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_IntensityRegionSearchItem', json, ($checkedConvert) {
   final val = _IntensityRegionSearchItem(
-    eventId: $checkedConvert('event_id', (v) => v as String),
     intensity: $checkedConvert(
       'intensity',
       (v) => $enumDecode(_$JmaIntensityEnumMap, v),
@@ -23,12 +22,11 @@ _IntensityRegionSearchItem _$IntensityRegionSearchItemFromJson(
     ),
   );
   return val;
-}, fieldKeyMap: const {'eventId': 'event_id'});
+});
 
 Map<String, dynamic> _$IntensityRegionSearchItemToJson(
   _IntensityRegionSearchItem instance,
 ) => <String, dynamic>{
-  'event_id': instance.eventId,
   'intensity': instance.intensity,
   'earthquake': instance.earthquake,
 };
