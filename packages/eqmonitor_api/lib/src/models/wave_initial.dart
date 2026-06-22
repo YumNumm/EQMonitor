@@ -4,12 +4,30 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'wave_initial.freezed.dart';
-part 'wave_initial.g.dart';
+@JsonEnum()
+enum WaveInitial {
+  /// 押し
+  @JsonValue('PUSH')
+  push('PUSH'),
 
-@Freezed()
-abstract class WaveInitial with _$WaveInitial {
-  const factory WaveInitial() = _WaveInitial;
-  
-  factory WaveInitial.fromJson(Map<String, Object?> json) => _$WaveInitialFromJson(json);
+  /// 引き
+  @JsonValue('PULL')
+  pull('PULL');
+
+  const WaveInitial(this.json);
+
+  final String? json;
+  String toJson() {
+    final value = json;
+    if (value == null) {
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
+    }
+    return value as String;
+  }
+
+  @override
+  String toString() => json?.toString() ?? super.toString();
 }

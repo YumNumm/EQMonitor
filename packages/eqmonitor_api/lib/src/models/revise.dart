@@ -4,12 +4,30 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'revise.freezed.dart';
-part 'revise.g.dart';
+@JsonEnum()
+enum Revise {
+  /// 新しく追加された場合
+  @JsonValue('ADDITION')
+  addition('ADDITION'),
 
-@Freezed()
-abstract class Revise with _$Revise {
-  const factory Revise() = _Revise;
-  
-  factory Revise.fromJson(Map<String, Object?> json) => _$ReviseFromJson(json);
+  /// 更新された場合
+  @JsonValue('UPDATE')
+  update('UPDATE');
+
+  const Revise(this.json);
+
+  final String? json;
+  String toJson() {
+    final value = json;
+    if (value == null) {
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
+    }
+    return value as String;
+  }
+
+  @override
+  String toString() => json?.toString() ?? super.toString();
 }

@@ -4,12 +4,34 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'observation_max_height_condition.freezed.dart';
-part 'observation_max_height_condition.g.dart';
+@JsonEnum()
+enum ObservationMaxHeightCondition {
+  /// 微弱
+  @JsonValue('MINOR')
+  minor('MINOR'),
 
-@Freezed()
-abstract class ObservationMaxHeightCondition with _$ObservationMaxHeightCondition {
-  const factory ObservationMaxHeightCondition() = _ObservationMaxHeightCondition;
-  
-  factory ObservationMaxHeightCondition.fromJson(Map<String, Object?> json) => _$ObservationMaxHeightConditionFromJson(json);
+  /// 観測中
+  @JsonValue('OBSERVING')
+  observing('OBSERVING'),
+
+  /// 重要
+  @JsonValue('IMPORTANT')
+  important('IMPORTANT');
+
+  const ObservationMaxHeightCondition(this.json);
+
+  final String? json;
+  String toJson() {
+    final value = json;
+    if (value == null) {
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
+    }
+    return value as String;
+  }
+
+  @override
+  String toString() => json?.toString() ?? super.toString();
 }

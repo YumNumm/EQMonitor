@@ -4,12 +4,34 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'first_height_condition.freezed.dart';
-part 'first_height_condition.g.dart';
+@JsonEnum()
+enum FirstHeightCondition {
+  /// 津波到達中と推測
+  @JsonValue('ARRIVING')
+  arriving('ARRIVING'),
 
-@Freezed()
-abstract class FirstHeightCondition with _$FirstHeightCondition {
-  const factory FirstHeightCondition() = _FirstHeightCondition;
-  
-  factory FirstHeightCondition.fromJson(Map<String, Object?> json) => _$FirstHeightConditionFromJson(json);
+  /// 第１波の到達を確認
+  @JsonValue('FIRST_WAVE_CONFIRMED')
+  firstWaveConfirmed('FIRST_WAVE_CONFIRMED'),
+
+  /// ただちに津波来襲と予測
+  @JsonValue('IMMINENT')
+  imminent('IMMINENT');
+
+  const FirstHeightCondition(this.json);
+
+  final String? json;
+  String toJson() {
+    final value = json;
+    if (value == null) {
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
+    }
+    return value as String;
+  }
+
+  @override
+  String toString() => json?.toString() ?? super.toString();
 }

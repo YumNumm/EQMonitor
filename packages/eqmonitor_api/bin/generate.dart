@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 void main(List<String> args) async {
@@ -99,6 +100,10 @@ void main(List<String> args) async {
         stdout.writeln('  patched: ${file.path}');
       }
     }
+  });
+
+  await _step('値のみ union を enum に変換', () async {
+    _patchValueOnlyUnionsToEnum(libDir, openapiFile);
   });
 
   await _step(r'$unknown 文字列補間パッチ', () async {
@@ -219,6 +224,160 @@ Future<void> _patchGeneratedFiles(Directory libDir) async {
   }
 }
 
+/// swagger_parser は `anyOf` / `oneOf` のメンバーがすべて `const`（値のみ）の
+/// union を、メンバーの無い空の Freezed クラスとして生成してしまう。
+/// 例: `TsunamiWarningKind`（`anyOf: [{const: "MAJOR_WARNING"}, ...]`）。
+/// これは実質使用不能なので enum として生成し直す。
+///
+/// OpenAPI 本体を直接読み、値のみ union のスキーマを検出して、
+/// swagger_parser が `enum:` から生成するのと同じ形
+/// （`@JsonEnum()` + `@JsonValue` + 手書き `toJson`）の enum 定義で上書きする。
+/// 各 const の `description` はメンバーの doc コメントにする。
+void _patchValueOnlyUnionsToEnum(Directory libDir, File openapiFile) {
+  if (!openapiFile.existsSync()) return;
+  final modelsDir = Directory('${libDir.path}/models');
+  if (!modelsDir.existsSync()) return;
+
+  final openapi =
+      jsonDecode(openapiFile.readAsStringSync()) as Map<String, Object?>;
+  final components = openapi['components'] as Map<String, Object?>?;
+  final schemas = components?['schemas'] as Map<String, Object?>?;
+  if (schemas == null) return;
+
+  for (final entry in schemas.entries) {
+    final name = entry.key;
+    final schema = entry.value;
+    if (schema is! Map<String, Object?>) continue;
+
+    final members = schema['anyOf'] ?? schema['oneOf'];
+    if (members is! List || members.isEmpty) continue;
+
+    // すべてのメンバーが文字列の const（値のみ）であることを要求する。
+    final values = <String>[];
+    final descriptions = <String?>[];
+    var valueOnly = true;
+    for (final m in members) {
+      if (m is! Map<String, Object?> || m['const'] is! String) {
+        valueOnly = false;
+        break;
+      }
+      values.add(m['const']! as String);
+      descriptions.add(m['description'] as String?);
+    }
+    if (!valueOnly) continue;
+
+    final file = File('${modelsDir.path}/${_toSnakeCase(name)}.dart');
+    if (!file.existsSync()) continue;
+
+    file.writeAsStringSync(
+      _buildEnumSource(
+        className: name,
+        values: values,
+        descriptions: descriptions,
+        schemaDescription: schema['description'] as String?,
+      ),
+    );
+    stdout.writeln('  Patched value-only union → enum: ${file.path}');
+  }
+}
+
+/// `TsunamiWarningKind` → `tsunami_warning_kind`。
+/// swagger_parser のファイル命名規則に合わせる。
+String _toSnakeCase(String pascal) {
+  final buffer = StringBuffer();
+  for (var i = 0; i < pascal.length; i++) {
+    final ch = pascal[i];
+    final isUpper = ch.toUpperCase() == ch && ch.toLowerCase() != ch;
+    if (isUpper && i > 0) buffer.write('_');
+    buffer.write(ch.toLowerCase());
+  }
+  return buffer.toString();
+}
+
+/// `MAJOR_WARNING` → `majorWarning`、`VXSE45_FORECAST` → `vxse45Forecast`。
+/// swagger_parser の enum メンバー命名規則に合わせる。
+String _toEnumMemberName(String value) {
+  final parts = value
+      .split(RegExp(r'[_\s-]+'))
+      .where((p) => p.isNotEmpty)
+      .toList();
+  if (parts.isEmpty) return value.toLowerCase();
+  final first = parts.first.toLowerCase();
+  final rest = parts.skip(1).map((p) {
+    final lower = p.toLowerCase();
+    return lower[0].toUpperCase() + lower.substring(1);
+  }).join();
+  return first + rest;
+}
+
+String _buildEnumSource({
+  required String className,
+  required List<String> values,
+  required List<String?> descriptions,
+  String? schemaDescription,
+}) {
+  final buffer = StringBuffer()
+    ..writeln('// coverage:ignore-file')
+    ..writeln('// GENERATED CODE - DO NOT MODIFY BY HAND')
+    ..writeln(
+      '// ignore_for_file: type=lint, unused_import, '
+      'invalid_annotation_target, unnecessary_import',
+    )
+    ..writeln()
+    ..writeln("import 'package:freezed_annotation/freezed_annotation.dart';")
+    ..writeln();
+
+  if (schemaDescription != null && schemaDescription.isNotEmpty) {
+    for (final line in schemaDescription.split('\n')) {
+      buffer.writeln('/// $line');
+    }
+  }
+  buffer
+    ..writeln('@JsonEnum()')
+    ..writeln('enum $className {');
+
+  for (var i = 0; i < values.length; i++) {
+    final value = values[i];
+    final description = descriptions[i];
+    if (description != null && description.isNotEmpty) {
+      for (final line in description.split('\n')) {
+        buffer.writeln('  /// $line');
+      }
+    }
+    final terminator = i == values.length - 1 ? ';' : ',';
+    buffer
+      ..writeln("  @JsonValue('$value')")
+      ..writeln("  ${_toEnumMemberName(value)}('$value')$terminator");
+  }
+
+  // `$unknown` は後段の `_patchGeneratedFiles` で `\$unknown` にエスケープされる。
+  buffer
+    ..writeln()
+    ..writeln('  const $className(this.json);')
+    ..writeln()
+    ..writeln('  final String? json;')
+    ..writeln('  String toJson() {')
+    ..writeln('    final value = json;')
+    ..writeln('    if (value == null) {')
+    ..writeln(
+      "      throw StateError('Cannot convert enum value with null JSON "
+      "representation to String. '",
+    )
+    ..writeln(
+      "          'This usually happens for \$unknown or @JsonValue(null) "
+      "entries.');",
+    )
+    ..writeln('    }')
+    ..writeln('    return value as String;')
+    ..writeln('  }')
+    ..writeln()
+    ..writeln('  @override')
+    ..writeln('  String toString() => json?.toString() ?? super.toString();')
+    ..writeln('}');
+
+  return buffer.toString();
+}
+
 const _telegramStatusImport = "import '../models/telegram_status.dart';";
 
 /// [statuses] クエリの扱い。
@@ -293,7 +452,8 @@ void _patchDynamicQueryParameters(Directory libDir) {
   };
 
   const requiredImports = {
-    'EarthquakeTelegramType': "import '../models/earthquake_telegram_type.dart';",
+    'EarthquakeTelegramType':
+        "import '../models/earthquake_telegram_type.dart';",
   };
 
   final pattern = RegExp(r"@Query\('(\w+)'\)\s+dynamic\s+(\w+)(?=[,)])");
@@ -379,7 +539,7 @@ void _patchUnionFromJson(
     r'factory\s+' +
         RegExp.escape(className) +
         r'\.fromJson\(Map<String, Object\?> json\)\s*=>'
-        r'[\s\S]*?throw UnimplementedError\(\);',
+            r'[\s\S]*?throw UnimplementedError\(\);',
   );
 
   if (!pattern.hasMatch(original)) {
@@ -465,7 +625,10 @@ void _patchApnsEnvironmentEnum(Directory libDir) {
     return;
   }
   final content = file.readAsStringSync();
-  final patched = content.replaceAll('return value as String;', 'return value;');
+  final patched = content.replaceAll(
+    'return value as String;',
+    'return value;',
+  );
   if (patched != content) {
     file.writeAsStringSync(patched);
     stdout.writeln('  patched: ${file.path}');
@@ -501,7 +664,11 @@ void _patchParameterDataResponseUnionFromJson(Directory libDir) {
           'Unknown ParameterDataResponseUnion type',
         ),
       }''';
-  _patchUnionFromJson(file, className: 'ParameterDataResponseUnion', body: body);
+  _patchUnionFromJson(
+    file,
+    className: 'ParameterDataResponseUnion',
+    body: body,
+  );
 }
 
 /// swagger_parser が `@Default(ja)` のようにenum値をリテラルなしで生成する問題を修正。
