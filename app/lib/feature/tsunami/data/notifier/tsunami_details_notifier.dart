@@ -38,11 +38,18 @@ class TsunamiDetailsNotifier extends _$TsunamiDetailsNotifier {
       _isPollingRefreshInProgress = true;
       try {
         final tsunami = await _fetch();
+        if (!ref.mounted) {
+          return;
+        }
         state = AsyncValue.data(tsunami);
         if (!tsunami.isActive) {
           _refreshTimer?.cancel();
         }
-      } on Exception catch (error, stackTrace) {
+        // ignore: avoid_catches_without_on_clauses
+      } catch (error, stackTrace) {
+        if (!ref.mounted) {
+          return;
+        }
         if (!state.hasValue) {
           state = AsyncValue.error(error, stackTrace);
         }
