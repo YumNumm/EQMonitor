@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_region_provider.dart';

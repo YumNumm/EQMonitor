@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_eqmonitor_api_in_ui
 // ignore_for_file: avoid_classes_with_only_static_members
 
 import 'dart:ui';

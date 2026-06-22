@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:analysis_server_plugin/plugin.dart';
 import 'package:analysis_server_plugin/registry.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:eqmonitor_lints/src/rules/avoid_eqmonitor_api_in_ui.dart';
 import 'package:eqmonitor_lints/src/rules/avoid_null_assertion_operator.dart';
 import 'package:eqmonitor_lints/src/rules/avoid_print_call.dart';
 import 'package:eqmonitor_lints/src/rules/avoid_stateful_widget.dart';
@@ -21,6 +22,7 @@ class _EqmonitorLintsPlugin extends Plugin {
       AvoidNullAssertionOperator(),
       AvoidTopLevelFunctions(),
       AvoidPrintCall(),
+      AvoidEqmonitorApiInUi(),
     ].forEach(registry.registerLintRule);
   }
 }

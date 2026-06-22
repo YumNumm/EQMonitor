@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/live_activity/data/notifier/live_activity_test_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;

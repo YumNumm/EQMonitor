@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/component/decoration/warning_stripe_decoration.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';

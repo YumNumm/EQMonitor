@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
