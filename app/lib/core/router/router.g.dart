@@ -527,6 +527,12 @@ RouteBase get $settingsRoute => GoRouteData.$route(
         GoRouteData.$route(
           path: 'tsunami-details',
           factory: $DebugTsunamiDetailsRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'timeline/:tsunamiId',
+              factory: $DebugTsunamiTimelineRoute._fromState,
+            ),
+          ],
         ),
         GoRouteData.$route(
           path: 'nied',
@@ -1331,6 +1337,31 @@ mixin $DebugTsunamiDetailsRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/tsunami-details');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugTsunamiTimelineRoute on GoRouteData {
+  static DebugTsunamiTimelineRoute _fromState(GoRouterState state) =>
+      DebugTsunamiTimelineRoute(tsunamiId: state.pathParameters['tsunamiId']!);
+
+  DebugTsunamiTimelineRoute get _self => this as DebugTsunamiTimelineRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/debug/tsunami-details/timeline/${Uri.encodeComponent(_self.tsunamiId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

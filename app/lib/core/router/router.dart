@@ -49,6 +49,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/notification/de
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_tsunami_details_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/tsunami_telegram_timeline_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
@@ -332,7 +333,14 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
         TypedGoRoute<DebugLiveActivityTestRoute>(path: 'live-activity-test'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
-        TypedGoRoute<DebugTsunamiDetailsRoute>(path: 'tsunami-details'),
+        TypedGoRoute<DebugTsunamiDetailsRoute>(
+          path: 'tsunami-details',
+          routes: [
+            TypedGoRoute<DebugTsunamiTimelineRoute>(
+              path: 'timeline/:tsunamiId',
+            ),
+          ],
+        ),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -680,6 +688,18 @@ class DebugTsunamiDetailsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugTsunamiDetailsPage();
+  }
+}
+
+class DebugTsunamiTimelineRoute extends GoRouteData
+    with $DebugTsunamiTimelineRoute {
+  const DebugTsunamiTimelineRoute({required this.tsunamiId});
+
+  final String tsunamiId;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TsunamiTelegramTimelineDebugPage(tsunamiId: tsunamiId);
   }
 }
 

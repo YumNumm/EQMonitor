@@ -48,6 +48,13 @@ class _TsunamiListView extends ConsumerWidget {
               onTap: () => TsunamiDetailsRoute(
                 tsunamiId: item.id,
               ).push<void>(context),
+              trailing: IconButton(
+                icon: const Icon(Icons.timeline),
+                tooltip: 'タイムライン',
+                onPressed: () => DebugTsunamiTimelineRoute(
+                  tsunamiId: item.id,
+                ).push<void>(context),
+              ),
             );
           },
         );
