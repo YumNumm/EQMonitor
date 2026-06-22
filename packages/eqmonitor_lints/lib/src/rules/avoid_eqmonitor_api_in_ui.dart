@@ -7,12 +7,17 @@ import 'package:analyzer/error/error.dart';
 
 class AvoidEqmonitorApiInUi extends AnalysisRule {
   AvoidEqmonitorApiInUi()
-    : super(name: _code.name, description: _code.problemMessage);
+    : super(
+        name: _code.name,
+        description: _code.problemMessage,
+      );
 
   static const _code = LintCode(
     'avoid_eqmonitor_api_in_ui',
     'UI 層 (ui/ 配下) で package:eqmonitor_api を import してはいけません。',
-    correctionMessage: 'data 層でアプリ用ドメインモデルへ変換し、UI からはドメイン型のみ参照してください。',
+    correctionMessage:
+        'data 層でアプリ用ドメインモデルへ変換し、'
+        ' UI からはドメイン型のみ参照してください。',
     severity: DiagnosticSeverity.WARNING,
   );
 
