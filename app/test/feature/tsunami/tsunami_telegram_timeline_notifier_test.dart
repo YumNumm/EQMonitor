@@ -14,8 +14,8 @@ void main() {
         serialNo: 1,
         title: 'T1',
         headline: null,
-        publishedAt: DateTime(2026, 1, 1),
-        reportedAt: DateTime(2026, 1, 1),
+        publishedAt: DateTime(2026, 1, 15),
+        reportedAt: DateTime(2026, 1, 15),
         targetedAt: null,
         revokedAt: null,
         infoKind: 'k',
@@ -24,6 +24,7 @@ void main() {
     final tracked = TrackedTsunamiTimeline(
       telegrams: meta,
       regions: [
+        // ignore: prefer_const_constructors
         TrackedRegion(
           code: '100',
           name: '宮城',
@@ -44,7 +45,7 @@ void main() {
       offshoreStations: const [],
     );
 
-    final TsunamiTimeline public = tracked.toPublic();
+    final public = tracked.toPublic();
 
     final region = public.regions.single;
     expect(region.code, '100');

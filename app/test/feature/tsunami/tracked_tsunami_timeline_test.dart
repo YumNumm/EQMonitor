@@ -39,15 +39,15 @@ void main() {
     final response = api.TsunamiTelegramsResponse(
       telegrams: [
         api.TsunamiTelegramWithState(
-          telegram: tg('t1', DateTime(2026, 1, 1, 0, 0)),
+          telegram: tg('t1', DateTime(2026, 1, 15)),
           state: stateWithKind(api.TsunamiWarningKind.warning),
         ),
         api.TsunamiTelegramWithState(
-          telegram: tg('t2', DateTime(2026, 1, 1, 0, 5)),
+          telegram: tg('t2', DateTime(2026, 1, 15, 1)),
           state: stateWithKind(api.TsunamiWarningKind.warning), // 変化なし
         ),
         api.TsunamiTelegramWithState(
-          telegram: tg('t3', DateTime(2026, 1, 1, 0, 10)),
+          telegram: tg('t3', DateTime(2026, 1, 15, 2)),
           state: stateWithKind(
             api.TsunamiWarningKind.majorWarning,
           ), // 変化
