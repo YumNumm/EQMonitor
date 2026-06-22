@@ -43,7 +43,7 @@ class _TsunamiListView extends ConsumerWidget {
               subtitle: Text(
                 'Active: ${item.isActive} | '
                 'Canceled: ${item.isCanceled} | '
-                'Regions: ${item.forecastRegions.length}',
+                'Regions: ${item.regions.length}',
               ),
               onTap: () => TsunamiDetailsRoute(
                 tsunamiId: item.id,

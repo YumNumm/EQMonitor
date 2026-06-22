@@ -53,13 +53,11 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final region = tsunami.forecastRegions
-        .cast<MergedForecastRegion?>()
-        .firstWhere(
-          (r) => r?.code == regionCode,
-          orElse: () => null,
-        );
-    if (region == null || region.kind == TsunamiWarningKind.none) {
+    final region = tsunami.regions.firstWhere(
+      (r) => r.code == regionCode,
+      orElse: () => null,
+    );
+    if (region.kind == .) {
       return const SizedBox.shrink();
     }
 

@@ -130,15 +130,15 @@ extension EewItemWithRelationsConverter on api.EewItemWithRelations {
 extension on api.EewHypocenter {
   EewHypocenterInfo _toEewHypocenterInfo() {
     return EewHypocenterInfo(
-      code: value.code,
-      name: value.name,
+      code: code,
+      name: name,
       detailedCode: detailed?.code,
       detailedName: detailed?.name,
       latitude: coordinates?.latitude.toDouble(),
       longitude: coordinates?.longitude.toDouble(),
       hasLatLng: coordinates != null,
       magnitude: magnitude?.toDouble(),
-      depth: depth?.toInt(),
+      depth: depth,
     );
   }
 }
@@ -156,8 +156,8 @@ extension on api.EewIntensity {
 
 extension on api.EewIntensityItem {
   EewForecastRegionInfo _toEewForecastRegionInfo() => EewForecastRegionInfo(
-    code: value.code,
-    name: value.name,
+    code: code,
+    name: name,
     isPlum: isPlum,
     isWarning: isWarning,
     intensity: intensity.value.toJmaIntensity,
@@ -182,8 +182,8 @@ extension on api.EewWarning {
 
 extension on api.EewWarningZoneItem {
   EewWarningZoneInfo _toEewWarningZoneInfo() => EewWarningZoneInfo(
-    code: value.code,
-    name: value.name,
+    code: code,
+    name: name,
     hadWarning: hadWarning,
   );
 }

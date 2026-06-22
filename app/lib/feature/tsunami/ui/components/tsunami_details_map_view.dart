@@ -195,7 +195,7 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
             final tsunamiMapData = jmaMap.areaTsunami;
             final geoJson = _buildTsunamiRegionGeoJson(
               tsunamiMapData,
-              tsunami.forecastRegions,
+              tsunami.regions,
             );
 
             if (disposed) {
@@ -238,11 +238,13 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
                   paint: {
                     'line-color': color,
                     'line-width': switch (kind) {
-                      TsunamiWarningKind.majorWarning => 5.0,
-                      TsunamiWarningKind.warning => 4.0,
-                      TsunamiWarningKind.advisory => 3.0,
-                      TsunamiWarningKind.forecast => 2.0,
-                      TsunamiWarningKind.none => 1.0,
+                      .majorWarning => 5.0,
+                      .warning => 4.0,
+                      .advisory => 3.0,
+                      .forecast => 2.0,
+                      .none => 1.0,
+                      .advisoryCancel => 0,
+                      .warningCancel => 0,
                     },
                     'line-opacity': 0.9,
                   },
@@ -271,7 +273,7 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
           }());
         };
       },
-      [styleController, jmaMapAsync, tsunami.forecastRegions],
+      [styleController, jmaMapAsync, tsunami.regions],
     );
 
     return const SizedBox.shrink();
@@ -281,11 +283,11 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
   /// GeoJSON FeatureCollection を構築する。
   String _buildTsunamiRegionGeoJson(
     JmaMap_JmaMapData tsunamiMapData,
-    List<MergedForecastRegion> forecastRegions,
+    List<TsunamiRegion> regions,
   ) {
     // forecastRegion の code → kind マッピング
     final codeToKind = <String, TsunamiWarningKind>{};
-    for (final region in forecastRegions) {
+    for (final region in regions) {
       codeToKind[region.code] = region.kind;
     }
 
@@ -294,7 +296,7 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
     for (final item in tsunamiMapData.data) {
       final code = item.property.code;
       final kind = codeToKind[code];
-      if (kind == null || kind == TsunamiWarningKind.none) {
+      if (kind == null || kind == .none) {
         continue;
       }
 
@@ -614,7 +616,7 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
     final features = <Map<String, dynamic>>[];
 
     // forecastRegions 内の observation stations
-    for (final region in tsunami.forecastRegions) {
+    for (final region in tsunami.regions) {
       final observation = region.observation;
       if (observation == null) {
         continue;

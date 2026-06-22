@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeHypocenter {
 
- String get code; String get name; Coordinate get coordinates; EarthquakeMagnitude get magnitude; EarthquakeDepth get depth; String? get detailedCode; String? get detailedName;
+ String get code; String get name; Coordinate? get coordinates; EarthquakeMagnitude get magnitude; EarthquakeDepth get depth; String? get detailedCode; String? get detailedName;
 /// Create a copy of EarthquakeHypocenter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $EarthquakeHypocenterCopyWith<$Res>  {
   factory $EarthquakeHypocenterCopyWith(EarthquakeHypocenter value, $Res Function(EarthquakeHypocenter) _then) = _$EarthquakeHypocenterCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, Coordinate coordinates, EarthquakeMagnitude magnitude, EarthquakeDepth depth, String? detailedCode, String? detailedName
+ String code, String name, Coordinate? coordinates, EarthquakeMagnitude magnitude, EarthquakeDepth depth, String? detailedCode, String? detailedName
 });
 
 
-$CoordinateCopyWith<$Res> get coordinates;$EarthquakeMagnitudeCopyWith<$Res> get magnitude;$EarthquakeDepthCopyWith<$Res> get depth;
+$CoordinateCopyWith<$Res>? get coordinates;$EarthquakeMagnitudeCopyWith<$Res> get magnitude;$EarthquakeDepthCopyWith<$Res> get depth;
 
 }
 /// @nodoc
@@ -65,12 +65,12 @@ class _$EarthquakeHypocenterCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHypocenter
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? coordinates = null,Object? magnitude = null,Object? depth = null,Object? detailedCode = freezed,Object? detailedName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? coordinates = freezed,Object? magnitude = null,Object? depth = null,Object? detailedCode = freezed,Object? detailedName = freezed,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,coordinates: null == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
-as Coordinate,magnitude: null == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
+as String,coordinates: freezed == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
+as Coordinate?,magnitude: null == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
 as EarthquakeMagnitude,depth: null == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
 as EarthquakeDepth,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
 as String?,detailedName: freezed == detailedName ? _self.detailedName : detailedName // ignore: cast_nullable_to_non_nullable
@@ -81,9 +81,12 @@ as String?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$CoordinateCopyWith<$Res> get coordinates {
-  
-  return $CoordinateCopyWith<$Res>(_self.coordinates, (value) {
+$CoordinateCopyWith<$Res>? get coordinates {
+    if (_self.coordinates == null) {
+    return null;
+  }
+
+  return $CoordinateCopyWith<$Res>(_self.coordinates!, (value) {
     return _then(_self.copyWith(coordinates: value));
   });
 }/// Create a copy of EarthquakeHypocenter
@@ -186,7 +189,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  Coordinate coordinates,  EarthquakeMagnitude magnitude,  EarthquakeDepth depth,  String? detailedCode,  String? detailedName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  Coordinate? coordinates,  EarthquakeMagnitude magnitude,  EarthquakeDepth depth,  String? detailedCode,  String? detailedName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHypocenter() when $default != null:
 return $default(_that.code,_that.name,_that.coordinates,_that.magnitude,_that.depth,_that.detailedCode,_that.detailedName);case _:
@@ -207,7 +210,7 @@ return $default(_that.code,_that.name,_that.coordinates,_that.magnitude,_that.de
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  Coordinate coordinates,  EarthquakeMagnitude magnitude,  EarthquakeDepth depth,  String? detailedCode,  String? detailedName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  Coordinate? coordinates,  EarthquakeMagnitude magnitude,  EarthquakeDepth depth,  String? detailedCode,  String? detailedName)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHypocenter():
 return $default(_that.code,_that.name,_that.coordinates,_that.magnitude,_that.depth,_that.detailedCode,_that.detailedName);case _:
@@ -227,7 +230,7 @@ return $default(_that.code,_that.name,_that.coordinates,_that.magnitude,_that.de
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  Coordinate coordinates,  EarthquakeMagnitude magnitude,  EarthquakeDepth depth,  String? detailedCode,  String? detailedName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  Coordinate? coordinates,  EarthquakeMagnitude magnitude,  EarthquakeDepth depth,  String? detailedCode,  String? detailedName)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHypocenter() when $default != null:
 return $default(_that.code,_that.name,_that.coordinates,_that.magnitude,_that.depth,_that.detailedCode,_that.detailedName);case _:
@@ -247,7 +250,7 @@ class _EarthquakeHypocenter implements EarthquakeHypocenter {
 
 @override final  String code;
 @override final  String name;
-@override final  Coordinate coordinates;
+@override final  Coordinate? coordinates;
 @override final  EarthquakeMagnitude magnitude;
 @override final  EarthquakeDepth depth;
 @override final  String? detailedCode;
@@ -286,11 +289,11 @@ abstract mixin class _$EarthquakeHypocenterCopyWith<$Res> implements $Earthquake
   factory _$EarthquakeHypocenterCopyWith(_EarthquakeHypocenter value, $Res Function(_EarthquakeHypocenter) _then) = __$EarthquakeHypocenterCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, Coordinate coordinates, EarthquakeMagnitude magnitude, EarthquakeDepth depth, String? detailedCode, String? detailedName
+ String code, String name, Coordinate? coordinates, EarthquakeMagnitude magnitude, EarthquakeDepth depth, String? detailedCode, String? detailedName
 });
 
 
-@override $CoordinateCopyWith<$Res> get coordinates;@override $EarthquakeMagnitudeCopyWith<$Res> get magnitude;@override $EarthquakeDepthCopyWith<$Res> get depth;
+@override $CoordinateCopyWith<$Res>? get coordinates;@override $EarthquakeMagnitudeCopyWith<$Res> get magnitude;@override $EarthquakeDepthCopyWith<$Res> get depth;
 
 }
 /// @nodoc
@@ -303,12 +306,12 @@ class __$EarthquakeHypocenterCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHypocenter
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? coordinates = null,Object? magnitude = null,Object? depth = null,Object? detailedCode = freezed,Object? detailedName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? coordinates = freezed,Object? magnitude = null,Object? depth = null,Object? detailedCode = freezed,Object? detailedName = freezed,}) {
   return _then(_EarthquakeHypocenter(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,coordinates: null == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
-as Coordinate,magnitude: null == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
+as String,coordinates: freezed == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
+as Coordinate?,magnitude: null == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
 as EarthquakeMagnitude,depth: null == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
 as EarthquakeDepth,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
 as String?,detailedName: freezed == detailedName ? _self.detailedName : detailedName // ignore: cast_nullable_to_non_nullable
@@ -320,9 +323,12 @@ as String?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$CoordinateCopyWith<$Res> get coordinates {
-  
-  return $CoordinateCopyWith<$Res>(_self.coordinates, (value) {
+$CoordinateCopyWith<$Res>? get coordinates {
+    if (_self.coordinates == null) {
+    return null;
+  }
+
+  return $CoordinateCopyWith<$Res>(_self.coordinates!, (value) {
     return _then(_self.copyWith(coordinates: value));
   });
 }/// Create a copy of EarthquakeHypocenter

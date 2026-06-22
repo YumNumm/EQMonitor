@@ -12,7 +12,7 @@ abstract class EarthquakeHypocenter with _$EarthquakeHypocenter {
   const factory EarthquakeHypocenter({
     required String code,
     required String name,
-    required Coordinate coordinates,
+    required Coordinate? coordinates,
     required EarthquakeMagnitude magnitude,
     required EarthquakeDepth depth,
     required String? detailedCode,
@@ -25,9 +25,9 @@ abstract class EarthquakeHypocenter with _$EarthquakeHypocenter {
 
 extension EarthquakeHypocenterApiExtension on api.Hypocenter {
   EarthquakeHypocenter get toEarthquakeHypocenter => EarthquakeHypocenter(
-    code: value.code,
-    name: value.name,
-    coordinates: coordinates.toCoordinate,
+    code: code,
+    name: name,
+    coordinates: coordinates?.toCoordinate,
     magnitude: magnitude.toEarthquakeMagnitude,
     depth: depth.toEarthquakeDepth,
     detailedCode: detailed?.code,
