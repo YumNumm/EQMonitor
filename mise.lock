@@ -412,6 +412,9 @@ url = "https://github.com/jdx/hk/releases/download/v1.46.0/hk-x86_64-pc-windows-
 version = "17.0.2"
 backend = "core:java"
 
+[tools.java.options]
+shorthand_vendor = "openjdk"
+
 [[tools.node]]
 version = "24.16.0"
 backend = "core:node"
@@ -659,6 +662,9 @@ checksum = "blake3:7c85377fa6d9bdbeec3f6724522835c59d31483906d5bee41ec41807eff0a
 [[tools.swiftformat]]
 version = "0.61.1"
 backend = "github:nicklockwood/SwiftFormat"
+
+[tools.swiftformat.options]
+no_app = "true"
 
 [[tools.terraform]]
 version = "1.15.5"
