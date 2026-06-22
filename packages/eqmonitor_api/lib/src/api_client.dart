@@ -27,8 +27,8 @@ class ApiClient {
   ApiClient(
     Dio dio, {
     String? baseUrl,
-  })  : _dio = dio,
-        _baseUrl = baseUrl;
+  }) : _dio = dio,
+       _baseUrl = baseUrl;
 
   final Dio _dio;
   final String? _baseUrl;
@@ -51,33 +51,45 @@ class ApiClient {
   RealtimeApiClient? _realtime;
   WebhooksApiClient? _webhooks;
 
-  ChangelogApiClient get changelog => _changelog ??= ChangelogApiClient(_dio, baseUrl: _baseUrl);
+  ChangelogApiClient get changelog =>
+      _changelog ??= ChangelogApiClient(_dio, baseUrl: _baseUrl);
 
-  StartApiClient get start => _start ??= StartApiClient(_dio, baseUrl: _baseUrl);
+  StartApiClient get start =>
+      _start ??= StartApiClient(_dio, baseUrl: _baseUrl);
 
-  AdminApiClient get admin => _admin ??= AdminApiClient(_dio, baseUrl: _baseUrl);
+  AdminApiClient get admin =>
+      _admin ??= AdminApiClient(_dio, baseUrl: _baseUrl);
 
-  DeviceApiClient get device => _device ??= DeviceApiClient(_dio, baseUrl: _baseUrl);
+  DeviceApiClient get device =>
+      _device ??= DeviceApiClient(_dio, baseUrl: _baseUrl);
 
-  NotificationApiClient get notification => _notification ??= NotificationApiClient(_dio, baseUrl: _baseUrl);
+  NotificationApiClient get notification =>
+      _notification ??= NotificationApiClient(_dio, baseUrl: _baseUrl);
 
-  EarthquakeApiClient get earthquake => _earthquake ??= EarthquakeApiClient(_dio, baseUrl: _baseUrl);
+  EarthquakeApiClient get earthquake =>
+      _earthquake ??= EarthquakeApiClient(_dio, baseUrl: _baseUrl);
 
   EewApiClient get eew => _eew ??= EewApiClient(_dio, baseUrl: _baseUrl);
 
   FeedApiClient get feed => _feed ??= FeedApiClient(_dio, baseUrl: _baseUrl);
 
-  ParametersApiClient get parameters => _parameters ??= ParametersApiClient(_dio, baseUrl: _baseUrl);
+  ParametersApiClient get parameters =>
+      _parameters ??= ParametersApiClient(_dio, baseUrl: _baseUrl);
 
-  SubscriptionApiClient get subscription => _subscription ??= SubscriptionApiClient(_dio, baseUrl: _baseUrl);
+  SubscriptionApiClient get subscription =>
+      _subscription ??= SubscriptionApiClient(_dio, baseUrl: _baseUrl);
 
-  TelegramApiClient get telegram => _telegram ??= TelegramApiClient(_dio, baseUrl: _baseUrl);
+  TelegramApiClient get telegram =>
+      _telegram ??= TelegramApiClient(_dio, baseUrl: _baseUrl);
 
-  TsunamiApiClient get tsunami => _tsunami ??= TsunamiApiClient(_dio, baseUrl: _baseUrl);
+  TsunamiApiClient get tsunami =>
+      _tsunami ??= TsunamiApiClient(_dio, baseUrl: _baseUrl);
 
   UserApiClient get user => _user ??= UserApiClient(_dio, baseUrl: _baseUrl);
 
-  RealtimeApiClient get realtime => _realtime ??= RealtimeApiClient(_dio, baseUrl: _baseUrl);
+  RealtimeApiClient get realtime =>
+      _realtime ??= RealtimeApiClient(_dio, baseUrl: _baseUrl);
 
-  WebhooksApiClient get webhooks => _webhooks ??= WebhooksApiClient(_dio, baseUrl: _baseUrl);
+  WebhooksApiClient get webhooks =>
+      _webhooks ??= WebhooksApiClient(_dio, baseUrl: _baseUrl);
 }

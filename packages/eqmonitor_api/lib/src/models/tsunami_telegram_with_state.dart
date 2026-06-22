@@ -16,6 +16,7 @@ abstract class TsunamiTelegramWithState with _$TsunamiTelegramWithState {
     required LatestTelegram telegram,
     required TsunamiState state,
   }) = _TsunamiTelegramWithState;
-  
-  factory TsunamiTelegramWithState.fromJson(Map<String, Object?> json) => _$TsunamiTelegramWithStateFromJson(json);
+
+  factory TsunamiTelegramWithState.fromJson(Map<String, Object?> json) =>
+      _$TsunamiTelegramWithStateFromJson(json);
 }

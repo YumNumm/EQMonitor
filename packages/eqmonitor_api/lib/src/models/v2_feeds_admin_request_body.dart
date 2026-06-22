@@ -19,9 +19,9 @@ abstract class V2FeedsAdminRequestBody with _$V2FeedsAdminRequestBody {
     required String publishedAt,
     required Data data,
     required List<Translations> translations,
-    @JsonKey(includeIfNull: false)
-    String? expiresAt,
+    @JsonKey(includeIfNull: false) String? expiresAt,
   }) = _V2FeedsAdminRequestBody;
-  
-  factory V2FeedsAdminRequestBody.fromJson(Map<String, Object?> json) => _$V2FeedsAdminRequestBodyFromJson(json);
+
+  factory V2FeedsAdminRequestBody.fromJson(Map<String, Object?> json) =>
+      _$V2FeedsAdminRequestBodyFromJson(json);
 }

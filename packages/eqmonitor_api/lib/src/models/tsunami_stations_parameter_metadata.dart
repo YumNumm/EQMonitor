@@ -8,21 +8,20 @@ part 'tsunami_stations_parameter_metadata.freezed.dart';
 part 'tsunami_stations_parameter_metadata.g.dart';
 
 @Freezed()
-abstract class TsunamiStationsParameterMetadata with _$TsunamiStationsParameterMetadata {
+abstract class TsunamiStationsParameterMetadata
+    with _$TsunamiStationsParameterMetadata {
   const factory TsunamiStationsParameterMetadata({
     required dynamic type,
-    @JsonKey(name: 'schema_version')
-    required dynamic schemaVersion,
-    @JsonKey(name: 'source_version')
-    required String sourceVersion,
-    @JsonKey(includeIfNull: true,name: 'source_updated_at')
+    @JsonKey(name: 'schema_version') required dynamic schemaVersion,
+    @JsonKey(name: 'source_version') required String sourceVersion,
+    @JsonKey(includeIfNull: true, name: 'source_updated_at')
     required String? sourceUpdatedAt,
-    @JsonKey(name: 'generated_at')
-    required String generatedAt,
-    @JsonKey(name: 'source_urls')
-    required List<String> sourceUrls,
+    @JsonKey(name: 'generated_at') required String generatedAt,
+    @JsonKey(name: 'source_urls') required List<String> sourceUrls,
     required String sha256,
   }) = _TsunamiStationsParameterMetadata;
-  
-  factory TsunamiStationsParameterMetadata.fromJson(Map<String, Object?> json) => _$TsunamiStationsParameterMetadataFromJson(json);
+
+  factory TsunamiStationsParameterMetadata.fromJson(
+    Map<String, Object?> json,
+  ) => _$TsunamiStationsParameterMetadataFromJson(json);
 }

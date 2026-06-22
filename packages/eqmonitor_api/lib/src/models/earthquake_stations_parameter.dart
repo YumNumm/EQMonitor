@@ -16,6 +16,7 @@ abstract class EarthquakeStationsParameter with _$EarthquakeStationsParameter {
     required ParameterMetadata metadata,
     required List<EarthquakeStationPrefecture> prefectures,
   }) = _EarthquakeStationsParameter;
-  
-  factory EarthquakeStationsParameter.fromJson(Map<String, Object?> json) => _$EarthquakeStationsParameterFromJson(json);
+
+  factory EarthquakeStationsParameter.fromJson(Map<String, Object?> json) =>
+      _$EarthquakeStationsParameterFromJson(json);
 }

@@ -13,6 +13,7 @@ abstract class StoreUrl with _$StoreUrl {
     required String ios,
     required String android,
   }) = _StoreUrl;
-  
-  factory StoreUrl.fromJson(Map<String, Object?> json) => _$StoreUrlFromJson(json);
+
+  factory StoreUrl.fromJson(Map<String, Object?> json) =>
+      _$StoreUrlFromJson(json);
 }

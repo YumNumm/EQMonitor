@@ -15,9 +15,9 @@ abstract class EewWarningZoneItem with _$EewWarningZoneItem {
     required String name,
 
     /// 前回の情報において、警報だったかどうか
-    @JsonKey(name: 'had_warning')
-    required bool hadWarning,
+    @JsonKey(name: 'had_warning') required bool hadWarning,
   }) = _EewWarningZoneItem;
-  
-  factory EewWarningZoneItem.fromJson(Map<String, Object?> json) => _$EewWarningZoneItemFromJson(json);
+
+  factory EewWarningZoneItem.fromJson(Map<String, Object?> json) =>
+      _$EewWarningZoneItemFromJson(json);
 }

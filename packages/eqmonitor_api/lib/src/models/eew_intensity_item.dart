@@ -17,16 +17,15 @@ abstract class EewIntensityItem with _$EewIntensityItem {
     /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
     required String code,
     required String name,
-    @JsonKey(name: 'is_plum')
-    required bool isPlum,
-    @JsonKey(name: 'is_warning')
-    required bool isWarning,
+    @JsonKey(name: 'is_plum') required bool isPlum,
+    @JsonKey(name: 'is_warning') required bool isWarning,
     required EewIntensityValue intensity,
     @JsonKey(name: 'arrival_time')
     required EewIntensityRegionArrivalTimeTime arrivalTime,
-    @JsonKey(includeIfNull: false,name: 'lpgm_intensity')
+    @JsonKey(includeIfNull: false, name: 'lpgm_intensity')
     EewIntensityLpgmValue? lpgmIntensity,
   }) = _EewIntensityItem;
-  
-  factory EewIntensityItem.fromJson(Map<String, Object?> json) => _$EewIntensityItemFromJson(json);
+
+  factory EewIntensityItem.fromJson(Map<String, Object?> json) =>
+      _$EewIntensityItemFromJson(json);
 }

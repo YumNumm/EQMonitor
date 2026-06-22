@@ -13,6 +13,7 @@ abstract class ChangelogSection with _$ChangelogSection {
     required String title,
     required List<String> items,
   }) = _ChangelogSection;
-  
-  factory ChangelogSection.fromJson(Map<String, Object?> json) => _$ChangelogSectionFromJson(json);
+
+  factory ChangelogSection.fromJson(Map<String, Object?> json) =>
+      _$ChangelogSectionFromJson(json);
 }

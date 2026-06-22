@@ -8,16 +8,16 @@ part 'live_activity_test_scenario_response.freezed.dart';
 part 'live_activity_test_scenario_response.g.dart';
 
 @Freezed()
-abstract class LiveActivityTestScenarioResponse with _$LiveActivityTestScenarioResponse {
+abstract class LiveActivityTestScenarioResponse
+    with _$LiveActivityTestScenarioResponse {
   const factory LiveActivityTestScenarioResponse({
     required dynamic ok,
-    @JsonKey(name: 'event_id')
-    required String eventId,
-    @JsonKey(name: 'live_activity_id')
-    required String liveActivityId,
-    @JsonKey(name: 'reports_planned')
-    required num reportsPlanned,
+    @JsonKey(name: 'event_id') required String eventId,
+    @JsonKey(name: 'live_activity_id') required String liveActivityId,
+    @JsonKey(name: 'reports_planned') required num reportsPlanned,
   }) = _LiveActivityTestScenarioResponse;
-  
-  factory LiveActivityTestScenarioResponse.fromJson(Map<String, Object?> json) => _$LiveActivityTestScenarioResponseFromJson(json);
+
+  factory LiveActivityTestScenarioResponse.fromJson(
+    Map<String, Object?> json,
+  ) => _$LiveActivityTestScenarioResponseFromJson(json);
 }

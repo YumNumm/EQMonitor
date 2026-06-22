@@ -17,6 +17,7 @@ abstract class ChangelogEntry with _$ChangelogEntry {
     required String url,
     required List<ChangelogSection> sections,
   }) = _ChangelogEntry;
-  
-  factory ChangelogEntry.fromJson(Map<String, Object?> json) => _$ChangelogEntryFromJson(json);
+
+  factory ChangelogEntry.fromJson(Map<String, Object?> json) =>
+      _$ChangelogEntryFromJson(json);
 }

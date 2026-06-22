@@ -13,6 +13,6 @@ abstract class Kind with _$Kind {
     required String code,
     required String name,
   }) = _Kind;
-  
+
   factory Kind.fromJson(Map<String, Object?> json) => _$KindFromJson(json);
 }

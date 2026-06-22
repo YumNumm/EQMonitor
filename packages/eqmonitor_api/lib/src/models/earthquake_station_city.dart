@@ -15,10 +15,10 @@ abstract class EarthquakeStationCity with _$EarthquakeStationCity {
   const factory EarthquakeStationCity({
     required String code,
     required LocalizedName name,
-    @JsonKey(includeIfNull: true)
-    required String? kana,
+    @JsonKey(includeIfNull: true) required String? kana,
     required List<EarthquakeStation> stations,
   }) = _EarthquakeStationCity;
-  
-  factory EarthquakeStationCity.fromJson(Map<String, Object?> json) => _$EarthquakeStationCityFromJson(json);
+
+  factory EarthquakeStationCity.fromJson(Map<String, Object?> json) =>
+      _$EarthquakeStationCityFromJson(json);
 }

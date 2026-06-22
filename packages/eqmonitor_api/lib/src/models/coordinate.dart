@@ -17,6 +17,7 @@ abstract class Coordinate with _$Coordinate {
     /// 経度
     required num longitude,
   }) = _Coordinate;
-  
-  factory Coordinate.fromJson(Map<String, Object?> json) => _$CoordinateFromJson(json);
+
+  factory Coordinate.fromJson(Map<String, Object?> json) =>
+      _$CoordinateFromJson(json);
 }

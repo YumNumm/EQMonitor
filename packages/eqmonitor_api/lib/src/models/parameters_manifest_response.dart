@@ -14,6 +14,7 @@ abstract class ParametersManifestResponse with _$ParametersManifestResponse {
   const factory ParametersManifestResponse({
     required List<ParameterManifestItem> parameters,
   }) = _ParametersManifestResponse;
-  
-  factory ParametersManifestResponse.fromJson(Map<String, Object?> json) => _$ParametersManifestResponseFromJson(json);
+
+  factory ParametersManifestResponse.fromJson(Map<String, Object?> json) =>
+      _$ParametersManifestResponseFromJson(json);
 }

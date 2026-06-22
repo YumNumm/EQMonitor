@@ -14,11 +14,10 @@ abstract class LatestVersion with _$LatestVersion {
   const factory LatestVersion({
     required String version,
     required DateTime date,
-    @JsonKey(name: 'show_whats_new')
-    required bool showWhatsNew,
-    @JsonKey(includeIfNull: false,name: 'whats_new')
-    WhatsNew? whatsNew,
+    @JsonKey(name: 'show_whats_new') required bool showWhatsNew,
+    @JsonKey(includeIfNull: false, name: 'whats_new') WhatsNew? whatsNew,
   }) = _LatestVersion;
-  
-  factory LatestVersion.fromJson(Map<String, Object?> json) => _$LatestVersionFromJson(json);
+
+  factory LatestVersion.fromJson(Map<String, Object?> json) =>
+      _$LatestVersionFromJson(json);
 }
