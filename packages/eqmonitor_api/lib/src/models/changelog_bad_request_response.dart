@@ -13,7 +13,6 @@ abstract class ChangelogBadRequestResponse with _$ChangelogBadRequestResponse {
     required dynamic code,
     required String message,
   }) = _ChangelogBadRequestResponse;
-
-  factory ChangelogBadRequestResponse.fromJson(Map<String, Object?> json) =>
-      _$ChangelogBadRequestResponseFromJson(json);
+  
+  factory ChangelogBadRequestResponse.fromJson(Map<String, Object?> json) => _$ChangelogBadRequestResponseFromJson(json);
 }

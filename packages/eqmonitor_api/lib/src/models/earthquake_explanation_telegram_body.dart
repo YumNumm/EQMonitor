@@ -8,14 +8,11 @@ part 'earthquake_explanation_telegram_body.freezed.dart';
 part 'earthquake_explanation_telegram_body.g.dart';
 
 @Freezed()
-abstract class EarthquakeExplanationTelegramBody
-    with _$EarthquakeExplanationTelegramBody {
+abstract class EarthquakeExplanationTelegramBody with _$EarthquakeExplanationTelegramBody {
   const factory EarthquakeExplanationTelegramBody({
     required dynamic type,
     required String text,
   }) = _EarthquakeExplanationTelegramBody;
-
-  factory EarthquakeExplanationTelegramBody.fromJson(
-    Map<String, Object?> json,
-  ) => _$EarthquakeExplanationTelegramBodyFromJson(json);
+  
+  factory EarthquakeExplanationTelegramBody.fromJson(Map<String, Object?> json) => _$EarthquakeExplanationTelegramBodyFromJson(json);
 }

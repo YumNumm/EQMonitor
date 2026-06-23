@@ -81,7 +81,6 @@ const _parameter = EarthquakeParameter(
     schemaVersion: 1,
     sourceVersion: 'test',
     sourceUpdatedAt: null,
-    generatedAt: '2026-06-04T00:00:00Z',
     sourceUrls: [],
     sha256: 'test',
   ),

@@ -14,11 +14,11 @@ part 'lpgm_intensity_tree.g.dart';
 @Freezed()
 abstract class LpgmIntensityTree with _$LpgmIntensityTree {
   const factory LpgmIntensityTree({
-    @JsonKey(name: 'lpgm_intensity') required JmaLpgmIntensity lpgmIntensity,
+    @JsonKey(name: 'lpgm_intensity')
+    required JmaLpgmIntensity lpgmIntensity,
     required List<LpgmIntensityTreeRegionId> regions,
     required List<IntensityStationItem> stations,
   }) = _LpgmIntensityTree;
-
-  factory LpgmIntensityTree.fromJson(Map<String, Object?> json) =>
-      _$LpgmIntensityTreeFromJson(json);
+  
+  factory LpgmIntensityTree.fromJson(Map<String, Object?> json) => _$LpgmIntensityTreeFromJson(json);
 }

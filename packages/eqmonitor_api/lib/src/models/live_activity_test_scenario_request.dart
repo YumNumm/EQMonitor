@@ -11,13 +11,13 @@ part 'live_activity_test_scenario_request.freezed.dart';
 part 'live_activity_test_scenario_request.g.dart';
 
 @Freezed()
-abstract class LiveActivityTestScenarioRequest
-    with _$LiveActivityTestScenarioRequest {
+abstract class LiveActivityTestScenarioRequest with _$LiveActivityTestScenarioRequest {
   const factory LiveActivityTestScenarioRequest({
-    @JsonKey(name: 'event_type') required LiveActivityStartTrigger eventType,
-    @JsonKey(includeIfNull: false) Scenario? scenario,
+    @JsonKey(name: 'event_type')
+    required LiveActivityStartTrigger eventType,
+    @JsonKey(includeIfNull: false)
+    Scenario? scenario,
   }) = _LiveActivityTestScenarioRequest;
-
-  factory LiveActivityTestScenarioRequest.fromJson(Map<String, Object?> json) =>
-      _$LiveActivityTestScenarioRequestFromJson(json);
+  
+  factory LiveActivityTestScenarioRequest.fromJson(Map<String, Object?> json) => _$LiveActivityTestScenarioRequestFromJson(json);
 }

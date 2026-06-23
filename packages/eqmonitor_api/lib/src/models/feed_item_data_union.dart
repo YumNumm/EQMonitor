@@ -21,54 +21,68 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
     required dynamic type,
     required String text,
   }) = FeedItemDataUnionVariant1;
-
+  
   @JsonSerializable()
   const factory FeedItemDataUnion.variant2({
     required dynamic type,
     required dynamic infoType,
     required String text,
-    @JsonKey(includeIfNull: false) Naming? naming,
-    @JsonKey(includeIfNull: false) Comments? comments,
+    @JsonKey(includeIfNull: false)
+    Naming? naming,
+    @JsonKey(includeIfNull: false)
+    Comments? comments,
   }) = FeedItemDataUnionVariant2;
-
+  
   @JsonSerializable()
   const factory FeedItemDataUnion.variant3({
     required dynamic type,
     required dynamic infoType,
-    @JsonKey(includeIfNull: false) List<EarthquakeCounts>? earthquakeCounts,
-    @JsonKey(includeIfNull: false) String? nextAdvisory,
-    @JsonKey(includeIfNull: false) String? text,
-    @JsonKey(includeIfNull: false) Comments2? comments,
+    @JsonKey(includeIfNull: false)
+    List<EarthquakeCounts>? earthquakeCounts,
+    @JsonKey(includeIfNull: false)
+    String? nextAdvisory,
+    @JsonKey(includeIfNull: false)
+    String? text,
+    @JsonKey(includeIfNull: false)
+    Comments2? comments,
   }) = FeedItemDataUnionVariant3;
-
+  
   @JsonSerializable()
   const factory FeedItemDataUnion.variant4({
     required dynamic type,
     required dynamic infoType,
     required dynamic telegramType,
-    @JsonKey(includeIfNull: false) EarthquakeInfo? earthquakeInfo,
-    @JsonKey(includeIfNull: false) String? nextAdvisory,
-    @JsonKey(includeIfNull: false) String? text,
+    @JsonKey(includeIfNull: false)
+    EarthquakeInfo? earthquakeInfo,
+    @JsonKey(includeIfNull: false)
+    String? nextAdvisory,
+    @JsonKey(includeIfNull: false)
+    String? text,
   }) = FeedItemDataUnionVariant4;
-
+  
   @JsonSerializable()
   const factory FeedItemDataUnion.variant5({
     required dynamic type,
-    @JsonKey(includeIfNull: false) String? version,
-    @JsonKey(includeIfNull: false) String? url,
+    @JsonKey(includeIfNull: false)
+    String? version,
+    @JsonKey(includeIfNull: false)
+    String? url,
   }) = FeedItemDataUnionVariant5;
-
+  
   @JsonSerializable()
   const factory FeedItemDataUnion.variant6({
     required dynamic type,
-    @JsonKey(includeIfNull: false) String? url,
+    @JsonKey(includeIfNull: false)
+    String? url,
   }) = FeedItemDataUnionVariant6;
-
+  
   @JsonSerializable()
   const factory FeedItemDataUnion.variant7({
     required dynamic type,
-    @JsonKey(includeIfNull: false) String? url,
+    @JsonKey(includeIfNull: false)
+    String? url,
   }) = FeedItemDataUnionVariant7;
+  
 
   factory FeedItemDataUnion.fromJson(Map<String, Object?> json) =>
       switch (json['type']) {
@@ -85,4 +99,5 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
           'Unknown FeedItemDataUnion type',
         ),
       };
+
 }

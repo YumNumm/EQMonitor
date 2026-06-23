@@ -11,10 +11,11 @@ part 'maintenance_info.g.dart';
 abstract class MaintenanceInfo with _$MaintenanceInfo {
   const factory MaintenanceInfo({
     required bool enabled,
-    @JsonKey(includeIfNull: false) String? message,
-    @JsonKey(includeIfNull: false) String? url,
+    @JsonKey(includeIfNull: false)
+    String? message,
+    @JsonKey(includeIfNull: false)
+    String? url,
   }) = _MaintenanceInfo;
-
-  factory MaintenanceInfo.fromJson(Map<String, Object?> json) =>
-      _$MaintenanceInfoFromJson(json);
+  
+  factory MaintenanceInfo.fromJson(Map<String, Object?> json) => _$MaintenanceInfoFromJson(json);
 }

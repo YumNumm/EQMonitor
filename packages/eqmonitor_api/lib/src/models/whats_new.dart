@@ -11,9 +11,9 @@ part 'whats_new.g.dart';
 abstract class WhatsNew with _$WhatsNew {
   const factory WhatsNew({
     required String content,
-    @JsonKey(includeIfNull: false) String? title,
+    @JsonKey(includeIfNull: false)
+    String? title,
   }) = _WhatsNew;
-
-  factory WhatsNew.fromJson(Map<String, Object?> json) =>
-      _$WhatsNewFromJson(json);
+  
+  factory WhatsNew.fromJson(Map<String, Object?> json) => _$WhatsNewFromJson(json);
 }

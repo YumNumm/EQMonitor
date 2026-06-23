@@ -13,10 +13,11 @@ part 'earthquake_info.g.dart';
 abstract class EarthquakeInfo with _$EarthquakeInfo {
   const factory EarthquakeInfo({
     required String text,
-    @JsonKey(includeIfNull: false) Kind? kind,
-    @JsonKey(includeIfNull: false) String? appendix,
+    @JsonKey(includeIfNull: false)
+    Kind? kind,
+    @JsonKey(includeIfNull: false)
+    String? appendix,
   }) = _EarthquakeInfo;
-
-  factory EarthquakeInfo.fromJson(Map<String, Object?> json) =>
-      _$EarthquakeInfoFromJson(json);
+  
+  factory EarthquakeInfo.fromJson(Map<String, Object?> json) => _$EarthquakeInfoFromJson(json);
 }

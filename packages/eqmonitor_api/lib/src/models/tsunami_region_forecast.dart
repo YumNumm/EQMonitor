@@ -13,12 +13,11 @@ part 'tsunami_region_forecast.g.dart';
 @Freezed()
 abstract class TsunamiRegionForecast with _$TsunamiRegionForecast {
   const factory TsunamiRegionForecast({
-    @JsonKey(includeIfNull: false, name: 'first_height')
+    @JsonKey(includeIfNull: false,name: 'first_height')
     TsunamiRegionForecastFirstHeight? firstHeight,
-    @JsonKey(includeIfNull: false, name: 'max_height')
+    @JsonKey(includeIfNull: false,name: 'max_height')
     TsunamiRegionForecastMaxHeight? maxHeight,
   }) = _TsunamiRegionForecast;
-
-  factory TsunamiRegionForecast.fromJson(Map<String, Object?> json) =>
-      _$TsunamiRegionForecastFromJson(json);
+  
+  factory TsunamiRegionForecast.fromJson(Map<String, Object?> json) => _$TsunamiRegionForecastFromJson(json);
 }

@@ -12,7 +12,6 @@ abstract class V2DeviceMeFcmRequestBody with _$V2DeviceMeFcmRequestBody {
   const factory V2DeviceMeFcmRequestBody({
     required String token,
   }) = _V2DeviceMeFcmRequestBody;
-
-  factory V2DeviceMeFcmRequestBody.fromJson(Map<String, Object?> json) =>
-      _$V2DeviceMeFcmRequestBodyFromJson(json);
+  
+  factory V2DeviceMeFcmRequestBody.fromJson(Map<String, Object?> json) => _$V2DeviceMeFcmRequestBodyFromJson(json);
 }

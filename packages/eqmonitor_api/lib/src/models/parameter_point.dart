@@ -13,7 +13,6 @@ abstract class ParameterPoint with _$ParameterPoint {
     required num x,
     required num y,
   }) = _ParameterPoint;
-
-  factory ParameterPoint.fromJson(Map<String, Object?> json) =>
-      _$ParameterPointFromJson(json);
+  
+  factory ParameterPoint.fromJson(Map<String, Object?> json) => _$ParameterPointFromJson(json);
 }

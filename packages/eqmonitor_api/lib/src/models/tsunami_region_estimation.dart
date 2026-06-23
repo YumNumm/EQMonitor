@@ -13,12 +13,13 @@ part 'tsunami_region_estimation.g.dart';
 @Freezed()
 abstract class TsunamiRegionEstimation with _$TsunamiRegionEstimation {
   const factory TsunamiRegionEstimation({
-    @JsonKey(name: 'first_height') required FirstHeight firstHeight,
+    @JsonKey(name: 'first_height')
+    required FirstHeight firstHeight,
 
     /// 津波の予想高さ(推定値)
-    @JsonKey(name: 'max_height') required MaxHeight maxHeight,
+    @JsonKey(name: 'max_height')
+    required MaxHeight maxHeight,
   }) = _TsunamiRegionEstimation;
-
-  factory TsunamiRegionEstimation.fromJson(Map<String, Object?> json) =>
-      _$TsunamiRegionEstimationFromJson(json);
+  
+  factory TsunamiRegionEstimation.fromJson(Map<String, Object?> json) => _$TsunamiRegionEstimationFromJson(json);
 }

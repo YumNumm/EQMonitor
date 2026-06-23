@@ -14,9 +14,9 @@ part 'telegrams.g.dart';
 abstract class Telegrams with _$Telegrams {
   const factory Telegrams({
     required Telegram telegram,
-    @JsonKey(includeIfNull: true) required TelegramComments? comments,
+    @JsonKey(includeIfNull: true)
+    required TelegramComments? comments,
   }) = _Telegrams;
-
-  factory Telegrams.fromJson(Map<String, Object?> json) =>
-      _$TelegramsFromJson(json);
+  
+  factory Telegrams.fromJson(Map<String, Object?> json) => _$TelegramsFromJson(json);
 }

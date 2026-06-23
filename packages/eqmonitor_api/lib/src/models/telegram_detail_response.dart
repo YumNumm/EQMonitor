@@ -14,9 +14,9 @@ part 'telegram_detail_response.g.dart';
 abstract class TelegramDetailResponse with _$TelegramDetailResponse {
   const factory TelegramDetailResponse({
     required TelegramDetail telegram,
-    @JsonKey(includeIfNull: true) required TelegramComments? comments,
+    @JsonKey(includeIfNull: true)
+    required TelegramComments? comments,
   }) = _TelegramDetailResponse;
-
-  factory TelegramDetailResponse.fromJson(Map<String, Object?> json) =>
-      _$TelegramDetailResponseFromJson(json);
+  
+  factory TelegramDetailResponse.fromJson(Map<String, Object?> json) => _$TelegramDetailResponseFromJson(json);
 }

@@ -13,10 +13,10 @@ part 'tsunami_station_area.g.dart';
 @Freezed()
 abstract class TsunamiStationArea with _$TsunamiStationArea {
   const factory TsunamiStationArea({
-    @JsonKey(includeIfNull: true) required LocalizedName? name,
+    @JsonKey(includeIfNull: true)
+    required LocalizedName? name,
     required List<TsunamiStation> stations,
   }) = _TsunamiStationArea;
-
-  factory TsunamiStationArea.fromJson(Map<String, Object?> json) =>
-      _$TsunamiStationAreaFromJson(json);
+  
+  factory TsunamiStationArea.fromJson(Map<String, Object?> json) => _$TsunamiStationAreaFromJson(json);
 }

@@ -13,7 +13,6 @@ abstract class ServiceUnavailableResponse with _$ServiceUnavailableResponse {
     required dynamic code,
     required String message,
   }) = _ServiceUnavailableResponse;
-
-  factory ServiceUnavailableResponse.fromJson(Map<String, Object?> json) =>
-      _$ServiceUnavailableResponseFromJson(json);
+  
+  factory ServiceUnavailableResponse.fromJson(Map<String, Object?> json) => _$ServiceUnavailableResponseFromJson(json);
 }

@@ -14,7 +14,6 @@ abstract class EewArrayResponse with _$EewArrayResponse {
   const factory EewArrayResponse({
     required List<EewItemWithRelations> items,
   }) = _EewArrayResponse;
-
-  factory EewArrayResponse.fromJson(Map<String, Object?> json) =>
-      _$EewArrayResponseFromJson(json);
+  
+  factory EewArrayResponse.fromJson(Map<String, Object?> json) => _$EewArrayResponseFromJson(json);
 }

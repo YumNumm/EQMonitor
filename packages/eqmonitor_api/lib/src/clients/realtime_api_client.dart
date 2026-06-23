@@ -18,7 +18,9 @@ abstract class RealtimeApiClient {
   Future<HttpResponse<RealtimeTicketResponse>> getV2RealtimeTicket();
 }
 
+
 abstract class RealtimeApiClientUrls {
-  /// /v2/realtime/ticket
-  static const getV2RealtimeTicket = "/v2/realtime/ticket";
+	/// /v2/realtime/ticket
+	static const getV2RealtimeTicket = "/v2/realtime/ticket";
 }
+

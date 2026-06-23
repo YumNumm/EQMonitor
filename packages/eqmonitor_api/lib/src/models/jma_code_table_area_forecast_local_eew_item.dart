@@ -10,16 +10,15 @@ part 'jma_code_table_area_forecast_local_eew_item.freezed.dart';
 part 'jma_code_table_area_forecast_local_eew_item.g.dart';
 
 @Freezed()
-abstract class JmaCodeTableAreaForecastLocalEewItem
-    with _$JmaCodeTableAreaForecastLocalEewItem {
+abstract class JmaCodeTableAreaForecastLocalEewItem with _$JmaCodeTableAreaForecastLocalEewItem {
   const factory JmaCodeTableAreaForecastLocalEewItem({
     required String code,
     required LocalizedName name,
-    @JsonKey(includeIfNull: true) required String? kana,
-    @JsonKey(includeIfNull: true) required String? description,
+    @JsonKey(includeIfNull: true)
+    required String? kana,
+    @JsonKey(includeIfNull: true)
+    required String? description,
   }) = _JmaCodeTableAreaForecastLocalEewItem;
-
-  factory JmaCodeTableAreaForecastLocalEewItem.fromJson(
-    Map<String, Object?> json,
-  ) => _$JmaCodeTableAreaForecastLocalEewItemFromJson(json);
+  
+  factory JmaCodeTableAreaForecastLocalEewItem.fromJson(Map<String, Object?> json) => _$JmaCodeTableAreaForecastLocalEewItemFromJson(json);
 }

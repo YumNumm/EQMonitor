@@ -13,7 +13,6 @@ abstract class TargetTime with _$TargetTime {
     required String start,
     required String end,
   }) = _TargetTime;
-
-  factory TargetTime.fromJson(Map<String, Object?> json) =>
-      _$TargetTimeFromJson(json);
+  
+  factory TargetTime.fromJson(Map<String, Object?> json) => _$TargetTimeFromJson(json);
 }

@@ -12,7 +12,6 @@ abstract class LiveActivityTokenRequest with _$LiveActivityTokenRequest {
   const factory LiveActivityTokenRequest({
     required String token,
   }) = _LiveActivityTokenRequest;
-
-  factory LiveActivityTokenRequest.fromJson(Map<String, Object?> json) =>
-      _$LiveActivityTokenRequestFromJson(json);
+  
+  factory LiveActivityTokenRequest.fromJson(Map<String, Object?> json) => _$LiveActivityTokenRequestFromJson(json);
 }

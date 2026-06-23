@@ -14,7 +14,6 @@ abstract class RealtimeTicketResponse with _$RealtimeTicketResponse {
     required DateTime expiresAt,
     required DateTime issuedAt,
   }) = _RealtimeTicketResponse;
-
-  factory RealtimeTicketResponse.fromJson(Map<String, Object?> json) =>
-      _$RealtimeTicketResponseFromJson(json);
+  
+  factory RealtimeTicketResponse.fromJson(Map<String, Object?> json) => _$RealtimeTicketResponseFromJson(json);
 }

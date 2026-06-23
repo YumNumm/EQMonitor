@@ -13,8 +13,10 @@
   "origin_time": "2023-11-14T22:08:20.000Z",
   "arrival_time": null,
   "hypocenter": {
-    "code": "311",
-    "name": "茨城県北部",
+    "value": {
+      "code": "311",
+      "name": "茨城県北部"
+    },
     "coordinates": {
       "latitude": 36.7,
       "longitude": 140.7
@@ -29,8 +31,10 @@
     },
     "regions": [
       {
-        "code": "2200",
-        "name": "茨城北部",
+        "value": {
+          "code": "2200",
+          "name": "茨城北部"
+        },
         "is_plum": false,
         "is_warning": false,
         "intensity": {
@@ -43,8 +47,10 @@
         }
       },
       {
-        "code": "2300",
-        "name": "茨城南部",
+        "value": {
+          "code": "2300",
+          "name": "茨城南部"
+        },
         "is_plum": false,
         "is_warning": false,
         "intensity": {

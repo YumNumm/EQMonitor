@@ -13,7 +13,6 @@ abstract class ChallengeResponse with _$ChallengeResponse {
     required String challengeCode,
     required DateTime expiresAt,
   }) = _ChallengeResponse;
-
-  factory ChallengeResponse.fromJson(Map<String, Object?> json) =>
-      _$ChallengeResponseFromJson(json);
+  
+  factory ChallengeResponse.fromJson(Map<String, Object?> json) => _$ChallengeResponseFromJson(json);
 }

@@ -17,11 +17,11 @@ abstract class TsunamiStationObservation with _$TsunamiStationObservation {
     required TsunamiStationObservationFirstHeight firstHeight,
 
     /// 特殊な観測機器の場合に出現
-    @JsonKey(includeIfNull: false) String? sensor,
-    @JsonKey(includeIfNull: false, name: 'max_height')
+    @JsonKey(includeIfNull: false)
+    String? sensor,
+    @JsonKey(includeIfNull: false,name: 'max_height')
     TsunamiStationObservationMaxHeight? maxHeight,
   }) = _TsunamiStationObservation;
-
-  factory TsunamiStationObservation.fromJson(Map<String, Object?> json) =>
-      _$TsunamiStationObservationFromJson(json);
+  
+  factory TsunamiStationObservation.fromJson(Map<String, Object?> json) => _$TsunamiStationObservationFromJson(json);
 }

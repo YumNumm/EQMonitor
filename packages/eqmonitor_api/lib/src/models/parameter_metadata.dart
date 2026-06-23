@@ -13,15 +13,16 @@ part 'parameter_metadata.g.dart';
 abstract class ParameterMetadata with _$ParameterMetadata {
   const factory ParameterMetadata({
     required ParameterType type,
-    @JsonKey(name: 'schema_version') required dynamic schemaVersion,
-    @JsonKey(name: 'source_version') required String sourceVersion,
-    @JsonKey(includeIfNull: true, name: 'source_updated_at')
+    @JsonKey(name: 'schema_version')
+    required dynamic schemaVersion,
+    @JsonKey(name: 'source_version')
+    required String sourceVersion,
+    @JsonKey(includeIfNull: true,name: 'source_updated_at')
     required String? sourceUpdatedAt,
-    @JsonKey(name: 'generated_at') required String generatedAt,
-    @JsonKey(name: 'source_urls') required List<String> sourceUrls,
+    @JsonKey(name: 'source_urls')
+    required List<String> sourceUrls,
     required String sha256,
   }) = _ParameterMetadata;
-
-  factory ParameterMetadata.fromJson(Map<String, Object?> json) =>
-      _$ParameterMetadataFromJson(json);
+  
+  factory ParameterMetadata.fromJson(Map<String, Object?> json) => _$ParameterMetadataFromJson(json);
 }

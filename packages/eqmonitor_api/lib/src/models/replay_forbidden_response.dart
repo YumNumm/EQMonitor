@@ -13,7 +13,6 @@ abstract class ReplayForbiddenResponse with _$ReplayForbiddenResponse {
     required dynamic code,
     required String message,
   }) = _ReplayForbiddenResponse;
-
-  factory ReplayForbiddenResponse.fromJson(Map<String, Object?> json) =>
-      _$ReplayForbiddenResponseFromJson(json);
+  
+  factory ReplayForbiddenResponse.fromJson(Map<String, Object?> json) => _$ReplayForbiddenResponseFromJson(json);
 }

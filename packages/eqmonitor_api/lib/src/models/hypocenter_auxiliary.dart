@@ -14,9 +14,9 @@ abstract class HypocenterAuxiliary with _$HypocenterAuxiliary {
     required String code,
     required String name,
     required String direction,
-    @JsonKey(name: 'distance_km') required num distanceKm,
+    @JsonKey(name: 'distance_km')
+    required num distanceKm,
   }) = _HypocenterAuxiliary;
-
-  factory HypocenterAuxiliary.fromJson(Map<String, Object?> json) =>
-      _$HypocenterAuxiliaryFromJson(json);
+  
+  factory HypocenterAuxiliary.fromJson(Map<String, Object?> json) => _$HypocenterAuxiliaryFromJson(json);
 }

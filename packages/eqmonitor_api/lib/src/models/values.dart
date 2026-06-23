@@ -10,9 +10,11 @@ part 'values.g.dart';
 @Freezed()
 abstract class Values with _$Values {
   const factory Values({
-    @JsonKey(includeIfNull: true) required String? all,
-    @JsonKey(includeIfNull: true) required String? felt,
+    @JsonKey(includeIfNull: true)
+    required String? all,
+    @JsonKey(includeIfNull: true)
+    required String? felt,
   }) = _Values;
-
+  
   factory Values.fromJson(Map<String, Object?> json) => _$ValuesFromJson(json);
 }

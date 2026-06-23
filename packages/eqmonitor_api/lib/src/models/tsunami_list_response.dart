@@ -15,12 +15,13 @@ abstract class TsunamiListResponse with _$TsunamiListResponse {
     required List<TsunamiState> items,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,
+    @JsonKey(includeIfNull: false,name: 'next_token')
+    String? nextToken,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling,
+    @JsonKey(includeIfNull: false,name: 'next_pooling')
+    String? nextPooling,
   }) = _TsunamiListResponse;
-
-  factory TsunamiListResponse.fromJson(Map<String, Object?> json) =>
-      _$TsunamiListResponseFromJson(json);
+  
+  factory TsunamiListResponse.fromJson(Map<String, Object?> json) => _$TsunamiListResponseFromJson(json);
 }

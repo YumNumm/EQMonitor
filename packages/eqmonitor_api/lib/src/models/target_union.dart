@@ -17,13 +17,14 @@ sealed class TargetUnion with _$TargetUnion {
     required dynamic type,
     required String deviceId,
   }) = TargetUnionVariant1;
-
+  
   @JsonSerializable()
   const factory TargetUnion.variant2({
     required dynamic type,
     required String token,
     required Environment environment,
   }) = TargetUnionVariant2;
+  
 
   factory TargetUnion.fromJson(Map<String, Object?> json) =>
       switch (json['type']) {
@@ -35,4 +36,5 @@ sealed class TargetUnion with _$TargetUnion {
           'Unknown TargetUnion type',
         ),
       };
+
 }

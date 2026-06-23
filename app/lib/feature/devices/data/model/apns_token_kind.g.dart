@@ -9,6 +9,6 @@ part of 'apns_token_kind.dart';
 // **************************************************************************
 
 const _$ApnsTokenKindEnumMap = {
-  ApnsTokenKind.notification: 'notification',
-  ApnsTokenKind.liveActivityStart: 'liveActivityStart',
+  ApnsTokenKind.notification: 'NOTIFICATION',
+  ApnsTokenKind.liveActivityStart: 'LIVE_ACTIVITY_START',
 };

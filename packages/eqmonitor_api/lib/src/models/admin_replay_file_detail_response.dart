@@ -10,12 +10,10 @@ part 'admin_replay_file_detail_response.freezed.dart';
 part 'admin_replay_file_detail_response.g.dart';
 
 @Freezed()
-abstract class AdminReplayFileDetailResponse
-    with _$AdminReplayFileDetailResponse {
+abstract class AdminReplayFileDetailResponse with _$AdminReplayFileDetailResponse {
   const factory AdminReplayFileDetailResponse({
     required AdminReplayFileDetailResponseItem item,
   }) = _AdminReplayFileDetailResponse;
-
-  factory AdminReplayFileDetailResponse.fromJson(Map<String, Object?> json) =>
-      _$AdminReplayFileDetailResponseFromJson(json);
+  
+  factory AdminReplayFileDetailResponse.fromJson(Map<String, Object?> json) => _$AdminReplayFileDetailResponseFromJson(json);
 }

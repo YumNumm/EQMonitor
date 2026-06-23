@@ -14,9 +14,9 @@ part 'eew_intensity_value.g.dart';
 abstract class EewIntensityValue with _$EewIntensityValue {
   const factory EewIntensityValue({
     required JmaIntensity value,
-    @JsonKey(name: 'is_over') required bool isOver,
+    @JsonKey(name: 'is_over')
+    required bool isOver,
   }) = _EewIntensityValue;
-
-  factory EewIntensityValue.fromJson(Map<String, Object?> json) =>
-      _$EewIntensityValueFromJson(json);
+  
+  factory EewIntensityValue.fromJson(Map<String, Object?> json) => _$EewIntensityValueFromJson(json);
 }

@@ -16,7 +16,9 @@ abstract class WebhooksApiClient {
   Future<HttpResponse<void>> postWebhooksRevenuecat();
 }
 
+
 abstract class WebhooksApiClientUrls {
-  /// /webhooks/revenuecat
-  static const postWebhooksRevenuecat = "/webhooks/revenuecat";
+	/// /webhooks/revenuecat
+	static const postWebhooksRevenuecat = "/webhooks/revenuecat";
 }
+

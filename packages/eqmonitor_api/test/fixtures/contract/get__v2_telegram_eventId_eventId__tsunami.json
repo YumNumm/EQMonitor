@@ -12,8 +12,8 @@
       "publishing_office": [
         "気象庁"
       ],
-      "pressed_at": "2011-03-11T05:49:00.000Z",
-      "reported_at": "2011-03-11T05:49:02.000Z",
+      "press_at": "2011-03-11T05:49:00.000Z",
+      "report_at": "2011-03-11T05:49:02.000Z",
       "info_kind": "津波警報・注意報・予報a",
       "info_kind_version": "1.0_0",
       "hash": "stub-hash-vtse41",

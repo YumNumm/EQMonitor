@@ -16,9 +16,9 @@ abstract class IntensityTree with _$IntensityTree {
   const factory IntensityTree({
     required JmaIntensity intensity,
     required List<IntensityTreeRegionId> regions,
-    @JsonKey(includeIfNull: false) List<IntensityTreeStationId>? stations,
+    @JsonKey(includeIfNull: false)
+    List<IntensityTreeStationId>? stations,
   }) = _IntensityTree;
-
-  factory IntensityTree.fromJson(Map<String, Object?> json) =>
-      _$IntensityTreeFromJson(json);
+  
+  factory IntensityTree.fromJson(Map<String, Object?> json) => _$IntensityTreeFromJson(json);
 }

@@ -16,12 +16,11 @@ part 'eew_intensity.g.dart';
 abstract class EewIntensity with _$EewIntensity {
   const factory EewIntensity({
     required List<EewIntensityItem> regions,
-    @JsonKey(includeIfNull: false, name: 'max_intensity')
+    @JsonKey(includeIfNull: false,name: 'max_intensity')
     EewIntensityValue? maxIntensity,
-    @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')
+    @JsonKey(includeIfNull: false,name: 'max_lpgm_intensity')
     EewIntensityLpgmValue? maxLpgmIntensity,
   }) = _EewIntensity;
-
-  factory EewIntensity.fromJson(Map<String, Object?> json) =>
-      _$EewIntensityFromJson(json);
+  
+  factory EewIntensity.fromJson(Map<String, Object?> json) => _$EewIntensityFromJson(json);
 }

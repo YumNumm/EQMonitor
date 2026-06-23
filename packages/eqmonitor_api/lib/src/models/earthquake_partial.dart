@@ -19,7 +19,8 @@ part 'earthquake_partial.g.dart';
 abstract class EarthquakePartial with _$EarthquakePartial {
   const factory EarthquakePartial({
     /// yyyyMMddHHmmss形式のイベントID
-    @JsonKey(name: 'event_id') required String eventId,
+    @JsonKey(name: 'event_id')
+    required String eventId,
     required TelegramStatus status,
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
@@ -28,17 +29,21 @@ abstract class EarthquakePartial with _$EarthquakePartial {
     /// この地震イベントに紐づく電文タイプの配列
     @JsonKey(name: 'telegram_types')
     required List<EarthquakeTelegramType> telegramTypes,
-    @JsonKey(name: 'earthquake_type') required EarthquakeType earthquakeType,
-    @JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,
-    @JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,
-    @JsonKey(includeIfNull: false) Hypocenter? hypocenter,
+    @JsonKey(name: 'earthquake_type')
+    required EarthquakeType earthquakeType,
+    @JsonKey(includeIfNull: false,name: 'origin_time')
+    DateTime? originTime,
+    @JsonKey(includeIfNull: false,name: 'arrival_time')
+    DateTime? arrivalTime,
+    @JsonKey(includeIfNull: false)
+    Hypocenter? hypocenter,
 
     /// 推計震度PMTilesのフルURL
-    @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')
+    @JsonKey(includeIfNull: false,name: 'estimated_intensity_tile')
     String? estimatedIntensityTile,
-    @JsonKey(includeIfNull: false) IntensityPartial? intensity,
+    @JsonKey(includeIfNull: false)
+    IntensityPartial? intensity,
   }) = _EarthquakePartial;
-
-  factory EarthquakePartial.fromJson(Map<String, Object?> json) =>
-      _$EarthquakePartialFromJson(json);
+  
+  factory EarthquakePartial.fromJson(Map<String, Object?> json) => _$EarthquakePartialFromJson(json);
 }

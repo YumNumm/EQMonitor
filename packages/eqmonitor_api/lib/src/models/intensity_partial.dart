@@ -13,11 +13,11 @@ part 'intensity_partial.g.dart';
 @Freezed()
 abstract class IntensityPartial with _$IntensityPartial {
   const factory IntensityPartial({
-    @JsonKey(name: 'max_intensity') required JmaIntensity maxIntensity,
-    @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')
+    @JsonKey(name: 'max_intensity')
+    required JmaIntensity maxIntensity,
+    @JsonKey(includeIfNull: false,name: 'max_lpgm_intensity')
     JmaLpgmIntensity? maxLpgmIntensity,
   }) = _IntensityPartial;
-
-  factory IntensityPartial.fromJson(Map<String, Object?> json) =>
-      _$IntensityPartialFromJson(json);
+  
+  factory IntensityPartial.fromJson(Map<String, Object?> json) => _$IntensityPartialFromJson(json);
 }

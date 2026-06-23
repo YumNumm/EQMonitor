@@ -27,7 +27,6 @@ _ParameterMetadata _$ParameterMetadataFromJson(Map<String, dynamic> json) =>
             'source_updated_at',
             (v) => v as String?,
           ),
-          generatedAt: $checkedConvert('generated_at', (v) => v as String),
           sourceUrls: $checkedConvert(
             'source_urls',
             (v) => (v as List<dynamic>).map((e) => e as String).toList(),
@@ -40,7 +39,6 @@ _ParameterMetadata _$ParameterMetadataFromJson(Map<String, dynamic> json) =>
         'schemaVersion': 'schema_version',
         'sourceVersion': 'source_version',
         'sourceUpdatedAt': 'source_updated_at',
-        'generatedAt': 'generated_at',
         'sourceUrls': 'source_urls',
       },
     );
@@ -51,7 +49,6 @@ Map<String, dynamic> _$ParameterMetadataToJson(_ParameterMetadata instance) =>
       'schema_version': instance.schemaVersion,
       'source_version': instance.sourceVersion,
       'source_updated_at': instance.sourceUpdatedAt,
-      'generated_at': instance.generatedAt,
       'source_urls': instance.sourceUrls,
       'sha256': instance.sha256,
     };

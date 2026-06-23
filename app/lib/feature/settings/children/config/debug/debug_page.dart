@@ -464,7 +464,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
                   dense: true,
                   title: Text(item.type.pathSegment),
                   subtitle: Text(
-                    'ver: ${item.sourceVersion}  generated: ${item.generatedAt}\n'
+                    'ver: ${item.sourceVersion}  updated: ${item.sourceUpdatedAt}\n'
                     'sha256: ${item.sha256.substring(0, 8)}…',
                     style: const TextStyle(
                       fontFamily: FontFamily.googleSansCode,

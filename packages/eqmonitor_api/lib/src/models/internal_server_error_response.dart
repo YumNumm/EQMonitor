@@ -12,9 +12,9 @@ abstract class InternalServerErrorResponse with _$InternalServerErrorResponse {
   const factory InternalServerErrorResponse({
     required dynamic code,
     required dynamic message,
-    @JsonKey(includeIfNull: false) String? reason,
+    @JsonKey(includeIfNull: false)
+    String? reason,
   }) = _InternalServerErrorResponse;
-
-  factory InternalServerErrorResponse.fromJson(Map<String, Object?> json) =>
-      _$InternalServerErrorResponseFromJson(json);
+  
+  factory InternalServerErrorResponse.fromJson(Map<String, Object?> json) => _$InternalServerErrorResponseFromJson(json);
 }

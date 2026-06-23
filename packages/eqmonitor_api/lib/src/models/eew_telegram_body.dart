@@ -17,7 +17,6 @@ abstract class EewTelegramBody with _$EewTelegramBody {
     required List<dynamic> eewWarningPrefectures,
     required List<dynamic> eewWarningRegions,
   }) = _EewTelegramBody;
-
-  factory EewTelegramBody.fromJson(Map<String, Object?> json) =>
-      _$EewTelegramBodyFromJson(json);
+  
+  factory EewTelegramBody.fromJson(Map<String, Object?> json) => _$EewTelegramBodyFromJson(json);
 }

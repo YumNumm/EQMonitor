@@ -10,12 +10,10 @@ part 'telegram_event_details_response.freezed.dart';
 part 'telegram_event_details_response.g.dart';
 
 @Freezed()
-abstract class TelegramEventDetailsResponse
-    with _$TelegramEventDetailsResponse {
+abstract class TelegramEventDetailsResponse with _$TelegramEventDetailsResponse {
   const factory TelegramEventDetailsResponse({
     required List<TelegramDetailResponse> items,
   }) = _TelegramEventDetailsResponse;
-
-  factory TelegramEventDetailsResponse.fromJson(Map<String, Object?> json) =>
-      _$TelegramEventDetailsResponseFromJson(json);
+  
+  factory TelegramEventDetailsResponse.fromJson(Map<String, Object?> json) => _$TelegramEventDetailsResponseFromJson(json);
 }

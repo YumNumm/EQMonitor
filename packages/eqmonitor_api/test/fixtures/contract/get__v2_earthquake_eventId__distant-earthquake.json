@@ -5,8 +5,10 @@
     "origin_time": "2023-11-14T20:13:20.000Z",
     "origin_time_precision": "SECOND",
     "hypocenter": {
-      "code": "999",
-      "name": "インドネシア付近",
+      "value": {
+        "code": "999",
+        "name": "インドネシア付近"
+      },
       "coordinates": {
         "latitude": -3.5,
         "longitude": 126.8

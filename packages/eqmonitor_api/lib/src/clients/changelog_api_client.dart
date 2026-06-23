@@ -22,7 +22,9 @@ abstract class ChangelogApiClient {
   });
 }
 
+
 abstract class ChangelogApiClientUrls {
-  /// /v1/changelog
-  static const getV1Changelog = "/v1/changelog";
+	/// /v1/changelog
+	static const getV1Changelog = "/v1/changelog";
 }
+

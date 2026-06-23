@@ -15,11 +15,11 @@ abstract class TsunamiStation with _$TsunamiStation {
   const factory TsunamiStation({
     required String code,
     required LocalizedName name,
-    @JsonKey(includeIfNull: true) required String? kana,
+    @JsonKey(includeIfNull: true)
+    required String? kana,
     required String owner,
     required ParameterLocation location,
   }) = _TsunamiStation;
-
-  factory TsunamiStation.fromJson(Map<String, Object?> json) =>
-      _$TsunamiStationFromJson(json);
+  
+  factory TsunamiStation.fromJson(Map<String, Object?> json) => _$TsunamiStationFromJson(json);
 }

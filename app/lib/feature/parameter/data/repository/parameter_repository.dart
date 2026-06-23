@@ -100,7 +100,6 @@ final class ParameterRepository {
             schemaVersion: (item.schemaVersion as num).toInt(),
             sourceVersion: item.sourceVersion,
             sourceUpdatedAt: item.sourceUpdatedAt,
-            generatedAt: item.generatedAt,
             sourceUrls: item.sourceUrls,
             sha256: item.sha256,
             sizeBytes: item.sizeBytes.toInt(),

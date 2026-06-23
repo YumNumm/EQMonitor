@@ -12,10 +12,11 @@ part 'comments3.g.dart';
 @Freezed()
 abstract class Comments3 with _$Comments3 {
   const factory Comments3({
-    @JsonKey(includeIfNull: false) String? free,
-    @JsonKey(includeIfNull: false) Warning? warning,
+    @JsonKey(includeIfNull: false)
+    String? free,
+    @JsonKey(includeIfNull: false)
+    Warning? warning,
   }) = _Comments3;
-
-  factory Comments3.fromJson(Map<String, Object?> json) =>
-      _$Comments3FromJson(json);
+  
+  factory Comments3.fromJson(Map<String, Object?> json) => _$Comments3FromJson(json);
 }

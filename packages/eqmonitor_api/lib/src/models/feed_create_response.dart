@@ -12,7 +12,6 @@ abstract class FeedCreateResponse with _$FeedCreateResponse {
   const factory FeedCreateResponse({
     required String id,
   }) = _FeedCreateResponse;
-
-  factory FeedCreateResponse.fromJson(Map<String, Object?> json) =>
-      _$FeedCreateResponseFromJson(json);
+  
+  factory FeedCreateResponse.fromJson(Map<String, Object?> json) => _$FeedCreateResponseFromJson(json);
 }

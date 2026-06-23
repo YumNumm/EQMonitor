@@ -13,14 +13,15 @@ part 'first_height.g.dart';
 abstract class FirstHeight with _$FirstHeight {
   const factory FirstHeight({
     /// 1観測地点以上で第1波の時刻を明瞭に観測した場合
-    @JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,
+    @JsonKey(includeIfNull: false,name: 'arrival_time')
+    DateTime? arrivalTime,
 
     /// 早いところでは既に津波到達と推定
-    @JsonKey(includeIfNull: false, name: 'is_already_arrived')
+    @JsonKey(includeIfNull: false,name: 'is_already_arrived')
     dynamic isAlreadyArrived,
-    @JsonKey(includeIfNull: false) Revise? revise,
+    @JsonKey(includeIfNull: false)
+    Revise? revise,
   }) = _FirstHeight;
-
-  factory FirstHeight.fromJson(Map<String, Object?> json) =>
-      _$FirstHeightFromJson(json);
+  
+  factory FirstHeight.fromJson(Map<String, Object?> json) => _$FirstHeightFromJson(json);
 }

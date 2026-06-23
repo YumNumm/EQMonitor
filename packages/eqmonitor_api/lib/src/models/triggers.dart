@@ -16,7 +16,6 @@ abstract class Triggers with _$Triggers {
     required String eventId,
     required String createdAt,
   }) = _Triggers;
-
-  factory Triggers.fromJson(Map<String, Object?> json) =>
-      _$TriggersFromJson(json);
+  
+  factory Triggers.fromJson(Map<String, Object?> json) => _$TriggersFromJson(json);
 }

@@ -14,8 +14,9 @@ part 'app.g.dart';
 abstract class App with _$App {
   const factory App({
     required Version version,
-    @JsonKey(name: 'store_url') required StoreUrl storeUrl,
+    @JsonKey(name: 'store_url')
+    required StoreUrl storeUrl,
   }) = _App;
-
+  
   factory App.fromJson(Map<String, Object?> json) => _$AppFromJson(json);
 }

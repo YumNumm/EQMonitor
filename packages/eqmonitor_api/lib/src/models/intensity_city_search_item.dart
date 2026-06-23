@@ -16,7 +16,6 @@ abstract class IntensityCitySearchItem with _$IntensityCitySearchItem {
     required JmaIntensity intensity,
     required EarthquakePartial earthquake,
   }) = _IntensityCitySearchItem;
-
-  factory IntensityCitySearchItem.fromJson(Map<String, Object?> json) =>
-      _$IntensityCitySearchItemFromJson(json);
+  
+  factory IntensityCitySearchItem.fromJson(Map<String, Object?> json) => _$IntensityCitySearchItemFromJson(json);
 }

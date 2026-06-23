@@ -14,7 +14,6 @@ abstract class TsunamiTelegramsResponse with _$TsunamiTelegramsResponse {
   const factory TsunamiTelegramsResponse({
     required List<TsunamiTelegramWithState> telegrams,
   }) = _TsunamiTelegramsResponse;
-
-  factory TsunamiTelegramsResponse.fromJson(Map<String, Object?> json) =>
-      _$TsunamiTelegramsResponseFromJson(json);
+  
+  factory TsunamiTelegramsResponse.fromJson(Map<String, Object?> json) => _$TsunamiTelegramsResponseFromJson(json);
 }

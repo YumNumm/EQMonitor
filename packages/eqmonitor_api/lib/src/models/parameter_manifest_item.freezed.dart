@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParameterManifestItem {
 
- ParameterType get type;@JsonKey(name: 'schema_version') dynamic get schemaVersion;@JsonKey(name: 'source_version') String get sourceVersion;@JsonKey(includeIfNull: true, name: 'source_updated_at') String? get sourceUpdatedAt;@JsonKey(name: 'generated_at') String get generatedAt;@JsonKey(name: 'source_urls') List<String> get sourceUrls; String get sha256;@JsonKey(name: 'size_bytes') num get sizeBytes; String get url;
+ ParameterType get type;@JsonKey(name: 'schema_version') dynamic get schemaVersion;@JsonKey(name: 'source_version') String get sourceVersion;@JsonKey(includeIfNull: true, name: 'source_updated_at') String? get sourceUpdatedAt;@JsonKey(name: 'source_urls') List<String> get sourceUrls; String get sha256;@JsonKey(name: 'size_bytes') num get sizeBytes; String get url;
 /// Create a copy of ParameterManifestItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ParameterManifestItemCopyWith<ParameterManifestItem> get copyWith => _$Paramete
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParameterManifestItem&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.schemaVersion, schemaVersion)&&(identical(other.sourceVersion, sourceVersion) || other.sourceVersion == sourceVersion)&&(identical(other.sourceUpdatedAt, sourceUpdatedAt) || other.sourceUpdatedAt == sourceUpdatedAt)&&(identical(other.generatedAt, generatedAt) || other.generatedAt == generatedAt)&&const DeepCollectionEquality().equals(other.sourceUrls, sourceUrls)&&(identical(other.sha256, sha256) || other.sha256 == sha256)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParameterManifestItem&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.schemaVersion, schemaVersion)&&(identical(other.sourceVersion, sourceVersion) || other.sourceVersion == sourceVersion)&&(identical(other.sourceUpdatedAt, sourceUpdatedAt) || other.sourceUpdatedAt == sourceUpdatedAt)&&const DeepCollectionEquality().equals(other.sourceUrls, sourceUrls)&&(identical(other.sha256, sha256) || other.sha256 == sha256)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,const DeepCollectionEquality().hash(schemaVersion),sourceVersion,sourceUpdatedAt,generatedAt,const DeepCollectionEquality().hash(sourceUrls),sha256,sizeBytes,url);
+int get hashCode => Object.hash(runtimeType,type,const DeepCollectionEquality().hash(schemaVersion),sourceVersion,sourceUpdatedAt,const DeepCollectionEquality().hash(sourceUrls),sha256,sizeBytes,url);
 
 @override
 String toString() {
-  return 'ParameterManifestItem(type: $type, schemaVersion: $schemaVersion, sourceVersion: $sourceVersion, sourceUpdatedAt: $sourceUpdatedAt, generatedAt: $generatedAt, sourceUrls: $sourceUrls, sha256: $sha256, sizeBytes: $sizeBytes, url: $url)';
+  return 'ParameterManifestItem(type: $type, schemaVersion: $schemaVersion, sourceVersion: $sourceVersion, sourceUpdatedAt: $sourceUpdatedAt, sourceUrls: $sourceUrls, sha256: $sha256, sizeBytes: $sizeBytes, url: $url)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ParameterManifestItemCopyWith<$Res>  {
   factory $ParameterManifestItemCopyWith(ParameterManifestItem value, $Res Function(ParameterManifestItem) _then) = _$ParameterManifestItemCopyWithImpl;
 @useResult
 $Res call({
- ParameterType type,@JsonKey(name: 'schema_version') dynamic schemaVersion,@JsonKey(name: 'source_version') String sourceVersion,@JsonKey(includeIfNull: true, name: 'source_updated_at') String? sourceUpdatedAt,@JsonKey(name: 'generated_at') String generatedAt,@JsonKey(name: 'source_urls') List<String> sourceUrls, String sha256,@JsonKey(name: 'size_bytes') num sizeBytes, String url
+ ParameterType type,@JsonKey(name: 'schema_version') dynamic schemaVersion,@JsonKey(name: 'source_version') String sourceVersion,@JsonKey(includeIfNull: true, name: 'source_updated_at') String? sourceUpdatedAt,@JsonKey(name: 'source_urls') List<String> sourceUrls, String sha256,@JsonKey(name: 'size_bytes') num sizeBytes, String url
 });
 
 
@@ -65,14 +65,13 @@ class _$ParameterManifestItemCopyWithImpl<$Res>
 
 /// Create a copy of ParameterManifestItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? schemaVersion = freezed,Object? sourceVersion = null,Object? sourceUpdatedAt = freezed,Object? generatedAt = null,Object? sourceUrls = null,Object? sha256 = null,Object? sizeBytes = null,Object? url = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? schemaVersion = freezed,Object? sourceVersion = null,Object? sourceUpdatedAt = freezed,Object? sourceUrls = null,Object? sha256 = null,Object? sizeBytes = null,Object? url = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ParameterType,schemaVersion: freezed == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
 as dynamic,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
 as String,sourceUpdatedAt: freezed == sourceUpdatedAt ? _self.sourceUpdatedAt : sourceUpdatedAt // ignore: cast_nullable_to_non_nullable
-as String?,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
-as String,sourceUrls: null == sourceUrls ? _self.sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable
+as String?,sourceUrls: null == sourceUrls ? _self.sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable
 as List<String>,sha256: null == sha256 ? _self.sha256 : sha256 // ignore: cast_nullable_to_non_nullable
 as String,sizeBytes: null == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
 as num,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
@@ -161,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterType type, @JsonKey(name: 'schema_version')  dynamic schemaVersion, @JsonKey(name: 'source_version')  String sourceVersion, @JsonKey(includeIfNull: true, name: 'source_updated_at')  String? sourceUpdatedAt, @JsonKey(name: 'generated_at')  String generatedAt, @JsonKey(name: 'source_urls')  List<String> sourceUrls,  String sha256, @JsonKey(name: 'size_bytes')  num sizeBytes,  String url)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterType type, @JsonKey(name: 'schema_version')  dynamic schemaVersion, @JsonKey(name: 'source_version')  String sourceVersion, @JsonKey(includeIfNull: true, name: 'source_updated_at')  String? sourceUpdatedAt, @JsonKey(name: 'source_urls')  List<String> sourceUrls,  String sha256, @JsonKey(name: 'size_bytes')  num sizeBytes,  String url)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParameterManifestItem() when $default != null:
-return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256,_that.sizeBytes,_that.url);case _:
+return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.sourceUrls,_that.sha256,_that.sizeBytes,_that.url);case _:
   return orElse();
 
 }
@@ -182,10 +181,10 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterType type, @JsonKey(name: 'schema_version')  dynamic schemaVersion, @JsonKey(name: 'source_version')  String sourceVersion, @JsonKey(includeIfNull: true, name: 'source_updated_at')  String? sourceUpdatedAt, @JsonKey(name: 'generated_at')  String generatedAt, @JsonKey(name: 'source_urls')  List<String> sourceUrls,  String sha256, @JsonKey(name: 'size_bytes')  num sizeBytes,  String url)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterType type, @JsonKey(name: 'schema_version')  dynamic schemaVersion, @JsonKey(name: 'source_version')  String sourceVersion, @JsonKey(includeIfNull: true, name: 'source_updated_at')  String? sourceUpdatedAt, @JsonKey(name: 'source_urls')  List<String> sourceUrls,  String sha256, @JsonKey(name: 'size_bytes')  num sizeBytes,  String url)  $default,) {final _that = this;
 switch (_that) {
 case _ParameterManifestItem():
-return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256,_that.sizeBytes,_that.url);case _:
+return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.sourceUrls,_that.sha256,_that.sizeBytes,_that.url);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +201,10 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterType type, @JsonKey(name: 'schema_version')  dynamic schemaVersion, @JsonKey(name: 'source_version')  String sourceVersion, @JsonKey(includeIfNull: true, name: 'source_updated_at')  String? sourceUpdatedAt, @JsonKey(name: 'generated_at')  String generatedAt, @JsonKey(name: 'source_urls')  List<String> sourceUrls,  String sha256, @JsonKey(name: 'size_bytes')  num sizeBytes,  String url)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterType type, @JsonKey(name: 'schema_version')  dynamic schemaVersion, @JsonKey(name: 'source_version')  String sourceVersion, @JsonKey(includeIfNull: true, name: 'source_updated_at')  String? sourceUpdatedAt, @JsonKey(name: 'source_urls')  List<String> sourceUrls,  String sha256, @JsonKey(name: 'size_bytes')  num sizeBytes,  String url)?  $default,) {final _that = this;
 switch (_that) {
 case _ParameterManifestItem() when $default != null:
-return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256,_that.sizeBytes,_that.url);case _:
+return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.sourceUrls,_that.sha256,_that.sizeBytes,_that.url);case _:
   return null;
 
 }
@@ -217,14 +216,13 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 @JsonSerializable()
 
 class _ParameterManifestItem implements ParameterManifestItem {
-  const _ParameterManifestItem({required this.type, @JsonKey(name: 'schema_version') required this.schemaVersion, @JsonKey(name: 'source_version') required this.sourceVersion, @JsonKey(includeIfNull: true, name: 'source_updated_at') required this.sourceUpdatedAt, @JsonKey(name: 'generated_at') required this.generatedAt, @JsonKey(name: 'source_urls') required final  List<String> sourceUrls, required this.sha256, @JsonKey(name: 'size_bytes') required this.sizeBytes, required this.url}): _sourceUrls = sourceUrls;
+  const _ParameterManifestItem({required this.type, @JsonKey(name: 'schema_version') required this.schemaVersion, @JsonKey(name: 'source_version') required this.sourceVersion, @JsonKey(includeIfNull: true, name: 'source_updated_at') required this.sourceUpdatedAt, @JsonKey(name: 'source_urls') required final  List<String> sourceUrls, required this.sha256, @JsonKey(name: 'size_bytes') required this.sizeBytes, required this.url}): _sourceUrls = sourceUrls;
   factory _ParameterManifestItem.fromJson(Map<String, dynamic> json) => _$ParameterManifestItemFromJson(json);
 
 @override final  ParameterType type;
 @override@JsonKey(name: 'schema_version') final  dynamic schemaVersion;
 @override@JsonKey(name: 'source_version') final  String sourceVersion;
 @override@JsonKey(includeIfNull: true, name: 'source_updated_at') final  String? sourceUpdatedAt;
-@override@JsonKey(name: 'generated_at') final  String generatedAt;
  final  List<String> _sourceUrls;
 @override@JsonKey(name: 'source_urls') List<String> get sourceUrls {
   if (_sourceUrls is EqualUnmodifiableListView) return _sourceUrls;
@@ -249,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParameterManifestItem&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.schemaVersion, schemaVersion)&&(identical(other.sourceVersion, sourceVersion) || other.sourceVersion == sourceVersion)&&(identical(other.sourceUpdatedAt, sourceUpdatedAt) || other.sourceUpdatedAt == sourceUpdatedAt)&&(identical(other.generatedAt, generatedAt) || other.generatedAt == generatedAt)&&const DeepCollectionEquality().equals(other._sourceUrls, _sourceUrls)&&(identical(other.sha256, sha256) || other.sha256 == sha256)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParameterManifestItem&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.schemaVersion, schemaVersion)&&(identical(other.sourceVersion, sourceVersion) || other.sourceVersion == sourceVersion)&&(identical(other.sourceUpdatedAt, sourceUpdatedAt) || other.sourceUpdatedAt == sourceUpdatedAt)&&const DeepCollectionEquality().equals(other._sourceUrls, _sourceUrls)&&(identical(other.sha256, sha256) || other.sha256 == sha256)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,const DeepCollectionEquality().hash(schemaVersion),sourceVersion,sourceUpdatedAt,generatedAt,const DeepCollectionEquality().hash(_sourceUrls),sha256,sizeBytes,url);
+int get hashCode => Object.hash(runtimeType,type,const DeepCollectionEquality().hash(schemaVersion),sourceVersion,sourceUpdatedAt,const DeepCollectionEquality().hash(_sourceUrls),sha256,sizeBytes,url);
 
 @override
 String toString() {
-  return 'ParameterManifestItem(type: $type, schemaVersion: $schemaVersion, sourceVersion: $sourceVersion, sourceUpdatedAt: $sourceUpdatedAt, generatedAt: $generatedAt, sourceUrls: $sourceUrls, sha256: $sha256, sizeBytes: $sizeBytes, url: $url)';
+  return 'ParameterManifestItem(type: $type, schemaVersion: $schemaVersion, sourceVersion: $sourceVersion, sourceUpdatedAt: $sourceUpdatedAt, sourceUrls: $sourceUrls, sha256: $sha256, sizeBytes: $sizeBytes, url: $url)';
 }
 
 
@@ -269,7 +267,7 @@ abstract mixin class _$ParameterManifestItemCopyWith<$Res> implements $Parameter
   factory _$ParameterManifestItemCopyWith(_ParameterManifestItem value, $Res Function(_ParameterManifestItem) _then) = __$ParameterManifestItemCopyWithImpl;
 @override @useResult
 $Res call({
- ParameterType type,@JsonKey(name: 'schema_version') dynamic schemaVersion,@JsonKey(name: 'source_version') String sourceVersion,@JsonKey(includeIfNull: true, name: 'source_updated_at') String? sourceUpdatedAt,@JsonKey(name: 'generated_at') String generatedAt,@JsonKey(name: 'source_urls') List<String> sourceUrls, String sha256,@JsonKey(name: 'size_bytes') num sizeBytes, String url
+ ParameterType type,@JsonKey(name: 'schema_version') dynamic schemaVersion,@JsonKey(name: 'source_version') String sourceVersion,@JsonKey(includeIfNull: true, name: 'source_updated_at') String? sourceUpdatedAt,@JsonKey(name: 'source_urls') List<String> sourceUrls, String sha256,@JsonKey(name: 'size_bytes') num sizeBytes, String url
 });
 
 
@@ -286,14 +284,13 @@ class __$ParameterManifestItemCopyWithImpl<$Res>
 
 /// Create a copy of ParameterManifestItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? schemaVersion = freezed,Object? sourceVersion = null,Object? sourceUpdatedAt = freezed,Object? generatedAt = null,Object? sourceUrls = null,Object? sha256 = null,Object? sizeBytes = null,Object? url = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? schemaVersion = freezed,Object? sourceVersion = null,Object? sourceUpdatedAt = freezed,Object? sourceUrls = null,Object? sha256 = null,Object? sizeBytes = null,Object? url = null,}) {
   return _then(_ParameterManifestItem(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ParameterType,schemaVersion: freezed == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
 as dynamic,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
 as String,sourceUpdatedAt: freezed == sourceUpdatedAt ? _self.sourceUpdatedAt : sourceUpdatedAt // ignore: cast_nullable_to_non_nullable
-as String?,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
-as String,sourceUrls: null == sourceUrls ? _self._sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable
+as String?,sourceUrls: null == sourceUrls ? _self._sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable
 as List<String>,sha256: null == sha256 ? _self.sha256 : sha256 // ignore: cast_nullable_to_non_nullable
 as String,sizeBytes: null == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
 as num,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable

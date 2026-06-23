@@ -20,7 +20,9 @@ abstract class StartApiClient {
   });
 }
 
+
 abstract class StartApiClientUrls {
-  /// /v1/start
-  static const getV1Start = "/v1/start";
+	/// /v1/start
+	static const getV1Start = "/v1/start";
 }
+
