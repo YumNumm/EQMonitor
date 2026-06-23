@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/tsunami/data/model/timeline/station_timeline_e
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/tsunami_timeline.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tsunami_telegram_meta.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_telegram_timeline_notifier.dart';
+import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_timeline_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
@@ -33,18 +34,28 @@ class TsunamiTelegramTimelineDebugPage extends HookConsumerWidget {
       appBar: AppBar(
         title: Text('Timeline: $tsunamiId'),
       ),
-      body: switch (asyncValue) {
-        AsyncLoading() => const Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-        AsyncError(:final error) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text('Error: $error'),
+      body: Stack(
+        children: [
+          switch (asyncValue) {
+            AsyncLoading() => const Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+            AsyncError(:final error) => Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text('Error: $error'),
+              ),
+            ),
+            AsyncData(:final value) => _TimelineBody(timeline: value),
+          },
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: TsunamiTimelineOverlay(tsunamiId: tsunamiId),
           ),
-        ),
-        AsyncData(:final value) => _TimelineBody(timeline: value),
-      },
+        ],
+      ),
     );
   }
 }
