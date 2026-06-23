@@ -1,0 +1,1 @@
+enum LiveActivityType { eew, shakeDetection }
