@@ -12,19 +12,14 @@ part 'region_setting_request.g.dart';
 @Freezed()
 abstract class RegionSettingRequest with _$RegionSettingRequest {
   const factory RegionSettingRequest({
-    @JsonKey(name: 'region_id')
-    required num regionId,
-    @JsonKey(name: 'is_current_location')
-    required bool isCurrentLocation,
-    @JsonKey(name: 'min_jma_intensity')
-    required JmaIntensity minJmaIntensity,
-    @JsonKey(includeIfNull: false,name: 'region_name')
-    String? regionName,
-    @JsonKey(includeIfNull: false,name: 'city_code')
-    String? cityCode,
-    @JsonKey(includeIfNull: false,name: 'city_name')
-    String? cityName,
+    @JsonKey(name: 'region_id') required num regionId,
+    @JsonKey(name: 'is_current_location') required bool isCurrentLocation,
+    @JsonKey(name: 'min_jma_intensity') required JmaIntensity minJmaIntensity,
+    @JsonKey(includeIfNull: false, name: 'region_name') String? regionName,
+    @JsonKey(includeIfNull: false, name: 'city_code') String? cityCode,
+    @JsonKey(includeIfNull: false, name: 'city_name') String? cityName,
   }) = _RegionSettingRequest;
-  
-  factory RegionSettingRequest.fromJson(Map<String, Object?> json) => _$RegionSettingRequestFromJson(json);
+
+  factory RegionSettingRequest.fromJson(Map<String, Object?> json) =>
+      _$RegionSettingRequestFromJson(json);
 }

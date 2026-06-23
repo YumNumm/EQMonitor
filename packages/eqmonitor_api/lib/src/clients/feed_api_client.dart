@@ -31,11 +31,10 @@ abstract class FeedApiClient {
   });
 }
 
-
 abstract class FeedApiClientUrls {
-	/// /v2/feeds
-	static const getV2Feeds = "/v2/feeds";
-	/// /v2/feeds/admin
-	static const postV2FeedsAdmin = "/v2/feeds/admin";
-}
+  /// /v2/feeds
+  static const getV2Feeds = "/v2/feeds";
 
+  /// /v2/feeds/admin
+  static const postV2FeedsAdmin = "/v2/feeds/admin";
+}

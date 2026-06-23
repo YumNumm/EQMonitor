@@ -16,14 +16,10 @@ part 'tsunami_state.g.dart';
 abstract class TsunamiState with _$TsunamiState {
   const factory TsunamiState({
     required String id,
-    @JsonKey(name: 'event_ids')
-    required List<String> eventIds,
-    @JsonKey(name: 'is_active')
-    required bool isActive,
-    @JsonKey(name: 'is_canceled')
-    required bool isCanceled,
-    @JsonKey(name: 'updated_at')
-    required DateTime updatedAt,
+    @JsonKey(name: 'event_ids') required List<String> eventIds,
+    @JsonKey(name: 'is_active') required bool isActive,
+    @JsonKey(name: 'is_canceled') required bool isCanceled,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
     required List<TsunamiStateEarthquake> earthquakes,
     @JsonKey(name: 'latest_telegrams')
     required List<LatestTelegram> latestTelegrams,
@@ -31,6 +27,7 @@ abstract class TsunamiState with _$TsunamiState {
     @JsonKey(name: 'offshore_stations')
     required List<TsunamiOffshoreStation> offshoreStations,
   }) = _TsunamiState;
-  
-  factory TsunamiState.fromJson(Map<String, Object?> json) => _$TsunamiStateFromJson(json);
+
+  factory TsunamiState.fromJson(Map<String, Object?> json) =>
+      _$TsunamiStateFromJson(json);
 }

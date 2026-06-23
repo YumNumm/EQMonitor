@@ -12,6 +12,7 @@ abstract class Comments2 with _$Comments2 {
   const factory Comments2({
     required String free,
   }) = _Comments2;
-  
-  factory Comments2.fromJson(Map<String, Object?> json) => _$Comments2FromJson(json);
+
+  factory Comments2.fromJson(Map<String, Object?> json) =>
+      _$Comments2FromJson(json);
 }

@@ -14,13 +14,11 @@ part 'first_height2.g.dart';
 abstract class FirstHeight2 with _$FirstHeight2 {
   const factory FirstHeight2({
     /// まだ津波が到達していない場合、到達していないと推測される場合に出現する
-    @JsonKey(includeIfNull: false,name: 'arrival_time')
-    DateTime? arrivalTime,
-    @JsonKey(includeIfNull: false)
-    FirstHeightCondition? condition,
-    @JsonKey(includeIfNull: false)
-    Revise? revise,
+    @JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,
+    @JsonKey(includeIfNull: false) FirstHeightCondition? condition,
+    @JsonKey(includeIfNull: false) Revise? revise,
   }) = _FirstHeight2;
-  
-  factory FirstHeight2.fromJson(Map<String, Object?> json) => _$FirstHeight2FromJson(json);
+
+  factory FirstHeight2.fromJson(Map<String, Object?> json) =>
+      _$FirstHeight2FromJson(json);
 }

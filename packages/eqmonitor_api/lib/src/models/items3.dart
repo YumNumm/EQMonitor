@@ -23,19 +23,13 @@ abstract class Items3 with _$Items3 {
     required num failedFcm,
     required num successApns,
     required num failedApns,
-    @JsonKey(includeIfNull: false)
-    String? headline,
-    @JsonKey(includeIfNull: false)
-    num? resolverDelayMs,
-    @JsonKey(includeIfNull: false)
-    String? proxyReceivedAt,
-    @JsonKey(includeIfNull: false)
-    String? resolverDoneAt,
-    @JsonKey(includeIfNull: false)
-    String? sendStartedAt,
-    @JsonKey(includeIfNull: false)
-    String? sendCompletedAt,
+    @JsonKey(includeIfNull: false) String? headline,
+    @JsonKey(includeIfNull: false) num? resolverDelayMs,
+    @JsonKey(includeIfNull: false) String? proxyReceivedAt,
+    @JsonKey(includeIfNull: false) String? resolverDoneAt,
+    @JsonKey(includeIfNull: false) String? sendStartedAt,
+    @JsonKey(includeIfNull: false) String? sendCompletedAt,
   }) = _Items3;
-  
+
   factory Items3.fromJson(Map<String, Object?> json) => _$Items3FromJson(json);
 }

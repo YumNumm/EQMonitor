@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'dart:async';
 
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';

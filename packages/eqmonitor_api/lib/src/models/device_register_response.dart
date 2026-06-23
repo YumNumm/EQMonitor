@@ -14,6 +14,7 @@ abstract class DeviceRegisterResponse with _$DeviceRegisterResponse {
     required String deviceToken,
     required dynamic expiresAt,
   }) = _DeviceRegisterResponse;
-  
-  factory DeviceRegisterResponse.fromJson(Map<String, Object?> json) => _$DeviceRegisterResponseFromJson(json);
+
+  factory DeviceRegisterResponse.fromJson(Map<String, Object?> json) =>
+      _$DeviceRegisterResponseFromJson(json);
 }

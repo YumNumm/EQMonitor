@@ -16,6 +16,7 @@ abstract class TsunamiStationsParameter with _$TsunamiStationsParameter {
     required TsunamiStationsParameterMetadata metadata,
     required List<TsunamiStationPrefecture> prefectures,
   }) = _TsunamiStationsParameter;
-  
-  factory TsunamiStationsParameter.fromJson(Map<String, Object?> json) => _$TsunamiStationsParameterFromJson(json);
+
+  factory TsunamiStationsParameter.fromJson(Map<String, Object?> json) =>
+      _$TsunamiStationsParameterFromJson(json);
 }

@@ -14,6 +14,7 @@ abstract class ChangelogResponse with _$ChangelogResponse {
   const factory ChangelogResponse({
     required List<ChangelogEntry> entries,
   }) = _ChangelogResponse;
-  
-  factory ChangelogResponse.fromJson(Map<String, Object?> json) => _$ChangelogResponseFromJson(json);
+
+  factory ChangelogResponse.fromJson(Map<String, Object?> json) =>
+      _$ChangelogResponseFromJson(json);
 }

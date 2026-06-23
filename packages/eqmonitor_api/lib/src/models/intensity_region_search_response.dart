@@ -10,18 +10,18 @@ part 'intensity_region_search_response.freezed.dart';
 part 'intensity_region_search_response.g.dart';
 
 @Freezed()
-abstract class IntensityRegionSearchResponse with _$IntensityRegionSearchResponse {
+abstract class IntensityRegionSearchResponse
+    with _$IntensityRegionSearchResponse {
   const factory IntensityRegionSearchResponse({
     required List<IntensityRegionSearchItem> items,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false,name: 'next_token')
-    String? nextToken,
+    @JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false,name: 'next_pooling')
-    String? nextPooling,
+    @JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling,
   }) = _IntensityRegionSearchResponse;
-  
-  factory IntensityRegionSearchResponse.fromJson(Map<String, Object?> json) => _$IntensityRegionSearchResponseFromJson(json);
+
+  factory IntensityRegionSearchResponse.fromJson(Map<String, Object?> json) =>
+      _$IntensityRegionSearchResponseFromJson(json);
 }

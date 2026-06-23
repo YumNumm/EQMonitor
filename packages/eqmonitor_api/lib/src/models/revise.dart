@@ -9,6 +9,7 @@ enum Revise {
   /// 新しく追加された場合
   @JsonValue('ADDITION')
   addition('ADDITION'),
+
   /// 更新された場合
   @JsonValue('UPDATE')
   update('UPDATE');
@@ -19,8 +20,10 @@ enum Revise {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

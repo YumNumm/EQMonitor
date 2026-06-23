@@ -17,6 +17,7 @@ abstract class JmaCodeTableParameter with _$JmaCodeTableParameter {
     @JsonKey(name: 'code_tables')
     required JmaCodeTableParameterCodeTables codeTables,
   }) = _JmaCodeTableParameter;
-  
-  factory JmaCodeTableParameter.fromJson(Map<String, Object?> json) => _$JmaCodeTableParameterFromJson(json);
+
+  factory JmaCodeTableParameter.fromJson(Map<String, Object?> json) =>
+      _$JmaCodeTableParameterFromJson(json);
 }

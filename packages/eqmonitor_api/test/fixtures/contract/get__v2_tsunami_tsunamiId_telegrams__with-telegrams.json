@@ -1,12 +1,11 @@
 {
   "telegrams": [
     {
-      "type": "VTSE51",
       "telegram": {
         "type": "VTSE51",
         "title": "津波情報",
-        "press_at": "2011-03-11T06:00:00.000Z",
-        "report_at": "2011-03-11T06:00:02.000Z",
+        "pressed_at": "2011-03-11T06:00:00.000Z",
+        "reported_at": "2011-03-11T06:00:02.000Z",
         "info_kind": "津波情報a",
         "serial_no": 1
       },
@@ -22,10 +21,8 @@
           {
             "origin_time": "2011-03-11T05:46:18.000Z",
             "hypocenter": {
-              "value": {
-                "code": "288",
-                "name": "三陸沖"
-              },
+              "code": "288",
+              "name": "三陸沖",
               "coordinates": {
                 "latitude": 38.1,
                 "longitude": 142.9
@@ -43,10 +40,15 @@
         ],
         "latest_telegrams": [
           {
+            "id": "stub-telegram-vtse41",
             "type": "VTSE41",
             "title": "大津波警報・津波警報・津波注意報",
-            "press_at": "2011-03-11T05:49:00.000Z",
-            "report_at": "2011-03-11T05:49:02.000Z",
+            "editorial_office": "気象庁本庁",
+            "publishing_office": [
+              "気象庁"
+            ],
+            "pressed_at": "2011-03-11T05:49:00.000Z",
+            "reported_at": "2011-03-11T05:49:02.000Z",
             "info_kind": "津波警報・注意報・予報a",
             "serial_no": 1,
             "headline": "大津波警報を発表しました"
@@ -80,7 +82,7 @@
                 "code": "21001",
                 "name": "宮古",
                 "forecast": {
-                  "high_tide_date_time": "2011-03-11T08:00:00.000Z",
+                  "high_tide_at": "2011-03-11T08:00:00.000Z",
                   "first_height": {
                     "arrival_time": "2011-03-11T05:50:00.000Z"
                   }
@@ -91,7 +93,7 @@
                     "initial": "PUSH"
                   },
                   "max_height": {
-                    "date_time": "2011-03-11T06:26:00.000Z",
+                    "observed_at": "2011-03-11T06:26:00.000Z",
                     "value": 8.5,
                     "is_over": true,
                     "is_rising": true,
@@ -120,7 +122,7 @@
                 "code": "22001",
                 "name": "石巻市鮎川",
                 "forecast": {
-                  "high_tide_date_time": "2011-03-11T07:32:00.000Z",
+                  "high_tide_at": "2011-03-11T07:32:00.000Z",
                   "first_height": {
                     "arrival_time": "2011-03-11T05:54:00.000Z"
                   }
@@ -131,7 +133,7 @@
                     "initial": "PUSH"
                   },
                   "max_height": {
-                    "date_time": "2011-03-11T06:46:00.000Z",
+                    "observed_at": "2011-03-11T06:46:00.000Z",
                     "value": 7.7,
                     "is_rising": true,
                     "condition": "OBSERVING"
@@ -158,7 +160,7 @@
                 "code": "25001",
                 "name": "相馬",
                 "forecast": {
-                  "high_tide_date_time": "2011-03-11T07:40:00.000Z",
+                  "high_tide_at": "2011-03-11T07:40:00.000Z",
                   "first_height": {
                     "arrival_time": "2011-03-11T06:00:00.000Z"
                   }
@@ -169,7 +171,7 @@
                     "initial": "PUSH"
                   },
                   "max_height": {
-                    "date_time": "2011-03-11T07:35:00.000Z",
+                    "observed_at": "2011-03-11T07:35:00.000Z",
                     "value": 9.3,
                     "is_over": true
                   }
@@ -188,7 +190,7 @@
               "initial": "PUSH"
             },
             "max_height": {
-              "date_time": "2011-03-11T06:11:00.000Z",
+              "observed_at": "2011-03-11T06:11:00.000Z",
               "value": 6.7
             }
           },
@@ -201,7 +203,7 @@
               "initial": "PUSH"
             },
             "max_height": {
-              "date_time": "2011-03-11T06:20:00.000Z",
+              "observed_at": "2011-03-11T06:20:00.000Z",
               "value": 0.3
             }
           }
@@ -209,12 +211,11 @@
       }
     },
     {
-      "type": "VTSE41",
       "telegram": {
         "type": "VTSE41",
         "title": "大津波警報・津波警報・津波注意報",
-        "press_at": "2011-03-11T05:49:00.000Z",
-        "report_at": "2011-03-11T05:49:02.000Z",
+        "pressed_at": "2011-03-11T05:49:00.000Z",
+        "reported_at": "2011-03-11T05:49:02.000Z",
         "info_kind": "津波警報・注意報・予報a",
         "serial_no": 1,
         "headline": "大津波警報を発表しました"
@@ -231,10 +232,8 @@
           {
             "origin_time": "2011-03-11T05:46:18.000Z",
             "hypocenter": {
-              "value": {
-                "code": "288",
-                "name": "三陸沖"
-              },
+              "code": "288",
+              "name": "三陸沖",
               "coordinates": {
                 "latitude": 38.1,
                 "longitude": 142.9
@@ -252,10 +251,15 @@
         ],
         "latest_telegrams": [
           {
+            "id": "stub-telegram-vtse41",
             "type": "VTSE41",
             "title": "大津波警報・津波警報・津波注意報",
-            "press_at": "2011-03-11T05:49:00.000Z",
-            "report_at": "2011-03-11T05:49:02.000Z",
+            "editorial_office": "気象庁本庁",
+            "publishing_office": [
+              "気象庁"
+            ],
+            "pressed_at": "2011-03-11T05:49:00.000Z",
+            "reported_at": "2011-03-11T05:49:02.000Z",
             "info_kind": "津波警報・注意報・予報a",
             "serial_no": 1,
             "headline": "大津波警報を発表しました"

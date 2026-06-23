@@ -12,11 +12,11 @@ part 'tsunami_station_forecast.g.dart';
 @Freezed()
 abstract class TsunamiStationForecast with _$TsunamiStationForecast {
   const factory TsunamiStationForecast({
-    @JsonKey(name: 'high_tide_at')
-    required DateTime highTideAt,
-    @JsonKey(includeIfNull: false,name: 'first_height')
+    @JsonKey(name: 'high_tide_at') required DateTime highTideAt,
+    @JsonKey(includeIfNull: false, name: 'first_height')
     FirstHeight2? firstHeight,
   }) = _TsunamiStationForecast;
-  
-  factory TsunamiStationForecast.fromJson(Map<String, Object?> json) => _$TsunamiStationForecastFromJson(json);
+
+  factory TsunamiStationForecast.fromJson(Map<String, Object?> json) =>
+      _$TsunamiStationForecastFromJson(json);
 }

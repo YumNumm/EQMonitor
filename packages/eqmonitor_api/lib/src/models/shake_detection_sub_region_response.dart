@@ -8,7 +8,8 @@ part 'shake_detection_sub_region_response.freezed.dart';
 part 'shake_detection_sub_region_response.g.dart';
 
 @Freezed()
-abstract class ShakeDetectionSubRegionResponse with _$ShakeDetectionSubRegionResponse {
+abstract class ShakeDetectionSubRegionResponse
+    with _$ShakeDetectionSubRegionResponse {
   const factory ShakeDetectionSubRegionResponse({
     required String id,
 
@@ -16,6 +17,7 @@ abstract class ShakeDetectionSubRegionResponse with _$ShakeDetectionSubRegionRes
     required String code,
     required String name,
   }) = _ShakeDetectionSubRegionResponse;
-  
-  factory ShakeDetectionSubRegionResponse.fromJson(Map<String, Object?> json) => _$ShakeDetectionSubRegionResponseFromJson(json);
+
+  factory ShakeDetectionSubRegionResponse.fromJson(Map<String, Object?> json) =>
+      _$ShakeDetectionSubRegionResponseFromJson(json);
 }

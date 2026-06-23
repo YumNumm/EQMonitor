@@ -17,6 +17,7 @@ abstract class EarthquakeCounts with _$EarthquakeCounts {
     required TargetTime targetTime,
     required Values values,
   }) = _EarthquakeCounts;
-  
-  factory EarthquakeCounts.fromJson(Map<String, Object?> json) => _$EarthquakeCountsFromJson(json);
+
+  factory EarthquakeCounts.fromJson(Map<String, Object?> json) =>
+      _$EarthquakeCountsFromJson(json);
 }

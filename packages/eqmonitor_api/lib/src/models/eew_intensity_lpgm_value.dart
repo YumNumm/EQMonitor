@@ -14,9 +14,9 @@ part 'eew_intensity_lpgm_value.g.dart';
 abstract class EewIntensityLpgmValue with _$EewIntensityLpgmValue {
   const factory EewIntensityLpgmValue({
     required JmaLpgmIntensity value,
-    @JsonKey(name: 'is_over')
-    required bool isOver,
+    @JsonKey(name: 'is_over') required bool isOver,
   }) = _EewIntensityLpgmValue;
-  
-  factory EewIntensityLpgmValue.fromJson(Map<String, Object?> json) => _$EewIntensityLpgmValueFromJson(json);
+
+  factory EewIntensityLpgmValue.fromJson(Map<String, Object?> json) =>
+      _$EewIntensityLpgmValueFromJson(json);
 }
