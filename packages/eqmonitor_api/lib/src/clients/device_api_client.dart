@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -61,7 +61,7 @@ abstract class DeviceApiClient {
   /// APNsトークンを更新
   @PATCH(DeviceApiClientUrls.patchV2DeviceMeApnsKind)
   Future<HttpResponse<void>> patchV2DeviceMeApnsKind({
-    @Path('kind') required dynamic kind,
+    @Path('kind') required String kind,
     @Body() required V2DeviceMeApnsKindRequestBody body,
   });
 

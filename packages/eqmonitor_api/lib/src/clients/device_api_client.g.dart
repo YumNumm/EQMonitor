@@ -155,7 +155,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<void>> patchV2DeviceMeApnsKind({
-    required dynamic kind,
+    required String kind,
     required V2DeviceMeApnsKindRequestBody body,
   }) async {
     final _extra = <String, dynamic>{};

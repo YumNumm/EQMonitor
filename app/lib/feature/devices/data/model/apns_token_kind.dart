@@ -4,8 +4,8 @@ part 'apns_token_kind.g.dart';
 
 @JsonEnum(alwaysCreate: true, valueField: 'json')
 enum ApnsTokenKind {
-  notification('notification'),
-  liveActivityStart('liveActivityStart');
+  notification('NOTIFICATION'),
+  liveActivityStart('LIVE_ACTIVITY_START');
 
   const ApnsTokenKind(this.json);
 
