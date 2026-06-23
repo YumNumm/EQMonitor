@@ -19,11 +19,25 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final telegramsAsync = ref.watch(tsunamiTelegramsProvider(tsunamiId));
-    final telegrams = telegramsAsync.value;
-    if (telegrams == null || telegrams.length <= 1) {
-      return const SizedBox.shrink();
-    }
 
+    return switch (telegramsAsync) {
+      AsyncLoading() => const SizedBox.shrink(),
+      AsyncError() => const SizedBox.shrink(),
+      AsyncData(value: final telegrams) when telegrams.isEmpty =>
+        const SizedBox.shrink(),
+      AsyncData(value: final telegrams) => _buildOverlay(
+          context,
+          ref,
+          telegrams,
+        ),
+    };
+  }
+
+  Widget _buildOverlay(
+    BuildContext context,
+    WidgetRef ref,
+    List<TsunamiTelegramWithState> telegrams,
+  ) {
     final selection = ref.watch(tsunamiPlaybackSelectionProvider);
 
     return SafeArea(
