@@ -114,6 +114,10 @@ void main(List<String> args) async {
     _patchStatusesQueryInApiClients(libDir);
   });
 
+  await _step('anyOf 由来の dynamic パスパラメータを String にパッチ', () async {
+    _patchDynamicPathParameters(libDir);
+  });
+
   await _step('anyOf 由来の dynamic クエリパラメータを String? にパッチ', () async {
     _patchDynamicQueryParameters(libDir);
   });
@@ -149,6 +153,10 @@ void main(List<String> args) async {
     _patchOriginTimeDateTimeToString(libDir);
   });
 
+  await _step('生成ファイルから type=lint を除去（lint 検出を有効化）', () async {
+    _stripTypeLintFromGeneratedHeaders(libDir);
+  });
+
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
     await _run('dart', [
       'run',
@@ -156,6 +164,10 @@ void main(List<String> args) async {
       'build',
       '--delete-conflicting-outputs',
     ], packageDir.path);
+  });
+
+  await _step('残存 dynamic の検出', () async {
+    _validateNoDynamic(libDir);
   });
 
   /// 契約 drift テスト用の fixtures を backend submodule からコピーする。
@@ -790,6 +802,102 @@ void _patchOriginTimeDateTimeToString(Directory libDir) {
       entity.writeAsStringSync(content);
       stdout.writeln('  Patched: ${entity.path}');
     }
+  }
+}
+
+/// swagger_parser が `anyOf` のパスパラメータを `dynamic` として生成する問題を修正。
+/// `@Path('xxx') required dynamic yyy` → `@Path('xxx') required String yyy`。
+void _patchDynamicPathParameters(Directory libDir) {
+  final clientsDir = Directory('${libDir.path}/clients');
+  if (!clientsDir.existsSync()) return;
+
+  final pattern = RegExp(r"@Path\('(\w+)'\)\s+required\s+dynamic\s+(\w+)");
+
+  for (final entity in clientsDir.listSync()) {
+    if (entity is! File || !entity.path.endsWith('_api_client.dart')) continue;
+
+    var content = entity.readAsStringSync();
+    final original = content;
+
+    content = content.replaceAllMapped(pattern, (m) {
+      final pathName = m[1];
+      final paramName = m[2];
+      return "@Path('$pathName') required String $paramName";
+    });
+
+    if (content != original) {
+      entity.writeAsStringSync(content);
+      stdout.writeln('  Patched dynamic path params: ${entity.path}');
+    }
+  }
+}
+
+/// swagger_parser が生成する `// ignore_for_file: type=lint, ...` から
+/// `type=lint` を除去する。これにより `avoid_annotating_with_dynamic` 等の
+/// lint ルールがコード生成結果に対して有効になる。
+///
+/// `.g.dart` / `.freezed.dart` はビルドランナー生成で独自に `type=lint` を
+/// 持つため対象外。
+void _stripTypeLintFromGeneratedHeaders(Directory libDir) {
+  final dartFiles = libDir
+      .listSync(recursive: true)
+      .whereType<File>()
+      .where(
+        (f) =>
+            f.path.endsWith('.dart') &&
+            !f.path.endsWith('.g.dart') &&
+            !f.path.endsWith('.freezed.dart'),
+      );
+
+  for (final file in dartFiles) {
+    var content = file.readAsStringSync();
+    final original = content;
+
+    content = content.replaceAll(
+      RegExp(r'type=lint,?\s*'),
+      '',
+    );
+    // 末尾にカンマ+空白だけ残った場合を整理
+    content = content.replaceAll(
+      RegExp(r'// ignore_for_file:\s*\n'),
+      '',
+    );
+
+    if (content != original) {
+      file.writeAsStringSync(content);
+      stdout.writeln('  Stripped type=lint: ${file.path}');
+    }
+  }
+}
+
+/// 生成後に `*.dart`（`*.g.dart`, `*.freezed.dart` を除く）に残った
+/// `dynamic` 型注釈を検出して警告する。
+void _validateNoDynamic(Directory libDir) {
+  final pattern = RegExp(r'\bdynamic\b');
+  final dartFiles = libDir
+      .listSync(recursive: true)
+      .whereType<File>()
+      .where(
+        (f) =>
+            f.path.endsWith('.dart') &&
+            !f.path.endsWith('.g.dart') &&
+            !f.path.endsWith('.freezed.dart'),
+      );
+
+  var count = 0;
+  for (final file in dartFiles) {
+    final lines = file.readAsLinesSync();
+    for (var i = 0; i < lines.length; i++) {
+      if (pattern.hasMatch(lines[i])) {
+        stderr.writeln(
+          '  ⚠️  dynamic detected: ${file.path}:${i + 1}: ${lines[i].trim()}',
+        );
+        count++;
+      }
+    }
+  }
+  if (count > 0) {
+    stderr.writeln('  ⚠️  $count dynamic annotation(s) remaining');
   }
 }
 
