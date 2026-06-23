@@ -49,7 +49,7 @@ final class TelemetryWriter {
                 t.column(colTimestampMs)
                 t.column(colEventId)
                 t.column(colPayload)
-                t.column(colSynced, defaultValue: 0, check: [0, 1].contains(colSynced))
+                t.column(colSynced, check: [0, 1].contains(colSynced), defaultValue: 0)
                 t.column(colCreatedAtMs)
             })
             return db
