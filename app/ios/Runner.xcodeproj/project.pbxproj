@@ -26,6 +26,7 @@
 		85C54D0C2E96C7EA00BFBBAB /* WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 85C54CF92E96C7E700BFBBAB /* WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		85C9C3EF2D9F053700F047DF /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 85C9C3EE2D9F053700F047DF /* SwiftProtobuf */; };
 		85E609552BFF792C00C21983 /* FcmServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 85E6094E2BFF792C00C21983 /* FcmServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		85A1B0102F59B00000000010 /* TelemetryWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1B0112F59B00000000011 /* TelemetryWriter.swift */; };
 		85E6095F2BFF7B6400C21983 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6095D2BFF7B6400C21983 /* NotificationService.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -101,6 +102,7 @@
 		85C945A32BE2AAC90099687E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		85E6094E2BFF792C00C21983 /* FcmServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FcmServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		85E609522BFF792C00C21983 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		85A1B0112F59B00000000011 /* TelemetryWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryWriter.swift; sourceTree = "<group>"; };
 		85E6095D2BFF7B6400C21983 /* NotificationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		85E609652BFF858900C21983 /* FcmServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FcmServiceExtension.entitlements; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				85E6095D2BFF7B6400C21983 /* NotificationService.swift */,
+				85A1B0112F59B00000000011 /* TelemetryWriter.swift */,
 				85E609652BFF858900C21983 /* FcmServiceExtension.entitlements */,
 				85E609522BFF792C00C21983 /* Info.plist */,
 			);
@@ -465,6 +468,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				85E6095F2BFF7B6400C21983 /* NotificationService.swift in Sources */,
+				85A1B0102F59B00000000010 /* TelemetryWriter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

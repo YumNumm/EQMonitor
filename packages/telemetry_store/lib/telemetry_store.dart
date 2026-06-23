@@ -1,3 +1,4 @@
+export 'src/database/schema_ddl.dart';
 export 'src/database/telemetry_database.dart';
 export 'src/database/telemetry_events_table.dart';
 export 'src/models/live_activity_end_reason.dart';
