@@ -71,6 +71,7 @@ Map<String, Object?> _changelogJson(String version) => {
     {
       'version': version,
       'date': '2026-06-04T00:00:00Z',
+      'url': 'https://example.com/changelog/$version',
       'sections': [
         {
           'title': '追加',
