@@ -5,6 +5,7 @@
 //  Created by 尾上 遼太朗 on 2024/05/23.
 //
 
+import Foundation
 import UserNotifications
 
 class NotificationService: UNNotificationServiceExtension {
@@ -18,6 +19,26 @@ class NotificationService: UNNotificationServiceExtension {
     ) {
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+
+        // Record telemetry event for notification receipt
+        let now = Int64(Date().timeIntervalSince1970 * 1000)
+        let eventId = (request.content.userInfo["eventId"] as? String)
+        let channelId = (request.content.userInfo["channelId"] as? String) ?? "unknown"
+        let payloadDict: [String: Any] = [
+            "framework": "apns",
+            "channel_id": channelId,
+            "title": request.content.title,
+        ]
+        if let payloadData = try? JSONSerialization.data(withJSONObject: payloadDict),
+           let payloadStr = String(data: payloadData, encoding: .utf8) {
+            TelemetryWriter.record(
+                eventType: "notification_received",
+                timestampMs: now,
+                eventId: eventId,
+                payload: payloadStr
+            )
+        }
+
         contentHandler(bestAttemptContent!)
     }
 

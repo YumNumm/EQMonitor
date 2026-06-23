@@ -5,8 +5,10 @@ import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/live_activity/data/provider/live_activity_token_stream.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:telemetry_store/telemetry_store.dart';
 
 part 'live_activity_token_sync_service.g.dart';
 
@@ -40,13 +42,25 @@ Future<void> liveActivityTokenSyncWiring(Ref ref) async {
   ref.listen<AsyncValue<LiveActivityTokenUpdate>>(
     liveActivityPushTokenUpdatesProvider,
     (_, next) => next.whenData(
-      (update) => unawaited(
-        service.syncToken(
-          deviceId: deviceId,
-          liveActivityId: update.liveActivityId,
-          token: update.token,
-        ),
-      ),
+      (update) {
+        unawaited(
+          ref.read(telemetryRecorderProvider).record(
+            TelemetryEvent.liveActivityUpdated(
+              activityType: update.activityType == 'eew'
+                  ? LiveActivityType.eew
+                  : LiveActivityType.shakeDetection,
+              activityId: update.liveActivityId,
+            ),
+          ),
+        );
+        unawaited(
+          service.syncToken(
+            deviceId: deviceId,
+            liveActivityId: update.liveActivityId,
+            token: update.token,
+          ),
+        );
+      },
     ),
   );
 }

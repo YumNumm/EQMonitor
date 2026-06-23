@@ -1,0 +1,1 @@
+enum NotificationFramework { fcm, apns }

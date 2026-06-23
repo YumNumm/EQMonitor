@@ -65,6 +65,9 @@ import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_pag
 import 'package:eqmonitor/feature/subscription/ui/page/paywall_page.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/subscription_settings_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
+import 'package:eqmonitor/feature/telemetry/telemetry_navigator_observer.dart';
 import 'package:eqmonitor/feature/tsunami/ui/tsunami_details_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/splash_page.dart';
@@ -106,6 +109,10 @@ GoRouter goRouter(Ref ref) => GoRouter(
   observers: [
     _NavigatorObserver(talker),
     FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+    TelemetryNavigatorObserver(
+      recorder: ref.read(telemetryRecorderProvider),
+      uploader: ref.read(telemetryUploaderProvider),
+    ),
   ],
   debugLogDiagnostics: kDebugMode,
 );
