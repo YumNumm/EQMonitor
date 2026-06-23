@@ -29,5 +29,11 @@ import background_location_tracker
       GeneratedPluginRegistrant.register(with: engine)
     }
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+
+    // Register App Group container path method channel.
+    let registrar = engineBridge.pluginRegistry.registrar(
+      forPlugin: "AppGroupMethodChannel"
+    )
+    AppGroupMethodChannel.register(with: registrar)
   }
 }
