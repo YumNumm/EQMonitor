@@ -525,6 +525,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugIntensityIconRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'telemetry',
+          factory: $DebugTelemetryRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'tsunami-details',
           factory: $DebugTsunamiDetailsRoute._fromState,
           routes: [
@@ -1315,6 +1319,27 @@ mixin $DebugIntensityIconRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/intensity-icon');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugTelemetryRoute on GoRouteData {
+  static DebugTelemetryRoute _fromState(GoRouterState state) =>
+      const DebugTelemetryRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/telemetry');
 
   @override
   void go(BuildContext context) => context.go(location);
