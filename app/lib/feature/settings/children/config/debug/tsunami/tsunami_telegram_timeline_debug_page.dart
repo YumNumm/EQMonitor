@@ -1,4 +1,3 @@
-import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/components/tsunami_timeline_row.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/estimation_timeline_entry.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/first_height_timeline_entry.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/kind_timeline_entry.dart';
@@ -10,11 +9,12 @@ import 'package:eqmonitor/feature/tsunami/data/model/tsunami_telegram_meta.dart'
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_telegram_timeline_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 
 /// 津波電文タイムライン デバッグ画面。
 ///
 /// [tsunamiId] に対応する [TsunamiTimeline] を取得し、
-/// 各地域・観測点・沖合観測局の追跡項目を横スクロールテーブルで表示する。
+/// 各地域・観測点・沖合観測局の追跡項目を 2 次元スクロールテーブルで表示する。
 class TsunamiTelegramTimelineDebugPage extends HookConsumerWidget {
   const TsunamiTelegramTimelineDebugPage({
     required this.tsunamiId,
@@ -54,6 +54,13 @@ class _TimelineBody extends StatelessWidget {
 
   final TsunamiTimeline timeline;
 
+  // 列幅・行高さ定義。
+  static const double _labelColumnWidth = 132;
+  static const double _cellColumnWidth = 140;
+  static const double _headerRowHeight = 56;
+  static const double _sectionRowHeight = 36;
+  static const double _dataRowHeight = 64;
+
   @override
   Widget build(BuildContext context) {
     final telegrams = timeline.telegrams;
@@ -62,97 +69,235 @@ class _TimelineBody extends StatelessWidget {
       return const Center(child: Text('電文なし'));
     }
 
-    return ListView(
-      children: [
-        _HeaderRow(telegrams: telegrams),
-        const Divider(height: 1),
-        for (final region in timeline.regions) ...[
-          _SectionHeader(label: '【地域】${region.name} (${region.code})'),
-          TsunamiTimelineRow(
-            label: 'kind',
-            telegrams: telegrams,
-            cellBuilder: (id) => _kindCell(region.kind, id),
-          ),
-          TsunamiTimelineRow(
-            label: 'lastKind',
-            telegrams: telegrams,
-            cellBuilder: (id) => _kindCell(region.lastKind, id),
-          ),
-          TsunamiTimelineRow(
-            label: '予報 第1波',
-            telegrams: telegrams,
-            cellBuilder: (id) => _forecastFirstHeightCell(
-              region.forecastFirstHeight,
-              id,
+    final theme = Theme.of(context);
+    final rows = _buildRows();
+
+    // 行数 = ヘッダー行(1) + 各 row spec。
+    // 列数 = ラベル列(1) + 電文数。
+    final rowCount = rows.length + 1;
+    final columnCount = telegrams.length + 1;
+
+    return TableView.builder(
+      pinnedRowCount: 1,
+      pinnedColumnCount: 1,
+      columnCount: columnCount,
+      rowCount: rowCount,
+      columnBuilder: (index) => TableSpan(
+        extent: FixedTableSpanExtent(
+          index == 0 ? _labelColumnWidth : _cellColumnWidth,
+        ),
+      ),
+      rowBuilder: (index) {
+        if (index == 0) {
+          return TableSpan(
+            extent: const FixedTableSpanExtent(_headerRowHeight),
+            backgroundDecoration: TableSpanDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+            ),
+          );
+        }
+        final spec = rows[index - 1];
+        return switch (spec) {
+          _SectionRowSpec() => TableSpan(
+            extent: const FixedTableSpanExtent(_sectionRowHeight),
+            backgroundDecoration: TableSpanDecoration(
+              color: theme.colorScheme.surfaceContainerLow,
             ),
           ),
-          TsunamiTimelineRow(
-            label: '予報 最大波高',
-            telegrams: telegrams,
-            cellBuilder: (id) => _forecastMaxHeightCell(
-              region.forecastMaxHeight,
-              id,
-            ),
+          _DataRowSpec() => const TableSpan(
+            extent: FixedTableSpanExtent(_dataRowHeight),
           ),
-          TsunamiTimelineRow(
-            label: '推定 第1波',
-            telegrams: telegrams,
-            cellBuilder: (id) => _estimationFirstHeightCell(
-              region.estimationFirstHeight,
-              id,
-            ),
-          ),
-          TsunamiTimelineRow(
-            label: '推定 最大波高',
-            telegrams: telegrams,
-            cellBuilder: (id) => _estimationMaxHeightCell(
-              region.estimationMaxHeight,
-              id,
-            ),
-          ),
-          for (final station in region.stations) ...[
-            _SectionHeader(
-              label: '  [観測点] ${station.name} (${station.code})',
-              indent: 16,
-            ),
-            TsunamiTimelineRow(
-              label: '  観測 第1波',
-              telegrams: telegrams,
-              cellBuilder: (id) => _stationObservationCell(
-                station.observation,
-                id,
+        };
+      },
+      cellBuilder: (context, vicinity) => _buildCell(
+        context,
+        vicinity,
+        rows: rows,
+        telegrams: telegrams,
+      ),
+    );
+  }
+
+  TableViewCell _buildCell(
+    BuildContext context,
+    TableVicinity vicinity, {
+    required List<_TimelineRowSpec> rows,
+    required List<TsunamiTelegramMeta> telegrams,
+  }) {
+    final theme = Theme.of(context);
+
+    // ── ヘッダー行 ─────────────────────────────────────────────────────────
+    if (vicinity.row == 0) {
+      if (vicinity.column == 0) {
+        return TableViewCell(
+          child: Padding(
+            padding: const EdgeInsets.all(6),
+            child: Text(
+              '項目',
+              style: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
             ),
-            TsunamiTimelineRow(
-              label: '  観測点 予報',
-              telegrams: telegrams,
-              cellBuilder: (id) => _stationForecastCell(station.forecast, id),
+          ),
+        );
+      }
+      final t = telegrams[vicinity.column - 1];
+      return TableViewCell(
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                t.title,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              Text(
+                _fmtDt(t.publishedAt),
+                style: theme.textTheme.labelSmall,
+              ),
+              if (t.serialNo != null)
+                Text(
+                  '#${t.serialNo}',
+                  style: theme.textTheme.labelSmall,
+                ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final spec = rows[vicinity.row - 1];
+    switch (spec) {
+      case _SectionRowSpec(:final label, :final indent):
+        // セクション見出しはラベル列にのみ表示（行全体は背景色で帯状に表現）。
+        if (vicinity.column == 0) {
+          return TableViewCell(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 8 + indent,
+                right: 8,
+                top: 8,
+                bottom: 4,
+              ),
+              child: Text(
+                label,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ],
-        ],
-        if (timeline.offshoreStations.isNotEmpty) ...[
-          const Divider(height: 1),
-          const _SectionHeader(label: '【沖合観測局】'),
-          for (final os in timeline.offshoreStations) ...[
-            _SectionHeader(
-              label: '  ${os.name} (${os.code})',
-              indent: 16,
+          );
+        }
+        return const TableViewCell(child: SizedBox.shrink());
+
+      case _DataRowSpec(:final label, :final cellBuilder, :final indent):
+        if (vicinity.column == 0) {
+          return TableViewCell(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 4 + indent,
+                right: 4,
+                top: 4,
+                bottom: 4,
+              ),
+              child: Text(
+                label,
+                style: theme.textTheme.bodySmall,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+              ),
             ),
-            TsunamiTimelineRow(
-              label: '  観測 第1波',
-              telegrams: telegrams,
-              cellBuilder: (id) => _offshoreFirstHeightCell(os.firstHeight, id),
+          );
+        }
+        final t = telegrams[vicinity.column - 1];
+        return TableViewCell(
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: Text(
+              cellBuilder(t.telegramId) ?? '—',
+              style: theme.textTheme.bodySmall,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
             ),
-            TsunamiTimelineRow(
-              label: '  観測 最大波高',
-              telegrams: telegrams,
-              cellBuilder: (id) => _offshoreMaxHeightCell(os.maxHeight, id),
-            ),
-          ],
-        ],
-        const SizedBox(height: 24),
-      ],
-    );
+          ),
+        );
+    }
+  }
+
+  /// ヘッダー行を除いた行スペックを順番に構築する。
+  List<_TimelineRowSpec> _buildRows() {
+    final rows = <_TimelineRowSpec>[];
+
+    for (final region in timeline.regions) {
+      rows.add(_SectionRowSpec('【地域】${region.name} (${region.code})'));
+      rows.addAll([
+        _DataRowSpec('kind', (id) => _kindCell(region.kind, id)),
+        _DataRowSpec('lastKind', (id) => _kindCell(region.lastKind, id)),
+        _DataRowSpec(
+          '予報 第1波',
+          (id) => _forecastFirstHeightCell(region.forecastFirstHeight, id),
+        ),
+        _DataRowSpec(
+          '予報 最大波高',
+          (id) => _forecastMaxHeightCell(region.forecastMaxHeight, id),
+        ),
+        _DataRowSpec(
+          '推定 第1波',
+          (id) => _estimationFirstHeightCell(region.estimationFirstHeight, id),
+        ),
+        _DataRowSpec(
+          '推定 最大波高',
+          (id) => _estimationMaxHeightCell(region.estimationMaxHeight, id),
+        ),
+      ]);
+      for (final station in region.stations) {
+        rows.add(
+          _SectionRowSpec(
+            '[観測点] ${station.name} (${station.code})',
+            indent: 16,
+          ),
+        );
+        rows.addAll([
+          _DataRowSpec(
+            '観測 第1波',
+            (id) => _stationObservationCell(station.observation, id),
+            indent: 16,
+          ),
+          _DataRowSpec(
+            '観測点 予報',
+            (id) => _stationForecastCell(station.forecast, id),
+            indent: 16,
+          ),
+        ]);
+      }
+    }
+
+    if (timeline.offshoreStations.isNotEmpty) {
+      rows.add(const _SectionRowSpec('【沖合観測局】'));
+      for (final os in timeline.offshoreStations) {
+        rows.add(_SectionRowSpec('${os.name} (${os.code})', indent: 16));
+        rows.addAll([
+          _DataRowSpec(
+            '観測 第1波',
+            (id) => _offshoreFirstHeightCell(os.firstHeight, id),
+            indent: 16,
+          ),
+          _DataRowSpec(
+            '観測 最大波高',
+            (id) => _offshoreMaxHeightCell(os.maxHeight, id),
+            indent: 16,
+          ),
+        ]);
+      }
+    }
+
+    return rows;
   }
 
   // ── cell builders ────────────────────────────────────────────────────────
@@ -379,94 +524,27 @@ class _TimelineBody extends StatelessWidget {
   }
 }
 
-/// ヘッダー行: 各電文のタイトル・発行日時を表示。
-class _HeaderRow extends StatelessWidget {
-  const _HeaderRow({required this.telegrams});
-
-  final List<TsunamiTelegramMeta> telegrams;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(width: 120),
-        Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (final t in telegrams)
-                  Container(
-                    width: 140,
-                    padding: const EdgeInsets.all(4),
-                    margin: const EdgeInsets.symmetric(horizontal: 2),
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          t.title,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                        Text(
-                          _fmtDt(t.publishedAt),
-                          style: theme.textTheme.labelSmall,
-                        ),
-                        if (t.serialNo != null)
-                          Text(
-                            '#${t.serialNo}',
-                            style: theme.textTheme.labelSmall,
-                          ),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  String _fmtDt(DateTime dt) {
-    final local = dt.toLocal();
-    return '${local.month.toString().padLeft(2, '0')}/'
-        '${local.day.toString().padLeft(2, '0')} '
-        '${local.hour.toString().padLeft(2, '0')}:'
-        '${local.minute.toString().padLeft(2, '0')}';
-  }
+/// タイムラインの 1 行を表すスペック。
+sealed class _TimelineRowSpec {
+  const _TimelineRowSpec();
 }
 
-/// セクション見出し行。
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.label, this.indent = 0});
+/// セクション見出し行（地域・観測点・沖合観測局）。
+class _SectionRowSpec extends _TimelineRowSpec {
+  const _SectionRowSpec(this.label, {this.indent = 0});
 
   final String label;
   final double indent;
+}
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: EdgeInsets.only(
-        left: 8 + indent,
-        right: 8,
-        top: 6,
-        bottom: 2,
-      ),
-      color: theme.colorScheme.surfaceContainerLow,
-      child: Text(
-        label,
-        style: theme.textTheme.labelMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
+/// 値を表示するデータ行。
+class _DataRowSpec extends _TimelineRowSpec {
+  const _DataRowSpec(this.label, this.cellBuilder, {this.indent = 0});
+
+  final String label;
+
+  /// telegramId に対するセル表示文字列を返すコールバック。
+  /// 変化なし (値なし) の場合は null を返す → "—" を表示。
+  final String? Function(String telegramId) cellBuilder;
+  final double indent;
 }
