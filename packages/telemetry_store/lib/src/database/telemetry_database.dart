@@ -62,4 +62,22 @@ class TelemetryDatabase extends _$TelemetryDatabase {
                   t.createdAtMs.isSmallerThanValue(beforeMs),
             ))
           .go();
+
+  Future<List<TelemetryEventRow>> getAllEvents({
+    int limit = 200,
+    int offset = 0,
+  }) =>
+      (select(telemetryEvents)
+            ..orderBy([(t) => OrderingTerm.desc(t.createdAtMs)])
+            ..limit(limit, offset: offset))
+          .get();
+
+  Future<int> countEvents() async {
+    final count = telemetryEvents.id.count();
+    final query = selectOnly(telemetryEvents)..addColumns([count]);
+    final row = await query.getSingle();
+    return row.read(count)!;
+  }
+
+  Future<int> deleteAllEvents() => delete(telemetryEvents).go();
 }

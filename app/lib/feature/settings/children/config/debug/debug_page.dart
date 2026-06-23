@@ -126,6 +126,13 @@ class _DebugWidget extends ConsumerWidget {
                   const DebugLiveActivityTestRoute().push<void>(context),
             ),
           ListTile(
+            title: const Text('Telemetry Events'),
+            leading: const Icon(Icons.analytics_outlined),
+            subtitle: const Text('ローカルテレメトリーイベントの閲覧'),
+            onTap: () async =>
+                const DebugTelemetryRoute().push<void>(context),
+          ),
+          ListTile(
             title: const Text('WebSocket'),
             leading: const Icon(Icons.cable),
             subtitle: const Text('WebSocket 接続状況と受信ログ'),
