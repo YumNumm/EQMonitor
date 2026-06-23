@@ -52,14 +52,15 @@ final class TelemetryWriter {
 
         let nowMs = Int64(Date().timeIntervalSince1970 * 1000)
 
-        sqlite3_bind_text(stmt, 1, (eventType as NSString).utf8String, -1, nil)
+        let transient = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
+        sqlite3_bind_text(stmt, 1, (eventType as NSString).utf8String, -1, transient)
         sqlite3_bind_int64(stmt, 2, timestampMs)
         if let eventId {
-            sqlite3_bind_text(stmt, 3, (eventId as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(stmt, 3, (eventId as NSString).utf8String, -1, transient)
         } else {
             sqlite3_bind_null(stmt, 3)
         }
-        sqlite3_bind_text(stmt, 4, (payload as NSString).utf8String, -1, nil)
+        sqlite3_bind_text(stmt, 4, (payload as NSString).utf8String, -1, transient)
         sqlite3_bind_int64(stmt, 5, nowMs)
 
         sqlite3_step(stmt)
