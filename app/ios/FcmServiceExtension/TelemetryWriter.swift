@@ -1,9 +1,17 @@
 import Foundation
-import SQLite3
+import SQLite
 
 final class TelemetryWriter {
     private static let appGroupId = "group.net.yumnumm.eqmonitor"
     private static let dbName = "telemetry.db"
+
+    private static let events = Table("telemetry_events")
+    private static let colEventType = SQLite.Expression<String>("event_type")
+    private static let colTimestampMs = SQLite.Expression<Int64>("timestamp_ms")
+    private static let colEventId = SQLite.Expression<String?>("event_id")
+    private static let colPayload = SQLite.Expression<String>("payload")
+    private static let colSynced = SQLite.Expression<Int64>("synced")
+    private static let colCreatedAtMs = SQLite.Expression<Int64>("created_at_ms")
 
     static func record(
         eventType: String,
@@ -11,59 +19,43 @@ final class TelemetryWriter {
         eventId: String?,
         payload: String
     ) {
-        guard let dbPath = databasePath() else { return }
-        var db: OpaquePointer?
-        guard sqlite3_open_v2(
-            dbPath,
-            &db,
-            SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX,
-            nil
-        ) == SQLITE_OK else { return }
-        defer { sqlite3_close(db) }
-
-        // Enable WAL mode for concurrent access
-        sqlite3_exec(db, "PRAGMA journal_mode=WAL;", nil, nil, nil)
-
-        // Ensure table exists
-        let createSQL = """
-        CREATE TABLE IF NOT EXISTS telemetry_events (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            event_type TEXT NOT NULL,
-            timestamp_ms INTEGER NOT NULL,
-            event_id TEXT,
-            payload TEXT NOT NULL,
-            synced INTEGER NOT NULL DEFAULT 0 CHECK ("synced" IN (0, 1)),
-            created_at_ms INTEGER NOT NULL
-        );
-        """
-        sqlite3_exec(db, createSQL, nil, nil, nil)
-
-        // Insert event
-        let insertSQL = """
-        INSERT INTO telemetry_events
-            (event_type, timestamp_ms, event_id, payload, synced, created_at_ms)
-        VALUES (?, ?, ?, ?, 0, ?);
-        """
-
-        var stmt: OpaquePointer?
-        guard sqlite3_prepare_v2(db, insertSQL, -1, &stmt, nil) == SQLITE_OK
-        else { return }
-        defer { sqlite3_finalize(stmt) }
+        guard let db = openDatabase() else { return }
 
         let nowMs = Int64(Date().timeIntervalSince1970 * 1000)
 
-        let transient = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
-        sqlite3_bind_text(stmt, 1, (eventType as NSString).utf8String, -1, transient)
-        sqlite3_bind_int64(stmt, 2, timestampMs)
-        if let eventId {
-            sqlite3_bind_text(stmt, 3, (eventId as NSString).utf8String, -1, transient)
-        } else {
-            sqlite3_bind_null(stmt, 3)
+        do {
+            try db.run(events.insert(
+                colEventType <- eventType,
+                colTimestampMs <- timestampMs,
+                colEventId <- eventId,
+                colPayload <- payload,
+                colSynced <- 0,
+                colCreatedAtMs <- nowMs
+            ))
+        } catch {
+            // Fire-and-forget: silently ignore insert failures
         }
-        sqlite3_bind_text(stmt, 4, (payload as NSString).utf8String, -1, transient)
-        sqlite3_bind_int64(stmt, 5, nowMs)
+    }
 
-        sqlite3_step(stmt)
+    private static func openDatabase() -> Connection? {
+        guard let dbPath = databasePath() else { return nil }
+
+        do {
+            let db = try Connection(dbPath, readonly: false)
+            try db.execute("PRAGMA journal_mode=WAL;")
+            try db.run(events.create(ifNotExists: true) { t in
+                t.column(SQLite.Expression<Int64>("id"), primaryKey: .autoincrement)
+                t.column(colEventType)
+                t.column(colTimestampMs)
+                t.column(colEventId)
+                t.column(colPayload)
+                t.column(colSynced, defaultValue: 0, check: [0, 1].contains(colSynced))
+                t.column(colCreatedAtMs)
+            })
+            return db
+        } catch {
+            return nil
+        }
     }
 
     private static func databasePath() -> String? {

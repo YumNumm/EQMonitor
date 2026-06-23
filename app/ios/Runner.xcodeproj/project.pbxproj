@@ -25,6 +25,7 @@
 		85C54CFD2E96C7E800BFBBAB /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C54CFC2E96C7E800BFBBAB /* SwiftUI.framework */; };
 		85C54D0C2E96C7EA00BFBBAB /* WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 85C54CF92E96C7E700BFBBAB /* WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		85C9C3EF2D9F053700F047DF /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 85C9C3EE2D9F053700F047DF /* SwiftProtobuf */; };
+		85D1E0012F5A000000000001 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 85D1E0022F5A000000000002 /* SQLite */; };
 		85E609552BFF792C00C21983 /* FcmServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 85E6094E2BFF792C00C21983 /* FcmServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		85A1B0102F59B00000000010 /* TelemetryWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1B0112F59B00000000011 /* TelemetryWriter.swift */; };
 		85E6095F2BFF7B6400C21983 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6095D2BFF7B6400C21983 /* NotificationService.swift */; };
@@ -146,6 +147,7 @@
 			files = (
 				85B4051A2C08E73300EB3835 /* Gzip in Frameworks */,
 				85C9C3EF2D9F053700F047DF /* SwiftProtobuf in Frameworks */,
+				85D1E0012F5A000000000001 /* SQLite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +294,7 @@
 			packageProductDependencies = (
 				85B405192C08E73300EB3835 /* Gzip */,
 				85C9C3EE2D9F053700F047DF /* SwiftProtobuf */,
+				85D1E0022F5A000000000002 /* SQLite */,
 			);
 			productName = FcmServiceExtension;
 			productReference = 85E6094E2BFF792C00C21983 /* FcmServiceExtension.appex */;
@@ -361,6 +364,7 @@
 				AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "Packages/EQMonitorAPI" */,
 				85B405182C08E73300EB3835 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 				85C9C3ED2D9F053700F047DF /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+				85D1E0032F5A000000000003 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -1158,6 +1162,14 @@
 				minimumVersion = 1.29.0;
 			};
 		};
+		85D1E0032F5A000000000003 /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.15.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1178,6 +1190,11 @@
 		AABB00022F30A00100000002 /* EQMonitorAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = EQMonitorAPI;
+		};
+		85D1E0022F5A000000000002 /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 85D1E0032F5A000000000003 /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			productName = SQLite;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
