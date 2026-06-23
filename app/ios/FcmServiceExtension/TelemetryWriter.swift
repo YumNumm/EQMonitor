@@ -32,7 +32,7 @@ final class TelemetryWriter {
             timestamp_ms INTEGER NOT NULL,
             event_id TEXT,
             payload TEXT NOT NULL,
-            synced INTEGER NOT NULL DEFAULT 0,
+            synced INTEGER NOT NULL DEFAULT 0 CHECK ("synced" IN (0, 1)),
             created_at_ms INTEGER NOT NULL
         );
         """

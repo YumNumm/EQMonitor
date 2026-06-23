@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS telemetry_events (
   timestamp_ms INTEGER NOT NULL,
   event_id TEXT,
   payload TEXT NOT NULL,
-  synced INTEGER NOT NULL DEFAULT 0,
+  synced INTEGER NOT NULL DEFAULT 0 CHECK ("synced" IN (0, 1)),
   created_at_ms INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_telemetry_synced
