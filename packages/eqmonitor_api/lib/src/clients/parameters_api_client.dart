@@ -5,7 +5,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-
 import '../models/parameter_type.dart';
 import '../models/parameters_manifest_response.dart';
 
@@ -13,7 +12,8 @@ part 'parameters_api_client.g.dart';
 
 @RestApi()
 abstract class ParametersApiClient {
-  factory ParametersApiClient(Dio dio, {String? baseUrl}) = _ParametersApiClient;
+  factory ParametersApiClient(Dio dio, {String? baseUrl}) =
+      _ParametersApiClient;
 
   /// パラメーターデータのバージョン・取得先一覧
   @GET(ParametersApiClientUrls.getV2ParametersManifest)
@@ -29,11 +29,10 @@ abstract class ParametersApiClient {
   });
 }
 
-
 abstract class ParametersApiClientUrls {
-	/// /v2/parameters/manifest
-	static const getV2ParametersManifest = "/v2/parameters/manifest";
-	/// /v2/parameters/{type}
-	static const getV2ParametersType = "/v2/parameters/{type}";
-}
+  /// /v2/parameters/manifest
+  static const getV2ParametersManifest = "/v2/parameters/manifest";
 
+  /// /v2/parameters/{type}
+  static const getV2ParametersType = "/v2/parameters/{type}";
+}

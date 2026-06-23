@@ -61,8 +61,8 @@ Map<String, dynamic> _$ParameterManifestItemToJson(
 };
 
 const _$ParameterTypeEnumMap = {
-  ParameterType.jmaCodeTable: 'jma_code_table',
-  ParameterType.kyoshinObservationPoints: 'kyoshin_observation_points',
-  ParameterType.earthquakeStations: 'earthquake_stations',
-  ParameterType.tsunamiStations: 'tsunami_stations',
+  ParameterType.jmaCodeTable: 'JMA_CODE_TABLE',
+  ParameterType.kyoshinObservationPoints: 'KYOSHIN_OBSERVATION_POINTS',
+  ParameterType.earthquakeStations: 'EARTHQUAKE_STATIONS',
+  ParameterType.tsunamiStations: 'TSUNAMI_STATIONS',
 };

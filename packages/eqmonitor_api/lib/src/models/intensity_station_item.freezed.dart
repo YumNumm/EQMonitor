@@ -18,7 +18,7 @@ mixin _$IntensityStationItem {
 /// 観測点ID
  String get code;/// 絶対速度応答スペクトルの1.6秒～7.8秒周期帯における最大値
 @JsonKey(includeIfNull: false) num? get sva;/// 1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル
-@JsonKey(includeIfNull: false) List<PrePeriods>? get prePeriods;
+@JsonKey(includeIfNull: false, name: 'pre_periods') List<PrePeriods>? get prePeriods;
 /// Create a copy of IntensityStationItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,7 +51,7 @@ abstract mixin class $IntensityStationItemCopyWith<$Res>  {
   factory $IntensityStationItemCopyWith(IntensityStationItem value, $Res Function(IntensityStationItem) _then) = _$IntensityStationItemCopyWithImpl;
 @useResult
 $Res call({
- String code,@JsonKey(includeIfNull: false) num? sva,@JsonKey(includeIfNull: false) List<PrePeriods>? prePeriods
+ String code,@JsonKey(includeIfNull: false) num? sva,@JsonKey(includeIfNull: false, name: 'pre_periods') List<PrePeriods>? prePeriods
 });
 
 
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false)  List<PrePeriods>? prePeriods)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false, name: 'pre_periods')  List<PrePeriods>? prePeriods)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityStationItem() when $default != null:
 return $default(_that.code,_that.sva,_that.prePeriods);case _:
@@ -179,7 +179,7 @@ return $default(_that.code,_that.sva,_that.prePeriods);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false)  List<PrePeriods>? prePeriods)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false, name: 'pre_periods')  List<PrePeriods>? prePeriods)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityStationItem():
 return $default(_that.code,_that.sva,_that.prePeriods);case _:
@@ -199,7 +199,7 @@ return $default(_that.code,_that.sva,_that.prePeriods);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false)  List<PrePeriods>? prePeriods)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false, name: 'pre_periods')  List<PrePeriods>? prePeriods)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityStationItem() when $default != null:
 return $default(_that.code,_that.sva,_that.prePeriods);case _:
@@ -214,7 +214,7 @@ return $default(_that.code,_that.sva,_that.prePeriods);case _:
 @JsonSerializable()
 
 class _IntensityStationItem implements IntensityStationItem {
-  const _IntensityStationItem({required this.code, @JsonKey(includeIfNull: false) this.sva, @JsonKey(includeIfNull: false) final  List<PrePeriods>? prePeriods}): _prePeriods = prePeriods;
+  const _IntensityStationItem({required this.code, @JsonKey(includeIfNull: false) this.sva, @JsonKey(includeIfNull: false, name: 'pre_periods') final  List<PrePeriods>? prePeriods}): _prePeriods = prePeriods;
   factory _IntensityStationItem.fromJson(Map<String, dynamic> json) => _$IntensityStationItemFromJson(json);
 
 /// 観測点ID
@@ -224,7 +224,7 @@ class _IntensityStationItem implements IntensityStationItem {
 /// 1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル
  final  List<PrePeriods>? _prePeriods;
 /// 1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル
-@override@JsonKey(includeIfNull: false) List<PrePeriods>? get prePeriods {
+@override@JsonKey(includeIfNull: false, name: 'pre_periods') List<PrePeriods>? get prePeriods {
   final value = _prePeriods;
   if (value == null) return null;
   if (_prePeriods is EqualUnmodifiableListView) return _prePeriods;
@@ -266,7 +266,7 @@ abstract mixin class _$IntensityStationItemCopyWith<$Res> implements $IntensityS
   factory _$IntensityStationItemCopyWith(_IntensityStationItem value, $Res Function(_IntensityStationItem) _then) = __$IntensityStationItemCopyWithImpl;
 @override @useResult
 $Res call({
- String code,@JsonKey(includeIfNull: false) num? sva,@JsonKey(includeIfNull: false) List<PrePeriods>? prePeriods
+ String code,@JsonKey(includeIfNull: false) num? sva,@JsonKey(includeIfNull: false, name: 'pre_periods') List<PrePeriods>? prePeriods
 });
 
 

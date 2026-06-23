@@ -21,7 +21,9 @@ void main() {
     });
 
     test('VXSE51 with EARTHQUAKE body (no hypocenter)', () {
-      final file = File('test/fixtures/contract/get__v2_telegram_id__vxse51.json');
+      final file = File(
+        'test/fixtures/contract/get__v2_telegram_id__vxse51.json',
+      );
       final json = jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
       final result = TelegramDetailResponse.fromJson(json);
       final body = result.telegram.body;
@@ -32,7 +34,9 @@ void main() {
     });
 
     test('VXSE53 cancel (minimal earthquake, no status)', () {
-      final file = File('test/fixtures/contract/get__v2_telegram_id__vxse53-cancel.json');
+      final file = File(
+        'test/fixtures/contract/get__v2_telegram_id__vxse53-cancel.json',
+      );
       final json = jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
       final result = TelegramDetailResponse.fromJson(json);
       final body = result.telegram.body;
@@ -43,11 +47,16 @@ void main() {
       expect(eq.earthquake?.magnitude, isNull);
     });
 
-    test('VXSE56 body: null', () {
-      final file = File('test/fixtures/contract/get__v2_telegram_id__vxse56.json');
+    test('VXSE56 body: EARTHQUAKE type', () {
+      final file = File(
+        'test/fixtures/contract/get__v2_telegram_id__vxse56.json',
+      );
       final json = jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
       final result = TelegramDetailResponse.fromJson(json);
-      expect(result.telegram.body, isNull);
+      expect(
+        result.telegram.body,
+        isA<TelegramBodyUnionEarthquakeTelegramBody>(),
+      );
     });
   });
 
@@ -61,7 +70,14 @@ void main() {
     });
 
     test('EEW', () {
-      final body = TelegramBodyUnion.fromJson({'type': 'EEW', 'eew': {}});
+      final body = TelegramBodyUnion.fromJson({
+        'type': 'EEW',
+        'eew': {},
+        'eewIntensityRegions': <dynamic>[],
+        'eewWarningZones': <dynamic>[],
+        'eewWarningPrefectures': <dynamic>[],
+        'eewWarningRegions': <dynamic>[],
+      });
       expect(body, isA<TelegramBodyUnionEewTelegramBody>());
     });
 

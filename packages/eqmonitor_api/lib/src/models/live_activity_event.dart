@@ -6,12 +6,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
 enum LiveActivityEvent {
-  @JsonValue('start')
-  start('start'),
-  @JsonValue('update')
-  update('update'),
-  @JsonValue('end')
-  end('end');
+  @JsonValue('START')
+  start('START'),
+  @JsonValue('UPDATE')
+  update('UPDATE'),
+  @JsonValue('END')
+  end('END');
 
   const LiveActivityEvent(this.json);
 
@@ -19,8 +19,10 @@ enum LiveActivityEvent {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

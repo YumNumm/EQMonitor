@@ -10,12 +10,14 @@ part 'eew_intensity_region_arrival_time_time.freezed.dart';
 part 'eew_intensity_region_arrival_time_time.g.dart';
 
 @Freezed()
-abstract class EewIntensityRegionArrivalTimeTime with _$EewIntensityRegionArrivalTimeTime {
+abstract class EewIntensityRegionArrivalTimeTime
+    with _$EewIntensityRegionArrivalTimeTime {
   const factory EewIntensityRegionArrivalTimeTime({
     required EewIntensityRegionArrivalTimeType type,
-    @JsonKey(includeIfNull: false)
-    DateTime? value,
+    @JsonKey(includeIfNull: false) DateTime? value,
   }) = _EewIntensityRegionArrivalTimeTime;
-  
-  factory EewIntensityRegionArrivalTimeTime.fromJson(Map<String, Object?> json) => _$EewIntensityRegionArrivalTimeTimeFromJson(json);
+
+  factory EewIntensityRegionArrivalTimeTime.fromJson(
+    Map<String, Object?> json,
+  ) => _$EewIntensityRegionArrivalTimeTimeFromJson(json);
 }

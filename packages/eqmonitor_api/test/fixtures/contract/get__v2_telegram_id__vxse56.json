@@ -11,13 +11,27 @@
     "publishing_office": [
       "気象庁"
     ],
-    "press_at": "2024-01-01T07:15:00.000Z",
-    "report_at": "2024-01-01T07:15:02.000Z",
+    "pressed_at": "2024-01-01T07:15:00.000Z",
+    "reported_at": "2024-01-01T07:15:02.000Z",
     "info_kind": "長周期地震動に関する観測情報",
     "info_kind_version": "1.0_0",
     "hash": "stub-hash-vxse56",
     "created_at": "2024-01-01T07:15:05.000Z",
-    "body": null
+    "body": {
+      "type": "EARTHQUAKE",
+      "earthquake": {
+        "eventId": "20240101161000",
+        "status": "NORMAL",
+        "magnitude": "7.6",
+        "maxIntensity": "7",
+        "depth": 10,
+        "epicenterName": "石川県能登地方",
+        "originTime": "2024-01-01T07:10:00.000Z",
+        "originTimePrecision": "SECOND",
+        "datasource": "JMA_DISASTER_INFORMATION_XML"
+      },
+      "intensityRegions": []
+    }
   },
   "comments": {
     "free_form_comment": "長周期地震動階級3以上を観測した地域があります。",

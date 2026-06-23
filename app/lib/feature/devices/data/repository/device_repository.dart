@@ -26,11 +26,18 @@ class DeviceRepository {
     this._api,
     this._authRepository, {
     required api.ApnsEnvironment apnsEnvironment,
-  }) : _apnsEnvironment = apnsEnvironment;
+    bool? isApplePlatform,
+  }) : _apnsEnvironment = apnsEnvironment,
+       _isApplePlatform =
+           isApplePlatform ?? (!kIsWeb && (Platform.isIOS || Platform.isMacOS));
 
   final api.ApiClient _api;
   final DeviceAuthRepository _authRepository;
   final api.ApnsEnvironment _apnsEnvironment;
+
+  /// APNs トークン同期は iOS/macOS でのみ行う。
+  /// テストでホスト OS に依存しないよう注入可能にしている。
+  final bool _isApplePlatform;
 
   Future<Result<RegisteredDevice, Exception>> getDevice(String deviceId) =>
       Result.capture(() async {
@@ -187,7 +194,7 @@ class DeviceRepository {
       }
     }
 
-    if (kIsWeb || !(Platform.isIOS || Platform.isMacOS)) {
+    if (!_isApplePlatform) {
       return const Success(null);
     }
 

@@ -11,13 +11,11 @@ part 'translations.g.dart';
 abstract class Translations with _$Translations {
   const factory Translations({
     required String locale,
-    @JsonKey(includeIfNull: false)
-    String? title,
-    @JsonKey(includeIfNull: false)
-    String? summary,
-    @JsonKey(includeIfNull: false)
-    String? body,
+    @JsonKey(includeIfNull: false) String? title,
+    @JsonKey(includeIfNull: false) String? summary,
+    @JsonKey(includeIfNull: false) String? body,
   }) = _Translations;
-  
-  factory Translations.fromJson(Map<String, Object?> json) => _$TranslationsFromJson(json);
+
+  factory Translations.fromJson(Map<String, Object?> json) =>
+      _$TranslationsFromJson(json);
 }

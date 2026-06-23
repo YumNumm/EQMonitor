@@ -31,6 +31,7 @@ void main() {
       api.ApiClient(dio),
       _MemoryDeviceAuthRepository(),
       apnsEnvironment: api.ApnsEnvironment.development,
+      isApplePlatform: true,
     );
 
     await repository.syncPushTokens(

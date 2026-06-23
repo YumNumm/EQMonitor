@@ -1,4 +1,3 @@
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -20,14 +19,14 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
     case HomeEarthquakeHistoryScope.nationwide:
       return const EarthquakeHistoryParameter();
     case HomeEarthquakeHistoryScope.currentLocation:
-      final position = await () async {
-        try {
-          return await ref.watch(locationStreamProvider.future);
-        } on Exception catch (exception) {
-          talker.error('Failed to get location', exception);
-          return null;
-        }
-      }();
+      // Use the current stream state synchronously so that the provider
+      // returns null immediately when no position is available (e.g. GPS
+      // not ready, permission denied) and re-evaluates when it arrives.
+      final posAsync = ref.watch(locationStreamProvider);
+      final position = switch (posAsync) {
+        AsyncData(:final value) => value,
+        _ => null,
+      };
       if (position == null) {
         return null;
       }

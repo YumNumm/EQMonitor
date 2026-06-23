@@ -10,11 +10,9 @@ part 'data.g.dart';
 @Freezed()
 abstract class Data with _$Data {
   const factory Data({
-    @JsonKey(includeIfNull: false)
-    String? version,
-    @JsonKey(includeIfNull: false)
-    String? url,
+    @JsonKey(includeIfNull: false) String? version,
+    @JsonKey(includeIfNull: false) String? url,
   }) = _Data;
-  
+
   factory Data.fromJson(Map<String, Object?> json) => _$DataFromJson(json);
 }

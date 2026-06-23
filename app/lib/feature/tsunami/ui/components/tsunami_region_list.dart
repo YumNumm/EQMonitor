@@ -13,7 +13,7 @@ class TsunamiRegionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final grouped = _groupByWarningKind(tsunami.forecastRegions);
+    final grouped = _groupByWarningKind(tsunami.regions);
     if (grouped.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -33,9 +33,10 @@ class TsunamiRegionList extends StatelessWidget {
     );
   }
 
-  static Map<TsunamiWarningKind, List<MergedForecastRegion>>
-  _groupByWarningKind(List<MergedForecastRegion> regions) {
-    final grouped = <TsunamiWarningKind, List<MergedForecastRegion>>{};
+  static Map<TsunamiWarningKind, List<TsunamiRegion>> _groupByWarningKind(
+    List<TsunamiRegion> regions,
+  ) {
+    final grouped = <TsunamiWarningKind, List<TsunamiRegion>>{};
     const order = [
       TsunamiWarningKind.majorWarning,
       TsunamiWarningKind.warning,
@@ -87,14 +88,19 @@ class _WarningGroupHeader extends StatelessWidget {
 class _ForecastRegionCard extends StatelessWidget {
   const _ForecastRegionCard({required this.region});
 
-  final MergedForecastRegion region;
+  final TsunamiRegion region;
 
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final color = designSystem.color;
-    final hasObservation =
-        region.observation != null && region.observation!.stations.isNotEmpty;
+    final observedStations = region.stations
+        .where(
+          (s) =>
+              s.observation != null &&
+              !((s.observation!.firstHeight.isMissing as bool?) ?? false),
+        )
+        .toList();
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 2),
@@ -120,11 +126,11 @@ class _ForecastRegionCard extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
             child: _ForecastDetails(region: region),
           ),
-          if (hasObservation)
+          if (observedStations.isNotEmpty)
             _ObservationExpansion(
-              stations: region.observation!.stations,
+              stations: observedStations,
             ),
-          if (!hasObservation) const SizedBox(height: 8),
+          if (observedStations.isEmpty) const SizedBox(height: 8),
         ],
       ),
     );
@@ -134,44 +140,47 @@ class _ForecastRegionCard extends StatelessWidget {
 class _ForecastDetails extends StatelessWidget {
   const _ForecastDetails({required this.region});
 
-  final MergedForecastRegion region;
+  final TsunamiRegion region;
 
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final parts = <String>[];
 
-    final mh = region.maxHeight;
-    if (mh != null) {
-      if (mh.qualitative != null) {
-        parts.add(
-          '予想最大波高: ${switch (mh.qualitative!) {
-            QualitativeHeight.enormous => '巨大',
-            QualitativeHeight.high => '高い',
-          }}',
-        );
-      } else if (mh.value != null) {
-        final valueStr = '${mh.value}m';
-        parts.add(
-          '予想最大波高: ${mh.over == true ? '$valueStr超' : valueStr}',
-        );
+    final forecast = region.forecast;
+    if (forecast != null) {
+      final mh = forecast.maxHeight;
+      if (mh != null) {
+        if (mh.qualitative != null) {
+          parts.add(
+            '予想最大波高: ${switch (mh.qualitative!) {
+              QualitativeHeight.enormous => '巨大',
+              QualitativeHeight.high => '高い',
+            }}',
+          );
+        } else if (mh.value != null) {
+          final valueStr = '${mh.value}m';
+          parts.add(
+            '予想最大波高: ${((mh.isOver as bool?) ?? false) ? '$valueStr超' : valueStr}',
+          );
+        }
       }
-    }
 
-    final fh = region.firstHeight;
-    if (fh != null) {
-      if (fh.condition != null) {
-        parts.add(
-          '到達予想: ${switch (fh.condition!) {
-            FirstHeightCondition.arriving => '第一波到達中',
-            FirstHeightCondition.firstWaveConfirmed => '第一波確認',
-            FirstHeightCondition.imminent => 'まもなく到達',
-          }}',
-        );
-      } else if (fh.arrivalTime != null) {
-        parts.add(
-          '到達予想: ${DateFormat('HH:mm').format(fh.arrivalTime!.toLocal())}頃',
-        );
+      final fh = forecast.firstHeight;
+      if (fh != null) {
+        if (fh.condition != null) {
+          parts.add(
+            '到達予想: ${switch (fh.condition!) {
+              FirstHeightCondition.arriving => '第一波到達中',
+              FirstHeightCondition.firstWaveConfirmed => '第一波確認',
+              FirstHeightCondition.imminent => 'まもなく到達',
+            }}',
+          );
+        } else if (fh.arrivalTime != null) {
+          parts.add(
+            '到達予想: ${DateFormat('HH:mm').format(fh.arrivalTime!.toLocal())}頃',
+          );
+        }
       }
     }
 
@@ -195,7 +204,7 @@ class _ForecastDetails extends StatelessWidget {
 class _ObservationExpansion extends StatefulWidget {
   const _ObservationExpansion({required this.stations});
 
-  final List<TsunamiObservationStation> stations;
+  final List<TsunamiRegionStation> stations;
 
   @override
   State<_ObservationExpansion> createState() => _ObservationExpansionState();
@@ -207,11 +216,8 @@ class _ObservationExpansionState extends State<_ObservationExpansion> {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final observedStations = widget.stations
-        .where((s) => !(s.firstHeight.isMissing ?? false))
-        .toList();
 
-    if (observedStations.isEmpty) {
+    if (widget.stations.isEmpty) {
       return const SizedBox(height: 8);
     }
 
@@ -231,7 +237,7 @@ class _ObservationExpansionState extends State<_ObservationExpansion> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '観測点を表示 (${observedStations.length})',
+                  '観測点を表示 (${widget.stations.length})',
                   style: TextStyle(
                     fontSize: 13,
                     color: designSystem.textColor.secondary,
@@ -247,7 +253,7 @@ class _ObservationExpansionState extends State<_ObservationExpansion> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (final station in observedStations)
+                for (final station in widget.stations)
                   TsunamiObservationStationTile(station: station),
               ],
             ),

@@ -16,13 +16,13 @@ abstract class IntensityStationItem with _$IntensityStationItem {
     required String code,
 
     /// 絶対速度応答スペクトルの1.6秒～7.8秒周期帯における最大値
-    @JsonKey(includeIfNull: false)
-    num? sva,
+    @JsonKey(includeIfNull: false) num? sva,
 
     /// 1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル
-    @JsonKey(includeIfNull: false)
+    @JsonKey(includeIfNull: false, name: 'pre_periods')
     List<PrePeriods>? prePeriods,
   }) = _IntensityStationItem;
-  
-  factory IntensityStationItem.fromJson(Map<String, Object?> json) => _$IntensityStationItemFromJson(json);
+
+  factory IntensityStationItem.fromJson(Map<String, Object?> json) =>
+      _$IntensityStationItemFromJson(json);
 }

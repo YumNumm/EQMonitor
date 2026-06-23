@@ -11,9 +11,8 @@ part 'naming.g.dart';
 abstract class Naming with _$Naming {
   const factory Naming({
     required String text,
-    @JsonKey(includeIfNull: false)
-    String? en,
+    @JsonKey(includeIfNull: false) String? en,
   }) = _Naming;
-  
+
   factory Naming.fromJson(Map<String, Object?> json) => _$NamingFromJson(json);
 }

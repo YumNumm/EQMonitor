@@ -6,10 +6,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
 enum DeviceRegistrationType {
-  @JsonValue('app_check')
-  appCheck('app_check'),
-  @JsonValue('challenge')
-  challenge('challenge');
+  @JsonValue('APP_CHECK')
+  appCheck('APP_CHECK'),
+  @JsonValue('CHALLENGE')
+  challenge('CHALLENGE');
 
   const DeviceRegistrationType(this.json);
 
@@ -17,8 +17,10 @@ enum DeviceRegistrationType {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

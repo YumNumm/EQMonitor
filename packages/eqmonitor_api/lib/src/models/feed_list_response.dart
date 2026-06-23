@@ -13,9 +13,10 @@ part 'feed_list_response.g.dart';
 abstract class FeedListResponse with _$FeedListResponse {
   const factory FeedListResponse({
     required List<FeedItem> feeds,
-    @JsonKey(includeIfNull: true,name: 'next_cursor')
+    @JsonKey(includeIfNull: true, name: 'next_cursor')
     required String? nextCursor,
   }) = _FeedListResponse;
-  
-  factory FeedListResponse.fromJson(Map<String, Object?> json) => _$FeedListResponseFromJson(json);
+
+  factory FeedListResponse.fromJson(Map<String, Object?> json) =>
+      _$FeedListResponseFromJson(json);
 }

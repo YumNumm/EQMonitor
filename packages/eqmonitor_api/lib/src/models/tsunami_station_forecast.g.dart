@@ -15,8 +15,8 @@ _TsunamiStationForecast _$TsunamiStationForecastFromJson(
   json,
   ($checkedConvert) {
     final val = _TsunamiStationForecast(
-      highTideDateTime: $checkedConvert(
-        'high_tide_date_time',
+      highTideAt: $checkedConvert(
+        'high_tide_at',
         (v) => DateTime.parse(v as String),
       ),
       firstHeight: $checkedConvert(
@@ -28,7 +28,7 @@ _TsunamiStationForecast _$TsunamiStationForecastFromJson(
     return val;
   },
   fieldKeyMap: const {
-    'highTideDateTime': 'high_tide_date_time',
+    'highTideAt': 'high_tide_at',
     'firstHeight': 'first_height',
   },
 );
@@ -36,6 +36,6 @@ _TsunamiStationForecast _$TsunamiStationForecastFromJson(
 Map<String, dynamic> _$TsunamiStationForecastToJson(
   _TsunamiStationForecast instance,
 ) => <String, dynamic>{
-  'high_tide_date_time': instance.highTideDateTime.toIso8601String(),
+  'high_tide_at': instance.highTideAt.toIso8601String(),
   'first_height': ?instance.firstHeight,
 };

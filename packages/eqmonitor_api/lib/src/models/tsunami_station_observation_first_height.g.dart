@@ -21,16 +21,13 @@ _$TsunamiStationObservationFirstHeightFromJson(Map<String, dynamic> json) =>
           ),
           initial: $checkedConvert(
             'initial',
-            (v) => v == null
-                ? null
-                : WaveInitial.fromJson(v as Map<String, dynamic>),
+            (v) => $enumDecodeNullable(_$WaveInitialEnumMap, v),
           ),
           isUnidentifiable: $checkedConvert('is_unidentifiable', (v) => v),
           isMissing: $checkedConvert('is_missing', (v) => v),
           revise: $checkedConvert(
             'revise',
-            (v) =>
-                v == null ? null : Revise.fromJson(v as Map<String, dynamic>),
+            (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
           ),
         );
         return val;
@@ -51,3 +48,10 @@ Map<String, dynamic> _$TsunamiStationObservationFirstHeightToJson(
   'is_missing': ?instance.isMissing,
   'revise': ?instance.revise,
 };
+
+const _$WaveInitialEnumMap = {
+  WaveInitial.push: 'PUSH',
+  WaveInitial.pull: 'PULL',
+};
+
+const _$ReviseEnumMap = {Revise.addition: 'ADDITION', Revise.update: 'UPDATE'};

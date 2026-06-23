@@ -15,19 +15,19 @@ _IntensityStationItem _$IntensityStationItemFromJson(
     code: $checkedConvert('code', (v) => v as String),
     sva: $checkedConvert('sva', (v) => v as num?),
     prePeriods: $checkedConvert(
-      'prePeriods',
+      'pre_periods',
       (v) => (v as List<dynamic>?)
           ?.map((e) => PrePeriods.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
   );
   return val;
-});
+}, fieldKeyMap: const {'prePeriods': 'pre_periods'});
 
 Map<String, dynamic> _$IntensityStationItemToJson(
   _IntensityStationItem instance,
 ) => <String, dynamic>{
   'code': instance.code,
   'sva': ?instance.sva,
-  'prePeriods': ?instance.prePeriods,
+  'pre_periods': ?instance.prePeriods,
 };

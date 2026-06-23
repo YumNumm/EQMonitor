@@ -13,28 +13,26 @@ _MaxHeight _$MaxHeightFromJson(Map<String, dynamic> json) => $checkedCreate(
   json,
   ($checkedConvert) {
     final val = _MaxHeight(
-      dateTime: $checkedConvert(
-        'date_time',
+      observedAt: $checkedConvert(
+        'observed_at',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
       value: $checkedConvert('value', (v) => v as num?),
       isOver: $checkedConvert('is_over', (v) => v),
       qualitative: $checkedConvert(
         'qualitative',
-        (v) => v == null
-            ? null
-            : QualitativeHeight.fromJson(v as Map<String, dynamic>),
+        (v) => $enumDecodeNullable(_$QualitativeHeightEnumMap, v),
       ),
       isObserving: $checkedConvert('is_observing', (v) => v),
       revise: $checkedConvert(
         'revise',
-        (v) => v == null ? null : Revise.fromJson(v as Map<String, dynamic>),
+        (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
       ),
     );
     return val;
   },
   fieldKeyMap: const {
-    'dateTime': 'date_time',
+    'observedAt': 'observed_at',
     'isOver': 'is_over',
     'isObserving': 'is_observing',
   },
@@ -42,10 +40,17 @@ _MaxHeight _$MaxHeightFromJson(Map<String, dynamic> json) => $checkedCreate(
 
 Map<String, dynamic> _$MaxHeightToJson(_MaxHeight instance) =>
     <String, dynamic>{
-      'date_time': ?instance.dateTime?.toIso8601String(),
+      'observed_at': ?instance.observedAt?.toIso8601String(),
       'value': ?instance.value,
       'is_over': ?instance.isOver,
       'qualitative': ?instance.qualitative,
       'is_observing': ?instance.isObserving,
       'revise': ?instance.revise,
     };
+
+const _$QualitativeHeightEnumMap = {
+  QualitativeHeight.enormous: 'ENORMOUS',
+  QualitativeHeight.high: 'HIGH',
+};
+
+const _$ReviseEnumMap = {Revise.addition: 'ADDITION', Revise.update: 'UPDATE'};

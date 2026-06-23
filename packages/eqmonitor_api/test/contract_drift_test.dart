@@ -116,7 +116,8 @@ void main() {
       test(
         'QUARANTINE: $label [$file]',
         () {},
-        skip: '既知の乖離。findings doc 参照 '
+        skip:
+            '既知の乖離。findings doc 参照 '
             '(docs/superpowers/specs/2026-05-30-spec1-contract-drift-findings.md)',
       );
       continue;

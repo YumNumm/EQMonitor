@@ -15,11 +15,11 @@ _TsunamiRegion _$TsunamiRegionFromJson(Map<String, dynamic> json) =>
         name: $checkedConvert('name', (v) => v as String),
         kind: $checkedConvert(
           'kind',
-          (v) => TsunamiWarningKind.fromJson(v as Map<String, dynamic>),
+          (v) => $enumDecode(_$TsunamiWarningKindEnumMap, v),
         ),
         lastKind: $checkedConvert(
           'last_kind',
-          (v) => TsunamiWarningKind.fromJson(v as Map<String, dynamic>),
+          (v) => $enumDecode(_$TsunamiWarningKindEnumMap, v),
         ),
         stations: $checkedConvert(
           'stations',
@@ -55,3 +55,13 @@ Map<String, dynamic> _$TsunamiRegionToJson(_TsunamiRegion instance) =>
       'forecast': ?instance.forecast,
       'estimation': ?instance.estimation,
     };
+
+const _$TsunamiWarningKindEnumMap = {
+  TsunamiWarningKind.majorWarning: 'MAJOR_WARNING',
+  TsunamiWarningKind.warning: 'WARNING',
+  TsunamiWarningKind.warningCancel: 'WARNING_CANCEL',
+  TsunamiWarningKind.advisory: 'ADVISORY',
+  TsunamiWarningKind.advisoryCancel: 'ADVISORY_CANCEL',
+  TsunamiWarningKind.forecast: 'FORECAST',
+  TsunamiWarningKind.none: 'NONE',
+};

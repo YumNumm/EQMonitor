@@ -15,8 +15,7 @@ part 'earthquake_telegram_body.g.dart';
 abstract class EarthquakeTelegramBody with _$EarthquakeTelegramBody {
   const factory EarthquakeTelegramBody({
     required dynamic type,
-    @JsonKey(includeIfNull: false)
-    EarthquakeTelegramBodyQuake? earthquake,
+    @JsonKey(includeIfNull: false) EarthquakeTelegramBodyQuake? earthquake,
     @JsonKey(includeIfNull: false)
     List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions,
     @JsonKey(includeIfNull: false)
@@ -26,6 +25,7 @@ abstract class EarthquakeTelegramBody with _$EarthquakeTelegramBody {
     @JsonKey(includeIfNull: false)
     List<EarthquakeTelegramBodyIntensityStation>? intensityStations,
   }) = _EarthquakeTelegramBody;
-  
-  factory EarthquakeTelegramBody.fromJson(Map<String, Object?> json) => _$EarthquakeTelegramBodyFromJson(json);
+
+  factory EarthquakeTelegramBody.fromJson(Map<String, Object?> json) =>
+      _$EarthquakeTelegramBodyFromJson(json);
 }

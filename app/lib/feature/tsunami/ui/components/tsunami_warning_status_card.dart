@@ -17,7 +17,7 @@ class TsunamiWarningStatusCard extends StatelessWidget {
     final designSystem = context.designSystem;
     final color = designSystem.color;
 
-    final maxKind = TsunamiWarningColor.resolveMaxKind(tsunami.forecastRegions);
+    final maxKind = TsunamiWarningColor.resolveMaxKind(tsunami.regions);
     final isCanceled = tsunami.isCanceled;
     final isExpired = !tsunami.isActive && !tsunami.isCanceled;
     final showStripe =

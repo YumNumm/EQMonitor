@@ -8,10 +8,12 @@ part 'subscription_inactive_response.freezed.dart';
 part 'subscription_inactive_response.g.dart';
 
 @Freezed()
-abstract class SubscriptionInactiveResponse with _$SubscriptionInactiveResponse {
+abstract class SubscriptionInactiveResponse
+    with _$SubscriptionInactiveResponse {
   const factory SubscriptionInactiveResponse({
     required dynamic status,
   }) = _SubscriptionInactiveResponse;
-  
-  factory SubscriptionInactiveResponse.fromJson(Map<String, Object?> json) => _$SubscriptionInactiveResponseFromJson(json);
+
+  factory SubscriptionInactiveResponse.fromJson(Map<String, Object?> json) =>
+      _$SubscriptionInactiveResponseFromJson(json);
 }

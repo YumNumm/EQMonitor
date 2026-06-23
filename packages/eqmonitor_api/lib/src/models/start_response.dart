@@ -16,6 +16,7 @@ abstract class StartResponse with _$StartResponse {
     required StartFlags flags,
     required App app,
   }) = _StartResponse;
-  
-  factory StartResponse.fromJson(Map<String, Object?> json) => _$StartResponseFromJson(json);
+
+  factory StartResponse.fromJson(Map<String, Object?> json) =>
+      _$StartResponseFromJson(json);
 }

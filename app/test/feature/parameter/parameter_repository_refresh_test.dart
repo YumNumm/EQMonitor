@@ -42,10 +42,10 @@ void main() {
       expect(await localDataSource.readParameterJson(type), isNotNull);
     }
     expect(adapter.requestedTypes, [
-      'jma_code_table',
-      'kyoshin_observation_points',
-      'earthquake_stations',
-      'tsunami_stations',
+      'JMA_CODE_TABLE',
+      'KYOSHIN_OBSERVATION_POINTS',
+      'EARTHQUAKE_STATIONS',
+      'TSUNAMI_STATIONS',
     ]);
   });
 }
@@ -86,7 +86,7 @@ Map<String, Object?> _manifestJson() => {
   'parameters': [
     for (final type in ParameterType.values)
       {
-        'type': type.pathSegment,
+        'type': type.toApiParameterType.toJson(),
         'schema_version': 1,
         'source_version': 'test',
         'source_updated_at': null,
@@ -100,7 +100,7 @@ Map<String, Object?> _manifestJson() => {
 };
 
 Map<String, Object?> _parameterJson(String type) => switch (type) {
-  'jma_code_table' => {
+  'JMA_CODE_TABLE' => {
     'metadata': _metadataJson(type),
     'code_tables': {
       'area_forecast_local_eew': <Object?>[],
@@ -110,27 +110,37 @@ Map<String, Object?> _parameterJson(String type) => switch (type) {
       'area_epicenter_detail': <Object?>[],
     },
   },
-  'kyoshin_observation_points' => {
+  'KYOSHIN_OBSERVATION_POINTS' => {
     'metadata': _metadataJson(type),
     'points': <Object?>[],
   },
-  'earthquake_stations' => {
+  'EARTHQUAKE_STATIONS' => {
     'metadata': _metadataJson(type),
     'prefectures': <Object?>[],
   },
-  'tsunami_stations' => {
+  'TSUNAMI_STATIONS' => {
     'metadata': _metadataJson(type),
     'prefectures': <Object?>[],
   },
   _ => throw StateError('Unexpected parameter type: $type'),
 };
 
-Map<String, Object?> _metadataJson(String type) => {
-  'type': type,
+/// Converts an UPPER_CASE API type value to the snake_case value expected by
+/// the app's local ParameterMetadata model.
+String _apiTypeToSnake(String apiType) => switch (apiType) {
+  'JMA_CODE_TABLE' => 'jma_code_table',
+  'KYOSHIN_OBSERVATION_POINTS' => 'kyoshin_observation_points',
+  'EARTHQUAKE_STATIONS' => 'earthquake_stations',
+  'TSUNAMI_STATIONS' => 'tsunami_stations',
+  _ => throw StateError('Unexpected API type: $apiType'),
+};
+
+Map<String, Object?> _metadataJson(String apiType) => {
+  'type': _apiTypeToSnake(apiType),
   'schema_version': 1,
   'source_version': 'test',
   'source_updated_at': null,
   'generated_at': '2026-06-04T00:00:00Z',
   'source_urls': <String>[],
-  'sha256': type,
+  'sha256': _apiTypeToSnake(apiType),
 };

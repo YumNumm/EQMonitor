@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$TsunamiStationObservationMaxHeight {
 
 /// 津波の最大波を観測した日時
-@JsonKey(includeIfNull: false, name: 'date_time') DateTime? get dateTime;@JsonKey(includeIfNull: false) num? get value;/// 観測範囲より津波の高さが超過した場合に使用し、数値情報を補助する
+@JsonKey(includeIfNull: false, name: 'observed_at') DateTime? get observedAt;@JsonKey(includeIfNull: false) num? get value;/// 観測範囲より津波の高さが超過した場合に使用し、数値情報を補助する
 @JsonKey(includeIfNull: false, name: 'is_over') dynamic get isOver;/// 数値情報に付加的情報が必要な場合に出現
 @JsonKey(includeIfNull: false, name: 'is_rising') dynamic get isRising;@JsonKey(includeIfNull: false) ObservationMaxHeightCondition? get condition;/// 欠測によりデータが現在取得できていない場合に出現する
 @JsonKey(includeIfNull: false, name: 'is_missing') dynamic get isMissing;@JsonKey(includeIfNull: false) Revise? get revise;
@@ -32,16 +32,16 @@ $TsunamiStationObservationMaxHeightCopyWith<TsunamiStationObservationMaxHeight> 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiStationObservationMaxHeight&&(identical(other.dateTime, dateTime) || other.dateTime == dateTime)&&(identical(other.value, value) || other.value == value)&&const DeepCollectionEquality().equals(other.isOver, isOver)&&const DeepCollectionEquality().equals(other.isRising, isRising)&&(identical(other.condition, condition) || other.condition == condition)&&const DeepCollectionEquality().equals(other.isMissing, isMissing)&&(identical(other.revise, revise) || other.revise == revise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiStationObservationMaxHeight&&(identical(other.observedAt, observedAt) || other.observedAt == observedAt)&&(identical(other.value, value) || other.value == value)&&const DeepCollectionEquality().equals(other.isOver, isOver)&&const DeepCollectionEquality().equals(other.isRising, isRising)&&(identical(other.condition, condition) || other.condition == condition)&&const DeepCollectionEquality().equals(other.isMissing, isMissing)&&(identical(other.revise, revise) || other.revise == revise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,dateTime,value,const DeepCollectionEquality().hash(isOver),const DeepCollectionEquality().hash(isRising),condition,const DeepCollectionEquality().hash(isMissing),revise);
+int get hashCode => Object.hash(runtimeType,observedAt,value,const DeepCollectionEquality().hash(isOver),const DeepCollectionEquality().hash(isRising),condition,const DeepCollectionEquality().hash(isMissing),revise);
 
 @override
 String toString() {
-  return 'TsunamiStationObservationMaxHeight(dateTime: $dateTime, value: $value, isOver: $isOver, isRising: $isRising, condition: $condition, isMissing: $isMissing, revise: $revise)';
+  return 'TsunamiStationObservationMaxHeight(observedAt: $observedAt, value: $value, isOver: $isOver, isRising: $isRising, condition: $condition, isMissing: $isMissing, revise: $revise)';
 }
 
 
@@ -52,11 +52,11 @@ abstract mixin class $TsunamiStationObservationMaxHeightCopyWith<$Res>  {
   factory $TsunamiStationObservationMaxHeightCopyWith(TsunamiStationObservationMaxHeight value, $Res Function(TsunamiStationObservationMaxHeight) _then) = _$TsunamiStationObservationMaxHeightCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeIfNull: false, name: 'date_time') DateTime? dateTime,@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false, name: 'is_over') dynamic isOver,@JsonKey(includeIfNull: false, name: 'is_rising') dynamic isRising,@JsonKey(includeIfNull: false) ObservationMaxHeightCondition? condition,@JsonKey(includeIfNull: false, name: 'is_missing') dynamic isMissing,@JsonKey(includeIfNull: false) Revise? revise
+@JsonKey(includeIfNull: false, name: 'observed_at') DateTime? observedAt,@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false, name: 'is_over') dynamic isOver,@JsonKey(includeIfNull: false, name: 'is_rising') dynamic isRising,@JsonKey(includeIfNull: false) ObservationMaxHeightCondition? condition,@JsonKey(includeIfNull: false, name: 'is_missing') dynamic isMissing,@JsonKey(includeIfNull: false) Revise? revise
 });
 
 
-$ObservationMaxHeightConditionCopyWith<$Res>? get condition;$ReviseCopyWith<$Res>? get revise;
+
 
 }
 /// @nodoc
@@ -69,9 +69,9 @@ class _$TsunamiStationObservationMaxHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiStationObservationMaxHeight
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? dateTime = freezed,Object? value = freezed,Object? isOver = freezed,Object? isRising = freezed,Object? condition = freezed,Object? isMissing = freezed,Object? revise = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? observedAt = freezed,Object? value = freezed,Object? isOver = freezed,Object? isRising = freezed,Object? condition = freezed,Object? isMissing = freezed,Object? revise = freezed,}) {
   return _then(_self.copyWith(
-dateTime: freezed == dateTime ? _self.dateTime : dateTime // ignore: cast_nullable_to_non_nullable
+observedAt: freezed == observedAt ? _self.observedAt : observedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as num?,isOver: freezed == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
 as dynamic,isRising: freezed == isRising ? _self.isRising : isRising // ignore: cast_nullable_to_non_nullable
@@ -81,31 +81,7 @@ as dynamic,revise: freezed == revise ? _self.revise : revise // ignore: cast_nul
 as Revise?,
   ));
 }
-/// Create a copy of TsunamiStationObservationMaxHeight
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ObservationMaxHeightConditionCopyWith<$Res>? get condition {
-    if (_self.condition == null) {
-    return null;
-  }
 
-  return $ObservationMaxHeightConditionCopyWith<$Res>(_self.condition!, (value) {
-    return _then(_self.copyWith(condition: value));
-  });
-}/// Create a copy of TsunamiStationObservationMaxHeight
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ReviseCopyWith<$Res>? get revise {
-    if (_self.revise == null) {
-    return null;
-  }
-
-  return $ReviseCopyWith<$Res>(_self.revise!, (value) {
-    return _then(_self.copyWith(revise: value));
-  });
-}
 }
 
 
@@ -187,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'date_time')  DateTime? dateTime, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false, name: 'is_rising')  dynamic isRising, @JsonKey(includeIfNull: false)  ObservationMaxHeightCondition? condition, @JsonKey(includeIfNull: false, name: 'is_missing')  dynamic isMissing, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'observed_at')  DateTime? observedAt, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false, name: 'is_rising')  dynamic isRising, @JsonKey(includeIfNull: false)  ObservationMaxHeightCondition? condition, @JsonKey(includeIfNull: false, name: 'is_missing')  dynamic isMissing, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiStationObservationMaxHeight() when $default != null:
-return $default(_that.dateTime,_that.value,_that.isOver,_that.isRising,_that.condition,_that.isMissing,_that.revise);case _:
+return $default(_that.observedAt,_that.value,_that.isOver,_that.isRising,_that.condition,_that.isMissing,_that.revise);case _:
   return orElse();
 
 }
@@ -208,10 +184,10 @@ return $default(_that.dateTime,_that.value,_that.isOver,_that.isRising,_that.con
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'date_time')  DateTime? dateTime, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false, name: 'is_rising')  dynamic isRising, @JsonKey(includeIfNull: false)  ObservationMaxHeightCondition? condition, @JsonKey(includeIfNull: false, name: 'is_missing')  dynamic isMissing, @JsonKey(includeIfNull: false)  Revise? revise)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'observed_at')  DateTime? observedAt, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false, name: 'is_rising')  dynamic isRising, @JsonKey(includeIfNull: false)  ObservationMaxHeightCondition? condition, @JsonKey(includeIfNull: false, name: 'is_missing')  dynamic isMissing, @JsonKey(includeIfNull: false)  Revise? revise)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiStationObservationMaxHeight():
-return $default(_that.dateTime,_that.value,_that.isOver,_that.isRising,_that.condition,_that.isMissing,_that.revise);case _:
+return $default(_that.observedAt,_that.value,_that.isOver,_that.isRising,_that.condition,_that.isMissing,_that.revise);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -228,10 +204,10 @@ return $default(_that.dateTime,_that.value,_that.isOver,_that.isRising,_that.con
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'date_time')  DateTime? dateTime, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false, name: 'is_rising')  dynamic isRising, @JsonKey(includeIfNull: false)  ObservationMaxHeightCondition? condition, @JsonKey(includeIfNull: false, name: 'is_missing')  dynamic isMissing, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'observed_at')  DateTime? observedAt, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false, name: 'is_rising')  dynamic isRising, @JsonKey(includeIfNull: false)  ObservationMaxHeightCondition? condition, @JsonKey(includeIfNull: false, name: 'is_missing')  dynamic isMissing, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiStationObservationMaxHeight() when $default != null:
-return $default(_that.dateTime,_that.value,_that.isOver,_that.isRising,_that.condition,_that.isMissing,_that.revise);case _:
+return $default(_that.observedAt,_that.value,_that.isOver,_that.isRising,_that.condition,_that.isMissing,_that.revise);case _:
   return null;
 
 }
@@ -243,11 +219,11 @@ return $default(_that.dateTime,_that.value,_that.isOver,_that.isRising,_that.con
 @JsonSerializable()
 
 class _TsunamiStationObservationMaxHeight implements TsunamiStationObservationMaxHeight {
-  const _TsunamiStationObservationMaxHeight({@JsonKey(includeIfNull: false, name: 'date_time') this.dateTime, @JsonKey(includeIfNull: false) this.value, @JsonKey(includeIfNull: false, name: 'is_over') this.isOver, @JsonKey(includeIfNull: false, name: 'is_rising') this.isRising, @JsonKey(includeIfNull: false) this.condition, @JsonKey(includeIfNull: false, name: 'is_missing') this.isMissing, @JsonKey(includeIfNull: false) this.revise});
+  const _TsunamiStationObservationMaxHeight({@JsonKey(includeIfNull: false, name: 'observed_at') this.observedAt, @JsonKey(includeIfNull: false) this.value, @JsonKey(includeIfNull: false, name: 'is_over') this.isOver, @JsonKey(includeIfNull: false, name: 'is_rising') this.isRising, @JsonKey(includeIfNull: false) this.condition, @JsonKey(includeIfNull: false, name: 'is_missing') this.isMissing, @JsonKey(includeIfNull: false) this.revise});
   factory _TsunamiStationObservationMaxHeight.fromJson(Map<String, dynamic> json) => _$TsunamiStationObservationMaxHeightFromJson(json);
 
 /// 津波の最大波を観測した日時
-@override@JsonKey(includeIfNull: false, name: 'date_time') final  DateTime? dateTime;
+@override@JsonKey(includeIfNull: false, name: 'observed_at') final  DateTime? observedAt;
 @override@JsonKey(includeIfNull: false) final  num? value;
 /// 観測範囲より津波の高さが超過した場合に使用し、数値情報を補助する
 @override@JsonKey(includeIfNull: false, name: 'is_over') final  dynamic isOver;
@@ -271,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiStationObservationMaxHeight&&(identical(other.dateTime, dateTime) || other.dateTime == dateTime)&&(identical(other.value, value) || other.value == value)&&const DeepCollectionEquality().equals(other.isOver, isOver)&&const DeepCollectionEquality().equals(other.isRising, isRising)&&(identical(other.condition, condition) || other.condition == condition)&&const DeepCollectionEquality().equals(other.isMissing, isMissing)&&(identical(other.revise, revise) || other.revise == revise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiStationObservationMaxHeight&&(identical(other.observedAt, observedAt) || other.observedAt == observedAt)&&(identical(other.value, value) || other.value == value)&&const DeepCollectionEquality().equals(other.isOver, isOver)&&const DeepCollectionEquality().equals(other.isRising, isRising)&&(identical(other.condition, condition) || other.condition == condition)&&const DeepCollectionEquality().equals(other.isMissing, isMissing)&&(identical(other.revise, revise) || other.revise == revise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,dateTime,value,const DeepCollectionEquality().hash(isOver),const DeepCollectionEquality().hash(isRising),condition,const DeepCollectionEquality().hash(isMissing),revise);
+int get hashCode => Object.hash(runtimeType,observedAt,value,const DeepCollectionEquality().hash(isOver),const DeepCollectionEquality().hash(isRising),condition,const DeepCollectionEquality().hash(isMissing),revise);
 
 @override
 String toString() {
-  return 'TsunamiStationObservationMaxHeight(dateTime: $dateTime, value: $value, isOver: $isOver, isRising: $isRising, condition: $condition, isMissing: $isMissing, revise: $revise)';
+  return 'TsunamiStationObservationMaxHeight(observedAt: $observedAt, value: $value, isOver: $isOver, isRising: $isRising, condition: $condition, isMissing: $isMissing, revise: $revise)';
 }
 
 
@@ -291,11 +267,11 @@ abstract mixin class _$TsunamiStationObservationMaxHeightCopyWith<$Res> implemen
   factory _$TsunamiStationObservationMaxHeightCopyWith(_TsunamiStationObservationMaxHeight value, $Res Function(_TsunamiStationObservationMaxHeight) _then) = __$TsunamiStationObservationMaxHeightCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeIfNull: false, name: 'date_time') DateTime? dateTime,@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false, name: 'is_over') dynamic isOver,@JsonKey(includeIfNull: false, name: 'is_rising') dynamic isRising,@JsonKey(includeIfNull: false) ObservationMaxHeightCondition? condition,@JsonKey(includeIfNull: false, name: 'is_missing') dynamic isMissing,@JsonKey(includeIfNull: false) Revise? revise
+@JsonKey(includeIfNull: false, name: 'observed_at') DateTime? observedAt,@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false, name: 'is_over') dynamic isOver,@JsonKey(includeIfNull: false, name: 'is_rising') dynamic isRising,@JsonKey(includeIfNull: false) ObservationMaxHeightCondition? condition,@JsonKey(includeIfNull: false, name: 'is_missing') dynamic isMissing,@JsonKey(includeIfNull: false) Revise? revise
 });
 
 
-@override $ObservationMaxHeightConditionCopyWith<$Res>? get condition;@override $ReviseCopyWith<$Res>? get revise;
+
 
 }
 /// @nodoc
@@ -308,9 +284,9 @@ class __$TsunamiStationObservationMaxHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiStationObservationMaxHeight
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? dateTime = freezed,Object? value = freezed,Object? isOver = freezed,Object? isRising = freezed,Object? condition = freezed,Object? isMissing = freezed,Object? revise = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? observedAt = freezed,Object? value = freezed,Object? isOver = freezed,Object? isRising = freezed,Object? condition = freezed,Object? isMissing = freezed,Object? revise = freezed,}) {
   return _then(_TsunamiStationObservationMaxHeight(
-dateTime: freezed == dateTime ? _self.dateTime : dateTime // ignore: cast_nullable_to_non_nullable
+observedAt: freezed == observedAt ? _self.observedAt : observedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as num?,isOver: freezed == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
 as dynamic,isRising: freezed == isRising ? _self.isRising : isRising // ignore: cast_nullable_to_non_nullable
@@ -321,31 +297,7 @@ as Revise?,
   ));
 }
 
-/// Create a copy of TsunamiStationObservationMaxHeight
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ObservationMaxHeightConditionCopyWith<$Res>? get condition {
-    if (_self.condition == null) {
-    return null;
-  }
 
-  return $ObservationMaxHeightConditionCopyWith<$Res>(_self.condition!, (value) {
-    return _then(_self.copyWith(condition: value));
-  });
-}/// Create a copy of TsunamiStationObservationMaxHeight
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ReviseCopyWith<$Res>? get revise {
-    if (_self.revise == null) {
-    return null;
-  }
-
-  return $ReviseCopyWith<$Res>(_self.revise!, (value) {
-    return _then(_self.copyWith(revise: value));
-  });
-}
 }
 
 // dart format on

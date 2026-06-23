@@ -13,11 +13,10 @@ part 'intensity_station_search_item.g.dart';
 @Freezed()
 abstract class IntensityStationSearchItem with _$IntensityStationSearchItem {
   const factory IntensityStationSearchItem({
-    @JsonKey(name: 'event_id')
-    required String eventId,
     required JmaIntensity intensity,
     required EarthquakePartial earthquake,
   }) = _IntensityStationSearchItem;
-  
-  factory IntensityStationSearchItem.fromJson(Map<String, Object?> json) => _$IntensityStationSearchItemFromJson(json);
+
+  factory IntensityStationSearchItem.fromJson(Map<String, Object?> json) =>
+      _$IntensityStationSearchItemFromJson(json);
 }

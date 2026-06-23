@@ -37,8 +37,8 @@ Map<String, dynamic> _$LiveActivityTestScenarioRequestToJson(
 };
 
 const _$LiveActivityStartTriggerEnumMap = {
-  LiveActivityStartTrigger.shakeDetection: 'shake_detection',
-  LiveActivityStartTrigger.eew: 'eew',
+  LiveActivityStartTrigger.shakeDetection: 'SHAKE_DETECTION',
+  LiveActivityStartTrigger.eew: 'EEW',
 };
 
 const _$ScenarioEnumMap = {

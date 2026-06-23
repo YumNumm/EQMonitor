@@ -6,10 +6,8 @@
       "origin_time": "2023-11-14T22:05:20.000Z",
       "origin_time_precision": "SECOND",
       "hypocenter": {
-        "value": {
-          "code": "311",
-          "name": "茨城県北部"
-        },
+        "code": "311",
+        "name": "茨城県北部",
         "coordinates": {
           "latitude": 36.7,
           "longitude": 140.7

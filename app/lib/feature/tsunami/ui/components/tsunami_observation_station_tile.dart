@@ -7,13 +7,14 @@ import 'package:intl/intl.dart';
 class TsunamiObservationStationTile extends StatelessWidget {
   const TsunamiObservationStationTile({required this.station, super.key});
 
-  final TsunamiObservationStation station;
+  final TsunamiRegionStation station;
 
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final firstHeight = station.firstHeight;
-    final maxHeight = station.maxHeight;
+    final observation = station.observation;
+    final firstHeight = observation?.firstHeight;
+    final maxHeight = observation?.maxHeight;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -29,7 +30,7 @@ class TsunamiObservationStationTile extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 2),
-          if (!_isFirstHeightMissing(firstHeight))
+          if (firstHeight != null && !_isFirstHeightMissing(firstHeight))
             Text(
               _formatFirstHeight(firstHeight),
               style: TextStyle(
@@ -37,7 +38,7 @@ class TsunamiObservationStationTile extends StatelessWidget {
                 color: designSystem.textColor.secondary,
               ),
             ),
-          if (maxHeight != null && !(maxHeight.isMissing ?? false))
+          if (maxHeight != null && !((maxHeight.isMissing as bool?) ?? false))
             Text(
               _formatMaxHeight(maxHeight),
               style: TextStyle(
@@ -54,13 +55,13 @@ class TsunamiObservationStationTile extends StatelessWidget {
   }
 
   static bool _isFirstHeightMissing(
-    TsunamiObservationStationFirstHeight fh,
-  ) => fh.isMissing ?? false;
+    TsunamiStationObservationFirstHeight fh,
+  ) => (fh.isMissing as bool?) ?? false;
 
   static String _formatFirstHeight(
-    TsunamiObservationStationFirstHeight fh,
+    TsunamiStationObservationFirstHeight fh,
   ) {
-    if (fh.isUnidentifiable ?? false) {
+    if ((fh.isUnidentifiable as bool?) ?? false) {
       return '第一波: 識別不能';
     }
     final timePart = fh.arrivalTime != null
@@ -74,11 +75,11 @@ class TsunamiObservationStationTile extends StatelessWidget {
     return '第一波: $timePart到達$initialPart';
   }
 
-  static String _formatMaxHeight(TsunamiObservationStationMaxHeight mh) {
+  static String _formatMaxHeight(TsunamiStationObservationMaxHeight mh) {
     final parts = <String>['最大波:'];
     if (mh.value != null) {
       final valueStr = '${mh.value}m';
-      parts.add(mh.over == true ? '$valueStr超' : valueStr);
+      parts.add(((mh.isOver as bool?) ?? false) ? '$valueStr超' : valueStr);
     } else if (mh.condition != null) {
       parts.add(
         switch (mh.condition!) {
@@ -88,17 +89,17 @@ class TsunamiObservationStationTile extends StatelessWidget {
         },
       );
     }
-    if (mh.dateTime != null) {
+    if (mh.observedAt != null) {
       parts.add(
-        '(${DateFormat('HH:mm').format(mh.dateTime!.toLocal())})',
+        '(${DateFormat('HH:mm').format(mh.observedAt!.toLocal())})',
       );
     }
-    if (mh.isRising == true) {
+    if ((mh.isRising as bool?) == true) {
       parts.add('上昇中');
     }
     return parts.join(' ');
   }
 
-  static bool _isImportant(TsunamiObservationStationMaxHeight mh) =>
+  static bool _isImportant(TsunamiStationObservationMaxHeight mh) =>
       mh.condition == ObservationMaxHeightCondition.important;
 }
