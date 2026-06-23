@@ -9,8 +9,7 @@ enum JmaNorthwestPacificTsunamiHeight {
   moreThan10m(508, 'More than 10m'),
   huge(509, 'Huge'),
   high(510, 'High'),
-  unknown(511, 'Unknown')
-  ;
+  unknown(511, 'Unknown');
 
   const JmaNorthwestPacificTsunamiHeight(this.code, this.descriptionEn);
 

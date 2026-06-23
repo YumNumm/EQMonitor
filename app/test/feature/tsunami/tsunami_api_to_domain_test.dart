@@ -181,7 +181,6 @@ void main() {
     test('全フィールドが非nullの場合', () {
       final arrivalTime = DateTime(2026, 1, 15, 14, 30);
       const apiModel = api.TsunamiRegionForecastFirstHeight(
-        arrivalTime: null,
         condition: api.FirstHeightCondition.imminent,
         revise: api.Revise.update,
       );
@@ -718,8 +717,7 @@ void main() {
         final timeline = response.toTrackedTimeline();
         final region = timeline.regions.single;
 
-        final estimationFirstHeight =
-            region.estimationFirstHeight.single.value;
+        final estimationFirstHeight = region.estimationFirstHeight.single.value;
         expect(estimationFirstHeight, isNotNull);
         expect(estimationFirstHeight!.arrivalTime, arrivalTime);
         expect(estimationFirstHeight.isAlreadyArrived, isTrue);
@@ -811,14 +809,13 @@ void main() {
                         name: '石巻港',
                         observation: api.TsunamiStationObservation(
                           sensor: 'GPS波浪計',
-                          firstHeight:
-                              api.TsunamiStationObservationFirstHeight(
-                                arrivalTime: arrivalTime,
-                                initial: api.WaveInitial.push,
-                                isUnidentifiable: false,
-                                isMissing: false,
-                                revise: api.Revise.addition,
-                              ),
+                          firstHeight: api.TsunamiStationObservationFirstHeight(
+                            arrivalTime: arrivalTime,
+                            initial: api.WaveInitial.push,
+                            isUnidentifiable: false,
+                            isMissing: false,
+                            revise: api.Revise.addition,
+                          ),
                           maxHeight: api.TsunamiStationObservationMaxHeight(
                             observedAt: maxObservedAt,
                             value: 2.5,
@@ -1053,11 +1050,10 @@ void main() {
                           ),
                         ),
                         observation: api.TsunamiStationObservation(
-                          firstHeight:
-                              api.TsunamiStationObservationFirstHeight(
-                                arrivalTime: arrivalTime,
-                                initial: api.WaveInitial.push,
-                              ),
+                          firstHeight: api.TsunamiStationObservationFirstHeight(
+                            arrivalTime: arrivalTime,
+                            initial: api.WaveInitial.push,
+                          ),
                           maxHeight: api.TsunamiStationObservationMaxHeight(
                             observedAt: maxObservedAt,
                             value: 3,

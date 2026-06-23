@@ -26,8 +26,7 @@ enum JmaInformationSerialCode {
   megaEarthquakeWarning(4, '巨大地震警戒', '巨大地震警戒'),
   megaEarthquakeCaution(5, '巨大地震注意', '巨大地震注意'),
   investigationEnded(6, '調査終了', '調査終了'),
-  otherInformation(15, 'その他の情報', 'その他の情報')
-  ;
+  otherInformation(15, 'その他の情報', 'その他の情報');
 
   const JmaInformationSerialCode(this.code, this.name, this.description);
 

@@ -6,8 +6,7 @@ enum JmaReportClassification {
   priority(1, '優先', 'Priority'),
   maximumPriority(2, '最優先', 'Maximum Priority'),
   // 3-6: Unused
-  trainingTest(7, '訓練/試験', 'Training/Test')
-  ;
+  trainingTest(7, '訓練/試験', 'Training/Test');
 
   const JmaReportClassification(this.code, this.nameJa, this.nameEn);
 

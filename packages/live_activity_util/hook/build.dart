@@ -74,8 +74,12 @@ Future<void> main(List<String> args) => build(
     if (!frameworksOutDir.existsSync()) {
       frameworksOutDir.createSync(recursive: true);
     }
-    final oldPlainFw = Directory('${frameworksOutDir.path}/$frameworkName.framework');
-    final oldXc = Directory('${frameworksOutDir.path}/$frameworkName.xcframework');
+    final oldPlainFw = Directory(
+      '${frameworksOutDir.path}/$frameworkName.framework',
+    );
+    final oldXc = Directory(
+      '${frameworksOutDir.path}/$frameworkName.xcframework',
+    );
     if (oldPlainFw.existsSync()) {
       oldPlainFw.deleteSync(recursive: true);
     }
@@ -83,7 +87,9 @@ Future<void> main(List<String> args) => build(
       oldXc.deleteSync(recursive: true);
     }
 
-    final dylibDevicePath = buildDirectory.resolve('lib${frameworkName}_device.dylib');
+    final dylibDevicePath = buildDirectory.resolve(
+      'lib${frameworkName}_device.dylib',
+    );
     final swiftcDevice = await Process.run(
       'swiftc',
       [
@@ -116,7 +122,9 @@ Future<void> main(List<String> args) => build(
       'Generated Objective-C header: ${generatedHeaderPath.toFilePath()}',
     );
 
-    final dylibSimArmPath = buildDirectory.resolve('lib${frameworkName}_sim_arm64.dylib');
+    final dylibSimArmPath = buildDirectory.resolve(
+      'lib${frameworkName}_sim_arm64.dylib',
+    );
     final swiftcSimArm = await Process.run(
       'swiftc',
       [
@@ -138,7 +146,9 @@ Future<void> main(List<String> args) => build(
       workingDirectory: packageRoot.toFilePath(),
     );
 
-    final dylibSimX86Path = buildDirectory.resolve('lib${frameworkName}_sim_x86.dylib');
+    final dylibSimX86Path = buildDirectory.resolve(
+      'lib${frameworkName}_sim_x86.dylib',
+    );
     final swiftcSimX86 = await Process.run(
       'swiftc',
       [
@@ -162,7 +172,9 @@ Future<void> main(List<String> args) => build(
 
     late final Uri dylibSimFinalPath;
     if (swiftcSimArm.exitCode == 0 && swiftcSimX86.exitCode == 0) {
-      dylibSimFinalPath = buildDirectory.resolve('lib${frameworkName}_sim_universal.dylib');
+      dylibSimFinalPath = buildDirectory.resolve(
+        'lib${frameworkName}_sim_universal.dylib',
+      );
       final lipoSim = await Process.run('lipo', [
         '-create',
         dylibSimArmPath.toFilePath(),
@@ -175,10 +187,14 @@ Future<void> main(List<String> args) => build(
         throw Exception('Failed to lipo simulator dylibs');
       }
     } else if (swiftcSimArm.exitCode == 0) {
-      logger.info('Using arm64-only iOS Simulator dylib (x86_64 swiftc unavailable)');
+      logger.info(
+        'Using arm64-only iOS Simulator dylib (x86_64 swiftc unavailable)',
+      );
       dylibSimFinalPath = dylibSimArmPath;
     } else if (swiftcSimX86.exitCode == 0) {
-      logger.info('Using x86_64-only iOS Simulator dylib (arm64 swiftc unavailable)');
+      logger.info(
+        'Using x86_64-only iOS Simulator dylib (arm64 swiftc unavailable)',
+      );
       dylibSimFinalPath = dylibSimX86Path;
     } else {
       logger.error(
@@ -223,13 +239,19 @@ Future<void> main(List<String> args) => build(
 </plist>
 ''';
 
-    await File(dylibDevicePath.toFilePath()).copy('${deviceFwDir.path}/$frameworkName');
+    await File(
+      dylibDevicePath.toFilePath(),
+    ).copy('${deviceFwDir.path}/$frameworkName');
     File('${deviceFwDir.path}/Info.plist').writeAsStringSync(infoPlistContents);
 
-    await File(dylibSimFinalPath.toFilePath()).copy('${simFwDir.path}/$frameworkName');
+    await File(
+      dylibSimFinalPath.toFilePath(),
+    ).copy('${simFwDir.path}/$frameworkName');
     File('${simFwDir.path}/Info.plist').writeAsStringSync(infoPlistContents);
 
-    final xcframeworkOut = Directory('${frameworksOutDir.path}/$frameworkName.xcframework');
+    final xcframeworkOut = Directory(
+      '${frameworksOutDir.path}/$frameworkName.xcframework',
+    );
     final createXc = await Process.run('xcodebuild', [
       '-create-xcframework',
       '-framework',

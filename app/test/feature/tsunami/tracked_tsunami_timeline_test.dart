@@ -1,8 +1,5 @@
 import 'package:eqmonitor/feature/tsunami/data/model/tracking/tracked_tsunami_timeline.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tsunami_estimation_first_height.dart';
-import 'package:eqmonitor/feature/tsunami/data/model/tsunami_estimation_max_height.dart';
-import 'package:eqmonitor/feature/tsunami/data/model/tsunami_forecast_first_height.dart';
-import 'package:eqmonitor/feature/tsunami/data/model/tsunami_station_forecast.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/value/first_height_condition.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/value/qualitative_height.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/value/revise.dart';
@@ -589,7 +586,6 @@ void main() {
                 stations: [],
                 estimation: api.TsunamiRegionEstimation(
                   firstHeight: api.FirstHeight(
-                    arrivalTime: null,
                     isAlreadyArrived: true,
                   ),
                   maxHeight: api.MaxHeight(value: 5),
@@ -782,10 +778,9 @@ void main() {
                     code: 'S2',
                     name: '仙台',
                     observation: api.TsunamiStationObservation(
-                      firstHeight:
-                          api.TsunamiStationObservationFirstHeight(
-                            initial: api.WaveInitial.push,
-                          ),
+                      firstHeight: api.TsunamiStationObservationFirstHeight(
+                        initial: api.WaveInitial.push,
+                      ),
                     ),
                   ),
                 ],
@@ -949,7 +944,7 @@ void main() {
   });
 
   test('空の電文リストでは空のタイムラインが返る', () {
-    final response = api.TsunamiTelegramsResponse(telegrams: const []);
+    const response = api.TsunamiTelegramsResponse(telegrams: []);
     final timeline = response.toTrackedTimeline();
 
     expect(timeline.telegrams, isEmpty);
@@ -1039,7 +1034,7 @@ void main() {
                         arrivalTime: DateTime(2026, 1, 15, 14),
                         initial: api.WaveInitial.pull,
                       ),
-                      maxHeight: api.TsunamiStationObservationMaxHeight(
+                      maxHeight: const api.TsunamiStationObservationMaxHeight(
                         value: 1.5,
                       ),
                     ),

@@ -9,8 +9,7 @@ enum JmaTsunamiHeight {
   height10m(5, '10m'),
   moreThan10m(6, '10m超'),
   unknown(14, '不明'),
-  other(15, 'その他の津波の高さ')
-  ;
+  other(15, 'その他の津波の高さ');
 
   const JmaTsunamiHeight(this.code, this.name);
 

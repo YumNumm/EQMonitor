@@ -283,8 +283,7 @@ enum ReplayDataType {
   keviJson(1000),
   snpLogEntry(1001),
   axisJson(1002),
-  eqMonitorEew(1003)
-  ;
+  eqMonitorEew(1003);
 
   const ReplayDataType(this.value);
   final int value;
@@ -295,8 +294,7 @@ enum ImageType {
   pga(1),
   pgv(2),
   psWave(3),
-  estShindo(4)
-  ;
+  estShindo(4);
 
   const ImageType(this.value);
   final int value;
@@ -304,8 +302,7 @@ enum ImageType {
 
 enum JsonType {
   eew(0),
-  eewWarning(1)
-  ;
+  eewWarning(1);
 
   const JsonType(this.value);
   final int value;

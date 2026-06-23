@@ -556,8 +556,7 @@ void main() {
         ],
       ).toPublic();
 
-      final entry =
-          result.regions.single.stations.single.forecast.single;
+      final entry = result.regions.single.stations.single.forecast.single;
       expect(entry.highTideAt, highTideAt);
       expect(entry.firstHeightArrivalTime, arrivalTime);
       expect(entry.firstHeightCondition, FirstHeightCondition.imminent);
@@ -601,8 +600,7 @@ void main() {
         ],
       ).toPublic();
 
-      final entry =
-          result.regions.single.stations.single.forecast.single;
+      final entry = result.regions.single.stations.single.forecast.single;
       expect(entry.highTideAt, highTideAt);
       expect(entry.firstHeightArrivalTime, isNull);
       expect(entry.firstHeightCondition, isNull);
@@ -637,8 +635,7 @@ void main() {
         ],
       ).toPublic();
 
-      final entry =
-          result.regions.single.stations.single.forecast.single;
+      final entry = result.regions.single.stations.single.forecast.single;
       expect(entry.highTideAt, isNull);
       expect(entry.firstHeightArrivalTime, isNull);
       expect(entry.firstHeightCondition, isNull);
@@ -700,8 +697,7 @@ void main() {
         ],
       ).toPublic();
 
-      final entry =
-          result.regions.single.stations.single.observation.single;
+      final entry = result.regions.single.stations.single.observation.single;
       expect(entry.sensor, 'GPS波浪計');
       expect(entry.firstHeightArrivalTime, arrivalTime);
       expect(entry.firstHeightInitial, WaveInitial.push);
@@ -764,8 +760,7 @@ void main() {
         ],
       ).toPublic();
 
-      final entry =
-          result.regions.single.stations.single.observation.single;
+      final entry = result.regions.single.stations.single.observation.single;
       expect(entry.sensor, isNull);
       expect(entry.firstHeightArrivalTime, arrivalTime);
       expect(entry.firstHeightInitial, WaveInitial.pull);
@@ -806,8 +801,7 @@ void main() {
         ],
       ).toPublic();
 
-      final entry =
-          result.regions.single.stations.single.observation.single;
+      final entry = result.regions.single.stations.single.observation.single;
       expect(entry.sensor, isNull);
       expect(entry.firstHeightArrivalTime, isNull);
       expect(entry.firstHeightInitial, isNull);
@@ -873,8 +867,7 @@ void main() {
         ],
       ).toPublic();
 
-      final entry =
-          result.regions.single.stations.single.observation.single;
+      final entry = result.regions.single.stations.single.observation.single;
       expect(entry.firstHeightIsUnidentifiable, isTrue);
       expect(entry.firstHeightIsMissing, isNull);
       expect(entry.maxHeightIsMissing, isTrue);
@@ -910,8 +903,7 @@ void main() {
         ],
       ).toPublic();
 
-      final entry =
-          result.offshoreStations.single.firstHeight.single;
+      final entry = result.offshoreStations.single.firstHeight.single;
       expect(entry.arrivalTime, arrivalTime);
       expect(entry.initial, WaveInitial.push);
       expect(entry.isUnidentifiable, isFalse);
@@ -945,8 +937,7 @@ void main() {
         ],
       ).toPublic();
 
-      final entry =
-          result.offshoreStations.single.firstHeight.single;
+      final entry = result.offshoreStations.single.firstHeight.single;
       expect(entry.arrivalTime, isNull);
       expect(entry.initial, isNull);
       expect(entry.isMissing, isTrue);
@@ -1094,8 +1085,6 @@ void main() {
     test('空の追跡リストでは空の公開タイムラインが返る', () {
       final result = tracked(
         telegrams: const [],
-        regions: const [],
-        offshoreStations: const [],
       ).toPublic();
 
       expect(result.telegrams, isEmpty);
@@ -1126,7 +1115,7 @@ void main() {
         ],
       );
 
-      expect(() => timeline.toPublic(), throwsArgumentError);
+      expect(timeline.toPublic, throwsArgumentError);
     });
   });
 
@@ -1211,8 +1200,7 @@ void main() {
         ],
       );
 
-      final publicTimeline =
-          response.toTrackedTimeline().toPublic();
+      final publicTimeline = response.toTrackedTimeline().toPublic();
 
       expect(publicTimeline.telegrams, hasLength(3));
       final kindEntries = publicTimeline.regions.single.kind;
@@ -1284,8 +1272,7 @@ void main() {
         ],
       );
 
-      final publicTimeline =
-          response.toTrackedTimeline().toPublic();
+      final publicTimeline = response.toTrackedTimeline().toPublic();
 
       final kindEntries = publicTimeline.regions.single.kind;
       expect(kindEntries, hasLength(3));
@@ -1343,11 +1330,9 @@ void main() {
         ],
       );
 
-      final publicTimeline =
-          response.toTrackedTimeline().toPublic();
+      final publicTimeline = response.toTrackedTimeline().toPublic();
 
-      final entries =
-          publicTimeline.regions.single.forecastFirstHeight;
+      final entries = publicTimeline.regions.single.forecastFirstHeight;
       expect(entries, hasLength(1));
       expect(entries.single.arrivalTime, arrivalTime);
       expect(entries.single.condition, FirstHeightCondition.imminent);
@@ -1403,11 +1388,9 @@ void main() {
         ],
       );
 
-      final publicTimeline =
-          response.toTrackedTimeline().toPublic();
+      final publicTimeline = response.toTrackedTimeline().toPublic();
 
-      final entries =
-          publicTimeline.regions.single.forecastFirstHeight;
+      final entries = publicTimeline.regions.single.forecastFirstHeight;
       expect(entries, hasLength(2));
 
       expect(entries[0].arrivalTime, arrivalTime1);
@@ -1499,11 +1482,9 @@ void main() {
         ],
       );
 
-      final publicTimeline =
-          response.toTrackedTimeline().toPublic();
+      final publicTimeline = response.toTrackedTimeline().toPublic();
 
-      final entries =
-          publicTimeline.regions.single.stations.single.observation;
+      final entries = publicTimeline.regions.single.stations.single.observation;
       expect(entries, hasLength(3));
 
       expect(entries[0].sensor, isNull);
@@ -1569,8 +1550,7 @@ void main() {
         ],
       );
 
-      final publicTimeline =
-          response.toTrackedTimeline().toPublic();
+      final publicTimeline = response.toTrackedTimeline().toPublic();
 
       final offshore = publicTimeline.offshoreStations.single;
       expect(offshore.code, 'O1');

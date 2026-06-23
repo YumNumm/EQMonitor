@@ -10,7 +10,13 @@ void main() {
   group('KnetBinaryParser', () {
     group('合成フィクスチャ', () {
       test('シグネチャが不正な場合はエラー', () {
-        final bytes = Uint8List.fromList([0x00, 0x00, 0x00, 0x00, ...List.filled(76, 0)]);
+        final bytes = Uint8List.fromList([
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          ...List.filled(76, 0),
+        ]);
         expect(
           () => parser.parse(bytes),
           throwsA(isA<KnetParseException>()),
@@ -142,10 +148,9 @@ void main() {
       final realDir = Directory('test/fixtures/real');
       final hasRealFiles =
           realDir.existsSync() &&
-          realDir
-              .listSync()
-              .whereType<File>()
-              .any((f) => f.path.endsWith('.kwin'));
+          realDir.listSync().whereType<File>().any(
+            (f) => f.path.endsWith('.kwin'),
+          );
 
       test(
         '2024年日向灘地震 EHM001 KWIN をパースできる (K-NET 3ch)',
@@ -374,7 +379,12 @@ Uint8List _buildSyntheticKwin({
   // e0 00 / e0 01 ブロックヘッダ + コンテンツ
   final contentBytes = e0Content.toBytes();
   final contentLen = contentBytes.length;
-  infoBuf.add([0xe0, blockSubtype, (contentLen >> 8) & 0xff, contentLen & 0xff]);
+  infoBuf.add([
+    0xe0,
+    blockSubtype,
+    (contentLen >> 8) & 0xff,
+    contentLen & 0xff,
+  ]);
   infoBuf.add(contentBytes);
 
   // -----------------------------------------------------------------------

@@ -31,8 +31,7 @@ enum JmaIntensity {
   sixUpper(displayName: '6+', description: '震度6強', level: 8),
 
   /// 震度7
-  seven(displayName: '7', description: '震度7', level: 9)
-  ;
+  seven(displayName: '7', description: '震度7', level: 9);
 
   const JmaIntensity({
     required this.displayName,

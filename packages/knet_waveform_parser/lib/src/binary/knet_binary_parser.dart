@@ -76,9 +76,11 @@ class KnetBinaryParser {
       final channelSamples = List.generate(channelCount, (_) => <int>[]);
       for (final block in secondBlocks) {
         recordTime ??= block.timestamp;
-        for (var ch = 0;
-            ch < block.channelData.length && ch < channelCount;
-            ch++) {
+        for (
+          var ch = 0;
+          ch < block.channelData.length && ch < channelCount;
+          ch++
+        ) {
           channelSamples[ch].addAll(block.channelData[ch]);
         }
       }
@@ -86,8 +88,9 @@ class KnetBinaryParser {
       // チャンネル方向の割り当て
       final directions = _buildDirections(channelCount);
       final channels = List.generate(channelCount, (i) {
-        final (num, den) =
-            i < scaleFactors.length ? scaleFactors[i] : (1.0, 1.0);
+        final (num, den) = i < scaleFactors.length
+            ? scaleFactors[i]
+            : (1.0, 1.0);
         return KnetBinaryChannel(
           direction: directions[i],
           scaleFactorNumerator: num,
@@ -96,8 +99,9 @@ class KnetBinaryParser {
         );
       });
 
-      final networkType =
-          channelCount >= 6 ? KnetNetworkType.kiknet : KnetNetworkType.knet;
+      final networkType = channelCount >= 6
+          ? KnetNetworkType.kiknet
+          : KnetNetworkType.knet;
 
       return KnetBinaryRecord(
         earthquakeInfo: earthquakeInfo,
@@ -308,8 +312,7 @@ class KnetBinaryParser {
 
   /// 8 バイト BCD タイムスタンプ（YYYY MM DD HH mm SS xx xx）を DateTime に変換
   DateTime _parseBcdTimestamp(Uint8List bytes, int offset) {
-    final year =
-        _bcdToDec(bytes[offset]) * 100 + _bcdToDec(bytes[offset + 1]);
+    final year = _bcdToDec(bytes[offset]) * 100 + _bcdToDec(bytes[offset + 1]);
     final month = _bcdToDec(bytes[offset + 2]);
     final day = _bcdToDec(bytes[offset + 3]);
     final hour = _bcdToDec(bytes[offset + 4]);

@@ -6,8 +6,7 @@ enum JmaTyphoonIntensityCategory {
   strong(1, '強い'),
   veryStrong(2, '非常に強い'),
   violent(3, '猛烈な'),
-  other(15, 'その他の強さ階級分類')
-  ;
+  other(15, 'その他の強さ階級分類');
 
   const JmaTyphoonIntensityCategory(this.code, this.nameJa);
 

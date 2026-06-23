@@ -72,9 +72,11 @@ class KnetFourierSpectrum {
     for (var i = 0; i < data.length; i++) {
       var sum = 0.0;
       var count = 0;
-      for (var j = (i - w).clamp(0, data.length - 1);
-          j <= (i + w).clamp(0, data.length - 1);
-          j++) {
+      for (
+        var j = (i - w).clamp(0, data.length - 1);
+        j <= (i + w).clamp(0, data.length - 1);
+        j++
+      ) {
         sum += data[j];
         count++;
       }
@@ -104,8 +106,12 @@ class KnetFourierSpectrum {
       }
       j += bit;
       if (i < j) {
-        final tr = re[i]; re[i] = re[j]; re[j] = tr;
-        final ti = im[i]; im[i] = im[j]; im[j] = ti;
+        final tr = re[i];
+        re[i] = re[j];
+        re[j] = tr;
+        final ti = im[i];
+        im[i] = im[j];
+        im[j] = ti;
       }
     }
 

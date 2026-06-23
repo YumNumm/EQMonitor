@@ -100,8 +100,7 @@ enum JmaTsunamiForecastRegion {
   daitoIslands(801, '大東島地方'),
   miyakoYaeyama(802, '宮古島・八重山地方'),
   okinawa(891, '沖縄県地方'),
-  other(1000, 'その他の津波予報区')
-  ;
+  other(1000, 'その他の津波予報区');
 
   const JmaTsunamiForecastRegion(this.code, this.name);
 

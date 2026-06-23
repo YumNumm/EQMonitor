@@ -1,4 +1,3 @@
-
 export 'src/background_location.g.dart'
     show
         BackgroundLocationFlutterApi,

@@ -13,8 +13,7 @@ enum JmaSeismicIntensityLowerLimit {
   intensity6Upper(9, '震度6強'),
   intensity7(10, '震度7'),
   none(14, 'なし'),
-  unknown(15, '不明')
-  ;
+  unknown(15, '不明');
 
   const JmaSeismicIntensityLowerLimit(this.code, this.name);
 
@@ -41,8 +40,7 @@ enum JmaSeismicIntensityUpperLimit {
   intensity7(10, '震度7'),
   orAbove(11, '〜程度以上'),
   none(14, 'なし'),
-  unknown(15, '不明')
-  ;
+  unknown(15, '不明');
 
   const JmaSeismicIntensityUpperLimit(this.code, this.name);
 
@@ -63,8 +61,7 @@ enum JmaLongPeriodGroundMotionLowerLimit {
   class2(3, '長周期地震動階級2'),
   class3(4, '長周期地震動階級3'),
   class4(5, '長周期地震動階級4'),
-  unknown(7, '不明')
-  ;
+  unknown(7, '不明');
 
   const JmaLongPeriodGroundMotionLowerLimit(this.code, this.name);
 
@@ -86,8 +83,7 @@ enum JmaLongPeriodGroundMotionUpperLimit {
   class3(4, '長周期地震動階級3'),
   class4(5, '長周期地震動階級4'),
   orAbove(6, '〜程度以上'),
-  unknown(7, '不明')
-  ;
+  unknown(7, '不明');
 
   const JmaLongPeriodGroundMotionUpperLimit(this.code, this.name);
 
@@ -108,8 +104,7 @@ enum JmaSeismicIntensity {
   intensity5Upper(4, '5強'),
   intensity6Lower(5, '6弱'),
   intensity6Upper(6, '6強'),
-  intensity7(7, '7')
-  ;
+  intensity7(7, '7');
 
   const JmaSeismicIntensity(this.code, this.name);
 

@@ -84,13 +84,13 @@ class _TsunamiListTile extends StatelessWidget {
     final statusLabel = item.isCanceled
         ? '解除'
         : item.isActive
-            ? '発表中'
-            : '終了';
+        ? '発表中'
+        : '終了';
     final statusColor = item.isCanceled
         ? theme.colorScheme.outline
         : item.isActive
-            ? theme.colorScheme.error
-            : theme.colorScheme.tertiary;
+        ? theme.colorScheme.error
+        : theme.colorScheme.tertiary;
 
     return Column(
       mainAxisSize: MainAxisSize.min,

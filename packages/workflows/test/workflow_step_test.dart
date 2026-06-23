@@ -8,7 +8,10 @@ void main() {
 
     setUp(() {
       persistence = InMemoryWorkflowPersistence();
-      step = WorkflowStep(instanceId: 'test-instance', persistence: persistence);
+      step = WorkflowStep(
+        instanceId: 'test-instance',
+        persistence: persistence,
+      );
     });
 
     test('executes callback on first call', () async {
@@ -21,20 +24,22 @@ void main() {
       expect(called, 1);
     });
 
-    test('does not re-execute callback on subsequent calls with same name',
-        () async {
-      var called = 0;
-      await step('stepA', () {
-        called++;
-        return 'first';
-      });
-      final result = await step('stepA', () {
-        called++;
-        return 'second';
-      });
-      expect(result, 'first');
-      expect(called, 1);
-    });
+    test(
+      'does not re-execute callback on subsequent calls with same name',
+      () async {
+        var called = 0;
+        await step('stepA', () {
+          called++;
+          return 'first';
+        });
+        final result = await step('stepA', () {
+          called++;
+          return 'second';
+        });
+        expect(result, 'first');
+        expect(called, 1);
+      },
+    );
 
     test('independent steps run independently', () async {
       var calledA = 0;
@@ -84,22 +89,22 @@ void main() {
       final executedSteps = <String>[];
 
       Future<void> runWorkflow() => runner.run(
-            instanceId: 'instance-1',
-            workflow: (step) async {
-              await step('step1', () async {
-                executedSteps.add('step1');
-                return 'done1';
-              });
-              await step('step2', () async {
-                executedSteps.add('step2');
-                return 'done2';
-              });
-              await step('step3', () async {
-                executedSteps.add('step3');
-                return 'done3';
-              });
-            },
-          );
+        instanceId: 'instance-1',
+        workflow: (step) async {
+          await step('step1', () async {
+            executedSteps.add('step1');
+            return 'done1';
+          });
+          await step('step2', () async {
+            executedSteps.add('step2');
+            return 'done2';
+          });
+          await step('step3', () async {
+            executedSteps.add('step3');
+            return 'done3';
+          });
+        },
+      );
 
       // First run completes normally
       await runWorkflow();
@@ -144,19 +149,19 @@ void main() {
         var callCount = 0;
 
         Future<List<String>> runLoop() => runner.run(
-              instanceId: 'loop-inst',
-              workflow: (step) async {
-                final out = <String>[];
-                for (final item in items) {
-                  final r = await step('process-$item', () {
-                    callCount++;
-                    return item.toUpperCase();
-                  });
-                  out.add(r);
-                }
-                return out;
-              },
-            );
+          instanceId: 'loop-inst',
+          workflow: (step) async {
+            final out = <String>[];
+            for (final item in items) {
+              final r = await step('process-$item', () {
+                callCount++;
+                return item.toUpperCase();
+              });
+              out.add(r);
+            }
+            return out;
+          },
+        );
 
         final first = await runLoop();
         expect(callCount, items.length);
@@ -174,19 +179,19 @@ void main() {
         final executed = <String>[];
 
         Future<void> runLoop() => runner.run(
-              instanceId: 'loop-inst',
-              workflow: (step) async {
-                for (final item in items) {
-                  await step('process-$item', () {
-                    if (item == failItem && shouldFail) {
-                      throw Exception('fail at $item');
-                    }
-                    executed.add(item);
-                    return item.toUpperCase();
-                  });
+          instanceId: 'loop-inst',
+          workflow: (step) async {
+            for (final item in items) {
+              await step('process-$item', () {
+                if (item == failItem && shouldFail) {
+                  throw Exception('fail at $item');
                 }
-              },
-            );
+                executed.add(item);
+                return item.toUpperCase();
+              });
+            }
+          },
+        );
 
         // 1回目: alpha, beta は完了し gamma で失敗
         await expectLater(runLoop(), throwsA(isA<Exception>()));
@@ -208,19 +213,19 @@ void main() {
         var callCount = 0;
 
         Future<List<int>> runLoop() => runner.run(
-              instanceId: 'idx-loop',
-              workflow: (step) async {
-                final out = <int>[];
-                for (var i = 0; i < items.length; i++) {
-                  final r = await step('step-$i', () {
-                    callCount++;
-                    return i * 10;
-                  });
-                  out.add(r);
-                }
-                return out;
-              },
-            );
+          instanceId: 'idx-loop',
+          workflow: (step) async {
+            final out = <int>[];
+            for (var i = 0; i < items.length; i++) {
+              final r = await step('step-$i', () {
+                callCount++;
+                return i * 10;
+              });
+              out.add(r);
+            }
+            return out;
+          },
+        );
 
         expect(await runLoop(), [0, 10, 20, 30]);
         expect(callCount, items.length);

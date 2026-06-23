@@ -44,7 +44,6 @@ class TsunamiHistoryDataSource
       final response = await _client.tsunami.getV2Tsunami(
         limit: limit.toString(),
         cursor: cursor,
-        sortOrder: api.SortOrder.desc,
       );
       return Success(
         page: PageData(

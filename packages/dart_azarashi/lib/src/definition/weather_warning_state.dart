@@ -3,8 +3,7 @@
 /// See IS-QZSS-DCR-015 Table 4.1.2-42.
 enum JmaWeatherWarningState {
   issued(1, '発表'),
-  cancelled(2, '解除')
-  ;
+  cancelled(2, '解除');
 
   const JmaWeatherWarningState(this.code, this.nameJa);
 

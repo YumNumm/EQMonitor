@@ -6,8 +6,7 @@ enum JmaAshFallWarningCode {
   moderateAshFall(2, 'やや多量の降灰'),
   heavyAshFall(3, '多量の降灰'),
   smallLapilliFall(4, '小さな噴石の落下'),
-  other(7, 'その他の防災気象情報要素2')
-  ;
+  other(7, 'その他の防災気象情報要素2');
 
   const JmaAshFallWarningCode(this.code, this.nameJa);
 

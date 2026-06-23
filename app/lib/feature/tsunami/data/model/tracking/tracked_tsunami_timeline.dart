@@ -39,15 +39,14 @@ class _TrackedTimelineBuilder {
   final api.TsunamiTelegramsResponse _response;
 
   TrackedTsunamiTimeline build() {
-    final sorted = [..._response.telegrams]..sort((a, b) {
-      final byTime =
-          a.telegram.pressedAt.compareTo(b.telegram.pressedAt);
-      if (byTime != 0) {
-        return byTime;
-      }
-      return (a.telegram.serialNo ?? 0)
-          .compareTo(b.telegram.serialNo ?? 0);
-    });
+    final sorted = [..._response.telegrams]
+      ..sort((a, b) {
+        final byTime = a.telegram.pressedAt.compareTo(b.telegram.pressedAt);
+        if (byTime != 0) {
+          return byTime;
+        }
+        return (a.telegram.serialNo ?? 0).compareTo(b.telegram.serialNo ?? 0);
+      });
 
     final telegrams = [
       for (final t in sorted) t.telegram.toTelegramMeta(),
@@ -65,17 +64,13 @@ class _TrackedTimelineBuilder {
     // region.code -> station.code -> アキュムレータ
     final stationOrder = <String, List<String>>{};
     final stationName = <String, Map<String, String>>{};
-    final stFc =
-        <String, Map<String, Tracked<TsunamiStationForecast?>>>{};
-    final stOb =
-        <String, Map<String, Tracked<TsunamiStationObservation?>>>{};
+    final stFc = <String, Map<String, Tracked<TsunamiStationForecast?>>>{};
+    final stOb = <String, Map<String, Tracked<TsunamiStationObservation?>>>{};
     // offshore.code -> アキュムレータ
     final offshoreCodes = <String>[];
     final offshoreName = <String, String>{};
-    final offFirst =
-        <String, Tracked<TsunamiObservationFirstHeight>>{};
-    final offMax =
-        <String, Tracked<TsunamiObservationMaxHeight?>>{};
+    final offFirst = <String, Tracked<TsunamiObservationFirstHeight>>{};
+    final offMax = <String, Tracked<TsunamiObservationMaxHeight?>>{};
 
     for (final t in sorted) {
       final id = t.telegram.id;
