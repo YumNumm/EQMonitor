@@ -148,7 +148,7 @@ class _DebugBody extends HookWidget {
             ],
           ),
         ),
-        EarthquakeIntensityWidget(item: earthquake),
+        JmaIntensityContent(item: earthquake),
       ],
     );
   }
