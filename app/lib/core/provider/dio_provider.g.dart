@@ -42,4 +42,4 @@ final class DioProvider
   }
 }
 
-String _$dioHash() => r'd81c393b4e2ca9f5091d8936272e1999f1a5535d';
+String _$dioHash() => r'e8622198b4663b41a0aae91bc8e64545acaf753a';
