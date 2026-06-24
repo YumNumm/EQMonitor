@@ -160,6 +160,11 @@ class _MapContent extends HookConsumerWidget {
             }
           },
           children: [
+            if (showEstimated && tileUrl != null)
+              EarthquakeHistoryDetailsEstimatedIntensityLayer(
+                key: const ValueKey('estimated'),
+                tileUrl: tileUrl,
+              ),
             if (!showEstimated) ...[
               EarthquakeHistoryFillLayer(
                 key: const ValueKey('fill'),
@@ -167,6 +172,11 @@ class _MapContent extends HookConsumerWidget {
                 parameter: parameter,
                 fillMode: EarthquakeHistoryFillMode.auto,
                 showingLpgmIntensity: showingLpgmIntensity,
+              ),
+              EarthquakeHistoryHypocenterErrorLayer(
+                key: const ValueKey('hypocenter-error'),
+                earthquake: earthquake,
+                parameter: parameter,
               ),
               hypocenterLayer,
               EarthquakeHistoryStationIntensityLayer(
@@ -177,17 +187,6 @@ class _MapContent extends HookConsumerWidget {
                 showingLpgmIntensity: showingLpgmIntensity,
               ),
             ],
-            if (showEstimated && tileUrl != null)
-              EarthquakeHistoryDetailsEstimatedIntensityLayer(
-                key: const ValueKey('estimated'),
-                tileUrl: tileUrl,
-              ),
-            if (!showEstimated)
-              EarthquakeHistoryHypocenterErrorLayer(
-                key: const ValueKey('hypocenter-error'),
-                earthquake: earthquake,
-                parameter: parameter,
-              ),
           ],
         ),
 
