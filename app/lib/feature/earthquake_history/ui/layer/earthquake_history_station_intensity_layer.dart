@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
@@ -23,12 +24,18 @@ import 'package:maplibre/maplibre.dart';
 class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   const EarthquakeHistoryStationIntensityLayer({
     required this.earthquake,
-    required this.config,
+    required this.parameter,
+    this.stationDisplayMode = StationDisplayMode.maxFocused,
+    this.showStationLabel = false,
+    this.showingLpgmIntensity = false,
     super.key,
   });
 
   final Earthquake earthquake;
-  final EarthquakeHistoryDetailConfig config;
+  final EarthquakeHistoryMapLayerParameter parameter;
+  final StationDisplayMode stationDisplayMode;
+  final bool showStationLabel;
+  final bool showingLpgmIntensity;
 
   static const _sourceId = 'eq-history-station-intensity';
   static const _circleLayerId = 'eq-history-station-intensity-circle';
@@ -44,7 +51,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensity = earthquake.intensity;
-    if (intensity == null || !config.showStation) {
+    if (intensity == null) {
       return const SizedBox.shrink();
     }
 
@@ -63,7 +70,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
         unawaited(() async {
           try {
-            final geoJson = config.showingLpgmIntensity
+            final geoJson = showingLpgmIntensity
                 ? _buildLpgmGeoJson(intensity, colorModel)
                 : _buildGeoJson(intensity, colorModel);
 
@@ -84,8 +91,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               await styleController.addImages(cachedBytes);
             }
 
-            final zoomThresholds = config.zoomThresholds;
-
             if (disposed) {
               return;
             }
@@ -93,31 +98,31 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               CircleStyleLayer(
                 id: _circleLayerId,
                 sourceId: _sourceId,
-                minZoom: zoomThresholds.stationMinZoom,
+                minZoom: parameter.stationMinZoom,
                 layout: const {
                   'circle-sort-key': ['get', 'sortKey'],
                 },
                 paint: {
-                  'circle-radius': switch (config.stationDisplayMode) {
-                    .allMinimized => [
+                  'circle-radius': switch (stationDisplayMode) {
+                    StationDisplayMode.allMinimized => [
                       'interpolate',
                       ['linear'],
                       ['zoom'],
                       4,
-                      4,
+                      parameter.stationCircleRadiusMin * 2,
                       10,
-                      10,
+                      parameter.stationCircleRadiusMax * 1.25,
                     ],
-                    .normal => [
+                    StationDisplayMode.normal => [
                       'interpolate',
                       ['linear'],
                       ['zoom'],
                       4,
-                      2,
+                      parameter.stationCircleRadiusMin,
                       10,
-                      8,
+                      parameter.stationCircleRadiusMax,
                     ],
-                    .maxFocused => [
+                    StationDisplayMode.maxFocused => [
                       'interpolate',
                       ['linear'],
                       ['zoom'],
@@ -125,15 +130,15 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                       [
                         'case',
                         ['get', 'isFocused'],
-                        3,
-                        1,
+                        parameter.stationCircleRadiusMin * 1.5,
+                        parameter.stationCircleRadiusMin * 0.5,
                       ],
                       10,
                       [
                         'case',
                         ['get', 'isFocused'],
-                        10,
-                        7,
+                        parameter.stationCircleRadiusMax * 1.25,
+                        parameter.stationCircleRadiusMax * 0.875,
                       ],
                     ],
                   },
@@ -160,7 +165,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                 SymbolStyleLayer(
                   id: _iconLayerId,
                   sourceId: _sourceId,
-                  minZoom: zoomThresholds.stationMinZoom,
+                  minZoom: parameter.stationMinZoom,
                   layout: {
                     'icon-image': ['get', 'iconId'],
                     'icon-allow-overlap': true,
@@ -171,11 +176,11 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                       ['linear'],
                       ['zoom'],
                       3,
-                      0.025,
+                      parameter.stationIconSizeMin,
                       7,
-                      0.18,
+                      parameter.stationIconSizeMid,
                       20,
-                      0.6,
+                      parameter.stationIconSizeMax,
                     ],
                   },
                 ),
@@ -186,12 +191,12 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             if (disposed) {
               return;
             }
-            if (config.showStationLabel) {
+            if (showStationLabel) {
               await styleController.addLayer(
                 SymbolStyleLayer(
                   id: _labelLayerId,
                   sourceId: _sourceId,
-                  minZoom: zoomThresholds.stationLabelMinZoom,
+                  minZoom: parameter.stationLabelMinZoom,
                   layout: {
                     'text-field': ['get', 'name'],
                     'text-size': 10,
@@ -217,7 +222,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
           disposed = true;
           unawaited(() async {
             try {
-              if (config.showStationLabel) {
+              if (showStationLabel) {
                 await styleController.removeLayer(_labelLayerId);
               }
               if (iconLayerAdded) {
@@ -235,10 +240,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         styleController,
         intensity,
         colorModel,
-        config.stationDisplayMode,
-        config.showStationLabel,
-        config.showingLpgmIntensity,
-        config.zoomThresholds,
+        stationDisplayMode,
+        showStationLabel,
+        showingLpgmIntensity,
+        parameter,
         iconData,
       ],
     );
@@ -248,7 +253,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
   /// stationDisplayMode と isFocused に応じてアイコン ID を返す。
   String _iconIdForStation(String intensityName, bool isFocused) {
-    final useSmall = switch (config.stationDisplayMode) {
+    final useSmall = switch (stationDisplayMode) {
       StationDisplayMode.normal => true,
       StationDisplayMode.maxFocused => isFocused,
       StationDisplayMode.allMinimized => false,
@@ -258,8 +263,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   }
 
   String _lpgmIconIdForStation(String lpgmName) {
-    final useSmall =
-        config.stationDisplayMode != StationDisplayMode.allMinimized;
+    final useSmall = stationDisplayMode != StationDisplayMode.allMinimized;
     final prefix = useSmall ? _lpgmIconSmallPrefix : _lpgmIconSmallNoTextPrefix;
     return '$prefix$lpgmName';
   }

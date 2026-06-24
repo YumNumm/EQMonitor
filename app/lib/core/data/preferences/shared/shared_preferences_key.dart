@@ -26,6 +26,7 @@ enum SharedPreferencesKey {
   lastApnsPushToStartTokenHash('last_apns_push_to_start_token_hash'),
   adsOptOut('ads_opt_out'),
   autoReturnToRealtime('auto_return_to_realtime'),
+  earthquakeHistoryMapLayerParameter('earthquake_history_map_layer_parameter'),
   ;
 
   const SharedPreferencesKey(this.key);

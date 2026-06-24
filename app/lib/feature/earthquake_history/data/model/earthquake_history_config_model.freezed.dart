@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeHistoryConfig {
 
- EarthquakeHistoryListConfig get list; EarthquakeHistoryDetailConfig get detail;
+ EarthquakeHistoryListConfig get list;
 /// Create a copy of EarthquakeHistoryConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $EarthquakeHistoryConfigCopyWith<EarthquakeHistoryConfig> get copyWith => _$Eart
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryConfig&&(identical(other.list, list) || other.list == list)&&(identical(other.detail, detail) || other.detail == detail));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryConfig&&(identical(other.list, list) || other.list == list));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,list,detail);
+int get hashCode => Object.hash(runtimeType,list);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryConfig(list: $list, detail: $detail)';
+  return 'EarthquakeHistoryConfig(list: $list)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $EarthquakeHistoryConfigCopyWith<$Res>  {
   factory $EarthquakeHistoryConfigCopyWith(EarthquakeHistoryConfig value, $Res Function(EarthquakeHistoryConfig) _then) = _$EarthquakeHistoryConfigCopyWithImpl;
 @useResult
 $Res call({
- EarthquakeHistoryListConfig list, EarthquakeHistoryDetailConfig detail
+ EarthquakeHistoryListConfig list
 });
 
 
-$EarthquakeHistoryListConfigCopyWith<$Res> get list;$EarthquakeHistoryDetailConfigCopyWith<$Res> get detail;
+$EarthquakeHistoryListConfigCopyWith<$Res> get list;
 
 }
 /// @nodoc
@@ -65,11 +65,10 @@ class _$EarthquakeHistoryConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? list = null,Object? detail = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? list = null,}) {
   return _then(_self.copyWith(
 list: null == list ? _self.list : list // ignore: cast_nullable_to_non_nullable
-as EarthquakeHistoryListConfig,detail: null == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
-as EarthquakeHistoryDetailConfig,
+as EarthquakeHistoryListConfig,
   ));
 }
 /// Create a copy of EarthquakeHistoryConfig
@@ -80,15 +79,6 @@ $EarthquakeHistoryListConfigCopyWith<$Res> get list {
   
   return $EarthquakeHistoryListConfigCopyWith<$Res>(_self.list, (value) {
     return _then(_self.copyWith(list: value));
-  });
-}/// Create a copy of EarthquakeHistoryConfig
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EarthquakeHistoryDetailConfigCopyWith<$Res> get detail {
-  
-  return $EarthquakeHistoryDetailConfigCopyWith<$Res>(_self.detail, (value) {
-    return _then(_self.copyWith(detail: value));
   });
 }
 }
@@ -172,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeHistoryListConfig list,  EarthquakeHistoryDetailConfig detail)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeHistoryListConfig list)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryConfig() when $default != null:
-return $default(_that.list,_that.detail);case _:
+return $default(_that.list);case _:
   return orElse();
 
 }
@@ -193,10 +183,10 @@ return $default(_that.list,_that.detail);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeHistoryListConfig list,  EarthquakeHistoryDetailConfig detail)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeHistoryListConfig list)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryConfig():
-return $default(_that.list,_that.detail);case _:
+return $default(_that.list);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -213,10 +203,10 @@ return $default(_that.list,_that.detail);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeHistoryListConfig list,  EarthquakeHistoryDetailConfig detail)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeHistoryListConfig list)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryConfig() when $default != null:
-return $default(_that.list,_that.detail);case _:
+return $default(_that.list);case _:
   return null;
 
 }
@@ -228,11 +218,10 @@ return $default(_that.list,_that.detail);case _:
 @JsonSerializable()
 
 class _EarthquakeHistoryConfig implements EarthquakeHistoryConfig {
-  const _EarthquakeHistoryConfig({required this.list, required this.detail});
+  const _EarthquakeHistoryConfig({required this.list});
   factory _EarthquakeHistoryConfig.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryConfigFromJson(json);
 
 @override final  EarthquakeHistoryListConfig list;
-@override final  EarthquakeHistoryDetailConfig detail;
 
 /// Create a copy of EarthquakeHistoryConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -247,16 +236,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryConfig&&(identical(other.list, list) || other.list == list)&&(identical(other.detail, detail) || other.detail == detail));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryConfig&&(identical(other.list, list) || other.list == list));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,list,detail);
+int get hashCode => Object.hash(runtimeType,list);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryConfig(list: $list, detail: $detail)';
+  return 'EarthquakeHistoryConfig(list: $list)';
 }
 
 
@@ -267,11 +256,11 @@ abstract mixin class _$EarthquakeHistoryConfigCopyWith<$Res> implements $Earthqu
   factory _$EarthquakeHistoryConfigCopyWith(_EarthquakeHistoryConfig value, $Res Function(_EarthquakeHistoryConfig) _then) = __$EarthquakeHistoryConfigCopyWithImpl;
 @override @useResult
 $Res call({
- EarthquakeHistoryListConfig list, EarthquakeHistoryDetailConfig detail
+ EarthquakeHistoryListConfig list
 });
 
 
-@override $EarthquakeHistoryListConfigCopyWith<$Res> get list;@override $EarthquakeHistoryDetailConfigCopyWith<$Res> get detail;
+@override $EarthquakeHistoryListConfigCopyWith<$Res> get list;
 
 }
 /// @nodoc
@@ -284,11 +273,10 @@ class __$EarthquakeHistoryConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? list = null,Object? detail = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? list = null,}) {
   return _then(_EarthquakeHistoryConfig(
 list: null == list ? _self.list : list // ignore: cast_nullable_to_non_nullable
-as EarthquakeHistoryListConfig,detail: null == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
-as EarthquakeHistoryDetailConfig,
+as EarthquakeHistoryListConfig,
   ));
 }
 
@@ -300,15 +288,6 @@ $EarthquakeHistoryListConfigCopyWith<$Res> get list {
   
   return $EarthquakeHistoryListConfigCopyWith<$Res>(_self.list, (value) {
     return _then(_self.copyWith(list: value));
-  });
-}/// Create a copy of EarthquakeHistoryConfig
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EarthquakeHistoryDetailConfigCopyWith<$Res> get detail {
-  
-  return $EarthquakeHistoryDetailConfigCopyWith<$Res>(_self.detail, (value) {
-    return _then(_self.copyWith(detail: value));
   });
 }
 }
@@ -587,334 +566,6 @@ as String?,
 }
 
 
-}
-
-
-/// @nodoc
-mixin _$EarthquakeHistoryDetailConfig {
-
-/// 塗りつぶしの表示モード
-@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) EarthquakeHistoryFillMode get fillMode;/// 観測点の表示方法
- StationDisplayMode get stationDisplayMode;/// 震央マーカーの表示方法
- HypocenterDisplayMode get hypocenterDisplayMode;/// 震央誤差矩形を表示するか
- bool get showHypocenterError;/// 観測点名ラベルを表示するか
- bool get showStationLabel;/// 推計震度データがある場合に自動で推計震度モードにするか（永続化）
- bool get useEstimatedIntensityWhenAvailable;/// 震度凡例を表示するか
- bool get showLegend;/// 長周期地震動階級を表示しているか
- bool get showingLpgmIntensity;/// 観測点レイヤーを表示するか
- bool get showStation;/// 各レイヤーのズームレベル閾値
- EarthquakeHistoryMapLayerZoomThresholds get zoomThresholds;
-/// Create a copy of EarthquakeHistoryDetailConfig
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$EarthquakeHistoryDetailConfigCopyWith<EarthquakeHistoryDetailConfig> get copyWith => _$EarthquakeHistoryDetailConfigCopyWithImpl<EarthquakeHistoryDetailConfig>(this as EarthquakeHistoryDetailConfig, _$identity);
-
-  /// Serializes this EarthquakeHistoryDetailConfig to a JSON map.
-  Map<String, dynamic> toJson();
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryDetailConfig&&(identical(other.fillMode, fillMode) || other.fillMode == fillMode)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode)&&(identical(other.hypocenterDisplayMode, hypocenterDisplayMode) || other.hypocenterDisplayMode == hypocenterDisplayMode)&&(identical(other.showHypocenterError, showHypocenterError) || other.showHypocenterError == showHypocenterError)&&(identical(other.showStationLabel, showStationLabel) || other.showStationLabel == showStationLabel)&&(identical(other.useEstimatedIntensityWhenAvailable, useEstimatedIntensityWhenAvailable) || other.useEstimatedIntensityWhenAvailable == useEstimatedIntensityWhenAvailable)&&(identical(other.showLegend, showLegend) || other.showLegend == showLegend)&&(identical(other.showingLpgmIntensity, showingLpgmIntensity) || other.showingLpgmIntensity == showingLpgmIntensity)&&(identical(other.showStation, showStation) || other.showStation == showStation)&&(identical(other.zoomThresholds, zoomThresholds) || other.zoomThresholds == zoomThresholds));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,fillMode,stationDisplayMode,hypocenterDisplayMode,showHypocenterError,showStationLabel,useEstimatedIntensityWhenAvailable,showLegend,showingLpgmIntensity,showStation,zoomThresholds);
-
-@override
-String toString() {
-  return 'EarthquakeHistoryDetailConfig(fillMode: $fillMode, stationDisplayMode: $stationDisplayMode, hypocenterDisplayMode: $hypocenterDisplayMode, showHypocenterError: $showHypocenterError, showStationLabel: $showStationLabel, useEstimatedIntensityWhenAvailable: $useEstimatedIntensityWhenAvailable, showLegend: $showLegend, showingLpgmIntensity: $showingLpgmIntensity, showStation: $showStation, zoomThresholds: $zoomThresholds)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $EarthquakeHistoryDetailConfigCopyWith<$Res>  {
-  factory $EarthquakeHistoryDetailConfigCopyWith(EarthquakeHistoryDetailConfig value, $Res Function(EarthquakeHistoryDetailConfig) _then) = _$EarthquakeHistoryDetailConfigCopyWithImpl;
-@useResult
-$Res call({
-@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) EarthquakeHistoryFillMode fillMode, StationDisplayMode stationDisplayMode, HypocenterDisplayMode hypocenterDisplayMode, bool showHypocenterError, bool showStationLabel, bool useEstimatedIntensityWhenAvailable, bool showLegend, bool showingLpgmIntensity, bool showStation, EarthquakeHistoryMapLayerZoomThresholds zoomThresholds
-});
-
-
-$EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res> get zoomThresholds;
-
-}
-/// @nodoc
-class _$EarthquakeHistoryDetailConfigCopyWithImpl<$Res>
-    implements $EarthquakeHistoryDetailConfigCopyWith<$Res> {
-  _$EarthquakeHistoryDetailConfigCopyWithImpl(this._self, this._then);
-
-  final EarthquakeHistoryDetailConfig _self;
-  final $Res Function(EarthquakeHistoryDetailConfig) _then;
-
-/// Create a copy of EarthquakeHistoryDetailConfig
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? fillMode = null,Object? stationDisplayMode = null,Object? hypocenterDisplayMode = null,Object? showHypocenterError = null,Object? showStationLabel = null,Object? useEstimatedIntensityWhenAvailable = null,Object? showLegend = null,Object? showingLpgmIntensity = null,Object? showStation = null,Object? zoomThresholds = null,}) {
-  return _then(_self.copyWith(
-fillMode: null == fillMode ? _self.fillMode : fillMode // ignore: cast_nullable_to_non_nullable
-as EarthquakeHistoryFillMode,stationDisplayMode: null == stationDisplayMode ? _self.stationDisplayMode : stationDisplayMode // ignore: cast_nullable_to_non_nullable
-as StationDisplayMode,hypocenterDisplayMode: null == hypocenterDisplayMode ? _self.hypocenterDisplayMode : hypocenterDisplayMode // ignore: cast_nullable_to_non_nullable
-as HypocenterDisplayMode,showHypocenterError: null == showHypocenterError ? _self.showHypocenterError : showHypocenterError // ignore: cast_nullable_to_non_nullable
-as bool,showStationLabel: null == showStationLabel ? _self.showStationLabel : showStationLabel // ignore: cast_nullable_to_non_nullable
-as bool,useEstimatedIntensityWhenAvailable: null == useEstimatedIntensityWhenAvailable ? _self.useEstimatedIntensityWhenAvailable : useEstimatedIntensityWhenAvailable // ignore: cast_nullable_to_non_nullable
-as bool,showLegend: null == showLegend ? _self.showLegend : showLegend // ignore: cast_nullable_to_non_nullable
-as bool,showingLpgmIntensity: null == showingLpgmIntensity ? _self.showingLpgmIntensity : showingLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as bool,showStation: null == showStation ? _self.showStation : showStation // ignore: cast_nullable_to_non_nullable
-as bool,zoomThresholds: null == zoomThresholds ? _self.zoomThresholds : zoomThresholds // ignore: cast_nullable_to_non_nullable
-as EarthquakeHistoryMapLayerZoomThresholds,
-  ));
-}
-/// Create a copy of EarthquakeHistoryDetailConfig
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res> get zoomThresholds {
-  
-  return $EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res>(_self.zoomThresholds, (value) {
-    return _then(_self.copyWith(zoomThresholds: value));
-  });
-}
-}
-
-
-/// Adds pattern-matching-related methods to [EarthquakeHistoryDetailConfig].
-extension EarthquakeHistoryDetailConfigPatterns on EarthquakeHistoryDetailConfig {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EarthquakeHistoryDetailConfig value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _EarthquakeHistoryDetailConfig() when $default != null:
-return $default(_that);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EarthquakeHistoryDetailConfig value)  $default,){
-final _that = this;
-switch (_that) {
-case _EarthquakeHistoryDetailConfig():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EarthquakeHistoryDetailConfig value)?  $default,){
-final _that = this;
-switch (_that) {
-case _EarthquakeHistoryDetailConfig() when $default != null:
-return $default(_that);case _:
-  return null;
-
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto)  EarthquakeHistoryFillMode fillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity,  bool showStation,  EarthquakeHistoryMapLayerZoomThresholds zoomThresholds)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _EarthquakeHistoryDetailConfig() when $default != null:
-return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity,_that.showStation,_that.zoomThresholds);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto)  EarthquakeHistoryFillMode fillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity,  bool showStation,  EarthquakeHistoryMapLayerZoomThresholds zoomThresholds)  $default,) {final _that = this;
-switch (_that) {
-case _EarthquakeHistoryDetailConfig():
-return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity,_that.showStation,_that.zoomThresholds);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto)  EarthquakeHistoryFillMode fillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity,  bool showStation,  EarthquakeHistoryMapLayerZoomThresholds zoomThresholds)?  $default,) {final _that = this;
-switch (_that) {
-case _EarthquakeHistoryDetailConfig() when $default != null:
-return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity,_that.showStation,_that.zoomThresholds);case _:
-  return null;
-
-}
-}
-
-}
-
-/// @nodoc
-@JsonSerializable()
-
-class _EarthquakeHistoryDetailConfig implements EarthquakeHistoryDetailConfig {
-  const _EarthquakeHistoryDetailConfig({@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) this.fillMode = EarthquakeHistoryFillMode.auto, this.stationDisplayMode = StationDisplayMode.maxFocused, this.hypocenterDisplayMode = HypocenterDisplayMode.zoomFade, this.showHypocenterError = false, this.showStationLabel = false, this.useEstimatedIntensityWhenAvailable = true, this.showLegend = true, this.showingLpgmIntensity = false, this.showStation = true, this.zoomThresholds = const EarthquakeHistoryMapLayerZoomThresholds()});
-  factory _EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryDetailConfigFromJson(json);
-
-/// 塗りつぶしの表示モード
-@override@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) final  EarthquakeHistoryFillMode fillMode;
-/// 観測点の表示方法
-@override@JsonKey() final  StationDisplayMode stationDisplayMode;
-/// 震央マーカーの表示方法
-@override@JsonKey() final  HypocenterDisplayMode hypocenterDisplayMode;
-/// 震央誤差矩形を表示するか
-@override@JsonKey() final  bool showHypocenterError;
-/// 観測点名ラベルを表示するか
-@override@JsonKey() final  bool showStationLabel;
-/// 推計震度データがある場合に自動で推計震度モードにするか（永続化）
-@override@JsonKey() final  bool useEstimatedIntensityWhenAvailable;
-/// 震度凡例を表示するか
-@override@JsonKey() final  bool showLegend;
-/// 長周期地震動階級を表示しているか
-@override@JsonKey() final  bool showingLpgmIntensity;
-/// 観測点レイヤーを表示するか
-@override@JsonKey() final  bool showStation;
-/// 各レイヤーのズームレベル閾値
-@override@JsonKey() final  EarthquakeHistoryMapLayerZoomThresholds zoomThresholds;
-
-/// Create a copy of EarthquakeHistoryDetailConfig
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$EarthquakeHistoryDetailConfigCopyWith<_EarthquakeHistoryDetailConfig> get copyWith => __$EarthquakeHistoryDetailConfigCopyWithImpl<_EarthquakeHistoryDetailConfig>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$EarthquakeHistoryDetailConfigToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryDetailConfig&&(identical(other.fillMode, fillMode) || other.fillMode == fillMode)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode)&&(identical(other.hypocenterDisplayMode, hypocenterDisplayMode) || other.hypocenterDisplayMode == hypocenterDisplayMode)&&(identical(other.showHypocenterError, showHypocenterError) || other.showHypocenterError == showHypocenterError)&&(identical(other.showStationLabel, showStationLabel) || other.showStationLabel == showStationLabel)&&(identical(other.useEstimatedIntensityWhenAvailable, useEstimatedIntensityWhenAvailable) || other.useEstimatedIntensityWhenAvailable == useEstimatedIntensityWhenAvailable)&&(identical(other.showLegend, showLegend) || other.showLegend == showLegend)&&(identical(other.showingLpgmIntensity, showingLpgmIntensity) || other.showingLpgmIntensity == showingLpgmIntensity)&&(identical(other.showStation, showStation) || other.showStation == showStation)&&(identical(other.zoomThresholds, zoomThresholds) || other.zoomThresholds == zoomThresholds));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,fillMode,stationDisplayMode,hypocenterDisplayMode,showHypocenterError,showStationLabel,useEstimatedIntensityWhenAvailable,showLegend,showingLpgmIntensity,showStation,zoomThresholds);
-
-@override
-String toString() {
-  return 'EarthquakeHistoryDetailConfig(fillMode: $fillMode, stationDisplayMode: $stationDisplayMode, hypocenterDisplayMode: $hypocenterDisplayMode, showHypocenterError: $showHypocenterError, showStationLabel: $showStationLabel, useEstimatedIntensityWhenAvailable: $useEstimatedIntensityWhenAvailable, showLegend: $showLegend, showingLpgmIntensity: $showingLpgmIntensity, showStation: $showStation, zoomThresholds: $zoomThresholds)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$EarthquakeHistoryDetailConfigCopyWith<$Res> implements $EarthquakeHistoryDetailConfigCopyWith<$Res> {
-  factory _$EarthquakeHistoryDetailConfigCopyWith(_EarthquakeHistoryDetailConfig value, $Res Function(_EarthquakeHistoryDetailConfig) _then) = __$EarthquakeHistoryDetailConfigCopyWithImpl;
-@override @useResult
-$Res call({
-@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) EarthquakeHistoryFillMode fillMode, StationDisplayMode stationDisplayMode, HypocenterDisplayMode hypocenterDisplayMode, bool showHypocenterError, bool showStationLabel, bool useEstimatedIntensityWhenAvailable, bool showLegend, bool showingLpgmIntensity, bool showStation, EarthquakeHistoryMapLayerZoomThresholds zoomThresholds
-});
-
-
-@override $EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res> get zoomThresholds;
-
-}
-/// @nodoc
-class __$EarthquakeHistoryDetailConfigCopyWithImpl<$Res>
-    implements _$EarthquakeHistoryDetailConfigCopyWith<$Res> {
-  __$EarthquakeHistoryDetailConfigCopyWithImpl(this._self, this._then);
-
-  final _EarthquakeHistoryDetailConfig _self;
-  final $Res Function(_EarthquakeHistoryDetailConfig) _then;
-
-/// Create a copy of EarthquakeHistoryDetailConfig
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? fillMode = null,Object? stationDisplayMode = null,Object? hypocenterDisplayMode = null,Object? showHypocenterError = null,Object? showStationLabel = null,Object? useEstimatedIntensityWhenAvailable = null,Object? showLegend = null,Object? showingLpgmIntensity = null,Object? showStation = null,Object? zoomThresholds = null,}) {
-  return _then(_EarthquakeHistoryDetailConfig(
-fillMode: null == fillMode ? _self.fillMode : fillMode // ignore: cast_nullable_to_non_nullable
-as EarthquakeHistoryFillMode,stationDisplayMode: null == stationDisplayMode ? _self.stationDisplayMode : stationDisplayMode // ignore: cast_nullable_to_non_nullable
-as StationDisplayMode,hypocenterDisplayMode: null == hypocenterDisplayMode ? _self.hypocenterDisplayMode : hypocenterDisplayMode // ignore: cast_nullable_to_non_nullable
-as HypocenterDisplayMode,showHypocenterError: null == showHypocenterError ? _self.showHypocenterError : showHypocenterError // ignore: cast_nullable_to_non_nullable
-as bool,showStationLabel: null == showStationLabel ? _self.showStationLabel : showStationLabel // ignore: cast_nullable_to_non_nullable
-as bool,useEstimatedIntensityWhenAvailable: null == useEstimatedIntensityWhenAvailable ? _self.useEstimatedIntensityWhenAvailable : useEstimatedIntensityWhenAvailable // ignore: cast_nullable_to_non_nullable
-as bool,showLegend: null == showLegend ? _self.showLegend : showLegend // ignore: cast_nullable_to_non_nullable
-as bool,showingLpgmIntensity: null == showingLpgmIntensity ? _self.showingLpgmIntensity : showingLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as bool,showStation: null == showStation ? _self.showStation : showStation // ignore: cast_nullable_to_non_nullable
-as bool,zoomThresholds: null == zoomThresholds ? _self.zoomThresholds : zoomThresholds // ignore: cast_nullable_to_non_nullable
-as EarthquakeHistoryMapLayerZoomThresholds,
-  ));
-}
-
-/// Create a copy of EarthquakeHistoryDetailConfig
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res> get zoomThresholds {
-  
-  return $EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res>(_self.zoomThresholds, (value) {
-    return _then(_self.copyWith(zoomThresholds: value));
-  });
-}
 }
 
 // dart format on

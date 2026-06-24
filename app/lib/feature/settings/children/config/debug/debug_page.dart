@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.d
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
@@ -168,6 +169,16 @@ class _DebugWidget extends ConsumerWidget {
             leading: const Icon(Icons.history_edu_outlined),
             onTap: () async =>
                 const DebugEarthquakeHistoryCardRoute().push(context),
+          ),
+          ListTile(
+            title: const Text('地震履歴 レイヤーパラメータ'),
+            subtitle: Text(
+              'マップレイヤーのズーム閾値・透明度・サイズを調整',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            leading: const Icon(Icons.layers_outlined),
+            onTap: () async =>
+                EarthquakeHistoryDebugModal.show(context: context),
           ),
           ListTile(
             title: const Text('地震履歴 ListTile'),

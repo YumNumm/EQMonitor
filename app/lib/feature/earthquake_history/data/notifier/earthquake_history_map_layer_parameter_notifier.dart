@@ -3,52 +3,55 @@ import 'dart:convert';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'earthquake_history_config_notifier.g.dart';
+part 'earthquake_history_map_layer_parameter_notifier.g.dart';
 
-const _defaultEarthquakeHistoryConfig = EarthquakeHistoryConfig(
-  list: EarthquakeHistoryListConfig(),
-);
+const _defaultEarthquakeHistoryMapLayerParameter =
+    EarthquakeHistoryMapLayerParameter();
 
 @Riverpod(keepAlive: true)
-class EarthquakeHistoryConfigNotifier
-    extends _$EarthquakeHistoryConfigNotifier {
+class EarthquakeHistoryMapLayerParameterNotifier
+    extends _$EarthquakeHistoryMapLayerParameterNotifier {
   @override
-  Future<EarthquakeHistoryConfig> build() async {
+  Future<EarthquakeHistoryMapLayerParameter> build() async {
     final sharedPreferences = await ref.read(
       sharedPreferencesDataSourceProvider.future,
     );
     final jsonString = await sharedPreferences.getString(
-      key: SharedPreferencesKey.earthquakeHistoryConfig,
+      key: SharedPreferencesKey.earthquakeHistoryMapLayerParameter,
     );
     if (jsonString == null) {
-      return _defaultEarthquakeHistoryConfig;
+      return _defaultEarthquakeHistoryMapLayerParameter;
     }
     try {
-      return EarthquakeHistoryConfig.fromJson(
+      return EarthquakeHistoryMapLayerParameter.fromJson(
         jsonDecode(jsonString) as Map<String, dynamic>,
       );
       // ignore: avoid_catches_without_on_clauses
     } catch (exception, stackTrace) {
       talker.error(
-        'load earthquake history config failed: $exception',
+        'load earthquake history map layer parameter failed: $exception',
         exception,
         stackTrace,
       );
-      return _defaultEarthquakeHistoryConfig;
+      return _defaultEarthquakeHistoryMapLayerParameter;
     }
   }
 
-  Future<void> save(EarthquakeHistoryConfig value) async {
+  Future<void> save(EarthquakeHistoryMapLayerParameter value) async {
     state = AsyncValue.data(value);
     final sharedPreferences = await ref.read(
       sharedPreferencesDataSourceProvider.future,
     );
     await sharedPreferences.setString(
-      key: SharedPreferencesKey.earthquakeHistoryConfig,
+      key: SharedPreferencesKey.earthquakeHistoryMapLayerParameter,
       value: jsonEncode(value.toJson()),
     );
+  }
+
+  Future<void> reset() async {
+    await save(_defaultEarthquakeHistoryMapLayerParameter);
   }
 }
