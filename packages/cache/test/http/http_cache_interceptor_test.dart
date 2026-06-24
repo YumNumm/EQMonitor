@@ -65,9 +65,13 @@ void main() {
 
     adapter.onGet(
       path,
-      (server) => server.reply(304, '', headers: {
-        'etag': [eTag],
-      }),
+      (server) => server.reply(
+        304,
+        '',
+        headers: {
+          'etag': [eTag],
+        },
+      ),
     );
     final second = await dio.get<dynamic>(path);
     expect(jsonDecode(second.data as String), {'items': <dynamic>[]});
@@ -77,12 +81,20 @@ void main() {
     const path = '/v2/earthquake';
     adapter.onGet(
       path,
-      (server) => server.reply(200, jsonEncode({'v': 1}), headers: jsonHeaders('W/"v1"')),
+      (server) => server.reply(
+        200,
+        jsonEncode({'v': 1}),
+        headers: jsonHeaders('W/"v1"'),
+      ),
     );
     await dio.get<dynamic>(path);
     adapter.onGet(
       path,
-      (server) => server.reply(200, jsonEncode({'v': 2}), headers: jsonHeaders('W/"v2"')),
+      (server) => server.reply(
+        200,
+        jsonEncode({'v': 2}),
+        headers: jsonHeaders('W/"v2"'),
+      ),
     );
     final updated = await dio.get<dynamic>(path);
     expect((jsonDecode(updated.data as String) as Map)['v'], 2);
@@ -92,7 +104,11 @@ void main() {
     const path = '/v2/earthquake';
     adapter.onGet(
       path,
-      (server) => server.reply(200, jsonEncode({'gen': 1}), headers: jsonHeaders('W/"v1"')),
+      (server) => server.reply(
+        200,
+        jsonEncode({'gen': 1}),
+        headers: jsonHeaders('W/"v1"'),
+      ),
     );
     await dio.get<dynamic>(path);
 
@@ -109,7 +125,11 @@ void main() {
     final adapter2 = DioAdapter(dio: dio2);
     adapter2.onGet(
       path,
-      (server) => server.reply(200, jsonEncode({'gen': 2}), headers: jsonHeaders('W/"v2"')),
+      (server) => server.reply(
+        200,
+        jsonEncode({'gen': 2}),
+        headers: jsonHeaders('W/"v2"'),
+      ),
     );
     final res = await dio2.get<dynamic>(path);
     expect((jsonDecode(res.data as String) as Map)['gen'], 2);

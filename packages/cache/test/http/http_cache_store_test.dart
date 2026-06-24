@@ -46,7 +46,11 @@ void main() {
 
   test('evict は指定キーのみ削除', () async {
     final mem = MemCacheStore();
-    final sut = HttpCacheStore(store: mem, schemaVersion: 1, appBuild: '3.0.0+100');
+    final sut = HttpCacheStore(
+      store: mem,
+      schemaVersion: 1,
+      appBuild: '3.0.0+100',
+    );
     final key = sut.primaryKeyForUrl(options());
     await mem.set(responseFor(key));
     expect(await mem.exists(key), isTrue);
@@ -58,7 +62,11 @@ void main() {
 
   test('clearAll は全削除', () async {
     final mem = MemCacheStore();
-    final sut = HttpCacheStore(store: mem, schemaVersion: 1, appBuild: '3.0.0+100');
+    final sut = HttpCacheStore(
+      store: mem,
+      schemaVersion: 1,
+      appBuild: '3.0.0+100',
+    );
     await mem.set(responseFor('k1'));
     await mem.set(responseFor('k2'));
 
