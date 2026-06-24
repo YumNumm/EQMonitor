@@ -177,7 +177,7 @@ checksum = "sha256:ff880b6f1d5f38053de34bfd73991932529b936b8b1b7541368dda371b16f
 url = "https://github.com/firebase/firebase-tools/releases/download/v15.19.0/firebase-tools-win.exe"
 
 [[tools.flutter]]
-version = "3.44.2-stable"
+version = "3.44.3-stable"
 backend = "asdf:flutter"
 
 [[tools.gcloud]]
