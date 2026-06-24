@@ -401,6 +401,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.9.2"
+  dio_cache_interceptor:
+    dependency: transitive
+    description:
+      name: dio_cache_interceptor
+      sha256: "3644ce3e0c9ba21885cbb0578b3d2ffe022c8badc6f6f4042cb56ecdbe90a7ad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.6"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -1135,6 +1143,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.0"
+  http_cache_core:
+    dependency: transitive
+    description:
+      name: http_cache_core
+      sha256: ff0b6e6c3766d774d59b806f928b39e6a48f7b2c47ae1fe27410bfd792bee511
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.3"
+  http_cache_drift_store:
+    dependency: transitive
+    description:
+      name: http_cache_drift_store
+      sha256: "369497975bb21b62410da601907e94bdf748bf9d0f189e14449ebf0592748ddb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   http_mock_adapter:
     dependency: transitive
     description:
