@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -15,7 +15,6 @@ abstract class JmaCodeTableItem with _$JmaCodeTableItem {
     required String code,
     required LocalizedName name,
   }) = _JmaCodeTableItem;
-
-  factory JmaCodeTableItem.fromJson(Map<String, Object?> json) =>
-      _$JmaCodeTableItemFromJson(json);
+  
+  factory JmaCodeTableItem.fromJson(Map<String, Object?> json) => _$JmaCodeTableItemFromJson(json);
 }

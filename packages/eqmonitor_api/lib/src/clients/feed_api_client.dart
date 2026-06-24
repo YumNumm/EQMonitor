@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -31,10 +31,11 @@ abstract class FeedApiClient {
   });
 }
 
-abstract class FeedApiClientUrls {
-  /// /v2/feeds
-  static const getV2Feeds = "/v2/feeds";
 
-  /// /v2/feeds/admin
-  static const postV2FeedsAdmin = "/v2/feeds/admin";
+abstract class FeedApiClientUrls {
+	/// /v2/feeds
+	static const getV2Feeds = "/v2/feeds";
+	/// /v2/feeds/admin
+	static const postV2FeedsAdmin = "/v2/feeds/admin";
 }
+

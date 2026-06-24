@@ -64,6 +64,7 @@ dependencies:
   device_info_plus: ^12.1.0
   dio: ^5.8.0+1
   dio_cache_interceptor: ^4.0.6
+  drift: ^2.22.0
   dynamic_color: ^1.7.0
   earthquake_replay:
     path: ../packages/earthquake_replay
@@ -138,6 +139,7 @@ dependencies:
   objective_c: ^9.2.2
   package_info_plus: ^9.0.0
   paging_view: ^2.8.1
+  path: ^1.9.0
   path_provider: ^2.1.5
   purchases_flutter: ^10.0.1
   riverpod: ^3.2.1
@@ -154,9 +156,12 @@ dependencies:
       path: sheet
   skeletonizer: ^2.1.3
   soft_edge_blur: ^0.1.3
+  sqlite3_flutter_libs: ^0.5.28
   synchronized: ^3.3.0
   talker_dio_logger: ^5.0.0
   talker_flutter: ^5.0.0
+  telemetry_store:
+    path: ../packages/telemetry_store
   theme_tailor_annotation: ^3.1.3
   timezone: ^0.11.0
   two_dimensional_scrollables: ^0.5.2

@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -10,19 +10,18 @@ part 'intensity_prefecture_search_response.freezed.dart';
 part 'intensity_prefecture_search_response.g.dart';
 
 @Freezed()
-abstract class IntensityPrefectureSearchResponse
-    with _$IntensityPrefectureSearchResponse {
+abstract class IntensityPrefectureSearchResponse with _$IntensityPrefectureSearchResponse {
   const factory IntensityPrefectureSearchResponse({
     required List<IntensityPrefectureSearchItem> items,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,
+    @JsonKey(includeIfNull: false,name: 'next_token')
+    String? nextToken,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling,
+    @JsonKey(includeIfNull: false,name: 'next_pooling')
+    String? nextPooling,
   }) = _IntensityPrefectureSearchResponse;
-
-  factory IntensityPrefectureSearchResponse.fromJson(
-    Map<String, Object?> json,
-  ) => _$IntensityPrefectureSearchResponseFromJson(json);
+  
+  factory IntensityPrefectureSearchResponse.fromJson(Map<String, Object?> json) => _$IntensityPrefectureSearchResponseFromJson(json);
 }

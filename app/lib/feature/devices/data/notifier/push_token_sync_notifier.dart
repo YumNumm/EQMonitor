@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -12,9 +13,12 @@ import 'package:eqmonitor/feature/devices/data/provider/notification_token_strea
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:telemetry_store/telemetry_store.dart';
 
 part 'push_token_sync_notifier.g.dart';
 
@@ -93,6 +97,14 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
             await handleAuthenticationFailure();
           }
           results[kind] = FailedTokenState(error: e);
+          unawaited(
+            ref.read(telemetryRecorderProvider).record(
+              TelemetryEvent.error(
+                errorType: 'push_token_sync_failed',
+                message: '${kind.name}: $e',
+              ),
+            ).then((_) => ref.read(telemetryUploaderProvider).flush()),
+          );
           lastError = e;
         } on DioException catch (e, st) {
           final mapped = mapDioToProvisioningException(e, st);
@@ -101,6 +113,14 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
             await handleAuthenticationFailure();
           }
           results[kind] = FailedTokenState(error: mapped);
+          unawaited(
+            ref.read(telemetryRecorderProvider).record(
+              TelemetryEvent.error(
+                errorType: 'push_token_sync_failed',
+                message: '${kind.name}: $e',
+              ),
+            ).then((_) => ref.read(telemetryUploaderProvider).flush()),
+          );
           lastError = mapped;
         } on Object catch (e, st) {
           final mapped = UnexpectedProvisioningException(
@@ -108,6 +128,14 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
             stackTrace: st,
           );
           results[kind] = FailedTokenState(error: mapped);
+          unawaited(
+            ref.read(telemetryRecorderProvider).record(
+              TelemetryEvent.error(
+                errorType: 'push_token_sync_failed',
+                message: '${kind.name}: $e',
+              ),
+            ).then((_) => ref.read(telemetryUploaderProvider).flush()),
+          );
           lastError = mapped;
         }
       }

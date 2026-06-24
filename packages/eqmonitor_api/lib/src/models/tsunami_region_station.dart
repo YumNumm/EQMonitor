@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,10 +16,11 @@ abstract class TsunamiRegionStation with _$TsunamiRegionStation {
     /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
     required String code,
     required String name,
-    @JsonKey(includeIfNull: false) TsunamiStationForecast? forecast,
-    @JsonKey(includeIfNull: false) TsunamiStationObservation? observation,
+    @JsonKey(includeIfNull: false)
+    TsunamiStationForecast? forecast,
+    @JsonKey(includeIfNull: false)
+    TsunamiStationObservation? observation,
   }) = _TsunamiRegionStation;
-
-  factory TsunamiRegionStation.fromJson(Map<String, Object?> json) =>
-      _$TsunamiRegionStationFromJson(json);
+  
+  factory TsunamiRegionStation.fromJson(Map<String, Object?> json) => _$TsunamiRegionStationFromJson(json);
 }

@@ -50,4 +50,4 @@ final class FirebaseMessagingInteractionProvider
 }
 
 String _$firebaseMessagingInteractionHash() =>
-    r'51d01acd3aeffbeb731537057efbc3e2e2f6af6a';
+    r'2b7d073a58cae205ecb67ff83b8c64be3ff670d7';

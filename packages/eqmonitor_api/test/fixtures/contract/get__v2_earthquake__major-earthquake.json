@@ -6,8 +6,10 @@
       "origin_time": "2023-11-14T21:43:20.000Z",
       "origin_time_precision": "SECOND",
       "hypocenter": {
-        "code": "531",
-        "name": "石川県能登地方",
+        "value": {
+          "code": "531",
+          "name": "石川県能登地方"
+        },
         "coordinates": {
           "latitude": 37.5,
           "longitude": 137.2

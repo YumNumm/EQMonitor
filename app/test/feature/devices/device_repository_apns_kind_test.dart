@@ -24,8 +24,8 @@ void main() {
     );
 
     expect(adapter.requests.map((request) => request.path), [
-      '/v2/device/me/apns/notification',
-      '/v2/device/me/apns/liveActivityStart',
+      '/v2/device/me/apns/NOTIFICATION',
+      '/v2/device/me/apns/LIVE_ACTIVITY_START',
     ]);
     expect(adapter.requests.map((request) => request.data), [
       {'token': 'apns-token'},

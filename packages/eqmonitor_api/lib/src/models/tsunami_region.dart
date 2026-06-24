@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -19,12 +19,14 @@ abstract class TsunamiRegion with _$TsunamiRegion {
     required String code,
     required String name,
     required TsunamiWarningKind kind,
-    @JsonKey(name: 'last_kind') required TsunamiWarningKind lastKind,
+    @JsonKey(name: 'last_kind')
+    required TsunamiWarningKind lastKind,
     required List<TsunamiRegionStation> stations,
-    @JsonKey(includeIfNull: false) TsunamiRegionForecast? forecast,
-    @JsonKey(includeIfNull: false) TsunamiRegionEstimation? estimation,
+    @JsonKey(includeIfNull: false)
+    TsunamiRegionForecast? forecast,
+    @JsonKey(includeIfNull: false)
+    TsunamiRegionEstimation? estimation,
   }) = _TsunamiRegion;
-
-  factory TsunamiRegion.fromJson(Map<String, Object?> json) =>
-      _$TsunamiRegionFromJson(json);
+  
+  factory TsunamiRegion.fromJson(Map<String, Object?> json) => _$TsunamiRegionFromJson(json);
 }

@@ -525,6 +525,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugIntensityIconRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'telemetry',
+          factory: $DebugTelemetryRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'tsunami-details',
           factory: $DebugTsunamiDetailsRoute._fromState,
           routes: [
@@ -1330,6 +1334,27 @@ mixin $DebugIntensityIconRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugTelemetryRoute on GoRouteData {
+  static DebugTelemetryRoute _fromState(GoRouterState state) =>
+      const DebugTelemetryRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/telemetry');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $DebugTsunamiDetailsRoute on GoRouteData {
   static DebugTsunamiDetailsRoute _fromState(GoRouterState state) =>
       const DebugTsunamiDetailsRoute();
@@ -1748,4 +1773,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'c5a60a0d87ce3a7099b964685b68b39070833dbf';
+String _$goRouterHash() => r'7fc3f4fa6d8fc76fae1d6c3a8aeec6ff27d2bfbf';

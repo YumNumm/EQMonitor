@@ -13,8 +13,10 @@
   "origin_time": "2023-11-14T22:03:20.000Z",
   "arrival_time": null,
   "hypocenter": {
-    "code": "531",
-    "name": "石川県能登地方",
+    "value": {
+      "code": "531",
+      "name": "石川県能登地方"
+    },
     "coordinates": {
       "latitude": 37.5,
       "longitude": 137.2
@@ -29,8 +31,10 @@
     },
     "regions": [
       {
-        "code": "5310",
-        "name": "能登",
+        "value": {
+          "code": "5310",
+          "name": "能登"
+        },
         "is_plum": false,
         "is_warning": true,
         "intensity": {
@@ -42,8 +46,10 @@
         }
       },
       {
-        "code": "5320",
-        "name": "加賀",
+        "value": {
+          "code": "5320",
+          "name": "加賀"
+        },
         "is_plum": false,
         "is_warning": true,
         "intensity": {
@@ -56,8 +62,10 @@
         }
       },
       {
-        "code": "5110",
-        "name": "富山",
+        "value": {
+          "code": "5110",
+          "name": "富山"
+        },
         "is_plum": false,
         "is_warning": false,
         "intensity": {
@@ -70,8 +78,10 @@
         }
       },
       {
-        "code": "5210",
-        "name": "福井",
+        "value": {
+          "code": "5210",
+          "name": "福井"
+        },
         "is_plum": false,
         "is_warning": false,
         "intensity": {
@@ -96,37 +106,49 @@
   "warning": {
     "zones": [
       {
-        "code": "1",
-        "name": "北陸",
+        "value": {
+          "code": "1",
+          "name": "北陸"
+        },
         "had_warning": false
       }
     ],
     "prefectures": [
       {
-        "code": "17",
-        "name": "石川県",
+        "value": {
+          "code": "17",
+          "name": "石川県"
+        },
         "had_warning": false
       },
       {
-        "code": "16",
-        "name": "富山県",
+        "value": {
+          "code": "16",
+          "name": "富山県"
+        },
         "had_warning": false
       },
       {
-        "code": "18",
-        "name": "福井県",
+        "value": {
+          "code": "18",
+          "name": "福井県"
+        },
         "had_warning": false
       }
     ],
     "regions": [
       {
-        "code": "5310",
-        "name": "能登",
+        "value": {
+          "code": "5310",
+          "name": "能登"
+        },
         "had_warning": false
       },
       {
-        "code": "5320",
-        "name": "加賀",
+        "value": {
+          "code": "5320",
+          "name": "加賀"
+        },
         "had_warning": false
       }
     ]

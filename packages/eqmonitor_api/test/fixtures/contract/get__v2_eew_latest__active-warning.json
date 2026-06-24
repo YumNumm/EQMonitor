@@ -15,8 +15,10 @@
       "origin_time": "2023-11-14T22:11:20.000Z",
       "arrival_time": null,
       "hypocenter": {
-        "code": "531",
-        "name": "石川県能登地方",
+        "value": {
+          "code": "531",
+          "name": "石川県能登地方"
+        },
         "coordinates": {
           "latitude": 37.5,
           "longitude": 137.2
@@ -31,8 +33,10 @@
         },
         "regions": [
           {
-            "code": "5310",
-            "name": "能登",
+            "value": {
+              "code": "5310",
+              "name": "能登"
+            },
             "is_plum": false,
             "is_warning": true,
             "intensity": {
@@ -44,8 +48,10 @@
             }
           },
           {
-            "code": "5320",
-            "name": "加賀",
+            "value": {
+              "code": "5320",
+              "name": "加賀"
+            },
             "is_plum": false,
             "is_warning": true,
             "intensity": {
@@ -58,8 +64,10 @@
             }
           },
           {
-            "code": "5110",
-            "name": "富山",
+            "value": {
+              "code": "5110",
+              "name": "富山"
+            },
             "is_plum": false,
             "is_warning": false,
             "intensity": {
@@ -72,8 +80,10 @@
             }
           },
           {
-            "code": "5210",
-            "name": "福井",
+            "value": {
+              "code": "5210",
+              "name": "福井"
+            },
             "is_plum": false,
             "is_warning": false,
             "intensity": {

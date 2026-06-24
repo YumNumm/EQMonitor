@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -17,11 +17,11 @@ abstract class TsunamiStationObservation with _$TsunamiStationObservation {
     required TsunamiStationObservationFirstHeight firstHeight,
 
     /// 特殊な観測機器の場合に出現
-    @JsonKey(includeIfNull: false) String? sensor,
-    @JsonKey(includeIfNull: false, name: 'max_height')
+    @JsonKey(includeIfNull: false)
+    String? sensor,
+    @JsonKey(includeIfNull: false,name: 'max_height')
     TsunamiStationObservationMaxHeight? maxHeight,
   }) = _TsunamiStationObservation;
-
-  factory TsunamiStationObservation.fromJson(Map<String, Object?> json) =>
-      _$TsunamiStationObservationFromJson(json);
+  
+  factory TsunamiStationObservation.fromJson(Map<String, Object?> json) => _$TsunamiStationObservationFromJson(json);
 }

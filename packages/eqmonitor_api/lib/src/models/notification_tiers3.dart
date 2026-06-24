@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -19,7 +19,6 @@ abstract class NotificationTiers3 with _$NotificationTiers3 {
     @JsonKey(name: 'interruption_level')
     required InterruptionLevel interruptionLevel,
   }) = _NotificationTiers3;
-
-  factory NotificationTiers3.fromJson(Map<String, Object?> json) =>
-      _$NotificationTiers3FromJson(json);
+  
+  factory NotificationTiers3.fromJson(Map<String, Object?> json) => _$NotificationTiers3FromJson(json);
 }

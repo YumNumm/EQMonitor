@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -14,7 +14,6 @@ abstract class RealtimeTicketResponse with _$RealtimeTicketResponse {
     required DateTime expiresAt,
     required DateTime issuedAt,
   }) = _RealtimeTicketResponse;
-
-  factory RealtimeTicketResponse.fromJson(Map<String, Object?> json) =>
-      _$RealtimeTicketResponseFromJson(json);
+  
+  factory RealtimeTicketResponse.fromJson(Map<String, Object?> json) => _$RealtimeTicketResponseFromJson(json);
 }

@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -14,8 +14,9 @@ part 'app.g.dart';
 abstract class App with _$App {
   const factory App({
     required Version version,
-    @JsonKey(name: 'store_url') required StoreUrl storeUrl,
+    @JsonKey(name: 'store_url')
+    required StoreUrl storeUrl,
   }) = _App;
-
+  
   factory App.fromJson(Map<String, Object?> json) => _$AppFromJson(json);
 }

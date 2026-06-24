@@ -2,4 +2,21 @@ include: package:eqmonitor_lints/analysis_options.yaml
 
 analyzer:
   exclude:
-    - "**/*"
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+  errors:
+    # 生成コードで重要なルールだけ error にし、その他は抑制する
+    avoid_annotating_with_dynamic: error
+    # 以下は swagger_parser 生成コードで不可避なため抑制
+    unnecessary_ignore: ignore
+    always_use_package_imports: ignore
+    directives_ordering: ignore
+    prefer_single_quotes: ignore
+    use_raw_strings: ignore
+    unnecessary_cast: ignore
+    unintended_html_in_doc_comment: ignore
+    avoid_unused_constructor_parameters: ignore
+
+linter:
+  rules:
+    avoid_annotating_with_dynamic: true

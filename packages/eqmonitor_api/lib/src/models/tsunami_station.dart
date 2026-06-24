@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -15,11 +15,11 @@ abstract class TsunamiStation with _$TsunamiStation {
   const factory TsunamiStation({
     required String code,
     required LocalizedName name,
-    @JsonKey(includeIfNull: true) required String? kana,
+    @JsonKey(includeIfNull: true)
+    required String? kana,
     required String owner,
     required ParameterLocation location,
   }) = _TsunamiStation;
-
-  factory TsunamiStation.fromJson(Map<String, Object?> json) =>
-      _$TsunamiStationFromJson(json);
+  
+  factory TsunamiStation.fromJson(Map<String, Object?> json) => _$TsunamiStationFromJson(json);
 }

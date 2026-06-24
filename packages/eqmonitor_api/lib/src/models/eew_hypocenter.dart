@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -17,14 +17,17 @@ abstract class EewHypocenter with _$EewHypocenter {
     /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
     required String code,
     required String name,
-    @JsonKey(includeIfNull: true) required num? magnitude,
+    @JsonKey(includeIfNull: true)
+    required num? magnitude,
 
     /// 震源の深さ `0`: `ごく浅い`, `700`: `700km以上`, `null`: `不明`
-    @JsonKey(includeIfNull: true) required int? depth,
-    @JsonKey(includeIfNull: false) CodeName? detailed,
-    @JsonKey(includeIfNull: false) Coordinate? coordinates,
+    @JsonKey(includeIfNull: true)
+    required int? depth,
+    @JsonKey(includeIfNull: false)
+    CodeName? detailed,
+    @JsonKey(includeIfNull: false)
+    Coordinate? coordinates,
   }) = _EewHypocenter;
-
-  factory EewHypocenter.fromJson(Map<String, Object?> json) =>
-      _$EewHypocenterFromJson(json);
+  
+  factory EewHypocenter.fromJson(Map<String, Object?> json) => _$EewHypocenterFromJson(json);
 }

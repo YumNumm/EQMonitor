@@ -48,6 +48,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navi
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/telemetry/debug_telemetry_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_tsunami_details_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/tsunami_telegram_timeline_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
@@ -65,6 +66,9 @@ import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_pag
 import 'package:eqmonitor/feature/subscription/ui/page/paywall_page.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/subscription_settings_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
+import 'package:eqmonitor/feature/telemetry/telemetry_navigator_observer.dart';
 import 'package:eqmonitor/feature/tsunami/ui/tsunami_details_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/splash_page.dart';
@@ -106,6 +110,10 @@ GoRouter goRouter(Ref ref) => GoRouter(
   observers: [
     _NavigatorObserver(talker),
     FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+    TelemetryNavigatorObserver(
+      recorder: ref.read(telemetryRecorderProvider),
+      uploader: ref.read(telemetryUploaderProvider),
+    ),
   ],
   debugLogDiagnostics: kDebugMode,
 );
@@ -333,6 +341,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
         TypedGoRoute<DebugLiveActivityTestRoute>(path: 'live-activity-test'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
+        TypedGoRoute<DebugTelemetryRoute>(path: 'telemetry'),
         TypedGoRoute<DebugTsunamiDetailsRoute>(
           path: 'tsunami-details',
           routes: [
@@ -678,6 +687,15 @@ class DebugIntensityIconRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const IntensityIconDebugPage();
+  }
+}
+
+class DebugTelemetryRoute extends GoRouteData with $DebugTelemetryRoute {
+  const DebugTelemetryRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugTelemetryPage();
   }
 }
 

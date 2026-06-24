@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,9 +16,9 @@ abstract class IntensityTree with _$IntensityTree {
   const factory IntensityTree({
     required JmaIntensity intensity,
     required List<IntensityTreeRegionId> regions,
-    @JsonKey(includeIfNull: false) List<IntensityTreeStationId>? stations,
+    @JsonKey(includeIfNull: false)
+    List<IntensityTreeStationId>? stations,
   }) = _IntensityTree;
-
-  factory IntensityTree.fromJson(Map<String, Object?> json) =>
-      _$IntensityTreeFromJson(json);
+  
+  factory IntensityTree.fromJson(Map<String, Object?> json) => _$IntensityTreeFromJson(json);
 }

@@ -5,8 +5,10 @@
     "origin_time": "2023-11-14T22:08:20.000Z",
     "origin_time_precision": "SECOND",
     "hypocenter": {
-      "code": "311",
-      "name": "茨城県北部",
+      "value": {
+        "code": "311",
+        "name": "茨城県北部"
+      },
       "coordinates": {
         "latitude": 36.7,
         "longitude": 140.7
@@ -71,8 +73,8 @@
           "publishing_office": [
             "気象庁"
           ],
-          "pressed_at": "2025-12-15T12:01:00.000Z",
-          "reported_at": "2025-12-15T12:01:02.000Z",
+          "press_at": "2025-12-15T12:01:00.000Z",
+          "report_at": "2025-12-15T12:01:02.000Z",
           "info_kind": "震度速報",
           "info_kind_version": "1.0_0",
           "hash": "stub-hash-vxse51",
@@ -93,8 +95,8 @@
           "publishing_office": [
             "気象庁"
           ],
-          "pressed_at": "2025-12-15T12:03:00.000Z",
-          "reported_at": "2025-12-15T12:03:02.000Z",
+          "press_at": "2025-12-15T12:03:00.000Z",
+          "report_at": "2025-12-15T12:03:02.000Z",
           "info_kind": "震源・震度に関する情報",
           "info_kind_version": "1.0_0",
           "hash": "stub-hash-vxse53",

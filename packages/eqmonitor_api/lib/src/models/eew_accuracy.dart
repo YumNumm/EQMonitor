@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -20,13 +20,13 @@ abstract class EewAccuracy with _$EewAccuracy {
     required num depth,
 
     /// マグニチュードの精度値
-    @JsonKey(name: 'magnitude_calculation') required num magnitudeCalculation,
+    @JsonKey(name: 'magnitude_calculation')
+    required num magnitudeCalculation,
 
     /// マグニチュード計算使用観測点数
     @JsonKey(name: 'number_of_magnitude_calculation')
     required num numberOfMagnitudeCalculation,
   }) = _EewAccuracy;
-
-  factory EewAccuracy.fromJson(Map<String, Object?> json) =>
-      _$EewAccuracyFromJson(json);
+  
+  factory EewAccuracy.fromJson(Map<String, Object?> json) => _$EewAccuracyFromJson(json);
 }

@@ -71,7 +71,6 @@ EarthquakeParameter _buildParameter() {
       schemaVersion: 1,
       sourceVersion: '1.0',
       sourceUpdatedAt: null,
-      generatedAt: '2024-01-01T00:00:00Z',
       sourceUrls: [],
       sha256: '',
     ),

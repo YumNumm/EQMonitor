@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -42,22 +42,19 @@ abstract class UserApiClient {
   });
 }
 
+
 abstract class UserApiClientUrls {
-  /// /v2/user/me
-  static const getV2UserMe = "/v2/user/me";
-
-  /// /v2/user/me
-  static const patchV2UserMe = "/v2/user/me";
-
-  /// /v2/user/me
-  static const deleteV2UserMe = "/v2/user/me";
-
-  /// /v2/user/me/devices
-  static const getV2UserMeDevices = "/v2/user/me/devices";
-
-  /// /v2/user/me/sessions
-  static const getV2UserMeSessions = "/v2/user/me/sessions";
-
-  /// /v2/user/me/sessions/{token}
-  static const deleteV2UserMeSessionsToken = "/v2/user/me/sessions/{token}";
+	/// /v2/user/me
+	static const getV2UserMe = "/v2/user/me";
+	/// /v2/user/me
+	static const patchV2UserMe = "/v2/user/me";
+	/// /v2/user/me
+	static const deleteV2UserMe = "/v2/user/me";
+	/// /v2/user/me/devices
+	static const getV2UserMeDevices = "/v2/user/me/devices";
+	/// /v2/user/me/sessions
+	static const getV2UserMeSessions = "/v2/user/me/sessions";
+	/// /v2/user/me/sessions/{token}
+	static const deleteV2UserMeSessionsToken = "/v2/user/me/sessions/{token}";
 }
+

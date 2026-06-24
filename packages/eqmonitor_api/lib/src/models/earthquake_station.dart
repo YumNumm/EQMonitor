@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -15,15 +15,17 @@ part 'earthquake_station.g.dart';
 abstract class EarthquakeStation with _$EarthquakeStation {
   const factory EarthquakeStation({
     required String code,
-    @JsonKey(name: 'no_code') required String noCode,
+    @JsonKey(name: 'no_code')
+    required String noCode,
     required LocalizedName name,
-    @JsonKey(includeIfNull: true) required String? kana,
+    @JsonKey(includeIfNull: true)
+    required String? kana,
     required EarthquakeStationStatus status,
-    @JsonKey(name: 'source_status') required String sourceStatus,
+    @JsonKey(name: 'source_status')
+    required String sourceStatus,
     required String owner,
     required ParameterLocation location,
   }) = _EarthquakeStation;
-
-  factory EarthquakeStation.fromJson(Map<String, Object?> json) =>
-      _$EarthquakeStationFromJson(json);
+  
+  factory EarthquakeStation.fromJson(Map<String, Object?> json) => _$EarthquakeStationFromJson(json);
 }

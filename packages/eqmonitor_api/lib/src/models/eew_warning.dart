@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,7 +16,6 @@ abstract class EewWarning with _$EewWarning {
     required List<EewWarningZoneItem> prefectures,
     required List<EewWarningZoneItem> regions,
   }) = _EewWarning;
-
-  factory EewWarning.fromJson(Map<String, Object?> json) =>
-      _$EewWarningFromJson(json);
+  
+  factory EewWarning.fromJson(Map<String, Object?> json) => _$EewWarningFromJson(json);
 }

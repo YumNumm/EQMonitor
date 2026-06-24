@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -11,8 +11,7 @@ part 'jma_code_table_parameter_code_tables.freezed.dart';
 part 'jma_code_table_parameter_code_tables.g.dart';
 
 @Freezed()
-abstract class JmaCodeTableParameterCodeTables
-    with _$JmaCodeTableParameterCodeTables {
+abstract class JmaCodeTableParameterCodeTables with _$JmaCodeTableParameterCodeTables {
   const factory JmaCodeTableParameterCodeTables({
     @JsonKey(name: 'area_forecast_local_eew')
     required List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew,
@@ -25,7 +24,6 @@ abstract class JmaCodeTableParameterCodeTables
     @JsonKey(name: 'area_epicenter_detail')
     required List<JmaCodeTableItem> areaEpicenterDetail,
   }) = _JmaCodeTableParameterCodeTables;
-
-  factory JmaCodeTableParameterCodeTables.fromJson(Map<String, Object?> json) =>
-      _$JmaCodeTableParameterCodeTablesFromJson(json);
+  
+  factory JmaCodeTableParameterCodeTables.fromJson(Map<String, Object?> json) => _$JmaCodeTableParameterCodeTablesFromJson(json);
 }

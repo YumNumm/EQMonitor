@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -53,8 +53,7 @@ abstract class TsunamiApiClient {
 
   /// 津波情報の電文履歴（pressed_at 降順）
   @GET(TsunamiApiClientUrls.getV2TsunamiTsunamiIdTelegrams)
-  Future<HttpResponse<TsunamiTelegramsResponse>>
-  getV2TsunamiTsunamiIdTelegrams({
+  Future<HttpResponse<TsunamiTelegramsResponse>> getV2TsunamiTsunamiIdTelegrams({
     @Path('tsunamiId') required String tsunamiId,
   });
 
@@ -65,18 +64,15 @@ abstract class TsunamiApiClient {
   });
 }
 
+
 abstract class TsunamiApiClientUrls {
-  /// /v2/tsunami
-  static const getV2Tsunami = "/v2/tsunami";
-
-  /// /v2/tsunami/by-event-id/{eventId}
-  static const getV2TsunamiByEventIdEventId =
-      "/v2/tsunami/by-event-id/{eventId}";
-
-  /// /v2/tsunami/{tsunamiId}/telegrams
-  static const getV2TsunamiTsunamiIdTelegrams =
-      "/v2/tsunami/{tsunamiId}/telegrams";
-
-  /// /v2/tsunami/{tsunamiId}
-  static const getV2TsunamiTsunamiId = "/v2/tsunami/{tsunamiId}";
+	/// /v2/tsunami
+	static const getV2Tsunami = "/v2/tsunami";
+	/// /v2/tsunami/by-event-id/{eventId}
+	static const getV2TsunamiByEventIdEventId = "/v2/tsunami/by-event-id/{eventId}";
+	/// /v2/tsunami/{tsunamiId}/telegrams
+	static const getV2TsunamiTsunamiIdTelegrams = "/v2/tsunami/{tsunamiId}/telegrams";
+	/// /v2/tsunami/{tsunamiId}
+	static const getV2TsunamiTsunamiId = "/v2/tsunami/{tsunamiId}";
 }
+

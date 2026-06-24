@@ -6,8 +6,10 @@
       "origin_time": "2023-11-14T22:11:20.000Z",
       "origin_time_precision": "SECOND",
       "hypocenter": {
-        "code": "401",
-        "name": "宮城県北部",
+        "value": {
+          "code": "401",
+          "name": "宮城県北部"
+        },
         "coordinates": {
           "latitude": 38.7,
           "longitude": 141
