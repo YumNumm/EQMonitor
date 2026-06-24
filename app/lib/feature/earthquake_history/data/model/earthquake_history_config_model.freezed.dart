@@ -602,7 +602,8 @@ mixin _$EarthquakeHistoryDetailConfig {
  bool get useEstimatedIntensityWhenAvailable;/// 震度凡例を表示するか
  bool get showLegend;/// 長周期地震動階級を表示しているか
  bool get showingLpgmIntensity;/// 観測点レイヤーを表示するか
- bool get showStation;
+ bool get showStation;/// 各レイヤーのズームレベル閾値
+ EarthquakeHistoryMapLayerZoomThresholds get zoomThresholds;
 /// Create a copy of EarthquakeHistoryDetailConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -615,16 +616,16 @@ $EarthquakeHistoryDetailConfigCopyWith<EarthquakeHistoryDetailConfig> get copyWi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryDetailConfig&&(identical(other.fillMode, fillMode) || other.fillMode == fillMode)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode)&&(identical(other.hypocenterDisplayMode, hypocenterDisplayMode) || other.hypocenterDisplayMode == hypocenterDisplayMode)&&(identical(other.showHypocenterError, showHypocenterError) || other.showHypocenterError == showHypocenterError)&&(identical(other.showStationLabel, showStationLabel) || other.showStationLabel == showStationLabel)&&(identical(other.useEstimatedIntensityWhenAvailable, useEstimatedIntensityWhenAvailable) || other.useEstimatedIntensityWhenAvailable == useEstimatedIntensityWhenAvailable)&&(identical(other.showLegend, showLegend) || other.showLegend == showLegend)&&(identical(other.showingLpgmIntensity, showingLpgmIntensity) || other.showingLpgmIntensity == showingLpgmIntensity)&&(identical(other.showStation, showStation) || other.showStation == showStation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryDetailConfig&&(identical(other.fillMode, fillMode) || other.fillMode == fillMode)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode)&&(identical(other.hypocenterDisplayMode, hypocenterDisplayMode) || other.hypocenterDisplayMode == hypocenterDisplayMode)&&(identical(other.showHypocenterError, showHypocenterError) || other.showHypocenterError == showHypocenterError)&&(identical(other.showStationLabel, showStationLabel) || other.showStationLabel == showStationLabel)&&(identical(other.useEstimatedIntensityWhenAvailable, useEstimatedIntensityWhenAvailable) || other.useEstimatedIntensityWhenAvailable == useEstimatedIntensityWhenAvailable)&&(identical(other.showLegend, showLegend) || other.showLegend == showLegend)&&(identical(other.showingLpgmIntensity, showingLpgmIntensity) || other.showingLpgmIntensity == showingLpgmIntensity)&&(identical(other.showStation, showStation) || other.showStation == showStation)&&(identical(other.zoomThresholds, zoomThresholds) || other.zoomThresholds == zoomThresholds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fillMode,stationDisplayMode,hypocenterDisplayMode,showHypocenterError,showStationLabel,useEstimatedIntensityWhenAvailable,showLegend,showingLpgmIntensity,showStation);
+int get hashCode => Object.hash(runtimeType,fillMode,stationDisplayMode,hypocenterDisplayMode,showHypocenterError,showStationLabel,useEstimatedIntensityWhenAvailable,showLegend,showingLpgmIntensity,showStation,zoomThresholds);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryDetailConfig(fillMode: $fillMode, stationDisplayMode: $stationDisplayMode, hypocenterDisplayMode: $hypocenterDisplayMode, showHypocenterError: $showHypocenterError, showStationLabel: $showStationLabel, useEstimatedIntensityWhenAvailable: $useEstimatedIntensityWhenAvailable, showLegend: $showLegend, showingLpgmIntensity: $showingLpgmIntensity, showStation: $showStation)';
+  return 'EarthquakeHistoryDetailConfig(fillMode: $fillMode, stationDisplayMode: $stationDisplayMode, hypocenterDisplayMode: $hypocenterDisplayMode, showHypocenterError: $showHypocenterError, showStationLabel: $showStationLabel, useEstimatedIntensityWhenAvailable: $useEstimatedIntensityWhenAvailable, showLegend: $showLegend, showingLpgmIntensity: $showingLpgmIntensity, showStation: $showStation, zoomThresholds: $zoomThresholds)';
 }
 
 
@@ -635,11 +636,11 @@ abstract mixin class $EarthquakeHistoryDetailConfigCopyWith<$Res>  {
   factory $EarthquakeHistoryDetailConfigCopyWith(EarthquakeHistoryDetailConfig value, $Res Function(EarthquakeHistoryDetailConfig) _then) = _$EarthquakeHistoryDetailConfigCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) EarthquakeHistoryFillMode fillMode, StationDisplayMode stationDisplayMode, HypocenterDisplayMode hypocenterDisplayMode, bool showHypocenterError, bool showStationLabel, bool useEstimatedIntensityWhenAvailable, bool showLegend, bool showingLpgmIntensity, bool showStation
+@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) EarthquakeHistoryFillMode fillMode, StationDisplayMode stationDisplayMode, HypocenterDisplayMode hypocenterDisplayMode, bool showHypocenterError, bool showStationLabel, bool useEstimatedIntensityWhenAvailable, bool showLegend, bool showingLpgmIntensity, bool showStation, EarthquakeHistoryMapLayerZoomThresholds zoomThresholds
 });
 
 
-
+$EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res> get zoomThresholds;
 
 }
 /// @nodoc
@@ -652,7 +653,7 @@ class _$EarthquakeHistoryDetailConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryDetailConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? fillMode = null,Object? stationDisplayMode = null,Object? hypocenterDisplayMode = null,Object? showHypocenterError = null,Object? showStationLabel = null,Object? useEstimatedIntensityWhenAvailable = null,Object? showLegend = null,Object? showingLpgmIntensity = null,Object? showStation = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? fillMode = null,Object? stationDisplayMode = null,Object? hypocenterDisplayMode = null,Object? showHypocenterError = null,Object? showStationLabel = null,Object? useEstimatedIntensityWhenAvailable = null,Object? showLegend = null,Object? showingLpgmIntensity = null,Object? showStation = null,Object? zoomThresholds = null,}) {
   return _then(_self.copyWith(
 fillMode: null == fillMode ? _self.fillMode : fillMode // ignore: cast_nullable_to_non_nullable
 as EarthquakeHistoryFillMode,stationDisplayMode: null == stationDisplayMode ? _self.stationDisplayMode : stationDisplayMode // ignore: cast_nullable_to_non_nullable
@@ -663,10 +664,20 @@ as bool,useEstimatedIntensityWhenAvailable: null == useEstimatedIntensityWhenAva
 as bool,showLegend: null == showLegend ? _self.showLegend : showLegend // ignore: cast_nullable_to_non_nullable
 as bool,showingLpgmIntensity: null == showingLpgmIntensity ? _self.showingLpgmIntensity : showingLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as bool,showStation: null == showStation ? _self.showStation : showStation // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,zoomThresholds: null == zoomThresholds ? _self.zoomThresholds : zoomThresholds // ignore: cast_nullable_to_non_nullable
+as EarthquakeHistoryMapLayerZoomThresholds,
   ));
 }
-
+/// Create a copy of EarthquakeHistoryDetailConfig
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res> get zoomThresholds {
+  
+  return $EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res>(_self.zoomThresholds, (value) {
+    return _then(_self.copyWith(zoomThresholds: value));
+  });
+}
 }
 
 
@@ -748,10 +759,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto)  EarthquakeHistoryFillMode fillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity,  bool showStation)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto)  EarthquakeHistoryFillMode fillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity,  bool showStation,  EarthquakeHistoryMapLayerZoomThresholds zoomThresholds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryDetailConfig() when $default != null:
-return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity,_that.showStation);case _:
+return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity,_that.showStation,_that.zoomThresholds);case _:
   return orElse();
 
 }
@@ -769,10 +780,10 @@ return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayM
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto)  EarthquakeHistoryFillMode fillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity,  bool showStation)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto)  EarthquakeHistoryFillMode fillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity,  bool showStation,  EarthquakeHistoryMapLayerZoomThresholds zoomThresholds)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryDetailConfig():
-return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity,_that.showStation);case _:
+return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity,_that.showStation,_that.zoomThresholds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -789,10 +800,10 @@ return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayM
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto)  EarthquakeHistoryFillMode fillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity,  bool showStation)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto)  EarthquakeHistoryFillMode fillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity,  bool showStation,  EarthquakeHistoryMapLayerZoomThresholds zoomThresholds)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryDetailConfig() when $default != null:
-return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity,_that.showStation);case _:
+return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity,_that.showStation,_that.zoomThresholds);case _:
   return null;
 
 }
@@ -804,7 +815,7 @@ return $default(_that.fillMode,_that.stationDisplayMode,_that.hypocenterDisplayM
 @JsonSerializable()
 
 class _EarthquakeHistoryDetailConfig implements EarthquakeHistoryDetailConfig {
-  const _EarthquakeHistoryDetailConfig({@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) this.fillMode = EarthquakeHistoryFillMode.auto, this.stationDisplayMode = StationDisplayMode.maxFocused, this.hypocenterDisplayMode = HypocenterDisplayMode.zoomFade, this.showHypocenterError = false, this.showStationLabel = false, this.useEstimatedIntensityWhenAvailable = true, this.showLegend = true, this.showingLpgmIntensity = false, this.showStation = true});
+  const _EarthquakeHistoryDetailConfig({@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) this.fillMode = EarthquakeHistoryFillMode.auto, this.stationDisplayMode = StationDisplayMode.maxFocused, this.hypocenterDisplayMode = HypocenterDisplayMode.zoomFade, this.showHypocenterError = false, this.showStationLabel = false, this.useEstimatedIntensityWhenAvailable = true, this.showLegend = true, this.showingLpgmIntensity = false, this.showStation = true, this.zoomThresholds = const EarthquakeHistoryMapLayerZoomThresholds()});
   factory _EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryDetailConfigFromJson(json);
 
 /// 塗りつぶしの表示モード
@@ -825,6 +836,8 @@ class _EarthquakeHistoryDetailConfig implements EarthquakeHistoryDetailConfig {
 @override@JsonKey() final  bool showingLpgmIntensity;
 /// 観測点レイヤーを表示するか
 @override@JsonKey() final  bool showStation;
+/// 各レイヤーのズームレベル閾値
+@override@JsonKey() final  EarthquakeHistoryMapLayerZoomThresholds zoomThresholds;
 
 /// Create a copy of EarthquakeHistoryDetailConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -839,16 +852,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryDetailConfig&&(identical(other.fillMode, fillMode) || other.fillMode == fillMode)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode)&&(identical(other.hypocenterDisplayMode, hypocenterDisplayMode) || other.hypocenterDisplayMode == hypocenterDisplayMode)&&(identical(other.showHypocenterError, showHypocenterError) || other.showHypocenterError == showHypocenterError)&&(identical(other.showStationLabel, showStationLabel) || other.showStationLabel == showStationLabel)&&(identical(other.useEstimatedIntensityWhenAvailable, useEstimatedIntensityWhenAvailable) || other.useEstimatedIntensityWhenAvailable == useEstimatedIntensityWhenAvailable)&&(identical(other.showLegend, showLegend) || other.showLegend == showLegend)&&(identical(other.showingLpgmIntensity, showingLpgmIntensity) || other.showingLpgmIntensity == showingLpgmIntensity)&&(identical(other.showStation, showStation) || other.showStation == showStation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryDetailConfig&&(identical(other.fillMode, fillMode) || other.fillMode == fillMode)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode)&&(identical(other.hypocenterDisplayMode, hypocenterDisplayMode) || other.hypocenterDisplayMode == hypocenterDisplayMode)&&(identical(other.showHypocenterError, showHypocenterError) || other.showHypocenterError == showHypocenterError)&&(identical(other.showStationLabel, showStationLabel) || other.showStationLabel == showStationLabel)&&(identical(other.useEstimatedIntensityWhenAvailable, useEstimatedIntensityWhenAvailable) || other.useEstimatedIntensityWhenAvailable == useEstimatedIntensityWhenAvailable)&&(identical(other.showLegend, showLegend) || other.showLegend == showLegend)&&(identical(other.showingLpgmIntensity, showingLpgmIntensity) || other.showingLpgmIntensity == showingLpgmIntensity)&&(identical(other.showStation, showStation) || other.showStation == showStation)&&(identical(other.zoomThresholds, zoomThresholds) || other.zoomThresholds == zoomThresholds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fillMode,stationDisplayMode,hypocenterDisplayMode,showHypocenterError,showStationLabel,useEstimatedIntensityWhenAvailable,showLegend,showingLpgmIntensity,showStation);
+int get hashCode => Object.hash(runtimeType,fillMode,stationDisplayMode,hypocenterDisplayMode,showHypocenterError,showStationLabel,useEstimatedIntensityWhenAvailable,showLegend,showingLpgmIntensity,showStation,zoomThresholds);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryDetailConfig(fillMode: $fillMode, stationDisplayMode: $stationDisplayMode, hypocenterDisplayMode: $hypocenterDisplayMode, showHypocenterError: $showHypocenterError, showStationLabel: $showStationLabel, useEstimatedIntensityWhenAvailable: $useEstimatedIntensityWhenAvailable, showLegend: $showLegend, showingLpgmIntensity: $showingLpgmIntensity, showStation: $showStation)';
+  return 'EarthquakeHistoryDetailConfig(fillMode: $fillMode, stationDisplayMode: $stationDisplayMode, hypocenterDisplayMode: $hypocenterDisplayMode, showHypocenterError: $showHypocenterError, showStationLabel: $showStationLabel, useEstimatedIntensityWhenAvailable: $useEstimatedIntensityWhenAvailable, showLegend: $showLegend, showingLpgmIntensity: $showingLpgmIntensity, showStation: $showStation, zoomThresholds: $zoomThresholds)';
 }
 
 
@@ -859,11 +872,11 @@ abstract mixin class _$EarthquakeHistoryDetailConfigCopyWith<$Res> implements $E
   factory _$EarthquakeHistoryDetailConfigCopyWith(_EarthquakeHistoryDetailConfig value, $Res Function(_EarthquakeHistoryDetailConfig) _then) = __$EarthquakeHistoryDetailConfigCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) EarthquakeHistoryFillMode fillMode, StationDisplayMode stationDisplayMode, HypocenterDisplayMode hypocenterDisplayMode, bool showHypocenterError, bool showStationLabel, bool useEstimatedIntensityWhenAvailable, bool showLegend, bool showingLpgmIntensity, bool showStation
+@JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto) EarthquakeHistoryFillMode fillMode, StationDisplayMode stationDisplayMode, HypocenterDisplayMode hypocenterDisplayMode, bool showHypocenterError, bool showStationLabel, bool useEstimatedIntensityWhenAvailable, bool showLegend, bool showingLpgmIntensity, bool showStation, EarthquakeHistoryMapLayerZoomThresholds zoomThresholds
 });
 
 
-
+@override $EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res> get zoomThresholds;
 
 }
 /// @nodoc
@@ -876,7 +889,7 @@ class __$EarthquakeHistoryDetailConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryDetailConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? fillMode = null,Object? stationDisplayMode = null,Object? hypocenterDisplayMode = null,Object? showHypocenterError = null,Object? showStationLabel = null,Object? useEstimatedIntensityWhenAvailable = null,Object? showLegend = null,Object? showingLpgmIntensity = null,Object? showStation = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? fillMode = null,Object? stationDisplayMode = null,Object? hypocenterDisplayMode = null,Object? showHypocenterError = null,Object? showStationLabel = null,Object? useEstimatedIntensityWhenAvailable = null,Object? showLegend = null,Object? showingLpgmIntensity = null,Object? showStation = null,Object? zoomThresholds = null,}) {
   return _then(_EarthquakeHistoryDetailConfig(
 fillMode: null == fillMode ? _self.fillMode : fillMode // ignore: cast_nullable_to_non_nullable
 as EarthquakeHistoryFillMode,stationDisplayMode: null == stationDisplayMode ? _self.stationDisplayMode : stationDisplayMode // ignore: cast_nullable_to_non_nullable
@@ -887,11 +900,21 @@ as bool,useEstimatedIntensityWhenAvailable: null == useEstimatedIntensityWhenAva
 as bool,showLegend: null == showLegend ? _self.showLegend : showLegend // ignore: cast_nullable_to_non_nullable
 as bool,showingLpgmIntensity: null == showingLpgmIntensity ? _self.showingLpgmIntensity : showingLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as bool,showStation: null == showStation ? _self.showStation : showStation // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,zoomThresholds: null == zoomThresholds ? _self.zoomThresholds : zoomThresholds // ignore: cast_nullable_to_non_nullable
+as EarthquakeHistoryMapLayerZoomThresholds,
   ));
 }
 
-
+/// Create a copy of EarthquakeHistoryDetailConfig
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res> get zoomThresholds {
+  
+  return $EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res>(_self.zoomThresholds, (value) {
+    return _then(_self.copyWith(zoomThresholds: value));
+  });
+}
 }
 
 // dart format on

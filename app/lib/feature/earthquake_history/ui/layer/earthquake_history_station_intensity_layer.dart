@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -83,6 +84,8 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               await styleController.addImages(cachedBytes);
             }
 
+            final zoomThresholds = config.zoomThresholds;
+
             if (disposed) {
               return;
             }
@@ -90,7 +93,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               CircleStyleLayer(
                 id: _circleLayerId,
                 sourceId: _sourceId,
-                minZoom: 8,
+                minZoom: zoomThresholds.stationMinZoom,
                 layout: const {
                   'circle-sort-key': ['get', 'sortKey'],
                 },
@@ -154,10 +157,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             }
             if (iconData != null) {
               await styleController.addLayer(
-                const SymbolStyleLayer(
+                SymbolStyleLayer(
                   id: _iconLayerId,
                   sourceId: _sourceId,
-                  minZoom: 8,
+                  minZoom: zoomThresholds.stationMinZoom,
                   layout: {
                     'icon-image': ['get', 'iconId'],
                     'icon-allow-overlap': true,
@@ -185,10 +188,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             }
             if (config.showStationLabel) {
               await styleController.addLayer(
-                const SymbolStyleLayer(
+                SymbolStyleLayer(
                   id: _labelLayerId,
                   sourceId: _sourceId,
-                  minZoom: 9,
+                  minZoom: zoomThresholds.stationLabelMinZoom,
                   layout: {
                     'text-field': ['get', 'name'],
                     'text-size': 10,
@@ -235,6 +238,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         config.stationDisplayMode,
         config.showStationLabel,
         config.showingLpgmIntensity,
+        config.zoomThresholds,
         iconData,
       ],
     );

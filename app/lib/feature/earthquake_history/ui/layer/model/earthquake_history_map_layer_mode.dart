@@ -23,12 +23,25 @@ abstract class EarthquakeHistoryMapLayerAvailability
   ) => _$EarthquakeHistoryMapLayerAvailabilityFromJson(json);
 }
 
-/// 自動表示で地域・市区町村を切り替えるズーム境界。
+/// 各レイヤーのズーム閾値。
 @freezed
 abstract class EarthquakeHistoryMapLayerZoomThresholds
     with _$EarthquakeHistoryMapLayerZoomThresholds {
   const factory EarthquakeHistoryMapLayerZoomThresholds({
-    required double regionToCity,
+    /// 自動表示で地域→市区町村に切り替えるズーム
+    @Default(8) double regionToCity,
+
+    /// 観測点（円・アイコン）の最小表示ズーム
+    @Default(8) double stationMinZoom,
+
+    /// 観測点名ラベルの最小表示ズーム
+    @Default(9) double stationLabelMinZoom,
+
+    /// 震央マーカーが半透明になるズーム（zoomFade モード用）
+    @Default(8) double hypocenterFadeZoom,
+
+    /// 震央誤差矩形が表示されるズーム
+    @Default(8) double hypocenterErrorMinZoom,
   }) = _EarthquakeHistoryMapLayerZoomThresholds;
 
   factory EarthquakeHistoryMapLayerZoomThresholds.fromJson(
@@ -37,7 +50,7 @@ abstract class EarthquakeHistoryMapLayerZoomThresholds
 }
 
 const defaultEarthquakeHistoryMapLayerZoomThresholds =
-    EarthquakeHistoryMapLayerZoomThresholds(regionToCity: 8);
+    EarthquakeHistoryMapLayerZoomThresholds();
 
 class EarthquakeHistoryMapLayerModeResolver {
   const EarthquakeHistoryMapLayerModeResolver();

@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,11 +20,13 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
   const EarthquakeHistoryHypocenterLayer({
     required this.earthquake,
     this.displayMode = HypocenterDisplayMode.zoomFade,
+    this.zoomThresholds = const EarthquakeHistoryMapLayerZoomThresholds(),
     super.key,
   });
 
   final Earthquake earthquake;
   final HypocenterDisplayMode displayMode;
+  final EarthquakeHistoryMapLayerZoomThresholds zoomThresholds;
 
   static const _sourceId = 'earthquake-history-hypocenter';
   static const _layerId = 'earthquake-history-hypocenter-symbol';
@@ -90,13 +93,11 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
                 },
                 paint: {
                   'icon-opacity': switch (displayMode) {
-                    .zoomFade =>
-                      // 低ズームでは非表示、ズームインで半透明表示
-                      [
+                    .zoomFade => [
                         'step',
                         ['zoom'],
                         1.0,
-                        8,
+                        zoomThresholds.hypocenterFadeZoom,
                         0.6,
                       ],
                     .alwaysOpaque || .belowStations => 1.0,
@@ -118,7 +119,7 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
           }
         };
       },
-      [styleController, earthquake, displayMode],
+      [styleController, earthquake, displayMode, zoomThresholds],
     );
 
     return const SizedBox.shrink();

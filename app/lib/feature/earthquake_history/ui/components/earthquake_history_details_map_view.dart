@@ -122,9 +122,11 @@ class _MapContent extends HookConsumerWidget {
       maxZoom: maxZoom,
       gestures: gestures,
     );
+    final zoomThresholds = config.zoomThresholds;
     final hypocenterLayer = EarthquakeHistoryHypocenterLayer(
       earthquake: earthquake,
       displayMode: config.hypocenterDisplayMode,
+      zoomThresholds: zoomThresholds,
     );
     const debugDialogAction = EarthquakeHistoryMapLayerDebugDialogAction();
 
@@ -152,6 +154,7 @@ class _MapContent extends HookConsumerWidget {
               key: const ValueKey('fill'),
               earthquake: earthquake,
               config: config,
+              zoomThresholds: zoomThresholds,
             ),
             // 推計震度
             if (tileUrl != null)
@@ -164,6 +167,7 @@ class _MapContent extends HookConsumerWidget {
               EarthquakeHistoryHypocenterErrorLayer(
                 key: const ValueKey('hypocenter-error'),
                 earthquake: earthquake,
+                zoomThresholds: zoomThresholds,
               ),
             // 観測点・震央（z 順を HypocenterDisplayMode で制御）
             if (config.hypocenterDisplayMode ==
@@ -540,7 +544,7 @@ class _MapLayerModeDebugContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const zoomThresholds = defaultEarthquakeHistoryMapLayerZoomThresholds;
+    final zoomThresholds = config.zoomThresholds;
     const modeResolver = EarthquakeHistoryMapLayerModeResolver();
 
     return Column(
@@ -608,6 +612,22 @@ class _MapLayerModeDebugContent extends StatelessWidget {
             _DebugRow(
               label: 'regionToCity',
               value: zoomThresholds.regionToCity.toString(),
+            ),
+            _DebugRow(
+              label: 'stationMinZoom',
+              value: zoomThresholds.stationMinZoom.toString(),
+            ),
+            _DebugRow(
+              label: 'stationLabelMinZoom',
+              value: zoomThresholds.stationLabelMinZoom.toString(),
+            ),
+            _DebugRow(
+              label: 'hypocenterFadeZoom',
+              value: zoomThresholds.hypocenterFadeZoom.toString(),
+            ),
+            _DebugRow(
+              label: 'hypocenterErrorMinZoom',
+              value: zoomThresholds.hypocenterErrorMinZoom.toString(),
             ),
           ],
         ),

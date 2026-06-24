@@ -284,7 +284,12 @@ as bool,
 /// @nodoc
 mixin _$EarthquakeHistoryMapLayerZoomThresholds {
 
- double get regionToCity;
+/// 自動表示で地域→市区町村に切り替えるズーム
+ double get regionToCity;/// 観測点（円・アイコン）の最小表示ズーム
+ double get stationMinZoom;/// 観測点名ラベルの最小表示ズーム
+ double get stationLabelMinZoom;/// 震央マーカーが半透明になるズーム（zoomFade モード用）
+ double get hypocenterFadeZoom;/// 震央誤差矩形が表示されるズーム
+ double get hypocenterErrorMinZoom;
 /// Create a copy of EarthquakeHistoryMapLayerZoomThresholds
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -297,16 +302,16 @@ $EarthquakeHistoryMapLayerZoomThresholdsCopyWith<EarthquakeHistoryMapLayerZoomTh
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryMapLayerZoomThresholds&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryMapLayerZoomThresholds&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity)&&(identical(other.stationMinZoom, stationMinZoom) || other.stationMinZoom == stationMinZoom)&&(identical(other.stationLabelMinZoom, stationLabelMinZoom) || other.stationLabelMinZoom == stationLabelMinZoom)&&(identical(other.hypocenterFadeZoom, hypocenterFadeZoom) || other.hypocenterFadeZoom == hypocenterFadeZoom)&&(identical(other.hypocenterErrorMinZoom, hypocenterErrorMinZoom) || other.hypocenterErrorMinZoom == hypocenterErrorMinZoom));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionToCity);
+int get hashCode => Object.hash(runtimeType,regionToCity,stationMinZoom,stationLabelMinZoom,hypocenterFadeZoom,hypocenterErrorMinZoom);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryMapLayerZoomThresholds(regionToCity: $regionToCity)';
+  return 'EarthquakeHistoryMapLayerZoomThresholds(regionToCity: $regionToCity, stationMinZoom: $stationMinZoom, stationLabelMinZoom: $stationLabelMinZoom, hypocenterFadeZoom: $hypocenterFadeZoom, hypocenterErrorMinZoom: $hypocenterErrorMinZoom)';
 }
 
 
@@ -317,7 +322,7 @@ abstract mixin class $EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res>  {
   factory $EarthquakeHistoryMapLayerZoomThresholdsCopyWith(EarthquakeHistoryMapLayerZoomThresholds value, $Res Function(EarthquakeHistoryMapLayerZoomThresholds) _then) = _$EarthquakeHistoryMapLayerZoomThresholdsCopyWithImpl;
 @useResult
 $Res call({
- double regionToCity
+ double regionToCity, double stationMinZoom, double stationLabelMinZoom, double hypocenterFadeZoom, double hypocenterErrorMinZoom
 });
 
 
@@ -334,9 +339,13 @@ class _$EarthquakeHistoryMapLayerZoomThresholdsCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryMapLayerZoomThresholds
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? regionToCity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? regionToCity = null,Object? stationMinZoom = null,Object? stationLabelMinZoom = null,Object? hypocenterFadeZoom = null,Object? hypocenterErrorMinZoom = null,}) {
   return _then(_self.copyWith(
 regionToCity: null == regionToCity ? _self.regionToCity : regionToCity // ignore: cast_nullable_to_non_nullable
+as double,stationMinZoom: null == stationMinZoom ? _self.stationMinZoom : stationMinZoom // ignore: cast_nullable_to_non_nullable
+as double,stationLabelMinZoom: null == stationLabelMinZoom ? _self.stationLabelMinZoom : stationLabelMinZoom // ignore: cast_nullable_to_non_nullable
+as double,hypocenterFadeZoom: null == hypocenterFadeZoom ? _self.hypocenterFadeZoom : hypocenterFadeZoom // ignore: cast_nullable_to_non_nullable
+as double,hypocenterErrorMinZoom: null == hypocenterErrorMinZoom ? _self.hypocenterErrorMinZoom : hypocenterErrorMinZoom // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
@@ -422,10 +431,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double regionToCity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double regionToCity,  double stationMinZoom,  double stationLabelMinZoom,  double hypocenterFadeZoom,  double hypocenterErrorMinZoom)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryMapLayerZoomThresholds() when $default != null:
-return $default(_that.regionToCity);case _:
+return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoom,_that.hypocenterFadeZoom,_that.hypocenterErrorMinZoom);case _:
   return orElse();
 
 }
@@ -443,10 +452,10 @@ return $default(_that.regionToCity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double regionToCity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double regionToCity,  double stationMinZoom,  double stationLabelMinZoom,  double hypocenterFadeZoom,  double hypocenterErrorMinZoom)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryMapLayerZoomThresholds():
-return $default(_that.regionToCity);case _:
+return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoom,_that.hypocenterFadeZoom,_that.hypocenterErrorMinZoom);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -463,10 +472,10 @@ return $default(_that.regionToCity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double regionToCity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double regionToCity,  double stationMinZoom,  double stationLabelMinZoom,  double hypocenterFadeZoom,  double hypocenterErrorMinZoom)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryMapLayerZoomThresholds() when $default != null:
-return $default(_that.regionToCity);case _:
+return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoom,_that.hypocenterFadeZoom,_that.hypocenterErrorMinZoom);case _:
   return null;
 
 }
@@ -478,10 +487,19 @@ return $default(_that.regionToCity);case _:
 @JsonSerializable()
 
 class _EarthquakeHistoryMapLayerZoomThresholds implements EarthquakeHistoryMapLayerZoomThresholds {
-  const _EarthquakeHistoryMapLayerZoomThresholds({required this.regionToCity});
+  const _EarthquakeHistoryMapLayerZoomThresholds({this.regionToCity = 8, this.stationMinZoom = 8, this.stationLabelMinZoom = 9, this.hypocenterFadeZoom = 8, this.hypocenterErrorMinZoom = 8});
   factory _EarthquakeHistoryMapLayerZoomThresholds.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryMapLayerZoomThresholdsFromJson(json);
 
-@override final  double regionToCity;
+/// 自動表示で地域→市区町村に切り替えるズーム
+@override@JsonKey() final  double regionToCity;
+/// 観測点（円・アイコン）の最小表示ズーム
+@override@JsonKey() final  double stationMinZoom;
+/// 観測点名ラベルの最小表示ズーム
+@override@JsonKey() final  double stationLabelMinZoom;
+/// 震央マーカーが半透明になるズーム（zoomFade モード用）
+@override@JsonKey() final  double hypocenterFadeZoom;
+/// 震央誤差矩形が表示されるズーム
+@override@JsonKey() final  double hypocenterErrorMinZoom;
 
 /// Create a copy of EarthquakeHistoryMapLayerZoomThresholds
 /// with the given fields replaced by the non-null parameter values.
@@ -496,16 +514,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryMapLayerZoomThresholds&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryMapLayerZoomThresholds&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity)&&(identical(other.stationMinZoom, stationMinZoom) || other.stationMinZoom == stationMinZoom)&&(identical(other.stationLabelMinZoom, stationLabelMinZoom) || other.stationLabelMinZoom == stationLabelMinZoom)&&(identical(other.hypocenterFadeZoom, hypocenterFadeZoom) || other.hypocenterFadeZoom == hypocenterFadeZoom)&&(identical(other.hypocenterErrorMinZoom, hypocenterErrorMinZoom) || other.hypocenterErrorMinZoom == hypocenterErrorMinZoom));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionToCity);
+int get hashCode => Object.hash(runtimeType,regionToCity,stationMinZoom,stationLabelMinZoom,hypocenterFadeZoom,hypocenterErrorMinZoom);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryMapLayerZoomThresholds(regionToCity: $regionToCity)';
+  return 'EarthquakeHistoryMapLayerZoomThresholds(regionToCity: $regionToCity, stationMinZoom: $stationMinZoom, stationLabelMinZoom: $stationLabelMinZoom, hypocenterFadeZoom: $hypocenterFadeZoom, hypocenterErrorMinZoom: $hypocenterErrorMinZoom)';
 }
 
 
@@ -516,7 +534,7 @@ abstract mixin class _$EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res> imp
   factory _$EarthquakeHistoryMapLayerZoomThresholdsCopyWith(_EarthquakeHistoryMapLayerZoomThresholds value, $Res Function(_EarthquakeHistoryMapLayerZoomThresholds) _then) = __$EarthquakeHistoryMapLayerZoomThresholdsCopyWithImpl;
 @override @useResult
 $Res call({
- double regionToCity
+ double regionToCity, double stationMinZoom, double stationLabelMinZoom, double hypocenterFadeZoom, double hypocenterErrorMinZoom
 });
 
 
@@ -533,9 +551,13 @@ class __$EarthquakeHistoryMapLayerZoomThresholdsCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryMapLayerZoomThresholds
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? regionToCity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? regionToCity = null,Object? stationMinZoom = null,Object? stationLabelMinZoom = null,Object? hypocenterFadeZoom = null,Object? hypocenterErrorMinZoom = null,}) {
   return _then(_EarthquakeHistoryMapLayerZoomThresholds(
 regionToCity: null == regionToCity ? _self.regionToCity : regionToCity // ignore: cast_nullable_to_non_nullable
+as double,stationMinZoom: null == stationMinZoom ? _self.stationMinZoom : stationMinZoom // ignore: cast_nullable_to_non_nullable
+as double,stationLabelMinZoom: null == stationLabelMinZoom ? _self.stationLabelMinZoom : stationLabelMinZoom // ignore: cast_nullable_to_non_nullable
+as double,hypocenterFadeZoom: null == hypocenterFadeZoom ? _self.hypocenterFadeZoom : hypocenterFadeZoom // ignore: cast_nullable_to_non_nullable
+as double,hypocenterErrorMinZoom: null == hypocenterErrorMinZoom ? _self.hypocenterErrorMinZoom : hypocenterErrorMinZoom // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }

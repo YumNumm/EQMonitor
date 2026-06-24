@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_config_model.freezed.dart';
@@ -65,6 +66,10 @@ abstract class EarthquakeHistoryDetailConfig
 
     /// 観測点レイヤーを表示するか
     @Default(true) bool showStation,
+
+    /// 各レイヤーのズームレベル閾値
+    @Default(EarthquakeHistoryMapLayerZoomThresholds())
+    EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
   }) = _EarthquakeHistoryDetailConfig;
 
   factory EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) =>

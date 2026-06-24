@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/map/hypocenter_error_range_util.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,10 +17,12 @@ import 'package:maplibre/maplibre.dart';
 class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
   const EarthquakeHistoryHypocenterErrorLayer({
     required this.earthquake,
+    this.zoomThresholds = const EarthquakeHistoryMapLayerZoomThresholds(),
     super.key,
   });
 
   final Earthquake earthquake;
+  final EarthquakeHistoryMapLayerZoomThresholds zoomThresholds;
 
   static const _sourceId = 'eq-history-hypocenter-error';
   static const _layerId = 'eq-history-hypocenter-error-line';
@@ -81,7 +84,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
                     'step',
                     ['zoom'],
                     0.0,
-                    8,
+                    zoomThresholds.hypocenterErrorMinZoom,
                     1.0,
                   ],
                 },
@@ -101,7 +104,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
           }
         };
       },
-      [styleController, earthquake, isDark],
+      [styleController, earthquake, isDark, zoomThresholds],
     );
 
     return const SizedBox.shrink();

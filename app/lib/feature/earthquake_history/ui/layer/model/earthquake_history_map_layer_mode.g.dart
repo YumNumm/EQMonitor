@@ -38,14 +38,42 @@ _$EarthquakeHistoryMapLayerZoomThresholdsFromJson(Map<String, dynamic> json) =>
         final val = _EarthquakeHistoryMapLayerZoomThresholds(
           regionToCity: $checkedConvert(
             'region_to_city',
-            (v) => (v as num).toDouble(),
+            (v) => (v as num?)?.toDouble() ?? 8,
+          ),
+          stationMinZoom: $checkedConvert(
+            'station_min_zoom',
+            (v) => (v as num?)?.toDouble() ?? 8,
+          ),
+          stationLabelMinZoom: $checkedConvert(
+            'station_label_min_zoom',
+            (v) => (v as num?)?.toDouble() ?? 9,
+          ),
+          hypocenterFadeZoom: $checkedConvert(
+            'hypocenter_fade_zoom',
+            (v) => (v as num?)?.toDouble() ?? 8,
+          ),
+          hypocenterErrorMinZoom: $checkedConvert(
+            'hypocenter_error_min_zoom',
+            (v) => (v as num?)?.toDouble() ?? 8,
           ),
         );
         return val;
       },
-      fieldKeyMap: const {'regionToCity': 'region_to_city'},
+      fieldKeyMap: const {
+        'regionToCity': 'region_to_city',
+        'stationMinZoom': 'station_min_zoom',
+        'stationLabelMinZoom': 'station_label_min_zoom',
+        'hypocenterFadeZoom': 'hypocenter_fade_zoom',
+        'hypocenterErrorMinZoom': 'hypocenter_error_min_zoom',
+      },
     );
 
 Map<String, dynamic> _$EarthquakeHistoryMapLayerZoomThresholdsToJson(
   _EarthquakeHistoryMapLayerZoomThresholds instance,
-) => <String, dynamic>{'region_to_city': instance.regionToCity};
+) => <String, dynamic>{
+  'region_to_city': instance.regionToCity,
+  'station_min_zoom': instance.stationMinZoom,
+  'station_label_min_zoom': instance.stationLabelMinZoom,
+  'hypocenter_fade_zoom': instance.hypocenterFadeZoom,
+  'hypocenter_error_min_zoom': instance.hypocenterErrorMinZoom,
+};

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -213,6 +214,15 @@ class EarthquakeHistoryMapDisplayModeModal extends ConsumerWidget {
                     ),
                   ),
                 ],
+
+                // ズームレベル閾値
+                _ZoomThresholdsSection(
+                  thresholds: value.detail.zoomThresholds,
+                  onChanged: (t) async => notifier.save(
+                    value.copyWith.detail(zoomThresholds: t),
+                  ),
+                ),
+
                 SizedBox(
                   height: MediaQuery.paddingOf(context).bottom,
                 ),
@@ -238,6 +248,112 @@ class _SectionHeader extends StatelessWidget {
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
           color: Theme.of(context).colorScheme.primary,
         ),
+      ),
+    );
+  }
+}
+
+class _ZoomThresholdsSection extends StatelessWidget {
+  const _ZoomThresholdsSection({
+    required this.thresholds,
+    required this.onChanged,
+  });
+
+  final EarthquakeHistoryMapLayerZoomThresholds thresholds;
+  final ValueChanged<EarthquakeHistoryMapLayerZoomThresholds> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const _SectionHeader(title: 'ズームレベル閾値'),
+        _ZoomSliderTile(
+          label: '地域→市区町村 切替',
+          value: thresholds.regionToCity,
+          onChanged: (v) => onChanged(thresholds.copyWith(regionToCity: v)),
+        ),
+        _ZoomSliderTile(
+          label: '観測点 表示開始',
+          value: thresholds.stationMinZoom,
+          onChanged: (v) => onChanged(thresholds.copyWith(stationMinZoom: v)),
+        ),
+        _ZoomSliderTile(
+          label: '観測点名 表示開始',
+          value: thresholds.stationLabelMinZoom,
+          onChanged: (v) =>
+              onChanged(thresholds.copyWith(stationLabelMinZoom: v)),
+        ),
+        _ZoomSliderTile(
+          label: '震央マーク 半透明化',
+          value: thresholds.hypocenterFadeZoom,
+          onChanged: (v) =>
+              onChanged(thresholds.copyWith(hypocenterFadeZoom: v)),
+        ),
+        _ZoomSliderTile(
+          label: '震央誤差矩形 表示開始',
+          value: thresholds.hypocenterErrorMinZoom,
+          onChanged: (v) =>
+              onChanged(thresholds.copyWith(hypocenterErrorMinZoom: v)),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () => onChanged(
+                const EarthquakeHistoryMapLayerZoomThresholds(),
+              ),
+              child: const Text('デフォルトに戻す'),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ZoomSliderTile extends StatelessWidget {
+  const _ZoomSliderTile({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String label;
+  final double value;
+  final ValueChanged<double> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 140,
+            child: Text(label, style: theme.textTheme.bodySmall),
+          ),
+          Expanded(
+            child: Slider(
+              value: value,
+              min: 3,
+              max: 15,
+              divisions: 24,
+              label: value.toStringAsFixed(1),
+              onChanged: onChanged,
+            ),
+          ),
+          SizedBox(
+            width: 36,
+            child: Text(
+              value.toStringAsFixed(1),
+              style: theme.textTheme.bodySmall,
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ],
       ),
     );
   }
