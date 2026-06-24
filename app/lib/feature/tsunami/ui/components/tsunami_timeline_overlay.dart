@@ -22,7 +22,7 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
 
     return switch (telegramsAsync) {
       AsyncLoading() => const SizedBox.shrink(),
-      AsyncError() => const SizedBox.shrink(),
+      AsyncError(:final error) => _buildErrorIndicator(context, error),
       AsyncData(value: final telegrams) when telegrams.isEmpty =>
         const SizedBox.shrink(),
       AsyncData(value: final telegrams) => _buildOverlay(
@@ -31,6 +31,33 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
           telegrams,
         ),
     };
+  }
+
+  Widget _buildErrorIndicator(BuildContext context, Object error) {
+    final designSystem = context.designSystem;
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: designSystem.color.surfaceCard.withValues(alpha: 0.95),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: designSystem.color.outlineSoft),
+          ),
+          child: Text(
+            'Timeline: $error',
+            style: TextStyle(
+              fontSize: 10,
+              color: designSystem.textColor.secondary,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildOverlay(
