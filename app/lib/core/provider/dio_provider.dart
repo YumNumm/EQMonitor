@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/interceptor/app_check_interceptor.dart';
 import 'package:eqmonitor/core/provider/interceptor/device_auth_token_interceptor.dart';
@@ -23,6 +26,7 @@ Future<Dio> dio(Ref ref) async {
   final deviceAuthTokenInterceptor = await ref.watch(
     deviceAuthTokenInterceptorProvider.future,
   );
+  final httpCache = await ref.watch(httpCacheStoreProvider.future);
 
   final dio = Dio(
     BaseOptions(
@@ -42,6 +46,23 @@ Future<Dio> dio(Ref ref) async {
   dio.interceptors.add(AppCheckInterceptor());
   dio.interceptors.add(DeviceIdInterceptor(deviceId: deviceId));
   dio.interceptors.add(deviceAuthTokenInterceptor);
+  // ETag/304 透過キャッシュ。TalkerDioLogger より前に登録し、
+  // レスポンス時はログ → キャッシュ保存/復元の順になるようにする。
+  dio.interceptors.add(
+    DioCacheInterceptor(
+      options: CacheOptions(
+        store: httpCache.store,
+        policy: CachePolicy.refreshForceCache,
+        keyBuilder: ({required url, headers, body}) => buildHttpCacheKey(
+          schemaVersion: httpCache.schemaVersion,
+          appBuild: httpCache.appBuild,
+          url: url,
+          headers: headers,
+          body: body,
+        ),
+      ),
+    ),
+  );
   dio.interceptors.add(
     TalkerDioLogger(
       settings: TalkerDioLoggerSettings(
