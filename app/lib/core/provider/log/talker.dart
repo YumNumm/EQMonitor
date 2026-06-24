@@ -67,6 +67,16 @@ class GoRouterLog extends TalkerLog {
   final pen = AnsiPen()..magenta();
 }
 
+class HttpCacheLog extends TalkerLog {
+  HttpCacheLog(super.message);
+
+  @override
+  String get title => 'HttpCache';
+
+  @override
+  final pen = AnsiPen()..blue();
+}
+
 class CrashlyticsTalkerObserver implements TalkerObserver {
   CrashlyticsTalkerObserver();
 

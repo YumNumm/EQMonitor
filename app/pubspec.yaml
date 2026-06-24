@@ -49,6 +49,8 @@ dependencies:
   app_settings: ^7.0.0
   background_location_tracker:
     path: ../packages/background_location_tracker
+  cache:
+    path: ../packages/cache
   cached_network_image: ^3.4.1
   clock: ^1.1.2
   collection: ^1.19.1
@@ -61,6 +63,7 @@ dependencies:
     path: ../packages/dart_azarashi
   device_info_plus: ^12.1.0
   dio: ^5.8.0+1
+  dio_cache_interceptor: ^4.0.6
   drift: ^2.22.0
   dynamic_color: ^1.7.0
   earthquake_replay:
@@ -108,6 +111,7 @@ dependencies:
   google_api_availability: ^5.0.1
   google_mobile_ads: ^8.0.0
   hooks_riverpod: ^3.0.3
+  http_cache_drift_store: ^7.0.0
   image: ^4.4.0
   in_app_review: ^2.0.10
   intl: ^0.20.2
