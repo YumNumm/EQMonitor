@@ -83,7 +83,7 @@ class _MapContent extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = ref.watch(
       earthquakeHistoryMapLayerParameterProvider.select(
-        (v) => v.valueOrNull ?? const EarthquakeHistoryMapLayerParameter(),
+        (v) => v.value ?? const EarthquakeHistoryMapLayerParameter(),
       ),
     );
     final mapSettings = ref.watch(
@@ -92,7 +92,7 @@ class _MapContent extends HookConsumerWidget {
       ),
     );
     final isDebugger = kDebugMode ||
-        (ref.watch(debugProvider).valueOrNull ?? false);
+        (ref.watch(debugProvider).value ?? false);
 
     ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (
       _,
