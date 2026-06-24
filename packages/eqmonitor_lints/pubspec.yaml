@@ -7,14 +7,11 @@ environment:
 resolution: workspace
 
 dependencies:
-  altive_lints: ^2.1.0
+  altive_lints: ^2.3.0
   analysis_server_plugin: ^0.3.4
   analyzer: ^9.0.0
-  # analyzer_plugin 0.14 は analyzer >=10 を要求し analyzer ^9.0.0 と衝突するため
-  # analyzer ^9 互換の ^0.13.11 に固定する (altive_lints ^2.x の制約とも一致)。
   analyzer_plugin: ^0.13.11
   flutter:
     sdk: flutter
-  yumemi_lints: ^4.1.1
-dev_dependencies:
-  test: ^1.29.0
+  yumemi_lints: ^4.4.0
+  prefer_shorthands: ^0.4.7

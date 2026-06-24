@@ -23,3 +23,6 @@ analyzer:
   exclude:
     - "**/DerivedData/**"
     - "**/build/**"
+
+plugins:
+  prefer_shorthands: ^0.4.7
