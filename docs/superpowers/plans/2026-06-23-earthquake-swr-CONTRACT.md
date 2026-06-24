@@ -111,12 +111,14 @@
 - 登録 (**app 側**): `dioProvider` (`app/lib/core/provider/dio_provider.dart`) に `DioCacheInterceptor` を `TalkerDioLogger` の**前**に追加。
 - ポリシー: `CachePolicy.refreshForceCache` 相当 (ETag があれば必ず再検証、304 ならキャッシュ body 復元)。GET のみ。
 - キャッシュキー名前空間: `keyBuilder` を schema version + app build で名前空間化。
-- **`packages/cache` が産出 (Riverpod 非依存)**:
-  - `const int kHttpCacheSchemaVersion` + `String buildHttpCacheKey({required int schemaVersion, required String appBuild, required RequestOptions options})` (`packages/cache/lib/src/http/http_cache_key.dart`)。
+- **`packages/cache` が産出 (Riverpod 非依存)** — 実 API (`http_cache_core 1.1.3`) に確定:
+  - `const int kHttpCacheSchemaVersion`。
+  - `String buildHttpCacheKey({required int schemaVersion, required String appBuild, required Uri url, Map<String, String>? headers, Object? body})` (`packages/cache/lib/src/http/http_cache_key.dart`)。`dio_cache_interceptor` の `CacheKeyBuilder` typedef (`String Function({required Uri url, Map<String,String>? headers, Object? body})`) と整合し、interceptor の `keyBuilder` にそのまま渡せる。内部で `CacheOptions.defaultCacheKeyBuilder(url:, headers:, body:)` を base に `v<schemaVersion>:<appBuild>:` を prefix。
   - クラス `HttpCacheStore` (`packages/cache/lib/src/http/http_cache_store.dart`) が `dio_cache_interceptor` の `CacheStore` をラップ。コンストラクタ `HttpCacheStore({required CacheStore store, required int schemaVersion, required String appBuild})`。
-    - `Future<void> evict(String primaryKey)` / `Future<void> clearAll()`。
-    - `String primaryKeyForUrl(RequestOptions options)` — interceptor の keyBuilder と同一ロジック (`buildHttpCacheKey`)。
-- **app が産出**: `@Riverpod(keepAlive: true) HttpCacheStore httpCacheStore(Ref ref)` (`app/lib/core/api/http_cache_store_provider.dart`、1 ファイル 1 公開 Provider)。`packageInfoProvider` から `appBuild` を作り `DriftCacheStore` を生成して `HttpCacheStore` で包む。
+    - `Future<void> evict(String primaryKey)` → `store.delete(primaryKey)`。
+    - `Future<void> clearAll()` → `store.clean()`。
+    - `String primaryKeyForUrl(RequestOptions options)` → `buildHttpCacheKey(..., url: options.uri)` (default keyBuilder は url のみ使用するため一致)。
+- **app が産出**: `@Riverpod(keepAlive: true) Future<HttpCacheStore> httpCacheStore(Ref ref)` (`app/lib/core/api/http_cache_store_provider.dart`、1 ファイル 1 公開 Provider)。**async Provider** — `DriftCacheStore` が `databasePath`(絶対パス) 必須のため `getApplicationSupportDirectory()` を await。`packageInfoProvider` から `appBuild`。**計画D は `ref.watch(httpCacheStoreProvider.future)` で消費**。
 
 ---
 
