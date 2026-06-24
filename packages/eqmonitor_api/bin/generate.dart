@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 void main(List<String> args) async {
-  final externalOpenapiPath = (await File(
+  final externalOpenapiPath = await File(
     '../../backend/api/api/openapi.json',
-  ).resolveSymbolicLinks());
+  ).resolveSymbolicLinks();
 
   final packageDir = Directory.current;
   final openapiFile = File('${packageDir.path}/openapi/openapi.json');
@@ -16,27 +16,23 @@ void main(List<String> args) async {
     }
   });
 
-  if (externalOpenapiPath != null) {
-    final src = File(externalOpenapiPath);
-    if (!src.existsSync()) {
-      stderr.writeln('指定された OpenAPI ファイルが見つかりません: $externalOpenapiPath');
-      exit(1);
-    }
+  final src = File(externalOpenapiPath);
+  if (!src.existsSync()) {
+    stderr.writeln('指定された OpenAPI ファイルが見つかりません: $externalOpenapiPath');
+    exit(1);
+  }
 
-    print('externalOpenapiPath: ${src.absolute.path}');
-    print('openapiFile.path: ${openapiFile.absolute.path}');
+  print('externalOpenapiPath: ${src.absolute.path}');
+  print('openapiFile.path: ${openapiFile.absolute.path}');
 
-    if (openapiFile.absolute.path != src.absolute.path) {
-      await _step('外部 OpenAPI ファイルをコピー', () async {
-        await openapiFile.create(recursive: true);
-        final copied = src.copySync(
-          openapiFile.path,
-        );
-        print('copied: ${copied.path}');
-      });
-    }
-  } else {
-    throw Exception('OpenAPI ファイルが指定されていません。-openapiFile を指定してください');
+  if (openapiFile.absolute.path != src.absolute.path) {
+    await _step('外部 OpenAPI ファイルをコピー', () async {
+      await openapiFile.create(recursive: true);
+      final copied = src.copySync(
+        openapiFile.path,
+      );
+      print('copied: ${copied.path}');
+    });
   }
 
   await _step('swagger_parser でクライアントコードを生成', () async {
@@ -55,7 +51,9 @@ void main(List<String> args) async {
   await _step('震度 enum メンバー名をパッチ', () async {
     final modelsDir = Directory('${packageDir.path}/lib/src/models');
 
-    if (!modelsDir.existsSync()) return;
+    if (!modelsDir.existsSync()) {
+      return;
+    }
 
     final dartFiles = modelsDir.listSync().whereType<File>().where(
       (f) => f.path.endsWith('.dart') && !f.path.endsWith('.g.dart'),
@@ -246,23 +244,33 @@ Future<void> _patchGeneratedFiles(Directory libDir) async {
 /// （`@JsonEnum()` + `@JsonValue` + 手書き `toJson`）の enum 定義で上書きする。
 /// 各 const の `description` はメンバーの doc コメントにする。
 void _patchValueOnlyUnionsToEnum(Directory libDir, File openapiFile) {
-  if (!openapiFile.existsSync()) return;
+  if (!openapiFile.existsSync()) {
+    return;
+  }
   final modelsDir = Directory('${libDir.path}/models');
-  if (!modelsDir.existsSync()) return;
+  if (!modelsDir.existsSync()) {
+    return;
+  }
 
   final openapi =
       jsonDecode(openapiFile.readAsStringSync()) as Map<String, Object?>;
   final components = openapi['components'] as Map<String, Object?>?;
   final schemas = components?['schemas'] as Map<String, Object?>?;
-  if (schemas == null) return;
+  if (schemas == null) {
+    return;
+  }
 
   for (final entry in schemas.entries) {
     final name = entry.key;
     final schema = entry.value;
-    if (schema is! Map<String, Object?>) continue;
+    if (schema is! Map<String, Object?>) {
+      continue;
+    }
 
     final members = schema['anyOf'] ?? schema['oneOf'];
-    if (members is! List || members.isEmpty) continue;
+    if (members is! List || members.isEmpty) {
+      continue;
+    }
 
     // すべてのメンバーが文字列の const（値のみ）であることを要求する。
     final values = <String>[];
@@ -276,10 +284,14 @@ void _patchValueOnlyUnionsToEnum(Directory libDir, File openapiFile) {
       values.add(m['const']! as String);
       descriptions.add(m['description'] as String?);
     }
-    if (!valueOnly) continue;
+    if (!valueOnly) {
+      continue;
+    }
 
     final file = File('${modelsDir.path}/${_toSnakeCase(name)}.dart');
-    if (!file.existsSync()) continue;
+    if (!file.existsSync()) {
+      continue;
+    }
 
     file.writeAsStringSync(
       _buildEnumSource(
@@ -300,7 +312,9 @@ String _toSnakeCase(String pascal) {
   for (var i = 0; i < pascal.length; i++) {
     final ch = pascal[i];
     final isUpper = ch.toUpperCase() == ch && ch.toLowerCase() != ch;
-    if (isUpper && i > 0) buffer.write('_');
+    if (isUpper && i > 0) {
+      buffer.write('_');
+    }
     buffer.write(ch.toLowerCase());
   }
   return buffer.toString();
@@ -313,7 +327,9 @@ String _toEnumMemberName(String value) {
       .split(RegExp(r'[_\s-]+'))
       .where((p) => p.isNotEmpty)
       .toList();
-  if (parts.isEmpty) return value.toLowerCase();
+  if (parts.isEmpty) {
+    return value.toLowerCase();
+  }
   final first = parts.first.toLowerCase();
   final rest = parts.skip(1).map((p) {
     final lower = p.toLowerCase();
@@ -437,8 +453,8 @@ void _patchStatusesQueryInApiClients(Directory libDir) {
     if (content.contains('List<TelegramStatus>') &&
         !content.contains('telegram_status.dart')) {
       content = content.replaceFirst(
-        '\n\npart \'',
-        '\n\n$_telegramStatusImport\n\npart \'',
+        "\n\npart '",
+        "\n\n$_telegramStatusImport\n\npart '",
       );
     }
 
@@ -456,7 +472,9 @@ void _patchStatusesQueryInApiClients(Directory libDir) {
 /// パラメータごとに本来の型を指定する。未知の dynamic は `String?` にフォールバック。
 void _patchDynamicQueryParameters(Directory libDir) {
   final clientsDir = Directory('${libDir.path}/clients');
-  if (!clientsDir.existsSync()) return;
+  if (!clientsDir.existsSync()) {
+    return;
+  }
 
   const overrides = {
     'epicenterCodes': 'List<String>?',
@@ -471,7 +489,9 @@ void _patchDynamicQueryParameters(Directory libDir) {
   final pattern = RegExp(r"@Query\('(\w+)'\)\s+dynamic\s+(\w+)(?=[,)])");
 
   for (final entity in clientsDir.listSync()) {
-    if (entity is! File || !entity.path.endsWith('_api_client.dart')) continue;
+    if (entity is! File || !entity.path.endsWith('_api_client.dart')) {
+      continue;
+    }
 
     var content = entity.readAsStringSync();
     final original = content;
@@ -487,7 +507,7 @@ void _patchDynamicQueryParameters(Directory libDir) {
       if (content.contains(entry.key) && !content.contains(entry.value)) {
         content = content.replaceFirst(
           "\npart '",
-          '\n${entry.value}\n\npart \'',
+          "\n${entry.value}\n\npart '",
         );
       }
     }
@@ -510,7 +530,9 @@ void _patchParameterDataResponseInApiClient(Directory libDir) {
   final clientFile = File(
     '${libDir.path}/clients/parameters_api_client.dart',
   );
-  if (!clientFile.existsSync()) return;
+  if (!clientFile.existsSync()) {
+    return;
+  }
 
   var content = clientFile.readAsStringSync();
   final original = content;
@@ -544,7 +566,9 @@ void _patchUnionFromJson(
   required String className,
   required String body,
 }) {
-  if (!file.existsSync()) return;
+  if (!file.existsSync()) {
+    return;
+  }
 
   final original = file.readAsStringSync();
   final pattern = RegExp(
@@ -580,7 +604,8 @@ void _patchUnionFromJson(
 ///   DEVELOPER_MESSAGE       → variant7
 void _patchFeedItemDataUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/feed_item_data_union.dart');
-  const body = '''switch (json['type']) {
+  const body = '''
+switch (json['type']) {
         'EARTHQUAKE_NOTICE' => FeedItemDataUnionVariant1.fromJson(json),
         'EARTHQUAKE_EXPLANATION' => FeedItemDataUnionVariant2.fromJson(json),
         'EARTHQUAKE_COUNTS' => FeedItemDataUnionVariant3.fromJson(json),
@@ -603,7 +628,8 @@ void _patchFeedItemDataUnionFromJson(Directory libDir) {
 ///   push_to_start_token  → variant2 (token + environment)
 void _patchTargetUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/target_union.dart');
-  const body = '''switch (json['type']) {
+  const body = '''
+switch (json['type']) {
         'device_id' => TargetUnionVariant1.fromJson(json),
         'push_to_start_token' => TargetUnionVariant2.fromJson(json),
         final value => throw ArgumentError.value(
@@ -658,8 +684,8 @@ void _patchApnsEnvironmentEnum(Directory libDir) {
 /// ユニークフィールドではなく metadata.type を必ず参照する。
 void _patchParameterDataResponseUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/parameter_data_response_union.dart');
-  const body =
-      '''switch ((json['metadata'] as Map<String, Object?>?)?['type']) {
+  const body = '''
+switch ((json['metadata'] as Map<String, Object?>?)?['type']) {
         'jma_code_table' =>
           ParameterDataResponseUnionJmaCodeTableParameter.fromJson(json),
         'kyoshin_observation_points' =>
@@ -686,10 +712,14 @@ void _patchParameterDataResponseUnionFromJson(Directory libDir) {
 /// swagger_parser が `@Default(ja)` のようにenum値をリテラルなしで生成する問題を修正。
 void _patchDeviceLocaleDefault(Directory libDir) {
   final modelsDir = Directory('${libDir.path}/models');
-  if (!modelsDir.existsSync()) return;
+  if (!modelsDir.existsSync()) {
+    return;
+  }
 
   for (final entity in modelsDir.listSync()) {
-    if (entity is! File || !entity.path.endsWith('.dart')) continue;
+    if (entity is! File || !entity.path.endsWith('.dart')) {
+      continue;
+    }
     if (entity.path.endsWith('.g.dart') ||
         entity.path.endsWith('.freezed.dart')) {
       continue;
@@ -713,7 +743,8 @@ void _patchDeviceLocaleDefault(Directory libDir) {
 /// TelegramBodyUnion の `type` 値で variant を判別する。
 void _patchTelegramBodyUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/telegram_body_union.dart');
-  const body = '''switch (json['type']) {
+  const body = '''
+switch (json['type']) {
         'EARTHQUAKE' =>
           TelegramBodyUnionEarthquakeTelegramBody.fromJson(json),
         'EEW' => TelegramBodyUnionEewTelegramBody.fromJson(json),
@@ -740,10 +771,14 @@ void _patchTelegramBodyUnionFromJson(Directory libDir) {
 /// import パスとクラス名を統一する。
 void _patchTelegramBodyReference(Directory libDir) {
   final modelsDir = Directory('${libDir.path}/models');
-  if (!modelsDir.existsSync()) return;
+  if (!modelsDir.existsSync()) {
+    return;
+  }
 
   for (final entity in modelsDir.listSync()) {
-    if (entity is! File || !entity.path.endsWith('.dart')) continue;
+    if (entity is! File || !entity.path.endsWith('.dart')) {
+      continue;
+    }
     // skip generated files
     if (entity.path.endsWith('.g.dart') ||
         entity.path.endsWith('.freezed.dart')) {
@@ -809,12 +844,16 @@ void _patchOriginTimeDateTimeToString(Directory libDir) {
 /// `@Path('xxx') required dynamic yyy` → `@Path('xxx') required String yyy`。
 void _patchDynamicPathParameters(Directory libDir) {
   final clientsDir = Directory('${libDir.path}/clients');
-  if (!clientsDir.existsSync()) return;
+  if (!clientsDir.existsSync()) {
+    return;
+  }
 
   final pattern = RegExp(r"@Path\('(\w+)'\)\s+required\s+dynamic\s+(\w+)");
 
   for (final entity in clientsDir.listSync()) {
-    if (entity is! File || !entity.path.endsWith('_api_client.dart')) continue;
+    if (entity is! File || !entity.path.endsWith('_api_client.dart')) {
+      continue;
+    }
 
     var content = entity.readAsStringSync();
     final original = content;

@@ -13,5 +13,5 @@ dependencies:
   analyzer_plugin: ^0.13.11
   flutter:
     sdk: flutter
-  yumemi_lints: ^4.4.0
   prefer_shorthands: ^0.4.7
+  yumemi_lints: ^4.4.0

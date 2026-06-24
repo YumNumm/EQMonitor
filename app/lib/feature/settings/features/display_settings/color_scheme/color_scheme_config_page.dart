@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -146,21 +145,23 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                       ),
                       FilledButton.tonal(
                         onPressed: () async {
+                          final json = ref
+                              .read(intensityColorProvider.notifier)
+                              .exportAsJsonString();
                           final path = await FilePicker.saveFile(
                             dialogTitle: '震度配色JSONを保存',
                             fileName: 'intensity_color.json',
-                            type: FileType.custom,
+                            type: .custom,
                             allowedExtensions: const ['json'],
+                            bytes: utf8.encode(json),
                           );
                           if (path == null) {
                             return;
                           }
-                          final json = ref
-                              .read(intensityColorProvider.notifier)
-                              .exportAsJsonString();
-                          await File(path).writeAsString(json);
                           messenger.showSnackBar(
-                            const SnackBar(content: Text('JSONを保存しました')),
+                            const SnackBar(
+                              content: Text('JSONを保存しました'),
+                            ),
                           );
                         },
                         child: const Text('ファイルへエクスポート'),
@@ -186,31 +187,19 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                       FilledButton.tonal(
                         onPressed: () async {
                           final result = await FilePicker.pickFiles(
-                            type: FileType.custom,
+                            type: .custom,
                             allowedExtensions: const ['json'],
-                            withData: true,
                           );
                           final files = result?.files;
                           if (files == null || files.isEmpty) {
                             return;
                           }
                           final file = files.first;
-                          final bytes = file.bytes;
-                          if (bytes != null) {
-                            await importFromJsonText(utf8.decode(bytes));
-                            return;
-                          }
-                          final path = file.path;
-                          if (path == null) {
-                            messenger.showSnackBar(
-                              const SnackBar(
-                                content: Text('ファイルの読み込みに失敗しました'),
-                              ),
-                            );
-                            return;
-                          }
-                          final text = await File(path).readAsString();
-                          await importFromJsonText(text);
+                          final bytes = await file.readAsBytes();
+                          await importFromJsonText(
+                            utf8.decode(bytes),
+                          );
+                          return;
                         },
                         child: const Text('ファイルからインポート'),
                       ),

@@ -253,10 +253,10 @@ packages:
     dependency: transitive
     description:
       name: code_assets
-      sha256: "83ccdaa064c980b5596c35dd64a8d3ecc68620174ab9b90b6343b753aa721687"
+      sha256: bf394f466ba9205f1812a0433b392d6af280f155f56651eda7c18cc32ed493b8
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.2.1"
   code_builder:
     dependency: transitive
     description:
@@ -1131,10 +1131,10 @@ packages:
     dependency: transitive
     description:
       name: hooks
-      sha256: "025f060e86d2d4c3c47b56e33caf7f93bf9283340f26d23424ebcfccf34f621e"
+      sha256: "9a62a50b50b769a737bc0a8ff381f333529df3ab746b2f6b02e83760231455ba"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "2.0.2"
   hooks_riverpod:
     dependency: transitive
     description:
@@ -1355,8 +1355,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre"
-      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
-      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
+      resolved-ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1364,8 +1364,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_android"
-      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
-      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
+      resolved-ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1373,8 +1373,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_ios"
-      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
-      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
+      resolved-ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1382,8 +1382,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_platform_interface"
-      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
-      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
+      resolved-ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1391,8 +1391,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_web"
-      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
-      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
+      resolved-ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1400,8 +1400,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_webview"
-      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
-      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
+      resolved-ref: "88c76eb0980d03504dc71c69ff50a4080e202e08"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1489,10 +1489,10 @@ packages:
     dependency: transitive
     description:
       name: native_toolchain_c
-      sha256: "6ba77bb18063eebe9de401f5e6437e95e1438af0a87a3a39084fbd37c90df572"
+      sha256: f59351d28f49520cd3a74eb1f41c5f19ae15e53c65a3231d14af672e46510a96
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.6"
+    version: "0.19.1"
   nm:
     dependency: transitive
     description:
@@ -1521,10 +1521,10 @@ packages:
     dependency: transitive
     description:
       name: objective_c
-      sha256: "100a1c87616ab6ed41ec263b083c0ef3261ee6cd1dc3b0f35f8ddfa4f996fe52"
+      sha256: "6cb691c686fa2838c6deb34980d426145c2a5d537491cb83d463c33cdbc726ed"
       url: "https://pub.dev"
     source: hosted
-    version: "9.3.0"
+    version: "9.4.1"
   octo_image:
     dependency: transitive
     description:
@@ -1717,6 +1717,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.5.0"
+  prefer_shorthands:
+    dependency: transitive
+    description:
+      name: prefer_shorthands
+      sha256: "37d4143447911d8661a0305f06c7999731fedf7024eb7e025b03862f9b99c7de"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.7"
   process:
     dependency: transitive
     description:
