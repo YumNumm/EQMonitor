@@ -14,9 +14,7 @@ Future<List<TsunamiTelegramWithState>> tsunamiTelegrams(
   final response = await client.tsunami.getV2TsunamiTsunamiIdTelegrams(
     tsunamiId: tsunamiId,
   );
-  final telegrams = response.data.telegrams;
-  telegrams.sort(
-    (a, b) => a.telegram.pressedAt.compareTo(b.telegram.pressedAt),
-  );
-  return telegrams;
+  return [...response.data.telegrams]..sort(
+      (a, b) => a.telegram.pressedAt.compareTo(b.telegram.pressedAt),
+    );
 }
