@@ -1,7 +1,12 @@
 import Foundation
+import os.log
 import SQLite
 
 final class TelemetryWriter {
+    #if DEBUG
+    private static let logger = Logger(subsystem: "net.yumnumm.eqmonitor", category: "TelemetryWriter")
+    #endif
+
     private static let appGroupId = "group.net.yumnumm.eqmonitor"
     private static let dbName = "telemetry.db"
 
@@ -19,7 +24,12 @@ final class TelemetryWriter {
         eventId: String?,
         payload: String
     ) {
-        guard let db = openDatabase() else { return }
+        guard let db = openDatabase() else {
+            #if DEBUG
+            logger.error("Failed to open telemetry database")
+            #endif
+            return
+        }
 
         let nowMs = Int64(Date().timeIntervalSince1970 * 1000)
 
@@ -33,7 +43,9 @@ final class TelemetryWriter {
                 colCreatedAtMs <- nowMs
             ))
         } catch {
-            // Fire-and-forget: silently ignore insert failures
+            #if DEBUG
+            logger.error("Failed to insert telemetry event: \(error.localizedDescription)")
+            #endif
         }
     }
 
@@ -54,6 +66,9 @@ final class TelemetryWriter {
             })
             return db
         } catch {
+            #if DEBUG
+            logger.error("Failed to initialize telemetry database: \(error.localizedDescription)")
+            #endif
             return nil
         }
     }
@@ -61,7 +76,12 @@ final class TelemetryWriter {
     private static func databasePath() -> String? {
         guard let containerURL = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: appGroupId
-        ) else { return nil }
+        ) else {
+            #if DEBUG
+            logger.error("Failed to access App Group container: \(appGroupId)")
+            #endif
+            return nil
+        }
 
         let supportDir = containerURL
             .appendingPathComponent("Library")
