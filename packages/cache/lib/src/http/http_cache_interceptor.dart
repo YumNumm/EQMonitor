@@ -24,8 +24,7 @@ class HttpCacheInterceptor extends Interceptor {
     final key = store.primaryKeyForUrl(options);
     options.extra[_keyExtra] = key;
     final base = options.validateStatus;
-    options.validateStatus = (status) =>
-        status == 304 || base(status);
+    options.validateStatus = (status) => status == 304 || base(status);
     final cached = await store.read(key);
     if (cached?.eTag != null) {
       options.headers['if-none-match'] = cached!.eTag;

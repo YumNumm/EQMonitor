@@ -27,7 +27,9 @@ void main() {
     key: key,
     statusCode: 200,
     eTag: 'W/"abc"',
-    headers: const {'content-type': ['application/json']},
+    headers: const {
+      'content-type': ['application/json'],
+    },
     responseType: 'json',
     body: Uint8List.fromList(utf8.encode('{}')),
     updatedAtMs: 0,

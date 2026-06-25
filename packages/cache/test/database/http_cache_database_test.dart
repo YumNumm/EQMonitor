@@ -11,16 +11,19 @@ void main() {
   setUp(() => db = CacheDatabase(NativeDatabase.memory()));
   tearDown(() => db.close());
 
-  HttpCacheEntriesCompanion entry(String key, {int status = 200, String? eTag}) =>
-      HttpCacheEntriesCompanion.insert(
-        key: key,
-        statusCode: status,
-        eTag: Value(eTag),
-        headers: jsonEncode(<String, List<String>>{}),
-        responseType: 'json',
-        body: Uint8List.fromList(utf8.encode('{}')),
-        updatedAtMs: 0,
-      );
+  HttpCacheEntriesCompanion entry(
+    String key, {
+    int status = 200,
+    String? eTag,
+  }) => HttpCacheEntriesCompanion.insert(
+    key: key,
+    statusCode: status,
+    eTag: Value(eTag),
+    headers: jsonEncode(<String, List<String>>{}),
+    responseType: 'json',
+    body: Uint8List.fromList(utf8.encode('{}')),
+    updatedAtMs: 0,
+  );
 
   test('putEntry then getEntry returns the row', () async {
     await db.putEntry(entry('k1', eTag: 'W/"a"'));

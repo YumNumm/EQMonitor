@@ -10,9 +10,9 @@ class CacheDatabase extends _$CacheDatabase {
   @override
   int get schemaVersion => 1;
 
-  Future<HttpCacheEntryRow?> getEntry(String key) =>
-      (select(httpCacheEntries)..where((t) => t.key.equals(key)))
-          .getSingleOrNull();
+  Future<HttpCacheEntryRow?> getEntry(String key) => (select(
+    httpCacheEntries,
+  )..where((t) => t.key.equals(key))).getSingleOrNull();
 
   Future<void> putEntry(HttpCacheEntriesCompanion data) =>
       into(httpCacheEntries).insertOnConflictUpdate(data);
