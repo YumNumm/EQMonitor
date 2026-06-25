@@ -1,8 +1,7 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:cache/src/database/http_cache_database.dart';
-import 'package:drift/drift.dart' hide isNull, isNotNull;
+import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -10,7 +9,7 @@ void main() {
   late CacheDatabase db;
 
   setUp(() => db = CacheDatabase(NativeDatabase.memory()));
-  tearDown(() async => db.close());
+  tearDown(() => db.close());
 
   HttpCacheEntriesCompanion entry(String key, {int status = 200, String? eTag}) =>
       HttpCacheEntriesCompanion.insert(
@@ -31,7 +30,7 @@ void main() {
   });
 
   test('putEntry replaces on same key', () async {
-    await db.putEntry(entry('k1', status: 200));
+    await db.putEntry(entry('k1'));
     await db.putEntry(entry('k1', status: 201));
     final row = await db.getEntry('k1');
     expect(row!.statusCode, 201);

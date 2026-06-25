@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:cache/cache.dart';
-import 'package:cache/src/database/http_cache_database.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,7 +13,7 @@ void main() {
   late CacheDatabase db;
 
   setUp(() => db = CacheDatabase(NativeDatabase.memory()));
-  tearDown(() async => db.close());
+  tearDown(() => db.close());
 
   Dio buildDio({int schemaVersion = 1}) {
     final store = HttpCacheStore(

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cache/cache.dart';
-import 'package:cache/src/database/http_cache_database.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,7 +14,7 @@ void main() {
     db = CacheDatabase(NativeDatabase.memory());
     store = HttpCacheStore(db: db, schemaVersion: 1, appBuild: '3.0.0+100');
   });
-  tearDown(() async => db.close());
+  tearDown(() => db.close());
 
   RequestOptions options() => RequestOptions(
     path: '/v2/earthquake',
