@@ -2,5 +2,6 @@
 library;
 
 export 'src/http/http_cache_entry.dart';
+export 'src/http/http_cache_interceptor.dart';
 export 'src/http/http_cache_key.dart';
 export 'src/http/http_cache_store.dart';
