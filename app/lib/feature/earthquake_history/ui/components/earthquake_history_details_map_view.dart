@@ -178,7 +178,6 @@ class _MapContent extends HookConsumerWidget {
                 earthquake: earthquake,
                 parameter: parameter,
               ),
-              hypocenterLayer,
               EarthquakeHistoryStationIntensityLayer(
                 key: const ValueKey('station'),
                 earthquake: earthquake,
@@ -187,6 +186,7 @@ class _MapContent extends HookConsumerWidget {
                 showingLpgmIntensity: showingLpgmIntensity,
               ),
             ],
+            hypocenterLayer,
           ],
         ),
 

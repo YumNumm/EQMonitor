@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/current_locat
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_lpgm_intensity_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -101,6 +102,7 @@ class _LoadedContent extends HookWidget {
                   child: Column(
                     children: [
                       EarthquakeHypocenterInformationCard(item: earthquake),
+                      EarthquakeLpgmIntensityCard(item: earthquake),
                       CurrentLocationIntensityCard(item: earthquake),
                       EarthquakeIntensityCard(
                         item: earthquake,
