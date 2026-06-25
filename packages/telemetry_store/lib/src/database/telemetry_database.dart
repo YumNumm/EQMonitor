@@ -39,28 +39,27 @@ class TelemetryDatabase extends _$TelemetryDatabase {
           .get();
 
   Future<void> markAsSynced(List<int> ids) =>
-      (update(telemetryEvents)..where((t) => t.id.isIn(ids)))
-          .write(const TelemetryEventsCompanion(synced: Value(true)));
+      (update(telemetryEvents)..where((t) => t.id.isIn(ids))).write(
+        const TelemetryEventsCompanion(synced: Value(true)),
+      );
 
   Future<List<TelemetryEventRow>> queryByType(
     String eventType, {
     required int sinceMs,
   }) =>
-      (select(telemetryEvents)
-            ..where(
-              (t) =>
-                  t.eventType.equals(eventType) &
-                  t.timestampMs.isBiggerOrEqualValue(sinceMs),
-            ))
+      (select(telemetryEvents)..where(
+            (t) =>
+                t.eventType.equals(eventType) &
+                t.timestampMs.isBiggerOrEqualValue(sinceMs),
+          ))
           .get();
 
   Future<int> deleteOldSyncedEvents({required int beforeMs}) =>
-      (delete(telemetryEvents)
-            ..where(
-              (t) =>
-                  t.synced.equals(true) &
-                  t.createdAtMs.isSmallerThanValue(beforeMs),
-            ))
+      (delete(telemetryEvents)..where(
+            (t) =>
+                t.synced.equals(true) &
+                t.createdAtMs.isSmallerThanValue(beforeMs),
+          ))
           .go();
 
   Future<List<TelemetryEventRow>> getAllEvents({

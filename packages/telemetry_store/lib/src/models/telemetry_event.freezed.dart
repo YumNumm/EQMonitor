@@ -55,7 +55,7 @@ extension TelemetryEventPatterns on TelemetryEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( NotificationReceivedEvent value)?  notificationReceived,TResult Function( NotificationOpenedEvent value)?  notificationOpened,TResult Function( LiveActivityStartedEvent value)?  liveActivityStarted,TResult Function( LiveActivityUpdatedEvent value)?  liveActivityUpdated,TResult Function( LiveActivityEndedEvent value)?  liveActivityEnded,TResult Function( ErrorTelemetryEvent value)?  error,TResult Function( UserActionEvent value)?  userAction,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( NotificationReceivedEvent value)?  notificationReceived,TResult Function( NotificationOpenedEvent value)?  notificationOpened,TResult Function( LiveActivityStartedEvent value)?  liveActivityStarted,TResult Function( LiveActivityUpdatedEvent value)?  liveActivityUpdated,TResult Function( LiveActivityEndedEvent value)?  liveActivityEnded,TResult Function( ErrorTelemetryEvent value)?  error,TResult Function( UserActionEvent value)?  userAction,TResult Function( AppLaunchEvent value)?  appLaunch,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case NotificationReceivedEvent() when notificationReceived != null:
@@ -65,7 +65,8 @@ return liveActivityStarted(_that);case LiveActivityUpdatedEvent() when liveActiv
 return liveActivityUpdated(_that);case LiveActivityEndedEvent() when liveActivityEnded != null:
 return liveActivityEnded(_that);case ErrorTelemetryEvent() when error != null:
 return error(_that);case UserActionEvent() when userAction != null:
-return userAction(_that);case _:
+return userAction(_that);case AppLaunchEvent() when appLaunch != null:
+return appLaunch(_that);case _:
   return orElse();
 
 }
@@ -83,7 +84,7 @@ return userAction(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( NotificationReceivedEvent value)  notificationReceived,required TResult Function( NotificationOpenedEvent value)  notificationOpened,required TResult Function( LiveActivityStartedEvent value)  liveActivityStarted,required TResult Function( LiveActivityUpdatedEvent value)  liveActivityUpdated,required TResult Function( LiveActivityEndedEvent value)  liveActivityEnded,required TResult Function( ErrorTelemetryEvent value)  error,required TResult Function( UserActionEvent value)  userAction,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( NotificationReceivedEvent value)  notificationReceived,required TResult Function( NotificationOpenedEvent value)  notificationOpened,required TResult Function( LiveActivityStartedEvent value)  liveActivityStarted,required TResult Function( LiveActivityUpdatedEvent value)  liveActivityUpdated,required TResult Function( LiveActivityEndedEvent value)  liveActivityEnded,required TResult Function( ErrorTelemetryEvent value)  error,required TResult Function( UserActionEvent value)  userAction,required TResult Function( AppLaunchEvent value)  appLaunch,}){
 final _that = this;
 switch (_that) {
 case NotificationReceivedEvent():
@@ -93,7 +94,8 @@ return liveActivityStarted(_that);case LiveActivityUpdatedEvent():
 return liveActivityUpdated(_that);case LiveActivityEndedEvent():
 return liveActivityEnded(_that);case ErrorTelemetryEvent():
 return error(_that);case UserActionEvent():
-return userAction(_that);}
+return userAction(_that);case AppLaunchEvent():
+return appLaunch(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -107,7 +109,7 @@ return userAction(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( NotificationReceivedEvent value)?  notificationReceived,TResult? Function( NotificationOpenedEvent value)?  notificationOpened,TResult? Function( LiveActivityStartedEvent value)?  liveActivityStarted,TResult? Function( LiveActivityUpdatedEvent value)?  liveActivityUpdated,TResult? Function( LiveActivityEndedEvent value)?  liveActivityEnded,TResult? Function( ErrorTelemetryEvent value)?  error,TResult? Function( UserActionEvent value)?  userAction,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( NotificationReceivedEvent value)?  notificationReceived,TResult? Function( NotificationOpenedEvent value)?  notificationOpened,TResult? Function( LiveActivityStartedEvent value)?  liveActivityStarted,TResult? Function( LiveActivityUpdatedEvent value)?  liveActivityUpdated,TResult? Function( LiveActivityEndedEvent value)?  liveActivityEnded,TResult? Function( ErrorTelemetryEvent value)?  error,TResult? Function( UserActionEvent value)?  userAction,TResult? Function( AppLaunchEvent value)?  appLaunch,}){
 final _that = this;
 switch (_that) {
 case NotificationReceivedEvent() when notificationReceived != null:
@@ -117,7 +119,8 @@ return liveActivityStarted(_that);case LiveActivityUpdatedEvent() when liveActiv
 return liveActivityUpdated(_that);case LiveActivityEndedEvent() when liveActivityEnded != null:
 return liveActivityEnded(_that);case ErrorTelemetryEvent() when error != null:
 return error(_that);case UserActionEvent() when userAction != null:
-return userAction(_that);case _:
+return userAction(_that);case AppLaunchEvent() when appLaunch != null:
+return appLaunch(_that);case _:
   return null;
 
 }
@@ -134,7 +137,7 @@ return userAction(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( NotificationFramework framework,  String channelId,  String? title,  String? eventId,  String? priority)?  notificationReceived,TResult Function( bool coldStart,  String? eventId,  int? elapsedMs)?  notificationOpened,TResult Function( LiveActivityType activityType,  String activityId)?  liveActivityStarted,TResult Function( LiveActivityType activityType,  String activityId,  String? eventId)?  liveActivityUpdated,TResult Function( LiveActivityType activityType,  String activityId,  LiveActivityEndReason endReason,  int? durationMs)?  liveActivityEnded,TResult Function( String errorType,  String message,  String? stackTrace)?  error,TResult Function( UserActionType action,  Map<String, dynamic>? params)?  userAction,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( NotificationFramework framework,  String channelId,  String? title,  String? eventId,  String? priority)?  notificationReceived,TResult Function( bool coldStart,  String? eventId,  int? elapsedMs)?  notificationOpened,TResult Function( LiveActivityType activityType,  String activityId)?  liveActivityStarted,TResult Function( LiveActivityType activityType,  String activityId,  String? eventId)?  liveActivityUpdated,TResult Function( LiveActivityType activityType,  String activityId,  LiveActivityEndReason endReason,  int? durationMs)?  liveActivityEnded,TResult Function( String errorType,  String message,  String? stackTrace)?  error,TResult Function( UserActionType action,  Map<String, dynamic>? params)?  userAction,TResult Function( String launchType,  String appVersion,  int buildNumber,  String platform,  String osVersion,  String deviceModel,  String locale,  bool isPhysicalDevice,  int physicalRamMb,  int cpuCores,  String manufacturer,  int? androidSdkInt,  String? securityPatch,  bool? isLowRamDevice,  String? installerStore)?  appLaunch,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case NotificationReceivedEvent() when notificationReceived != null:
 return notificationReceived(_that.framework,_that.channelId,_that.title,_that.eventId,_that.priority);case NotificationOpenedEvent() when notificationOpened != null:
@@ -143,7 +146,8 @@ return liveActivityStarted(_that.activityType,_that.activityId);case LiveActivit
 return liveActivityUpdated(_that.activityType,_that.activityId,_that.eventId);case LiveActivityEndedEvent() when liveActivityEnded != null:
 return liveActivityEnded(_that.activityType,_that.activityId,_that.endReason,_that.durationMs);case ErrorTelemetryEvent() when error != null:
 return error(_that.errorType,_that.message,_that.stackTrace);case UserActionEvent() when userAction != null:
-return userAction(_that.action,_that.params);case _:
+return userAction(_that.action,_that.params);case AppLaunchEvent() when appLaunch != null:
+return appLaunch(_that.launchType,_that.appVersion,_that.buildNumber,_that.platform,_that.osVersion,_that.deviceModel,_that.locale,_that.isPhysicalDevice,_that.physicalRamMb,_that.cpuCores,_that.manufacturer,_that.androidSdkInt,_that.securityPatch,_that.isLowRamDevice,_that.installerStore);case _:
   return orElse();
 
 }
@@ -161,7 +165,7 @@ return userAction(_that.action,_that.params);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( NotificationFramework framework,  String channelId,  String? title,  String? eventId,  String? priority)  notificationReceived,required TResult Function( bool coldStart,  String? eventId,  int? elapsedMs)  notificationOpened,required TResult Function( LiveActivityType activityType,  String activityId)  liveActivityStarted,required TResult Function( LiveActivityType activityType,  String activityId,  String? eventId)  liveActivityUpdated,required TResult Function( LiveActivityType activityType,  String activityId,  LiveActivityEndReason endReason,  int? durationMs)  liveActivityEnded,required TResult Function( String errorType,  String message,  String? stackTrace)  error,required TResult Function( UserActionType action,  Map<String, dynamic>? params)  userAction,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( NotificationFramework framework,  String channelId,  String? title,  String? eventId,  String? priority)  notificationReceived,required TResult Function( bool coldStart,  String? eventId,  int? elapsedMs)  notificationOpened,required TResult Function( LiveActivityType activityType,  String activityId)  liveActivityStarted,required TResult Function( LiveActivityType activityType,  String activityId,  String? eventId)  liveActivityUpdated,required TResult Function( LiveActivityType activityType,  String activityId,  LiveActivityEndReason endReason,  int? durationMs)  liveActivityEnded,required TResult Function( String errorType,  String message,  String? stackTrace)  error,required TResult Function( UserActionType action,  Map<String, dynamic>? params)  userAction,required TResult Function( String launchType,  String appVersion,  int buildNumber,  String platform,  String osVersion,  String deviceModel,  String locale,  bool isPhysicalDevice,  int physicalRamMb,  int cpuCores,  String manufacturer,  int? androidSdkInt,  String? securityPatch,  bool? isLowRamDevice,  String? installerStore)  appLaunch,}) {final _that = this;
 switch (_that) {
 case NotificationReceivedEvent():
 return notificationReceived(_that.framework,_that.channelId,_that.title,_that.eventId,_that.priority);case NotificationOpenedEvent():
@@ -170,7 +174,8 @@ return liveActivityStarted(_that.activityType,_that.activityId);case LiveActivit
 return liveActivityUpdated(_that.activityType,_that.activityId,_that.eventId);case LiveActivityEndedEvent():
 return liveActivityEnded(_that.activityType,_that.activityId,_that.endReason,_that.durationMs);case ErrorTelemetryEvent():
 return error(_that.errorType,_that.message,_that.stackTrace);case UserActionEvent():
-return userAction(_that.action,_that.params);}
+return userAction(_that.action,_that.params);case AppLaunchEvent():
+return appLaunch(_that.launchType,_that.appVersion,_that.buildNumber,_that.platform,_that.osVersion,_that.deviceModel,_that.locale,_that.isPhysicalDevice,_that.physicalRamMb,_that.cpuCores,_that.manufacturer,_that.androidSdkInt,_that.securityPatch,_that.isLowRamDevice,_that.installerStore);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -184,7 +189,7 @@ return userAction(_that.action,_that.params);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( NotificationFramework framework,  String channelId,  String? title,  String? eventId,  String? priority)?  notificationReceived,TResult? Function( bool coldStart,  String? eventId,  int? elapsedMs)?  notificationOpened,TResult? Function( LiveActivityType activityType,  String activityId)?  liveActivityStarted,TResult? Function( LiveActivityType activityType,  String activityId,  String? eventId)?  liveActivityUpdated,TResult? Function( LiveActivityType activityType,  String activityId,  LiveActivityEndReason endReason,  int? durationMs)?  liveActivityEnded,TResult? Function( String errorType,  String message,  String? stackTrace)?  error,TResult? Function( UserActionType action,  Map<String, dynamic>? params)?  userAction,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( NotificationFramework framework,  String channelId,  String? title,  String? eventId,  String? priority)?  notificationReceived,TResult? Function( bool coldStart,  String? eventId,  int? elapsedMs)?  notificationOpened,TResult? Function( LiveActivityType activityType,  String activityId)?  liveActivityStarted,TResult? Function( LiveActivityType activityType,  String activityId,  String? eventId)?  liveActivityUpdated,TResult? Function( LiveActivityType activityType,  String activityId,  LiveActivityEndReason endReason,  int? durationMs)?  liveActivityEnded,TResult? Function( String errorType,  String message,  String? stackTrace)?  error,TResult? Function( UserActionType action,  Map<String, dynamic>? params)?  userAction,TResult? Function( String launchType,  String appVersion,  int buildNumber,  String platform,  String osVersion,  String deviceModel,  String locale,  bool isPhysicalDevice,  int physicalRamMb,  int cpuCores,  String manufacturer,  int? androidSdkInt,  String? securityPatch,  bool? isLowRamDevice,  String? installerStore)?  appLaunch,}) {final _that = this;
 switch (_that) {
 case NotificationReceivedEvent() when notificationReceived != null:
 return notificationReceived(_that.framework,_that.channelId,_that.title,_that.eventId,_that.priority);case NotificationOpenedEvent() when notificationOpened != null:
@@ -193,7 +198,8 @@ return liveActivityStarted(_that.activityType,_that.activityId);case LiveActivit
 return liveActivityUpdated(_that.activityType,_that.activityId,_that.eventId);case LiveActivityEndedEvent() when liveActivityEnded != null:
 return liveActivityEnded(_that.activityType,_that.activityId,_that.endReason,_that.durationMs);case ErrorTelemetryEvent() when error != null:
 return error(_that.errorType,_that.message,_that.stackTrace);case UserActionEvent() when userAction != null:
-return userAction(_that.action,_that.params);case _:
+return userAction(_that.action,_that.params);case AppLaunchEvent() when appLaunch != null:
+return appLaunch(_that.launchType,_that.appVersion,_that.buildNumber,_that.platform,_that.osVersion,_that.deviceModel,_that.locale,_that.isPhysicalDevice,_that.physicalRamMb,_that.cpuCores,_that.manufacturer,_that.androidSdkInt,_that.securityPatch,_that.isLowRamDevice,_that.installerStore);case _:
   return null;
 
 }
@@ -695,6 +701,100 @@ class _$UserActionEventCopyWithImpl<$Res>
 action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
 as UserActionType,params: freezed == params ? _self._params : params // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class AppLaunchEvent extends TelemetryEvent {
+  const AppLaunchEvent({required this.launchType, required this.appVersion, required this.buildNumber, required this.platform, required this.osVersion, required this.deviceModel, required this.locale, required this.isPhysicalDevice, required this.physicalRamMb, required this.cpuCores, required this.manufacturer, this.androidSdkInt, this.securityPatch, this.isLowRamDevice, this.installerStore}): super._();
+  
+
+ final  String launchType;
+ final  String appVersion;
+ final  int buildNumber;
+ final  String platform;
+ final  String osVersion;
+ final  String deviceModel;
+ final  String locale;
+ final  bool isPhysicalDevice;
+ final  int physicalRamMb;
+ final  int cpuCores;
+ final  String manufacturer;
+ final  int? androidSdkInt;
+ final  String? securityPatch;
+ final  bool? isLowRamDevice;
+ final  String? installerStore;
+
+/// Create a copy of TelemetryEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AppLaunchEventCopyWith<AppLaunchEvent> get copyWith => _$AppLaunchEventCopyWithImpl<AppLaunchEvent>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppLaunchEvent&&(identical(other.launchType, launchType) || other.launchType == launchType)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.osVersion, osVersion) || other.osVersion == osVersion)&&(identical(other.deviceModel, deviceModel) || other.deviceModel == deviceModel)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.isPhysicalDevice, isPhysicalDevice) || other.isPhysicalDevice == isPhysicalDevice)&&(identical(other.physicalRamMb, physicalRamMb) || other.physicalRamMb == physicalRamMb)&&(identical(other.cpuCores, cpuCores) || other.cpuCores == cpuCores)&&(identical(other.manufacturer, manufacturer) || other.manufacturer == manufacturer)&&(identical(other.androidSdkInt, androidSdkInt) || other.androidSdkInt == androidSdkInt)&&(identical(other.securityPatch, securityPatch) || other.securityPatch == securityPatch)&&(identical(other.isLowRamDevice, isLowRamDevice) || other.isLowRamDevice == isLowRamDevice)&&(identical(other.installerStore, installerStore) || other.installerStore == installerStore));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,launchType,appVersion,buildNumber,platform,osVersion,deviceModel,locale,isPhysicalDevice,physicalRamMb,cpuCores,manufacturer,androidSdkInt,securityPatch,isLowRamDevice,installerStore);
+
+@override
+String toString() {
+  return 'TelemetryEvent.appLaunch(launchType: $launchType, appVersion: $appVersion, buildNumber: $buildNumber, platform: $platform, osVersion: $osVersion, deviceModel: $deviceModel, locale: $locale, isPhysicalDevice: $isPhysicalDevice, physicalRamMb: $physicalRamMb, cpuCores: $cpuCores, manufacturer: $manufacturer, androidSdkInt: $androidSdkInt, securityPatch: $securityPatch, isLowRamDevice: $isLowRamDevice, installerStore: $installerStore)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $AppLaunchEventCopyWith<$Res> implements $TelemetryEventCopyWith<$Res> {
+  factory $AppLaunchEventCopyWith(AppLaunchEvent value, $Res Function(AppLaunchEvent) _then) = _$AppLaunchEventCopyWithImpl;
+@useResult
+$Res call({
+ String launchType, String appVersion, int buildNumber, String platform, String osVersion, String deviceModel, String locale, bool isPhysicalDevice, int physicalRamMb, int cpuCores, String manufacturer, int? androidSdkInt, String? securityPatch, bool? isLowRamDevice, String? installerStore
+});
+
+
+
+
+}
+/// @nodoc
+class _$AppLaunchEventCopyWithImpl<$Res>
+    implements $AppLaunchEventCopyWith<$Res> {
+  _$AppLaunchEventCopyWithImpl(this._self, this._then);
+
+  final AppLaunchEvent _self;
+  final $Res Function(AppLaunchEvent) _then;
+
+/// Create a copy of TelemetryEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? launchType = null,Object? appVersion = null,Object? buildNumber = null,Object? platform = null,Object? osVersion = null,Object? deviceModel = null,Object? locale = null,Object? isPhysicalDevice = null,Object? physicalRamMb = null,Object? cpuCores = null,Object? manufacturer = null,Object? androidSdkInt = freezed,Object? securityPatch = freezed,Object? isLowRamDevice = freezed,Object? installerStore = freezed,}) {
+  return _then(AppLaunchEvent(
+launchType: null == launchType ? _self.launchType : launchType // ignore: cast_nullable_to_non_nullable
+as String,appVersion: null == appVersion ? _self.appVersion : appVersion // ignore: cast_nullable_to_non_nullable
+as String,buildNumber: null == buildNumber ? _self.buildNumber : buildNumber // ignore: cast_nullable_to_non_nullable
+as int,platform: null == platform ? _self.platform : platform // ignore: cast_nullable_to_non_nullable
+as String,osVersion: null == osVersion ? _self.osVersion : osVersion // ignore: cast_nullable_to_non_nullable
+as String,deviceModel: null == deviceModel ? _self.deviceModel : deviceModel // ignore: cast_nullable_to_non_nullable
+as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,isPhysicalDevice: null == isPhysicalDevice ? _self.isPhysicalDevice : isPhysicalDevice // ignore: cast_nullable_to_non_nullable
+as bool,physicalRamMb: null == physicalRamMb ? _self.physicalRamMb : physicalRamMb // ignore: cast_nullable_to_non_nullable
+as int,cpuCores: null == cpuCores ? _self.cpuCores : cpuCores // ignore: cast_nullable_to_non_nullable
+as int,manufacturer: null == manufacturer ? _self.manufacturer : manufacturer // ignore: cast_nullable_to_non_nullable
+as String,androidSdkInt: freezed == androidSdkInt ? _self.androidSdkInt : androidSdkInt // ignore: cast_nullable_to_non_nullable
+as int?,securityPatch: freezed == securityPatch ? _self.securityPatch : securityPatch // ignore: cast_nullable_to_non_nullable
+as String?,isLowRamDevice: freezed == isLowRamDevice ? _self.isLowRamDevice : isLowRamDevice // ignore: cast_nullable_to_non_nullable
+as bool?,installerStore: freezed == installerStore ? _self.installerStore : installerStore // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

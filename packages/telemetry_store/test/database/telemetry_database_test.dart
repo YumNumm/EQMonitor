@@ -21,14 +21,13 @@ void main() {
     String payload = '{}',
     bool synced = false,
     int createdAtMs = 1000,
-  }) =>
-      TelemetryEventsCompanion.insert(
-        eventType: eventType,
-        timestampMs: timestampMs,
-        eventId: Value(eventId),
-        payload: payload,
-        createdAtMs: createdAtMs,
-      );
+  }) => TelemetryEventsCompanion.insert(
+    eventType: eventType,
+    timestampMs: timestampMs,
+    eventId: Value(eventId),
+    payload: payload,
+    createdAtMs: createdAtMs,
+  );
 
   group('insertEvent', () {
     test('inserts and returns generated id', () async {
