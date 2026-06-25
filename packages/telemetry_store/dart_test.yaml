@@ -1,0 +1,7 @@
+# Only include pure Dart tests in `dart test`.
+# Tests that require Flutter (dart:ui) are run by `flutter test` instead.
+paths:
+  - test/database
+  - test/models
+  - test/recorder/telemetry_recorder_test.dart
+  - test/uploader

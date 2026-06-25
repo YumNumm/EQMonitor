@@ -53,6 +53,24 @@ sealed class TelemetryEvent with _$TelemetryEvent {
     Map<String, dynamic>? params,
   }) = UserActionEvent;
 
+  const factory TelemetryEvent.appLaunch({
+    required String launchType,
+    required String appVersion,
+    required int buildNumber,
+    required String platform,
+    required String osVersion,
+    required String deviceModel,
+    required String locale,
+    required bool isPhysicalDevice,
+    required int physicalRamMb,
+    required int cpuCores,
+    required String manufacturer,
+    int? androidSdkInt,
+    String? securityPatch,
+    bool? isLowRamDevice,
+    String? installerStore,
+  }) = AppLaunchEvent;
+
   String get eventType => switch (this) {
     NotificationReceivedEvent() => 'notification_received',
     NotificationOpenedEvent() => 'notification_opened',
@@ -61,6 +79,7 @@ sealed class TelemetryEvent with _$TelemetryEvent {
     LiveActivityEndedEvent() => 'live_activity_ended',
     ErrorTelemetryEvent() => 'error',
     UserActionEvent() => 'user_action',
+    AppLaunchEvent() => 'app_launch',
   };
 
   String? get eventId => switch (this) {
@@ -121,5 +140,39 @@ sealed class TelemetryEvent with _$TelemetryEvent {
       'action': action.name,
       'params': ?params,
     },
+    AppLaunchEvent(
+      :final launchType,
+      :final appVersion,
+      :final buildNumber,
+      :final platform,
+      :final osVersion,
+      :final deviceModel,
+      :final locale,
+      :final isPhysicalDevice,
+      :final physicalRamMb,
+      :final cpuCores,
+      :final manufacturer,
+      :final androidSdkInt,
+      :final securityPatch,
+      :final isLowRamDevice,
+      :final installerStore,
+    ) =>
+      {
+        'launch_type': launchType,
+        'app_version': appVersion,
+        'build_number': buildNumber,
+        'platform': platform,
+        'os_version': osVersion,
+        'device_model': deviceModel,
+        'locale': locale,
+        'is_physical_device': isPhysicalDevice,
+        'physical_ram_mb': physicalRamMb,
+        'cpu_cores': cpuCores,
+        'manufacturer': manufacturer,
+        'android_sdk_int': ?androidSdkInt,
+        'security_patch': ?securityPatch,
+        'is_low_ram_device': ?isLowRamDevice,
+        'installer_store': ?installerStore,
+      },
   };
 }

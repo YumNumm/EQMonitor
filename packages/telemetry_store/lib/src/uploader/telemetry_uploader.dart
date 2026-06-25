@@ -7,8 +7,8 @@ class TelemetryUploader {
     required TelemetryDatabase db,
     required EventSender sender,
     this.batchSize = 100,
-  })  : _db = db,
-        _sender = sender;
+  }) : _db = db,
+       _sender = sender;
 
   final TelemetryDatabase _db;
   final EventSender _sender;

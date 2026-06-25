@@ -29,6 +29,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_ma
 import 'package:eqmonitor/feature/live_activity/data/repository/live_activity_token_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_watcher_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_startup_flush_provider.dart';
 import 'package:eqmonitor/firebase_options.dart';
@@ -203,8 +204,7 @@ Future<void> _main() async {
   ).wait;
   initLicenses();
 
-  final telemetryDbPath =
-      kIsWeb ? null : await resolveTelemetryDbPath();
+  final telemetryDbPath = kIsWeb ? null : await resolveTelemetryDbPath();
 
   if (!kIsWeb) {
     unawaited(
@@ -246,6 +246,7 @@ Future<void> _main() async {
   unawaited(container.read(pushTokenSyncWiringProvider.future));
   if (!kIsWeb) {
     unawaited(container.read(telemetryStartupFlushProvider.future));
+    container.read(appLaunchWatcherProvider);
   }
 
   runApp(
