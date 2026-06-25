@@ -63,7 +63,6 @@ dependencies:
     path: ../packages/dart_azarashi
   device_info_plus: ^13.1.0
   dio: ^5.8.0+1
-  dio_cache_interceptor: ^4.0.6
   drift: ^2.22.0
   dynamic_color: ^1.7.0
   earthquake_replay:
@@ -111,7 +110,6 @@ dependencies:
   google_api_availability: ^5.0.1
   google_mobile_ads: ^9.0.0
   hooks_riverpod: ^3.0.3
-  http_cache_drift_store: ^7.0.0
   image: ^4.4.0
   in_app_review: ^2.0.10
   intl: ^0.20.2

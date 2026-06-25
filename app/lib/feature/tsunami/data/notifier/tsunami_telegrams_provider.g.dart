@@ -68,7 +68,7 @@ final class TsunamiTelegramsProvider
   }
 }
 
-String _$tsunamiTelegramsHash() => r'312b121172e782b22dfeeb817b5828df45e07c07';
+String _$tsunamiTelegramsHash() => r'8929c55a035990198799720899403ba0dc1600a1';
 
 final class TsunamiTelegramsFamily extends $Family
     with

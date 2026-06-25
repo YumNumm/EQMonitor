@@ -1,5 +1,5 @@
 import 'package:cache/cache.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final url = Uri.parse('https://v2.api.eqmonitor.app/v2/earthquake?limit=10');
