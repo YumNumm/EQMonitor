@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -6,6 +7,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:telemetry_store/telemetry_store.dart';
 
 part 'firebase_messaging_interaction.g.dart';
+
+String? _pendingNotificationEventId;
+
+String? consumePendingNotificationEventId() {
+  final eventId = _pendingNotificationEventId;
+  _pendingNotificationEventId = null;
+  return eventId;
+}
 
 @Riverpod(keepAlive: true)
 Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
@@ -21,6 +30,10 @@ Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
       initialMessage,
       coldStart: true,
     );
+    final eventId = initialMessage.data['eventId'] as String?;
+    if (eventId != null) {
+      _pendingNotificationEventId = eventId;
+    }
     yield initialMessage;
   }
 
@@ -31,6 +44,12 @@ Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
       message,
       coldStart: false,
     );
+    final eventId = message.data['eventId'] as String?;
+    if (eventId != null) {
+      ref
+          .read(goRouterProvider)
+          .push(EarthquakeHistoryDetailsRoute(eventId: eventId).location);
+    }
     yield message;
   }
 }
