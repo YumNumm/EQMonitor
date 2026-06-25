@@ -45,8 +45,9 @@ Future<Dio> dio(Ref ref) async {
   dio.interceptors.add(AppCheckInterceptor());
   dio.interceptors.add(DeviceIdInterceptor(deviceId: deviceId));
   dio.interceptors.add(deviceAuthTokenInterceptor);
-  // ETag/304 透過キャッシュ。TalkerDioLogger より前に登録し、
-  // レスポンス時はログ → キャッシュ保存/復元の順になるようにする。
+  // ETag/304 透過キャッシュ。onResponse は登録順に実行されるため
+  // TalkerDioLogger より前に置く。304 ヒット時は handler.resolve で
+  // キャッシュ復元して短絡し、以降のロガーには到達しない。
   dio.interceptors.add(HttpCacheInterceptor(httpCache));
   dio.interceptors.add(
     TalkerDioLogger(
