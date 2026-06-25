@@ -1,37 +1,58 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:cache/src/database/http_cache_database.dart';
+import 'package:cache/src/http/http_cache_entry.dart';
 import 'package:cache/src/http/http_cache_key.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:drift/drift.dart';
 
-/// `dio_cache_interceptor` の [CacheStore] をラップし、URL 単位 evict と
-/// 全消去、キャッシュキー解決を公開する横断 HTTP キャッシュストア。
-///
-/// Riverpod 非依存 (provider は app が供給)。計画D の自己修復 (該当 URL の
-/// evict) と一括 wipe (clearAll) から消費される。
 class HttpCacheStore {
   HttpCacheStore({
-    required this.store,
+    required this.db,
     required this.schemaVersion,
     required this.appBuild,
   });
 
-  /// 内部の dio_cache_interceptor ストア (Drift / Mem)。
-  final CacheStore store;
-
-  /// キャッシュキーの名前空間に使う schema version。
+  final CacheDatabase db;
   final int schemaVersion;
-
-  /// キャッシュキーの名前空間に使う app build (`version+build`)。
   final String appBuild;
 
-  /// 指定した primaryKey のキャッシュエントリを削除する。
-  Future<void> evict(String primaryKey) => store.delete(primaryKey);
+  Future<HttpCacheEntry?> read(String key) async {
+    final row = await db.getEntry(key);
+    if (row == null) {
+      return null;
+    }
+    final decoded = (jsonDecode(row.headers) as Map<String, dynamic>).map(
+      (k, v) => MapEntry(k, (v as List).cast<String>()),
+    );
+    return HttpCacheEntry(
+      key: row.key,
+      statusCode: row.statusCode,
+      eTag: row.eTag,
+      headers: decoded,
+      responseType: row.responseType,
+      body: Uint8List.fromList(row.body),
+      updatedAtMs: row.updatedAtMs,
+    );
+  }
 
-  /// すべての HTTP キャッシュエントリを削除する。
-  Future<void> clearAll() => store.clean();
+  Future<void> write(HttpCacheEntry entry) => db.putEntry(
+    HttpCacheEntriesCompanion.insert(
+      key: entry.key,
+      statusCode: entry.statusCode,
+      eTag: Value(entry.eTag),
+      headers: jsonEncode(entry.headers),
+      responseType: entry.responseType,
+      body: entry.body,
+      updatedAtMs: entry.updatedAtMs,
+    ),
+  );
 
-  /// interceptor の keyBuilder と同一ロジックで URL からキャッシュキーを解決する。
-  ///
-  /// 既定 keyBuilder は url のみを使うため、`options.uri` のみで一致する。
+  Future<void> evict(String key) => db.deleteEntry(key);
+
+  Future<void> clearAll() => db.clear();
+
   String primaryKeyForUrl(RequestOptions options) => buildHttpCacheKey(
     schemaVersion: schemaVersion,
     appBuild: appBuild,
