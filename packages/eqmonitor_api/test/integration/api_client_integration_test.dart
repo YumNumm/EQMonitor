@@ -11,7 +11,7 @@ import 'stub_admin.dart';
 
 /// Dart クライアント↔起動中 api-stub の結合テスト（Spec ②）。
 ///
-/// 前提: api-stub が [STUB_BASE_URL]（既定 http://localhost:8790）で起動していること。
+/// 前提: api-stub が `STUB_BASE_URL`（既定 http://localhost:8790）で起動していること。
 /// ローカル: `cd backend/api/api-stub && pnpm build && node dist/index.mjs`
 /// 実行: `dart test --run-skipped --tags integration`
 void main() {

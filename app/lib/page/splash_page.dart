@@ -63,7 +63,9 @@ class SplashPage extends HookConsumerWidget {
                   );
                 },
               )
-            : const Center(child: CircularProgressIndicator.adaptive()),
+            : const Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
       ),
     );
   }
