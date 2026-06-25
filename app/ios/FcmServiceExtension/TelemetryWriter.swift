@@ -1,10 +1,25 @@
 import Foundation
 import os.log
 import SQLite
+import UserNotifications
 
 final class TelemetryWriter {
     #if DEBUG
     private static let logger = Logger(subsystem: "net.yumnumm.eqmonitor", category: "TelemetryWriter")
+
+    private static func notifyError(_ message: String) {
+        logger.error("\(message)")
+        let content = UNMutableNotificationContent()
+        content.title = "[TelemetryWriter] Error"
+        content.body = message
+        content.sound = .none
+        let request = UNNotificationRequest(
+            identifier: "telemetry-error-\(UUID().uuidString)",
+            content: content,
+            trigger: nil
+        )
+        UNUserNotificationCenter.current().add(request)
+    }
     #endif
 
     private static let appGroupId = "group.net.yumnumm.eqmonitor"
@@ -26,7 +41,7 @@ final class TelemetryWriter {
     ) {
         guard let db = openDatabase() else {
             #if DEBUG
-            logger.error("Failed to open telemetry database")
+            notifyError("Failed to open telemetry database")
             #endif
             return
         }
@@ -44,7 +59,7 @@ final class TelemetryWriter {
             ))
         } catch {
             #if DEBUG
-            logger.error("Failed to insert telemetry event: \(error.localizedDescription)")
+            notifyError("Failed to insert telemetry event: \(error.localizedDescription)")
             #endif
         }
     }
@@ -67,7 +82,7 @@ final class TelemetryWriter {
             return db
         } catch {
             #if DEBUG
-            logger.error("Failed to initialize telemetry database: \(error.localizedDescription)")
+            notifyError("Failed to initialize telemetry database: \(error.localizedDescription)")
             #endif
             return nil
         }
@@ -78,7 +93,7 @@ final class TelemetryWriter {
             forSecurityApplicationGroupIdentifier: appGroupId
         ) else {
             #if DEBUG
-            logger.error("Failed to access App Group container: \(appGroupId)")
+            notifyError("Failed to access App Group container: \(appGroupId)")
             #endif
             return nil
         }
