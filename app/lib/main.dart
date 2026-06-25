@@ -16,6 +16,7 @@ import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
+import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
@@ -242,6 +243,7 @@ Future<void> _main() async {
   container.read(autoReturnWatcherProvider);
   container.listen(backgroundLocationServiceProvider, (_, _) {});
   unawaited(container.read(pushTokenSyncWiringProvider.future));
+  container.listen(firebaseMessagingInteractionProvider, (_, _) {});
   if (!kIsWeb) {
     unawaited(container.read(telemetryStartupFlushProvider.future));
   }
