@@ -7,11 +7,6 @@ environment:
 resolution: workspace
 
 dependencies:
-  altive_lints: ^2.3.0
-  analysis_server_plugin: ^0.3.4
-  analyzer: ^9.0.0
-  analyzer_plugin: ^0.13.11
   flutter:
     sdk: flutter
-  prefer_shorthands: ^0.4.7
   yumemi_lints: ^4.4.0

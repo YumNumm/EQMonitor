@@ -10,3 +10,14 @@ analyzer:
   exclude:
     - "**/DerivedData/**"
     - "**/build/**"
+
+plugins:
+  eqmonitor_lints_plugin:
+    path: tools/eqmonitor_lints_plugin
+    diagnostics:
+      avoid_stateful_widget: true
+      avoid_null_assertion_operator: true
+      avoid_top_level_functions: true
+      avoid_print: true
+      avoid_eqmonitor_api_in_ui: true
+      avoid_mixed_declaration_categories: true

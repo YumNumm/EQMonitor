@@ -14,8 +14,8 @@ class AvoidMixedDeclarationCategories extends AnalysisRule {
 
   static const _code = LintCode(
     'avoid_mixed_declaration_categories',
-    'freezed モデルは他の class / Riverpod プロバイダと'
-        '同一ファイルに定義できません。専用ファイルに分離してください。',
+    'freezed モデルは他の class / Riverpod プロバイダと同一ファイルに定義できません。'
+        ' 専用ファイルに分離してください。',
     correctionMessage:
         'freezed モデルを専用ファイルへ分離してください。'
         ' Riverpod プロバイダと、それが DI する通常 class の同居のみ許可されます。',
@@ -55,7 +55,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    final freezedClasses = <ClassDeclaration>[];
+    // analyzer 13 で ClassDeclaration.name ゲッターが廃止されたため、
+    // 報告対象は @freezed アノテーションノードとする。
+    final freezedAnnotations = <Annotation>[];
     final categories = <_Category>{};
 
     for (final declaration in node.declarations) {
@@ -65,15 +67,18 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
       categories.add(category);
       if (category == _Category.freezed && declaration is ClassDeclaration) {
-        freezedClasses.add(declaration);
+        final annotation = _annotationOf(declaration.metadata, _freezedNames);
+        if (annotation != null) {
+          freezedAnnotations.add(annotation);
+        }
       }
     }
 
     // 「1ファイル1カテゴリ」 + Riverpod DI 例外 ({riverpod, plain} は許可)。
     // freezed が他カテゴリと混在している場合のみ違反とする。
     if (categories.contains(_Category.freezed) && categories.length > 1) {
-      for (final freezed in freezedClasses) {
-        rule.reportAtToken(freezed.name);
+      for (final annotation in freezedAnnotations) {
+        rule.reportAtNode(annotation);
       }
     }
   }
@@ -81,17 +86,17 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Category? _categoryOf(CompilationUnitMember declaration) {
     switch (declaration) {
       case ClassDeclaration():
-        if (_hasAnnotation(declaration.metadata, _freezedNames)) {
+        if (_annotationOf(declaration.metadata, _freezedNames) != null) {
           return _Category.freezed;
         }
-        if (_hasAnnotation(declaration.metadata, _riverpodNames)) {
+        if (_annotationOf(declaration.metadata, _riverpodNames) != null) {
           return _Category.riverpod;
         }
         return _Category.plain;
       case FunctionDeclaration():
         // @riverpod 関数プロバイダのみカテゴリ対象。
         // 通常のトップレベル関数は avoid_top_level_functions の責務。
-        if (_hasAnnotation(declaration.metadata, _riverpodNames)) {
+        if (_annotationOf(declaration.metadata, _riverpodNames) != null) {
           return _Category.riverpod;
         }
         return null;
@@ -100,12 +105,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  bool _hasAnnotation(NodeList<Annotation> metadata, Set<String> names) {
+  Annotation? _annotationOf(NodeList<Annotation> metadata, Set<String> names) {
     for (final annotation in metadata) {
       if (names.contains(annotation.name.name)) {
-        return true;
+        return annotation;
       }
     }
-    return false;
+    return null;
   }
 }

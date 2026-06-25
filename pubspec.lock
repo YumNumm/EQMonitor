@@ -1693,14 +1693,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.5.0"
-  prefer_shorthands:
-    dependency: transitive
-    description:
-      name: prefer_shorthands
-      sha256: "37d4143447911d8661a0305f06c7999731fedf7024eb7e025b03862f9b99c7de"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.7"
   process:
     dependency: transitive
     description:
