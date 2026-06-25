@@ -4,10 +4,16 @@ import SQLite
 import UserNotifications
 
 final class TelemetryWriter {
-    #if DEBUG
+    private static let appGroupId = "group.net.yumnumm.eqmonitor"
+    private static let dbName = "telemetry.db"
     private static let logger = Logger(subsystem: "net.yumnumm.eqmonitor", category: "TelemetryWriter")
 
+    private static var isDebug: Bool {
+        UserDefaults(suiteName: appGroupId)?.bool(forKey: "debugMode") ?? false
+    }
+
     private static func notifyError(_ message: String) {
+        guard isDebug else { return }
         logger.error("\(message)")
         let content = UNMutableNotificationContent()
         content.title = "[TelemetryWriter] Error"
@@ -20,10 +26,6 @@ final class TelemetryWriter {
         )
         UNUserNotificationCenter.current().add(request)
     }
-    #endif
-
-    private static let appGroupId = "group.net.yumnumm.eqmonitor"
-    private static let dbName = "telemetry.db"
 
     private static let events = Table("telemetry_events")
     private static let colEventType = SQLite.Expression<String>("event_type")
@@ -40,9 +42,7 @@ final class TelemetryWriter {
         payload: String
     ) {
         guard let db = openDatabase() else {
-            #if DEBUG
             notifyError("Failed to open telemetry database")
-            #endif
             return
         }
 
@@ -58,9 +58,7 @@ final class TelemetryWriter {
                 colCreatedAtMs <- nowMs
             ))
         } catch {
-            #if DEBUG
             notifyError("Failed to insert telemetry event: \(error.localizedDescription)")
-            #endif
         }
     }
 
@@ -81,9 +79,7 @@ final class TelemetryWriter {
             })
             return db
         } catch {
-            #if DEBUG
             notifyError("Failed to initialize telemetry database: \(error.localizedDescription)")
-            #endif
             return nil
         }
     }
@@ -92,9 +88,7 @@ final class TelemetryWriter {
         guard let containerURL = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: appGroupId
         ) else {
-            #if DEBUG
             notifyError("Failed to access App Group container: \(appGroupId)")
-            #endif
             return nil
         }
 
