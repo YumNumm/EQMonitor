@@ -18,16 +18,10 @@ _MaxHeight _$MaxHeightFromJson(Map<String, dynamic> json) => $checkedCreate(
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
       value: $checkedConvert('value', (v) => v as num?),
-      isOver: $checkedConvert('is_over', (v) => v),
-      qualitative: $checkedConvert(
-        'qualitative',
-        (v) => $enumDecodeNullable(_$QualitativeHeightEnumMap, v),
-      ),
-      isObserving: $checkedConvert('is_observing', (v) => v),
-      revise: $checkedConvert(
-        'revise',
-        (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
-      ),
+      isOver: $checkedConvert('is_over', (v) => v as bool?),
+      qualitative: $checkedConvert('qualitative', (v) => v as String?),
+      isObserving: $checkedConvert('is_observing', (v) => v as bool?),
+      revise: $checkedConvert('revise', (v) => v as String?),
     );
     return val;
   },
@@ -47,10 +41,3 @@ Map<String, dynamic> _$MaxHeightToJson(_MaxHeight instance) =>
       'is_observing': ?instance.isObserving,
       'revise': ?instance.revise,
     };
-
-const _$QualitativeHeightEnumMap = {
-  QualitativeHeight.enormous: 'ENORMOUS',
-  QualitativeHeight.high: 'HIGH',
-};
-
-const _$ReviseEnumMap = {Revise.addition: 'ADDITION', Revise.update: 'UPDATE'};

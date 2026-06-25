@@ -12,8 +12,8 @@ _V2FeedsAdminRequestBody _$V2FeedsAdminRequestBodyFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_V2FeedsAdminRequestBody', json, ($checkedConvert) {
   final val = _V2FeedsAdminRequestBody(
-    feedType: $checkedConvert('feedType', (v) => v),
-    priority: $checkedConvert('priority', (v) => v),
+    feedType: $checkedConvert('feedType', (v) => v as String),
+    priority: $checkedConvert('priority', (v) => v as String),
     isImportant: $checkedConvert('isImportant', (v) => v as bool),
     publishedAt: $checkedConvert('publishedAt', (v) => v as String),
     data: $checkedConvert(

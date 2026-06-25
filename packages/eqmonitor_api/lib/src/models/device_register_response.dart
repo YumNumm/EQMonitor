@@ -12,7 +12,8 @@ abstract class DeviceRegisterResponse with _$DeviceRegisterResponse {
   const factory DeviceRegisterResponse({
     required String deviceId,
     required String deviceToken,
-    required dynamic expiresAt,
+    @JsonKey(includeIfNull: true)
+    required String? expiresAt,
   }) = _DeviceRegisterResponse;
   
   factory DeviceRegisterResponse.fromJson(Map<String, Object?> json) => _$DeviceRegisterResponseFromJson(json);

@@ -14,7 +14,7 @@ _PostV2AdminTestLiveEventResponse _$PostV2AdminTestLiveEventResponseFromJson(
   $checkedConvert,
 ) {
   final val = _PostV2AdminTestLiveEventResponse(
-    ok: $checkedConvert('ok', (v) => v),
+    ok: $checkedConvert('ok', (v) => v as bool),
   );
   return val;
 });

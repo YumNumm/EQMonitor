@@ -10,7 +10,7 @@ part 'replay_download_service_unavailable.g.dart';
 @Freezed()
 abstract class ReplayDownloadServiceUnavailable with _$ReplayDownloadServiceUnavailable {
   const factory ReplayDownloadServiceUnavailable({
-    required dynamic code,
+    required String code,
     required String message,
   }) = _ReplayDownloadServiceUnavailable;
   

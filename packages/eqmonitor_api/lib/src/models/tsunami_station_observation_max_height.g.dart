@@ -20,18 +20,11 @@ _$TsunamiStationObservationMaxHeightFromJson(Map<String, dynamic> json) =>
             (v) => v == null ? null : DateTime.parse(v as String),
           ),
           value: $checkedConvert('value', (v) => v as num?),
-          isOver: $checkedConvert('is_over', (v) => v),
-          isRising: $checkedConvert('is_rising', (v) => v),
-          condition: $checkedConvert(
-            'condition',
-            (v) =>
-                $enumDecodeNullable(_$ObservationMaxHeightConditionEnumMap, v),
-          ),
-          isMissing: $checkedConvert('is_missing', (v) => v),
-          revise: $checkedConvert(
-            'revise',
-            (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
-          ),
+          isOver: $checkedConvert('is_over', (v) => v as bool?),
+          isRising: $checkedConvert('is_rising', (v) => v as bool?),
+          condition: $checkedConvert('condition', (v) => v as String?),
+          isMissing: $checkedConvert('is_missing', (v) => v as bool?),
+          revise: $checkedConvert('revise', (v) => v as String?),
         );
         return val;
       },
@@ -54,11 +47,3 @@ Map<String, dynamic> _$TsunamiStationObservationMaxHeightToJson(
   'is_missing': ?instance.isMissing,
   'revise': ?instance.revise,
 };
-
-const _$ObservationMaxHeightConditionEnumMap = {
-  ObservationMaxHeightCondition.minor: 'MINOR',
-  ObservationMaxHeightCondition.observing: 'OBSERVING',
-  ObservationMaxHeightCondition.important: 'IMPORTANT',
-};
-
-const _$ReviseEnumMap = {Revise.addition: 'ADDITION', Revise.update: 'UPDATE'};

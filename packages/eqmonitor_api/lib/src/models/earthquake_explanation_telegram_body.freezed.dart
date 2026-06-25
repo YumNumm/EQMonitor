@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeExplanationTelegramBody {
 
- dynamic get type; String get text;
+ String get type; String get text;
 /// Create a copy of EarthquakeExplanationTelegramBody
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $EarthquakeExplanationTelegramBodyCopyWith<EarthquakeExplanationTelegramBody> ge
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeExplanationTelegramBody&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeExplanationTelegramBody&&(identical(other.type, type) || other.type == type)&&(identical(other.text, text) || other.text == text));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),text);
+int get hashCode => Object.hash(runtimeType,type,text);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $EarthquakeExplanationTelegramBodyCopyWith<$Res>  {
   factory $EarthquakeExplanationTelegramBodyCopyWith(EarthquakeExplanationTelegramBody value, $Res Function(EarthquakeExplanationTelegramBody) _then) = _$EarthquakeExplanationTelegramBodyCopyWithImpl;
 @useResult
 $Res call({
- dynamic type, String text
+ String type, String text
 });
 
 
@@ -65,10 +65,10 @@ class _$EarthquakeExplanationTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeExplanationTelegramBody
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = freezed,Object? text = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? text = null,}) {
   return _then(_self.copyWith(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic type,  String text)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  String text)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeExplanationTelegramBody() when $default != null:
 return $default(_that.type,_that.text);case _:
@@ -175,7 +175,7 @@ return $default(_that.type,_that.text);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic type,  String text)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  String text)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeExplanationTelegramBody():
 return $default(_that.type,_that.text);case _:
@@ -195,7 +195,7 @@ return $default(_that.type,_that.text);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic type,  String text)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  String text)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeExplanationTelegramBody() when $default != null:
 return $default(_that.type,_that.text);case _:
@@ -213,7 +213,7 @@ class _EarthquakeExplanationTelegramBody implements EarthquakeExplanationTelegra
   const _EarthquakeExplanationTelegramBody({required this.type, required this.text});
   factory _EarthquakeExplanationTelegramBody.fromJson(Map<String, dynamic> json) => _$EarthquakeExplanationTelegramBodyFromJson(json);
 
-@override final  dynamic type;
+@override final  String type;
 @override final  String text;
 
 /// Create a copy of EarthquakeExplanationTelegramBody
@@ -229,12 +229,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeExplanationTelegramBody&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeExplanationTelegramBody&&(identical(other.type, type) || other.type == type)&&(identical(other.text, text) || other.text == text));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),text);
+int get hashCode => Object.hash(runtimeType,type,text);
 
 @override
 String toString() {
@@ -249,7 +249,7 @@ abstract mixin class _$EarthquakeExplanationTelegramBodyCopyWith<$Res> implement
   factory _$EarthquakeExplanationTelegramBodyCopyWith(_EarthquakeExplanationTelegramBody value, $Res Function(_EarthquakeExplanationTelegramBody) _then) = __$EarthquakeExplanationTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, String text
+ String type, String text
 });
 
 
@@ -266,10 +266,10 @@ class __$EarthquakeExplanationTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeExplanationTelegramBody
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? text = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? text = null,}) {
   return _then(_EarthquakeExplanationTelegramBody(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

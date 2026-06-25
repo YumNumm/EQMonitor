@@ -8,6 +8,9 @@ import 'package:json_annotation/json_annotation.dart';
 import 'earthquake_telegram_body_intensity_region.dart';
 import 'earthquake_telegram_body_intensity_station.dart';
 import 'earthquake_telegram_body_quake.dart';
+import 'eew_telegram_body_eew.dart';
+import 'eew_telegram_body_intensity_region.dart';
+import 'eew_telegram_body_warning_area.dart';
 
 part 'telegram_body_union.freezed.dart';
 part 'telegram_body_union.g.dart';
@@ -16,7 +19,7 @@ part 'telegram_body_union.g.dart';
 sealed class TelegramBodyUnion with _$TelegramBodyUnion {
   @JsonSerializable()
   const factory TelegramBodyUnion.earthquakeTelegramBody({
-    required dynamic type,
+    required String type,
     @JsonKey(includeIfNull: false)
     EarthquakeTelegramBodyQuake? earthquake,
     @JsonKey(includeIfNull: false)
@@ -31,33 +34,33 @@ sealed class TelegramBodyUnion with _$TelegramBodyUnion {
   
   @JsonSerializable()
   const factory TelegramBodyUnion.eewTelegramBody({
-    required dynamic type,
-    required dynamic eew,
-    required List<dynamic> eewIntensityRegions,
-    required List<dynamic> eewWarningZones,
-    required List<dynamic> eewWarningPrefectures,
-    required List<dynamic> eewWarningRegions,
+    required String type,
+    required EewTelegramBodyEew eew,
+    required List<EewTelegramBodyIntensityRegion> eewIntensityRegions,
+    required List<EewTelegramBodyWarningArea> eewWarningZones,
+    required List<EewTelegramBodyWarningArea> eewWarningPrefectures,
+    required List<EewTelegramBodyWarningArea> eewWarningRegions,
   }) = TelegramBodyUnionEewTelegramBody;
   
   @JsonSerializable()
   const factory TelegramBodyUnion.earthquakeNoticeTelegramBody({
-    required dynamic type,
+    required String type,
   }) = TelegramBodyUnionEarthquakeNoticeTelegramBody;
   
   @JsonSerializable()
   const factory TelegramBodyUnion.earthquakeExplanationTelegramBody({
-    required dynamic type,
+    required String type,
     required String text,
   }) = TelegramBodyUnionEarthquakeExplanationTelegramBody;
   
   @JsonSerializable()
   const factory TelegramBodyUnion.earthquakeCountsTelegramBody({
-    required dynamic type,
+    required String type,
   }) = TelegramBodyUnionEarthquakeCountsTelegramBody;
   
   @JsonSerializable()
   const factory TelegramBodyUnion.earthquakeNankaiTelegramBody({
-    required dynamic type,
+    required String type,
   }) = TelegramBodyUnionEarthquakeNankaiTelegramBody;
   
 

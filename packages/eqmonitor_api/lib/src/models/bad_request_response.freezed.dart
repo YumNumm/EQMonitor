@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BadRequestResponse {
 
- dynamic get code; dynamic get message;@JsonKey(includeIfNull: false) String? get reason;
+ String get code; String get message;@JsonKey(includeIfNull: false) String? get reason;
 /// Create a copy of BadRequestResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $BadRequestResponseCopyWith<BadRequestResponse> get copyWith => _$BadRequestResp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BadRequestResponse&&const DeepCollectionEquality().equals(other.code, code)&&const DeepCollectionEquality().equals(other.message, message)&&(identical(other.reason, reason) || other.reason == reason));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BadRequestResponse&&(identical(other.code, code) || other.code == code)&&(identical(other.message, message) || other.message == message)&&(identical(other.reason, reason) || other.reason == reason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(code),const DeepCollectionEquality().hash(message),reason);
+int get hashCode => Object.hash(runtimeType,code,message,reason);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $BadRequestResponseCopyWith<$Res>  {
   factory $BadRequestResponseCopyWith(BadRequestResponse value, $Res Function(BadRequestResponse) _then) = _$BadRequestResponseCopyWithImpl;
 @useResult
 $Res call({
- dynamic code, dynamic message,@JsonKey(includeIfNull: false) String? reason
+ String code, String message,@JsonKey(includeIfNull: false) String? reason
 });
 
 
@@ -65,11 +65,11 @@ class _$BadRequestResponseCopyWithImpl<$Res>
 
 /// Create a copy of BadRequestResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = freezed,Object? message = freezed,Object? reason = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? message = null,Object? reason = freezed,}) {
   return _then(_self.copyWith(
-code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as dynamic,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as dynamic,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic code,  dynamic message, @JsonKey(includeIfNull: false)  String? reason)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String message, @JsonKey(includeIfNull: false)  String? reason)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BadRequestResponse() when $default != null:
 return $default(_that.code,_that.message,_that.reason);case _:
@@ -176,7 +176,7 @@ return $default(_that.code,_that.message,_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic code,  dynamic message, @JsonKey(includeIfNull: false)  String? reason)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String message, @JsonKey(includeIfNull: false)  String? reason)  $default,) {final _that = this;
 switch (_that) {
 case _BadRequestResponse():
 return $default(_that.code,_that.message,_that.reason);case _:
@@ -196,7 +196,7 @@ return $default(_that.code,_that.message,_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic code,  dynamic message, @JsonKey(includeIfNull: false)  String? reason)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String message, @JsonKey(includeIfNull: false)  String? reason)?  $default,) {final _that = this;
 switch (_that) {
 case _BadRequestResponse() when $default != null:
 return $default(_that.code,_that.message,_that.reason);case _:
@@ -214,8 +214,8 @@ class _BadRequestResponse implements BadRequestResponse {
   const _BadRequestResponse({required this.code, required this.message, @JsonKey(includeIfNull: false) this.reason});
   factory _BadRequestResponse.fromJson(Map<String, dynamic> json) => _$BadRequestResponseFromJson(json);
 
-@override final  dynamic code;
-@override final  dynamic message;
+@override final  String code;
+@override final  String message;
 @override@JsonKey(includeIfNull: false) final  String? reason;
 
 /// Create a copy of BadRequestResponse
@@ -231,12 +231,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BadRequestResponse&&const DeepCollectionEquality().equals(other.code, code)&&const DeepCollectionEquality().equals(other.message, message)&&(identical(other.reason, reason) || other.reason == reason));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BadRequestResponse&&(identical(other.code, code) || other.code == code)&&(identical(other.message, message) || other.message == message)&&(identical(other.reason, reason) || other.reason == reason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(code),const DeepCollectionEquality().hash(message),reason);
+int get hashCode => Object.hash(runtimeType,code,message,reason);
 
 @override
 String toString() {
@@ -251,7 +251,7 @@ abstract mixin class _$BadRequestResponseCopyWith<$Res> implements $BadRequestRe
   factory _$BadRequestResponseCopyWith(_BadRequestResponse value, $Res Function(_BadRequestResponse) _then) = __$BadRequestResponseCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic code, dynamic message,@JsonKey(includeIfNull: false) String? reason
+ String code, String message,@JsonKey(includeIfNull: false) String? reason
 });
 
 
@@ -268,11 +268,11 @@ class __$BadRequestResponseCopyWithImpl<$Res>
 
 /// Create a copy of BadRequestResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = freezed,Object? message = freezed,Object? reason = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? message = null,Object? reason = freezed,}) {
   return _then(_BadRequestResponse(
-code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as dynamic,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as dynamic,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Triggers {
 
- String get id; String get replayFileId; dynamic get triggerType; String get eventId; String get createdAt;
+ String get id; String get replayFileId; String get triggerType; String get eventId; String get createdAt;
 /// Create a copy of Triggers
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $TriggersCopyWith<Triggers> get copyWith => _$TriggersCopyWithImpl<Triggers>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Triggers&&(identical(other.id, id) || other.id == id)&&(identical(other.replayFileId, replayFileId) || other.replayFileId == replayFileId)&&const DeepCollectionEquality().equals(other.triggerType, triggerType)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Triggers&&(identical(other.id, id) || other.id == id)&&(identical(other.replayFileId, replayFileId) || other.replayFileId == replayFileId)&&(identical(other.triggerType, triggerType) || other.triggerType == triggerType)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,replayFileId,const DeepCollectionEquality().hash(triggerType),eventId,createdAt);
+int get hashCode => Object.hash(runtimeType,id,replayFileId,triggerType,eventId,createdAt);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $TriggersCopyWith<$Res>  {
   factory $TriggersCopyWith(Triggers value, $Res Function(Triggers) _then) = _$TriggersCopyWithImpl;
 @useResult
 $Res call({
- String id, String replayFileId, dynamic triggerType, String eventId, String createdAt
+ String id, String replayFileId, String triggerType, String eventId, String createdAt
 });
 
 
@@ -65,12 +65,12 @@ class _$TriggersCopyWithImpl<$Res>
 
 /// Create a copy of Triggers
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? replayFileId = null,Object? triggerType = freezed,Object? eventId = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? replayFileId = null,Object? triggerType = null,Object? eventId = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,replayFileId: null == replayFileId ? _self.replayFileId : replayFileId // ignore: cast_nullable_to_non_nullable
-as String,triggerType: freezed == triggerType ? _self.triggerType : triggerType // ignore: cast_nullable_to_non_nullable
-as dynamic,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,triggerType: null == triggerType ? _self.triggerType : triggerType // ignore: cast_nullable_to_non_nullable
+as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String replayFileId,  dynamic triggerType,  String eventId,  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String replayFileId,  String triggerType,  String eventId,  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Triggers() when $default != null:
 return $default(_that.id,_that.replayFileId,_that.triggerType,_that.eventId,_that.createdAt);case _:
@@ -178,7 +178,7 @@ return $default(_that.id,_that.replayFileId,_that.triggerType,_that.eventId,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String replayFileId,  dynamic triggerType,  String eventId,  String createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String replayFileId,  String triggerType,  String eventId,  String createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Triggers():
 return $default(_that.id,_that.replayFileId,_that.triggerType,_that.eventId,_that.createdAt);case _:
@@ -198,7 +198,7 @@ return $default(_that.id,_that.replayFileId,_that.triggerType,_that.eventId,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String replayFileId,  dynamic triggerType,  String eventId,  String createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String replayFileId,  String triggerType,  String eventId,  String createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Triggers() when $default != null:
 return $default(_that.id,_that.replayFileId,_that.triggerType,_that.eventId,_that.createdAt);case _:
@@ -218,7 +218,7 @@ class _Triggers implements Triggers {
 
 @override final  String id;
 @override final  String replayFileId;
-@override final  dynamic triggerType;
+@override final  String triggerType;
 @override final  String eventId;
 @override final  String createdAt;
 
@@ -235,12 +235,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Triggers&&(identical(other.id, id) || other.id == id)&&(identical(other.replayFileId, replayFileId) || other.replayFileId == replayFileId)&&const DeepCollectionEquality().equals(other.triggerType, triggerType)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Triggers&&(identical(other.id, id) || other.id == id)&&(identical(other.replayFileId, replayFileId) || other.replayFileId == replayFileId)&&(identical(other.triggerType, triggerType) || other.triggerType == triggerType)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,replayFileId,const DeepCollectionEquality().hash(triggerType),eventId,createdAt);
+int get hashCode => Object.hash(runtimeType,id,replayFileId,triggerType,eventId,createdAt);
 
 @override
 String toString() {
@@ -255,7 +255,7 @@ abstract mixin class _$TriggersCopyWith<$Res> implements $TriggersCopyWith<$Res>
   factory _$TriggersCopyWith(_Triggers value, $Res Function(_Triggers) _then) = __$TriggersCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String replayFileId, dynamic triggerType, String eventId, String createdAt
+ String id, String replayFileId, String triggerType, String eventId, String createdAt
 });
 
 
@@ -272,12 +272,12 @@ class __$TriggersCopyWithImpl<$Res>
 
 /// Create a copy of Triggers
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? replayFileId = null,Object? triggerType = freezed,Object? eventId = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? replayFileId = null,Object? triggerType = null,Object? eventId = null,Object? createdAt = null,}) {
   return _then(_Triggers(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,replayFileId: null == replayFileId ? _self.replayFileId : replayFileId // ignore: cast_nullable_to_non_nullable
-as String,triggerType: freezed == triggerType ? _self.triggerType : triggerType // ignore: cast_nullable_to_non_nullable
-as dynamic,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,triggerType: null == triggerType ? _self.triggerType : triggerType // ignore: cast_nullable_to_non_nullable
+as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));

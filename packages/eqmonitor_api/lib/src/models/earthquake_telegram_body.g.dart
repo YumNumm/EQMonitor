@@ -12,7 +12,7 @@ _EarthquakeTelegramBody _$EarthquakeTelegramBodyFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_EarthquakeTelegramBody', json, ($checkedConvert) {
   final val = _EarthquakeTelegramBody(
-    type: $checkedConvert('type', (v) => v),
+    type: $checkedConvert('type', (v) => v as String),
     earthquake: $checkedConvert(
       'earthquake',
       (v) => v == null

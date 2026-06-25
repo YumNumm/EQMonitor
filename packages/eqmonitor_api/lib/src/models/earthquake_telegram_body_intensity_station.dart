@@ -24,7 +24,7 @@ abstract class EarthquakeTelegramBodyIntensityStation with _$EarthquakeTelegramB
     @JsonKey(includeIfNull: false)
     JmaLpgmIntensity? lpgmIntensity,
     @JsonKey(includeIfNull: false)
-    dynamic sva,
+    String? sva,
     @JsonKey(includeIfNull: false)
     List<PrePeriods2>? prePeriods,
     @JsonKey(includeIfNull: false)

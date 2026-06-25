@@ -125,8 +125,8 @@
           "publishing_office": [
             "気象庁"
           ],
-          "press_at": "2025-12-15T12:01:00.000Z",
-          "report_at": "2025-12-15T12:01:02.000Z",
+          "pressed_at": "2025-12-15T12:01:00.000Z",
+          "reported_at": "2025-12-15T12:01:02.000Z",
           "info_kind": "震度速報",
           "info_kind_version": "1.0_0",
           "hash": "stub-hash-vxse51",
@@ -147,8 +147,8 @@
           "publishing_office": [
             "気象庁"
           ],
-          "press_at": "2025-12-15T12:03:00.000Z",
-          "report_at": "2025-12-15T12:03:02.000Z",
+          "pressed_at": "2025-12-15T12:03:00.000Z",
+          "reported_at": "2025-12-15T12:03:02.000Z",
           "info_kind": "震源・震度に関する情報",
           "info_kind_version": "1.0_0",
           "hash": "stub-hash-vxse53",
@@ -169,8 +169,8 @@
           "publishing_office": [
             "気象庁"
           ],
-          "press_at": "2025-12-15T12:05:00.000Z",
-          "report_at": "2025-12-15T12:05:02.000Z",
+          "pressed_at": "2025-12-15T12:05:00.000Z",
+          "reported_at": "2025-12-15T12:05:02.000Z",
           "info_kind": "長周期地震動に関する観測情報",
           "info_kind_version": "1.0_0",
           "hash": "stub-hash-vxse56",

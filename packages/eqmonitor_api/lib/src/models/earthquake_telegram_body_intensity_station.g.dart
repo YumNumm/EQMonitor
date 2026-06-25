@@ -25,7 +25,7 @@ _$EarthquakeTelegramBodyIntensityStationFromJson(Map<String, dynamic> json) =>
           'lpgmIntensity',
           (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
         ),
-        sva: $checkedConvert('sva', (v) => v),
+        sva: $checkedConvert('sva', (v) => v as String?),
         prePeriods: $checkedConvert(
           'prePeriods',
           (v) => (v as List<dynamic>?)

@@ -10,8 +10,8 @@ part 'internal_server_error_response.g.dart';
 @Freezed()
 abstract class InternalServerErrorResponse with _$InternalServerErrorResponse {
   const factory InternalServerErrorResponse({
-    required dynamic code,
-    required dynamic message,
+    required String code,
+    required String message,
     @JsonKey(includeIfNull: false)
     String? reason,
   }) = _InternalServerErrorResponse;

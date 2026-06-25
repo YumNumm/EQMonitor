@@ -12,7 +12,7 @@ _SubscriptionActiveResponse _$SubscriptionActiveResponseFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_SubscriptionActiveResponse', json, ($checkedConvert) {
   final val = _SubscriptionActiveResponse(
-    status: $checkedConvert('status', (v) => v),
+    status: $checkedConvert('status', (v) => v as String),
     productId: $checkedConvert('productId', (v) => v as String),
     expiresAt: $checkedConvert(
       'expiresAt',

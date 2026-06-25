@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DeviceRegisterResponse {
 
- String get deviceId; String get deviceToken; dynamic get expiresAt;
+ String get deviceId; String get deviceToken;@JsonKey(includeIfNull: true) String? get expiresAt;
 /// Create a copy of DeviceRegisterResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $DeviceRegisterResponseCopyWith<DeviceRegisterResponse> get copyWith => _$Device
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceRegisterResponse&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.deviceToken, deviceToken) || other.deviceToken == deviceToken)&&const DeepCollectionEquality().equals(other.expiresAt, expiresAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceRegisterResponse&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.deviceToken, deviceToken) || other.deviceToken == deviceToken)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,deviceId,deviceToken,const DeepCollectionEquality().hash(expiresAt));
+int get hashCode => Object.hash(runtimeType,deviceId,deviceToken,expiresAt);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $DeviceRegisterResponseCopyWith<$Res>  {
   factory $DeviceRegisterResponseCopyWith(DeviceRegisterResponse value, $Res Function(DeviceRegisterResponse) _then) = _$DeviceRegisterResponseCopyWithImpl;
 @useResult
 $Res call({
- String deviceId, String deviceToken, dynamic expiresAt
+ String deviceId, String deviceToken,@JsonKey(includeIfNull: true) String? expiresAt
 });
 
 
@@ -70,7 +70,7 @@ class _$DeviceRegisterResponseCopyWithImpl<$Res>
 deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,deviceToken: null == deviceToken ? _self.deviceToken : deviceToken // ignore: cast_nullable_to_non_nullable
 as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as dynamic,
+as String?,
   ));
 }
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String deviceId,  String deviceToken,  dynamic expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String deviceId,  String deviceToken, @JsonKey(includeIfNull: true)  String? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeviceRegisterResponse() when $default != null:
 return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
@@ -176,7 +176,7 @@ return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String deviceId,  String deviceToken,  dynamic expiresAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String deviceId,  String deviceToken, @JsonKey(includeIfNull: true)  String? expiresAt)  $default,) {final _that = this;
 switch (_that) {
 case _DeviceRegisterResponse():
 return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
@@ -196,7 +196,7 @@ return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String deviceId,  String deviceToken,  dynamic expiresAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String deviceId,  String deviceToken, @JsonKey(includeIfNull: true)  String? expiresAt)?  $default,) {final _that = this;
 switch (_that) {
 case _DeviceRegisterResponse() when $default != null:
 return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
@@ -211,12 +211,12 @@ return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
 @JsonSerializable()
 
 class _DeviceRegisterResponse implements DeviceRegisterResponse {
-  const _DeviceRegisterResponse({required this.deviceId, required this.deviceToken, required this.expiresAt});
+  const _DeviceRegisterResponse({required this.deviceId, required this.deviceToken, @JsonKey(includeIfNull: true) required this.expiresAt});
   factory _DeviceRegisterResponse.fromJson(Map<String, dynamic> json) => _$DeviceRegisterResponseFromJson(json);
 
 @override final  String deviceId;
 @override final  String deviceToken;
-@override final  dynamic expiresAt;
+@override@JsonKey(includeIfNull: true) final  String? expiresAt;
 
 /// Create a copy of DeviceRegisterResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -231,12 +231,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceRegisterResponse&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.deviceToken, deviceToken) || other.deviceToken == deviceToken)&&const DeepCollectionEquality().equals(other.expiresAt, expiresAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceRegisterResponse&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.deviceToken, deviceToken) || other.deviceToken == deviceToken)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,deviceId,deviceToken,const DeepCollectionEquality().hash(expiresAt));
+int get hashCode => Object.hash(runtimeType,deviceId,deviceToken,expiresAt);
 
 @override
 String toString() {
@@ -251,7 +251,7 @@ abstract mixin class _$DeviceRegisterResponseCopyWith<$Res> implements $DeviceRe
   factory _$DeviceRegisterResponseCopyWith(_DeviceRegisterResponse value, $Res Function(_DeviceRegisterResponse) _then) = __$DeviceRegisterResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String deviceId, String deviceToken, dynamic expiresAt
+ String deviceId, String deviceToken,@JsonKey(includeIfNull: true) String? expiresAt
 });
 
 
@@ -273,7 +273,7 @@ class __$DeviceRegisterResponseCopyWithImpl<$Res>
 deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,deviceToken: null == deviceToken ? _self.deviceToken : deviceToken // ignore: cast_nullable_to_non_nullable
 as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as dynamic,
+as String?,
   ));
 }
 

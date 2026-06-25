@@ -5,7 +5,6 @@
       "schema_version": 1,
       "source_version": "2025-01-01",
       "source_updated_at": "2025-01-01T00:00:00.000Z",
-      "generated_at": "2025-01-01T00:00:00.000Z",
       "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "size_bytes": 102400
     },
@@ -14,7 +13,6 @@
       "schema_version": 1,
       "source_version": "2025-06-01",
       "source_updated_at": "2025-06-01T00:00:00.000Z",
-      "generated_at": "2025-06-01T00:00:00.000Z",
       "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
       "size_bytes": 512000
     }

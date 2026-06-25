@@ -17,7 +17,7 @@ mixin _$TsunamiRegionForecastMaxHeight {
 
 /// 津波の予想される高さ 定性的表現をする場合は出現しない
 @JsonKey(includeIfNull: false) num? get value;/// 10m超となるときに出現 数値情報より大きいことを示す場合に出現
-@JsonKey(includeIfNull: false, name: 'is_over') dynamic get isOver;@JsonKey(includeIfNull: false) QualitativeHeight? get qualitative;@JsonKey(includeIfNull: false, name: 'is_important') dynamic get isImportant;@JsonKey(includeIfNull: false) Revise? get revise;
+@JsonKey(includeIfNull: false, name: 'is_over') bool? get isOver;@JsonKey(includeIfNull: false) QualitativeHeight? get qualitative;@JsonKey(includeIfNull: false, name: 'is_important') bool? get isImportant;@JsonKey(includeIfNull: false) Revise? get revise;
 /// Create a copy of TsunamiRegionForecastMaxHeight
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,12 +30,12 @@ $TsunamiRegionForecastMaxHeightCopyWith<TsunamiRegionForecastMaxHeight> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiRegionForecastMaxHeight&&(identical(other.value, value) || other.value == value)&&const DeepCollectionEquality().equals(other.isOver, isOver)&&(identical(other.qualitative, qualitative) || other.qualitative == qualitative)&&const DeepCollectionEquality().equals(other.isImportant, isImportant)&&(identical(other.revise, revise) || other.revise == revise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiRegionForecastMaxHeight&&(identical(other.value, value) || other.value == value)&&(identical(other.isOver, isOver) || other.isOver == isOver)&&(identical(other.qualitative, qualitative) || other.qualitative == qualitative)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.revise, revise) || other.revise == revise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,const DeepCollectionEquality().hash(isOver),qualitative,const DeepCollectionEquality().hash(isImportant),revise);
+int get hashCode => Object.hash(runtimeType,value,isOver,qualitative,isImportant,revise);
 
 @override
 String toString() {
@@ -50,7 +50,7 @@ abstract mixin class $TsunamiRegionForecastMaxHeightCopyWith<$Res>  {
   factory $TsunamiRegionForecastMaxHeightCopyWith(TsunamiRegionForecastMaxHeight value, $Res Function(TsunamiRegionForecastMaxHeight) _then) = _$TsunamiRegionForecastMaxHeightCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false, name: 'is_over') dynamic isOver,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false, name: 'is_important') dynamic isImportant,@JsonKey(includeIfNull: false) Revise? revise
+@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false, name: 'is_over') bool? isOver,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false, name: 'is_important') bool? isImportant,@JsonKey(includeIfNull: false) Revise? revise
 });
 
 
@@ -71,9 +71,9 @@ class _$TsunamiRegionForecastMaxHeightCopyWithImpl<$Res>
   return _then(_self.copyWith(
 value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as num?,isOver: freezed == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
-as dynamic,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
+as bool?,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
 as QualitativeHeight?,isImportant: freezed == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
-as dynamic,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
+as bool?,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
 as Revise?,
   ));
 }
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_important')  dynamic isImportant, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  bool? isOver, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_important')  bool? isImportant, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiRegionForecastMaxHeight() when $default != null:
 return $default(_that.value,_that.isOver,_that.qualitative,_that.isImportant,_that.revise);case _:
@@ -180,7 +180,7 @@ return $default(_that.value,_that.isOver,_that.qualitative,_that.isImportant,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_important')  dynamic isImportant, @JsonKey(includeIfNull: false)  Revise? revise)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  bool? isOver, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_important')  bool? isImportant, @JsonKey(includeIfNull: false)  Revise? revise)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiRegionForecastMaxHeight():
 return $default(_that.value,_that.isOver,_that.qualitative,_that.isImportant,_that.revise);case _:
@@ -200,7 +200,7 @@ return $default(_that.value,_that.isOver,_that.qualitative,_that.isImportant,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_important')  dynamic isImportant, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  bool? isOver, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_important')  bool? isImportant, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiRegionForecastMaxHeight() when $default != null:
 return $default(_that.value,_that.isOver,_that.qualitative,_that.isImportant,_that.revise);case _:
@@ -221,9 +221,9 @@ class _TsunamiRegionForecastMaxHeight implements TsunamiRegionForecastMaxHeight 
 /// 津波の予想される高さ 定性的表現をする場合は出現しない
 @override@JsonKey(includeIfNull: false) final  num? value;
 /// 10m超となるときに出現 数値情報より大きいことを示す場合に出現
-@override@JsonKey(includeIfNull: false, name: 'is_over') final  dynamic isOver;
+@override@JsonKey(includeIfNull: false, name: 'is_over') final  bool? isOver;
 @override@JsonKey(includeIfNull: false) final  QualitativeHeight? qualitative;
-@override@JsonKey(includeIfNull: false, name: 'is_important') final  dynamic isImportant;
+@override@JsonKey(includeIfNull: false, name: 'is_important') final  bool? isImportant;
 @override@JsonKey(includeIfNull: false) final  Revise? revise;
 
 /// Create a copy of TsunamiRegionForecastMaxHeight
@@ -239,12 +239,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiRegionForecastMaxHeight&&(identical(other.value, value) || other.value == value)&&const DeepCollectionEquality().equals(other.isOver, isOver)&&(identical(other.qualitative, qualitative) || other.qualitative == qualitative)&&const DeepCollectionEquality().equals(other.isImportant, isImportant)&&(identical(other.revise, revise) || other.revise == revise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiRegionForecastMaxHeight&&(identical(other.value, value) || other.value == value)&&(identical(other.isOver, isOver) || other.isOver == isOver)&&(identical(other.qualitative, qualitative) || other.qualitative == qualitative)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.revise, revise) || other.revise == revise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,const DeepCollectionEquality().hash(isOver),qualitative,const DeepCollectionEquality().hash(isImportant),revise);
+int get hashCode => Object.hash(runtimeType,value,isOver,qualitative,isImportant,revise);
 
 @override
 String toString() {
@@ -259,7 +259,7 @@ abstract mixin class _$TsunamiRegionForecastMaxHeightCopyWith<$Res> implements $
   factory _$TsunamiRegionForecastMaxHeightCopyWith(_TsunamiRegionForecastMaxHeight value, $Res Function(_TsunamiRegionForecastMaxHeight) _then) = __$TsunamiRegionForecastMaxHeightCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false, name: 'is_over') dynamic isOver,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false, name: 'is_important') dynamic isImportant,@JsonKey(includeIfNull: false) Revise? revise
+@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false, name: 'is_over') bool? isOver,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false, name: 'is_important') bool? isImportant,@JsonKey(includeIfNull: false) Revise? revise
 });
 
 
@@ -280,9 +280,9 @@ class __$TsunamiRegionForecastMaxHeightCopyWithImpl<$Res>
   return _then(_TsunamiRegionForecastMaxHeight(
 value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as num?,isOver: freezed == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
-as dynamic,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
+as bool?,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
 as QualitativeHeight?,isImportant: freezed == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
-as dynamic,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
+as bool?,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
 as Revise?,
   ));
 }

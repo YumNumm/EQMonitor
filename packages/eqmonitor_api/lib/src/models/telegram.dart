@@ -5,6 +5,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'info_type.dart';
+import 'telegram_body_union.dart';
 import 'telegram_status.dart';
 import 'telegram_type.dart';
 
@@ -46,7 +47,7 @@ abstract class Telegram with _$Telegram {
     @JsonKey(includeIfNull: false)
     String? headline,
     @JsonKey(includeIfNull: false)
-    dynamic body,
+    TelegramBodyUnion? body,
   }) = _Telegram;
   
   factory Telegram.fromJson(Map<String, Object?> json) => _$TelegramFromJson(json);

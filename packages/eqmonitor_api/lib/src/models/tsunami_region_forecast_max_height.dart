@@ -19,11 +19,11 @@ abstract class TsunamiRegionForecastMaxHeight with _$TsunamiRegionForecastMaxHei
 
     /// 10m超となるときに出現 数値情報より大きいことを示す場合に出現
     @JsonKey(includeIfNull: false,name: 'is_over')
-    dynamic isOver,
+    bool? isOver,
     @JsonKey(includeIfNull: false)
     QualitativeHeight? qualitative,
     @JsonKey(includeIfNull: false,name: 'is_important')
-    dynamic isImportant,
+    bool? isImportant,
     @JsonKey(includeIfNull: false)
     Revise? revise,
   }) = _TsunamiRegionForecastMaxHeight;

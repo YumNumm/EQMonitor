@@ -14,8 +14,8 @@ _FeedItem _$FeedItemFromJson(Map<String, dynamic> json) => $checkedCreate(
   ($checkedConvert) {
     final val = _FeedItem(
       id: $checkedConvert('id', (v) => v as String),
-      feedType: $checkedConvert('feed_type', (v) => v),
-      priority: $checkedConvert('priority', (v) => v),
+      feedType: $checkedConvert('feed_type', (v) => v as String),
+      priority: $checkedConvert('priority', (v) => v as String),
       isImportant: $checkedConvert('is_important', (v) => v as bool),
       publishedAt: $checkedConvert('published_at', (v) => v as String),
       expiresAt: $checkedConvert('expires_at', (v) => v as String?),

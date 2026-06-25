@@ -21,17 +21,17 @@ abstract class TsunamiStationObservationMaxHeight with _$TsunamiStationObservati
 
     /// 観測範囲より津波の高さが超過した場合に使用し、数値情報を補助する
     @JsonKey(includeIfNull: false,name: 'is_over')
-    dynamic isOver,
+    bool? isOver,
 
     /// 数値情報に付加的情報が必要な場合に出現
     @JsonKey(includeIfNull: false,name: 'is_rising')
-    dynamic isRising,
+    bool? isRising,
     @JsonKey(includeIfNull: false)
     ObservationMaxHeightCondition? condition,
 
     /// 欠測によりデータが現在取得できていない場合に出現する
     @JsonKey(includeIfNull: false,name: 'is_missing')
-    dynamic isMissing,
+    bool? isMissing,
     @JsonKey(includeIfNull: false)
     Revise? revise,
   }) = _TsunamiStationObservationMaxHeight;

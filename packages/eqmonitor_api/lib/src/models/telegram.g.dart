@@ -58,7 +58,12 @@ _Telegram _$TelegramFromJson(Map<String, dynamic> json) => $checkedCreate(
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
       headline: $checkedConvert('headline', (v) => v as String?),
-      body: $checkedConvert('body', (v) => v),
+      body: $checkedConvert(
+        'body',
+        (v) => v == null
+            ? null
+            : TelegramBodyUnion.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },

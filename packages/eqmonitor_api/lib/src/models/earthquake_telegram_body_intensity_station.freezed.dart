@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeTelegramBodyIntensityStation {
 
- String get code; String get name;@JsonKey(includeIfNull: false) String? get eventId;@JsonKey(includeIfNull: false) JmaIntensity? get intensity;@JsonKey(includeIfNull: false) JmaLpgmIntensity? get lpgmIntensity;@JsonKey(includeIfNull: false) dynamic get sva;@JsonKey(includeIfNull: false) List<PrePeriods2>? get prePeriods;@JsonKey(includeIfNull: false) EarthquakeDatasource? get datasource;
+ String get code; String get name;@JsonKey(includeIfNull: false) String? get eventId;@JsonKey(includeIfNull: false) JmaIntensity? get intensity;@JsonKey(includeIfNull: false) JmaLpgmIntensity? get lpgmIntensity;@JsonKey(includeIfNull: false) String? get sva;@JsonKey(includeIfNull: false) List<PrePeriods2>? get prePeriods;@JsonKey(includeIfNull: false) EarthquakeDatasource? get datasource;
 /// Create a copy of EarthquakeTelegramBodyIntensityStation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $EarthquakeTelegramBodyIntensityStationCopyWith<EarthquakeTelegramBodyIntensityS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeTelegramBodyIntensityStation&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&const DeepCollectionEquality().equals(other.sva, sva)&&const DeepCollectionEquality().equals(other.prePeriods, prePeriods)&&(identical(other.datasource, datasource) || other.datasource == datasource));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeTelegramBodyIntensityStation&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&(identical(other.sva, sva) || other.sva == sva)&&const DeepCollectionEquality().equals(other.prePeriods, prePeriods)&&(identical(other.datasource, datasource) || other.datasource == datasource));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,name,eventId,intensity,lpgmIntensity,const DeepCollectionEquality().hash(sva),const DeepCollectionEquality().hash(prePeriods),datasource);
+int get hashCode => Object.hash(runtimeType,code,name,eventId,intensity,lpgmIntensity,sva,const DeepCollectionEquality().hash(prePeriods),datasource);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $EarthquakeTelegramBodyIntensityStationCopyWith<$Res>  {
   factory $EarthquakeTelegramBodyIntensityStationCopyWith(EarthquakeTelegramBodyIntensityStation value, $Res Function(EarthquakeTelegramBodyIntensityStation) _then) = _$EarthquakeTelegramBodyIntensityStationCopyWithImpl;
 @useResult
 $Res call({
- String code, String name,@JsonKey(includeIfNull: false) String? eventId,@JsonKey(includeIfNull: false) JmaIntensity? intensity,@JsonKey(includeIfNull: false) JmaLpgmIntensity? lpgmIntensity,@JsonKey(includeIfNull: false) dynamic sva,@JsonKey(includeIfNull: false) List<PrePeriods2>? prePeriods,@JsonKey(includeIfNull: false) EarthquakeDatasource? datasource
+ String code, String name,@JsonKey(includeIfNull: false) String? eventId,@JsonKey(includeIfNull: false) JmaIntensity? intensity,@JsonKey(includeIfNull: false) JmaLpgmIntensity? lpgmIntensity,@JsonKey(includeIfNull: false) String? sva,@JsonKey(includeIfNull: false) List<PrePeriods2>? prePeriods,@JsonKey(includeIfNull: false) EarthquakeDatasource? datasource
 });
 
 
@@ -73,7 +73,7 @@ as String,eventId: freezed == eventId ? _self.eventId : eventId // ignore: cast_
 as String?,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
-as dynamic,prePeriods: freezed == prePeriods ? _self.prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
+as String?,prePeriods: freezed == prePeriods ? _self.prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
 as List<PrePeriods2>?,datasource: freezed == datasource ? _self.datasource : datasource // ignore: cast_nullable_to_non_nullable
 as EarthquakeDatasource?,
   ));
@@ -160,7 +160,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: false)  String? eventId, @JsonKey(includeIfNull: false)  JmaIntensity? intensity, @JsonKey(includeIfNull: false)  JmaLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: false)  dynamic sva, @JsonKey(includeIfNull: false)  List<PrePeriods2>? prePeriods, @JsonKey(includeIfNull: false)  EarthquakeDatasource? datasource)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: false)  String? eventId, @JsonKey(includeIfNull: false)  JmaIntensity? intensity, @JsonKey(includeIfNull: false)  JmaLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: false)  String? sva, @JsonKey(includeIfNull: false)  List<PrePeriods2>? prePeriods, @JsonKey(includeIfNull: false)  EarthquakeDatasource? datasource)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeTelegramBodyIntensityStation() when $default != null:
 return $default(_that.code,_that.name,_that.eventId,_that.intensity,_that.lpgmIntensity,_that.sva,_that.prePeriods,_that.datasource);case _:
@@ -181,7 +181,7 @@ return $default(_that.code,_that.name,_that.eventId,_that.intensity,_that.lpgmIn
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: false)  String? eventId, @JsonKey(includeIfNull: false)  JmaIntensity? intensity, @JsonKey(includeIfNull: false)  JmaLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: false)  dynamic sva, @JsonKey(includeIfNull: false)  List<PrePeriods2>? prePeriods, @JsonKey(includeIfNull: false)  EarthquakeDatasource? datasource)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: false)  String? eventId, @JsonKey(includeIfNull: false)  JmaIntensity? intensity, @JsonKey(includeIfNull: false)  JmaLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: false)  String? sva, @JsonKey(includeIfNull: false)  List<PrePeriods2>? prePeriods, @JsonKey(includeIfNull: false)  EarthquakeDatasource? datasource)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeTelegramBodyIntensityStation():
 return $default(_that.code,_that.name,_that.eventId,_that.intensity,_that.lpgmIntensity,_that.sva,_that.prePeriods,_that.datasource);case _:
@@ -201,7 +201,7 @@ return $default(_that.code,_that.name,_that.eventId,_that.intensity,_that.lpgmIn
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name, @JsonKey(includeIfNull: false)  String? eventId, @JsonKey(includeIfNull: false)  JmaIntensity? intensity, @JsonKey(includeIfNull: false)  JmaLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: false)  dynamic sva, @JsonKey(includeIfNull: false)  List<PrePeriods2>? prePeriods, @JsonKey(includeIfNull: false)  EarthquakeDatasource? datasource)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name, @JsonKey(includeIfNull: false)  String? eventId, @JsonKey(includeIfNull: false)  JmaIntensity? intensity, @JsonKey(includeIfNull: false)  JmaLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: false)  String? sva, @JsonKey(includeIfNull: false)  List<PrePeriods2>? prePeriods, @JsonKey(includeIfNull: false)  EarthquakeDatasource? datasource)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeTelegramBodyIntensityStation() when $default != null:
 return $default(_that.code,_that.name,_that.eventId,_that.intensity,_that.lpgmIntensity,_that.sva,_that.prePeriods,_that.datasource);case _:
@@ -224,7 +224,7 @@ class _EarthquakeTelegramBodyIntensityStation implements EarthquakeTelegramBodyI
 @override@JsonKey(includeIfNull: false) final  String? eventId;
 @override@JsonKey(includeIfNull: false) final  JmaIntensity? intensity;
 @override@JsonKey(includeIfNull: false) final  JmaLpgmIntensity? lpgmIntensity;
-@override@JsonKey(includeIfNull: false) final  dynamic sva;
+@override@JsonKey(includeIfNull: false) final  String? sva;
  final  List<PrePeriods2>? _prePeriods;
 @override@JsonKey(includeIfNull: false) List<PrePeriods2>? get prePeriods {
   final value = _prePeriods;
@@ -249,12 +249,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeTelegramBodyIntensityStation&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&const DeepCollectionEquality().equals(other.sva, sva)&&const DeepCollectionEquality().equals(other._prePeriods, _prePeriods)&&(identical(other.datasource, datasource) || other.datasource == datasource));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeTelegramBodyIntensityStation&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&(identical(other.sva, sva) || other.sva == sva)&&const DeepCollectionEquality().equals(other._prePeriods, _prePeriods)&&(identical(other.datasource, datasource) || other.datasource == datasource));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,name,eventId,intensity,lpgmIntensity,const DeepCollectionEquality().hash(sva),const DeepCollectionEquality().hash(_prePeriods),datasource);
+int get hashCode => Object.hash(runtimeType,code,name,eventId,intensity,lpgmIntensity,sva,const DeepCollectionEquality().hash(_prePeriods),datasource);
 
 @override
 String toString() {
@@ -269,7 +269,7 @@ abstract mixin class _$EarthquakeTelegramBodyIntensityStationCopyWith<$Res> impl
   factory _$EarthquakeTelegramBodyIntensityStationCopyWith(_EarthquakeTelegramBodyIntensityStation value, $Res Function(_EarthquakeTelegramBodyIntensityStation) _then) = __$EarthquakeTelegramBodyIntensityStationCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name,@JsonKey(includeIfNull: false) String? eventId,@JsonKey(includeIfNull: false) JmaIntensity? intensity,@JsonKey(includeIfNull: false) JmaLpgmIntensity? lpgmIntensity,@JsonKey(includeIfNull: false) dynamic sva,@JsonKey(includeIfNull: false) List<PrePeriods2>? prePeriods,@JsonKey(includeIfNull: false) EarthquakeDatasource? datasource
+ String code, String name,@JsonKey(includeIfNull: false) String? eventId,@JsonKey(includeIfNull: false) JmaIntensity? intensity,@JsonKey(includeIfNull: false) JmaLpgmIntensity? lpgmIntensity,@JsonKey(includeIfNull: false) String? sva,@JsonKey(includeIfNull: false) List<PrePeriods2>? prePeriods,@JsonKey(includeIfNull: false) EarthquakeDatasource? datasource
 });
 
 
@@ -294,7 +294,7 @@ as String,eventId: freezed == eventId ? _self.eventId : eventId // ignore: cast_
 as String?,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
-as dynamic,prePeriods: freezed == prePeriods ? _self._prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
+as String?,prePeriods: freezed == prePeriods ? _self._prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
 as List<PrePeriods2>?,datasource: freezed == datasource ? _self.datasource : datasource // ignore: cast_nullable_to_non_nullable
 as EarthquakeDatasource?,
   ));

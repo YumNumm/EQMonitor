@@ -10,8 +10,8 @@ part 'bad_request_response.g.dart';
 @Freezed()
 abstract class BadRequestResponse with _$BadRequestResponse {
   const factory BadRequestResponse({
-    required dynamic code,
-    required dynamic message,
+    required String code,
+    required String message,
     @JsonKey(includeIfNull: false)
     String? reason,
   }) = _BadRequestResponse;

@@ -39,6 +39,10 @@ void main(List<String> args) async {
     throw Exception('OpenAPI ファイルが指定されていません。-openapiFile を指定してください');
   }
 
+  await _step('OpenAPI スキーマをパッチ (dynamic 排除)', () async {
+    _patchOpenapiSchema(openapiFile);
+  });
+
   await _step('swagger_parser でクライアントコードを生成', () async {
     await _run('dart', ['run', 'swagger_parser'], packageDir.path);
   });
@@ -871,7 +875,7 @@ void _stripTypeLintFromGeneratedHeaders(Directory libDir) {
 }
 
 /// 生成後に `*.dart`（`*.g.dart`, `*.freezed.dart` を除く）に残った
-/// `dynamic` 型注釈を検出して警告する。
+/// `dynamic` 型注釈を検出しビルドを失敗させる。
 void _validateNoDynamic(Directory libDir) {
   final pattern = RegExp(r'\bdynamic\b');
   final dartFiles = libDir
@@ -897,8 +901,185 @@ void _validateNoDynamic(Directory libDir) {
     }
   }
   if (count > 0) {
-    stderr.writeln('  ⚠️  $count dynamic annotation(s) remaining');
+    stderr.writeln('  ❌ $count dynamic annotation(s) remaining — aborting');
+    exit(1);
   }
+}
+
+/// swagger_parser が `dynamic` を生成するスキーマパターンを修正する。
+///
+/// swagger_parser 実行前に `openapi/openapi.json` を書き換え、
+/// Dart コードに `dynamic` が出現しないようにする。
+///
+/// 対象パターン:
+///   1. `{"const": <value>}` に `type` が無い → 型を補完
+///   2. `anyOf/oneOf` の全メンバーが文字列 const →
+///      `{"type":"string","enum":[...]}` へ集約
+///   3. `{"type":"null"}` 単独 (nullable 以外) → `{"type":"string","nullable":true}`
+///   4. `Telegram.body` が空 → `$ref: TelegramBody` へ
+void _patchOpenapiSchema(File openapiFile) {
+  final content = openapiFile.readAsStringSync();
+  final openapi = jsonDecode(content) as Map<String, Object?>;
+  var patchCount = 0;
+
+  void walkAndPatch(Object? node) {
+    if (node is Map<String, Object?>) {
+      // Pattern 4: body プロパティを nullable $ref TelegramBody に
+      final props = node['properties'];
+      if (props is Map<String, Object?> && props.containsKey('body')) {
+        final body = props['body'];
+        if (body is Map<String, Object?>) {
+          final needsPatch = !body.containsKey('type') &&
+              !body.containsKey('anyOf') &&
+              !body.containsKey('oneOf') &&
+              !body.containsKey('allOf');
+          final isDirectRef =
+              body[r'$ref'] == '#/components/schemas/TelegramBody';
+          if (needsPatch && !isDirectRef) {
+            // 空スキーマ → nullable $ref
+            props['body'] = <String, Object?>{
+              'nullable': true,
+              'allOf': [
+                {r'$ref': '#/components/schemas/TelegramBody'},
+              ],
+            };
+            patchCount++;
+            stdout.writeln('  Patched: body (empty) → nullable \$ref');
+          } else if (isDirectRef && body['nullable'] != true) {
+            // 直参照を nullable 化
+            props['body'] = <String, Object?>{
+              'nullable': true,
+              'allOf': [
+                {r'$ref': '#/components/schemas/TelegramBody'},
+              ],
+            };
+            patchCount++;
+            stdout.writeln('  Patched: body (\$ref) → nullable \$ref');
+          }
+        }
+      }
+
+      for (final entry in node.entries.toList()) {
+        final value = entry.value;
+
+        // Pattern 1: const without type
+        if (value is Map<String, Object?> &&
+            value.containsKey('const') &&
+            !value.containsKey('type') &&
+            !value.containsKey(r'$ref')) {
+          final constVal = value['const'];
+          String? typeStr;
+          if (constVal is String) {
+            typeStr = 'string';
+          } else if (constVal is bool) {
+            typeStr = 'boolean';
+          } else if (constVal is int) {
+            typeStr = 'integer';
+          } else if (constVal is double) {
+            typeStr = 'number';
+          }
+          if (typeStr != null) {
+            value['type'] = typeStr;
+            patchCount++;
+          }
+        }
+
+        // Pattern 2: anyOf/oneOf all-string-const → enum
+        if (value is Map<String, Object?>) {
+          for (final unionKey in ['anyOf', 'oneOf']) {
+            final members = value[unionKey];
+            if (members is! List || members.isEmpty) continue;
+            final allStringConst = members.every(
+              (m) =>
+                  m is Map<String, Object?> &&
+                  m['const'] is String &&
+                  !m.containsKey(r'$ref'),
+            );
+            if (!allStringConst) continue;
+
+            // 全メンバーがnullable無しの文字列constだけの場合
+            // nullable member ({type:null}) を探す
+            final hasNullMember = members.any(
+              (m) => m is Map<String, Object?> && m['type'] == 'null',
+            );
+            if (hasNullMember) continue;
+
+            // anyOf/oneOf を削除し type:string に置換
+            // enum は付けない（swagger_parser が自動命名で
+            // 既存スキーマ名と衝突するのを防ぐ）
+            value.remove(unionKey);
+            value['type'] = 'string';
+            patchCount++;
+          }
+        }
+
+        // Pattern 3: standalone {type: "null"} → nullable string
+        if (value is Map<String, Object?> &&
+            value['type'] == 'null' &&
+            value.length == 1) {
+          value['type'] = 'string';
+          value['nullable'] = true;
+          patchCount++;
+        }
+
+        // Pattern 5: anyOf/oneOf mixing primitive types (e.g. number|string)
+        // → flatten to string (swagger_parser emits dynamic for mixed types)
+        if (value is Map<String, Object?>) {
+          for (final unionKey in ['anyOf', 'oneOf']) {
+            final members = value[unionKey];
+            if (members is! List || members.isEmpty) continue;
+            final primitiveTypes = <String>{};
+            var allPrimitive = true;
+            for (final m in members) {
+              if (m is Map<String, Object?> && m.containsKey('type')) {
+                final t = m['type'] as String;
+                if (t == 'null') continue;
+                primitiveTypes.add(t);
+              } else if (m is Map<String, Object?> &&
+                  (m.containsKey('anyOf') || m.containsKey('oneOf'))) {
+                // nested anyOf — flatten
+                final inner =
+                    (m['anyOf'] ?? m['oneOf']) as List<Object?>? ?? [];
+                for (final im in inner) {
+                  if (im is Map<String, Object?> && im.containsKey('type')) {
+                    final t = im['type'] as String;
+                    if (t != 'null') primitiveTypes.add(t);
+                  } else {
+                    allPrimitive = false;
+                  }
+                }
+              } else {
+                allPrimitive = false;
+              }
+            }
+            if (!allPrimitive || primitiveTypes.length < 2) continue;
+            // mixed primitives → string
+            final isNullable = value['nullable'] == true ||
+                members.any(
+                  (m) => m is Map<String, Object?> && m['type'] == 'null',
+                );
+            value.remove(unionKey);
+            value['type'] = 'string';
+            if (isNullable) value['nullable'] = true;
+            patchCount++;
+          }
+        }
+
+        // Recurse
+        walkAndPatch(value);
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        walkAndPatch(item);
+      }
+    }
+  }
+
+  walkAndPatch(openapi);
+
+  final encoder = JsonEncoder.withIndent('  ');
+  openapiFile.writeAsStringSync(encoder.convert(openapi));
+  stdout.writeln('  $patchCount patches applied');
 }
 
 Future<void> _run(String exe, List<String> args, String cwd) async {

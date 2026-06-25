@@ -14,7 +14,7 @@ abstract class ParameterMetadata with _$ParameterMetadata {
   const factory ParameterMetadata({
     required ParameterType type,
     @JsonKey(name: 'schema_version')
-    required dynamic schemaVersion,
+    required int schemaVersion,
     @JsonKey(name: 'source_version')
     required String sourceVersion,
     @JsonKey(includeIfNull: true,name: 'source_updated_at')

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InternalServerErrorResponse {
 
- dynamic get code; dynamic get message;@JsonKey(includeIfNull: false) String? get reason;
+ String get code; String get message;@JsonKey(includeIfNull: false) String? get reason;
 /// Create a copy of InternalServerErrorResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $InternalServerErrorResponseCopyWith<InternalServerErrorResponse> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternalServerErrorResponse&&const DeepCollectionEquality().equals(other.code, code)&&const DeepCollectionEquality().equals(other.message, message)&&(identical(other.reason, reason) || other.reason == reason));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternalServerErrorResponse&&(identical(other.code, code) || other.code == code)&&(identical(other.message, message) || other.message == message)&&(identical(other.reason, reason) || other.reason == reason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(code),const DeepCollectionEquality().hash(message),reason);
+int get hashCode => Object.hash(runtimeType,code,message,reason);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $InternalServerErrorResponseCopyWith<$Res>  {
   factory $InternalServerErrorResponseCopyWith(InternalServerErrorResponse value, $Res Function(InternalServerErrorResponse) _then) = _$InternalServerErrorResponseCopyWithImpl;
 @useResult
 $Res call({
- dynamic code, dynamic message,@JsonKey(includeIfNull: false) String? reason
+ String code, String message,@JsonKey(includeIfNull: false) String? reason
 });
 
 
@@ -65,11 +65,11 @@ class _$InternalServerErrorResponseCopyWithImpl<$Res>
 
 /// Create a copy of InternalServerErrorResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = freezed,Object? message = freezed,Object? reason = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? message = null,Object? reason = freezed,}) {
   return _then(_self.copyWith(
-code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as dynamic,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as dynamic,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic code,  dynamic message, @JsonKey(includeIfNull: false)  String? reason)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String message, @JsonKey(includeIfNull: false)  String? reason)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InternalServerErrorResponse() when $default != null:
 return $default(_that.code,_that.message,_that.reason);case _:
@@ -176,7 +176,7 @@ return $default(_that.code,_that.message,_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic code,  dynamic message, @JsonKey(includeIfNull: false)  String? reason)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String message, @JsonKey(includeIfNull: false)  String? reason)  $default,) {final _that = this;
 switch (_that) {
 case _InternalServerErrorResponse():
 return $default(_that.code,_that.message,_that.reason);case _:
@@ -196,7 +196,7 @@ return $default(_that.code,_that.message,_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic code,  dynamic message, @JsonKey(includeIfNull: false)  String? reason)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String message, @JsonKey(includeIfNull: false)  String? reason)?  $default,) {final _that = this;
 switch (_that) {
 case _InternalServerErrorResponse() when $default != null:
 return $default(_that.code,_that.message,_that.reason);case _:
@@ -214,8 +214,8 @@ class _InternalServerErrorResponse implements InternalServerErrorResponse {
   const _InternalServerErrorResponse({required this.code, required this.message, @JsonKey(includeIfNull: false) this.reason});
   factory _InternalServerErrorResponse.fromJson(Map<String, dynamic> json) => _$InternalServerErrorResponseFromJson(json);
 
-@override final  dynamic code;
-@override final  dynamic message;
+@override final  String code;
+@override final  String message;
 @override@JsonKey(includeIfNull: false) final  String? reason;
 
 /// Create a copy of InternalServerErrorResponse
@@ -231,12 +231,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternalServerErrorResponse&&const DeepCollectionEquality().equals(other.code, code)&&const DeepCollectionEquality().equals(other.message, message)&&(identical(other.reason, reason) || other.reason == reason));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternalServerErrorResponse&&(identical(other.code, code) || other.code == code)&&(identical(other.message, message) || other.message == message)&&(identical(other.reason, reason) || other.reason == reason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(code),const DeepCollectionEquality().hash(message),reason);
+int get hashCode => Object.hash(runtimeType,code,message,reason);
 
 @override
 String toString() {
@@ -251,7 +251,7 @@ abstract mixin class _$InternalServerErrorResponseCopyWith<$Res> implements $Int
   factory _$InternalServerErrorResponseCopyWith(_InternalServerErrorResponse value, $Res Function(_InternalServerErrorResponse) _then) = __$InternalServerErrorResponseCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic code, dynamic message,@JsonKey(includeIfNull: false) String? reason
+ String code, String message,@JsonKey(includeIfNull: false) String? reason
 });
 
 
@@ -268,11 +268,11 @@ class __$InternalServerErrorResponseCopyWithImpl<$Res>
 
 /// Create a copy of InternalServerErrorResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = freezed,Object? message = freezed,Object? reason = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? message = null,Object? reason = freezed,}) {
   return _then(_InternalServerErrorResponse(
-code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as dynamic,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as dynamic,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

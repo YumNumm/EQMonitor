@@ -12,7 +12,7 @@ _ChangelogBadRequestResponse _$ChangelogBadRequestResponseFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_ChangelogBadRequestResponse', json, ($checkedConvert) {
   final val = _ChangelogBadRequestResponse(
-    code: $checkedConvert('code', (v) => v),
+    code: $checkedConvert('code', (v) => v as String),
     message: $checkedConvert('message', (v) => v as String),
   );
   return val;

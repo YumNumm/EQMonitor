@@ -13,8 +13,8 @@ part 'v2_feeds_admin_request_body.g.dart';
 @Freezed()
 abstract class V2FeedsAdminRequestBody with _$V2FeedsAdminRequestBody {
   const factory V2FeedsAdminRequestBody({
-    required dynamic feedType,
-    required dynamic priority,
+    required String feedType,
+    required String priority,
     required bool isImportant,
     required String publishedAt,
     required Data data,

@@ -22,13 +22,13 @@ abstract class MaxHeight with _$MaxHeight {
 
     /// 10m超となる時に出現する 取りうる値はtrueのみ
     @JsonKey(includeIfNull: false,name: 'is_over')
-    dynamic isOver,
+    bool? isOver,
     @JsonKey(includeIfNull: false)
     QualitativeHeight? qualitative,
 
     /// 津波警報以上でまだ津波の観測値が小さい場合に出現する
     @JsonKey(includeIfNull: false,name: 'is_observing')
-    dynamic isObserving,
+    bool? isObserving,
     @JsonKey(includeIfNull: false)
     Revise? revise,
   }) = _MaxHeight;

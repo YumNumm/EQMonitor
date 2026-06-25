@@ -14,13 +14,13 @@ part 'target_union.g.dart';
 sealed class TargetUnion with _$TargetUnion {
   @JsonSerializable()
   const factory TargetUnion.variant1({
-    required dynamic type,
+    required String type,
     required String deviceId,
   }) = TargetUnionVariant1;
   
   @JsonSerializable()
   const factory TargetUnion.variant2({
-    required dynamic type,
+    required String type,
     required String token,
     required Environment environment,
   }) = TargetUnionVariant2;

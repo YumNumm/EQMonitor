@@ -18,7 +18,7 @@ abstract class FirstHeight with _$FirstHeight {
 
     /// 早いところでは既に津波到達と推定
     @JsonKey(includeIfNull: false,name: 'is_already_arrived')
-    dynamic isAlreadyArrived,
+    bool? isAlreadyArrived,
     @JsonKey(includeIfNull: false)
     Revise? revise,
   }) = _FirstHeight;

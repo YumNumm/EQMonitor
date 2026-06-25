@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SubscriptionActiveResponse {
 
- dynamic get status; String get productId;@JsonKey(includeIfNull: true) DateTime? get expiresAt; bool get willRenew;
+ String get status; String get productId;@JsonKey(includeIfNull: true) DateTime? get expiresAt; bool get willRenew;
 /// Create a copy of SubscriptionActiveResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $SubscriptionActiveResponseCopyWith<SubscriptionActiveResponse> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SubscriptionActiveResponse&&const DeepCollectionEquality().equals(other.status, status)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.willRenew, willRenew) || other.willRenew == willRenew));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SubscriptionActiveResponse&&(identical(other.status, status) || other.status == status)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.willRenew, willRenew) || other.willRenew == willRenew));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(status),productId,expiresAt,willRenew);
+int get hashCode => Object.hash(runtimeType,status,productId,expiresAt,willRenew);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $SubscriptionActiveResponseCopyWith<$Res>  {
   factory $SubscriptionActiveResponseCopyWith(SubscriptionActiveResponse value, $Res Function(SubscriptionActiveResponse) _then) = _$SubscriptionActiveResponseCopyWithImpl;
 @useResult
 $Res call({
- dynamic status, String productId,@JsonKey(includeIfNull: true) DateTime? expiresAt, bool willRenew
+ String status, String productId,@JsonKey(includeIfNull: true) DateTime? expiresAt, bool willRenew
 });
 
 
@@ -65,10 +65,10 @@ class _$SubscriptionActiveResponseCopyWithImpl<$Res>
 
 /// Create a copy of SubscriptionActiveResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,Object? productId = null,Object? expiresAt = freezed,Object? willRenew = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? productId = null,Object? expiresAt = freezed,Object? willRenew = null,}) {
   return _then(_self.copyWith(
-status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as dynamic,productId: null == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
+status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,productId: null == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
 as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,willRenew: null == willRenew ? _self.willRenew : willRenew // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic status,  String productId, @JsonKey(includeIfNull: true)  DateTime? expiresAt,  bool willRenew)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String status,  String productId, @JsonKey(includeIfNull: true)  DateTime? expiresAt,  bool willRenew)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SubscriptionActiveResponse() when $default != null:
 return $default(_that.status,_that.productId,_that.expiresAt,_that.willRenew);case _:
@@ -177,7 +177,7 @@ return $default(_that.status,_that.productId,_that.expiresAt,_that.willRenew);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic status,  String productId, @JsonKey(includeIfNull: true)  DateTime? expiresAt,  bool willRenew)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String status,  String productId, @JsonKey(includeIfNull: true)  DateTime? expiresAt,  bool willRenew)  $default,) {final _that = this;
 switch (_that) {
 case _SubscriptionActiveResponse():
 return $default(_that.status,_that.productId,_that.expiresAt,_that.willRenew);case _:
@@ -197,7 +197,7 @@ return $default(_that.status,_that.productId,_that.expiresAt,_that.willRenew);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic status,  String productId, @JsonKey(includeIfNull: true)  DateTime? expiresAt,  bool willRenew)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String status,  String productId, @JsonKey(includeIfNull: true)  DateTime? expiresAt,  bool willRenew)?  $default,) {final _that = this;
 switch (_that) {
 case _SubscriptionActiveResponse() when $default != null:
 return $default(_that.status,_that.productId,_that.expiresAt,_that.willRenew);case _:
@@ -215,7 +215,7 @@ class _SubscriptionActiveResponse implements SubscriptionActiveResponse {
   const _SubscriptionActiveResponse({required this.status, required this.productId, @JsonKey(includeIfNull: true) required this.expiresAt, required this.willRenew});
   factory _SubscriptionActiveResponse.fromJson(Map<String, dynamic> json) => _$SubscriptionActiveResponseFromJson(json);
 
-@override final  dynamic status;
+@override final  String status;
 @override final  String productId;
 @override@JsonKey(includeIfNull: true) final  DateTime? expiresAt;
 @override final  bool willRenew;
@@ -233,12 +233,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubscriptionActiveResponse&&const DeepCollectionEquality().equals(other.status, status)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.willRenew, willRenew) || other.willRenew == willRenew));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubscriptionActiveResponse&&(identical(other.status, status) || other.status == status)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.willRenew, willRenew) || other.willRenew == willRenew));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(status),productId,expiresAt,willRenew);
+int get hashCode => Object.hash(runtimeType,status,productId,expiresAt,willRenew);
 
 @override
 String toString() {
@@ -253,7 +253,7 @@ abstract mixin class _$SubscriptionActiveResponseCopyWith<$Res> implements $Subs
   factory _$SubscriptionActiveResponseCopyWith(_SubscriptionActiveResponse value, $Res Function(_SubscriptionActiveResponse) _then) = __$SubscriptionActiveResponseCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic status, String productId,@JsonKey(includeIfNull: true) DateTime? expiresAt, bool willRenew
+ String status, String productId,@JsonKey(includeIfNull: true) DateTime? expiresAt, bool willRenew
 });
 
 
@@ -270,10 +270,10 @@ class __$SubscriptionActiveResponseCopyWithImpl<$Res>
 
 /// Create a copy of SubscriptionActiveResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = freezed,Object? productId = null,Object? expiresAt = freezed,Object? willRenew = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? productId = null,Object? expiresAt = freezed,Object? willRenew = null,}) {
   return _then(_SubscriptionActiveResponse(
-status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as dynamic,productId: null == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
+status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,productId: null == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
 as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,willRenew: null == willRenew ? _self.willRenew : willRenew // ignore: cast_nullable_to_non_nullable
 as bool,

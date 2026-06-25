@@ -54,7 +54,7 @@ TelegramBodyUnion _$TelegramBodyUnionFromJson(
 /// @nodoc
 mixin _$TelegramBodyUnion {
 
- dynamic get type;
+ String get type;
 /// Create a copy of TelegramBodyUnion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -67,12 +67,12 @@ $TelegramBodyUnionCopyWith<TelegramBodyUnion> get copyWith => _$TelegramBodyUnio
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnion&&const DeepCollectionEquality().equals(other.type, type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnion&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type));
+int get hashCode => Object.hash(runtimeType,type);
 
 @override
 String toString() {
@@ -87,7 +87,7 @@ abstract mixin class $TelegramBodyUnionCopyWith<$Res>  {
   factory $TelegramBodyUnionCopyWith(TelegramBodyUnion value, $Res Function(TelegramBodyUnion) _then) = _$TelegramBodyUnionCopyWithImpl;
 @useResult
 $Res call({
- dynamic type
+ String type
 });
 
 
@@ -104,10 +104,10 @@ class _$TelegramBodyUnionCopyWithImpl<$Res>
 
 /// Create a copy of TelegramBodyUnion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,}) {
   return _then(_self.copyWith(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -204,7 +204,7 @@ return earthquakeNankaiTelegramBody(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( dynamic type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  earthquakeTelegramBody,TResult Function( dynamic type,  dynamic eew,  List<dynamic> eewIntensityRegions,  List<dynamic> eewWarningZones,  List<dynamic> eewWarningPrefectures,  List<dynamic> eewWarningRegions)?  eewTelegramBody,TResult Function( dynamic type)?  earthquakeNoticeTelegramBody,TResult Function( dynamic type,  String text)?  earthquakeExplanationTelegramBody,TResult Function( dynamic type)?  earthquakeCountsTelegramBody,TResult Function( dynamic type)?  earthquakeNankaiTelegramBody,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  earthquakeTelegramBody,TResult Function( String type,  EewTelegramBodyEew eew,  List<EewTelegramBodyIntensityRegion> eewIntensityRegions,  List<EewTelegramBodyWarningArea> eewWarningZones,  List<EewTelegramBodyWarningArea> eewWarningPrefectures,  List<EewTelegramBodyWarningArea> eewWarningRegions)?  eewTelegramBody,TResult Function( String type)?  earthquakeNoticeTelegramBody,TResult Function( String type,  String text)?  earthquakeExplanationTelegramBody,TResult Function( String type)?  earthquakeCountsTelegramBody,TResult Function( String type)?  earthquakeNankaiTelegramBody,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case TelegramBodyUnionEarthquakeTelegramBody() when earthquakeTelegramBody != null:
 return earthquakeTelegramBody(_that.type,_that.earthquake,_that.intensityRegions,_that.intensityPrefectures,_that.intensityCities,_that.intensityStations);case TelegramBodyUnionEewTelegramBody() when eewTelegramBody != null:
@@ -230,7 +230,7 @@ return earthquakeNankaiTelegramBody(_that.type);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( dynamic type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)  earthquakeTelegramBody,required TResult Function( dynamic type,  dynamic eew,  List<dynamic> eewIntensityRegions,  List<dynamic> eewWarningZones,  List<dynamic> eewWarningPrefectures,  List<dynamic> eewWarningRegions)  eewTelegramBody,required TResult Function( dynamic type)  earthquakeNoticeTelegramBody,required TResult Function( dynamic type,  String text)  earthquakeExplanationTelegramBody,required TResult Function( dynamic type)  earthquakeCountsTelegramBody,required TResult Function( dynamic type)  earthquakeNankaiTelegramBody,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)  earthquakeTelegramBody,required TResult Function( String type,  EewTelegramBodyEew eew,  List<EewTelegramBodyIntensityRegion> eewIntensityRegions,  List<EewTelegramBodyWarningArea> eewWarningZones,  List<EewTelegramBodyWarningArea> eewWarningPrefectures,  List<EewTelegramBodyWarningArea> eewWarningRegions)  eewTelegramBody,required TResult Function( String type)  earthquakeNoticeTelegramBody,required TResult Function( String type,  String text)  earthquakeExplanationTelegramBody,required TResult Function( String type)  earthquakeCountsTelegramBody,required TResult Function( String type)  earthquakeNankaiTelegramBody,}) {final _that = this;
 switch (_that) {
 case TelegramBodyUnionEarthquakeTelegramBody():
 return earthquakeTelegramBody(_that.type,_that.earthquake,_that.intensityRegions,_that.intensityPrefectures,_that.intensityCities,_that.intensityStations);case TelegramBodyUnionEewTelegramBody():
@@ -252,7 +252,7 @@ return earthquakeNankaiTelegramBody(_that.type);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( dynamic type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  earthquakeTelegramBody,TResult? Function( dynamic type,  dynamic eew,  List<dynamic> eewIntensityRegions,  List<dynamic> eewWarningZones,  List<dynamic> eewWarningPrefectures,  List<dynamic> eewWarningRegions)?  eewTelegramBody,TResult? Function( dynamic type)?  earthquakeNoticeTelegramBody,TResult? Function( dynamic type,  String text)?  earthquakeExplanationTelegramBody,TResult? Function( dynamic type)?  earthquakeCountsTelegramBody,TResult? Function( dynamic type)?  earthquakeNankaiTelegramBody,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  earthquakeTelegramBody,TResult? Function( String type,  EewTelegramBodyEew eew,  List<EewTelegramBodyIntensityRegion> eewIntensityRegions,  List<EewTelegramBodyWarningArea> eewWarningZones,  List<EewTelegramBodyWarningArea> eewWarningPrefectures,  List<EewTelegramBodyWarningArea> eewWarningRegions)?  eewTelegramBody,TResult? Function( String type)?  earthquakeNoticeTelegramBody,TResult? Function( String type,  String text)?  earthquakeExplanationTelegramBody,TResult? Function( String type)?  earthquakeCountsTelegramBody,TResult? Function( String type)?  earthquakeNankaiTelegramBody,}) {final _that = this;
 switch (_that) {
 case TelegramBodyUnionEarthquakeTelegramBody() when earthquakeTelegramBody != null:
 return earthquakeTelegramBody(_that.type,_that.earthquake,_that.intensityRegions,_that.intensityPrefectures,_that.intensityCities,_that.intensityStations);case TelegramBodyUnionEewTelegramBody() when eewTelegramBody != null:
@@ -275,7 +275,7 @@ class TelegramBodyUnionEarthquakeTelegramBody implements TelegramBodyUnion {
   const TelegramBodyUnionEarthquakeTelegramBody({required this.type, @JsonKey(includeIfNull: false) this.earthquake, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityStation>? intensityStations, final  String? $type}): _intensityRegions = intensityRegions,_intensityPrefectures = intensityPrefectures,_intensityCities = intensityCities,_intensityStations = intensityStations,$type = $type ?? 'earthquakeTelegramBody';
   factory TelegramBodyUnionEarthquakeTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEarthquakeTelegramBodyFromJson(json);
 
-@override final  dynamic type;
+@override final  String type;
 @JsonKey(includeIfNull: false) final  EarthquakeTelegramBodyQuake? earthquake;
  final  List<EarthquakeTelegramBodyIntensityRegion>? _intensityRegions;
 @JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? get intensityRegions {
@@ -331,12 +331,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEarthquakeTelegramBody&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&const DeepCollectionEquality().equals(other._intensityRegions, _intensityRegions)&&const DeepCollectionEquality().equals(other._intensityPrefectures, _intensityPrefectures)&&const DeepCollectionEquality().equals(other._intensityCities, _intensityCities)&&const DeepCollectionEquality().equals(other._intensityStations, _intensityStations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEarthquakeTelegramBody&&(identical(other.type, type) || other.type == type)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&const DeepCollectionEquality().equals(other._intensityRegions, _intensityRegions)&&const DeepCollectionEquality().equals(other._intensityPrefectures, _intensityPrefectures)&&const DeepCollectionEquality().equals(other._intensityCities, _intensityCities)&&const DeepCollectionEquality().equals(other._intensityStations, _intensityStations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),earthquake,const DeepCollectionEquality().hash(_intensityRegions),const DeepCollectionEquality().hash(_intensityPrefectures),const DeepCollectionEquality().hash(_intensityCities),const DeepCollectionEquality().hash(_intensityStations));
+int get hashCode => Object.hash(runtimeType,type,earthquake,const DeepCollectionEquality().hash(_intensityRegions),const DeepCollectionEquality().hash(_intensityPrefectures),const DeepCollectionEquality().hash(_intensityCities),const DeepCollectionEquality().hash(_intensityStations));
 
 @override
 String toString() {
@@ -351,7 +351,7 @@ abstract mixin class $TelegramBodyUnionEarthquakeTelegramBodyCopyWith<$Res> impl
   factory $TelegramBodyUnionEarthquakeTelegramBodyCopyWith(TelegramBodyUnionEarthquakeTelegramBody value, $Res Function(TelegramBodyUnionEarthquakeTelegramBody) _then) = _$TelegramBodyUnionEarthquakeTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type,@JsonKey(includeIfNull: false) EarthquakeTelegramBodyQuake? earthquake,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityCities,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityStation>? intensityStations
+ String type,@JsonKey(includeIfNull: false) EarthquakeTelegramBodyQuake? earthquake,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityCities,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityStation>? intensityStations
 });
 
 
@@ -368,10 +368,10 @@ class _$TelegramBodyUnionEarthquakeTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of TelegramBodyUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? earthquake = freezed,Object? intensityRegions = freezed,Object? intensityPrefectures = freezed,Object? intensityCities = freezed,Object? intensityStations = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? earthquake = freezed,Object? intensityRegions = freezed,Object? intensityPrefectures = freezed,Object? intensityCities = freezed,Object? intensityStations = freezed,}) {
   return _then(TelegramBodyUnionEarthquakeTelegramBody(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,earthquake: freezed == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,earthquake: freezed == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakeTelegramBodyQuake?,intensityRegions: freezed == intensityRegions ? _self._intensityRegions : intensityRegions // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeTelegramBodyIntensityRegion>?,intensityPrefectures: freezed == intensityPrefectures ? _self._intensityPrefectures : intensityPrefectures // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeTelegramBodyIntensityRegion>?,intensityCities: freezed == intensityCities ? _self._intensityCities : intensityCities // ignore: cast_nullable_to_non_nullable
@@ -399,34 +399,34 @@ $EarthquakeTelegramBodyQuakeCopyWith<$Res>? get earthquake {
 
 @JsonSerializable()
 class TelegramBodyUnionEewTelegramBody implements TelegramBodyUnion {
-  const TelegramBodyUnionEewTelegramBody({required this.type, required this.eew, required final  List<dynamic> eewIntensityRegions, required final  List<dynamic> eewWarningZones, required final  List<dynamic> eewWarningPrefectures, required final  List<dynamic> eewWarningRegions, final  String? $type}): _eewIntensityRegions = eewIntensityRegions,_eewWarningZones = eewWarningZones,_eewWarningPrefectures = eewWarningPrefectures,_eewWarningRegions = eewWarningRegions,$type = $type ?? 'eewTelegramBody';
+  const TelegramBodyUnionEewTelegramBody({required this.type, required this.eew, required final  List<EewTelegramBodyIntensityRegion> eewIntensityRegions, required final  List<EewTelegramBodyWarningArea> eewWarningZones, required final  List<EewTelegramBodyWarningArea> eewWarningPrefectures, required final  List<EewTelegramBodyWarningArea> eewWarningRegions, final  String? $type}): _eewIntensityRegions = eewIntensityRegions,_eewWarningZones = eewWarningZones,_eewWarningPrefectures = eewWarningPrefectures,_eewWarningRegions = eewWarningRegions,$type = $type ?? 'eewTelegramBody';
   factory TelegramBodyUnionEewTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEewTelegramBodyFromJson(json);
 
-@override final  dynamic type;
- final  dynamic eew;
- final  List<dynamic> _eewIntensityRegions;
- List<dynamic> get eewIntensityRegions {
+@override final  String type;
+ final  EewTelegramBodyEew eew;
+ final  List<EewTelegramBodyIntensityRegion> _eewIntensityRegions;
+ List<EewTelegramBodyIntensityRegion> get eewIntensityRegions {
   if (_eewIntensityRegions is EqualUnmodifiableListView) return _eewIntensityRegions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_eewIntensityRegions);
 }
 
- final  List<dynamic> _eewWarningZones;
- List<dynamic> get eewWarningZones {
+ final  List<EewTelegramBodyWarningArea> _eewWarningZones;
+ List<EewTelegramBodyWarningArea> get eewWarningZones {
   if (_eewWarningZones is EqualUnmodifiableListView) return _eewWarningZones;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_eewWarningZones);
 }
 
- final  List<dynamic> _eewWarningPrefectures;
- List<dynamic> get eewWarningPrefectures {
+ final  List<EewTelegramBodyWarningArea> _eewWarningPrefectures;
+ List<EewTelegramBodyWarningArea> get eewWarningPrefectures {
   if (_eewWarningPrefectures is EqualUnmodifiableListView) return _eewWarningPrefectures;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_eewWarningPrefectures);
 }
 
- final  List<dynamic> _eewWarningRegions;
- List<dynamic> get eewWarningRegions {
+ final  List<EewTelegramBodyWarningArea> _eewWarningRegions;
+ List<EewTelegramBodyWarningArea> get eewWarningRegions {
   if (_eewWarningRegions is EqualUnmodifiableListView) return _eewWarningRegions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_eewWarningRegions);
@@ -450,12 +450,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEewTelegramBody&&const DeepCollectionEquality().equals(other.type, type)&&const DeepCollectionEquality().equals(other.eew, eew)&&const DeepCollectionEquality().equals(other._eewIntensityRegions, _eewIntensityRegions)&&const DeepCollectionEquality().equals(other._eewWarningZones, _eewWarningZones)&&const DeepCollectionEquality().equals(other._eewWarningPrefectures, _eewWarningPrefectures)&&const DeepCollectionEquality().equals(other._eewWarningRegions, _eewWarningRegions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEewTelegramBody&&(identical(other.type, type) || other.type == type)&&(identical(other.eew, eew) || other.eew == eew)&&const DeepCollectionEquality().equals(other._eewIntensityRegions, _eewIntensityRegions)&&const DeepCollectionEquality().equals(other._eewWarningZones, _eewWarningZones)&&const DeepCollectionEquality().equals(other._eewWarningPrefectures, _eewWarningPrefectures)&&const DeepCollectionEquality().equals(other._eewWarningRegions, _eewWarningRegions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),const DeepCollectionEquality().hash(eew),const DeepCollectionEquality().hash(_eewIntensityRegions),const DeepCollectionEquality().hash(_eewWarningZones),const DeepCollectionEquality().hash(_eewWarningPrefectures),const DeepCollectionEquality().hash(_eewWarningRegions));
+int get hashCode => Object.hash(runtimeType,type,eew,const DeepCollectionEquality().hash(_eewIntensityRegions),const DeepCollectionEquality().hash(_eewWarningZones),const DeepCollectionEquality().hash(_eewWarningPrefectures),const DeepCollectionEquality().hash(_eewWarningRegions));
 
 @override
 String toString() {
@@ -470,11 +470,11 @@ abstract mixin class $TelegramBodyUnionEewTelegramBodyCopyWith<$Res> implements 
   factory $TelegramBodyUnionEewTelegramBodyCopyWith(TelegramBodyUnionEewTelegramBody value, $Res Function(TelegramBodyUnionEewTelegramBody) _then) = _$TelegramBodyUnionEewTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, dynamic eew, List<dynamic> eewIntensityRegions, List<dynamic> eewWarningZones, List<dynamic> eewWarningPrefectures, List<dynamic> eewWarningRegions
+ String type, EewTelegramBodyEew eew, List<EewTelegramBodyIntensityRegion> eewIntensityRegions, List<EewTelegramBodyWarningArea> eewWarningZones, List<EewTelegramBodyWarningArea> eewWarningPrefectures, List<EewTelegramBodyWarningArea> eewWarningRegions
 });
 
 
-
+$EewTelegramBodyEewCopyWith<$Res> get eew;
 
 }
 /// @nodoc
@@ -487,19 +487,28 @@ class _$TelegramBodyUnionEewTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of TelegramBodyUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? eew = freezed,Object? eewIntensityRegions = null,Object? eewWarningZones = null,Object? eewWarningPrefectures = null,Object? eewWarningRegions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? eew = null,Object? eewIntensityRegions = null,Object? eewWarningZones = null,Object? eewWarningPrefectures = null,Object? eewWarningRegions = null,}) {
   return _then(TelegramBodyUnionEewTelegramBody(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,eew: freezed == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
-as dynamic,eewIntensityRegions: null == eewIntensityRegions ? _self._eewIntensityRegions : eewIntensityRegions // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,eewWarningZones: null == eewWarningZones ? _self._eewWarningZones : eewWarningZones // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,eewWarningPrefectures: null == eewWarningPrefectures ? _self._eewWarningPrefectures : eewWarningPrefectures // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,eewWarningRegions: null == eewWarningRegions ? _self._eewWarningRegions : eewWarningRegions // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,eew: null == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
+as EewTelegramBodyEew,eewIntensityRegions: null == eewIntensityRegions ? _self._eewIntensityRegions : eewIntensityRegions // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyIntensityRegion>,eewWarningZones: null == eewWarningZones ? _self._eewWarningZones : eewWarningZones // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyWarningArea>,eewWarningPrefectures: null == eewWarningPrefectures ? _self._eewWarningPrefectures : eewWarningPrefectures // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyWarningArea>,eewWarningRegions: null == eewWarningRegions ? _self._eewWarningRegions : eewWarningRegions // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyWarningArea>,
   ));
 }
 
-
+/// Create a copy of TelegramBodyUnion
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EewTelegramBodyEewCopyWith<$Res> get eew {
+  
+  return $EewTelegramBodyEewCopyWith<$Res>(_self.eew, (value) {
+    return _then(_self.copyWith(eew: value));
+  });
+}
 }
 
 /// @nodoc
@@ -509,7 +518,7 @@ class TelegramBodyUnionEarthquakeNoticeTelegramBody implements TelegramBodyUnion
   const TelegramBodyUnionEarthquakeNoticeTelegramBody({required this.type, final  String? $type}): $type = $type ?? 'earthquakeNoticeTelegramBody';
   factory TelegramBodyUnionEarthquakeNoticeTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEarthquakeNoticeTelegramBodyFromJson(json);
 
-@override final  dynamic type;
+@override final  String type;
 
 @JsonKey(name: 'runtimeType')
 final String $type;
@@ -528,12 +537,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEarthquakeNoticeTelegramBody&&const DeepCollectionEquality().equals(other.type, type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEarthquakeNoticeTelegramBody&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type));
+int get hashCode => Object.hash(runtimeType,type);
 
 @override
 String toString() {
@@ -548,7 +557,7 @@ abstract mixin class $TelegramBodyUnionEarthquakeNoticeTelegramBodyCopyWith<$Res
   factory $TelegramBodyUnionEarthquakeNoticeTelegramBodyCopyWith(TelegramBodyUnionEarthquakeNoticeTelegramBody value, $Res Function(TelegramBodyUnionEarthquakeNoticeTelegramBody) _then) = _$TelegramBodyUnionEarthquakeNoticeTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type
+ String type
 });
 
 
@@ -565,10 +574,10 @@ class _$TelegramBodyUnionEarthquakeNoticeTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of TelegramBodyUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,}) {
   return _then(TelegramBodyUnionEarthquakeNoticeTelegramBody(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -582,7 +591,7 @@ class TelegramBodyUnionEarthquakeExplanationTelegramBody implements TelegramBody
   const TelegramBodyUnionEarthquakeExplanationTelegramBody({required this.type, required this.text, final  String? $type}): $type = $type ?? 'earthquakeExplanationTelegramBody';
   factory TelegramBodyUnionEarthquakeExplanationTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEarthquakeExplanationTelegramBodyFromJson(json);
 
-@override final  dynamic type;
+@override final  String type;
  final  String text;
 
 @JsonKey(name: 'runtimeType')
@@ -602,12 +611,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEarthquakeExplanationTelegramBody&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEarthquakeExplanationTelegramBody&&(identical(other.type, type) || other.type == type)&&(identical(other.text, text) || other.text == text));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),text);
+int get hashCode => Object.hash(runtimeType,type,text);
 
 @override
 String toString() {
@@ -622,7 +631,7 @@ abstract mixin class $TelegramBodyUnionEarthquakeExplanationTelegramBodyCopyWith
   factory $TelegramBodyUnionEarthquakeExplanationTelegramBodyCopyWith(TelegramBodyUnionEarthquakeExplanationTelegramBody value, $Res Function(TelegramBodyUnionEarthquakeExplanationTelegramBody) _then) = _$TelegramBodyUnionEarthquakeExplanationTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, String text
+ String type, String text
 });
 
 
@@ -639,10 +648,10 @@ class _$TelegramBodyUnionEarthquakeExplanationTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of TelegramBodyUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? text = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? text = null,}) {
   return _then(TelegramBodyUnionEarthquakeExplanationTelegramBody(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -657,7 +666,7 @@ class TelegramBodyUnionEarthquakeCountsTelegramBody implements TelegramBodyUnion
   const TelegramBodyUnionEarthquakeCountsTelegramBody({required this.type, final  String? $type}): $type = $type ?? 'earthquakeCountsTelegramBody';
   factory TelegramBodyUnionEarthquakeCountsTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEarthquakeCountsTelegramBodyFromJson(json);
 
-@override final  dynamic type;
+@override final  String type;
 
 @JsonKey(name: 'runtimeType')
 final String $type;
@@ -676,12 +685,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEarthquakeCountsTelegramBody&&const DeepCollectionEquality().equals(other.type, type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEarthquakeCountsTelegramBody&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type));
+int get hashCode => Object.hash(runtimeType,type);
 
 @override
 String toString() {
@@ -696,7 +705,7 @@ abstract mixin class $TelegramBodyUnionEarthquakeCountsTelegramBodyCopyWith<$Res
   factory $TelegramBodyUnionEarthquakeCountsTelegramBodyCopyWith(TelegramBodyUnionEarthquakeCountsTelegramBody value, $Res Function(TelegramBodyUnionEarthquakeCountsTelegramBody) _then) = _$TelegramBodyUnionEarthquakeCountsTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type
+ String type
 });
 
 
@@ -713,10 +722,10 @@ class _$TelegramBodyUnionEarthquakeCountsTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of TelegramBodyUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,}) {
   return _then(TelegramBodyUnionEarthquakeCountsTelegramBody(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -730,7 +739,7 @@ class TelegramBodyUnionEarthquakeNankaiTelegramBody implements TelegramBodyUnion
   const TelegramBodyUnionEarthquakeNankaiTelegramBody({required this.type, final  String? $type}): $type = $type ?? 'earthquakeNankaiTelegramBody';
   factory TelegramBodyUnionEarthquakeNankaiTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEarthquakeNankaiTelegramBodyFromJson(json);
 
-@override final  dynamic type;
+@override final  String type;
 
 @JsonKey(name: 'runtimeType')
 final String $type;
@@ -749,12 +758,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEarthquakeNankaiTelegramBody&&const DeepCollectionEquality().equals(other.type, type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionEarthquakeNankaiTelegramBody&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type));
+int get hashCode => Object.hash(runtimeType,type);
 
 @override
 String toString() {
@@ -769,7 +778,7 @@ abstract mixin class $TelegramBodyUnionEarthquakeNankaiTelegramBodyCopyWith<$Res
   factory $TelegramBodyUnionEarthquakeNankaiTelegramBodyCopyWith(TelegramBodyUnionEarthquakeNankaiTelegramBody value, $Res Function(TelegramBodyUnionEarthquakeNankaiTelegramBody) _then) = _$TelegramBodyUnionEarthquakeNankaiTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type
+ String type
 });
 
 
@@ -786,10 +795,10 @@ class _$TelegramBodyUnionEarthquakeNankaiTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of TelegramBodyUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,}) {
   return _then(TelegramBodyUnionEarthquakeNankaiTelegramBody(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

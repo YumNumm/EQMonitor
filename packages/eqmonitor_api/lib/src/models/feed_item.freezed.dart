@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FeedItem {
 
- String get id;@JsonKey(name: 'feed_type') dynamic get feedType; dynamic get priority;@JsonKey(name: 'is_important') bool get isImportant;@JsonKey(name: 'published_at') String get publishedAt;@JsonKey(includeIfNull: true, name: 'expires_at') String? get expiresAt;@JsonKey(includeIfNull: true) String? get title;@JsonKey(includeIfNull: true) String? get summary; FeedItemDataUnion get data;
+ String get id;@JsonKey(name: 'feed_type') String get feedType; String get priority;@JsonKey(name: 'is_important') bool get isImportant;@JsonKey(name: 'published_at') String get publishedAt;@JsonKey(includeIfNull: true, name: 'expires_at') String? get expiresAt;@JsonKey(includeIfNull: true) String? get title;@JsonKey(includeIfNull: true) String? get summary; FeedItemDataUnion get data;
 /// Create a copy of FeedItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $FeedItemCopyWith<FeedItem> get copyWith => _$FeedItemCopyWithImpl<FeedItem>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItem&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.feedType, feedType)&&const DeepCollectionEquality().equals(other.priority, priority)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.summary, summary) || other.summary == summary)&&(identical(other.data, data) || other.data == data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItem&&(identical(other.id, id) || other.id == id)&&(identical(other.feedType, feedType) || other.feedType == feedType)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.summary, summary) || other.summary == summary)&&(identical(other.data, data) || other.data == data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(feedType),const DeepCollectionEquality().hash(priority),isImportant,publishedAt,expiresAt,title,summary,data);
+int get hashCode => Object.hash(runtimeType,id,feedType,priority,isImportant,publishedAt,expiresAt,title,summary,data);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $FeedItemCopyWith<$Res>  {
   factory $FeedItemCopyWith(FeedItem value, $Res Function(FeedItem) _then) = _$FeedItemCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'feed_type') dynamic feedType, dynamic priority,@JsonKey(name: 'is_important') bool isImportant,@JsonKey(name: 'published_at') String publishedAt,@JsonKey(includeIfNull: true, name: 'expires_at') String? expiresAt,@JsonKey(includeIfNull: true) String? title,@JsonKey(includeIfNull: true) String? summary, FeedItemDataUnion data
+ String id,@JsonKey(name: 'feed_type') String feedType, String priority,@JsonKey(name: 'is_important') bool isImportant,@JsonKey(name: 'published_at') String publishedAt,@JsonKey(includeIfNull: true, name: 'expires_at') String? expiresAt,@JsonKey(includeIfNull: true) String? title,@JsonKey(includeIfNull: true) String? summary, FeedItemDataUnion data
 });
 
 
@@ -65,12 +65,12 @@ class _$FeedItemCopyWithImpl<$Res>
 
 /// Create a copy of FeedItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? feedType = freezed,Object? priority = freezed,Object? isImportant = null,Object? publishedAt = null,Object? expiresAt = freezed,Object? title = freezed,Object? summary = freezed,Object? data = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? feedType = null,Object? priority = null,Object? isImportant = null,Object? publishedAt = null,Object? expiresAt = freezed,Object? title = freezed,Object? summary = freezed,Object? data = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,feedType: freezed == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
-as dynamic,priority: freezed == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as dynamic,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
+as String,feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
+as String,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
+as String,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
 as bool,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
 as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -170,7 +170,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'feed_type')  dynamic feedType,  dynamic priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'feed_type')  String feedType,  String priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FeedItem() when $default != null:
 return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.expiresAt,_that.title,_that.summary,_that.data);case _:
@@ -191,7 +191,7 @@ return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'feed_type')  dynamic feedType,  dynamic priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'feed_type')  String feedType,  String priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)  $default,) {final _that = this;
 switch (_that) {
 case _FeedItem():
 return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.expiresAt,_that.title,_that.summary,_that.data);case _:
@@ -211,7 +211,7 @@ return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'feed_type')  dynamic feedType,  dynamic priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'feed_type')  String feedType,  String priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)?  $default,) {final _that = this;
 switch (_that) {
 case _FeedItem() when $default != null:
 return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.expiresAt,_that.title,_that.summary,_that.data);case _:
@@ -230,8 +230,8 @@ class _FeedItem implements FeedItem {
   factory _FeedItem.fromJson(Map<String, dynamic> json) => _$FeedItemFromJson(json);
 
 @override final  String id;
-@override@JsonKey(name: 'feed_type') final  dynamic feedType;
-@override final  dynamic priority;
+@override@JsonKey(name: 'feed_type') final  String feedType;
+@override final  String priority;
 @override@JsonKey(name: 'is_important') final  bool isImportant;
 @override@JsonKey(name: 'published_at') final  String publishedAt;
 @override@JsonKey(includeIfNull: true, name: 'expires_at') final  String? expiresAt;
@@ -252,12 +252,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedItem&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.feedType, feedType)&&const DeepCollectionEquality().equals(other.priority, priority)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.summary, summary) || other.summary == summary)&&(identical(other.data, data) || other.data == data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedItem&&(identical(other.id, id) || other.id == id)&&(identical(other.feedType, feedType) || other.feedType == feedType)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.summary, summary) || other.summary == summary)&&(identical(other.data, data) || other.data == data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(feedType),const DeepCollectionEquality().hash(priority),isImportant,publishedAt,expiresAt,title,summary,data);
+int get hashCode => Object.hash(runtimeType,id,feedType,priority,isImportant,publishedAt,expiresAt,title,summary,data);
 
 @override
 String toString() {
@@ -272,7 +272,7 @@ abstract mixin class _$FeedItemCopyWith<$Res> implements $FeedItemCopyWith<$Res>
   factory _$FeedItemCopyWith(_FeedItem value, $Res Function(_FeedItem) _then) = __$FeedItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'feed_type') dynamic feedType, dynamic priority,@JsonKey(name: 'is_important') bool isImportant,@JsonKey(name: 'published_at') String publishedAt,@JsonKey(includeIfNull: true, name: 'expires_at') String? expiresAt,@JsonKey(includeIfNull: true) String? title,@JsonKey(includeIfNull: true) String? summary, FeedItemDataUnion data
+ String id,@JsonKey(name: 'feed_type') String feedType, String priority,@JsonKey(name: 'is_important') bool isImportant,@JsonKey(name: 'published_at') String publishedAt,@JsonKey(includeIfNull: true, name: 'expires_at') String? expiresAt,@JsonKey(includeIfNull: true) String? title,@JsonKey(includeIfNull: true) String? summary, FeedItemDataUnion data
 });
 
 
@@ -289,12 +289,12 @@ class __$FeedItemCopyWithImpl<$Res>
 
 /// Create a copy of FeedItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? feedType = freezed,Object? priority = freezed,Object? isImportant = null,Object? publishedAt = null,Object? expiresAt = freezed,Object? title = freezed,Object? summary = freezed,Object? data = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? feedType = null,Object? priority = null,Object? isImportant = null,Object? publishedAt = null,Object? expiresAt = freezed,Object? title = freezed,Object? summary = freezed,Object? data = null,}) {
   return _then(_FeedItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,feedType: freezed == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
-as dynamic,priority: freezed == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as dynamic,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
+as String,feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
+as String,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
+as String,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
 as bool,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
 as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable

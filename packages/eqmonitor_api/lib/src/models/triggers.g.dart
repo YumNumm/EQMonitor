@@ -13,7 +13,7 @@ _Triggers _$TriggersFromJson(Map<String, dynamic> json) =>
       final val = _Triggers(
         id: $checkedConvert('id', (v) => v as String),
         replayFileId: $checkedConvert('replayFileId', (v) => v as String),
-        triggerType: $checkedConvert('triggerType', (v) => v),
+        triggerType: $checkedConvert('triggerType', (v) => v as String),
         eventId: $checkedConvert('eventId', (v) => v as String),
         createdAt: $checkedConvert('createdAt', (v) => v as String),
       );

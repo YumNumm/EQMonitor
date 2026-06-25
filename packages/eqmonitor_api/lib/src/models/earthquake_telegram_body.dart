@@ -14,7 +14,7 @@ part 'earthquake_telegram_body.g.dart';
 @Freezed()
 abstract class EarthquakeTelegramBody with _$EarthquakeTelegramBody {
   const factory EarthquakeTelegramBody({
-    required dynamic type,
+    required String type,
     @JsonKey(includeIfNull: false)
     EarthquakeTelegramBodyQuake? earthquake,
     @JsonKey(includeIfNull: false)

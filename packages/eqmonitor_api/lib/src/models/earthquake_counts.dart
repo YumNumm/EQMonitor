@@ -13,7 +13,7 @@ part 'earthquake_counts.g.dart';
 @Freezed()
 abstract class EarthquakeCounts with _$EarthquakeCounts {
   const factory EarthquakeCounts({
-    required dynamic type,
+    required String type,
     required TargetTime targetTime,
     required Values values,
   }) = _EarthquakeCounts;

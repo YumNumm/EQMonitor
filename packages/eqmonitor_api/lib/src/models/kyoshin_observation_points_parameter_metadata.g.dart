@@ -16,8 +16,11 @@ _$KyoshinObservationPointsParameterMetadataFromJson(
   json,
   ($checkedConvert) {
     final val = _KyoshinObservationPointsParameterMetadata(
-      type: $checkedConvert('type', (v) => v),
-      schemaVersion: $checkedConvert('schema_version', (v) => v),
+      type: $checkedConvert('type', (v) => v as String),
+      schemaVersion: $checkedConvert(
+        'schema_version',
+        (v) => (v as num).toInt(),
+      ),
       sourceVersion: $checkedConvert('source_version', (v) => v as String),
       sourceUpdatedAt: $checkedConvert(
         'source_updated_at',

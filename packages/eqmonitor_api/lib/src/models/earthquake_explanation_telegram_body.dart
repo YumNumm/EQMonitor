@@ -10,7 +10,7 @@ part 'earthquake_explanation_telegram_body.g.dart';
 @Freezed()
 abstract class EarthquakeExplanationTelegramBody with _$EarthquakeExplanationTelegramBody {
   const factory EarthquakeExplanationTelegramBody({
-    required dynamic type,
+    required String type,
     required String text,
   }) = _EarthquakeExplanationTelegramBody;
   

@@ -14,7 +14,7 @@ _ReplayDownloadServiceUnavailable _$ReplayDownloadServiceUnavailableFromJson(
   $checkedConvert,
 ) {
   final val = _ReplayDownloadServiceUnavailable(
-    code: $checkedConvert('code', (v) => v),
+    code: $checkedConvert('code', (v) => v as String),
     message: $checkedConvert('message', (v) => v as String),
   );
   return val;

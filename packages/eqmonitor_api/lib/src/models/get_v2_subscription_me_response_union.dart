@@ -12,7 +12,7 @@ part 'get_v2_subscription_me_response_union.g.dart';
 sealed class GetV2SubscriptionMeResponseUnion with _$GetV2SubscriptionMeResponseUnion {
   @JsonSerializable()
   const factory GetV2SubscriptionMeResponseUnion.subscriptionActiveResponse({
-    required dynamic status,
+    required String status,
     required String productId,
     @JsonKey(includeIfNull: true)
     required DateTime? expiresAt,
@@ -21,7 +21,7 @@ sealed class GetV2SubscriptionMeResponseUnion with _$GetV2SubscriptionMeResponse
   
   @JsonSerializable()
   const factory GetV2SubscriptionMeResponseUnion.subscriptionInactiveResponse({
-    required dynamic status,
+    required String status,
   }) = GetV2SubscriptionMeResponseUnionSubscriptionInactiveResponse;
   
 

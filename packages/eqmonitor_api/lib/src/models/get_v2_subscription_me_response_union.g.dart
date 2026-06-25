@@ -16,7 +16,7 @@ _$GetV2SubscriptionMeResponseUnionSubscriptionActiveResponseFromJson(
   json,
   ($checkedConvert) {
     final val = GetV2SubscriptionMeResponseUnionSubscriptionActiveResponse(
-      status: $checkedConvert('status', (v) => v),
+      status: $checkedConvert('status', (v) => v as String),
       productId: $checkedConvert('productId', (v) => v as String),
       expiresAt: $checkedConvert(
         'expiresAt',
@@ -49,7 +49,7 @@ _$GetV2SubscriptionMeResponseUnionSubscriptionInactiveResponseFromJson(
   json,
   ($checkedConvert) {
     final val = GetV2SubscriptionMeResponseUnionSubscriptionInactiveResponse(
-      status: $checkedConvert('status', (v) => v),
+      status: $checkedConvert('status', (v) => v as String),
       $type: $checkedConvert('runtimeType', (v) => v as String?),
     );
     return val;

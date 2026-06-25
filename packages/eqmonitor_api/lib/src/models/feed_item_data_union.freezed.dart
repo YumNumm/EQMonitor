@@ -58,7 +58,7 @@ FeedItemDataUnion _$FeedItemDataUnionFromJson(
 /// @nodoc
 mixin _$FeedItemDataUnion {
 
- dynamic get type;
+ String get type;
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -71,12 +71,12 @@ $FeedItemDataUnionCopyWith<FeedItemDataUnion> get copyWith => _$FeedItemDataUnio
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnion&&const DeepCollectionEquality().equals(other.type, type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnion&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type));
+int get hashCode => Object.hash(runtimeType,type);
 
 @override
 String toString() {
@@ -91,7 +91,7 @@ abstract mixin class $FeedItemDataUnionCopyWith<$Res>  {
   factory $FeedItemDataUnionCopyWith(FeedItemDataUnion value, $Res Function(FeedItemDataUnion) _then) = _$FeedItemDataUnionCopyWithImpl;
 @useResult
 $Res call({
- dynamic type
+ String type
 });
 
 
@@ -108,10 +108,10 @@ class _$FeedItemDataUnionCopyWithImpl<$Res>
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,}) {
   return _then(_self.copyWith(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -211,7 +211,7 @@ return variant7(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( dynamic type,  String text)?  variant1,TResult Function( dynamic type,  dynamic infoType,  String text, @JsonKey(includeIfNull: false)  Naming? naming, @JsonKey(includeIfNull: false)  Comments? comments)?  variant2,TResult Function( dynamic type,  dynamic infoType, @JsonKey(includeIfNull: false)  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  Comments2? comments)?  variant3,TResult Function( dynamic type,  dynamic infoType,  dynamic telegramType, @JsonKey(includeIfNull: false)  EarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  variant4,TResult Function( dynamic type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  variant5,TResult Function( dynamic type, @JsonKey(includeIfNull: false)  String? url)?  variant6,TResult Function( dynamic type, @JsonKey(includeIfNull: false)  String? url)?  variant7,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String type,  String text)?  variant1,TResult Function( String type,  String infoType,  String text, @JsonKey(includeIfNull: false)  Naming? naming, @JsonKey(includeIfNull: false)  Comments? comments)?  variant2,TResult Function( String type,  String infoType, @JsonKey(includeIfNull: false)  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  Comments2? comments)?  variant3,TResult Function( String type,  String infoType,  String telegramType, @JsonKey(includeIfNull: false)  EarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  variant4,TResult Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  variant5,TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)?  variant6,TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)?  variant7,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case FeedItemDataUnionVariant1() when variant1 != null:
 return variant1(_that.type,_that.text);case FeedItemDataUnionVariant2() when variant2 != null:
@@ -238,7 +238,7 @@ return variant7(_that.type,_that.url);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( dynamic type,  String text)  variant1,required TResult Function( dynamic type,  dynamic infoType,  String text, @JsonKey(includeIfNull: false)  Naming? naming, @JsonKey(includeIfNull: false)  Comments? comments)  variant2,required TResult Function( dynamic type,  dynamic infoType, @JsonKey(includeIfNull: false)  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  Comments2? comments)  variant3,required TResult Function( dynamic type,  dynamic infoType,  dynamic telegramType, @JsonKey(includeIfNull: false)  EarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)  variant4,required TResult Function( dynamic type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)  variant5,required TResult Function( dynamic type, @JsonKey(includeIfNull: false)  String? url)  variant6,required TResult Function( dynamic type, @JsonKey(includeIfNull: false)  String? url)  variant7,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String type,  String text)  variant1,required TResult Function( String type,  String infoType,  String text, @JsonKey(includeIfNull: false)  Naming? naming, @JsonKey(includeIfNull: false)  Comments? comments)  variant2,required TResult Function( String type,  String infoType, @JsonKey(includeIfNull: false)  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  Comments2? comments)  variant3,required TResult Function( String type,  String infoType,  String telegramType, @JsonKey(includeIfNull: false)  EarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)  variant4,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)  variant5,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)  variant6,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)  variant7,}) {final _that = this;
 switch (_that) {
 case FeedItemDataUnionVariant1():
 return variant1(_that.type,_that.text);case FeedItemDataUnionVariant2():
@@ -261,7 +261,7 @@ return variant7(_that.type,_that.url);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( dynamic type,  String text)?  variant1,TResult? Function( dynamic type,  dynamic infoType,  String text, @JsonKey(includeIfNull: false)  Naming? naming, @JsonKey(includeIfNull: false)  Comments? comments)?  variant2,TResult? Function( dynamic type,  dynamic infoType, @JsonKey(includeIfNull: false)  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  Comments2? comments)?  variant3,TResult? Function( dynamic type,  dynamic infoType,  dynamic telegramType, @JsonKey(includeIfNull: false)  EarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  variant4,TResult? Function( dynamic type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  variant5,TResult? Function( dynamic type, @JsonKey(includeIfNull: false)  String? url)?  variant6,TResult? Function( dynamic type, @JsonKey(includeIfNull: false)  String? url)?  variant7,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String type,  String text)?  variant1,TResult? Function( String type,  String infoType,  String text, @JsonKey(includeIfNull: false)  Naming? naming, @JsonKey(includeIfNull: false)  Comments? comments)?  variant2,TResult? Function( String type,  String infoType, @JsonKey(includeIfNull: false)  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  Comments2? comments)?  variant3,TResult? Function( String type,  String infoType,  String telegramType, @JsonKey(includeIfNull: false)  EarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  variant4,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  variant5,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? url)?  variant6,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? url)?  variant7,}) {final _that = this;
 switch (_that) {
 case FeedItemDataUnionVariant1() when variant1 != null:
 return variant1(_that.type,_that.text);case FeedItemDataUnionVariant2() when variant2 != null:
@@ -285,7 +285,7 @@ class FeedItemDataUnionVariant1 implements FeedItemDataUnion {
   const FeedItemDataUnionVariant1({required this.type, required this.text, final  String? $type}): $type = $type ?? 'variant1';
   factory FeedItemDataUnionVariant1.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant1FromJson(json);
 
-@override final  dynamic type;
+@override final  String type;
  final  String text;
 
 @JsonKey(name: 'runtimeType')
@@ -305,12 +305,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant1&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant1&&(identical(other.type, type) || other.type == type)&&(identical(other.text, text) || other.text == text));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),text);
+int get hashCode => Object.hash(runtimeType,type,text);
 
 @override
 String toString() {
@@ -325,7 +325,7 @@ abstract mixin class $FeedItemDataUnionVariant1CopyWith<$Res> implements $FeedIt
   factory $FeedItemDataUnionVariant1CopyWith(FeedItemDataUnionVariant1 value, $Res Function(FeedItemDataUnionVariant1) _then) = _$FeedItemDataUnionVariant1CopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, String text
+ String type, String text
 });
 
 
@@ -342,10 +342,10 @@ class _$FeedItemDataUnionVariant1CopyWithImpl<$Res>
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? text = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? text = null,}) {
   return _then(FeedItemDataUnionVariant1(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -360,8 +360,8 @@ class FeedItemDataUnionVariant2 implements FeedItemDataUnion {
   const FeedItemDataUnionVariant2({required this.type, required this.infoType, required this.text, @JsonKey(includeIfNull: false) this.naming, @JsonKey(includeIfNull: false) this.comments, final  String? $type}): $type = $type ?? 'variant2';
   factory FeedItemDataUnionVariant2.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant2FromJson(json);
 
-@override final  dynamic type;
- final  dynamic infoType;
+@override final  String type;
+ final  String infoType;
  final  String text;
 @JsonKey(includeIfNull: false) final  Naming? naming;
 @JsonKey(includeIfNull: false) final  Comments? comments;
@@ -383,12 +383,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant2&&const DeepCollectionEquality().equals(other.type, type)&&const DeepCollectionEquality().equals(other.infoType, infoType)&&(identical(other.text, text) || other.text == text)&&(identical(other.naming, naming) || other.naming == naming)&&(identical(other.comments, comments) || other.comments == comments));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant2&&(identical(other.type, type) || other.type == type)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.text, text) || other.text == text)&&(identical(other.naming, naming) || other.naming == naming)&&(identical(other.comments, comments) || other.comments == comments));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),const DeepCollectionEquality().hash(infoType),text,naming,comments);
+int get hashCode => Object.hash(runtimeType,type,infoType,text,naming,comments);
 
 @override
 String toString() {
@@ -403,7 +403,7 @@ abstract mixin class $FeedItemDataUnionVariant2CopyWith<$Res> implements $FeedIt
   factory $FeedItemDataUnionVariant2CopyWith(FeedItemDataUnionVariant2 value, $Res Function(FeedItemDataUnionVariant2) _then) = _$FeedItemDataUnionVariant2CopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, dynamic infoType, String text,@JsonKey(includeIfNull: false) Naming? naming,@JsonKey(includeIfNull: false) Comments? comments
+ String type, String infoType, String text,@JsonKey(includeIfNull: false) Naming? naming,@JsonKey(includeIfNull: false) Comments? comments
 });
 
 
@@ -420,11 +420,11 @@ class _$FeedItemDataUnionVariant2CopyWithImpl<$Res>
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? infoType = freezed,Object? text = null,Object? naming = freezed,Object? comments = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? infoType = null,Object? text = null,Object? naming = freezed,Object? comments = freezed,}) {
   return _then(FeedItemDataUnionVariant2(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,infoType: freezed == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
-as dynamic,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
+as String,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,naming: freezed == naming ? _self.naming : naming // ignore: cast_nullable_to_non_nullable
 as Naming?,comments: freezed == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
 as Comments?,
@@ -465,8 +465,8 @@ class FeedItemDataUnionVariant3 implements FeedItemDataUnion {
   const FeedItemDataUnionVariant3({required this.type, required this.infoType, @JsonKey(includeIfNull: false) final  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, @JsonKey(includeIfNull: false) this.comments, final  String? $type}): _earthquakeCounts = earthquakeCounts,$type = $type ?? 'variant3';
   factory FeedItemDataUnionVariant3.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant3FromJson(json);
 
-@override final  dynamic type;
- final  dynamic infoType;
+@override final  String type;
+ final  String infoType;
  final  List<EarthquakeCounts>? _earthquakeCounts;
 @JsonKey(includeIfNull: false) List<EarthquakeCounts>? get earthquakeCounts {
   final value = _earthquakeCounts;
@@ -497,12 +497,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant3&&const DeepCollectionEquality().equals(other.type, type)&&const DeepCollectionEquality().equals(other.infoType, infoType)&&const DeepCollectionEquality().equals(other._earthquakeCounts, _earthquakeCounts)&&(identical(other.nextAdvisory, nextAdvisory) || other.nextAdvisory == nextAdvisory)&&(identical(other.text, text) || other.text == text)&&(identical(other.comments, comments) || other.comments == comments));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant3&&(identical(other.type, type) || other.type == type)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&const DeepCollectionEquality().equals(other._earthquakeCounts, _earthquakeCounts)&&(identical(other.nextAdvisory, nextAdvisory) || other.nextAdvisory == nextAdvisory)&&(identical(other.text, text) || other.text == text)&&(identical(other.comments, comments) || other.comments == comments));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),const DeepCollectionEquality().hash(infoType),const DeepCollectionEquality().hash(_earthquakeCounts),nextAdvisory,text,comments);
+int get hashCode => Object.hash(runtimeType,type,infoType,const DeepCollectionEquality().hash(_earthquakeCounts),nextAdvisory,text,comments);
 
 @override
 String toString() {
@@ -517,7 +517,7 @@ abstract mixin class $FeedItemDataUnionVariant3CopyWith<$Res> implements $FeedIt
   factory $FeedItemDataUnionVariant3CopyWith(FeedItemDataUnionVariant3 value, $Res Function(FeedItemDataUnionVariant3) _then) = _$FeedItemDataUnionVariant3CopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, dynamic infoType,@JsonKey(includeIfNull: false) List<EarthquakeCounts>? earthquakeCounts,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text,@JsonKey(includeIfNull: false) Comments2? comments
+ String type, String infoType,@JsonKey(includeIfNull: false) List<EarthquakeCounts>? earthquakeCounts,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text,@JsonKey(includeIfNull: false) Comments2? comments
 });
 
 
@@ -534,11 +534,11 @@ class _$FeedItemDataUnionVariant3CopyWithImpl<$Res>
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? infoType = freezed,Object? earthquakeCounts = freezed,Object? nextAdvisory = freezed,Object? text = freezed,Object? comments = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? infoType = null,Object? earthquakeCounts = freezed,Object? nextAdvisory = freezed,Object? text = freezed,Object? comments = freezed,}) {
   return _then(FeedItemDataUnionVariant3(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,infoType: freezed == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
-as dynamic,earthquakeCounts: freezed == earthquakeCounts ? _self._earthquakeCounts : earthquakeCounts // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
+as String,earthquakeCounts: freezed == earthquakeCounts ? _self._earthquakeCounts : earthquakeCounts // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeCounts>?,nextAdvisory: freezed == nextAdvisory ? _self.nextAdvisory : nextAdvisory // ignore: cast_nullable_to_non_nullable
 as String?,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String?,comments: freezed == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
@@ -568,9 +568,9 @@ class FeedItemDataUnionVariant4 implements FeedItemDataUnion {
   const FeedItemDataUnionVariant4({required this.type, required this.infoType, required this.telegramType, @JsonKey(includeIfNull: false) this.earthquakeInfo, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, final  String? $type}): $type = $type ?? 'variant4';
   factory FeedItemDataUnionVariant4.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant4FromJson(json);
 
-@override final  dynamic type;
- final  dynamic infoType;
- final  dynamic telegramType;
+@override final  String type;
+ final  String infoType;
+ final  String telegramType;
 @JsonKey(includeIfNull: false) final  EarthquakeInfo? earthquakeInfo;
 @JsonKey(includeIfNull: false) final  String? nextAdvisory;
 @JsonKey(includeIfNull: false) final  String? text;
@@ -592,12 +592,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant4&&const DeepCollectionEquality().equals(other.type, type)&&const DeepCollectionEquality().equals(other.infoType, infoType)&&const DeepCollectionEquality().equals(other.telegramType, telegramType)&&(identical(other.earthquakeInfo, earthquakeInfo) || other.earthquakeInfo == earthquakeInfo)&&(identical(other.nextAdvisory, nextAdvisory) || other.nextAdvisory == nextAdvisory)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant4&&(identical(other.type, type) || other.type == type)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.telegramType, telegramType) || other.telegramType == telegramType)&&(identical(other.earthquakeInfo, earthquakeInfo) || other.earthquakeInfo == earthquakeInfo)&&(identical(other.nextAdvisory, nextAdvisory) || other.nextAdvisory == nextAdvisory)&&(identical(other.text, text) || other.text == text));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),const DeepCollectionEquality().hash(infoType),const DeepCollectionEquality().hash(telegramType),earthquakeInfo,nextAdvisory,text);
+int get hashCode => Object.hash(runtimeType,type,infoType,telegramType,earthquakeInfo,nextAdvisory,text);
 
 @override
 String toString() {
@@ -612,7 +612,7 @@ abstract mixin class $FeedItemDataUnionVariant4CopyWith<$Res> implements $FeedIt
   factory $FeedItemDataUnionVariant4CopyWith(FeedItemDataUnionVariant4 value, $Res Function(FeedItemDataUnionVariant4) _then) = _$FeedItemDataUnionVariant4CopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, dynamic infoType, dynamic telegramType,@JsonKey(includeIfNull: false) EarthquakeInfo? earthquakeInfo,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text
+ String type, String infoType, String telegramType,@JsonKey(includeIfNull: false) EarthquakeInfo? earthquakeInfo,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text
 });
 
 
@@ -629,12 +629,12 @@ class _$FeedItemDataUnionVariant4CopyWithImpl<$Res>
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? infoType = freezed,Object? telegramType = freezed,Object? earthquakeInfo = freezed,Object? nextAdvisory = freezed,Object? text = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? infoType = null,Object? telegramType = null,Object? earthquakeInfo = freezed,Object? nextAdvisory = freezed,Object? text = freezed,}) {
   return _then(FeedItemDataUnionVariant4(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,infoType: freezed == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
-as dynamic,telegramType: freezed == telegramType ? _self.telegramType : telegramType // ignore: cast_nullable_to_non_nullable
-as dynamic,earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
+as String,telegramType: null == telegramType ? _self.telegramType : telegramType // ignore: cast_nullable_to_non_nullable
+as String,earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
 as EarthquakeInfo?,nextAdvisory: freezed == nextAdvisory ? _self.nextAdvisory : nextAdvisory // ignore: cast_nullable_to_non_nullable
 as String?,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -663,7 +663,7 @@ class FeedItemDataUnionVariant5 implements FeedItemDataUnion {
   const FeedItemDataUnionVariant5({required this.type, @JsonKey(includeIfNull: false) this.version, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'variant5';
   factory FeedItemDataUnionVariant5.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant5FromJson(json);
 
-@override final  dynamic type;
+@override final  String type;
 @JsonKey(includeIfNull: false) final  String? version;
 @JsonKey(includeIfNull: false) final  String? url;
 
@@ -684,12 +684,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant5&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.version, version) || other.version == version)&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant5&&(identical(other.type, type) || other.type == type)&&(identical(other.version, version) || other.version == version)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),version,url);
+int get hashCode => Object.hash(runtimeType,type,version,url);
 
 @override
 String toString() {
@@ -704,7 +704,7 @@ abstract mixin class $FeedItemDataUnionVariant5CopyWith<$Res> implements $FeedIt
   factory $FeedItemDataUnionVariant5CopyWith(FeedItemDataUnionVariant5 value, $Res Function(FeedItemDataUnionVariant5) _then) = _$FeedItemDataUnionVariant5CopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type,@JsonKey(includeIfNull: false) String? version,@JsonKey(includeIfNull: false) String? url
+ String type,@JsonKey(includeIfNull: false) String? version,@JsonKey(includeIfNull: false) String? url
 });
 
 
@@ -721,10 +721,10 @@ class _$FeedItemDataUnionVariant5CopyWithImpl<$Res>
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? version = freezed,Object? url = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? version = freezed,Object? url = freezed,}) {
   return _then(FeedItemDataUnionVariant5(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -740,7 +740,7 @@ class FeedItemDataUnionVariant6 implements FeedItemDataUnion {
   const FeedItemDataUnionVariant6({required this.type, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'variant6';
   factory FeedItemDataUnionVariant6.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant6FromJson(json);
 
-@override final  dynamic type;
+@override final  String type;
 @JsonKey(includeIfNull: false) final  String? url;
 
 @JsonKey(name: 'runtimeType')
@@ -760,12 +760,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant6&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant6&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),url);
+int get hashCode => Object.hash(runtimeType,type,url);
 
 @override
 String toString() {
@@ -780,7 +780,7 @@ abstract mixin class $FeedItemDataUnionVariant6CopyWith<$Res> implements $FeedIt
   factory $FeedItemDataUnionVariant6CopyWith(FeedItemDataUnionVariant6 value, $Res Function(FeedItemDataUnionVariant6) _then) = _$FeedItemDataUnionVariant6CopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type,@JsonKey(includeIfNull: false) String? url
+ String type,@JsonKey(includeIfNull: false) String? url
 });
 
 
@@ -797,10 +797,10 @@ class _$FeedItemDataUnionVariant6CopyWithImpl<$Res>
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? url = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? url = freezed,}) {
   return _then(FeedItemDataUnionVariant6(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -815,7 +815,7 @@ class FeedItemDataUnionVariant7 implements FeedItemDataUnion {
   const FeedItemDataUnionVariant7({required this.type, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'variant7';
   factory FeedItemDataUnionVariant7.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant7FromJson(json);
 
-@override final  dynamic type;
+@override final  String type;
 @JsonKey(includeIfNull: false) final  String? url;
 
 @JsonKey(name: 'runtimeType')
@@ -835,12 +835,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant7&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant7&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),url);
+int get hashCode => Object.hash(runtimeType,type,url);
 
 @override
 String toString() {
@@ -855,7 +855,7 @@ abstract mixin class $FeedItemDataUnionVariant7CopyWith<$Res> implements $FeedIt
   factory $FeedItemDataUnionVariant7CopyWith(FeedItemDataUnionVariant7 value, $Res Function(FeedItemDataUnionVariant7) _then) = _$FeedItemDataUnionVariant7CopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type,@JsonKey(includeIfNull: false) String? url
+ String type,@JsonKey(includeIfNull: false) String? url
 });
 
 
@@ -872,10 +872,10 @@ class _$FeedItemDataUnionVariant7CopyWithImpl<$Res>
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? url = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? url = freezed,}) {
   return _then(FeedItemDataUnionVariant7(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

@@ -10,7 +10,7 @@ part 'changelog_bad_request_response.g.dart';
 @Freezed()
 abstract class ChangelogBadRequestResponse with _$ChangelogBadRequestResponse {
   const factory ChangelogBadRequestResponse({
-    required dynamic code,
+    required String code,
     required String message,
   }) = _ChangelogBadRequestResponse;
   

@@ -52,7 +52,9 @@ _TelegramDetail _$TelegramDetailFromJson(
       ),
       body: $checkedConvert(
         'body',
-        (v) => TelegramBodyUnion.fromJson(v as Map<String, dynamic>),
+        (v) => v == null
+            ? null
+            : TelegramBodyUnion.fromJson(v as Map<String, dynamic>),
       ),
       serialNo: $checkedConvert('serial_no', (v) => v as num?),
       targetedAt: $checkedConvert(

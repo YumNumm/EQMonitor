@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewTelegramBody {
 
- dynamic get type; dynamic get eew; List<dynamic> get eewIntensityRegions; List<dynamic> get eewWarningZones; List<dynamic> get eewWarningPrefectures; List<dynamic> get eewWarningRegions;
+ String get type; EewTelegramBodyEew get eew; List<EewTelegramBodyIntensityRegion> get eewIntensityRegions; List<EewTelegramBodyWarningArea> get eewWarningZones; List<EewTelegramBodyWarningArea> get eewWarningPrefectures; List<EewTelegramBodyWarningArea> get eewWarningRegions;
 /// Create a copy of EewTelegramBody
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $EewTelegramBodyCopyWith<EewTelegramBody> get copyWith => _$EewTelegramBodyCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewTelegramBody&&const DeepCollectionEquality().equals(other.type, type)&&const DeepCollectionEquality().equals(other.eew, eew)&&const DeepCollectionEquality().equals(other.eewIntensityRegions, eewIntensityRegions)&&const DeepCollectionEquality().equals(other.eewWarningZones, eewWarningZones)&&const DeepCollectionEquality().equals(other.eewWarningPrefectures, eewWarningPrefectures)&&const DeepCollectionEquality().equals(other.eewWarningRegions, eewWarningRegions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewTelegramBody&&(identical(other.type, type) || other.type == type)&&(identical(other.eew, eew) || other.eew == eew)&&const DeepCollectionEquality().equals(other.eewIntensityRegions, eewIntensityRegions)&&const DeepCollectionEquality().equals(other.eewWarningZones, eewWarningZones)&&const DeepCollectionEquality().equals(other.eewWarningPrefectures, eewWarningPrefectures)&&const DeepCollectionEquality().equals(other.eewWarningRegions, eewWarningRegions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),const DeepCollectionEquality().hash(eew),const DeepCollectionEquality().hash(eewIntensityRegions),const DeepCollectionEquality().hash(eewWarningZones),const DeepCollectionEquality().hash(eewWarningPrefectures),const DeepCollectionEquality().hash(eewWarningRegions));
+int get hashCode => Object.hash(runtimeType,type,eew,const DeepCollectionEquality().hash(eewIntensityRegions),const DeepCollectionEquality().hash(eewWarningZones),const DeepCollectionEquality().hash(eewWarningPrefectures),const DeepCollectionEquality().hash(eewWarningRegions));
 
 @override
 String toString() {
@@ -48,11 +48,11 @@ abstract mixin class $EewTelegramBodyCopyWith<$Res>  {
   factory $EewTelegramBodyCopyWith(EewTelegramBody value, $Res Function(EewTelegramBody) _then) = _$EewTelegramBodyCopyWithImpl;
 @useResult
 $Res call({
- dynamic type, dynamic eew, List<dynamic> eewIntensityRegions, List<dynamic> eewWarningZones, List<dynamic> eewWarningPrefectures, List<dynamic> eewWarningRegions
+ String type, EewTelegramBodyEew eew, List<EewTelegramBodyIntensityRegion> eewIntensityRegions, List<EewTelegramBodyWarningArea> eewWarningZones, List<EewTelegramBodyWarningArea> eewWarningPrefectures, List<EewTelegramBodyWarningArea> eewWarningRegions
 });
 
 
-
+$EewTelegramBodyEewCopyWith<$Res> get eew;
 
 }
 /// @nodoc
@@ -65,18 +65,27 @@ class _$EewTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of EewTelegramBody
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = freezed,Object? eew = freezed,Object? eewIntensityRegions = null,Object? eewWarningZones = null,Object? eewWarningPrefectures = null,Object? eewWarningRegions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? eew = null,Object? eewIntensityRegions = null,Object? eewWarningZones = null,Object? eewWarningPrefectures = null,Object? eewWarningRegions = null,}) {
   return _then(_self.copyWith(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,eew: freezed == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
-as dynamic,eewIntensityRegions: null == eewIntensityRegions ? _self.eewIntensityRegions : eewIntensityRegions // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,eewWarningZones: null == eewWarningZones ? _self.eewWarningZones : eewWarningZones // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,eewWarningPrefectures: null == eewWarningPrefectures ? _self.eewWarningPrefectures : eewWarningPrefectures // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,eewWarningRegions: null == eewWarningRegions ? _self.eewWarningRegions : eewWarningRegions // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,eew: null == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
+as EewTelegramBodyEew,eewIntensityRegions: null == eewIntensityRegions ? _self.eewIntensityRegions : eewIntensityRegions // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyIntensityRegion>,eewWarningZones: null == eewWarningZones ? _self.eewWarningZones : eewWarningZones // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyWarningArea>,eewWarningPrefectures: null == eewWarningPrefectures ? _self.eewWarningPrefectures : eewWarningPrefectures // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyWarningArea>,eewWarningRegions: null == eewWarningRegions ? _self.eewWarningRegions : eewWarningRegions // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyWarningArea>,
   ));
 }
-
+/// Create a copy of EewTelegramBody
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EewTelegramBodyEewCopyWith<$Res> get eew {
+  
+  return $EewTelegramBodyEewCopyWith<$Res>(_self.eew, (value) {
+    return _then(_self.copyWith(eew: value));
+  });
+}
 }
 
 
@@ -158,7 +167,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic type,  dynamic eew,  List<dynamic> eewIntensityRegions,  List<dynamic> eewWarningZones,  List<dynamic> eewWarningPrefectures,  List<dynamic> eewWarningRegions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  EewTelegramBodyEew eew,  List<EewTelegramBodyIntensityRegion> eewIntensityRegions,  List<EewTelegramBodyWarningArea> eewWarningZones,  List<EewTelegramBodyWarningArea> eewWarningPrefectures,  List<EewTelegramBodyWarningArea> eewWarningRegions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewTelegramBody() when $default != null:
 return $default(_that.type,_that.eew,_that.eewIntensityRegions,_that.eewWarningZones,_that.eewWarningPrefectures,_that.eewWarningRegions);case _:
@@ -179,7 +188,7 @@ return $default(_that.type,_that.eew,_that.eewIntensityRegions,_that.eewWarningZ
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic type,  dynamic eew,  List<dynamic> eewIntensityRegions,  List<dynamic> eewWarningZones,  List<dynamic> eewWarningPrefectures,  List<dynamic> eewWarningRegions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  EewTelegramBodyEew eew,  List<EewTelegramBodyIntensityRegion> eewIntensityRegions,  List<EewTelegramBodyWarningArea> eewWarningZones,  List<EewTelegramBodyWarningArea> eewWarningPrefectures,  List<EewTelegramBodyWarningArea> eewWarningRegions)  $default,) {final _that = this;
 switch (_that) {
 case _EewTelegramBody():
 return $default(_that.type,_that.eew,_that.eewIntensityRegions,_that.eewWarningZones,_that.eewWarningPrefectures,_that.eewWarningRegions);case _:
@@ -199,7 +208,7 @@ return $default(_that.type,_that.eew,_that.eewIntensityRegions,_that.eewWarningZ
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic type,  dynamic eew,  List<dynamic> eewIntensityRegions,  List<dynamic> eewWarningZones,  List<dynamic> eewWarningPrefectures,  List<dynamic> eewWarningRegions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  EewTelegramBodyEew eew,  List<EewTelegramBodyIntensityRegion> eewIntensityRegions,  List<EewTelegramBodyWarningArea> eewWarningZones,  List<EewTelegramBodyWarningArea> eewWarningPrefectures,  List<EewTelegramBodyWarningArea> eewWarningRegions)?  $default,) {final _that = this;
 switch (_that) {
 case _EewTelegramBody() when $default != null:
 return $default(_that.type,_that.eew,_that.eewIntensityRegions,_that.eewWarningZones,_that.eewWarningPrefectures,_that.eewWarningRegions);case _:
@@ -214,34 +223,34 @@ return $default(_that.type,_that.eew,_that.eewIntensityRegions,_that.eewWarningZ
 @JsonSerializable()
 
 class _EewTelegramBody implements EewTelegramBody {
-  const _EewTelegramBody({required this.type, required this.eew, required final  List<dynamic> eewIntensityRegions, required final  List<dynamic> eewWarningZones, required final  List<dynamic> eewWarningPrefectures, required final  List<dynamic> eewWarningRegions}): _eewIntensityRegions = eewIntensityRegions,_eewWarningZones = eewWarningZones,_eewWarningPrefectures = eewWarningPrefectures,_eewWarningRegions = eewWarningRegions;
+  const _EewTelegramBody({required this.type, required this.eew, required final  List<EewTelegramBodyIntensityRegion> eewIntensityRegions, required final  List<EewTelegramBodyWarningArea> eewWarningZones, required final  List<EewTelegramBodyWarningArea> eewWarningPrefectures, required final  List<EewTelegramBodyWarningArea> eewWarningRegions}): _eewIntensityRegions = eewIntensityRegions,_eewWarningZones = eewWarningZones,_eewWarningPrefectures = eewWarningPrefectures,_eewWarningRegions = eewWarningRegions;
   factory _EewTelegramBody.fromJson(Map<String, dynamic> json) => _$EewTelegramBodyFromJson(json);
 
-@override final  dynamic type;
-@override final  dynamic eew;
- final  List<dynamic> _eewIntensityRegions;
-@override List<dynamic> get eewIntensityRegions {
+@override final  String type;
+@override final  EewTelegramBodyEew eew;
+ final  List<EewTelegramBodyIntensityRegion> _eewIntensityRegions;
+@override List<EewTelegramBodyIntensityRegion> get eewIntensityRegions {
   if (_eewIntensityRegions is EqualUnmodifiableListView) return _eewIntensityRegions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_eewIntensityRegions);
 }
 
- final  List<dynamic> _eewWarningZones;
-@override List<dynamic> get eewWarningZones {
+ final  List<EewTelegramBodyWarningArea> _eewWarningZones;
+@override List<EewTelegramBodyWarningArea> get eewWarningZones {
   if (_eewWarningZones is EqualUnmodifiableListView) return _eewWarningZones;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_eewWarningZones);
 }
 
- final  List<dynamic> _eewWarningPrefectures;
-@override List<dynamic> get eewWarningPrefectures {
+ final  List<EewTelegramBodyWarningArea> _eewWarningPrefectures;
+@override List<EewTelegramBodyWarningArea> get eewWarningPrefectures {
   if (_eewWarningPrefectures is EqualUnmodifiableListView) return _eewWarningPrefectures;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_eewWarningPrefectures);
 }
 
- final  List<dynamic> _eewWarningRegions;
-@override List<dynamic> get eewWarningRegions {
+ final  List<EewTelegramBodyWarningArea> _eewWarningRegions;
+@override List<EewTelegramBodyWarningArea> get eewWarningRegions {
   if (_eewWarningRegions is EqualUnmodifiableListView) return _eewWarningRegions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_eewWarningRegions);
@@ -261,12 +270,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewTelegramBody&&const DeepCollectionEquality().equals(other.type, type)&&const DeepCollectionEquality().equals(other.eew, eew)&&const DeepCollectionEquality().equals(other._eewIntensityRegions, _eewIntensityRegions)&&const DeepCollectionEquality().equals(other._eewWarningZones, _eewWarningZones)&&const DeepCollectionEquality().equals(other._eewWarningPrefectures, _eewWarningPrefectures)&&const DeepCollectionEquality().equals(other._eewWarningRegions, _eewWarningRegions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewTelegramBody&&(identical(other.type, type) || other.type == type)&&(identical(other.eew, eew) || other.eew == eew)&&const DeepCollectionEquality().equals(other._eewIntensityRegions, _eewIntensityRegions)&&const DeepCollectionEquality().equals(other._eewWarningZones, _eewWarningZones)&&const DeepCollectionEquality().equals(other._eewWarningPrefectures, _eewWarningPrefectures)&&const DeepCollectionEquality().equals(other._eewWarningRegions, _eewWarningRegions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),const DeepCollectionEquality().hash(eew),const DeepCollectionEquality().hash(_eewIntensityRegions),const DeepCollectionEquality().hash(_eewWarningZones),const DeepCollectionEquality().hash(_eewWarningPrefectures),const DeepCollectionEquality().hash(_eewWarningRegions));
+int get hashCode => Object.hash(runtimeType,type,eew,const DeepCollectionEquality().hash(_eewIntensityRegions),const DeepCollectionEquality().hash(_eewWarningZones),const DeepCollectionEquality().hash(_eewWarningPrefectures),const DeepCollectionEquality().hash(_eewWarningRegions));
 
 @override
 String toString() {
@@ -281,11 +290,11 @@ abstract mixin class _$EewTelegramBodyCopyWith<$Res> implements $EewTelegramBody
   factory _$EewTelegramBodyCopyWith(_EewTelegramBody value, $Res Function(_EewTelegramBody) _then) = __$EewTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, dynamic eew, List<dynamic> eewIntensityRegions, List<dynamic> eewWarningZones, List<dynamic> eewWarningPrefectures, List<dynamic> eewWarningRegions
+ String type, EewTelegramBodyEew eew, List<EewTelegramBodyIntensityRegion> eewIntensityRegions, List<EewTelegramBodyWarningArea> eewWarningZones, List<EewTelegramBodyWarningArea> eewWarningPrefectures, List<EewTelegramBodyWarningArea> eewWarningRegions
 });
 
 
-
+@override $EewTelegramBodyEewCopyWith<$Res> get eew;
 
 }
 /// @nodoc
@@ -298,19 +307,28 @@ class __$EewTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of EewTelegramBody
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? eew = freezed,Object? eewIntensityRegions = null,Object? eewWarningZones = null,Object? eewWarningPrefectures = null,Object? eewWarningRegions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? eew = null,Object? eewIntensityRegions = null,Object? eewWarningZones = null,Object? eewWarningPrefectures = null,Object? eewWarningRegions = null,}) {
   return _then(_EewTelegramBody(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,eew: freezed == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
-as dynamic,eewIntensityRegions: null == eewIntensityRegions ? _self._eewIntensityRegions : eewIntensityRegions // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,eewWarningZones: null == eewWarningZones ? _self._eewWarningZones : eewWarningZones // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,eewWarningPrefectures: null == eewWarningPrefectures ? _self._eewWarningPrefectures : eewWarningPrefectures // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,eewWarningRegions: null == eewWarningRegions ? _self._eewWarningRegions : eewWarningRegions // ignore: cast_nullable_to_non_nullable
-as List<dynamic>,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,eew: null == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
+as EewTelegramBodyEew,eewIntensityRegions: null == eewIntensityRegions ? _self._eewIntensityRegions : eewIntensityRegions // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyIntensityRegion>,eewWarningZones: null == eewWarningZones ? _self._eewWarningZones : eewWarningZones // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyWarningArea>,eewWarningPrefectures: null == eewWarningPrefectures ? _self._eewWarningPrefectures : eewWarningPrefectures // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyWarningArea>,eewWarningRegions: null == eewWarningRegions ? _self._eewWarningRegions : eewWarningRegions // ignore: cast_nullable_to_non_nullable
+as List<EewTelegramBodyWarningArea>,
   ));
 }
 
-
+/// Create a copy of EewTelegramBody
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EewTelegramBodyEewCopyWith<$Res> get eew {
+  
+  return $EewTelegramBodyEewCopyWith<$Res>(_self.eew, (value) {
+    return _then(_self.copyWith(eew: value));
+  });
+}
 }
 
 // dart format on

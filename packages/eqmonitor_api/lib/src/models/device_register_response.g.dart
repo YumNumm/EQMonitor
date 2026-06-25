@@ -14,7 +14,7 @@ _DeviceRegisterResponse _$DeviceRegisterResponseFromJson(
   final val = _DeviceRegisterResponse(
     deviceId: $checkedConvert('deviceId', (v) => v as String),
     deviceToken: $checkedConvert('deviceToken', (v) => v as String),
-    expiresAt: $checkedConvert('expiresAt', (v) => v),
+    expiresAt: $checkedConvert('expiresAt', (v) => v as String?),
   );
   return val;
 });

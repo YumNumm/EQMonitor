@@ -12,7 +12,7 @@ _UnauthorizedResponse _$UnauthorizedResponseFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_UnauthorizedResponse', json, ($checkedConvert) {
   final val = _UnauthorizedResponse(
-    code: $checkedConvert('code', (v) => v),
+    code: $checkedConvert('code', (v) => v as String),
     message: $checkedConvert('message', (v) => v as String),
   );
   return val;

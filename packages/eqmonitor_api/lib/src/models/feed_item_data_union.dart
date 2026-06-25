@@ -18,14 +18,14 @@ part 'feed_item_data_union.g.dart';
 sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   @JsonSerializable()
   const factory FeedItemDataUnion.variant1({
-    required dynamic type,
+    required String type,
     required String text,
   }) = FeedItemDataUnionVariant1;
   
   @JsonSerializable()
   const factory FeedItemDataUnion.variant2({
-    required dynamic type,
-    required dynamic infoType,
+    required String type,
+    required String infoType,
     required String text,
     @JsonKey(includeIfNull: false)
     Naming? naming,
@@ -35,8 +35,8 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   
   @JsonSerializable()
   const factory FeedItemDataUnion.variant3({
-    required dynamic type,
-    required dynamic infoType,
+    required String type,
+    required String infoType,
     @JsonKey(includeIfNull: false)
     List<EarthquakeCounts>? earthquakeCounts,
     @JsonKey(includeIfNull: false)
@@ -49,9 +49,9 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   
   @JsonSerializable()
   const factory FeedItemDataUnion.variant4({
-    required dynamic type,
-    required dynamic infoType,
-    required dynamic telegramType,
+    required String type,
+    required String infoType,
+    required String telegramType,
     @JsonKey(includeIfNull: false)
     EarthquakeInfo? earthquakeInfo,
     @JsonKey(includeIfNull: false)
@@ -62,7 +62,7 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   
   @JsonSerializable()
   const factory FeedItemDataUnion.variant5({
-    required dynamic type,
+    required String type,
     @JsonKey(includeIfNull: false)
     String? version,
     @JsonKey(includeIfNull: false)
@@ -71,14 +71,14 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   
   @JsonSerializable()
   const factory FeedItemDataUnion.variant6({
-    required dynamic type,
+    required String type,
     @JsonKey(includeIfNull: false)
     String? url,
   }) = FeedItemDataUnionVariant6;
   
   @JsonSerializable()
   const factory FeedItemDataUnion.variant7({
-    required dynamic type,
+    required String type,
     @JsonKey(includeIfNull: false)
     String? url,
   }) = FeedItemDataUnionVariant7;

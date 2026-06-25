@@ -21,11 +21,11 @@ abstract class TsunamiStationObservationFirstHeight with _$TsunamiStationObserva
 
     /// 識別不能時に出現する
     @JsonKey(includeIfNull: false,name: 'is_unidentifiable')
-    dynamic isUnidentifiable,
+    bool? isUnidentifiable,
 
     /// 欠測によりデータがない場合出現する
     @JsonKey(includeIfNull: false,name: 'is_missing')
-    dynamic isMissing,
+    bool? isMissing,
     @JsonKey(includeIfNull: false)
     Revise? revise,
   }) = _TsunamiStationObservationFirstHeight;

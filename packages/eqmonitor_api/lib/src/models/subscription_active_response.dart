@@ -10,7 +10,7 @@ part 'subscription_active_response.g.dart';
 @Freezed()
 abstract class SubscriptionActiveResponse with _$SubscriptionActiveResponse {
   const factory SubscriptionActiveResponse({
-    required dynamic status,
+    required String status,
     required String productId,
     @JsonKey(includeIfNull: true)
     required DateTime? expiresAt,

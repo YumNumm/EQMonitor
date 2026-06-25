@@ -38,7 +38,8 @@ abstract class TelegramDetail with _$TelegramDetail {
     required String hash,
     @JsonKey(name: 'created_at')
     required DateTime createdAt,
-    required TelegramBodyUnion body,
+    @JsonKey(includeIfNull: true)
+    required TelegramBodyUnion? body,
     @JsonKey(includeIfNull: false,name: 'serial_no')
     num? serialNo,
     @JsonKey(includeIfNull: false,name: 'targeted_at')

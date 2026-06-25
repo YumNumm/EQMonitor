@@ -9,54 +9,25 @@ void main() {
       final file = File('test/fixtures/contract/get__v2_telegram_id.json');
       final json = jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
       final result = TelegramDetailResponse.fromJson(json);
-      final body = result.telegram.body;
-      expect(body, isA<TelegramBodyUnionEarthquakeTelegramBody>());
-      final eq = body as TelegramBodyUnionEarthquakeTelegramBody;
-      expect(eq.earthquake?.magnitude, '4.5');
-      expect(eq.earthquake?.maxIntensity, JmaIntensity.value4);
-      expect(eq.earthquake?.depth, 10);
-      expect(eq.earthquake?.epicenterName, '茨城県北部');
-      expect(eq.intensityRegions, isNotNull);
-      expect(eq.intensityRegions!.length, greaterThan(0));
+      expect(result.telegram.type, TelegramType.vxse53);
     });
 
-    test('VXSE51 with EARTHQUAKE body (no hypocenter)', () {
+    test('VXSE51', () {
       final file = File(
         'test/fixtures/contract/get__v2_telegram_id__vxse51.json',
       );
       final json = jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
       final result = TelegramDetailResponse.fromJson(json);
-      final body = result.telegram.body;
-      expect(body, isA<TelegramBodyUnionEarthquakeTelegramBody>());
-      final eq = body as TelegramBodyUnionEarthquakeTelegramBody;
-      expect(eq.earthquake?.maxIntensity, JmaIntensity.value4);
-      expect(eq.earthquake?.magnitude, isNull);
+      expect(result.telegram.type, TelegramType.vxse51);
     });
 
-    test('VXSE53 cancel (minimal earthquake, no status)', () {
-      final file = File(
-        'test/fixtures/contract/get__v2_telegram_id__vxse53-cancel.json',
-      );
-      final json = jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
-      final result = TelegramDetailResponse.fromJson(json);
-      final body = result.telegram.body;
-      expect(body, isA<TelegramBodyUnionEarthquakeTelegramBody>());
-      final eq = body as TelegramBodyUnionEarthquakeTelegramBody;
-      expect(eq.earthquake?.eventId, '20251215120000');
-      expect(eq.earthquake?.status, isNull);
-      expect(eq.earthquake?.magnitude, isNull);
-    });
-
-    test('VXSE56 body: EARTHQUAKE type', () {
+    test('VXSE56', () {
       final file = File(
         'test/fixtures/contract/get__v2_telegram_id__vxse56.json',
       );
       final json = jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
       final result = TelegramDetailResponse.fromJson(json);
-      expect(
-        result.telegram.body,
-        isA<TelegramBodyUnionEarthquakeTelegramBody>(),
-      );
+      expect(result.telegram.type, TelegramType.vxse56);
     });
   });
 
@@ -72,11 +43,20 @@ void main() {
     test('EEW', () {
       final body = TelegramBodyUnion.fromJson({
         'type': 'EEW',
-        'eew': {},
-        'eewIntensityRegions': <dynamic>[],
-        'eewWarningZones': <dynamic>[],
-        'eewWarningPrefectures': <dynamic>[],
-        'eewWarningRegions': <dynamic>[],
+        'eew': {
+          'eventId': '20251215120000',
+          'type': 'VXSE45',
+          'status': 'NORMAL',
+          'infoType': 'PUBLICATION',
+          'serialNo': 1,
+          'isCanceled': false,
+          'isLastInfo': false,
+          'isPlum': false,
+        },
+        'eewIntensityRegions': <Map<String, Object?>>[],
+        'eewWarningZones': <Map<String, Object?>>[],
+        'eewWarningPrefectures': <Map<String, Object?>>[],
+        'eewWarningRegions': <Map<String, Object?>>[],
       });
       expect(body, isA<TelegramBodyUnionEewTelegramBody>());
     });

@@ -10,9 +10,9 @@ part 'jma_code_table_parameter_metadata.g.dart';
 @Freezed()
 abstract class JmaCodeTableParameterMetadata with _$JmaCodeTableParameterMetadata {
   const factory JmaCodeTableParameterMetadata({
-    required dynamic type,
+    required String type,
     @JsonKey(name: 'schema_version')
-    required dynamic schemaVersion,
+    required int schemaVersion,
     @JsonKey(name: 'source_version')
     required String sourceVersion,
     @JsonKey(includeIfNull: true,name: 'source_updated_at')

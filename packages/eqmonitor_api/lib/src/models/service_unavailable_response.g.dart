@@ -12,7 +12,7 @@ _ServiceUnavailableResponse _$ServiceUnavailableResponseFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_ServiceUnavailableResponse', json, ($checkedConvert) {
   final val = _ServiceUnavailableResponse(
-    code: $checkedConvert('code', (v) => v),
+    code: $checkedConvert('code', (v) => v as String),
     message: $checkedConvert('message', (v) => v as String),
   );
   return val;

@@ -19,7 +19,10 @@ _ParameterManifestItem _$ParameterManifestItemFromJson(
         'type',
         (v) => $enumDecode(_$ParameterTypeEnumMap, v),
       ),
-      schemaVersion: $checkedConvert('schema_version', (v) => v),
+      schemaVersion: $checkedConvert(
+        'schema_version',
+        (v) => (v as num).toInt(),
+      ),
       sourceVersion: $checkedConvert('source_version', (v) => v as String),
       sourceUpdatedAt: $checkedConvert(
         'source_updated_at',

@@ -4,18 +4,22 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'eew_telegram_body_eew.dart';
+import 'eew_telegram_body_intensity_region.dart';
+import 'eew_telegram_body_warning_area.dart';
+
 part 'eew_telegram_body.freezed.dart';
 part 'eew_telegram_body.g.dart';
 
 @Freezed()
 abstract class EewTelegramBody with _$EewTelegramBody {
   const factory EewTelegramBody({
-    required dynamic type,
-    required dynamic eew,
-    required List<dynamic> eewIntensityRegions,
-    required List<dynamic> eewWarningZones,
-    required List<dynamic> eewWarningPrefectures,
-    required List<dynamic> eewWarningRegions,
+    required String type,
+    required EewTelegramBodyEew eew,
+    required List<EewTelegramBodyIntensityRegion> eewIntensityRegions,
+    required List<EewTelegramBodyWarningArea> eewWarningZones,
+    required List<EewTelegramBodyWarningArea> eewWarningPrefectures,
+    required List<EewTelegramBodyWarningArea> eewWarningRegions,
   }) = _EewTelegramBody;
   
   factory EewTelegramBody.fromJson(Map<String, Object?> json) => _$EewTelegramBodyFromJson(json);

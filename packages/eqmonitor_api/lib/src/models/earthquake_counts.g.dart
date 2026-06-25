@@ -11,7 +11,7 @@ part of 'earthquake_counts.dart';
 _EarthquakeCounts _$EarthquakeCountsFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_EarthquakeCounts', json, ($checkedConvert) {
       final val = _EarthquakeCounts(
-        type: $checkedConvert('type', (v) => v),
+        type: $checkedConvert('type', (v) => v as String),
         targetTime: $checkedConvert(
           'targetTime',
           (v) => TargetTime.fromJson(v as Map<String, dynamic>),

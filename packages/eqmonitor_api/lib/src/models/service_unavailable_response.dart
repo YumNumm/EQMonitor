@@ -10,7 +10,7 @@ part 'service_unavailable_response.g.dart';
 @Freezed()
 abstract class ServiceUnavailableResponse with _$ServiceUnavailableResponse {
   const factory ServiceUnavailableResponse({
-    required dynamic code,
+    required String code,
     required String message,
   }) = _ServiceUnavailableResponse;
   

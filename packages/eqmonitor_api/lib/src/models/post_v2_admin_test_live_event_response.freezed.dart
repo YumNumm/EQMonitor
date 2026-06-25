@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PostV2AdminTestLiveEventResponse {
 
- dynamic get ok;
+ bool get ok;
 /// Create a copy of PostV2AdminTestLiveEventResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $PostV2AdminTestLiveEventResponseCopyWith<PostV2AdminTestLiveEventResponse> get 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostV2AdminTestLiveEventResponse&&const DeepCollectionEquality().equals(other.ok, ok));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostV2AdminTestLiveEventResponse&&(identical(other.ok, ok) || other.ok == ok));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(ok));
+int get hashCode => Object.hash(runtimeType,ok);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $PostV2AdminTestLiveEventResponseCopyWith<$Res>  {
   factory $PostV2AdminTestLiveEventResponseCopyWith(PostV2AdminTestLiveEventResponse value, $Res Function(PostV2AdminTestLiveEventResponse) _then) = _$PostV2AdminTestLiveEventResponseCopyWithImpl;
 @useResult
 $Res call({
- dynamic ok
+ bool ok
 });
 
 
@@ -65,10 +65,10 @@ class _$PostV2AdminTestLiveEventResponseCopyWithImpl<$Res>
 
 /// Create a copy of PostV2AdminTestLiveEventResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? ok = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? ok = null,}) {
   return _then(_self.copyWith(
-ok: freezed == ok ? _self.ok : ok // ignore: cast_nullable_to_non_nullable
-as dynamic,
+ok: null == ok ? _self.ok : ok // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -153,7 +153,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic ok)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool ok)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PostV2AdminTestLiveEventResponse() when $default != null:
 return $default(_that.ok);case _:
@@ -174,7 +174,7 @@ return $default(_that.ok);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic ok)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool ok)  $default,) {final _that = this;
 switch (_that) {
 case _PostV2AdminTestLiveEventResponse():
 return $default(_that.ok);case _:
@@ -194,7 +194,7 @@ return $default(_that.ok);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic ok)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool ok)?  $default,) {final _that = this;
 switch (_that) {
 case _PostV2AdminTestLiveEventResponse() when $default != null:
 return $default(_that.ok);case _:
@@ -212,7 +212,7 @@ class _PostV2AdminTestLiveEventResponse implements PostV2AdminTestLiveEventRespo
   const _PostV2AdminTestLiveEventResponse({required this.ok});
   factory _PostV2AdminTestLiveEventResponse.fromJson(Map<String, dynamic> json) => _$PostV2AdminTestLiveEventResponseFromJson(json);
 
-@override final  dynamic ok;
+@override final  bool ok;
 
 /// Create a copy of PostV2AdminTestLiveEventResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -227,12 +227,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostV2AdminTestLiveEventResponse&&const DeepCollectionEquality().equals(other.ok, ok));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostV2AdminTestLiveEventResponse&&(identical(other.ok, ok) || other.ok == ok));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(ok));
+int get hashCode => Object.hash(runtimeType,ok);
 
 @override
 String toString() {
@@ -247,7 +247,7 @@ abstract mixin class _$PostV2AdminTestLiveEventResponseCopyWith<$Res> implements
   factory _$PostV2AdminTestLiveEventResponseCopyWith(_PostV2AdminTestLiveEventResponse value, $Res Function(_PostV2AdminTestLiveEventResponse) _then) = __$PostV2AdminTestLiveEventResponseCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic ok
+ bool ok
 });
 
 
@@ -264,10 +264,10 @@ class __$PostV2AdminTestLiveEventResponseCopyWithImpl<$Res>
 
 /// Create a copy of PostV2AdminTestLiveEventResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? ok = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? ok = null,}) {
   return _then(_PostV2AdminTestLiveEventResponse(
-ok: freezed == ok ? _self.ok : ok // ignore: cast_nullable_to_non_nullable
-as dynamic,
+ok: null == ok ? _self.ok : ok // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

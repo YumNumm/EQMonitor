@@ -17,7 +17,7 @@ mixin _$FirstHeight {
 
 /// 1観測地点以上で第1波の時刻を明瞭に観測した場合
 @JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;/// 早いところでは既に津波到達と推定
-@JsonKey(includeIfNull: false, name: 'is_already_arrived') dynamic get isAlreadyArrived;@JsonKey(includeIfNull: false) Revise? get revise;
+@JsonKey(includeIfNull: false, name: 'is_already_arrived') bool? get isAlreadyArrived;@JsonKey(includeIfNull: false) Revise? get revise;
 /// Create a copy of FirstHeight
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,12 +30,12 @@ $FirstHeightCopyWith<FirstHeight> get copyWith => _$FirstHeightCopyWithImpl<Firs
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FirstHeight&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&const DeepCollectionEquality().equals(other.isAlreadyArrived, isAlreadyArrived)&&(identical(other.revise, revise) || other.revise == revise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FirstHeight&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.isAlreadyArrived, isAlreadyArrived) || other.isAlreadyArrived == isAlreadyArrived)&&(identical(other.revise, revise) || other.revise == revise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,arrivalTime,const DeepCollectionEquality().hash(isAlreadyArrived),revise);
+int get hashCode => Object.hash(runtimeType,arrivalTime,isAlreadyArrived,revise);
 
 @override
 String toString() {
@@ -50,7 +50,7 @@ abstract mixin class $FirstHeightCopyWith<$Res>  {
   factory $FirstHeightCopyWith(FirstHeight value, $Res Function(FirstHeight) _then) = _$FirstHeightCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false, name: 'is_already_arrived') dynamic isAlreadyArrived,@JsonKey(includeIfNull: false) Revise? revise
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false, name: 'is_already_arrived') bool? isAlreadyArrived,@JsonKey(includeIfNull: false) Revise? revise
 });
 
 
@@ -71,7 +71,7 @@ class _$FirstHeightCopyWithImpl<$Res>
   return _then(_self.copyWith(
 arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,isAlreadyArrived: freezed == isAlreadyArrived ? _self.isAlreadyArrived : isAlreadyArrived // ignore: cast_nullable_to_non_nullable
-as dynamic,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
+as bool?,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
 as Revise?,
   ));
 }
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false, name: 'is_already_arrived')  dynamic isAlreadyArrived, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false, name: 'is_already_arrived')  bool? isAlreadyArrived, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FirstHeight() when $default != null:
 return $default(_that.arrivalTime,_that.isAlreadyArrived,_that.revise);case _:
@@ -178,7 +178,7 @@ return $default(_that.arrivalTime,_that.isAlreadyArrived,_that.revise);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false, name: 'is_already_arrived')  dynamic isAlreadyArrived, @JsonKey(includeIfNull: false)  Revise? revise)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false, name: 'is_already_arrived')  bool? isAlreadyArrived, @JsonKey(includeIfNull: false)  Revise? revise)  $default,) {final _that = this;
 switch (_that) {
 case _FirstHeight():
 return $default(_that.arrivalTime,_that.isAlreadyArrived,_that.revise);case _:
@@ -198,7 +198,7 @@ return $default(_that.arrivalTime,_that.isAlreadyArrived,_that.revise);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false, name: 'is_already_arrived')  dynamic isAlreadyArrived, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false, name: 'is_already_arrived')  bool? isAlreadyArrived, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,) {final _that = this;
 switch (_that) {
 case _FirstHeight() when $default != null:
 return $default(_that.arrivalTime,_that.isAlreadyArrived,_that.revise);case _:
@@ -219,7 +219,7 @@ class _FirstHeight implements FirstHeight {
 /// 1観測地点以上で第1波の時刻を明瞭に観測した場合
 @override@JsonKey(includeIfNull: false, name: 'arrival_time') final  DateTime? arrivalTime;
 /// 早いところでは既に津波到達と推定
-@override@JsonKey(includeIfNull: false, name: 'is_already_arrived') final  dynamic isAlreadyArrived;
+@override@JsonKey(includeIfNull: false, name: 'is_already_arrived') final  bool? isAlreadyArrived;
 @override@JsonKey(includeIfNull: false) final  Revise? revise;
 
 /// Create a copy of FirstHeight
@@ -235,12 +235,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FirstHeight&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&const DeepCollectionEquality().equals(other.isAlreadyArrived, isAlreadyArrived)&&(identical(other.revise, revise) || other.revise == revise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FirstHeight&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.isAlreadyArrived, isAlreadyArrived) || other.isAlreadyArrived == isAlreadyArrived)&&(identical(other.revise, revise) || other.revise == revise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,arrivalTime,const DeepCollectionEquality().hash(isAlreadyArrived),revise);
+int get hashCode => Object.hash(runtimeType,arrivalTime,isAlreadyArrived,revise);
 
 @override
 String toString() {
@@ -255,7 +255,7 @@ abstract mixin class _$FirstHeightCopyWith<$Res> implements $FirstHeightCopyWith
   factory _$FirstHeightCopyWith(_FirstHeight value, $Res Function(_FirstHeight) _then) = __$FirstHeightCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false, name: 'is_already_arrived') dynamic isAlreadyArrived,@JsonKey(includeIfNull: false) Revise? revise
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false, name: 'is_already_arrived') bool? isAlreadyArrived,@JsonKey(includeIfNull: false) Revise? revise
 });
 
 
@@ -276,7 +276,7 @@ class __$FirstHeightCopyWithImpl<$Res>
   return _then(_FirstHeight(
 arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,isAlreadyArrived: freezed == isAlreadyArrived ? _self.isAlreadyArrived : isAlreadyArrived // ignore: cast_nullable_to_non_nullable
-as dynamic,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
+as bool?,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
 as Revise?,
   ));
 }

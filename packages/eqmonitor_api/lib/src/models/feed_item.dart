@@ -14,8 +14,8 @@ abstract class FeedItem with _$FeedItem {
   const factory FeedItem({
     required String id,
     @JsonKey(name: 'feed_type')
-    required dynamic feedType,
-    required dynamic priority,
+    required String feedType,
+    required String priority,
     @JsonKey(name: 'is_important')
     required bool isImportant,
     @JsonKey(name: 'published_at')

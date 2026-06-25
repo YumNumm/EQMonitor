@@ -12,7 +12,7 @@ abstract class Triggers with _$Triggers {
   const factory Triggers({
     required String id,
     required String replayFileId,
-    required dynamic triggerType,
+    required String triggerType,
     required String eventId,
     required String createdAt,
   }) = _Triggers;

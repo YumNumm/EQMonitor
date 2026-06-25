@@ -19,14 +19,8 @@ _TsunamiRegionForecastFirstHeight _$TsunamiRegionForecastFirstHeightFromJson(
         'arrival_time',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
-      condition: $checkedConvert(
-        'condition',
-        (v) => $enumDecodeNullable(_$FirstHeightConditionEnumMap, v),
-      ),
-      revise: $checkedConvert(
-        'revise',
-        (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
-      ),
+      condition: $checkedConvert('condition', (v) => v as String?),
+      revise: $checkedConvert('revise', (v) => v as String?),
     );
     return val;
   },
@@ -40,11 +34,3 @@ Map<String, dynamic> _$TsunamiRegionForecastFirstHeightToJson(
   'condition': ?instance.condition,
   'revise': ?instance.revise,
 };
-
-const _$FirstHeightConditionEnumMap = {
-  FirstHeightCondition.arriving: 'ARRIVING',
-  FirstHeightCondition.firstWaveConfirmed: 'FIRST_WAVE_CONFIRMED',
-  FirstHeightCondition.imminent: 'IMMINENT',
-};
-
-const _$ReviseEnumMap = {Revise.addition: 'ADDITION', Revise.update: 'UPDATE'};

@@ -16,16 +16,10 @@ _TsunamiRegionForecastMaxHeight _$TsunamiRegionForecastMaxHeightFromJson(
   ($checkedConvert) {
     final val = _TsunamiRegionForecastMaxHeight(
       value: $checkedConvert('value', (v) => v as num?),
-      isOver: $checkedConvert('is_over', (v) => v),
-      qualitative: $checkedConvert(
-        'qualitative',
-        (v) => $enumDecodeNullable(_$QualitativeHeightEnumMap, v),
-      ),
-      isImportant: $checkedConvert('is_important', (v) => v),
-      revise: $checkedConvert(
-        'revise',
-        (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
-      ),
+      isOver: $checkedConvert('is_over', (v) => v as bool?),
+      qualitative: $checkedConvert('qualitative', (v) => v as String?),
+      isImportant: $checkedConvert('is_important', (v) => v as bool?),
+      revise: $checkedConvert('revise', (v) => v as String?),
     );
     return val;
   },
@@ -41,10 +35,3 @@ Map<String, dynamic> _$TsunamiRegionForecastMaxHeightToJson(
   'is_important': ?instance.isImportant,
   'revise': ?instance.revise,
 };
-
-const _$QualitativeHeightEnumMap = {
-  QualitativeHeight.enormous: 'ENORMOUS',
-  QualitativeHeight.high: 'HIGH',
-};
-
-const _$ReviseEnumMap = {Revise.addition: 'ADDITION', Revise.update: 'UPDATE'};
