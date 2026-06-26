@@ -151,6 +151,11 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                             fileName: 'intensity_color.json',
                             type: FileType.custom,
                             allowedExtensions: const ['json'],
+                            bytes: utf8.encode(
+                              ref
+                                  .read(intensityColorProvider.notifier)
+                                  .exportAsJsonString(),
+                            ),
                           );
                           if (path == null) {
                             return;
@@ -188,24 +193,18 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                           final result = await FilePicker.pickFiles(
                             type: FileType.custom,
                             allowedExtensions: const ['json'],
-                            withData: true,
                           );
                           final files = result?.files;
                           if (files == null || files.isEmpty) {
                             return;
                           }
                           final file = files.first;
-                          final bytes = file.bytes;
-                          if (bytes != null) {
-                            await importFromJsonText(utf8.decode(bytes));
-                            return;
-                          }
+                          final bytes = await file.readAsBytes();
+                          await importFromJsonText(utf8.decode(bytes));
                           final path = file.path;
                           if (path == null) {
                             messenger.showSnackBar(
-                              const SnackBar(
-                                content: Text('ファイルの読み込みに失敗しました'),
-                              ),
+                              const SnackBar(content: Text('ファイルの読み込みに失敗しました')),
                             );
                             return;
                           }
@@ -318,9 +317,7 @@ class _IntensityWidgets extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final providerContainer = ProviderContainer(
       parent: ref.container,
-      overrides: [
-        intensityColorProvider.overrideWithValue(colorModel),
-      ],
+      overrides: [intensityColorProvider.overrideWithValue(colorModel)],
     );
     return Wrap(
       spacing: 4,
@@ -329,11 +326,7 @@ class _IntensityWidgets extends ConsumerWidget {
         ...JmaIntensity.values.map(
           (e) => UncontrolledProviderScope(
             container: providerContainer,
-            child: JmaIntensityIcon(
-              intensity: e,
-              type: .filled,
-              size: 40,
-            ),
+            child: JmaIntensityIcon(intensity: e, type: .filled, size: 40),
           ),
         ),
       ],
