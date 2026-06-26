@@ -16,6 +16,7 @@ import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
+import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
@@ -28,6 +29,9 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_ma
 import 'package:eqmonitor/feature/live_activity/data/repository/live_activity_token_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_watcher_provider.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,7 +64,7 @@ Future<void> main() async {
           fatal: true,
         );
       } on Object {
-        // 起動失敗時のフォールバック表示を優先する。
+        talker.error(error, stackTrace);
       }
     }());
     runApp(
@@ -200,6 +204,8 @@ Future<void> _main() async {
   ).wait;
   initLicenses();
 
+  final telemetryDbPath = kIsWeb ? null : await resolveTelemetryDbPath();
+
   if (!kIsWeb) {
     unawaited(
       FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
@@ -223,6 +229,8 @@ Future<void> _main() async {
         applicationDocumentsDirectoryProvider.overrideWithValue(appDir),
       if (results.$2.$1 case final colorMap?)
         kyoshinColorMapProvider.overrideWithValue(colorMap),
+      if (telemetryDbPath case final dbPath?)
+        telemetryDbPathProvider.overrideWithValue(dbPath),
     ],
     observers: [
       if (kDebugMode) CustomProviderObserver(talker),
@@ -232,12 +240,14 @@ Future<void> _main() async {
 
   container.read(eqMonitorWsStatusProvider);
   container.read(realtimeEventsProvider);
-  // リプレイ/タイムシフト中にライブイベントが来たら通常再生へ戻すウォッチャを常駐させる。
   container.read(autoReturnWatcherProvider);
-  // killed状態で永続化された位置情報の反映と、live位置更新の購読を開始する。
-  // backgroundLocationServiceProvider は keepAlive: true で常駐させる。
   container.listen(backgroundLocationServiceProvider, (_, _) {});
+  container.listen(firebaseMessagingInteractionProvider, (_, _) {});
   unawaited(container.read(pushTokenSyncWiringProvider.future));
+  if (!kIsWeb) {
+    unawaited(container.read(telemetryUploaderProvider).flush());
+    container.read(appLaunchWatcherProvider);
+  }
 
   runApp(
     UncontrolledProviderScope(

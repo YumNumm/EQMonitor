@@ -42,34 +42,40 @@
           "headline": "大津波警報を発表しました"
         }
       ],
-      "forecast_regions": [
+      "regions": [
         {
           "code": "201",
           "name": "岩手県",
           "kind": "MAJOR_WARNING",
           "last_kind": "NONE",
-          "first_height": {
-            "condition": "ARRIVING"
+          "forecast": {
+            "first_height": {
+              "condition": "ARRIVING"
+            },
+            "max_height": {
+              "value": 10,
+              "is_over": true
+            }
           },
-          "max_height": {
-            "value": 10,
-            "over": true
+          "estimation": {
+            "first_height": {
+              "is_already_arrived": true
+            },
+            "max_height": {
+              "value": 6
+            }
           },
           "stations": [
             {
-              "code": "201001",
+              "code": "21001",
               "name": "宮古",
-              "high_tide_date_time": "2011-03-11T08:00:00.000Z",
-              "first_height": {
-                "arrival_time": "2011-03-11T05:50:00.000Z"
-              }
-            }
-          ],
-          "observation": {
-            "stations": [
-              {
-                "code": "201001",
-                "name": "宮古",
+              "forecast": {
+                "high_tide_date_time": "2011-03-11T08:00:00.000Z",
+                "first_height": {
+                  "arrival_time": "2011-03-11T05:50:00.000Z"
+                }
+              },
+              "observation": {
                 "first_height": {
                   "arrival_time": "2011-03-11T05:50:00.000Z",
                   "initial": "PUSH"
@@ -77,17 +83,96 @@
                 "max_height": {
                   "date_time": "2011-03-11T06:26:00.000Z",
                   "value": 8.5,
-                  "over": true
+                  "is_over": true,
+                  "is_rising": true,
+                  "condition": "OBSERVING"
                 }
               }
-            ]
-          }
+            }
+          ]
+        },
+        {
+          "code": "220",
+          "name": "宮城県",
+          "kind": "MAJOR_WARNING",
+          "last_kind": "NONE",
+          "forecast": {
+            "first_height": {
+              "condition": "ARRIVING"
+            },
+            "max_height": {
+              "value": 10,
+              "is_over": true
+            }
+          },
+          "stations": [
+            {
+              "code": "22001",
+              "name": "石巻市鮎川",
+              "forecast": {
+                "high_tide_date_time": "2011-03-11T07:32:00.000Z",
+                "first_height": {
+                  "arrival_time": "2011-03-11T05:54:00.000Z"
+                }
+              },
+              "observation": {
+                "first_height": {
+                  "arrival_time": "2011-03-11T05:54:00.000Z",
+                  "initial": "PUSH"
+                },
+                "max_height": {
+                  "date_time": "2011-03-11T06:46:00.000Z",
+                  "value": 7.7,
+                  "is_rising": true,
+                  "condition": "OBSERVING"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "250",
+          "name": "福島県",
+          "kind": "MAJOR_WARNING",
+          "last_kind": "NONE",
+          "forecast": {
+            "first_height": {
+              "condition": "ARRIVING"
+            },
+            "max_height": {
+              "value": 6
+            }
+          },
+          "stations": [
+            {
+              "code": "25001",
+              "name": "相馬",
+              "forecast": {
+                "high_tide_date_time": "2011-03-11T07:40:00.000Z",
+                "first_height": {
+                  "arrival_time": "2011-03-11T06:00:00.000Z"
+                }
+              },
+              "observation": {
+                "first_height": {
+                  "arrival_time": "2011-03-11T06:00:00.000Z",
+                  "initial": "PUSH"
+                },
+                "max_height": {
+                  "date_time": "2011-03-11T07:35:00.000Z",
+                  "value": 9.3,
+                  "is_over": true
+                }
+              }
+            }
+          ]
         }
       ],
-      "offshore_observations": [
+      "offshore_stations": [
         {
-          "station_code": "G801",
-          "station_name": "岩手沖GPS波浪計",
+          "code": "G801",
+          "name": "岩手沖GPS波浪計",
+          "sensor": "GPS波浪計",
           "first_height": {
             "arrival_time": "2011-03-11T05:55:00.000Z",
             "initial": "PUSH"
@@ -95,6 +180,19 @@
           "max_height": {
             "date_time": "2011-03-11T06:11:00.000Z",
             "value": 6.7
+          }
+        },
+        {
+          "code": "10172",
+          "name": "浦河沖50kmA",
+          "sensor": "水圧計",
+          "first_height": {
+            "arrival_time": "2011-03-11T06:05:00.000Z",
+            "initial": "PUSH"
+          },
+          "max_height": {
+            "date_time": "2011-03-11T06:20:00.000Z",
+            "value": 0.3
           }
         }
       ]

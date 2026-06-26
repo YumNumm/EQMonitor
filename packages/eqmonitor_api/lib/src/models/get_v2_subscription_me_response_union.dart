@@ -1,9 +1,11 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'status.dart';
 
 part 'get_v2_subscription_me_response_union.freezed.dart';
 part 'get_v2_subscription_me_response_union.g.dart';
@@ -12,7 +14,8 @@ part 'get_v2_subscription_me_response_union.g.dart';
 sealed class GetV2SubscriptionMeResponseUnion with _$GetV2SubscriptionMeResponseUnion {
   @JsonSerializable()
   const factory GetV2SubscriptionMeResponseUnion.subscriptionActiveResponse({
-    required dynamic status,
+    /// const: "ACTIVE" | const: "GRACE_PERIOD"
+    required Status status,
     required String productId,
     @JsonKey(includeIfNull: true)
     required DateTime? expiresAt,
@@ -21,7 +24,8 @@ sealed class GetV2SubscriptionMeResponseUnion with _$GetV2SubscriptionMeResponse
   
   @JsonSerializable()
   const factory GetV2SubscriptionMeResponseUnion.subscriptionInactiveResponse({
-    required dynamic status,
+    /// const: "INACTIVE"
+    required String status,
   }) = GetV2SubscriptionMeResponseUnionSubscriptionInactiveResponse;
   
 

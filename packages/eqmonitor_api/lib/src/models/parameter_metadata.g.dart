@@ -18,13 +18,15 @@ _ParameterMetadata _$ParameterMetadataFromJson(Map<String, dynamic> json) =>
             'type',
             (v) => $enumDecode(_$ParameterTypeEnumMap, v),
           ),
-          schemaVersion: $checkedConvert('schema_version', (v) => v),
+          schemaVersion: $checkedConvert(
+            'schema_version',
+            (v) => (v as num).toInt(),
+          ),
           sourceVersion: $checkedConvert('source_version', (v) => v as String),
           sourceUpdatedAt: $checkedConvert(
             'source_updated_at',
             (v) => v as String?,
           ),
-          generatedAt: $checkedConvert('generated_at', (v) => v as String),
           sourceUrls: $checkedConvert(
             'source_urls',
             (v) => (v as List<dynamic>).map((e) => e as String).toList(),
@@ -37,7 +39,6 @@ _ParameterMetadata _$ParameterMetadataFromJson(Map<String, dynamic> json) =>
         'schemaVersion': 'schema_version',
         'sourceVersion': 'source_version',
         'sourceUpdatedAt': 'source_updated_at',
-        'generatedAt': 'generated_at',
         'sourceUrls': 'source_urls',
       },
     );
@@ -48,14 +49,13 @@ Map<String, dynamic> _$ParameterMetadataToJson(_ParameterMetadata instance) =>
       'schema_version': instance.schemaVersion,
       'source_version': instance.sourceVersion,
       'source_updated_at': instance.sourceUpdatedAt,
-      'generated_at': instance.generatedAt,
       'source_urls': instance.sourceUrls,
       'sha256': instance.sha256,
     };
 
 const _$ParameterTypeEnumMap = {
-  ParameterType.jmaCodeTable: 'jma_code_table',
-  ParameterType.kyoshinObservationPoints: 'kyoshin_observation_points',
-  ParameterType.earthquakeStations: 'earthquake_stations',
-  ParameterType.tsunamiStations: 'tsunami_stations',
+  ParameterType.jmaCodeTable: 'JMA_CODE_TABLE',
+  ParameterType.kyoshinObservationPoints: 'KYOSHIN_OBSERVATION_POINTS',
+  ParameterType.earthquakeStations: 'EARTHQUAKE_STATIONS',
+  ParameterType.tsunamiStations: 'TSUNAMI_STATIONS',
 };

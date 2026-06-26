@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -42,6 +43,13 @@ class SplashPage extends HookConsumerWidget {
           );
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.go(const HomeRoute().location);
+            final pendingEventId = consumePendingNotificationEventId();
+            if (pendingEventId != null) {
+              context.push(
+                EarthquakeHistoryDetailsRoute(eventId: pendingEventId)
+                    .location,
+              );
+            }
           });
         }
         return null;
@@ -63,7 +71,9 @@ class SplashPage extends HookConsumerWidget {
                   );
                 },
               )
-            : const Center(child: CircularProgressIndicator.adaptive()),
+            : const Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
       ),
     );
   }

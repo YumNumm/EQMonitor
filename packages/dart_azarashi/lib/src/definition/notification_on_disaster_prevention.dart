@@ -89,8 +89,7 @@ enum JmaNotificationOnDisasterPrevention {
   eewIssuedNoIntensity(244, 'この地震について、緊急地震速報を発表しています。この地震で震度1以上は観測されていません。'),
   eewNoStrongShaking(245, 'この地震で緊急地震速報を発表しましたが、強い揺れは観測されませんでした。'),
   epicenterCorrection(256, '震源要素を訂正します。'),
-  otherDisasterPrevention(500, 'その他の防災上の留意事項')
-  ;
+  otherDisasterPrevention(500, 'その他の防災上の留意事項');
 
   const JmaNotificationOnDisasterPrevention(this.code, this.message);
 

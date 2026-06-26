@@ -17,7 +17,8 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
   final String tileUrl;
 
   static const _sourceId = 'earthquake-history-estimated-intensity';
-  static const _layerId = 'earthquake-history-estimated-intensity-raster';
+  static const _fillLayerId = 'earthquake-history-estimated-intensity-fill';
+  static const _lineLayerId = 'earthquake-history-estimated-intensity-line';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,6 +30,8 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
 
     useEffect(
       () {
+        var disposed = false;
+
         unawaited(() async {
           await styleController.addSource(
             VectorSource(
@@ -38,9 +41,11 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
             ),
           );
 
+          if (disposed) return;
+
           await styleController.addLayer(
             const FillStyleLayer(
-              id: _layerId,
+              id: _fillLayerId,
               sourceId: _sourceId,
               sourceLayerId: 'seismic_intensity',
               paint: {
@@ -50,31 +55,37 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
             ),
             belowLayerId: BaseLayer.areaForecastLocalELine.name,
           );
+
+          if (disposed) return;
+
           await styleController.addLayer(
             const LineStyleLayer(
-              id: _layerId,
+              id: _lineLayerId,
               sourceId: _sourceId,
               sourceLayerId: 'seismic_intensity',
               paint: {
                 'line-opacity': 1,
                 'line-color': ['get', 'fill'],
-                'line-blur': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
-                  3,
-                  0,
-                  5,
-                  100,
-                ],
+                'line-width': 0.5,
               },
             ),
+            belowLayerId: BaseLayer.areaForecastLocalELine.name,
           );
         }());
 
-        return () async {
-          await styleController.removeLayer(_layerId);
-          await styleController.removeSource(_sourceId);
+        return () {
+          disposed = true;
+          unawaited(() async {
+            try {
+              await styleController.removeLayer(_lineLayerId);
+            } on Exception catch (_) {}
+            try {
+              await styleController.removeLayer(_fillLayerId);
+            } on Exception catch (_) {}
+            try {
+              await styleController.removeSource(_sourceId);
+            } on Exception catch (_) {}
+          }());
         };
       },
       [styleController, tileUrl],

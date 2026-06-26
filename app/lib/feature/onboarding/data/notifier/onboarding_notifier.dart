@@ -1,11 +1,15 @@
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_notifier.g.dart';
 
 @riverpod
 class OnboardingCompleted extends _$OnboardingCompleted {
+  static final completeMutation = Mutation<void>();
+  static final resetMutation = Mutation<void>();
+
   @override
   bool build() {
     final prefs = ref.watch(sharedPreferencesProvider);

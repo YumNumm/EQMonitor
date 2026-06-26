@@ -145,8 +145,7 @@ enum Prefecture {
   okinawa(shortName: '沖縄', longName: '沖縄県'),
 
   /// 不明
-  unknown(shortName: '不明', longName: '不明')
-  ;
+  unknown(shortName: '不明', longName: '不明');
 
   const Prefecture({required this.shortName, required this.longName});
 

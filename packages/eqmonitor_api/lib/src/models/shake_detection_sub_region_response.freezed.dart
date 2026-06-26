@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShakeDetectionSubRegionResponse {
 
- String get id; String get code; String get name;
+ String get id;/// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
+ String get code; String get name;
 /// Create a copy of ShakeDetectionSubRegionResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -215,6 +216,7 @@ class _ShakeDetectionSubRegionResponse implements ShakeDetectionSubRegionRespons
   factory _ShakeDetectionSubRegionResponse.fromJson(Map<String, dynamic> json) => _$ShakeDetectionSubRegionResponseFromJson(json);
 
 @override final  String id;
+/// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
 @override final  String code;
 @override final  String name;
 

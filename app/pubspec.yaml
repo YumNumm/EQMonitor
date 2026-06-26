@@ -17,38 +17,40 @@ dependency_overrides:
   maplibre:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: 3df3a6d7861b993d6905b40dae4d80261321f04d
+      ref: 88c76eb0980d03504dc71c69ff50a4080e202e08
       path: packages/maplibre
   maplibre_android:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: 3df3a6d7861b993d6905b40dae4d80261321f04d
+      ref: 88c76eb0980d03504dc71c69ff50a4080e202e08
       path: packages/maplibre_android
   maplibre_ios:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: 3df3a6d7861b993d6905b40dae4d80261321f04d
+      ref: 88c76eb0980d03504dc71c69ff50a4080e202e08
       path: packages/maplibre_ios
   maplibre_platform_interface:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: 3df3a6d7861b993d6905b40dae4d80261321f04d
+      ref: 88c76eb0980d03504dc71c69ff50a4080e202e08
       path: packages/maplibre_platform_interface
   maplibre_web:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: 3df3a6d7861b993d6905b40dae4d80261321f04d
+      ref: 88c76eb0980d03504dc71c69ff50a4080e202e08
       path: packages/maplibre_web
   maplibre_webview:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: 3df3a6d7861b993d6905b40dae4d80261321f04d
+      ref: 88c76eb0980d03504dc71c69ff50a4080e202e08
       path: packages/maplibre_webview
 
 dependencies:
   app_settings: ^7.0.0
   background_location_tracker:
     path: ../packages/background_location_tracker
+  cache:
+    path: ../packages/cache
   cached_network_image: ^3.4.1
   clock: ^1.1.2
   collection: ^1.19.1
@@ -59,8 +61,9 @@ dependencies:
   cue: ^0.3.1
   dart_azarashi:
     path: ../packages/dart_azarashi
-  device_info_plus: ^12.1.0
+  device_info_plus: ^13.1.0
   dio: ^5.8.0+1
+  drift: ^2.22.0
   dynamic_color: ^1.7.0
   earthquake_replay:
     path: ../packages/earthquake_replay
@@ -70,7 +73,7 @@ dependencies:
     path: ../packages/eqmonitor_websocket
   extensions:
     path: ../packages/extensions
-  file_picker: ^11.0.2
+  file_picker: ^12.0.0-beta.7
   firebase_analytics: ^12.0.0
   firebase_app_check: ^0.4.2
   firebase_app_installations: ^0.4.0
@@ -86,7 +89,7 @@ dependencies:
       ref: e9b124896076991fa077f62bdbab3df1a26149d7
   flutter_hooks: ^0.21.2
   flutter_html: ^3.0.0
-  flutter_local_notifications: ^21.0.0-dev.2
+  flutter_local_notifications: ^22.0.1
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.7.5
@@ -105,7 +108,7 @@ dependencies:
   geolocator: ^14.0.1
   go_router: ^17.0.0
   google_api_availability: ^5.0.1
-  google_mobile_ads: ^8.0.0
+  google_mobile_ads: ^9.0.0
   hooks_riverpod: ^3.0.3
   image: ^4.4.0
   in_app_review: ^2.0.10
@@ -132,15 +135,16 @@ dependencies:
     path: ../packages/nied_api_client
   ntp: ^2.0.0
   objective_c: ^9.2.2
-  package_info_plus: ^9.0.0
+  package_info_plus: ^10.1.0
   paging_view: ^2.8.1
+  path: ^1.9.0
   path_provider: ^2.1.5
   purchases_flutter: ^10.0.1
   riverpod: ^3.2.1
   riverpod_annotation: ^4.0.0
   screenshot: 3.0.0
   sensors_plus: ^7.0.0
-  share_plus: ^12.0.0
+  share_plus: ^13.1.0
   shared_preferences: ^2.3.3
   shared_preferences_foundation: ^2.5.6
   sheet:
@@ -150,11 +154,15 @@ dependencies:
       path: sheet
   skeletonizer: ^2.1.3
   soft_edge_blur: ^0.1.3
+  sqlite3_flutter_libs: ^0.6.0+eol
   synchronized: ^3.3.0
   talker_dio_logger: ^5.0.0
   talker_flutter: ^5.0.0
+  telemetry_store:
+    path: ../packages/telemetry_store
   theme_tailor_annotation: ^3.1.3
   timezone: ^0.11.0
+  two_dimensional_scrollables: ^0.5.2
   upgrader: ^13.0.0
   url_launcher: ^6.3.1
   uuid: ^4.5.1
@@ -166,7 +174,7 @@ dependencies:
     path: ../packages/workflows
 
 dev_dependencies:
-  altive_lints: ^2.1.0
+  altive_lints: ^2.3.0
   build_runner: ^2.4.13
   eqmonitor_lints:
     path: ../packages/eqmonitor_lints

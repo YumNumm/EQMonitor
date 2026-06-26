@@ -43,6 +43,6 @@ Map<String, dynamic> _$LiveActivityTokenResponseToJson(
 };
 
 const _$LiveActivityStartTriggerEnumMap = {
-  LiveActivityStartTrigger.shakeDetection: 'shake_detection',
-  LiveActivityStartTrigger.eew: 'eew',
+  LiveActivityStartTrigger.shakeDetection: 'SHAKE_DETECTION',
+  LiveActivityStartTrigger.eew: 'EEW',
 };

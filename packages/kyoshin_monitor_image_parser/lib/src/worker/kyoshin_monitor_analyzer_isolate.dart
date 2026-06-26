@@ -295,5 +295,6 @@ Future<void> _runAnalyze(
 
 String _colorHex(int r, int g, int b) =>
     '#${r.toRadixString(16).padLeft(2, '0')}'
-    '${g.toRadixString(16).padLeft(2, '0')}'
-    '${b.toRadixString(16).padLeft(2, '0')}'.toUpperCase();
+            '${g.toRadixString(16).padLeft(2, '0')}'
+            '${b.toRadixString(16).padLeft(2, '0')}'
+        .toUpperCase();

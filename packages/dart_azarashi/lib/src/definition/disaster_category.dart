@@ -15,8 +15,7 @@ enum JmaDisasterCategory {
   flood(11, '洪水', 'Flood'),
   typhoon(12, '台風', 'Typhoon'),
   // 13: Unused
-  marine(14, '海上', 'Marine')
-  ;
+  marine(14, '海上', 'Marine');
 
   const JmaDisasterCategory(this.code, this.nameJa, this.nameEn);
 

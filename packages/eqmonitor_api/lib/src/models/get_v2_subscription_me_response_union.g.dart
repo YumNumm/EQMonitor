@@ -16,7 +16,7 @@ _$GetV2SubscriptionMeResponseUnionSubscriptionActiveResponseFromJson(
   json,
   ($checkedConvert) {
     final val = GetV2SubscriptionMeResponseUnionSubscriptionActiveResponse(
-      status: $checkedConvert('status', (v) => v),
+      status: $checkedConvert('status', (v) => $enumDecode(_$StatusEnumMap, v)),
       productId: $checkedConvert('productId', (v) => v as String),
       expiresAt: $checkedConvert(
         'expiresAt',
@@ -41,6 +41,11 @@ _$GetV2SubscriptionMeResponseUnionSubscriptionActiveResponseToJson(
   'runtimeType': instance.$type,
 };
 
+const _$StatusEnumMap = {
+  Status.active: 'ACTIVE',
+  Status.gracePeriod: 'GRACE_PERIOD',
+};
+
 GetV2SubscriptionMeResponseUnionSubscriptionInactiveResponse
 _$GetV2SubscriptionMeResponseUnionSubscriptionInactiveResponseFromJson(
   Map<String, dynamic> json,
@@ -49,7 +54,7 @@ _$GetV2SubscriptionMeResponseUnionSubscriptionInactiveResponseFromJson(
   json,
   ($checkedConvert) {
     final val = GetV2SubscriptionMeResponseUnionSubscriptionInactiveResponse(
-      status: $checkedConvert('status', (v) => v),
+      status: $checkedConvert('status', (v) => v as String),
       $type: $checkedConvert('runtimeType', (v) => v as String?),
     );
     return val;

@@ -1,15 +1,18 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
 enum ObservationMaxHeightCondition {
+  /// 微弱
   @JsonValue('MINOR')
   minor('MINOR'),
+  /// 観測中
   @JsonValue('OBSERVING')
   observing('OBSERVING'),
+  /// 重要
   @JsonValue('IMPORTANT')
   important('IMPORTANT');
 

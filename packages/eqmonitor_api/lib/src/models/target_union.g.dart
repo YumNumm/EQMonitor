@@ -11,7 +11,7 @@ part of 'target_union.dart';
 TargetUnionVariant1 _$TargetUnionVariant1FromJson(Map<String, dynamic> json) =>
     $checkedCreate('TargetUnionVariant1', json, ($checkedConvert) {
       final val = TargetUnionVariant1(
-        type: $checkedConvert('type', (v) => v),
+        type: $checkedConvert('type', (v) => v as String),
         deviceId: $checkedConvert('deviceId', (v) => v as String),
         $type: $checkedConvert('runtimeType', (v) => v as String?),
       );
@@ -29,7 +29,7 @@ Map<String, dynamic> _$TargetUnionVariant1ToJson(
 TargetUnionVariant2 _$TargetUnionVariant2FromJson(Map<String, dynamic> json) =>
     $checkedCreate('TargetUnionVariant2', json, ($checkedConvert) {
       final val = TargetUnionVariant2(
-        type: $checkedConvert('type', (v) => v),
+        type: $checkedConvert('type', (v) => v as String),
         token: $checkedConvert('token', (v) => v as String),
         environment: $checkedConvert(
           'environment',

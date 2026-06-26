@@ -9,7 +9,8 @@ import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' show TelegramStatus;
+import 'package:eqmonitor_api/eqmonitor_api.dart'
+    show EarthquakeDatasource, EarthquakeTelegramType, TelegramStatus;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_parameter.freezed.dart';
@@ -57,6 +58,18 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     // 長周期地震動階級フィルター
     JmaLpgmIntensity? maxLpgmIntensityGte,
     JmaLpgmIntensity? maxLpgmIntensityLte,
+
+    // データソースフィルター
+    EarthquakeDatasource? datasource,
+
+    // 電文種別フィルター
+    List<EarthquakeTelegramType>? telegramTypes,
+
+    // 緯度経度範囲フィルター
+    double? latitudeGte,
+    double? latitudeLte,
+    double? longitudeGte,
+    double? longitudeLte,
 
     // ソート
     EarthquakeSortBy? sortBy,
@@ -116,4 +129,37 @@ extension EarthquakeHistoryParameterEx on EarthquakeHistoryParameter {
     EarthquakeSortBy? sortBy,
     SortOrder? sortOrder,
   ) => copyWith(sortBy: sortBy, sortOrder: sortOrder);
+
+  EarthquakeHistoryParameter updateDatasource(EarthquakeDatasource? ds) =>
+      copyWith(datasource: ds);
+
+  EarthquakeHistoryParameter updateTelegramTypes(
+    List<EarthquakeTelegramType>? types,
+  ) => copyWith(telegramTypes: types);
+
+  EarthquakeHistoryParameter updateLatLngRange({
+    double? latitudeGte,
+    double? latitudeLte,
+    double? longitudeGte,
+    double? longitudeLte,
+  }) => copyWith(
+    latitudeGte: latitudeGte,
+    latitudeLte: latitudeLte,
+    longitudeGte: longitudeGte,
+    longitudeLte: longitudeLte,
+  );
+
+  EarthquakeHistoryParameter updateRegion({
+    required RegionSearchType? regionSearchType,
+    required String? regionCode,
+    required String? regionName,
+    JmaIntensity? regionIntensityGte,
+    JmaIntensity? regionIntensityLte,
+  }) => copyWith(
+    regionSearchType: regionSearchType,
+    regionCode: regionCode,
+    regionName: regionName,
+    regionIntensityGte: regionIntensityGte,
+    regionIntensityLte: regionIntensityLte,
+  );
 }

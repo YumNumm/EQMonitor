@@ -116,7 +116,7 @@ class KnetResponseSpectrum {
   static List<double> _defaultPeriods() {
     const n = 100;
     const logMin = -1.301; // log10(0.05)
-    const logMax = 0.699;  // log10(5.0)
+    const logMax = 0.699; // log10(5.0)
     return List.generate(
       n,
       (i) => pow(10.0, logMin + (logMax - logMin) * i / (n - 1)).toDouble(),

@@ -52,6 +52,6 @@ const _$DeviceLocaleEnumMap = {
 };
 
 const _$DeviceRegistrationTypeEnumMap = {
-  DeviceRegistrationType.appCheck: 'app_check',
-  DeviceRegistrationType.challenge: 'challenge',
+  DeviceRegistrationType.appCheck: 'APP_CHECK',
+  DeviceRegistrationType.challenge: 'CHALLENGE',
 };

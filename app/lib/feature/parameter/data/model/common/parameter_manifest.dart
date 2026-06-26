@@ -21,7 +21,6 @@ abstract class ParameterManifestItem with _$ParameterManifestItem {
     required int schemaVersion,
     required String sourceVersion,
     required String? sourceUpdatedAt,
-    required String generatedAt,
     required List<String> sourceUrls,
     required String sha256,
     required int sizeBytes,

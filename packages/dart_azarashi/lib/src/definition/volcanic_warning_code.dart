@@ -16,8 +16,7 @@ enum JmaVolcanicWarningCode {
   surroundingSeaWarning(36, '周辺海域警戒'),
   eruption(52, '噴火'),
   possibleEruption(62, '噴火したもよう'),
-  other(127, 'その他の防災気象情報要素')
-  ;
+  other(127, 'その他の防災気象情報要素');
 
   const JmaVolcanicWarningCode(this.code, this.nameJa);
 

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParameterMetadata {
 
- ParameterType get type; int get schemaVersion; String get sourceVersion; String? get sourceUpdatedAt; String get generatedAt; List<String> get sourceUrls; String get sha256;
+ ParameterType get type; int get schemaVersion; String get sourceVersion; String? get sourceUpdatedAt; List<String> get sourceUrls; String get sha256;
 /// Create a copy of ParameterMetadata
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ParameterMetadataCopyWith<ParameterMetadata> get copyWith => _$ParameterMetadat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParameterMetadata&&(identical(other.type, type) || other.type == type)&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.sourceVersion, sourceVersion) || other.sourceVersion == sourceVersion)&&(identical(other.sourceUpdatedAt, sourceUpdatedAt) || other.sourceUpdatedAt == sourceUpdatedAt)&&(identical(other.generatedAt, generatedAt) || other.generatedAt == generatedAt)&&const DeepCollectionEquality().equals(other.sourceUrls, sourceUrls)&&(identical(other.sha256, sha256) || other.sha256 == sha256));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParameterMetadata&&(identical(other.type, type) || other.type == type)&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.sourceVersion, sourceVersion) || other.sourceVersion == sourceVersion)&&(identical(other.sourceUpdatedAt, sourceUpdatedAt) || other.sourceUpdatedAt == sourceUpdatedAt)&&const DeepCollectionEquality().equals(other.sourceUrls, sourceUrls)&&(identical(other.sha256, sha256) || other.sha256 == sha256));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,schemaVersion,sourceVersion,sourceUpdatedAt,generatedAt,const DeepCollectionEquality().hash(sourceUrls),sha256);
+int get hashCode => Object.hash(runtimeType,type,schemaVersion,sourceVersion,sourceUpdatedAt,const DeepCollectionEquality().hash(sourceUrls),sha256);
 
 @override
 String toString() {
-  return 'ParameterMetadata(type: $type, schemaVersion: $schemaVersion, sourceVersion: $sourceVersion, sourceUpdatedAt: $sourceUpdatedAt, generatedAt: $generatedAt, sourceUrls: $sourceUrls, sha256: $sha256)';
+  return 'ParameterMetadata(type: $type, schemaVersion: $schemaVersion, sourceVersion: $sourceVersion, sourceUpdatedAt: $sourceUpdatedAt, sourceUrls: $sourceUrls, sha256: $sha256)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ParameterMetadataCopyWith<$Res>  {
   factory $ParameterMetadataCopyWith(ParameterMetadata value, $Res Function(ParameterMetadata) _then) = _$ParameterMetadataCopyWithImpl;
 @useResult
 $Res call({
- ParameterType type, int schemaVersion, String sourceVersion, String? sourceUpdatedAt, String generatedAt, List<String> sourceUrls, String sha256
+ ParameterType type, int schemaVersion, String sourceVersion, String? sourceUpdatedAt, List<String> sourceUrls, String sha256
 });
 
 
@@ -65,14 +65,13 @@ class _$ParameterMetadataCopyWithImpl<$Res>
 
 /// Create a copy of ParameterMetadata
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? schemaVersion = null,Object? sourceVersion = null,Object? sourceUpdatedAt = freezed,Object? generatedAt = null,Object? sourceUrls = null,Object? sha256 = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? schemaVersion = null,Object? sourceVersion = null,Object? sourceUpdatedAt = freezed,Object? sourceUrls = null,Object? sha256 = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ParameterType,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
 as int,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
 as String,sourceUpdatedAt: freezed == sourceUpdatedAt ? _self.sourceUpdatedAt : sourceUpdatedAt // ignore: cast_nullable_to_non_nullable
-as String?,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
-as String,sourceUrls: null == sourceUrls ? _self.sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable
+as String?,sourceUrls: null == sourceUrls ? _self.sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable
 as List<String>,sha256: null == sha256 ? _self.sha256 : sha256 // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -159,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  List<String> sourceUrls,  String sha256)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParameterMetadata() when $default != null:
-return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256);case _:
+return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.sourceUrls,_that.sha256);case _:
   return orElse();
 
 }
@@ -180,10 +179,10 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  List<String> sourceUrls,  String sha256)  $default,) {final _that = this;
 switch (_that) {
 case _ParameterMetadata():
-return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256);case _:
+return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.sourceUrls,_that.sha256);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +199,10 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  List<String> sourceUrls,  String sha256)?  $default,) {final _that = this;
 switch (_that) {
 case _ParameterMetadata() when $default != null:
-return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256);case _:
+return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.sourceUrls,_that.sha256);case _:
   return null;
 
 }
@@ -215,14 +214,13 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 @JsonSerializable()
 
 class _ParameterMetadata implements ParameterMetadata {
-  const _ParameterMetadata({required this.type, required this.schemaVersion, required this.sourceVersion, required this.sourceUpdatedAt, required this.generatedAt, required final  List<String> sourceUrls, required this.sha256}): _sourceUrls = sourceUrls;
+  const _ParameterMetadata({required this.type, required this.schemaVersion, required this.sourceVersion, required this.sourceUpdatedAt, required final  List<String> sourceUrls, required this.sha256}): _sourceUrls = sourceUrls;
   factory _ParameterMetadata.fromJson(Map<String, dynamic> json) => _$ParameterMetadataFromJson(json);
 
 @override final  ParameterType type;
 @override final  int schemaVersion;
 @override final  String sourceVersion;
 @override final  String? sourceUpdatedAt;
-@override final  String generatedAt;
  final  List<String> _sourceUrls;
 @override List<String> get sourceUrls {
   if (_sourceUrls is EqualUnmodifiableListView) return _sourceUrls;
@@ -245,16 +243,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParameterMetadata&&(identical(other.type, type) || other.type == type)&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.sourceVersion, sourceVersion) || other.sourceVersion == sourceVersion)&&(identical(other.sourceUpdatedAt, sourceUpdatedAt) || other.sourceUpdatedAt == sourceUpdatedAt)&&(identical(other.generatedAt, generatedAt) || other.generatedAt == generatedAt)&&const DeepCollectionEquality().equals(other._sourceUrls, _sourceUrls)&&(identical(other.sha256, sha256) || other.sha256 == sha256));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParameterMetadata&&(identical(other.type, type) || other.type == type)&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.sourceVersion, sourceVersion) || other.sourceVersion == sourceVersion)&&(identical(other.sourceUpdatedAt, sourceUpdatedAt) || other.sourceUpdatedAt == sourceUpdatedAt)&&const DeepCollectionEquality().equals(other._sourceUrls, _sourceUrls)&&(identical(other.sha256, sha256) || other.sha256 == sha256));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,schemaVersion,sourceVersion,sourceUpdatedAt,generatedAt,const DeepCollectionEquality().hash(_sourceUrls),sha256);
+int get hashCode => Object.hash(runtimeType,type,schemaVersion,sourceVersion,sourceUpdatedAt,const DeepCollectionEquality().hash(_sourceUrls),sha256);
 
 @override
 String toString() {
-  return 'ParameterMetadata(type: $type, schemaVersion: $schemaVersion, sourceVersion: $sourceVersion, sourceUpdatedAt: $sourceUpdatedAt, generatedAt: $generatedAt, sourceUrls: $sourceUrls, sha256: $sha256)';
+  return 'ParameterMetadata(type: $type, schemaVersion: $schemaVersion, sourceVersion: $sourceVersion, sourceUpdatedAt: $sourceUpdatedAt, sourceUrls: $sourceUrls, sha256: $sha256)';
 }
 
 
@@ -265,7 +263,7 @@ abstract mixin class _$ParameterMetadataCopyWith<$Res> implements $ParameterMeta
   factory _$ParameterMetadataCopyWith(_ParameterMetadata value, $Res Function(_ParameterMetadata) _then) = __$ParameterMetadataCopyWithImpl;
 @override @useResult
 $Res call({
- ParameterType type, int schemaVersion, String sourceVersion, String? sourceUpdatedAt, String generatedAt, List<String> sourceUrls, String sha256
+ ParameterType type, int schemaVersion, String sourceVersion, String? sourceUpdatedAt, List<String> sourceUrls, String sha256
 });
 
 
@@ -282,14 +280,13 @@ class __$ParameterMetadataCopyWithImpl<$Res>
 
 /// Create a copy of ParameterMetadata
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? schemaVersion = null,Object? sourceVersion = null,Object? sourceUpdatedAt = freezed,Object? generatedAt = null,Object? sourceUrls = null,Object? sha256 = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? schemaVersion = null,Object? sourceVersion = null,Object? sourceUpdatedAt = freezed,Object? sourceUrls = null,Object? sha256 = null,}) {
   return _then(_ParameterMetadata(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ParameterType,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
 as int,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
 as String,sourceUpdatedAt: freezed == sourceUpdatedAt ? _self.sourceUpdatedAt : sourceUpdatedAt // ignore: cast_nullable_to_non_nullable
-as String?,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
-as String,sourceUrls: null == sourceUrls ? _self._sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable
+as String?,sourceUrls: null == sourceUrls ? _self._sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable
 as List<String>,sha256: null == sha256 ? _self.sha256 : sha256 // ignore: cast_nullable_to_non_nullable
 as String,
   ));

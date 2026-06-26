@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -14,13 +14,15 @@ part 'target_union.g.dart';
 sealed class TargetUnion with _$TargetUnion {
   @JsonSerializable()
   const factory TargetUnion.variant1({
-    required dynamic type,
+    /// const: "DEVICE_ID"
+    required String type,
     required String deviceId,
   }) = TargetUnionVariant1;
   
   @JsonSerializable()
   const factory TargetUnion.variant2({
-    required dynamic type,
+    /// const: "PUSH_TO_START_TOKEN"
+    required String type,
     required String token,
     required Environment environment,
   }) = TargetUnionVariant2;

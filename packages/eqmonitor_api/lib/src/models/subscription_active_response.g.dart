@@ -12,7 +12,7 @@ _SubscriptionActiveResponse _$SubscriptionActiveResponseFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_SubscriptionActiveResponse', json, ($checkedConvert) {
   final val = _SubscriptionActiveResponse(
-    status: $checkedConvert('status', (v) => v),
+    status: $checkedConvert('status', (v) => $enumDecode(_$StatusEnumMap, v)),
     productId: $checkedConvert('productId', (v) => v as String),
     expiresAt: $checkedConvert(
       'expiresAt',
@@ -30,4 +30,9 @@ Map<String, dynamic> _$SubscriptionActiveResponseToJson(
   'productId': instance.productId,
   'expiresAt': instance.expiresAt?.toIso8601String(),
   'willRenew': instance.willRenew,
+};
+
+const _$StatusEnumMap = {
+  Status.active: 'ACTIVE',
+  Status.gracePeriod: 'GRACE_PERIOD',
 };

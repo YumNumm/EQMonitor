@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 void main(List<String> args) async {
-  final externalOpenapiPath = (await File(
+  final externalOpenapiPath = await File(
     '../../backend/api/api/openapi.json',
-  ).resolveSymbolicLinks());
+  ).resolveSymbolicLinks();
 
   final packageDir = Directory.current;
   final openapiFile = File('${packageDir.path}/openapi/openapi.json');
@@ -15,28 +16,28 @@ void main(List<String> args) async {
     }
   });
 
-  if (externalOpenapiPath != null) {
-    final src = File(externalOpenapiPath);
-    if (!src.existsSync()) {
-      stderr.writeln('指定された OpenAPI ファイルが見つかりません: $externalOpenapiPath');
-      exit(1);
-    }
-
-    print('externalOpenapiPath: ${src.absolute.path}');
-    print('openapiFile.path: ${openapiFile.absolute.path}');
-
-    if (openapiFile.absolute.path != src.absolute.path) {
-      await _step('外部 OpenAPI ファイルをコピー', () async {
-        await openapiFile.create(recursive: true);
-        final copied = src.copySync(
-          openapiFile.path,
-        );
-        print('copied: ${copied.path}');
-      });
-    }
-  } else {
-    throw Exception('OpenAPI ファイルが指定されていません。-openapiFile を指定してください');
+  final src = File(externalOpenapiPath);
+  if (!src.existsSync()) {
+    stderr.writeln('指定された OpenAPI ファイルが見つかりません: $externalOpenapiPath');
+    exit(1);
   }
+
+  print('externalOpenapiPath: ${src.absolute.path}');
+  print('openapiFile.path: ${openapiFile.absolute.path}');
+
+  if (openapiFile.absolute.path != src.absolute.path) {
+    await _step('外部 OpenAPI ファイルをコピー', () async {
+      await openapiFile.create(recursive: true);
+      final copied = src.copySync(
+        openapiFile.path,
+      );
+      print('copied: ${copied.path}');
+    });
+  }
+
+  await _step('OpenAPI の const プロパティを型付きに変換', () async {
+    _patchConstPropertiesToTyped(openapiFile);
+  });
 
   await _step('swagger_parser でクライアントコードを生成', () async {
     await _run('dart', ['run', 'swagger_parser'], packageDir.path);
@@ -54,7 +55,9 @@ void main(List<String> args) async {
   await _step('震度 enum メンバー名をパッチ', () async {
     final modelsDir = Directory('${packageDir.path}/lib/src/models');
 
-    if (!modelsDir.existsSync()) return;
+    if (!modelsDir.existsSync()) {
+      return;
+    }
 
     final dartFiles = modelsDir.listSync().whereType<File>().where(
       (f) => f.path.endsWith('.dart') && !f.path.endsWith('.g.dart'),
@@ -101,12 +104,20 @@ void main(List<String> args) async {
     }
   });
 
+  await _step('値のみ union を enum に変換', () async {
+    _patchValueOnlyUnionsToEnum(libDir, openapiFile);
+  });
+
   await _step(r'$unknown 文字列補間パッチ', () async {
     await _patchGeneratedFiles(libDir);
   });
 
   await _step('statuses クエリパラメータの型パッチ', () async {
     _patchStatusesQueryInApiClients(libDir);
+  });
+
+  await _step('anyOf 由来の dynamic パスパラメータを String にパッチ', () async {
+    _patchDynamicPathParameters(libDir);
   });
 
   await _step('anyOf 由来の dynamic クエリパラメータを String? にパッチ', () async {
@@ -144,6 +155,14 @@ void main(List<String> args) async {
     _patchOriginTimeDateTimeToString(libDir);
   });
 
+  await _step('生成ファイルから type=lint を除去（lint 検出を有効化）', () async {
+    _stripTypeLintFromGeneratedHeaders(libDir);
+  });
+
+  await _step('残存 dynamic → 正しい型にパッチ', () async {
+    _patchRemainingDynamic(libDir);
+  });
+
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
     await _run('dart', [
       'run',
@@ -151,6 +170,10 @@ void main(List<String> args) async {
       'build',
       '--delete-conflicting-outputs',
     ], packageDir.path);
+  });
+
+  await _step('残存 dynamic の検出', () async {
+    _validateNoDynamic(libDir);
   });
 
   /// 契約 drift テスト用の fixtures を backend submodule からコピーする。
@@ -219,10 +242,180 @@ Future<void> _patchGeneratedFiles(Directory libDir) async {
   }
 }
 
+/// swagger_parser は `anyOf` / `oneOf` のメンバーがすべて `const`（値のみ）の
+/// union を、メンバーの無い空の Freezed クラスとして生成してしまう。
+/// 例: `TsunamiWarningKind`（`anyOf: [{const: "MAJOR_WARNING"}, ...]`）。
+/// これは実質使用不能なので enum として生成し直す。
+///
+/// OpenAPI 本体を直接読み、値のみ union のスキーマを検出して、
+/// swagger_parser が `enum:` から生成するのと同じ形
+/// （`@JsonEnum()` + `@JsonValue` + 手書き `toJson`）の enum 定義で上書きする。
+/// 各 const の `description` はメンバーの doc コメントにする。
+void _patchValueOnlyUnionsToEnum(Directory libDir, File openapiFile) {
+  if (!openapiFile.existsSync()) {
+    return;
+  }
+  final modelsDir = Directory('${libDir.path}/models');
+  if (!modelsDir.existsSync()) {
+    return;
+  }
+
+  final openapi =
+      jsonDecode(openapiFile.readAsStringSync()) as Map<String, Object?>;
+  final components = openapi['components'] as Map<String, Object?>?;
+  final schemas = components?['schemas'] as Map<String, Object?>?;
+  if (schemas == null) {
+    return;
+  }
+
+  for (final entry in schemas.entries) {
+    final name = entry.key;
+    final schema = entry.value;
+    if (schema is! Map<String, Object?>) {
+      continue;
+    }
+
+    final members = schema['anyOf'] ?? schema['oneOf'];
+    if (members is! List || members.isEmpty) {
+      continue;
+    }
+
+    // すべてのメンバーが文字列の const（値のみ）であることを要求する。
+    final values = <String>[];
+    final descriptions = <String?>[];
+    var valueOnly = true;
+    for (final m in members) {
+      if (m is! Map<String, Object?> || m['const'] is! String) {
+        valueOnly = false;
+        break;
+      }
+      values.add(m['const']! as String);
+      descriptions.add(m['description'] as String?);
+    }
+    if (!valueOnly) {
+      continue;
+    }
+
+    final file = File('${modelsDir.path}/${_toSnakeCase(name)}.dart');
+    if (!file.existsSync()) {
+      continue;
+    }
+
+    file.writeAsStringSync(
+      _buildEnumSource(
+        className: name,
+        values: values,
+        descriptions: descriptions,
+        schemaDescription: schema['description'] as String?,
+      ),
+    );
+    stdout.writeln('  Patched value-only union → enum: ${file.path}');
+  }
+}
+
+/// `TsunamiWarningKind` → `tsunami_warning_kind`。
+/// swagger_parser のファイル命名規則に合わせる。
+String _toSnakeCase(String pascal) {
+  final buffer = StringBuffer();
+  for (var i = 0; i < pascal.length; i++) {
+    final ch = pascal[i];
+    final isUpper = ch.toUpperCase() == ch && ch.toLowerCase() != ch;
+    if (isUpper && i > 0) {
+      buffer.write('_');
+    }
+    buffer.write(ch.toLowerCase());
+  }
+  return buffer.toString();
+}
+
+/// `MAJOR_WARNING` → `majorWarning`、`VXSE45_FORECAST` → `vxse45Forecast`。
+/// swagger_parser の enum メンバー命名規則に合わせる。
+String _toEnumMemberName(String value) {
+  final parts = value
+      .split(RegExp(r'[_\s-]+'))
+      .where((p) => p.isNotEmpty)
+      .toList();
+  if (parts.isEmpty) {
+    return value.toLowerCase();
+  }
+  final first = parts.first.toLowerCase();
+  final rest = parts.skip(1).map((p) {
+    final lower = p.toLowerCase();
+    return lower[0].toUpperCase() + lower.substring(1);
+  }).join();
+  return first + rest;
+}
+
+String _buildEnumSource({
+  required String className,
+  required List<String> values,
+  required List<String?> descriptions,
+  String? schemaDescription,
+}) {
+  final buffer = StringBuffer()
+    ..writeln('// coverage:ignore-file')
+    ..writeln('// GENERATED CODE - DO NOT MODIFY BY HAND')
+    ..writeln(
+      '// ignore_for_file: type=lint, unused_import, '
+      'invalid_annotation_target, unnecessary_import',
+    )
+    ..writeln()
+    ..writeln("import 'package:freezed_annotation/freezed_annotation.dart';")
+    ..writeln();
+
+  if (schemaDescription != null && schemaDescription.isNotEmpty) {
+    for (final line in schemaDescription.split('\n')) {
+      buffer.writeln('/// $line');
+    }
+  }
+  buffer
+    ..writeln('@JsonEnum()')
+    ..writeln('enum $className {');
+
+  for (var i = 0; i < values.length; i++) {
+    final value = values[i];
+    final description = descriptions[i];
+    if (description != null && description.isNotEmpty) {
+      for (final line in description.split('\n')) {
+        buffer.writeln('  /// $line');
+      }
+    }
+    final terminator = i == values.length - 1 ? ';' : ',';
+    buffer
+      ..writeln("  @JsonValue('$value')")
+      ..writeln("  ${_toEnumMemberName(value)}('$value')$terminator");
+  }
+
+  // `$unknown` は後段の `_patchGeneratedFiles` で `\$unknown` にエスケープされる。
+  buffer
+    ..writeln()
+    ..writeln('  const $className(this.json);')
+    ..writeln()
+    ..writeln('  final String? json;')
+    ..writeln('  String toJson() {')
+    ..writeln('    final value = json;')
+    ..writeln('    if (value == null) {')
+    ..writeln(
+      "      throw StateError('Cannot convert enum value with null JSON "
+      "representation to String. '",
+    )
+    ..writeln(
+      "          'This usually happens for \$unknown or @JsonValue(null) "
+      "entries.');",
+    )
+    ..writeln('    }')
+    ..writeln('    return value as String;')
+    ..writeln('  }')
+    ..writeln()
+    ..writeln('  @override')
+    ..writeln('  String toString() => json?.toString() ?? super.toString();')
+    ..writeln('}');
+
+  return buffer.toString();
+}
+
 const _telegramStatusImport = "import '../models/telegram_status.dart';";
 
-/// [statuses] クエリの扱い。
-///
 /// バックエンドが出力する OpenAPI では `anyOf`（配列 or 単一 enum）と
 /// `default: ["NORMAL"]` の組み合わせになりやすく、swagger_parser が
 /// `dynamic` + `const ['NORMAL']`（実質 `List<String>`）を生成することがある。
@@ -266,8 +459,8 @@ void _patchStatusesQueryInApiClients(Directory libDir) {
     if (content.contains('List<TelegramStatus>') &&
         !content.contains('telegram_status.dart')) {
       content = content.replaceFirst(
-        '\n\npart \'',
-        '\n\n$_telegramStatusImport\n\npart \'',
+        "\n\npart '",
+        "\n\n$_telegramStatusImport\n\npart '",
       );
     }
 
@@ -285,7 +478,9 @@ void _patchStatusesQueryInApiClients(Directory libDir) {
 /// パラメータごとに本来の型を指定する。未知の dynamic は `String?` にフォールバック。
 void _patchDynamicQueryParameters(Directory libDir) {
   final clientsDir = Directory('${libDir.path}/clients');
-  if (!clientsDir.existsSync()) return;
+  if (!clientsDir.existsSync()) {
+    return;
+  }
 
   const overrides = {
     'epicenterCodes': 'List<String>?',
@@ -293,13 +488,16 @@ void _patchDynamicQueryParameters(Directory libDir) {
   };
 
   const requiredImports = {
-    'EarthquakeTelegramType': "import '../models/earthquake_telegram_type.dart';",
+    'EarthquakeTelegramType':
+        "import '../models/earthquake_telegram_type.dart';",
   };
 
   final pattern = RegExp(r"@Query\('(\w+)'\)\s+dynamic\s+(\w+)(?=[,)])");
 
   for (final entity in clientsDir.listSync()) {
-    if (entity is! File || !entity.path.endsWith('_api_client.dart')) continue;
+    if (entity is! File || !entity.path.endsWith('_api_client.dart')) {
+      continue;
+    }
 
     var content = entity.readAsStringSync();
     final original = content;
@@ -315,7 +513,7 @@ void _patchDynamicQueryParameters(Directory libDir) {
       if (content.contains(entry.key) && !content.contains(entry.value)) {
         content = content.replaceFirst(
           "\npart '",
-          '\n${entry.value}\n\npart \'',
+          "\n${entry.value}\n\npart '",
         );
       }
     }
@@ -327,7 +525,7 @@ void _patchDynamicQueryParameters(Directory libDir) {
   }
 }
 
-/// [parameters_api_client.dart] の `ParameterDataResponse` を
+/// `parameters_api_client.dart` の `ParameterDataResponse` を
 /// `Map<String, Object?>` に置き換える。
 ///
 /// swagger_parser は OpenAPI の anyOf/oneOf discriminator 無しの union 型を
@@ -338,7 +536,9 @@ void _patchParameterDataResponseInApiClient(Directory libDir) {
   final clientFile = File(
     '${libDir.path}/clients/parameters_api_client.dart',
   );
-  if (!clientFile.existsSync()) return;
+  if (!clientFile.existsSync()) {
+    return;
+  }
 
   var content = clientFile.readAsStringSync();
   final original = content;
@@ -372,14 +572,18 @@ void _patchUnionFromJson(
   required String className,
   required String body,
 }) {
-  if (!file.existsSync()) return;
+  if (!file.existsSync()) {
+    return;
+  }
 
   final original = file.readAsStringSync();
   final pattern = RegExp(
     r'factory\s+' +
+        // ignore: prefer_interpolation_to_compose_strings
         RegExp.escape(className) +
+        // ignore: missing_whitespace_between_adjacent_strings
         r'\.fromJson\(Map<String, Object\?> json\)\s*=>'
-        r'[\s\S]*?throw UnimplementedError\(\);',
+            r'[\s\S]*?throw UnimplementedError\(\);',
   );
 
   if (!pattern.hasMatch(original)) {
@@ -399,23 +603,24 @@ void _patchUnionFromJson(
 
 /// FeedItem.data の `type` const 値で variant を判別する。
 ///
-///   EARTHQUAKE_NOTICE       → variant1
-///   EARTHQUAKE_EXPLANATION  → variant2
-///   EARTHQUAKE_COUNTS       → variant3
-///   EARTHQUAKE_NANKAI       → variant4
-///   APP_UPDATE              → variant5
-///   INCIDENT                → variant6
-///   DEVELOPER_MESSAGE       → variant7
 void _patchFeedItemDataUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/feed_item_data_union.dart');
-  const body = '''switch (json['type']) {
-        'EARTHQUAKE_NOTICE' => FeedItemDataUnionVariant1.fromJson(json),
-        'EARTHQUAKE_EXPLANATION' => FeedItemDataUnionVariant2.fromJson(json),
-        'EARTHQUAKE_COUNTS' => FeedItemDataUnionVariant3.fromJson(json),
-        'EARTHQUAKE_NANKAI' => FeedItemDataUnionVariant4.fromJson(json),
-        'APP_UPDATE' => FeedItemDataUnionVariant5.fromJson(json),
-        'INCIDENT' => FeedItemDataUnionVariant6.fromJson(json),
-        'DEVELOPER_MESSAGE' => FeedItemDataUnionVariant7.fromJson(json),
+  const body = '''
+switch (json['type']) {
+        'EARTHQUAKE_NOTICE' =>
+          FeedItemDataUnionFeedEarthquakeNoticeData.fromJson(json),
+        'EARTHQUAKE_EXPLANATION' =>
+          FeedItemDataUnionFeedEarthquakeExplanationData.fromJson(json),
+        'EARTHQUAKE_COUNTS' =>
+          FeedItemDataUnionFeedEarthquakeCountsData.fromJson(json),
+        'EARTHQUAKE_NANKAI' =>
+          FeedItemDataUnionFeedEarthquakeNankaiData.fromJson(json),
+        'APP_UPDATE' =>
+          FeedItemDataUnionFeedAppUpdateData.fromJson(json),
+        'INCIDENT' =>
+          FeedItemDataUnionFeedIncidentData.fromJson(json),
+        'DEVELOPER_MESSAGE' =>
+          FeedItemDataUnionFeedDeveloperMessageData.fromJson(json),
         final value => throw ArgumentError.value(
           value,
           'type',
@@ -431,7 +636,8 @@ void _patchFeedItemDataUnionFromJson(Directory libDir) {
 ///   push_to_start_token  → variant2 (token + environment)
 void _patchTargetUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/target_union.dart');
-  const body = '''switch (json['type']) {
+  const body = '''
+switch (json['type']) {
         'device_id' => TargetUnionVariant1.fromJson(json),
         'push_to_start_token' => TargetUnionVariant2.fromJson(json),
         final value => throw ArgumentError.value(
@@ -465,7 +671,10 @@ void _patchApnsEnvironmentEnum(Directory libDir) {
     return;
   }
   final content = file.readAsStringSync();
-  final patched = content.replaceAll('return value as String;', 'return value;');
+  final patched = content.replaceAll(
+    'return value as String;',
+    'return value;',
+  );
   if (patched != content) {
     file.writeAsStringSync(patched);
     stdout.writeln('  patched: ${file.path}');
@@ -483,8 +692,8 @@ void _patchApnsEnvironmentEnum(Directory libDir) {
 /// ユニークフィールドではなく metadata.type を必ず参照する。
 void _patchParameterDataResponseUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/parameter_data_response_union.dart');
-  const body =
-      '''switch ((json['metadata'] as Map<String, Object?>?)?['type']) {
+  const body = '''
+switch ((json['metadata'] as Map<String, Object?>?)?['type']) {
         'jma_code_table' =>
           ParameterDataResponseUnionJmaCodeTableParameter.fromJson(json),
         'kyoshin_observation_points' =>
@@ -501,16 +710,24 @@ void _patchParameterDataResponseUnionFromJson(Directory libDir) {
           'Unknown ParameterDataResponseUnion type',
         ),
       }''';
-  _patchUnionFromJson(file, className: 'ParameterDataResponseUnion', body: body);
+  _patchUnionFromJson(
+    file,
+    className: 'ParameterDataResponseUnion',
+    body: body,
+  );
 }
 
 /// swagger_parser が `@Default(ja)` のようにenum値をリテラルなしで生成する問題を修正。
 void _patchDeviceLocaleDefault(Directory libDir) {
   final modelsDir = Directory('${libDir.path}/models');
-  if (!modelsDir.existsSync()) return;
+  if (!modelsDir.existsSync()) {
+    return;
+  }
 
   for (final entity in modelsDir.listSync()) {
-    if (entity is! File || !entity.path.endsWith('.dart')) continue;
+    if (entity is! File || !entity.path.endsWith('.dart')) {
+      continue;
+    }
     if (entity.path.endsWith('.g.dart') ||
         entity.path.endsWith('.freezed.dart')) {
       continue;
@@ -534,7 +751,8 @@ void _patchDeviceLocaleDefault(Directory libDir) {
 /// TelegramBodyUnion の `type` 値で variant を判別する。
 void _patchTelegramBodyUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/telegram_body_union.dart');
-  const body = '''switch (json['type']) {
+  const body = '''
+switch (json['type']) {
         'EARTHQUAKE' =>
           TelegramBodyUnionEarthquakeTelegramBody.fromJson(json),
         'EEW' => TelegramBodyUnionEewTelegramBody.fromJson(json),
@@ -561,10 +779,14 @@ void _patchTelegramBodyUnionFromJson(Directory libDir) {
 /// import パスとクラス名を統一する。
 void _patchTelegramBodyReference(Directory libDir) {
   final modelsDir = Directory('${libDir.path}/models');
-  if (!modelsDir.existsSync()) return;
+  if (!modelsDir.existsSync()) {
+    return;
+  }
 
   for (final entity in modelsDir.listSync()) {
-    if (entity is! File || !entity.path.endsWith('.dart')) continue;
+    if (entity is! File || !entity.path.endsWith('.dart')) {
+      continue;
+    }
     // skip generated files
     if (entity.path.endsWith('.g.dart') ||
         entity.path.endsWith('.freezed.dart')) {
@@ -624,6 +846,489 @@ void _patchOriginTimeDateTimeToString(Directory libDir) {
       stdout.writeln('  Patched: ${entity.path}');
     }
   }
+}
+
+/// swagger_parser が `anyOf` のパスパラメータを `dynamic` として生成する問題を修正。
+/// `@Path('xxx') required dynamic yyy` → `@Path('xxx') required String yyy`。
+void _patchDynamicPathParameters(Directory libDir) {
+  final clientsDir = Directory('${libDir.path}/clients');
+  if (!clientsDir.existsSync()) {
+    return;
+  }
+
+  final pattern = RegExp(r"@Path\('(\w+)'\)\s+required\s+dynamic\s+(\w+)");
+
+  for (final entity in clientsDir.listSync()) {
+    if (entity is! File || !entity.path.endsWith('_api_client.dart')) {
+      continue;
+    }
+
+    var content = entity.readAsStringSync();
+    final original = content;
+
+    content = content.replaceAllMapped(pattern, (m) {
+      final pathName = m[1];
+      final paramName = m[2];
+      return "@Path('$pathName') required String $paramName";
+    });
+
+    if (content != original) {
+      entity.writeAsStringSync(content);
+      stdout.writeln('  Patched dynamic path params: ${entity.path}');
+    }
+  }
+}
+
+/// swagger_parser が生成する `// ignore_for_file: type=lint, ...` から
+/// `type=lint` を除去する。これにより `avoid_annotating_with_dynamic` 等の
+/// lint ルールがコード生成結果に対して有効になる。
+///
+/// `.g.dart` / `.freezed.dart` はビルドランナー生成で独自に `type=lint` を
+/// 持つため対象外。
+void _stripTypeLintFromGeneratedHeaders(Directory libDir) {
+  final dartFiles = libDir
+      .listSync(recursive: true)
+      .whereType<File>()
+      .where(
+        (f) =>
+            f.path.endsWith('.dart') &&
+            !f.path.endsWith('.g.dart') &&
+            !f.path.endsWith('.freezed.dart'),
+      );
+
+  for (final file in dartFiles) {
+    var content = file.readAsStringSync();
+    final original = content;
+
+    content = content.replaceAll(
+      RegExp(r'type=lint,?\s*'),
+      '',
+    );
+    // 末尾にカンマ+空白だけ残った場合を整理
+    content = content.replaceAll(
+      RegExp(r'// ignore_for_file:\s*\n'),
+      '',
+    );
+
+    if (content != original) {
+      file.writeAsStringSync(content);
+      stdout.writeln('  Stripped type=lint: ${file.path}');
+    }
+  }
+}
+
+/// 生成後に `*.dart`（`*.g.dart`, `*.freezed.dart` を除く）に残った
+/// `dynamic` 型注釈を検出して警告する。
+void _validateNoDynamic(Directory libDir) {
+  final pattern = RegExp(r'\bdynamic\b');
+  final dartFiles = libDir
+      .listSync(recursive: true)
+      .whereType<File>()
+      .where(
+        (f) =>
+            f.path.endsWith('.dart') &&
+            !f.path.endsWith('.g.dart') &&
+            !f.path.endsWith('.freezed.dart'),
+      );
+
+  var count = 0;
+  for (final file in dartFiles) {
+    final lines = file.readAsLinesSync();
+    for (var i = 0; i < lines.length; i++) {
+      if (pattern.hasMatch(lines[i])) {
+        stderr.writeln(
+          '  ⚠️  dynamic detected: ${file.path}:${i + 1}: ${lines[i].trim()}',
+        );
+        count++;
+      }
+    }
+  }
+  if (count > 0) {
+    stderr.writeln('  ⚠️  $count dynamic annotation(s) remaining');
+  }
+}
+
+/// swagger_parser が空スキーマ `{}` や `{nullable: true}` から生成した
+/// `dynamic` を Valibot 定義に基づく正しい型に置き換える。
+///
+/// バックエンドの Valibot 定義から各フィールドの正しい型を特定し、
+/// 生成済み Dart ファイルで文字列置換する。
+void _patchRemainingDynamic(Directory libDir) {
+  // ファイルパス（basename） → {置換前: 置換後}
+  //
+  // Valibot 定義との対応:
+  //   v.unknown()                             → Object?
+  //   v.array(v.unknown())                    → List<Object?>
+  //   v.optional(v.unknown())                 → Object?
+  //   v.null()                                → Object?
+  //   v.optional(v.nullable(v.union([num,str]))) → Object?
+  final replacements = <String, List<(String, String)>>{
+    // EewTelegramBody: eew = v.unknown(), eew*Regions = v.array(v.unknown())
+    'eew_telegram_body.dart': [
+      ('required dynamic eew,', 'required Object? eew,'),
+      (
+        'required List<dynamic> eewIntensityRegions,',
+        'required List<Object?> eewIntensityRegions,',
+      ),
+      (
+        'required List<dynamic> eewWarningZones,',
+        'required List<Object?> eewWarningZones,',
+      ),
+      (
+        'required List<dynamic> eewWarningPrefectures,',
+        'required List<Object?> eewWarningPrefectures,',
+      ),
+      (
+        'required List<dynamic> eewWarningRegions,',
+        'required List<Object?> eewWarningRegions,',
+      ),
+    ],
+    // TelegramBodyUnion の EEW variant（EewTelegramBody と同じフィールド）
+    'telegram_body_union.dart': [
+      ('required dynamic eew,', 'required Object? eew,'),
+      (
+        'required List<dynamic> eewIntensityRegions,',
+        'required List<Object?> eewIntensityRegions,',
+      ),
+      (
+        'required List<dynamic> eewWarningZones,',
+        'required List<Object?> eewWarningZones,',
+      ),
+      (
+        'required List<dynamic> eewWarningPrefectures,',
+        'required List<Object?> eewWarningPrefectures,',
+      ),
+      (
+        'required List<dynamic> eewWarningRegions,',
+        'required List<Object?> eewWarningRegions,',
+      ),
+    ],
+    // Telegram.body: v.optional(v.unknown())
+    'telegram.dart': [
+      ('dynamic body,', 'Object? body,'),
+    ],
+    // DeviceRegisterResponse.expiresAt: v.null()
+    'device_register_response.dart': [
+      ('required dynamic expiresAt,', 'required Object? expiresAt,'),
+    ],
+    // FeedItem.data: swagger_parser が FeedItemData を参照するが、
+    // 実際の union 型は FeedItemDataUnion
+    'feed_item.dart': [
+      ("import 'feed_item_data.dart';", "import 'feed_item_data_union.dart';"),
+      ('required FeedItemData data,', 'required FeedItemDataUnion data,'),
+    ],
+  };
+
+  for (final entry in replacements.entries) {
+    final fileName = entry.key;
+    final file = File('${libDir.path}/models/$fileName');
+    if (!file.existsSync()) {
+      continue;
+    }
+
+    var content = file.readAsStringSync();
+    final original = content;
+
+    for (final (from, to) in entry.value) {
+      content = content.replaceAll(from, to);
+    }
+
+    if (content != original) {
+      file.writeAsStringSync(content);
+      stdout.writeln('  Patched: $fileName');
+    }
+  }
+}
+
+/// OpenAPI スキーマ内の `const` プロパティを swagger_parser が理解できる
+/// 型付きスキーマに変換する。
+///
+/// swagger_parser は `{"const": "VALUE"}` や `{"const": true}` を解釈できず
+/// `dynamic` を出力する。ここで以下の変換を行う:
+///
+///   `{"const": "VALUE"}`  → `{"type": "string", "description": "const: \"VALUE\""}`
+///   `{"const": true}`     → `{"type": "boolean", "description": "const: true"}`
+///   `{"const": 123}`      → `{"type": "integer", "description": "const: 123"}`
+///   `{"const": 1.5}`      → `{"type": "number", "description": "const: 1.5"}`
+///
+/// `anyOf` / `oneOf` 内の `const` メンバーも同様に変換する。
+/// 変換後の OpenAPI ファイルを上書き保存する。
+void _patchConstPropertiesToTyped(File openapiFile) {
+  if (!openapiFile.existsSync()) {
+    return;
+  }
+
+  final content = openapiFile.readAsStringSync();
+  final openapi = jsonDecode(content) as Map<String, Object?>;
+  var patchCount = 0;
+
+  void patchProperties(Map<String, Object?> props) {
+    for (final key in props.keys.toList()) {
+      final prop = props[key];
+      if (prop is! Map<String, Object?>) {
+        continue;
+      }
+
+      // anyOf / oneOf 内の const メンバーを変換
+      for (final unionKey in ['anyOf', 'oneOf']) {
+        final members = prop[unionKey];
+        if (members is! List) {
+          continue;
+        }
+
+        // 全メンバーが const であれば enum に変換
+        final enumResult = _tryConvertToEnum(prop, unionKey, members);
+        if (enumResult != null) {
+          props[key] = enumResult;
+          patchCount++;
+          continue;
+        }
+
+        // const メンバーを個別に型付きに変換
+        for (var i = 0; i < members.length; i++) {
+          final m = members[i];
+          if (m is Map<String, Object?> && m.containsKey('const')) {
+            final replaced = _constToTyped(m);
+            if (replaced != null) {
+              members[i] = replaced;
+              patchCount++;
+            }
+          }
+        }
+
+        // 変換後に全メンバーが同じ type を持つ場合、anyOf を単一型に畳む。
+        final collapsed = _collapseUniformAnyOf(prop, unionKey, members);
+        if (collapsed != null) {
+          props[key] = collapsed;
+          patchCount++;
+        }
+      }
+
+      // プロパティ直下の const を変換（nullable を除去）
+      if (prop.containsKey('const') && !prop.containsKey('type')) {
+        final replaced = _constToTyped(prop);
+        if (replaced != null) {
+          replaced.remove('nullable');
+          props[key] = replaced;
+          patchCount++;
+        }
+      }
+    }
+  }
+
+  /// JSON ツリーを再帰的に走査し、`properties` を持つ全てのオブジェクトに
+  /// const パッチを適用する。components.schemas だけでなく、paths 内の
+  /// インラインスキーマやネストされたオブジェクト定義も処理する。
+  void walkAndPatch(Object? node) {
+    if (node is Map<String, Object?>) {
+      final props = node['properties'];
+      if (props is Map<String, Object?>) {
+        patchProperties(props);
+      }
+      for (final value in node.values) {
+        walkAndPatch(value);
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        walkAndPatch(item);
+      }
+    }
+  }
+
+  walkAndPatch(openapi);
+
+  if (patchCount > 0) {
+    const encoder = JsonEncoder.withIndent('  ');
+    openapiFile.writeAsStringSync(encoder.convert(openapi));
+    stdout.writeln('  $patchCount const プロパティを型付きに変換しました');
+  }
+}
+
+/// `anyOf` / `oneOf` の全非 null メンバーが文字列 `const` である場合に、
+/// `{type: string, enum: [...]}` に変換する。
+///
+/// swagger_parser は `enum` をネイティブに理解して enum 型を生成するため、
+/// `String` に畳むより正確な型が得られる。
+///
+/// 例:
+///   anyOf: [{const: "ACTIVE"}, {const: "GRACE_PERIOD"}]
+///   → {type: string, enum: ["ACTIVE", "GRACE_PERIOD"],
+///      description: "const: \"ACTIVE\" | const: \"GRACE_PERIOD\""}
+Map<String, Object?>? _tryConvertToEnum(
+  Map<String, Object?> prop,
+  String unionKey,
+  List<Object?> members,
+) {
+  if (members.isEmpty) {
+    return null;
+  }
+
+  final enumValues = <String>[];
+  final descriptions = <String>[];
+  var hasNull = false;
+
+  for (final m in members) {
+    if (m is! Map<String, Object?>) {
+      return null;
+    }
+    // {type: null} は nullable フラグとして扱う
+    if (m['type'] == 'null') {
+      hasNull = true;
+      continue;
+    }
+    final constValue = m['const'];
+    if (constValue is! String) {
+      return null;
+    }
+    enumValues.add(constValue);
+    final desc = m['description'] as String?;
+    descriptions.add(desc ?? 'const: "$constValue"');
+  }
+
+  if (enumValues.isEmpty) {
+    return null;
+  }
+
+  final result = Map<String, Object?>.of(prop);
+  result.remove(unionKey);
+  result['type'] = 'string';
+  result['enum'] = enumValues;
+  if (hasNull) {
+    result['nullable'] = true;
+  }
+
+  final existingDesc = prop['description'] as String?;
+  final memberDesc = descriptions.join(' | ');
+  result['description'] = existingDesc != null
+      ? '$existingDesc\n$memberDesc'
+      : memberDesc;
+
+  return result;
+}
+
+/// `anyOf` / `oneOf` を単一型に畳む。
+///
+/// - 非 null メンバーが1つだけ → 畳む（nullable array/object を含む）
+/// - 非 null メンバーが複数かつ全て同じプリミティブ型 → 畳む
+/// - 非 null メンバーが複数の object/array → 畳まない（variant ごとに異なるため）
+///
+/// sub-schema キー（`items`, `format`, `pattern` 等）は最初の型メンバーから保持する。
+Map<String, Object?>? _collapseUniformAnyOf(
+  Map<String, Object?> prop,
+  String unionKey,
+  List<Object?> members,
+) {
+  if (members.isEmpty) {
+    return null;
+  }
+
+  String? commonType;
+  var hasNull = false;
+  final descriptions = <String>[];
+  final typedMembers = <Map<String, Object?>>[];
+
+  for (final m in members) {
+    if (m is! Map<String, Object?>) {
+      return null;
+    }
+    final type = m['type'] as String?;
+    if (type == null) {
+      return null;
+    }
+    if (type == 'null') {
+      hasNull = true;
+      continue;
+    }
+    typedMembers.add(m);
+    if (commonType == null) {
+      commonType = type;
+    } else if (commonType != type) {
+      return null;
+    }
+    final desc = m['description'] as String?;
+    if (desc != null) {
+      descriptions.add(desc);
+    }
+  }
+
+  if (commonType == null || typedMembers.isEmpty) {
+    return null;
+  }
+
+  // object/array が複数 variant ある場合は畳まない
+  const complexTypes = {'object', 'array'};
+  if (typedMembers.length > 1 && complexTypes.contains(commonType)) {
+    return null;
+  }
+
+  final result = Map<String, Object?>.of(prop);
+  result.remove(unionKey);
+
+  // 最初の型メンバーから sub-schema キーをコピー
+  final firstMember = typedMembers.first;
+  for (final subKey in [
+    'type', 'items', 'format', 'pattern', 'minimum', 'maximum',
+    'minItems', 'maxItems', 'minLength', 'maxLength',
+  ]) {
+    if (firstMember.containsKey(subKey)) {
+      result[subKey] = firstMember[subKey];
+    }
+  }
+
+  if (hasNull) {
+    result['nullable'] = true;
+  }
+
+  final existingDesc = prop['description'] as String?;
+  final memberDesc = descriptions.isNotEmpty ? descriptions.join(' | ') : null;
+  final combinedDesc = [
+    if (existingDesc != null) existingDesc,
+    if (memberDesc != null) memberDesc,
+  ].join('\n');
+  if (combinedDesc.isNotEmpty) {
+    result['description'] = combinedDesc;
+  }
+
+  return result;
+}
+
+/// `{"const": value, ...rest}` を `{"type": ..., "description": "const: ..."}` に
+/// 変換する。既存の `description` がある場合は末尾に追記する。
+Map<String, Object?>? _constToTyped(Map<String, Object?> schema) {
+  final constValue = schema['const'];
+  if (constValue == null) {
+    return null;
+  }
+
+  final String type;
+  final String constRepr;
+
+  switch (constValue) {
+    case String():
+      type = 'string';
+      constRepr = '"$constValue"';
+    case bool():
+      type = 'boolean';
+      constRepr = '$constValue';
+    case int():
+      type = 'integer';
+      constRepr = '$constValue';
+    case double():
+      type = 'number';
+      constRepr = '$constValue';
+    default:
+      return null;
+  }
+
+  final result = Map<String, Object?>.of(schema);
+  result.remove('const');
+  result['type'] = type;
+
+  final existing = schema['description'] as String?;
+  final constDesc = 'const: $constRepr';
+  result['description'] = existing != null ? '$existing\n$constDesc' : constDesc;
+
+  return result;
 }
 
 Future<void> _run(String exe, List<String> args, String cwd) async {

@@ -10,7 +10,6 @@ part 'earthquake_history_config_notifier.g.dart';
 
 const _defaultEarthquakeHistoryConfig = EarthquakeHistoryConfig(
   list: EarthquakeHistoryListConfig(),
-  detail: EarthquakeHistoryDetailConfig(),
 );
 
 @Riverpod(keepAlive: true)

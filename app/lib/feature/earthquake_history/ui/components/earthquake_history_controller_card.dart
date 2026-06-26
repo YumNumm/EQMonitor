@@ -1,19 +1,18 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class EarthquakeHistoryControllerCard extends StatelessWidget {
   const EarthquakeHistoryControllerCard({
     super.key,
-    this.onLayerButtonTap,
     this.onLocationButtonTap,
+    this.onDebugButtonTap,
   });
 
-  final void Function()? onLayerButtonTap;
   final void Function()? onLocationButtonTap;
+  final void Function()? onDebugButtonTap;
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +39,6 @@ class EarthquakeHistoryControllerCard extends StatelessWidget {
                     InkWell(
                       child: const Padding(
                         padding: EdgeInsets.all(8),
-                        child: Icon(Icons.layers_rounded),
-                      ),
-                      onTap: () async {
-                        await hapticFeedback();
-                        onLayerButtonTap?.call();
-                      },
-                    ),
-                    InkWell(
-                      child: const Padding(
-                        padding: EdgeInsets.all(8),
                         child: Icon(Icons.home_rounded),
                       ),
                       onTap: () async {
@@ -57,22 +46,17 @@ class EarthquakeHistoryControllerCard extends StatelessWidget {
                         onLocationButtonTap?.call();
                       },
                     ),
-                    InkWell(
-                      child: const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Icon(Icons.folder_copy_outlined),
+                    if (onDebugButtonTap != null)
+                      InkWell(
+                        child: const Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.bug_report_rounded),
+                        ),
+                        onTap: () async {
+                          await hapticFeedback();
+                          onDebugButtonTap?.call();
+                        },
                       ),
-                      onTap: () async {
-                        await hapticFeedback();
-                        if (!context.mounted) {
-                          return;
-                        }
-                        await showEarthquakeHistoryDetailConfigDialog(
-                          context,
-                          hasLpgmIntensity: false,
-                        );
-                      },
-                    ),
                   ]
                   .mapIndexed((index, child) => [if (index > 0) divider, child])
                   .flattened

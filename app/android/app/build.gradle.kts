@@ -90,4 +90,5 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics:19.4.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("com.google.android.material:material:1.12.0")
 }

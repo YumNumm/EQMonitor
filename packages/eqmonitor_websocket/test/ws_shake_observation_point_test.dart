@@ -113,52 +113,54 @@ void main() {
       expect(shake.points[0].intensityDiff, equals(0.3));
     });
 
-    test('points が含まれる shake_detected を RealtimeEventEnvelope として直接パースできること',
-        () {
-      final json = <String, dynamic>{
-        'type': 'shake_detected',
-        'eventId': 'shake-002',
-        'createdAt': '2025-01-15T12:00:00.000Z',
-        'level': 'Strong',
-        'changeReasons': <dynamic>[],
-        'isReplay': false,
-        'pointCount': 2,
-        'region': {
-          'topLeft': {'latitude': 36.0, 'longitude': 139.0},
-          'bottomRight': {'latitude': 35.0, 'longitude': 140.0},
-        },
-        'points': [
-          {
-            'code': 'KNG001',
-            'name': '横浜',
-            'region': '神奈川',
-            'type': 'K-NET',
-            'location': {'latitude': 35.5, 'longitude': 139.7},
-            'intensity': 3.0,
-            'intensityDiff': 0.5,
+    test(
+      'points が含まれる shake_detected を RealtimeEventEnvelope として直接パースできること',
+      () {
+        final json = <String, dynamic>{
+          'type': 'shake_detected',
+          'eventId': 'shake-002',
+          'createdAt': '2025-01-15T12:00:00.000Z',
+          'level': 'Strong',
+          'changeReasons': <dynamic>[],
+          'isReplay': false,
+          'pointCount': 2,
+          'region': {
+            'topLeft': {'latitude': 36.0, 'longitude': 139.0},
+            'bottomRight': {'latitude': 35.0, 'longitude': 140.0},
           },
-          {
-            'code': 'TKY001',
-            'name': '東京',
-            'region': '東京都',
-            'type': 'KiK-net',
-            'location': {'latitude': 35.7, 'longitude': 139.7},
-            'intensity': null,
-            'intensityDiff': 0.1,
-          },
-        ],
-      };
+          'points': [
+            {
+              'code': 'KNG001',
+              'name': '横浜',
+              'region': '神奈川',
+              'type': 'K-NET',
+              'location': {'latitude': 35.5, 'longitude': 139.7},
+              'intensity': 3.0,
+              'intensityDiff': 0.5,
+            },
+            {
+              'code': 'TKY001',
+              'name': '東京',
+              'region': '東京都',
+              'type': 'KiK-net',
+              'location': {'latitude': 35.7, 'longitude': 139.7},
+              'intensity': null,
+              'intensityDiff': 0.1,
+            },
+          ],
+        };
 
-      final result = RealtimeEventEnvelope.fromJson(json);
+        final result = RealtimeEventEnvelope.fromJson(json);
 
-      expect(result, isA<WsShakeDetectedRealtimeEvent>());
-      final shake = result as WsShakeDetectedRealtimeEvent;
-      expect(shake.points, hasLength(2));
-      expect(shake.points[0].code, equals('KNG001'));
-      expect(shake.points[0].intensity, equals(3.0));
-      expect(shake.points[1].code, equals('TKY001'));
-      expect(shake.points[1].intensity, isNull);
-    });
+        expect(result, isA<WsShakeDetectedRealtimeEvent>());
+        final shake = result as WsShakeDetectedRealtimeEvent;
+        expect(shake.points, hasLength(2));
+        expect(shake.points[0].code, equals('KNG001'));
+        expect(shake.points[0].intensity, equals(3.0));
+        expect(shake.points[1].code, equals('TKY001'));
+        expect(shake.points[1].intensity, isNull);
+      },
+    );
   });
 
   // ---------------------------------------------------------------------------

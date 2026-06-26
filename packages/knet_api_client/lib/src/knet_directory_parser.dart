@@ -52,10 +52,7 @@ class KnetDirectoryParser {
   ///
   /// 昇順ソート（古い順）で返す。
   static List<int> parseYears(String html) {
-    return parseEntries(html)
-        .map(int.tryParse)
-        .whereType<int>()
-        .toList()
+    return parseEntries(html).map(int.tryParse).whereType<int>().toList()
       ..sort();
   }
 
@@ -63,10 +60,7 @@ class KnetDirectoryParser {
   ///
   /// 昇順ソート（1月から）で返す。
   static List<int> parseMonths(String html) {
-    return parseEntries(html)
-        .map(int.tryParse)
-        .whereType<int>()
-        .toList()
+    return parseEntries(html).map(int.tryParse).whereType<int>().toList()
       ..sort();
   }
 

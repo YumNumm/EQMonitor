@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -146,26 +145,31 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                       ),
                       FilledButton.tonal(
                         onPressed: () async {
+                          final json = ref
+                              .read(intensityColorProvider.notifier)
+                              .exportAsJsonString();
                           final path = await FilePicker.saveFile(
                             dialogTitle: '震度配色JSONを保存',
                             fileName: 'intensity_color.json',
-                            type: FileType.custom,
+                            type: .custom,
                             allowedExtensions: const ['json'],
+<<<<<<< HEAD
                             bytes: utf8.encode(
                               ref
                                   .read(intensityColorProvider.notifier)
                                   .exportAsJsonString(),
                             ),
+=======
+                            bytes: utf8.encode(json),
+>>>>>>> d143fa6ec041f07b99e3e91934581b5d8843fa80
                           );
                           if (path == null) {
                             return;
                           }
-                          final json = ref
-                              .read(intensityColorProvider.notifier)
-                              .exportAsJsonString();
-                          await File(path).writeAsString(json);
                           messenger.showSnackBar(
-                            const SnackBar(content: Text('JSONを保存しました')),
+                            const SnackBar(
+                              content: Text('JSONを保存しました'),
+                            ),
                           );
                         },
                         child: const Text('ファイルへエクスポート'),
@@ -191,7 +195,7 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                       FilledButton.tonal(
                         onPressed: () async {
                           final result = await FilePicker.pickFiles(
-                            type: FileType.custom,
+                            type: .custom,
                             allowedExtensions: const ['json'],
                           );
                           final files = result?.files;
@@ -210,6 +214,7 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                           }
                           final text = await File(path).readAsString();
                           await importFromJsonText(text);
+=======
                         },
                         child: const Text('ファイルからインポート'),
                       ),

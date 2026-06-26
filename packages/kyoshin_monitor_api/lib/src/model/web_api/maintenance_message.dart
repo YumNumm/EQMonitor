@@ -25,8 +25,7 @@ abstract class MaintenanceMessage
 enum MaintenanceMessageType {
   non('0'),
   small('1'),
-  highLight('2')
-  ;
+  highLight('2');
 
   const MaintenanceMessageType(this.type);
   final String type;

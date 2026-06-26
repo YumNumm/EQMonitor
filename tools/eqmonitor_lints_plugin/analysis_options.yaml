@@ -1,0 +1,4 @@
+analyzer:
+  errors:
+    lines_longer_than_80_chars: ignore
+    deprecated_member_use: ignore

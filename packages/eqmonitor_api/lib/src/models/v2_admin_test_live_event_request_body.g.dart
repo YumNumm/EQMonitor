@@ -33,6 +33,6 @@ Map<String, dynamic> _$V2AdminTestLiveEventRequestBodyToJson(
 };
 
 const _$EventTypeEnumMap = {
-  EventType.eew: 'eew',
-  EventType.shakeDetection: 'shake_detection',
+  EventType.eew: 'EEW',
+  EventType.shakeDetection: 'SHAKE_DETECTION',
 };

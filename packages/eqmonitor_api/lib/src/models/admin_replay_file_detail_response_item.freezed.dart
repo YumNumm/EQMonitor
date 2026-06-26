@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AdminReplayFileDetailResponseItem {
 
- String get id; String get startTime; String get endTime; String get objectKey;@JsonKey(includeIfNull: true) num? get fileSizeBytes; String get createdAt;@JsonKey(includeIfNull: true) String? get downloadUrl; List<Triggers> get triggers;
+ String get id; String get startTime; String get endTime; String get objectKey;@JsonKey(includeIfNull: true) num? get fileSizeBytes; String get createdAt;@JsonKey(includeIfNull: true) String? get downloadUrl; List<ReplayFileTrigger> get triggers;
 /// Create a copy of AdminReplayFileDetailResponseItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $AdminReplayFileDetailResponseItemCopyWith<$Res>  {
   factory $AdminReplayFileDetailResponseItemCopyWith(AdminReplayFileDetailResponseItem value, $Res Function(AdminReplayFileDetailResponseItem) _then) = _$AdminReplayFileDetailResponseItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String startTime, String endTime, String objectKey,@JsonKey(includeIfNull: true) num? fileSizeBytes, String createdAt,@JsonKey(includeIfNull: true) String? downloadUrl, List<Triggers> triggers
+ String id, String startTime, String endTime, String objectKey,@JsonKey(includeIfNull: true) num? fileSizeBytes, String createdAt,@JsonKey(includeIfNull: true) String? downloadUrl, List<ReplayFileTrigger> triggers
 });
 
 
@@ -75,7 +75,7 @@ as String,fileSizeBytes: freezed == fileSizeBytes ? _self.fileSizeBytes : fileSi
 as num?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,downloadUrl: freezed == downloadUrl ? _self.downloadUrl : downloadUrl // ignore: cast_nullable_to_non_nullable
 as String?,triggers: null == triggers ? _self.triggers : triggers // ignore: cast_nullable_to_non_nullable
-as List<Triggers>,
+as List<ReplayFileTrigger>,
   ));
 }
 
@@ -160,7 +160,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String startTime,  String endTime,  String objectKey, @JsonKey(includeIfNull: true)  num? fileSizeBytes,  String createdAt, @JsonKey(includeIfNull: true)  String? downloadUrl,  List<Triggers> triggers)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String startTime,  String endTime,  String objectKey, @JsonKey(includeIfNull: true)  num? fileSizeBytes,  String createdAt, @JsonKey(includeIfNull: true)  String? downloadUrl,  List<ReplayFileTrigger> triggers)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AdminReplayFileDetailResponseItem() when $default != null:
 return $default(_that.id,_that.startTime,_that.endTime,_that.objectKey,_that.fileSizeBytes,_that.createdAt,_that.downloadUrl,_that.triggers);case _:
@@ -181,7 +181,7 @@ return $default(_that.id,_that.startTime,_that.endTime,_that.objectKey,_that.fil
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String startTime,  String endTime,  String objectKey, @JsonKey(includeIfNull: true)  num? fileSizeBytes,  String createdAt, @JsonKey(includeIfNull: true)  String? downloadUrl,  List<Triggers> triggers)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String startTime,  String endTime,  String objectKey, @JsonKey(includeIfNull: true)  num? fileSizeBytes,  String createdAt, @JsonKey(includeIfNull: true)  String? downloadUrl,  List<ReplayFileTrigger> triggers)  $default,) {final _that = this;
 switch (_that) {
 case _AdminReplayFileDetailResponseItem():
 return $default(_that.id,_that.startTime,_that.endTime,_that.objectKey,_that.fileSizeBytes,_that.createdAt,_that.downloadUrl,_that.triggers);case _:
@@ -201,7 +201,7 @@ return $default(_that.id,_that.startTime,_that.endTime,_that.objectKey,_that.fil
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String startTime,  String endTime,  String objectKey, @JsonKey(includeIfNull: true)  num? fileSizeBytes,  String createdAt, @JsonKey(includeIfNull: true)  String? downloadUrl,  List<Triggers> triggers)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String startTime,  String endTime,  String objectKey, @JsonKey(includeIfNull: true)  num? fileSizeBytes,  String createdAt, @JsonKey(includeIfNull: true)  String? downloadUrl,  List<ReplayFileTrigger> triggers)?  $default,) {final _that = this;
 switch (_that) {
 case _AdminReplayFileDetailResponseItem() when $default != null:
 return $default(_that.id,_that.startTime,_that.endTime,_that.objectKey,_that.fileSizeBytes,_that.createdAt,_that.downloadUrl,_that.triggers);case _:
@@ -216,7 +216,7 @@ return $default(_that.id,_that.startTime,_that.endTime,_that.objectKey,_that.fil
 @JsonSerializable()
 
 class _AdminReplayFileDetailResponseItem implements AdminReplayFileDetailResponseItem {
-  const _AdminReplayFileDetailResponseItem({required this.id, required this.startTime, required this.endTime, required this.objectKey, @JsonKey(includeIfNull: true) required this.fileSizeBytes, required this.createdAt, @JsonKey(includeIfNull: true) required this.downloadUrl, required final  List<Triggers> triggers}): _triggers = triggers;
+  const _AdminReplayFileDetailResponseItem({required this.id, required this.startTime, required this.endTime, required this.objectKey, @JsonKey(includeIfNull: true) required this.fileSizeBytes, required this.createdAt, @JsonKey(includeIfNull: true) required this.downloadUrl, required final  List<ReplayFileTrigger> triggers}): _triggers = triggers;
   factory _AdminReplayFileDetailResponseItem.fromJson(Map<String, dynamic> json) => _$AdminReplayFileDetailResponseItemFromJson(json);
 
 @override final  String id;
@@ -226,8 +226,8 @@ class _AdminReplayFileDetailResponseItem implements AdminReplayFileDetailRespons
 @override@JsonKey(includeIfNull: true) final  num? fileSizeBytes;
 @override final  String createdAt;
 @override@JsonKey(includeIfNull: true) final  String? downloadUrl;
- final  List<Triggers> _triggers;
-@override List<Triggers> get triggers {
+ final  List<ReplayFileTrigger> _triggers;
+@override List<ReplayFileTrigger> get triggers {
   if (_triggers is EqualUnmodifiableListView) return _triggers;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_triggers);
@@ -267,7 +267,7 @@ abstract mixin class _$AdminReplayFileDetailResponseItemCopyWith<$Res> implement
   factory _$AdminReplayFileDetailResponseItemCopyWith(_AdminReplayFileDetailResponseItem value, $Res Function(_AdminReplayFileDetailResponseItem) _then) = __$AdminReplayFileDetailResponseItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String startTime, String endTime, String objectKey,@JsonKey(includeIfNull: true) num? fileSizeBytes, String createdAt,@JsonKey(includeIfNull: true) String? downloadUrl, List<Triggers> triggers
+ String id, String startTime, String endTime, String objectKey,@JsonKey(includeIfNull: true) num? fileSizeBytes, String createdAt,@JsonKey(includeIfNull: true) String? downloadUrl, List<ReplayFileTrigger> triggers
 });
 
 
@@ -294,7 +294,7 @@ as String,fileSizeBytes: freezed == fileSizeBytes ? _self.fileSizeBytes : fileSi
 as num?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,downloadUrl: freezed == downloadUrl ? _self.downloadUrl : downloadUrl // ignore: cast_nullable_to_non_nullable
 as String?,triggers: null == triggers ? _self._triggers : triggers // ignore: cast_nullable_to_non_nullable
-as List<Triggers>,
+as List<ReplayFileTrigger>,
   ));
 }
 

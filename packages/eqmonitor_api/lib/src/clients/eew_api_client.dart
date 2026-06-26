@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -31,9 +31,9 @@ abstract class EewApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeGte] - 日付 (例: 2024-01-01).
   ///
-  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeLte] - 日付 (例: 2024-01-01).
   @GET(EewApiClientUrls.getV2Eew)
   Future<HttpResponse<EewListResponse>> getV2Eew({
     @Query('limit') String? limit,

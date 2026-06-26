@@ -12,8 +12,7 @@ enum JmaWeatherRelatedDisasterSubCategory {
   recordHeavyRainInfo(21, '記録的短時間大雨情報'),
   tornadoWarningInfo(22, '竜巻注意情報'),
   sedimentDisasterWarningInfo(23, '土砂災害警戒情報'),
-  other(31, 'その他の警報等情報要素')
-  ;
+  other(31, 'その他の警報等情報要素');
 
   const JmaWeatherRelatedDisasterSubCategory(this.code, this.nameJa);
 

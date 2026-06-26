@@ -3,12 +3,15 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/current_location_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_lpgm_intensity_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -51,83 +54,97 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
           ),
         ),
       ),
-      AsyncData(value: final earthquake) => () {
-        final theme = Theme.of(context);
-        final colorScheme = theme.colorScheme;
-
-        return Scaffold(
-          body: Stack(
-            children: [
-              EarthquakeHistoryDetailsMapView(
-                earthquake: earthquake,
-              ),
-              _Sheet(
-                item: earthquake,
-              ),
-              if (Navigator.canPop(context))
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                    ),
-                    child: IconButton.filledTonal(
-                      style: ButtonStyle(
-                        shape: WidgetStatePropertyAll(
-                          RoundedSuperellipseBorder(
-                            side: BorderSide(
-                              color: colorScheme.primary.withValues(alpha: 0.2),
-                            ),
-                            borderRadius: BorderRadius.circular(128),
-                          ),
-                        ),
-                      ),
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => context.pop(),
-                      color: colorScheme.primary,
-                      padding: const EdgeInsets.all(12),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        );
-      }(),
+      AsyncData(value: final earthquake) => _LoadedContent(
+        earthquake: earthquake,
+      ),
     };
   }
 }
 
-class _Sheet extends StatelessWidget {
-  const _Sheet({
-    required this.item,
-  });
+class _LoadedContent extends HookWidget {
+  const _LoadedContent({required this.earthquake});
 
-  final Earthquake item;
+  final Earthquake earthquake;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: BasicModalSheet(
-        hasAppBar: false,
-        child: SingleChildScrollView(
-          child: SafeArea(
-            child: Column(
-              children: [
-                EarthquakeHypocenterInformationCard(item: item),
-                CurrentLocationIntensityCard(item: item),
-                EarthquakeIntensityWidget(
-                  item: item,
+    final hasEstimated = earthquake.estimatedIntensityTileUrl != null;
+    final hasLpgm = earthquake.intensity?.maxLpgmIntensity != null;
+
+    final displayMode = useState(
+      hasEstimated
+          ? IntensityDisplayMode.estimated
+          : IntensityDisplayMode.jma,
+    );
+
+    final availableModes = [
+      IntensityDisplayMode.jma,
+      if (hasLpgm) IntensityDisplayMode.lpgm,
+      if (hasEstimated) IntensityDisplayMode.estimated,
+    ];
+
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          EarthquakeHistoryDetailsMapView(
+            earthquake: earthquake,
+            displayMode: displayMode.value,
+          ),
+          SafeArea(
+            bottom: false,
+            child: BasicModalSheet(
+              hasAppBar: false,
+              child: SingleChildScrollView(
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      EarthquakeHypocenterInformationCard(item: earthquake),
+                      EarthquakeLpgmIntensityCard(item: earthquake),
+                      CurrentLocationIntensityCard(item: earthquake),
+                      EarthquakeIntensityCard(
+                        item: earthquake,
+                        displayMode: displayMode.value,
+                        onDisplayModeChanged: (mode) =>
+                            displayMode.value = mode,
+                        availableModes: availableModes,
+                      ),
+                      if (earthquake.originTime != null &&
+                          DateTime.now().difference(earthquake.originTime!) >
+                              const Duration(hours: 24))
+                        const AdBanner(),
+                      _TelegramListButton(eventId: earthquake.eventId),
+                    ],
+                  ),
                 ),
-                // 発生から24時間以上経過した地震の詳細にのみ広告を表示する
-                if (item.originTime != null &&
-                    DateTime.now().difference(item.originTime!) >
-                        const Duration(hours: 24))
-                  const AdBanner(),
-                _TelegramListButton(eventId: item.eventId),
-              ],
+              ),
             ),
           ),
-        ),
+          if (Navigator.canPop(context))
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: IconButton.filledTonal(
+                  style: ButtonStyle(
+                    shape: WidgetStatePropertyAll(
+                      RoundedSuperellipseBorder(
+                        side: BorderSide(
+                          color: colorScheme.primary.withValues(alpha: 0.2),
+                        ),
+                        borderRadius: BorderRadius.circular(128),
+                      ),
+                    ),
+                  ),
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => context.pop(),
+                  color: colorScheme.primary,
+                  padding: const EdgeInsets.all(12),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

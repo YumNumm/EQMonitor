@@ -1,17 +1,17 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
 enum TestNotificationType {
-  @JsonValue('silent')
-  silent('silent'),
-  @JsonValue('normal')
-  normal('normal'),
-  @JsonValue('critical')
-  critical('critical');
+  @JsonValue('SILENT')
+  silent('SILENT'),
+  @JsonValue('NORMAL')
+  normal('NORMAL'),
+  @JsonValue('CRITICAL')
+  critical('CRITICAL');
 
   const TestNotificationType(this.json);
 

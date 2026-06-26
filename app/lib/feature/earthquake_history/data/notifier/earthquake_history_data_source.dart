@@ -150,6 +150,14 @@ class EarthquakeHistoryDataSource
           code: _parameter.regionCode!,
           limit: limit,
           cursor: cursor,
+          magnitudeGte: _parameter.magnitudeGte,
+          magnitudeLte: _parameter.magnitudeLte,
+          depthGte: _parameter.depthGte,
+          depthLte: _parameter.depthLte,
+          intensityGte:
+              _parameter.regionIntensityGte ?? _parameter.intensityGte,
+          intensityLte:
+              _parameter.regionIntensityLte ?? _parameter.intensityLte,
           statuses: _parameter.statuses?.cast<api.TelegramStatus>(),
           epicenterCodes: _epicenterCodes,
           earthquakeType: _apiEarthquakeType,
@@ -183,6 +191,14 @@ class EarthquakeHistoryDataSource
           code: _parameter.regionCode!,
           limit: limit,
           cursor: cursor,
+          magnitudeGte: _parameter.magnitudeGte,
+          magnitudeLte: _parameter.magnitudeLte,
+          depthGte: _parameter.depthGte,
+          depthLte: _parameter.depthLte,
+          intensityGte:
+              _parameter.regionIntensityGte ?? _parameter.intensityGte,
+          intensityLte:
+              _parameter.regionIntensityLte ?? _parameter.intensityLte,
           statuses: _parameter.statuses?.cast<api.TelegramStatus>(),
           epicenterCodes: _epicenterCodes,
           earthquakeType: _apiEarthquakeType,
@@ -222,12 +238,19 @@ class EarthquakeHistoryDataSource
         statuses: _parameter.statuses?.cast<api.TelegramStatus>(),
         epicenterCodes: _epicenterCodes,
         earthquakeType: _apiEarthquakeType,
+        datasource: _parameter.datasource,
+        telegramTypes: _parameter.telegramTypes
+            ?.cast<api.EarthquakeTelegramType>(),
         originTimeGte: _parameter.originTimeGte,
         originTimeLte: _parameter.originTimeLte,
         maxLpgmIntensityGte:
             _parameter.maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
         maxLpgmIntensityLte:
             _parameter.maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
+        latitudeGte: _parameter.latitudeGte,
+        latitudeLte: _parameter.latitudeLte,
+        longitudeGte: _parameter.longitudeGte,
+        longitudeLte: _parameter.longitudeLte,
         sortBy: _apiSortBy,
         sortOrder: _apiSortOrder,
       );

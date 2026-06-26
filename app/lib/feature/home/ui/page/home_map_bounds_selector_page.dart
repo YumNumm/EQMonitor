@@ -79,17 +79,20 @@ class _Body extends HookConsumerWidget {
           }
           final region = c.getVisibleRegion();
           final current = await ref.read(homeConfigurationProvider.future);
-          await ref
-              .read(homeConfigurationProvider.notifier)
-              .updateMap(
-                current.map.copyWith(
-                  defaultBounds: HomeMapDefaultBounds.custom,
-                  customBounds: LatLngBoundary.fromTwo(
-                    LatLng(region.longitudeWest, region.latitudeSouth),
-                    LatLng(region.longitudeEast, region.latitudeNorth),
+          await HomeConfigurationNotifier.saveMutation.run(
+            ref,
+            (tsx) async => tsx
+                .get(homeConfigurationProvider.notifier)
+                .updateMap(
+                  current.map.copyWith(
+                    defaultBounds: HomeMapDefaultBounds.custom,
+                    customBounds: LatLngBoundary.fromTwo(
+                      LatLng(region.longitudeWest, region.latitudeSouth),
+                      LatLng(region.longitudeEast, region.latitudeNorth),
+                    ),
                   ),
                 ),
-              );
+          );
           if (context.mounted) {
             Navigator.of(context).pop();
           }

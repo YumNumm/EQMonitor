@@ -1,141 +1,95 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'earthquake_history_map_layer_mode.freezed.dart';
-part 'earthquake_history_map_layer_mode.g.dart';
 
 enum EarthquakeHistoryMapLayerMode { none, region, city, station, auto }
-
-/// 地震データに含まれる地図レイヤー粒度ごとの表示可否。
-@freezed
-abstract class EarthquakeHistoryMapLayerAvailability
-    with _$EarthquakeHistoryMapLayerAvailability {
-  const factory EarthquakeHistoryMapLayerAvailability({
-    required bool region,
-    required bool city,
-    required bool station,
-  }) = _EarthquakeHistoryMapLayerAvailability;
-
-  factory EarthquakeHistoryMapLayerAvailability.fromJson(
-    Map<String, dynamic> json,
-  ) => _$EarthquakeHistoryMapLayerAvailabilityFromJson(json);
-}
-
-/// 自動表示で地域・市区町村を切り替えるズーム境界。
-@freezed
-abstract class EarthquakeHistoryMapLayerZoomThresholds
-    with _$EarthquakeHistoryMapLayerZoomThresholds {
-  const factory EarthquakeHistoryMapLayerZoomThresholds({
-    required double regionToCity,
-  }) = _EarthquakeHistoryMapLayerZoomThresholds;
-
-  factory EarthquakeHistoryMapLayerZoomThresholds.fromJson(
-    Map<String, dynamic> json,
-  ) => _$EarthquakeHistoryMapLayerZoomThresholdsFromJson(json);
-}
-
-const defaultEarthquakeHistoryMapLayerZoomThresholds =
-    EarthquakeHistoryMapLayerZoomThresholds(regionToCity: 8);
 
 class EarthquakeHistoryMapLayerModeResolver {
   const EarthquakeHistoryMapLayerModeResolver();
 
   EarthquakeHistoryMapLayerMode resolveFillLayerMode({
     required Earthquake earthquake,
-    required EarthquakeHistoryDetailConfig config,
+    required EarthquakeHistoryFillMode fillMode,
+    required bool showingLpgmIntensity,
   }) {
     final availability = resolveAvailability(
       earthquake: earthquake,
-      showingLpgmIntensity: config.showingLpgmIntensity,
+      showingLpgmIntensity: showingLpgmIntensity,
     );
-    return switch (config.fillMode) {
-      EarthquakeHistoryFillMode.none => EarthquakeHistoryMapLayerMode.none,
-      EarthquakeHistoryFillMode.auto
-          when availability.region && availability.city =>
-        EarthquakeHistoryMapLayerMode.auto,
-      EarthquakeHistoryFillMode.auto when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
-      EarthquakeHistoryFillMode.auto when availability.city =>
-        EarthquakeHistoryMapLayerMode.city,
-      EarthquakeHistoryFillMode.auto => EarthquakeHistoryMapLayerMode.none,
-      EarthquakeHistoryFillMode.region when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
-      EarthquakeHistoryFillMode.region => EarthquakeHistoryMapLayerMode.none,
-      EarthquakeHistoryFillMode.city when availability.city =>
-        EarthquakeHistoryMapLayerMode.city,
-      EarthquakeHistoryFillMode.city when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
-      EarthquakeHistoryFillMode.city => EarthquakeHistoryMapLayerMode.none,
+    return switch (fillMode) {
+      .none => .none,
+      .auto when availability.region && availability.city => .auto,
+      .auto when availability.region => .region,
+      .auto when availability.city => .city,
+      .auto => .none,
+      .region when availability.region => .region,
+      .region => .none,
+      .city when availability.city => .city,
+      .city when availability.region => .region,
+      .city => .none,
     };
   }
 
-  EarthquakeHistoryMapLayerAvailability resolveAvailability({
+  ({bool region, bool city, bool station}) resolveAvailability({
     required Earthquake earthquake,
     required bool showingLpgmIntensity,
   }) {
     final intensity = earthquake.intensity;
     if (intensity == null) {
-      return const EarthquakeHistoryMapLayerAvailability(
-        region: false,
-        city: false,
-        station: false,
-      );
+      return (region: false, city: false, station: false);
     }
 
     if (showingLpgmIntensity) {
-      return resolveLpgmAvailability(intensity);
+      return _resolveLpgmAvailability(intensity);
     }
-    return resolveJmaAvailability(intensity);
+    return _resolveJmaAvailability(intensity);
   }
 
   Object regionFillOpacity({
     required EarthquakeHistoryMapLayerMode mode,
-    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+    required double regionToCity,
     required double visibleOpacity,
   }) {
-    if (mode != EarthquakeHistoryMapLayerMode.auto) {
+    if (mode != .auto) {
       return visibleOpacity;
     }
     return [
       'step',
       ['zoom'],
       visibleOpacity,
-      zoomThresholds.regionToCity,
+      regionToCity,
       0.0,
     ];
   }
 
   Object cityFillOpacity({
     required EarthquakeHistoryMapLayerMode mode,
-    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+    required double regionToCity,
     required double visibleOpacity,
   }) {
-    if (mode != EarthquakeHistoryMapLayerMode.auto) {
+    if (mode != .auto) {
       return visibleOpacity;
     }
     return [
       'step',
       ['zoom'],
       0.0,
-      zoomThresholds.regionToCity,
+      regionToCity,
       visibleOpacity,
     ];
   }
 
   bool showsRegionFill(EarthquakeHistoryMapLayerMode mode) =>
-      mode == EarthquakeHistoryMapLayerMode.auto ||
-      mode == EarthquakeHistoryMapLayerMode.region;
+      mode == .auto || mode == .region;
 
   bool showsCityFill(EarthquakeHistoryMapLayerMode mode) =>
-      mode == EarthquakeHistoryMapLayerMode.auto ||
-      mode == EarthquakeHistoryMapLayerMode.city;
+      mode == .auto || mode == .city;
 
-  EarthquakeHistoryMapLayerAvailability resolveJmaAvailability(
+  ({bool region, bool city, bool station}) _resolveJmaAvailability(
     EarthquakeIntensity intensity,
   ) {
-    return EarthquakeHistoryMapLayerAvailability(
+    return (
       region: intensity.regions.values.any(
         (regions) => regions.any(
           (region) => region.maxIntensity != null,
@@ -158,10 +112,10 @@ class EarthquakeHistoryMapLayerModeResolver {
     );
   }
 
-  EarthquakeHistoryMapLayerAvailability resolveLpgmAvailability(
+  ({bool region, bool city, bool station}) _resolveLpgmAvailability(
     EarthquakeIntensity intensity,
   ) {
-    return EarthquakeHistoryMapLayerAvailability(
+    return (
       region: intensity.lpgmIntensityTree.values.any(
         (regions) => regions.any(
           (region) => region.maxLpgmIntensity != null,

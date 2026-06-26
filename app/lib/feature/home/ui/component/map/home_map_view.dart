@@ -12,8 +12,10 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_inte
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_warning_regions_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_label_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/modal/home_map_label_debug_modal.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/connection_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
@@ -153,6 +155,7 @@ class _MapContent extends ConsumerWidget {
                   eews: ref.watch(eewAliveTelegramProvider) ?? [],
                 ),
               ),
+              const HomeMapLabelLayer(),
               const SafeArea(
                 child: _MapHeader(),
               ),
@@ -206,6 +209,9 @@ class _MapHeader extends ConsumerWidget {
           const HomeMapLayerRoute().push<void>(context),
       onLocationButtonTap: () =>
           ref.read(homeMapCameraStateProvider.notifier).returnToHome(),
+      onLabelDebugButtonTap: isDebug
+          ? () => HomeMapLabelDebugModal.show(context: context)
+          : null,
       onDebugButtonTap: isDebug ? () => PlaybackModeModal.show(context) : null,
     );
 

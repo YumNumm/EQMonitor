@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
@@ -50,7 +51,7 @@ class TsunamiEarthquakeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hypo.value.name,
+                  hypo.name,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,

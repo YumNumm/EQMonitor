@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -13,14 +13,14 @@ part 'parameter_manifest_item.g.dart';
 abstract class ParameterManifestItem with _$ParameterManifestItem {
   const factory ParameterManifestItem({
     required ParameterType type,
+
+    /// const: 1
     @JsonKey(name: 'schema_version')
-    required dynamic schemaVersion,
+    required int schemaVersion,
     @JsonKey(name: 'source_version')
     required String sourceVersion,
     @JsonKey(includeIfNull: true,name: 'source_updated_at')
     required String? sourceUpdatedAt,
-    @JsonKey(name: 'generated_at')
-    required String generatedAt,
     @JsonKey(name: 'source_urls')
     required List<String> sourceUrls,
     required String sha256,

@@ -28,7 +28,6 @@ class BorderedContainer extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       elevation: elevation,
       color: accentColor ?? theme.colorScheme.surfaceContainer,
-      // border
       shape: RoundedSuperellipseBorder(
         side: BorderSide(
           color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),

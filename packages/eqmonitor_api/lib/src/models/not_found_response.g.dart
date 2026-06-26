@@ -11,7 +11,7 @@ part of 'not_found_response.dart';
 _NotFoundResponse _$NotFoundResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_NotFoundResponse', json, ($checkedConvert) {
       final val = _NotFoundResponse(
-        code: $checkedConvert('code', (v) => v),
+        code: $checkedConvert('code', (v) => v as String),
         message: $checkedConvert('message', (v) => v as String),
       );
       return val;

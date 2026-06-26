@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -25,6 +25,11 @@ import '../models/region_setting_response.dart';
 import '../models/shake_detection_setting_request.dart';
 import '../models/shake_detection_setting_response.dart';
 import '../models/shake_detection_sub_region_response.dart';
+import '../models/tsunami_region_setting_patch_request.dart';
+import '../models/tsunami_region_setting_request.dart';
+import '../models/tsunami_region_setting_response.dart';
+import '../models/tsunami_settings_request.dart';
+import '../models/tsunami_settings_response.dart';
 import '../models/v2_device_me_apns_kind_request_body.dart';
 import '../models/v2_device_me_fcm_request_body.dart';
 
@@ -61,7 +66,7 @@ abstract class DeviceApiClient {
   /// APNsトークンを更新
   @PATCH(DeviceApiClientUrls.patchV2DeviceMeApnsKind)
   Future<HttpResponse<void>> patchV2DeviceMeApnsKind({
-    @Path('kind') required dynamic kind,
+    @Path('kind') required String kind,
     @Body() required V2DeviceMeApnsKindRequestBody body,
   });
 
@@ -167,6 +172,45 @@ abstract class DeviceApiClient {
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsShakeDetectionSubRegions)
   Future<HttpResponse<List<ShakeDetectionSubRegionResponse>>> getV2DeviceMeSettingsShakeDetectionSubRegions();
 
+  /// 津波通知設定を取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsTsunami)
+  Future<HttpResponse<TsunamiSettingsResponse>> getV2DeviceMeSettingsTsunami();
+
+  /// 津波通知設定を更新
+  @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsTsunami)
+  Future<HttpResponse<TsunamiSettingsResponse>> patchV2DeviceMeSettingsTsunami({
+    @Body() required TsunamiSettingsRequest body,
+  });
+
+  /// 津波通知リージョン設定一覧を取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsTsunamiRegions)
+  Future<HttpResponse<List<TsunamiRegionSettingResponse>>> getV2DeviceMeSettingsTsunamiRegions();
+
+  /// 津波通知リージョン設定を新規作成（同一予報区コードが既存の場合は上書き）
+  @POST(DeviceApiClientUrls.postV2DeviceMeSettingsTsunamiRegions)
+  Future<HttpResponse<TsunamiRegionSettingResponse>> postV2DeviceMeSettingsTsunamiRegions({
+    @Body() required TsunamiRegionSettingRequest body,
+  });
+
+  /// 特定の津波リージョン設定を取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsTsunamiRegionsRegionId)
+  Future<HttpResponse<TsunamiRegionSettingResponse>> getV2DeviceMeSettingsTsunamiRegionsRegionId({
+    @Path('regionId') required String regionId,
+  });
+
+  /// 特定の津波リージョン設定を更新
+  @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsTsunamiRegionsRegionId)
+  Future<HttpResponse<TsunamiRegionSettingResponse>> patchV2DeviceMeSettingsTsunamiRegionsRegionId({
+    @Path('regionId') required String regionId,
+    @Body() required TsunamiRegionSettingPatchRequest body,
+  });
+
+  /// 特定の津波リージョン設定を削除
+  @DELETE(DeviceApiClientUrls.deleteV2DeviceMeSettingsTsunamiRegionsRegionId)
+  Future<HttpResponse<void>> deleteV2DeviceMeSettingsTsunamiRegionsRegionId({
+    @Path('regionId') required String regionId,
+  });
+
   /// Live Activity updateToken一覧を取得
   @GET(DeviceApiClientUrls.getV2DeviceMeLiveActivity)
   Future<HttpResponse<List<LiveActivityTokenResponse>>> getV2DeviceMeLiveActivity();
@@ -243,6 +287,20 @@ abstract class DeviceApiClientUrls {
 	static const putV2DeviceMeSettingsShakeDetection = "/v2/device/me/settings/shake-detection";
 	/// /v2/device/me/settings/shake-detection/sub-regions
 	static const getV2DeviceMeSettingsShakeDetectionSubRegions = "/v2/device/me/settings/shake-detection/sub-regions";
+	/// /v2/device/me/settings/tsunami
+	static const getV2DeviceMeSettingsTsunami = "/v2/device/me/settings/tsunami";
+	/// /v2/device/me/settings/tsunami
+	static const patchV2DeviceMeSettingsTsunami = "/v2/device/me/settings/tsunami";
+	/// /v2/device/me/settings/tsunami/regions
+	static const getV2DeviceMeSettingsTsunamiRegions = "/v2/device/me/settings/tsunami/regions";
+	/// /v2/device/me/settings/tsunami/regions
+	static const postV2DeviceMeSettingsTsunamiRegions = "/v2/device/me/settings/tsunami/regions";
+	/// /v2/device/me/settings/tsunami/regions/{regionId}
+	static const getV2DeviceMeSettingsTsunamiRegionsRegionId = "/v2/device/me/settings/tsunami/regions/{regionId}";
+	/// /v2/device/me/settings/tsunami/regions/{regionId}
+	static const patchV2DeviceMeSettingsTsunamiRegionsRegionId = "/v2/device/me/settings/tsunami/regions/{regionId}";
+	/// /v2/device/me/settings/tsunami/regions/{regionId}
+	static const deleteV2DeviceMeSettingsTsunamiRegionsRegionId = "/v2/device/me/settings/tsunami/regions/{regionId}";
 	/// /v2/device/me/live-activity
 	static const getV2DeviceMeLiveActivity = "/v2/device/me/live-activity";
 	/// /v2/device/me/live-activity/{liveActivityId}/token

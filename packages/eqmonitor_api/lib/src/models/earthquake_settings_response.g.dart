@@ -19,7 +19,7 @@ _EarthquakeSettingsResponse _$EarthquakeSettingsResponseFromJson(
       notificationTiers: $checkedConvert(
         'notification_tiers',
         (v) => (v as List<dynamic>)
-            .map((e) => NotificationTiers.fromJson(e as Map<String, dynamic>))
+            .map((e) => NotificationTier.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
       estimatedIntensityEnabled: $checkedConvert(

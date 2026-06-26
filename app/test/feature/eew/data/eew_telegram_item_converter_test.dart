@@ -95,7 +95,8 @@ void main() {
     test('hypocenter の code/name/magnitude/depth が引き渡ること', () {
       final apiEew = _makeApiEew(
         hypocenter: const api.EewHypocenter(
-          value: api.CodeName(code: '350', name: '岐阜県美濃中西部'),
+          code: '350',
+          name: '岐阜県美濃中西部',
           coordinates: api.Coordinate(latitude: 35.5, longitude: 137.5),
           magnitude: 6.5,
           depth: 10,
@@ -112,7 +113,8 @@ void main() {
     test('hypocenter の coordinates が設定済みのとき hasLatLng=true で値が引き渡る', () {
       final apiEew = _makeApiEew(
         hypocenter: const api.EewHypocenter(
-          value: api.CodeName(code: '350', name: '岐阜県美濃中西部'),
+          code: '350',
+          name: '岐阜県美濃中西部',
           coordinates: api.Coordinate(latitude: 35.5, longitude: 137.5),
           magnitude: 5,
           depth: 30,
@@ -130,7 +132,8 @@ void main() {
     test('hypocenter の magnitude/depth が null でも例外にならず null で引き渡る', () {
       final apiEew = _makeApiEew(
         hypocenter: const api.EewHypocenter(
-          value: api.CodeName(code: '350', name: '岐阜県美濃中西部'),
+          code: '350',
+          name: '岐阜県美濃中西部',
           coordinates: api.Coordinate(latitude: 35.5, longitude: 137.5),
           magnitude: null,
           depth: null,
@@ -167,7 +170,8 @@ void main() {
           forecastIntensity: const api.EewIntensity(
             regions: [
               api.EewIntensityItem(
-                value: api.CodeName(code: '900', name: '岩手県'),
+                code: '900',
+                name: '岩手県',
                 isPlum: false,
                 isWarning: true,
                 intensity: api.EewIntensityValue(
@@ -200,7 +204,8 @@ void main() {
           forecastIntensity: api.EewIntensity(
             regions: [
               api.EewIntensityItem(
-                value: const api.CodeName(code: '900', name: '岩手県'),
+                code: '900',
+                name: '岩手県',
                 isPlum: false,
                 isWarning: false,
                 intensity: const api.EewIntensityValue(
@@ -227,19 +232,22 @@ void main() {
         warning: const api.EewWarning(
           zones: [
             api.EewWarningZoneItem(
-              value: api.CodeName(code: '900', name: '岩手県'),
+              code: '900',
+              name: '岩手県',
               hadWarning: true,
             ),
           ],
           prefectures: [
             api.EewWarningZoneItem(
-              value: api.CodeName(code: '901', name: '宮城県'),
+              code: '901',
+              name: '宮城県',
               hadWarning: false,
             ),
           ],
           regions: [
             api.EewWarningZoneItem(
-              value: api.CodeName(code: '902', name: '東北地方'),
+              code: '902',
+              name: '東北地方',
               hadWarning: false,
             ),
           ],

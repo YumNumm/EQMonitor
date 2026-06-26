@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
@@ -94,7 +95,10 @@ class _DebugWidget extends ConsumerWidget {
             subtitle: const Text('完了フラグを消去してオンボーディングを再表示'),
             leading: const Icon(Icons.restart_alt),
             onTap: () async =>
-                ref.read(onboardingCompletedProvider.notifier).reset(),
+                OnboardingCompleted.resetMutation.run(
+                    ref,
+                    (tsx) async => tsx.get(onboardingCompletedProvider.notifier).reset(),
+                ),
           ),
           ListTile(
             title: const Text('ログ'),
@@ -125,6 +129,13 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   const DebugLiveActivityTestRoute().push<void>(context),
             ),
+          ListTile(
+            title: const Text('Telemetry Events'),
+            leading: const Icon(Icons.analytics_outlined),
+            subtitle: const Text('ローカルテレメトリーイベントの閲覧'),
+            onTap: () async =>
+                const DebugTelemetryRoute().push<void>(context),
+          ),
           ListTile(
             title: const Text('WebSocket'),
             leading: const Icon(Icons.cable),
@@ -161,6 +172,16 @@ class _DebugWidget extends ConsumerWidget {
             leading: const Icon(Icons.history_edu_outlined),
             onTap: () async =>
                 const DebugEarthquakeHistoryCardRoute().push(context),
+          ),
+          ListTile(
+            title: const Text('地震履歴 レイヤーパラメータ'),
+            subtitle: Text(
+              'マップレイヤーのズーム閾値・透明度・サイズを調整',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            leading: const Icon(Icons.layers_outlined),
+            onTap: () async =>
+                EarthquakeHistoryDebugModal.show(context: context),
           ),
           ListTile(
             title: const Text('地震履歴 ListTile'),
@@ -457,7 +478,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
                   dense: true,
                   title: Text(item.type.pathSegment),
                   subtitle: Text(
-                    'ver: ${item.sourceVersion}  generated: ${item.generatedAt}\n'
+                    'ver: ${item.sourceVersion}  updated: ${item.sourceUpdatedAt}\n'
                     'sha256: ${item.sha256.substring(0, 8)}…',
                     style: const TextStyle(
                       fontFamily: FontFamily.googleSansCode,

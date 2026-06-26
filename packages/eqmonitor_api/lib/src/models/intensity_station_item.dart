@@ -1,10 +1,10 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'pre_periods.dart';
+import 'lpgm_pre_period.dart';
 
 part 'intensity_station_item.freezed.dart';
 part 'intensity_station_item.g.dart';
@@ -20,8 +20,8 @@ abstract class IntensityStationItem with _$IntensityStationItem {
     num? sva,
 
     /// 1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル
-    @JsonKey(includeIfNull: false)
-    List<PrePeriods>? prePeriods,
+    @JsonKey(includeIfNull: false,name: 'pre_periods')
+    List<LpgmPrePeriod>? prePeriods,
   }) = _IntensityStationItem;
   
   factory IntensityStationItem.fromJson(Map<String, Object?> json) => _$IntensityStationItemFromJson(json);

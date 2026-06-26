@@ -6,8 +6,7 @@ enum JmaFloodWarningLevel {
   floodWarning(2, '氾濫警戒情報'),
   floodDanger(3, '氾濫危険情報'),
   floodOccurred(4, '氾濫発生情報'),
-  other(15, 'その他の警戒レベル')
-  ;
+  other(15, 'その他の警戒レベル');
 
   const JmaFloodWarningLevel(this.code, this.nameJa);
 

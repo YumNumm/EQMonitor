@@ -48,8 +48,7 @@ enum JmaPrefecture {
   oita(44, '大分県'),
   miyazaki(45, '宮崎県'),
   kagoshima(46, '鹿児島県'),
-  okinawa(47, '沖縄県')
-  ;
+  okinawa(47, '沖縄県');
 
   const JmaPrefecture(this.code, this.name);
 

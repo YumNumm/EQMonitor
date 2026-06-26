@@ -131,8 +131,7 @@ enum RealtimeDataType {
 
   /// 階級データ(周期7秒台)
   /// Lpgm系列でのみ利用可
-  abrsp7s('階級データ(周期7秒台)', 'abrsp7s', isLpgm: true)
-  ;
+  abrsp7s('階級データ(周期7秒台)', 'abrsp7s', isLpgm: true);
 
   const RealtimeDataType(
     this.displayName,
@@ -155,8 +154,7 @@ enum RealtimeLayer {
   surface('地上', 's'),
 
   /// 地下
-  underground('地下', 'b')
-  ;
+  underground('地下', 'b');
 
   const RealtimeLayer(this.displayName, this.urlString);
 
@@ -169,8 +167,7 @@ enum RealtimeLayer {
 
 enum BaseMapTheme {
   white('白', 'w'),
-  gray('グレー', 'b')
-  ;
+  gray('グレー', 'b');
 
   const BaseMapTheme(this.displayName, this.urlString);
 

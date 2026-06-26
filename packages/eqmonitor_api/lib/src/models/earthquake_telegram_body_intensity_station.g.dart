@@ -25,11 +25,14 @@ _$EarthquakeTelegramBodyIntensityStationFromJson(Map<String, dynamic> json) =>
           'lpgmIntensity',
           (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
         ),
-        sva: $checkedConvert('sva', (v) => v),
+        sva: $checkedConvert('sva', (v) => v as num?),
         prePeriods: $checkedConvert(
           'prePeriods',
           (v) => (v as List<dynamic>?)
-              ?.map((e) => PrePeriods2.fromJson(e as Map<String, dynamic>))
+              ?.map(
+                (e) =>
+                    TelegramBodyPrePeriod.fromJson(e as Map<String, dynamic>),
+              )
               .toList(),
         ),
         datasource: $checkedConvert(

@@ -17,7 +17,7 @@ _AdminDispatchSummaryListResponse _$AdminDispatchSummaryListResponseFromJson(
     items: $checkedConvert(
       'items',
       (v) => (v as List<dynamic>)
-          .map((e) => Items.fromJson(e as Map<String, dynamic>))
+          .map((e) => DispatchSummaryItem.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
   );

@@ -177,7 +177,7 @@ checksum = "sha256:ff880b6f1d5f38053de34bfd73991932529b936b8b1b7541368dda371b16f
 url = "https://github.com/firebase/firebase-tools/releases/download/v15.19.0/firebase-tools-win.exe"
 
 [[tools.flutter]]
-version = "3.44.2-stable"
+version = "3.44.3-stable"
 backend = "asdf:flutter"
 
 [[tools.gcloud]]
@@ -412,6 +412,25 @@ url = "https://github.com/jdx/hk/releases/download/v1.46.0/hk-x86_64-pc-windows-
 version = "17.0.2"
 backend = "core:java"
 
+[tools.java.options]
+shorthand_vendor = "openjdk"
+
+[tools.java."platforms.linux-arm64"]
+checksum = "sha256:13bfd976acf8803f862e82c7113fb0e9311ca5458b1decaef8a09ffd91119fa4"
+url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-aarch64_bin.tar.gz"
+
+[tools.java."platforms.linux-x64"]
+checksum = "sha256:0022753d0cceecacdd3a795dd4cea2bd7ffdf9dc06e22ffd1be98411742fbb44"
+url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz"
+
+[tools.java."platforms.macos-arm64"]
+checksum = "sha256:602d7de72526368bb3f80d95c4427696ea639d2e0cc40455f53ff0bbb18c27c8"
+url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"
+
+[tools.java."platforms.macos-x64"]
+checksum = "sha256:b85c4aaf7b141825ad3a0ea34b965e45c15d5963677e9b27235aa05f65c6df06"
+url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-x64_bin.tar.gz"
+
 [[tools.node]]
 version = "24.16.0"
 backend = "core:node"
@@ -602,6 +621,30 @@ checksum = "sha256:84ce90e38bc0b1164173eb853a0fbffc7edcb050cb0d5c8ce4ca609f5c808
 url = "https://github.com/pnpm/pnpm/releases/download/v11.4.0/pnpm-win32-x64.zip"
 provenance = "github-attestations"
 
+[[tools.python]]
+version = "3.14.3"
+backend = "core:python"
+
+[tools.python."platforms.linux-arm64"]
+checksum = "sha256:53700338695e402a1a1fe22be4a41fbdacc70e22bb308a48eca8ed67cb7992be"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260324/cpython-3.14.3+20260324-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"
+provenance = "github-attestations"
+
+[tools.python."platforms.linux-x64"]
+checksum = "sha256:d7a9f970914bb4c88756fe3bdcc186d4feb90e9500e54f1db47dae4dc9687e39"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260324/cpython-3.14.3+20260324-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
+provenance = "github-attestations"
+
+[tools.python."platforms.macos-arm64"]
+checksum = "sha256:c43aecde4a663aebff99b9b83da0efec506479f1c3f98331442f33d2c43501f9"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260324/cpython-3.14.3+20260324-aarch64-apple-darwin-install_only_stripped.tar.gz"
+provenance = "github-attestations"
+
+[tools.python."platforms.macos-x64"]
+checksum = "sha256:9ab41dbc2f100a2a45d1833b9c11165f51051c558b5213eda9a9731d5948a0c0"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260324/cpython-3.14.3+20260324-x86_64-apple-darwin-install_only_stripped.tar.gz"
+provenance = "github-attestations"
+
 [[tools.shellcheck]]
 version = "0.11.0"
 backend = "aqua:koalaman/shellcheck"
@@ -659,6 +702,9 @@ checksum = "blake3:7c85377fa6d9bdbeec3f6724522835c59d31483906d5bee41ec41807eff0a
 [[tools.swiftformat]]
 version = "0.61.1"
 backend = "github:nicklockwood/SwiftFormat"
+
+[tools.swiftformat.options]
+no_app = "true"
 
 [[tools.terraform]]
 version = "1.15.5"

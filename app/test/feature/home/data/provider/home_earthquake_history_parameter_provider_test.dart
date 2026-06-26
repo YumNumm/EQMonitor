@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -88,9 +90,24 @@ void main() {
         ),
       );
 
-      final result = await container.read(
-        homeEarthquakeHistoryParameterProvider.future,
+      // With the synchronous locationStream approach the provider re-runs once
+      // the stream emits its first position.  We wait for the latest resolved
+      // value to become non-null instead of just taking the first resolution.
+      EarthquakeHistoryParameter? result;
+      final completer = Completer<EarthquakeHistoryParameter?>();
+      final subscription = container.listen(
+        homeEarthquakeHistoryParameterProvider,
+        (_, next) {
+          if (next case AsyncData(:final value) when value != null) {
+            if (!completer.isCompleted) {
+              completer.complete(value);
+            }
+          }
+        },
+        fireImmediately: true,
       );
+      result = await completer.future;
+      subscription.close();
 
       expect(result, isNotNull);
       expect(result!.regionSearchType, RegionSearchType.city);

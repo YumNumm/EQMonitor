@@ -1,1 +1,7 @@
 include: package:eqmonitor_lints/analysis_options.yaml
+
+plugins:
+  eqmonitor_lints_plugin:
+    path: ../../tools/eqmonitor_lints_plugin
+    diagnostics:
+      avoid_top_level_functions: true

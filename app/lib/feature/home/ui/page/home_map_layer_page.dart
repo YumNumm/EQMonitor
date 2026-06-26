@@ -551,9 +551,12 @@ class _EewFillModeTile extends ConsumerWidget {
       ],
       selected: {mode},
       onSelectionChanged: (next) async {
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateEew(cfg.eew.copyWith(fillMode: next.first));
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateEew(cfg.eew.copyWith(fillMode: next.first)),
+        );
       },
     );
   }
@@ -573,9 +576,12 @@ class _EewPsWaveTile extends ConsumerWidget {
       subtitle: cfg.eew.showPSWaveCircle ? '地図上に表示します。' : '地図上に表示しません。',
       value: cfg.eew.showPSWaveCircle,
       onChanged: (next) async {
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateEew(cfg.eew.copyWith(showPSWaveCircle: next));
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateEew(cfg.eew.copyWith(showPSWaveCircle: next)),
+        );
       },
     );
   }
@@ -607,9 +613,12 @@ class _EewAnimationTile extends ConsumerWidget {
       ],
       selected: {rate},
       onSelectionChanged: (next) async {
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateEew(cfg.eew.copyWith(animationRate: next.first));
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateEew(cfg.eew.copyWith(animationRate: next.first)),
+        );
       },
     );
   }
@@ -629,9 +638,12 @@ class _EewAutoZoomTile extends ConsumerWidget {
       subtitle: cfg.eew.autoZoom ? '発生時に自動で注視します。' : '現在のズームを維持します。',
       value: cfg.eew.autoZoom,
       onChanged: (next) async {
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateEew(cfg.eew.copyWith(autoZoom: next));
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateEew(cfg.eew.copyWith(autoZoom: next)),
+        );
       },
     );
   }
@@ -697,9 +709,12 @@ class _ShowLocationTile extends ConsumerWidget {
             return;
           }
         }
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateCommon(cfg.common.copyWith(showLocation: next));
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateCommon(cfg.common.copyWith(showLocation: next)),
+        );
       },
     );
   }
@@ -960,13 +975,16 @@ class _KyoshinMinShindoTile extends ConsumerWidget {
               AppSwitch(
                 value: isEnabled,
                 onChanged: (next) async {
-                  await ref
-                      .read(homeConfigurationProvider.notifier)
-                      .updateKyoshinMonitor(
-                        homeConfig.kyoshinMonitor.copyWith(
-                          minRealtimeShindo: next ? -1.0 : null,
+                  await HomeConfigurationNotifier.saveMutation.run(
+                    ref,
+                    (tsx) async => tsx
+                        .get(homeConfigurationProvider.notifier)
+                        .updateKyoshinMonitor(
+                          homeConfig.kyoshinMonitor.copyWith(
+                            minRealtimeShindo: next ? -1.0 : null,
+                          ),
                         ),
-                      );
+                  );
                 },
               ),
             ],
@@ -980,13 +998,16 @@ class _KyoshinMinShindoTile extends ConsumerWidget {
               divisions: 20,
               label: min.toStringAsFixed(1),
               onChanged: (next) async {
-                await ref
-                    .read(homeConfigurationProvider.notifier)
-                    .updateKyoshinMonitor(
-                      homeConfig.kyoshinMonitor.copyWith(
-                        minRealtimeShindo: next,
+                await HomeConfigurationNotifier.saveMutation.run(
+                  ref,
+                  (tsx) async => tsx
+                      .get(homeConfigurationProvider.notifier)
+                      .updateKyoshinMonitor(
+                        homeConfig.kyoshinMonitor.copyWith(
+                          minRealtimeShindo: next,
+                        ),
                       ),
-                    );
+                );
               },
             ),
             Text(
@@ -1031,11 +1052,14 @@ class _KyoshinMarkerSizeTile extends ConsumerWidget {
       ],
       selected: {size},
       onSelectionChanged: (next) async {
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateKyoshinMonitor(
-              homeConfig.kyoshinMonitor.copyWith(markerSize: next.first),
-            );
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateKyoshinMonitor(
+                homeConfig.kyoshinMonitor.copyWith(markerSize: next.first),
+              ),
+        );
       },
     );
   }
@@ -1055,9 +1079,12 @@ class _MapLockBearingTile extends ConsumerWidget {
       subtitle: '地図の回転を無効にします。',
       value: cfg.map.lockBearing,
       onChanged: (next) async {
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateMap(cfg.map.copyWith(lockBearing: next));
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateMap(cfg.map.copyWith(lockBearing: next)),
+        );
       },
     );
   }
@@ -1111,11 +1138,14 @@ class _MapMaxZoomTile extends ConsumerWidget {
               AppSwitch(
                 value: isEnabled,
                 onChanged: (next) async {
-                  await ref
-                      .read(homeConfigurationProvider.notifier)
-                      .updateMap(
-                        cfg.map.copyWith(maxZoom: next ? 12.0 : null),
-                      );
+                  await HomeConfigurationNotifier.saveMutation.run(
+                    ref,
+                    (tsx) async => tsx
+                        .get(homeConfigurationProvider.notifier)
+                        .updateMap(
+                          cfg.map.copyWith(maxZoom: next ? 12.0 : null),
+                        ),
+                  );
                 },
               ),
             ],
@@ -1129,9 +1159,12 @@ class _MapMaxZoomTile extends ConsumerWidget {
               divisions: 14,
               label: maxZoom.toStringAsFixed(0),
               onChanged: (next) async {
-                await ref
-                    .read(homeConfigurationProvider.notifier)
-                    .updateMap(cfg.map.copyWith(maxZoom: next));
+                await HomeConfigurationNotifier.saveMutation.run(
+                  ref,
+                  (tsx) async => tsx
+                      .get(homeConfigurationProvider.notifier)
+                      .updateMap(cfg.map.copyWith(maxZoom: next)),
+                );
               },
             ),
             Text(
@@ -1175,9 +1208,12 @@ class _MapDefaultBoundsTile extends ConsumerWidget {
       ],
       selected: {bounds},
       onSelectionChanged: (next) async {
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateMap(cfg.map.copyWith(defaultBounds: next.first));
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateMap(cfg.map.copyWith(defaultBounds: next.first)),
+        );
       },
     );
   }
@@ -1218,9 +1254,12 @@ class _ShakeDetectionShowTile extends ConsumerWidget {
       subtitle: cfg.shakeDetection.show ? '検知イベントを枠で表示します。' : '揺れ検知を表示しません。',
       value: cfg.shakeDetection.show,
       onChanged: (next) async {
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateShakeDetection(cfg.shakeDetection.copyWith(show: next));
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateShakeDetection(cfg.shakeDetection.copyWith(show: next)),
+        );
       },
     );
   }
@@ -1252,11 +1291,14 @@ class _ShakeDetectionDisplayModeTile extends ConsumerWidget {
       ],
       selected: {mode},
       onSelectionChanged: (next) async {
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateShakeDetection(
-              cfg.shakeDetection.copyWith(displayMode: next.first),
-            );
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateShakeDetection(
+                cfg.shakeDetection.copyWith(displayMode: next.first),
+              ),
+        );
       },
     );
   }
@@ -1292,11 +1334,14 @@ class _ShakeDetectionAnimationModeTile extends ConsumerWidget {
       ],
       selected: {mode},
       onSelectionChanged: (next) async {
-        await ref
-            .read(homeConfigurationProvider.notifier)
-            .updateShakeDetection(
-              cfg.shakeDetection.copyWith(animationMode: next.first),
-            );
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateShakeDetection(
+                cfg.shakeDetection.copyWith(animationMode: next.first),
+              ),
+        );
       },
     );
   }

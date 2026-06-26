@@ -407,6 +407,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'color-schema',
           factory: $ColorSchemeConfigRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'estimated-intensity-color-schema',
+          factory: $EstimatedIntensityColorConfigRoute._fromState,
+        ),
       ],
     ),
     GoRouteData.$route(
@@ -525,8 +529,18 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugIntensityIconRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'telemetry',
+          factory: $DebugTelemetryRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'tsunami-details',
           factory: $DebugTsunamiDetailsRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'timeline/:tsunamiId',
+              factory: $DebugTsunamiTimelineRoute._fromState,
+            ),
+          ],
         ),
         GoRouteData.$route(
           path: 'nied',
@@ -628,6 +642,29 @@ mixin $ColorSchemeConfigRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/display/color-schema');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $EstimatedIntensityColorConfigRoute on GoRouteData {
+  static EstimatedIntensityColorConfigRoute _fromState(GoRouterState state) =>
+      const EstimatedIntensityColorConfigRoute();
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/display/estimated-intensity-color-schema',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1324,6 +1361,27 @@ mixin $DebugIntensityIconRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugTelemetryRoute on GoRouteData {
+  static DebugTelemetryRoute _fromState(GoRouterState state) =>
+      const DebugTelemetryRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/telemetry');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $DebugTsunamiDetailsRoute on GoRouteData {
   static DebugTsunamiDetailsRoute _fromState(GoRouterState state) =>
       const DebugTsunamiDetailsRoute();
@@ -1331,6 +1389,31 @@ mixin $DebugTsunamiDetailsRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/tsunami-details');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugTsunamiTimelineRoute on GoRouteData {
+  static DebugTsunamiTimelineRoute _fromState(GoRouterState state) =>
+      DebugTsunamiTimelineRoute(tsunamiId: state.pathParameters['tsunamiId']!);
+
+  DebugTsunamiTimelineRoute get _self => this as DebugTsunamiTimelineRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/debug/tsunami-details/timeline/${Uri.encodeComponent(_self.tsunamiId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1717,4 +1800,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'c5a60a0d87ce3a7099b964685b68b39070833dbf';
+String _$goRouterHash() => r'7fc3f4fa6d8fc76fae1d6c3a8aeec6ff27d2bfbf';

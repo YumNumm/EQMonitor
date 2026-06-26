@@ -78,6 +78,32 @@ _EarthquakeHistoryParameter _$EarthquakeHistoryParameterFromJson(
         'max_lpgm_intensity_lte',
         (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
       ),
+      datasource: $checkedConvert(
+        'datasource',
+        (v) => $enumDecodeNullable(_$EarthquakeDatasourceEnumMap, v),
+      ),
+      telegramTypes: $checkedConvert(
+        'telegram_types',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
+            .toList(),
+      ),
+      latitudeGte: $checkedConvert(
+        'latitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      latitudeLte: $checkedConvert(
+        'latitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      longitudeGte: $checkedConvert(
+        'longitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      longitudeLte: $checkedConvert(
+        'longitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
       sortBy: $checkedConvert(
         'sort_by',
         (v) => $enumDecodeNullable(_$EarthquakeSortByEnumMap, v),
@@ -108,6 +134,11 @@ _EarthquakeHistoryParameter _$EarthquakeHistoryParameterFromJson(
     'originTimeLte': 'origin_time_lte',
     'maxLpgmIntensityGte': 'max_lpgm_intensity_gte',
     'maxLpgmIntensityLte': 'max_lpgm_intensity_lte',
+    'telegramTypes': 'telegram_types',
+    'latitudeGte': 'latitude_gte',
+    'latitudeLte': 'latitude_lte',
+    'longitudeGte': 'longitude_gte',
+    'longitudeLte': 'longitude_lte',
     'sortBy': 'sort_by',
     'sortOrder': 'sort_order',
   },
@@ -137,6 +168,12 @@ Map<String, dynamic> _$EarthquakeHistoryParameterToJson(
       _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityGte],
   'max_lpgm_intensity_lte':
       _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityLte],
+  'datasource': instance.datasource,
+  'telegram_types': instance.telegramTypes,
+  'latitude_gte': instance.latitudeGte,
+  'latitude_lte': instance.latitudeLte,
+  'longitude_gte': instance.longitudeGte,
+  'longitude_lte': instance.longitudeLte,
   'sort_by': _$EarthquakeSortByEnumMap[instance.sortBy],
   'sort_order': _$SortOrderEnumMap[instance.sortOrder],
 };
@@ -180,6 +217,22 @@ const _$JmaLpgmIntensityEnumMap = {
   JmaLpgmIntensity.two: 'two',
   JmaLpgmIntensity.three: 'three',
   JmaLpgmIntensity.four: 'four',
+};
+
+const _$EarthquakeDatasourceEnumMap = {
+  EarthquakeDatasource.jmaIntensityDatabase: 'JMA_INTENSITY_DATABASE',
+  EarthquakeDatasource.jmaDisasterInformationXml:
+      'JMA_DISASTER_INFORMATION_XML',
+};
+
+const _$EarthquakeTelegramTypeEnumMap = {
+  EarthquakeTelegramType.vxse51: 'VXSE51',
+  EarthquakeTelegramType.vxse52: 'VXSE52',
+  EarthquakeTelegramType.vxse53: 'VXSE53',
+  EarthquakeTelegramType.vxse61: 'VXSE61',
+  EarthquakeTelegramType.vxse62: 'VXSE62',
+  EarthquakeTelegramType.vxse45Forecast: 'VXSE45_FORECAST',
+  EarthquakeTelegramType.vxse45Warning: 'VXSE45_WARNING',
 };
 
 const _$EarthquakeSortByEnumMap = {

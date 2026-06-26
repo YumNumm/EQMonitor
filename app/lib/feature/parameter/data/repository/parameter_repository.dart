@@ -87,7 +87,27 @@ final class ParameterRepository {
   Future<bool> refresh() async {
     final manifestResponse = await _apiClient.parameters
         .getV2ParametersManifest();
-    final manifestJson = jsonEncode(manifestResponse.data.toJson());
+    // Convert the API manifest (UPPER_CASE type values) to the app's local
+    // manifest format (snake_case type values) so that loadLocalOrNull() can
+    // parse the stored JSON with the app's ParameterManifest model.
+    final appManifest = ParameterManifest(
+      parameters: [
+        for (final item in manifestResponse.data.parameters)
+          ParameterManifestItem(
+            type: ParameterType.values.firstWhere(
+              (t) => t.toApiParameterType == item.type,
+            ),
+            schemaVersion: (item.schemaVersion as num).toInt(),
+            sourceVersion: item.sourceVersion,
+            sourceUpdatedAt: item.sourceUpdatedAt,
+            sourceUrls: item.sourceUrls,
+            sha256: item.sha256,
+            sizeBytes: item.sizeBytes.toInt(),
+            url: item.url,
+          ),
+      ],
+    );
+    final manifestJson = jsonEncode(appManifest.toJson());
     final parameterJsonByType = <ParameterType, String>{};
 
     for (final type in ParameterType.values) {

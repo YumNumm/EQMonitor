@@ -21,7 +21,7 @@ _TsunamiStateEarthquake _$TsunamiStateEarthquakeFromJson(
       ),
       hypocenter: $checkedConvert(
         'hypocenter',
-        (v) => TsunamiStateHypocenter.fromJson(v as Map<String, dynamic>),
+        (v) => Hypocenter.fromJson(v as Map<String, dynamic>),
       ),
       arrivalTime: $checkedConvert(
         'arrival_time',

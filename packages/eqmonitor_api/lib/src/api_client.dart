@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:dio/dio.dart';
 
@@ -9,6 +9,7 @@ import 'clients/start_api_client.dart';
 import 'clients/admin_api_client.dart';
 import 'clients/device_api_client.dart';
 import 'clients/notification_api_client.dart';
+import 'clients/telemetry_api_client.dart';
 import 'clients/earthquake_api_client.dart';
 import 'clients/eew_api_client.dart';
 import 'clients/feed_api_client.dart';
@@ -40,6 +41,7 @@ class ApiClient {
   AdminApiClient? _admin;
   DeviceApiClient? _device;
   NotificationApiClient? _notification;
+  TelemetryApiClient? _telemetry;
   EarthquakeApiClient? _earthquake;
   EewApiClient? _eew;
   FeedApiClient? _feed;
@@ -60,6 +62,8 @@ class ApiClient {
   DeviceApiClient get device => _device ??= DeviceApiClient(_dio, baseUrl: _baseUrl);
 
   NotificationApiClient get notification => _notification ??= NotificationApiClient(_dio, baseUrl: _baseUrl);
+
+  TelemetryApiClient get telemetry => _telemetry ??= TelemetryApiClient(_dio, baseUrl: _baseUrl);
 
   EarthquakeApiClient get earthquake => _earthquake ??= EarthquakeApiClient(_dio, baseUrl: _baseUrl);
 

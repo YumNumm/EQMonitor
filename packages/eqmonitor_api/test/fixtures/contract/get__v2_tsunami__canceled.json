@@ -10,8 +10,8 @@
       "updated_at": "2025-12-15T12:15:00.000Z",
       "earthquakes": [],
       "latest_telegrams": [],
-      "forecast_regions": [],
-      "offshore_observations": []
+      "regions": [],
+      "offshore_stations": []
     }
   ]
 }

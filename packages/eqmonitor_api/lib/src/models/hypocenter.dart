@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -17,12 +17,15 @@ part 'hypocenter.g.dart';
 @Freezed()
 abstract class Hypocenter with _$Hypocenter {
   const factory Hypocenter({
-    required CodeName value,
-    required Coordinate coordinates,
+    /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
+    required String code,
+    required String name,
     required Magnitude magnitude,
     required Depth depth,
     @JsonKey(includeIfNull: false)
     CodeName? detailed,
+    @JsonKey(includeIfNull: false)
+    Coordinate? coordinates,
     @JsonKey(includeIfNull: false)
     HypocenterAuxiliary? auxiliary,
   }) = _Hypocenter;

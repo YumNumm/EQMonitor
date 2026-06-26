@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiTelegramWithState {
 
- TelegramType get type; LatestTelegram get telegram; TsunamiState get state;
+ LatestTelegram get telegram; TsunamiState get state;
 /// Create a copy of TsunamiTelegramWithState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TsunamiTelegramWithStateCopyWith<TsunamiTelegramWithState> get copyWith => _$Ts
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiTelegramWithState&&(identical(other.type, type) || other.type == type)&&(identical(other.telegram, telegram) || other.telegram == telegram)&&(identical(other.state, state) || other.state == state));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiTelegramWithState&&(identical(other.telegram, telegram) || other.telegram == telegram)&&(identical(other.state, state) || other.state == state));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,telegram,state);
+int get hashCode => Object.hash(runtimeType,telegram,state);
 
 @override
 String toString() {
-  return 'TsunamiTelegramWithState(type: $type, telegram: $telegram, state: $state)';
+  return 'TsunamiTelegramWithState(telegram: $telegram, state: $state)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TsunamiTelegramWithStateCopyWith<$Res>  {
   factory $TsunamiTelegramWithStateCopyWith(TsunamiTelegramWithState value, $Res Function(TsunamiTelegramWithState) _then) = _$TsunamiTelegramWithStateCopyWithImpl;
 @useResult
 $Res call({
- TelegramType type, LatestTelegram telegram, TsunamiState state
+ LatestTelegram telegram, TsunamiState state
 });
 
 
@@ -65,10 +65,9 @@ class _$TsunamiTelegramWithStateCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiTelegramWithState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? telegram = null,Object? state = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? telegram = null,Object? state = null,}) {
   return _then(_self.copyWith(
-type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as TelegramType,telegram: null == telegram ? _self.telegram : telegram // ignore: cast_nullable_to_non_nullable
+telegram: null == telegram ? _self.telegram : telegram // ignore: cast_nullable_to_non_nullable
 as LatestTelegram,state: null == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as TsunamiState,
   ));
@@ -173,10 +172,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TelegramType type,  LatestTelegram telegram,  TsunamiState state)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( LatestTelegram telegram,  TsunamiState state)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramWithState() when $default != null:
-return $default(_that.type,_that.telegram,_that.state);case _:
+return $default(_that.telegram,_that.state);case _:
   return orElse();
 
 }
@@ -194,10 +193,10 @@ return $default(_that.type,_that.telegram,_that.state);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TelegramType type,  LatestTelegram telegram,  TsunamiState state)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( LatestTelegram telegram,  TsunamiState state)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramWithState():
-return $default(_that.type,_that.telegram,_that.state);case _:
+return $default(_that.telegram,_that.state);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -214,10 +213,10 @@ return $default(_that.type,_that.telegram,_that.state);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TelegramType type,  LatestTelegram telegram,  TsunamiState state)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( LatestTelegram telegram,  TsunamiState state)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramWithState() when $default != null:
-return $default(_that.type,_that.telegram,_that.state);case _:
+return $default(_that.telegram,_that.state);case _:
   return null;
 
 }
@@ -229,10 +228,9 @@ return $default(_that.type,_that.telegram,_that.state);case _:
 @JsonSerializable()
 
 class _TsunamiTelegramWithState implements TsunamiTelegramWithState {
-  const _TsunamiTelegramWithState({required this.type, required this.telegram, required this.state});
+  const _TsunamiTelegramWithState({required this.telegram, required this.state});
   factory _TsunamiTelegramWithState.fromJson(Map<String, dynamic> json) => _$TsunamiTelegramWithStateFromJson(json);
 
-@override final  TelegramType type;
 @override final  LatestTelegram telegram;
 @override final  TsunamiState state;
 
@@ -249,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiTelegramWithState&&(identical(other.type, type) || other.type == type)&&(identical(other.telegram, telegram) || other.telegram == telegram)&&(identical(other.state, state) || other.state == state));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiTelegramWithState&&(identical(other.telegram, telegram) || other.telegram == telegram)&&(identical(other.state, state) || other.state == state));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,telegram,state);
+int get hashCode => Object.hash(runtimeType,telegram,state);
 
 @override
 String toString() {
-  return 'TsunamiTelegramWithState(type: $type, telegram: $telegram, state: $state)';
+  return 'TsunamiTelegramWithState(telegram: $telegram, state: $state)';
 }
 
 
@@ -269,7 +267,7 @@ abstract mixin class _$TsunamiTelegramWithStateCopyWith<$Res> implements $Tsunam
   factory _$TsunamiTelegramWithStateCopyWith(_TsunamiTelegramWithState value, $Res Function(_TsunamiTelegramWithState) _then) = __$TsunamiTelegramWithStateCopyWithImpl;
 @override @useResult
 $Res call({
- TelegramType type, LatestTelegram telegram, TsunamiState state
+ LatestTelegram telegram, TsunamiState state
 });
 
 
@@ -286,10 +284,9 @@ class __$TsunamiTelegramWithStateCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiTelegramWithState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? telegram = null,Object? state = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? telegram = null,Object? state = null,}) {
   return _then(_TsunamiTelegramWithState(
-type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as TelegramType,telegram: null == telegram ? _self.telegram : telegram // ignore: cast_nullable_to_non_nullable
+telegram: null == telegram ? _self.telegram : telegram // ignore: cast_nullable_to_non_nullable
 as LatestTelegram,state: null == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as TsunamiState,
   ));

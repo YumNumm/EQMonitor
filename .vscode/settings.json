@@ -24,4 +24,5 @@
 		"./.vscode/*.json": "jsonc"
 	},
 	"editor.formatOnSave": true,
+	"dotnet.defaultSolution": "disable",
 }

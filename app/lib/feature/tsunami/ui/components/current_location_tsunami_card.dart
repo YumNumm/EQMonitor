@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/component/decoration/warning_stripe_decoration.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
@@ -53,12 +54,10 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final region = tsunami.forecastRegions
-        .cast<MergedForecastRegion?>()
-        .firstWhere(
-          (r) => r?.code == regionCode,
-          orElse: () => null,
-        );
+    final region = tsunami.regions.cast<TsunamiRegion?>().firstWhere(
+      (r) => r?.code == regionCode,
+      orElse: () => null,
+    );
     if (region == null || region.kind == TsunamiWarningKind.none) {
       return const SizedBox.shrink();
     }
@@ -69,11 +68,13 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
     final headerBg = TsunamiWarningColor.headerColor(region.kind);
     final distanceKm = nearest.distanceToCoastlineKm;
 
-    final observedStations =
-        region.observation?.stations
-            .where((s) => !(s.firstHeight.isMissing ?? false))
-            .toList() ??
-        [];
+    final observedStations = region.stations
+        .where(
+          (s) =>
+              s.observation != null &&
+              !((s.observation!.firstHeight.isMissing as bool?) ?? false),
+        )
+        .toList();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),

@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
@@ -16,20 +17,22 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-class EarthquakeHistoryFillLayer extends HookWidget {
+class EarthquakeHistoryFillLayer extends HookConsumerWidget {
   const EarthquakeHistoryFillLayer({
     required this.earthquake,
-    required this.config,
-    this.zoomThresholds = defaultEarthquakeHistoryMapLayerZoomThresholds,
+    required this.parameter,
+    this.fillMode = EarthquakeHistoryFillMode.auto,
+    this.showingLpgmIntensity = false,
     super.key,
   });
 
   final Earthquake earthquake;
-  final EarthquakeHistoryDetailConfig config;
-  final EarthquakeHistoryMapLayerZoomThresholds zoomThresholds;
+  final EarthquakeHistoryMapLayerParameter parameter;
+  final EarthquakeHistoryFillMode fillMode;
+  final bool showingLpgmIntensity;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final intensity = earthquake.intensity;
     if (intensity == null) {
       return const SizedBox.shrink();
@@ -40,40 +43,14 @@ class EarthquakeHistoryFillLayer extends HookWidget {
     );
     final mode = modeResolver.resolveFillLayerMode(
       earthquake: earthquake,
-      config: config,
+      fillMode: fillMode,
+      showingLpgmIntensity: showingLpgmIntensity,
     );
     if (mode == EarthquakeHistoryMapLayerMode.none ||
         mode == EarthquakeHistoryMapLayerMode.station) {
       return const SizedBox.shrink();
     }
 
-    return _ResolvedEarthquakeHistoryFillLayer(
-      intensity: intensity,
-      mode: mode,
-      showingLpgmIntensity: config.showingLpgmIntensity,
-      zoomThresholds: zoomThresholds,
-      modeResolver: modeResolver,
-    );
-  }
-}
-
-class _ResolvedEarthquakeHistoryFillLayer extends HookConsumerWidget {
-  const _ResolvedEarthquakeHistoryFillLayer({
-    required this.intensity,
-    required this.mode,
-    required this.showingLpgmIntensity,
-    required this.zoomThresholds,
-    required this.modeResolver,
-  });
-
-  final EarthquakeIntensity intensity;
-  final EarthquakeHistoryMapLayerMode mode;
-  final bool showingLpgmIntensity;
-  final EarthquakeHistoryMapLayerZoomThresholds zoomThresholds;
-  final EarthquakeHistoryMapLayerModeResolver modeResolver;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
     final fillLayerBuilder = useMemoized(
@@ -106,18 +83,15 @@ class _ResolvedEarthquakeHistoryFillLayer extends HookConsumerWidget {
               colorModel: colorModel,
               mode: mode,
               showingLpgmIntensity: showingLpgmIntensity,
-              zoomThresholds: zoomThresholds,
+              parameter: parameter,
             );
             for (final layer in layers) {
               if (disposed) {
                 return;
               }
-              final belowLayerId = layer.id.contains('-city-')
-                  ? BaseLayer.areaInformationCityQuakeLine.name
-                  : BaseLayer.areaForecastLocalELine.name;
               await styleController.addLayer(
                 layer,
-                belowLayerId: belowLayerId,
+                belowLayerId: BaseLayer.areaForecastLocalELine.name,
               );
               addedLayerIds.add(layer.id);
             }
@@ -137,7 +111,7 @@ class _ResolvedEarthquakeHistoryFillLayer extends HookConsumerWidget {
         colorModel,
         mode,
         showingLpgmIntensity,
-        zoomThresholds,
+        parameter,
         fillLayerBuilder,
       ],
     );
@@ -148,9 +122,6 @@ class _ResolvedEarthquakeHistoryFillLayer extends HookConsumerWidget {
 
 const _regionSourceLayerId = 'areaForecastLocalE';
 const _citySourceLayerId = 'areaInformationCityQuake';
-const _regionFillOpacity = 0.6;
-const _regionLineOpacity = 0.8;
-const _cityFillOpacity = 0.6;
 
 class EarthquakeHistoryFillLayerBuilder {
   const EarthquakeHistoryFillLayerBuilder({required this.modeResolver});
@@ -162,7 +133,7 @@ class EarthquakeHistoryFillLayerBuilder {
     required IntensityColorModel colorModel,
     required EarthquakeHistoryMapLayerMode mode,
     required bool showingLpgmIntensity,
-    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+    required EarthquakeHistoryMapLayerParameter parameter,
   }) {
     if (mode == EarthquakeHistoryMapLayerMode.none ||
         mode == EarthquakeHistoryMapLayerMode.station) {
@@ -173,13 +144,13 @@ class EarthquakeHistoryFillLayerBuilder {
             intensity: intensity,
             colorModel: colorModel,
             mode: mode,
-            zoomThresholds: zoomThresholds,
+            parameter: parameter,
           )
         : buildJmaLayers(
             intensity: intensity,
             colorModel: colorModel,
             mode: mode,
-            zoomThresholds: zoomThresholds,
+            parameter: parameter,
           );
   }
 
@@ -187,7 +158,7 @@ class EarthquakeHistoryFillLayerBuilder {
     required EarthquakeIntensity intensity,
     required IntensityColorModel colorModel,
     required EarthquakeHistoryMapLayerMode mode,
-    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+    required EarthquakeHistoryMapLayerParameter parameter,
   }) {
     final layers = <StyleLayer>[];
     final levels = sortedJmaLevels(intensity);
@@ -207,7 +178,7 @@ class EarthquakeHistoryFillLayerBuilder {
             codes: codes,
             color: color,
             mode: mode,
-            zoomThresholds: zoomThresholds,
+            parameter: parameter,
           ),
         );
       }
@@ -229,7 +200,7 @@ class EarthquakeHistoryFillLayerBuilder {
             codes: codes,
             color: color,
             mode: mode,
-            zoomThresholds: zoomThresholds,
+            parameter: parameter,
           ),
         );
       }
@@ -241,7 +212,7 @@ class EarthquakeHistoryFillLayerBuilder {
     required EarthquakeIntensity intensity,
     required IntensityColorModel colorModel,
     required EarthquakeHistoryMapLayerMode mode,
-    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+    required EarthquakeHistoryMapLayerParameter parameter,
   }) {
     final layers = <StyleLayer>[];
     final levels = sortedLpgmLevels(intensity);
@@ -261,7 +232,7 @@ class EarthquakeHistoryFillLayerBuilder {
             codes: codes,
             color: color,
             mode: mode,
-            zoomThresholds: zoomThresholds,
+            parameter: parameter,
           ),
         );
       }
@@ -283,7 +254,7 @@ class EarthquakeHistoryFillLayerBuilder {
             codes: codes,
             color: color,
             mode: mode,
-            zoomThresholds: zoomThresholds,
+            parameter: parameter,
           ),
         );
       }
@@ -296,7 +267,7 @@ class EarthquakeHistoryFillLayerBuilder {
     required List<String> codes,
     required String color,
     required EarthquakeHistoryMapLayerMode mode,
-    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+    required EarthquakeHistoryMapLayerParameter parameter,
   }) {
     final fillId = '$idPrefix-region-fill';
     final lineId = '$idPrefix-region-line';
@@ -311,8 +282,8 @@ class EarthquakeHistoryFillLayerBuilder {
           'fill-color': color,
           'fill-opacity': modeResolver.regionFillOpacity(
             mode: mode,
-            zoomThresholds: zoomThresholds,
-            visibleOpacity: _regionFillOpacity,
+            regionToCity: parameter.regionToCity,
+            visibleOpacity: parameter.regionFillOpacity,
           ),
         },
       ),
@@ -326,8 +297,8 @@ class EarthquakeHistoryFillLayerBuilder {
           'line-width': 0.5,
           'line-opacity': modeResolver.regionFillOpacity(
             mode: mode,
-            zoomThresholds: zoomThresholds,
-            visibleOpacity: _regionLineOpacity,
+            regionToCity: parameter.regionToCity,
+            visibleOpacity: parameter.regionLineOpacity,
           ),
         },
       ),
@@ -339,7 +310,7 @@ class EarthquakeHistoryFillLayerBuilder {
     required List<String> codes,
     required String color,
     required EarthquakeHistoryMapLayerMode mode,
-    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+    required EarthquakeHistoryMapLayerParameter parameter,
   }) {
     return FillStyleLayer(
       id: '$idPrefix-city-fill',
@@ -350,21 +321,19 @@ class EarthquakeHistoryFillLayerBuilder {
         'fill-color': color,
         'fill-opacity': modeResolver.cityFillOpacity(
           mode: mode,
-          zoomThresholds: zoomThresholds,
-          visibleOpacity: _cityFillOpacity,
+          regionToCity: parameter.regionToCity,
+          visibleOpacity: parameter.cityFillOpacity,
         ),
       },
     );
   }
 
-  // areaForecastLocalE は `code` フィールドでフィルター
   List<Object> regionCodeFilter(List<String> codes) => [
     'in',
     ['get', 'code'],
     ['literal', codes],
   ];
 
-  // areaInformationCityQuake は `regioncode` フィールドでフィルター
   List<Object> cityCodeFilter(List<String> codes) => [
     'in',
     ['get', 'regioncode'],

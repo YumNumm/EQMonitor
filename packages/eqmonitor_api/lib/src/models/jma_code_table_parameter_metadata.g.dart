@@ -15,14 +15,16 @@ _JmaCodeTableParameterMetadata _$JmaCodeTableParameterMetadataFromJson(
   json,
   ($checkedConvert) {
     final val = _JmaCodeTableParameterMetadata(
-      type: $checkedConvert('type', (v) => v),
-      schemaVersion: $checkedConvert('schema_version', (v) => v),
+      type: $checkedConvert('type', (v) => v as String),
+      schemaVersion: $checkedConvert(
+        'schema_version',
+        (v) => (v as num).toInt(),
+      ),
       sourceVersion: $checkedConvert('source_version', (v) => v as String),
       sourceUpdatedAt: $checkedConvert(
         'source_updated_at',
         (v) => v as String?,
       ),
-      generatedAt: $checkedConvert('generated_at', (v) => v as String),
       sourceUrls: $checkedConvert(
         'source_urls',
         (v) => (v as List<dynamic>).map((e) => e as String).toList(),
@@ -35,7 +37,6 @@ _JmaCodeTableParameterMetadata _$JmaCodeTableParameterMetadataFromJson(
     'schemaVersion': 'schema_version',
     'sourceVersion': 'source_version',
     'sourceUpdatedAt': 'source_updated_at',
-    'generatedAt': 'generated_at',
     'sourceUrls': 'source_urls',
   },
 );
@@ -47,7 +48,6 @@ Map<String, dynamic> _$JmaCodeTableParameterMetadataToJson(
   'schema_version': instance.schemaVersion,
   'source_version': instance.sourceVersion,
   'source_updated_at': instance.sourceUpdatedAt,
-  'generated_at': instance.generatedAt,
   'source_urls': instance.sourceUrls,
   'sha256': instance.sha256,
 };

@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_eqmonitor_api_in_ui
 // ignore_for_file: avoid_classes_with_only_static_members
 
 import 'dart:ui';
@@ -18,7 +19,10 @@ abstract final class TsunamiWarningColor {
       Color(0xFFFFCC00),
       Color(0xFF996600),
     ],
-    TsunamiWarningKind.forecast || TsunamiWarningKind.none => const [],
+    TsunamiWarningKind.warningCancel ||
+    TsunamiWarningKind.advisoryCancel ||
+    TsunamiWarningKind.forecast ||
+    TsunamiWarningKind.none => const [],
   };
 
   static Color headerColor(TsunamiWarningKind kind) => switch (kind) {
@@ -26,6 +30,8 @@ abstract final class TsunamiWarningColor {
     TsunamiWarningKind.warning => const Color(0xFFB31A1A),
     TsunamiWarningKind.advisory => const Color(0xFFCC9900),
     TsunamiWarningKind.forecast => const Color(0xFF1E5AA0),
+    TsunamiWarningKind.warningCancel ||
+    TsunamiWarningKind.advisoryCancel ||
     TsunamiWarningKind.none => const Color(0xFF757575),
   };
 
@@ -42,6 +48,8 @@ abstract final class TsunamiWarningColor {
     TsunamiWarningKind.forecast => const Color(
       0xFF1E5AA0,
     ).withValues(alpha: 0.3),
+    TsunamiWarningKind.warningCancel ||
+    TsunamiWarningKind.advisoryCancel ||
     TsunamiWarningKind.none => const Color(0x00000000),
   };
 
@@ -50,13 +58,17 @@ abstract final class TsunamiWarningColor {
     TsunamiWarningKind.warning => const Color(0xFFFF0000),
     TsunamiWarningKind.advisory => const Color(0xFFFFCC00),
     TsunamiWarningKind.forecast => const Color(0xFF1E5AA0),
+    TsunamiWarningKind.warningCancel ||
+    TsunamiWarningKind.advisoryCancel ||
     TsunamiWarningKind.none => const Color(0x00000000),
   };
 
   static String displayName(TsunamiWarningKind kind) => switch (kind) {
     TsunamiWarningKind.majorWarning => '大津波警報',
     TsunamiWarningKind.warning => '津波警報',
+    TsunamiWarningKind.warningCancel => '警報解除',
     TsunamiWarningKind.advisory => '津波注意報',
+    TsunamiWarningKind.advisoryCancel => '注意報解除',
     TsunamiWarningKind.forecast => '津波予報',
     TsunamiWarningKind.none => '解除',
   };
@@ -64,7 +76,7 @@ abstract final class TsunamiWarningColor {
   /// Returns the highest [TsunamiWarningKind] across all regions,
   /// falling back to [TsunamiWarningKind.none] for an empty list.
   static TsunamiWarningKind resolveMaxKind(
-    List<MergedForecastRegion> regions,
+    List<TsunamiRegion> regions,
   ) {
     if (regions.isEmpty) {
       return TsunamiWarningKind.none;
@@ -74,6 +86,8 @@ abstract final class TsunamiWarningColor {
       TsunamiWarningKind.warning,
       TsunamiWarningKind.advisory,
       TsunamiWarningKind.forecast,
+      TsunamiWarningKind.warningCancel,
+      TsunamiWarningKind.advisoryCancel,
       TsunamiWarningKind.none,
     ];
     var max = TsunamiWarningKind.none;

@@ -1,17 +1,17 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
 enum LiveActivityEvent {
-  @JsonValue('start')
-  start('start'),
-  @JsonValue('update')
-  update('update'),
-  @JsonValue('end')
-  end('end');
+  @JsonValue('START')
+  start('START'),
+  @JsonValue('UPDATE')
+  update('UPDATE'),
+  @JsonValue('END')
+  end('END');
 
   const LiveActivityEvent(this.json);
 

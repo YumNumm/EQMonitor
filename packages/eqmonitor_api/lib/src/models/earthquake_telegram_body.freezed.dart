@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeTelegramBody {
 
- dynamic get type;@JsonKey(includeIfNull: false) EarthquakeTelegramBodyQuake? get earthquake;@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? get intensityRegions;@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? get intensityPrefectures;@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? get intensityCities;@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityStation>? get intensityStations;
+/// const: "EARTHQUAKE"
+ String get type;@JsonKey(includeIfNull: false) EarthquakeTelegramBodyQuake? get earthquake;@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? get intensityRegions;@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? get intensityPrefectures;@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? get intensityCities;@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityStation>? get intensityStations;
 /// Create a copy of EarthquakeTelegramBody
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +29,12 @@ $EarthquakeTelegramBodyCopyWith<EarthquakeTelegramBody> get copyWith => _$Earthq
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeTelegramBody&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&const DeepCollectionEquality().equals(other.intensityRegions, intensityRegions)&&const DeepCollectionEquality().equals(other.intensityPrefectures, intensityPrefectures)&&const DeepCollectionEquality().equals(other.intensityCities, intensityCities)&&const DeepCollectionEquality().equals(other.intensityStations, intensityStations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeTelegramBody&&(identical(other.type, type) || other.type == type)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&const DeepCollectionEquality().equals(other.intensityRegions, intensityRegions)&&const DeepCollectionEquality().equals(other.intensityPrefectures, intensityPrefectures)&&const DeepCollectionEquality().equals(other.intensityCities, intensityCities)&&const DeepCollectionEquality().equals(other.intensityStations, intensityStations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),earthquake,const DeepCollectionEquality().hash(intensityRegions),const DeepCollectionEquality().hash(intensityPrefectures),const DeepCollectionEquality().hash(intensityCities),const DeepCollectionEquality().hash(intensityStations));
+int get hashCode => Object.hash(runtimeType,type,earthquake,const DeepCollectionEquality().hash(intensityRegions),const DeepCollectionEquality().hash(intensityPrefectures),const DeepCollectionEquality().hash(intensityCities),const DeepCollectionEquality().hash(intensityStations));
 
 @override
 String toString() {
@@ -48,7 +49,7 @@ abstract mixin class $EarthquakeTelegramBodyCopyWith<$Res>  {
   factory $EarthquakeTelegramBodyCopyWith(EarthquakeTelegramBody value, $Res Function(EarthquakeTelegramBody) _then) = _$EarthquakeTelegramBodyCopyWithImpl;
 @useResult
 $Res call({
- dynamic type,@JsonKey(includeIfNull: false) EarthquakeTelegramBodyQuake? earthquake,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityCities,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityStation>? intensityStations
+ String type,@JsonKey(includeIfNull: false) EarthquakeTelegramBodyQuake? earthquake,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityCities,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityStation>? intensityStations
 });
 
 
@@ -65,10 +66,10 @@ class _$EarthquakeTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeTelegramBody
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = freezed,Object? earthquake = freezed,Object? intensityRegions = freezed,Object? intensityPrefectures = freezed,Object? intensityCities = freezed,Object? intensityStations = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? earthquake = freezed,Object? intensityRegions = freezed,Object? intensityPrefectures = freezed,Object? intensityCities = freezed,Object? intensityStations = freezed,}) {
   return _then(_self.copyWith(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,earthquake: freezed == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,earthquake: freezed == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakeTelegramBodyQuake?,intensityRegions: freezed == intensityRegions ? _self.intensityRegions : intensityRegions // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeTelegramBodyIntensityRegion>?,intensityPrefectures: freezed == intensityPrefectures ? _self.intensityPrefectures : intensityPrefectures // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeTelegramBodyIntensityRegion>?,intensityCities: freezed == intensityCities ? _self.intensityCities : intensityCities // ignore: cast_nullable_to_non_nullable
@@ -170,7 +171,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeTelegramBody() when $default != null:
 return $default(_that.type,_that.earthquake,_that.intensityRegions,_that.intensityPrefectures,_that.intensityCities,_that.intensityStations);case _:
@@ -191,7 +192,7 @@ return $default(_that.type,_that.earthquake,_that.intensityRegions,_that.intensi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeTelegramBody():
 return $default(_that.type,_that.earthquake,_that.intensityRegions,_that.intensityPrefectures,_that.intensityCities,_that.intensityStations);case _:
@@ -211,7 +212,7 @@ return $default(_that.type,_that.earthquake,_that.intensityRegions,_that.intensi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeTelegramBody() when $default != null:
 return $default(_that.type,_that.earthquake,_that.intensityRegions,_that.intensityPrefectures,_that.intensityCities,_that.intensityStations);case _:
@@ -229,7 +230,8 @@ class _EarthquakeTelegramBody implements EarthquakeTelegramBody {
   const _EarthquakeTelegramBody({required this.type, @JsonKey(includeIfNull: false) this.earthquake, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityStation>? intensityStations}): _intensityRegions = intensityRegions,_intensityPrefectures = intensityPrefectures,_intensityCities = intensityCities,_intensityStations = intensityStations;
   factory _EarthquakeTelegramBody.fromJson(Map<String, dynamic> json) => _$EarthquakeTelegramBodyFromJson(json);
 
-@override final  dynamic type;
+/// const: "EARTHQUAKE"
+@override final  String type;
 @override@JsonKey(includeIfNull: false) final  EarthquakeTelegramBodyQuake? earthquake;
  final  List<EarthquakeTelegramBodyIntensityRegion>? _intensityRegions;
 @override@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? get intensityRegions {
@@ -281,12 +283,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeTelegramBody&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&const DeepCollectionEquality().equals(other._intensityRegions, _intensityRegions)&&const DeepCollectionEquality().equals(other._intensityPrefectures, _intensityPrefectures)&&const DeepCollectionEquality().equals(other._intensityCities, _intensityCities)&&const DeepCollectionEquality().equals(other._intensityStations, _intensityStations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeTelegramBody&&(identical(other.type, type) || other.type == type)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&const DeepCollectionEquality().equals(other._intensityRegions, _intensityRegions)&&const DeepCollectionEquality().equals(other._intensityPrefectures, _intensityPrefectures)&&const DeepCollectionEquality().equals(other._intensityCities, _intensityCities)&&const DeepCollectionEquality().equals(other._intensityStations, _intensityStations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),earthquake,const DeepCollectionEquality().hash(_intensityRegions),const DeepCollectionEquality().hash(_intensityPrefectures),const DeepCollectionEquality().hash(_intensityCities),const DeepCollectionEquality().hash(_intensityStations));
+int get hashCode => Object.hash(runtimeType,type,earthquake,const DeepCollectionEquality().hash(_intensityRegions),const DeepCollectionEquality().hash(_intensityPrefectures),const DeepCollectionEquality().hash(_intensityCities),const DeepCollectionEquality().hash(_intensityStations));
 
 @override
 String toString() {
@@ -301,7 +303,7 @@ abstract mixin class _$EarthquakeTelegramBodyCopyWith<$Res> implements $Earthqua
   factory _$EarthquakeTelegramBodyCopyWith(_EarthquakeTelegramBody value, $Res Function(_EarthquakeTelegramBody) _then) = __$EarthquakeTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type,@JsonKey(includeIfNull: false) EarthquakeTelegramBodyQuake? earthquake,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityCities,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityStation>? intensityStations
+ String type,@JsonKey(includeIfNull: false) EarthquakeTelegramBodyQuake? earthquake,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityRegion>? intensityCities,@JsonKey(includeIfNull: false) List<EarthquakeTelegramBodyIntensityStation>? intensityStations
 });
 
 
@@ -318,10 +320,10 @@ class __$EarthquakeTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeTelegramBody
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? earthquake = freezed,Object? intensityRegions = freezed,Object? intensityPrefectures = freezed,Object? intensityCities = freezed,Object? intensityStations = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? earthquake = freezed,Object? intensityRegions = freezed,Object? intensityPrefectures = freezed,Object? intensityCities = freezed,Object? intensityStations = freezed,}) {
   return _then(_EarthquakeTelegramBody(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,earthquake: freezed == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,earthquake: freezed == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakeTelegramBodyQuake?,intensityRegions: freezed == intensityRegions ? _self._intensityRegions : intensityRegions // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeTelegramBodyIntensityRegion>?,intensityPrefectures: freezed == intensityPrefectures ? _self._intensityPrefectures : intensityPrefectures // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeTelegramBodyIntensityRegion>?,intensityCities: freezed == intensityCities ? _self._intensityCities : intensityCities // ignore: cast_nullable_to_non_nullable

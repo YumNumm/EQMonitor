@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AdminReplayFileListResponse {
 
- List<Items2> get items;/// カーソル情報（base64エンコード）
+ List<ReplayFile> get items;/// カーソル情報（base64エンコード）
 @JsonKey(includeIfNull: false, name: 'next_token') String? get nextToken;/// カーソル情報（base64エンコード）
 @JsonKey(includeIfNull: false, name: 'next_pooling') String? get nextPooling;
 /// Create a copy of AdminReplayFileListResponse
@@ -50,7 +50,7 @@ abstract mixin class $AdminReplayFileListResponseCopyWith<$Res>  {
   factory $AdminReplayFileListResponseCopyWith(AdminReplayFileListResponse value, $Res Function(AdminReplayFileListResponse) _then) = _$AdminReplayFileListResponseCopyWithImpl;
 @useResult
 $Res call({
- List<Items2> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
+ List<ReplayFile> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
 });
 
 
@@ -70,7 +70,7 @@ class _$AdminReplayFileListResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? nextToken = freezed,Object? nextPooling = freezed,}) {
   return _then(_self.copyWith(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
-as List<Items2>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
+as List<ReplayFile>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
 as String?,nextPooling: freezed == nextPooling ? _self.nextPooling : nextPooling // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Items2> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ReplayFile> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AdminReplayFileListResponse() when $default != null:
 return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
@@ -178,7 +178,7 @@ return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Items2> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ReplayFile> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)  $default,) {final _that = this;
 switch (_that) {
 case _AdminReplayFileListResponse():
 return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
@@ -198,7 +198,7 @@ return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Items2> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ReplayFile> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,) {final _that = this;
 switch (_that) {
 case _AdminReplayFileListResponse() when $default != null:
 return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
@@ -213,11 +213,11 @@ return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
 @JsonSerializable()
 
 class _AdminReplayFileListResponse implements AdminReplayFileListResponse {
-  const _AdminReplayFileListResponse({required final  List<Items2> items, @JsonKey(includeIfNull: false, name: 'next_token') this.nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling') this.nextPooling}): _items = items;
+  const _AdminReplayFileListResponse({required final  List<ReplayFile> items, @JsonKey(includeIfNull: false, name: 'next_token') this.nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling') this.nextPooling}): _items = items;
   factory _AdminReplayFileListResponse.fromJson(Map<String, dynamic> json) => _$AdminReplayFileListResponseFromJson(json);
 
- final  List<Items2> _items;
-@override List<Items2> get items {
+ final  List<ReplayFile> _items;
+@override List<ReplayFile> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
@@ -261,7 +261,7 @@ abstract mixin class _$AdminReplayFileListResponseCopyWith<$Res> implements $Adm
   factory _$AdminReplayFileListResponseCopyWith(_AdminReplayFileListResponse value, $Res Function(_AdminReplayFileListResponse) _then) = __$AdminReplayFileListResponseCopyWithImpl;
 @override @useResult
 $Res call({
- List<Items2> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
+ List<ReplayFile> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
 });
 
 
@@ -281,7 +281,7 @@ class __$AdminReplayFileListResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? nextToken = freezed,Object? nextPooling = freezed,}) {
   return _then(_AdminReplayFileListResponse(
 items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<Items2>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
+as List<ReplayFile>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
 as String?,nextPooling: freezed == nextPooling ? _self.nextPooling : nextPooling // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

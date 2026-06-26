@@ -19,7 +19,8 @@ _EarthquakeHypocenter _$EarthquakeHypocenterFromJson(
       name: $checkedConvert('name', (v) => v as String),
       coordinates: $checkedConvert(
         'coordinates',
-        (v) => Coordinate.fromJson(v as Map<String, dynamic>),
+        (v) =>
+            v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
       ),
       magnitude: $checkedConvert(
         'magnitude',

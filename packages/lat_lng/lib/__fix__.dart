@@ -1,0 +1,1 @@
+int plainTopLevel() => 2;

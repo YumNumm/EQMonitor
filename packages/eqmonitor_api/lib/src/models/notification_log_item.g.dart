@@ -100,12 +100,12 @@ const _$FrameworkEnumMap = {Framework.fcm: 'FCM', Framework.apns: 'APNS'};
 const _$ResultEnumMap = {Result.ok: 'OK', Result.ng: 'NG'};
 
 const _$LiveActivityEventEnumMap = {
-  LiveActivityEvent.start: 'start',
-  LiveActivityEvent.update: 'update',
-  LiveActivityEvent.end: 'end',
+  LiveActivityEvent.start: 'START',
+  LiveActivityEvent.update: 'UPDATE',
+  LiveActivityEvent.end: 'END',
 };
 
 const _$StartTriggerEnumMap = {
-  StartTrigger.eew: 'eew',
-  StartTrigger.shakeDetection: 'shake_detection',
+  StartTrigger.eew: 'EEW',
+  StartTrigger.shakeDetection: 'SHAKE_DETECTION',
 };

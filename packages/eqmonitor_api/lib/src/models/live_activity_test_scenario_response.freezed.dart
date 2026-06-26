@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LiveActivityTestScenarioResponse {
 
- dynamic get ok;@JsonKey(name: 'event_id') String get eventId;@JsonKey(name: 'live_activity_id') String get liveActivityId;@JsonKey(name: 'reports_planned') num get reportsPlanned;
+/// const: true
+ bool get ok;@JsonKey(name: 'event_id') String get eventId;@JsonKey(name: 'live_activity_id') String get liveActivityId;@JsonKey(name: 'reports_planned') num get reportsPlanned;
 /// Create a copy of LiveActivityTestScenarioResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +29,12 @@ $LiveActivityTestScenarioResponseCopyWith<LiveActivityTestScenarioResponse> get 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveActivityTestScenarioResponse&&const DeepCollectionEquality().equals(other.ok, ok)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.liveActivityId, liveActivityId) || other.liveActivityId == liveActivityId)&&(identical(other.reportsPlanned, reportsPlanned) || other.reportsPlanned == reportsPlanned));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveActivityTestScenarioResponse&&(identical(other.ok, ok) || other.ok == ok)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.liveActivityId, liveActivityId) || other.liveActivityId == liveActivityId)&&(identical(other.reportsPlanned, reportsPlanned) || other.reportsPlanned == reportsPlanned));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(ok),eventId,liveActivityId,reportsPlanned);
+int get hashCode => Object.hash(runtimeType,ok,eventId,liveActivityId,reportsPlanned);
 
 @override
 String toString() {
@@ -48,7 +49,7 @@ abstract mixin class $LiveActivityTestScenarioResponseCopyWith<$Res>  {
   factory $LiveActivityTestScenarioResponseCopyWith(LiveActivityTestScenarioResponse value, $Res Function(LiveActivityTestScenarioResponse) _then) = _$LiveActivityTestScenarioResponseCopyWithImpl;
 @useResult
 $Res call({
- dynamic ok,@JsonKey(name: 'event_id') String eventId,@JsonKey(name: 'live_activity_id') String liveActivityId,@JsonKey(name: 'reports_planned') num reportsPlanned
+ bool ok,@JsonKey(name: 'event_id') String eventId,@JsonKey(name: 'live_activity_id') String liveActivityId,@JsonKey(name: 'reports_planned') num reportsPlanned
 });
 
 
@@ -65,10 +66,10 @@ class _$LiveActivityTestScenarioResponseCopyWithImpl<$Res>
 
 /// Create a copy of LiveActivityTestScenarioResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? ok = freezed,Object? eventId = null,Object? liveActivityId = null,Object? reportsPlanned = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? ok = null,Object? eventId = null,Object? liveActivityId = null,Object? reportsPlanned = null,}) {
   return _then(_self.copyWith(
-ok: freezed == ok ? _self.ok : ok // ignore: cast_nullable_to_non_nullable
-as dynamic,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+ok: null == ok ? _self.ok : ok // ignore: cast_nullable_to_non_nullable
+as bool,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,liveActivityId: null == liveActivityId ? _self.liveActivityId : liveActivityId // ignore: cast_nullable_to_non_nullable
 as String,reportsPlanned: null == reportsPlanned ? _self.reportsPlanned : reportsPlanned // ignore: cast_nullable_to_non_nullable
 as num,
@@ -156,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic ok, @JsonKey(name: 'event_id')  String eventId, @JsonKey(name: 'live_activity_id')  String liveActivityId, @JsonKey(name: 'reports_planned')  num reportsPlanned)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool ok, @JsonKey(name: 'event_id')  String eventId, @JsonKey(name: 'live_activity_id')  String liveActivityId, @JsonKey(name: 'reports_planned')  num reportsPlanned)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LiveActivityTestScenarioResponse() when $default != null:
 return $default(_that.ok,_that.eventId,_that.liveActivityId,_that.reportsPlanned);case _:
@@ -177,7 +178,7 @@ return $default(_that.ok,_that.eventId,_that.liveActivityId,_that.reportsPlanned
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic ok, @JsonKey(name: 'event_id')  String eventId, @JsonKey(name: 'live_activity_id')  String liveActivityId, @JsonKey(name: 'reports_planned')  num reportsPlanned)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool ok, @JsonKey(name: 'event_id')  String eventId, @JsonKey(name: 'live_activity_id')  String liveActivityId, @JsonKey(name: 'reports_planned')  num reportsPlanned)  $default,) {final _that = this;
 switch (_that) {
 case _LiveActivityTestScenarioResponse():
 return $default(_that.ok,_that.eventId,_that.liveActivityId,_that.reportsPlanned);case _:
@@ -197,7 +198,7 @@ return $default(_that.ok,_that.eventId,_that.liveActivityId,_that.reportsPlanned
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic ok, @JsonKey(name: 'event_id')  String eventId, @JsonKey(name: 'live_activity_id')  String liveActivityId, @JsonKey(name: 'reports_planned')  num reportsPlanned)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool ok, @JsonKey(name: 'event_id')  String eventId, @JsonKey(name: 'live_activity_id')  String liveActivityId, @JsonKey(name: 'reports_planned')  num reportsPlanned)?  $default,) {final _that = this;
 switch (_that) {
 case _LiveActivityTestScenarioResponse() when $default != null:
 return $default(_that.ok,_that.eventId,_that.liveActivityId,_that.reportsPlanned);case _:
@@ -215,7 +216,8 @@ class _LiveActivityTestScenarioResponse implements LiveActivityTestScenarioRespo
   const _LiveActivityTestScenarioResponse({required this.ok, @JsonKey(name: 'event_id') required this.eventId, @JsonKey(name: 'live_activity_id') required this.liveActivityId, @JsonKey(name: 'reports_planned') required this.reportsPlanned});
   factory _LiveActivityTestScenarioResponse.fromJson(Map<String, dynamic> json) => _$LiveActivityTestScenarioResponseFromJson(json);
 
-@override final  dynamic ok;
+/// const: true
+@override final  bool ok;
 @override@JsonKey(name: 'event_id') final  String eventId;
 @override@JsonKey(name: 'live_activity_id') final  String liveActivityId;
 @override@JsonKey(name: 'reports_planned') final  num reportsPlanned;
@@ -233,12 +235,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveActivityTestScenarioResponse&&const DeepCollectionEquality().equals(other.ok, ok)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.liveActivityId, liveActivityId) || other.liveActivityId == liveActivityId)&&(identical(other.reportsPlanned, reportsPlanned) || other.reportsPlanned == reportsPlanned));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveActivityTestScenarioResponse&&(identical(other.ok, ok) || other.ok == ok)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.liveActivityId, liveActivityId) || other.liveActivityId == liveActivityId)&&(identical(other.reportsPlanned, reportsPlanned) || other.reportsPlanned == reportsPlanned));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(ok),eventId,liveActivityId,reportsPlanned);
+int get hashCode => Object.hash(runtimeType,ok,eventId,liveActivityId,reportsPlanned);
 
 @override
 String toString() {
@@ -253,7 +255,7 @@ abstract mixin class _$LiveActivityTestScenarioResponseCopyWith<$Res> implements
   factory _$LiveActivityTestScenarioResponseCopyWith(_LiveActivityTestScenarioResponse value, $Res Function(_LiveActivityTestScenarioResponse) _then) = __$LiveActivityTestScenarioResponseCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic ok,@JsonKey(name: 'event_id') String eventId,@JsonKey(name: 'live_activity_id') String liveActivityId,@JsonKey(name: 'reports_planned') num reportsPlanned
+ bool ok,@JsonKey(name: 'event_id') String eventId,@JsonKey(name: 'live_activity_id') String liveActivityId,@JsonKey(name: 'reports_planned') num reportsPlanned
 });
 
 
@@ -270,10 +272,10 @@ class __$LiveActivityTestScenarioResponseCopyWithImpl<$Res>
 
 /// Create a copy of LiveActivityTestScenarioResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? ok = freezed,Object? eventId = null,Object? liveActivityId = null,Object? reportsPlanned = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? ok = null,Object? eventId = null,Object? liveActivityId = null,Object? reportsPlanned = null,}) {
   return _then(_LiveActivityTestScenarioResponse(
-ok: freezed == ok ? _self.ok : ok // ignore: cast_nullable_to_non_nullable
-as dynamic,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+ok: null == ok ? _self.ok : ok // ignore: cast_nullable_to_non_nullable
+as bool,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,liveActivityId: null == liveActivityId ? _self.liveActivityId : liveActivityId // ignore: cast_nullable_to_non_nullable
 as String,reportsPlanned: null == reportsPlanned ? _self.reportsPlanned : reportsPlanned // ignore: cast_nullable_to_non_nullable
 as num,

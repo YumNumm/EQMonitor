@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
 
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -51,7 +51,7 @@ abstract class TsunamiApiClient {
     @Path('eventId') required String eventId,
   });
 
-  /// 津波情報の電文履歴（press_at 降順）
+  /// 津波情報の電文履歴（pressed_at 降順）
   @GET(TsunamiApiClientUrls.getV2TsunamiTsunamiIdTelegrams)
   Future<HttpResponse<TsunamiTelegramsResponse>> getV2TsunamiTsunamiIdTelegrams({
     @Path('tsunamiId') required String tsunamiId,

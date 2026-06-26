@@ -11,12 +11,10 @@ part of 'eew_hypocenter.dart';
 _EewHypocenter _$EewHypocenterFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_EewHypocenter', json, ($checkedConvert) {
       final val = _EewHypocenter(
-        value: $checkedConvert(
-          'value',
-          (v) => CodeName.fromJson(v as Map<String, dynamic>),
-        ),
+        code: $checkedConvert('code', (v) => v as String),
+        name: $checkedConvert('name', (v) => v as String),
         magnitude: $checkedConvert('magnitude', (v) => v as num?),
-        depth: $checkedConvert('depth', (v) => v as num?),
+        depth: $checkedConvert('depth', (v) => (v as num?)?.toInt()),
         detailed: $checkedConvert(
           'detailed',
           (v) =>
@@ -33,7 +31,8 @@ _EewHypocenter _$EewHypocenterFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$EewHypocenterToJson(_EewHypocenter instance) =>
     <String, dynamic>{
-      'value': instance.value,
+      'code': instance.code,
+      'name': instance.name,
       'magnitude': instance.magnitude,
       'depth': instance.depth,
       'detailed': ?instance.detailed,
