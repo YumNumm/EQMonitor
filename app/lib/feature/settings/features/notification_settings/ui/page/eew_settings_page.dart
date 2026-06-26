@@ -16,7 +16,7 @@ class EewSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('緊急地震速報の通知')),
+      appBar: AppBar(title: const Text('緊急地震速報の通知'),),
       body: const _Body(),
     );
   }
@@ -74,7 +74,7 @@ class _Body extends ConsumerWidget {
           const SizedBox(
             height: 32,
             child: Placeholder(
-              child: Text('重大な通知'),
+              child: Center(child: Text('重大な通知')),
             ),
           ),
           const SettingsSectionHeader(text: 'Live Activity'),
@@ -99,6 +99,7 @@ class _EnabledSection extends ConsumerWidget {
 
     return AppSwitchListTile(
       title: '緊急地震速報の通知',
+      // TODO(YumNumm): メッセージ変える
       subtitle: '[TODO: メッセージ変える] 緊急地震速報を受け取ります',
       value: settings.enabled,
       onChanged: isSaving
@@ -134,9 +135,8 @@ class _LiveActivitySection extends ConsumerWidget {
     return AppSwitchListTile(
       title: 'Live Activity を開始',
       subtitle: 'EEW 発生時にDynamic Island・ロック画面に情報を表示します\n'
-      '[TODO: ]',
+      '[TODO: 説明画像を挿入したい]',
       value: settings.startLiveActivity,
-
       onChanged: isSaving
           ? null
           : (value) async {

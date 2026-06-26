@@ -92,6 +92,8 @@ void main() {
               value: value,
               qualitative: api.QualitativeHeight.high,
               revise: api.Revise.update,
+              isOver: false,
+              isImportant: false,
             ),
           ),
         ),
@@ -145,7 +147,11 @@ void main() {
             regions: [
               region(
                 const api.TsunamiRegionForecast(
-                  maxHeight: api.TsunamiRegionForecastMaxHeight(value: 4),
+                  maxHeight: api.TsunamiRegionForecastMaxHeight(
+                    value: 4,
+                    isOver: false,
+                    isImportant: false,
+                  ),
                 ),
               ),
             ],
@@ -179,9 +185,14 @@ void main() {
               observation: api.TsunamiStationObservation(
                 firstHeight: const api.TsunamiStationObservationFirstHeight(
                   initial: api.WaveInitial.push,
+                  isUnidentifiable: false,
+                  isMissing: false,
                 ),
                 maxHeight: api.TsunamiStationObservationMaxHeight(
                   value: maxValue,
+                  isOver: false,
+                  isRising: false,
+                  isMissing: false,
                 ),
               ),
             ),
@@ -224,8 +235,15 @@ void main() {
           name: '金華山沖',
           firstHeight: const api.TsunamiStationObservationFirstHeight(
             initial: api.WaveInitial.push,
+            isUnidentifiable: false,
+            isMissing: false,
           ),
-          maxHeight: api.TsunamiStationObservationMaxHeight(value: maxValue),
+          maxHeight: api.TsunamiStationObservationMaxHeight(
+            value: maxValue,
+            isOver: false,
+            isRising: false,
+            isMissing: false,
+          ),
         ),
       ],
     );
@@ -364,7 +382,7 @@ void main() {
 
     api.TsunamiState stateWithEstimation({
       DateTime? arrivalTime,
-      bool? isAlreadyArrived,
+      bool isAlreadyArrived = false,
     }) => stateWith(
       regions: [
         api.TsunamiRegion(
@@ -374,11 +392,15 @@ void main() {
           lastKind: api.TsunamiWarningKind.warning,
           stations: const [],
           estimation: api.TsunamiRegionEstimation(
-            firstHeight: api.FirstHeight(
+            firstHeight: api.TsunamiRegionEstimationFirstHeight(
               arrivalTime: arrivalTime,
               isAlreadyArrived: isAlreadyArrived,
             ),
-            maxHeight: const api.MaxHeight(value: 3),
+            maxHeight: const api.TsunamiRegionEstimationMaxHeight(
+              value: 3,
+              isOver: false,
+              isObserving: false,
+            ),
           ),
         ),
       ],
@@ -411,7 +433,7 @@ void main() {
       region.estimationFirstHeight[0].value,
       TsunamiEstimationFirstHeight(
         arrivalTime: arrivalTime1,
-        isAlreadyArrived: null,
+        isAlreadyArrived: false,
         revise: null,
       ),
     );
@@ -442,11 +464,15 @@ void main() {
           lastKind: api.TsunamiWarningKind.warning,
           stations: const [],
           estimation: api.TsunamiRegionEstimation(
-            firstHeight: const api.FirstHeight(),
-            maxHeight: api.MaxHeight(
+            firstHeight: const api.TsunamiRegionEstimationFirstHeight(
+              isAlreadyArrived: false,
+            ),
+            maxHeight: api.TsunamiRegionEstimationMaxHeight(
               observedAt: observedAt,
               value: value,
               qualitative: qualitative,
+              isOver: false,
+              isObserving: false,
             ),
           ),
         ),
@@ -519,7 +545,7 @@ void main() {
               name: '石巻',
               forecast: api.TsunamiStationForecast(
                 highTideAt: highTideAt,
-                firstHeight: const api.FirstHeight2(
+                firstHeight: const api.TsunamiStationForecastFirstHeight(
                   condition: api.FirstHeightCondition.imminent,
                 ),
               ),
@@ -585,10 +611,14 @@ void main() {
                 lastKind: api.TsunamiWarningKind.warning,
                 stations: [],
                 estimation: api.TsunamiRegionEstimation(
-                  firstHeight: api.FirstHeight(
+                  firstHeight: api.TsunamiRegionEstimationFirstHeight(
                     isAlreadyArrived: true,
                   ),
-                  maxHeight: api.MaxHeight(value: 5),
+                  maxHeight: api.TsunamiRegionEstimationMaxHeight(
+                    value: 5,
+                    isOver: false,
+                    isObserving: false,
+                  ),
                 ),
               ),
             ],
@@ -780,6 +810,8 @@ void main() {
                     observation: api.TsunamiStationObservation(
                       firstHeight: api.TsunamiStationObservationFirstHeight(
                         initial: api.WaveInitial.push,
+                        isUnidentifiable: false,
+                        isMissing: false,
                       ),
                     ),
                   ),
@@ -813,6 +845,8 @@ void main() {
                 name: '金華山沖',
                 firstHeight: api.TsunamiStationObservationFirstHeight(
                   initial: api.WaveInitial.push,
+                  isUnidentifiable: false,
+                  isMissing: false,
                 ),
               ),
             ],
@@ -828,6 +862,8 @@ void main() {
                 firstHeight: api.TsunamiStationObservationFirstHeight(
                   arrivalTime: arrivalTime1,
                   initial: api.WaveInitial.push,
+                  isUnidentifiable: false,
+                  isMissing: false,
                 ),
               ),
             ],
@@ -1033,9 +1069,14 @@ void main() {
                       firstHeight: api.TsunamiStationObservationFirstHeight(
                         arrivalTime: DateTime(2026, 1, 15, 14),
                         initial: api.WaveInitial.pull,
+                        isUnidentifiable: false,
+                        isMissing: false,
                       ),
                       maxHeight: const api.TsunamiStationObservationMaxHeight(
                         value: 1.5,
+                        isOver: false,
+                        isRising: false,
+                        isMissing: false,
                       ),
                     ),
                   ),

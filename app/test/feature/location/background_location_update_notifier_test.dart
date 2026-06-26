@@ -31,7 +31,6 @@ class _FakeEewSettingsNotifier extends EewSettingsNotifier {
   Future<EewNotificationSettings> build() async =>
       const EewNotificationSettings(
         enabled: true,
-        criticalThreshold: null,
         startLiveActivity: false,
         onePointEnabled: false,
         regions: [],
@@ -44,7 +43,6 @@ class _FakeEarthquakeNotificationSettingsNotifier
   Future<EarthquakeNotificationSettings> build() async =>
       const EarthquakeNotificationSettings(
         enabled: true,
-        criticalThreshold: null,
         estimatedIntensityEnabled: false,
         regions: [],
       );
@@ -56,7 +54,6 @@ class _FakeRepo implements DeviceNotificationSettingsRepository {
     this.availableSubRegions = const [],
     this.eewSettings = const EewNotificationSettings(
       enabled: true,
-      criticalThreshold: null,
       startLiveActivity: false,
       onePointEnabled: false,
       regions: [],
@@ -64,7 +61,6 @@ class _FakeRepo implements DeviceNotificationSettingsRepository {
     this.eewRegions = const [],
     this.earthquakeSettings = const EarthquakeNotificationSettings(
       enabled: true,
-      criticalThreshold: null,
       estimatedIntensityEnabled: false,
       regions: [],
     ),
@@ -158,7 +154,6 @@ class _FakeRepo implements DeviceNotificationSettingsRepository {
   Future<Result<EewNotificationSettings, Exception>> patchEewSettings({
     required String deviceId,
     required bool enabled,
-    required JmaIntensity? criticalThreshold,
     required bool startLiveActivity,
     required bool onePointEnabled,
   }) => throw UnimplementedError();
@@ -168,7 +163,6 @@ class _FakeRepo implements DeviceNotificationSettingsRepository {
   patchEarthquakeSettings({
     required String deviceId,
     required bool enabled,
-    required JmaIntensity? criticalThreshold,
     required bool estimatedIntensityEnabled,
   }) => throw UnimplementedError();
 }

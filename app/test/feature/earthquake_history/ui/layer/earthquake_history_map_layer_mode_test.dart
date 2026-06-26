@@ -23,13 +23,11 @@ void main() {
       final earthquake = testData.earthquake(
         intensity: testData.fullIntensity(),
       );
-      const config = EarthquakeHistoryDetailConfig(
-        fillMode: EarthquakeHistoryFillMode.none,
-      );
 
       final mode = resolver.resolveFillLayerMode(
         earthquake: earthquake,
-        config: config,
+        fillMode: EarthquakeHistoryFillMode.none,
+        showingLpgmIntensity: false,
       );
 
       expect(mode, EarthquakeHistoryMapLayerMode.none);
@@ -44,12 +42,11 @@ void main() {
         EarthquakeHistoryFillMode.city,
         EarthquakeHistoryFillMode.auto,
       ]) {
-        final config = EarthquakeHistoryDetailConfig(fillMode: fillMode);
-
         expect(
           resolver.resolveFillLayerMode(
             earthquake: earthquake,
-            config: config,
+            fillMode: fillMode,
+            showingLpgmIntensity: false,
           ),
           EarthquakeHistoryMapLayerMode.region,
         );
@@ -68,12 +65,11 @@ void main() {
       };
 
       for (final entry in cases.entries) {
-        final config = EarthquakeHistoryDetailConfig(fillMode: entry.key);
-
         expect(
           resolver.resolveFillLayerMode(
             earthquake: earthquake,
-            config: config,
+            fillMode: entry.key,
+            showingLpgmIntensity: false,
           ),
           entry.value,
         );
@@ -85,25 +81,19 @@ void main() {
         intensity: testData.lpgmFullJmaRegionOnly(),
       );
 
-      const jmaConfig = EarthquakeHistoryDetailConfig(
-        fillMode: EarthquakeHistoryFillMode.city,
-      );
-      const lpgmConfig = EarthquakeHistoryDetailConfig(
-        fillMode: EarthquakeHistoryFillMode.city,
-        showingLpgmIntensity: true,
-      );
-
       expect(
         resolver.resolveFillLayerMode(
           earthquake: earthquake,
-          config: jmaConfig,
+          fillMode: EarthquakeHistoryFillMode.city,
+          showingLpgmIntensity: false,
         ),
         EarthquakeHistoryMapLayerMode.region,
       );
       expect(
         resolver.resolveFillLayerMode(
           earthquake: earthquake,
-          config: lpgmConfig,
+          fillMode: EarthquakeHistoryFillMode.city,
+          showingLpgmIntensity: true,
         ),
         EarthquakeHistoryMapLayerMode.city,
       );
@@ -111,12 +101,12 @@ void main() {
 
     test('intensity がない不正な地震データは none を返す', () {
       final earthquake = testData.earthquake();
-      const config = EarthquakeHistoryDetailConfig();
 
       expect(
         resolver.resolveFillLayerMode(
           earthquake: earthquake,
-          config: config,
+          fillMode: EarthquakeHistoryFillMode.auto,
+          showingLpgmIntensity: false,
         ),
         EarthquakeHistoryMapLayerMode.none,
       );
@@ -125,14 +115,10 @@ void main() {
 
   group('opacity expressions', () {
     test('auto の regionFillOpacity は regionToCity でカットオフする', () {
-      const zoomThresholds = EarthquakeHistoryMapLayerZoomThresholds(
-        regionToCity: 7.5,
-      );
-
       expect(
         resolver.regionFillOpacity(
           mode: EarthquakeHistoryMapLayerMode.auto,
-          zoomThresholds: zoomThresholds,
+          regionToCity: 7.5,
           visibleOpacity: 0.6,
         ),
         [
@@ -146,14 +132,10 @@ void main() {
     });
 
     test('auto の cityFillOpacity は regionToCity 以上で表示（上限カットオフなし）', () {
-      const zoomThresholds = EarthquakeHistoryMapLayerZoomThresholds(
-        regionToCity: 7.5,
-      );
-
       expect(
         resolver.cityFillOpacity(
           mode: EarthquakeHistoryMapLayerMode.auto,
-          zoomThresholds: zoomThresholds,
+          regionToCity: 7.5,
           visibleOpacity: 0.6,
         ),
         [
@@ -167,12 +149,10 @@ void main() {
     });
 
     test('region モードの regionFillOpacity は固定値を返す', () {
-      const zoomThresholds = defaultEarthquakeHistoryMapLayerZoomThresholds;
-
       expect(
         resolver.regionFillOpacity(
           mode: EarthquakeHistoryMapLayerMode.region,
-          zoomThresholds: zoomThresholds,
+          regionToCity: 8,
           visibleOpacity: 0.6,
         ),
         0.6,
@@ -180,12 +160,10 @@ void main() {
     });
 
     test('city モードの cityFillOpacity は固定値を返す', () {
-      const zoomThresholds = defaultEarthquakeHistoryMapLayerZoomThresholds;
-
       expect(
         resolver.cityFillOpacity(
           mode: EarthquakeHistoryMapLayerMode.city,
-          zoomThresholds: zoomThresholds,
+          regionToCity: 8,
           visibleOpacity: 0.6,
         ),
         0.6,

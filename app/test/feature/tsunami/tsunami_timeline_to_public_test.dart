@@ -1441,6 +1441,8 @@ void main() {
                         firstHeight: api.TsunamiStationObservationFirstHeight(
                           arrivalTime: arrivalTime,
                           initial: api.WaveInitial.push,
+                          isUnidentifiable: false,
+                          isMissing: false,
                         ),
                       ),
                     ),
@@ -1466,11 +1468,15 @@ void main() {
                         firstHeight: api.TsunamiStationObservationFirstHeight(
                           arrivalTime: arrivalTime,
                           initial: api.WaveInitial.push,
+                          isUnidentifiable: false,
+                          isMissing: false,
                         ),
                         maxHeight: api.TsunamiStationObservationMaxHeight(
                           observedAt: maxDateTime,
                           value: 2.5,
                           isRising: true,
+                          isOver: false,
+                          isMissing: false,
                         ),
                       ),
                     ),
@@ -1521,6 +1527,8 @@ void main() {
                   firstHeight: api.TsunamiStationObservationFirstHeight(
                     arrivalTime: arrivalTime,
                     initial: api.WaveInitial.push,
+                    isUnidentifiable: false,
+                    isMissing: false,
                   ),
                 ),
               ],
@@ -1536,11 +1544,15 @@ void main() {
                   firstHeight: api.TsunamiStationObservationFirstHeight(
                     arrivalTime: arrivalTime,
                     initial: api.WaveInitial.push,
+                    isUnidentifiable: false,
+                    isMissing: false,
                   ),
                   maxHeight: api.TsunamiStationObservationMaxHeight(
                     observedAt: maxDateTime,
                     value: 1.5,
                     isRising: true,
+                    isOver: false,
+                    isMissing: false,
                     condition: api.ObservationMaxHeightCondition.observing,
                   ),
                 ),

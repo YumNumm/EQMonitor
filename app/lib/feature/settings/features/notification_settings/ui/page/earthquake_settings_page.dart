@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_notification_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
@@ -63,13 +62,13 @@ class _Body extends ConsumerWidget {
       enabled: settingsAsync.isLoading,
       child: ListView(
         children: [
-          const SettingsSectionHeader(text: '通知の有効化'),
+          const SettingsSectionHeader(text: '通知'),
           _EnabledSection(settings: settings),
           // TODO(YumNumm): 重大な通知の実装
           const SizedBox(
             height: 32,
             child: Placeholder(
-              child: Text('重大な通知'),
+              child: Center(child: Text('重大な通知')),
             ),
           ),
           const SettingsSectionHeader(text: '推定震度'),
@@ -135,8 +134,8 @@ class _EstimatedIntensitySection extends ConsumerWidget {
     final isSaving = saveState is MutationPending;
 
     return AppSwitchListTile(
-      title: '推定震度を含む',
-      subtitle: '気象庁発表前の推定震度を通知に含めます',
+      title: '推定震度発表時の通知',
+      subtitle: '震度4以上の地震が発生した時に....[TODO: メッセージ変える]',
       value: settings.estimatedIntensityEnabled,
       onChanged: isSaving
           ? null
