@@ -21,7 +21,10 @@ mixin _$EarthquakeHistoryParameter {
  RegionSearchType? get regionSearchType; String? get regionCode; String? get regionName; JmaIntensity? get regionIntensityLte; JmaIntensity? get regionIntensityGte;// 地震種別フィルター
  EarthquakeType? get earthquakeType;// 発生時刻範囲フィルター
  Date? get originTimeGte; Date? get originTimeLte;// 長周期地震動階級フィルター
- JmaLpgmIntensity? get maxLpgmIntensityGte; JmaLpgmIntensity? get maxLpgmIntensityLte;// ソート
+ JmaLpgmIntensity? get maxLpgmIntensityGte; JmaLpgmIntensity? get maxLpgmIntensityLte;// データソースフィルター
+ EarthquakeDatasource? get datasource;// 電文種別フィルター
+ List<EarthquakeTelegramType>? get telegramTypes;// 緯度経度範囲フィルター
+ double? get latitudeGte; double? get latitudeLte; double? get longitudeGte; double? get longitudeLte;// ソート
  EarthquakeSortBy? get sortBy; SortOrder? get sortOrder;
 /// Create a copy of EarthquakeHistoryParameter
 /// with the given fields replaced by the non-null parameter values.
@@ -35,16 +38,16 @@ $EarthquakeHistoryParameterCopyWith<EarthquakeHistoryParameter> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryParameter&&(identical(other.magnitudeLte, magnitudeLte) || other.magnitudeLte == magnitudeLte)&&(identical(other.magnitudeGte, magnitudeGte) || other.magnitudeGte == magnitudeGte)&&(identical(other.depthLte, depthLte) || other.depthLte == depthLte)&&(identical(other.depthGte, depthGte) || other.depthGte == depthGte)&&(identical(other.intensityLte, intensityLte) || other.intensityLte == intensityLte)&&(identical(other.intensityGte, intensityGte) || other.intensityGte == intensityGte)&&const DeepCollectionEquality().equals(other.statuses, statuses)&&(identical(other.epicenterCode, epicenterCode) || other.epicenterCode == epicenterCode)&&(identical(other.epicenterName, epicenterName) || other.epicenterName == epicenterName)&&(identical(other.regionSearchType, regionSearchType) || other.regionSearchType == regionSearchType)&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.regionIntensityLte, regionIntensityLte) || other.regionIntensityLte == regionIntensityLte)&&(identical(other.regionIntensityGte, regionIntensityGte) || other.regionIntensityGte == regionIntensityGte)&&(identical(other.earthquakeType, earthquakeType) || other.earthquakeType == earthquakeType)&&(identical(other.originTimeGte, originTimeGte) || other.originTimeGte == originTimeGte)&&(identical(other.originTimeLte, originTimeLte) || other.originTimeLte == originTimeLte)&&(identical(other.maxLpgmIntensityGte, maxLpgmIntensityGte) || other.maxLpgmIntensityGte == maxLpgmIntensityGte)&&(identical(other.maxLpgmIntensityLte, maxLpgmIntensityLte) || other.maxLpgmIntensityLte == maxLpgmIntensityLte)&&(identical(other.sortBy, sortBy) || other.sortBy == sortBy)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryParameter&&(identical(other.magnitudeLte, magnitudeLte) || other.magnitudeLte == magnitudeLte)&&(identical(other.magnitudeGte, magnitudeGte) || other.magnitudeGte == magnitudeGte)&&(identical(other.depthLte, depthLte) || other.depthLte == depthLte)&&(identical(other.depthGte, depthGte) || other.depthGte == depthGte)&&(identical(other.intensityLte, intensityLte) || other.intensityLte == intensityLte)&&(identical(other.intensityGte, intensityGte) || other.intensityGte == intensityGte)&&const DeepCollectionEquality().equals(other.statuses, statuses)&&(identical(other.epicenterCode, epicenterCode) || other.epicenterCode == epicenterCode)&&(identical(other.epicenterName, epicenterName) || other.epicenterName == epicenterName)&&(identical(other.regionSearchType, regionSearchType) || other.regionSearchType == regionSearchType)&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.regionIntensityLte, regionIntensityLte) || other.regionIntensityLte == regionIntensityLte)&&(identical(other.regionIntensityGte, regionIntensityGte) || other.regionIntensityGte == regionIntensityGte)&&(identical(other.earthquakeType, earthquakeType) || other.earthquakeType == earthquakeType)&&(identical(other.originTimeGte, originTimeGte) || other.originTimeGte == originTimeGte)&&(identical(other.originTimeLte, originTimeLte) || other.originTimeLte == originTimeLte)&&(identical(other.maxLpgmIntensityGte, maxLpgmIntensityGte) || other.maxLpgmIntensityGte == maxLpgmIntensityGte)&&(identical(other.maxLpgmIntensityLte, maxLpgmIntensityLte) || other.maxLpgmIntensityLte == maxLpgmIntensityLte)&&(identical(other.datasource, datasource) || other.datasource == datasource)&&const DeepCollectionEquality().equals(other.telegramTypes, telegramTypes)&&(identical(other.latitudeGte, latitudeGte) || other.latitudeGte == latitudeGte)&&(identical(other.latitudeLte, latitudeLte) || other.latitudeLte == latitudeLte)&&(identical(other.longitudeGte, longitudeGte) || other.longitudeGte == longitudeGte)&&(identical(other.longitudeLte, longitudeLte) || other.longitudeLte == longitudeLte)&&(identical(other.sortBy, sortBy) || other.sortBy == sortBy)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,magnitudeLte,magnitudeGte,depthLte,depthGte,intensityLte,intensityGte,const DeepCollectionEquality().hash(statuses),epicenterCode,epicenterName,regionSearchType,regionCode,regionName,regionIntensityLte,regionIntensityGte,earthquakeType,originTimeGte,originTimeLte,maxLpgmIntensityGte,maxLpgmIntensityLte,sortBy,sortOrder]);
+int get hashCode => Object.hashAll([runtimeType,magnitudeLte,magnitudeGte,depthLte,depthGte,intensityLte,intensityGte,const DeepCollectionEquality().hash(statuses),epicenterCode,epicenterName,regionSearchType,regionCode,regionName,regionIntensityLte,regionIntensityGte,earthquakeType,originTimeGte,originTimeLte,maxLpgmIntensityGte,maxLpgmIntensityLte,datasource,const DeepCollectionEquality().hash(telegramTypes),latitudeGte,latitudeLte,longitudeGte,longitudeLte,sortBy,sortOrder]);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryParameter(magnitudeLte: $magnitudeLte, magnitudeGte: $magnitudeGte, depthLte: $depthLte, depthGte: $depthGte, intensityLte: $intensityLte, intensityGte: $intensityGte, statuses: $statuses, epicenterCode: $epicenterCode, epicenterName: $epicenterName, regionSearchType: $regionSearchType, regionCode: $regionCode, regionName: $regionName, regionIntensityLte: $regionIntensityLte, regionIntensityGte: $regionIntensityGte, earthquakeType: $earthquakeType, originTimeGte: $originTimeGte, originTimeLte: $originTimeLte, maxLpgmIntensityGte: $maxLpgmIntensityGte, maxLpgmIntensityLte: $maxLpgmIntensityLte, sortBy: $sortBy, sortOrder: $sortOrder)';
+  return 'EarthquakeHistoryParameter(magnitudeLte: $magnitudeLte, magnitudeGte: $magnitudeGte, depthLte: $depthLte, depthGte: $depthGte, intensityLte: $intensityLte, intensityGte: $intensityGte, statuses: $statuses, epicenterCode: $epicenterCode, epicenterName: $epicenterName, regionSearchType: $regionSearchType, regionCode: $regionCode, regionName: $regionName, regionIntensityLte: $regionIntensityLte, regionIntensityGte: $regionIntensityGte, earthquakeType: $earthquakeType, originTimeGte: $originTimeGte, originTimeLte: $originTimeLte, maxLpgmIntensityGte: $maxLpgmIntensityGte, maxLpgmIntensityLte: $maxLpgmIntensityLte, datasource: $datasource, telegramTypes: $telegramTypes, latitudeGte: $latitudeGte, latitudeLte: $latitudeLte, longitudeGte: $longitudeGte, longitudeLte: $longitudeLte, sortBy: $sortBy, sortOrder: $sortOrder)';
 }
 
 
@@ -55,7 +58,7 @@ abstract mixin class $EarthquakeHistoryParameterCopyWith<$Res>  {
   factory $EarthquakeHistoryParameterCopyWith(EarthquakeHistoryParameter value, $Res Function(EarthquakeHistoryParameter) _then) = _$EarthquakeHistoryParameterCopyWithImpl;
 @useResult
 $Res call({
- double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, JmaIntensity? regionIntensityLte, JmaIntensity? regionIntensityGte, EarthquakeType? earthquakeType, Date? originTimeGte, Date? originTimeLte, JmaLpgmIntensity? maxLpgmIntensityGte, JmaLpgmIntensity? maxLpgmIntensityLte, EarthquakeSortBy? sortBy, SortOrder? sortOrder
+ double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, JmaIntensity? regionIntensityLte, JmaIntensity? regionIntensityGte, EarthquakeType? earthquakeType, Date? originTimeGte, Date? originTimeLte, JmaLpgmIntensity? maxLpgmIntensityGte, JmaLpgmIntensity? maxLpgmIntensityLte, EarthquakeDatasource? datasource, List<EarthquakeTelegramType>? telegramTypes, double? latitudeGte, double? latitudeLte, double? longitudeGte, double? longitudeLte, EarthquakeSortBy? sortBy, SortOrder? sortOrder
 });
 
 
@@ -72,7 +75,7 @@ class _$EarthquakeHistoryParameterCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryParameter
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? magnitudeLte = freezed,Object? magnitudeGte = freezed,Object? depthLte = freezed,Object? depthGte = freezed,Object? intensityLte = freezed,Object? intensityGte = freezed,Object? statuses = freezed,Object? epicenterCode = freezed,Object? epicenterName = freezed,Object? regionSearchType = freezed,Object? regionCode = freezed,Object? regionName = freezed,Object? regionIntensityLte = freezed,Object? regionIntensityGte = freezed,Object? earthquakeType = freezed,Object? originTimeGte = freezed,Object? originTimeLte = freezed,Object? maxLpgmIntensityGte = freezed,Object? maxLpgmIntensityLte = freezed,Object? sortBy = freezed,Object? sortOrder = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? magnitudeLte = freezed,Object? magnitudeGte = freezed,Object? depthLte = freezed,Object? depthGte = freezed,Object? intensityLte = freezed,Object? intensityGte = freezed,Object? statuses = freezed,Object? epicenterCode = freezed,Object? epicenterName = freezed,Object? regionSearchType = freezed,Object? regionCode = freezed,Object? regionName = freezed,Object? regionIntensityLte = freezed,Object? regionIntensityGte = freezed,Object? earthquakeType = freezed,Object? originTimeGte = freezed,Object? originTimeLte = freezed,Object? maxLpgmIntensityGte = freezed,Object? maxLpgmIntensityLte = freezed,Object? datasource = freezed,Object? telegramTypes = freezed,Object? latitudeGte = freezed,Object? latitudeLte = freezed,Object? longitudeGte = freezed,Object? longitudeLte = freezed,Object? sortBy = freezed,Object? sortOrder = freezed,}) {
   return _then(_self.copyWith(
 magnitudeLte: freezed == magnitudeLte ? _self.magnitudeLte : magnitudeLte // ignore: cast_nullable_to_non_nullable
 as double?,magnitudeGte: freezed == magnitudeGte ? _self.magnitudeGte : magnitudeGte // ignore: cast_nullable_to_non_nullable
@@ -93,7 +96,13 @@ as EarthquakeType?,originTimeGte: freezed == originTimeGte ? _self.originTimeGte
 as Date?,originTimeLte: freezed == originTimeLte ? _self.originTimeLte : originTimeLte // ignore: cast_nullable_to_non_nullable
 as Date?,maxLpgmIntensityGte: freezed == maxLpgmIntensityGte ? _self.maxLpgmIntensityGte : maxLpgmIntensityGte // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,maxLpgmIntensityLte: freezed == maxLpgmIntensityLte ? _self.maxLpgmIntensityLte : maxLpgmIntensityLte // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,sortBy: freezed == sortBy ? _self.sortBy : sortBy // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,datasource: freezed == datasource ? _self.datasource : datasource // ignore: cast_nullable_to_non_nullable
+as EarthquakeDatasource?,telegramTypes: freezed == telegramTypes ? _self.telegramTypes : telegramTypes // ignore: cast_nullable_to_non_nullable
+as List<EarthquakeTelegramType>?,latitudeGte: freezed == latitudeGte ? _self.latitudeGte : latitudeGte // ignore: cast_nullable_to_non_nullable
+as double?,latitudeLte: freezed == latitudeLte ? _self.latitudeLte : latitudeLte // ignore: cast_nullable_to_non_nullable
+as double?,longitudeGte: freezed == longitudeGte ? _self.longitudeGte : longitudeGte // ignore: cast_nullable_to_non_nullable
+as double?,longitudeLte: freezed == longitudeLte ? _self.longitudeLte : longitudeLte // ignore: cast_nullable_to_non_nullable
+as double?,sortBy: freezed == sortBy ? _self.sortBy : sortBy // ignore: cast_nullable_to_non_nullable
 as EarthquakeSortBy?,sortOrder: freezed == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
 as SortOrder?,
   ));
@@ -204,10 +213,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  Date? originTimeGte,  Date? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  Date? originTimeGte,  Date? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeDatasource? datasource,  List<EarthquakeTelegramType>? telegramTypes,  double? latitudeGte,  double? latitudeLte,  double? longitudeGte,  double? longitudeLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter() when $default != null:
-return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte,_that.earthquakeType,_that.originTimeGte,_that.originTimeLte,_that.maxLpgmIntensityGte,_that.maxLpgmIntensityLte,_that.sortBy,_that.sortOrder);case _:
+return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte,_that.earthquakeType,_that.originTimeGte,_that.originTimeLte,_that.maxLpgmIntensityGte,_that.maxLpgmIntensityLte,_that.datasource,_that.telegramTypes,_that.latitudeGte,_that.latitudeLte,_that.longitudeGte,_that.longitudeLte,_that.sortBy,_that.sortOrder);case _:
   return orElse();
 
 }
@@ -225,10 +234,10 @@ return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depth
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  Date? originTimeGte,  Date? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  Date? originTimeGte,  Date? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeDatasource? datasource,  List<EarthquakeTelegramType>? telegramTypes,  double? latitudeGte,  double? latitudeLte,  double? longitudeGte,  double? longitudeLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter():
-return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte,_that.earthquakeType,_that.originTimeGte,_that.originTimeLte,_that.maxLpgmIntensityGte,_that.maxLpgmIntensityLte,_that.sortBy,_that.sortOrder);case _:
+return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte,_that.earthquakeType,_that.originTimeGte,_that.originTimeLte,_that.maxLpgmIntensityGte,_that.maxLpgmIntensityLte,_that.datasource,_that.telegramTypes,_that.latitudeGte,_that.latitudeLte,_that.longitudeGte,_that.longitudeLte,_that.sortBy,_that.sortOrder);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -245,10 +254,10 @@ return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depth
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  Date? originTimeGte,  Date? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  Date? originTimeGte,  Date? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeDatasource? datasource,  List<EarthquakeTelegramType>? telegramTypes,  double? latitudeGte,  double? latitudeLte,  double? longitudeGte,  double? longitudeLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter() when $default != null:
-return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte,_that.earthquakeType,_that.originTimeGte,_that.originTimeLte,_that.maxLpgmIntensityGte,_that.maxLpgmIntensityLte,_that.sortBy,_that.sortOrder);case _:
+return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte,_that.earthquakeType,_that.originTimeGte,_that.originTimeLte,_that.maxLpgmIntensityGte,_that.maxLpgmIntensityLte,_that.datasource,_that.telegramTypes,_that.latitudeGte,_that.latitudeLte,_that.longitudeGte,_that.longitudeLte,_that.sortBy,_that.sortOrder);case _:
   return null;
 
 }
@@ -260,7 +269,7 @@ return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depth
 @JsonSerializable()
 
 class _EarthquakeHistoryParameter extends EarthquakeHistoryParameter {
-  const _EarthquakeHistoryParameter({this.magnitudeLte, this.magnitudeGte, this.depthLte, this.depthGte, this.intensityLte, this.intensityGte, final  List<TelegramStatus>? statuses, this.epicenterCode, this.epicenterName, this.regionSearchType, this.regionCode, this.regionName, this.regionIntensityLte, this.regionIntensityGte, this.earthquakeType, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.sortBy, this.sortOrder}): _statuses = statuses,super._();
+  const _EarthquakeHistoryParameter({this.magnitudeLte, this.magnitudeGte, this.depthLte, this.depthGte, this.intensityLte, this.intensityGte, final  List<TelegramStatus>? statuses, this.epicenterCode, this.epicenterName, this.regionSearchType, this.regionCode, this.regionName, this.regionIntensityLte, this.regionIntensityGte, this.earthquakeType, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.datasource, final  List<EarthquakeTelegramType>? telegramTypes, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte, this.sortBy, this.sortOrder}): _statuses = statuses,_telegramTypes = telegramTypes,super._();
   factory _EarthquakeHistoryParameter.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryParameterFromJson(json);
 
 // 基本フィルター
@@ -296,6 +305,24 @@ class _EarthquakeHistoryParameter extends EarthquakeHistoryParameter {
 // 長周期地震動階級フィルター
 @override final  JmaLpgmIntensity? maxLpgmIntensityGte;
 @override final  JmaLpgmIntensity? maxLpgmIntensityLte;
+// データソースフィルター
+@override final  EarthquakeDatasource? datasource;
+// 電文種別フィルター
+ final  List<EarthquakeTelegramType>? _telegramTypes;
+// 電文種別フィルター
+@override List<EarthquakeTelegramType>? get telegramTypes {
+  final value = _telegramTypes;
+  if (value == null) return null;
+  if (_telegramTypes is EqualUnmodifiableListView) return _telegramTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+// 緯度経度範囲フィルター
+@override final  double? latitudeGte;
+@override final  double? latitudeLte;
+@override final  double? longitudeGte;
+@override final  double? longitudeLte;
 // ソート
 @override final  EarthquakeSortBy? sortBy;
 @override final  SortOrder? sortOrder;
@@ -313,16 +340,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryParameter&&(identical(other.magnitudeLte, magnitudeLte) || other.magnitudeLte == magnitudeLte)&&(identical(other.magnitudeGte, magnitudeGte) || other.magnitudeGte == magnitudeGte)&&(identical(other.depthLte, depthLte) || other.depthLte == depthLte)&&(identical(other.depthGte, depthGte) || other.depthGte == depthGte)&&(identical(other.intensityLte, intensityLte) || other.intensityLte == intensityLte)&&(identical(other.intensityGte, intensityGte) || other.intensityGte == intensityGte)&&const DeepCollectionEquality().equals(other._statuses, _statuses)&&(identical(other.epicenterCode, epicenterCode) || other.epicenterCode == epicenterCode)&&(identical(other.epicenterName, epicenterName) || other.epicenterName == epicenterName)&&(identical(other.regionSearchType, regionSearchType) || other.regionSearchType == regionSearchType)&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.regionIntensityLte, regionIntensityLte) || other.regionIntensityLte == regionIntensityLte)&&(identical(other.regionIntensityGte, regionIntensityGte) || other.regionIntensityGte == regionIntensityGte)&&(identical(other.earthquakeType, earthquakeType) || other.earthquakeType == earthquakeType)&&(identical(other.originTimeGte, originTimeGte) || other.originTimeGte == originTimeGte)&&(identical(other.originTimeLte, originTimeLte) || other.originTimeLte == originTimeLte)&&(identical(other.maxLpgmIntensityGte, maxLpgmIntensityGte) || other.maxLpgmIntensityGte == maxLpgmIntensityGte)&&(identical(other.maxLpgmIntensityLte, maxLpgmIntensityLte) || other.maxLpgmIntensityLte == maxLpgmIntensityLte)&&(identical(other.sortBy, sortBy) || other.sortBy == sortBy)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryParameter&&(identical(other.magnitudeLte, magnitudeLte) || other.magnitudeLte == magnitudeLte)&&(identical(other.magnitudeGte, magnitudeGte) || other.magnitudeGte == magnitudeGte)&&(identical(other.depthLte, depthLte) || other.depthLte == depthLte)&&(identical(other.depthGte, depthGte) || other.depthGte == depthGte)&&(identical(other.intensityLte, intensityLte) || other.intensityLte == intensityLte)&&(identical(other.intensityGte, intensityGte) || other.intensityGte == intensityGte)&&const DeepCollectionEquality().equals(other._statuses, _statuses)&&(identical(other.epicenterCode, epicenterCode) || other.epicenterCode == epicenterCode)&&(identical(other.epicenterName, epicenterName) || other.epicenterName == epicenterName)&&(identical(other.regionSearchType, regionSearchType) || other.regionSearchType == regionSearchType)&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.regionIntensityLte, regionIntensityLte) || other.regionIntensityLte == regionIntensityLte)&&(identical(other.regionIntensityGte, regionIntensityGte) || other.regionIntensityGte == regionIntensityGte)&&(identical(other.earthquakeType, earthquakeType) || other.earthquakeType == earthquakeType)&&(identical(other.originTimeGte, originTimeGte) || other.originTimeGte == originTimeGte)&&(identical(other.originTimeLte, originTimeLte) || other.originTimeLte == originTimeLte)&&(identical(other.maxLpgmIntensityGte, maxLpgmIntensityGte) || other.maxLpgmIntensityGte == maxLpgmIntensityGte)&&(identical(other.maxLpgmIntensityLte, maxLpgmIntensityLte) || other.maxLpgmIntensityLte == maxLpgmIntensityLte)&&(identical(other.datasource, datasource) || other.datasource == datasource)&&const DeepCollectionEquality().equals(other._telegramTypes, _telegramTypes)&&(identical(other.latitudeGte, latitudeGte) || other.latitudeGte == latitudeGte)&&(identical(other.latitudeLte, latitudeLte) || other.latitudeLte == latitudeLte)&&(identical(other.longitudeGte, longitudeGte) || other.longitudeGte == longitudeGte)&&(identical(other.longitudeLte, longitudeLte) || other.longitudeLte == longitudeLte)&&(identical(other.sortBy, sortBy) || other.sortBy == sortBy)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,magnitudeLte,magnitudeGte,depthLte,depthGte,intensityLte,intensityGte,const DeepCollectionEquality().hash(_statuses),epicenterCode,epicenterName,regionSearchType,regionCode,regionName,regionIntensityLte,regionIntensityGte,earthquakeType,originTimeGte,originTimeLte,maxLpgmIntensityGte,maxLpgmIntensityLte,sortBy,sortOrder]);
+int get hashCode => Object.hashAll([runtimeType,magnitudeLte,magnitudeGte,depthLte,depthGte,intensityLte,intensityGte,const DeepCollectionEquality().hash(_statuses),epicenterCode,epicenterName,regionSearchType,regionCode,regionName,regionIntensityLte,regionIntensityGte,earthquakeType,originTimeGte,originTimeLte,maxLpgmIntensityGte,maxLpgmIntensityLte,datasource,const DeepCollectionEquality().hash(_telegramTypes),latitudeGte,latitudeLte,longitudeGte,longitudeLte,sortBy,sortOrder]);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryParameter(magnitudeLte: $magnitudeLte, magnitudeGte: $magnitudeGte, depthLte: $depthLte, depthGte: $depthGte, intensityLte: $intensityLte, intensityGte: $intensityGte, statuses: $statuses, epicenterCode: $epicenterCode, epicenterName: $epicenterName, regionSearchType: $regionSearchType, regionCode: $regionCode, regionName: $regionName, regionIntensityLte: $regionIntensityLte, regionIntensityGte: $regionIntensityGte, earthquakeType: $earthquakeType, originTimeGte: $originTimeGte, originTimeLte: $originTimeLte, maxLpgmIntensityGte: $maxLpgmIntensityGte, maxLpgmIntensityLte: $maxLpgmIntensityLte, sortBy: $sortBy, sortOrder: $sortOrder)';
+  return 'EarthquakeHistoryParameter(magnitudeLte: $magnitudeLte, magnitudeGte: $magnitudeGte, depthLte: $depthLte, depthGte: $depthGte, intensityLte: $intensityLte, intensityGte: $intensityGte, statuses: $statuses, epicenterCode: $epicenterCode, epicenterName: $epicenterName, regionSearchType: $regionSearchType, regionCode: $regionCode, regionName: $regionName, regionIntensityLte: $regionIntensityLte, regionIntensityGte: $regionIntensityGte, earthquakeType: $earthquakeType, originTimeGte: $originTimeGte, originTimeLte: $originTimeLte, maxLpgmIntensityGte: $maxLpgmIntensityGte, maxLpgmIntensityLte: $maxLpgmIntensityLte, datasource: $datasource, telegramTypes: $telegramTypes, latitudeGte: $latitudeGte, latitudeLte: $latitudeLte, longitudeGte: $longitudeGte, longitudeLte: $longitudeLte, sortBy: $sortBy, sortOrder: $sortOrder)';
 }
 
 
@@ -333,7 +360,7 @@ abstract mixin class _$EarthquakeHistoryParameterCopyWith<$Res> implements $Eart
   factory _$EarthquakeHistoryParameterCopyWith(_EarthquakeHistoryParameter value, $Res Function(_EarthquakeHistoryParameter) _then) = __$EarthquakeHistoryParameterCopyWithImpl;
 @override @useResult
 $Res call({
- double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, JmaIntensity? regionIntensityLte, JmaIntensity? regionIntensityGte, EarthquakeType? earthquakeType, Date? originTimeGte, Date? originTimeLte, JmaLpgmIntensity? maxLpgmIntensityGte, JmaLpgmIntensity? maxLpgmIntensityLte, EarthquakeSortBy? sortBy, SortOrder? sortOrder
+ double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, JmaIntensity? regionIntensityLte, JmaIntensity? regionIntensityGte, EarthquakeType? earthquakeType, Date? originTimeGte, Date? originTimeLte, JmaLpgmIntensity? maxLpgmIntensityGte, JmaLpgmIntensity? maxLpgmIntensityLte, EarthquakeDatasource? datasource, List<EarthquakeTelegramType>? telegramTypes, double? latitudeGte, double? latitudeLte, double? longitudeGte, double? longitudeLte, EarthquakeSortBy? sortBy, SortOrder? sortOrder
 });
 
 
@@ -350,7 +377,7 @@ class __$EarthquakeHistoryParameterCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryParameter
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? magnitudeLte = freezed,Object? magnitudeGte = freezed,Object? depthLte = freezed,Object? depthGte = freezed,Object? intensityLte = freezed,Object? intensityGte = freezed,Object? statuses = freezed,Object? epicenterCode = freezed,Object? epicenterName = freezed,Object? regionSearchType = freezed,Object? regionCode = freezed,Object? regionName = freezed,Object? regionIntensityLte = freezed,Object? regionIntensityGte = freezed,Object? earthquakeType = freezed,Object? originTimeGte = freezed,Object? originTimeLte = freezed,Object? maxLpgmIntensityGte = freezed,Object? maxLpgmIntensityLte = freezed,Object? sortBy = freezed,Object? sortOrder = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? magnitudeLte = freezed,Object? magnitudeGte = freezed,Object? depthLte = freezed,Object? depthGte = freezed,Object? intensityLte = freezed,Object? intensityGte = freezed,Object? statuses = freezed,Object? epicenterCode = freezed,Object? epicenterName = freezed,Object? regionSearchType = freezed,Object? regionCode = freezed,Object? regionName = freezed,Object? regionIntensityLte = freezed,Object? regionIntensityGte = freezed,Object? earthquakeType = freezed,Object? originTimeGte = freezed,Object? originTimeLte = freezed,Object? maxLpgmIntensityGte = freezed,Object? maxLpgmIntensityLte = freezed,Object? datasource = freezed,Object? telegramTypes = freezed,Object? latitudeGte = freezed,Object? latitudeLte = freezed,Object? longitudeGte = freezed,Object? longitudeLte = freezed,Object? sortBy = freezed,Object? sortOrder = freezed,}) {
   return _then(_EarthquakeHistoryParameter(
 magnitudeLte: freezed == magnitudeLte ? _self.magnitudeLte : magnitudeLte // ignore: cast_nullable_to_non_nullable
 as double?,magnitudeGte: freezed == magnitudeGte ? _self.magnitudeGte : magnitudeGte // ignore: cast_nullable_to_non_nullable
@@ -371,7 +398,13 @@ as EarthquakeType?,originTimeGte: freezed == originTimeGte ? _self.originTimeGte
 as Date?,originTimeLte: freezed == originTimeLte ? _self.originTimeLte : originTimeLte // ignore: cast_nullable_to_non_nullable
 as Date?,maxLpgmIntensityGte: freezed == maxLpgmIntensityGte ? _self.maxLpgmIntensityGte : maxLpgmIntensityGte // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,maxLpgmIntensityLte: freezed == maxLpgmIntensityLte ? _self.maxLpgmIntensityLte : maxLpgmIntensityLte // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,sortBy: freezed == sortBy ? _self.sortBy : sortBy // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,datasource: freezed == datasource ? _self.datasource : datasource // ignore: cast_nullable_to_non_nullable
+as EarthquakeDatasource?,telegramTypes: freezed == telegramTypes ? _self._telegramTypes : telegramTypes // ignore: cast_nullable_to_non_nullable
+as List<EarthquakeTelegramType>?,latitudeGte: freezed == latitudeGte ? _self.latitudeGte : latitudeGte // ignore: cast_nullable_to_non_nullable
+as double?,latitudeLte: freezed == latitudeLte ? _self.latitudeLte : latitudeLte // ignore: cast_nullable_to_non_nullable
+as double?,longitudeGte: freezed == longitudeGte ? _self.longitudeGte : longitudeGte // ignore: cast_nullable_to_non_nullable
+as double?,longitudeLte: freezed == longitudeLte ? _self.longitudeLte : longitudeLte // ignore: cast_nullable_to_non_nullable
+as double?,sortBy: freezed == sortBy ? _self.sortBy : sortBy // ignore: cast_nullable_to_non_nullable
 as EarthquakeSortBy?,sortOrder: freezed == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
 as SortOrder?,
   ));

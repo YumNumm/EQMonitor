@@ -1,13 +1,16 @@
 import 'package:core/core.dart' show Date;
+import 'package:eqmonitor/core/component/chip/datasource_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/earthquake_type_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
+import 'package:eqmonitor/core/component/chip/lat_lng_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/lpgm_intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/region_intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/sort_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
+import 'package:eqmonitor/core/component/chip/telegram_type_filter_chip.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:flutter/material.dart';
@@ -171,6 +174,52 @@ class _FilterChipBar extends StatelessWidget {
                   regionName: result.name,
                   regionIntensityGte: result.intensityGte,
                   regionIntensityLte: result.intensityLte,
+                ),
+              );
+            }
+          },
+        ),
+      ),
+      (
+        order: 9,
+        isActive: parameter.datasource != null,
+        chip: DatasourceFilterChip(
+          datasource: parameter.datasource,
+          onChanged: (ds) => onChanged(parameter.updateDatasource(ds)),
+        ),
+      ),
+      (
+        order: 10,
+        isActive: parameter.telegramTypes != null,
+        chip: TelegramTypeFilterChip(
+          telegramTypes: parameter.telegramTypes,
+          onChanged: (types) => onChanged(parameter.updateTelegramTypes(types)),
+        ),
+      ),
+      (
+        order: 11,
+        isActive:
+            parameter.latitudeGte != null ||
+            parameter.latitudeLte != null ||
+            parameter.longitudeGte != null ||
+            parameter.longitudeLte != null,
+        chip: LatLngFilterChip(
+          latitudeGte: parameter.latitudeGte,
+          latitudeLte: parameter.latitudeLte,
+          longitudeGte: parameter.longitudeGte,
+          longitudeLte: parameter.longitudeLte,
+          onChanged: (range) {
+            if (range == null) {
+              onChanged(
+                parameter.updateLatLngRange(),
+              );
+            } else {
+              onChanged(
+                parameter.updateLatLngRange(
+                  latitudeGte: range.latitudeGte,
+                  latitudeLte: range.latitudeLte,
+                  longitudeGte: range.longitudeGte,
+                  longitudeLte: range.longitudeLte,
                 ),
               );
             }

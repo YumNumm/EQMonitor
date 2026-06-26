@@ -238,12 +238,19 @@ class EarthquakeHistoryDataSource
         statuses: _parameter.statuses?.cast<api.TelegramStatus>(),
         epicenterCodes: _epicenterCodes,
         earthquakeType: _apiEarthquakeType,
+        datasource: _parameter.datasource,
+        telegramTypes: _parameter.telegramTypes
+            ?.cast<api.EarthquakeTelegramType>(),
         originTimeGte: _parameter.originTimeGte,
         originTimeLte: _parameter.originTimeLte,
         maxLpgmIntensityGte:
             _parameter.maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
         maxLpgmIntensityLte:
             _parameter.maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
+        latitudeGte: _parameter.latitudeGte,
+        latitudeLte: _parameter.latitudeLte,
+        longitudeGte: _parameter.longitudeGte,
+        longitudeLte: _parameter.longitudeLte,
         sortBy: _apiSortBy,
         sortOrder: _apiSortOrder,
       );
