@@ -16,8 +16,6 @@ abstract class FeedEarthquakeCountsData with _$FeedEarthquakeCountsData {
   const factory FeedEarthquakeCountsData({
     /// const: "EARTHQUAKE_COUNTS"
     required String type,
-
-    /// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
     required InfoType infoType,
     @JsonKey(includeIfNull: false)
     List<FeedEarthquakeCount>? earthquakeCounts,

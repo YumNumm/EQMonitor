@@ -15,8 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FeedEarthquakeCount {
 
-/// const: "１時間地震回数" | const: "累積地震回数" | const: "地震回数"
- Type get type; FeedEarthquakeCountTargetTime get targetTime; FeedEarthquakeCountValues get values;
+ FeedTelegramType get type; FeedEarthquakeCountTargetTime get targetTime; FeedEarthquakeCountValues get values;
 /// Create a copy of FeedEarthquakeCount
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +48,7 @@ abstract mixin class $FeedEarthquakeCountCopyWith<$Res>  {
   factory $FeedEarthquakeCountCopyWith(FeedEarthquakeCount value, $Res Function(FeedEarthquakeCount) _then) = _$FeedEarthquakeCountCopyWithImpl;
 @useResult
 $Res call({
- Type type, FeedEarthquakeCountTargetTime targetTime, FeedEarthquakeCountValues values
+ FeedTelegramType type, FeedEarthquakeCountTargetTime targetTime, FeedEarthquakeCountValues values
 });
 
 
@@ -69,7 +68,7 @@ class _$FeedEarthquakeCountCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? targetTime = null,Object? values = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type,targetTime: null == targetTime ? _self.targetTime : targetTime // ignore: cast_nullable_to_non_nullable
+as FeedTelegramType,targetTime: null == targetTime ? _self.targetTime : targetTime // ignore: cast_nullable_to_non_nullable
 as FeedEarthquakeCountTargetTime,values: null == values ? _self.values : values // ignore: cast_nullable_to_non_nullable
 as FeedEarthquakeCountValues,
   ));
@@ -174,7 +173,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type type,  FeedEarthquakeCountTargetTime targetTime,  FeedEarthquakeCountValues values)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( FeedTelegramType type,  FeedEarthquakeCountTargetTime targetTime,  FeedEarthquakeCountValues values)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FeedEarthquakeCount() when $default != null:
 return $default(_that.type,_that.targetTime,_that.values);case _:
@@ -195,7 +194,7 @@ return $default(_that.type,_that.targetTime,_that.values);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type type,  FeedEarthquakeCountTargetTime targetTime,  FeedEarthquakeCountValues values)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( FeedTelegramType type,  FeedEarthquakeCountTargetTime targetTime,  FeedEarthquakeCountValues values)  $default,) {final _that = this;
 switch (_that) {
 case _FeedEarthquakeCount():
 return $default(_that.type,_that.targetTime,_that.values);case _:
@@ -215,7 +214,7 @@ return $default(_that.type,_that.targetTime,_that.values);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type type,  FeedEarthquakeCountTargetTime targetTime,  FeedEarthquakeCountValues values)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( FeedTelegramType type,  FeedEarthquakeCountTargetTime targetTime,  FeedEarthquakeCountValues values)?  $default,) {final _that = this;
 switch (_that) {
 case _FeedEarthquakeCount() when $default != null:
 return $default(_that.type,_that.targetTime,_that.values);case _:
@@ -233,8 +232,7 @@ class _FeedEarthquakeCount implements FeedEarthquakeCount {
   const _FeedEarthquakeCount({required this.type, required this.targetTime, required this.values});
   factory _FeedEarthquakeCount.fromJson(Map<String, dynamic> json) => _$FeedEarthquakeCountFromJson(json);
 
-/// const: "１時間地震回数" | const: "累積地震回数" | const: "地震回数"
-@override final  Type type;
+@override final  FeedTelegramType type;
 @override final  FeedEarthquakeCountTargetTime targetTime;
 @override final  FeedEarthquakeCountValues values;
 
@@ -271,7 +269,7 @@ abstract mixin class _$FeedEarthquakeCountCopyWith<$Res> implements $FeedEarthqu
   factory _$FeedEarthquakeCountCopyWith(_FeedEarthquakeCount value, $Res Function(_FeedEarthquakeCount) _then) = __$FeedEarthquakeCountCopyWithImpl;
 @override @useResult
 $Res call({
- Type type, FeedEarthquakeCountTargetTime targetTime, FeedEarthquakeCountValues values
+ FeedTelegramType type, FeedEarthquakeCountTargetTime targetTime, FeedEarthquakeCountValues values
 });
 
 
@@ -291,7 +289,7 @@ class __$FeedEarthquakeCountCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? targetTime = null,Object? values = null,}) {
   return _then(_FeedEarthquakeCount(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type,targetTime: null == targetTime ? _self.targetTime : targetTime // ignore: cast_nullable_to_non_nullable
+as FeedTelegramType,targetTime: null == targetTime ? _self.targetTime : targetTime // ignore: cast_nullable_to_non_nullable
 as FeedEarthquakeCountTargetTime,values: null == values ? _self.values : values // ignore: cast_nullable_to_non_nullable
 as FeedEarthquakeCountValues,
   ));

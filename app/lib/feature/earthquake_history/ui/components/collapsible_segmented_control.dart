@@ -11,6 +11,7 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
 
   final List<SegmentItem<T>> segments;
   final T selected;
+  // ignore: unsafe_variance
   final ValueChanged<T> onSelected;
 
   @override
@@ -66,7 +67,7 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
           alignment: Alignment.centerRight,
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(8),

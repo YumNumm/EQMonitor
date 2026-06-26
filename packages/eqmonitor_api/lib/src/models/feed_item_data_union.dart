@@ -9,8 +9,8 @@ import 'feed_comments.dart';
 import 'feed_earthquake_count.dart';
 import 'feed_naming.dart';
 import 'feed_nankai_earthquake_info.dart';
+import 'feed_telegram_type.dart';
 import 'info_type.dart';
-import 'telegram_type.dart';
 
 part 'feed_item_data_union.freezed.dart';
 part 'feed_item_data_union.g.dart';
@@ -28,8 +28,6 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   const factory FeedItemDataUnion.feedEarthquakeExplanationData({
     /// const: "EARTHQUAKE_EXPLANATION"
     required String type,
-
-    /// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
     required InfoType infoType,
     required String text,
     @JsonKey(includeIfNull: false)
@@ -42,8 +40,6 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   const factory FeedItemDataUnion.feedEarthquakeCountsData({
     /// const: "EARTHQUAKE_COUNTS"
     required String type,
-
-    /// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
     required InfoType infoType,
     @JsonKey(includeIfNull: false)
     List<FeedEarthquakeCount>? earthquakeCounts,
@@ -59,12 +55,8 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   const factory FeedItemDataUnion.feedEarthquakeNankaiData({
     /// const: "EARTHQUAKE_NANKAI"
     required String type,
-
-    /// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
     required InfoType infoType,
-
-    /// const: "南海トラフ地震臨時情報" | const: "南海トラフ地震関連解説情報" | const: "北海道・三陸沖後発地震注意情報"
-    required TelegramType telegramType,
+    required FeedTelegramType telegramType,
     @JsonKey(includeIfNull: false)
     FeedNankaiEarthquakeInfo? earthquakeInfo,
     @JsonKey(includeIfNull: false)

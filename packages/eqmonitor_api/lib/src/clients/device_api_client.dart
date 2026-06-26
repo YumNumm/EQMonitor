@@ -13,8 +13,6 @@ import '../models/earthquake_settings_request.dart';
 import '../models/earthquake_settings_response.dart';
 import '../models/eew_settings_request.dart';
 import '../models/eew_settings_response.dart';
-import '../models/live_activity_test_scenario_request.dart';
-import '../models/live_activity_test_scenario_response.dart';
 import '../models/live_activity_token_request.dart';
 import '../models/live_activity_token_response.dart';
 import '../models/notification_settings_request.dart';
@@ -227,12 +225,6 @@ abstract class DeviceApiClient {
   Future<HttpResponse<void>> deleteV2DeviceMeLiveActivityLiveActivityIdToken({
     @Path('liveActivityId') required String liveActivityId,
   });
-
-  /// デバッグ用: Live Activity の 4 報シーケンス（start + 3 updates）を再生する
-  @POST(DeviceApiClientUrls.postV2DeviceMeLiveActivityTestScenario)
-  Future<HttpResponse<LiveActivityTestScenarioResponse>> postV2DeviceMeLiveActivityTestScenario({
-    @Body() required LiveActivityTestScenarioRequest body,
-  });
 }
 
 
@@ -307,7 +299,5 @@ abstract class DeviceApiClientUrls {
 	static const putV2DeviceMeLiveActivityLiveActivityIdToken = "/v2/device/me/live-activity/{liveActivityId}/token";
 	/// /v2/device/me/live-activity/{liveActivityId}/token
 	static const deleteV2DeviceMeLiveActivityLiveActivityIdToken = "/v2/device/me/live-activity/{liveActivityId}/token";
-	/// /v2/device/me/live-activity/test-scenario
-	static const postV2DeviceMeLiveActivityTestScenario = "/v2/device/me/live-activity/test-scenario";
 }
 

@@ -55,7 +55,6 @@ class EarthquakeNotificationSettingsNotifier
     final result = await repo.patchEarthquakeSettings(
       deviceId: deviceId,
       enabled: enabled,
-      criticalThreshold: current.criticalThreshold,
       estimatedIntensityEnabled: current.estimatedIntensityEnabled,
     );
     switch (result) {
@@ -75,7 +74,6 @@ class EarthquakeNotificationSettingsNotifier
     final result = await repo.patchEarthquakeSettings(
       deviceId: deviceId,
       enabled: current.enabled,
-      criticalThreshold: threshold,
       estimatedIntensityEnabled: current.estimatedIntensityEnabled,
     );
     switch (result) {
@@ -95,7 +93,6 @@ class EarthquakeNotificationSettingsNotifier
     final result = await repo.patchEarthquakeSettings(
       deviceId: deviceId,
       enabled: current.enabled,
-      criticalThreshold: current.criticalThreshold,
       estimatedIntensityEnabled: enabled,
     );
     switch (result) {

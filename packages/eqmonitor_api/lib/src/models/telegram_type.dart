@@ -4,18 +4,47 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// const: "南海トラフ地震臨時情報" | const: "南海トラフ地震関連解説情報" | const: "北海道・三陸沖後発地震注意情報"
+/// 情報名称(Control/Title部)
 @JsonEnum()
 enum TelegramType {
-  /// Incorrect name has been replaced. Original name: `南海トラフ地震臨時情報`.
-  @JsonValue('南海トラフ地震臨時情報')
-  undefined0('南海トラフ地震臨時情報'),
-  /// Incorrect name has been replaced. Original name: `南海トラフ地震関連解説情報`.
-  @JsonValue('南海トラフ地震関連解説情報')
-  undefined1('南海トラフ地震関連解説情報'),
-  /// Incorrect name has been replaced. Original name: `北海道・三陸沖後発地震注意情報`.
-  @JsonValue('北海道・三陸沖後発地震注意情報')
-  undefined2('北海道・三陸沖後発地震注意情報');
+  @JsonValue('VZSE40')
+  vzse40('VZSE40'),
+  @JsonValue('VXSE42')
+  vxse42('VXSE42'),
+  @JsonValue('VXSE43')
+  vxse43('VXSE43'),
+  @JsonValue('VXSE44')
+  vxse44('VXSE44'),
+  @JsonValue('VXSE45')
+  vxse45('VXSE45'),
+  @JsonValue('VXSE47')
+  vxse47('VXSE47'),
+  @JsonValue('VTSE41')
+  vtse41('VTSE41'),
+  @JsonValue('VTSE51')
+  vtse51('VTSE51'),
+  @JsonValue('VTSE52')
+  vtse52('VTSE52'),
+  @JsonValue('VXSE51')
+  vxse51('VXSE51'),
+  @JsonValue('VXSE52')
+  vxse52('VXSE52'),
+  @JsonValue('VXSE53')
+  vxse53('VXSE53'),
+  @JsonValue('VXSE56')
+  vxse56('VXSE56'),
+  @JsonValue('VXSE60')
+  vxse60('VXSE60'),
+  @JsonValue('VXSE61')
+  vxse61('VXSE61'),
+  @JsonValue('VXSE62')
+  vxse62('VXSE62'),
+  @JsonValue('NANKAI')
+  nankai('NANKAI'),
+  @JsonValue('VYSE60')
+  vyse60('VYSE60'),
+  @JsonValue('SHINDO_DB')
+  shindoDb('SHINDO_DB');
 
   const TelegramType(this.json);
 

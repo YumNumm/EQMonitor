@@ -19,7 +19,7 @@ _FeedEarthquakeNankaiData _$FeedEarthquakeNankaiDataFromJson(
     ),
     telegramType: $checkedConvert(
       'telegramType',
-      (v) => $enumDecode(_$TelegramTypeEnumMap, v),
+      (v) => $enumDecode(_$FeedTelegramTypeEnumMap, v),
     ),
     earthquakeInfo: $checkedConvert(
       'earthquakeInfo',
@@ -47,11 +47,12 @@ Map<String, dynamic> _$FeedEarthquakeNankaiDataToJson(
 const _$InfoTypeEnumMap = {
   InfoType.publication: 'PUBLICATION',
   InfoType.correction: 'CORRECTION',
+  InfoType.delay: 'DELAY',
   InfoType.cancellation: 'CANCELLATION',
 };
 
-const _$TelegramTypeEnumMap = {
-  TelegramType.undefined0: '南海トラフ地震臨時情報',
-  TelegramType.undefined1: '南海トラフ地震関連解説情報',
-  TelegramType.undefined2: '北海道・三陸沖後発地震注意情報',
+const _$FeedTelegramTypeEnumMap = {
+  FeedTelegramType.oneHourEarthquakeCount: 'ONE_HOUR_EARTHQUAKE_COUNT',
+  FeedTelegramType.accumulativeEarthquakeCount: 'ACCUMULATIVE_EARTHQUAKE_COUNT',
+  FeedTelegramType.earthquakeCount: 'EARTHQUAKE_COUNT',
 };

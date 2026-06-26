@@ -16,8 +16,6 @@ abstract class FeedEarthquakeExplanationData with _$FeedEarthquakeExplanationDat
   const factory FeedEarthquakeExplanationData({
     /// const: "EARTHQUAKE_EXPLANATION"
     required String type,
-
-    /// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
     required InfoType infoType,
     required String text,
     @JsonKey(includeIfNull: false)

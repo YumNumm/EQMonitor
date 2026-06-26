@@ -212,7 +212,7 @@ return feedDeveloperMessageData(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String type,  String text)?  feedEarthquakeNoticeData,TResult Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  FeedNaming? naming, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeExplanationData,TResult Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeCountsData,TResult Function( String type,  InfoType infoType,  TelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  feedEarthquakeNankaiData,TResult Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  feedAppUpdateData,TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedIncidentData,TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedDeveloperMessageData,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String type,  String text)?  feedEarthquakeNoticeData,TResult Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  FeedNaming? naming, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeExplanationData,TResult Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeCountsData,TResult Function( String type,  InfoType infoType,  FeedTelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  feedEarthquakeNankaiData,TResult Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  feedAppUpdateData,TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedIncidentData,TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedDeveloperMessageData,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case FeedItemDataUnionFeedEarthquakeNoticeData() when feedEarthquakeNoticeData != null:
 return feedEarthquakeNoticeData(_that.type,_that.text);case FeedItemDataUnionFeedEarthquakeExplanationData() when feedEarthquakeExplanationData != null:
@@ -239,7 +239,7 @@ return feedDeveloperMessageData(_that.type,_that.url);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String type,  String text)  feedEarthquakeNoticeData,required TResult Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  FeedNaming? naming, @JsonKey(includeIfNull: false)  FeedComments? comments)  feedEarthquakeExplanationData,required TResult Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  FeedComments? comments)  feedEarthquakeCountsData,required TResult Function( String type,  InfoType infoType,  TelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)  feedEarthquakeNankaiData,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)  feedAppUpdateData,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)  feedIncidentData,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)  feedDeveloperMessageData,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String type,  String text)  feedEarthquakeNoticeData,required TResult Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  FeedNaming? naming, @JsonKey(includeIfNull: false)  FeedComments? comments)  feedEarthquakeExplanationData,required TResult Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  FeedComments? comments)  feedEarthquakeCountsData,required TResult Function( String type,  InfoType infoType,  FeedTelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)  feedEarthquakeNankaiData,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)  feedAppUpdateData,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)  feedIncidentData,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)  feedDeveloperMessageData,}) {final _that = this;
 switch (_that) {
 case FeedItemDataUnionFeedEarthquakeNoticeData():
 return feedEarthquakeNoticeData(_that.type,_that.text);case FeedItemDataUnionFeedEarthquakeExplanationData():
@@ -262,7 +262,7 @@ return feedDeveloperMessageData(_that.type,_that.url);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String type,  String text)?  feedEarthquakeNoticeData,TResult? Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  FeedNaming? naming, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeExplanationData,TResult? Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeCountsData,TResult? Function( String type,  InfoType infoType,  TelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  feedEarthquakeNankaiData,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  feedAppUpdateData,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedIncidentData,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedDeveloperMessageData,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String type,  String text)?  feedEarthquakeNoticeData,TResult? Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  FeedNaming? naming, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeExplanationData,TResult? Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeCountsData,TResult? Function( String type,  InfoType infoType,  FeedTelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  feedEarthquakeNankaiData,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  feedAppUpdateData,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedIncidentData,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedDeveloperMessageData,}) {final _that = this;
 switch (_that) {
 case FeedItemDataUnionFeedEarthquakeNoticeData() when feedEarthquakeNoticeData != null:
 return feedEarthquakeNoticeData(_that.type,_that.text);case FeedItemDataUnionFeedEarthquakeExplanationData() when feedEarthquakeExplanationData != null:
@@ -364,7 +364,6 @@ class FeedItemDataUnionFeedEarthquakeExplanationData implements FeedItemDataUnio
 
 /// const: "EARTHQUAKE_EXPLANATION"
 @override final  String type;
-/// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
  final  InfoType infoType;
  final  String text;
 @JsonKey(includeIfNull: false) final  FeedNaming? naming;
@@ -471,7 +470,6 @@ class FeedItemDataUnionFeedEarthquakeCountsData implements FeedItemDataUnion {
 
 /// const: "EARTHQUAKE_COUNTS"
 @override final  String type;
-/// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
  final  InfoType infoType;
  final  List<FeedEarthquakeCount>? _earthquakeCounts;
 @JsonKey(includeIfNull: false) List<FeedEarthquakeCount>? get earthquakeCounts {
@@ -576,10 +574,8 @@ class FeedItemDataUnionFeedEarthquakeNankaiData implements FeedItemDataUnion {
 
 /// const: "EARTHQUAKE_NANKAI"
 @override final  String type;
-/// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
  final  InfoType infoType;
-/// const: "南海トラフ地震臨時情報" | const: "南海トラフ地震関連解説情報" | const: "北海道・三陸沖後発地震注意情報"
- final  TelegramType telegramType;
+ final  FeedTelegramType telegramType;
 @JsonKey(includeIfNull: false) final  FeedNankaiEarthquakeInfo? earthquakeInfo;
 @JsonKey(includeIfNull: false) final  String? nextAdvisory;
 @JsonKey(includeIfNull: false) final  String? text;
@@ -621,7 +617,7 @@ abstract mixin class $FeedItemDataUnionFeedEarthquakeNankaiDataCopyWith<$Res> im
   factory $FeedItemDataUnionFeedEarthquakeNankaiDataCopyWith(FeedItemDataUnionFeedEarthquakeNankaiData value, $Res Function(FeedItemDataUnionFeedEarthquakeNankaiData) _then) = _$FeedItemDataUnionFeedEarthquakeNankaiDataCopyWithImpl;
 @override @useResult
 $Res call({
- String type, InfoType infoType, TelegramType telegramType,@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? earthquakeInfo,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text
+ String type, InfoType infoType, FeedTelegramType telegramType,@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? earthquakeInfo,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text
 });
 
 
@@ -643,7 +639,7 @@ class _$FeedItemDataUnionFeedEarthquakeNankaiDataCopyWithImpl<$Res>
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
 as InfoType,telegramType: null == telegramType ? _self.telegramType : telegramType // ignore: cast_nullable_to_non_nullable
-as TelegramType,earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
+as FeedTelegramType,earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
 as FeedNankaiEarthquakeInfo?,nextAdvisory: freezed == nextAdvisory ? _self.nextAdvisory : nextAdvisory // ignore: cast_nullable_to_non_nullable
 as String?,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String?,

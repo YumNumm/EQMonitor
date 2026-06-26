@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -153,15 +154,7 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                             fileName: 'intensity_color.json',
                             type: .custom,
                             allowedExtensions: const ['json'],
-<<<<<<< HEAD
-                            bytes: utf8.encode(
-                              ref
-                                  .read(intensityColorProvider.notifier)
-                                  .exportAsJsonString(),
-                            ),
-=======
                             bytes: utf8.encode(json),
->>>>>>> d143fa6ec041f07b99e3e91934581b5d8843fa80
                           );
                           if (path == null) {
                             return;
@@ -214,7 +207,6 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                           }
                           final text = await File(path).readAsString();
                           await importFromJsonText(text);
-=======
                         },
                         child: const Text('ファイルからインポート'),
                       ),

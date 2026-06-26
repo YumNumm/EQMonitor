@@ -5,17 +5,17 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
-enum Scenario {
-  @JsonValue('noto_4reports')
-  noto4reports('noto_4reports'),
-  @JsonValue('one_point_growth')
-  onePointGrowth('one_point_growth'),
-  @JsonValue('shake_growth')
-  shakeGrowth('shake_growth'),
-  @JsonValue('shake_warning')
-  shakeWarning('shake_warning');
+enum FeedPriority {
+  @JsonValue('CRITICAL')
+  critical('CRITICAL'),
+  @JsonValue('HIGH')
+  high('HIGH'),
+  @JsonValue('NORMAL')
+  normal('NORMAL'),
+  @JsonValue('LOW')
+  low('LOW');
 
-  const Scenario(this.json);
+  const FeedPriority(this.json);
 
   final String? json;
   String toJson() {

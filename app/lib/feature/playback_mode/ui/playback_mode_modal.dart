@@ -150,11 +150,6 @@ class _OpenReplayFileButton extends ConsumerWidget {
       icon: const Icon(Icons.folder_open_rounded),
       label: const Text('EQRP リプレイファイルを開く'),
       onPressed: () async {
-<<<<<<< HEAD
-        final result = await FilePicker.pickFiles();
-        final picked = result?.files.singleOrNull;
-        if (picked == null) {
-=======
         final result = await FilePicker.pickFiles(
           type: .custom,
           allowedExtensions: const ['eqrp'],
@@ -164,10 +159,12 @@ class _OpenReplayFileButton extends ConsumerWidget {
         if (bytes == null) {
           return;
         }
-        final bytes = await picked.readAsBytes();
         await ref
             .read(replayProvider.notifier)
-            .loadFile(bytes: bytes, fileName: picked.name);
+            .loadFile(
+              bytes: bytes,
+              fileName: picked?.name ?? '',
+            );
       },
     );
   }

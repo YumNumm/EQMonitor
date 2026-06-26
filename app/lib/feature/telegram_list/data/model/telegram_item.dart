@@ -30,7 +30,7 @@ abstract class TelegramItem with _$TelegramItem {
   }) = _TelegramItem;
 }
 
-extension ItemsApiExtension on api.Items4 {
+extension ItemsApiExtension on api.TelegramPartial {
   TelegramItem get toTelegramItem => TelegramItem(
     id: id,
     eventId: eventId,

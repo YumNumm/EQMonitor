@@ -46,7 +46,7 @@ Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
     );
     final eventId = message.data['eventId'] as String?;
     if (eventId != null) {
-      ref
+     await ref
           .read(goRouterProvider)
           .push(EarthquakeHistoryDetailsRoute(eventId: eventId).location);
     }

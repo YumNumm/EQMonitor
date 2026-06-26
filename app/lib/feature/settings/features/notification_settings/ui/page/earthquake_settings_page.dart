@@ -55,7 +55,6 @@ class _Body extends ConsumerWidget {
         settingsAsync.value ??
         const EarthquakeNotificationSettings(
           enabled: true,
-          criticalThreshold: null,
           estimatedIntensityEnabled: false,
           regions: [],
         );
@@ -66,8 +65,13 @@ class _Body extends ConsumerWidget {
         children: [
           const SettingsSectionHeader(text: '通知の有効化'),
           _EnabledSection(settings: settings),
-          const SettingsSectionHeader(text: 'クリティカル通知'),
-          _ThresholdSection(settings: settings),
+          // TODO(YumNumm): 重大な通知の実装
+          const SizedBox(
+            height: 32,
+            child: Placeholder(
+              child: Text('重大な通知'),
+            ),
+          ),
           const SettingsSectionHeader(text: '推定震度'),
           _EstimatedIntensitySection(settings: settings),
           const SettingsSectionHeader(text: '通知地域'),
@@ -108,73 +112,6 @@ class _EnabledSection extends ConsumerWidget {
                               earthquakeNotificationSettingsProvider.notifier,
                             )
                             .setEnabled(enabled: value);
-                      },
-                    );
-              } on Object {
-                return;
-              }
-            },
-    );
-  }
-}
-
-class _ThresholdSection extends ConsumerWidget {
-  const _ThresholdSection({required this.settings});
-
-  final EarthquakeNotificationSettings settings;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final saveState = ref.watch(
-      EarthquakeNotificationSettingsNotifier.saveSettingsMutation,
-    );
-    final isSaving = saveState is MutationPending;
-    final threshold = settings.criticalThreshold;
-    final themeColors = Theme.of(context).colorScheme;
-
-    return ListTile(
-      title: const Text('クリティカル通知のしきい値'),
-      subtitle: Text(
-        threshold != null
-            ? '震度${threshold.mainText}${threshold.suffix}以上'
-            : '設定なし',
-      ),
-      trailing: isSaving
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator.adaptive(
-                strokeWidth: 2,
-                backgroundColor: themeColors.onSurfaceVariant,
-              ),
-            )
-          : const Icon(Icons.chevron_right),
-      onTap: isSaving
-          ? null
-          : () async {
-              final picked = await _showIntensityPicker(
-                context: context,
-                current: threshold,
-              );
-              if (picked == null) {
-                return;
-              }
-              if (!context.mounted) {
-                return;
-              }
-              try {
-                await EarthquakeNotificationSettingsNotifier
-                    .saveSettingsMutation
-                    .run(
-                      ref,
-                      (tsx) async {
-                        await tsx
-                            .get(
-                              earthquakeNotificationSettingsProvider.notifier,
-                            )
-                            .setCriticalThreshold(
-                              picked == _kClearThreshold ? null : picked,
-                            );
                       },
                     );
               } on Object {

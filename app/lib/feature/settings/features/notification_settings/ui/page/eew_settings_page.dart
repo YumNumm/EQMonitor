@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_notification_settings.dart';
@@ -60,7 +59,6 @@ class _Body extends ConsumerWidget {
         settingsAsync.value ??
         const EewNotificationSettings(
           enabled: true,
-          criticalThreshold: null,
           startLiveActivity: true,
           onePointEnabled: true,
           regions: [],
@@ -72,8 +70,13 @@ class _Body extends ConsumerWidget {
         children: [
           const SettingsSectionHeader(text: '通知の有効化'),
           _EnabledSection(settings: settings),
-          const SettingsSectionHeader(text: 'クリティカル通知'),
-          _ThresholdSection(settings: settings),
+          // TODO(YumNumm): 重大な通知の実装
+          const SizedBox(
+            height: 32,
+            child: Placeholder(
+              child: Text('重大な通知'),
+            ),
+          ),
           const SettingsSectionHeader(text: 'Live Activity'),
           _LiveActivitySection(settings: settings),
           const SettingsSectionHeader(text: '通知地域'),
@@ -108,67 +111,6 @@ class _EnabledSection extends ConsumerWidget {
                     await tsx
                         .get(eewSettingsProvider.notifier)
                         .setEnabled(enabled: value);
-                  },
-                );
-              } on Object {
-                return;
-              }
-            },
-    );
-  }
-}
-
-class _ThresholdSection extends ConsumerWidget {
-  const _ThresholdSection({required this.settings});
-
-  final EewNotificationSettings settings;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final saveState = ref.watch(EewSettingsNotifier.saveSettingsMutation);
-    final isSaving = saveState is MutationPending;
-    final threshold = settings.criticalThreshold;
-    final themeColors = Theme.of(context).colorScheme;
-
-    return ListTile(
-      title: const Text('クリティカル通知のしきい値'),
-      subtitle: Text(
-        threshold != null
-            ? '震度${threshold.mainText}${threshold.suffix}以上'
-            : '設定なし',
-      ),
-      trailing: isSaving
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator.adaptive(
-                strokeWidth: 2,
-                backgroundColor: themeColors.onSurfaceVariant,
-              ),
-            )
-          : const Icon(Icons.chevron_right),
-      onTap: isSaving
-          ? null
-          : () async {
-              final picked = await _showIntensityPicker(
-                context: context,
-                current: threshold,
-              );
-              if (picked == null) {
-                return;
-              }
-              if (!context.mounted) {
-                return;
-              }
-              try {
-                await EewSettingsNotifier.saveSettingsMutation.run(
-                  ref,
-                  (tsx) async {
-                    await tsx
-                        .get(eewSettingsProvider.notifier)
-                        .setCriticalThreshold(
-                          picked == _kClearThreshold ? null : picked,
-                        );
                   },
                 );
               } on Object {
@@ -466,57 +408,6 @@ Future<({double lat, double lon})?> _ensurePermissionAndGetLocation(
     }
     return null;
   }
-}
-
-const JmaIntensity _kClearThreshold = JmaIntensity.unknown;
-
-Future<JmaIntensity?> _showIntensityPicker({
-  required BuildContext context,
-  required JmaIntensity? current,
-}) async {
-  const selectableIntensities = [
-    JmaIntensity.one,
-    JmaIntensity.two,
-    JmaIntensity.three,
-    JmaIntensity.four,
-    JmaIntensity.fiveLower,
-    JmaIntensity.fiveUpper,
-    JmaIntensity.sixLower,
-    JmaIntensity.sixUpper,
-    JmaIntensity.seven,
-  ];
-
-  return showDialog<JmaIntensity>(
-    context: context,
-    builder: (context) => SimpleDialog(
-      title: const Text('通知のしきい値を選択'),
-      children: [
-        SimpleDialogOption(
-          onPressed: () => Navigator.of(context).pop(_kClearThreshold),
-          child: const Text('設定なし'),
-        ),
-        for (final intensity in selectableIntensities)
-          SimpleDialogOption(
-            onPressed: () => Navigator.of(context).pop(intensity),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '震度${intensity.mainText}${intensity.suffix}以上',
-                  ),
-                ),
-                if (current == intensity)
-                  Icon(
-                    Icons.check,
-                    color: Theme.of(context).colorScheme.primary,
-                    size: 18,
-                  ),
-              ],
-            ),
-          ),
-      ],
-    ),
-  );
 }
 
 class _ErrorBody extends StatelessWidget {
