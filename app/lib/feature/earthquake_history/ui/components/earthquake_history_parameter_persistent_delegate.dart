@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/component/chip/earthquake_type_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/lpgm_intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
+import 'package:eqmonitor/core/component/chip/region_intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/sort_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
@@ -43,8 +44,9 @@ class EarthquakeHistoryParameterPersistentDelegate
   double get minExtent => 48;
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      false;
+  bool shouldRebuild(
+    covariant EarthquakeHistoryParameterPersistentDelegate oldDelegate,
+  ) => parameter != oldDelegate.parameter;
 }
 
 class _FilterChipBar extends StatelessWidget {
@@ -141,6 +143,38 @@ class _FilterChipBar extends StatelessWidget {
           statuses: parameter.statuses,
           onChanged: (statuses) =>
               onChanged(parameter.updateStatuses(statuses)),
+        ),
+      ),
+      (
+        order: 8,
+        isActive: parameter.regionCode != null,
+        chip: RegionIntensityFilterChip(
+          regionSearchType: parameter.regionSearchType,
+          regionCode: parameter.regionCode,
+          regionName: parameter.regionName,
+          regionIntensityGte: parameter.regionIntensityGte,
+          regionIntensityLte: parameter.regionIntensityLte,
+          onChanged: (result) {
+            if (result == null) {
+              onChanged(
+                parameter.updateRegion(
+                  regionSearchType: null,
+                  regionCode: null,
+                  regionName: null,
+                ),
+              );
+            } else {
+              onChanged(
+                parameter.updateRegion(
+                  regionSearchType: result.searchType,
+                  regionCode: result.code,
+                  regionName: result.name,
+                  regionIntensityGte: result.intensityGte,
+                  regionIntensityLte: result.intensityLte,
+                ),
+              );
+            }
+          },
         ),
       ),
     ];
