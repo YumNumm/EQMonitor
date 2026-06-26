@@ -16,7 +16,7 @@ class EqMonitorRealtimeEventMapper {
 
   List<RealtimeEvent> map(WsMessage message) => switch (message) {
     WsSnapshotMessage(:final data) => [
-      RealtimeEvent.snapshot(
+      .snapshot(
         eews: data.eews,
         earthquakes: data.earthquakes,
         shakes: data.shakes.map(mapSnapshotShakeEntry).toList(),
@@ -90,6 +90,7 @@ class EqMonitorRealtimeEventMapper {
       ],
     },
     WsPingMessage() => const <RealtimeEvent>[],
+    WsReadyMessage() => const <RealtimeEvent>[],
   };
 
   RealtimeShakeData mapSnapshotShakeEntry(WsSnapshotShakeEntry entry) =>

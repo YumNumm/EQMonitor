@@ -11,6 +11,8 @@ import 'jma_code_table_parameter_metadata.dart';
 import 'kyoshin_observation_point.dart';
 import 'kyoshin_observation_points_parameter_metadata.dart';
 import 'parameter_metadata.dart';
+import 'shindo_db_station.dart';
+import 'shindo_db_stations_parameter_metadata.dart';
 import 'tsunami_station_prefecture.dart';
 import 'tsunami_stations_parameter_metadata.dart';
 
@@ -43,6 +45,12 @@ sealed class ParameterDataResponseUnion with _$ParameterDataResponseUnion {
     required TsunamiStationsParameterMetadata metadata,
     required List<TsunamiStationPrefecture> prefectures,
   }) = ParameterDataResponseUnionTsunamiStationsParameter;
+  
+  @JsonSerializable()
+  const factory ParameterDataResponseUnion.shindoDbStationsParameter({
+    required ShindoDbStationsParameterMetadata metadata,
+    required List<ShindoDbStation> stations,
+  }) = ParameterDataResponseUnionShindoDbStationsParameter;
   
 
   factory ParameterDataResponseUnion.fromJson(Map<String, Object?> json) =>

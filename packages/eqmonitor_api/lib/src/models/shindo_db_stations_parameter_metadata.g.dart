@@ -2,23 +2,20 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'parameter_manifest_item.dart';
+part of 'shindo_db_stations_parameter_metadata.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_ParameterManifestItem _$ParameterManifestItemFromJson(
+_ShindoDbStationsParameterMetadata _$ShindoDbStationsParameterMetadataFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  '_ParameterManifestItem',
+  '_ShindoDbStationsParameterMetadata',
   json,
   ($checkedConvert) {
-    final val = _ParameterManifestItem(
-      type: $checkedConvert(
-        'type',
-        (v) => $enumDecode(_$ParameterTypeEnumMap, v),
-      ),
+    final val = _ShindoDbStationsParameterMetadata(
+      type: $checkedConvert('type', (v) => v as String),
       schemaVersion: $checkedConvert(
         'schema_version',
         (v) => (v as num).toInt(),
@@ -33,8 +30,6 @@ _ParameterManifestItem _$ParameterManifestItemFromJson(
         (v) => (v as List<dynamic>).map((e) => e as String).toList(),
       ),
       sha256: $checkedConvert('sha256', (v) => v as String),
-      sizeBytes: $checkedConvert('size_bytes', (v) => v as num),
-      url: $checkedConvert('url', (v) => v as String),
     );
     return val;
   },
@@ -43,12 +38,11 @@ _ParameterManifestItem _$ParameterManifestItemFromJson(
     'sourceVersion': 'source_version',
     'sourceUpdatedAt': 'source_updated_at',
     'sourceUrls': 'source_urls',
-    'sizeBytes': 'size_bytes',
   },
 );
 
-Map<String, dynamic> _$ParameterManifestItemToJson(
-  _ParameterManifestItem instance,
+Map<String, dynamic> _$ShindoDbStationsParameterMetadataToJson(
+  _ShindoDbStationsParameterMetadata instance,
 ) => <String, dynamic>{
   'type': instance.type,
   'schema_version': instance.schemaVersion,
@@ -56,14 +50,4 @@ Map<String, dynamic> _$ParameterManifestItemToJson(
   'source_updated_at': instance.sourceUpdatedAt,
   'source_urls': instance.sourceUrls,
   'sha256': instance.sha256,
-  'size_bytes': instance.sizeBytes,
-  'url': instance.url,
-};
-
-const _$ParameterTypeEnumMap = {
-  ParameterType.jmaCodeTable: 'JMA_CODE_TABLE',
-  ParameterType.kyoshinObservationPoints: 'KYOSHIN_OBSERVATION_POINTS',
-  ParameterType.earthquakeStations: 'EARTHQUAKE_STATIONS',
-  ParameterType.tsunamiStations: 'TSUNAMI_STATIONS',
-  ParameterType.shindoDbStations: 'SHINDO_DB_STATIONS',
 };

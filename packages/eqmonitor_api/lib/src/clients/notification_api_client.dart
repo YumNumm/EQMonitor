@@ -10,6 +10,8 @@ import '../models/dispatch_summary_list_response.dart';
 import '../models/notification_history_response.dart';
 import '../models/test_notification_request.dart';
 import '../models/test_notification_response.dart';
+import '../models/test_scenario_request.dart';
+import '../models/test_scenario_response.dart';
 
 part 'notification_api_client.g.dart';
 
@@ -39,6 +41,12 @@ abstract class NotificationApiClient {
   Future<HttpResponse<TestNotificationResponse>> postV2DeviceMeNotificationTest({
     @Body() required TestNotificationRequest body,
   });
+
+  /// 指定したイベントIDの実データをDBから取得し、実際の通知パイプラインを通してこのデバイスにのみ通知を配信する（EEW + VXSE51/52/53）
+  @POST(NotificationApiClientUrls.postV2DeviceMeNotificationTestScenario)
+  Future<HttpResponse<TestScenarioResponse>> postV2DeviceMeNotificationTestScenario({
+    @Body() required TestScenarioRequest body,
+  });
 }
 
 
@@ -51,5 +59,7 @@ abstract class NotificationApiClientUrls {
 	static const getV2DeviceMeNotificationDispatchesCorrelationKey = "/v2/device/me/notification/dispatches/{correlationKey}";
 	/// /v2/device/me/notification/test
 	static const postV2DeviceMeNotificationTest = "/v2/device/me/notification/test";
+	/// /v2/device/me/notification/test-scenario
+	static const postV2DeviceMeNotificationTestScenario = "/v2/device/me/notification/test-scenario";
 }
 
