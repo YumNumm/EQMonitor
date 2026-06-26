@@ -59,4 +59,17 @@ class PushNotificationRepository {
     );
     return response.data.toTestNotificationDeliveryResult;
   });
+
+  /// 指定したイベントIDの実データをDBから取得し、実際の通知パイプラインを
+  /// 通してこのデバイスにのみ通知を配信する（EEW + VXSE51/52/53）
+  Future<Result<TestScenarioDeliveryResult, Exception>> sendTestScenario({
+    required String deviceId,
+    required String eventId,
+  }) => Result.capture(() async {
+    final response = await _api.notification
+        .postV2DeviceMeNotificationTestScenario(
+          body: api.TestScenarioRequest(eventId: eventId),
+        );
+    return response.data.toTestScenarioDeliveryResult;
+  });
 }

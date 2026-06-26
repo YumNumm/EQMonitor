@@ -289,60 +289,10 @@ class _RegionsSection extends ConsumerWidget {
   }
 }
 
-const JmaIntensity _kClearThreshold = JmaIntensity.unknown;
-
-Future<JmaIntensity?> _showIntensityPicker({
-  required BuildContext context,
-  required JmaIntensity? current,
-}) async {
-  const selectableIntensities = [
-    JmaIntensity.one,
-    JmaIntensity.two,
-    JmaIntensity.three,
-    JmaIntensity.four,
-    JmaIntensity.fiveLower,
-    JmaIntensity.fiveUpper,
-    JmaIntensity.sixLower,
-    JmaIntensity.sixUpper,
-    JmaIntensity.seven,
-  ];
-
-  return showDialog<JmaIntensity>(
-    context: context,
-    builder: (context) => SimpleDialog(
-      title: const Text('通知のしきい値を選択'),
-      children: [
-        SimpleDialogOption(
-          onPressed: () => Navigator.of(context).pop(_kClearThreshold),
-          child: const Text('設定なし'),
-        ),
-        for (final intensity in selectableIntensities)
-          SimpleDialogOption(
-            onPressed: () => Navigator.of(context).pop(intensity),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '震度${intensity.mainText}${intensity.suffix}以上',
-                  ),
-                ),
-                if (current == intensity)
-                  Icon(
-                    Icons.check,
-                    color: Theme.of(context).colorScheme.primary,
-                    size: 18,
-                  ),
-              ],
-            ),
-          ),
-      ],
-    ),
-  );
-}
-
 class _ErrorBody extends StatelessWidget {
-  const _ErrorBody({required this.onRetry});
-
+  const _ErrorBody({
+    required this.onRetry,
+  });
   final VoidCallback onRetry;
 
   @override

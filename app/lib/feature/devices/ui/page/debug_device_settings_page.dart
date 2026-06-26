@@ -69,6 +69,10 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
                     deviceId: deviceIdAsync.requireValue,
                   ),
                 if (deviceIdAsync.hasValue)
+                  _TestScenarioSection(
+                    deviceId: deviceIdAsync.requireValue,
+                  ),
+                if (deviceIdAsync.hasValue)
                   _HistorySection(deviceId: deviceIdAsync.requireValue),
                 const SizedBox(height: 32),
               ],
@@ -755,6 +759,108 @@ class _TestNotificationSection extends HookConsumerWidget {
                     : Text(kind.displayLabel),
               );
             }).toList(),
+      ),
+    );
+  }
+}
+
+// ── テストシナリオ実行 ───────────────────────────────────────────────────────
+
+class _TestScenarioSection extends HookConsumerWidget {
+  const _TestScenarioSection({required this.deviceId});
+
+  final String deviceId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = useTextEditingController();
+    final isPending = useState(false);
+    final lastResult = useState<TestScenarioDeliveryResult?>(null);
+
+    Future<void> run() async {
+      final eventId = controller.text.trim();
+      if (eventId.isEmpty || isPending.value) {
+        return;
+      }
+      isPending.value = true;
+      final messenger = ScaffoldMessenger.of(context);
+      final notificationRepository = await ref.read(
+        pushNotificationRepositoryProvider.future,
+      );
+      final result = await notificationRepository.sendTestScenario(
+        deviceId: deviceId,
+        eventId: eventId,
+      );
+      isPending.value = false;
+      if (!context.mounted) {
+        return;
+      }
+      switch (result) {
+        case Success(:final value):
+          lastResult.value = value;
+          messenger.showSnackBar(
+            SnackBar(
+              content: Text(
+                'シナリオを実行しました（${value.stepsPlanned} ステップ）: '
+                '${value.telegramTypes.join(', ')}',
+              ),
+            ),
+          );
+        case Failure(:final exception):
+          messenger.showSnackBar(
+            SnackBar(
+              content: Text('実行に失敗: $exception'),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+      }
+    }
+
+    return _SectionCard(
+      title: 'テストシナリオ実行',
+      subtitle:
+          'イベントIDの実データをDBから取得し、実際の通知パイプライン経由で'
+          'この端末にのみ配信します（EEW + VXSE51/52/53）',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
+            controller: controller,
+            enabled: !isPending.value,
+            textInputAction: TextInputAction.go,
+            decoration: const InputDecoration(
+              labelText: 'イベントID',
+              border: OutlineInputBorder(),
+            ),
+            onSubmitted: (_) async => run(),
+          ),
+          const SizedBox(height: 12),
+          FilledButton.icon(
+            onPressed: isPending.value ? null : () async => run(),
+            icon: isPending.value
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                  )
+                : const Icon(Icons.play_arrow),
+            label: const Text('シナリオを実行'),
+          ),
+          if (lastResult.value case final result?) ...[
+            const SizedBox(height: 16),
+            _KeyValueRow(label: 'event_id', value: result.eventId),
+            _KeyValueRow(
+              label: 'steps_planned',
+              value: result.stepsPlanned.toString(),
+            ),
+            _KeyValueRow(
+              label: 'telegram_types',
+              value: result.telegramTypes.isEmpty
+                  ? '(なし)'
+                  : result.telegramTypes.join(', '),
+            ),
+          ],
+        ],
       ),
     );
   }
