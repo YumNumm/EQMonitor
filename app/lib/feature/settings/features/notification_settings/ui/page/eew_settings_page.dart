@@ -99,7 +99,7 @@ class _EnabledSection extends ConsumerWidget {
 
     return AppSwitchListTile(
       title: '緊急地震速報の通知',
-      subtitle: '緊急地震速報（警報）を受け取ります',
+      subtitle: '[TODO: メッセージ変える] 緊急地震速報を受け取ります',
       value: settings.enabled,
       onChanged: isSaving
           ? null
@@ -133,8 +133,10 @@ class _LiveActivitySection extends ConsumerWidget {
 
     return AppSwitchListTile(
       title: 'Live Activity を開始',
-      subtitle: 'EEW 発生時にダイナミックアイランド・ロック画面に情報を表示します（iOS のみ）',
+      subtitle: 'EEW 発生時にDynamic Island・ロック画面に情報を表示します\n'
+      '[TODO: ]',
       value: settings.startLiveActivity,
+
       onChanged: isSaving
           ? null
           : (value) async {
