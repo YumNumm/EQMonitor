@@ -46,7 +46,7 @@ abstract class Telegram with _$Telegram {
     @JsonKey(includeIfNull: false)
     String? headline,
     @JsonKey(includeIfNull: false)
-    dynamic body,
+    Object? body,
   }) = _Telegram;
   
   factory Telegram.fromJson(Map<String, Object?> json) => _$TelegramFromJson(json);

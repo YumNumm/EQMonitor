@@ -10,7 +10,8 @@ part 'not_found_response.g.dart';
 @Freezed()
 abstract class NotFoundResponse with _$NotFoundResponse {
   const factory NotFoundResponse({
-    required dynamic code,
+    /// const: "NOT_FOUND"
+    required String code,
     required String message,
   }) = _NotFoundResponse;
   

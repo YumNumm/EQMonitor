@@ -13,8 +13,10 @@ part 'parameter_metadata.g.dart';
 abstract class ParameterMetadata with _$ParameterMetadata {
   const factory ParameterMetadata({
     required ParameterType type,
+
+    /// const: 1
     @JsonKey(name: 'schema_version')
-    required dynamic schemaVersion,
+    required int schemaVersion,
     @JsonKey(name: 'source_version')
     required String sourceVersion,
     @JsonKey(includeIfNull: true,name: 'source_updated_at')

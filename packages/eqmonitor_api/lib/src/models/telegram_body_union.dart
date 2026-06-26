@@ -16,7 +16,8 @@ part 'telegram_body_union.g.dart';
 sealed class TelegramBodyUnion with _$TelegramBodyUnion {
   @JsonSerializable()
   const factory TelegramBodyUnion.earthquakeTelegramBody({
-    required dynamic type,
+    /// const: "EARTHQUAKE"
+    required String type,
     @JsonKey(includeIfNull: false)
     EarthquakeTelegramBodyQuake? earthquake,
     @JsonKey(includeIfNull: false)
@@ -31,33 +32,38 @@ sealed class TelegramBodyUnion with _$TelegramBodyUnion {
   
   @JsonSerializable()
   const factory TelegramBodyUnion.eewTelegramBody({
-    required dynamic type,
-    required dynamic eew,
-    required List<dynamic> eewIntensityRegions,
-    required List<dynamic> eewWarningZones,
-    required List<dynamic> eewWarningPrefectures,
-    required List<dynamic> eewWarningRegions,
+    /// const: "EEW"
+    required String type,
+    required Object? eew,
+    required List<Object?> eewIntensityRegions,
+    required List<Object?> eewWarningZones,
+    required List<Object?> eewWarningPrefectures,
+    required List<Object?> eewWarningRegions,
   }) = TelegramBodyUnionEewTelegramBody;
   
   @JsonSerializable()
   const factory TelegramBodyUnion.earthquakeNoticeTelegramBody({
-    required dynamic type,
+    /// const: "EARTHQUAKE_NOTICE"
+    required String type,
   }) = TelegramBodyUnionEarthquakeNoticeTelegramBody;
   
   @JsonSerializable()
   const factory TelegramBodyUnion.earthquakeExplanationTelegramBody({
-    required dynamic type,
+    /// const: "EARTHQUAKE_EXPLANATION"
+    required String type,
     required String text,
   }) = TelegramBodyUnionEarthquakeExplanationTelegramBody;
   
   @JsonSerializable()
   const factory TelegramBodyUnion.earthquakeCountsTelegramBody({
-    required dynamic type,
+    /// const: "EARTHQUAKE_COUNTS"
+    required String type,
   }) = TelegramBodyUnionEarthquakeCountsTelegramBody;
   
   @JsonSerializable()
   const factory TelegramBodyUnion.earthquakeNankaiTelegramBody({
-    required dynamic type,
+    /// const: "EARTHQUAKE_NANKAI"
+    required String type,
   }) = TelegramBodyUnionEarthquakeNankaiTelegramBody;
   
 

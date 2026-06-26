@@ -12,7 +12,7 @@ _ReplayForbiddenResponse _$ReplayForbiddenResponseFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_ReplayForbiddenResponse', json, ($checkedConvert) {
   final val = _ReplayForbiddenResponse(
-    code: $checkedConvert('code', (v) => v),
+    code: $checkedConvert('code', (v) => v as String),
     message: $checkedConvert('message', (v) => v as String),
   );
   return val;

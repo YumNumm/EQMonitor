@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChangelogBadRequestResponse {
 
- dynamic get code; String get message;
+/// const: "BAD_REQUEST"
+ String get code; String get message;
 /// Create a copy of ChangelogBadRequestResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +29,12 @@ $ChangelogBadRequestResponseCopyWith<ChangelogBadRequestResponse> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChangelogBadRequestResponse&&const DeepCollectionEquality().equals(other.code, code)&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChangelogBadRequestResponse&&(identical(other.code, code) || other.code == code)&&(identical(other.message, message) || other.message == message));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(code),message);
+int get hashCode => Object.hash(runtimeType,code,message);
 
 @override
 String toString() {
@@ -48,7 +49,7 @@ abstract mixin class $ChangelogBadRequestResponseCopyWith<$Res>  {
   factory $ChangelogBadRequestResponseCopyWith(ChangelogBadRequestResponse value, $Res Function(ChangelogBadRequestResponse) _then) = _$ChangelogBadRequestResponseCopyWithImpl;
 @useResult
 $Res call({
- dynamic code, String message
+ String code, String message
 });
 
 
@@ -65,10 +66,10 @@ class _$ChangelogBadRequestResponseCopyWithImpl<$Res>
 
 /// Create a copy of ChangelogBadRequestResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = freezed,Object? message = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? message = null,}) {
   return _then(_self.copyWith(
-code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as dynamic,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -154,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic code,  String message)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String message)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChangelogBadRequestResponse() when $default != null:
 return $default(_that.code,_that.message);case _:
@@ -175,7 +176,7 @@ return $default(_that.code,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic code,  String message)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String message)  $default,) {final _that = this;
 switch (_that) {
 case _ChangelogBadRequestResponse():
 return $default(_that.code,_that.message);case _:
@@ -195,7 +196,7 @@ return $default(_that.code,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic code,  String message)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String message)?  $default,) {final _that = this;
 switch (_that) {
 case _ChangelogBadRequestResponse() when $default != null:
 return $default(_that.code,_that.message);case _:
@@ -213,7 +214,8 @@ class _ChangelogBadRequestResponse implements ChangelogBadRequestResponse {
   const _ChangelogBadRequestResponse({required this.code, required this.message});
   factory _ChangelogBadRequestResponse.fromJson(Map<String, dynamic> json) => _$ChangelogBadRequestResponseFromJson(json);
 
-@override final  dynamic code;
+/// const: "BAD_REQUEST"
+@override final  String code;
 @override final  String message;
 
 /// Create a copy of ChangelogBadRequestResponse
@@ -229,12 +231,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangelogBadRequestResponse&&const DeepCollectionEquality().equals(other.code, code)&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangelogBadRequestResponse&&(identical(other.code, code) || other.code == code)&&(identical(other.message, message) || other.message == message));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(code),message);
+int get hashCode => Object.hash(runtimeType,code,message);
 
 @override
 String toString() {
@@ -249,7 +251,7 @@ abstract mixin class _$ChangelogBadRequestResponseCopyWith<$Res> implements $Cha
   factory _$ChangelogBadRequestResponseCopyWith(_ChangelogBadRequestResponse value, $Res Function(_ChangelogBadRequestResponse) _then) = __$ChangelogBadRequestResponseCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic code, String message
+ String code, String message
 });
 
 
@@ -266,10 +268,10 @@ class __$ChangelogBadRequestResponseCopyWithImpl<$Res>
 
 /// Create a copy of ChangelogBadRequestResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = freezed,Object? message = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? message = null,}) {
   return _then(_ChangelogBadRequestResponse(
-code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as dynamic,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

@@ -10,9 +10,12 @@ part 'kyoshin_observation_points_parameter_metadata.g.dart';
 @Freezed()
 abstract class KyoshinObservationPointsParameterMetadata with _$KyoshinObservationPointsParameterMetadata {
   const factory KyoshinObservationPointsParameterMetadata({
-    required dynamic type,
+    /// const: "KYOSHIN_OBSERVATION_POINTS"
+    required String type,
+
+    /// const: 1
     @JsonKey(name: 'schema_version')
-    required dynamic schemaVersion,
+    required int schemaVersion,
     @JsonKey(name: 'source_version')
     required String sourceVersion,
     @JsonKey(includeIfNull: true,name: 'source_updated_at')

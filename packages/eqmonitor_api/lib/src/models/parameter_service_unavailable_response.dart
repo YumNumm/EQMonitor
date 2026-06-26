@@ -10,7 +10,8 @@ part 'parameter_service_unavailable_response.g.dart';
 @Freezed()
 abstract class ParameterServiceUnavailableResponse with _$ParameterServiceUnavailableResponse {
   const factory ParameterServiceUnavailableResponse({
-    required dynamic code,
+    /// const: "SERVICE_UNAVAILABLE"
+    required String code,
     required String message,
   }) = _ParameterServiceUnavailableResponse;
   

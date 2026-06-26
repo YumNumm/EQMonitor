@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiStationForecast {
 
-@JsonKey(name: 'high_tide_at') DateTime get highTideAt;@JsonKey(includeIfNull: false, name: 'first_height') FirstHeight2? get firstHeight;
+@JsonKey(name: 'high_tide_at') DateTime get highTideAt;@JsonKey(includeIfNull: false, name: 'first_height') TsunamiStationForecastFirstHeight? get firstHeight;
 /// Create a copy of TsunamiStationForecast
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $TsunamiStationForecastCopyWith<$Res>  {
   factory $TsunamiStationForecastCopyWith(TsunamiStationForecast value, $Res Function(TsunamiStationForecast) _then) = _$TsunamiStationForecastCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'high_tide_at') DateTime highTideAt,@JsonKey(includeIfNull: false, name: 'first_height') FirstHeight2? firstHeight
+@JsonKey(name: 'high_tide_at') DateTime highTideAt,@JsonKey(includeIfNull: false, name: 'first_height') TsunamiStationForecastFirstHeight? firstHeight
 });
 
 
-$FirstHeight2CopyWith<$Res>? get firstHeight;
+$TsunamiStationForecastFirstHeightCopyWith<$Res>? get firstHeight;
 
 }
 /// @nodoc
@@ -69,19 +69,19 @@ class _$TsunamiStationForecastCopyWithImpl<$Res>
   return _then(_self.copyWith(
 highTideAt: null == highTideAt ? _self.highTideAt : highTideAt // ignore: cast_nullable_to_non_nullable
 as DateTime,firstHeight: freezed == firstHeight ? _self.firstHeight : firstHeight // ignore: cast_nullable_to_non_nullable
-as FirstHeight2?,
+as TsunamiStationForecastFirstHeight?,
   ));
 }
 /// Create a copy of TsunamiStationForecast
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$FirstHeight2CopyWith<$Res>? get firstHeight {
+$TsunamiStationForecastFirstHeightCopyWith<$Res>? get firstHeight {
     if (_self.firstHeight == null) {
     return null;
   }
 
-  return $FirstHeight2CopyWith<$Res>(_self.firstHeight!, (value) {
+  return $TsunamiStationForecastFirstHeightCopyWith<$Res>(_self.firstHeight!, (value) {
     return _then(_self.copyWith(firstHeight: value));
   });
 }
@@ -166,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'high_tide_at')  DateTime highTideAt, @JsonKey(includeIfNull: false, name: 'first_height')  FirstHeight2? firstHeight)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'high_tide_at')  DateTime highTideAt, @JsonKey(includeIfNull: false, name: 'first_height')  TsunamiStationForecastFirstHeight? firstHeight)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiStationForecast() when $default != null:
 return $default(_that.highTideAt,_that.firstHeight);case _:
@@ -187,7 +187,7 @@ return $default(_that.highTideAt,_that.firstHeight);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'high_tide_at')  DateTime highTideAt, @JsonKey(includeIfNull: false, name: 'first_height')  FirstHeight2? firstHeight)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'high_tide_at')  DateTime highTideAt, @JsonKey(includeIfNull: false, name: 'first_height')  TsunamiStationForecastFirstHeight? firstHeight)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiStationForecast():
 return $default(_that.highTideAt,_that.firstHeight);case _:
@@ -207,7 +207,7 @@ return $default(_that.highTideAt,_that.firstHeight);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'high_tide_at')  DateTime highTideAt, @JsonKey(includeIfNull: false, name: 'first_height')  FirstHeight2? firstHeight)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'high_tide_at')  DateTime highTideAt, @JsonKey(includeIfNull: false, name: 'first_height')  TsunamiStationForecastFirstHeight? firstHeight)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiStationForecast() when $default != null:
 return $default(_that.highTideAt,_that.firstHeight);case _:
@@ -226,7 +226,7 @@ class _TsunamiStationForecast implements TsunamiStationForecast {
   factory _TsunamiStationForecast.fromJson(Map<String, dynamic> json) => _$TsunamiStationForecastFromJson(json);
 
 @override@JsonKey(name: 'high_tide_at') final  DateTime highTideAt;
-@override@JsonKey(includeIfNull: false, name: 'first_height') final  FirstHeight2? firstHeight;
+@override@JsonKey(includeIfNull: false, name: 'first_height') final  TsunamiStationForecastFirstHeight? firstHeight;
 
 /// Create a copy of TsunamiStationForecast
 /// with the given fields replaced by the non-null parameter values.
@@ -261,11 +261,11 @@ abstract mixin class _$TsunamiStationForecastCopyWith<$Res> implements $TsunamiS
   factory _$TsunamiStationForecastCopyWith(_TsunamiStationForecast value, $Res Function(_TsunamiStationForecast) _then) = __$TsunamiStationForecastCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'high_tide_at') DateTime highTideAt,@JsonKey(includeIfNull: false, name: 'first_height') FirstHeight2? firstHeight
+@JsonKey(name: 'high_tide_at') DateTime highTideAt,@JsonKey(includeIfNull: false, name: 'first_height') TsunamiStationForecastFirstHeight? firstHeight
 });
 
 
-@override $FirstHeight2CopyWith<$Res>? get firstHeight;
+@override $TsunamiStationForecastFirstHeightCopyWith<$Res>? get firstHeight;
 
 }
 /// @nodoc
@@ -282,7 +282,7 @@ class __$TsunamiStationForecastCopyWithImpl<$Res>
   return _then(_TsunamiStationForecast(
 highTideAt: null == highTideAt ? _self.highTideAt : highTideAt // ignore: cast_nullable_to_non_nullable
 as DateTime,firstHeight: freezed == firstHeight ? _self.firstHeight : firstHeight // ignore: cast_nullable_to_non_nullable
-as FirstHeight2?,
+as TsunamiStationForecastFirstHeight?,
   ));
 }
 
@@ -290,12 +290,12 @@ as FirstHeight2?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$FirstHeight2CopyWith<$Res>? get firstHeight {
+$TsunamiStationForecastFirstHeightCopyWith<$Res>? get firstHeight {
     if (_self.firstHeight == null) {
     return null;
   }
 
-  return $FirstHeight2CopyWith<$Res>(_self.firstHeight!, (value) {
+  return $TsunamiStationForecastFirstHeightCopyWith<$Res>(_self.firstHeight!, (value) {
     return _then(_self.copyWith(firstHeight: value));
   });
 }

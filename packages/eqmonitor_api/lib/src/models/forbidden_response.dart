@@ -10,7 +10,8 @@ part 'forbidden_response.g.dart';
 @Freezed()
 abstract class ForbiddenResponse with _$ForbiddenResponse {
   const factory ForbiddenResponse({
-    required dynamic code,
+    /// const: "FORBIDDEN"
+    required String code,
     required String message,
   }) = _ForbiddenResponse;
   

@@ -14,7 +14,7 @@ _$ParameterServiceUnavailableResponseFromJson(Map<String, dynamic> json) =>
       $checkedConvert,
     ) {
       final val = _ParameterServiceUnavailableResponse(
-        code: $checkedConvert('code', (v) => v),
+        code: $checkedConvert('code', (v) => v as String),
         message: $checkedConvert('message', (v) => v as String),
       );
       return val;

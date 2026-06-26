@@ -24,7 +24,7 @@ _AdminReplayFileDetailResponseItem _$AdminReplayFileDetailResponseItemFromJson(
     triggers: $checkedConvert(
       'triggers',
       (v) => (v as List<dynamic>)
-          .map((e) => Triggers.fromJson(e as Map<String, dynamic>))
+          .map((e) => ReplayFileTrigger.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
   );

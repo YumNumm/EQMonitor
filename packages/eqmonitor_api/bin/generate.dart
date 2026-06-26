@@ -35,6 +35,10 @@ void main(List<String> args) async {
     });
   }
 
+  await _step('OpenAPI の const プロパティを型付きに変換', () async {
+    _patchConstPropertiesToTyped(openapiFile);
+  });
+
   await _step('swagger_parser でクライアントコードを生成', () async {
     await _run('dart', ['run', 'swagger_parser'], packageDir.path);
   });
@@ -153,6 +157,10 @@ void main(List<String> args) async {
 
   await _step('生成ファイルから type=lint を除去（lint 検出を有効化）', () async {
     _stripTypeLintFromGeneratedHeaders(libDir);
+  });
+
+  await _step('残存 dynamic → 正しい型にパッチ', () async {
+    _patchRemainingDynamic(libDir);
   });
 
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
@@ -408,8 +416,6 @@ String _buildEnumSource({
 
 const _telegramStatusImport = "import '../models/telegram_status.dart';";
 
-/// [statuses] クエリの扱い。
-///
 /// バックエンドが出力する OpenAPI では `anyOf`（配列 or 単一 enum）と
 /// `default: ["NORMAL"]` の組み合わせになりやすく、swagger_parser が
 /// `dynamic` + `const ['NORMAL']`（実質 `List<String>`）を生成することがある。
@@ -519,7 +525,7 @@ void _patchDynamicQueryParameters(Directory libDir) {
   }
 }
 
-/// [parameters_api_client.dart] の `ParameterDataResponse` を
+/// `parameters_api_client.dart` の `ParameterDataResponse` を
 /// `Map<String, Object?>` に置き換える。
 ///
 /// swagger_parser は OpenAPI の anyOf/oneOf discriminator 無しの union 型を
@@ -573,7 +579,9 @@ void _patchUnionFromJson(
   final original = file.readAsStringSync();
   final pattern = RegExp(
     r'factory\s+' +
+        // ignore: prefer_interpolation_to_compose_strings
         RegExp.escape(className) +
+        // ignore: missing_whitespace_between_adjacent_strings
         r'\.fromJson\(Map<String, Object\?> json\)\s*=>'
             r'[\s\S]*?throw UnimplementedError\(\);',
   );
@@ -595,24 +603,24 @@ void _patchUnionFromJson(
 
 /// FeedItem.data の `type` const 値で variant を判別する。
 ///
-///   EARTHQUAKE_NOTICE       → variant1
-///   EARTHQUAKE_EXPLANATION  → variant2
-///   EARTHQUAKE_COUNTS       → variant3
-///   EARTHQUAKE_NANKAI       → variant4
-///   APP_UPDATE              → variant5
-///   INCIDENT                → variant6
-///   DEVELOPER_MESSAGE       → variant7
 void _patchFeedItemDataUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/feed_item_data_union.dart');
   const body = '''
 switch (json['type']) {
-        'EARTHQUAKE_NOTICE' => FeedItemDataUnionVariant1.fromJson(json),
-        'EARTHQUAKE_EXPLANATION' => FeedItemDataUnionVariant2.fromJson(json),
-        'EARTHQUAKE_COUNTS' => FeedItemDataUnionVariant3.fromJson(json),
-        'EARTHQUAKE_NANKAI' => FeedItemDataUnionVariant4.fromJson(json),
-        'APP_UPDATE' => FeedItemDataUnionVariant5.fromJson(json),
-        'INCIDENT' => FeedItemDataUnionVariant6.fromJson(json),
-        'DEVELOPER_MESSAGE' => FeedItemDataUnionVariant7.fromJson(json),
+        'EARTHQUAKE_NOTICE' =>
+          FeedItemDataUnionFeedEarthquakeNoticeData.fromJson(json),
+        'EARTHQUAKE_EXPLANATION' =>
+          FeedItemDataUnionFeedEarthquakeExplanationData.fromJson(json),
+        'EARTHQUAKE_COUNTS' =>
+          FeedItemDataUnionFeedEarthquakeCountsData.fromJson(json),
+        'EARTHQUAKE_NANKAI' =>
+          FeedItemDataUnionFeedEarthquakeNankaiData.fromJson(json),
+        'APP_UPDATE' =>
+          FeedItemDataUnionFeedAppUpdateData.fromJson(json),
+        'INCIDENT' =>
+          FeedItemDataUnionFeedIncidentData.fromJson(json),
+        'DEVELOPER_MESSAGE' =>
+          FeedItemDataUnionFeedDeveloperMessageData.fromJson(json),
         final value => throw ArgumentError.value(
           value,
           'type',
@@ -938,6 +946,389 @@ void _validateNoDynamic(Directory libDir) {
   if (count > 0) {
     stderr.writeln('  ⚠️  $count dynamic annotation(s) remaining');
   }
+}
+
+/// swagger_parser が空スキーマ `{}` や `{nullable: true}` から生成した
+/// `dynamic` を Valibot 定義に基づく正しい型に置き換える。
+///
+/// バックエンドの Valibot 定義から各フィールドの正しい型を特定し、
+/// 生成済み Dart ファイルで文字列置換する。
+void _patchRemainingDynamic(Directory libDir) {
+  // ファイルパス（basename） → {置換前: 置換後}
+  //
+  // Valibot 定義との対応:
+  //   v.unknown()                             → Object?
+  //   v.array(v.unknown())                    → List<Object?>
+  //   v.optional(v.unknown())                 → Object?
+  //   v.null()                                → Object?
+  //   v.optional(v.nullable(v.union([num,str]))) → Object?
+  final replacements = <String, List<(String, String)>>{
+    // EewTelegramBody: eew = v.unknown(), eew*Regions = v.array(v.unknown())
+    'eew_telegram_body.dart': [
+      ('required dynamic eew,', 'required Object? eew,'),
+      (
+        'required List<dynamic> eewIntensityRegions,',
+        'required List<Object?> eewIntensityRegions,',
+      ),
+      (
+        'required List<dynamic> eewWarningZones,',
+        'required List<Object?> eewWarningZones,',
+      ),
+      (
+        'required List<dynamic> eewWarningPrefectures,',
+        'required List<Object?> eewWarningPrefectures,',
+      ),
+      (
+        'required List<dynamic> eewWarningRegions,',
+        'required List<Object?> eewWarningRegions,',
+      ),
+    ],
+    // TelegramBodyUnion の EEW variant（EewTelegramBody と同じフィールド）
+    'telegram_body_union.dart': [
+      ('required dynamic eew,', 'required Object? eew,'),
+      (
+        'required List<dynamic> eewIntensityRegions,',
+        'required List<Object?> eewIntensityRegions,',
+      ),
+      (
+        'required List<dynamic> eewWarningZones,',
+        'required List<Object?> eewWarningZones,',
+      ),
+      (
+        'required List<dynamic> eewWarningPrefectures,',
+        'required List<Object?> eewWarningPrefectures,',
+      ),
+      (
+        'required List<dynamic> eewWarningRegions,',
+        'required List<Object?> eewWarningRegions,',
+      ),
+    ],
+    // Telegram.body: v.optional(v.unknown())
+    'telegram.dart': [
+      ('dynamic body,', 'Object? body,'),
+    ],
+    // DeviceRegisterResponse.expiresAt: v.null()
+    'device_register_response.dart': [
+      ('required dynamic expiresAt,', 'required Object? expiresAt,'),
+    ],
+    // FeedItem.data: swagger_parser が FeedItemData を参照するが、
+    // 実際の union 型は FeedItemDataUnion
+    'feed_item.dart': [
+      ("import 'feed_item_data.dart';", "import 'feed_item_data_union.dart';"),
+      ('required FeedItemData data,', 'required FeedItemDataUnion data,'),
+    ],
+  };
+
+  for (final entry in replacements.entries) {
+    final fileName = entry.key;
+    final file = File('${libDir.path}/models/$fileName');
+    if (!file.existsSync()) {
+      continue;
+    }
+
+    var content = file.readAsStringSync();
+    final original = content;
+
+    for (final (from, to) in entry.value) {
+      content = content.replaceAll(from, to);
+    }
+
+    if (content != original) {
+      file.writeAsStringSync(content);
+      stdout.writeln('  Patched: $fileName');
+    }
+  }
+}
+
+/// OpenAPI スキーマ内の `const` プロパティを swagger_parser が理解できる
+/// 型付きスキーマに変換する。
+///
+/// swagger_parser は `{"const": "VALUE"}` や `{"const": true}` を解釈できず
+/// `dynamic` を出力する。ここで以下の変換を行う:
+///
+///   `{"const": "VALUE"}`  → `{"type": "string", "description": "const: \"VALUE\""}`
+///   `{"const": true}`     → `{"type": "boolean", "description": "const: true"}`
+///   `{"const": 123}`      → `{"type": "integer", "description": "const: 123"}`
+///   `{"const": 1.5}`      → `{"type": "number", "description": "const: 1.5"}`
+///
+/// `anyOf` / `oneOf` 内の `const` メンバーも同様に変換する。
+/// 変換後の OpenAPI ファイルを上書き保存する。
+void _patchConstPropertiesToTyped(File openapiFile) {
+  if (!openapiFile.existsSync()) {
+    return;
+  }
+
+  final content = openapiFile.readAsStringSync();
+  final openapi = jsonDecode(content) as Map<String, Object?>;
+  var patchCount = 0;
+
+  void patchProperties(Map<String, Object?> props) {
+    for (final key in props.keys.toList()) {
+      final prop = props[key];
+      if (prop is! Map<String, Object?>) {
+        continue;
+      }
+
+      // anyOf / oneOf 内の const メンバーを変換
+      for (final unionKey in ['anyOf', 'oneOf']) {
+        final members = prop[unionKey];
+        if (members is! List) {
+          continue;
+        }
+
+        // 全メンバーが const であれば enum に変換
+        final enumResult = _tryConvertToEnum(prop, unionKey, members);
+        if (enumResult != null) {
+          props[key] = enumResult;
+          patchCount++;
+          continue;
+        }
+
+        // const メンバーを個別に型付きに変換
+        for (var i = 0; i < members.length; i++) {
+          final m = members[i];
+          if (m is Map<String, Object?> && m.containsKey('const')) {
+            final replaced = _constToTyped(m);
+            if (replaced != null) {
+              members[i] = replaced;
+              patchCount++;
+            }
+          }
+        }
+
+        // 変換後に全メンバーが同じ type を持つ場合、anyOf を単一型に畳む。
+        final collapsed = _collapseUniformAnyOf(prop, unionKey, members);
+        if (collapsed != null) {
+          props[key] = collapsed;
+          patchCount++;
+        }
+      }
+
+      // プロパティ直下の const を変換（nullable を除去）
+      if (prop.containsKey('const') && !prop.containsKey('type')) {
+        final replaced = _constToTyped(prop);
+        if (replaced != null) {
+          replaced.remove('nullable');
+          props[key] = replaced;
+          patchCount++;
+        }
+      }
+    }
+  }
+
+  /// JSON ツリーを再帰的に走査し、`properties` を持つ全てのオブジェクトに
+  /// const パッチを適用する。components.schemas だけでなく、paths 内の
+  /// インラインスキーマやネストされたオブジェクト定義も処理する。
+  void walkAndPatch(Object? node) {
+    if (node is Map<String, Object?>) {
+      final props = node['properties'];
+      if (props is Map<String, Object?>) {
+        patchProperties(props);
+      }
+      for (final value in node.values) {
+        walkAndPatch(value);
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        walkAndPatch(item);
+      }
+    }
+  }
+
+  walkAndPatch(openapi);
+
+  if (patchCount > 0) {
+    const encoder = JsonEncoder.withIndent('  ');
+    openapiFile.writeAsStringSync(encoder.convert(openapi));
+    stdout.writeln('  $patchCount const プロパティを型付きに変換しました');
+  }
+}
+
+/// `anyOf` / `oneOf` の全非 null メンバーが文字列 `const` である場合に、
+/// `{type: string, enum: [...]}` に変換する。
+///
+/// swagger_parser は `enum` をネイティブに理解して enum 型を生成するため、
+/// `String` に畳むより正確な型が得られる。
+///
+/// 例:
+///   anyOf: [{const: "ACTIVE"}, {const: "GRACE_PERIOD"}]
+///   → {type: string, enum: ["ACTIVE", "GRACE_PERIOD"],
+///      description: "const: \"ACTIVE\" | const: \"GRACE_PERIOD\""}
+Map<String, Object?>? _tryConvertToEnum(
+  Map<String, Object?> prop,
+  String unionKey,
+  List<Object?> members,
+) {
+  if (members.isEmpty) {
+    return null;
+  }
+
+  final enumValues = <String>[];
+  final descriptions = <String>[];
+  var hasNull = false;
+
+  for (final m in members) {
+    if (m is! Map<String, Object?>) {
+      return null;
+    }
+    // {type: null} は nullable フラグとして扱う
+    if (m['type'] == 'null') {
+      hasNull = true;
+      continue;
+    }
+    final constValue = m['const'];
+    if (constValue is! String) {
+      return null;
+    }
+    enumValues.add(constValue);
+    final desc = m['description'] as String?;
+    descriptions.add(desc ?? 'const: "$constValue"');
+  }
+
+  if (enumValues.isEmpty) {
+    return null;
+  }
+
+  final result = Map<String, Object?>.of(prop);
+  result.remove(unionKey);
+  result['type'] = 'string';
+  result['enum'] = enumValues;
+  if (hasNull) {
+    result['nullable'] = true;
+  }
+
+  final existingDesc = prop['description'] as String?;
+  final memberDesc = descriptions.join(' | ');
+  result['description'] = existingDesc != null
+      ? '$existingDesc\n$memberDesc'
+      : memberDesc;
+
+  return result;
+}
+
+/// `anyOf` / `oneOf` を単一型に畳む。
+///
+/// - 非 null メンバーが1つだけ → 畳む（nullable array/object を含む）
+/// - 非 null メンバーが複数かつ全て同じプリミティブ型 → 畳む
+/// - 非 null メンバーが複数の object/array → 畳まない（variant ごとに異なるため）
+///
+/// sub-schema キー（`items`, `format`, `pattern` 等）は最初の型メンバーから保持する。
+Map<String, Object?>? _collapseUniformAnyOf(
+  Map<String, Object?> prop,
+  String unionKey,
+  List<Object?> members,
+) {
+  if (members.isEmpty) {
+    return null;
+  }
+
+  String? commonType;
+  var hasNull = false;
+  final descriptions = <String>[];
+  final typedMembers = <Map<String, Object?>>[];
+
+  for (final m in members) {
+    if (m is! Map<String, Object?>) {
+      return null;
+    }
+    final type = m['type'] as String?;
+    if (type == null) {
+      return null;
+    }
+    if (type == 'null') {
+      hasNull = true;
+      continue;
+    }
+    typedMembers.add(m);
+    if (commonType == null) {
+      commonType = type;
+    } else if (commonType != type) {
+      return null;
+    }
+    final desc = m['description'] as String?;
+    if (desc != null) {
+      descriptions.add(desc);
+    }
+  }
+
+  if (commonType == null || typedMembers.isEmpty) {
+    return null;
+  }
+
+  // object/array が複数 variant ある場合は畳まない
+  const complexTypes = {'object', 'array'};
+  if (typedMembers.length > 1 && complexTypes.contains(commonType)) {
+    return null;
+  }
+
+  final result = Map<String, Object?>.of(prop);
+  result.remove(unionKey);
+
+  // 最初の型メンバーから sub-schema キーをコピー
+  final firstMember = typedMembers.first;
+  for (final subKey in [
+    'type', 'items', 'format', 'pattern', 'minimum', 'maximum',
+    'minItems', 'maxItems', 'minLength', 'maxLength',
+  ]) {
+    if (firstMember.containsKey(subKey)) {
+      result[subKey] = firstMember[subKey];
+    }
+  }
+
+  if (hasNull) {
+    result['nullable'] = true;
+  }
+
+  final existingDesc = prop['description'] as String?;
+  final memberDesc = descriptions.isNotEmpty ? descriptions.join(' | ') : null;
+  final combinedDesc = [
+    if (existingDesc != null) existingDesc,
+    if (memberDesc != null) memberDesc,
+  ].join('\n');
+  if (combinedDesc.isNotEmpty) {
+    result['description'] = combinedDesc;
+  }
+
+  return result;
+}
+
+/// `{"const": value, ...rest}` を `{"type": ..., "description": "const: ..."}` に
+/// 変換する。既存の `description` がある場合は末尾に追記する。
+Map<String, Object?>? _constToTyped(Map<String, Object?> schema) {
+  final constValue = schema['const'];
+  if (constValue == null) {
+    return null;
+  }
+
+  final String type;
+  final String constRepr;
+
+  switch (constValue) {
+    case String():
+      type = 'string';
+      constRepr = '"$constValue"';
+    case bool():
+      type = 'boolean';
+      constRepr = '$constValue';
+    case int():
+      type = 'integer';
+      constRepr = '$constValue';
+    case double():
+      type = 'number';
+      constRepr = '$constValue';
+    default:
+      return null;
+  }
+
+  final result = Map<String, Object?>.of(schema);
+  result.remove('const');
+  result['type'] = type;
+
+  final existing = schema['description'] as String?;
+  final constDesc = 'const: $constRepr';
+  result['description'] = existing != null ? '$existing\n$constDesc' : constDesc;
+
+  return result;
 }
 
 Future<void> _run(String exe, List<String> args, String cwd) async {

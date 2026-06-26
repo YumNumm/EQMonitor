@@ -4,13 +4,16 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'status.dart';
+
 part 'subscription_active_response.freezed.dart';
 part 'subscription_active_response.g.dart';
 
 @Freezed()
 abstract class SubscriptionActiveResponse with _$SubscriptionActiveResponse {
   const factory SubscriptionActiveResponse({
-    required dynamic status,
+    /// const: "ACTIVE" | const: "GRACE_PERIOD"
+    required Status status,
     required String productId,
     @JsonKey(includeIfNull: true)
     required DateTime? expiresAt,

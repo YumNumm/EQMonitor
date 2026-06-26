@@ -4,14 +4,13 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+/// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
 @JsonEnum()
 enum InfoType {
   @JsonValue('PUBLICATION')
   publication('PUBLICATION'),
   @JsonValue('CORRECTION')
   correction('CORRECTION'),
-  @JsonValue('DELAY')
-  delay('DELAY'),
   @JsonValue('CANCELLATION')
   cancellation('CANCELLATION');
 

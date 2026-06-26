@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DispatchSummaryListResponse {
 
- List<Items3> get items;
+ List<DispatchSummaryItem> get items;
 /// Create a copy of DispatchSummaryListResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $DispatchSummaryListResponseCopyWith<$Res>  {
   factory $DispatchSummaryListResponseCopyWith(DispatchSummaryListResponse value, $Res Function(DispatchSummaryListResponse) _then) = _$DispatchSummaryListResponseCopyWithImpl;
 @useResult
 $Res call({
- List<Items3> items
+ List<DispatchSummaryItem> items
 });
 
 
@@ -68,7 +68,7 @@ class _$DispatchSummaryListResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? items = null,}) {
   return _then(_self.copyWith(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
-as List<Items3>,
+as List<DispatchSummaryItem>,
   ));
 }
 
@@ -153,7 +153,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Items3> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<DispatchSummaryItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DispatchSummaryListResponse() when $default != null:
 return $default(_that.items);case _:
@@ -174,7 +174,7 @@ return $default(_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Items3> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<DispatchSummaryItem> items)  $default,) {final _that = this;
 switch (_that) {
 case _DispatchSummaryListResponse():
 return $default(_that.items);case _:
@@ -194,7 +194,7 @@ return $default(_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Items3> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<DispatchSummaryItem> items)?  $default,) {final _that = this;
 switch (_that) {
 case _DispatchSummaryListResponse() when $default != null:
 return $default(_that.items);case _:
@@ -209,11 +209,11 @@ return $default(_that.items);case _:
 @JsonSerializable()
 
 class _DispatchSummaryListResponse implements DispatchSummaryListResponse {
-  const _DispatchSummaryListResponse({required final  List<Items3> items}): _items = items;
+  const _DispatchSummaryListResponse({required final  List<DispatchSummaryItem> items}): _items = items;
   factory _DispatchSummaryListResponse.fromJson(Map<String, dynamic> json) => _$DispatchSummaryListResponseFromJson(json);
 
- final  List<Items3> _items;
-@override List<Items3> get items {
+ final  List<DispatchSummaryItem> _items;
+@override List<DispatchSummaryItem> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
@@ -253,7 +253,7 @@ abstract mixin class _$DispatchSummaryListResponseCopyWith<$Res> implements $Dis
   factory _$DispatchSummaryListResponseCopyWith(_DispatchSummaryListResponse value, $Res Function(_DispatchSummaryListResponse) _then) = __$DispatchSummaryListResponseCopyWithImpl;
 @override @useResult
 $Res call({
- List<Items3> items
+ List<DispatchSummaryItem> items
 });
 
 
@@ -273,7 +273,7 @@ class __$DispatchSummaryListResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? items = null,}) {
   return _then(_DispatchSummaryListResponse(
 items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<Items3>,
+as List<DispatchSummaryItem>,
   ));
 }
 

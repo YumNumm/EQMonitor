@@ -17,7 +17,7 @@ _IntensityStationItem _$IntensityStationItemFromJson(
     prePeriods: $checkedConvert(
       'pre_periods',
       (v) => (v as List<dynamic>?)
-          ?.map((e) => PrePeriods.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => LpgmPrePeriod.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
   );

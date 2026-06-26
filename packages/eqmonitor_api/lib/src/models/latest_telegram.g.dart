@@ -8,61 +8,65 @@ part of 'latest_telegram.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_LatestTelegram _$LatestTelegramFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(
-  '_LatestTelegram',
-  json,
-  ($checkedConvert) {
-    final val = _LatestTelegram(
-      id: $checkedConvert('id', (v) => v as String),
-      type: $checkedConvert(
-        'type',
-        (v) => $enumDecode(_$TelegramTypeEnumMap, v),
-      ),
-      title: $checkedConvert('title', (v) => v as String),
-      editorialOffice: $checkedConvert('editorial_office', (v) => v as String),
-      publishingOffice: $checkedConvert(
-        'publishing_office',
-        (v) => (v as List<dynamic>).map((e) => e as String).toList(),
-      ),
-      pressedAt: $checkedConvert(
-        'pressed_at',
-        (v) => DateTime.parse(v as String),
-      ),
-      reportedAt: $checkedConvert(
-        'reported_at',
-        (v) => DateTime.parse(v as String),
-      ),
-      infoKind: $checkedConvert('info_kind', (v) => v as String),
-      serialNo: $checkedConvert('serial_no', (v) => v as num?),
-      targetedAt: $checkedConvert(
-        'targeted_at',
-        (v) => v == null ? null : DateTime.parse(v as String),
-      ),
-      revokedAt: $checkedConvert(
-        'revoked_at',
-        (v) => v == null ? null : DateTime.parse(v as String),
-      ),
-      headline: $checkedConvert('headline', (v) => v as String?),
-      comments: $checkedConvert(
-        'comments',
-        (v) => v == null ? null : Comments3.fromJson(v as Map<String, dynamic>),
-      ),
+_LatestTelegram _$LatestTelegramFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      '_LatestTelegram',
+      json,
+      ($checkedConvert) {
+        final val = _LatestTelegram(
+          id: $checkedConvert('id', (v) => v as String),
+          type: $checkedConvert(
+            'type',
+            (v) => $enumDecode(_$TelegramTypeEnumMap, v),
+          ),
+          title: $checkedConvert('title', (v) => v as String),
+          editorialOffice: $checkedConvert(
+            'editorial_office',
+            (v) => v as String,
+          ),
+          publishingOffice: $checkedConvert(
+            'publishing_office',
+            (v) => (v as List<dynamic>).map((e) => e as String).toList(),
+          ),
+          pressedAt: $checkedConvert(
+            'pressed_at',
+            (v) => DateTime.parse(v as String),
+          ),
+          reportedAt: $checkedConvert(
+            'reported_at',
+            (v) => DateTime.parse(v as String),
+          ),
+          infoKind: $checkedConvert('info_kind', (v) => v as String),
+          serialNo: $checkedConvert('serial_no', (v) => v as num?),
+          targetedAt: $checkedConvert(
+            'targeted_at',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+          revokedAt: $checkedConvert(
+            'revoked_at',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+          headline: $checkedConvert('headline', (v) => v as String?),
+          comments: $checkedConvert(
+            'comments',
+            (v) => v == null
+                ? null
+                : TsunamiTelegramComments.fromJson(v as Map<String, dynamic>),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'editorialOffice': 'editorial_office',
+        'publishingOffice': 'publishing_office',
+        'pressedAt': 'pressed_at',
+        'reportedAt': 'reported_at',
+        'infoKind': 'info_kind',
+        'serialNo': 'serial_no',
+        'targetedAt': 'targeted_at',
+        'revokedAt': 'revoked_at',
+      },
     );
-    return val;
-  },
-  fieldKeyMap: const {
-    'editorialOffice': 'editorial_office',
-    'publishingOffice': 'publishing_office',
-    'pressedAt': 'pressed_at',
-    'reportedAt': 'reported_at',
-    'infoKind': 'info_kind',
-    'serialNo': 'serial_no',
-    'targetedAt': 'targeted_at',
-    'revokedAt': 'revoked_at',
-  },
-);
 
 Map<String, dynamic> _$LatestTelegramToJson(_LatestTelegram instance) =>
     <String, dynamic>{
@@ -82,23 +86,7 @@ Map<String, dynamic> _$LatestTelegramToJson(_LatestTelegram instance) =>
     };
 
 const _$TelegramTypeEnumMap = {
-  TelegramType.vzse40: 'VZSE40',
-  TelegramType.vxse42: 'VXSE42',
-  TelegramType.vxse43: 'VXSE43',
-  TelegramType.vxse44: 'VXSE44',
-  TelegramType.vxse45: 'VXSE45',
-  TelegramType.vxse47: 'VXSE47',
-  TelegramType.vtse41: 'VTSE41',
-  TelegramType.vtse51: 'VTSE51',
-  TelegramType.vtse52: 'VTSE52',
-  TelegramType.vxse51: 'VXSE51',
-  TelegramType.vxse52: 'VXSE52',
-  TelegramType.vxse53: 'VXSE53',
-  TelegramType.vxse56: 'VXSE56',
-  TelegramType.vxse60: 'VXSE60',
-  TelegramType.vxse61: 'VXSE61',
-  TelegramType.vxse62: 'VXSE62',
-  TelegramType.nankai: 'NANKAI',
-  TelegramType.vyse60: 'VYSE60',
-  TelegramType.shindoDb: 'SHINDO_DB',
+  TelegramType.undefined0: '南海トラフ地震臨時情報',
+  TelegramType.undefined1: '南海トラフ地震関連解説情報',
+  TelegramType.undefined2: '北海道・三陸沖後発地震注意情報',
 };

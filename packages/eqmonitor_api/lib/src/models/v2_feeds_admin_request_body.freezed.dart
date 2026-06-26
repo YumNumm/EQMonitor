@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$V2FeedsAdminRequestBody {
 
- dynamic get feedType; dynamic get priority; bool get isImportant; String get publishedAt; Data get data; List<Translations> get translations;@JsonKey(includeIfNull: false) String? get expiresAt;
+/// const: "APP_UPDATE" | const: "INCIDENT" | const: "DEVELOPER_MESSAGE"
+ FeedType get feedType;/// const: "CRITICAL" | const: "HIGH" | const: "NORMAL" | const: "LOW"
+ Priority get priority; bool get isImportant; String get publishedAt; Data get data; List<Translations> get translations;@JsonKey(includeIfNull: false) String? get expiresAt;
 /// Create a copy of V2FeedsAdminRequestBody
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +30,12 @@ $V2FeedsAdminRequestBodyCopyWith<V2FeedsAdminRequestBody> get copyWith => _$V2Fe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is V2FeedsAdminRequestBody&&const DeepCollectionEquality().equals(other.feedType, feedType)&&const DeepCollectionEquality().equals(other.priority, priority)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.data, data) || other.data == data)&&const DeepCollectionEquality().equals(other.translations, translations)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is V2FeedsAdminRequestBody&&(identical(other.feedType, feedType) || other.feedType == feedType)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.data, data) || other.data == data)&&const DeepCollectionEquality().equals(other.translations, translations)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(feedType),const DeepCollectionEquality().hash(priority),isImportant,publishedAt,data,const DeepCollectionEquality().hash(translations),expiresAt);
+int get hashCode => Object.hash(runtimeType,feedType,priority,isImportant,publishedAt,data,const DeepCollectionEquality().hash(translations),expiresAt);
 
 @override
 String toString() {
@@ -48,7 +50,7 @@ abstract mixin class $V2FeedsAdminRequestBodyCopyWith<$Res>  {
   factory $V2FeedsAdminRequestBodyCopyWith(V2FeedsAdminRequestBody value, $Res Function(V2FeedsAdminRequestBody) _then) = _$V2FeedsAdminRequestBodyCopyWithImpl;
 @useResult
 $Res call({
- dynamic feedType, dynamic priority, bool isImportant, String publishedAt, Data data, List<Translations> translations,@JsonKey(includeIfNull: false) String? expiresAt
+ FeedType feedType, Priority priority, bool isImportant, String publishedAt, Data data, List<Translations> translations,@JsonKey(includeIfNull: false) String? expiresAt
 });
 
 
@@ -65,11 +67,11 @@ class _$V2FeedsAdminRequestBodyCopyWithImpl<$Res>
 
 /// Create a copy of V2FeedsAdminRequestBody
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? feedType = freezed,Object? priority = freezed,Object? isImportant = null,Object? publishedAt = null,Object? data = null,Object? translations = null,Object? expiresAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? feedType = null,Object? priority = null,Object? isImportant = null,Object? publishedAt = null,Object? data = null,Object? translations = null,Object? expiresAt = freezed,}) {
   return _then(_self.copyWith(
-feedType: freezed == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
-as dynamic,priority: freezed == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as dynamic,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
+feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
+as FeedType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
+as Priority,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
 as bool,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
 as String,data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as Data,translations: null == translations ? _self.translations : translations // ignore: cast_nullable_to_non_nullable
@@ -168,7 +170,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic feedType,  dynamic priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( FeedType feedType,  Priority priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _V2FeedsAdminRequestBody() when $default != null:
 return $default(_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.data,_that.translations,_that.expiresAt);case _:
@@ -189,7 +191,7 @@ return $default(_that.feedType,_that.priority,_that.isImportant,_that.publishedA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic feedType,  dynamic priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( FeedType feedType,  Priority priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)  $default,) {final _that = this;
 switch (_that) {
 case _V2FeedsAdminRequestBody():
 return $default(_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.data,_that.translations,_that.expiresAt);case _:
@@ -209,7 +211,7 @@ return $default(_that.feedType,_that.priority,_that.isImportant,_that.publishedA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic feedType,  dynamic priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( FeedType feedType,  Priority priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)?  $default,) {final _that = this;
 switch (_that) {
 case _V2FeedsAdminRequestBody() when $default != null:
 return $default(_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.data,_that.translations,_that.expiresAt);case _:
@@ -227,8 +229,10 @@ class _V2FeedsAdminRequestBody implements V2FeedsAdminRequestBody {
   const _V2FeedsAdminRequestBody({required this.feedType, required this.priority, required this.isImportant, required this.publishedAt, required this.data, required final  List<Translations> translations, @JsonKey(includeIfNull: false) this.expiresAt}): _translations = translations;
   factory _V2FeedsAdminRequestBody.fromJson(Map<String, dynamic> json) => _$V2FeedsAdminRequestBodyFromJson(json);
 
-@override final  dynamic feedType;
-@override final  dynamic priority;
+/// const: "APP_UPDATE" | const: "INCIDENT" | const: "DEVELOPER_MESSAGE"
+@override final  FeedType feedType;
+/// const: "CRITICAL" | const: "HIGH" | const: "NORMAL" | const: "LOW"
+@override final  Priority priority;
 @override final  bool isImportant;
 @override final  String publishedAt;
 @override final  Data data;
@@ -254,12 +258,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _V2FeedsAdminRequestBody&&const DeepCollectionEquality().equals(other.feedType, feedType)&&const DeepCollectionEquality().equals(other.priority, priority)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.data, data) || other.data == data)&&const DeepCollectionEquality().equals(other._translations, _translations)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _V2FeedsAdminRequestBody&&(identical(other.feedType, feedType) || other.feedType == feedType)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.data, data) || other.data == data)&&const DeepCollectionEquality().equals(other._translations, _translations)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(feedType),const DeepCollectionEquality().hash(priority),isImportant,publishedAt,data,const DeepCollectionEquality().hash(_translations),expiresAt);
+int get hashCode => Object.hash(runtimeType,feedType,priority,isImportant,publishedAt,data,const DeepCollectionEquality().hash(_translations),expiresAt);
 
 @override
 String toString() {
@@ -274,7 +278,7 @@ abstract mixin class _$V2FeedsAdminRequestBodyCopyWith<$Res> implements $V2Feeds
   factory _$V2FeedsAdminRequestBodyCopyWith(_V2FeedsAdminRequestBody value, $Res Function(_V2FeedsAdminRequestBody) _then) = __$V2FeedsAdminRequestBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic feedType, dynamic priority, bool isImportant, String publishedAt, Data data, List<Translations> translations,@JsonKey(includeIfNull: false) String? expiresAt
+ FeedType feedType, Priority priority, bool isImportant, String publishedAt, Data data, List<Translations> translations,@JsonKey(includeIfNull: false) String? expiresAt
 });
 
 
@@ -291,11 +295,11 @@ class __$V2FeedsAdminRequestBodyCopyWithImpl<$Res>
 
 /// Create a copy of V2FeedsAdminRequestBody
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? feedType = freezed,Object? priority = freezed,Object? isImportant = null,Object? publishedAt = null,Object? data = null,Object? translations = null,Object? expiresAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? feedType = null,Object? priority = null,Object? isImportant = null,Object? publishedAt = null,Object? data = null,Object? translations = null,Object? expiresAt = freezed,}) {
   return _then(_V2FeedsAdminRequestBody(
-feedType: freezed == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
-as dynamic,priority: freezed == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as dynamic,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
+feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
+as FeedType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
+as Priority,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
 as bool,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
 as String,data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as Data,translations: null == translations ? _self._translations : translations // ignore: cast_nullable_to_non_nullable

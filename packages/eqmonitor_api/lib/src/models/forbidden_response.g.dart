@@ -11,7 +11,7 @@ part of 'forbidden_response.dart';
 _ForbiddenResponse _$ForbiddenResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_ForbiddenResponse', json, ($checkedConvert) {
       final val = _ForbiddenResponse(
-        code: $checkedConvert('code', (v) => v),
+        code: $checkedConvert('code', (v) => v as String),
         message: $checkedConvert('message', (v) => v as String),
       );
       return val;

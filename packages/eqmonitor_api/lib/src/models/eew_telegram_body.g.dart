@@ -11,7 +11,7 @@ part of 'eew_telegram_body.dart';
 _EewTelegramBody _$EewTelegramBodyFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_EewTelegramBody', json, ($checkedConvert) {
       final val = _EewTelegramBody(
-        type: $checkedConvert('type', (v) => v),
+        type: $checkedConvert('type', (v) => v as String),
         eew: $checkedConvert('eew', (v) => v),
         eewIntensityRegions: $checkedConvert(
           'eewIntensityRegions',

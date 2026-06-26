@@ -15,8 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiRegionEstimation {
 
-@JsonKey(name: 'first_height') FirstHeight get firstHeight;/// 津波の予想高さ(推定値)
-@JsonKey(name: 'max_height') MaxHeight get maxHeight;
+@JsonKey(name: 'first_height') TsunamiRegionEstimationFirstHeight get firstHeight;@JsonKey(name: 'max_height') TsunamiRegionEstimationMaxHeight get maxHeight;
 /// Create a copy of TsunamiRegionEstimation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,11 +48,11 @@ abstract mixin class $TsunamiRegionEstimationCopyWith<$Res>  {
   factory $TsunamiRegionEstimationCopyWith(TsunamiRegionEstimation value, $Res Function(TsunamiRegionEstimation) _then) = _$TsunamiRegionEstimationCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'first_height') FirstHeight firstHeight,@JsonKey(name: 'max_height') MaxHeight maxHeight
+@JsonKey(name: 'first_height') TsunamiRegionEstimationFirstHeight firstHeight,@JsonKey(name: 'max_height') TsunamiRegionEstimationMaxHeight maxHeight
 });
 
 
-$FirstHeightCopyWith<$Res> get firstHeight;$MaxHeightCopyWith<$Res> get maxHeight;
+$TsunamiRegionEstimationFirstHeightCopyWith<$Res> get firstHeight;$TsunamiRegionEstimationMaxHeightCopyWith<$Res> get maxHeight;
 
 }
 /// @nodoc
@@ -69,26 +68,26 @@ class _$TsunamiRegionEstimationCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? firstHeight = null,Object? maxHeight = null,}) {
   return _then(_self.copyWith(
 firstHeight: null == firstHeight ? _self.firstHeight : firstHeight // ignore: cast_nullable_to_non_nullable
-as FirstHeight,maxHeight: null == maxHeight ? _self.maxHeight : maxHeight // ignore: cast_nullable_to_non_nullable
-as MaxHeight,
+as TsunamiRegionEstimationFirstHeight,maxHeight: null == maxHeight ? _self.maxHeight : maxHeight // ignore: cast_nullable_to_non_nullable
+as TsunamiRegionEstimationMaxHeight,
   ));
 }
 /// Create a copy of TsunamiRegionEstimation
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$FirstHeightCopyWith<$Res> get firstHeight {
+$TsunamiRegionEstimationFirstHeightCopyWith<$Res> get firstHeight {
   
-  return $FirstHeightCopyWith<$Res>(_self.firstHeight, (value) {
+  return $TsunamiRegionEstimationFirstHeightCopyWith<$Res>(_self.firstHeight, (value) {
     return _then(_self.copyWith(firstHeight: value));
   });
 }/// Create a copy of TsunamiRegionEstimation
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$MaxHeightCopyWith<$Res> get maxHeight {
+$TsunamiRegionEstimationMaxHeightCopyWith<$Res> get maxHeight {
   
-  return $MaxHeightCopyWith<$Res>(_self.maxHeight, (value) {
+  return $TsunamiRegionEstimationMaxHeightCopyWith<$Res>(_self.maxHeight, (value) {
     return _then(_self.copyWith(maxHeight: value));
   });
 }
@@ -173,7 +172,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'first_height')  FirstHeight firstHeight, @JsonKey(name: 'max_height')  MaxHeight maxHeight)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'first_height')  TsunamiRegionEstimationFirstHeight firstHeight, @JsonKey(name: 'max_height')  TsunamiRegionEstimationMaxHeight maxHeight)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiRegionEstimation() when $default != null:
 return $default(_that.firstHeight,_that.maxHeight);case _:
@@ -194,7 +193,7 @@ return $default(_that.firstHeight,_that.maxHeight);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'first_height')  FirstHeight firstHeight, @JsonKey(name: 'max_height')  MaxHeight maxHeight)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'first_height')  TsunamiRegionEstimationFirstHeight firstHeight, @JsonKey(name: 'max_height')  TsunamiRegionEstimationMaxHeight maxHeight)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiRegionEstimation():
 return $default(_that.firstHeight,_that.maxHeight);case _:
@@ -214,7 +213,7 @@ return $default(_that.firstHeight,_that.maxHeight);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'first_height')  FirstHeight firstHeight, @JsonKey(name: 'max_height')  MaxHeight maxHeight)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'first_height')  TsunamiRegionEstimationFirstHeight firstHeight, @JsonKey(name: 'max_height')  TsunamiRegionEstimationMaxHeight maxHeight)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiRegionEstimation() when $default != null:
 return $default(_that.firstHeight,_that.maxHeight);case _:
@@ -232,9 +231,8 @@ class _TsunamiRegionEstimation implements TsunamiRegionEstimation {
   const _TsunamiRegionEstimation({@JsonKey(name: 'first_height') required this.firstHeight, @JsonKey(name: 'max_height') required this.maxHeight});
   factory _TsunamiRegionEstimation.fromJson(Map<String, dynamic> json) => _$TsunamiRegionEstimationFromJson(json);
 
-@override@JsonKey(name: 'first_height') final  FirstHeight firstHeight;
-/// 津波の予想高さ(推定値)
-@override@JsonKey(name: 'max_height') final  MaxHeight maxHeight;
+@override@JsonKey(name: 'first_height') final  TsunamiRegionEstimationFirstHeight firstHeight;
+@override@JsonKey(name: 'max_height') final  TsunamiRegionEstimationMaxHeight maxHeight;
 
 /// Create a copy of TsunamiRegionEstimation
 /// with the given fields replaced by the non-null parameter values.
@@ -269,11 +267,11 @@ abstract mixin class _$TsunamiRegionEstimationCopyWith<$Res> implements $Tsunami
   factory _$TsunamiRegionEstimationCopyWith(_TsunamiRegionEstimation value, $Res Function(_TsunamiRegionEstimation) _then) = __$TsunamiRegionEstimationCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'first_height') FirstHeight firstHeight,@JsonKey(name: 'max_height') MaxHeight maxHeight
+@JsonKey(name: 'first_height') TsunamiRegionEstimationFirstHeight firstHeight,@JsonKey(name: 'max_height') TsunamiRegionEstimationMaxHeight maxHeight
 });
 
 
-@override $FirstHeightCopyWith<$Res> get firstHeight;@override $MaxHeightCopyWith<$Res> get maxHeight;
+@override $TsunamiRegionEstimationFirstHeightCopyWith<$Res> get firstHeight;@override $TsunamiRegionEstimationMaxHeightCopyWith<$Res> get maxHeight;
 
 }
 /// @nodoc
@@ -289,8 +287,8 @@ class __$TsunamiRegionEstimationCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? firstHeight = null,Object? maxHeight = null,}) {
   return _then(_TsunamiRegionEstimation(
 firstHeight: null == firstHeight ? _self.firstHeight : firstHeight // ignore: cast_nullable_to_non_nullable
-as FirstHeight,maxHeight: null == maxHeight ? _self.maxHeight : maxHeight // ignore: cast_nullable_to_non_nullable
-as MaxHeight,
+as TsunamiRegionEstimationFirstHeight,maxHeight: null == maxHeight ? _self.maxHeight : maxHeight // ignore: cast_nullable_to_non_nullable
+as TsunamiRegionEstimationMaxHeight,
   ));
 }
 
@@ -298,18 +296,18 @@ as MaxHeight,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$FirstHeightCopyWith<$Res> get firstHeight {
+$TsunamiRegionEstimationFirstHeightCopyWith<$Res> get firstHeight {
   
-  return $FirstHeightCopyWith<$Res>(_self.firstHeight, (value) {
+  return $TsunamiRegionEstimationFirstHeightCopyWith<$Res>(_self.firstHeight, (value) {
     return _then(_self.copyWith(firstHeight: value));
   });
 }/// Create a copy of TsunamiRegionEstimation
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$MaxHeightCopyWith<$Res> get maxHeight {
+$TsunamiRegionEstimationMaxHeightCopyWith<$Res> get maxHeight {
   
-  return $MaxHeightCopyWith<$Res>(_self.maxHeight, (value) {
+  return $TsunamiRegionEstimationMaxHeightCopyWith<$Res>(_self.maxHeight, (value) {
     return _then(_self.copyWith(maxHeight: value));
   });
 }

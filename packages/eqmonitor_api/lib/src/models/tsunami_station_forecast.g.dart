@@ -21,8 +21,11 @@ _TsunamiStationForecast _$TsunamiStationForecastFromJson(
       ),
       firstHeight: $checkedConvert(
         'first_height',
-        (v) =>
-            v == null ? null : FirstHeight2.fromJson(v as Map<String, dynamic>),
+        (v) => v == null
+            ? null
+            : TsunamiStationForecastFirstHeight.fromJson(
+                v as Map<String, dynamic>,
+              ),
       ),
     );
     return val;

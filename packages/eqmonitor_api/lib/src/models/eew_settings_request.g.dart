@@ -19,7 +19,7 @@ _EewSettingsRequest _$EewSettingsRequestFromJson(
       notificationTiers: $checkedConvert(
         'notification_tiers',
         (v) => (v as List<dynamic>?)
-            ?.map((e) => NotificationTiers4.fromJson(e as Map<String, dynamic>))
+            ?.map((e) => NotificationTier.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
       startLiveActivity: $checkedConvert(

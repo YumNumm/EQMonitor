@@ -14,7 +14,7 @@ _DispatchSummaryDetailResponse _$DispatchSummaryDetailResponseFromJson(
   final val = _DispatchSummaryDetailResponse(
     item: $checkedConvert(
       'item',
-      (v) => Item2.fromJson(v as Map<String, dynamic>),
+      (v) => DispatchSummaryItem.fromJson(v as Map<String, dynamic>),
     ),
   );
   return val;
