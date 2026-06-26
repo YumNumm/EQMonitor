@@ -407,6 +407,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'color-schema',
           factory: $ColorSchemeConfigRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'estimated-intensity-color-schema',
+          factory: $EstimatedIntensityColorConfigRoute._fromState,
+        ),
       ],
     ),
     GoRouteData.$route(
@@ -638,6 +642,29 @@ mixin $ColorSchemeConfigRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/display/color-schema');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $EstimatedIntensityColorConfigRoute on GoRouteData {
+  static EstimatedIntensityColorConfigRoute _fromState(GoRouterState state) =>
+      const EstimatedIntensityColorConfigRoute();
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/display/estimated-intensity-color-schema',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -10,11 +10,11 @@ part of 'app_launch_watcher_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Watches the app lifecycle and records [AppLaunchRecorder] events.
+/// Watches the app lifecycle and records app launch telemetry events.
 ///
 /// On cold start (`build`), records a `cold_start` event immediately.
 /// When the app resumes from background, records a `resume` event
-/// (subject to the 30-second debounce inside [AppLaunchRecorder]).
+/// (subject to the 30-second debounce inside the recorder).
 ///
 /// Register this provider in `main.dart` by calling
 /// `container.read(appLaunchWatcherProvider)`.
@@ -22,21 +22,21 @@ part of 'app_launch_watcher_provider.dart';
 @ProviderFor(AppLaunchWatcher)
 final appLaunchWatcherProvider = AppLaunchWatcherProvider._();
 
-/// Watches the app lifecycle and records [AppLaunchRecorder] events.
+/// Watches the app lifecycle and records app launch telemetry events.
 ///
 /// On cold start (`build`), records a `cold_start` event immediately.
 /// When the app resumes from background, records a `resume` event
-/// (subject to the 30-second debounce inside [AppLaunchRecorder]).
+/// (subject to the 30-second debounce inside the recorder).
 ///
 /// Register this provider in `main.dart` by calling
 /// `container.read(appLaunchWatcherProvider)`.
 final class AppLaunchWatcherProvider
     extends $NotifierProvider<AppLaunchWatcher, void> {
-  /// Watches the app lifecycle and records [AppLaunchRecorder] events.
+  /// Watches the app lifecycle and records app launch telemetry events.
   ///
   /// On cold start (`build`), records a `cold_start` event immediately.
   /// When the app resumes from background, records a `resume` event
-  /// (subject to the 30-second debounce inside [AppLaunchRecorder]).
+  /// (subject to the 30-second debounce inside the recorder).
   ///
   /// Register this provider in `main.dart` by calling
   /// `container.read(appLaunchWatcherProvider)`.
@@ -69,11 +69,11 @@ final class AppLaunchWatcherProvider
 
 String _$appLaunchWatcherHash() => r'e95cf5059d471b51f1417e9ec5b7f7dfc59bb584';
 
-/// Watches the app lifecycle and records [AppLaunchRecorder] events.
+/// Watches the app lifecycle and records app launch telemetry events.
 ///
 /// On cold start (`build`), records a `cold_start` event immediately.
 /// When the app resumes from background, records a `resume` event
-/// (subject to the 30-second debounce inside [AppLaunchRecorder]).
+/// (subject to the 30-second debounce inside the recorder).
 ///
 /// Register this provider in `main.dart` by calling
 /// `container.read(appLaunchWatcherProvider)`.

@@ -34,10 +34,18 @@ class _Body extends StatelessWidget {
             const _ThemeSelector(),
             const Divider(),
             ListTile(
-              title: const Text('震度配色設定'),
+              title: const Text('震度アイコン配色設定'),
               leading: const Icon(Icons.color_lens),
               onTap: () async =>
                   const ColorSchemeConfigRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('推計震度配色設定'),
+              subtitle: const Text('地図上の推計震度レイヤーの色'),
+              leading: const Icon(Icons.map),
+              onTap: () async =>
+                  const EstimatedIntensityColorConfigRoute()
+                      .push<void>(context),
             ),
           ],
         ),

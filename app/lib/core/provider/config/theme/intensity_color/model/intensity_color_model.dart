@@ -142,6 +142,23 @@ abstract class IntensityColorModel with _$IntensityColorModel {
     ),
   );
 
+  /// ダークマップ背景に対して WCAG AA (3:1以上) のコントラスト比を満たす
+  /// 高視認性パレット。推計震度レイヤーのデフォルト。
+  factory IntensityColorModel.mapFillHighContrast() =>
+      IntensityColorModel.fromBaseColors(
+        unknwon: const Color(0xFF90A4AE),
+        zero: const Color(0xFFB0BEC5),
+        one: const Color(0xFF4DD0E1),
+        two: const Color(0xFF29B6F6),
+        three: const Color(0xFF66BB6A),
+        four: const Color(0xFFFFEE58),
+        fiveLower: const Color(0xFFFFA726),
+        fiveUpper: const Color(0xFFFF7043),
+        sixLower: const Color(0xFFEF5350),
+        sixUpper: const Color(0xFFF06292),
+        seven: const Color(0xFFCE93D8),
+      );
+
   factory IntensityColorModel.earthQuickly() => const IntensityColorModel(
     zero: TextColorModel(
       foreground: Colors.white,
