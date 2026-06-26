@@ -11,7 +11,7 @@ void main() {
 
   setUp(() {
     db = TelemetryDatabase(NativeDatabase.memory());
-    recorder = TelemetryRecorder(db);
+    recorder = TelemetryRecorder(db: db);
     SharedPreferences.setMockInitialValues({});
   });
 
@@ -64,63 +64,70 @@ void main() {
   );
 
   group('debounce logic', () {
-    test('records event when no previous timestamp exists (first launch)',
-        () async {
-      final prefs = await SharedPreferences.getInstance();
-      final r = makeRecorder(prefs);
+    test(
+      'records event when no previous timestamp exists (first launch)',
+      () async {
+        final prefs = await SharedPreferences.getInstance();
+        final r = makeRecorder(prefs);
 
-      final result = await recordIos(r);
+        final result = await recordIos(r);
 
-      expect(result, isTrue);
-      final rows = await db.getUnsyncedEvents();
-      expect(rows, hasLength(1));
-      expect(rows.first.eventType, 'app_launch');
-    });
+        expect(result, isTrue);
+        final rows = await db.getUnsyncedEvents();
+        expect(rows, hasLength(1));
+        expect(rows.first.eventType, 'app_launch');
+      },
+    );
 
-    test('records event when >30 seconds have elapsed since last send',
-        () async {
-      final prefs = await SharedPreferences.getInstance();
-      // Simulate a last-sent timestamp 31 seconds in the past.
-      final oldTimestamp =
-          DateTime.now().millisecondsSinceEpoch - 31 * 1000;
-      await prefs.setInt('app_launch_last_sent_ms', oldTimestamp);
-      final r = makeRecorder(prefs);
+    test(
+      'records event when >30 seconds have elapsed since last send',
+      () async {
+        final prefs = await SharedPreferences.getInstance();
+        // Simulate a last-sent timestamp 31 seconds in the past.
+        final oldTimestamp = DateTime.now().millisecondsSinceEpoch - 31 * 1000;
+        await prefs.setInt('app_launch_last_sent_ms', oldTimestamp);
+        final r = makeRecorder(prefs);
 
-      final result = await recordIos(r);
+        final result = await recordIos(r);
 
-      expect(result, isTrue);
-      final rows = await db.getUnsyncedEvents();
-      expect(rows, hasLength(1));
-    });
+        expect(result, isTrue);
+        final rows = await db.getUnsyncedEvents();
+        expect(rows, hasLength(1));
+      },
+    );
 
-    test('does NOT record when <30 seconds have elapsed since last send',
-        () async {
-      final prefs = await SharedPreferences.getInstance();
-      // Simulate a last-sent timestamp only 5 seconds ago.
-      final recentTimestamp =
-          DateTime.now().millisecondsSinceEpoch - 5 * 1000;
-      await prefs.setInt('app_launch_last_sent_ms', recentTimestamp);
-      final r = makeRecorder(prefs);
+    test(
+      'does NOT record when <30 seconds have elapsed since last send',
+      () async {
+        final prefs = await SharedPreferences.getInstance();
+        // Simulate a last-sent timestamp only 5 seconds ago.
+        final recentTimestamp =
+            DateTime.now().millisecondsSinceEpoch - 5 * 1000;
+        await prefs.setInt('app_launch_last_sent_ms', recentTimestamp);
+        final r = makeRecorder(prefs);
 
-      final result = await recordIos(r);
+        final result = await recordIos(r);
 
-      expect(result, isFalse);
-      final rows = await db.getUnsyncedEvents();
-      expect(rows, isEmpty);
-    });
+        expect(result, isFalse);
+        final rows = await db.getUnsyncedEvents();
+        expect(rows, isEmpty);
+      },
+    );
 
-    test('does NOT record when well within debounce window (15 s elapsed)',
-        () async {
-      final prefs = await SharedPreferences.getInstance();
-      // 15 seconds ago — clearly within the 30-second debounce window.
-      final recent = DateTime.now().millisecondsSinceEpoch - 15 * 1000;
-      await prefs.setInt('app_launch_last_sent_ms', recent);
-      final r = makeRecorder(prefs);
+    test(
+      'does NOT record when well within debounce window (15 s elapsed)',
+      () async {
+        final prefs = await SharedPreferences.getInstance();
+        // 15 seconds ago — clearly within the 30-second debounce window.
+        final recent = DateTime.now().millisecondsSinceEpoch - 15 * 1000;
+        await prefs.setInt('app_launch_last_sent_ms', recent);
+        final r = makeRecorder(prefs);
 
-      final result = await recordIos(r);
+        final result = await recordIos(r);
 
-      expect(result, isFalse);
-    });
+        expect(result, isFalse);
+      },
+    );
   });
 
   group('iOS launch — Android-specific fields are null', () {
@@ -189,32 +196,36 @@ void main() {
       expect(rows.first.payload, contains('"launch_type":"resume"'));
     });
 
-    test('second call with resume within debounce window is debounced',
-        () async {
-      final prefs = await SharedPreferences.getInstance();
-      final r = makeRecorder(prefs);
+    test(
+      'second call with resume within debounce window is debounced',
+      () async {
+        final prefs = await SharedPreferences.getInstance();
+        final r = makeRecorder(prefs);
 
-      final first = await recordIos(r);
-      final second = await recordIos(r, launchType: 'resume');
+        final first = await recordIos(r);
+        final second = await recordIos(r, launchType: 'resume');
 
-      expect(first, isTrue);
-      expect(second, isFalse);
-      // Only the first event was recorded.
-      expect(await db.getUnsyncedEvents(), hasLength(1));
-    });
+        expect(first, isTrue);
+        expect(second, isFalse);
+        // Only the first event was recorded.
+        expect(await db.getUnsyncedEvents(), hasLength(1));
+      },
+    );
   });
 
   group('timestamp updated after successful record', () {
-    test('updates stored timestamp so next immediate call is debounced',
-        () async {
-      final prefs = await SharedPreferences.getInstance();
-      final r = makeRecorder(prefs);
+    test(
+      'updates stored timestamp so next immediate call is debounced',
+      () async {
+        final prefs = await SharedPreferences.getInstance();
+        final r = makeRecorder(prefs);
 
-      await recordIos(r);
-      // Immediately call again — should be debounced.
-      final result = await recordIos(r);
+        await recordIos(r);
+        // Immediately call again — should be debounced.
+        final result = await recordIos(r);
 
-      expect(result, isFalse);
-    });
+        expect(result, isFalse);
+      },
+    );
   });
 }

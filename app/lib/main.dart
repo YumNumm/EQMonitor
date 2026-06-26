@@ -245,7 +245,14 @@ Future<void> _main() async {
   container.listen(firebaseMessagingInteractionProvider, (_, _) {});
   unawaited(container.read(pushTokenSyncWiringProvider.future));
   if (!kIsWeb) {
-    unawaited(container.read(telemetryUploaderProvider).flush());
+    unawaited(() async {
+      try {
+        final uploader = container.read(telemetryUploaderProvider);
+        await uploader.flush();
+      } on Exception catch (exception, stackTrace) {
+        talker.error(exception, stackTrace);
+      }
+    }());
     container.read(appLaunchWatcherProvider);
   }
 

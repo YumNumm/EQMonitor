@@ -41,7 +41,9 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
             ),
           );
 
-          if (disposed) return;
+          if (disposed) {
+            return;
+          }
 
           await styleController.addLayer(
             const FillStyleLayer(
@@ -56,7 +58,9 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
             belowLayerId: BaseLayer.areaForecastLocalELine.name,
           );
 
-          if (disposed) return;
+          if (disposed) {
+            return;
+          }
 
           await styleController.addLayer(
             const LineStyleLayer(

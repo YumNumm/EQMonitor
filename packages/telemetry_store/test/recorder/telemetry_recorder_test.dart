@@ -12,7 +12,7 @@ void main() {
 
   setUp(() {
     db = TelemetryDatabase(NativeDatabase.memory());
-    recorder = TelemetryRecorder(db);
+    recorder = TelemetryRecorder(db: db);
   });
 
   tearDown(() async {

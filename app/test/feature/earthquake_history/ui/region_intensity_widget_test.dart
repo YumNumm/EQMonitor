@@ -38,7 +38,7 @@ void main() {
         child: MaterialApp(
           home: Scaffold(
             body: SingleChildScrollView(
-              child: EarthquakeIntensityWidget(item: item),
+              child: JmaIntensityContent(item: item),
             ),
           ),
         ),
@@ -115,7 +115,6 @@ void main() {
 
     await pumpWidget(tester, item: item);
 
-    expect(find.text('各地の震度'), findsOneWidget);
     expect(find.textContaining('震度4'), findsWidgets);
     expect(find.textContaining('宮城県'), findsOneWidget);
   });
@@ -184,6 +183,7 @@ void main() {
 
     await pumpWidget(tester, item: item);
 
-    expect(find.text('各地の震度'), findsNothing);
+    expect(find.byType(JmaIntensityContent), findsOneWidget);
+    expect(find.textContaining('震度'), findsNothing);
   });
 }

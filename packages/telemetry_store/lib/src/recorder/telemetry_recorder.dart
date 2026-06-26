@@ -5,7 +5,7 @@ import 'package:telemetry_store/src/database/telemetry_database.dart';
 import 'package:telemetry_store/src/models/telemetry_event.dart';
 
 class TelemetryRecorder {
-  TelemetryRecorder(this._db);
+  TelemetryRecorder({required TelemetryDatabase db}) : _db = db;
 
   final TelemetryDatabase _db;
 
