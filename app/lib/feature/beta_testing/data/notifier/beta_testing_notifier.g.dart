@@ -43,7 +43,7 @@ final class BetaTestingAgreedProvider
   }
 }
 
-String _$betaTestingAgreedHash() => r'40c187161cf8af2495f5fee5647dad12b3fab18f';
+String _$betaTestingAgreedHash() => r'4b19f15edbf808bead1fb43e236490580c0db3d8';
 
 abstract class _$BetaTestingAgreed extends $Notifier<bool> {
   bool build();

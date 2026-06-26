@@ -46,13 +46,18 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
           if (result == null) {
             return;
           }
-          final notifier = ref.read(homeConfigurationProvider.notifier);
-          if (result.regionCode == null) {
-            // クリアされた場合は parameter のみ消し、スコープは保持する
-            await notifier.clearCustomEarthquakeHistoryParameter();
-          } else {
-            await notifier.setCustomEarthquakeHistoryParameter(result);
-          }
+          await HomeConfigurationNotifier.saveMutation.run(
+            ref,
+            (tsx) async {
+              final notifier = tsx.get(homeConfigurationProvider.notifier);
+              if (result.regionCode == null) {
+                // クリアされた場合は parameter のみ消し、スコープは保持する
+                await notifier.clearCustomEarthquakeHistoryParameter();
+              } else {
+                await notifier.setCustomEarthquakeHistoryParameter(result);
+              }
+            },
+          );
         }
 
         return Card.outlined(
@@ -75,9 +80,12 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                       home.common.parameter == null) {
                     await openRegionPicker();
                   } else {
-                    await ref
-                        .read(homeConfigurationProvider.notifier)
-                        .setEarthquakeHistoryScope(newScope);
+                    await HomeConfigurationNotifier.saveMutation.run(
+                      ref,
+                      (tsx) async => tsx
+                          .get(homeConfigurationProvider.notifier)
+                          .setEarthquakeHistoryScope(newScope),
+                    );
                   }
                 },
                 locationName: locationName,

@@ -95,7 +95,10 @@ class SettingsPage extends ConsumerWidget {
                   title: '広告を非表示',
                   value: ref.watch(adsOptOutProvider),
                   onChanged: (_) =>
-                      ref.read(adsOptOutProvider.notifier).toggle(),
+                      AdsOptOutNotifier.saveMutation.run(
+                          ref,
+                          (tsx) async => tsx.get(adsOptOutProvider.notifier).toggle(),
+                      ),
                 ),
                 Center(
                   child: Text(

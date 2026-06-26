@@ -129,9 +129,12 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
                           if (userId.isEmpty || password.isEmpty) {
                             return;
                           }
-                          await ref
-                              .read(knetCredentialsProvider.notifier)
-                              .save(userId: userId, password: password);
+                          await KnetCredentialsNotifier.saveMutation.run(
+                            ref,
+                            (tsx) async => tsx
+                                .get(knetCredentialsProvider.notifier)
+                                .save(userId: userId, password: password),
+                          );
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('認証情報を保存しました')),
@@ -162,7 +165,10 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
                   foregroundColor: Theme.of(context).colorScheme.error,
                 ),
                 onPressed: () async {
-                  await ref.read(knetCredentialsProvider.notifier).clear();
+                  await KnetCredentialsNotifier.clearMutation.run(
+                    ref,
+                    (tsx) async => tsx.get(knetCredentialsProvider.notifier).clear(),
+                  );
                   if (context.mounted) {
                     Navigator.of(context).pop();
                   }

@@ -72,7 +72,10 @@ class OnboardingPage extends HookConsumerWidget {
       }
 
       if (currentPage.value == steps.length - 1) {
-        await ref.read(onboardingCompletedProvider.notifier).complete();
+        await OnboardingCompleted.completeMutation.run(
+          ref,
+          (tsx) async => tsx.get(onboardingCompletedProvider.notifier).complete(),
+        );
         if (context.mounted) {
           context.go('/');
         }

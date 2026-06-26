@@ -43,7 +43,7 @@ final class AdsOptOutNotifierProvider
   }
 }
 
-String _$adsOptOutNotifierHash() => r'878e447190e717cc4a5c20a0e7de5d10817ef474';
+String _$adsOptOutNotifierHash() => r'7979f3d1c6fd262ced418e0abfadfa7c2e0f3858';
 
 abstract class _$AdsOptOutNotifier extends $Notifier<bool> {
   bool build();

@@ -1,11 +1,14 @@
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'beta_testing_notifier.g.dart';
 
 @riverpod
 class BetaTestingAgreed extends _$BetaTestingAgreed {
+  static final agreeMutation = Mutation<void>();
+
   @override
   bool build() {
     final prefs = ref.watch(sharedPreferencesProvider);
