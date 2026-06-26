@@ -116,4 +116,18 @@ extension EarthquakeHistoryParameterEx on EarthquakeHistoryParameter {
     EarthquakeSortBy? sortBy,
     SortOrder? sortOrder,
   ) => copyWith(sortBy: sortBy, sortOrder: sortOrder);
+
+  EarthquakeHistoryParameter updateRegion({
+    required RegionSearchType? regionSearchType,
+    required String? regionCode,
+    required String? regionName,
+    JmaIntensity? regionIntensityGte,
+    JmaIntensity? regionIntensityLte,
+  }) => copyWith(
+    regionSearchType: regionSearchType,
+    regionCode: regionCode,
+    regionName: regionName,
+    regionIntensityGte: regionIntensityGte,
+    regionIntensityLte: regionIntensityLte,
+  );
 }
