@@ -4,9 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// const: "１時間地震回数" | const: "累積地震回数" | const: "地震回数"
 @JsonEnum()
-enum Type {
+enum EarthquakeCountType {
   /// Incorrect name has been replaced. Original name: `１時間地震回数`.
   @JsonValue('１時間地震回数')
   undefined0('１時間地震回数'),
@@ -17,7 +16,7 @@ enum Type {
   @JsonValue('地震回数')
   undefined2('地震回数');
 
-  const Type(this.json);
+  const EarthquakeCountType(this.json);
 
   final String? json;
   String toJson() {

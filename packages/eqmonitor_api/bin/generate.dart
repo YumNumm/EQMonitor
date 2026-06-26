@@ -1125,13 +1125,9 @@ void _patchConstPropertiesToTyped(File openapiFile) {
       if (props is Map<String, Object?>) {
         patchProperties(props);
       }
-      for (final value in node.values) {
-        walkAndPatch(value);
-      }
+      node.values.forEach(walkAndPatch);
     } else if (node is List) {
-      for (final item in node) {
-        walkAndPatch(item);
-      }
+      node.forEach(walkAndPatch);
     }
   }
 
@@ -1267,8 +1263,16 @@ Map<String, Object?>? _collapseUniformAnyOf(
   // 最初の型メンバーから sub-schema キーをコピー
   final firstMember = typedMembers.first;
   for (final subKey in [
-    'type', 'items', 'format', 'pattern', 'minimum', 'maximum',
-    'minItems', 'maxItems', 'minLength', 'maxLength',
+    'type',
+    'items',
+    'format',
+    'pattern',
+    'minimum',
+    'maximum',
+    'minItems',
+    'maxItems',
+    'minLength',
+    'maxLength',
   ]) {
     if (firstMember.containsKey(subKey)) {
       result[subKey] = firstMember[subKey];
@@ -1282,8 +1286,8 @@ Map<String, Object?>? _collapseUniformAnyOf(
   final existingDesc = prop['description'] as String?;
   final memberDesc = descriptions.isNotEmpty ? descriptions.join(' | ') : null;
   final combinedDesc = [
-    if (existingDesc != null) existingDesc,
-    if (memberDesc != null) memberDesc,
+    ?existingDesc,
+    ?memberDesc,
   ].join('\n');
   if (combinedDesc.isNotEmpty) {
     result['description'] = combinedDesc;
@@ -1326,7 +1330,9 @@ Map<String, Object?>? _constToTyped(Map<String, Object?> schema) {
 
   final existing = schema['description'] as String?;
   final constDesc = 'const: $constRepr';
-  result['description'] = existing != null ? '$existing\n$constDesc' : constDesc;
+  result['description'] = existing != null
+      ? '$existing\n$constDesc'
+      : constDesc;
 
   return result;
 }

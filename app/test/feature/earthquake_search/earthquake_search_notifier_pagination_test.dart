@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart' as app;
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
@@ -56,6 +57,12 @@ final class _FakeEarthquakeHistoryRepository
     required String code,
     int? limit,
     String? cursor,
+    double? magnitudeGte,
+    double? magnitudeLte,
+    int? depthGte,
+    int? depthLte,
+    JmaIntensity? intensityGte,
+    JmaIntensity? intensityLte,
     List<api.TelegramStatus>? statuses,
     List<int>? epicenterCodes,
     api.EarthquakeType? earthquakeType,

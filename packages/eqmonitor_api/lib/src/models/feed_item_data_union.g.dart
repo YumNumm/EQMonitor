@@ -143,7 +143,7 @@ _$FeedItemDataUnionFeedEarthquakeNankaiDataFromJson(
       ),
       telegramType: $checkedConvert(
         'telegramType',
-        (v) => $enumDecode(_$TelegramTypeEnumMap, v),
+        (v) => $enumDecode(_$NankaiTelegramTypeEnumMap, v),
       ),
       earthquakeInfo: $checkedConvert(
         'earthquakeInfo',
@@ -172,10 +172,10 @@ Map<String, dynamic> _$FeedItemDataUnionFeedEarthquakeNankaiDataToJson(
   'runtimeType': instance.$type,
 };
 
-const _$TelegramTypeEnumMap = {
-  TelegramType.undefined0: '南海トラフ地震臨時情報',
-  TelegramType.undefined1: '南海トラフ地震関連解説情報',
-  TelegramType.undefined2: '北海道・三陸沖後発地震注意情報',
+const _$NankaiTelegramTypeEnumMap = {
+  NankaiTelegramType.undefined0: '南海トラフ地震臨時情報',
+  NankaiTelegramType.undefined1: '南海トラフ地震関連解説情報',
+  NankaiTelegramType.undefined2: '北海道・三陸沖後発地震注意情報',
 };
 
 FeedItemDataUnionFeedAppUpdateData _$FeedItemDataUnionFeedAppUpdateDataFromJson(

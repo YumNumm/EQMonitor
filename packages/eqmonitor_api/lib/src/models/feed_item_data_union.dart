@@ -10,7 +10,7 @@ import 'feed_earthquake_count.dart';
 import 'feed_naming.dart';
 import 'feed_nankai_earthquake_info.dart';
 import 'info_type.dart';
-import 'telegram_type.dart';
+import 'nankai_telegram_type.dart';
 
 part 'feed_item_data_union.freezed.dart';
 part 'feed_item_data_union.g.dart';
@@ -62,9 +62,7 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
 
     /// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
     required InfoType infoType,
-
-    /// const: "南海トラフ地震臨時情報" | const: "南海トラフ地震関連解説情報" | const: "北海道・三陸沖後発地震注意情報"
-    required TelegramType telegramType,
+    required NankaiTelegramType telegramType,
     @JsonKey(includeIfNull: false)
     FeedNankaiEarthquakeInfo? earthquakeInfo,
     @JsonKey(includeIfNull: false)

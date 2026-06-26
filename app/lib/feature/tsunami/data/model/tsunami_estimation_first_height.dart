@@ -14,7 +14,8 @@ abstract class TsunamiEstimationFirstHeight
   }) = _TsunamiEstimationFirstHeight;
 }
 
-extension TsunamiEstimationFirstHeightApiExt on api.FirstHeight {
+extension TsunamiEstimationFirstHeightApiExt
+    on api.TsunamiRegionEstimationFirstHeight {
   TsunamiEstimationFirstHeight toDomain() => TsunamiEstimationFirstHeight(
     arrivalTime: arrivalTime,
     isAlreadyArrived: isAlreadyArrived as bool?,

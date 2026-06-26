@@ -5,7 +5,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 enum TelegramInfoType {
   publication,
   correction,
-  delay,
   cancellation,
 }
 

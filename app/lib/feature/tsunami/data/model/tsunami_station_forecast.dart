@@ -21,7 +21,7 @@ extension TsunamiStationForecastApiExt on api.TsunamiStationForecast {
   );
 }
 
-extension _FirstHeight2ApiExt on api.FirstHeight2 {
+extension _FirstHeight2ApiExt on api.TsunamiStationForecastFirstHeight {
   TsunamiForecastFirstHeight toDomainFromFirstHeight2() =>
       TsunamiForecastFirstHeight(
         arrivalTime: arrivalTime,

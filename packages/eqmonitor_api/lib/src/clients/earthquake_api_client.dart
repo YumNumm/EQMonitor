@@ -16,6 +16,7 @@ import '../models/intensity_region_search_response.dart';
 import '../models/intensity_station_search_response.dart';
 import '../models/jma_intensity.dart';
 import '../models/jma_lpgm_intensity.dart';
+import '../models/similar_earthquake_response.dart';
 import '../models/sort_order.dart';
 
 import '../models/telegram_status.dart';
@@ -79,6 +80,11 @@ abstract class EarthquakeApiClient {
     @Query('latitudeLte') String? latitudeLte,
     @Query('longitudeGte') String? longitudeGte,
     @Query('longitudeLte') String? longitudeLte,
+  });
+
+  @GET(EarthquakeApiClientUrls.getV2EarthquakeEventIdSimilar)
+  Future<HttpResponse<SimilarEarthquakeResponse>> getV2EarthquakeEventIdSimilar({
+    @Path('eventId') required String eventId,
   });
 
   @GET(EarthquakeApiClientUrls.getV2EarthquakeEventId)
@@ -299,6 +305,8 @@ abstract class EarthquakeApiClient {
 abstract class EarthquakeApiClientUrls {
 	/// /v2/earthquake
 	static const getV2Earthquake = "/v2/earthquake";
+	/// /v2/earthquake/{eventId}/similar
+	static const getV2EarthquakeEventIdSimilar = "/v2/earthquake/{eventId}/similar";
 	/// /v2/earthquake/{eventId}
 	static const getV2EarthquakeEventId = "/v2/earthquake/{eventId}";
 	/// /v2/earthquake/intensity/region/{code}

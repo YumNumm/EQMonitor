@@ -113,7 +113,7 @@ Future<void> _main() async {
       formatter: const ColoredLoggerFormatter(),
     ),
   );
-  if (!kIsWeb) {
+  if (!kIsWeb && !kDebugMode) {
     talker.configure(
       observer: CrashlyticsTalkerObserver(),
     );

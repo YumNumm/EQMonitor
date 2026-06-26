@@ -4,9 +4,9 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'earthquake_count_type.dart';
 import 'feed_earthquake_count_target_time.dart';
 import 'feed_earthquake_count_values.dart';
-import 'type.dart';
 
 part 'feed_earthquake_count.freezed.dart';
 part 'feed_earthquake_count.g.dart';
@@ -14,8 +14,7 @@ part 'feed_earthquake_count.g.dart';
 @Freezed()
 abstract class FeedEarthquakeCount with _$FeedEarthquakeCount {
   const factory FeedEarthquakeCount({
-    /// const: "１時間地震回数" | const: "累積地震回数" | const: "地震回数"
-    required Type type,
+    required EarthquakeCountType type,
     required FeedEarthquakeCountTargetTime targetTime,
     required FeedEarthquakeCountValues values,
   }) = _FeedEarthquakeCount;

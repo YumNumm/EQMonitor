@@ -51,7 +51,7 @@ class DeviceNotificationSettingsRepository {
     final response = await _api.device.patchV2DeviceMeSettingsEew(
       body: api.EewSettingsRequest(
         enabled: enabled,
-        notificationTiers: _toEewApiTiers(criticalThreshold),
+        notificationTiers: _toApiTiers(criticalThreshold),
         startLiveActivity: startLiveActivity,
         onePointEnabled: onePointEnabled,
       ),
@@ -100,7 +100,7 @@ class DeviceNotificationSettingsRepository {
     final response = await _api.device.patchV2DeviceMeSettingsEarthquake(
       body: api.EarthquakeSettingsRequest(
         enabled: enabled,
-        notificationTiers: _toEarthquakeApiTiers(criticalThreshold),
+        notificationTiers: _toApiTiers(criticalThreshold),
         estimatedIntensityEnabled: estimatedIntensityEnabled,
       ),
     );
@@ -171,7 +171,7 @@ class DeviceNotificationSettingsRepository {
     List<NotificationRegion> regions,
   ) => EewNotificationSettings(
     enabled: resp.enabled,
-    criticalThreshold: _extractCriticalThresholdFromTiers3(
+    criticalThreshold: _extractCriticalThresholdFromTiers(
       resp.notificationTiers,
     ),
     startLiveActivity: resp.startLiveActivity,
@@ -202,7 +202,7 @@ class DeviceNotificationSettingsRepository {
   );
 
   JmaIntensity? _extractCriticalThresholdFromTiers(
-    List<api.NotificationTiers> tiers,
+    List<api.NotificationTier> tiers,
   ) {
     final tier = tiers.firstWhereOrNull(
       (t) => t.interruptionLevel == api.InterruptionLevel.critical,
@@ -210,16 +210,7 @@ class DeviceNotificationSettingsRepository {
     return tier?.minJmaIntensity.toJmaIntensity;
   }
 
-  JmaIntensity? _extractCriticalThresholdFromTiers3(
-    List<api.NotificationTiers3> tiers,
-  ) {
-    final tier = tiers.firstWhereOrNull(
-      (t) => t.interruptionLevel == api.InterruptionLevel.critical,
-    );
-    return tier?.minJmaIntensity.toJmaIntensity;
-  }
-
-  List<api.NotificationTiers4>? _toEewApiTiers(JmaIntensity? threshold) {
+  List<api.NotificationTier>? _toApiTiers(JmaIntensity? threshold) {
     if (threshold == null) {
       return null;
     }
@@ -228,24 +219,7 @@ class DeviceNotificationSettingsRepository {
       return null;
     }
     return [
-      api.NotificationTiers4(
-        minJmaIntensity: apiIntensity,
-        sound: 'default',
-        interruptionLevel: api.InterruptionLevel.critical,
-      ),
-    ];
-  }
-
-  List<api.NotificationTiers2>? _toEarthquakeApiTiers(JmaIntensity? threshold) {
-    if (threshold == null) {
-      return null;
-    }
-    final apiIntensity = threshold.toApiMinJmaIntensity;
-    if (apiIntensity == null) {
-      return null;
-    }
-    return [
-      api.NotificationTiers2(
+      api.NotificationTier(
         minJmaIntensity: apiIntensity,
         sound: 'default',
         interruptionLevel: api.InterruptionLevel.critical,

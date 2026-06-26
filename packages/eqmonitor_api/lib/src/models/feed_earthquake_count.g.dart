@@ -11,7 +11,10 @@ part of 'feed_earthquake_count.dart';
 _FeedEarthquakeCount _$FeedEarthquakeCountFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_FeedEarthquakeCount', json, ($checkedConvert) {
       final val = _FeedEarthquakeCount(
-        type: $checkedConvert('type', (v) => $enumDecode(_$TypeEnumMap, v)),
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$EarthquakeCountTypeEnumMap, v),
+        ),
         targetTime: $checkedConvert(
           'targetTime',
           (v) =>
@@ -33,8 +36,8 @@ Map<String, dynamic> _$FeedEarthquakeCountToJson(
   'values': instance.values,
 };
 
-const _$TypeEnumMap = {
-  Type.undefined0: '１時間地震回数',
-  Type.undefined1: '累積地震回数',
-  Type.undefined2: '地震回数',
+const _$EarthquakeCountTypeEnumMap = {
+  EarthquakeCountType.undefined0: '１時間地震回数',
+  EarthquakeCountType.undefined1: '累積地震回数',
+  EarthquakeCountType.undefined2: '地震回数',
 };

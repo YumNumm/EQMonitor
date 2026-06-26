@@ -80,7 +80,6 @@ void main() {
       for (final entry in <api.InfoType, TelegramInfoType>{
         api.InfoType.publication: TelegramInfoType.publication,
         api.InfoType.correction: TelegramInfoType.correction,
-        api.InfoType.delay: TelegramInfoType.delay,
         api.InfoType.cancellation: TelegramInfoType.cancellation,
       }.entries) {
         final converted = _makeApiEew(infoType: entry.key).toEewTelegramItem;

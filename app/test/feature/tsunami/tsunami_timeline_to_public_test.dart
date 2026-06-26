@@ -1438,10 +1438,8 @@ void main() {
                       code: 'S1',
                       name: '石巻',
                       observation: api.TsunamiStationObservation(
-                        firstHeight: api.TsunamiStationObservationFirstHeight(
-                          arrivalTime: arrivalTime,
-                          initial: api.WaveInitial.push,
-                        ),
+                        firstHeight: api.TsunamiStationObservationFirstHeight(arrivalTime: arrivalTime,
+                          initial: api.WaveInitial.push, isMissing: false, isUnidentifiable: false),
                       ),
                     ),
                   ],
@@ -1463,15 +1461,11 @@ void main() {
                       code: 'S1',
                       name: '石巻',
                       observation: api.TsunamiStationObservation(
-                        firstHeight: api.TsunamiStationObservationFirstHeight(
-                          arrivalTime: arrivalTime,
-                          initial: api.WaveInitial.push,
-                        ),
-                        maxHeight: api.TsunamiStationObservationMaxHeight(
-                          observedAt: maxDateTime,
+                        firstHeight: api.TsunamiStationObservationFirstHeight(arrivalTime: arrivalTime,
+                          initial: api.WaveInitial.push, isMissing: false, isUnidentifiable: false),
+                        maxHeight: api.TsunamiStationObservationMaxHeight(observedAt: maxDateTime,
                           value: 2.5,
-                          isRising: true,
-                        ),
+                          isRising: true, isOver: false, isMissing: false),
                       ),
                     ),
                   ],
@@ -1518,10 +1512,8 @@ void main() {
                 api.TsunamiOffshoreStation(
                   code: 'O1',
                   name: '金華山沖',
-                  firstHeight: api.TsunamiStationObservationFirstHeight(
-                    arrivalTime: arrivalTime,
-                    initial: api.WaveInitial.push,
-                  ),
+                  firstHeight: api.TsunamiStationObservationFirstHeight(arrivalTime: arrivalTime,
+                    initial: api.WaveInitial.push, isMissing: false, isUnidentifiable: false),
                 ),
               ],
             ),
@@ -1533,16 +1525,12 @@ void main() {
                 api.TsunamiOffshoreStation(
                   code: 'O1',
                   name: '金華山沖',
-                  firstHeight: api.TsunamiStationObservationFirstHeight(
-                    arrivalTime: arrivalTime,
-                    initial: api.WaveInitial.push,
-                  ),
-                  maxHeight: api.TsunamiStationObservationMaxHeight(
-                    observedAt: maxDateTime,
+                  firstHeight: api.TsunamiStationObservationFirstHeight(arrivalTime: arrivalTime,
+                    initial: api.WaveInitial.push, isMissing: false, isUnidentifiable: false),
+                  maxHeight: api.TsunamiStationObservationMaxHeight(observedAt: maxDateTime,
                     value: 1.5,
                     isRising: true,
-                    condition: api.ObservationMaxHeightCondition.observing,
-                  ),
+                    condition: api.ObservationMaxHeightCondition.observing, isOver: false, isMissing: false),
                 ),
               ],
             ),
