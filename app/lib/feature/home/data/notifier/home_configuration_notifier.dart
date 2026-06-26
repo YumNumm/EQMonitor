@@ -5,12 +5,15 @@ import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_s
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
+import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_configuration_notifier.g.dart';
 
 @riverpod
 class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
+  static final saveMutation = Mutation<void>();
+
   @override
   Future<HomeConfigurationModel> build() async => load();
 

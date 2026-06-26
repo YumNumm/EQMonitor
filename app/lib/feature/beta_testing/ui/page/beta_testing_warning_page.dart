@@ -190,7 +190,10 @@ class _AgreementBottom extends ConsumerWidget {
               width: double.infinity,
               child: FilledButton(
                 onPressed: () async {
-                  await ref.read(betaTestingAgreedProvider.notifier).agree();
+                  await BetaTestingAgreed.agreeMutation.run(
+                    ref,
+                    (tsx) async => tsx.get(betaTestingAgreedProvider.notifier).agree(),
+                  );
                   if (context.mounted) {
                     context.go('/');
                   }

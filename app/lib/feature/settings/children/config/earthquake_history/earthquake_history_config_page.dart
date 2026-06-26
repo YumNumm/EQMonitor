@@ -55,12 +55,17 @@ class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
         if (result == null) {
           return;
         }
-        final notifier = ref.read(homeConfigurationProvider.notifier);
-        if (result.regionCode == null) {
-          await notifier.clearCustomEarthquakeHistoryParameter();
-        } else {
-          await notifier.setCustomEarthquakeHistoryParameter(result);
-        }
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async {
+            final notifier = tsx.get(homeConfigurationProvider.notifier);
+            if (result.regionCode == null) {
+              await notifier.clearCustomEarthquakeHistoryParameter();
+            } else {
+              await notifier.setCustomEarthquakeHistoryParameter(result);
+            }
+          },
+        );
       },
     );
   }

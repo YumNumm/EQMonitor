@@ -27,7 +27,10 @@ class AdsOptOutFlow {
     WidgetRef ref,
     BuildContext context,
   ) async {
-    await ref.read(adsOptOutProvider.notifier).setOptOut(value: true);
+    await AdsOptOutNotifier.saveMutation.run(
+      ref,
+      (tsx) async => tsx.get(adsOptOutProvider.notifier).setOptOut(value: true),
+    );
     if (!context.mounted) {
       return;
     }

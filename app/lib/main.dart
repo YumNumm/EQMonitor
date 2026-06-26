@@ -31,7 +31,7 @@ import 'package:eqmonitor/feature/location/data/background_location_service.dart
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_watcher_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
-import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_startup_flush_provider.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -245,7 +245,7 @@ Future<void> _main() async {
   container.listen(firebaseMessagingInteractionProvider, (_, _) {});
   unawaited(container.read(pushTokenSyncWiringProvider.future));
   if (!kIsWeb) {
-    unawaited(container.read(telemetryStartupFlushProvider.future));
+    unawaited(container.read(telemetryUploaderProvider).flush());
     container.read(appLaunchWatcherProvider);
   }
 

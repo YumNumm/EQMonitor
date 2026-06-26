@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage.dart';
+import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'knet_credentials_provider.g.dart';
@@ -17,6 +18,9 @@ class KnetCredentials {
 /// SecureStorage から BOSAI 認証情報を読み書きする Notifier
 @Riverpod(keepAlive: true)
 class KnetCredentialsNotifier extends _$KnetCredentialsNotifier {
+  static final saveMutation = Mutation<void>();
+  static final clearMutation = Mutation<void>();
+
   @override
   Future<KnetCredentials?> build() async {
     final storage = await ref.watch(secureStorageProvider.future);
