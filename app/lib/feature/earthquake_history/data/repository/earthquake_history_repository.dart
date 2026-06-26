@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_list_
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/similar_earthquake_group.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -139,6 +140,17 @@ class EarthquakeHistoryRepository {
     return response.data.earthquake.toEarthquake(
       parameter: earthquakeParameter,
     );
+  }
+
+  Future<List<SimilarEarthquakeGroup>> fetchSimilarEarthquakes({
+    required String eventId,
+  }) async {
+    final response = await _api.earthquake.getV2EarthquakeEventIdSimilar(
+      eventId: eventId,
+    );
+    return response.data.items
+        .map((e) => e.toSimilarEarthquakeGroup(parameter: earthquakeParameter))
+        .toList();
   }
 
   Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByRegion({
