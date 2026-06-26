@@ -12,6 +12,24 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+const List<IntensityColorTarget> _estimatedIntensityTargets = [
+  IntensityColorTarget.four,
+  IntensityColorTarget.fiveLower,
+  IntensityColorTarget.fiveUpper,
+  IntensityColorTarget.sixLower,
+  IntensityColorTarget.sixUpper,
+  IntensityColorTarget.seven,
+];
+
+const List<JmaIntensity> _estimatedJmaIntensities = [
+  JmaIntensity.four,
+  JmaIntensity.fiveLower,
+  JmaIntensity.fiveUpper,
+  JmaIntensity.sixLower,
+  JmaIntensity.sixUpper,
+  JmaIntensity.seven,
+];
+
 class EstimatedIntensityColorConfigPage extends HookConsumerWidget {
   const EstimatedIntensityColorConfigPage({super.key});
 
@@ -133,7 +151,7 @@ class EstimatedIntensityColorConfigPage extends HookConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  ...IntensityColorTarget.values.map(
+                  ..._estimatedIntensityTargets.map(
                     (target) => _EditableIntensityTile(target: target),
                   ),
                   const SizedBox(height: 16),
@@ -328,9 +346,7 @@ class _IntensityPreview extends StatelessWidget {
       spacing: 4,
       runSpacing: 4,
       children: [
-        ...JmaIntensity.values
-            .where((e) => e != JmaIntensity.unknown)
-            .map(
+        ..._estimatedJmaIntensities.map(
               (e) => Container(
                 width: 32,
                 height: 32,

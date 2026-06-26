@@ -90,7 +90,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           await Future.wait(futures);
         };
       },
-      [styleController],
+      [styleController, colorModel],
     );
 
     // データ更新
@@ -109,7 +109,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
 
         return null;
       },
-      [styleController, regionMaxIntensities, colorModel],
+      [styleController, regionMaxIntensities],
     );
 
     return const SizedBox.shrink();
