@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_lpgm_intensity_card.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/similar_earthquake_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -72,9 +73,7 @@ class _LoadedContent extends HookWidget {
     final hasLpgm = earthquake.intensity?.maxLpgmIntensity != null;
 
     final displayMode = useState(
-      hasEstimated
-          ? IntensityDisplayMode.estimated
-          : IntensityDisplayMode.jma,
+      hasEstimated ? IntensityDisplayMode.estimated : IntensityDisplayMode.jma,
     );
 
     final availableModes = [
@@ -116,6 +115,7 @@ class _LoadedContent extends HookWidget {
                               const Duration(hours: 24))
                         const AdBanner(),
                       _TelegramListButton(eventId: earthquake.eventId),
+                      SimilarEarthquakeCard(eventId: earthquake.eventId),
                     ],
                   ),
                 ),

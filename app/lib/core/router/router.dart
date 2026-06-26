@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dar
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/similar_earthquake_page.dart';
 import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
@@ -203,6 +204,20 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return EarthquakeHistoryDetailsPage(eventId: eventId);
+  }
+}
+
+@TypedGoRoute<SimilarEarthquakeRoute>(
+  path: '/earthquake-history-details/:eventId/similar',
+)
+class SimilarEarthquakeRoute extends GoRouteData with $SimilarEarthquakeRoute {
+  const SimilarEarthquakeRoute({required this.eventId});
+
+  final String eventId;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return SimilarEarthquakePage(eventId: eventId);
   }
 }
 

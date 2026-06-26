@@ -15,6 +15,7 @@ List<RouteBase> get $appRoutes => [
   $earthquakeHistoryRoute,
   $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
+  $similarEarthquakeRoute,
   $shakeDetectionHistoryRoute,
   $shakeDetectionHistoryDetailsRoute,
   $telegramListByEventIdRoute,
@@ -183,6 +184,36 @@ mixin $EarthquakeHistoryDetailsRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/earthquake-history-details/${Uri.encodeComponent(_self.eventId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $similarEarthquakeRoute => GoRouteData.$route(
+  path: '/earthquake-history-details/:eventId/similar',
+  factory: $SimilarEarthquakeRoute._fromState,
+);
+
+mixin $SimilarEarthquakeRoute on GoRouteData {
+  static SimilarEarthquakeRoute _fromState(GoRouterState state) =>
+      SimilarEarthquakeRoute(eventId: state.pathParameters['eventId']!);
+
+  SimilarEarthquakeRoute get _self => this as SimilarEarthquakeRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/earthquake-history-details/${Uri.encodeComponent(_self.eventId)}/similar',
   );
 
   @override
