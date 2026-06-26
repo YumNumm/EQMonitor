@@ -11,11 +11,13 @@ class HomeMapControllerCard extends StatelessWidget {
     this.onLayerButtonTap,
     this.onLocationButtonTap,
     this.onDebugButtonTap,
+    this.onLabelDebugButtonTap,
   });
 
   final void Function()? onLayerButtonTap;
   final void Function()? onLocationButtonTap;
   final void Function()? onDebugButtonTap;
+  final void Function()? onLabelDebugButtonTap;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,17 @@ class HomeMapControllerCard extends StatelessWidget {
                         onLocationButtonTap?.call();
                       },
                     ),
+                    if (onLabelDebugButtonTap != null)
+                      InkWell(
+                        child: Padding(
+                          padding: EdgeInsets.all(spacing.sm),
+                          child: const Icon(Icons.label_rounded),
+                        ),
+                        onTap: () async {
+                          await hapticFeedback();
+                          onLabelDebugButtonTap?.call();
+                        },
+                      ),
                     if (onDebugButtonTap != null)
                       InkWell(
                         child: Padding(

@@ -31,6 +31,7 @@ class MapStyleUtil {
     final json = {
       'version': 8,
       'name': 'EQMonitor Style',
+      'glyphs': 'https://glyphs.geolonia.com/{fontstack}/{range}.pbf',
       'sources': {
         'eqmonitor_map': {
           'type': 'vector',

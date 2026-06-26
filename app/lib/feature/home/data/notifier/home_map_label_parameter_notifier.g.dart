@@ -1,0 +1,67 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
+
+part of 'home_map_label_parameter_notifier.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(HomeMapLabelParameterNotifier)
+final homeMapLabelParameterProvider = HomeMapLabelParameterNotifierProvider._();
+
+final class HomeMapLabelParameterNotifierProvider
+    extends
+        $AsyncNotifierProvider<
+          HomeMapLabelParameterNotifier,
+          HomeMapLabelParameter
+        > {
+  HomeMapLabelParameterNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'homeMapLabelParameterProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$homeMapLabelParameterNotifierHash();
+
+  @$internal
+  @override
+  HomeMapLabelParameterNotifier create() => HomeMapLabelParameterNotifier();
+}
+
+String _$homeMapLabelParameterNotifierHash() =>
+    r'e72d462a41efe247ae9ee3331923dc52c309f574';
+
+abstract class _$HomeMapLabelParameterNotifier
+    extends $AsyncNotifier<HomeMapLabelParameter> {
+  FutureOr<HomeMapLabelParameter> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<HomeMapLabelParameter>, HomeMapLabelParameter>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<HomeMapLabelParameter>,
+                HomeMapLabelParameter
+              >,
+              AsyncValue<HomeMapLabelParameter>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
