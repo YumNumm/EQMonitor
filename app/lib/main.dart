@@ -199,11 +199,12 @@ Future<void> _main() async {
             ),
       kIsWeb
           ? Future<Null>.value()
-          : FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-              alert: true,
-              sound: true,
-              badge: true,
-            ),
+          : FirebaseMessaging.instance
+                .setForegroundNotificationPresentationOptions(
+                  alert: true,
+                  sound: true,
+                  badge: true,
+                ),
     ).wait,
     (
       kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
