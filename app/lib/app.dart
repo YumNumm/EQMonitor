@@ -44,7 +44,7 @@ class App extends HookConsumerWidget {
           lightColorScheme = ColorScheme.fromSeed(seedColor: brandBlue);
           darkColorScheme = ColorScheme.fromSeed(
             seedColor: brandBlue,
-            brightness: Brightness.dark,
+            brightness: .dark,
           );
         }
         return MaterialApp.router(
@@ -77,45 +77,32 @@ class App extends HookConsumerWidget {
       child: app,
     );
 
-    final packageInfo = ref.watch(packageInfoProvider);
-    final versionBanner = Banner(
-      message: 'v${packageInfo.version}+${packageInfo.buildNumber}',
-      location: BannerLocation.bottomEnd,
-      color: const Color(0xFFF4C75E),
-      textStyle: const TextStyle(
-        color: Color(0xFF0F141A),
-        fontSize: 8,
-        fontWeight: FontWeight.w600,
-      ),
-      child: result,
-    );
-
-    if (buildConfig.isBetaTesting) {
+    if (!kDebugMode && buildConfig.isBetaTesting) {
       result = Directionality(
-        textDirection: TextDirection.ltr,
+        textDirection: .ltr,
         child: Banner(
-          message: 'Beta',
-          location: BannerLocation.topEnd,
-          color: const Color(0xFFF4C75E),
+          message: 'BETA',
+          location: .topEnd,
+          color: Colors.orange.shade400,
           textStyle: const TextStyle(
             color: Color(0xFF0F141A),
             fontSize: 10,
-            fontWeight: FontWeight.w700,
+            fontWeight: .w700,
             letterSpacing: 0.5,
           ),
-          child: versionBanner,
+          child: result,
         ),
       );
     }
 
-    if (kDebugMode && !buildConfig.isBetaTesting) {
+    if (kDebugMode || buildConfig.isBetaTesting) {
       final packageInfo = ref.watch(packageInfoProvider);
       result = Directionality(
-        textDirection: TextDirection.ltr,
+        textDirection: .ltr,
         child: Banner(
           message: 'v${packageInfo.version}-${packageInfo.buildNumber}',
-          location: BannerLocation.bottomStart,
-          child: versionBanner,
+          location: .bottomStart,
+          child: result,
         ),
       );
     }
