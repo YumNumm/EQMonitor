@@ -48,3 +48,14 @@ WsPingMessage _$WsPingMessageFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$WsPingMessageToJson(WsPingMessage instance) =>
     <String, dynamic>{'type': instance.$type};
+
+WsReadyMessage _$WsReadyMessageFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('WsReadyMessage', json, ($checkedConvert) {
+      final val = WsReadyMessage(
+        $type: $checkedConvert('type', (v) => v as String?),
+      );
+      return val;
+    }, fieldKeyMap: const {r'$type': 'type'});
+
+Map<String, dynamic> _$WsReadyMessageToJson(WsReadyMessage instance) =>
+    <String, dynamic>{'type': instance.$type};

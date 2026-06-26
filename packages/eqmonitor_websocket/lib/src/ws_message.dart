@@ -22,6 +22,9 @@ sealed class WsMessage with _$WsMessage {
   @FreezedUnionValue('ping')
   const factory WsMessage.ping() = WsPingMessage;
 
+  @FreezedUnionValue('ready')
+  const factory WsMessage.ready() = WsReadyMessage;
+
   factory WsMessage.fromJson(Map<String, dynamic> json) =>
       _$WsMessageFromJson(json);
 }
