@@ -18,6 +18,8 @@ abstract class EarthquakeSettingsRequest with _$EarthquakeSettingsRequest {
     List<NotificationTier>? notificationTiers,
     @JsonKey(includeIfNull: false,name: 'estimated_intensity_enabled')
     bool? estimatedIntensityEnabled,
+    @JsonKey(includeIfNull: false,name: 'collapse_notification')
+    bool? collapseNotification,
   }) = _EarthquakeSettingsRequest;
   
   factory EarthquakeSettingsRequest.fromJson(Map<String, Object?> json) => _$EarthquakeSettingsRequestFromJson(json);

@@ -52,7 +52,7 @@ $Res call({
 });
 
 
-
+$DeviceRegistrationTypeCopyWith<$Res> get registrationType;
 
 }
 /// @nodoc
@@ -77,7 +77,16 @@ as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore
 as DateTime,
   ));
 }
-
+/// Create a copy of DeviceMeResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DeviceRegistrationTypeCopyWith<$Res> get registrationType {
+  
+  return $DeviceRegistrationTypeCopyWith<$Res>(_self.registrationType, (value) {
+    return _then(_self.copyWith(registrationType: value));
+  });
+}
 }
 
 
@@ -263,7 +272,7 @@ $Res call({
 });
 
 
-
+@override $DeviceRegistrationTypeCopyWith<$Res> get registrationType;
 
 }
 /// @nodoc
@@ -289,7 +298,16 @@ as DateTime,
   ));
 }
 
-
+/// Create a copy of DeviceMeResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DeviceRegistrationTypeCopyWith<$Res> get registrationType {
+  
+  return $DeviceRegistrationTypeCopyWith<$Res>(_self.registrationType, (value) {
+    return _then(_self.copyWith(registrationType: value));
+  });
+}
 }
 
 // dart format on

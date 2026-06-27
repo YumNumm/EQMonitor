@@ -20,6 +20,10 @@ abstract class EewSettingsRequest with _$EewSettingsRequest {
     bool? startLiveActivity,
     @JsonKey(includeIfNull: false,name: 'one_point_enabled')
     bool? onePointEnabled,
+    @JsonKey(includeIfNull: false,name: 'collapse_notification')
+    bool? collapseNotification,
+    @JsonKey(includeIfNull: false,name: 'warning_enabled')
+    bool? warningEnabled,
   }) = _EewSettingsRequest;
   
   factory EewSettingsRequest.fromJson(Map<String, Object?> json) => _$EewSettingsRequestFromJson(json);

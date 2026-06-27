@@ -39,6 +39,10 @@ TelegramBodyUnion _$TelegramBodyUnionFromJson(
           return TelegramBodyUnionEarthquakeNankaiTelegramBody.fromJson(
             json
           );
+                case 'fallbackTelegramBody':
+          return TelegramBodyUnionFallbackTelegramBody.fromJson(
+            json
+          );
         
           default:
             throw CheckedFromJsonException(
@@ -129,7 +133,7 @@ extension TelegramBodyUnionPatterns on TelegramBodyUnion {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( TelegramBodyUnionEarthquakeTelegramBody value)?  earthquakeTelegramBody,TResult Function( TelegramBodyUnionEewTelegramBody value)?  eewTelegramBody,TResult Function( TelegramBodyUnionEarthquakeNoticeTelegramBody value)?  earthquakeNoticeTelegramBody,TResult Function( TelegramBodyUnionEarthquakeExplanationTelegramBody value)?  earthquakeExplanationTelegramBody,TResult Function( TelegramBodyUnionEarthquakeCountsTelegramBody value)?  earthquakeCountsTelegramBody,TResult Function( TelegramBodyUnionEarthquakeNankaiTelegramBody value)?  earthquakeNankaiTelegramBody,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( TelegramBodyUnionEarthquakeTelegramBody value)?  earthquakeTelegramBody,TResult Function( TelegramBodyUnionEewTelegramBody value)?  eewTelegramBody,TResult Function( TelegramBodyUnionEarthquakeNoticeTelegramBody value)?  earthquakeNoticeTelegramBody,TResult Function( TelegramBodyUnionEarthquakeExplanationTelegramBody value)?  earthquakeExplanationTelegramBody,TResult Function( TelegramBodyUnionEarthquakeCountsTelegramBody value)?  earthquakeCountsTelegramBody,TResult Function( TelegramBodyUnionEarthquakeNankaiTelegramBody value)?  earthquakeNankaiTelegramBody,TResult Function( TelegramBodyUnionFallbackTelegramBody value)?  fallbackTelegramBody,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case TelegramBodyUnionEarthquakeTelegramBody() when earthquakeTelegramBody != null:
@@ -138,7 +142,8 @@ return eewTelegramBody(_that);case TelegramBodyUnionEarthquakeNoticeTelegramBody
 return earthquakeNoticeTelegramBody(_that);case TelegramBodyUnionEarthquakeExplanationTelegramBody() when earthquakeExplanationTelegramBody != null:
 return earthquakeExplanationTelegramBody(_that);case TelegramBodyUnionEarthquakeCountsTelegramBody() when earthquakeCountsTelegramBody != null:
 return earthquakeCountsTelegramBody(_that);case TelegramBodyUnionEarthquakeNankaiTelegramBody() when earthquakeNankaiTelegramBody != null:
-return earthquakeNankaiTelegramBody(_that);case _:
+return earthquakeNankaiTelegramBody(_that);case TelegramBodyUnionFallbackTelegramBody() when fallbackTelegramBody != null:
+return fallbackTelegramBody(_that);case _:
   return orElse();
 
 }
@@ -156,7 +161,7 @@ return earthquakeNankaiTelegramBody(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( TelegramBodyUnionEarthquakeTelegramBody value)  earthquakeTelegramBody,required TResult Function( TelegramBodyUnionEewTelegramBody value)  eewTelegramBody,required TResult Function( TelegramBodyUnionEarthquakeNoticeTelegramBody value)  earthquakeNoticeTelegramBody,required TResult Function( TelegramBodyUnionEarthquakeExplanationTelegramBody value)  earthquakeExplanationTelegramBody,required TResult Function( TelegramBodyUnionEarthquakeCountsTelegramBody value)  earthquakeCountsTelegramBody,required TResult Function( TelegramBodyUnionEarthquakeNankaiTelegramBody value)  earthquakeNankaiTelegramBody,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( TelegramBodyUnionEarthquakeTelegramBody value)  earthquakeTelegramBody,required TResult Function( TelegramBodyUnionEewTelegramBody value)  eewTelegramBody,required TResult Function( TelegramBodyUnionEarthquakeNoticeTelegramBody value)  earthquakeNoticeTelegramBody,required TResult Function( TelegramBodyUnionEarthquakeExplanationTelegramBody value)  earthquakeExplanationTelegramBody,required TResult Function( TelegramBodyUnionEarthquakeCountsTelegramBody value)  earthquakeCountsTelegramBody,required TResult Function( TelegramBodyUnionEarthquakeNankaiTelegramBody value)  earthquakeNankaiTelegramBody,required TResult Function( TelegramBodyUnionFallbackTelegramBody value)  fallbackTelegramBody,}){
 final _that = this;
 switch (_that) {
 case TelegramBodyUnionEarthquakeTelegramBody():
@@ -165,7 +170,8 @@ return eewTelegramBody(_that);case TelegramBodyUnionEarthquakeNoticeTelegramBody
 return earthquakeNoticeTelegramBody(_that);case TelegramBodyUnionEarthquakeExplanationTelegramBody():
 return earthquakeExplanationTelegramBody(_that);case TelegramBodyUnionEarthquakeCountsTelegramBody():
 return earthquakeCountsTelegramBody(_that);case TelegramBodyUnionEarthquakeNankaiTelegramBody():
-return earthquakeNankaiTelegramBody(_that);}
+return earthquakeNankaiTelegramBody(_that);case TelegramBodyUnionFallbackTelegramBody():
+return fallbackTelegramBody(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -179,7 +185,7 @@ return earthquakeNankaiTelegramBody(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( TelegramBodyUnionEarthquakeTelegramBody value)?  earthquakeTelegramBody,TResult? Function( TelegramBodyUnionEewTelegramBody value)?  eewTelegramBody,TResult? Function( TelegramBodyUnionEarthquakeNoticeTelegramBody value)?  earthquakeNoticeTelegramBody,TResult? Function( TelegramBodyUnionEarthquakeExplanationTelegramBody value)?  earthquakeExplanationTelegramBody,TResult? Function( TelegramBodyUnionEarthquakeCountsTelegramBody value)?  earthquakeCountsTelegramBody,TResult? Function( TelegramBodyUnionEarthquakeNankaiTelegramBody value)?  earthquakeNankaiTelegramBody,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( TelegramBodyUnionEarthquakeTelegramBody value)?  earthquakeTelegramBody,TResult? Function( TelegramBodyUnionEewTelegramBody value)?  eewTelegramBody,TResult? Function( TelegramBodyUnionEarthquakeNoticeTelegramBody value)?  earthquakeNoticeTelegramBody,TResult? Function( TelegramBodyUnionEarthquakeExplanationTelegramBody value)?  earthquakeExplanationTelegramBody,TResult? Function( TelegramBodyUnionEarthquakeCountsTelegramBody value)?  earthquakeCountsTelegramBody,TResult? Function( TelegramBodyUnionEarthquakeNankaiTelegramBody value)?  earthquakeNankaiTelegramBody,TResult? Function( TelegramBodyUnionFallbackTelegramBody value)?  fallbackTelegramBody,}){
 final _that = this;
 switch (_that) {
 case TelegramBodyUnionEarthquakeTelegramBody() when earthquakeTelegramBody != null:
@@ -188,7 +194,8 @@ return eewTelegramBody(_that);case TelegramBodyUnionEarthquakeNoticeTelegramBody
 return earthquakeNoticeTelegramBody(_that);case TelegramBodyUnionEarthquakeExplanationTelegramBody() when earthquakeExplanationTelegramBody != null:
 return earthquakeExplanationTelegramBody(_that);case TelegramBodyUnionEarthquakeCountsTelegramBody() when earthquakeCountsTelegramBody != null:
 return earthquakeCountsTelegramBody(_that);case TelegramBodyUnionEarthquakeNankaiTelegramBody() when earthquakeNankaiTelegramBody != null:
-return earthquakeNankaiTelegramBody(_that);case _:
+return earthquakeNankaiTelegramBody(_that);case TelegramBodyUnionFallbackTelegramBody() when fallbackTelegramBody != null:
+return fallbackTelegramBody(_that);case _:
   return null;
 
 }
@@ -205,7 +212,7 @@ return earthquakeNankaiTelegramBody(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  earthquakeTelegramBody,TResult Function( String type,  Object? eew,  List<Object?> eewIntensityRegions,  List<Object?> eewWarningZones,  List<Object?> eewWarningPrefectures,  List<Object?> eewWarningRegions)?  eewTelegramBody,TResult Function( String type)?  earthquakeNoticeTelegramBody,TResult Function( String type,  String text)?  earthquakeExplanationTelegramBody,TResult Function( String type)?  earthquakeCountsTelegramBody,TResult Function( String type)?  earthquakeNankaiTelegramBody,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  earthquakeTelegramBody,TResult Function( String type,  Object? eew,  List<Object?> eewIntensityRegions,  List<Object?> eewWarningZones,  List<Object?> eewWarningPrefectures,  List<Object?> eewWarningRegions)?  eewTelegramBody,TResult Function( String type)?  earthquakeNoticeTelegramBody,TResult Function( String type,  String text)?  earthquakeExplanationTelegramBody,TResult Function( String type)?  earthquakeCountsTelegramBody,TResult Function( String type)?  earthquakeNankaiTelegramBody,TResult Function( String type)?  fallbackTelegramBody,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case TelegramBodyUnionEarthquakeTelegramBody() when earthquakeTelegramBody != null:
 return earthquakeTelegramBody(_that.type,_that.earthquake,_that.intensityRegions,_that.intensityPrefectures,_that.intensityCities,_that.intensityStations);case TelegramBodyUnionEewTelegramBody() when eewTelegramBody != null:
@@ -213,7 +220,8 @@ return eewTelegramBody(_that.type,_that.eew,_that.eewIntensityRegions,_that.eewW
 return earthquakeNoticeTelegramBody(_that.type);case TelegramBodyUnionEarthquakeExplanationTelegramBody() when earthquakeExplanationTelegramBody != null:
 return earthquakeExplanationTelegramBody(_that.type,_that.text);case TelegramBodyUnionEarthquakeCountsTelegramBody() when earthquakeCountsTelegramBody != null:
 return earthquakeCountsTelegramBody(_that.type);case TelegramBodyUnionEarthquakeNankaiTelegramBody() when earthquakeNankaiTelegramBody != null:
-return earthquakeNankaiTelegramBody(_that.type);case _:
+return earthquakeNankaiTelegramBody(_that.type);case TelegramBodyUnionFallbackTelegramBody() when fallbackTelegramBody != null:
+return fallbackTelegramBody(_that.type);case _:
   return orElse();
 
 }
@@ -231,7 +239,7 @@ return earthquakeNankaiTelegramBody(_that.type);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)  earthquakeTelegramBody,required TResult Function( String type,  Object? eew,  List<Object?> eewIntensityRegions,  List<Object?> eewWarningZones,  List<Object?> eewWarningPrefectures,  List<Object?> eewWarningRegions)  eewTelegramBody,required TResult Function( String type)  earthquakeNoticeTelegramBody,required TResult Function( String type,  String text)  earthquakeExplanationTelegramBody,required TResult Function( String type)  earthquakeCountsTelegramBody,required TResult Function( String type)  earthquakeNankaiTelegramBody,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)  earthquakeTelegramBody,required TResult Function( String type,  Object? eew,  List<Object?> eewIntensityRegions,  List<Object?> eewWarningZones,  List<Object?> eewWarningPrefectures,  List<Object?> eewWarningRegions)  eewTelegramBody,required TResult Function( String type)  earthquakeNoticeTelegramBody,required TResult Function( String type,  String text)  earthquakeExplanationTelegramBody,required TResult Function( String type)  earthquakeCountsTelegramBody,required TResult Function( String type)  earthquakeNankaiTelegramBody,required TResult Function( String type)  fallbackTelegramBody,}) {final _that = this;
 switch (_that) {
 case TelegramBodyUnionEarthquakeTelegramBody():
 return earthquakeTelegramBody(_that.type,_that.earthquake,_that.intensityRegions,_that.intensityPrefectures,_that.intensityCities,_that.intensityStations);case TelegramBodyUnionEewTelegramBody():
@@ -239,7 +247,8 @@ return eewTelegramBody(_that.type,_that.eew,_that.eewIntensityRegions,_that.eewW
 return earthquakeNoticeTelegramBody(_that.type);case TelegramBodyUnionEarthquakeExplanationTelegramBody():
 return earthquakeExplanationTelegramBody(_that.type,_that.text);case TelegramBodyUnionEarthquakeCountsTelegramBody():
 return earthquakeCountsTelegramBody(_that.type);case TelegramBodyUnionEarthquakeNankaiTelegramBody():
-return earthquakeNankaiTelegramBody(_that.type);}
+return earthquakeNankaiTelegramBody(_that.type);case TelegramBodyUnionFallbackTelegramBody():
+return fallbackTelegramBody(_that.type);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -253,7 +262,7 @@ return earthquakeNankaiTelegramBody(_that.type);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  earthquakeTelegramBody,TResult? Function( String type,  Object? eew,  List<Object?> eewIntensityRegions,  List<Object?> eewWarningZones,  List<Object?> eewWarningPrefectures,  List<Object?> eewWarningRegions)?  eewTelegramBody,TResult? Function( String type)?  earthquakeNoticeTelegramBody,TResult? Function( String type,  String text)?  earthquakeExplanationTelegramBody,TResult? Function( String type)?  earthquakeCountsTelegramBody,TResult? Function( String type)?  earthquakeNankaiTelegramBody,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String type, @JsonKey(includeIfNull: false)  EarthquakeTelegramBodyQuake? earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations)?  earthquakeTelegramBody,TResult? Function( String type,  Object? eew,  List<Object?> eewIntensityRegions,  List<Object?> eewWarningZones,  List<Object?> eewWarningPrefectures,  List<Object?> eewWarningRegions)?  eewTelegramBody,TResult? Function( String type)?  earthquakeNoticeTelegramBody,TResult? Function( String type,  String text)?  earthquakeExplanationTelegramBody,TResult? Function( String type)?  earthquakeCountsTelegramBody,TResult? Function( String type)?  earthquakeNankaiTelegramBody,TResult? Function( String type)?  fallbackTelegramBody,}) {final _that = this;
 switch (_that) {
 case TelegramBodyUnionEarthquakeTelegramBody() when earthquakeTelegramBody != null:
 return earthquakeTelegramBody(_that.type,_that.earthquake,_that.intensityRegions,_that.intensityPrefectures,_that.intensityCities,_that.intensityStations);case TelegramBodyUnionEewTelegramBody() when eewTelegramBody != null:
@@ -261,7 +270,8 @@ return eewTelegramBody(_that.type,_that.eew,_that.eewIntensityRegions,_that.eewW
 return earthquakeNoticeTelegramBody(_that.type);case TelegramBodyUnionEarthquakeExplanationTelegramBody() when earthquakeExplanationTelegramBody != null:
 return earthquakeExplanationTelegramBody(_that.type,_that.text);case TelegramBodyUnionEarthquakeCountsTelegramBody() when earthquakeCountsTelegramBody != null:
 return earthquakeCountsTelegramBody(_that.type);case TelegramBodyUnionEarthquakeNankaiTelegramBody() when earthquakeNankaiTelegramBody != null:
-return earthquakeNankaiTelegramBody(_that.type);case _:
+return earthquakeNankaiTelegramBody(_that.type);case TelegramBodyUnionFallbackTelegramBody() when fallbackTelegramBody != null:
+return fallbackTelegramBody(_that.type);case _:
   return null;
 
 }
@@ -794,6 +804,79 @@ class _$TelegramBodyUnionEarthquakeNankaiTelegramBodyCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,}) {
   return _then(TelegramBodyUnionEarthquakeNankaiTelegramBody(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+@JsonSerializable()
+class TelegramBodyUnionFallbackTelegramBody implements TelegramBodyUnion {
+  const TelegramBodyUnionFallbackTelegramBody({required this.type, final  String? $type}): $type = $type ?? 'fallbackTelegramBody';
+  factory TelegramBodyUnionFallbackTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionFallbackTelegramBodyFromJson(json);
+
+@override final  String type;
+
+@JsonKey(name: 'runtimeType')
+final String $type;
+
+
+/// Create a copy of TelegramBodyUnion
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TelegramBodyUnionFallbackTelegramBodyCopyWith<TelegramBodyUnionFallbackTelegramBody> get copyWith => _$TelegramBodyUnionFallbackTelegramBodyCopyWithImpl<TelegramBodyUnionFallbackTelegramBody>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TelegramBodyUnionFallbackTelegramBodyToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramBodyUnionFallbackTelegramBody&&(identical(other.type, type) || other.type == type));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type);
+
+@override
+String toString() {
+  return 'TelegramBodyUnion.fallbackTelegramBody(type: $type)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TelegramBodyUnionFallbackTelegramBodyCopyWith<$Res> implements $TelegramBodyUnionCopyWith<$Res> {
+  factory $TelegramBodyUnionFallbackTelegramBodyCopyWith(TelegramBodyUnionFallbackTelegramBody value, $Res Function(TelegramBodyUnionFallbackTelegramBody) _then) = _$TelegramBodyUnionFallbackTelegramBodyCopyWithImpl;
+@override @useResult
+$Res call({
+ String type
+});
+
+
+
+
+}
+/// @nodoc
+class _$TelegramBodyUnionFallbackTelegramBodyCopyWithImpl<$Res>
+    implements $TelegramBodyUnionFallbackTelegramBodyCopyWith<$Res> {
+  _$TelegramBodyUnionFallbackTelegramBodyCopyWithImpl(this._self, this._then);
+
+  final TelegramBodyUnionFallbackTelegramBody _self;
+  final $Res Function(TelegramBodyUnionFallbackTelegramBody) _then;
+
+/// Create a copy of TelegramBodyUnion
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,}) {
+  return _then(TelegramBodyUnionFallbackTelegramBody(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,
   ));

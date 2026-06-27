@@ -10,6 +10,7 @@ import '../models/earthquake_detail_response.dart';
 import '../models/earthquake_list_response.dart';
 import '../models/earthquake_sort_by.dart';
 import '../models/earthquake_type.dart';
+import '../models/highest_intensity_response.dart';
 import '../models/intensity_city_search_response.dart';
 import '../models/intensity_prefecture_search_response.dart';
 import '../models/intensity_region_search_response.dart';
@@ -90,6 +91,16 @@ abstract class EarthquakeApiClient {
   @GET(EarthquakeApiClientUrls.getV2EarthquakeEventId)
   Future<HttpResponse<EarthquakeDetailResponse>> getV2EarthquakeEventId({
     @Path('eventId') required String eventId,
+  });
+
+  /// 都道府県ごとの過去最高震度一覧
+  @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityPrefectureHighest)
+  Future<HttpResponse<HighestIntensityResponse>> getV2EarthquakeIntensityPrefectureHighest();
+
+  /// 指定都道府県内の市区町村ごとの過去最高震度一覧
+  @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityPrefectureCodeCityHighest)
+  Future<HttpResponse<HighestIntensityResponse>> getV2EarthquakeIntensityPrefectureCodeCityHighest({
+    @Path('code') required String code,
   });
 
   /// [limit] - 1~100 の整数(string).
@@ -309,6 +320,10 @@ abstract class EarthquakeApiClientUrls {
 	static const getV2EarthquakeEventIdSimilar = "/v2/earthquake/{eventId}/similar";
 	/// /v2/earthquake/{eventId}
 	static const getV2EarthquakeEventId = "/v2/earthquake/{eventId}";
+	/// /v2/earthquake/intensity/prefecture/highest
+	static const getV2EarthquakeIntensityPrefectureHighest = "/v2/earthquake/intensity/prefecture/highest";
+	/// /v2/earthquake/intensity/prefecture/{code}/city/highest
+	static const getV2EarthquakeIntensityPrefectureCodeCityHighest = "/v2/earthquake/intensity/prefecture/{code}/city/highest";
 	/// /v2/earthquake/intensity/region/{code}
 	static const getV2EarthquakeIntensityRegionCode = "/v2/earthquake/intensity/region/{code}";
 	/// /v2/earthquake/intensity/prefecture/{code}

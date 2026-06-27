@@ -6,6 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../models/challenge_response.dart';
+import '../models/device_location_request.dart';
+import '../models/device_location_response.dart';
 import '../models/device_me_response.dart';
 import '../models/device_register_body.dart';
 import '../models/device_register_response.dart';
@@ -41,7 +43,7 @@ abstract class DeviceApiClient {
   @POST(DeviceApiClientUrls.postV2DeviceChallenge)
   Future<HttpResponse<ChallengeResponse>> postV2DeviceChallenge();
 
-  /// デバイスを登録してJWTを返す。X-Firebase-AppCheck または X-Challenge-Code/X-Challenge-Response が必要。
+  /// デバイスを登録してJWTを返す。X-Firebase-AppCheck または X-Challenge-Code/X-Challenge-Response ヘッダーが存在する場合はそれぞれ検証を試みるが、検証失敗時も registrationType=null として登録を続行する。
   @POST(DeviceApiClientUrls.postV2Device)
   Future<HttpResponse<DeviceRegisterResponse>> postV2Device({
     @Body() required DeviceRegisterBody body,
@@ -225,6 +227,12 @@ abstract class DeviceApiClient {
   Future<HttpResponse<void>> deleteV2DeviceMeLiveActivityLiveActivityIdToken({
     @Path('liveActivityId') required String liveActivityId,
   });
+
+  /// デバイスの現在地を更新
+  @PUT(DeviceApiClientUrls.putV2DeviceMeLocation)
+  Future<HttpResponse<DeviceLocationResponse>> putV2DeviceMeLocation({
+    @Body() required DeviceLocationRequest body,
+  });
 }
 
 
@@ -299,5 +307,7 @@ abstract class DeviceApiClientUrls {
 	static const putV2DeviceMeLiveActivityLiveActivityIdToken = "/v2/device/me/live-activity/{liveActivityId}/token";
 	/// /v2/device/me/live-activity/{liveActivityId}/token
 	static const deleteV2DeviceMeLiveActivityLiveActivityIdToken = "/v2/device/me/live-activity/{liveActivityId}/token";
+	/// /v2/device/me/location
+	static const putV2DeviceMeLocation = "/v2/device/me/location";
 }
 

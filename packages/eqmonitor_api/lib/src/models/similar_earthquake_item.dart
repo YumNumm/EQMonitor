@@ -14,7 +14,7 @@ abstract class SimilarEarthquakeItem with _$SimilarEarthquakeItem {
   const factory SimilarEarthquakeItem({
     required EarthquakePartial earthquake,
 
-    /// km相当の距離スコア（小さいほど類似）
+    /// 深さを考慮した震源距離（km）
     required num score,
 
     /// グループ内の他の地震（代表を除く）

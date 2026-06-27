@@ -27,6 +27,11 @@ _EewSettingsResponse _$EewSettingsResponseFromJson(
         (v) => v as bool,
       ),
       onePointEnabled: $checkedConvert('one_point_enabled', (v) => v as bool),
+      collapseNotification: $checkedConvert(
+        'collapse_notification',
+        (v) => v as bool,
+      ),
+      warningEnabled: $checkedConvert('warning_enabled', (v) => v as bool),
     );
     return val;
   },
@@ -34,6 +39,8 @@ _EewSettingsResponse _$EewSettingsResponseFromJson(
     'notificationTiers': 'notification_tiers',
     'startLiveActivity': 'start_live_activity',
     'onePointEnabled': 'one_point_enabled',
+    'collapseNotification': 'collapse_notification',
+    'warningEnabled': 'warning_enabled',
   },
 );
 
@@ -44,4 +51,6 @@ Map<String, dynamic> _$EewSettingsResponseToJson(
   'notification_tiers': instance.notificationTiers,
   'start_live_activity': instance.startLiveActivity,
   'one_point_enabled': instance.onePointEnabled,
+  'collapse_notification': instance.collapseNotification,
+  'warning_enabled': instance.warningEnabled,
 };
