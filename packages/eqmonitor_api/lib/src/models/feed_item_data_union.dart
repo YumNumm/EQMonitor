@@ -95,19 +95,19 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   factory FeedItemDataUnion.fromJson(Map<String, Object?> json) =>
       switch (json['type']) {
         'EARTHQUAKE_NOTICE' =>
-          FeedItemDataUnionVariant1.fromJson(json),
+          FeedItemDataUnionFeedEarthquakeNoticeData.fromJson(json),
         'EARTHQUAKE_EXPLANATION' =>
-          FeedItemDataUnionVariant2.fromJson(json),
+          FeedItemDataUnionFeedEarthquakeExplanationData.fromJson(json),
         'EARTHQUAKE_COUNTS' =>
-          FeedItemDataUnionVariant3.fromJson(json),
+          FeedItemDataUnionFeedEarthquakeCountsData.fromJson(json),
         'EARTHQUAKE_NANKAI' =>
-          FeedItemDataUnionVariant4.fromJson(json),
+          FeedItemDataUnionFeedEarthquakeNankaiData.fromJson(json),
         'APP_UPDATE' =>
-          FeedItemDataUnionVariant5.fromJson(json),
+          FeedItemDataUnionFeedAppUpdateData.fromJson(json),
         'INCIDENT' =>
-          FeedItemDataUnionVariant6.fromJson(json),
+          FeedItemDataUnionFeedIncidentData.fromJson(json),
         'DEVELOPER_MESSAGE' =>
-          FeedItemDataUnionVariant7.fromJson(json),
+          FeedItemDataUnionFeedDeveloperMessageData.fromJson(json),
         final value => throw ArgumentError.value(
           value,
           'type',

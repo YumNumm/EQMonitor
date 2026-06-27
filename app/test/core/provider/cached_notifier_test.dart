@@ -1,39 +1,37 @@
+import 'dart:async';
+
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
 import 'package:eqmonitor/core/provider/cached_notifier.dart';
+import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:riverpod/riverpod.dart';
 
-// Test control variables
 late ApiClient _cacheOnlyClient;
 late ApiClient _normalClient;
 var _shouldCacheHit = false;
 var _cachedValue = 'cached';
 var _freshValue = 'fresh';
-Exception? _cacheError;
-Exception? _networkError;
+Object? _cacheError;
+Object? _networkError;
+Completer<String>? _networkCompleter;
 
 class _TestNotifier extends AsyncNotifier<String> with CachedNotifier<String> {
   @override
   Future<String> fetch(ApiClient client) async {
     if (identical(client, _cacheOnlyClient)) {
-      if (_cacheError != null) {
-        throw _cacheError!;
-      }
-      if (_shouldCacheHit) {
-        return _cachedValue;
-      }
+      if (_cacheError != null) throw _cacheError!;
+      if (_shouldCacheHit) return _cachedValue;
       throw DioException(
         requestOptions: RequestOptions(),
         error: const CacheMissException(),
       );
     }
-    if (_networkError != null) {
-      throw _networkError!;
-    }
+    if (_networkCompleter != null) return _networkCompleter!.future;
+    if (_networkError != null) throw _networkError!;
     return _freshValue;
   }
 
@@ -44,6 +42,12 @@ class _TestNotifier extends AsyncNotifier<String> with CachedNotifier<String> {
 final _testProvider = AsyncNotifierProvider<_TestNotifier, String>(
   _TestNotifier.new,
 );
+
+Future<void> _pumpMicrotasks() async {
+  await Future<void>.delayed(Duration.zero);
+  await Future<void>.delayed(Duration.zero);
+  await Future<void>.delayed(Duration.zero);
+}
 
 void main() {
   late ProviderContainer container;
@@ -56,6 +60,7 @@ void main() {
     _freshValue = 'fresh';
     _cacheError = null;
     _networkError = null;
+    _networkCompleter = null;
 
     container = ProviderContainer(
       overrides: [
@@ -63,79 +68,283 @@ void main() {
           (ref) async => _cacheOnlyClient,
         ),
         apiClientProvider.overrideWith((ref) async => _normalClient),
+        dioProvider.overrideWith((ref) async => Dio()),
       ],
     );
   });
 
   tearDown(() => container.dispose());
 
-  test('cache miss: loads from network directly', () async {
-    _shouldCacheHit = false;
-    _freshValue = 'network-data';
+  group('cache miss', () {
+    test('loads from network directly', () async {
+      _shouldCacheHit = false;
+      _freshValue = 'network-data';
 
-    final result = await container.read(_testProvider.future);
+      final result = await container.read(_testProvider.future);
 
-    expect(result, 'network-data');
+      expect(result, 'network-data');
+    });
+
+    test('network error propagates as AsyncError', () async {
+      _shouldCacheHit = false;
+      _networkError = Exception('server down');
+
+      final sub = container.listen(_testProvider, (_, __) {});
+      await _pumpMicrotasks();
+
+      final state = container.read(_testProvider);
+      expect(state.hasError, isTrue);
+      expect(state.hasValue, isFalse);
+      sub.close();
+    });
   });
 
-  test('cache hit: returns stale then updates with fresh', () async {
-    _shouldCacheHit = true;
-    _cachedValue = 'stale-data';
-    _freshValue = 'fresh-data';
+  group('cache hit → SWR cycle', () {
+    test('returns stale immediately then updates with fresh', () async {
+      _shouldCacheHit = true;
+      _cachedValue = 'stale-data';
+      _freshValue = 'fresh-data';
 
-    final states = <AsyncValue<String>>[];
-    container.listen(_testProvider, (_, next) => states.add(next));
+      final states = <AsyncValue<String>>[];
+      container.listen(_testProvider, (_, next) => states.add(next));
 
-    // Wait for build to return cached value
-    await container.read(_testProvider.future);
-    expect(container.read(_testProvider).value, 'stale-data');
+      await container.read(_testProvider.future);
+      expect(container.read(_testProvider).value, 'stale-data');
 
-    // Wait for background revalidation microtask
-    await Future<void>.delayed(Duration.zero);
-    await Future<void>.delayed(Duration.zero);
+      await _pumpMicrotasks();
 
-    expect(container.read(_testProvider).value, 'fresh-data');
+      expect(container.read(_testProvider).value, 'fresh-data');
+    });
+
+    test('isRefreshing is true during background revalidation', () async {
+      _shouldCacheHit = true;
+      _cachedValue = 'stale';
+      _networkCompleter = Completer<String>();
+
+      final states = <AsyncValue<String>>[];
+      container.listen(_testProvider, (_, next) => states.add(next));
+
+      await container.read(_testProvider.future);
+      await Future<void>.delayed(Duration.zero);
+
+      final midState = container.read(_testProvider);
+      expect(midState.isLoading, isTrue, reason: 'should be loading');
+      expect(midState.hasValue, isTrue, reason: 'should retain stale value');
+      expect(midState.value, 'stale');
+      expect(
+        midState.isRefreshing,
+        isTrue,
+        reason: 'isRefreshing = isLoading && hasValue',
+      );
+
+      _networkCompleter!.complete('fresh');
+      await _pumpMicrotasks();
+
+      final finalState = container.read(_testProvider);
+      expect(finalState.value, 'fresh');
+      expect(finalState.isLoading, isFalse);
+    });
+
+    test('network failure preserves stale value with error', () async {
+      _shouldCacheHit = true;
+      _cachedValue = 'stale-data';
+      _networkError = Exception('offline');
+
+      await container.read(_testProvider.future);
+      expect(container.read(_testProvider).value, 'stale-data');
+
+      await _pumpMicrotasks();
+
+      final state = container.read(_testProvider);
+      expect(state.hasValue, isTrue, reason: 'stale preserved');
+      expect(state.value, 'stale-data');
+      expect(state.hasError, isTrue, reason: 'error recorded');
+    });
+
+    test('stale data same as fresh (304 scenario)', () async {
+      _shouldCacheHit = true;
+      _cachedValue = 'same-value';
+      _freshValue = 'same-value';
+
+      await container.read(_testProvider.future);
+      await _pumpMicrotasks();
+
+      final state = container.read(_testProvider);
+      expect(state.value, 'same-value');
+      expect(state.isLoading, isFalse);
+      expect(state.hasError, isFalse);
+    });
   });
 
-  test('cache hit + network failure: maintains stale with error', () async {
-    _shouldCacheHit = true;
-    _cachedValue = 'stale-data';
-    _networkError = Exception('offline');
+  group('corrupt cache → force-fresh', () {
+    test('non-CacheMiss error triggers force-fresh path', () async {
+      _cacheError = const FormatException('corrupt JSON');
+      _freshValue = 'force-fresh-data';
 
-    await container.read(_testProvider.future);
-    expect(container.read(_testProvider).value, 'stale-data');
+      final result = await container.read(_testProvider.future);
 
-    // Wait for background revalidation to fail
-    await Future<void>.delayed(Duration.zero);
-    await Future<void>.delayed(Duration.zero);
+      expect(result, 'force-fresh-data');
+    });
 
-    final state = container.read(_testProvider);
-    expect(state.hasValue, isTrue);
-    expect(state.value, 'stale-data');
-    expect(state.hasError, isTrue);
+    test('TypeError from cache triggers force-fresh path', () async {
+      _cacheError = TypeError();
+      _freshValue = 'recovered';
+
+      final result = await container.read(_testProvider.future);
+
+      expect(result, 'recovered');
+    });
+
+    test('force-fresh network error propagates', () async {
+      _cacheError = const FormatException('corrupt');
+      _networkError = Exception('network down');
+
+      final sub = container.listen(_testProvider, (_, __) {});
+      await _pumpMicrotasks();
+
+      final state = container.read(_testProvider);
+      expect(state.hasError, isTrue);
+      sub.close();
+    });
   });
 
-  test(
-    'generation counter prevents stale microtask from updating state',
-    () async {
+  group('generation counter', () {
+    test('prevents stale microtask from updating state', () async {
       _shouldCacheHit = true;
       _cachedValue = 'stale-v1';
       _freshValue = 'fresh-v1';
 
       await container.read(_testProvider.future);
 
-      // Invalidate before background revalidation completes
       _cachedValue = 'stale-v2';
       _freshValue = 'fresh-v2';
       container.invalidate(_testProvider);
 
-      // Wait for everything to settle
+      await container.read(_testProvider.future);
+      await _pumpMicrotasks();
+
+      expect(container.read(_testProvider).value, 'fresh-v2');
+    });
+
+    test('triple rapid invalidation settles to final value', () async {
+      _shouldCacheHit = true;
+      _cachedValue = 'stale-1';
+      _freshValue = 'fresh-1';
+
+      await container.read(_testProvider.future);
+
+      _cachedValue = 'stale-2';
+      _freshValue = 'fresh-2';
+      container.invalidate(_testProvider);
+
+      _cachedValue = 'stale-3';
+      _freshValue = 'fresh-3';
+      container.invalidate(_testProvider);
+
+      await container.read(_testProvider.future);
+      await _pumpMicrotasks();
+
+      expect(container.read(_testProvider).value, 'fresh-3');
+    });
+  });
+
+  group('dispose safety', () {
+    test(
+      'container dispose during background revalidation does not crash',
+      () async {
+        _shouldCacheHit = true;
+        _cachedValue = 'stale';
+        _networkCompleter = Completer<String>();
+
+        container.listen(_testProvider, (_, __) {});
+        await container.read(_testProvider.future);
+
+        container.dispose();
+
+        _networkCompleter!.complete('should-be-ignored');
+        await _pumpMicrotasks();
+      },
+    );
+
+    test(
+      'invalidation after container dispose does not throw',
+      () async {
+        _shouldCacheHit = true;
+        _cachedValue = 'stale';
+        _freshValue = 'fresh';
+
+        await container.read(_testProvider.future);
+        container.dispose();
+
+        // Rebind so tearDown doesn't double-dispose
+        container = ProviderContainer();
+      },
+    );
+  });
+
+  group('state transition sequence', () {
+    test('cache miss: AsyncLoading → AsyncData', () async {
+      _shouldCacheHit = false;
+      _networkCompleter = Completer<String>();
+
+      container.listen(_testProvider, (_, __) {});
+      container.read(_testProvider);
+
+      final loading = container.read(_testProvider);
+      expect(loading is AsyncLoading, isTrue, reason: 'should be loading');
+      expect(loading.hasValue, isFalse, reason: 'no previous value');
+
+      _networkCompleter!.complete('data');
+      await _pumpMicrotasks();
+
+      expect(container.read(_testProvider).value, 'data');
+    });
+
+    test('cache hit: AsyncData(stale) → isRefreshing → AsyncData(fresh)',
+        () async {
+      _shouldCacheHit = true;
+      _cachedValue = 'stale';
+      _networkCompleter = Completer<String>();
+
+      final states = <AsyncValue<String>>[];
+      container.listen(_testProvider, (_, next) => states.add(next));
+
       await container.read(_testProvider.future);
       await Future<void>.delayed(Duration.zero);
-      await Future<void>.delayed(Duration.zero);
 
-      // Should see v2, not v1
-      expect(container.read(_testProvider).value, 'fresh-v2');
-    },
-  );
+      final hasRefreshing = states.any((s) => s.isRefreshing);
+      expect(hasRefreshing, isTrue, reason: 'should pass through isRefreshing');
+
+      _networkCompleter!.complete('fresh');
+      await _pumpMicrotasks();
+
+      final finalState = container.read(_testProvider);
+      expect(finalState.value, 'fresh');
+      expect(finalState.isLoading, isFalse);
+    });
+
+    test(
+      'cache hit + error: AsyncData(stale) → isRefreshing → '
+      'AsyncError with previous value',
+      () async {
+        _shouldCacheHit = true;
+        _cachedValue = 'stale';
+        _networkCompleter = Completer<String>();
+
+        final states = <AsyncValue<String>>[];
+        container.listen(_testProvider, (_, next) => states.add(next));
+
+        await container.read(_testProvider.future);
+        await Future<void>.delayed(Duration.zero);
+
+        _networkCompleter!.completeError(Exception('fail'));
+        await _pumpMicrotasks();
+
+        final finalState = container.read(_testProvider);
+        expect(finalState.hasError, isTrue);
+        expect(finalState.hasValue, isTrue);
+        expect(finalState.value, 'stale');
+      },
+    );
+  });
 }
