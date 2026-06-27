@@ -33,15 +33,33 @@ class HttpCacheInterceptor extends Interceptor {
 
     // force-fresh: skip conditional headers, still save on 200
     if (options.extra[kForceFreshExtra] == true) {
+      options.headers.remove('if-none-match');
       handler.next(options);
       return;
     }
 
+    // 条件付きリクエスト(304)を許可する以上、304 が返ってきたら必ず
+    // キャッシュから復元できる状態でなければならない。復元元が無い／壊れて
+    // いる場合に if-none-match を付けると、復元不能な 304 が呼び出し側へ
+    // 漏れてしまうため、その時はヘッダを除去してフルレスポンスを取得する。
+    // 上流(リポジトリ等)が独自に付与した if-none-match もここで一元管理する。
     final cached = await store.read(key);
-    if (cached?.eTag != null) {
-      options.headers['if-none-match'] = cached!.eTag;
+    if (cached?.eTag != null && _isRestorable(options, cached!)) {
+      options.headers['if-none-match'] = cached.eTag;
+    } else {
+      options.headers.remove('if-none-match');
     }
     handler.next(options);
+  }
+
+  /// キャッシュエントリが実際に復元(パース)可能かを検証する。
+  bool _isRestorable(RequestOptions options, HttpCacheEntry entry) {
+    try {
+      restoreResponse(options, entry);
+      return true;
+    } on Object {
+      return false;
+    }
   }
 
   @override
