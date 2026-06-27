@@ -35,18 +35,6 @@ class ShakeDetection extends _$ShakeDetection {
 
   void _onRealtimeEvent(RealtimeEvent event) {
     switch (event) {
-      case RealtimeSnapshotEvent(:final shakes):
-        final snapshotEvents = shakes.map(_fromShakeData).toList();
-        final snapshotEventIds = snapshotEvents
-            .map((event) => event.eventId)
-            .toSet();
-        state = [
-          ...state.where(
-            (event) => !snapshotEventIds.contains(event.eventId),
-          ),
-          ...snapshotEvents,
-        ];
-        _cleanup();
       case RealtimeShakeDetectedEvent(:final data):
         _upsert(_fromShakeData(data));
       default:

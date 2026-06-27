@@ -15,14 +15,7 @@ class EqMonitorRealtimeEventMapper {
   static const tilesBaseUrl = 'https://tiles.eqmonitor.app';
 
   List<RealtimeEvent> map(WsMessage message) => switch (message) {
-    WsSnapshotMessage(:final data) => [
-      .snapshot(
-        eews: data.eews,
-        earthquakes: data.earthquakes,
-        shakes: data.shakes.map(mapSnapshotShakeEntry).toList(),
-        source: RealtimeSource.eqmonitor,
-      ),
-    ],
+    WsSnapshotMessage() => const <RealtimeEvent>[],
     WsRealtimeMessage(:final data) => switch (data) {
       WsEewRealtimeEvent(:final item) => [
         RealtimeEvent.eewUpsert(item: item, source: RealtimeSource.eqmonitor),
@@ -53,7 +46,27 @@ class EqMonitorRealtimeEventMapper {
           ],
           _ => const <RealtimeEvent>[],
         },
-      WsTsunamiRealtimeEvent() => const <RealtimeEvent>[],
+      WsTsunamiRealtimeEvent(
+        :final operation,
+        :final eventId,
+        :final groupId,
+      ) =>
+        switch (operation) {
+          WsRealtimeOperation.upsert => [
+            RealtimeEvent.tsunamiUpsert(
+              eventId: eventId,
+              groupId: groupId,
+              source: RealtimeSource.eqmonitor,
+            ),
+          ],
+          WsRealtimeOperation.delete => [
+            RealtimeEvent.tsunamiDelete(
+              eventId: eventId,
+              groupId: groupId,
+              source: RealtimeSource.eqmonitor,
+            ),
+          ],
+        },
       WsShakeDetectedRealtimeEvent(
         :final eventId,
         :final createdAt,
@@ -90,20 +103,8 @@ class EqMonitorRealtimeEventMapper {
       ],
     },
     WsPingMessage() => const <RealtimeEvent>[],
-    WsReadyMessage() => const <RealtimeEvent>[],
+    WsReadyMessage() => [
+      const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+    ],
   };
-
-  RealtimeShakeData mapSnapshotShakeEntry(WsSnapshotShakeEntry entry) =>
-      RealtimeShakeData(
-        eventId: entry.eventId,
-        createdAt: entry.createdAt,
-        level: entry.level,
-        isReplay: entry.isReplay,
-        pointCount: entry.pointCount,
-        minLat: entry.region.bottomRight.latitude,
-        maxLat: entry.region.topLeft.latitude,
-        minLng: entry.region.topLeft.longitude,
-        maxLng: entry.region.bottomRight.longitude,
-        changeReasons: entry.changeReasons,
-      );
 }

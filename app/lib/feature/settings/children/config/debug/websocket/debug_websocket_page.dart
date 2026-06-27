@@ -155,21 +155,26 @@ class _WsEventCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     final displayType = switch (event) {
-      RealtimeSnapshotEvent() => 'snapshot',
+      RealtimeReadyEvent() => 'ready',
       RealtimeEewUpsertEvent() => 'eew/upsert',
       RealtimeEarthquakeUpsertEvent() => 'earthquake/upsert',
       RealtimeEarthquakeDeleteEvent() => 'earthquake/delete',
+      RealtimeTsunamiUpsertEvent() => 'tsunami/upsert',
+      RealtimeTsunamiDeleteEvent() => 'tsunami/delete',
       RealtimeShakeDetectedEvent() => 'shake_detected',
       RealtimeEstimatedIntensityUpsertEvent() => 'estimated_intensity/upsert',
     };
 
     final detail = switch (event) {
-      RealtimeSnapshotEvent(:final eews, :final earthquakes, :final shakes) =>
-        'eews=${eews.length} earthquakes=${earthquakes.length} shakes=${shakes.length}',
+      RealtimeReadyEvent(:final source) => 'source=$source',
       RealtimeEewUpsertEvent(:final item) => 'eventId=${item.eventId}',
       RealtimeEarthquakeUpsertEvent(:final record) =>
         'eventId=${record.eventId}',
       RealtimeEarthquakeDeleteEvent(:final eventId) => 'eventId=$eventId',
+      RealtimeTsunamiUpsertEvent(:final eventId, :final groupId) =>
+        'eventId=$eventId groupId=$groupId',
+      RealtimeTsunamiDeleteEvent(:final eventId, :final groupId) =>
+        'eventId=$eventId groupId=$groupId',
       RealtimeShakeDetectedEvent(:final data) => 'eventId=${data.eventId}',
       RealtimeEstimatedIntensityUpsertEvent(:final eventId) =>
         'eventId=$eventId',

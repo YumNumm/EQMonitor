@@ -9,12 +9,9 @@ enum RealtimeSource { eqmonitor, dmdata }
 
 @Freezed()
 sealed class RealtimeEvent with _$RealtimeEvent {
-  const factory RealtimeEvent.snapshot({
-    required List<EewItemWithRelations> eews,
-    required List<EarthquakePartial> earthquakes,
-    required List<RealtimeShakeData> shakes,
+  const factory RealtimeEvent.ready({
     required RealtimeSource source,
-  }) = RealtimeSnapshotEvent;
+  }) = RealtimeReadyEvent;
 
   const factory RealtimeEvent.eewUpsert({
     required EewItemWithRelations item,
@@ -30,6 +27,18 @@ sealed class RealtimeEvent with _$RealtimeEvent {
     required String eventId,
     required RealtimeSource source,
   }) = RealtimeEarthquakeDeleteEvent;
+
+  const factory RealtimeEvent.tsunamiUpsert({
+    required String eventId,
+    required RealtimeSource source,
+    String? groupId,
+  }) = RealtimeTsunamiUpsertEvent;
+
+  const factory RealtimeEvent.tsunamiDelete({
+    required String eventId,
+    required RealtimeSource source,
+    String? groupId,
+  }) = RealtimeTsunamiDeleteEvent;
 
   const factory RealtimeEvent.shakeDetected({
     required RealtimeShakeData data,

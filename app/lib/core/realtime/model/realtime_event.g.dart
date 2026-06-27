@@ -8,46 +8,23 @@ part of 'realtime_event.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-RealtimeSnapshotEvent _$RealtimeSnapshotEventFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('RealtimeSnapshotEvent', json, ($checkedConvert) {
-  final val = RealtimeSnapshotEvent(
-    eews: $checkedConvert(
-      'eews',
-      (v) => (v as List<dynamic>)
-          .map((e) => EewItemWithRelations.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    ),
-    earthquakes: $checkedConvert(
-      'earthquakes',
-      (v) => (v as List<dynamic>)
-          .map((e) => EarthquakePartial.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    ),
-    shakes: $checkedConvert(
-      'shakes',
-      (v) => (v as List<dynamic>)
-          .map((e) => RealtimeShakeData.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    ),
-    source: $checkedConvert(
-      'source',
-      (v) => $enumDecode(_$RealtimeSourceEnumMap, v),
-    ),
-    $type: $checkedConvert('runtimeType', (v) => v as String?),
-  );
-  return val;
-}, fieldKeyMap: const {r'$type': 'runtimeType'});
+RealtimeReadyEvent _$RealtimeReadyEventFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('RealtimeReadyEvent', json, ($checkedConvert) {
+      final val = RealtimeReadyEvent(
+        source: $checkedConvert(
+          'source',
+          (v) => $enumDecode(_$RealtimeSourceEnumMap, v),
+        ),
+        $type: $checkedConvert('runtimeType', (v) => v as String?),
+      );
+      return val;
+    }, fieldKeyMap: const {r'$type': 'runtimeType'});
 
-Map<String, dynamic> _$RealtimeSnapshotEventToJson(
-  RealtimeSnapshotEvent instance,
-) => <String, dynamic>{
-  'eews': instance.eews,
-  'earthquakes': instance.earthquakes,
-  'shakes': instance.shakes,
-  'source': _$RealtimeSourceEnumMap[instance.source]!,
-  'runtimeType': instance.$type,
-};
+Map<String, dynamic> _$RealtimeReadyEventToJson(RealtimeReadyEvent instance) =>
+    <String, dynamic>{
+      'source': _$RealtimeSourceEnumMap[instance.source]!,
+      'runtimeType': instance.$type,
+    };
 
 const _$RealtimeSourceEnumMap = {
   RealtimeSource.eqmonitor: 'eqmonitor',
@@ -128,6 +105,72 @@ Map<String, dynamic> _$RealtimeEarthquakeDeleteEventToJson(
 ) => <String, dynamic>{
   'event_id': instance.eventId,
   'source': _$RealtimeSourceEnumMap[instance.source]!,
+  'runtimeType': instance.$type,
+};
+
+RealtimeTsunamiUpsertEvent _$RealtimeTsunamiUpsertEventFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  'RealtimeTsunamiUpsertEvent',
+  json,
+  ($checkedConvert) {
+    final val = RealtimeTsunamiUpsertEvent(
+      eventId: $checkedConvert('event_id', (v) => v as String),
+      source: $checkedConvert(
+        'source',
+        (v) => $enumDecode(_$RealtimeSourceEnumMap, v),
+      ),
+      groupId: $checkedConvert('group_id', (v) => v as String?),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'eventId': 'event_id',
+    'groupId': 'group_id',
+    r'$type': 'runtimeType',
+  },
+);
+
+Map<String, dynamic> _$RealtimeTsunamiUpsertEventToJson(
+  RealtimeTsunamiUpsertEvent instance,
+) => <String, dynamic>{
+  'event_id': instance.eventId,
+  'source': _$RealtimeSourceEnumMap[instance.source]!,
+  'group_id': instance.groupId,
+  'runtimeType': instance.$type,
+};
+
+RealtimeTsunamiDeleteEvent _$RealtimeTsunamiDeleteEventFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  'RealtimeTsunamiDeleteEvent',
+  json,
+  ($checkedConvert) {
+    final val = RealtimeTsunamiDeleteEvent(
+      eventId: $checkedConvert('event_id', (v) => v as String),
+      source: $checkedConvert(
+        'source',
+        (v) => $enumDecode(_$RealtimeSourceEnumMap, v),
+      ),
+      groupId: $checkedConvert('group_id', (v) => v as String?),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'eventId': 'event_id',
+    'groupId': 'group_id',
+    r'$type': 'runtimeType',
+  },
+);
+
+Map<String, dynamic> _$RealtimeTsunamiDeleteEventToJson(
+  RealtimeTsunamiDeleteEvent instance,
+) => <String, dynamic>{
+  'event_id': instance.eventId,
+  'source': _$RealtimeSourceEnumMap[instance.source]!,
+  'group_id': instance.groupId,
   'runtimeType': instance.$type,
 };
 
