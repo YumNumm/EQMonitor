@@ -114,7 +114,7 @@ class _LoadedContent extends HookWidget {
                           DateTime.now().difference(earthquake.originTime!) >
                               const Duration(hours: 24))
                         const AdBanner(),
-                      SimilarEarthquakeCard(eventId: earthquake.eventId),
+                      SimilarEarthquakeCard(earthquake: earthquake),
                       _TelegramListButton(eventId: earthquake.eventId),
                     ],
                   ),
