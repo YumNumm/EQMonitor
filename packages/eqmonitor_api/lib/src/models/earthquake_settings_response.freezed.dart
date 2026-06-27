@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeSettingsResponse {
 
- bool get enabled;@JsonKey(name: 'notification_tiers') List<NotificationTier> get notificationTiers;@JsonKey(name: 'estimated_intensity_enabled') bool get estimatedIntensityEnabled;
+ bool get enabled;@JsonKey(name: 'notification_tiers') List<NotificationTiers> get notificationTiers;@JsonKey(name: 'estimated_intensity_enabled') bool get estimatedIntensityEnabled;
 /// Create a copy of EarthquakeSettingsResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $EarthquakeSettingsResponseCopyWith<$Res>  {
   factory $EarthquakeSettingsResponseCopyWith(EarthquakeSettingsResponse value, $Res Function(EarthquakeSettingsResponse) _then) = _$EarthquakeSettingsResponseCopyWithImpl;
 @useResult
 $Res call({
- bool enabled,@JsonKey(name: 'notification_tiers') List<NotificationTier> notificationTiers,@JsonKey(name: 'estimated_intensity_enabled') bool estimatedIntensityEnabled
+ bool enabled,@JsonKey(name: 'notification_tiers') List<NotificationTiers> notificationTiers,@JsonKey(name: 'estimated_intensity_enabled') bool estimatedIntensityEnabled
 });
 
 
@@ -69,7 +69,7 @@ class _$EarthquakeSettingsResponseCopyWithImpl<$Res>
   return _then(_self.copyWith(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,notificationTiers: null == notificationTiers ? _self.notificationTiers : notificationTiers // ignore: cast_nullable_to_non_nullable
-as List<NotificationTier>,estimatedIntensityEnabled: null == estimatedIntensityEnabled ? _self.estimatedIntensityEnabled : estimatedIntensityEnabled // ignore: cast_nullable_to_non_nullable
+as List<NotificationTiers>,estimatedIntensityEnabled: null == estimatedIntensityEnabled ? _self.estimatedIntensityEnabled : estimatedIntensityEnabled // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled, @JsonKey(name: 'notification_tiers')  List<NotificationTier> notificationTiers, @JsonKey(name: 'estimated_intensity_enabled')  bool estimatedIntensityEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled, @JsonKey(name: 'notification_tiers')  List<NotificationTiers> notificationTiers, @JsonKey(name: 'estimated_intensity_enabled')  bool estimatedIntensityEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeSettingsResponse() when $default != null:
 return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEnabled);case _:
@@ -176,7 +176,7 @@ return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEn
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled, @JsonKey(name: 'notification_tiers')  List<NotificationTier> notificationTiers, @JsonKey(name: 'estimated_intensity_enabled')  bool estimatedIntensityEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled, @JsonKey(name: 'notification_tiers')  List<NotificationTiers> notificationTiers, @JsonKey(name: 'estimated_intensity_enabled')  bool estimatedIntensityEnabled)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeSettingsResponse():
 return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEnabled);case _:
@@ -196,7 +196,7 @@ return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEn
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled, @JsonKey(name: 'notification_tiers')  List<NotificationTier> notificationTiers, @JsonKey(name: 'estimated_intensity_enabled')  bool estimatedIntensityEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled, @JsonKey(name: 'notification_tiers')  List<NotificationTiers> notificationTiers, @JsonKey(name: 'estimated_intensity_enabled')  bool estimatedIntensityEnabled)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeSettingsResponse() when $default != null:
 return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEnabled);case _:
@@ -211,12 +211,12 @@ return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEn
 @JsonSerializable()
 
 class _EarthquakeSettingsResponse implements EarthquakeSettingsResponse {
-  const _EarthquakeSettingsResponse({required this.enabled, @JsonKey(name: 'notification_tiers') required final  List<NotificationTier> notificationTiers, @JsonKey(name: 'estimated_intensity_enabled') required this.estimatedIntensityEnabled}): _notificationTiers = notificationTiers;
+  const _EarthquakeSettingsResponse({required this.enabled, @JsonKey(name: 'notification_tiers') required final  List<NotificationTiers> notificationTiers, @JsonKey(name: 'estimated_intensity_enabled') required this.estimatedIntensityEnabled}): _notificationTiers = notificationTiers;
   factory _EarthquakeSettingsResponse.fromJson(Map<String, dynamic> json) => _$EarthquakeSettingsResponseFromJson(json);
 
 @override final  bool enabled;
- final  List<NotificationTier> _notificationTiers;
-@override@JsonKey(name: 'notification_tiers') List<NotificationTier> get notificationTiers {
+ final  List<NotificationTiers> _notificationTiers;
+@override@JsonKey(name: 'notification_tiers') List<NotificationTiers> get notificationTiers {
   if (_notificationTiers is EqualUnmodifiableListView) return _notificationTiers;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_notificationTiers);
@@ -257,7 +257,7 @@ abstract mixin class _$EarthquakeSettingsResponseCopyWith<$Res> implements $Eart
   factory _$EarthquakeSettingsResponseCopyWith(_EarthquakeSettingsResponse value, $Res Function(_EarthquakeSettingsResponse) _then) = __$EarthquakeSettingsResponseCopyWithImpl;
 @override @useResult
 $Res call({
- bool enabled,@JsonKey(name: 'notification_tiers') List<NotificationTier> notificationTiers,@JsonKey(name: 'estimated_intensity_enabled') bool estimatedIntensityEnabled
+ bool enabled,@JsonKey(name: 'notification_tiers') List<NotificationTiers> notificationTiers,@JsonKey(name: 'estimated_intensity_enabled') bool estimatedIntensityEnabled
 });
 
 
@@ -278,7 +278,7 @@ class __$EarthquakeSettingsResponseCopyWithImpl<$Res>
   return _then(_EarthquakeSettingsResponse(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,notificationTiers: null == notificationTiers ? _self._notificationTiers : notificationTiers // ignore: cast_nullable_to_non_nullable
-as List<NotificationTier>,estimatedIntensityEnabled: null == estimatedIntensityEnabled ? _self.estimatedIntensityEnabled : estimatedIntensityEnabled // ignore: cast_nullable_to_non_nullable
+as List<NotificationTiers>,estimatedIntensityEnabled: null == estimatedIntensityEnabled ? _self.estimatedIntensityEnabled : estimatedIntensityEnabled // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

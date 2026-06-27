@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'notification_tier.dart';
+import 'notification_tiers.dart';
 
 part 'earthquake_settings_response.freezed.dart';
 part 'earthquake_settings_response.g.dart';
@@ -14,7 +14,7 @@ abstract class EarthquakeSettingsResponse with _$EarthquakeSettingsResponse {
   const factory EarthquakeSettingsResponse({
     required bool enabled,
     @JsonKey(name: 'notification_tiers')
-    required List<NotificationTier> notificationTiers,
+    required List<NotificationTiers> notificationTiers,
     @JsonKey(name: 'estimated_intensity_enabled')
     required bool estimatedIntensityEnabled,
   }) = _EarthquakeSettingsResponse;

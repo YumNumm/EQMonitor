@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StartResponse {
 
- StartFlags get flags; StartApp get app;
+ StartFlags get flags; App get app;
 /// Create a copy of StartResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $StartResponseCopyWith<$Res>  {
   factory $StartResponseCopyWith(StartResponse value, $Res Function(StartResponse) _then) = _$StartResponseCopyWithImpl;
 @useResult
 $Res call({
- StartFlags flags, StartApp app
+ StartFlags flags, App app
 });
 
 
-$StartFlagsCopyWith<$Res> get flags;$StartAppCopyWith<$Res> get app;
+$StartFlagsCopyWith<$Res> get flags;$AppCopyWith<$Res> get app;
 
 }
 /// @nodoc
@@ -69,7 +69,7 @@ class _$StartResponseCopyWithImpl<$Res>
   return _then(_self.copyWith(
 flags: null == flags ? _self.flags : flags // ignore: cast_nullable_to_non_nullable
 as StartFlags,app: null == app ? _self.app : app // ignore: cast_nullable_to_non_nullable
-as StartApp,
+as App,
   ));
 }
 /// Create a copy of StartResponse
@@ -85,9 +85,9 @@ $StartFlagsCopyWith<$Res> get flags {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$StartAppCopyWith<$Res> get app {
+$AppCopyWith<$Res> get app {
   
-  return $StartAppCopyWith<$Res>(_self.app, (value) {
+  return $AppCopyWith<$Res>(_self.app, (value) {
     return _then(_self.copyWith(app: value));
   });
 }
@@ -172,7 +172,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StartFlags flags,  StartApp app)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StartFlags flags,  App app)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StartResponse() when $default != null:
 return $default(_that.flags,_that.app);case _:
@@ -193,7 +193,7 @@ return $default(_that.flags,_that.app);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StartFlags flags,  StartApp app)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StartFlags flags,  App app)  $default,) {final _that = this;
 switch (_that) {
 case _StartResponse():
 return $default(_that.flags,_that.app);case _:
@@ -213,7 +213,7 @@ return $default(_that.flags,_that.app);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StartFlags flags,  StartApp app)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StartFlags flags,  App app)?  $default,) {final _that = this;
 switch (_that) {
 case _StartResponse() when $default != null:
 return $default(_that.flags,_that.app);case _:
@@ -232,7 +232,7 @@ class _StartResponse implements StartResponse {
   factory _StartResponse.fromJson(Map<String, dynamic> json) => _$StartResponseFromJson(json);
 
 @override final  StartFlags flags;
-@override final  StartApp app;
+@override final  App app;
 
 /// Create a copy of StartResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -267,11 +267,11 @@ abstract mixin class _$StartResponseCopyWith<$Res> implements $StartResponseCopy
   factory _$StartResponseCopyWith(_StartResponse value, $Res Function(_StartResponse) _then) = __$StartResponseCopyWithImpl;
 @override @useResult
 $Res call({
- StartFlags flags, StartApp app
+ StartFlags flags, App app
 });
 
 
-@override $StartFlagsCopyWith<$Res> get flags;@override $StartAppCopyWith<$Res> get app;
+@override $StartFlagsCopyWith<$Res> get flags;@override $AppCopyWith<$Res> get app;
 
 }
 /// @nodoc
@@ -288,7 +288,7 @@ class __$StartResponseCopyWithImpl<$Res>
   return _then(_StartResponse(
 flags: null == flags ? _self.flags : flags // ignore: cast_nullable_to_non_nullable
 as StartFlags,app: null == app ? _self.app : app // ignore: cast_nullable_to_non_nullable
-as StartApp,
+as App,
   ));
 }
 
@@ -305,9 +305,9 @@ $StartFlagsCopyWith<$Res> get flags {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$StartAppCopyWith<$Res> get app {
+$AppCopyWith<$Res> get app {
   
-  return $StartAppCopyWith<$Res>(_self.app, (value) {
+  return $AppCopyWith<$Res>(_self.app, (value) {
     return _then(_self.copyWith(app: value));
   });
 }

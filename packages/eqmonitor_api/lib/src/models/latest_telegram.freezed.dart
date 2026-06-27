@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LatestTelegram {
 
- String get id; TelegramType get type; String get title;@JsonKey(name: 'editorial_office') String get editorialOffice;@JsonKey(name: 'publishing_office') List<String> get publishingOffice;@JsonKey(name: 'pressed_at') DateTime get pressedAt;@JsonKey(name: 'reported_at') DateTime get reportedAt;@JsonKey(name: 'info_kind') String get infoKind;@JsonKey(includeIfNull: false, name: 'serial_no') num? get serialNo;@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? get targetedAt;@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? get revokedAt;@JsonKey(includeIfNull: false) String? get headline;@JsonKey(includeIfNull: false) TsunamiTelegramComments? get comments;
+ String get id; TelegramType get type; String get title;@JsonKey(name: 'editorial_office') String get editorialOffice;@JsonKey(name: 'publishing_office') List<String> get publishingOffice;@JsonKey(name: 'pressed_at') DateTime get pressedAt;@JsonKey(name: 'reported_at') DateTime get reportedAt;@JsonKey(name: 'info_kind') String get infoKind;@JsonKey(includeIfNull: false, name: 'serial_no') num? get serialNo;@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? get targetedAt;@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? get revokedAt;@JsonKey(includeIfNull: false) String? get headline;@JsonKey(includeIfNull: false) Comments3? get comments;
 /// Create a copy of LatestTelegram
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $LatestTelegramCopyWith<$Res>  {
   factory $LatestTelegramCopyWith(LatestTelegram value, $Res Function(LatestTelegram) _then) = _$LatestTelegramCopyWithImpl;
 @useResult
 $Res call({
- String id, TelegramType type, String title,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'pressed_at') DateTime pressedAt,@JsonKey(name: 'reported_at') DateTime reportedAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? targetedAt,@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? revokedAt,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false) TsunamiTelegramComments? comments
+ String id, TelegramType type, String title,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'pressed_at') DateTime pressedAt,@JsonKey(name: 'reported_at') DateTime reportedAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? targetedAt,@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? revokedAt,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false) Comments3? comments
 });
 
 
-$TsunamiTelegramCommentsCopyWith<$Res>? get comments;
+$Comments3CopyWith<$Res>? get comments;
 
 }
 /// @nodoc
@@ -80,19 +80,19 @@ as num?,targetedAt: freezed == targetedAt ? _self.targetedAt : targetedAt // ign
 as DateTime?,revokedAt: freezed == revokedAt ? _self.revokedAt : revokedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
 as String?,comments: freezed == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
-as TsunamiTelegramComments?,
+as Comments3?,
   ));
 }
 /// Create a copy of LatestTelegram
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$TsunamiTelegramCommentsCopyWith<$Res>? get comments {
+$Comments3CopyWith<$Res>? get comments {
     if (_self.comments == null) {
     return null;
   }
 
-  return $TsunamiTelegramCommentsCopyWith<$Res>(_self.comments!, (value) {
+  return $Comments3CopyWith<$Res>(_self.comments!, (value) {
     return _then(_self.copyWith(comments: value));
   });
 }
@@ -177,7 +177,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  TelegramType type,  String title, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  TsunamiTelegramComments? comments)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  TelegramType type,  String title, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  Comments3? comments)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LatestTelegram() when $default != null:
 return $default(_that.id,_that.type,_that.title,_that.editorialOffice,_that.publishingOffice,_that.pressedAt,_that.reportedAt,_that.infoKind,_that.serialNo,_that.targetedAt,_that.revokedAt,_that.headline,_that.comments);case _:
@@ -198,7 +198,7 @@ return $default(_that.id,_that.type,_that.title,_that.editorialOffice,_that.publ
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  TelegramType type,  String title, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  TsunamiTelegramComments? comments)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  TelegramType type,  String title, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  Comments3? comments)  $default,) {final _that = this;
 switch (_that) {
 case _LatestTelegram():
 return $default(_that.id,_that.type,_that.title,_that.editorialOffice,_that.publishingOffice,_that.pressedAt,_that.reportedAt,_that.infoKind,_that.serialNo,_that.targetedAt,_that.revokedAt,_that.headline,_that.comments);case _:
@@ -218,7 +218,7 @@ return $default(_that.id,_that.type,_that.title,_that.editorialOffice,_that.publ
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  TelegramType type,  String title, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  TsunamiTelegramComments? comments)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  TelegramType type,  String title, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  Comments3? comments)?  $default,) {final _that = this;
 switch (_that) {
 case _LatestTelegram() when $default != null:
 return $default(_that.id,_that.type,_that.title,_that.editorialOffice,_that.publishingOffice,_that.pressedAt,_that.reportedAt,_that.infoKind,_that.serialNo,_that.targetedAt,_that.revokedAt,_that.headline,_that.comments);case _:
@@ -254,7 +254,7 @@ class _LatestTelegram implements LatestTelegram {
 @override@JsonKey(includeIfNull: false, name: 'targeted_at') final  DateTime? targetedAt;
 @override@JsonKey(includeIfNull: false, name: 'revoked_at') final  DateTime? revokedAt;
 @override@JsonKey(includeIfNull: false) final  String? headline;
-@override@JsonKey(includeIfNull: false) final  TsunamiTelegramComments? comments;
+@override@JsonKey(includeIfNull: false) final  Comments3? comments;
 
 /// Create a copy of LatestTelegram
 /// with the given fields replaced by the non-null parameter values.
@@ -289,11 +289,11 @@ abstract mixin class _$LatestTelegramCopyWith<$Res> implements $LatestTelegramCo
   factory _$LatestTelegramCopyWith(_LatestTelegram value, $Res Function(_LatestTelegram) _then) = __$LatestTelegramCopyWithImpl;
 @override @useResult
 $Res call({
- String id, TelegramType type, String title,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'pressed_at') DateTime pressedAt,@JsonKey(name: 'reported_at') DateTime reportedAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? targetedAt,@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? revokedAt,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false) TsunamiTelegramComments? comments
+ String id, TelegramType type, String title,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'pressed_at') DateTime pressedAt,@JsonKey(name: 'reported_at') DateTime reportedAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? targetedAt,@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? revokedAt,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false) Comments3? comments
 });
 
 
-@override $TsunamiTelegramCommentsCopyWith<$Res>? get comments;
+@override $Comments3CopyWith<$Res>? get comments;
 
 }
 /// @nodoc
@@ -321,7 +321,7 @@ as num?,targetedAt: freezed == targetedAt ? _self.targetedAt : targetedAt // ign
 as DateTime?,revokedAt: freezed == revokedAt ? _self.revokedAt : revokedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
 as String?,comments: freezed == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
-as TsunamiTelegramComments?,
+as Comments3?,
   ));
 }
 
@@ -329,12 +329,12 @@ as TsunamiTelegramComments?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$TsunamiTelegramCommentsCopyWith<$Res>? get comments {
+$Comments3CopyWith<$Res>? get comments {
     if (_self.comments == null) {
     return null;
   }
 
-  return $TsunamiTelegramCommentsCopyWith<$Res>(_self.comments!, (value) {
+  return $Comments3CopyWith<$Res>(_self.comments!, (value) {
     return _then(_self.copyWith(comments: value));
   });
 }

@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'tsunami_notification_tier.dart';
+import 'notification_tiers5.dart';
 
 part 'tsunami_settings_response.freezed.dart';
 part 'tsunami_settings_response.g.dart';
@@ -13,7 +13,7 @@ part 'tsunami_settings_response.g.dart';
 abstract class TsunamiSettingsResponse with _$TsunamiSettingsResponse {
   const factory TsunamiSettingsResponse({
     @JsonKey(name: 'notification_tiers')
-    required List<TsunamiNotificationTier> notificationTiers,
+    required List<NotificationTiers5> notificationTiers,
     @JsonKey(name: 'start_live_activity')
     required bool startLiveActivity,
   }) = _TsunamiSettingsResponse;

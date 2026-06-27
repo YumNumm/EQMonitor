@@ -20,7 +20,7 @@ _FeedItem _$FeedItemFromJson(Map<String, dynamic> json) => $checkedCreate(
       ),
       priority: $checkedConvert(
         'priority',
-        (v) => $enumDecode(_$FeedPriorityEnumMap, v),
+        (v) => $enumDecode(_$PriorityEnumMap, v),
       ),
       isImportant: $checkedConvert('is_important', (v) => v as bool),
       publishedAt: $checkedConvert('published_at', (v) => v as String),
@@ -64,9 +64,9 @@ const _$FeedTypeEnumMap = {
   FeedType.developerMessage: 'DEVELOPER_MESSAGE',
 };
 
-const _$FeedPriorityEnumMap = {
-  FeedPriority.critical: 'CRITICAL',
-  FeedPriority.high: 'HIGH',
-  FeedPriority.normal: 'NORMAL',
-  FeedPriority.low: 'LOW',
+const _$PriorityEnumMap = {
+  Priority.critical: 'CRITICAL',
+  Priority.high: 'HIGH',
+  Priority.normal: 'NORMAL',
+  Priority.low: 'LOW',
 };

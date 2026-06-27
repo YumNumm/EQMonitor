@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiSettingsRequest {
 
-@JsonKey(includeIfNull: false, name: 'notification_tiers') List<TsunamiNotificationTier>? get notificationTiers;@JsonKey(includeIfNull: false, name: 'start_live_activity') bool? get startLiveActivity;
+@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTiers6>? get notificationTiers;@JsonKey(includeIfNull: false, name: 'start_live_activity') bool? get startLiveActivity;
 /// Create a copy of TsunamiSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TsunamiSettingsRequestCopyWith<$Res>  {
   factory $TsunamiSettingsRequestCopyWith(TsunamiSettingsRequest value, $Res Function(TsunamiSettingsRequest) _then) = _$TsunamiSettingsRequestCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeIfNull: false, name: 'notification_tiers') List<TsunamiNotificationTier>? notificationTiers,@JsonKey(includeIfNull: false, name: 'start_live_activity') bool? startLiveActivity
+@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTiers6>? notificationTiers,@JsonKey(includeIfNull: false, name: 'start_live_activity') bool? startLiveActivity
 });
 
 
@@ -68,7 +68,7 @@ class _$TsunamiSettingsRequestCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? notificationTiers = freezed,Object? startLiveActivity = freezed,}) {
   return _then(_self.copyWith(
 notificationTiers: freezed == notificationTiers ? _self.notificationTiers : notificationTiers // ignore: cast_nullable_to_non_nullable
-as List<TsunamiNotificationTier>?,startLiveActivity: freezed == startLiveActivity ? _self.startLiveActivity : startLiveActivity // ignore: cast_nullable_to_non_nullable
+as List<NotificationTiers6>?,startLiveActivity: freezed == startLiveActivity ? _self.startLiveActivity : startLiveActivity // ignore: cast_nullable_to_non_nullable
 as bool?,
   ));
 }
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'notification_tiers')  List<TsunamiNotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity')  bool? startLiveActivity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTiers6>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity')  bool? startLiveActivity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiSettingsRequest() when $default != null:
 return $default(_that.notificationTiers,_that.startLiveActivity);case _:
@@ -175,7 +175,7 @@ return $default(_that.notificationTiers,_that.startLiveActivity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'notification_tiers')  List<TsunamiNotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity')  bool? startLiveActivity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTiers6>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity')  bool? startLiveActivity)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiSettingsRequest():
 return $default(_that.notificationTiers,_that.startLiveActivity);case _:
@@ -195,7 +195,7 @@ return $default(_that.notificationTiers,_that.startLiveActivity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'notification_tiers')  List<TsunamiNotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity')  bool? startLiveActivity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTiers6>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity')  bool? startLiveActivity)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiSettingsRequest() when $default != null:
 return $default(_that.notificationTiers,_that.startLiveActivity);case _:
@@ -210,11 +210,11 @@ return $default(_that.notificationTiers,_that.startLiveActivity);case _:
 @JsonSerializable()
 
 class _TsunamiSettingsRequest implements TsunamiSettingsRequest {
-  const _TsunamiSettingsRequest({@JsonKey(includeIfNull: false, name: 'notification_tiers') final  List<TsunamiNotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity') this.startLiveActivity}): _notificationTiers = notificationTiers;
+  const _TsunamiSettingsRequest({@JsonKey(includeIfNull: false, name: 'notification_tiers') final  List<NotificationTiers6>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity') this.startLiveActivity}): _notificationTiers = notificationTiers;
   factory _TsunamiSettingsRequest.fromJson(Map<String, dynamic> json) => _$TsunamiSettingsRequestFromJson(json);
 
- final  List<TsunamiNotificationTier>? _notificationTiers;
-@override@JsonKey(includeIfNull: false, name: 'notification_tiers') List<TsunamiNotificationTier>? get notificationTiers {
+ final  List<NotificationTiers6>? _notificationTiers;
+@override@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTiers6>? get notificationTiers {
   final value = _notificationTiers;
   if (value == null) return null;
   if (_notificationTiers is EqualUnmodifiableListView) return _notificationTiers;
@@ -257,7 +257,7 @@ abstract mixin class _$TsunamiSettingsRequestCopyWith<$Res> implements $TsunamiS
   factory _$TsunamiSettingsRequestCopyWith(_TsunamiSettingsRequest value, $Res Function(_TsunamiSettingsRequest) _then) = __$TsunamiSettingsRequestCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeIfNull: false, name: 'notification_tiers') List<TsunamiNotificationTier>? notificationTiers,@JsonKey(includeIfNull: false, name: 'start_live_activity') bool? startLiveActivity
+@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTiers6>? notificationTiers,@JsonKey(includeIfNull: false, name: 'start_live_activity') bool? startLiveActivity
 });
 
 
@@ -277,7 +277,7 @@ class __$TsunamiSettingsRequestCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? notificationTiers = freezed,Object? startLiveActivity = freezed,}) {
   return _then(_TsunamiSettingsRequest(
 notificationTiers: freezed == notificationTiers ? _self._notificationTiers : notificationTiers // ignore: cast_nullable_to_non_nullable
-as List<TsunamiNotificationTier>?,startLiveActivity: freezed == startLiveActivity ? _self.startLiveActivity : startLiveActivity // ignore: cast_nullable_to_non_nullable
+as List<NotificationTiers6>?,startLiveActivity: freezed == startLiveActivity ? _self.startLiveActivity : startLiveActivity // ignore: cast_nullable_to_non_nullable
 as bool?,
   ));
 }

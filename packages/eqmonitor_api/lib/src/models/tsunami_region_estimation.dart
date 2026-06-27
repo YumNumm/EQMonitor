@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'tsunami_region_estimation_first_height.dart';
-import 'tsunami_region_estimation_max_height.dart';
+import 'first_height.dart';
+import 'max_height.dart';
 
 part 'tsunami_region_estimation.freezed.dart';
 part 'tsunami_region_estimation.g.dart';
@@ -14,9 +14,11 @@ part 'tsunami_region_estimation.g.dart';
 abstract class TsunamiRegionEstimation with _$TsunamiRegionEstimation {
   const factory TsunamiRegionEstimation({
     @JsonKey(name: 'first_height')
-    required TsunamiRegionEstimationFirstHeight firstHeight,
+    required FirstHeight firstHeight,
+
+    /// 津波の予想高さ(推定値)
     @JsonKey(name: 'max_height')
-    required TsunamiRegionEstimationMaxHeight maxHeight,
+    required MaxHeight maxHeight,
   }) = _TsunamiRegionEstimation;
   
   factory TsunamiRegionEstimation.fromJson(Map<String, Object?> json) => _$TsunamiRegionEstimationFromJson(json);

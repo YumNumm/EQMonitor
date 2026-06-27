@@ -16,7 +16,7 @@ _$AdminDispatchSummaryDetailResponseFromJson(Map<String, dynamic> json) =>
       final val = _AdminDispatchSummaryDetailResponse(
         item: $checkedConvert(
           'item',
-          (v) => DispatchSummaryItem.fromJson(v as Map<String, dynamic>),
+          (v) => Item.fromJson(v as Map<String, dynamic>),
         ),
       );
       return val;

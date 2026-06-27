@@ -155,39 +155,3 @@ Map<String, dynamic> _$ParameterDataResponseUnionTsunamiStationsParameterToJson(
   'prefectures': instance.prefectures,
   'runtimeType': instance.$type,
 };
-
-ParameterDataResponseUnionShindoDbStationsParameter
-_$ParameterDataResponseUnionShindoDbStationsParameterFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(
-  'ParameterDataResponseUnionShindoDbStationsParameter',
-  json,
-  ($checkedConvert) {
-    final val = ParameterDataResponseUnionShindoDbStationsParameter(
-      metadata: $checkedConvert(
-        'metadata',
-        (v) => ShindoDbStationsParameterMetadata.fromJson(
-          v as Map<String, dynamic>,
-        ),
-      ),
-      stations: $checkedConvert(
-        'stations',
-        (v) => (v as List<dynamic>)
-            .map((e) => ShindoDbStation.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      ),
-      $type: $checkedConvert('runtimeType', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {r'$type': 'runtimeType'},
-);
-
-Map<String, dynamic>
-_$ParameterDataResponseUnionShindoDbStationsParameterToJson(
-  ParameterDataResponseUnionShindoDbStationsParameter instance,
-) => <String, dynamic>{
-  'metadata': instance.metadata,
-  'stations': instance.stations,
-  'runtimeType': instance.$type,
-};

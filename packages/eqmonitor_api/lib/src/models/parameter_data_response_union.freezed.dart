@@ -31,10 +31,6 @@ ParameterDataResponseUnion _$ParameterDataResponseUnionFromJson(
           return ParameterDataResponseUnionTsunamiStationsParameter.fromJson(
             json
           );
-                case 'shindoDbStationsParameter':
-          return ParameterDataResponseUnionShindoDbStationsParameter.fromJson(
-            json
-          );
         
           default:
             throw CheckedFromJsonException(
@@ -93,15 +89,14 @@ extension ParameterDataResponseUnionPatterns on ParameterDataResponseUnion {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ParameterDataResponseUnionJmaCodeTableParameter value)?  jmaCodeTableParameter,TResult Function( ParameterDataResponseUnionKyoshinObservationPointsParameter value)?  kyoshinObservationPointsParameter,TResult Function( ParameterDataResponseUnionEarthquakeStationsParameter value)?  earthquakeStationsParameter,TResult Function( ParameterDataResponseUnionTsunamiStationsParameter value)?  tsunamiStationsParameter,TResult Function( ParameterDataResponseUnionShindoDbStationsParameter value)?  shindoDbStationsParameter,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ParameterDataResponseUnionJmaCodeTableParameter value)?  jmaCodeTableParameter,TResult Function( ParameterDataResponseUnionKyoshinObservationPointsParameter value)?  kyoshinObservationPointsParameter,TResult Function( ParameterDataResponseUnionEarthquakeStationsParameter value)?  earthquakeStationsParameter,TResult Function( ParameterDataResponseUnionTsunamiStationsParameter value)?  tsunamiStationsParameter,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ParameterDataResponseUnionJmaCodeTableParameter() when jmaCodeTableParameter != null:
 return jmaCodeTableParameter(_that);case ParameterDataResponseUnionKyoshinObservationPointsParameter() when kyoshinObservationPointsParameter != null:
 return kyoshinObservationPointsParameter(_that);case ParameterDataResponseUnionEarthquakeStationsParameter() when earthquakeStationsParameter != null:
 return earthquakeStationsParameter(_that);case ParameterDataResponseUnionTsunamiStationsParameter() when tsunamiStationsParameter != null:
-return tsunamiStationsParameter(_that);case ParameterDataResponseUnionShindoDbStationsParameter() when shindoDbStationsParameter != null:
-return shindoDbStationsParameter(_that);case _:
+return tsunamiStationsParameter(_that);case _:
   return orElse();
 
 }
@@ -119,15 +114,14 @@ return shindoDbStationsParameter(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ParameterDataResponseUnionJmaCodeTableParameter value)  jmaCodeTableParameter,required TResult Function( ParameterDataResponseUnionKyoshinObservationPointsParameter value)  kyoshinObservationPointsParameter,required TResult Function( ParameterDataResponseUnionEarthquakeStationsParameter value)  earthquakeStationsParameter,required TResult Function( ParameterDataResponseUnionTsunamiStationsParameter value)  tsunamiStationsParameter,required TResult Function( ParameterDataResponseUnionShindoDbStationsParameter value)  shindoDbStationsParameter,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ParameterDataResponseUnionJmaCodeTableParameter value)  jmaCodeTableParameter,required TResult Function( ParameterDataResponseUnionKyoshinObservationPointsParameter value)  kyoshinObservationPointsParameter,required TResult Function( ParameterDataResponseUnionEarthquakeStationsParameter value)  earthquakeStationsParameter,required TResult Function( ParameterDataResponseUnionTsunamiStationsParameter value)  tsunamiStationsParameter,}){
 final _that = this;
 switch (_that) {
 case ParameterDataResponseUnionJmaCodeTableParameter():
 return jmaCodeTableParameter(_that);case ParameterDataResponseUnionKyoshinObservationPointsParameter():
 return kyoshinObservationPointsParameter(_that);case ParameterDataResponseUnionEarthquakeStationsParameter():
 return earthquakeStationsParameter(_that);case ParameterDataResponseUnionTsunamiStationsParameter():
-return tsunamiStationsParameter(_that);case ParameterDataResponseUnionShindoDbStationsParameter():
-return shindoDbStationsParameter(_that);}
+return tsunamiStationsParameter(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -141,15 +135,14 @@ return shindoDbStationsParameter(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ParameterDataResponseUnionJmaCodeTableParameter value)?  jmaCodeTableParameter,TResult? Function( ParameterDataResponseUnionKyoshinObservationPointsParameter value)?  kyoshinObservationPointsParameter,TResult? Function( ParameterDataResponseUnionEarthquakeStationsParameter value)?  earthquakeStationsParameter,TResult? Function( ParameterDataResponseUnionTsunamiStationsParameter value)?  tsunamiStationsParameter,TResult? Function( ParameterDataResponseUnionShindoDbStationsParameter value)?  shindoDbStationsParameter,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ParameterDataResponseUnionJmaCodeTableParameter value)?  jmaCodeTableParameter,TResult? Function( ParameterDataResponseUnionKyoshinObservationPointsParameter value)?  kyoshinObservationPointsParameter,TResult? Function( ParameterDataResponseUnionEarthquakeStationsParameter value)?  earthquakeStationsParameter,TResult? Function( ParameterDataResponseUnionTsunamiStationsParameter value)?  tsunamiStationsParameter,}){
 final _that = this;
 switch (_that) {
 case ParameterDataResponseUnionJmaCodeTableParameter() when jmaCodeTableParameter != null:
 return jmaCodeTableParameter(_that);case ParameterDataResponseUnionKyoshinObservationPointsParameter() when kyoshinObservationPointsParameter != null:
 return kyoshinObservationPointsParameter(_that);case ParameterDataResponseUnionEarthquakeStationsParameter() when earthquakeStationsParameter != null:
 return earthquakeStationsParameter(_that);case ParameterDataResponseUnionTsunamiStationsParameter() when tsunamiStationsParameter != null:
-return tsunamiStationsParameter(_that);case ParameterDataResponseUnionShindoDbStationsParameter() when shindoDbStationsParameter != null:
-return shindoDbStationsParameter(_that);case _:
+return tsunamiStationsParameter(_that);case _:
   return null;
 
 }
@@ -166,14 +159,13 @@ return shindoDbStationsParameter(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( JmaCodeTableParameterMetadata metadata, @JsonKey(name: 'code_tables')  JmaCodeTableParameterCodeTables codeTables)?  jmaCodeTableParameter,TResult Function( KyoshinObservationPointsParameterMetadata metadata,  List<KyoshinObservationPoint> points)?  kyoshinObservationPointsParameter,TResult Function( ParameterMetadata metadata,  List<EarthquakeStationPrefecture> prefectures)?  earthquakeStationsParameter,TResult Function( TsunamiStationsParameterMetadata metadata,  List<TsunamiStationPrefecture> prefectures)?  tsunamiStationsParameter,TResult Function( ShindoDbStationsParameterMetadata metadata,  List<ShindoDbStation> stations)?  shindoDbStationsParameter,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( JmaCodeTableParameterMetadata metadata, @JsonKey(name: 'code_tables')  JmaCodeTableParameterCodeTables codeTables)?  jmaCodeTableParameter,TResult Function( KyoshinObservationPointsParameterMetadata metadata,  List<KyoshinObservationPoint> points)?  kyoshinObservationPointsParameter,TResult Function( ParameterMetadata metadata,  List<EarthquakeStationPrefecture> prefectures)?  earthquakeStationsParameter,TResult Function( TsunamiStationsParameterMetadata metadata,  List<TsunamiStationPrefecture> prefectures)?  tsunamiStationsParameter,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ParameterDataResponseUnionJmaCodeTableParameter() when jmaCodeTableParameter != null:
 return jmaCodeTableParameter(_that.metadata,_that.codeTables);case ParameterDataResponseUnionKyoshinObservationPointsParameter() when kyoshinObservationPointsParameter != null:
 return kyoshinObservationPointsParameter(_that.metadata,_that.points);case ParameterDataResponseUnionEarthquakeStationsParameter() when earthquakeStationsParameter != null:
 return earthquakeStationsParameter(_that.metadata,_that.prefectures);case ParameterDataResponseUnionTsunamiStationsParameter() when tsunamiStationsParameter != null:
-return tsunamiStationsParameter(_that.metadata,_that.prefectures);case ParameterDataResponseUnionShindoDbStationsParameter() when shindoDbStationsParameter != null:
-return shindoDbStationsParameter(_that.metadata,_that.stations);case _:
+return tsunamiStationsParameter(_that.metadata,_that.prefectures);case _:
   return orElse();
 
 }
@@ -191,14 +183,13 @@ return shindoDbStationsParameter(_that.metadata,_that.stations);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( JmaCodeTableParameterMetadata metadata, @JsonKey(name: 'code_tables')  JmaCodeTableParameterCodeTables codeTables)  jmaCodeTableParameter,required TResult Function( KyoshinObservationPointsParameterMetadata metadata,  List<KyoshinObservationPoint> points)  kyoshinObservationPointsParameter,required TResult Function( ParameterMetadata metadata,  List<EarthquakeStationPrefecture> prefectures)  earthquakeStationsParameter,required TResult Function( TsunamiStationsParameterMetadata metadata,  List<TsunamiStationPrefecture> prefectures)  tsunamiStationsParameter,required TResult Function( ShindoDbStationsParameterMetadata metadata,  List<ShindoDbStation> stations)  shindoDbStationsParameter,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( JmaCodeTableParameterMetadata metadata, @JsonKey(name: 'code_tables')  JmaCodeTableParameterCodeTables codeTables)  jmaCodeTableParameter,required TResult Function( KyoshinObservationPointsParameterMetadata metadata,  List<KyoshinObservationPoint> points)  kyoshinObservationPointsParameter,required TResult Function( ParameterMetadata metadata,  List<EarthquakeStationPrefecture> prefectures)  earthquakeStationsParameter,required TResult Function( TsunamiStationsParameterMetadata metadata,  List<TsunamiStationPrefecture> prefectures)  tsunamiStationsParameter,}) {final _that = this;
 switch (_that) {
 case ParameterDataResponseUnionJmaCodeTableParameter():
 return jmaCodeTableParameter(_that.metadata,_that.codeTables);case ParameterDataResponseUnionKyoshinObservationPointsParameter():
 return kyoshinObservationPointsParameter(_that.metadata,_that.points);case ParameterDataResponseUnionEarthquakeStationsParameter():
 return earthquakeStationsParameter(_that.metadata,_that.prefectures);case ParameterDataResponseUnionTsunamiStationsParameter():
-return tsunamiStationsParameter(_that.metadata,_that.prefectures);case ParameterDataResponseUnionShindoDbStationsParameter():
-return shindoDbStationsParameter(_that.metadata,_that.stations);}
+return tsunamiStationsParameter(_that.metadata,_that.prefectures);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -212,14 +203,13 @@ return shindoDbStationsParameter(_that.metadata,_that.stations);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( JmaCodeTableParameterMetadata metadata, @JsonKey(name: 'code_tables')  JmaCodeTableParameterCodeTables codeTables)?  jmaCodeTableParameter,TResult? Function( KyoshinObservationPointsParameterMetadata metadata,  List<KyoshinObservationPoint> points)?  kyoshinObservationPointsParameter,TResult? Function( ParameterMetadata metadata,  List<EarthquakeStationPrefecture> prefectures)?  earthquakeStationsParameter,TResult? Function( TsunamiStationsParameterMetadata metadata,  List<TsunamiStationPrefecture> prefectures)?  tsunamiStationsParameter,TResult? Function( ShindoDbStationsParameterMetadata metadata,  List<ShindoDbStation> stations)?  shindoDbStationsParameter,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( JmaCodeTableParameterMetadata metadata, @JsonKey(name: 'code_tables')  JmaCodeTableParameterCodeTables codeTables)?  jmaCodeTableParameter,TResult? Function( KyoshinObservationPointsParameterMetadata metadata,  List<KyoshinObservationPoint> points)?  kyoshinObservationPointsParameter,TResult? Function( ParameterMetadata metadata,  List<EarthquakeStationPrefecture> prefectures)?  earthquakeStationsParameter,TResult? Function( TsunamiStationsParameterMetadata metadata,  List<TsunamiStationPrefecture> prefectures)?  tsunamiStationsParameter,}) {final _that = this;
 switch (_that) {
 case ParameterDataResponseUnionJmaCodeTableParameter() when jmaCodeTableParameter != null:
 return jmaCodeTableParameter(_that.metadata,_that.codeTables);case ParameterDataResponseUnionKyoshinObservationPointsParameter() when kyoshinObservationPointsParameter != null:
 return kyoshinObservationPointsParameter(_that.metadata,_that.points);case ParameterDataResponseUnionEarthquakeStationsParameter() when earthquakeStationsParameter != null:
 return earthquakeStationsParameter(_that.metadata,_that.prefectures);case ParameterDataResponseUnionTsunamiStationsParameter() when tsunamiStationsParameter != null:
-return tsunamiStationsParameter(_that.metadata,_that.prefectures);case ParameterDataResponseUnionShindoDbStationsParameter() when shindoDbStationsParameter != null:
-return shindoDbStationsParameter(_that.metadata,_that.stations);case _:
+return tsunamiStationsParameter(_that.metadata,_that.prefectures);case _:
   return null;
 
 }
@@ -585,96 +575,6 @@ as List<TsunamiStationPrefecture>,
 $TsunamiStationsParameterMetadataCopyWith<$Res> get metadata {
   
   return $TsunamiStationsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
-    return _then(_self.copyWith(metadata: value));
-  });
-}
-}
-
-/// @nodoc
-
-@JsonSerializable()
-class ParameterDataResponseUnionShindoDbStationsParameter implements ParameterDataResponseUnion {
-  const ParameterDataResponseUnionShindoDbStationsParameter({required this.metadata, required final  List<ShindoDbStation> stations, final  String? $type}): _stations = stations,$type = $type ?? 'shindoDbStationsParameter';
-  factory ParameterDataResponseUnionShindoDbStationsParameter.fromJson(Map<String, dynamic> json) => _$ParameterDataResponseUnionShindoDbStationsParameterFromJson(json);
-
-@override final  ShindoDbStationsParameterMetadata metadata;
- final  List<ShindoDbStation> _stations;
- List<ShindoDbStation> get stations {
-  if (_stations is EqualUnmodifiableListView) return _stations;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_stations);
-}
-
-
-@JsonKey(name: 'runtimeType')
-final String $type;
-
-
-/// Create a copy of ParameterDataResponseUnion
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$ParameterDataResponseUnionShindoDbStationsParameterCopyWith<ParameterDataResponseUnionShindoDbStationsParameter> get copyWith => _$ParameterDataResponseUnionShindoDbStationsParameterCopyWithImpl<ParameterDataResponseUnionShindoDbStationsParameter>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$ParameterDataResponseUnionShindoDbStationsParameterToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParameterDataResponseUnionShindoDbStationsParameter&&(identical(other.metadata, metadata) || other.metadata == metadata)&&const DeepCollectionEquality().equals(other._stations, _stations));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,metadata,const DeepCollectionEquality().hash(_stations));
-
-@override
-String toString() {
-  return 'ParameterDataResponseUnion.shindoDbStationsParameter(metadata: $metadata, stations: $stations)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $ParameterDataResponseUnionShindoDbStationsParameterCopyWith<$Res> implements $ParameterDataResponseUnionCopyWith<$Res> {
-  factory $ParameterDataResponseUnionShindoDbStationsParameterCopyWith(ParameterDataResponseUnionShindoDbStationsParameter value, $Res Function(ParameterDataResponseUnionShindoDbStationsParameter) _then) = _$ParameterDataResponseUnionShindoDbStationsParameterCopyWithImpl;
-@useResult
-$Res call({
- ShindoDbStationsParameterMetadata metadata, List<ShindoDbStation> stations
-});
-
-
-$ShindoDbStationsParameterMetadataCopyWith<$Res> get metadata;
-
-}
-/// @nodoc
-class _$ParameterDataResponseUnionShindoDbStationsParameterCopyWithImpl<$Res>
-    implements $ParameterDataResponseUnionShindoDbStationsParameterCopyWith<$Res> {
-  _$ParameterDataResponseUnionShindoDbStationsParameterCopyWithImpl(this._self, this._then);
-
-  final ParameterDataResponseUnionShindoDbStationsParameter _self;
-  final $Res Function(ParameterDataResponseUnionShindoDbStationsParameter) _then;
-
-/// Create a copy of ParameterDataResponseUnion
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? metadata = null,Object? stations = null,}) {
-  return _then(ParameterDataResponseUnionShindoDbStationsParameter(
-metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
-as ShindoDbStationsParameterMetadata,stations: null == stations ? _self._stations : stations // ignore: cast_nullable_to_non_nullable
-as List<ShindoDbStation>,
-  ));
-}
-
-/// Create a copy of ParameterDataResponseUnion
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ShindoDbStationsParameterMetadataCopyWith<$Res> get metadata {
-  
-  return $ShindoDbStationsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
 }

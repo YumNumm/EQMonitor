@@ -13,9 +13,7 @@ enum ParameterType {
   @JsonValue('EARTHQUAKE_STATIONS')
   earthquakeStations('EARTHQUAKE_STATIONS'),
   @JsonValue('TSUNAMI_STATIONS')
-  tsunamiStations('TSUNAMI_STATIONS'),
-  @JsonValue('SHINDO_DB_STATIONS')
-  shindoDbStations('SHINDO_DB_STATIONS');
+  tsunamiStations('TSUNAMI_STATIONS');
 
   const ParameterType(this.json);
 
