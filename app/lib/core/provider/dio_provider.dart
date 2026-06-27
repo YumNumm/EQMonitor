@@ -4,6 +4,7 @@ import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/dio_base_options.dart';
 import 'package:eqmonitor/core/provider/interceptor/app_check_interceptor.dart';
 import 'package:eqmonitor/core/provider/interceptor/device_auth_token_interceptor.dart';
 import 'package:eqmonitor/core/provider/interceptor/device_id_interceptor.dart';
@@ -27,21 +28,13 @@ Future<Dio> dio(Ref ref) async {
   );
   final httpCache = await ref.watch(httpCacheStoreProvider.future);
 
-  final dio = Dio(
-    BaseOptions(
-      headers: {
-        'x-eqmonitor-version': '${package.version}+${package.buildNumber}',
-        'x-eqmonitor-platform': Platform.isAndroid ? 'android' : 'ios',
-      },
-      baseUrl: telegramUrl.restApiUrl,
-      contentType: ContentType.json.value,
-      connectTimeout: const Duration(milliseconds: 10000),
-      sendTimeout: const Duration(milliseconds: 10000),
-      // バックエンドは query の配列を `key[]=a&key[]=b` 形式で受け取る。
-      // `multi` の単一要素は `key=a` となりスカラー扱いで 400 になる。
-      listFormat: ListFormat.multiCompatible,
-    ),
-  );
+  final dio = Dio(buildApiBaseOptions(baseUrl: telegramUrl.restApiUrl));
+  dio.options.headers.addAll({
+    'x-eqmonitor-version': '${package.version}+${package.buildNumber}',
+    'x-eqmonitor-platform': Platform.isAndroid ? 'android' : 'ios',
+  });
+  dio.options.connectTimeout = const Duration(milliseconds: 10000);
+  dio.options.sendTimeout = const Duration(milliseconds: 10000);
   dio.interceptors.add(AppCheckInterceptor());
   dio.interceptors.add(DeviceIdInterceptor(deviceId: deviceId));
   dio.interceptors.add(deviceAuthTokenInterceptor);
