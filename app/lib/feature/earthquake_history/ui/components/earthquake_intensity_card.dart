@@ -28,9 +28,9 @@ class EarthquakeIntensityCard extends StatelessWidget {
     }
 
     final title = switch (displayMode) {
-      IntensityDisplayMode.jma => '各地の震度',
-      IntensityDisplayMode.lpgm => '各地の長周期地震動階級',
-      IntensityDisplayMode.estimated => '推計震度',
+      .jma => '各地の震度',
+      .lpgm => '各地の長周期地震動階級',
+      .estimated => '推計震度',
     };
 
     final segments = availableModes
@@ -38,9 +38,9 @@ class EarthquakeIntensityCard extends StatelessWidget {
           (m) => SegmentItem(
             value: m,
             label: switch (m) {
-              IntensityDisplayMode.jma => '各地の震度',
-              IntensityDisplayMode.lpgm => '長周期階級',
-              IntensityDisplayMode.estimated => '推計震度',
+              .jma => '各地の震度',
+              .lpgm => '長周期階級',
+              .estimated => '推計震度',
             },
           ),
         )
@@ -50,10 +50,10 @@ class EarthquakeIntensityCard extends StatelessWidget {
       elevation: 1,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Stack(
-            alignment: Alignment.centerRight,
+            alignment: .centerRight,
             children: [
               SheetHeader(title: title),
               if (segments.length > 1)
@@ -68,42 +68,16 @@ class EarthquakeIntensityCard extends StatelessWidget {
             ],
           ),
           switch (displayMode) {
-            IntensityDisplayMode.jma => JmaIntensityContent(
-              item: item,
+            .jma => JmaIntensityContent(item: item),
+            .lpgm => LpgmIntensityContent(item: item),
+            .estimated => const SizedBox(
+              height: 32,
+              width: .infinity,
+              child: Placeholder(
+                strokeWidth: 1,
+              ),
             ),
-            IntensityDisplayMode.lpgm => LpgmIntensityContent(
-              item: item,
-            ),
-            IntensityDisplayMode.estimated => const EstimatedIntensityContent(),
           },
-        ],
-      ),
-    );
-  }
-}
-
-class EstimatedIntensityContent extends StatelessWidget {
-  const EstimatedIntensityContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      child: Row(
-        children: [
-          Icon(
-            Icons.map_outlined,
-            color: theme.colorScheme.primary,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '推計震度を地図上に表示中',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
         ],
       ),
     );

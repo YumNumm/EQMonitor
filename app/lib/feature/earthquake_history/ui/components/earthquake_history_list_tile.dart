@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_parti
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -115,7 +116,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
           : null,
       onTap: onTap,
       title: Text(
-        title,
+        title.toHalfWidth,
         style: theme.textTheme.titleSmall!.copyWith(
           fontWeight: FontWeight.bold,
           color: titleTextColor,

@@ -76,78 +76,82 @@ class _SortFilterModal extends HookWidget {
     );
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: sheetBar),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              '並び替え',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: sheetBar),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                '並び替え',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          RadioGroup<EarthquakeSortBy>(
-            groupValue: sortBy.value,
-            onChanged: (value) {
-              if (value != null) {
-                sortBy.value = value;
-              }
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (final item in EarthquakeSortBy.values)
-                  RadioListTile<EarthquakeSortBy>(
-                    title: Text(item.label),
-                    value: item,
-                  ),
-              ],
-            ),
-          ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SegmentedButton<SortOrder>(
-              segments: [
-                for (final order in SortOrder.values)
-                  ButtonSegment(
-                    value: order,
-                    label: Text('${order.label} ${order.arrow}'),
-                  ),
-              ],
-              selected: {sortOrder.value},
-              onSelectionChanged: (selected) {
-                sortOrder.value = selected.first;
+            const SizedBox(height: 8),
+            RadioGroup<EarthquakeSortBy>(
+              groupValue: sortBy.value,
+              onChanged: (value) {
+                if (value != null) {
+                  sortBy.value = value;
+                }
               },
+              child: Column(
+                mainAxisSize: .min,
+                children: [
+                  for (final item in EarthquakeSortBy.values)
+                    RadioListTile<EarthquakeSortBy>(
+                      title: Text(item.label),
+                      value: item,
+                    ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('キャンセル'),
-              ),
-              TextButton(
-                onPressed: () {
-                  final isDefault =
-                      sortBy.value == .eventId && sortOrder.value == .desc;
-                  Navigator.of(context).pop(
-                    isDefault ? (null, null) : (sortBy.value, sortOrder.value),
-                  );
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SegmentedButton<SortOrder>(
+                segments: [
+                  for (final order in SortOrder.values)
+                    ButtonSegment(
+                      value: order,
+                      label: Text('${order.label} ${order.arrow}'),
+                    ),
+                ],
+                selected: {sortOrder.value},
+                onSelectionChanged: (selected) {
+                  sortOrder.value = selected.first;
                 },
-                child: const Text('完了'),
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-        ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('キャンセル'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final isDefault =
+                        sortBy.value == .eventId && sortOrder.value == .desc;
+                    Navigator.of(context).pop(
+                      isDefault
+                          ? (null, null)
+                          : (sortBy.value, sortOrder.value),
+                    );
+                  },
+                  child: const Text('完了'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }
