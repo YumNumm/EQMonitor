@@ -44,7 +44,16 @@ enum TelegramType {
   @JsonValue('VYSE60')
   vyse60('VYSE60'),
   @JsonValue('SHINDO_DB')
-  shindoDb('SHINDO_DB');
+  shindoDb('SHINDO_DB'),
+  /// Incorrect name has been replaced. Original name: `南海トラフ地震臨時情報`.
+  @JsonValue('南海トラフ地震臨時情報')
+  undefined0('南海トラフ地震臨時情報'),
+  /// Incorrect name has been replaced. Original name: `南海トラフ地震関連解説情報`.
+  @JsonValue('南海トラフ地震関連解説情報')
+  undefined1('南海トラフ地震関連解説情報'),
+  /// Incorrect name has been replaced. Original name: `北海道・三陸沖後発地震注意情報`.
+  @JsonValue('北海道・三陸沖後発地震注意情報')
+  undefined2('北海道・三陸沖後発地震注意情報');
 
   const TelegramType(this.json);
 
