@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'items.dart';
+import 'dispatch_summary_item.dart';
 
 part 'admin_dispatch_summary_list_response.freezed.dart';
 part 'admin_dispatch_summary_list_response.g.dart';
@@ -12,7 +12,7 @@ part 'admin_dispatch_summary_list_response.g.dart';
 @Freezed()
 abstract class AdminDispatchSummaryListResponse with _$AdminDispatchSummaryListResponse {
   const factory AdminDispatchSummaryListResponse({
-    required List<Items> items,
+    required List<DispatchSummaryItem> items,
   }) = _AdminDispatchSummaryListResponse;
   
   factory AdminDispatchSummaryListResponse.fromJson(Map<String, Object?> json) => _$AdminDispatchSummaryListResponseFromJson(json);

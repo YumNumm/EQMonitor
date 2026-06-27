@@ -39,7 +39,17 @@ class BasicModalSheet extends HookWidget {
               side: BorderSide(color: color.outlineSoft),
             ),
             initialExtent: size.height * 0.2,
-            physics: const SnapSheetPhysics(stops: [0.1, 0.2, 0.5, 0.8, 1]),
+            physics: const SnapSheetPhysics(
+              stops: [
+                0.1,
+                0.2,
+                0.3,
+                0.5,
+                0.7,
+                0.8,
+                1,
+              ],
+            ),
             child: Column(
               children: [
                 Container(

@@ -37,12 +37,19 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
         : null;
 
     final cardBackgroundColor = colorScheme?.background ?? Colors.transparent;
-    final cardColor = cardBackgroundColor.withValues(alpha: 0.3);
+    final cardColor = cardBackgroundColor.withValues(
+      alpha: 0.3,
+    );
 
     return Card(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 8,
-      ).add(const EdgeInsets.only(bottom: 4)),
+      margin:
+          const EdgeInsets.symmetric(
+            horizontal: 8,
+          ).add(
+            const EdgeInsets.only(
+              bottom: 4,
+            ),
+          ),
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(16),

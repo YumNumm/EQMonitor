@@ -6,12 +6,14 @@ enum TelegramInfoType {
   publication,
   correction,
   cancellation,
+  delay,
 }
 
 extension TelegramInfoTypeApiExtension on api.InfoType {
   TelegramInfoType get toTelegramInfoType => switch (this) {
     .publication => .publication,
     .correction => .correction,
+    .delay => .delay,
     .cancellation => .cancellation,
   };
 }

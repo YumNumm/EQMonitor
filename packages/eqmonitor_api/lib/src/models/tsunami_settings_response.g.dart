@@ -18,7 +18,10 @@ _TsunamiSettingsResponse _$TsunamiSettingsResponseFromJson(
       notificationTiers: $checkedConvert(
         'notification_tiers',
         (v) => (v as List<dynamic>)
-            .map((e) => NotificationTiers5.fromJson(e as Map<String, dynamic>))
+            .map(
+              (e) =>
+                  TsunamiNotificationTier.fromJson(e as Map<String, dynamic>),
+            )
             .toList(),
       ),
       startLiveActivity: $checkedConvert(

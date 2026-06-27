@@ -1,7 +1,5 @@
-import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_notification_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_notification_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region.dart';
@@ -44,14 +42,12 @@ class DeviceNotificationSettingsRepository {
   Future<Result<EewNotificationSettings, Exception>> patchEewSettings({
     required String deviceId,
     required bool enabled,
-    required JmaIntensity? criticalThreshold,
     required bool startLiveActivity,
     required bool onePointEnabled,
   }) => Result.capture(() async {
     final response = await _api.device.patchV2DeviceMeSettingsEew(
       body: api.EewSettingsRequest(
         enabled: enabled,
-        notificationTiers: _toApiTiers(criticalThreshold),
         startLiveActivity: startLiveActivity,
         onePointEnabled: onePointEnabled,
       ),
@@ -94,13 +90,11 @@ class DeviceNotificationSettingsRepository {
   patchEarthquakeSettings({
     required String deviceId,
     required bool enabled,
-    required JmaIntensity? criticalThreshold,
     required bool estimatedIntensityEnabled,
   }) => Result.capture(() async {
     final response = await _api.device.patchV2DeviceMeSettingsEarthquake(
       body: api.EarthquakeSettingsRequest(
         enabled: enabled,
-        notificationTiers: _toApiTiers(criticalThreshold),
         estimatedIntensityEnabled: estimatedIntensityEnabled,
       ),
     );
@@ -171,9 +165,6 @@ class DeviceNotificationSettingsRepository {
     List<NotificationRegion> regions,
   ) => EewNotificationSettings(
     enabled: resp.enabled,
-    criticalThreshold: _extractCriticalThresholdFromTiers(
-      resp.notificationTiers,
-    ),
     startLiveActivity: resp.startLiveActivity,
     onePointEnabled: resp.onePointEnabled,
     regions: regions,
@@ -184,9 +175,6 @@ class DeviceNotificationSettingsRepository {
     List<NotificationRegion> regions,
   ) => EarthquakeNotificationSettings(
     enabled: resp.enabled,
-    criticalThreshold: _extractCriticalThresholdFromTiers(
-      resp.notificationTiers,
-    ),
     estimatedIntensityEnabled: resp.estimatedIntensityEnabled,
     regions: regions,
   );
@@ -200,30 +188,4 @@ class DeviceNotificationSettingsRepository {
     minLevel: r.minLevel,
     isCurrentLocation: r.isCurrentLocation,
   );
-
-  JmaIntensity? _extractCriticalThresholdFromTiers(
-    List<api.NotificationTier> tiers,
-  ) {
-    final tier = tiers.firstWhereOrNull(
-      (t) => t.interruptionLevel == api.InterruptionLevel.critical,
-    );
-    return tier?.minJmaIntensity.toJmaIntensity;
-  }
-
-  List<api.NotificationTier>? _toApiTiers(JmaIntensity? threshold) {
-    if (threshold == null) {
-      return null;
-    }
-    final apiIntensity = threshold.toApiMinJmaIntensity;
-    if (apiIntensity == null) {
-      return null;
-    }
-    return [
-      api.NotificationTier(
-        minJmaIntensity: apiIntensity,
-        sound: 'default',
-        interruptionLevel: api.InterruptionLevel.critical,
-      ),
-    ];
-  }
 }

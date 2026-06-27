@@ -18,7 +18,7 @@ _TelegramListResponse _$TelegramListResponseFromJson(
       items: $checkedConvert(
         'items',
         (v) => (v as List<dynamic>)
-            .map((e) => Items4.fromJson(e as Map<String, dynamic>))
+            .map((e) => TelegramPartial.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
       nextToken: $checkedConvert('next_token', (v) => v as String?),

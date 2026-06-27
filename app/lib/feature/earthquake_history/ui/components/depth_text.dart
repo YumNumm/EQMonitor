@@ -14,26 +14,35 @@ class DepthText extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    final (text, isSpecial) = switch (depth) {
-      EarthquakeDepthShallow() => ('ごく浅い', true),
-      EarthquakeDepthValue(:final value) => ('${value}km', false),
-      EarthquakeDepthOver700km() => ('700km以上', true),
-      EarthquakeDepthUnknown() || null => ('調査中', true),
+    final (text, trailing, isSpecial) = switch (depth) {
+      EarthquakeDepthShallow() => ('ごく浅い', null, true),
+      EarthquakeDepthValue(:final value) => ('$value', 'km', false),
+      EarthquakeDepthOver700km() => ('700', 'km以上', true),
+      EarthquakeDepthUnknown() || null => ('調査中', null, true),
     };
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: [
-        Text('深さ', style: textTheme.labelStyle(textTheme.titleSmall!)),
-        Text(
-          text,
-          style: textTheme.valueStyle(
-            isSpecial ? textTheme.headlineMedium! : textTheme.headlineLarge!,
+    final subTextStyle = textTheme.labelStyle(textTheme.titleSmall!);
+
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: '深さ',
+            style: subTextStyle,
           ),
-        ),
-      ],
+          TextSpan(
+            text: text,
+            style: textTheme.valueStyle(
+              isSpecial ? textTheme.headlineMedium! : textTheme.headlineLarge!,
+            ),
+          ),
+          if (trailing != null)
+            TextSpan(
+              text: trailing,
+              style: subTextStyle,
+            ),
+        ],
+      ),
     );
   }
 }

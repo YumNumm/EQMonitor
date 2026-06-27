@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'notification_tiers4.dart';
+import 'notification_tier.dart';
 
 part 'eew_settings_request.freezed.dart';
 part 'eew_settings_request.g.dart';
@@ -15,7 +15,7 @@ abstract class EewSettingsRequest with _$EewSettingsRequest {
     @JsonKey(includeIfNull: false)
     bool? enabled,
     @JsonKey(name: 'notification_tiers')
-    List<NotificationTiers4>? notificationTiers,
+    List<NotificationTier>? notificationTiers,
     @JsonKey(includeIfNull: false,name: 'start_live_activity')
     bool? startLiveActivity,
     @JsonKey(includeIfNull: false,name: 'one_point_enabled')

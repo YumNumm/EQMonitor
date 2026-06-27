@@ -15,32 +15,32 @@ FeedItemDataUnion _$FeedItemDataUnionFromJson(
   Map<String, dynamic> json
 ) {
         switch (json['runtimeType']) {
-                  case 'variant1':
-          return FeedItemDataUnionVariant1.fromJson(
+                  case 'feedEarthquakeNoticeData':
+          return FeedItemDataUnionFeedEarthquakeNoticeData.fromJson(
             json
           );
-                case 'variant2':
-          return FeedItemDataUnionVariant2.fromJson(
+                case 'feedEarthquakeExplanationData':
+          return FeedItemDataUnionFeedEarthquakeExplanationData.fromJson(
             json
           );
-                case 'variant3':
-          return FeedItemDataUnionVariant3.fromJson(
+                case 'feedEarthquakeCountsData':
+          return FeedItemDataUnionFeedEarthquakeCountsData.fromJson(
             json
           );
-                case 'variant4':
-          return FeedItemDataUnionVariant4.fromJson(
+                case 'feedEarthquakeNankaiData':
+          return FeedItemDataUnionFeedEarthquakeNankaiData.fromJson(
             json
           );
-                case 'variant5':
-          return FeedItemDataUnionVariant5.fromJson(
+                case 'feedAppUpdateData':
+          return FeedItemDataUnionFeedAppUpdateData.fromJson(
             json
           );
-                case 'variant6':
-          return FeedItemDataUnionVariant6.fromJson(
+                case 'feedIncidentData':
+          return FeedItemDataUnionFeedIncidentData.fromJson(
             json
           );
-                case 'variant7':
-          return FeedItemDataUnionVariant7.fromJson(
+                case 'feedDeveloperMessageData':
+          return FeedItemDataUnionFeedDeveloperMessageData.fromJson(
             json
           );
         
@@ -133,17 +133,17 @@ extension FeedItemDataUnionPatterns on FeedItemDataUnion {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FeedItemDataUnionVariant1 value)?  variant1,TResult Function( FeedItemDataUnionVariant2 value)?  variant2,TResult Function( FeedItemDataUnionVariant3 value)?  variant3,TResult Function( FeedItemDataUnionVariant4 value)?  variant4,TResult Function( FeedItemDataUnionVariant5 value)?  variant5,TResult Function( FeedItemDataUnionVariant6 value)?  variant6,TResult Function( FeedItemDataUnionVariant7 value)?  variant7,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FeedItemDataUnionFeedEarthquakeNoticeData value)?  feedEarthquakeNoticeData,TResult Function( FeedItemDataUnionFeedEarthquakeExplanationData value)?  feedEarthquakeExplanationData,TResult Function( FeedItemDataUnionFeedEarthquakeCountsData value)?  feedEarthquakeCountsData,TResult Function( FeedItemDataUnionFeedEarthquakeNankaiData value)?  feedEarthquakeNankaiData,TResult Function( FeedItemDataUnionFeedAppUpdateData value)?  feedAppUpdateData,TResult Function( FeedItemDataUnionFeedIncidentData value)?  feedIncidentData,TResult Function( FeedItemDataUnionFeedDeveloperMessageData value)?  feedDeveloperMessageData,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case FeedItemDataUnionVariant1() when variant1 != null:
-return variant1(_that);case FeedItemDataUnionVariant2() when variant2 != null:
-return variant2(_that);case FeedItemDataUnionVariant3() when variant3 != null:
-return variant3(_that);case FeedItemDataUnionVariant4() when variant4 != null:
-return variant4(_that);case FeedItemDataUnionVariant5() when variant5 != null:
-return variant5(_that);case FeedItemDataUnionVariant6() when variant6 != null:
-return variant6(_that);case FeedItemDataUnionVariant7() when variant7 != null:
-return variant7(_that);case _:
+case FeedItemDataUnionFeedEarthquakeNoticeData() when feedEarthquakeNoticeData != null:
+return feedEarthquakeNoticeData(_that);case FeedItemDataUnionFeedEarthquakeExplanationData() when feedEarthquakeExplanationData != null:
+return feedEarthquakeExplanationData(_that);case FeedItemDataUnionFeedEarthquakeCountsData() when feedEarthquakeCountsData != null:
+return feedEarthquakeCountsData(_that);case FeedItemDataUnionFeedEarthquakeNankaiData() when feedEarthquakeNankaiData != null:
+return feedEarthquakeNankaiData(_that);case FeedItemDataUnionFeedAppUpdateData() when feedAppUpdateData != null:
+return feedAppUpdateData(_that);case FeedItemDataUnionFeedIncidentData() when feedIncidentData != null:
+return feedIncidentData(_that);case FeedItemDataUnionFeedDeveloperMessageData() when feedDeveloperMessageData != null:
+return feedDeveloperMessageData(_that);case _:
   return orElse();
 
 }
@@ -161,17 +161,17 @@ return variant7(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FeedItemDataUnionVariant1 value)  variant1,required TResult Function( FeedItemDataUnionVariant2 value)  variant2,required TResult Function( FeedItemDataUnionVariant3 value)  variant3,required TResult Function( FeedItemDataUnionVariant4 value)  variant4,required TResult Function( FeedItemDataUnionVariant5 value)  variant5,required TResult Function( FeedItemDataUnionVariant6 value)  variant6,required TResult Function( FeedItemDataUnionVariant7 value)  variant7,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FeedItemDataUnionFeedEarthquakeNoticeData value)  feedEarthquakeNoticeData,required TResult Function( FeedItemDataUnionFeedEarthquakeExplanationData value)  feedEarthquakeExplanationData,required TResult Function( FeedItemDataUnionFeedEarthquakeCountsData value)  feedEarthquakeCountsData,required TResult Function( FeedItemDataUnionFeedEarthquakeNankaiData value)  feedEarthquakeNankaiData,required TResult Function( FeedItemDataUnionFeedAppUpdateData value)  feedAppUpdateData,required TResult Function( FeedItemDataUnionFeedIncidentData value)  feedIncidentData,required TResult Function( FeedItemDataUnionFeedDeveloperMessageData value)  feedDeveloperMessageData,}){
 final _that = this;
 switch (_that) {
-case FeedItemDataUnionVariant1():
-return variant1(_that);case FeedItemDataUnionVariant2():
-return variant2(_that);case FeedItemDataUnionVariant3():
-return variant3(_that);case FeedItemDataUnionVariant4():
-return variant4(_that);case FeedItemDataUnionVariant5():
-return variant5(_that);case FeedItemDataUnionVariant6():
-return variant6(_that);case FeedItemDataUnionVariant7():
-return variant7(_that);}
+case FeedItemDataUnionFeedEarthquakeNoticeData():
+return feedEarthquakeNoticeData(_that);case FeedItemDataUnionFeedEarthquakeExplanationData():
+return feedEarthquakeExplanationData(_that);case FeedItemDataUnionFeedEarthquakeCountsData():
+return feedEarthquakeCountsData(_that);case FeedItemDataUnionFeedEarthquakeNankaiData():
+return feedEarthquakeNankaiData(_that);case FeedItemDataUnionFeedAppUpdateData():
+return feedAppUpdateData(_that);case FeedItemDataUnionFeedIncidentData():
+return feedIncidentData(_that);case FeedItemDataUnionFeedDeveloperMessageData():
+return feedDeveloperMessageData(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -185,17 +185,17 @@ return variant7(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FeedItemDataUnionVariant1 value)?  variant1,TResult? Function( FeedItemDataUnionVariant2 value)?  variant2,TResult? Function( FeedItemDataUnionVariant3 value)?  variant3,TResult? Function( FeedItemDataUnionVariant4 value)?  variant4,TResult? Function( FeedItemDataUnionVariant5 value)?  variant5,TResult? Function( FeedItemDataUnionVariant6 value)?  variant6,TResult? Function( FeedItemDataUnionVariant7 value)?  variant7,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FeedItemDataUnionFeedEarthquakeNoticeData value)?  feedEarthquakeNoticeData,TResult? Function( FeedItemDataUnionFeedEarthquakeExplanationData value)?  feedEarthquakeExplanationData,TResult? Function( FeedItemDataUnionFeedEarthquakeCountsData value)?  feedEarthquakeCountsData,TResult? Function( FeedItemDataUnionFeedEarthquakeNankaiData value)?  feedEarthquakeNankaiData,TResult? Function( FeedItemDataUnionFeedAppUpdateData value)?  feedAppUpdateData,TResult? Function( FeedItemDataUnionFeedIncidentData value)?  feedIncidentData,TResult? Function( FeedItemDataUnionFeedDeveloperMessageData value)?  feedDeveloperMessageData,}){
 final _that = this;
 switch (_that) {
-case FeedItemDataUnionVariant1() when variant1 != null:
-return variant1(_that);case FeedItemDataUnionVariant2() when variant2 != null:
-return variant2(_that);case FeedItemDataUnionVariant3() when variant3 != null:
-return variant3(_that);case FeedItemDataUnionVariant4() when variant4 != null:
-return variant4(_that);case FeedItemDataUnionVariant5() when variant5 != null:
-return variant5(_that);case FeedItemDataUnionVariant6() when variant6 != null:
-return variant6(_that);case FeedItemDataUnionVariant7() when variant7 != null:
-return variant7(_that);case _:
+case FeedItemDataUnionFeedEarthquakeNoticeData() when feedEarthquakeNoticeData != null:
+return feedEarthquakeNoticeData(_that);case FeedItemDataUnionFeedEarthquakeExplanationData() when feedEarthquakeExplanationData != null:
+return feedEarthquakeExplanationData(_that);case FeedItemDataUnionFeedEarthquakeCountsData() when feedEarthquakeCountsData != null:
+return feedEarthquakeCountsData(_that);case FeedItemDataUnionFeedEarthquakeNankaiData() when feedEarthquakeNankaiData != null:
+return feedEarthquakeNankaiData(_that);case FeedItemDataUnionFeedAppUpdateData() when feedAppUpdateData != null:
+return feedAppUpdateData(_that);case FeedItemDataUnionFeedIncidentData() when feedIncidentData != null:
+return feedIncidentData(_that);case FeedItemDataUnionFeedDeveloperMessageData() when feedDeveloperMessageData != null:
+return feedDeveloperMessageData(_that);case _:
   return null;
 
 }
@@ -212,16 +212,16 @@ return variant7(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String type,  String text)?  variant1,TResult Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  Naming? naming, @JsonKey(includeIfNull: false)  Comments? comments)?  variant2,TResult Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  Comments2? comments)?  variant3,TResult Function( String type,  InfoType infoType,  TelegramType telegramType, @JsonKey(includeIfNull: false)  EarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  variant4,TResult Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  variant5,TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)?  variant6,TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)?  variant7,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String type,  String text)?  feedEarthquakeNoticeData,TResult Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  FeedNaming? naming, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeExplanationData,TResult Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeCountsData,TResult Function( String type,  InfoType infoType,  FeedTelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  feedEarthquakeNankaiData,TResult Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  feedAppUpdateData,TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedIncidentData,TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedDeveloperMessageData,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case FeedItemDataUnionVariant1() when variant1 != null:
-return variant1(_that.type,_that.text);case FeedItemDataUnionVariant2() when variant2 != null:
-return variant2(_that.type,_that.infoType,_that.text,_that.naming,_that.comments);case FeedItemDataUnionVariant3() when variant3 != null:
-return variant3(_that.type,_that.infoType,_that.earthquakeCounts,_that.nextAdvisory,_that.text,_that.comments);case FeedItemDataUnionVariant4() when variant4 != null:
-return variant4(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInfo,_that.nextAdvisory,_that.text);case FeedItemDataUnionVariant5() when variant5 != null:
-return variant5(_that.type,_that.version,_that.url);case FeedItemDataUnionVariant6() when variant6 != null:
-return variant6(_that.type,_that.url);case FeedItemDataUnionVariant7() when variant7 != null:
-return variant7(_that.type,_that.url);case _:
+case FeedItemDataUnionFeedEarthquakeNoticeData() when feedEarthquakeNoticeData != null:
+return feedEarthquakeNoticeData(_that.type,_that.text);case FeedItemDataUnionFeedEarthquakeExplanationData() when feedEarthquakeExplanationData != null:
+return feedEarthquakeExplanationData(_that.type,_that.infoType,_that.text,_that.naming,_that.comments);case FeedItemDataUnionFeedEarthquakeCountsData() when feedEarthquakeCountsData != null:
+return feedEarthquakeCountsData(_that.type,_that.infoType,_that.earthquakeCounts,_that.nextAdvisory,_that.text,_that.comments);case FeedItemDataUnionFeedEarthquakeNankaiData() when feedEarthquakeNankaiData != null:
+return feedEarthquakeNankaiData(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInfo,_that.nextAdvisory,_that.text);case FeedItemDataUnionFeedAppUpdateData() when feedAppUpdateData != null:
+return feedAppUpdateData(_that.type,_that.version,_that.url);case FeedItemDataUnionFeedIncidentData() when feedIncidentData != null:
+return feedIncidentData(_that.type,_that.url);case FeedItemDataUnionFeedDeveloperMessageData() when feedDeveloperMessageData != null:
+return feedDeveloperMessageData(_that.type,_that.url);case _:
   return orElse();
 
 }
@@ -239,16 +239,16 @@ return variant7(_that.type,_that.url);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String type,  String text)  variant1,required TResult Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  Naming? naming, @JsonKey(includeIfNull: false)  Comments? comments)  variant2,required TResult Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  Comments2? comments)  variant3,required TResult Function( String type,  InfoType infoType,  TelegramType telegramType, @JsonKey(includeIfNull: false)  EarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)  variant4,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)  variant5,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)  variant6,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)  variant7,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String type,  String text)  feedEarthquakeNoticeData,required TResult Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  FeedNaming? naming, @JsonKey(includeIfNull: false)  FeedComments? comments)  feedEarthquakeExplanationData,required TResult Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  FeedComments? comments)  feedEarthquakeCountsData,required TResult Function( String type,  InfoType infoType,  FeedTelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)  feedEarthquakeNankaiData,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)  feedAppUpdateData,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)  feedIncidentData,required TResult Function( String type, @JsonKey(includeIfNull: false)  String? url)  feedDeveloperMessageData,}) {final _that = this;
 switch (_that) {
-case FeedItemDataUnionVariant1():
-return variant1(_that.type,_that.text);case FeedItemDataUnionVariant2():
-return variant2(_that.type,_that.infoType,_that.text,_that.naming,_that.comments);case FeedItemDataUnionVariant3():
-return variant3(_that.type,_that.infoType,_that.earthquakeCounts,_that.nextAdvisory,_that.text,_that.comments);case FeedItemDataUnionVariant4():
-return variant4(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInfo,_that.nextAdvisory,_that.text);case FeedItemDataUnionVariant5():
-return variant5(_that.type,_that.version,_that.url);case FeedItemDataUnionVariant6():
-return variant6(_that.type,_that.url);case FeedItemDataUnionVariant7():
-return variant7(_that.type,_that.url);}
+case FeedItemDataUnionFeedEarthquakeNoticeData():
+return feedEarthquakeNoticeData(_that.type,_that.text);case FeedItemDataUnionFeedEarthquakeExplanationData():
+return feedEarthquakeExplanationData(_that.type,_that.infoType,_that.text,_that.naming,_that.comments);case FeedItemDataUnionFeedEarthquakeCountsData():
+return feedEarthquakeCountsData(_that.type,_that.infoType,_that.earthquakeCounts,_that.nextAdvisory,_that.text,_that.comments);case FeedItemDataUnionFeedEarthquakeNankaiData():
+return feedEarthquakeNankaiData(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInfo,_that.nextAdvisory,_that.text);case FeedItemDataUnionFeedAppUpdateData():
+return feedAppUpdateData(_that.type,_that.version,_that.url);case FeedItemDataUnionFeedIncidentData():
+return feedIncidentData(_that.type,_that.url);case FeedItemDataUnionFeedDeveloperMessageData():
+return feedDeveloperMessageData(_that.type,_that.url);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -262,16 +262,16 @@ return variant7(_that.type,_that.url);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String type,  String text)?  variant1,TResult? Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  Naming? naming, @JsonKey(includeIfNull: false)  Comments? comments)?  variant2,TResult? Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  Comments2? comments)?  variant3,TResult? Function( String type,  InfoType infoType,  TelegramType telegramType, @JsonKey(includeIfNull: false)  EarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  variant4,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  variant5,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? url)?  variant6,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? url)?  variant7,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String type,  String text)?  feedEarthquakeNoticeData,TResult? Function( String type,  InfoType infoType,  String text, @JsonKey(includeIfNull: false)  FeedNaming? naming, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeExplanationData,TResult? Function( String type,  InfoType infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  FeedComments? comments)?  feedEarthquakeCountsData,TResult? Function( String type,  InfoType infoType,  FeedTelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  feedEarthquakeNankaiData,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false)  String? url)?  feedAppUpdateData,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedIncidentData,TResult? Function( String type, @JsonKey(includeIfNull: false)  String? url)?  feedDeveloperMessageData,}) {final _that = this;
 switch (_that) {
-case FeedItemDataUnionVariant1() when variant1 != null:
-return variant1(_that.type,_that.text);case FeedItemDataUnionVariant2() when variant2 != null:
-return variant2(_that.type,_that.infoType,_that.text,_that.naming,_that.comments);case FeedItemDataUnionVariant3() when variant3 != null:
-return variant3(_that.type,_that.infoType,_that.earthquakeCounts,_that.nextAdvisory,_that.text,_that.comments);case FeedItemDataUnionVariant4() when variant4 != null:
-return variant4(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInfo,_that.nextAdvisory,_that.text);case FeedItemDataUnionVariant5() when variant5 != null:
-return variant5(_that.type,_that.version,_that.url);case FeedItemDataUnionVariant6() when variant6 != null:
-return variant6(_that.type,_that.url);case FeedItemDataUnionVariant7() when variant7 != null:
-return variant7(_that.type,_that.url);case _:
+case FeedItemDataUnionFeedEarthquakeNoticeData() when feedEarthquakeNoticeData != null:
+return feedEarthquakeNoticeData(_that.type,_that.text);case FeedItemDataUnionFeedEarthquakeExplanationData() when feedEarthquakeExplanationData != null:
+return feedEarthquakeExplanationData(_that.type,_that.infoType,_that.text,_that.naming,_that.comments);case FeedItemDataUnionFeedEarthquakeCountsData() when feedEarthquakeCountsData != null:
+return feedEarthquakeCountsData(_that.type,_that.infoType,_that.earthquakeCounts,_that.nextAdvisory,_that.text,_that.comments);case FeedItemDataUnionFeedEarthquakeNankaiData() when feedEarthquakeNankaiData != null:
+return feedEarthquakeNankaiData(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInfo,_that.nextAdvisory,_that.text);case FeedItemDataUnionFeedAppUpdateData() when feedAppUpdateData != null:
+return feedAppUpdateData(_that.type,_that.version,_that.url);case FeedItemDataUnionFeedIncidentData() when feedIncidentData != null:
+return feedIncidentData(_that.type,_that.url);case FeedItemDataUnionFeedDeveloperMessageData() when feedDeveloperMessageData != null:
+return feedDeveloperMessageData(_that.type,_that.url);case _:
   return null;
 
 }
@@ -282,9 +282,9 @@ return variant7(_that.type,_that.url);case _:
 /// @nodoc
 
 @JsonSerializable()
-class FeedItemDataUnionVariant1 implements FeedItemDataUnion {
-  const FeedItemDataUnionVariant1({required this.type, required this.text, final  String? $type}): $type = $type ?? 'variant1';
-  factory FeedItemDataUnionVariant1.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant1FromJson(json);
+class FeedItemDataUnionFeedEarthquakeNoticeData implements FeedItemDataUnion {
+  const FeedItemDataUnionFeedEarthquakeNoticeData({required this.type, required this.text, final  String? $type}): $type = $type ?? 'feedEarthquakeNoticeData';
+  factory FeedItemDataUnionFeedEarthquakeNoticeData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedEarthquakeNoticeDataFromJson(json);
 
 /// const: "EARTHQUAKE_NOTICE"
 @override final  String type;
@@ -298,16 +298,16 @@ final String $type;
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$FeedItemDataUnionVariant1CopyWith<FeedItemDataUnionVariant1> get copyWith => _$FeedItemDataUnionVariant1CopyWithImpl<FeedItemDataUnionVariant1>(this, _$identity);
+$FeedItemDataUnionFeedEarthquakeNoticeDataCopyWith<FeedItemDataUnionFeedEarthquakeNoticeData> get copyWith => _$FeedItemDataUnionFeedEarthquakeNoticeDataCopyWithImpl<FeedItemDataUnionFeedEarthquakeNoticeData>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$FeedItemDataUnionVariant1ToJson(this, );
+  return _$FeedItemDataUnionFeedEarthquakeNoticeDataToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant1&&(identical(other.type, type) || other.type == type)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionFeedEarthquakeNoticeData&&(identical(other.type, type) || other.type == type)&&(identical(other.text, text) || other.text == text));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -316,15 +316,15 @@ int get hashCode => Object.hash(runtimeType,type,text);
 
 @override
 String toString() {
-  return 'FeedItemDataUnion.variant1(type: $type, text: $text)';
+  return 'FeedItemDataUnion.feedEarthquakeNoticeData(type: $type, text: $text)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $FeedItemDataUnionVariant1CopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
-  factory $FeedItemDataUnionVariant1CopyWith(FeedItemDataUnionVariant1 value, $Res Function(FeedItemDataUnionVariant1) _then) = _$FeedItemDataUnionVariant1CopyWithImpl;
+abstract mixin class $FeedItemDataUnionFeedEarthquakeNoticeDataCopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
+  factory $FeedItemDataUnionFeedEarthquakeNoticeDataCopyWith(FeedItemDataUnionFeedEarthquakeNoticeData value, $Res Function(FeedItemDataUnionFeedEarthquakeNoticeData) _then) = _$FeedItemDataUnionFeedEarthquakeNoticeDataCopyWithImpl;
 @override @useResult
 $Res call({
  String type, String text
@@ -335,17 +335,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$FeedItemDataUnionVariant1CopyWithImpl<$Res>
-    implements $FeedItemDataUnionVariant1CopyWith<$Res> {
-  _$FeedItemDataUnionVariant1CopyWithImpl(this._self, this._then);
+class _$FeedItemDataUnionFeedEarthquakeNoticeDataCopyWithImpl<$Res>
+    implements $FeedItemDataUnionFeedEarthquakeNoticeDataCopyWith<$Res> {
+  _$FeedItemDataUnionFeedEarthquakeNoticeDataCopyWithImpl(this._self, this._then);
 
-  final FeedItemDataUnionVariant1 _self;
-  final $Res Function(FeedItemDataUnionVariant1) _then;
+  final FeedItemDataUnionFeedEarthquakeNoticeData _self;
+  final $Res Function(FeedItemDataUnionFeedEarthquakeNoticeData) _then;
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? text = null,}) {
-  return _then(FeedItemDataUnionVariant1(
+  return _then(FeedItemDataUnionFeedEarthquakeNoticeData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,
@@ -358,17 +358,16 @@ as String,
 /// @nodoc
 
 @JsonSerializable()
-class FeedItemDataUnionVariant2 implements FeedItemDataUnion {
-  const FeedItemDataUnionVariant2({required this.type, required this.infoType, required this.text, @JsonKey(includeIfNull: false) this.naming, @JsonKey(includeIfNull: false) this.comments, final  String? $type}): $type = $type ?? 'variant2';
-  factory FeedItemDataUnionVariant2.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant2FromJson(json);
+class FeedItemDataUnionFeedEarthquakeExplanationData implements FeedItemDataUnion {
+  const FeedItemDataUnionFeedEarthquakeExplanationData({required this.type, required this.infoType, required this.text, @JsonKey(includeIfNull: false) this.naming, @JsonKey(includeIfNull: false) this.comments, final  String? $type}): $type = $type ?? 'feedEarthquakeExplanationData';
+  factory FeedItemDataUnionFeedEarthquakeExplanationData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedEarthquakeExplanationDataFromJson(json);
 
 /// const: "EARTHQUAKE_EXPLANATION"
 @override final  String type;
-/// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
  final  InfoType infoType;
  final  String text;
-@JsonKey(includeIfNull: false) final  Naming? naming;
-@JsonKey(includeIfNull: false) final  Comments? comments;
+@JsonKey(includeIfNull: false) final  FeedNaming? naming;
+@JsonKey(includeIfNull: false) final  FeedComments? comments;
 
 @JsonKey(name: 'runtimeType')
 final String $type;
@@ -378,16 +377,16 @@ final String $type;
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$FeedItemDataUnionVariant2CopyWith<FeedItemDataUnionVariant2> get copyWith => _$FeedItemDataUnionVariant2CopyWithImpl<FeedItemDataUnionVariant2>(this, _$identity);
+$FeedItemDataUnionFeedEarthquakeExplanationDataCopyWith<FeedItemDataUnionFeedEarthquakeExplanationData> get copyWith => _$FeedItemDataUnionFeedEarthquakeExplanationDataCopyWithImpl<FeedItemDataUnionFeedEarthquakeExplanationData>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$FeedItemDataUnionVariant2ToJson(this, );
+  return _$FeedItemDataUnionFeedEarthquakeExplanationDataToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant2&&(identical(other.type, type) || other.type == type)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.text, text) || other.text == text)&&(identical(other.naming, naming) || other.naming == naming)&&(identical(other.comments, comments) || other.comments == comments));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionFeedEarthquakeExplanationData&&(identical(other.type, type) || other.type == type)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.text, text) || other.text == text)&&(identical(other.naming, naming) || other.naming == naming)&&(identical(other.comments, comments) || other.comments == comments));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -396,42 +395,42 @@ int get hashCode => Object.hash(runtimeType,type,infoType,text,naming,comments);
 
 @override
 String toString() {
-  return 'FeedItemDataUnion.variant2(type: $type, infoType: $infoType, text: $text, naming: $naming, comments: $comments)';
+  return 'FeedItemDataUnion.feedEarthquakeExplanationData(type: $type, infoType: $infoType, text: $text, naming: $naming, comments: $comments)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $FeedItemDataUnionVariant2CopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
-  factory $FeedItemDataUnionVariant2CopyWith(FeedItemDataUnionVariant2 value, $Res Function(FeedItemDataUnionVariant2) _then) = _$FeedItemDataUnionVariant2CopyWithImpl;
+abstract mixin class $FeedItemDataUnionFeedEarthquakeExplanationDataCopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
+  factory $FeedItemDataUnionFeedEarthquakeExplanationDataCopyWith(FeedItemDataUnionFeedEarthquakeExplanationData value, $Res Function(FeedItemDataUnionFeedEarthquakeExplanationData) _then) = _$FeedItemDataUnionFeedEarthquakeExplanationDataCopyWithImpl;
 @override @useResult
 $Res call({
- String type, InfoType infoType, String text,@JsonKey(includeIfNull: false) Naming? naming,@JsonKey(includeIfNull: false) Comments? comments
+ String type, InfoType infoType, String text,@JsonKey(includeIfNull: false) FeedNaming? naming,@JsonKey(includeIfNull: false) FeedComments? comments
 });
 
 
-$NamingCopyWith<$Res>? get naming;$CommentsCopyWith<$Res>? get comments;
+$FeedNamingCopyWith<$Res>? get naming;$FeedCommentsCopyWith<$Res>? get comments;
 
 }
 /// @nodoc
-class _$FeedItemDataUnionVariant2CopyWithImpl<$Res>
-    implements $FeedItemDataUnionVariant2CopyWith<$Res> {
-  _$FeedItemDataUnionVariant2CopyWithImpl(this._self, this._then);
+class _$FeedItemDataUnionFeedEarthquakeExplanationDataCopyWithImpl<$Res>
+    implements $FeedItemDataUnionFeedEarthquakeExplanationDataCopyWith<$Res> {
+  _$FeedItemDataUnionFeedEarthquakeExplanationDataCopyWithImpl(this._self, this._then);
 
-  final FeedItemDataUnionVariant2 _self;
-  final $Res Function(FeedItemDataUnionVariant2) _then;
+  final FeedItemDataUnionFeedEarthquakeExplanationData _self;
+  final $Res Function(FeedItemDataUnionFeedEarthquakeExplanationData) _then;
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? infoType = null,Object? text = null,Object? naming = freezed,Object? comments = freezed,}) {
-  return _then(FeedItemDataUnionVariant2(
+  return _then(FeedItemDataUnionFeedEarthquakeExplanationData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
 as InfoType,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,naming: freezed == naming ? _self.naming : naming // ignore: cast_nullable_to_non_nullable
-as Naming?,comments: freezed == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
-as Comments?,
+as FeedNaming?,comments: freezed == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
+as FeedComments?,
   ));
 }
 
@@ -439,24 +438,24 @@ as Comments?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$NamingCopyWith<$Res>? get naming {
+$FeedNamingCopyWith<$Res>? get naming {
     if (_self.naming == null) {
     return null;
   }
 
-  return $NamingCopyWith<$Res>(_self.naming!, (value) {
+  return $FeedNamingCopyWith<$Res>(_self.naming!, (value) {
     return _then(_self.copyWith(naming: value));
   });
 }/// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$CommentsCopyWith<$Res>? get comments {
+$FeedCommentsCopyWith<$Res>? get comments {
     if (_self.comments == null) {
     return null;
   }
 
-  return $CommentsCopyWith<$Res>(_self.comments!, (value) {
+  return $FeedCommentsCopyWith<$Res>(_self.comments!, (value) {
     return _then(_self.copyWith(comments: value));
   });
 }
@@ -465,16 +464,15 @@ $CommentsCopyWith<$Res>? get comments {
 /// @nodoc
 
 @JsonSerializable()
-class FeedItemDataUnionVariant3 implements FeedItemDataUnion {
-  const FeedItemDataUnionVariant3({required this.type, required this.infoType, @JsonKey(includeIfNull: false) final  List<EarthquakeCounts>? earthquakeCounts, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, @JsonKey(includeIfNull: false) this.comments, final  String? $type}): _earthquakeCounts = earthquakeCounts,$type = $type ?? 'variant3';
-  factory FeedItemDataUnionVariant3.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant3FromJson(json);
+class FeedItemDataUnionFeedEarthquakeCountsData implements FeedItemDataUnion {
+  const FeedItemDataUnionFeedEarthquakeCountsData({required this.type, required this.infoType, @JsonKey(includeIfNull: false) final  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, @JsonKey(includeIfNull: false) this.comments, final  String? $type}): _earthquakeCounts = earthquakeCounts,$type = $type ?? 'feedEarthquakeCountsData';
+  factory FeedItemDataUnionFeedEarthquakeCountsData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedEarthquakeCountsDataFromJson(json);
 
 /// const: "EARTHQUAKE_COUNTS"
 @override final  String type;
-/// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
  final  InfoType infoType;
- final  List<EarthquakeCounts>? _earthquakeCounts;
-@JsonKey(includeIfNull: false) List<EarthquakeCounts>? get earthquakeCounts {
+ final  List<FeedEarthquakeCount>? _earthquakeCounts;
+@JsonKey(includeIfNull: false) List<FeedEarthquakeCount>? get earthquakeCounts {
   final value = _earthquakeCounts;
   if (value == null) return null;
   if (_earthquakeCounts is EqualUnmodifiableListView) return _earthquakeCounts;
@@ -484,7 +482,7 @@ class FeedItemDataUnionVariant3 implements FeedItemDataUnion {
 
 @JsonKey(includeIfNull: false) final  String? nextAdvisory;
 @JsonKey(includeIfNull: false) final  String? text;
-@JsonKey(includeIfNull: false) final  Comments2? comments;
+@JsonKey(includeIfNull: false) final  FeedComments? comments;
 
 @JsonKey(name: 'runtimeType')
 final String $type;
@@ -494,16 +492,16 @@ final String $type;
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$FeedItemDataUnionVariant3CopyWith<FeedItemDataUnionVariant3> get copyWith => _$FeedItemDataUnionVariant3CopyWithImpl<FeedItemDataUnionVariant3>(this, _$identity);
+$FeedItemDataUnionFeedEarthquakeCountsDataCopyWith<FeedItemDataUnionFeedEarthquakeCountsData> get copyWith => _$FeedItemDataUnionFeedEarthquakeCountsDataCopyWithImpl<FeedItemDataUnionFeedEarthquakeCountsData>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$FeedItemDataUnionVariant3ToJson(this, );
+  return _$FeedItemDataUnionFeedEarthquakeCountsDataToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant3&&(identical(other.type, type) || other.type == type)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&const DeepCollectionEquality().equals(other._earthquakeCounts, _earthquakeCounts)&&(identical(other.nextAdvisory, nextAdvisory) || other.nextAdvisory == nextAdvisory)&&(identical(other.text, text) || other.text == text)&&(identical(other.comments, comments) || other.comments == comments));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionFeedEarthquakeCountsData&&(identical(other.type, type) || other.type == type)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&const DeepCollectionEquality().equals(other._earthquakeCounts, _earthquakeCounts)&&(identical(other.nextAdvisory, nextAdvisory) || other.nextAdvisory == nextAdvisory)&&(identical(other.text, text) || other.text == text)&&(identical(other.comments, comments) || other.comments == comments));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -512,43 +510,43 @@ int get hashCode => Object.hash(runtimeType,type,infoType,const DeepCollectionEq
 
 @override
 String toString() {
-  return 'FeedItemDataUnion.variant3(type: $type, infoType: $infoType, earthquakeCounts: $earthquakeCounts, nextAdvisory: $nextAdvisory, text: $text, comments: $comments)';
+  return 'FeedItemDataUnion.feedEarthquakeCountsData(type: $type, infoType: $infoType, earthquakeCounts: $earthquakeCounts, nextAdvisory: $nextAdvisory, text: $text, comments: $comments)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $FeedItemDataUnionVariant3CopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
-  factory $FeedItemDataUnionVariant3CopyWith(FeedItemDataUnionVariant3 value, $Res Function(FeedItemDataUnionVariant3) _then) = _$FeedItemDataUnionVariant3CopyWithImpl;
+abstract mixin class $FeedItemDataUnionFeedEarthquakeCountsDataCopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
+  factory $FeedItemDataUnionFeedEarthquakeCountsDataCopyWith(FeedItemDataUnionFeedEarthquakeCountsData value, $Res Function(FeedItemDataUnionFeedEarthquakeCountsData) _then) = _$FeedItemDataUnionFeedEarthquakeCountsDataCopyWithImpl;
 @override @useResult
 $Res call({
- String type, InfoType infoType,@JsonKey(includeIfNull: false) List<EarthquakeCounts>? earthquakeCounts,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text,@JsonKey(includeIfNull: false) Comments2? comments
+ String type, InfoType infoType,@JsonKey(includeIfNull: false) List<FeedEarthquakeCount>? earthquakeCounts,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text,@JsonKey(includeIfNull: false) FeedComments? comments
 });
 
 
-$Comments2CopyWith<$Res>? get comments;
+$FeedCommentsCopyWith<$Res>? get comments;
 
 }
 /// @nodoc
-class _$FeedItemDataUnionVariant3CopyWithImpl<$Res>
-    implements $FeedItemDataUnionVariant3CopyWith<$Res> {
-  _$FeedItemDataUnionVariant3CopyWithImpl(this._self, this._then);
+class _$FeedItemDataUnionFeedEarthquakeCountsDataCopyWithImpl<$Res>
+    implements $FeedItemDataUnionFeedEarthquakeCountsDataCopyWith<$Res> {
+  _$FeedItemDataUnionFeedEarthquakeCountsDataCopyWithImpl(this._self, this._then);
 
-  final FeedItemDataUnionVariant3 _self;
-  final $Res Function(FeedItemDataUnionVariant3) _then;
+  final FeedItemDataUnionFeedEarthquakeCountsData _self;
+  final $Res Function(FeedItemDataUnionFeedEarthquakeCountsData) _then;
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? infoType = null,Object? earthquakeCounts = freezed,Object? nextAdvisory = freezed,Object? text = freezed,Object? comments = freezed,}) {
-  return _then(FeedItemDataUnionVariant3(
+  return _then(FeedItemDataUnionFeedEarthquakeCountsData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
 as InfoType,earthquakeCounts: freezed == earthquakeCounts ? _self._earthquakeCounts : earthquakeCounts // ignore: cast_nullable_to_non_nullable
-as List<EarthquakeCounts>?,nextAdvisory: freezed == nextAdvisory ? _self.nextAdvisory : nextAdvisory // ignore: cast_nullable_to_non_nullable
+as List<FeedEarthquakeCount>?,nextAdvisory: freezed == nextAdvisory ? _self.nextAdvisory : nextAdvisory // ignore: cast_nullable_to_non_nullable
 as String?,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String?,comments: freezed == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
-as Comments2?,
+as FeedComments?,
   ));
 }
 
@@ -556,12 +554,12 @@ as Comments2?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$Comments2CopyWith<$Res>? get comments {
+$FeedCommentsCopyWith<$Res>? get comments {
     if (_self.comments == null) {
     return null;
   }
 
-  return $Comments2CopyWith<$Res>(_self.comments!, (value) {
+  return $FeedCommentsCopyWith<$Res>(_self.comments!, (value) {
     return _then(_self.copyWith(comments: value));
   });
 }
@@ -570,17 +568,15 @@ $Comments2CopyWith<$Res>? get comments {
 /// @nodoc
 
 @JsonSerializable()
-class FeedItemDataUnionVariant4 implements FeedItemDataUnion {
-  const FeedItemDataUnionVariant4({required this.type, required this.infoType, required this.telegramType, @JsonKey(includeIfNull: false) this.earthquakeInfo, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, final  String? $type}): $type = $type ?? 'variant4';
-  factory FeedItemDataUnionVariant4.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant4FromJson(json);
+class FeedItemDataUnionFeedEarthquakeNankaiData implements FeedItemDataUnion {
+  const FeedItemDataUnionFeedEarthquakeNankaiData({required this.type, required this.infoType, required this.telegramType, @JsonKey(includeIfNull: false) this.earthquakeInfo, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, final  String? $type}): $type = $type ?? 'feedEarthquakeNankaiData';
+  factory FeedItemDataUnionFeedEarthquakeNankaiData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedEarthquakeNankaiDataFromJson(json);
 
 /// const: "EARTHQUAKE_NANKAI"
 @override final  String type;
-/// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
  final  InfoType infoType;
-/// const: "南海トラフ地震臨時情報" | const: "南海トラフ地震関連解説情報" | const: "北海道・三陸沖後発地震注意情報"
- final  TelegramType telegramType;
-@JsonKey(includeIfNull: false) final  EarthquakeInfo? earthquakeInfo;
+ final  FeedTelegramType telegramType;
+@JsonKey(includeIfNull: false) final  FeedNankaiEarthquakeInfo? earthquakeInfo;
 @JsonKey(includeIfNull: false) final  String? nextAdvisory;
 @JsonKey(includeIfNull: false) final  String? text;
 
@@ -592,16 +588,16 @@ final String $type;
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$FeedItemDataUnionVariant4CopyWith<FeedItemDataUnionVariant4> get copyWith => _$FeedItemDataUnionVariant4CopyWithImpl<FeedItemDataUnionVariant4>(this, _$identity);
+$FeedItemDataUnionFeedEarthquakeNankaiDataCopyWith<FeedItemDataUnionFeedEarthquakeNankaiData> get copyWith => _$FeedItemDataUnionFeedEarthquakeNankaiDataCopyWithImpl<FeedItemDataUnionFeedEarthquakeNankaiData>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$FeedItemDataUnionVariant4ToJson(this, );
+  return _$FeedItemDataUnionFeedEarthquakeNankaiDataToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant4&&(identical(other.type, type) || other.type == type)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.telegramType, telegramType) || other.telegramType == telegramType)&&(identical(other.earthquakeInfo, earthquakeInfo) || other.earthquakeInfo == earthquakeInfo)&&(identical(other.nextAdvisory, nextAdvisory) || other.nextAdvisory == nextAdvisory)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionFeedEarthquakeNankaiData&&(identical(other.type, type) || other.type == type)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.telegramType, telegramType) || other.telegramType == telegramType)&&(identical(other.earthquakeInfo, earthquakeInfo) || other.earthquakeInfo == earthquakeInfo)&&(identical(other.nextAdvisory, nextAdvisory) || other.nextAdvisory == nextAdvisory)&&(identical(other.text, text) || other.text == text));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -610,41 +606,41 @@ int get hashCode => Object.hash(runtimeType,type,infoType,telegramType,earthquak
 
 @override
 String toString() {
-  return 'FeedItemDataUnion.variant4(type: $type, infoType: $infoType, telegramType: $telegramType, earthquakeInfo: $earthquakeInfo, nextAdvisory: $nextAdvisory, text: $text)';
+  return 'FeedItemDataUnion.feedEarthquakeNankaiData(type: $type, infoType: $infoType, telegramType: $telegramType, earthquakeInfo: $earthquakeInfo, nextAdvisory: $nextAdvisory, text: $text)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $FeedItemDataUnionVariant4CopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
-  factory $FeedItemDataUnionVariant4CopyWith(FeedItemDataUnionVariant4 value, $Res Function(FeedItemDataUnionVariant4) _then) = _$FeedItemDataUnionVariant4CopyWithImpl;
+abstract mixin class $FeedItemDataUnionFeedEarthquakeNankaiDataCopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
+  factory $FeedItemDataUnionFeedEarthquakeNankaiDataCopyWith(FeedItemDataUnionFeedEarthquakeNankaiData value, $Res Function(FeedItemDataUnionFeedEarthquakeNankaiData) _then) = _$FeedItemDataUnionFeedEarthquakeNankaiDataCopyWithImpl;
 @override @useResult
 $Res call({
- String type, InfoType infoType, TelegramType telegramType,@JsonKey(includeIfNull: false) EarthquakeInfo? earthquakeInfo,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text
+ String type, InfoType infoType, FeedTelegramType telegramType,@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? earthquakeInfo,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text
 });
 
 
-$EarthquakeInfoCopyWith<$Res>? get earthquakeInfo;
+$FeedNankaiEarthquakeInfoCopyWith<$Res>? get earthquakeInfo;
 
 }
 /// @nodoc
-class _$FeedItemDataUnionVariant4CopyWithImpl<$Res>
-    implements $FeedItemDataUnionVariant4CopyWith<$Res> {
-  _$FeedItemDataUnionVariant4CopyWithImpl(this._self, this._then);
+class _$FeedItemDataUnionFeedEarthquakeNankaiDataCopyWithImpl<$Res>
+    implements $FeedItemDataUnionFeedEarthquakeNankaiDataCopyWith<$Res> {
+  _$FeedItemDataUnionFeedEarthquakeNankaiDataCopyWithImpl(this._self, this._then);
 
-  final FeedItemDataUnionVariant4 _self;
-  final $Res Function(FeedItemDataUnionVariant4) _then;
+  final FeedItemDataUnionFeedEarthquakeNankaiData _self;
+  final $Res Function(FeedItemDataUnionFeedEarthquakeNankaiData) _then;
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? infoType = null,Object? telegramType = null,Object? earthquakeInfo = freezed,Object? nextAdvisory = freezed,Object? text = freezed,}) {
-  return _then(FeedItemDataUnionVariant4(
+  return _then(FeedItemDataUnionFeedEarthquakeNankaiData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
 as InfoType,telegramType: null == telegramType ? _self.telegramType : telegramType // ignore: cast_nullable_to_non_nullable
-as TelegramType,earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
-as EarthquakeInfo?,nextAdvisory: freezed == nextAdvisory ? _self.nextAdvisory : nextAdvisory // ignore: cast_nullable_to_non_nullable
+as FeedTelegramType,earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
+as FeedNankaiEarthquakeInfo?,nextAdvisory: freezed == nextAdvisory ? _self.nextAdvisory : nextAdvisory // ignore: cast_nullable_to_non_nullable
 as String?,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -654,12 +650,12 @@ as String?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$EarthquakeInfoCopyWith<$Res>? get earthquakeInfo {
+$FeedNankaiEarthquakeInfoCopyWith<$Res>? get earthquakeInfo {
     if (_self.earthquakeInfo == null) {
     return null;
   }
 
-  return $EarthquakeInfoCopyWith<$Res>(_self.earthquakeInfo!, (value) {
+  return $FeedNankaiEarthquakeInfoCopyWith<$Res>(_self.earthquakeInfo!, (value) {
     return _then(_self.copyWith(earthquakeInfo: value));
   });
 }
@@ -668,9 +664,9 @@ $EarthquakeInfoCopyWith<$Res>? get earthquakeInfo {
 /// @nodoc
 
 @JsonSerializable()
-class FeedItemDataUnionVariant5 implements FeedItemDataUnion {
-  const FeedItemDataUnionVariant5({required this.type, @JsonKey(includeIfNull: false) this.version, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'variant5';
-  factory FeedItemDataUnionVariant5.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant5FromJson(json);
+class FeedItemDataUnionFeedAppUpdateData implements FeedItemDataUnion {
+  const FeedItemDataUnionFeedAppUpdateData({required this.type, @JsonKey(includeIfNull: false) this.version, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'feedAppUpdateData';
+  factory FeedItemDataUnionFeedAppUpdateData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedAppUpdateDataFromJson(json);
 
 /// const: "APP_UPDATE"
 @override final  String type;
@@ -685,16 +681,16 @@ final String $type;
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$FeedItemDataUnionVariant5CopyWith<FeedItemDataUnionVariant5> get copyWith => _$FeedItemDataUnionVariant5CopyWithImpl<FeedItemDataUnionVariant5>(this, _$identity);
+$FeedItemDataUnionFeedAppUpdateDataCopyWith<FeedItemDataUnionFeedAppUpdateData> get copyWith => _$FeedItemDataUnionFeedAppUpdateDataCopyWithImpl<FeedItemDataUnionFeedAppUpdateData>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$FeedItemDataUnionVariant5ToJson(this, );
+  return _$FeedItemDataUnionFeedAppUpdateDataToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant5&&(identical(other.type, type) || other.type == type)&&(identical(other.version, version) || other.version == version)&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionFeedAppUpdateData&&(identical(other.type, type) || other.type == type)&&(identical(other.version, version) || other.version == version)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -703,15 +699,15 @@ int get hashCode => Object.hash(runtimeType,type,version,url);
 
 @override
 String toString() {
-  return 'FeedItemDataUnion.variant5(type: $type, version: $version, url: $url)';
+  return 'FeedItemDataUnion.feedAppUpdateData(type: $type, version: $version, url: $url)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $FeedItemDataUnionVariant5CopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
-  factory $FeedItemDataUnionVariant5CopyWith(FeedItemDataUnionVariant5 value, $Res Function(FeedItemDataUnionVariant5) _then) = _$FeedItemDataUnionVariant5CopyWithImpl;
+abstract mixin class $FeedItemDataUnionFeedAppUpdateDataCopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
+  factory $FeedItemDataUnionFeedAppUpdateDataCopyWith(FeedItemDataUnionFeedAppUpdateData value, $Res Function(FeedItemDataUnionFeedAppUpdateData) _then) = _$FeedItemDataUnionFeedAppUpdateDataCopyWithImpl;
 @override @useResult
 $Res call({
  String type,@JsonKey(includeIfNull: false) String? version,@JsonKey(includeIfNull: false) String? url
@@ -722,17 +718,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$FeedItemDataUnionVariant5CopyWithImpl<$Res>
-    implements $FeedItemDataUnionVariant5CopyWith<$Res> {
-  _$FeedItemDataUnionVariant5CopyWithImpl(this._self, this._then);
+class _$FeedItemDataUnionFeedAppUpdateDataCopyWithImpl<$Res>
+    implements $FeedItemDataUnionFeedAppUpdateDataCopyWith<$Res> {
+  _$FeedItemDataUnionFeedAppUpdateDataCopyWithImpl(this._self, this._then);
 
-  final FeedItemDataUnionVariant5 _self;
-  final $Res Function(FeedItemDataUnionVariant5) _then;
+  final FeedItemDataUnionFeedAppUpdateData _self;
+  final $Res Function(FeedItemDataUnionFeedAppUpdateData) _then;
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? version = freezed,Object? url = freezed,}) {
-  return _then(FeedItemDataUnionVariant5(
+  return _then(FeedItemDataUnionFeedAppUpdateData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
@@ -746,9 +742,9 @@ as String?,
 /// @nodoc
 
 @JsonSerializable()
-class FeedItemDataUnionVariant6 implements FeedItemDataUnion {
-  const FeedItemDataUnionVariant6({required this.type, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'variant6';
-  factory FeedItemDataUnionVariant6.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant6FromJson(json);
+class FeedItemDataUnionFeedIncidentData implements FeedItemDataUnion {
+  const FeedItemDataUnionFeedIncidentData({required this.type, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'feedIncidentData';
+  factory FeedItemDataUnionFeedIncidentData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedIncidentDataFromJson(json);
 
 /// const: "INCIDENT"
 @override final  String type;
@@ -762,16 +758,16 @@ final String $type;
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$FeedItemDataUnionVariant6CopyWith<FeedItemDataUnionVariant6> get copyWith => _$FeedItemDataUnionVariant6CopyWithImpl<FeedItemDataUnionVariant6>(this, _$identity);
+$FeedItemDataUnionFeedIncidentDataCopyWith<FeedItemDataUnionFeedIncidentData> get copyWith => _$FeedItemDataUnionFeedIncidentDataCopyWithImpl<FeedItemDataUnionFeedIncidentData>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$FeedItemDataUnionVariant6ToJson(this, );
+  return _$FeedItemDataUnionFeedIncidentDataToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant6&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionFeedIncidentData&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -780,15 +776,15 @@ int get hashCode => Object.hash(runtimeType,type,url);
 
 @override
 String toString() {
-  return 'FeedItemDataUnion.variant6(type: $type, url: $url)';
+  return 'FeedItemDataUnion.feedIncidentData(type: $type, url: $url)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $FeedItemDataUnionVariant6CopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
-  factory $FeedItemDataUnionVariant6CopyWith(FeedItemDataUnionVariant6 value, $Res Function(FeedItemDataUnionVariant6) _then) = _$FeedItemDataUnionVariant6CopyWithImpl;
+abstract mixin class $FeedItemDataUnionFeedIncidentDataCopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
+  factory $FeedItemDataUnionFeedIncidentDataCopyWith(FeedItemDataUnionFeedIncidentData value, $Res Function(FeedItemDataUnionFeedIncidentData) _then) = _$FeedItemDataUnionFeedIncidentDataCopyWithImpl;
 @override @useResult
 $Res call({
  String type,@JsonKey(includeIfNull: false) String? url
@@ -799,17 +795,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$FeedItemDataUnionVariant6CopyWithImpl<$Res>
-    implements $FeedItemDataUnionVariant6CopyWith<$Res> {
-  _$FeedItemDataUnionVariant6CopyWithImpl(this._self, this._then);
+class _$FeedItemDataUnionFeedIncidentDataCopyWithImpl<$Res>
+    implements $FeedItemDataUnionFeedIncidentDataCopyWith<$Res> {
+  _$FeedItemDataUnionFeedIncidentDataCopyWithImpl(this._self, this._then);
 
-  final FeedItemDataUnionVariant6 _self;
-  final $Res Function(FeedItemDataUnionVariant6) _then;
+  final FeedItemDataUnionFeedIncidentData _self;
+  final $Res Function(FeedItemDataUnionFeedIncidentData) _then;
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? url = freezed,}) {
-  return _then(FeedItemDataUnionVariant6(
+  return _then(FeedItemDataUnionFeedIncidentData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -822,9 +818,9 @@ as String?,
 /// @nodoc
 
 @JsonSerializable()
-class FeedItemDataUnionVariant7 implements FeedItemDataUnion {
-  const FeedItemDataUnionVariant7({required this.type, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'variant7';
-  factory FeedItemDataUnionVariant7.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionVariant7FromJson(json);
+class FeedItemDataUnionFeedDeveloperMessageData implements FeedItemDataUnion {
+  const FeedItemDataUnionFeedDeveloperMessageData({required this.type, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'feedDeveloperMessageData';
+  factory FeedItemDataUnionFeedDeveloperMessageData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedDeveloperMessageDataFromJson(json);
 
 /// const: "DEVELOPER_MESSAGE"
 @override final  String type;
@@ -838,16 +834,16 @@ final String $type;
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$FeedItemDataUnionVariant7CopyWith<FeedItemDataUnionVariant7> get copyWith => _$FeedItemDataUnionVariant7CopyWithImpl<FeedItemDataUnionVariant7>(this, _$identity);
+$FeedItemDataUnionFeedDeveloperMessageDataCopyWith<FeedItemDataUnionFeedDeveloperMessageData> get copyWith => _$FeedItemDataUnionFeedDeveloperMessageDataCopyWithImpl<FeedItemDataUnionFeedDeveloperMessageData>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$FeedItemDataUnionVariant7ToJson(this, );
+  return _$FeedItemDataUnionFeedDeveloperMessageDataToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionVariant7&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedItemDataUnionFeedDeveloperMessageData&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -856,15 +852,15 @@ int get hashCode => Object.hash(runtimeType,type,url);
 
 @override
 String toString() {
-  return 'FeedItemDataUnion.variant7(type: $type, url: $url)';
+  return 'FeedItemDataUnion.feedDeveloperMessageData(type: $type, url: $url)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $FeedItemDataUnionVariant7CopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
-  factory $FeedItemDataUnionVariant7CopyWith(FeedItemDataUnionVariant7 value, $Res Function(FeedItemDataUnionVariant7) _then) = _$FeedItemDataUnionVariant7CopyWithImpl;
+abstract mixin class $FeedItemDataUnionFeedDeveloperMessageDataCopyWith<$Res> implements $FeedItemDataUnionCopyWith<$Res> {
+  factory $FeedItemDataUnionFeedDeveloperMessageDataCopyWith(FeedItemDataUnionFeedDeveloperMessageData value, $Res Function(FeedItemDataUnionFeedDeveloperMessageData) _then) = _$FeedItemDataUnionFeedDeveloperMessageDataCopyWithImpl;
 @override @useResult
 $Res call({
  String type,@JsonKey(includeIfNull: false) String? url
@@ -875,17 +871,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$FeedItemDataUnionVariant7CopyWithImpl<$Res>
-    implements $FeedItemDataUnionVariant7CopyWith<$Res> {
-  _$FeedItemDataUnionVariant7CopyWithImpl(this._self, this._then);
+class _$FeedItemDataUnionFeedDeveloperMessageDataCopyWithImpl<$Res>
+    implements $FeedItemDataUnionFeedDeveloperMessageDataCopyWith<$Res> {
+  _$FeedItemDataUnionFeedDeveloperMessageDataCopyWithImpl(this._self, this._then);
 
-  final FeedItemDataUnionVariant7 _self;
-  final $Res Function(FeedItemDataUnionVariant7) _then;
+  final FeedItemDataUnionFeedDeveloperMessageData _self;
+  final $Res Function(FeedItemDataUnionFeedDeveloperMessageData) _then;
 
 /// Create a copy of FeedItemDataUnion
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? url = freezed,}) {
-  return _then(FeedItemDataUnionVariant7(
+  return _then(FeedItemDataUnionFeedDeveloperMessageData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,

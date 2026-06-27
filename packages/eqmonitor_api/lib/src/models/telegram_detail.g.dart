@@ -137,5 +137,6 @@ const _$TelegramStatusEnumMap = {
 const _$InfoTypeEnumMap = {
   InfoType.publication: 'PUBLICATION',
   InfoType.correction: 'CORRECTION',
+  InfoType.delay: 'DELAY',
   InfoType.cancellation: 'CANCELLATION',
 };

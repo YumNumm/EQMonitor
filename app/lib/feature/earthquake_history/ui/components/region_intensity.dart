@@ -7,10 +7,8 @@ import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_map_focus.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_focus_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -66,9 +64,7 @@ class JmaIntensityContent extends HookConsumerWidget {
               (entry) => _PreliminaryIntensityLevelSection(
                 intensity: entry.key,
                 regions: entry.value,
-                dividerColor: colorModel
-                    .fromJmaIntensity(entry.key)
-                    .background,
+                dividerColor: colorModel.fromJmaIntensity(entry.key).background,
               ),
             ),
         ],
@@ -132,8 +128,9 @@ class LpgmIntensityContent extends HookConsumerWidget {
               intensity: entry.key,
               prefectures: entry.value,
               eventId: item.eventId,
-              dividerColor:
-                  colorModel.fromJmaLpgmIntensity(entry.key).background,
+              dividerColor: colorModel
+                  .fromJmaLpgmIntensity(entry.key)
+                  .background,
             ),
           )
           .toList(),
@@ -339,9 +336,7 @@ class _LpgmIntensityLevelSection extends HookWidget {
     final hasCityData = prefectures.any((p) => p.cities.isNotEmpty);
 
     final theme = Theme.of(context);
-    final regionNames = prefectures
-        .map((e) => e.region.name.ja)
-        .join(' ');
+    final regionNames = prefectures.map((e) => e.region.name.ja).join(' ');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -430,18 +425,9 @@ class _PrefectureTile extends HookWidget {
     final isExpanded = useState(false);
     final hasCities = prefecture.cities.isNotEmpty;
 
-    final mapButton = _MapFocusButton(
-      eventId: eventId,
-      focus: EarthquakeIntensityMapFocus(
-        kind: EarthquakeIntensityMapFocusKind.prefectureRegion,
-        code: prefecture.prefecture.prefecture.code,
-      ),
-    );
-
     final trailing = _buildTrailing(
       hasChildren: hasCities,
       isExpanded: isExpanded.value,
-      mapButton: mapButton,
     );
 
     return Column(
@@ -487,18 +473,9 @@ class _LpgmPrefectureTile extends HookWidget {
     final isExpanded = useState(false);
     final hasCities = prefecture.cities.isNotEmpty;
 
-    final mapButton = _MapFocusButton(
-      eventId: eventId,
-      focus: EarthquakeIntensityMapFocus(
-        kind: EarthquakeIntensityMapFocusKind.prefectureRegion,
-        code: prefecture.region.code,
-      ),
-    );
-
     final trailing = _buildTrailing(
       hasChildren: hasCities,
       isExpanded: isExpanded.value,
-      mapButton: mapButton,
     );
 
     return Column(
@@ -546,27 +523,16 @@ class _CityTile extends HookWidget {
     final isExpanded = useState(false);
     final hasStations = city.stations.isNotEmpty;
 
-    final mapButton = eventId != null
-        ? _MapFocusButton(
-            eventId: eventId!,
-            focus: EarthquakeIntensityMapFocus(
-              kind: EarthquakeIntensityMapFocusKind.city,
-              code: city.city.code,
-            ),
-          )
-        : null;
-
     final trailing = _buildTrailing(
       hasChildren: hasStations,
       isExpanded: isExpanded.value,
-      mapButton: mapButton,
     );
 
     return Column(
       crossAxisAlignment: .start,
       children: [
         ListTile(
-          visualDensity: VisualDensity.compact,
+          visualDensity: .compact,
           dense: true,
           title: Text(city.city.name.ja),
           trailing: trailing,
@@ -603,20 +569,9 @@ class _LpgmCityTile extends HookWidget {
     final isExpanded = useState(false);
     final hasStations = city.stations.isNotEmpty;
 
-    final mapButton = eventId != null
-        ? _MapFocusButton(
-            eventId: eventId!,
-            focus: EarthquakeIntensityMapFocus(
-              kind: EarthquakeIntensityMapFocusKind.city,
-              code: city.city.code,
-            ),
-          )
-        : null;
-
     final trailing = _buildTrailing(
       hasChildren: hasStations,
       isExpanded: isExpanded.value,
-      mapButton: mapButton,
     );
 
     return Column(
@@ -646,53 +601,16 @@ class _LpgmCityTile extends HookWidget {
   }
 }
 
-class _MapFocusButton extends ConsumerWidget {
-  const _MapFocusButton({
-    required this.eventId,
-    required this.focus,
-  });
-
-  final String eventId;
-  final EarthquakeIntensityMapFocus focus;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return IconButton(
-      tooltip: '地図で表示',
-      icon: const Icon(Icons.map_outlined, size: 20),
-      visualDensity: VisualDensity.compact,
-      padding: EdgeInsets.zero,
-      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-      onPressed: () {
-        ref
-            .read(earthquakeHistoryMapFocusProvider(eventId).notifier)
-            .select(focus);
-      },
-    );
-  }
-}
-
 Widget? _buildTrailing({
   required bool hasChildren,
   required bool isExpanded,
-  Widget? mapButton,
 }) {
-  if (!hasChildren && mapButton == null) {
+  if (!hasChildren) {
     return null;
   }
-  if (!hasChildren) {
-    return mapButton;
-  }
-
-  return Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      ?mapButton,
-      AnimatedRotation(
-        turns: isExpanded ? 0.5 : 0.0,
-        duration: const Duration(milliseconds: 200),
-        child: const Icon(Icons.expand_more),
-      ),
-    ],
+  return AnimatedRotation(
+    turns: isExpanded ? 0.5 : 0.0,
+    duration: const Duration(milliseconds: 200),
+    child: const Icon(Icons.expand_more),
   );
 }

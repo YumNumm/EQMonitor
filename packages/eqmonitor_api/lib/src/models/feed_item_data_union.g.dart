@@ -8,50 +8,64 @@ part of 'feed_item_data_union.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FeedItemDataUnionVariant1 _$FeedItemDataUnionVariant1FromJson(
+FeedItemDataUnionFeedEarthquakeNoticeData
+_$FeedItemDataUnionFeedEarthquakeNoticeDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('FeedItemDataUnionVariant1', json, ($checkedConvert) {
-  final val = FeedItemDataUnionVariant1(
-    type: $checkedConvert('type', (v) => v as String),
-    text: $checkedConvert('text', (v) => v as String),
-    $type: $checkedConvert('runtimeType', (v) => v as String?),
-  );
-  return val;
-}, fieldKeyMap: const {r'$type': 'runtimeType'});
+) => $checkedCreate(
+  'FeedItemDataUnionFeedEarthquakeNoticeData',
+  json,
+  ($checkedConvert) {
+    final val = FeedItemDataUnionFeedEarthquakeNoticeData(
+      type: $checkedConvert('type', (v) => v as String),
+      text: $checkedConvert('text', (v) => v as String),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {r'$type': 'runtimeType'},
+);
 
-Map<String, dynamic> _$FeedItemDataUnionVariant1ToJson(
-  FeedItemDataUnionVariant1 instance,
+Map<String, dynamic> _$FeedItemDataUnionFeedEarthquakeNoticeDataToJson(
+  FeedItemDataUnionFeedEarthquakeNoticeData instance,
 ) => <String, dynamic>{
   'type': instance.type,
   'text': instance.text,
   'runtimeType': instance.$type,
 };
 
-FeedItemDataUnionVariant2 _$FeedItemDataUnionVariant2FromJson(
+FeedItemDataUnionFeedEarthquakeExplanationData
+_$FeedItemDataUnionFeedEarthquakeExplanationDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('FeedItemDataUnionVariant2', json, ($checkedConvert) {
-  final val = FeedItemDataUnionVariant2(
-    type: $checkedConvert('type', (v) => v as String),
-    infoType: $checkedConvert(
-      'infoType',
-      (v) => $enumDecode(_$InfoTypeEnumMap, v),
-    ),
-    text: $checkedConvert('text', (v) => v as String),
-    naming: $checkedConvert(
-      'naming',
-      (v) => v == null ? null : Naming.fromJson(v as Map<String, dynamic>),
-    ),
-    comments: $checkedConvert(
-      'comments',
-      (v) => v == null ? null : Comments.fromJson(v as Map<String, dynamic>),
-    ),
-    $type: $checkedConvert('runtimeType', (v) => v as String?),
-  );
-  return val;
-}, fieldKeyMap: const {r'$type': 'runtimeType'});
+) => $checkedCreate(
+  'FeedItemDataUnionFeedEarthquakeExplanationData',
+  json,
+  ($checkedConvert) {
+    final val = FeedItemDataUnionFeedEarthquakeExplanationData(
+      type: $checkedConvert('type', (v) => v as String),
+      infoType: $checkedConvert(
+        'infoType',
+        (v) => $enumDecode(_$InfoTypeEnumMap, v),
+      ),
+      text: $checkedConvert('text', (v) => v as String),
+      naming: $checkedConvert(
+        'naming',
+        (v) =>
+            v == null ? null : FeedNaming.fromJson(v as Map<String, dynamic>),
+      ),
+      comments: $checkedConvert(
+        'comments',
+        (v) =>
+            v == null ? null : FeedComments.fromJson(v as Map<String, dynamic>),
+      ),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {r'$type': 'runtimeType'},
+);
 
-Map<String, dynamic> _$FeedItemDataUnionVariant2ToJson(
-  FeedItemDataUnionVariant2 instance,
+Map<String, dynamic> _$FeedItemDataUnionFeedEarthquakeExplanationDataToJson(
+  FeedItemDataUnionFeedEarthquakeExplanationData instance,
 ) => <String, dynamic>{
   'type': instance.type,
   'infoType': instance.infoType,
@@ -64,37 +78,47 @@ Map<String, dynamic> _$FeedItemDataUnionVariant2ToJson(
 const _$InfoTypeEnumMap = {
   InfoType.publication: 'PUBLICATION',
   InfoType.correction: 'CORRECTION',
+  InfoType.delay: 'DELAY',
   InfoType.cancellation: 'CANCELLATION',
 };
 
-FeedItemDataUnionVariant3 _$FeedItemDataUnionVariant3FromJson(
+FeedItemDataUnionFeedEarthquakeCountsData
+_$FeedItemDataUnionFeedEarthquakeCountsDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('FeedItemDataUnionVariant3', json, ($checkedConvert) {
-  final val = FeedItemDataUnionVariant3(
-    type: $checkedConvert('type', (v) => v as String),
-    infoType: $checkedConvert(
-      'infoType',
-      (v) => $enumDecode(_$InfoTypeEnumMap, v),
-    ),
-    earthquakeCounts: $checkedConvert(
-      'earthquakeCounts',
-      (v) => (v as List<dynamic>?)
-          ?.map((e) => EarthquakeCounts.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    ),
-    nextAdvisory: $checkedConvert('nextAdvisory', (v) => v as String?),
-    text: $checkedConvert('text', (v) => v as String?),
-    comments: $checkedConvert(
-      'comments',
-      (v) => v == null ? null : Comments2.fromJson(v as Map<String, dynamic>),
-    ),
-    $type: $checkedConvert('runtimeType', (v) => v as String?),
-  );
-  return val;
-}, fieldKeyMap: const {r'$type': 'runtimeType'});
+) => $checkedCreate(
+  'FeedItemDataUnionFeedEarthquakeCountsData',
+  json,
+  ($checkedConvert) {
+    final val = FeedItemDataUnionFeedEarthquakeCountsData(
+      type: $checkedConvert('type', (v) => v as String),
+      infoType: $checkedConvert(
+        'infoType',
+        (v) => $enumDecode(_$InfoTypeEnumMap, v),
+      ),
+      earthquakeCounts: $checkedConvert(
+        'earthquakeCounts',
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) => FeedEarthquakeCount.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
+      ),
+      nextAdvisory: $checkedConvert('nextAdvisory', (v) => v as String?),
+      text: $checkedConvert('text', (v) => v as String?),
+      comments: $checkedConvert(
+        'comments',
+        (v) =>
+            v == null ? null : FeedComments.fromJson(v as Map<String, dynamic>),
+      ),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {r'$type': 'runtimeType'},
+);
 
-Map<String, dynamic> _$FeedItemDataUnionVariant3ToJson(
-  FeedItemDataUnionVariant3 instance,
+Map<String, dynamic> _$FeedItemDataUnionFeedEarthquakeCountsDataToJson(
+  FeedItemDataUnionFeedEarthquakeCountsData instance,
 ) => <String, dynamic>{
   'type': instance.type,
   'infoType': instance.infoType,
@@ -105,33 +129,40 @@ Map<String, dynamic> _$FeedItemDataUnionVariant3ToJson(
   'runtimeType': instance.$type,
 };
 
-FeedItemDataUnionVariant4 _$FeedItemDataUnionVariant4FromJson(
+FeedItemDataUnionFeedEarthquakeNankaiData
+_$FeedItemDataUnionFeedEarthquakeNankaiDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('FeedItemDataUnionVariant4', json, ($checkedConvert) {
-  final val = FeedItemDataUnionVariant4(
-    type: $checkedConvert('type', (v) => v as String),
-    infoType: $checkedConvert(
-      'infoType',
-      (v) => $enumDecode(_$InfoTypeEnumMap, v),
-    ),
-    telegramType: $checkedConvert(
-      'telegramType',
-      (v) => $enumDecode(_$TelegramTypeEnumMap, v),
-    ),
-    earthquakeInfo: $checkedConvert(
-      'earthquakeInfo',
-      (v) =>
-          v == null ? null : EarthquakeInfo.fromJson(v as Map<String, dynamic>),
-    ),
-    nextAdvisory: $checkedConvert('nextAdvisory', (v) => v as String?),
-    text: $checkedConvert('text', (v) => v as String?),
-    $type: $checkedConvert('runtimeType', (v) => v as String?),
-  );
-  return val;
-}, fieldKeyMap: const {r'$type': 'runtimeType'});
+) => $checkedCreate(
+  'FeedItemDataUnionFeedEarthquakeNankaiData',
+  json,
+  ($checkedConvert) {
+    final val = FeedItemDataUnionFeedEarthquakeNankaiData(
+      type: $checkedConvert('type', (v) => v as String),
+      infoType: $checkedConvert(
+        'infoType',
+        (v) => $enumDecode(_$InfoTypeEnumMap, v),
+      ),
+      telegramType: $checkedConvert(
+        'telegramType',
+        (v) => $enumDecode(_$FeedTelegramTypeEnumMap, v),
+      ),
+      earthquakeInfo: $checkedConvert(
+        'earthquakeInfo',
+        (v) => v == null
+            ? null
+            : FeedNankaiEarthquakeInfo.fromJson(v as Map<String, dynamic>),
+      ),
+      nextAdvisory: $checkedConvert('nextAdvisory', (v) => v as String?),
+      text: $checkedConvert('text', (v) => v as String?),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {r'$type': 'runtimeType'},
+);
 
-Map<String, dynamic> _$FeedItemDataUnionVariant4ToJson(
-  FeedItemDataUnionVariant4 instance,
+Map<String, dynamic> _$FeedItemDataUnionFeedEarthquakeNankaiDataToJson(
+  FeedItemDataUnionFeedEarthquakeNankaiData instance,
 ) => <String, dynamic>{
   'type': instance.type,
   'infoType': instance.infoType,
@@ -142,26 +173,31 @@ Map<String, dynamic> _$FeedItemDataUnionVariant4ToJson(
   'runtimeType': instance.$type,
 };
 
-const _$TelegramTypeEnumMap = {
-  TelegramType.undefined0: '南海トラフ地震臨時情報',
-  TelegramType.undefined1: '南海トラフ地震関連解説情報',
-  TelegramType.undefined2: '北海道・三陸沖後発地震注意情報',
+const _$FeedTelegramTypeEnumMap = {
+  FeedTelegramType.oneHourEarthquakeCount: 'ONE_HOUR_EARTHQUAKE_COUNT',
+  FeedTelegramType.accumulativeEarthquakeCount: 'ACCUMULATIVE_EARTHQUAKE_COUNT',
+  FeedTelegramType.earthquakeCount: 'EARTHQUAKE_COUNT',
 };
 
-FeedItemDataUnionVariant5 _$FeedItemDataUnionVariant5FromJson(
+FeedItemDataUnionFeedAppUpdateData _$FeedItemDataUnionFeedAppUpdateDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('FeedItemDataUnionVariant5', json, ($checkedConvert) {
-  final val = FeedItemDataUnionVariant5(
-    type: $checkedConvert('type', (v) => v as String),
-    version: $checkedConvert('version', (v) => v as String?),
-    url: $checkedConvert('url', (v) => v as String?),
-    $type: $checkedConvert('runtimeType', (v) => v as String?),
-  );
-  return val;
-}, fieldKeyMap: const {r'$type': 'runtimeType'});
+) => $checkedCreate(
+  'FeedItemDataUnionFeedAppUpdateData',
+  json,
+  ($checkedConvert) {
+    final val = FeedItemDataUnionFeedAppUpdateData(
+      type: $checkedConvert('type', (v) => v as String),
+      version: $checkedConvert('version', (v) => v as String?),
+      url: $checkedConvert('url', (v) => v as String?),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {r'$type': 'runtimeType'},
+);
 
-Map<String, dynamic> _$FeedItemDataUnionVariant5ToJson(
-  FeedItemDataUnionVariant5 instance,
+Map<String, dynamic> _$FeedItemDataUnionFeedAppUpdateDataToJson(
+  FeedItemDataUnionFeedAppUpdateData instance,
 ) => <String, dynamic>{
   'type': instance.type,
   'version': ?instance.version,
@@ -169,38 +205,49 @@ Map<String, dynamic> _$FeedItemDataUnionVariant5ToJson(
   'runtimeType': instance.$type,
 };
 
-FeedItemDataUnionVariant6 _$FeedItemDataUnionVariant6FromJson(
+FeedItemDataUnionFeedIncidentData _$FeedItemDataUnionFeedIncidentDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('FeedItemDataUnionVariant6', json, ($checkedConvert) {
-  final val = FeedItemDataUnionVariant6(
-    type: $checkedConvert('type', (v) => v as String),
-    url: $checkedConvert('url', (v) => v as String?),
-    $type: $checkedConvert('runtimeType', (v) => v as String?),
-  );
-  return val;
-}, fieldKeyMap: const {r'$type': 'runtimeType'});
+) => $checkedCreate(
+  'FeedItemDataUnionFeedIncidentData',
+  json,
+  ($checkedConvert) {
+    final val = FeedItemDataUnionFeedIncidentData(
+      type: $checkedConvert('type', (v) => v as String),
+      url: $checkedConvert('url', (v) => v as String?),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {r'$type': 'runtimeType'},
+);
 
-Map<String, dynamic> _$FeedItemDataUnionVariant6ToJson(
-  FeedItemDataUnionVariant6 instance,
+Map<String, dynamic> _$FeedItemDataUnionFeedIncidentDataToJson(
+  FeedItemDataUnionFeedIncidentData instance,
 ) => <String, dynamic>{
   'type': instance.type,
   'url': ?instance.url,
   'runtimeType': instance.$type,
 };
 
-FeedItemDataUnionVariant7 _$FeedItemDataUnionVariant7FromJson(
+FeedItemDataUnionFeedDeveloperMessageData
+_$FeedItemDataUnionFeedDeveloperMessageDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('FeedItemDataUnionVariant7', json, ($checkedConvert) {
-  final val = FeedItemDataUnionVariant7(
-    type: $checkedConvert('type', (v) => v as String),
-    url: $checkedConvert('url', (v) => v as String?),
-    $type: $checkedConvert('runtimeType', (v) => v as String?),
-  );
-  return val;
-}, fieldKeyMap: const {r'$type': 'runtimeType'});
+) => $checkedCreate(
+  'FeedItemDataUnionFeedDeveloperMessageData',
+  json,
+  ($checkedConvert) {
+    final val = FeedItemDataUnionFeedDeveloperMessageData(
+      type: $checkedConvert('type', (v) => v as String),
+      url: $checkedConvert('url', (v) => v as String?),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {r'$type': 'runtimeType'},
+);
 
-Map<String, dynamic> _$FeedItemDataUnionVariant7ToJson(
-  FeedItemDataUnionVariant7 instance,
+Map<String, dynamic> _$FeedItemDataUnionFeedDeveloperMessageDataToJson(
+  FeedItemDataUnionFeedDeveloperMessageData instance,
 ) => <String, dynamic>{
   'type': instance.type,
   'url': ?instance.url,

@@ -15,9 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FeedItem {
 
- String get id;/// const: "EARTHQUAKE_NOTICE" | const: "EARTHQUAKE_EXPLANATION" | const: "EARTHQUAKE_COUNTS" | const: "EARTHQUAKE_NANKAI" | const: "APP_UPDATE" | const: "INCIDENT" | const: "DEVELOPER_MESSAGE"
-@JsonKey(name: 'feed_type') FeedType get feedType;/// const: "CRITICAL" | const: "HIGH" | const: "NORMAL" | const: "LOW"
- Priority get priority;@JsonKey(name: 'is_important') bool get isImportant;@JsonKey(name: 'published_at') String get publishedAt;@JsonKey(includeIfNull: true, name: 'expires_at') String? get expiresAt;@JsonKey(includeIfNull: true) String? get title;@JsonKey(includeIfNull: true) String? get summary; FeedItemDataUnion get data;
+ String get id;@JsonKey(name: 'feed_type') FeedType get feedType; FeedPriority get priority;@JsonKey(name: 'is_important') bool get isImportant;@JsonKey(name: 'published_at') String get publishedAt;@JsonKey(includeIfNull: true, name: 'expires_at') String? get expiresAt;@JsonKey(includeIfNull: true) String? get title;@JsonKey(includeIfNull: true) String? get summary; FeedItemDataUnion get data;
 /// Create a copy of FeedItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -50,7 +48,7 @@ abstract mixin class $FeedItemCopyWith<$Res>  {
   factory $FeedItemCopyWith(FeedItem value, $Res Function(FeedItem) _then) = _$FeedItemCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'feed_type') FeedType feedType, Priority priority,@JsonKey(name: 'is_important') bool isImportant,@JsonKey(name: 'published_at') String publishedAt,@JsonKey(includeIfNull: true, name: 'expires_at') String? expiresAt,@JsonKey(includeIfNull: true) String? title,@JsonKey(includeIfNull: true) String? summary, FeedItemDataUnion data
+ String id,@JsonKey(name: 'feed_type') FeedType feedType, FeedPriority priority,@JsonKey(name: 'is_important') bool isImportant,@JsonKey(name: 'published_at') String publishedAt,@JsonKey(includeIfNull: true, name: 'expires_at') String? expiresAt,@JsonKey(includeIfNull: true) String? title,@JsonKey(includeIfNull: true) String? summary, FeedItemDataUnion data
 });
 
 
@@ -72,7 +70,7 @@ class _$FeedItemCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
 as FeedType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as Priority,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
+as FeedPriority,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
 as bool,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
 as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -172,7 +170,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'feed_type')  FeedType feedType,  Priority priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'feed_type')  FeedType feedType,  FeedPriority priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FeedItem() when $default != null:
 return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.expiresAt,_that.title,_that.summary,_that.data);case _:
@@ -193,7 +191,7 @@ return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'feed_type')  FeedType feedType,  Priority priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'feed_type')  FeedType feedType,  FeedPriority priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)  $default,) {final _that = this;
 switch (_that) {
 case _FeedItem():
 return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.expiresAt,_that.title,_that.summary,_that.data);case _:
@@ -213,7 +211,7 @@ return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'feed_type')  FeedType feedType,  Priority priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'feed_type')  FeedType feedType,  FeedPriority priority, @JsonKey(name: 'is_important')  bool isImportant, @JsonKey(name: 'published_at')  String publishedAt, @JsonKey(includeIfNull: true, name: 'expires_at')  String? expiresAt, @JsonKey(includeIfNull: true)  String? title, @JsonKey(includeIfNull: true)  String? summary,  FeedItemDataUnion data)?  $default,) {final _that = this;
 switch (_that) {
 case _FeedItem() when $default != null:
 return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.expiresAt,_that.title,_that.summary,_that.data);case _:
@@ -232,10 +230,8 @@ class _FeedItem implements FeedItem {
   factory _FeedItem.fromJson(Map<String, dynamic> json) => _$FeedItemFromJson(json);
 
 @override final  String id;
-/// const: "EARTHQUAKE_NOTICE" | const: "EARTHQUAKE_EXPLANATION" | const: "EARTHQUAKE_COUNTS" | const: "EARTHQUAKE_NANKAI" | const: "APP_UPDATE" | const: "INCIDENT" | const: "DEVELOPER_MESSAGE"
 @override@JsonKey(name: 'feed_type') final  FeedType feedType;
-/// const: "CRITICAL" | const: "HIGH" | const: "NORMAL" | const: "LOW"
-@override final  Priority priority;
+@override final  FeedPriority priority;
 @override@JsonKey(name: 'is_important') final  bool isImportant;
 @override@JsonKey(name: 'published_at') final  String publishedAt;
 @override@JsonKey(includeIfNull: true, name: 'expires_at') final  String? expiresAt;
@@ -276,7 +272,7 @@ abstract mixin class _$FeedItemCopyWith<$Res> implements $FeedItemCopyWith<$Res>
   factory _$FeedItemCopyWith(_FeedItem value, $Res Function(_FeedItem) _then) = __$FeedItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'feed_type') FeedType feedType, Priority priority,@JsonKey(name: 'is_important') bool isImportant,@JsonKey(name: 'published_at') String publishedAt,@JsonKey(includeIfNull: true, name: 'expires_at') String? expiresAt,@JsonKey(includeIfNull: true) String? title,@JsonKey(includeIfNull: true) String? summary, FeedItemDataUnion data
+ String id,@JsonKey(name: 'feed_type') FeedType feedType, FeedPriority priority,@JsonKey(name: 'is_important') bool isImportant,@JsonKey(name: 'published_at') String publishedAt,@JsonKey(includeIfNull: true, name: 'expires_at') String? expiresAt,@JsonKey(includeIfNull: true) String? title,@JsonKey(includeIfNull: true) String? summary, FeedItemDataUnion data
 });
 
 
@@ -298,7 +294,7 @@ class __$FeedItemCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
 as FeedType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as Priority,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
+as FeedPriority,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
 as bool,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
 as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable

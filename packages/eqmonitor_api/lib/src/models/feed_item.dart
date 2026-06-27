@@ -5,8 +5,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'feed_item_data_union.dart';
+import 'feed_priority.dart';
 import 'feed_type.dart';
-import 'priority.dart';
 
 part 'feed_item.freezed.dart';
 part 'feed_item.g.dart';
@@ -15,13 +15,9 @@ part 'feed_item.g.dart';
 abstract class FeedItem with _$FeedItem {
   const factory FeedItem({
     required String id,
-
-    /// const: "EARTHQUAKE_NOTICE" | const: "EARTHQUAKE_EXPLANATION" | const: "EARTHQUAKE_COUNTS" | const: "EARTHQUAKE_NANKAI" | const: "APP_UPDATE" | const: "INCIDENT" | const: "DEVELOPER_MESSAGE"
     @JsonKey(name: 'feed_type')
     required FeedType feedType,
-
-    /// const: "CRITICAL" | const: "HIGH" | const: "NORMAL" | const: "LOW"
-    required Priority priority,
+    required FeedPriority priority,
     @JsonKey(name: 'is_important')
     required bool isImportant,
     @JsonKey(name: 'published_at')

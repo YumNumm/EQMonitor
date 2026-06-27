@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AdminDispatchSummaryDetailResponse {
 
- Item get item;
+ DispatchSummaryItem get item;
 /// Create a copy of AdminDispatchSummaryDetailResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $AdminDispatchSummaryDetailResponseCopyWith<$Res>  {
   factory $AdminDispatchSummaryDetailResponseCopyWith(AdminDispatchSummaryDetailResponse value, $Res Function(AdminDispatchSummaryDetailResponse) _then) = _$AdminDispatchSummaryDetailResponseCopyWithImpl;
 @useResult
 $Res call({
- Item item
+ DispatchSummaryItem item
 });
 
 
-$ItemCopyWith<$Res> get item;
+$DispatchSummaryItemCopyWith<$Res> get item;
 
 }
 /// @nodoc
@@ -68,16 +68,16 @@ class _$AdminDispatchSummaryDetailResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? item = null,}) {
   return _then(_self.copyWith(
 item: null == item ? _self.item : item // ignore: cast_nullable_to_non_nullable
-as Item,
+as DispatchSummaryItem,
   ));
 }
 /// Create a copy of AdminDispatchSummaryDetailResponse
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ItemCopyWith<$Res> get item {
+$DispatchSummaryItemCopyWith<$Res> get item {
   
-  return $ItemCopyWith<$Res>(_self.item, (value) {
+  return $DispatchSummaryItemCopyWith<$Res>(_self.item, (value) {
     return _then(_self.copyWith(item: value));
   });
 }
@@ -162,7 +162,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Item item)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DispatchSummaryItem item)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AdminDispatchSummaryDetailResponse() when $default != null:
 return $default(_that.item);case _:
@@ -183,7 +183,7 @@ return $default(_that.item);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Item item)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DispatchSummaryItem item)  $default,) {final _that = this;
 switch (_that) {
 case _AdminDispatchSummaryDetailResponse():
 return $default(_that.item);case _:
@@ -203,7 +203,7 @@ return $default(_that.item);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Item item)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DispatchSummaryItem item)?  $default,) {final _that = this;
 switch (_that) {
 case _AdminDispatchSummaryDetailResponse() when $default != null:
 return $default(_that.item);case _:
@@ -221,7 +221,7 @@ class _AdminDispatchSummaryDetailResponse implements AdminDispatchSummaryDetailR
   const _AdminDispatchSummaryDetailResponse({required this.item});
   factory _AdminDispatchSummaryDetailResponse.fromJson(Map<String, dynamic> json) => _$AdminDispatchSummaryDetailResponseFromJson(json);
 
-@override final  Item item;
+@override final  DispatchSummaryItem item;
 
 /// Create a copy of AdminDispatchSummaryDetailResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -256,11 +256,11 @@ abstract mixin class _$AdminDispatchSummaryDetailResponseCopyWith<$Res> implemen
   factory _$AdminDispatchSummaryDetailResponseCopyWith(_AdminDispatchSummaryDetailResponse value, $Res Function(_AdminDispatchSummaryDetailResponse) _then) = __$AdminDispatchSummaryDetailResponseCopyWithImpl;
 @override @useResult
 $Res call({
- Item item
+ DispatchSummaryItem item
 });
 
 
-@override $ItemCopyWith<$Res> get item;
+@override $DispatchSummaryItemCopyWith<$Res> get item;
 
 }
 /// @nodoc
@@ -276,7 +276,7 @@ class __$AdminDispatchSummaryDetailResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? item = null,}) {
   return _then(_AdminDispatchSummaryDetailResponse(
 item: null == item ? _self.item : item // ignore: cast_nullable_to_non_nullable
-as Item,
+as DispatchSummaryItem,
   ));
 }
 
@@ -284,9 +284,9 @@ as Item,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ItemCopyWith<$Res> get item {
+$DispatchSummaryItemCopyWith<$Res> get item {
   
-  return $ItemCopyWith<$Res>(_self.item, (value) {
+  return $DispatchSummaryItemCopyWith<$Res>(_self.item, (value) {
     return _then(_self.copyWith(item: value));
   });
 }

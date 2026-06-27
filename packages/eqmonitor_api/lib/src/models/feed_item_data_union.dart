@@ -5,13 +5,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'comments.dart';
-import 'comments2.dart';
-import 'earthquake_counts.dart';
-import 'earthquake_info.dart';
+import 'feed_comments.dart';
+import 'feed_earthquake_count.dart';
+import 'feed_naming.dart';
+import 'feed_nankai_earthquake_info.dart';
+import 'feed_telegram_type.dart';
 import 'info_type.dart';
-import 'naming.dart';
-import 'telegram_type.dart';
 
 part 'feed_item_data_union.freezed.dart';
 part 'feed_item_data_union.g.dart';
@@ -19,86 +18,78 @@ part 'feed_item_data_union.g.dart';
 @Freezed()
 sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   @JsonSerializable()
-  const factory FeedItemDataUnion.variant1({
+  const factory FeedItemDataUnion.feedEarthquakeNoticeData({
     /// const: "EARTHQUAKE_NOTICE"
     required String type,
     required String text,
-  }) = FeedItemDataUnionVariant1;
+  }) = FeedItemDataUnionFeedEarthquakeNoticeData;
   
   @JsonSerializable()
-  const factory FeedItemDataUnion.variant2({
+  const factory FeedItemDataUnion.feedEarthquakeExplanationData({
     /// const: "EARTHQUAKE_EXPLANATION"
     required String type,
-
-    /// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
     required InfoType infoType,
     required String text,
     @JsonKey(includeIfNull: false)
-    Naming? naming,
+    FeedNaming? naming,
     @JsonKey(includeIfNull: false)
-    Comments? comments,
-  }) = FeedItemDataUnionVariant2;
+    FeedComments? comments,
+  }) = FeedItemDataUnionFeedEarthquakeExplanationData;
   
   @JsonSerializable()
-  const factory FeedItemDataUnion.variant3({
+  const factory FeedItemDataUnion.feedEarthquakeCountsData({
     /// const: "EARTHQUAKE_COUNTS"
     required String type,
-
-    /// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
     required InfoType infoType,
     @JsonKey(includeIfNull: false)
-    List<EarthquakeCounts>? earthquakeCounts,
+    List<FeedEarthquakeCount>? earthquakeCounts,
     @JsonKey(includeIfNull: false)
     String? nextAdvisory,
     @JsonKey(includeIfNull: false)
     String? text,
     @JsonKey(includeIfNull: false)
-    Comments2? comments,
-  }) = FeedItemDataUnionVariant3;
+    FeedComments? comments,
+  }) = FeedItemDataUnionFeedEarthquakeCountsData;
   
   @JsonSerializable()
-  const factory FeedItemDataUnion.variant4({
+  const factory FeedItemDataUnion.feedEarthquakeNankaiData({
     /// const: "EARTHQUAKE_NANKAI"
     required String type,
-
-    /// const: "PUBLICATION" | const: "CORRECTION" | const: "CANCELLATION"
     required InfoType infoType,
-
-    /// const: "南海トラフ地震臨時情報" | const: "南海トラフ地震関連解説情報" | const: "北海道・三陸沖後発地震注意情報"
-    required TelegramType telegramType,
+    required FeedTelegramType telegramType,
     @JsonKey(includeIfNull: false)
-    EarthquakeInfo? earthquakeInfo,
+    FeedNankaiEarthquakeInfo? earthquakeInfo,
     @JsonKey(includeIfNull: false)
     String? nextAdvisory,
     @JsonKey(includeIfNull: false)
     String? text,
-  }) = FeedItemDataUnionVariant4;
+  }) = FeedItemDataUnionFeedEarthquakeNankaiData;
   
   @JsonSerializable()
-  const factory FeedItemDataUnion.variant5({
+  const factory FeedItemDataUnion.feedAppUpdateData({
     /// const: "APP_UPDATE"
     required String type,
     @JsonKey(includeIfNull: false)
     String? version,
     @JsonKey(includeIfNull: false)
     String? url,
-  }) = FeedItemDataUnionVariant5;
+  }) = FeedItemDataUnionFeedAppUpdateData;
   
   @JsonSerializable()
-  const factory FeedItemDataUnion.variant6({
+  const factory FeedItemDataUnion.feedIncidentData({
     /// const: "INCIDENT"
     required String type,
     @JsonKey(includeIfNull: false)
     String? url,
-  }) = FeedItemDataUnionVariant6;
+  }) = FeedItemDataUnionFeedIncidentData;
   
   @JsonSerializable()
-  const factory FeedItemDataUnion.variant7({
+  const factory FeedItemDataUnion.feedDeveloperMessageData({
     /// const: "DEVELOPER_MESSAGE"
     required String type,
     @JsonKey(includeIfNull: false)
     String? url,
-  }) = FeedItemDataUnionVariant7;
+  }) = FeedItemDataUnionFeedDeveloperMessageData;
   
 
   factory FeedItemDataUnion.fromJson(Map<String, Object?> json) =>

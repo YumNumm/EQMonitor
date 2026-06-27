@@ -230,6 +230,7 @@ class StartNotifier extends _$StartNotifier with CachedNotifier<StartResponse> {
 ```
 
 移行時の注意:
+
 - **公開 provider 名と型契約を変えない**: 既存 `StartNotifier`/`startProvider` を流用し、現在の `AsyncValue<StartResponse?>`(nullable・初期 `data(null)`)から `CachedNotifier<StartResponse>`(non-null・初回 `AsyncLoading`)へ**型が変わる**。`startProvider` の消費者(`splash_page.dart`, `debug_page.dart`, `maintenance_banner.dart`, `forced_update_dialog.dart`, `whats_new_banner.dart`)の null 取り扱い・loading 表現を PR-2 で個別に追従させる。
 - **`ifNoneMatch` パラメータは呼び出し側で渡さない**: `getV1Start({ifNoneMatch})` のような retrofit 引数を指定すると、`HttpCacheInterceptor` が付与する `if-none-match` ヘッダと二重・競合する。ETag は常にインターセプタ任せ。
 - **family エンドポイント**(`@Path('eventId')` 等)は `fetch(ApiClient)` に引数の口が無いため、family Notifier の引数(`this`/provider 引数)から読んで `client.earthquake.getV2EarthquakeEventId(this.eventId)` のように呼ぶ。

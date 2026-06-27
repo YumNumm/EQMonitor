@@ -5,11 +5,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'earthquake_datasource.dart';
+import 'earthquake_telegram.dart';
 import 'hypocenter.dart';
 import 'intensity.dart';
 import 'origin_time_precision.dart';
 import 'telegram_status.dart';
-import 'telegrams.dart';
 
 part 'earthquake.freezed.dart';
 part 'earthquake.g.dart';
@@ -24,7 +24,7 @@ abstract class Earthquake with _$Earthquake {
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
     required EarthquakeDatasource datasource,
-    required List<Telegrams> telegrams,
+    required List<EarthquakeTelegram> telegrams,
     @JsonKey(includeIfNull: false,name: 'origin_time')
     DateTime? originTime,
     @JsonKey(includeIfNull: false,name: 'arrival_time')

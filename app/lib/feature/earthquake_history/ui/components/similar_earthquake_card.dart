@@ -26,42 +26,42 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
 
     return switch (asyncItems) {
       AsyncLoading() => const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Center(
-            child: SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-            ),
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Center(
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator.adaptive(strokeWidth: 2),
           ),
         ),
+      ),
       AsyncError() => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              const Icon(Icons.error_outline, size: 16),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  '類似地震の取得に失敗しました',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: [
+            const Icon(Icons.error_outline, size: 16),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                '類似地震の取得に失敗しました',
+                style: Theme.of(context).textTheme.bodySmall,
               ),
-              TextButton(
-                onPressed: () => ref.invalidate(
-                  similarEarthquakeProvider(eventId),
-                ),
-                child: const Text('再試行'),
+            ),
+            TextButton(
+              onPressed: () => ref.invalidate(
+                similarEarthquakeProvider(eventId),
               ),
-            ],
-          ),
+              child: const Text('再試行'),
+            ),
+          ],
         ),
-      AsyncData(value: final items) when items.isEmpty => const SizedBox
-          .shrink(),
+      ),
+      AsyncData(value: final items) when items.isEmpty =>
+        const SizedBox.shrink(),
       AsyncData(value: final items) => _SimilarEarthquakeList(
-          items: items,
-          intensityColor: intensityColor,
-        ),
+        items: items,
+        intensityColor: intensityColor,
+      ),
     };
   }
 }
@@ -83,8 +83,7 @@ class _SimilarEarthquakeList extends HookWidget {
     final displayItems = showAll.value
         ? items
         : items.take(SimilarEarthquakeCard._initialDisplayCount).toList();
-    final hasMore =
-        items.length > SimilarEarthquakeCard._initialDisplayCount;
+    final hasMore = items.length > SimilarEarthquakeCard._initialDisplayCount;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +91,7 @@ class _SimilarEarthquakeList extends HookWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Text(
-            '類似している地震',
+            'この震源の近傍で発生した地震',
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -161,9 +160,7 @@ class _SimilarEarthquakeItemTile extends HookWidget {
               child: Row(
                 children: [
                   Icon(
-                    isExpanded.value
-                        ? Icons.expand_less
-                        : Icons.expand_more,
+                    isExpanded.value ? Icons.expand_less : Icons.expand_more,
                     size: 16,
                   ),
                   const SizedBox(width: 4),
