@@ -3,9 +3,14 @@ import 'dart:typed_data';
 
 import 'package:cache/src/http/http_cache_entry.dart';
 import 'package:cache/src/http/http_cache_store.dart';
+import 'package:cache/src/http/restore_response.dart';
 import 'package:dio/dio.dart';
 
 const _keyExtra = 'cache.key';
+
+/// `HttpCacheInterceptor.onRequest` でこのキーが `true` に設定されている場合、
+/// `if-none-match` ヘッダの付与をスキップする（200 保存は通常どおり行う）。
+const kForceFreshExtra = 'cache.force_fresh';
 
 class HttpCacheInterceptor extends Interceptor {
   HttpCacheInterceptor(this.store);
@@ -25,6 +30,13 @@ class HttpCacheInterceptor extends Interceptor {
     options.extra[_keyExtra] = key;
     final base = options.validateStatus;
     options.validateStatus = (status) => status == 304 || base(status);
+
+    // force-fresh: skip conditional headers, still save on 200
+    if (options.extra[kForceFreshExtra] == true) {
+      handler.next(options);
+      return;
+    }
+
     final cached = await store.read(key);
     if (cached?.eTag != null) {
       options.headers['if-none-match'] = cached!.eTag;
@@ -48,7 +60,7 @@ class HttpCacheInterceptor extends Interceptor {
         handler.next(response);
         return;
       }
-      handler.resolve(_restore(response.requestOptions, cached));
+      handler.resolve(restoreResponse(response.requestOptions, cached));
       return;
     }
     if (response.statusCode == 200) {
@@ -58,25 +70,6 @@ class HttpCacheInterceptor extends Interceptor {
       }
     }
     handler.next(response);
-  }
-
-  Response<dynamic> _restore(RequestOptions options, HttpCacheEntry entry) {
-    final dynamic data;
-    switch (entry.responseType) {
-      case 'bytes':
-        data = entry.body;
-      case 'plain':
-        data = utf8.decode(entry.body);
-      case 'json':
-      default:
-        data = jsonDecode(utf8.decode(entry.body));
-    }
-    return Response<dynamic>(
-      requestOptions: options,
-      statusCode: entry.statusCode,
-      data: data,
-      headers: Headers.fromMap(entry.headers),
-    );
   }
 
   HttpCacheEntry? _toEntry(String key, Response<dynamic> response) {

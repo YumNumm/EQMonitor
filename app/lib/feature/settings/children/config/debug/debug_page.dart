@@ -557,11 +557,12 @@ class _StartApiDebugSection extends ConsumerWidget {
           trailing: IconButton(
             icon: const Icon(Icons.refresh),
             tooltip: '強制再取得',
-            onPressed: () => ref.read(startProvider.notifier).refresh(),
+            onPressed: () => ref.invalidate(startProvider),
           ),
         ),
+        if (startAsync.isRefreshing) const LinearProgressIndicator(),
         switch (startAsync) {
-          AsyncLoading() => const ListTile(
+          AsyncLoading() when !startAsync.hasValue => const ListTile(
             leading: SizedBox(
               width: 20,
               height: 20,
@@ -569,51 +570,58 @@ class _StartApiDebugSection extends ConsumerWidget {
             ),
             title: Text('取得中...'),
           ),
-          AsyncError(:final error) => ListTile(
+          AsyncError(:final error) when !startAsync.hasValue => ListTile(
             leading: const Icon(Icons.error_outline),
             title: const Text('エラー'),
             subtitle: Text(error.toString()),
           ),
-          AsyncData(:final value) when value == null => const ListTile(
-            leading: Icon(Icons.hourglass_empty),
-            title: Text('未取得'),
-          ),
-          AsyncData(:final value) => Column(
+          _ when startAsync.hasValue => Column(
             children: [
+              if (startAsync.hasError)
+                ListTile(
+                  dense: true,
+                  leading: const Icon(Icons.warning_amber),
+                  title: const Text('再検証エラー（stale 表示中）'),
+                  subtitle: Text(startAsync.error.toString()),
+                ),
               ListTile(
                 dense: true,
                 title: const Text('maintenance.enabled'),
-                trailing: Text(value!.flags.maintenance.enabled.toString()),
+                trailing: Text(
+                  startAsync.value!.flags.maintenance.enabled.toString(),
+                ),
               ),
-              if (value.flags.maintenance.message != null)
+              if (startAsync.value!.flags.maintenance.message != null)
                 ListTile(
                   dense: true,
                   title: const Text('maintenance.message'),
-                  subtitle: Text(value.flags.maintenance.message!),
+                  subtitle: Text(startAsync.value!.flags.maintenance.message!),
                 ),
               ListTile(
                 dense: true,
                 title: const Text('latest.version'),
                 trailing: Text(
-                  value.app.version.latest?.version ?? '(なし)',
+                  startAsync.value!.app.version.latest?.version ?? '(なし)',
                 ),
               ),
               ListTile(
                 dense: true,
                 title: const Text('latest.showWhatsNew'),
                 trailing: Text(
-                  value.app.version.latest?.showWhatsNew.toString() ?? '-',
+                  startAsync.value!.app.version.latest?.showWhatsNew
+                          .toString() ??
+                      '-',
                 ),
               ),
               ListTile(
                 dense: true,
                 title: const Text('requiredVersions'),
                 subtitle: Text(
-                  value.app.version.requiredVersions
+                  startAsync.value!.app.version.requiredVersions
                           .map((r) => r.version)
                           .join(', ')
                           .isNotEmpty
-                      ? value.app.version.requiredVersions
+                      ? startAsync.value!.app.version.requiredVersions
                             .map((r) => r.version)
                             .join(', ')
                       : '(なし)',
@@ -621,6 +629,7 @@ class _StartApiDebugSection extends ConsumerWidget {
               ),
             ],
           ),
+          _ => const SizedBox.shrink(),
         },
       ],
     );
