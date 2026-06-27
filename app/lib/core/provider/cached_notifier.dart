@@ -42,6 +42,8 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
     if (!ref.mounted || gen != _generation) {
       return;
     }
+    // ignore: invalid_use_of_internal_member
+    state = AsyncLoading<T>().copyWithPrevious(state);
     try {
       final fresh = await fetch(await ref.read(apiClientProvider.future));
       if (ref.mounted && gen == _generation) {
@@ -49,7 +51,8 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
       }
     } on Exception catch (e, st) {
       if (ref.mounted && gen == _generation) {
-        state = AsyncError<T>(e, st);
+        // ignore: invalid_use_of_internal_member
+        state = AsyncError<T>(e, st).copyWithPrevious(state);
       }
     }
   }
