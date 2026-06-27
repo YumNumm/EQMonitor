@@ -1,10 +1,8 @@
+import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/similar_earthquake_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/similar_earthquake_provider.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/similarity_score_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,8 +14,6 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
   });
 
   final String eventId;
-
-  static const _initialDisplayCount = 5;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,14 +39,17 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                '類似地震の取得に失敗しました',
+                'この地震の近傍で発生した地震の取得に失敗しました',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
             TextButton(
-              onPressed: () => ref.invalidate(
-                similarEarthquakeProvider(eventId),
-              ),
+              onPressed: asyncItems.isReloading
+                  ? null
+                  : () async => ref.invalidate(
+                      similarEarthquakeProvider(eventId),
+                      asReload: true,
+                    ),
               child: const Text('再試行'),
             ),
           ],
@@ -77,124 +76,53 @@ class _SimilarEarthquakeList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showAll = useState(false);
     final theme = Theme.of(context);
 
-    final displayItems = showAll.value
-        ? items
-        : items.take(SimilarEarthquakeCard._initialDisplayCount).toList();
-    final hasMore = items.length > SimilarEarthquakeCard._initialDisplayCount;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-          child: Text(
-            'この震源の近傍で発生した地震',
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        for (final item in displayItems)
-          _SimilarEarthquakeItemTile(
-            item: item,
-            intensityColor: intensityColor,
-          ),
-        if (hasMore && !showAll.value)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: TextButton(
-              onPressed: () => showAll.value = true,
-              child: Text(
-                'すべて表示（残り${items.length - SimilarEarthquakeCard._initialDisplayCount}件）',
+    return BorderedContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'この震源の近傍で発生した地震',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _SimilarEarthquakeItemTile extends HookWidget {
-  const _SimilarEarthquakeItemTile({
-    required this.item,
-    required this.intensityColor,
-  });
-
-  final SimilarEarthquakeItem item;
-  final IntensityColorModel intensityColor;
-
-  @override
-  Widget build(BuildContext context) {
-    final isExpanded = useState(false);
-    final hasGroup = item.groupedEarthquakes.isNotEmpty;
-
-    return Column(
-      children: [
-        Stack(
-          children: [
-            EarthquakeHistoryListTile(
-              item: item.earthquake,
-              intensityColor: intensityColor,
-              onTap: () => EarthquakeHistoryDetailsRoute(
-                eventId: item.earthquake.eventId,
-              ).push<void>(context),
-              showBackgroundColor: false,
-              intensityIconSize: 32,
-              dense: true,
-            ),
-            Positioned(
-              right: 8,
-              top: 8,
-              child: SimilarityScoreIndicator(level: item.level),
-            ),
-          ],
-        ),
-        if (hasGroup)
-          InkWell(
-            onTap: () => isExpanded.value = !isExpanded.value,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Row(
-                children: [
-                  Icon(
-                    isExpanded.value ? Icons.expand_less : Icons.expand_more,
-                    size: 16,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    isExpanded.value
-                        ? '閉じる'
-                        : '他${item.groupedEarthquakes.length}件の余震',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
+              const Placeholder(
+                child: Text('SORT BUTTON'),
               ),
+            ],
+          ),
+          const SizedBox(
+            height: 64,
+            width: .infinity,
+            child: Placeholder(
+              strokeWidth: 1,
+              // TODO: Implement the actual content
+              child: Center(child: Text('NOT IMPLEMENTED YET')),
             ),
           ),
-        if (hasGroup && isExpanded.value)
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Column(
-              children: [
-                for (final grouped in item.groupedEarthquakes)
-                  EarthquakeHistoryListTile(
-                    item: grouped,
-                    intensityColor: intensityColor,
-                    onTap: () => EarthquakeHistoryDetailsRoute(
-                      eventId: grouped.eventId,
-                    ).push<void>(context),
-                    showBackgroundColor: false,
-                    intensityIconSize: 28,
-                    dense: true,
-                  ),
-              ],
-            ),
-          ),
-        const Divider(height: 1, indent: 16, endIndent: 16),
-      ],
+          // for (final item in displayItems)
+          //   _SimilarEarthquakeItemTile(
+          //     item: item,
+          //     intensityColor: intensityColor,
+          //   ),
+          // if (hasMore && !showAll.value)
+          //   Padding(
+          //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          //     child: TextButton(
+          //       onPressed: () => showAll.value = true,
+          //       child: Text(
+          //         'すべて表示（残り${items.length - SimilarEarthquakeCard._initialDisplayCount}件）',
+          //       ),
+          //     ),
+          //   ),
+        ],
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -19,6 +20,8 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
     final isExpanded = useState(false);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final designSystem = theme.designSystemThemeExtension;
+    final spacing = designSystem.spacing;
 
     final selectedSegment = segments.firstWhere(
       (s) => s.value == selected,
@@ -27,26 +30,26 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
 
     if (!isExpanded.value) {
       return Align(
-        alignment: Alignment.centerRight,
+        alignment: .centerRight,
         child: GestureDetector(
           onTap: () => isExpanded.value = true,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: const .symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               color: colorScheme.secondaryContainer,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: .circular(8),
             ),
             child: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
+              spacing: spacing.xs,
               children: [
                 Text(
                   selectedSegment.label,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: colorScheme.onSecondaryContainer,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
-                const SizedBox(width: 2),
                 Icon(
                   Icons.arrow_drop_down,
                   size: 18,
@@ -62,18 +65,18 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
     return TapRegion(
       onTapOutside: (_) => isExpanded.value = false,
       child: Align(
-        alignment: Alignment.centerRight,
+        alignment: .centerRight,
         child: AnimatedSize(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
-          alignment: Alignment.centerRight,
+          alignment: .centerRight,
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: .circular(8),
             ),
             child: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 for (final segment in segments)
                   GestureDetector(
@@ -83,9 +86,9 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
+                      padding: .symmetric(
+                        horizontal: spacing.xs,
+                        vertical: spacing.xs,
                       ),
                       decoration: BoxDecoration(
                         color: segment.value == selected

@@ -28,7 +28,9 @@ class DebugPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Debug Page')),
+      appBar: AppBar(
+        title: const Text('Debug Page'),
+      ),
       body: const _DebugWidget(),
     );
   }
@@ -43,269 +45,277 @@ class _DebugWidget extends ConsumerWidget {
     final notificationToken = ref.watch(notificationTokenStreamProvider).value;
     final buildCfg = ref.watch(buildConfigProvider);
 
-    return ListTileTheme(
-      dense: true,
-      child: ListView(
-        children: [
-          ListTile(
-            title: const Text('デバッグモード'),
-            subtitle: Text(isDebugEnabled ? 'ON' : 'OFF'),
-            trailing: AppSwitch(
-              value: isDebugEnabled,
-              onChanged: (value) async =>
-                  ref.read(debugProvider.notifier).save(isEnabled: value),
-            ),
-            onTap: () async => ref
-                .read(debugProvider.notifier)
-                .save(isEnabled: !isDebugEnabled),
-          ),
-          ListTile(
-            title: const Text('Flavor'),
-            leading: const Icon(Icons.flag),
-            subtitle: Text(buildCfg.flavor.name),
-          ),
-          ListTile(
-            title: const Text('ビルド時刻'),
-            leading: const Icon(Icons.schedule),
-            subtitle: Text(
-              buildCfg.buildTimestamp.isEmpty
-                  ? '(not set)'
-                  : buildCfg.buildTimestamp,
-              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
-            ),
-          ),
-          ListTile(
-            title: const Text('ビルド時コミットメッセージ'),
-            leading: const Icon(Icons.commit),
-            subtitle: Text(
-              buildCfg.buildCommitMessage.isEmpty
-                  ? '(not set)'
-                  : buildCfg.buildCommitMessage,
-              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
-            ),
-          ),
-          ListTile(
-            title: const Text('オンボーディング'),
-            subtitle: const Text('オンボーディングフローをプレビュー'),
-            leading: const Icon(Icons.start),
-            onTap: () async => const OnboardingRoute().push<void>(context),
-          ),
-          ListTile(
-            title: const Text('オンボーディングリセット'),
-            subtitle: const Text('完了フラグを消去してオンボーディングを再表示'),
-            leading: const Icon(Icons.restart_alt),
-            onTap: () async => OnboardingCompleted.resetMutation.run(
-              ref,
-              (tsx) async =>
-                  tsx.get(onboardingCompletedProvider.notifier).reset(),
-            ),
-          ),
-          ListTile(
-            title: const Text('ログ'),
-            leading: const Icon(Icons.list),
-            onTap: () async => const TalkerRoute().push<void>(context),
-          ),
-          ListTile(
-            title: const Text('サーバ選択'),
-            leading: const Icon(Icons.dns),
-            subtitle: Text(
-              ref.watch(telegramUrlProvider).requireValue.restApiUrl,
-            ),
-            onTap: () async =>
-                const HttpApiEndpointSelectorRoute().push<void>(context),
-          ),
-          if (Platform.isIOS)
+    return Theme(
+      data: Theme.of(context).copyWith(
+        visualDensity: .compact,
+      ),
+      child: ListTileTheme(
+        dense: true,
+        child: ListView(
+          children: [
             ListTile(
-              title: const Text('App Groups UserDefaults'),
-              subtitle: const Text('Widget が参照する UserDefaults を直接操作'),
-              leading: const Icon(Icons.widgets_outlined),
-              onTap: () => const DebugAppGroupRoute().push<void>(context),
+              title: const Text('デバッグモード'),
+              subtitle: Text(isDebugEnabled ? 'ON' : 'OFF'),
+              trailing: AppSwitch(
+                value: isDebugEnabled,
+                onChanged: (value) async =>
+                    ref.read(debugProvider.notifier).save(isEnabled: value),
+              ),
+              onTap: () async => ref
+                  .read(debugProvider.notifier)
+                  .save(isEnabled: !isDebugEnabled),
             ),
-          ListTile(
-            title: const Text('Telemetry Events'),
-            leading: const Icon(Icons.analytics_outlined),
-            subtitle: const Text('ローカルテレメトリーイベントの閲覧'),
-            onTap: () async => const DebugTelemetryRoute().push<void>(context),
-          ),
-          ListTile(
-            title: const Text('WebSocket'),
-            leading: const Icon(Icons.cable),
-            subtitle: const Text('WebSocket 接続状況と受信ログ'),
-            onTap: () async => const DebugWebSocketRoute().push<void>(context),
-          ),
-          ListTile(
-            title: const Text('KyoshinMonitor'),
-            leading: const Icon(Icons.list),
-            onTap: () async => const DebugKyoshinMonitorRoute().push(context),
-          ),
-          ListTile(
-            title: const Text('EEW Card'),
-            subtitle: Text(
-              'ホームと同じカードの見た目をパラメータ検証',
-              style: Theme.of(context).textTheme.bodySmall,
+            ListTile(
+              title: const Text('Flavor'),
+              leading: const Icon(Icons.flag),
+              subtitle: Text(buildCfg.flavor.name),
             ),
-            leading: const Icon(Icons.flash_on),
-            onTap: () async => const DebugEewCardRoute().push(context),
-          ),
-          ListTile(
-            title: const Text('Tsunami Details'),
-            subtitle: const Text('津波情報詳細画面のデバッグ'),
-            leading: const Icon(Icons.tsunami),
-            onTap: () async =>
-                const DebugTsunamiDetailsRoute().push<void>(context),
-          ),
-          ListTile(
-            title: const Text('地震履歴 Card'),
-            subtitle: Text(
-              '各地の震度表示（速報値・確定値）をパラメータ検証',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            leading: const Icon(Icons.history_edu_outlined),
-            onTap: () async =>
-                const DebugEarthquakeHistoryCardRoute().push(context),
-          ),
-          ListTile(
-            title: const Text('地震履歴 レイヤーパラメータ'),
-            subtitle: Text(
-              'マップレイヤーのズーム閾値・透明度・サイズを調整',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            leading: const Icon(Icons.layers_outlined),
-            onTap: () async =>
-                EarthquakeHistoryDebugModal.show(context: context),
-          ),
-          ListTile(
-            title: const Text('地震履歴 ListTile'),
-            subtitle: Text(
-              '各種地震・検索対象地域の震度・海外遠地地震・海外噴火の見た目を確認',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            leading: const Icon(Icons.list_alt_outlined),
-            onTap: () async =>
-                const DebugEarthquakeHistoryListTileRoute().push(context),
-          ),
-          ListTile(
-            title: const Text('揺れ検知 Card'),
-            subtitle: Text(
-              'ホームと同じ揺れ検知カードの見た目をパラメータ検証',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            leading: const Icon(Icons.sensors_rounded),
-            onTap: () async =>
-                const DebugShakeDetectionCardRoute().push(context),
-          ),
-          ListTile(
-            title: const Text('JmaMap'),
-            leading: const Icon(Icons.map),
-            onTap: () async => const DebugJmaMapRoute().push(context),
-          ),
-          ListTile(
-            title: const Text('NIED'),
-            leading: const Icon(Icons.science),
-            onTap: () async => const NiedRoute().push(context),
-          ),
-          ListTile(
-            title: const Text('ナビゲーション'),
-            subtitle: const Text('ルート一覧から画面へ直接遷移'),
-            leading: const Icon(Icons.navigation),
-            onTap: () async => const DebugNavigationRoute().push<void>(context),
-          ),
-          ListTile(
-            title: const Text('Playground'),
-            leading: const Icon(Icons.list),
-            onTap: () async => const PlaygroundRoute().push(context),
-          ),
-          ListTile(
-            title: const Text('揺れ検知履歴'),
-            subtitle: const Text('このセッション中の揺れ検知イベント一覧'),
-            leading: const Icon(Icons.sensors_rounded),
-            onTap: () async =>
-                const ShakeDetectionHistoryRoute().push<void>(context),
-          ),
-          ListTile(
-            title: const Text('震度アイコン確認'),
-            subtitle: Text(
-              '全震度・全タイプのアイコンをプレビュー',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            leading: const Icon(Icons.format_list_numbered),
-            onTap: () async =>
-                const DebugIntensityIconRoute().push<void>(context),
-          ),
-          ListTile(
-            title: const Text('地震履歴詳細アイコン一覧'),
-            subtitle: const Text('震源・JMA震度・長周期地震動階級アイコンのプレビュー'),
-            leading: const Icon(Icons.place),
-            onTap: () async => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (context) => const HypocenterIconPage(),
+            ListTile(
+              title: const Text('ビルド時刻'),
+              leading: const Icon(Icons.schedule),
+              subtitle: Text(
+                buildCfg.buildTimestamp.isEmpty
+                    ? '(not set)'
+                    : buildCfg.buildTimestamp,
+                style: const TextStyle(fontFamily: FontFamily.googleSansCode),
               ),
             ),
-          ),
-          ListTile(
-            title: const Text('デバイス・通知'),
-            subtitle: const Text('登録・トークン同期・設定・テスト通知・履歴'),
-            leading: const Icon(Icons.phonelink_setup),
-            onTap: () async => const DebugDeviceSettingsRoute().push<void>(
-              context,
-            ),
-          ),
-          ListTile(
-            title: const Text('通知配信ログ'),
-            subtitle: const Text('GET /v2/device/{id}/notification/history'),
-            leading: const Icon(Icons.history),
-            onTap: () async =>
-                const DebugNotificationDeliveryLogRoute().push<void>(context),
-          ),
-          ListTile(
-            title: const Text('デバイス管理'),
-            subtitle: const Text('登録・再登録・削除・通知条件の設定'),
-            leading: const Icon(Icons.manage_accounts_outlined),
-            onTap: () async => const DebugDeviceAdminRoute().push<void>(
-              context,
-            ),
-          ),
-          const Divider(),
-          const _BackgroundLocationDebugSection(),
-          const Divider(),
-          ListTile(
-            title: const Text('FCM Token'),
-            subtitle: Text(
-              notificationToken?.fcmToken?.toString() ?? 'null',
-              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
-            ),
-            onTap: () async => Clipboard.setData(
-              ClipboardData(text: notificationToken?.fcmToken ?? ''),
-            ),
-          ),
-          ListTile(
-            title: const Text('APNS Token'),
-            subtitle: Text(
-              notificationToken?.apnsToken?.toString() ?? 'null',
-              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
-            ),
-            onTap: () async => Clipboard.setData(
-              ClipboardData(text: notificationToken?.apnsToken ?? ''),
-            ),
-          ),
-          ListTile(
-            title: const Text('Push To Start Token'),
-            subtitle: Text(
-              notificationToken?.apnsPushToStartToken?.toString() ?? 'null',
-              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
-            ),
-            onTap: () async => Clipboard.setData(
-              ClipboardData(
-                text: notificationToken?.apnsPushToStartToken ?? '',
+            ListTile(
+              title: const Text('ビルド時コミットメッセージ'),
+              leading: const Icon(Icons.commit),
+              subtitle: Text(
+                buildCfg.buildCommitMessage.isEmpty
+                    ? '(not set)'
+                    : buildCfg.buildCommitMessage,
+                style: const TextStyle(fontFamily: FontFamily.googleSansCode),
               ),
             ),
-          ),
-          const _ParameterDebugSection(),
-          const Divider(),
-          const _StartApiDebugSection(),
-          const Divider(),
-          const _AppCheckSection(),
-        ],
+            ListTile(
+              title: const Text('オンボーディング'),
+              subtitle: const Text('オンボーディングフローをプレビュー'),
+              leading: const Icon(Icons.start),
+              onTap: () async => const OnboardingRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('オンボーディングリセット'),
+              subtitle: const Text('完了フラグを消去してオンボーディングを再表示'),
+              leading: const Icon(Icons.restart_alt),
+              onTap: () async => OnboardingCompleted.resetMutation.run(
+                ref,
+                (tsx) async =>
+                    tsx.get(onboardingCompletedProvider.notifier).reset(),
+              ),
+            ),
+            ListTile(
+              title: const Text('ログ'),
+              leading: const Icon(Icons.list),
+              onTap: () async => const TalkerRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('サーバ選択'),
+              leading: const Icon(Icons.dns),
+              subtitle: Text(
+                ref.watch(telegramUrlProvider).requireValue.restApiUrl,
+              ),
+              onTap: () async =>
+                  const HttpApiEndpointSelectorRoute().push<void>(context),
+            ),
+            if (Platform.isIOS)
+              ListTile(
+                title: const Text('App Groups UserDefaults'),
+                subtitle: const Text('Widget が参照する UserDefaults を直接操作'),
+                leading: const Icon(Icons.widgets_outlined),
+                onTap: () => const DebugAppGroupRoute().push<void>(context),
+              ),
+            ListTile(
+              title: const Text('Telemetry Events'),
+              leading: const Icon(Icons.analytics_outlined),
+              subtitle: const Text('ローカルテレメトリーイベントの閲覧'),
+              onTap: () async =>
+                  const DebugTelemetryRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('WebSocket'),
+              leading: const Icon(Icons.cable),
+              subtitle: const Text('WebSocket 接続状況と受信ログ'),
+              onTap: () async =>
+                  const DebugWebSocketRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('KyoshinMonitor'),
+              leading: const Icon(Icons.list),
+              onTap: () async => const DebugKyoshinMonitorRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('EEW Card'),
+              subtitle: Text(
+                'ホームと同じカードの見た目をパラメータ検証',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              leading: const Icon(Icons.flash_on),
+              onTap: () async => const DebugEewCardRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('Tsunami Details'),
+              subtitle: const Text('津波情報詳細画面のデバッグ'),
+              leading: const Icon(Icons.tsunami),
+              onTap: () async =>
+                  const DebugTsunamiDetailsRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('地震履歴 Card'),
+              subtitle: Text(
+                '各地の震度表示（速報値・確定値）をパラメータ検証',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              leading: const Icon(Icons.history_edu_outlined),
+              onTap: () async =>
+                  const DebugEarthquakeHistoryCardRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('地震履歴 レイヤーパラメータ'),
+              subtitle: Text(
+                'マップレイヤーのズーム閾値・透明度・サイズを調整',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              leading: const Icon(Icons.layers_outlined),
+              onTap: () async =>
+                  EarthquakeHistoryDebugModal.show(context: context),
+            ),
+            ListTile(
+              title: const Text('地震履歴 ListTile'),
+              subtitle: Text(
+                '各種地震・検索対象地域の震度・海外遠地地震・海外噴火の見た目を確認',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              leading: const Icon(Icons.list_alt_outlined),
+              onTap: () async =>
+                  const DebugEarthquakeHistoryListTileRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('揺れ検知 Card'),
+              subtitle: Text(
+                'ホームと同じ揺れ検知カードの見た目をパラメータ検証',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              leading: const Icon(Icons.sensors_rounded),
+              onTap: () async =>
+                  const DebugShakeDetectionCardRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('JmaMap'),
+              leading: const Icon(Icons.map),
+              onTap: () async => const DebugJmaMapRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('NIED'),
+              leading: const Icon(Icons.science),
+              onTap: () async => const NiedRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('ナビゲーション'),
+              subtitle: const Text('ルート一覧から画面へ直接遷移'),
+              leading: const Icon(Icons.navigation),
+              onTap: () async =>
+                  const DebugNavigationRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('Playground'),
+              leading: const Icon(Icons.list),
+              onTap: () async => const PlaygroundRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('揺れ検知履歴'),
+              subtitle: const Text('このセッション中の揺れ検知イベント一覧'),
+              leading: const Icon(Icons.sensors_rounded),
+              onTap: () async =>
+                  const ShakeDetectionHistoryRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('震度アイコン確認'),
+              subtitle: Text(
+                '全震度・全タイプのアイコンをプレビュー',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              leading: const Icon(Icons.format_list_numbered),
+              onTap: () async =>
+                  const DebugIntensityIconRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('地震履歴詳細アイコン一覧'),
+              subtitle: const Text('震源・JMA震度・長周期地震動階級アイコンのプレビュー'),
+              leading: const Icon(Icons.place),
+              onTap: () async => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => const HypocenterIconPage(),
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('デバイス・通知'),
+              subtitle: const Text('登録・トークン同期・設定・テスト通知・履歴'),
+              leading: const Icon(Icons.phonelink_setup),
+              onTap: () async => const DebugDeviceSettingsRoute().push<void>(
+                context,
+              ),
+            ),
+            ListTile(
+              title: const Text('通知配信ログ'),
+              subtitle: const Text('GET /v2/device/{id}/notification/history'),
+              leading: const Icon(Icons.history),
+              onTap: () async =>
+                  const DebugNotificationDeliveryLogRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('デバイス管理'),
+              subtitle: const Text('登録・再登録・削除・通知条件の設定'),
+              leading: const Icon(Icons.manage_accounts_outlined),
+              onTap: () async => const DebugDeviceAdminRoute().push<void>(
+                context,
+              ),
+            ),
+            const Divider(),
+            const _BackgroundLocationDebugSection(),
+            const Divider(),
+            ListTile(
+              title: const Text('FCM Token'),
+              subtitle: Text(
+                notificationToken?.fcmToken?.toString() ?? 'null',
+                style: const TextStyle(fontFamily: FontFamily.googleSansCode),
+              ),
+              onTap: () async => Clipboard.setData(
+                ClipboardData(text: notificationToken?.fcmToken ?? ''),
+              ),
+            ),
+            ListTile(
+              title: const Text('APNS Token'),
+              subtitle: Text(
+                notificationToken?.apnsToken?.toString() ?? 'null',
+                style: const TextStyle(fontFamily: FontFamily.googleSansCode),
+              ),
+              onTap: () async => Clipboard.setData(
+                ClipboardData(text: notificationToken?.apnsToken ?? ''),
+              ),
+            ),
+            ListTile(
+              title: const Text('Push To Start Token'),
+              subtitle: Text(
+                notificationToken?.apnsPushToStartToken?.toString() ?? 'null',
+                style: const TextStyle(fontFamily: FontFamily.googleSansCode),
+              ),
+              onTap: () async => Clipboard.setData(
+                ClipboardData(
+                  text: notificationToken?.apnsPushToStartToken ?? '',
+                ),
+              ),
+            ),
+            const _ParameterDebugSection(),
+            const Divider(),
+            const _StartApiDebugSection(),
+            const Divider(),
+            const _AppCheckSection(),
+          ],
+        ),
       ),
     );
   }

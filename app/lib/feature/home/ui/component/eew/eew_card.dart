@@ -263,7 +263,7 @@ class _EewCardHeader extends StatelessWidget {
 
     final leftColumn = Expanded(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             typeLabelWithSerial,
@@ -275,10 +275,10 @@ class _EewCardHeader extends StatelessWidget {
           Text(
             headlineText,
             style: typography.titleSmall.copyWith(
-              fontWeight: FontWeight.w700,
+              fontWeight: .w700,
               color: Colors.white,
             ),
-            overflow: TextOverflow.visible,
+            overflow: .visible,
           ),
         ],
       ),
@@ -287,7 +287,7 @@ class _EewCardHeader extends StatelessWidget {
     final Widget? rightColumn;
     if (countdownText != null) {
       rightColumn = Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: .end,
         children: [
           Text(
             '主要動到達まで',
@@ -400,6 +400,7 @@ class _EewHypocenterSection extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: spacing.xs,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -408,7 +409,7 @@ class _EewHypocenterSection extends StatelessWidget {
             if (eew.isPlum)
               Text(
                 'PLUM法による検知',
-                style: typography.titleSmall.copyWith(
+                style: typography.titleMedium.copyWith(
                   fontFamily: codeFontFamily,
                 ),
               )
@@ -422,8 +423,6 @@ class _EewHypocenterSection extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 4),
-        const SizedBox(height: 4),
         Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
@@ -595,7 +594,7 @@ class _MagnitudeRow extends StatelessWidget {
             magnitude!.toStringAsFixed(1),
             style: typography.titleLarge.copyWith(
               fontFamily: codeFontFamily,
-              letterSpacing: -0.5,
+              letterSpacing: -2,
             ),
           )
         else
@@ -638,20 +637,22 @@ class _DepthRow extends StatelessWidget {
             ),
           ),
           Text(
-            ' km以上',
+            'km以上',
             style: typography.labelSmall.copyWith(color: textColor.secondary),
           ),
         ] else ...[
           Text(
-            '$depth ',
+            '$depth',
             style: typography.titleLarge.copyWith(
               fontFamily: codeFontFamily,
               letterSpacing: -0.5,
             ),
           ),
           Text(
-            'km',
-            style: typography.labelSmall.copyWith(color: textColor.secondary),
+            ' km',
+            style: typography.labelSmall.copyWith(
+              color: textColor.secondary,
+            ),
           ),
         ],
       ],

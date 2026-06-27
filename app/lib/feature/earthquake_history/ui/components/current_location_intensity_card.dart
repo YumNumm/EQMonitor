@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
@@ -117,8 +117,7 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
             intensity: intensity,
             lpgmIntensity: lpgmIntensity,
             title: "${cityParameterName ?? ''} で最大震度${intensity.label}",
-            description:
-                '${cityParameterName ?? ''}で最大震度${intensity.label}を観測しました',
+            description: '',
           ),
       },
       skipLoadingOnRefresh: true,
@@ -144,31 +143,24 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final icons = [
-      JmaIntensityIcon(
-        intensity: intensity,
-        type: .filled,
-        size: 40,
-      ),
-      if (lpgmIntensity != null) ...[
-        const SizedBox(width: 4),
-        JmaLpgmIntensityIcon(
-          intensity: lpgmIntensity!,
-          type: .filled,
-          size: 34,
-        ),
-      ],
-    ];
+
+    final designSystem = theme.designSystemThemeExtension;
+    final spacing = designSystem.spacing;
 
     return BorderedContainer(
       elevation: 1,
       child: Row(
+        spacing: spacing.md,
         children: [
-          Row(mainAxisSize: MainAxisSize.min, children: icons),
-          const SizedBox(width: 12),
+          JmaIntensityIcon(
+            intensity: intensity,
+            type: .filled,
+            size: 40,
+          ),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
+              spacing: spacing.xs,
               children: [
                 Text(
                   title,
@@ -176,7 +168,6 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
                 Text(
                   description,
                   style: textTheme.bodySmall?.copyWith(
