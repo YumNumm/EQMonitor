@@ -26,8 +26,6 @@ abstract class TrackedTsunamiTimeline with _$TrackedTsunamiTimeline {
   }) = _TrackedTsunamiTimeline;
 }
 
-/// api レスポンスを中間追跡表現に変換する extension。
-/// トップレベル関数禁止のため、変換は private クラス経由で行う。
 extension TsunamiTelegramsResponseApiExt on api.TsunamiTelegramsResponse {
   TrackedTsunamiTimeline toTrackedTimeline() =>
       _TrackedTimelineBuilder(this).build();

@@ -17,15 +17,11 @@ _TsunamiRegionEstimation _$TsunamiRegionEstimationFromJson(
     final val = _TsunamiRegionEstimation(
       firstHeight: $checkedConvert(
         'first_height',
-        (v) => TsunamiRegionEstimationFirstHeight.fromJson(
-          v as Map<String, dynamic>,
-        ),
+        (v) => FirstHeight.fromJson(v as Map<String, dynamic>),
       ),
       maxHeight: $checkedConvert(
         'max_height',
-        (v) => TsunamiRegionEstimationMaxHeight.fromJson(
-          v as Map<String, dynamic>,
-        ),
+        (v) => MaxHeight.fromJson(v as Map<String, dynamic>),
       ),
     );
     return val;

@@ -1,0 +1,25 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: unused_import, invalid_annotation_target, unnecessary_import
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'trigger_type.dart';
+
+part 'triggers.freezed.dart';
+part 'triggers.g.dart';
+
+@Freezed()
+abstract class Triggers with _$Triggers {
+  const factory Triggers({
+    required String id,
+    required String replayFileId,
+
+    /// const: "SHAKE_DETECTION" | const: "EARTHQUAKE"
+    required TriggerType triggerType,
+    required String eventId,
+    required String createdAt,
+  }) = _Triggers;
+  
+  factory Triggers.fromJson(Map<String, Object?> json) => _$TriggersFromJson(json);
+}

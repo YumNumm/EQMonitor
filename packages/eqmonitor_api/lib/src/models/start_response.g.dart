@@ -17,7 +17,7 @@ _StartResponse _$StartResponseFromJson(Map<String, dynamic> json) =>
         ),
         app: $checkedConvert(
           'app',
-          (v) => StartApp.fromJson(v as Map<String, dynamic>),
+          (v) => App.fromJson(v as Map<String, dynamic>),
         ),
       );
       return val;

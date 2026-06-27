@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'tsunami_station_forecast_first_height.dart';
+import 'first_height2.dart';
 
 part 'tsunami_station_forecast.freezed.dart';
 part 'tsunami_station_forecast.g.dart';
@@ -15,7 +15,7 @@ abstract class TsunamiStationForecast with _$TsunamiStationForecast {
     @JsonKey(name: 'high_tide_at')
     required DateTime highTideAt,
     @JsonKey(includeIfNull: false,name: 'first_height')
-    TsunamiStationForecastFirstHeight? firstHeight,
+    FirstHeight2? firstHeight,
   }) = _TsunamiStationForecast;
   
   factory TsunamiStationForecast.fromJson(Map<String, Object?> json) => _$TsunamiStationForecastFromJson(json);

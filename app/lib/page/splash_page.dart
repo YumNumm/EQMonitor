@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -9,6 +10,7 @@ import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SplashPage extends HookConsumerWidget {
@@ -39,8 +41,14 @@ class SplashPage extends HookConsumerWidget {
           unawaited(
             ref.read(startProvider.notifier).fetchInBackground(),
           );
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            const HomeRoute().go(context);
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            context.go(const HomeRoute().location);
+            final pendingEventId = consumePendingNotificationEventId();
+            if (pendingEventId != null) {
+              await EarthquakeHistoryDetailsRoute(
+                eventId: pendingEventId,
+              ).push<void>(context);
+            }
           });
         }
         return null;

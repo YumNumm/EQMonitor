@@ -7,7 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'earthquake_datasource.dart';
 import 'jma_intensity.dart';
 import 'jma_lpgm_intensity.dart';
-import 'telegram_body_pre_period.dart';
+import 'pre_periods2.dart';
 
 part 'earthquake_telegram_body_intensity_station.freezed.dart';
 part 'earthquake_telegram_body_intensity_station.g.dart';
@@ -24,9 +24,9 @@ abstract class EarthquakeTelegramBodyIntensityStation with _$EarthquakeTelegramB
     @JsonKey(includeIfNull: false)
     JmaLpgmIntensity? lpgmIntensity,
     @JsonKey(includeIfNull: false)
-    num? sva,
+    dynamic sva,
     @JsonKey(includeIfNull: false)
-    List<TelegramBodyPrePeriod>? prePeriods,
+    List<PrePeriods2>? prePeriods,
     @JsonKey(includeIfNull: false)
     EarthquakeDatasource? datasource,
   }) = _EarthquakeTelegramBodyIntensityStation;

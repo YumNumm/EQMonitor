@@ -59,3 +59,25 @@ extension TestNotificationKindApiExtension on TestNotificationKind {
     },
   );
 }
+
+/// テストシナリオ実行結果
+class TestScenarioDeliveryResult {
+  const TestScenarioDeliveryResult({
+    required this.eventId,
+    required this.stepsPlanned,
+    required this.telegramTypes,
+  });
+
+  final String eventId;
+  final int stepsPlanned;
+  final List<String> telegramTypes;
+}
+
+extension TestScenarioDeliveryResultApiExtension on api.TestScenarioResponse {
+  TestScenarioDeliveryResult get toTestScenarioDeliveryResult =>
+      TestScenarioDeliveryResult(
+        eventId: eventId,
+        stepsPlanned: stepsPlanned.toInt(),
+        telegramTypes: telegramTypes,
+      );
+}

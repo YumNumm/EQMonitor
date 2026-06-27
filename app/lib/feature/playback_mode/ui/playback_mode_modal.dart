@@ -161,7 +161,10 @@ class _OpenReplayFileButton extends ConsumerWidget {
         }
         await ref
             .read(replayProvider.notifier)
-            .loadFile(bytes: bytes, fileName: picked!.name);
+            .loadFile(
+              bytes: bytes,
+              fileName: picked?.name ?? '',
+            );
       },
     );
   }

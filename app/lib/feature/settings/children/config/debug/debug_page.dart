@@ -94,11 +94,11 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('オンボーディングリセット'),
             subtitle: const Text('完了フラグを消去してオンボーディングを再表示'),
             leading: const Icon(Icons.restart_alt),
-            onTap: () async =>
-                OnboardingCompleted.resetMutation.run(
-                    ref,
-                    (tsx) async => tsx.get(onboardingCompletedProvider.notifier).reset(),
-                ),
+            onTap: () async => OnboardingCompleted.resetMutation.run(
+              ref,
+              (tsx) async =>
+                  tsx.get(onboardingCompletedProvider.notifier).reset(),
+            ),
           ),
           ListTile(
             title: const Text('ログ'),
@@ -120,14 +120,6 @@ class _DebugWidget extends ConsumerWidget {
               subtitle: const Text('Widget が参照する UserDefaults を直接操作'),
               leading: const Icon(Icons.widgets_outlined),
               onTap: () => const DebugAppGroupRoute().push<void>(context),
-            ),
-          if (Platform.isIOS)
-            ListTile(
-              title: const Text('Live Activity デバッグ'),
-              subtitle: const Text('EEW / 揺れ検知の 4 報シナリオを APNs 経由でテスト'),
-              leading: const Icon(Icons.lightbulb),
-              onTap: () async =>
-                  const DebugLiveActivityTestRoute().push<void>(context),
             ),
           ListTile(
             title: const Text('Telemetry Events'),

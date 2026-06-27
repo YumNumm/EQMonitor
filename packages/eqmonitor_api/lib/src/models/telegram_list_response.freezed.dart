@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TelegramListResponse {
 
- List<TelegramPartial> get items;/// カーソル情報（base64エンコード）
+ List<Items4> get items;/// カーソル情報（base64エンコード）
 @JsonKey(includeIfNull: false, name: 'next_token') String? get nextToken;/// カーソル情報（base64エンコード）
 @JsonKey(includeIfNull: false, name: 'next_pooling') String? get nextPooling;
 /// Create a copy of TelegramListResponse
@@ -50,7 +50,7 @@ abstract mixin class $TelegramListResponseCopyWith<$Res>  {
   factory $TelegramListResponseCopyWith(TelegramListResponse value, $Res Function(TelegramListResponse) _then) = _$TelegramListResponseCopyWithImpl;
 @useResult
 $Res call({
- List<TelegramPartial> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
+ List<Items4> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
 });
 
 
@@ -70,7 +70,7 @@ class _$TelegramListResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? nextToken = freezed,Object? nextPooling = freezed,}) {
   return _then(_self.copyWith(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
-as List<TelegramPartial>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
+as List<Items4>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
 as String?,nextPooling: freezed == nextPooling ? _self.nextPooling : nextPooling // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TelegramPartial> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Items4> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TelegramListResponse() when $default != null:
 return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
@@ -178,7 +178,7 @@ return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TelegramPartial> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Items4> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)  $default,) {final _that = this;
 switch (_that) {
 case _TelegramListResponse():
 return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
@@ -198,7 +198,7 @@ return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TelegramPartial> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Items4> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,) {final _that = this;
 switch (_that) {
 case _TelegramListResponse() when $default != null:
 return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
@@ -213,11 +213,11 @@ return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
 @JsonSerializable()
 
 class _TelegramListResponse implements TelegramListResponse {
-  const _TelegramListResponse({required final  List<TelegramPartial> items, @JsonKey(includeIfNull: false, name: 'next_token') this.nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling') this.nextPooling}): _items = items;
+  const _TelegramListResponse({required final  List<Items4> items, @JsonKey(includeIfNull: false, name: 'next_token') this.nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling') this.nextPooling}): _items = items;
   factory _TelegramListResponse.fromJson(Map<String, dynamic> json) => _$TelegramListResponseFromJson(json);
 
- final  List<TelegramPartial> _items;
-@override List<TelegramPartial> get items {
+ final  List<Items4> _items;
+@override List<Items4> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
@@ -261,7 +261,7 @@ abstract mixin class _$TelegramListResponseCopyWith<$Res> implements $TelegramLi
   factory _$TelegramListResponseCopyWith(_TelegramListResponse value, $Res Function(_TelegramListResponse) _then) = __$TelegramListResponseCopyWithImpl;
 @override @useResult
 $Res call({
- List<TelegramPartial> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
+ List<Items4> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
 });
 
 
@@ -281,7 +281,7 @@ class __$TelegramListResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? nextToken = freezed,Object? nextPooling = freezed,}) {
   return _then(_TelegramListResponse(
 items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<TelegramPartial>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
+as List<Items4>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
 as String?,nextPooling: freezed == nextPooling ? _self.nextPooling : nextPooling // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

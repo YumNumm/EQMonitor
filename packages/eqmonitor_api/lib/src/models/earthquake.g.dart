@@ -29,7 +29,7 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
       telegrams: $checkedConvert(
         'telegrams',
         (v) => (v as List<dynamic>)
-            .map((e) => EarthquakeTelegram.fromJson(e as Map<String, dynamic>))
+            .map((e) => Telegrams.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
       originTime: $checkedConvert(

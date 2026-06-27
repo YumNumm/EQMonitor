@@ -163,7 +163,6 @@ final class _BackgroundLocationServiceTestModels {
   EewNotificationSettings eewSettings({required bool hasCurrentLocation}) =>
       EewNotificationSettings(
         enabled: true,
-        criticalThreshold: null,
         startLiveActivity: true,
         onePointEnabled: true,
         regions: [
@@ -175,7 +174,6 @@ final class _BackgroundLocationServiceTestModels {
     required bool hasCurrentLocation,
   }) => EarthquakeNotificationSettings(
     enabled: true,
-    criticalThreshold: null,
     estimatedIntensityEnabled: false,
     regions: [
       if (hasCurrentLocation) notificationRegion(isCurrentLocation: true),

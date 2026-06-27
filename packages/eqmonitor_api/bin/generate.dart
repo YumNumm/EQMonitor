@@ -1125,7 +1125,10 @@ void _patchConstPropertiesToTyped(File openapiFile) {
       if (props is Map<String, Object?>) {
         patchProperties(props);
       }
-      node.values.forEach(walkAndPatch);
+      // ignore: prefer_foreach
+      for (final value in node.values) {
+        walkAndPatch(value);
+      }
     } else if (node is List) {
       node.forEach(walkAndPatch);
     }

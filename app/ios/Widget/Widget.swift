@@ -49,7 +49,7 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
                 case .nationwide:
                     return nil
                 case .currentLocation:
-                    // モック: 東京都23区
+                    // TODO(YumNumm): 位置情報をUserDefaultsから取ってくる
                     return "350"
                 case .specificRegion:
                     return configuration.region?.id
