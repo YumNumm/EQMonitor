@@ -91,12 +91,17 @@ WsTsunamiRealtimeEvent _$WsTsunamiRealtimeEventFromJson(
         (v) => $enumDecode(_$WsRealtimeOperationEnumMap, v),
       ),
       eventId: $checkedConvert('event_id', (v) => v as String),
+      groupId: $checkedConvert('group_id', (v) => v as String?),
       record: $checkedConvert('record', (v) => v as Map<String, dynamic>?),
       $type: $checkedConvert('type', (v) => v as String?),
     );
     return val;
   },
-  fieldKeyMap: const {'eventId': 'event_id', r'$type': 'type'},
+  fieldKeyMap: const {
+    'eventId': 'event_id',
+    'groupId': 'group_id',
+    r'$type': 'type',
+  },
 );
 
 Map<String, dynamic> _$WsTsunamiRealtimeEventToJson(
@@ -104,6 +109,7 @@ Map<String, dynamic> _$WsTsunamiRealtimeEventToJson(
 ) => <String, dynamic>{
   'operation': _$WsRealtimeOperationEnumMap[instance.operation]!,
   'event_id': instance.eventId,
+  'group_id': instance.groupId,
   'record': instance.record,
   'type': instance.$type,
 };

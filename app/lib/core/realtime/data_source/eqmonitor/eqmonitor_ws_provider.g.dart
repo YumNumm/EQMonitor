@@ -51,34 +51,33 @@ String _$eqmonitorWebSocketHash() =>
     r'a2ec95ca93dd52b41d6b11bf833eb20780645400';
 
 /// WebSocket イベントストリーム。
+///
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
-/// CloseReceived 検知時に eqmonitorWebSocket を invalidate して再接続をトリガーする。
+/// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
+/// アプリ resume 時はバックオフをリセットして即座に再接続する。
 
-@ProviderFor(eqmonitorWsEventStream)
+@ProviderFor(EqmonitorWsEventStream)
 final eqmonitorWsEventStreamProvider = EqmonitorWsEventStreamProvider._();
 
 /// WebSocket イベントストリーム。
+///
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
-/// CloseReceived 検知時に eqmonitorWebSocket を invalidate して再接続をトリガーする。
-
+/// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
+/// アプリ resume 時はバックオフをリセットして即座に再接続する。
 final class EqmonitorWsEventStreamProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<WebSocketEvent>,
-          WebSocketEvent,
-          Stream<WebSocketEvent>
-        >
-    with $FutureModifier<WebSocketEvent>, $StreamProvider<WebSocketEvent> {
+    extends $StreamNotifierProvider<EqmonitorWsEventStream, WebSocketEvent> {
   /// WebSocket イベントストリーム。
+  ///
   /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
-  /// CloseReceived 検知時に eqmonitorWebSocket を invalidate して再接続をトリガーする。
+  /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
+  /// アプリ resume 時はバックオフをリセットして即座に再接続する。
   EqmonitorWsEventStreamProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'eqmonitorWsEventStreamProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -88,18 +87,36 @@ final class EqmonitorWsEventStreamProvider
 
   @$internal
   @override
-  $StreamProviderElement<WebSocketEvent> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
-
-  @override
-  Stream<WebSocketEvent> create(Ref ref) {
-    return eqmonitorWsEventStream(ref);
-  }
+  EqmonitorWsEventStream create() => EqmonitorWsEventStream();
 }
 
 String _$eqmonitorWsEventStreamHash() =>
-    r'25b58f12d853328d9ba3d189d1e747cba9dc4dcb';
+    r'5d74667823b05b7eeb6bdfc577fc562e18b4363c';
+
+/// WebSocket イベントストリーム。
+///
+/// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
+/// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
+/// アプリ resume 時はバックオフをリセットして即座に再接続する。
+
+abstract class _$EqmonitorWsEventStream
+    extends $StreamNotifier<WebSocketEvent> {
+  Stream<WebSocketEvent> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<WebSocketEvent>, WebSocketEvent>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<WebSocketEvent>, WebSocketEvent>,
+              AsyncValue<WebSocketEvent>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
 
 @ProviderFor(eqmonitorWebSocketTicket)
 final eqmonitorWebSocketTicketProvider = EqmonitorWebSocketTicketProvider._();

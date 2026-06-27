@@ -72,6 +72,9 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
     ref.listen(realtimeEventsProvider, (_, next) async {
       if (next case AsyncData(:final value)) {
         switch (value) {
+          case RealtimeReadyEvent():
+            final result = await repository.fetchEarthquakeList(limit: 10);
+            dataSource.upsertItems(result.items);
           case RealtimeEarthquakeUpsertEvent():
             final result = await repository.fetchEarthquakeList(limit: 10);
             dataSource.upsertItems(result.items);

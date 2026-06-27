@@ -37,6 +37,7 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
   const factory RealtimeEventEnvelope.tsunami({
     required WsRealtimeOperation operation,
     @JsonKey(name: 'event_id') required String eventId,
+    @JsonKey(name: 'group_id') String? groupId,
     Map<String, dynamic>? record,
   }) = WsTsunamiRealtimeEvent;
 

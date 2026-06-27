@@ -56,4 +56,4 @@ final class TelemetryRecorderProvider
   }
 }
 
-String _$telemetryRecorderHash() => r'a7c09f4a2bad1d14f87ec69d6c5d784f2c1c0d27';
+String _$telemetryRecorderHash() => r'a0ac094897646fe3f513b5ccd0bf4c9ed1ad4f48';

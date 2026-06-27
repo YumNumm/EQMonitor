@@ -34,8 +34,8 @@ class Eew extends _$Eew {
     ref.listen(realtimeEventsProvider, (_, next) {
       next.whenData((event) {
         switch (event) {
-          case RealtimeSnapshotEvent(:final eews):
-            state = AsyncData(eews.map((e) => e.toEewTelegramItem).toList());
+          case RealtimeReadyEvent():
+            ref.invalidate(_eewRestProvider, asReload: true);
           case RealtimeEewUpsertEvent(:final item):
             _upsert(item.toEewTelegramItem);
           default:
