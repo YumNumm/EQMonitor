@@ -156,6 +156,15 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async => const DebugEewCardRoute().push(context),
             ),
             ListTile(
+              title: const Text('EEW 一覧'),
+              subtitle: Text(
+                '発表中EEWのピン留めと過去EEWの履歴(将来一般公開予定)',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              leading: const Icon(Icons.list_alt),
+              onTap: () async => const EewHistoryRoute().push<void>(context),
+            ),
+            ListTile(
               title: const Text('Tsunami Details'),
               subtitle: const Text('津波情報詳細画面のデバッグ'),
               leading: const Icon(Icons.tsunami),
