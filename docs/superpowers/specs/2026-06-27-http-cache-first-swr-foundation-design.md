@@ -42,7 +42,7 @@
 ┌───────────────┴───────────────────────────────────────────────┐
 │ CachedNotifier<T> mixin（app/core）                            │
 │   build(): fetch(cacheOnlyApi) → 即return → microtaskでrevalidate│
-│   revalidate(): copyWithPrevious で stale維持しつつ最新へ        │
+│   build内microtask: copyWithPrevious で stale維持しつつ最新へ   │
 │   （オプション）AppLifecycle 復帰時に revalidate                │
 └───────┬───────────────────────────────────┬───────────────────┘
         │ cacheOnlyApiClient                │ apiClient（既存・通常Dio）
@@ -91,24 +91,22 @@ class CacheOnlyInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    final cacheMiss = DioException(
+      requestOptions: options,
+      error: const CacheMissException(),
+    );
     if (options.method.toUpperCase() != 'GET') {
-      handler.reject(_cacheMiss(options));    // GET 以外はキャッシュ対象外
+      handler.reject(cacheMiss);   // GET 以外はキャッシュ対象外
       return;
     }
     final key = store.primaryKeyForUrl(options);   // 通常 Dio と同一のキー計算
     final cached = await store.read(key);
     if (cached == null) {
-      handler.reject(_cacheMiss(options));
+      handler.reject(cacheMiss);
       return;
     }
     handler.resolve(restoreResponse(options, cached));   // 復元 Response で短絡
   }
-
-  DioException _cacheMiss(RequestOptions o) => DioException(
-        requestOptions: o,
-        type: DioExceptionType.unknown,
-        error: const CacheMissException(),
-      );
 }
 ```
 
@@ -143,14 +141,17 @@ Future<ApiClient> cacheOnlyApiClient(Ref ref) async =>
 
 riverpod_generator (3.2.1) は `class X extends _$X` を要求し、`Future<T> build()` のクラス Notifier の生成基底は `abstract class _$X extends $AsyncNotifier<T>`(`$` 付き)。レガシーの `AsyncNotifier` は `$AsyncNotifier` の**サブクラス**なので、mixin 制約は **`on $AsyncNotifier<T>`** にしなければコンパイルできない(`on AsyncNotifier<T>` は不可)。`ref` は `AnyNotifier`/`$AsyncNotifier` 上に定義されるためこの制約で利用可能。各 feature は `fetch(ApiClient)` を 1 つ実装するだけ。
 
-cache-only 経路は**投機的読み出し**なので、cache-miss(`DioException(.error=CacheMissException)`)もデシリアライズ失敗(retrofit が元例外を rethrow)も区別せず**包括 catch で通常ロードへフォールバック**し、壊れたエントリは evict する。`isCacheMiss(Object)` ヘルパを `packages/cache` から export し判定に使う。
+**公開 `revalidate()` メソッドは設けない。** 明示的な再取得(pull-to-refresh 等)は消費側が `ref.invalidate(provider)`、アプリ復帰は `ref.invalidateSelf()` を使う。invalidate すると `build()` が再走し、同じ「cache 即返し → 裏でネットワーク更新」フローがそのまま回る(直前の取得結果がストアにあるので即 stale 表示も維持される)。build を再走させずに行う必要があるのは **build 内のバックグラウンド更新だけ**(これを invalidate にすると無限ループになるため、state を直接更新する内部処理として残す)。
+
+cache-only 経路は**投機的読み出し**なので、cache-miss(`DioException(.error=CacheMissException)`、`isCacheMiss` で判定)もデシリアライズ失敗も区別せず**包括 catch で通常ロードへフォールバック**する。壊れたキャッシュ(parse 失敗)時はそのデータを**除去**してから通常ロードする(セクション4)。多重発火(build microtask と invalidate 再走)対策は **世代カウンタ + `ref.mounted`** で行う(invalidate 再走で `_generation` が進み、追い越された古い microtask は state を触らない = last-write-wins 逆転を防止)。
 
 ```dart
 /// キャッシュ優先 + 裏で再検証する Notifier の共通 mixin。
 ///
-/// - build(): cache-only を試し、ヒットすれば即返して裏で再検証。
+/// - build(): cache-only を試し、ヒットすれば即返して裏でネットワーク更新。
 ///   失敗(ミス/パース不整合)なら通常ロード。
 /// - 状態は AsyncValue<T> のまま。stale 表示中は isRefreshing=true。
+/// - 再取得は ref.invalidate(Self) で build を再走させる(専用メソッド不要)。
 mixin CachedNotifier<T> on $AsyncNotifier<T> {
   /// cache-only / 通常を問わず、渡された client で取得する。
   /// ETag 付与・304 復元・保存は通常 Dio のインターセプタが担当するため、
@@ -160,57 +161,50 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
   Future<ApiClient> get _cacheOnlyApi => ref.read(cacheOnlyApiClientProvider.future);
   Future<ApiClient> get _networkApi => ref.read(apiClientProvider.future);
 
-  /// アプリ復帰時にも再検証するか (Provider ごとにオーバーライド)。
+  /// アプリ復帰時に ref.invalidateSelf() で再取得するか (Provider ごとにオーバーライド)。
   bool get revalidateOnAppResume => false;
 
-  Future<void>? _inflight;   // in-flight な再検証(競合防止)
+  int _generation = 0;
 
   @override
   Future<T> build() async {
     if (revalidateOnAppResume) {
-      // 既存 app_lifecycle provider を ref.listen し、resumed で revalidate。
-      // build 再実行ごとの二重登録は ref.listen の購読差し替えで回避。
-      _listenAppLifecycleForResume();
+      _listenAppResume();   // resumed で ref.invalidateSelf()
     }
+    final gen = ++_generation;
     try {
       final cached = await fetch(await _cacheOnlyApi);
-      Future.microtask(revalidate);   // 返した直後に裏で再検証
-      return cached;                  // → AsyncData(stale) を即表示
-    } catch (_) {
-      // cache-only はネットワークに出ないため、ここに来る例外は
-      // cache-miss か壊れたキャッシュのみ。どちらも通常ロードへ。
-      return fetch(await _networkApi);   // → 初回 AsyncLoading → AsyncData
+      Future.microtask(() => _revalidateInBackground(gen));   // 返した直後に裏で更新
+      return cached;                                          // → AsyncData(stale) を即表示
+    } catch (e) {
+      // cache-only はネットワークに出ないため、例外は cache-miss か壊れたキャッシュのみ。
+      if (!isCacheMiss(e)) {
+        await _evictBrokenCacheEntry();   // 壊れたデータを除去(304 復元での再失敗を防ぐ。セクション4)
+      }
+      return fetch(await _networkApi);    // → 初回 AsyncLoading → AsyncData
     }
   }
 
-  /// 明示的再検証 / 裏での再検証。stale を維持したまま最新へ。
-  /// 多重発火(build microtask / 明示 refresh / 復帰)は in-flight で 1 本化する。
-  Future<void> revalidate() {
-    return _inflight ??= _revalidate().whenComplete(() => _inflight = null);
-  }
-
-  Future<void> _revalidate() async {
-    if (!ref.mounted) {
-      return;   // dispose 済み Notifier への state 代入クラッシュを防ぐ
+  Future<void> _revalidateInBackground(int gen) async {
+    if (!ref.mounted || gen != _generation) {
+      return;   // dispose 済み / 新しい build に追い越された
     }
     state = const AsyncLoading<T>().copyWithPrevious(state);   // isRefreshing=true
     try {
       final fresh = await fetch(await _networkApi);
-      if (!ref.mounted) {
-        return;
+      if (ref.mounted && gen == _generation) {
+        state = AsyncData(fresh);                              // 最新 (304 はストア復元値)
       }
-      state = AsyncData(fresh);                                // 最新 (304 はストア復元値)
     } on Exception catch (e, st) {
-      if (!ref.mounted) {
-        return;
+      if (ref.mounted && gen == _generation) {
+        state = AsyncError<T>(e, st).copyWithPrevious(state);  // stale を残したままエラー通知
       }
-      state = AsyncError<T>(e, st).copyWithPrevious(state);    // stale を残したままエラー通知
     }
   }
 }
 ```
 
-> `_listenAppLifecycleForResume` は既存 `app/lib/core/provider/app_lifecycle.dart`(`AppLifecycle`)を `ref.listen` して resumed を拾う。`_inflight` ガードにより「遅く完了した再検証が新しい値を上書きする(last-write-wins 逆転)」を防ぐ。
+> `_listenAppResume` は既存 `app/lib/core/provider/app_lifecycle.dart`(`AppLifecycle`)を `ref.listen` し、resumed で `ref.invalidateSelf()` を呼ぶ。`_evictBrokenCacheEntry` の具体手段はセクション4 + 未解決論点参照。
 
 ### AsyncValue による状態表現
 
@@ -261,7 +255,7 @@ class StartNotifier extends _$StartNotifier with CachedNotifier<StartResponse> {
 ### Tier 2 — ユーザー設定系 (後続・別 spec)
 
 - `/v2/device/me/settings/*` 等(`/v2/user/me`・`/v2/subscription/me` は現状 app/lib に消費者ゼロのため当面除外 = YAGNI)。
-- **書き込み連動の無効化は evict ではなく revalidate/invalidate**: 当初案の「write 成功時に `store.evict(key)`」は、key が URI 由来(`store.primaryKeyForUrl(RequestOptions)`)で write 側が GET の URI/`@Path`/baseUrl を再構築する必要があり、「キー再宣言を持ち込まない」中心思想に反する(`@Path` 動的・1 write→複数 GET もある)。代わりに **write 成功後に対応する `CachedNotifier` の `revalidate()`(または `ref.invalidate`)を叩く**。これで HTTP インターセプタが ETag 再検証し、サーバ反映済みの最新へ更新される。プレフィックス単位 evict が必要なら `HttpCacheStore` に専用 API を足すのは別 spec で検討。
+- **書き込み連動の無効化は evict ではなく `ref.invalidate`**: 当初案の「write 成功時に `store.evict(key)`」は、key が URI 由来(`store.primaryKeyForUrl(RequestOptions)`)で write 側が GET の URI/`@Path`/baseUrl を再構築する必要があり、「キー再宣言を持ち込まない」中心思想に反する(`@Path` 動的・1 write→複数 GET もある)。代わりに **write 成功後に対応 provider を `ref.invalidate` する**(build 再走 → cache 即表示 → 裏でネットワーク更新)。これで HTTP インターセプタが ETag 再検証し、サーバ反映済みの最新へ更新される。プレフィックス単位 evict が必要なら `HttpCacheStore` に専用 API を足すのは別 spec で検討。
 
 ### 対象外 — 常に最新が必要 / 一過性
 
@@ -274,10 +268,13 @@ class StartNotifier extends _$StartNotifier with CachedNotifier<StartResponse> {
 
 ## セクション4: エラー処理・エッジケース
 
-- **cache-only ミス / 壊れたキャッシュ** → cache-only 経路は**包括 catch** で通常ロードへフォールバック(初回 `AsyncLoading` → `AsyncData`)。cache-miss(`DioException(.error=CacheMissException)`)も旧スキーマでのデシリアライズ失敗(retrofit が元例外を rethrow)も区別せず吸収する。デシリアライズ失敗時は該当エントリを `store.evict(key)` し、同じ失敗の再発を防ぐ。
+- **cache-only ミス** → cache-only 経路は**包括 catch**。`isCacheMiss(e)` 真なら素直に通常ロード(初回 `AsyncLoading` → `AsyncData`)。
+- **壊れたキャッシュ(parse 失敗)→ そのデータを除去してから通常ロード**: cache-only で取得した body がデシリアライズに失敗したら、**そのキャッシュデータを除去(remove)**する。除去しないと、続く通常ロードが `if-none-match` を送って 304 を受け、`HttpCacheInterceptor` が**同じ壊れた body を復元して再び parse 失敗**するため。
+  - 補足: この経路は防御的(ほぼ起きない)。保存される body は受信時の 200 を同一 retrofit クライアントが parse できたもので、キーは appBuild で名前空間化されるため、同一ビルド内で「保存済み body が parse 不能」は基本的に発生しない。実害は DB 破損等の稀ケース。
+  - 除去手段: 失敗した retrofit parse はキャッシュキーを呼び出し側に渡さない(元例外を rethrow)。キーを手で再構築しない(中心思想)ため、**通常ロードを 304 復元不能な「強制フレッシュ取得」で行い、200 で当該エントリを上書き**する案を採る(キー不要)。具体配線(専用 force-fresh Dio か、`HttpCacheInterceptor` に条件付きヘッダを抑止する経路を足すか)は実装計画で確定(未解決論点)。
 - **再検証失敗 (オフライン等)** → `AsyncError.copyWithPrevious` で stale 維持しつつエラー通知。UI は古い値を出し続けられる。
-- **多重 revalidate** → `_inflight` ガードで 1 本化(last-write-wins 逆転を防ぐ)。dispose 後は `ref.mounted` チェックで state 代入を抑止。
-- **書き込み後の不整合** → Tier 2 は write 成功後に対応 Notifier の `revalidate()`/`ref.invalidate`(evict ではない。セクション3 参照)。
+- **多重バックグラウンド更新** → 世代カウンタ(`_generation`)+ `ref.mounted` で、invalidate 再走に追い越された古い microtask が state を触らないようにする(last-write-wins 逆転防止)。
+- **書き込み後の不整合** → Tier 2 は write 成功後に対応 provider を `ref.invalidate`(セクション3 参照)。
 - **schemaVersion / appBuild 変更** → キャッシュキー (`v$schemaVersion:$appBuild:$url`) に含まれるため自動失効 (既存挙動)。
 - **`cacheId`(キャッシュ世代)変更** → キーに含まれないため**自動失効しない**(下記セクション5 で扱う)。
 
@@ -286,7 +283,7 @@ class StartNotifier extends _$StartNotifier with CachedNotifier<StartResponse> {
 [2026-06-23 設計](2026-06-23-earthquake-swr-cache-design.md) は `/v1/start`(`StartResponse`)に `cacheId`(キャッシュ世代トークン)を載せ、クライアントが起動時に `last_seen_cache_id` と比較して**変化していたら Drift + HTTP キャッシュを全 wipe** する。本基盤が同じ `/v1/start` を cache-first SWR 化すると、cold start ではまず stale を即返すため、cacheId 比較と wipe の起動シーケンスが問題になる。
 
 - **責務分界**: cacheId 比較と一括 wipe(`HttpCacheStore.clearAll()` 呼び出し)の**オーナーは 2026-06-23 設計側**とし、本基盤は wipe の手段(`clearAll`)を提供するに留める。
-- **順序**: 起動時は `/v1/start` の stale を即表示(ブロックしない)。`revalidate()` 完了で最新 `StartResponse` が得られた時点で `cacheId` を比較し、不一致なら `clearAll()` + 再ロード。旧世代データが一時表示される window は 2026-06-23 設計の方針どおり許容(バンプは稀)。
+- **順序**: 起動時は `/v1/start` の stale を即表示(ブロックしない)。裏のネットワーク更新完了で最新 `StartResponse` が得られた時点で `cacheId` を比較し、不一致なら `clearAll()` + 再ロード。旧世代データが一時表示される window は 2026-06-23 設計の方針どおり許容(バンプは稀)。
 - **本 spec での扱い**: cacheId 比較ロジック自体は本 spec の実装対象に**含めない**(別設計の責務)。ただし「`/v1/start` を SWR 化しても cacheId 比較が revalidate 完了後に発火できる」ことを PoC で確認し、矛盾しないことを担保する。詳細な起動シーケンス統合は未解決論点に挙げる。
 
 ## セクション6: テスト戦略
@@ -299,10 +296,10 @@ class StartNotifier extends _$StartNotifier with CachedNotifier<StartResponse> {
 - **`app/core`**: `CachedNotifier` mixin の状態遷移を偽 `ApiClient` または `http_mock_adapter` で検証。
   - cache hit → stale 即 emit → fresh。
   - cache miss → 通常ロード。
-  - 壊れたキャッシュ(parse 失敗)→ 包括 catch で通常ロード + 該当エントリ evict。
   - 再検証失敗で stale 維持 (`hasValue && hasError`)。
-  - 多重 revalidate が `_inflight` で 1 本化され last-write-wins 逆転が起きない。
-  - dispose 後の revalidate が `ref.mounted` ガードでクラッシュしない。
+  - invalidate 再走で世代が進み、追い越された古い microtask が state を触らない(last-write-wins 逆転なし)。
+  - dispose 後のバックグラウンド更新が `ref.mounted` ガードでクラッシュしない。
+  - 壊れたキャッシュ → 除去 + 強制フレッシュ取得で 304 再失敗ループに陥らない。
   - `revalidateOnAppResume=true` 時のアプリ復帰再検証。
 - **start 移行に伴うテスト整理**: `start_repository_cache_key_test` は prefs キャッシュ廃止に伴い**削除**(等価カバレッジは `packages/cache` の HTTP インターセプタ test が担保)。`changelog_repository_cache_key_test`・`parameter_repository_refresh_test` は本 spec のコミット対象外(後続 spec で扱う)なので**触らない**。
 - **統合**: start 移行で end-to-end (cache 即表示 → 304 → 変化なし、200 → 差し替え) を確認。
@@ -311,10 +308,10 @@ class StartNotifier extends _$StartNotifier with CachedNotifier<StartResponse> {
 
 **本 spec のコミット対象は PR-1 + PR-2 のみ。** 以降は方向性として記す。
 
-1. **PR-1 基盤**: `CacheOnlyInterceptor` + `CacheMissException` + `isCacheMiss` + 復元共通化/status 正規化 (`packages/cache`)、cache-only Dio / `cacheOnlyApiClientProvider`、共通 `buildApiBaseOptions`、`CachedNotifier` mixin(`on $AsyncNotifier<T>`・`_inflight`/`ref.mounted` ガード)+ テスト。
+1. **PR-1 基盤**: `CacheOnlyInterceptor` + `CacheMissException` + `isCacheMiss` + 復元共通化/status 正規化 + 壊れたキャッシュ除去のための強制フレッシュ経路 (`packages/cache`)、cache-only Dio / `cacheOnlyApiClientProvider`、共通 `buildApiBaseOptions`、`CachedNotifier` mixin(`on $AsyncNotifier<T>`・世代カウンタ/`ref.mounted` ガード・再取得は invalidate)+ テスト。
 2. **PR-2 start 移行**: `StartNotifier` を `CachedNotifier` 化(provider 名維持・型 nullable→non-null に伴う消費者 6 箇所の追従)、`start_repository` の自前 prefs キャッシュ (`startEtag`/`startBody`) 廃止、`start_repository_cache_key_test` 削除。cacheId 比較が revalidate 完了後に発火できることの確認。
 3. **後続(別 spec)**: Tier 1 の changelog / earthquake detail / tsunami detail(family)を順次。
-4. **後続(別 spec)**: Tier 2(`device/me/settings/*`、write 後 revalidate/invalidate)。parameters・ページネーション・cacheId wipe 統合はそれぞれ別設計。
+4. **後続(別 spec)**: Tier 2(`device/me/settings/*`、write 後 `ref.invalidate`)。parameters・ページネーション・cacheId wipe 統合はそれぞれ別設計。
 
 ## 確定した決定事項
 
@@ -324,16 +321,17 @@ class StartNotifier extends _$StartNotifier with CachedNotifier<StartResponse> {
 4. 即表示は cache-only Dio が同一 store を読むことで実現。型デシリアライズ・キー計算は通常経路と完全共通。
 5. cache-only Dio と通常 Dio は同一 `HttpCacheStore` を共有し、URI 関連 BaseOptions を共通ビルダーで揃える。復元 Response は status 200 に正規化。
 6. 基底は mixin **`CachedNotifier<T> on $AsyncNotifier<T>`**(生成基底が `$AsyncNotifier`。`AsyncNotifier` では `on` 制約不成立)。各 feature は `fetch(ApiClient)` を 1 つ実装。
-7. 再検証は build 時 (+ 明示 refresh)。`revalidateOnAppResume` でアプリ復帰時もオプトイン可能。多重発火は `_inflight` で 1 本化、dispose は `ref.mounted` ガード。
-8. cache-only 経路は包括 catch で、cache-miss(`DioException(.error=CacheMissException)`、`isCacheMiss` で判定)もデシリアライズ失敗も通常ロードへフォールバック(失敗時は evict)。再検証失敗は stale 維持。
+7. 再検証は build 時(cache 即返し → 裏で更新)。明示再取得は **`ref.invalidate`/`ref.invalidateSelf`**(公開 `revalidate()` は設けない)。`revalidateOnAppResume` で復帰時に `invalidateSelf`。多重発火は**世代カウンタ**で抑止、dispose は `ref.mounted` ガード。
+8. cache-only 経路は包括 catch。cache-miss(`DioException(.error=CacheMissException)`、`isCacheMiss` で判定)は通常ロード。**parse 失敗は壊れたキャッシュデータを除去(remove)してから強制フレッシュ取得で上書き**(304 復元での再失敗を回避)。再検証失敗は stale 維持。
 9. SWR 対象の FutureProvider はクラス型へ変換。非キャッシュ系 FutureProvider は据え置き。
-10. Tier 2 の書き込み連動は **evict ではなく revalidate/invalidate**(key 再構築を避けるため)。realtime/EEW/admin は対象外。parameters は独自層のため対象外。
+10. Tier 2 の書き込み連動は **evict ではなく `ref.invalidate`**(key 再構築を避けるため)。realtime/EEW/admin は対象外。parameters は独自層のため対象外。
 11. 地震一覧の SWR は別レイヤー (2026-06-23 設計のドメイン Drift キャッシュ) に委ね、本基盤と補完関係。
-12. `cacheId` 一括 wipe は 2026-06-23 設計の責務。本基盤は `clearAll()` を提供し、`/v1/start` の SWR 化が cacheId 比較(revalidate 完了後発火)と矛盾しないことのみ担保。
+12. `cacheId` 一括 wipe は 2026-06-23 設計の責務。本基盤は `clearAll()` を提供し、`/v1/start` の SWR 化が cacheId 比較(裏のネットワーク更新完了後発火)と矛盾しないことのみ担保。
 
 ## 実装計画フェーズで詰める未解決論点
 
-- `_listenAppLifecycleForResume` の具体実装(既存 `app/lib/core/provider/app_lifecycle.dart` の `AppLifecycle` を `ref.listen`。build 再実行時の購読重複回避)。
+- 壊れたキャッシュ除去の「強制フレッシュ取得」の具体配線: 専用 force-fresh Dio を足すか、`HttpCacheInterceptor` に条件付きヘッダ抑止経路を設けるか(キーを呼び出し側へ渡さない前提を維持)。
+- `_listenAppResume` の具体実装(既存 `app/lib/core/provider/app_lifecycle.dart` の `AppLifecycle` を `ref.listen` し resumed で `ref.invalidateSelf`。build 再実行時の購読重複回避)。
 - family Notifier(`@Path` 付き)で `fetch(ApiClient)` が provider 引数を読む配線パターン(PR-2 では非 family の start のみ)。
 - 共通 `buildApiBaseOptions` 切り出しに伴う既存 `dio_provider.dart` のリファクタ範囲(`validateStatus`・`listFormat`・timeout の共有境界)。
 - `/v1/start` SWR 化と cacheId 一括 wipe の起動シーケンス統合(本 spec は非矛盾の確認まで。実装は 2026-06-23 設計側)。
