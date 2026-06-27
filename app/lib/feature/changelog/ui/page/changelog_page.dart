@@ -1,26 +1,16 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
-import 'dart:async';
-
 import 'package:eqmonitor/feature/changelog/data/notifier/changelog_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class ChangelogPage extends HookConsumerWidget {
+class ChangelogPage extends ConsumerWidget {
   const ChangelogPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(() {
-      unawaited(
-        Future.microtask(() => ref.read(changelogProvider.notifier).fetch()),
-      );
-      return null;
-    }, const []);
-
     final state = ref.watch(changelogProvider);
 
     return Scaffold(
@@ -44,16 +34,13 @@ class ChangelogPage extends HookConsumerWidget {
               ),
               const SizedBox(height: 16),
               FilledButton.tonal(
-                onPressed: () => ref.read(changelogProvider.notifier).fetch(),
+                onPressed: () => ref.invalidate(changelogProvider),
                 child: const Text('再試行'),
               ),
             ],
           ),
         ),
-        AsyncData(:final value) when value == null => const Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-        AsyncData(:final value) => _ChangelogList(entries: value!.entries),
+        AsyncData(:final value) => _ChangelogList(entries: value.entries),
       },
     );
   }

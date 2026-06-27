@@ -1,3 +1,5 @@
+// ignore_for_file: implementation_imports, invalid_use_of_internal_member
+
 import 'dart:async';
 
 import 'package:cache/cache.dart';
@@ -8,6 +10,7 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter/widgets.dart';
+import 'package:riverpod/src/internals.dart' show DataKind;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 mixin CachedNotifier<T> on $AsyncNotifier<T> {
@@ -26,7 +29,7 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
       final cached = await fetch(
         await ref.read(cacheOnlyApiClientProvider.future),
       );
-      unawaited(Future.microtask(() => _revalidateInBackground(gen)));
+      unawaited(Future.microtask(() => _revalidateInBackground(gen, cached)));
       return cached;
     } on Object catch (e) {
       if (isCacheMiss(e)) {
@@ -38,12 +41,13 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
     }
   }
 
-  Future<void> _revalidateInBackground(int gen) async {
+  Future<void> _revalidateInBackground(int gen, T cached) async {
     if (!ref.mounted || gen != _generation) {
       return;
     }
-    // ignore: invalid_use_of_internal_member
-    state = AsyncLoading<T>().copyWithPrevious(state);
+    state = AsyncLoading<T>().copyWithPrevious(
+      AsyncData<T>(cached, kind: DataKind.cache),
+    );
     try {
       final fresh = await fetch(await ref.read(apiClientProvider.future));
       if (ref.mounted && gen == _generation) {
@@ -51,7 +55,6 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
       }
     } on Exception catch (e, st) {
       if (ref.mounted && gen == _generation) {
-        // ignore: invalid_use_of_internal_member
         state = AsyncError<T>(e, st).copyWithPrevious(state);
       }
     }

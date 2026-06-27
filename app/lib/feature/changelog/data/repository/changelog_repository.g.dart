@@ -17,13 +17,11 @@ final changelogRepositoryProvider = ChangelogRepositoryProvider._();
 final class ChangelogRepositoryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<ChangelogRepository>,
           ChangelogRepository,
-          FutureOr<ChangelogRepository>
+          ChangelogRepository,
+          ChangelogRepository
         >
-    with
-        $FutureModifier<ChangelogRepository>,
-        $FutureProvider<ChangelogRepository> {
+    with $Provider<ChangelogRepository> {
   ChangelogRepositoryProvider._()
     : super(
         from: null,
@@ -40,15 +38,23 @@ final class ChangelogRepositoryProvider
 
   @$internal
   @override
-  $FutureProviderElement<ChangelogRepository> $createElement(
+  $ProviderElement<ChangelogRepository> $createElement(
     $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  ) => $ProviderElement(pointer);
 
   @override
-  FutureOr<ChangelogRepository> create(Ref ref) {
+  ChangelogRepository create(Ref ref) {
     return changelogRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ChangelogRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ChangelogRepository>(value),
+    );
   }
 }
 
 String _$changelogRepositoryHash() =>
-    r'edcb1620cd2b9eab138cf94a32ac8d2ca3e3bae4';
+    r'd17fb376d8c89acfa2a2970bd3d578fc3c19ccdc';

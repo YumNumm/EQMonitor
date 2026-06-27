@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
+import 'package:drift/native.dart';
 import 'package:eqmonitor/feature/parameter/data/data_source/parameter_asset_data_source.dart';
-import 'package:eqmonitor/feature/parameter/data/data_source/parameter_local_data_source.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/parameter/data/repository/parameter_json_parser.dart';
 import 'package:eqmonitor/feature/parameter/data/repository/parameter_repository.dart';
@@ -12,42 +12,40 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('refresh downloads parameter json and stores it locally', () async {
-    final tempDirectory = await Directory.systemTemp.createTemp(
-      'parameter_repository_refresh_test_',
-    );
-    addTearDown(() async {
-      if (tempDirectory.existsSync()) {
-        await tempDirectory.delete(recursive: true);
-      }
-    });
-    final adapter = _ParametersApiAdapter();
-    final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
-      ..httpClientAdapter = adapter;
-    final localDataSource = ParameterLocalDataSource(
-      documentsDirectory: tempDirectory,
-    );
-    final repository = ParameterRepository(
-      assetDataSource: ParameterAssetDataSource(bundle: rootBundle),
-      localDataSource: localDataSource,
-      parser: const ParameterJsonParser(),
-      apiClient: api.ApiClient(dio),
-    );
+  test(
+    'fetch stores parameter json in package cache and restores it',
+    () async {
+      final db = CacheDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      final store = HttpCacheStore(
+        db: db,
+        schemaVersion: 1,
+        appBuild: '3.0.0+100',
+      );
+      final adapter = _ParametersApiAdapter();
+      final normalDio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+        ..interceptors.add(HttpCacheInterceptor(store))
+        ..httpClientAdapter = adapter;
+      final cacheOnlyDio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+        ..interceptors.add(CacheOnlyInterceptor(store));
+      final repository = ParameterRepository(
+        assetDataSource: ParameterAssetDataSource(bundle: rootBundle),
+        parser: const ParameterJsonParser(),
+      );
 
-    final refreshed = await repository.refresh();
+      final fresh = await repository.fetch(api.ApiClient(normalDio));
+      final cached = await repository.fetch(api.ApiClient(cacheOnlyDio));
 
-    expect(refreshed, isTrue);
-    expect(await localDataSource.readManifestJson(), isNotNull);
-    for (final type in ParameterType.values) {
-      expect(await localDataSource.readParameterJson(type), isNotNull);
-    }
-    expect(adapter.requestedTypes, [
-      'JMA_CODE_TABLE',
-      'KYOSHIN_OBSERVATION_POINTS',
-      'EARTHQUAKE_STATIONS',
-      'TSUNAMI_STATIONS',
-    ]);
-  });
+      expect(fresh.jmaCodeTable.metadata.sourceVersion, 'test');
+      expect(cached.jmaCodeTable.metadata.sourceVersion, 'test');
+      expect(adapter.requestedTypes, [
+        'JMA_CODE_TABLE',
+        'KYOSHIN_OBSERVATION_POINTS',
+        'EARTHQUAKE_STATIONS',
+        'TSUNAMI_STATIONS',
+      ]);
+    },
+  );
 }
 
 final class _ParametersApiAdapter implements HttpClientAdapter {
@@ -74,6 +72,7 @@ final class _ParametersApiAdapter implements HttpClientAdapter {
       200,
       headers: {
         Headers.contentTypeHeader: [Headers.jsonContentType],
+        'etag': ['W/"$path"'],
       },
     );
   }
@@ -125,8 +124,6 @@ Map<String, Object?> _parameterJson(String type) => switch (type) {
   _ => throw StateError('Unexpected parameter type: $type'),
 };
 
-/// Converts an UPPER_CASE API type value to the snake_case value expected by
-/// the app's local ParameterMetadata model.
 String _apiTypeToSnake(String apiType) => switch (apiType) {
   'JMA_CODE_TABLE' => 'jma_code_table',
   'KYOSHIN_OBSERVATION_POINTS' => 'kyoshin_observation_points',

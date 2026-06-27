@@ -155,6 +155,29 @@ void main() {
       expect(finalState.isLoading, isFalse);
     });
 
+    test('marks stale value as cache during background revalidation', () async {
+      _shouldCacheHit = true;
+      _cachedValue = 'stale';
+      _networkCompleter = Completer<String>();
+
+      container.listen(_testProvider, (_, _) {});
+
+      await container.read(_testProvider.future);
+      await Future<void>.delayed(Duration.zero);
+
+      final midState = container.read(_testProvider);
+      expect(midState.value, 'stale');
+      expect(midState.isRefreshing, isTrue);
+      expect(midState.isFromCache, isTrue);
+
+      _networkCompleter!.complete('fresh');
+      await _pumpMicrotasks();
+
+      final finalState = container.read(_testProvider);
+      expect(finalState.value, 'fresh');
+      expect(finalState.isFromCache, isFalse);
+    });
+
     test('network failure preserves stale value with error', () async {
       _shouldCacheHit = true;
       _cachedValue = 'stale-data';

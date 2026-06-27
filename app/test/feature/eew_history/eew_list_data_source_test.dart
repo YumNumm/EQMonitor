@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -6,7 +7,6 @@ import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart
 import 'package:eqmonitor/feature/eew_history/data/notifier/eew_list_data_source.dart';
 import 'package:eqmonitor/feature/eew_history/data/repository/eew_list_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:paging_view/paging_view.dart';
 
