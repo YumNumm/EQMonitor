@@ -10,7 +10,8 @@ part 'live_activity_test_scenario_response.g.dart';
 @Freezed()
 abstract class LiveActivityTestScenarioResponse with _$LiveActivityTestScenarioResponse {
   const factory LiveActivityTestScenarioResponse({
-    required dynamic ok,
+    /// const: true
+    required bool ok,
     @JsonKey(name: 'event_id')
     required String eventId,
     @JsonKey(name: 'live_activity_id')

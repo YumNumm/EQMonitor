@@ -55,7 +55,6 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     final result = await repo.patchEewSettings(
       deviceId: deviceId,
       enabled: enabled,
-      criticalThreshold: current.criticalThreshold,
       startLiveActivity: current.startLiveActivity,
       onePointEnabled: current.onePointEnabled,
     );
@@ -76,7 +75,6 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     final result = await repo.patchEewSettings(
       deviceId: deviceId,
       enabled: current.enabled,
-      criticalThreshold: threshold,
       startLiveActivity: current.startLiveActivity,
       onePointEnabled: current.onePointEnabled,
     );
@@ -97,7 +95,6 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     final result = await repo.patchEewSettings(
       deviceId: deviceId,
       enabled: current.enabled,
-      criticalThreshold: current.criticalThreshold,
       startLiveActivity: startLiveActivity,
       onePointEnabled: current.onePointEnabled,
     );

@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
@@ -14,7 +15,7 @@ void main() {
   const resolver = EarthquakeHistoryMapLayerModeResolver();
   const builder = EarthquakeHistoryFillLayerBuilder(modeResolver: resolver);
   final colorModel = IntensityColorModel.jma();
-  const thresholds = defaultEarthquakeHistoryMapLayerZoomThresholds;
+  const parameter = EarthquakeHistoryMapLayerParameter();
 
   // ──────────────────────────────────────────────
   // regionCodeFilter
@@ -82,7 +83,7 @@ void main() {
         codes: ['001'],
         color: '#FF0000',
         mode: mode,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect(layers, hasLength(2));
       expect(layers[0], isA<FillStyleLayer>());
@@ -95,7 +96,7 @@ void main() {
         codes: ['001'],
         color: '#FF0000',
         mode: mode,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect((layers[0] as FillStyleLayer).sourceId, 'eqmonitor_map');
       expect((layers[1] as LineStyleLayer).sourceId, 'eqmonitor_map');
@@ -107,7 +108,7 @@ void main() {
         codes: ['001'],
         color: '#FF0000',
         mode: mode,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect((layers[0] as FillStyleLayer).sourceLayerId, 'areaForecastLocalE');
       expect((layers[1] as LineStyleLayer).sourceLayerId, 'areaForecastLocalE');
@@ -119,7 +120,7 @@ void main() {
         codes: ['001'],
         color: '#FF0000',
         mode: mode,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect(layers[0].id, 'eq-history-jma-four-region-fill');
       expect(layers[1].id, 'eq-history-jma-four-region-line');
@@ -131,7 +132,7 @@ void main() {
         codes: ['001', '002'],
         color: '#FF0000',
         mode: mode,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       final fill = layers[0] as FillStyleLayer;
       expect(fill.filter, [
@@ -150,7 +151,7 @@ void main() {
         codes: ['001'],
         color: '#ABCDEF',
         mode: mode,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect((layers[0] as FillStyleLayer).paint['fill-color'], '#ABCDEF');
     });
@@ -161,7 +162,7 @@ void main() {
         codes: ['001'],
         color: '#FF0000',
         mode: mode,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect((layers[1] as LineStyleLayer).paint['line-color'], '#ffffff');
     });
@@ -180,7 +181,7 @@ void main() {
         codes: ['1010001'],
         color: '#FF0000',
         mode: mode,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect(layer, isA<FillStyleLayer>());
     });
@@ -192,7 +193,7 @@ void main() {
                 codes: ['1010001'],
                 color: '#FF0000',
                 mode: mode,
-                zoomThresholds: thresholds,
+                parameter: parameter,
               )
               as FillStyleLayer;
       expect(layer.sourceId, 'eqmonitor_map');
@@ -205,7 +206,7 @@ void main() {
                 codes: ['1010001'],
                 color: '#FF0000',
                 mode: mode,
-                zoomThresholds: thresholds,
+                parameter: parameter,
               )
               as FillStyleLayer;
       expect(layer.sourceLayerId, 'areaInformationCityQuake');
@@ -217,7 +218,7 @@ void main() {
         codes: ['1010001'],
         color: '#FF0000',
         mode: mode,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect(layer.id, 'eq-history-jma-four-city-fill');
     });
@@ -229,7 +230,7 @@ void main() {
                 codes: ['1010001', '1310000'],
                 color: '#FF0000',
                 mode: mode,
-                zoomThresholds: thresholds,
+                parameter: parameter,
               )
               as FillStyleLayer;
       expect(layer.filter, [
@@ -249,7 +250,7 @@ void main() {
                 codes: ['1010001'],
                 color: '#ABCDEF',
                 mode: mode,
-                zoomThresholds: thresholds,
+                parameter: parameter,
               )
               as FillStyleLayer;
       expect(layer.paint['fill-color'], '#ABCDEF');
@@ -269,7 +270,7 @@ void main() {
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.none,
         showingLpgmIntensity: false,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect(layers, isEmpty);
     });
@@ -280,7 +281,7 @@ void main() {
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.station,
         showingLpgmIntensity: false,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect(layers, isEmpty);
     });
@@ -290,7 +291,7 @@ void main() {
         intensity: testData.regionAndCityIntensity(),
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.region,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect(layers, isNotEmpty);
       expect(layers.every((l) => l.id.contains('region')), isTrue);
@@ -302,7 +303,7 @@ void main() {
         intensity: testData.regionAndCityIntensity(),
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.city,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect(layers, isNotEmpty);
       expect(layers.every((l) => l.id.contains('city')), isTrue);
@@ -315,7 +316,7 @@ void main() {
         intensity: intensity,
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.region,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       // 震度 3, 4 の 2 レベル × (fill + line) = 4 レイヤー
       expect(layers, hasLength(4));
@@ -330,7 +331,7 @@ void main() {
         intensity: intensity,
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.region,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       // 震度 4 のみ → fill + line = 2 レイヤー
       expect(layers, hasLength(2));
@@ -342,7 +343,7 @@ void main() {
         intensity: testData.regionAndCityIntensity(),
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.region,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       final fills = layers.whereType<FillStyleLayer>().toList();
       for (final fill in fills) {
@@ -356,7 +357,7 @@ void main() {
         intensity: testData.regionAndCityIntensity(),
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.city,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       final fills = layers.whereType<FillStyleLayer>().toList();
       for (final fill in fills) {
@@ -382,7 +383,7 @@ void main() {
         intensity: testData.lpgmIntensity(),
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.region,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect(layers, isNotEmpty);
       expect(layers.every((l) => l.id.contains('region')), isTrue);
@@ -393,7 +394,7 @@ void main() {
         intensity: testData.lpgmIntensity(),
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.city,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       expect(layers, isNotEmpty);
       expect(layers.every((l) => l.id.contains('city')), isTrue);
@@ -404,7 +405,7 @@ void main() {
         intensity: testData.lpgmIntensity(),
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.city,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       final fills = layers.whereType<FillStyleLayer>().toList();
       for (final fill in fills) {
@@ -419,14 +420,14 @@ void main() {
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.region,
         showingLpgmIntensity: true,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       final jma = builder.build(
         intensity: testData.lpgmIntensity(),
         colorModel: colorModel,
         mode: EarthquakeHistoryMapLayerMode.region,
         showingLpgmIntensity: false,
-        zoomThresholds: thresholds,
+        parameter: parameter,
       );
       // LPGM レイヤー ID には 'lpgm' が含まれ、JMA には含まれない
       expect(lpgm.every((l) => l.id.contains('lpgm')), isTrue);

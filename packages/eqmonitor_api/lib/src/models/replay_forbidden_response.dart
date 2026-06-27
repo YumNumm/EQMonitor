@@ -10,7 +10,8 @@ part 'replay_forbidden_response.g.dart';
 @Freezed()
 abstract class ReplayForbiddenResponse with _$ReplayForbiddenResponse {
   const factory ReplayForbiddenResponse({
-    required dynamic code,
+    /// const: "FORBIDDEN"
+    required String code,
     required String message,
   }) = _ReplayForbiddenResponse;
   

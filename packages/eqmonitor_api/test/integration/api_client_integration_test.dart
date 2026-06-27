@@ -79,9 +79,7 @@ void main() {
     });
 
     test('statuses(List<TelegramStatus>) クエリ', () async {
-      final res = await api.telegram.getV2Telegram(
-        statuses: const [TelegramStatus.normal],
-      );
+      final res = await api.telegram.getV2Telegram();
       expect(res.response.statusCode, 200);
     });
   });

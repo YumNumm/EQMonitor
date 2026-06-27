@@ -13,22 +13,23 @@ part 'max_height.g.dart';
 @Freezed()
 abstract class MaxHeight with _$MaxHeight {
   const factory MaxHeight({
+    /// 10m超となる時に出現する 取りうる値はtrueのみ.
+    /// const: true.
+    @JsonKey(name: 'is_over')
+    required bool isOver,
+
+    /// 津波警報以上でまだ津波の観測値が小さい場合に出現する.
+    /// const: true.
+    @JsonKey(name: 'is_observing')
+    required bool isObserving,
     @JsonKey(includeIfNull: false,name: 'observed_at')
     DateTime? observedAt,
 
     /// 津波警報以上でまだ津波の観測値が小さい場合は出現しない
     @JsonKey(includeIfNull: false)
     num? value,
-
-    /// 10m超となる時に出現する 取りうる値はtrueのみ
-    @JsonKey(includeIfNull: false,name: 'is_over')
-    dynamic isOver,
     @JsonKey(includeIfNull: false)
     QualitativeHeight? qualitative,
-
-    /// 津波警報以上でまだ津波の観測値が小さい場合に出現する
-    @JsonKey(includeIfNull: false,name: 'is_observing')
-    dynamic isObserving,
     @JsonKey(includeIfNull: false)
     Revise? revise,
   }) = _MaxHeight;

@@ -15,10 +15,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MaxHeight {
 
-@JsonKey(includeIfNull: false, name: 'observed_at') DateTime? get observedAt;/// 津波警報以上でまだ津波の観測値が小さい場合は出現しない
-@JsonKey(includeIfNull: false) num? get value;/// 10m超となる時に出現する 取りうる値はtrueのみ
-@JsonKey(includeIfNull: false, name: 'is_over') dynamic get isOver;@JsonKey(includeIfNull: false) QualitativeHeight? get qualitative;/// 津波警報以上でまだ津波の観測値が小さい場合に出現する
-@JsonKey(includeIfNull: false, name: 'is_observing') dynamic get isObserving;@JsonKey(includeIfNull: false) Revise? get revise;
+/// 10m超となる時に出現する 取りうる値はtrueのみ.
+/// const: true.
+@JsonKey(name: 'is_over') bool get isOver;/// 津波警報以上でまだ津波の観測値が小さい場合に出現する.
+/// const: true.
+@JsonKey(name: 'is_observing') bool get isObserving;@JsonKey(includeIfNull: false, name: 'observed_at') DateTime? get observedAt;/// 津波警報以上でまだ津波の観測値が小さい場合は出現しない
+@JsonKey(includeIfNull: false) num? get value;@JsonKey(includeIfNull: false) QualitativeHeight? get qualitative;@JsonKey(includeIfNull: false) Revise? get revise;
 /// Create a copy of MaxHeight
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +33,16 @@ $MaxHeightCopyWith<MaxHeight> get copyWith => _$MaxHeightCopyWithImpl<MaxHeight>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MaxHeight&&(identical(other.observedAt, observedAt) || other.observedAt == observedAt)&&(identical(other.value, value) || other.value == value)&&const DeepCollectionEquality().equals(other.isOver, isOver)&&(identical(other.qualitative, qualitative) || other.qualitative == qualitative)&&const DeepCollectionEquality().equals(other.isObserving, isObserving)&&(identical(other.revise, revise) || other.revise == revise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MaxHeight&&(identical(other.isOver, isOver) || other.isOver == isOver)&&(identical(other.isObserving, isObserving) || other.isObserving == isObserving)&&(identical(other.observedAt, observedAt) || other.observedAt == observedAt)&&(identical(other.value, value) || other.value == value)&&(identical(other.qualitative, qualitative) || other.qualitative == qualitative)&&(identical(other.revise, revise) || other.revise == revise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,observedAt,value,const DeepCollectionEquality().hash(isOver),qualitative,const DeepCollectionEquality().hash(isObserving),revise);
+int get hashCode => Object.hash(runtimeType,isOver,isObserving,observedAt,value,qualitative,revise);
 
 @override
 String toString() {
-  return 'MaxHeight(observedAt: $observedAt, value: $value, isOver: $isOver, qualitative: $qualitative, isObserving: $isObserving, revise: $revise)';
+  return 'MaxHeight(isOver: $isOver, isObserving: $isObserving, observedAt: $observedAt, value: $value, qualitative: $qualitative, revise: $revise)';
 }
 
 
@@ -51,7 +53,7 @@ abstract mixin class $MaxHeightCopyWith<$Res>  {
   factory $MaxHeightCopyWith(MaxHeight value, $Res Function(MaxHeight) _then) = _$MaxHeightCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeIfNull: false, name: 'observed_at') DateTime? observedAt,@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false, name: 'is_over') dynamic isOver,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false, name: 'is_observing') dynamic isObserving,@JsonKey(includeIfNull: false) Revise? revise
+@JsonKey(name: 'is_over') bool isOver,@JsonKey(name: 'is_observing') bool isObserving,@JsonKey(includeIfNull: false, name: 'observed_at') DateTime? observedAt,@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false) Revise? revise
 });
 
 
@@ -68,14 +70,14 @@ class _$MaxHeightCopyWithImpl<$Res>
 
 /// Create a copy of MaxHeight
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? observedAt = freezed,Object? value = freezed,Object? isOver = freezed,Object? qualitative = freezed,Object? isObserving = freezed,Object? revise = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isOver = null,Object? isObserving = null,Object? observedAt = freezed,Object? value = freezed,Object? qualitative = freezed,Object? revise = freezed,}) {
   return _then(_self.copyWith(
-observedAt: freezed == observedAt ? _self.observedAt : observedAt // ignore: cast_nullable_to_non_nullable
+isOver: null == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
+as bool,isObserving: null == isObserving ? _self.isObserving : isObserving // ignore: cast_nullable_to_non_nullable
+as bool,observedAt: freezed == observedAt ? _self.observedAt : observedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as num?,isOver: freezed == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
-as dynamic,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
-as QualitativeHeight?,isObserving: freezed == isObserving ? _self.isObserving : isObserving // ignore: cast_nullable_to_non_nullable
-as dynamic,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
+as num?,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
+as QualitativeHeight?,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
 as Revise?,
   ));
 }
@@ -161,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'observed_at')  DateTime? observedAt, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_observing')  dynamic isObserving, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'is_over')  bool isOver, @JsonKey(name: 'is_observing')  bool isObserving, @JsonKey(includeIfNull: false, name: 'observed_at')  DateTime? observedAt, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MaxHeight() when $default != null:
-return $default(_that.observedAt,_that.value,_that.isOver,_that.qualitative,_that.isObserving,_that.revise);case _:
+return $default(_that.isOver,_that.isObserving,_that.observedAt,_that.value,_that.qualitative,_that.revise);case _:
   return orElse();
 
 }
@@ -182,10 +184,10 @@ return $default(_that.observedAt,_that.value,_that.isOver,_that.qualitative,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'observed_at')  DateTime? observedAt, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_observing')  dynamic isObserving, @JsonKey(includeIfNull: false)  Revise? revise)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'is_over')  bool isOver, @JsonKey(name: 'is_observing')  bool isObserving, @JsonKey(includeIfNull: false, name: 'observed_at')  DateTime? observedAt, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false)  Revise? revise)  $default,) {final _that = this;
 switch (_that) {
 case _MaxHeight():
-return $default(_that.observedAt,_that.value,_that.isOver,_that.qualitative,_that.isObserving,_that.revise);case _:
+return $default(_that.isOver,_that.isObserving,_that.observedAt,_that.value,_that.qualitative,_that.revise);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +204,10 @@ return $default(_that.observedAt,_that.value,_that.isOver,_that.qualitative,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'observed_at')  DateTime? observedAt, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false, name: 'is_over')  dynamic isOver, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_observing')  dynamic isObserving, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'is_over')  bool isOver, @JsonKey(name: 'is_observing')  bool isObserving, @JsonKey(includeIfNull: false, name: 'observed_at')  DateTime? observedAt, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,) {final _that = this;
 switch (_that) {
 case _MaxHeight() when $default != null:
-return $default(_that.observedAt,_that.value,_that.isOver,_that.qualitative,_that.isObserving,_that.revise);case _:
+return $default(_that.isOver,_that.isObserving,_that.observedAt,_that.value,_that.qualitative,_that.revise);case _:
   return null;
 
 }
@@ -217,17 +219,19 @@ return $default(_that.observedAt,_that.value,_that.isOver,_that.qualitative,_tha
 @JsonSerializable()
 
 class _MaxHeight implements MaxHeight {
-  const _MaxHeight({@JsonKey(includeIfNull: false, name: 'observed_at') this.observedAt, @JsonKey(includeIfNull: false) this.value, @JsonKey(includeIfNull: false, name: 'is_over') this.isOver, @JsonKey(includeIfNull: false) this.qualitative, @JsonKey(includeIfNull: false, name: 'is_observing') this.isObserving, @JsonKey(includeIfNull: false) this.revise});
+  const _MaxHeight({@JsonKey(name: 'is_over') required this.isOver, @JsonKey(name: 'is_observing') required this.isObserving, @JsonKey(includeIfNull: false, name: 'observed_at') this.observedAt, @JsonKey(includeIfNull: false) this.value, @JsonKey(includeIfNull: false) this.qualitative, @JsonKey(includeIfNull: false) this.revise});
   factory _MaxHeight.fromJson(Map<String, dynamic> json) => _$MaxHeightFromJson(json);
 
+/// 10m超となる時に出現する 取りうる値はtrueのみ.
+/// const: true.
+@override@JsonKey(name: 'is_over') final  bool isOver;
+/// 津波警報以上でまだ津波の観測値が小さい場合に出現する.
+/// const: true.
+@override@JsonKey(name: 'is_observing') final  bool isObserving;
 @override@JsonKey(includeIfNull: false, name: 'observed_at') final  DateTime? observedAt;
 /// 津波警報以上でまだ津波の観測値が小さい場合は出現しない
 @override@JsonKey(includeIfNull: false) final  num? value;
-/// 10m超となる時に出現する 取りうる値はtrueのみ
-@override@JsonKey(includeIfNull: false, name: 'is_over') final  dynamic isOver;
 @override@JsonKey(includeIfNull: false) final  QualitativeHeight? qualitative;
-/// 津波警報以上でまだ津波の観測値が小さい場合に出現する
-@override@JsonKey(includeIfNull: false, name: 'is_observing') final  dynamic isObserving;
 @override@JsonKey(includeIfNull: false) final  Revise? revise;
 
 /// Create a copy of MaxHeight
@@ -243,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MaxHeight&&(identical(other.observedAt, observedAt) || other.observedAt == observedAt)&&(identical(other.value, value) || other.value == value)&&const DeepCollectionEquality().equals(other.isOver, isOver)&&(identical(other.qualitative, qualitative) || other.qualitative == qualitative)&&const DeepCollectionEquality().equals(other.isObserving, isObserving)&&(identical(other.revise, revise) || other.revise == revise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MaxHeight&&(identical(other.isOver, isOver) || other.isOver == isOver)&&(identical(other.isObserving, isObserving) || other.isObserving == isObserving)&&(identical(other.observedAt, observedAt) || other.observedAt == observedAt)&&(identical(other.value, value) || other.value == value)&&(identical(other.qualitative, qualitative) || other.qualitative == qualitative)&&(identical(other.revise, revise) || other.revise == revise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,observedAt,value,const DeepCollectionEquality().hash(isOver),qualitative,const DeepCollectionEquality().hash(isObserving),revise);
+int get hashCode => Object.hash(runtimeType,isOver,isObserving,observedAt,value,qualitative,revise);
 
 @override
 String toString() {
-  return 'MaxHeight(observedAt: $observedAt, value: $value, isOver: $isOver, qualitative: $qualitative, isObserving: $isObserving, revise: $revise)';
+  return 'MaxHeight(isOver: $isOver, isObserving: $isObserving, observedAt: $observedAt, value: $value, qualitative: $qualitative, revise: $revise)';
 }
 
 
@@ -263,7 +267,7 @@ abstract mixin class _$MaxHeightCopyWith<$Res> implements $MaxHeightCopyWith<$Re
   factory _$MaxHeightCopyWith(_MaxHeight value, $Res Function(_MaxHeight) _then) = __$MaxHeightCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeIfNull: false, name: 'observed_at') DateTime? observedAt,@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false, name: 'is_over') dynamic isOver,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false, name: 'is_observing') dynamic isObserving,@JsonKey(includeIfNull: false) Revise? revise
+@JsonKey(name: 'is_over') bool isOver,@JsonKey(name: 'is_observing') bool isObserving,@JsonKey(includeIfNull: false, name: 'observed_at') DateTime? observedAt,@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false) Revise? revise
 });
 
 
@@ -280,14 +284,14 @@ class __$MaxHeightCopyWithImpl<$Res>
 
 /// Create a copy of MaxHeight
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? observedAt = freezed,Object? value = freezed,Object? isOver = freezed,Object? qualitative = freezed,Object? isObserving = freezed,Object? revise = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isOver = null,Object? isObserving = null,Object? observedAt = freezed,Object? value = freezed,Object? qualitative = freezed,Object? revise = freezed,}) {
   return _then(_MaxHeight(
-observedAt: freezed == observedAt ? _self.observedAt : observedAt // ignore: cast_nullable_to_non_nullable
+isOver: null == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
+as bool,isObserving: null == isObserving ? _self.isObserving : isObserving // ignore: cast_nullable_to_non_nullable
+as bool,observedAt: freezed == observedAt ? _self.observedAt : observedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as num?,isOver: freezed == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
-as dynamic,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
-as QualitativeHeight?,isObserving: freezed == isObserving ? _self.isObserving : isObserving // ignore: cast_nullable_to_non_nullable
-as dynamic,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
+as num?,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
+as QualitativeHeight?,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
 as Revise?,
   ));
 }

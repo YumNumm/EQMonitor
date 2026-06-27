@@ -233,19 +233,26 @@ void main() {
     });
 
     test('全フィールドが null の場合', () {
-      const apiModel = api.TsunamiRegionForecastMaxHeight();
+      const apiModel = api.TsunamiRegionForecastMaxHeight(
+        isOver: false,
+        isImportant: false,
+      );
 
       final result = apiModel.toDomain();
 
       expect(result.value, isNull);
-      expect(result.isOver, isNull);
+      expect(result.isOver, isFalse);
       expect(result.qualitative, isNull);
-      expect(result.isImportant, isNull);
+      expect(result.isImportant, isFalse);
       expect(result.revise, isNull);
     });
 
     test('value が int の場合に double に変換される', () {
-      const apiModel = api.TsunamiRegionForecastMaxHeight(value: 3);
+      const apiModel = api.TsunamiRegionForecastMaxHeight(
+        value: 3,
+        isOver: false,
+        isImportant: false,
+      );
 
       final result = apiModel.toDomain();
 
@@ -257,7 +264,7 @@ void main() {
   group('FirstHeight.toDomain (estimation first height)', () {
     test('全フィールドが非nullの場合', () {
       final arrivalTime = DateTime(2026, 1, 15, 14);
-      final apiModel = api.FirstHeight(
+      final apiModel = api.TsunamiRegionEstimationFirstHeight(
         arrivalTime: arrivalTime,
         isAlreadyArrived: true,
         revise: api.Revise.update,
@@ -271,12 +278,14 @@ void main() {
     });
 
     test('全フィールドが null の場合', () {
-      const apiModel = api.FirstHeight();
+      const apiModel = api.TsunamiRegionEstimationFirstHeight(
+        isAlreadyArrived: false,
+      );
 
       final result = apiModel.toDomain();
 
       expect(result.arrivalTime, isNull);
-      expect(result.isAlreadyArrived, isNull);
+      expect(result.isAlreadyArrived, isFalse);
       expect(result.revise, isNull);
     });
   });
@@ -284,7 +293,7 @@ void main() {
   group('MaxHeight.toDomain (estimation max height)', () {
     test('全フィールドが非nullの場合', () {
       final observedAt = DateTime(2026, 1, 15, 15);
-      final apiModel = api.MaxHeight(
+      final apiModel = api.TsunamiRegionEstimationMaxHeight(
         observedAt: observedAt,
         value: 8,
         isOver: true,
@@ -305,21 +314,28 @@ void main() {
     });
 
     test('全フィールドが null の場合', () {
-      const apiModel = api.MaxHeight();
+      const apiModel = api.TsunamiRegionEstimationMaxHeight(
+        isOver: false,
+        isObserving: false,
+      );
 
       final result = apiModel.toDomain();
 
       expect(result.dateTime, isNull);
       expect(result.value, isNull);
-      expect(result.isOver, isNull);
+      expect(result.isOver, isFalse);
       expect(result.qualitative, isNull);
-      expect(result.isObserving, isNull);
+      expect(result.isObserving, isFalse);
       expect(result.revise, isNull);
     });
 
     test('observedAt が dateTime にマッピングされる', () {
       final observedAt = DateTime(2026, 6, 1, 12, 30);
-      final apiModel = api.MaxHeight(observedAt: observedAt);
+      final apiModel = api.TsunamiRegionEstimationMaxHeight(
+        observedAt: observedAt,
+        isOver: false,
+        isObserving: false,
+      );
 
       expect(apiModel.toDomain().dateTime, observedAt);
     });
@@ -346,20 +362,24 @@ void main() {
     });
 
     test('全フィールドが null の場合', () {
-      const apiModel = api.TsunamiStationObservationFirstHeight();
+      const apiModel = api.TsunamiStationObservationFirstHeight(
+        isUnidentifiable: false,
+        isMissing: false,
+      );
 
       final result = apiModel.toDomain();
 
       expect(result.arrivalTime, isNull);
       expect(result.initial, isNull);
-      expect(result.isUnidentifiable, isNull);
-      expect(result.isMissing, isNull);
+      expect(result.isUnidentifiable, isFalse);
+      expect(result.isMissing, isFalse);
       expect(result.revise, isNull);
     });
 
     test('識別不能時のパターン', () {
       const apiModel = api.TsunamiStationObservationFirstHeight(
         isUnidentifiable: true,
+        isMissing: false,
       );
 
       final result = apiModel.toDomain();
@@ -372,6 +392,7 @@ void main() {
     test('欠測時のパターン', () {
       const apiModel = api.TsunamiStationObservationFirstHeight(
         isMissing: true,
+        isUnidentifiable: false,
       );
 
       final result = apiModel.toDomain();
@@ -406,16 +427,20 @@ void main() {
     });
 
     test('全フィールドが null の場合', () {
-      const apiModel = api.TsunamiStationObservationMaxHeight();
+      const apiModel = api.TsunamiStationObservationMaxHeight(
+        isOver: false,
+        isRising: false,
+        isMissing: false,
+      );
 
       final result = apiModel.toDomain();
 
       expect(result.dateTime, isNull);
       expect(result.value, isNull);
-      expect(result.isOver, isNull);
-      expect(result.isRising, isNull);
+      expect(result.isOver, isFalse);
+      expect(result.isRising, isFalse);
       expect(result.condition, isNull);
-      expect(result.isMissing, isNull);
+      expect(result.isMissing, isFalse);
       expect(result.revise, isNull);
     });
 
@@ -423,13 +448,21 @@ void main() {
       final observedAt = DateTime(2026, 6, 1, 12, 30);
       final apiModel = api.TsunamiStationObservationMaxHeight(
         observedAt: observedAt,
+        isOver: false,
+        isRising: false,
+        isMissing: false,
       );
 
       expect(apiModel.toDomain().dateTime, observedAt);
     });
 
     test('value が int の場合に double に変換される', () {
-      const apiModel = api.TsunamiStationObservationMaxHeight(value: 3);
+      const apiModel = api.TsunamiStationObservationMaxHeight(
+        value: 3,
+        isOver: false,
+        isRising: false,
+        isMissing: false,
+      );
 
       final result = apiModel.toDomain();
 
@@ -442,6 +475,7 @@ void main() {
         value: 10,
         isOver: true,
         isRising: true,
+        isMissing: false,
         condition: api.ObservationMaxHeightCondition.important,
       );
 
@@ -456,6 +490,8 @@ void main() {
     test('欠測時のパターン', () {
       const apiModel = api.TsunamiStationObservationMaxHeight(
         isMissing: true,
+        isOver: false,
+        isRising: false,
       );
 
       final result = apiModel.toDomain();
@@ -471,7 +507,7 @@ void main() {
       final arrivalTime = DateTime(2026, 1, 15, 14, 30);
       final apiModel = api.TsunamiStationForecast(
         highTideAt: highTideAt,
-        firstHeight: api.FirstHeight2(
+        firstHeight: api.TsunamiStationForecastFirstHeight(
           arrivalTime: arrivalTime,
           condition: api.FirstHeightCondition.imminent,
           revise: api.Revise.update,
@@ -501,7 +537,7 @@ void main() {
       final highTideAt = DateTime(2026, 1, 15, 18);
       final apiModel = api.TsunamiStationForecast(
         highTideAt: highTideAt,
-        firstHeight: const api.FirstHeight2(),
+        firstHeight: const api.TsunamiStationForecastFirstHeight(),
       );
 
       final result = apiModel.toDomain();
@@ -562,6 +598,8 @@ void main() {
       const apiModel = api.TsunamiStationObservation(
         firstHeight: api.TsunamiStationObservationFirstHeight(
           initial: api.WaveInitial.pull,
+          isUnidentifiable: false,
+          isMissing: false,
         ),
       );
 
@@ -574,7 +612,10 @@ void main() {
 
     test('firstHeight は常に非null (required)', () {
       const apiModel = api.TsunamiStationObservation(
-        firstHeight: api.TsunamiStationObservationFirstHeight(),
+        firstHeight: api.TsunamiStationObservationFirstHeight(
+          isUnidentifiable: false,
+          isMissing: false,
+        ),
       );
 
       final result = apiModel.toDomain();
@@ -693,12 +734,12 @@ void main() {
                     lastKind: api.TsunamiWarningKind.warning,
                     stations: const [],
                     estimation: api.TsunamiRegionEstimation(
-                      firstHeight: api.FirstHeight(
+                      firstHeight: api.TsunamiRegionEstimationFirstHeight(
                         arrivalTime: arrivalTime,
                         isAlreadyArrived: true,
                         revise: api.Revise.addition,
                       ),
-                      maxHeight: api.MaxHeight(
+                      maxHeight: api.TsunamiRegionEstimationMaxHeight(
                         observedAt: observedAt,
                         value: 8,
                         isOver: true,
@@ -756,7 +797,7 @@ void main() {
                         name: '石巻港',
                         forecast: api.TsunamiStationForecast(
                           highTideAt: highTideAt,
-                          firstHeight: api.FirstHeight2(
+                          firstHeight: api.TsunamiStationForecastFirstHeight(
                             arrivalTime: arrivalTime,
                             condition: api.FirstHeightCondition.imminent,
                             revise: api.Revise.update,
@@ -982,6 +1023,8 @@ void main() {
                       observation: api.TsunamiStationObservation(
                         firstHeight: api.TsunamiStationObservationFirstHeight(
                           initial: api.WaveInitial.pull,
+                          isUnidentifiable: false,
+                          isMissing: false,
                         ),
                       ),
                     ),
@@ -1044,7 +1087,7 @@ void main() {
                         name: '石巻港',
                         forecast: api.TsunamiStationForecast(
                           highTideAt: highTideAt,
-                          firstHeight: api.FirstHeight2(
+                          firstHeight: api.TsunamiStationForecastFirstHeight(
                             arrivalTime: arrivalTime,
                             condition: api.FirstHeightCondition.imminent,
                           ),
@@ -1053,11 +1096,15 @@ void main() {
                           firstHeight: api.TsunamiStationObservationFirstHeight(
                             arrivalTime: arrivalTime,
                             initial: api.WaveInitial.push,
+                            isUnidentifiable: false,
+                            isMissing: false,
                           ),
                           maxHeight: api.TsunamiStationObservationMaxHeight(
                             observedAt: maxObservedAt,
                             value: 3,
                             isRising: true,
+                            isOver: false,
+                            isMissing: false,
                           ),
                         ),
                       ),
@@ -1075,13 +1122,15 @@ void main() {
                       ),
                     ),
                     estimation: api.TsunamiRegionEstimation(
-                      firstHeight: const api.FirstHeight(
+                      firstHeight: const api.TsunamiRegionEstimationFirstHeight(
                         isAlreadyArrived: true,
                       ),
-                      maxHeight: api.MaxHeight(
+                      maxHeight: api.TsunamiRegionEstimationMaxHeight(
                         observedAt: maxObservedAt,
                         value: 8,
                         qualitative: api.QualitativeHeight.enormous,
+                        isOver: false,
+                        isObserving: false,
                       ),
                     ),
                   ),
@@ -1100,10 +1149,15 @@ void main() {
                     firstHeight: api.TsunamiStationObservationFirstHeight(
                       arrivalTime: arrivalTime,
                       initial: api.WaveInitial.push,
+                      isUnidentifiable: false,
+                      isMissing: false,
                     ),
                     maxHeight: api.TsunamiStationObservationMaxHeight(
                       observedAt: maxObservedAt,
                       value: 1.5,
+                      isOver: false,
+                      isRising: false,
+                      isMissing: false,
                     ),
                   ),
                 ],

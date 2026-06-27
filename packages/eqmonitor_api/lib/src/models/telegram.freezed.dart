@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Telegram {
 
- String get id;@JsonKey(name: 'event_id') String get eventId; TelegramType get type; String get title; TelegramStatus get status;@JsonKey(name: 'info_type') InfoType get infoType;@JsonKey(name: 'editorial_office') String get editorialOffice;@JsonKey(name: 'publishing_office') List<String> get publishingOffice;@JsonKey(name: 'pressed_at') DateTime get pressedAt;@JsonKey(name: 'reported_at') DateTime get reportedAt;@JsonKey(name: 'info_kind') String get infoKind;@JsonKey(name: 'info_kind_version') String get infoKindVersion; String get hash;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(includeIfNull: false, name: 'serial_no') num? get serialNo;@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? get targetedAt;@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? get revokedAt;@JsonKey(includeIfNull: false) String? get headline;@JsonKey(includeIfNull: false) dynamic get body;
+ String get id;@JsonKey(name: 'event_id') String get eventId; TelegramType get type; String get title; TelegramStatus get status;@JsonKey(name: 'info_type') InfoType get infoType;@JsonKey(name: 'editorial_office') String get editorialOffice;@JsonKey(name: 'publishing_office') List<String> get publishingOffice;@JsonKey(name: 'pressed_at') DateTime get pressedAt;@JsonKey(name: 'reported_at') DateTime get reportedAt;@JsonKey(name: 'info_kind') String get infoKind;@JsonKey(name: 'info_kind_version') String get infoKindVersion; String get hash;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(includeIfNull: false, name: 'serial_no') num? get serialNo;@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? get targetedAt;@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? get revokedAt;@JsonKey(includeIfNull: false) String? get headline;@JsonKey(includeIfNull: false) Object? get body;
 /// Create a copy of Telegram
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TelegramCopyWith<$Res>  {
   factory $TelegramCopyWith(Telegram value, $Res Function(Telegram) _then) = _$TelegramCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'event_id') String eventId, TelegramType type, String title, TelegramStatus status,@JsonKey(name: 'info_type') InfoType infoType,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'pressed_at') DateTime pressedAt,@JsonKey(name: 'reported_at') DateTime reportedAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(name: 'info_kind_version') String infoKindVersion, String hash,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? targetedAt,@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? revokedAt,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false) dynamic body
+ String id,@JsonKey(name: 'event_id') String eventId, TelegramType type, String title, TelegramStatus status,@JsonKey(name: 'info_type') InfoType infoType,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'pressed_at') DateTime pressedAt,@JsonKey(name: 'reported_at') DateTime reportedAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(name: 'info_kind_version') String infoKindVersion, String hash,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? targetedAt,@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? revokedAt,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false) Object? body
 });
 
 
@@ -85,8 +85,7 @@ as DateTime,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore:
 as num?,targetedAt: freezed == targetedAt ? _self.targetedAt : targetedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,revokedAt: freezed == revokedAt ? _self.revokedAt : revokedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
-as String?,body: freezed == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
-as dynamic,
+as String?,body: freezed == body ? _self.body : body ,
   ));
 }
 
@@ -171,7 +170,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  dynamic body)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  Object? body)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Telegram() when $default != null:
 return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that.infoType,_that.editorialOffice,_that.publishingOffice,_that.pressedAt,_that.reportedAt,_that.infoKind,_that.infoKindVersion,_that.hash,_that.createdAt,_that.serialNo,_that.targetedAt,_that.revokedAt,_that.headline,_that.body);case _:
@@ -192,7 +191,7 @@ return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  dynamic body)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  Object? body)  $default,) {final _that = this;
 switch (_that) {
 case _Telegram():
 return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that.infoType,_that.editorialOffice,_that.publishingOffice,_that.pressedAt,_that.reportedAt,_that.infoKind,_that.infoKindVersion,_that.hash,_that.createdAt,_that.serialNo,_that.targetedAt,_that.revokedAt,_that.headline,_that.body);case _:
@@ -212,7 +211,7 @@ return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  dynamic body)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'pressed_at')  DateTime pressedAt, @JsonKey(name: 'reported_at')  DateTime reportedAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at')  DateTime? targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at')  DateTime? revokedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  Object? body)?  $default,) {final _that = this;
 switch (_that) {
 case _Telegram() when $default != null:
 return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that.infoType,_that.editorialOffice,_that.publishingOffice,_that.pressedAt,_that.reportedAt,_that.infoKind,_that.infoKindVersion,_that.hash,_that.createdAt,_that.serialNo,_that.targetedAt,_that.revokedAt,_that.headline,_that.body);case _:
@@ -254,7 +253,7 @@ class _Telegram implements Telegram {
 @override@JsonKey(includeIfNull: false, name: 'targeted_at') final  DateTime? targetedAt;
 @override@JsonKey(includeIfNull: false, name: 'revoked_at') final  DateTime? revokedAt;
 @override@JsonKey(includeIfNull: false) final  String? headline;
-@override@JsonKey(includeIfNull: false) final  dynamic body;
+@override@JsonKey(includeIfNull: false) final  Object? body;
 
 /// Create a copy of Telegram
 /// with the given fields replaced by the non-null parameter values.
@@ -289,7 +288,7 @@ abstract mixin class _$TelegramCopyWith<$Res> implements $TelegramCopyWith<$Res>
   factory _$TelegramCopyWith(_Telegram value, $Res Function(_Telegram) _then) = __$TelegramCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'event_id') String eventId, TelegramType type, String title, TelegramStatus status,@JsonKey(name: 'info_type') InfoType infoType,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'pressed_at') DateTime pressedAt,@JsonKey(name: 'reported_at') DateTime reportedAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(name: 'info_kind_version') String infoKindVersion, String hash,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? targetedAt,@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? revokedAt,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false) dynamic body
+ String id,@JsonKey(name: 'event_id') String eventId, TelegramType type, String title, TelegramStatus status,@JsonKey(name: 'info_type') InfoType infoType,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'pressed_at') DateTime pressedAt,@JsonKey(name: 'reported_at') DateTime reportedAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(name: 'info_kind_version') String infoKindVersion, String hash,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'targeted_at') DateTime? targetedAt,@JsonKey(includeIfNull: false, name: 'revoked_at') DateTime? revokedAt,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false) Object? body
 });
 
 
@@ -326,8 +325,7 @@ as DateTime,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore:
 as num?,targetedAt: freezed == targetedAt ? _self.targetedAt : targetedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,revokedAt: freezed == revokedAt ? _self.revokedAt : revokedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
-as String?,body: freezed == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
-as dynamic,
+as String?,body: freezed == body ? _self.body : body ,
   ));
 }
 

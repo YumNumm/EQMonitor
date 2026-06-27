@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeCounts {
 
- dynamic get type; TargetTime get targetTime; Values get values;
+/// const: "１時間地震回数" | const: "累積地震回数" | const: "地震回数"
+ Type get type; TargetTime get targetTime; Values get values;
 /// Create a copy of EarthquakeCounts
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +29,12 @@ $EarthquakeCountsCopyWith<EarthquakeCounts> get copyWith => _$EarthquakeCountsCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeCounts&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.targetTime, targetTime) || other.targetTime == targetTime)&&(identical(other.values, values) || other.values == values));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeCounts&&(identical(other.type, type) || other.type == type)&&(identical(other.targetTime, targetTime) || other.targetTime == targetTime)&&(identical(other.values, values) || other.values == values));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),targetTime,values);
+int get hashCode => Object.hash(runtimeType,type,targetTime,values);
 
 @override
 String toString() {
@@ -48,7 +49,7 @@ abstract mixin class $EarthquakeCountsCopyWith<$Res>  {
   factory $EarthquakeCountsCopyWith(EarthquakeCounts value, $Res Function(EarthquakeCounts) _then) = _$EarthquakeCountsCopyWithImpl;
 @useResult
 $Res call({
- dynamic type, TargetTime targetTime, Values values
+ Type type, TargetTime targetTime, Values values
 });
 
 
@@ -65,10 +66,10 @@ class _$EarthquakeCountsCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeCounts
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = freezed,Object? targetTime = null,Object? values = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? targetTime = null,Object? values = null,}) {
   return _then(_self.copyWith(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,targetTime: null == targetTime ? _self.targetTime : targetTime // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as Type,targetTime: null == targetTime ? _self.targetTime : targetTime // ignore: cast_nullable_to_non_nullable
 as TargetTime,values: null == values ? _self.values : values // ignore: cast_nullable_to_non_nullable
 as Values,
   ));
@@ -173,7 +174,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic type,  TargetTime targetTime,  Values values)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type type,  TargetTime targetTime,  Values values)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeCounts() when $default != null:
 return $default(_that.type,_that.targetTime,_that.values);case _:
@@ -194,7 +195,7 @@ return $default(_that.type,_that.targetTime,_that.values);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic type,  TargetTime targetTime,  Values values)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type type,  TargetTime targetTime,  Values values)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeCounts():
 return $default(_that.type,_that.targetTime,_that.values);case _:
@@ -214,7 +215,7 @@ return $default(_that.type,_that.targetTime,_that.values);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic type,  TargetTime targetTime,  Values values)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type type,  TargetTime targetTime,  Values values)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeCounts() when $default != null:
 return $default(_that.type,_that.targetTime,_that.values);case _:
@@ -232,7 +233,8 @@ class _EarthquakeCounts implements EarthquakeCounts {
   const _EarthquakeCounts({required this.type, required this.targetTime, required this.values});
   factory _EarthquakeCounts.fromJson(Map<String, dynamic> json) => _$EarthquakeCountsFromJson(json);
 
-@override final  dynamic type;
+/// const: "１時間地震回数" | const: "累積地震回数" | const: "地震回数"
+@override final  Type type;
 @override final  TargetTime targetTime;
 @override final  Values values;
 
@@ -249,12 +251,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeCounts&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.targetTime, targetTime) || other.targetTime == targetTime)&&(identical(other.values, values) || other.values == values));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeCounts&&(identical(other.type, type) || other.type == type)&&(identical(other.targetTime, targetTime) || other.targetTime == targetTime)&&(identical(other.values, values) || other.values == values));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),targetTime,values);
+int get hashCode => Object.hash(runtimeType,type,targetTime,values);
 
 @override
 String toString() {
@@ -269,7 +271,7 @@ abstract mixin class _$EarthquakeCountsCopyWith<$Res> implements $EarthquakeCoun
   factory _$EarthquakeCountsCopyWith(_EarthquakeCounts value, $Res Function(_EarthquakeCounts) _then) = __$EarthquakeCountsCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, TargetTime targetTime, Values values
+ Type type, TargetTime targetTime, Values values
 });
 
 
@@ -286,10 +288,10 @@ class __$EarthquakeCountsCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeCounts
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? targetTime = null,Object? values = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? targetTime = null,Object? values = null,}) {
   return _then(_EarthquakeCounts(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,targetTime: null == targetTime ? _self.targetTime : targetTime // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as Type,targetTime: null == targetTime ? _self.targetTime : targetTime // ignore: cast_nullable_to_non_nullable
 as TargetTime,values: null == values ? _self.values : values // ignore: cast_nullable_to_non_nullable
 as Values,
   ));

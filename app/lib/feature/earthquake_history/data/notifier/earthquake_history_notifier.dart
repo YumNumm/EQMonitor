@@ -18,7 +18,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
-import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_notifier.g.dart';
@@ -155,7 +154,6 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     );
   }
 
-  static final fetchNextDataMutation = Mutation<void>();
   Future<void> fetchNextData() async {
     if (state.isRefreshing || state.isReloading) {
       return;

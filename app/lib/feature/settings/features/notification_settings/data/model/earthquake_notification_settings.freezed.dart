@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeNotificationSettings {
 
- bool get enabled; JmaIntensity? get criticalThreshold; bool get estimatedIntensityEnabled; List<NotificationRegion> get regions;
+ bool get enabled; bool get estimatedIntensityEnabled; List<NotificationRegion> get regions;
 /// Create a copy of EarthquakeNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $EarthquakeNotificationSettingsCopyWith<EarthquakeNotificationSettings> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeNotificationSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.criticalThreshold, criticalThreshold) || other.criticalThreshold == criticalThreshold)&&(identical(other.estimatedIntensityEnabled, estimatedIntensityEnabled) || other.estimatedIntensityEnabled == estimatedIntensityEnabled)&&const DeepCollectionEquality().equals(other.regions, regions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeNotificationSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.estimatedIntensityEnabled, estimatedIntensityEnabled) || other.estimatedIntensityEnabled == estimatedIntensityEnabled)&&const DeepCollectionEquality().equals(other.regions, regions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,enabled,criticalThreshold,estimatedIntensityEnabled,const DeepCollectionEquality().hash(regions));
+int get hashCode => Object.hash(runtimeType,enabled,estimatedIntensityEnabled,const DeepCollectionEquality().hash(regions));
 
 @override
 String toString() {
-  return 'EarthquakeNotificationSettings(enabled: $enabled, criticalThreshold: $criticalThreshold, estimatedIntensityEnabled: $estimatedIntensityEnabled, regions: $regions)';
+  return 'EarthquakeNotificationSettings(enabled: $enabled, estimatedIntensityEnabled: $estimatedIntensityEnabled, regions: $regions)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $EarthquakeNotificationSettingsCopyWith<$Res>  {
   factory $EarthquakeNotificationSettingsCopyWith(EarthquakeNotificationSettings value, $Res Function(EarthquakeNotificationSettings) _then) = _$EarthquakeNotificationSettingsCopyWithImpl;
 @useResult
 $Res call({
- bool enabled, JmaIntensity? criticalThreshold, bool estimatedIntensityEnabled, List<NotificationRegion> regions
+ bool enabled, bool estimatedIntensityEnabled, List<NotificationRegion> regions
 });
 
 
@@ -62,11 +62,10 @@ class _$EarthquakeNotificationSettingsCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? criticalThreshold = freezed,Object? estimatedIntensityEnabled = null,Object? regions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? estimatedIntensityEnabled = null,Object? regions = null,}) {
   return _then(_self.copyWith(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
-as bool,criticalThreshold: freezed == criticalThreshold ? _self.criticalThreshold : criticalThreshold // ignore: cast_nullable_to_non_nullable
-as JmaIntensity?,estimatedIntensityEnabled: null == estimatedIntensityEnabled ? _self.estimatedIntensityEnabled : estimatedIntensityEnabled // ignore: cast_nullable_to_non_nullable
+as bool,estimatedIntensityEnabled: null == estimatedIntensityEnabled ? _self.estimatedIntensityEnabled : estimatedIntensityEnabled // ignore: cast_nullable_to_non_nullable
 as bool,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<NotificationRegion>,
   ));
@@ -153,10 +152,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  JmaIntensity? criticalThreshold,  bool estimatedIntensityEnabled,  List<NotificationRegion> regions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  bool estimatedIntensityEnabled,  List<NotificationRegion> regions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeNotificationSettings() when $default != null:
-return $default(_that.enabled,_that.criticalThreshold,_that.estimatedIntensityEnabled,_that.regions);case _:
+return $default(_that.enabled,_that.estimatedIntensityEnabled,_that.regions);case _:
   return orElse();
 
 }
@@ -174,10 +173,10 @@ return $default(_that.enabled,_that.criticalThreshold,_that.estimatedIntensityEn
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  JmaIntensity? criticalThreshold,  bool estimatedIntensityEnabled,  List<NotificationRegion> regions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  bool estimatedIntensityEnabled,  List<NotificationRegion> regions)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeNotificationSettings():
-return $default(_that.enabled,_that.criticalThreshold,_that.estimatedIntensityEnabled,_that.regions);case _:
+return $default(_that.enabled,_that.estimatedIntensityEnabled,_that.regions);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +193,10 @@ return $default(_that.enabled,_that.criticalThreshold,_that.estimatedIntensityEn
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  JmaIntensity? criticalThreshold,  bool estimatedIntensityEnabled,  List<NotificationRegion> regions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  bool estimatedIntensityEnabled,  List<NotificationRegion> regions)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeNotificationSettings() when $default != null:
-return $default(_that.enabled,_that.criticalThreshold,_that.estimatedIntensityEnabled,_that.regions);case _:
+return $default(_that.enabled,_that.estimatedIntensityEnabled,_that.regions);case _:
   return null;
 
 }
@@ -209,11 +208,10 @@ return $default(_that.enabled,_that.criticalThreshold,_that.estimatedIntensityEn
 
 
 class _EarthquakeNotificationSettings implements EarthquakeNotificationSettings {
-  const _EarthquakeNotificationSettings({required this.enabled, required this.criticalThreshold, required this.estimatedIntensityEnabled, required final  List<NotificationRegion> regions}): _regions = regions;
+  const _EarthquakeNotificationSettings({required this.enabled, required this.estimatedIntensityEnabled, required final  List<NotificationRegion> regions}): _regions = regions;
   
 
 @override final  bool enabled;
-@override final  JmaIntensity? criticalThreshold;
 @override final  bool estimatedIntensityEnabled;
  final  List<NotificationRegion> _regions;
 @override List<NotificationRegion> get regions {
@@ -233,16 +231,16 @@ _$EarthquakeNotificationSettingsCopyWith<_EarthquakeNotificationSettings> get co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeNotificationSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.criticalThreshold, criticalThreshold) || other.criticalThreshold == criticalThreshold)&&(identical(other.estimatedIntensityEnabled, estimatedIntensityEnabled) || other.estimatedIntensityEnabled == estimatedIntensityEnabled)&&const DeepCollectionEquality().equals(other._regions, _regions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeNotificationSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.estimatedIntensityEnabled, estimatedIntensityEnabled) || other.estimatedIntensityEnabled == estimatedIntensityEnabled)&&const DeepCollectionEquality().equals(other._regions, _regions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,enabled,criticalThreshold,estimatedIntensityEnabled,const DeepCollectionEquality().hash(_regions));
+int get hashCode => Object.hash(runtimeType,enabled,estimatedIntensityEnabled,const DeepCollectionEquality().hash(_regions));
 
 @override
 String toString() {
-  return 'EarthquakeNotificationSettings(enabled: $enabled, criticalThreshold: $criticalThreshold, estimatedIntensityEnabled: $estimatedIntensityEnabled, regions: $regions)';
+  return 'EarthquakeNotificationSettings(enabled: $enabled, estimatedIntensityEnabled: $estimatedIntensityEnabled, regions: $regions)';
 }
 
 
@@ -253,7 +251,7 @@ abstract mixin class _$EarthquakeNotificationSettingsCopyWith<$Res> implements $
   factory _$EarthquakeNotificationSettingsCopyWith(_EarthquakeNotificationSettings value, $Res Function(_EarthquakeNotificationSettings) _then) = __$EarthquakeNotificationSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- bool enabled, JmaIntensity? criticalThreshold, bool estimatedIntensityEnabled, List<NotificationRegion> regions
+ bool enabled, bool estimatedIntensityEnabled, List<NotificationRegion> regions
 });
 
 
@@ -270,11 +268,10 @@ class __$EarthquakeNotificationSettingsCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? criticalThreshold = freezed,Object? estimatedIntensityEnabled = null,Object? regions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? estimatedIntensityEnabled = null,Object? regions = null,}) {
   return _then(_EarthquakeNotificationSettings(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
-as bool,criticalThreshold: freezed == criticalThreshold ? _self.criticalThreshold : criticalThreshold // ignore: cast_nullable_to_non_nullable
-as JmaIntensity?,estimatedIntensityEnabled: null == estimatedIntensityEnabled ? _self.estimatedIntensityEnabled : estimatedIntensityEnabled // ignore: cast_nullable_to_non_nullable
+as bool,estimatedIntensityEnabled: null == estimatedIntensityEnabled ? _self.estimatedIntensityEnabled : estimatedIntensityEnabled // ignore: cast_nullable_to_non_nullable
 as bool,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
 as List<NotificationRegion>,
   ));

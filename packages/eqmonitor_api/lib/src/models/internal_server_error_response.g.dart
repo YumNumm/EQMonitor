@@ -12,8 +12,8 @@ _InternalServerErrorResponse _$InternalServerErrorResponseFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_InternalServerErrorResponse', json, ($checkedConvert) {
   final val = _InternalServerErrorResponse(
-    code: $checkedConvert('code', (v) => v),
-    message: $checkedConvert('message', (v) => v),
+    code: $checkedConvert('code', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String),
     reason: $checkedConvert('reason', (v) => v as String?),
   );
   return val;

@@ -15,7 +15,7 @@ _LiveActivityTestScenarioResponse _$LiveActivityTestScenarioResponseFromJson(
   json,
   ($checkedConvert) {
     final val = _LiveActivityTestScenarioResponse(
-      ok: $checkedConvert('ok', (v) => v),
+      ok: $checkedConvert('ok', (v) => v as bool),
       eventId: $checkedConvert('event_id', (v) => v as String),
       liveActivityId: $checkedConvert('live_activity_id', (v) => v as String),
       reportsPlanned: $checkedConvert('reports_planned', (v) => v as num),

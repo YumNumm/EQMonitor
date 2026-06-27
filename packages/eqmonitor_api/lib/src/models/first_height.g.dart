@@ -13,11 +13,11 @@ _FirstHeight _$FirstHeightFromJson(Map<String, dynamic> json) => $checkedCreate(
   json,
   ($checkedConvert) {
     final val = _FirstHeight(
+      isAlreadyArrived: $checkedConvert('is_already_arrived', (v) => v as bool),
       arrivalTime: $checkedConvert(
         'arrival_time',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
-      isAlreadyArrived: $checkedConvert('is_already_arrived', (v) => v),
       revise: $checkedConvert(
         'revise',
         (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
@@ -26,15 +26,15 @@ _FirstHeight _$FirstHeightFromJson(Map<String, dynamic> json) => $checkedCreate(
     return val;
   },
   fieldKeyMap: const {
-    'arrivalTime': 'arrival_time',
     'isAlreadyArrived': 'is_already_arrived',
+    'arrivalTime': 'arrival_time',
   },
 );
 
 Map<String, dynamic> _$FirstHeightToJson(_FirstHeight instance) =>
     <String, dynamic>{
+      'is_already_arrived': instance.isAlreadyArrived,
       'arrival_time': ?instance.arrivalTime?.toIso8601String(),
-      'is_already_arrived': ?instance.isAlreadyArrived,
       'revise': ?instance.revise,
     };
 

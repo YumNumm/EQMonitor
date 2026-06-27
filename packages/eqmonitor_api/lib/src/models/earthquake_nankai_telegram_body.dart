@@ -10,7 +10,8 @@ part 'earthquake_nankai_telegram_body.g.dart';
 @Freezed()
 abstract class EarthquakeNankaiTelegramBody with _$EarthquakeNankaiTelegramBody {
   const factory EarthquakeNankaiTelegramBody({
-    required dynamic type,
+    /// const: "EARTHQUAKE_NANKAI"
+    required String type,
   }) = _EarthquakeNankaiTelegramBody;
   
   factory EarthquakeNankaiTelegramBody.fromJson(Map<String, Object?> json) => _$EarthquakeNankaiTelegramBodyFromJson(json);

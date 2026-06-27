@@ -41,14 +41,13 @@ class SplashPage extends HookConsumerWidget {
           unawaited(
             ref.read(startProvider.notifier).fetchInBackground(),
           );
-          WidgetsBinding.instance.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
             context.go(const HomeRoute().location);
             final pendingEventId = consumePendingNotificationEventId();
             if (pendingEventId != null) {
-              context.push(
-                EarthquakeHistoryDetailsRoute(eventId: pendingEventId)
-                    .location,
-              );
+              await EarthquakeHistoryDetailsRoute(
+                eventId: pendingEventId,
+              ).push<void>(context);
             }
           });
         }

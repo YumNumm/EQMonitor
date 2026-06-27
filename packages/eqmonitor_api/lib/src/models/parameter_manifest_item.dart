@@ -13,8 +13,10 @@ part 'parameter_manifest_item.g.dart';
 abstract class ParameterManifestItem with _$ParameterManifestItem {
   const factory ParameterManifestItem({
     required ParameterType type,
+
+    /// const: 1
     @JsonKey(name: 'schema_version')
-    required dynamic schemaVersion,
+    required int schemaVersion,
     @JsonKey(name: 'source_version')
     required String sourceVersion,
     @JsonKey(includeIfNull: true,name: 'source_updated_at')

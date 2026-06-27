@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeCountsTelegramBody {
 
- dynamic get type;
+/// const: "EARTHQUAKE_COUNTS"
+ String get type;
 /// Create a copy of EarthquakeCountsTelegramBody
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +29,12 @@ $EarthquakeCountsTelegramBodyCopyWith<EarthquakeCountsTelegramBody> get copyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeCountsTelegramBody&&const DeepCollectionEquality().equals(other.type, type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeCountsTelegramBody&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type));
+int get hashCode => Object.hash(runtimeType,type);
 
 @override
 String toString() {
@@ -48,7 +49,7 @@ abstract mixin class $EarthquakeCountsTelegramBodyCopyWith<$Res>  {
   factory $EarthquakeCountsTelegramBodyCopyWith(EarthquakeCountsTelegramBody value, $Res Function(EarthquakeCountsTelegramBody) _then) = _$EarthquakeCountsTelegramBodyCopyWithImpl;
 @useResult
 $Res call({
- dynamic type
+ String type
 });
 
 
@@ -65,10 +66,10 @@ class _$EarthquakeCountsTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeCountsTelegramBody
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,}) {
   return _then(_self.copyWith(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -153,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic type)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeCountsTelegramBody() when $default != null:
 return $default(_that.type);case _:
@@ -174,7 +175,7 @@ return $default(_that.type);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic type)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeCountsTelegramBody():
 return $default(_that.type);case _:
@@ -194,7 +195,7 @@ return $default(_that.type);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic type)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeCountsTelegramBody() when $default != null:
 return $default(_that.type);case _:
@@ -212,7 +213,8 @@ class _EarthquakeCountsTelegramBody implements EarthquakeCountsTelegramBody {
   const _EarthquakeCountsTelegramBody({required this.type});
   factory _EarthquakeCountsTelegramBody.fromJson(Map<String, dynamic> json) => _$EarthquakeCountsTelegramBodyFromJson(json);
 
-@override final  dynamic type;
+/// const: "EARTHQUAKE_COUNTS"
+@override final  String type;
 
 /// Create a copy of EarthquakeCountsTelegramBody
 /// with the given fields replaced by the non-null parameter values.
@@ -227,12 +229,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeCountsTelegramBody&&const DeepCollectionEquality().equals(other.type, type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeCountsTelegramBody&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type));
+int get hashCode => Object.hash(runtimeType,type);
 
 @override
 String toString() {
@@ -247,7 +249,7 @@ abstract mixin class _$EarthquakeCountsTelegramBodyCopyWith<$Res> implements $Ea
   factory _$EarthquakeCountsTelegramBodyCopyWith(_EarthquakeCountsTelegramBody value, $Res Function(_EarthquakeCountsTelegramBody) _then) = __$EarthquakeCountsTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type
+ String type
 });
 
 
@@ -264,10 +266,10 @@ class __$EarthquakeCountsTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeCountsTelegramBody
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,}) {
   return _then(_EarthquakeCountsTelegramBody(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

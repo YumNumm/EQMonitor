@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
@@ -91,8 +90,7 @@ class _MapContent extends HookConsumerWidget {
         (v) => v.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final isDebugger = kDebugMode ||
-        (ref.watch(debugProvider).value ?? false);
+    final isDebugger = kDebugMode || (ref.watch(debugProvider).value ?? false);
 
     ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (
       _,
@@ -137,7 +135,6 @@ class _MapContent extends HookConsumerWidget {
     );
     final hypocenterLayer = EarthquakeHistoryHypocenterLayer(
       earthquake: earthquake,
-      displayMode: HypocenterDisplayMode.zoomFade,
       parameter: parameter,
     );
 
@@ -170,7 +167,6 @@ class _MapContent extends HookConsumerWidget {
                 key: const ValueKey('fill'),
                 earthquake: earthquake,
                 parameter: parameter,
-                fillMode: EarthquakeHistoryFillMode.auto,
                 showingLpgmIntensity: showingLpgmIntensity,
               ),
               EarthquakeHistoryHypocenterErrorLayer(
@@ -182,7 +178,6 @@ class _MapContent extends HookConsumerWidget {
                 key: const ValueKey('station'),
                 earthquake: earthquake,
                 parameter: parameter,
-                stationDisplayMode: StationDisplayMode.maxFocused,
                 showingLpgmIntensity: showingLpgmIntensity,
               ),
             ],

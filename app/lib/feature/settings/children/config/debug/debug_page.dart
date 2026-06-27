@@ -6,12 +6,12 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
@@ -94,8 +94,11 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('オンボーディングリセット'),
             subtitle: const Text('完了フラグを消去してオンボーディングを再表示'),
             leading: const Icon(Icons.restart_alt),
-            onTap: () async =>
-                ref.read(onboardingCompletedProvider.notifier).reset(),
+            onTap: () async => OnboardingCompleted.resetMutation.run(
+              ref,
+              (tsx) async =>
+                  tsx.get(onboardingCompletedProvider.notifier).reset(),
+            ),
           ),
           ListTile(
             title: const Text('ログ'),
@@ -118,20 +121,11 @@ class _DebugWidget extends ConsumerWidget {
               leading: const Icon(Icons.widgets_outlined),
               onTap: () => const DebugAppGroupRoute().push<void>(context),
             ),
-          if (Platform.isIOS)
-            ListTile(
-              title: const Text('Live Activity デバッグ'),
-              subtitle: const Text('EEW / 揺れ検知の 4 報シナリオを APNs 経由でテスト'),
-              leading: const Icon(Icons.lightbulb),
-              onTap: () async =>
-                  const DebugLiveActivityTestRoute().push<void>(context),
-            ),
           ListTile(
             title: const Text('Telemetry Events'),
             leading: const Icon(Icons.analytics_outlined),
             subtitle: const Text('ローカルテレメトリーイベントの閲覧'),
-            onTap: () async =>
-                const DebugTelemetryRoute().push<void>(context),
+            onTap: () async => const DebugTelemetryRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('WebSocket'),

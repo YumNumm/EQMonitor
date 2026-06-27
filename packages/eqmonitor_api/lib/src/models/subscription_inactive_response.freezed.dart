@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SubscriptionInactiveResponse {
 
- dynamic get status;
+/// const: "INACTIVE"
+ String get status;
 /// Create a copy of SubscriptionInactiveResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +29,12 @@ $SubscriptionInactiveResponseCopyWith<SubscriptionInactiveResponse> get copyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SubscriptionInactiveResponse&&const DeepCollectionEquality().equals(other.status, status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SubscriptionInactiveResponse&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(status));
+int get hashCode => Object.hash(runtimeType,status);
 
 @override
 String toString() {
@@ -48,7 +49,7 @@ abstract mixin class $SubscriptionInactiveResponseCopyWith<$Res>  {
   factory $SubscriptionInactiveResponseCopyWith(SubscriptionInactiveResponse value, $Res Function(SubscriptionInactiveResponse) _then) = _$SubscriptionInactiveResponseCopyWithImpl;
 @useResult
 $Res call({
- dynamic status
+ String status
 });
 
 
@@ -65,10 +66,10 @@ class _$SubscriptionInactiveResponseCopyWithImpl<$Res>
 
 /// Create a copy of SubscriptionInactiveResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,}) {
   return _then(_self.copyWith(
-status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as dynamic,
+status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -153,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SubscriptionInactiveResponse() when $default != null:
 return $default(_that.status);case _:
@@ -174,7 +175,7 @@ return $default(_that.status);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String status)  $default,) {final _that = this;
 switch (_that) {
 case _SubscriptionInactiveResponse():
 return $default(_that.status);case _:
@@ -194,7 +195,7 @@ return $default(_that.status);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String status)?  $default,) {final _that = this;
 switch (_that) {
 case _SubscriptionInactiveResponse() when $default != null:
 return $default(_that.status);case _:
@@ -212,7 +213,8 @@ class _SubscriptionInactiveResponse implements SubscriptionInactiveResponse {
   const _SubscriptionInactiveResponse({required this.status});
   factory _SubscriptionInactiveResponse.fromJson(Map<String, dynamic> json) => _$SubscriptionInactiveResponseFromJson(json);
 
-@override final  dynamic status;
+/// const: "INACTIVE"
+@override final  String status;
 
 /// Create a copy of SubscriptionInactiveResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -227,12 +229,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubscriptionInactiveResponse&&const DeepCollectionEquality().equals(other.status, status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubscriptionInactiveResponse&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(status));
+int get hashCode => Object.hash(runtimeType,status);
 
 @override
 String toString() {
@@ -247,7 +249,7 @@ abstract mixin class _$SubscriptionInactiveResponseCopyWith<$Res> implements $Su
   factory _$SubscriptionInactiveResponseCopyWith(_SubscriptionInactiveResponse value, $Res Function(_SubscriptionInactiveResponse) _then) = __$SubscriptionInactiveResponseCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic status
+ String status
 });
 
 
@@ -264,10 +266,10 @@ class __$SubscriptionInactiveResponseCopyWithImpl<$Res>
 
 /// Create a copy of SubscriptionInactiveResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,}) {
   return _then(_SubscriptionInactiveResponse(
-status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as dynamic,
+status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

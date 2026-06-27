@@ -19,7 +19,6 @@ void main() {
     final result = await repository.patchEewSettings(
       deviceId: 'unused',
       enabled: true,
-      criticalThreshold: null,
       startLiveActivity: true,
       onePointEnabled: false,
     );

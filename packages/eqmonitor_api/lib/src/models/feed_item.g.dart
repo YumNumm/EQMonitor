@@ -14,8 +14,14 @@ _FeedItem _$FeedItemFromJson(Map<String, dynamic> json) => $checkedCreate(
   ($checkedConvert) {
     final val = _FeedItem(
       id: $checkedConvert('id', (v) => v as String),
-      feedType: $checkedConvert('feed_type', (v) => v),
-      priority: $checkedConvert('priority', (v) => v),
+      feedType: $checkedConvert(
+        'feed_type',
+        (v) => $enumDecode(_$FeedTypeEnumMap, v),
+      ),
+      priority: $checkedConvert(
+        'priority',
+        (v) => $enumDecode(_$PriorityEnumMap, v),
+      ),
       isImportant: $checkedConvert('is_important', (v) => v as bool),
       publishedAt: $checkedConvert('published_at', (v) => v as String),
       expiresAt: $checkedConvert('expires_at', (v) => v as String?),
@@ -46,4 +52,21 @@ Map<String, dynamic> _$FeedItemToJson(_FeedItem instance) => <String, dynamic>{
   'title': instance.title,
   'summary': instance.summary,
   'data': instance.data,
+};
+
+const _$FeedTypeEnumMap = {
+  FeedType.earthquakeNotice: 'EARTHQUAKE_NOTICE',
+  FeedType.earthquakeExplanation: 'EARTHQUAKE_EXPLANATION',
+  FeedType.earthquakeCounts: 'EARTHQUAKE_COUNTS',
+  FeedType.earthquakeNankai: 'EARTHQUAKE_NANKAI',
+  FeedType.appUpdate: 'APP_UPDATE',
+  FeedType.incident: 'INCIDENT',
+  FeedType.developerMessage: 'DEVELOPER_MESSAGE',
+};
+
+const _$PriorityEnumMap = {
+  Priority.critical: 'CRITICAL',
+  Priority.high: 'HIGH',
+  Priority.normal: 'NORMAL',
+  Priority.low: 'LOW',
 };

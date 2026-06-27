@@ -20,7 +20,7 @@ class EarthquakeHistoryMapLayerParameterNotifier
       sharedPreferencesDataSourceProvider.future,
     );
     final jsonString = await sharedPreferences.getString(
-      key: SharedPreferencesKey.earthquakeHistoryMapLayerParameter,
+      key: .earthquakeHistoryMapLayerParameter,
     );
     if (jsonString == null) {
       return _defaultEarthquakeHistoryMapLayerParameter;

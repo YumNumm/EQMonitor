@@ -12,8 +12,14 @@ _V2FeedsAdminRequestBody _$V2FeedsAdminRequestBodyFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_V2FeedsAdminRequestBody', json, ($checkedConvert) {
   final val = _V2FeedsAdminRequestBody(
-    feedType: $checkedConvert('feedType', (v) => v),
-    priority: $checkedConvert('priority', (v) => v),
+    feedType: $checkedConvert(
+      'feedType',
+      (v) => $enumDecode(_$FeedTypeEnumMap, v),
+    ),
+    priority: $checkedConvert(
+      'priority',
+      (v) => $enumDecode(_$PriorityEnumMap, v),
+    ),
     isImportant: $checkedConvert('isImportant', (v) => v as bool),
     publishedAt: $checkedConvert('publishedAt', (v) => v as String),
     data: $checkedConvert(
@@ -41,4 +47,21 @@ Map<String, dynamic> _$V2FeedsAdminRequestBodyToJson(
   'data': instance.data,
   'translations': instance.translations,
   'expiresAt': ?instance.expiresAt,
+};
+
+const _$FeedTypeEnumMap = {
+  FeedType.earthquakeNotice: 'EARTHQUAKE_NOTICE',
+  FeedType.earthquakeExplanation: 'EARTHQUAKE_EXPLANATION',
+  FeedType.earthquakeCounts: 'EARTHQUAKE_COUNTS',
+  FeedType.earthquakeNankai: 'EARTHQUAKE_NANKAI',
+  FeedType.appUpdate: 'APP_UPDATE',
+  FeedType.incident: 'INCIDENT',
+  FeedType.developerMessage: 'DEVELOPER_MESSAGE',
+};
+
+const _$PriorityEnumMap = {
+  Priority.critical: 'CRITICAL',
+  Priority.high: 'HIGH',
+  Priority.normal: 'NORMAL',
+  Priority.low: 'LOW',
 };

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -196,10 +197,16 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                           }
                           final file = files.first;
                           final bytes = await file.readAsBytes();
-                          await importFromJsonText(
-                            utf8.decode(bytes),
-                          );
-                          return;
+                          await importFromJsonText(utf8.decode(bytes));
+                          final path = file.path;
+                          if (path == null) {
+                            messenger.showSnackBar(
+                              const SnackBar(content: Text('ファイルの読み込みに失敗しました')),
+                            );
+                            return;
+                          }
+                          final text = await File(path).readAsString();
+                          await importFromJsonText(text);
                         },
                         child: const Text('ファイルからインポート'),
                       ),
@@ -307,9 +314,7 @@ class _IntensityWidgets extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final providerContainer = ProviderContainer(
       parent: ref.container,
-      overrides: [
-        intensityColorProvider.overrideWithValue(colorModel),
-      ],
+      overrides: [intensityColorProvider.overrideWithValue(colorModel)],
     );
     return Wrap(
       spacing: 4,
@@ -318,11 +323,7 @@ class _IntensityWidgets extends ConsumerWidget {
         ...JmaIntensity.values.map(
           (e) => UncontrolledProviderScope(
             container: providerContainer,
-            child: JmaIntensityIcon(
-              intensity: e,
-              type: .filled,
-              size: 40,
-            ),
+            child: JmaIntensityIcon(intensity: e, type: .filled, size: 40),
           ),
         ),
       ],

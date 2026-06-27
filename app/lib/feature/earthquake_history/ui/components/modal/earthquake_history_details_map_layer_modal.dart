@@ -101,15 +101,18 @@ class _LocationSettingCards extends ConsumerWidget {
                     icon: Icons.location_off_outlined,
                     isSelected: !config.common.showLocation,
                     onTap: () => lightHapticFunction(
-                      () => ref
-                          .read(homeConfigurationProvider.notifier)
-                          .save(
-                            config.copyWith(
-                              common: config.common.copyWith(
-                                showLocation: false,
+                      () => HomeConfigurationNotifier.saveMutation.run(
+                        ref,
+                        (tsx) async => tsx
+                            .get(homeConfigurationProvider.notifier)
+                            .save(
+                              config.copyWith(
+                                common: config.common.copyWith(
+                                  showLocation: false,
+                                ),
                               ),
                             ),
-                          ),
+                      ),
                     ),
                   ),
                 ),
@@ -130,15 +133,18 @@ class _LocationSettingCards extends ConsumerWidget {
                           p == LocationPermission.deniedForever) {
                         return;
                       }
-                      await ref
-                          .read(homeConfigurationProvider.notifier)
-                          .save(
-                            config.copyWith(
-                              common: config.common.copyWith(
-                                showLocation: true,
+                      await HomeConfigurationNotifier.saveMutation.run(
+                        ref,
+                        (tsx) async => tsx
+                            .get(homeConfigurationProvider.notifier)
+                            .save(
+                              config.copyWith(
+                                common: config.common.copyWith(
+                                  showLocation: true,
+                                ),
                               ),
                             ),
-                          );
+                      );
                     }),
                   ),
                 ),

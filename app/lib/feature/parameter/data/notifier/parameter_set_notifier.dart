@@ -1,15 +1,12 @@
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/repository/parameter_repository.dart';
-import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'parameter_set_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class ParameterSetNotifier extends _$ParameterSetNotifier {
-  static final refreshMutation = Mutation<bool>();
-
   @override
   Future<ParameterSet> build() async {
     final repository = await ref.watch(parameterRepositoryProvider.future);

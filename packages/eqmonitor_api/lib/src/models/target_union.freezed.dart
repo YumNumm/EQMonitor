@@ -38,7 +38,8 @@ TargetUnion _$TargetUnionFromJson(
 /// @nodoc
 mixin _$TargetUnion {
 
- dynamic get type;
+/// const: "DEVICE_ID"
+ String get type;
 /// Create a copy of TargetUnion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,12 +52,12 @@ $TargetUnionCopyWith<TargetUnion> get copyWith => _$TargetUnionCopyWithImpl<Targ
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TargetUnion&&const DeepCollectionEquality().equals(other.type, type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TargetUnion&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type));
+int get hashCode => Object.hash(runtimeType,type);
 
 @override
 String toString() {
@@ -71,7 +72,7 @@ abstract mixin class $TargetUnionCopyWith<$Res>  {
   factory $TargetUnionCopyWith(TargetUnion value, $Res Function(TargetUnion) _then) = _$TargetUnionCopyWithImpl;
 @useResult
 $Res call({
- dynamic type
+ String type
 });
 
 
@@ -88,10 +89,10 @@ class _$TargetUnionCopyWithImpl<$Res>
 
 /// Create a copy of TargetUnion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,}) {
   return _then(_self.copyWith(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -176,7 +177,7 @@ return variant2(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( dynamic type,  String deviceId)?  variant1,TResult Function( dynamic type,  String token,  Environment environment)?  variant2,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String type,  String deviceId)?  variant1,TResult Function( String type,  String token,  Environment environment)?  variant2,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case TargetUnionVariant1() when variant1 != null:
 return variant1(_that.type,_that.deviceId);case TargetUnionVariant2() when variant2 != null:
@@ -198,7 +199,7 @@ return variant2(_that.type,_that.token,_that.environment);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( dynamic type,  String deviceId)  variant1,required TResult Function( dynamic type,  String token,  Environment environment)  variant2,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String type,  String deviceId)  variant1,required TResult Function( String type,  String token,  Environment environment)  variant2,}) {final _that = this;
 switch (_that) {
 case TargetUnionVariant1():
 return variant1(_that.type,_that.deviceId);case TargetUnionVariant2():
@@ -216,7 +217,7 @@ return variant2(_that.type,_that.token,_that.environment);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( dynamic type,  String deviceId)?  variant1,TResult? Function( dynamic type,  String token,  Environment environment)?  variant2,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String type,  String deviceId)?  variant1,TResult? Function( String type,  String token,  Environment environment)?  variant2,}) {final _that = this;
 switch (_that) {
 case TargetUnionVariant1() when variant1 != null:
 return variant1(_that.type,_that.deviceId);case TargetUnionVariant2() when variant2 != null:
@@ -235,7 +236,8 @@ class TargetUnionVariant1 implements TargetUnion {
   const TargetUnionVariant1({required this.type, required this.deviceId, final  String? $type}): $type = $type ?? 'variant1';
   factory TargetUnionVariant1.fromJson(Map<String, dynamic> json) => _$TargetUnionVariant1FromJson(json);
 
-@override final  dynamic type;
+/// const: "DEVICE_ID"
+@override final  String type;
  final  String deviceId;
 
 @JsonKey(name: 'runtimeType')
@@ -255,12 +257,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TargetUnionVariant1&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TargetUnionVariant1&&(identical(other.type, type) || other.type == type)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),deviceId);
+int get hashCode => Object.hash(runtimeType,type,deviceId);
 
 @override
 String toString() {
@@ -275,7 +277,7 @@ abstract mixin class $TargetUnionVariant1CopyWith<$Res> implements $TargetUnionC
   factory $TargetUnionVariant1CopyWith(TargetUnionVariant1 value, $Res Function(TargetUnionVariant1) _then) = _$TargetUnionVariant1CopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, String deviceId
+ String type, String deviceId
 });
 
 
@@ -292,10 +294,10 @@ class _$TargetUnionVariant1CopyWithImpl<$Res>
 
 /// Create a copy of TargetUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? deviceId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? deviceId = null,}) {
   return _then(TargetUnionVariant1(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -310,7 +312,8 @@ class TargetUnionVariant2 implements TargetUnion {
   const TargetUnionVariant2({required this.type, required this.token, required this.environment, final  String? $type}): $type = $type ?? 'variant2';
   factory TargetUnionVariant2.fromJson(Map<String, dynamic> json) => _$TargetUnionVariant2FromJson(json);
 
-@override final  dynamic type;
+/// const: "PUSH_TO_START_TOKEN"
+@override final  String type;
  final  String token;
  final  Environment environment;
 
@@ -331,12 +334,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TargetUnionVariant2&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.token, token) || other.token == token)&&(identical(other.environment, environment) || other.environment == environment));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TargetUnionVariant2&&(identical(other.type, type) || other.type == type)&&(identical(other.token, token) || other.token == token)&&(identical(other.environment, environment) || other.environment == environment));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),token,environment);
+int get hashCode => Object.hash(runtimeType,type,token,environment);
 
 @override
 String toString() {
@@ -351,7 +354,7 @@ abstract mixin class $TargetUnionVariant2CopyWith<$Res> implements $TargetUnionC
   factory $TargetUnionVariant2CopyWith(TargetUnionVariant2 value, $Res Function(TargetUnionVariant2) _then) = _$TargetUnionVariant2CopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, String token, Environment environment
+ String type, String token, Environment environment
 });
 
 
@@ -368,10 +371,10 @@ class _$TargetUnionVariant2CopyWithImpl<$Res>
 
 /// Create a copy of TargetUnion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? token = null,Object? environment = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? token = null,Object? environment = null,}) {
   return _then(TargetUnionVariant2(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,environment: null == environment ? _self.environment : environment // ignore: cast_nullable_to_non_nullable
 as Environment,
   ));

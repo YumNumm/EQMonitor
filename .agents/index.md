@@ -215,6 +215,52 @@ final label = switch (mode) { ... };
 
 ---
 
+## Preferences キー管理規約
+
+> 対象ファイル: `app/lib/**/*.dart`, `packages/*/lib/**/*.dart`
+
+ストレージのキー文字列をコード中にハードコードすることを禁止する。キーは必ず専用の enum で一元管理すること。
+
+### SharedPreferences
+
+キーは `app/lib/core/data/preferences/shared/shared_preferences_key.dart` の `SharedPreferencesKey` enum に追加する。
+
+```dart
+// ❌ 悪い例
+const kMyKey = 'my_key';
+prefs.getString('my_key');
+
+// ✅ 良い例
+enum SharedPreferencesKey {
+  myKey('my_key'),
+  ;
+}
+prefs.getString(SharedPreferencesKey.myKey.key);
+```
+
+### SecureStorage
+
+キーは `app/lib/core/data/preferences/secure/secure_storage_key.dart` の `SecureStorageKey` enum に追加する。
+アクセスは必ず `SecurePreferencesDataSource` 経由で行う（`FlutterSecureStorage` を直接呼ばない）。
+
+```dart
+// ❌ 悪い例
+secureStorage.read(key: 'my_secret');
+
+// ✅ 良い例
+enum SecureStorageKey { mySecret('my_secret'); }
+final ds = await ref.read(securePreferencesDataSourceProvider.future);
+ds.getString(key: SecureStorageKey.mySecret);
+```
+
+### チェックリスト
+
+- 同じ用途のキーが既に enum に存在しないか確認する
+- キー文字列は `snake_case` で統一する
+- レガシーキー（移行用）の場合はコメントでその旨を明記する
+
+---
+
 ## 知見の記録ルール
 
 作業中に判明した重要な知見・運用上の注意点・プラットフォーム固有の情報は、会話が終わる前に `docs/knowledge/{YYYYMMDD}_<topic>.md` にルールとして残す。

@@ -4,6 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'trigger_type.dart';
+
 part 'triggers.freezed.dart';
 part 'triggers.g.dart';
 
@@ -12,7 +14,9 @@ abstract class Triggers with _$Triggers {
   const factory Triggers({
     required String id,
     required String replayFileId,
-    required dynamic triggerType,
+
+    /// const: "SHAKE_DETECTION" | const: "EARTHQUAKE"
+    required TriggerType triggerType,
     required String eventId,
     required String createdAt,
   }) = _Triggers;

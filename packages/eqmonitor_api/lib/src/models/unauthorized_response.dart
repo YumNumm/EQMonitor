@@ -10,7 +10,8 @@ part 'unauthorized_response.g.dart';
 @Freezed()
 abstract class UnauthorizedResponse with _$UnauthorizedResponse {
   const factory UnauthorizedResponse({
-    required dynamic code,
+    /// const: "UNAUTHORIZED"
+    required String code,
     required String message,
   }) = _UnauthorizedResponse;
   

@@ -12,7 +12,7 @@ FeedItemDataUnionVariant1 _$FeedItemDataUnionVariant1FromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('FeedItemDataUnionVariant1', json, ($checkedConvert) {
   final val = FeedItemDataUnionVariant1(
-    type: $checkedConvert('type', (v) => v),
+    type: $checkedConvert('type', (v) => v as String),
     text: $checkedConvert('text', (v) => v as String),
     $type: $checkedConvert('runtimeType', (v) => v as String?),
   );
@@ -31,8 +31,11 @@ FeedItemDataUnionVariant2 _$FeedItemDataUnionVariant2FromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('FeedItemDataUnionVariant2', json, ($checkedConvert) {
   final val = FeedItemDataUnionVariant2(
-    type: $checkedConvert('type', (v) => v),
-    infoType: $checkedConvert('infoType', (v) => v),
+    type: $checkedConvert('type', (v) => v as String),
+    infoType: $checkedConvert(
+      'infoType',
+      (v) => $enumDecode(_$InfoTypeEnumMap, v),
+    ),
     text: $checkedConvert('text', (v) => v as String),
     naming: $checkedConvert(
       'naming',
@@ -58,12 +61,21 @@ Map<String, dynamic> _$FeedItemDataUnionVariant2ToJson(
   'runtimeType': instance.$type,
 };
 
+const _$InfoTypeEnumMap = {
+  InfoType.publication: 'PUBLICATION',
+  InfoType.correction: 'CORRECTION',
+  InfoType.cancellation: 'CANCELLATION',
+};
+
 FeedItemDataUnionVariant3 _$FeedItemDataUnionVariant3FromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('FeedItemDataUnionVariant3', json, ($checkedConvert) {
   final val = FeedItemDataUnionVariant3(
-    type: $checkedConvert('type', (v) => v),
-    infoType: $checkedConvert('infoType', (v) => v),
+    type: $checkedConvert('type', (v) => v as String),
+    infoType: $checkedConvert(
+      'infoType',
+      (v) => $enumDecode(_$InfoTypeEnumMap, v),
+    ),
     earthquakeCounts: $checkedConvert(
       'earthquakeCounts',
       (v) => (v as List<dynamic>?)
@@ -97,9 +109,15 @@ FeedItemDataUnionVariant4 _$FeedItemDataUnionVariant4FromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('FeedItemDataUnionVariant4', json, ($checkedConvert) {
   final val = FeedItemDataUnionVariant4(
-    type: $checkedConvert('type', (v) => v),
-    infoType: $checkedConvert('infoType', (v) => v),
-    telegramType: $checkedConvert('telegramType', (v) => v),
+    type: $checkedConvert('type', (v) => v as String),
+    infoType: $checkedConvert(
+      'infoType',
+      (v) => $enumDecode(_$InfoTypeEnumMap, v),
+    ),
+    telegramType: $checkedConvert(
+      'telegramType',
+      (v) => $enumDecode(_$TelegramTypeEnumMap, v),
+    ),
     earthquakeInfo: $checkedConvert(
       'earthquakeInfo',
       (v) =>
@@ -124,11 +142,17 @@ Map<String, dynamic> _$FeedItemDataUnionVariant4ToJson(
   'runtimeType': instance.$type,
 };
 
+const _$TelegramTypeEnumMap = {
+  TelegramType.undefined0: '南海トラフ地震臨時情報',
+  TelegramType.undefined1: '南海トラフ地震関連解説情報',
+  TelegramType.undefined2: '北海道・三陸沖後発地震注意情報',
+};
+
 FeedItemDataUnionVariant5 _$FeedItemDataUnionVariant5FromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('FeedItemDataUnionVariant5', json, ($checkedConvert) {
   final val = FeedItemDataUnionVariant5(
-    type: $checkedConvert('type', (v) => v),
+    type: $checkedConvert('type', (v) => v as String),
     version: $checkedConvert('version', (v) => v as String?),
     url: $checkedConvert('url', (v) => v as String?),
     $type: $checkedConvert('runtimeType', (v) => v as String?),
@@ -149,7 +173,7 @@ FeedItemDataUnionVariant6 _$FeedItemDataUnionVariant6FromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('FeedItemDataUnionVariant6', json, ($checkedConvert) {
   final val = FeedItemDataUnionVariant6(
-    type: $checkedConvert('type', (v) => v),
+    type: $checkedConvert('type', (v) => v as String),
     url: $checkedConvert('url', (v) => v as String?),
     $type: $checkedConvert('runtimeType', (v) => v as String?),
   );
@@ -168,7 +192,7 @@ FeedItemDataUnionVariant7 _$FeedItemDataUnionVariant7FromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('FeedItemDataUnionVariant7', json, ($checkedConvert) {
   final val = FeedItemDataUnionVariant7(
-    type: $checkedConvert('type', (v) => v),
+    type: $checkedConvert('type', (v) => v as String),
     url: $checkedConvert('url', (v) => v as String?),
     $type: $checkedConvert('runtimeType', (v) => v as String?),
   );

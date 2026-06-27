@@ -17,7 +17,8 @@ abstract class TsunamiEstimationMaxHeight with _$TsunamiEstimationMaxHeight {
   }) = _TsunamiEstimationMaxHeight;
 }
 
-extension TsunamiEstimationMaxHeightApiExt on api.MaxHeight {
+extension TsunamiEstimationMaxHeightApiExt
+    on api.TsunamiRegionEstimationMaxHeight {
   TsunamiEstimationMaxHeight toDomain() => TsunamiEstimationMaxHeight(
     dateTime: observedAt,
     value: value?.toDouble(),

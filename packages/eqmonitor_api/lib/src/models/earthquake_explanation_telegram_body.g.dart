@@ -14,7 +14,7 @@ _EarthquakeExplanationTelegramBody _$EarthquakeExplanationTelegramBodyFromJson(
   $checkedConvert,
 ) {
   final val = _EarthquakeExplanationTelegramBody(
-    type: $checkedConvert('type', (v) => v),
+    type: $checkedConvert('type', (v) => v as String),
     text: $checkedConvert('text', (v) => v as String),
   );
   return val;

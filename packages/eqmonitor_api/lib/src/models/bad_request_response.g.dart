@@ -11,8 +11,8 @@ part of 'bad_request_response.dart';
 _BadRequestResponse _$BadRequestResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_BadRequestResponse', json, ($checkedConvert) {
       final val = _BadRequestResponse(
-        code: $checkedConvert('code', (v) => v),
-        message: $checkedConvert('message', (v) => v),
+        code: $checkedConvert('code', (v) => v as String),
+        message: $checkedConvert('message', (v) => v as String),
         reason: $checkedConvert('reason', (v) => v as String?),
       );
       return val;

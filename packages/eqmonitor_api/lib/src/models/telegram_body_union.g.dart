@@ -15,7 +15,7 @@ _$TelegramBodyUnionEarthquakeTelegramBodyFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = TelegramBodyUnionEarthquakeTelegramBody(
-          type: $checkedConvert('type', (v) => v),
+          type: $checkedConvert('type', (v) => v as String),
           earthquake: $checkedConvert(
             'earthquake',
             (v) => v == null
@@ -90,7 +90,7 @@ TelegramBodyUnionEewTelegramBody _$TelegramBodyUnionEewTelegramBodyFromJson(
   json,
   ($checkedConvert) {
     final val = TelegramBodyUnionEewTelegramBody(
-      type: $checkedConvert('type', (v) => v),
+      type: $checkedConvert('type', (v) => v as String),
       eew: $checkedConvert('eew', (v) => v),
       eewIntensityRegions: $checkedConvert(
         'eewIntensityRegions',
@@ -135,7 +135,7 @@ _$TelegramBodyUnionEarthquakeNoticeTelegramBodyFromJson(
   json,
   ($checkedConvert) {
     final val = TelegramBodyUnionEarthquakeNoticeTelegramBody(
-      type: $checkedConvert('type', (v) => v),
+      type: $checkedConvert('type', (v) => v as String),
       $type: $checkedConvert('runtimeType', (v) => v as String?),
     );
     return val;
@@ -155,7 +155,7 @@ _$TelegramBodyUnionEarthquakeExplanationTelegramBodyFromJson(
   json,
   ($checkedConvert) {
     final val = TelegramBodyUnionEarthquakeExplanationTelegramBody(
-      type: $checkedConvert('type', (v) => v),
+      type: $checkedConvert('type', (v) => v as String),
       text: $checkedConvert('text', (v) => v as String),
       $type: $checkedConvert('runtimeType', (v) => v as String?),
     );
@@ -180,7 +180,7 @@ _$TelegramBodyUnionEarthquakeCountsTelegramBodyFromJson(
   json,
   ($checkedConvert) {
     final val = TelegramBodyUnionEarthquakeCountsTelegramBody(
-      type: $checkedConvert('type', (v) => v),
+      type: $checkedConvert('type', (v) => v as String),
       $type: $checkedConvert('runtimeType', (v) => v as String?),
     );
     return val;
@@ -200,7 +200,7 @@ _$TelegramBodyUnionEarthquakeNankaiTelegramBodyFromJson(
   json,
   ($checkedConvert) {
     final val = TelegramBodyUnionEarthquakeNankaiTelegramBody(
-      type: $checkedConvert('type', (v) => v),
+      type: $checkedConvert('type', (v) => v as String),
       $type: $checkedConvert('runtimeType', (v) => v as String?),
     );
     return val;

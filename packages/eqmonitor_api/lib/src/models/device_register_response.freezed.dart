@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DeviceRegisterResponse {
 
- String get deviceId; String get deviceToken; dynamic get expiresAt;
+ String get deviceId; String get deviceToken; Object? get expiresAt;
 /// Create a copy of DeviceRegisterResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $DeviceRegisterResponseCopyWith<$Res>  {
   factory $DeviceRegisterResponseCopyWith(DeviceRegisterResponse value, $Res Function(DeviceRegisterResponse) _then) = _$DeviceRegisterResponseCopyWithImpl;
 @useResult
 $Res call({
- String deviceId, String deviceToken, dynamic expiresAt
+ String deviceId, String deviceToken, Object? expiresAt
 });
 
 
@@ -69,8 +69,7 @@ class _$DeviceRegisterResponseCopyWithImpl<$Res>
   return _then(_self.copyWith(
 deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,deviceToken: null == deviceToken ? _self.deviceToken : deviceToken // ignore: cast_nullable_to_non_nullable
-as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as dynamic,
+as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt ,
   ));
 }
 
@@ -155,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String deviceId,  String deviceToken,  dynamic expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String deviceId,  String deviceToken,  Object? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeviceRegisterResponse() when $default != null:
 return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
@@ -176,7 +175,7 @@ return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String deviceId,  String deviceToken,  dynamic expiresAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String deviceId,  String deviceToken,  Object? expiresAt)  $default,) {final _that = this;
 switch (_that) {
 case _DeviceRegisterResponse():
 return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
@@ -196,7 +195,7 @@ return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String deviceId,  String deviceToken,  dynamic expiresAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String deviceId,  String deviceToken,  Object? expiresAt)?  $default,) {final _that = this;
 switch (_that) {
 case _DeviceRegisterResponse() when $default != null:
 return $default(_that.deviceId,_that.deviceToken,_that.expiresAt);case _:
@@ -216,7 +215,7 @@ class _DeviceRegisterResponse implements DeviceRegisterResponse {
 
 @override final  String deviceId;
 @override final  String deviceToken;
-@override final  dynamic expiresAt;
+@override final  Object? expiresAt;
 
 /// Create a copy of DeviceRegisterResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -251,7 +250,7 @@ abstract mixin class _$DeviceRegisterResponseCopyWith<$Res> implements $DeviceRe
   factory _$DeviceRegisterResponseCopyWith(_DeviceRegisterResponse value, $Res Function(_DeviceRegisterResponse) _then) = __$DeviceRegisterResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String deviceId, String deviceToken, dynamic expiresAt
+ String deviceId, String deviceToken, Object? expiresAt
 });
 
 
@@ -272,8 +271,7 @@ class __$DeviceRegisterResponseCopyWithImpl<$Res>
   return _then(_DeviceRegisterResponse(
 deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,deviceToken: null == deviceToken ? _self.deviceToken : deviceToken // ignore: cast_nullable_to_non_nullable
-as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as dynamic,
+as String,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt ,
   ));
 }
 

@@ -20,9 +20,8 @@ import 'package:test/test.dart';
 ///
 /// 既知の限界: `GET /v2/parameters/:type` は stub fixture が jma_code_table のみで、
 /// ParameterDataResponseUnion の他 3 variant は drift 対象外（follow-up）。
-typedef _FromJson = Object? Function(Map<String, Object?>);
 
-final _parsers = <String, _FromJson>{
+final _parsers = <String, Object? Function(Map<String, Object?>)>{
   'GET /v1/changelog': ChangelogResponse.fromJson,
   'GET /v1/start': StartResponse.fromJson,
   'GET /v2/earthquake': EarthquakeListResponse.fromJson,

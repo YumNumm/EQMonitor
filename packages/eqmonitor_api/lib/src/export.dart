@@ -261,8 +261,12 @@ export 'models/max_height.dart';
 export 'models/first_height2.dart';
 export 'models/event_type.dart';
 export 'models/environment.dart';
+export 'models/feed_type.dart';
+export 'models/priority.dart';
+export 'models/status.dart';
 export 'models/is_canceled.dart';
 export 'models/is_active.dart';
+export 'models/trigger_type.dart';
 export 'models/min_jma_intensity.dart';
 export 'models/interruption_level.dart';
 export 'models/scenario.dart';
@@ -271,6 +275,7 @@ export 'models/result.dart';
 export 'models/live_activity_event.dart';
 export 'models/start_trigger.dart';
 export 'models/info_type.dart';
+export 'models/type.dart';
 // Root client
 export 'api_client.dart';
 

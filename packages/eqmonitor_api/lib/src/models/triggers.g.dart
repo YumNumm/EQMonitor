@@ -13,7 +13,10 @@ _Triggers _$TriggersFromJson(Map<String, dynamic> json) =>
       final val = _Triggers(
         id: $checkedConvert('id', (v) => v as String),
         replayFileId: $checkedConvert('replayFileId', (v) => v as String),
-        triggerType: $checkedConvert('triggerType', (v) => v),
+        triggerType: $checkedConvert(
+          'triggerType',
+          (v) => $enumDecode(_$TriggerTypeEnumMap, v),
+        ),
         eventId: $checkedConvert('eventId', (v) => v as String),
         createdAt: $checkedConvert('createdAt', (v) => v as String),
       );
@@ -26,4 +29,9 @@ Map<String, dynamic> _$TriggersToJson(_Triggers instance) => <String, dynamic>{
   'triggerType': instance.triggerType,
   'eventId': instance.eventId,
   'createdAt': instance.createdAt,
+};
+
+const _$TriggerTypeEnumMap = {
+  TriggerType.shakeDetection: 'SHAKE_DETECTION',
+  TriggerType.earthquake: 'EARTHQUAKE',
 };

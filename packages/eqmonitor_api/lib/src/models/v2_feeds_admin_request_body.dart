@@ -4,6 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'feed_type.dart';
+import 'priority.dart';
 import 'data.dart';
 import 'translations.dart';
 
@@ -13,8 +15,11 @@ part 'v2_feeds_admin_request_body.g.dart';
 @Freezed()
 abstract class V2FeedsAdminRequestBody with _$V2FeedsAdminRequestBody {
   const factory V2FeedsAdminRequestBody({
-    required dynamic feedType,
-    required dynamic priority,
+    /// const: "APP_UPDATE" | const: "INCIDENT" | const: "DEVELOPER_MESSAGE"
+    required FeedType feedType,
+
+    /// const: "CRITICAL" | const: "HIGH" | const: "NORMAL" | const: "LOW"
+    required Priority priority,
     required bool isImportant,
     required String publishedAt,
     required Data data,

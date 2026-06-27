@@ -1,4 +1,3 @@
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_layer_parameter_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -61,7 +60,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                     ),
                     const Spacer(),
                     TextButton(
-                      onPressed: () => notifier.reset(),
+                      onPressed: notifier.reset,
                       child: const Text('リセット'),
                     ),
                   ],
@@ -69,46 +68,126 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
               ),
 
               _header(theme, 'ズーム閾値'),
-              _slider('地域→市区町村', value.regionToCity, 3, 15, (v) =>
-                notifier.save(value.copyWith(regionToCity: v))),
-              _slider('観測点 表示開始', value.stationMinZoom, 3, 15, (v) =>
-                notifier.save(value.copyWith(stationMinZoom: v))),
-              _slider('観測点名 表示開始', value.stationLabelMinZoom, 3, 15, (v) =>
-                notifier.save(value.copyWith(stationLabelMinZoom: v))),
-              _slider('震央 半透明化', value.hypocenterFadeZoom, 3, 15, (v) =>
-                notifier.save(value.copyWith(hypocenterFadeZoom: v))),
-              _slider('誤差矩形 表示開始', value.hypocenterErrorMinZoom, 3, 15, (v) =>
-                notifier.save(value.copyWith(hypocenterErrorMinZoom: v))),
+              _slider(
+                '地域→市区町村',
+                value.regionToCity,
+                3,
+                15,
+                (v) => notifier.save(value.copyWith(regionToCity: v)),
+              ),
+              _slider(
+                '観測点 表示開始',
+                value.stationMinZoom,
+                3,
+                15,
+                (v) => notifier.save(value.copyWith(stationMinZoom: v)),
+              ),
+              _slider(
+                '観測点名 表示開始',
+                value.stationLabelMinZoom,
+                3,
+                15,
+                (v) => notifier.save(value.copyWith(stationLabelMinZoom: v)),
+              ),
+              _slider(
+                '震央 半透明化',
+                value.hypocenterFadeZoom,
+                3,
+                15,
+                (v) => notifier.save(value.copyWith(hypocenterFadeZoom: v)),
+              ),
+              _slider(
+                '誤差矩形 表示開始',
+                value.hypocenterErrorMinZoom,
+                3,
+                15,
+                (v) => notifier.save(value.copyWith(hypocenterErrorMinZoom: v)),
+              ),
 
               _header(theme, '塗りつぶし透明度'),
-              _slider('地域 Fill', value.regionFillOpacity, 0, 1, (v) =>
-                notifier.save(value.copyWith(regionFillOpacity: v))),
-              _slider('地域 Line', value.regionLineOpacity, 0, 1, (v) =>
-                notifier.save(value.copyWith(regionLineOpacity: v))),
-              _slider('市区町村 Fill', value.cityFillOpacity, 0, 1, (v) =>
-                notifier.save(value.copyWith(cityFillOpacity: v))),
+              _slider(
+                '地域 Fill',
+                value.regionFillOpacity,
+                0,
+                1,
+                (v) => notifier.save(value.copyWith(regionFillOpacity: v)),
+              ),
+              _slider(
+                '地域 Line',
+                value.regionLineOpacity,
+                0,
+                1,
+                (v) => notifier.save(value.copyWith(regionLineOpacity: v)),
+              ),
+              _slider(
+                '市区町村 Fill',
+                value.cityFillOpacity,
+                0,
+                1,
+                (v) => notifier.save(value.copyWith(cityFillOpacity: v)),
+              ),
 
               _header(theme, '観測点サイズ (circle-radius)'),
-              _slider('最小 (z4)', value.stationCircleRadiusMin, 0, 20, (v) =>
-                notifier.save(value.copyWith(stationCircleRadiusMin: v))),
-              _slider('最大 (z10)', value.stationCircleRadiusMax, 0, 20, (v) =>
-                notifier.save(value.copyWith(stationCircleRadiusMax: v))),
+              _slider(
+                '最小 (z4)',
+                value.stationCircleRadiusMin,
+                0,
+                20,
+                (v) => notifier.save(value.copyWith(stationCircleRadiusMin: v)),
+              ),
+              _slider(
+                '最大 (z10)',
+                value.stationCircleRadiusMax,
+                0,
+                20,
+                (v) => notifier.save(value.copyWith(stationCircleRadiusMax: v)),
+              ),
 
               _header(theme, '観測点アイコンサイズ'),
-              _slider('最小 (z3)', value.stationIconSizeMin, 0, 0.2, (v) =>
-                notifier.save(value.copyWith(stationIconSizeMin: v))),
-              _slider('中間 (z7)', value.stationIconSizeMid, 0, 0.5, (v) =>
-                notifier.save(value.copyWith(stationIconSizeMid: v))),
-              _slider('最大 (z20)', value.stationIconSizeMax, 0, 1.5, (v) =>
-                notifier.save(value.copyWith(stationIconSizeMax: v))),
+              _slider(
+                '最小 (z3)',
+                value.stationIconSizeMin,
+                0,
+                0.2,
+                (v) => notifier.save(value.copyWith(stationIconSizeMin: v)),
+              ),
+              _slider(
+                '中間 (z7)',
+                value.stationIconSizeMid,
+                0,
+                0.5,
+                (v) => notifier.save(value.copyWith(stationIconSizeMid: v)),
+              ),
+              _slider(
+                '最大 (z20)',
+                value.stationIconSizeMax,
+                0,
+                1.5,
+                (v) => notifier.save(value.copyWith(stationIconSizeMax: v)),
+              ),
 
               _header(theme, '震央マーカー'),
-              _slider('アイコン最小 (z3)', value.hypocenterIconSizeMin, 0, 0.5, (v) =>
-                notifier.save(value.copyWith(hypocenterIconSizeMin: v))),
-              _slider('アイコン最大 (z20)', value.hypocenterIconSizeMax, 0, 1, (v) =>
-                notifier.save(value.copyWith(hypocenterIconSizeMax: v))),
-              _slider('フェード透明度', value.hypocenterFadeOpacity, 0, 1, (v) =>
-                notifier.save(value.copyWith(hypocenterFadeOpacity: v))),
+              _slider(
+                'アイコン最小 (z3)',
+                value.hypocenterIconSizeMin,
+                0,
+                0.5,
+                (v) => notifier.save(value.copyWith(hypocenterIconSizeMin: v)),
+              ),
+              _slider(
+                'アイコン最大 (z20)',
+                value.hypocenterIconSizeMax,
+                0,
+                1,
+                (v) => notifier.save(value.copyWith(hypocenterIconSizeMax: v)),
+              ),
+              _slider(
+                'フェード透明度',
+                value.hypocenterFadeOpacity,
+                0,
+                1,
+                (v) => notifier.save(value.copyWith(hypocenterFadeOpacity: v)),
+              ),
 
               SizedBox(height: MediaQuery.paddingOf(context).bottom),
             ],

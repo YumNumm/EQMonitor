@@ -44,7 +44,7 @@ extension IntensityStationApiExtension on api.IntensityStationItem {
   );
 }
 
-extension PrePeriodApiExtension on api.PrePeriods {
+extension PrePeriodApiExtension on api.LpgmPrePeriod {
   PrePeriod get toPrePeriod => PrePeriod(
     band: band.toDouble(),
     lpgmIntensity: lpgmIntensity.toJmaLpgmIntensity,

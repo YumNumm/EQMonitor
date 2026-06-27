@@ -12,13 +12,14 @@ part 'first_height.g.dart';
 @Freezed()
 abstract class FirstHeight with _$FirstHeight {
   const factory FirstHeight({
+    /// 早いところでは既に津波到達と推定.
+    /// const: true.
+    @JsonKey(name: 'is_already_arrived')
+    required bool isAlreadyArrived,
+
     /// 1観測地点以上で第1波の時刻を明瞭に観測した場合
     @JsonKey(includeIfNull: false,name: 'arrival_time')
     DateTime? arrivalTime,
-
-    /// 早いところでは既に津波到達と推定
-    @JsonKey(includeIfNull: false,name: 'is_already_arrived')
-    dynamic isAlreadyArrived,
     @JsonKey(includeIfNull: false)
     Revise? revise,
   }) = _FirstHeight;

@@ -16,6 +16,7 @@ analyzer:
     unnecessary_cast: ignore
     unintended_html_in_doc_comment: ignore
     avoid_unused_constructor_parameters: ignore
+    eol_at_end_of_file: ignore
 
 linter:
   rules:

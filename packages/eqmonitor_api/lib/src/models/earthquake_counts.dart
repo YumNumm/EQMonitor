@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'type.dart';
 import 'target_time.dart';
 import 'values.dart';
 
@@ -13,7 +14,8 @@ part 'earthquake_counts.g.dart';
 @Freezed()
 abstract class EarthquakeCounts with _$EarthquakeCounts {
   const factory EarthquakeCounts({
-    required dynamic type,
+    /// const: "１時間地震回数" | const: "累積地震回数" | const: "地震回数"
+    required Type type,
     required TargetTime targetTime,
     required Values values,
   }) = _EarthquakeCounts;

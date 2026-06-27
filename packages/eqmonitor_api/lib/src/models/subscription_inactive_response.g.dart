@@ -12,7 +12,7 @@ _SubscriptionInactiveResponse _$SubscriptionInactiveResponseFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_SubscriptionInactiveResponse', json, ($checkedConvert) {
   final val = _SubscriptionInactiveResponse(
-    status: $checkedConvert('status', (v) => v),
+    status: $checkedConvert('status', (v) => v as String),
   );
   return val;
 });

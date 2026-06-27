@@ -12,7 +12,7 @@ _EarthquakeNankaiTelegramBody _$EarthquakeNankaiTelegramBodyFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_EarthquakeNankaiTelegramBody', json, ($checkedConvert) {
   final val = _EarthquakeNankaiTelegramBody(
-    type: $checkedConvert('type', (v) => v),
+    type: $checkedConvert('type', (v) => v as String),
   );
   return val;
 });
