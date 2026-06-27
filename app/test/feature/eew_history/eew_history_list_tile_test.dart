@@ -62,4 +62,106 @@ void main() {
 
     expect(find.text('宮城県沖'), findsOneWidget);
   });
+
+  testWidgets('isWarning: true のとき警報バッジが表示される', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final preferences = await SharedPreferences.getInstance();
+    final container = ProviderContainer(
+      overrides: [
+        app_prefs.sharedPreferencesProvider.overrideWithValue(
+          app_prefs.SharedPreferencesAsync(preferences),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final item = EewTelegramItem(
+      eventId: 'e2',
+      status: TelegramStatus.normal,
+      infoType: TelegramInfoType.publication,
+      serialNo: 1,
+      isCanceled: false,
+      isLastInfo: false,
+      reportTime: DateTime.utc(2026, 6, 27, 12),
+      originTime: DateTime.utc(2026, 6, 27, 12),
+      isPlum: false,
+      isWarning: true,
+      hypocenter: const EewHypocenterInfo(
+        code: '200',
+        name: '岩手県沖',
+        hasLatLng: false,
+        magnitude: 7,
+      ),
+      forecastIntensity: const EewForecastIntensityInfo(
+        regions: [],
+        maxIntensity: JmaIntensity.sixLower,
+      ),
+    );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          home: Scaffold(
+            body: EewHistoryListTile(
+              item: item,
+              intensityColor: container.read(intensityColorProvider),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('警報'), findsOneWidget);
+  });
+
+  testWidgets('isWarning: false のとき警報バッジが表示されない', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final preferences = await SharedPreferences.getInstance();
+    final container = ProviderContainer(
+      overrides: [
+        app_prefs.sharedPreferencesProvider.overrideWithValue(
+          app_prefs.SharedPreferencesAsync(preferences),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final item = EewTelegramItem(
+      eventId: 'e3',
+      status: TelegramStatus.normal,
+      infoType: TelegramInfoType.publication,
+      serialNo: 1,
+      isCanceled: false,
+      isLastInfo: false,
+      reportTime: DateTime.utc(2026, 6, 27, 12),
+      originTime: DateTime.utc(2026, 6, 27, 12),
+      isPlum: false,
+      isWarning: false,
+      hypocenter: const EewHypocenterInfo(
+        code: '300',
+        name: '千葉県北西部',
+        hasLatLng: false,
+        magnitude: 4.5,
+      ),
+      forecastIntensity: const EewForecastIntensityInfo(
+        regions: [],
+        maxIntensity: JmaIntensity.three,
+      ),
+    );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          home: Scaffold(
+            body: EewHistoryListTile(
+              item: item,
+              intensityColor: container.read(intensityColorProvider),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('警報'), findsNothing);
+  });
 }

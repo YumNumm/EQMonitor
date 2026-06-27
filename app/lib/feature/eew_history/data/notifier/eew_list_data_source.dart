@@ -56,6 +56,10 @@ Future<EewListDataSource> eewListDataSource(
       if (next case AsyncData(:final value)) {
         if (value is RealtimeEewUpsertEvent) {
           dataSource.upsertItems([value.item.toEewTelegramItem]);
+        } else if (value is RealtimeSnapshotEvent) {
+          dataSource.upsertItems(
+            value.eews.map((e) => e.toEewTelegramItem).toList(),
+          );
         }
       }
     });
@@ -114,7 +118,7 @@ class EewListDataSource
 
   void upsertItems(List<EewTelegramItem> newItems) {
     final currentItems = [...notifier.values];
-    for (final item in newItems) {
+    for (final item in newItems.reversed) {
       final index = currentItems.indexWhere((e) => e.eventId == item.eventId);
       if (index == -1) {
         insertItem(0, item);
