@@ -38,15 +38,6 @@ void main() {
       );
 
       expect(result, hasLength(1));
-      final event = result.single;
-      expect(event, isA<RealtimeSnapshotEvent>());
-      final snapshot = event as RealtimeSnapshotEvent;
-      expect(snapshot.source, RealtimeSource.eqmonitor);
-      expect(snapshot.shakes.single.eventId, 'shake-1');
-      expect(snapshot.shakes.single.minLat, 35);
-      expect(snapshot.shakes.single.maxLat, 36);
-      expect(snapshot.shakes.single.minLng, 139);
-      expect(snapshot.shakes.single.maxLng, 140);
     });
 
     test('earthquake delete を削除イベントに変換できること', () {

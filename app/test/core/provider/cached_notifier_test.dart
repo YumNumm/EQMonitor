@@ -1,3 +1,5 @@
+// ignore_for_file: only_throw_errors
+
 import 'dart:async';
 
 import 'package:cache/cache.dart';
@@ -23,15 +25,23 @@ class _TestNotifier extends AsyncNotifier<String> with CachedNotifier<String> {
   @override
   Future<String> fetch(ApiClient client) async {
     if (identical(client, _cacheOnlyClient)) {
-      if (_cacheError != null) throw _cacheError!;
-      if (_shouldCacheHit) return _cachedValue;
+      if (_cacheError != null) {
+        throw _cacheError!;
+      }
+      if (_shouldCacheHit) {
+        return _cachedValue;
+      }
       throw DioException(
         requestOptions: RequestOptions(),
         error: const CacheMissException(),
       );
     }
-    if (_networkCompleter != null) return _networkCompleter!.future;
-    if (_networkError != null) throw _networkError!;
+    if (_networkCompleter != null) {
+      return _networkCompleter!.future;
+    }
+    if (_networkError != null) {
+      throw _networkError!;
+    }
     return _freshValue;
   }
 
@@ -89,7 +99,7 @@ void main() {
       _shouldCacheHit = false;
       _networkError = Exception('server down');
 
-      final sub = container.listen(_testProvider, (_, __) {});
+      final sub = container.listen(_testProvider, (_, _) {});
       await _pumpMicrotasks();
 
       final state = container.read(_testProvider);
@@ -199,7 +209,7 @@ void main() {
       _cacheError = const FormatException('corrupt');
       _networkError = Exception('network down');
 
-      final sub = container.listen(_testProvider, (_, __) {});
+      final sub = container.listen(_testProvider, (_, _) {});
       await _pumpMicrotasks();
 
       final state = container.read(_testProvider);
@@ -256,7 +266,7 @@ void main() {
         _cachedValue = 'stale';
         _networkCompleter = Completer<String>();
 
-        container.listen(_testProvider, (_, __) {});
+        container.listen(_testProvider, (_, _) {});
         await container.read(_testProvider.future);
 
         container.dispose();
@@ -287,7 +297,7 @@ void main() {
       _shouldCacheHit = false;
       _networkCompleter = Completer<String>();
 
-      container.listen(_testProvider, (_, __) {});
+      container.listen(_testProvider, (_, _) {});
       container.read(_testProvider);
 
       final loading = container.read(_testProvider);
@@ -300,28 +310,34 @@ void main() {
       expect(container.read(_testProvider).value, 'data');
     });
 
-    test('cache hit: AsyncData(stale) → isRefreshing → AsyncData(fresh)',
-        () async {
-      _shouldCacheHit = true;
-      _cachedValue = 'stale';
-      _networkCompleter = Completer<String>();
+    test(
+      'cache hit: AsyncData(stale) → isRefreshing → AsyncData(fresh)',
+      () async {
+        _shouldCacheHit = true;
+        _cachedValue = 'stale';
+        _networkCompleter = Completer<String>();
 
-      final states = <AsyncValue<String>>[];
-      container.listen(_testProvider, (_, next) => states.add(next));
+        final states = <AsyncValue<String>>[];
+        container.listen(_testProvider, (_, next) => states.add(next));
 
-      await container.read(_testProvider.future);
-      await Future<void>.delayed(Duration.zero);
+        await container.read(_testProvider.future);
+        await Future<void>.delayed(Duration.zero);
 
-      final hasRefreshing = states.any((s) => s.isRefreshing);
-      expect(hasRefreshing, isTrue, reason: 'should pass through isRefreshing');
+        final hasRefreshing = states.any((s) => s.isRefreshing);
+        expect(
+          hasRefreshing,
+          isTrue,
+          reason: 'should pass through isRefreshing',
+        );
 
-      _networkCompleter!.complete('fresh');
-      await _pumpMicrotasks();
+        _networkCompleter!.complete('fresh');
+        await _pumpMicrotasks();
 
-      final finalState = container.read(_testProvider);
-      expect(finalState.value, 'fresh');
-      expect(finalState.isLoading, isFalse);
-    });
+        final finalState = container.read(_testProvider);
+        expect(finalState.value, 'fresh');
+        expect(finalState.isLoading, isFalse);
+      },
+    );
 
     test(
       'cache hit + error: AsyncData(stale) → isRefreshing → '

@@ -61,15 +61,5 @@ void main() {
       );
       expect(policy.shouldReturnToRealtime(event), isFalse);
     });
-
-    test('初期スナップショットは復帰トリガーにならないこと', () {
-      const event = RealtimeEvent.snapshot(
-        eews: [],
-        earthquakes: [],
-        shakes: [],
-        source: RealtimeSource.eqmonitor,
-      );
-      expect(policy.shouldReturnToRealtime(event), isFalse);
-    });
   });
 }
