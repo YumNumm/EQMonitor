@@ -26,7 +26,15 @@ final class NearbyEarthquakeProvider
         $FutureProvider<List<EarthquakePartial>> {
   NearbyEarthquakeProvider._({
     required NearbyEarthquakeFamily super.from,
-    required (String, double, double, int?, api.EarthquakeSortBy, api.SortOrder)
+    required (
+      String,
+      double,
+      double,
+      int?,
+      api.EarthquakeSortBy,
+      api.SortOrder,
+      NearbyEarthquakeParameter,
+    )
     super.argument,
   }) : super(
          retry: null,
@@ -63,6 +71,7 @@ final class NearbyEarthquakeProvider
               int?,
               api.EarthquakeSortBy,
               api.SortOrder,
+              NearbyEarthquakeParameter,
             );
     return nearbyEarthquake(
       ref,
@@ -72,6 +81,7 @@ final class NearbyEarthquakeProvider
       argument.$4,
       argument.$5,
       argument.$6,
+      argument.$7,
     );
   }
 
@@ -86,13 +96,21 @@ final class NearbyEarthquakeProvider
   }
 }
 
-String _$nearbyEarthquakeHash() => r'2e8fe5b4b86563f9e8fdf6e2c6284137d5d080cd';
+String _$nearbyEarthquakeHash() => r'9acd54d1431d49138ec6e08a200d2b2cb4c29447';
 
 final class NearbyEarthquakeFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<List<EarthquakePartial>>,
-          (String, double, double, int?, api.EarthquakeSortBy, api.SortOrder)
+          (
+            String,
+            double,
+            double,
+            int?,
+            api.EarthquakeSortBy,
+            api.SortOrder,
+            NearbyEarthquakeParameter,
+          )
         > {
   NearbyEarthquakeFamily._()
     : super(
@@ -110,8 +128,17 @@ final class NearbyEarthquakeFamily extends $Family
     int? depth,
     api.EarthquakeSortBy sortBy,
     api.SortOrder sortOrder,
+    NearbyEarthquakeParameter parameter,
   ) => NearbyEarthquakeProvider._(
-    argument: (excludeEventId, latitude, longitude, depth, sortBy, sortOrder),
+    argument: (
+      excludeEventId,
+      latitude,
+      longitude,
+      depth,
+      sortBy,
+      sortOrder,
+      parameter,
+    ),
     from: this,
   );
 
