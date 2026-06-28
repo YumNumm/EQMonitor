@@ -40,7 +40,7 @@ EarthquakeParameterPrefectureItem _pref(
 //                   市区町村 '0110101', '0110102' (prefix 01)
 //   都道府県 '0200': 細分区域 '0210100'
 //                   市区町村 '0210101' (prefix 02)
-final _testPrefectures = [
+final List<EarthquakeParameterPrefectureItem> _testPrefectures = [
   _pref('0100', [
     _region('0110100', ['0110101', '0110102']),
     _region('0110200', ['0110201']),

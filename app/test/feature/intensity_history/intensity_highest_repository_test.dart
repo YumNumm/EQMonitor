@@ -141,7 +141,6 @@ void main() {
 
       final page = await repo.fetchCityIntensityList(
         cityCode: '0110100',
-        cursor: null,
         limit: 20,
       );
       expect(page.items.length, 2);
@@ -156,7 +155,6 @@ void main() {
 
       final page = await repo.fetchCityIntensityList(
         cityCode: '0110100',
-        cursor: null,
         limit: 20,
       );
       expect(page.nextToken, isNull);

@@ -1,9 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/intensity_history/data/model/city_intensity_page.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_intensity_list_data_source.dart';
 import 'package:eqmonitor/feature/intensity_history/data/repository/intensity_highest_repository.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
-import 'package:dio/dio.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -70,7 +70,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp(
+        child: const MaterialApp(
           home: Scaffold(
             body: _ModalWrapper(
               cityCode: 'city-1',
