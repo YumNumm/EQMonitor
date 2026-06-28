@@ -15,14 +15,14 @@ Future<IntensityHighestRepository> intensityHighestRepository(Ref ref) async {
 /// 最高震度 API をまとめる薄いラッパ。
 class IntensityHighestRepository {
   IntensityHighestRepository({required EarthquakeApiClient earthquake})
-      : _earthquake = earthquake;
+    : _earthquake = earthquake;
 
   final EarthquakeApiClient _earthquake;
 
   /// 全都道府県の過去最高震度一覧を取得する。
   Future<List<HighestIntensityEntry>> fetchPrefectureHighest() async {
-    final response =
-        await _earthquake.getV2EarthquakeIntensityPrefectureHighest();
+    final response = await _earthquake
+        .getV2EarthquakeIntensityPrefectureHighest();
     return response.data.items.map(HighestIntensityEntry.fromApi).toList();
   }
 
@@ -31,7 +31,9 @@ class IntensityHighestRepository {
     String prefectureCode,
   ) async {
     final response = await _earthquake
-        .getV2EarthquakeIntensityPrefectureCodeCityHighest(code: prefectureCode);
+        .getV2EarthquakeIntensityPrefectureCodeCityHighest(
+          code: prefectureCode,
+        );
     return response.data.items.map(HighestIntensityEntry.fromApi).toList();
   }
 

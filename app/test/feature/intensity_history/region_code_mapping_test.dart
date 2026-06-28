@@ -10,32 +10,30 @@ import 'package:flutter_test/flutter_test.dart';
 LocalizedName _name(String ja) => LocalizedName(ja: ja, en: ja);
 
 EarthquakeParameterCityItem _city(String code) => EarthquakeParameterCityItem(
-      code: code,
-      name: _name('city-$code'),
-      kana: null,
-      stations: const [],
-    );
+  code: code,
+  name: _name('city-$code'),
+  kana: null,
+  stations: const [],
+);
 
 EarthquakeParameterRegionItem _region(
   String code,
   List<String> cityCodes,
-) =>
-    EarthquakeParameterRegionItem(
-      code: code,
-      name: _name('region-$code'),
-      kana: null,
-      cities: cityCodes.map(_city).toList(),
-    );
+) => EarthquakeParameterRegionItem(
+  code: code,
+  name: _name('region-$code'),
+  kana: null,
+  cities: cityCodes.map(_city).toList(),
+);
 
 EarthquakeParameterPrefectureItem _pref(
   String code,
   List<EarthquakeParameterRegionItem> regions,
-) =>
-    EarthquakeParameterPrefectureItem(
-      code: code,
-      name: _name('pref-$code'),
-      regions: regions,
-    );
+) => EarthquakeParameterPrefectureItem(
+  code: code,
+  name: _name('pref-$code'),
+  regions: regions,
+);
 
 // サンプルデータ:
 //   都道府県 '0100': 細分区域 '0110100', '0110200'

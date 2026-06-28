@@ -54,10 +54,12 @@ void main() {
     addTearDown(container.dispose);
 
     // Lv2 状態に遷移
-    container.read(intensityHistoryControllerProvider.notifier).focusPrefecture(
-      code: '0100',
-      name: '北海道',
-    );
+    container
+        .read(intensityHistoryControllerProvider.notifier)
+        .focusPrefecture(
+          code: '0100',
+          name: '北海道',
+        );
 
     await tester.pumpWidget(
       UncontrolledProviderScope(

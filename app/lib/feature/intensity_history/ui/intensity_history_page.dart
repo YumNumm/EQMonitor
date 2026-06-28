@@ -95,12 +95,12 @@ class _MapContent extends HookConsumerWidget {
         }
 
         final paramAsync = ref.read(parameterSetProvider);
-        final prefectures =
-            paramAsync.whenOrNull(data: (p) => p.earthquake.prefectures);
+        final prefectures = paramAsync.whenOrNull(
+          data: (p) => p.earthquake.prefectures,
+        );
         var prefName = prefCode;
         if (prefectures != null) {
-          final pref =
-              prefectures.where((p) => p.code == prefCode).firstOrNull;
+          final pref = prefectures.where((p) => p.code == prefCode).firstOrNull;
           if (pref != null) {
             prefName = pref.name.ja;
           }
@@ -286,9 +286,7 @@ class _MapContent extends HookConsumerWidget {
           .whenOrNull(data: (v) => v);
       HighestIntensityEntry? summary;
       if (cityHighest != null) {
-        summary = cityHighest
-            .where((e) => e.code == cityCode)
-            .firstOrNull;
+        summary = cityHighest.where((e) => e.code == cityCode).firstOrNull;
       }
 
       if (!context.mounted) {

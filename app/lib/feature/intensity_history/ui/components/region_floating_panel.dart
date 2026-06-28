@@ -69,9 +69,7 @@ class _CityPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prefectureHighestAsync = ref.watch(prefectureHighestProvider);
     final entry = prefectureHighestAsync.whenOrNull(
-      data: (list) => list
-          .where((e) => e.code == prefectureCode)
-          .firstOrNull,
+      data: (list) => list.where((e) => e.code == prefectureCode).firstOrNull,
     );
 
     return Card(

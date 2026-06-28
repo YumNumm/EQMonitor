@@ -10,26 +10,25 @@ import 'package:flutter_test/flutter_test.dart';
 // ---------------------------------------------------------------------------
 
 EarthquakePartial _partial(String eventId) => EarthquakePartial(
-      eventId: eventId,
-      status: TelegramStatus.normal,
-      originTimePrecision: OriginTimePrecision.second,
-      datasource: EarthquakeDatasource.jmaDisasterInformationXml,
-      telegramTypes: const [],
-      earthquakeType: EarthquakeType.normal,
-    );
+  eventId: eventId,
+  status: TelegramStatus.normal,
+  originTimePrecision: OriginTimePrecision.second,
+  datasource: EarthquakeDatasource.jmaDisasterInformationXml,
+  telegramTypes: const [],
+  earthquakeType: EarthquakeType.normal,
+);
 
 HighestIntensityItem _item({
   required String code,
   required String name,
   required JmaIntensity intensity,
-}) =>
-    HighestIntensityItem(
-      code: code,
-      name: name,
-      intensity: intensity,
-      count: 3,
-      earthquake: _partial('evt-$code'),
-    );
+}) => HighestIntensityItem(
+  code: code,
+  name: name,
+  intensity: intensity,
+  count: 3,
+  earthquake: _partial('evt-$code'),
+);
 
 IntensityCitySearchItem _citySearchItem(JmaIntensity intensity) =>
     IntensityCitySearchItem(
@@ -43,7 +42,7 @@ IntensityCitySearchItem _citySearchItem(JmaIntensity intensity) =>
 
 class _FakeIntensityHighestRepository extends IntensityHighestRepository {
   _FakeIntensityHighestRepository()
-      : super(earthquake: ApiClient(Dio()).earthquake);
+    : super(earthquake: ApiClient(Dio()).earthquake);
 
   List<HighestIntensityItem> prefectureItems = const [];
   List<HighestIntensityItem> cityItems = const [];
@@ -117,7 +116,11 @@ void main() {
     test('cityItems を HighestIntensityEntry のリストに変換して返す', () async {
       final repo = _FakeIntensityHighestRepository()
         ..cityItems = [
-          _item(code: '0110100', name: '札幌市中央区', intensity: JmaIntensity.value4),
+          _item(
+            code: '0110100',
+            name: '札幌市中央区',
+            intensity: JmaIntensity.value4,
+          ),
         ];
 
       final result = await repo.fetchCityHighest('0100');
