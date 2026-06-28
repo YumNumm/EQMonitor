@@ -123,6 +123,17 @@ class _SheetBody extends ConsumerWidget {
       child: Column(
         children: [
           ListTile(
+            leading: const Icon(Icons.bar_chart_outlined),
+            title: Text('都道府県別 最大震度', style: typography.titleSmall),
+            subtitle: Text(
+              '地域ごとの最大震度履歴をマップで確認します',
+              style: typography.bodySmall,
+            ),
+            onTap: () async =>
+                const IntensityHistoryRoute().push<void>(context),
+          ),
+          Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
+          ListTile(
             leading: const Icon(Icons.settings_outlined),
             title: Text('設定', style: typography.titleSmall),
             subtitle: Text('表示設定や地図の動作を調整します', style: typography.bodySmall),

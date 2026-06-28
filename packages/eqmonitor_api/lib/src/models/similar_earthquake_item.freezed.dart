@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SimilarEarthquakeItem {
 
- EarthquakePartial get earthquake;/// km相当の距離スコア（小さいほど類似）
+ EarthquakePartial get earthquake;/// 深さを考慮した震源距離（km）
  num get score;/// グループ内の他の地震（代表を除く）
 @JsonKey(name: 'grouped_earthquakes') List<EarthquakePartial> get groupedEarthquakes;
 /// Create a copy of SimilarEarthquakeItem
@@ -226,7 +226,7 @@ class _SimilarEarthquakeItem implements SimilarEarthquakeItem {
   factory _SimilarEarthquakeItem.fromJson(Map<String, dynamic> json) => _$SimilarEarthquakeItemFromJson(json);
 
 @override final  EarthquakePartial earthquake;
-/// km相当の距離スコア（小さいほど類似）
+/// 深さを考慮した震源距離（km）
 @override final  num score;
 /// グループ内の他の地震（代表を除く）
  final  List<EarthquakePartial> _groupedEarthquakes;

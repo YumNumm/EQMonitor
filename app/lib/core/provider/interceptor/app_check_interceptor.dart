@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/feature/devices/data/exception/app_check_rejection.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:firebase_app_check/firebase_app_check.dart';
 
@@ -46,13 +46,19 @@ class AppCheckInterceptor extends Interceptor {
       }
       handler.next(options);
     } on FirebaseException catch (exception, stackTrace) {
-      handler.reject(
-        DioException.requestCancelled(
-          requestOptions: options,
-          reason: AppCheckRejection(exception),
-          stackTrace: stackTrace,
-        ),
+      talker.info(
+        'AppCheckInterceptor: AppCheck Tokenの発行に失敗しました。headerは無しで続行します',
+        exception,
+        stackTrace,
       );
+      handler.next(options);
+      // handler.reject(
+      //   DioException.requestCancelled(
+      //     requestOptions: options,
+      //     reason: AppCheckRejection(exception),
+      //     stackTrace: stackTrace,
+      //   ),
+      // );
     }
   }
 }

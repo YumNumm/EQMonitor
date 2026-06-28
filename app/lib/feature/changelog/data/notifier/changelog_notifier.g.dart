@@ -15,11 +15,7 @@ part of 'changelog_notifier.dart';
 final changelogProvider = ChangelogNotifierProvider._();
 
 final class ChangelogNotifierProvider
-    extends
-        $NotifierProvider<
-          ChangelogNotifier,
-          AsyncValue<api.ChangelogResponse?>
-        > {
+    extends $AsyncNotifierProvider<ChangelogNotifier, api.ChangelogResponse> {
   ChangelogNotifierProvider._()
     : super(
         from: null,
@@ -37,40 +33,27 @@ final class ChangelogNotifierProvider
   @$internal
   @override
   ChangelogNotifier create() => ChangelogNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AsyncValue<api.ChangelogResponse?> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<AsyncValue<api.ChangelogResponse?>>(
-        value,
-      ),
-    );
-  }
 }
 
-String _$changelogNotifierHash() => r'2b1d2de7ddca621221542b36ee4eec4b29e89e27';
+String _$changelogNotifierHash() => r'10b2985ddc08ec439dcd8a74e92e40db472dcbcf';
 
 abstract class _$ChangelogNotifier
-    extends $Notifier<AsyncValue<api.ChangelogResponse?>> {
-  AsyncValue<api.ChangelogResponse?> build();
+    extends $AsyncNotifier<api.ChangelogResponse> {
+  FutureOr<api.ChangelogResponse> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
         this.ref
-            as $Ref<
-              AsyncValue<api.ChangelogResponse?>,
-              AsyncValue<api.ChangelogResponse?>
-            >;
+            as $Ref<AsyncValue<api.ChangelogResponse>, api.ChangelogResponse>;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<api.ChangelogResponse?>,
-                AsyncValue<api.ChangelogResponse?>
+                AsyncValue<api.ChangelogResponse>,
+                api.ChangelogResponse
               >,
-              AsyncValue<api.ChangelogResponse?>,
+              AsyncValue<api.ChangelogResponse>,
               Object?,
               Object?
             >;

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
@@ -37,10 +35,8 @@ class SplashPage extends HookConsumerWidget {
     useEffect(
       () {
         if (allLoaded) {
-          // バックグラウンドで Start API を取得（ブロックしない）
-          unawaited(
-            ref.read(startProvider.notifier).fetchInBackground(),
-          );
+          // SWR: build() が自動でキャッシュ即表示→裏で再検証
+          ref.read(startProvider);
           WidgetsBinding.instance.addPostFrameCallback((_) async {
             context.go(const HomeRoute().location);
             final pendingEventId = consumePendingNotificationEventId();

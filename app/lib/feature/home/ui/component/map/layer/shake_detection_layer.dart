@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
@@ -51,6 +52,7 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
     final isInitialized = useRef(false);
     final latestGeoJson = useRef<String?>(null);
     final wasActive = useRef(false);
+    final enqueue = useMapOperationQueue();
 
     // レイヤー初期化
     useEffect(
@@ -59,74 +61,86 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(() async {
-          try {
-            await styleController.addSource(
-              const GeoJsonSource(
-                id: ShakeDetectionLayer.sourceId,
-                data: _emptyGeoJson,
-              ),
-            );
-
-            await (
-              styleController.addLayer(
-                const FillStyleLayer(
-                  id: ShakeDetectionLayer._fillLayerId,
-                  sourceId: ShakeDetectionLayer.sourceId,
-                  paint: {
-                    'fill-color': ['get', 'fillColor'],
-                    'fill-opacity': 1,
-                  },
+        unawaited(
+          enqueue(() async {
+            try {
+              await styleController.addSource(
+                const GeoJsonSource(
+                  id: ShakeDetectionLayer.sourceId,
+                  data: _emptyGeoJson,
                 ),
-              ),
-              styleController.addLayer(
-                const LineStyleLayer(
-                  id: ShakeDetectionLayer._lineLayerId,
-                  sourceId: ShakeDetectionLayer.sourceId,
-                  paint: {
-                    'line-color': ['get', 'lineColor'],
-                    'line-width': 2,
-                    'line-opacity': 1,
-                  },
-                ),
-              ),
-              styleController.addLayer(
-                const CircleStyleLayer(
-                  id: ShakeDetectionLayer._centerLayerId,
-                  sourceId: ShakeDetectionLayer.sourceId,
-                  paint: {
-                    'circle-radius': [
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      3,
-                      5,
-                      7,
-                      10,
-                      10,
-                      14,
-                    ],
-                    'circle-color': ['get', 'centerColor'],
-                    'circle-opacity': 1,
-                    'circle-stroke-color': ['get', 'strokeColor'],
-                    'circle-stroke-width': 2,
-                    'circle-stroke-opacity': 1,
-                  },
-                ),
-              ),
-            ).wait;
+              );
 
-            isInitialized.value = true;
-          } on Exception catch (e) {
-            debugPrint('ShakeDetectionLayer: failed to init layers: $e');
-          }
-        }());
+              await (
+                styleController.addLayer(
+                  const FillStyleLayer(
+                    id: ShakeDetectionLayer._fillLayerId,
+                    sourceId: ShakeDetectionLayer.sourceId,
+                    paint: {
+                      'fill-color': ['get', 'fillColor'],
+                      'fill-opacity': 1,
+                    },
+                  ),
+                ),
+                styleController.addLayer(
+                  const LineStyleLayer(
+                    id: ShakeDetectionLayer._lineLayerId,
+                    sourceId: ShakeDetectionLayer.sourceId,
+                    paint: {
+                      'line-color': ['get', 'lineColor'],
+                      'line-width': 2,
+                      'line-opacity': 1,
+                    },
+                  ),
+                ),
+                styleController.addLayer(
+                  const CircleStyleLayer(
+                    id: ShakeDetectionLayer._centerLayerId,
+                    sourceId: ShakeDetectionLayer.sourceId,
+                    paint: {
+                      'circle-radius': [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        3,
+                        5,
+                        7,
+                        10,
+                        10,
+                        14,
+                      ],
+                      'circle-color': ['get', 'centerColor'],
+                      'circle-opacity': 1,
+                      'circle-stroke-color': ['get', 'strokeColor'],
+                      'circle-stroke-width': 2,
+                      'circle-stroke-opacity': 1,
+                    },
+                  ),
+                ),
+              ).wait;
 
-        return () async {
-          await styleController.removeLayer(ShakeDetectionLayer._centerLayerId);
-          await styleController.removeLayer(ShakeDetectionLayer._fillLayerId);
-          await styleController.removeLayer(ShakeDetectionLayer._lineLayerId);
-          await styleController.removeSource(ShakeDetectionLayer.sourceId);
+              isInitialized.value = true;
+            } on Exception catch (e) {
+              debugPrint('ShakeDetectionLayer: failed to init layers: $e');
+            }
+          }),
+        );
+
+        return () {
+          unawaited(
+            enqueue(() async {
+              await styleController.removeLayer(
+                ShakeDetectionLayer._centerLayerId,
+              );
+              await styleController.removeLayer(
+                ShakeDetectionLayer._fillLayerId,
+              );
+              await styleController.removeLayer(
+                ShakeDetectionLayer._lineLayerId,
+              );
+              await styleController.removeSource(ShakeDetectionLayer.sourceId);
+            }),
+          );
         };
       },
       [styleController],

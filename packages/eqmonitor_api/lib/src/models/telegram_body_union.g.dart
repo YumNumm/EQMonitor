@@ -211,3 +211,22 @@ _$TelegramBodyUnionEarthquakeNankaiTelegramBodyFromJson(
 Map<String, dynamic> _$TelegramBodyUnionEarthquakeNankaiTelegramBodyToJson(
   TelegramBodyUnionEarthquakeNankaiTelegramBody instance,
 ) => <String, dynamic>{'type': instance.type, 'runtimeType': instance.$type};
+
+TelegramBodyUnionFallbackTelegramBody
+_$TelegramBodyUnionFallbackTelegramBodyFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'TelegramBodyUnionFallbackTelegramBody',
+      json,
+      ($checkedConvert) {
+        final val = TelegramBodyUnionFallbackTelegramBody(
+          type: $checkedConvert('type', (v) => v as String),
+          $type: $checkedConvert('runtimeType', (v) => v as String?),
+        );
+        return val;
+      },
+      fieldKeyMap: const {r'$type': 'runtimeType'},
+    );
+
+Map<String, dynamic> _$TelegramBodyUnionFallbackTelegramBodyToJson(
+  TelegramBodyUnionFallbackTelegramBody instance,
+) => <String, dynamic>{'type': instance.type, 'runtimeType': instance.$type};

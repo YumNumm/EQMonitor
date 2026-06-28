@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeSettingsRequest {
 
-@JsonKey(includeIfNull: false) bool? get enabled;@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTier>? get notificationTiers;@JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled') bool? get estimatedIntensityEnabled;
+@JsonKey(includeIfNull: false) bool? get enabled;@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTier>? get notificationTiers;@JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled') bool? get estimatedIntensityEnabled;@JsonKey(includeIfNull: false, name: 'collapse_notification') bool? get collapseNotification;
 /// Create a copy of EarthquakeSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $EarthquakeSettingsRequestCopyWith<EarthquakeSettingsRequest> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeSettingsRequest&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other.notificationTiers, notificationTiers)&&(identical(other.estimatedIntensityEnabled, estimatedIntensityEnabled) || other.estimatedIntensityEnabled == estimatedIntensityEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeSettingsRequest&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other.notificationTiers, notificationTiers)&&(identical(other.estimatedIntensityEnabled, estimatedIntensityEnabled) || other.estimatedIntensityEnabled == estimatedIntensityEnabled)&&(identical(other.collapseNotification, collapseNotification) || other.collapseNotification == collapseNotification));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(notificationTiers),estimatedIntensityEnabled);
+int get hashCode => Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(notificationTiers),estimatedIntensityEnabled,collapseNotification);
 
 @override
 String toString() {
-  return 'EarthquakeSettingsRequest(enabled: $enabled, notificationTiers: $notificationTiers, estimatedIntensityEnabled: $estimatedIntensityEnabled)';
+  return 'EarthquakeSettingsRequest(enabled: $enabled, notificationTiers: $notificationTiers, estimatedIntensityEnabled: $estimatedIntensityEnabled, collapseNotification: $collapseNotification)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $EarthquakeSettingsRequestCopyWith<$Res>  {
   factory $EarthquakeSettingsRequestCopyWith(EarthquakeSettingsRequest value, $Res Function(EarthquakeSettingsRequest) _then) = _$EarthquakeSettingsRequestCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeIfNull: false) bool? enabled,@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTier>? notificationTiers,@JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled') bool? estimatedIntensityEnabled
+@JsonKey(includeIfNull: false) bool? enabled,@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTier>? notificationTiers,@JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled') bool? estimatedIntensityEnabled,@JsonKey(includeIfNull: false, name: 'collapse_notification') bool? collapseNotification
 });
 
 
@@ -65,11 +65,12 @@ class _$EarthquakeSettingsRequestCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? enabled = freezed,Object? notificationTiers = freezed,Object? estimatedIntensityEnabled = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? enabled = freezed,Object? notificationTiers = freezed,Object? estimatedIntensityEnabled = freezed,Object? collapseNotification = freezed,}) {
   return _then(_self.copyWith(
 enabled: freezed == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool?,notificationTiers: freezed == notificationTiers ? _self.notificationTiers : notificationTiers // ignore: cast_nullable_to_non_nullable
 as List<NotificationTier>?,estimatedIntensityEnabled: freezed == estimatedIntensityEnabled ? _self.estimatedIntensityEnabled : estimatedIntensityEnabled // ignore: cast_nullable_to_non_nullable
+as bool?,collapseNotification: freezed == collapseNotification ? _self.collapseNotification : collapseNotification // ignore: cast_nullable_to_non_nullable
 as bool?,
   ));
 }
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  bool? enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled')  bool? estimatedIntensityEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  bool? enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled')  bool? estimatedIntensityEnabled, @JsonKey(includeIfNull: false, name: 'collapse_notification')  bool? collapseNotification)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeSettingsRequest() when $default != null:
-return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEnabled);case _:
+return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEnabled,_that.collapseNotification);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEn
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  bool? enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled')  bool? estimatedIntensityEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  bool? enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled')  bool? estimatedIntensityEnabled, @JsonKey(includeIfNull: false, name: 'collapse_notification')  bool? collapseNotification)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeSettingsRequest():
-return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEnabled);case _:
+return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEnabled,_that.collapseNotification);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEn
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  bool? enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled')  bool? estimatedIntensityEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  bool? enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled')  bool? estimatedIntensityEnabled, @JsonKey(includeIfNull: false, name: 'collapse_notification')  bool? collapseNotification)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeSettingsRequest() when $default != null:
-return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEnabled);case _:
+return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEnabled,_that.collapseNotification);case _:
   return null;
 
 }
@@ -211,7 +212,7 @@ return $default(_that.enabled,_that.notificationTiers,_that.estimatedIntensityEn
 @JsonSerializable()
 
 class _EarthquakeSettingsRequest implements EarthquakeSettingsRequest {
-  const _EarthquakeSettingsRequest({@JsonKey(includeIfNull: false) this.enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers') final  List<NotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled') this.estimatedIntensityEnabled}): _notificationTiers = notificationTiers;
+  const _EarthquakeSettingsRequest({@JsonKey(includeIfNull: false) this.enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers') final  List<NotificationTier>? notificationTiers, @JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled') this.estimatedIntensityEnabled, @JsonKey(includeIfNull: false, name: 'collapse_notification') this.collapseNotification}): _notificationTiers = notificationTiers;
   factory _EarthquakeSettingsRequest.fromJson(Map<String, dynamic> json) => _$EarthquakeSettingsRequestFromJson(json);
 
 @override@JsonKey(includeIfNull: false) final  bool? enabled;
@@ -225,6 +226,7 @@ class _EarthquakeSettingsRequest implements EarthquakeSettingsRequest {
 }
 
 @override@JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled') final  bool? estimatedIntensityEnabled;
+@override@JsonKey(includeIfNull: false, name: 'collapse_notification') final  bool? collapseNotification;
 
 /// Create a copy of EarthquakeSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeSettingsRequest&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other._notificationTiers, _notificationTiers)&&(identical(other.estimatedIntensityEnabled, estimatedIntensityEnabled) || other.estimatedIntensityEnabled == estimatedIntensityEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeSettingsRequest&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other._notificationTiers, _notificationTiers)&&(identical(other.estimatedIntensityEnabled, estimatedIntensityEnabled) || other.estimatedIntensityEnabled == estimatedIntensityEnabled)&&(identical(other.collapseNotification, collapseNotification) || other.collapseNotification == collapseNotification));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(_notificationTiers),estimatedIntensityEnabled);
+int get hashCode => Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(_notificationTiers),estimatedIntensityEnabled,collapseNotification);
 
 @override
 String toString() {
-  return 'EarthquakeSettingsRequest(enabled: $enabled, notificationTiers: $notificationTiers, estimatedIntensityEnabled: $estimatedIntensityEnabled)';
+  return 'EarthquakeSettingsRequest(enabled: $enabled, notificationTiers: $notificationTiers, estimatedIntensityEnabled: $estimatedIntensityEnabled, collapseNotification: $collapseNotification)';
 }
 
 
@@ -259,7 +261,7 @@ abstract mixin class _$EarthquakeSettingsRequestCopyWith<$Res> implements $Earth
   factory _$EarthquakeSettingsRequestCopyWith(_EarthquakeSettingsRequest value, $Res Function(_EarthquakeSettingsRequest) _then) = __$EarthquakeSettingsRequestCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeIfNull: false) bool? enabled,@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTier>? notificationTiers,@JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled') bool? estimatedIntensityEnabled
+@JsonKey(includeIfNull: false) bool? enabled,@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTier>? notificationTiers,@JsonKey(includeIfNull: false, name: 'estimated_intensity_enabled') bool? estimatedIntensityEnabled,@JsonKey(includeIfNull: false, name: 'collapse_notification') bool? collapseNotification
 });
 
 
@@ -276,11 +278,12 @@ class __$EarthquakeSettingsRequestCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? enabled = freezed,Object? notificationTiers = freezed,Object? estimatedIntensityEnabled = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? enabled = freezed,Object? notificationTiers = freezed,Object? estimatedIntensityEnabled = freezed,Object? collapseNotification = freezed,}) {
   return _then(_EarthquakeSettingsRequest(
 enabled: freezed == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool?,notificationTiers: freezed == notificationTiers ? _self._notificationTiers : notificationTiers // ignore: cast_nullable_to_non_nullable
 as List<NotificationTier>?,estimatedIntensityEnabled: freezed == estimatedIntensityEnabled ? _self.estimatedIntensityEnabled : estimatedIntensityEnabled // ignore: cast_nullable_to_non_nullable
+as bool?,collapseNotification: freezed == collapseNotification ? _self.collapseNotification : collapseNotification // ignore: cast_nullable_to_non_nullable
 as bool?,
   ));
 }

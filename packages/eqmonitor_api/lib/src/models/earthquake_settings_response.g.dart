@@ -26,12 +26,17 @@ _EarthquakeSettingsResponse _$EarthquakeSettingsResponseFromJson(
         'estimated_intensity_enabled',
         (v) => v as bool,
       ),
+      collapseNotification: $checkedConvert(
+        'collapse_notification',
+        (v) => v as bool,
+      ),
     );
     return val;
   },
   fieldKeyMap: const {
     'notificationTiers': 'notification_tiers',
     'estimatedIntensityEnabled': 'estimated_intensity_enabled',
+    'collapseNotification': 'collapse_notification',
   },
 );
 
@@ -41,4 +46,5 @@ Map<String, dynamic> _$EarthquakeSettingsResponseToJson(
   'enabled': instance.enabled,
   'notification_tiers': instance.notificationTiers,
   'estimated_intensity_enabled': instance.estimatedIntensityEnabled,
+  'collapse_notification': instance.collapseNotification,
 };

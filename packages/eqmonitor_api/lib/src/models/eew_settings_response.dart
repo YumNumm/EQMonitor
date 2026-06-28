@@ -19,6 +19,10 @@ abstract class EewSettingsResponse with _$EewSettingsResponse {
     required bool startLiveActivity,
     @JsonKey(name: 'one_point_enabled')
     required bool onePointEnabled,
+    @JsonKey(name: 'collapse_notification')
+    required bool collapseNotification,
+    @JsonKey(name: 'warning_enabled')
+    required bool warningEnabled,
   }) = _EewSettingsResponse;
   
   factory EewSettingsResponse.fromJson(Map<String, Object?> json) => _$EewSettingsResponseFromJson(json);

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
     final isInitialized = useRef(false);
     final latestCodes = useRef<List<String>>(codes);
     latestCodes.value = codes;
+    final enqueue = useMapOperationQueue();
 
     useEffect(
       () {
@@ -45,28 +47,34 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(() async {
-          await styleController.addLayer(
-            FillStyleLayer(
+        unawaited(
+          enqueue(() async {
+            await styleController.addLayer(
+              FillStyleLayer(
+                id: _layerId,
+                sourceId: 'eqmonitor_map',
+                sourceLayerId: 'areaForecastLocalEew',
+                filter: buildEewAreaCodeFilter(codes),
+                paint: const {
+                  'fill-color': '#FF0000',
+                  'fill-opacity': 0.25,
+                },
+              ),
+            );
+            isInitialized.value = true;
+            await styleController.updateFilter(
               id: _layerId,
-              sourceId: 'eqmonitor_map',
-              sourceLayerId: 'areaForecastLocalEew',
-              filter: buildEewAreaCodeFilter(codes),
-              paint: const {
-                'fill-color': '#FF0000',
-                'fill-opacity': 0.25,
-              },
-            ),
-          );
-          isInitialized.value = true;
-          await styleController.updateFilter(
-            id: _layerId,
-            filter: buildEewAreaCodeFilter(latestCodes.value),
-          );
-        }());
+              filter: buildEewAreaCodeFilter(latestCodes.value),
+            );
+          }),
+        );
 
-        return () async {
-          await styleController.removeLayer(_layerId);
+        return () {
+          unawaited(
+            enqueue(() async {
+              await styleController.removeLayer(_layerId);
+            }),
+          );
         };
       },
       [styleController],

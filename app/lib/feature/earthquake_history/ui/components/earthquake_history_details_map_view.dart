@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
@@ -22,8 +23,10 @@ import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
+import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -150,6 +153,7 @@ class _MapContent extends HookConsumerWidget {
               if (context.mounted) {
                 await _handleTap(
                   context: context,
+                  ref: ref,
                   event: event,
                   jmaMap: jmaMap,
                 );
@@ -223,6 +227,7 @@ class _MapContent extends HookConsumerWidget {
 
   Future<void> _handleTap({
     required BuildContext context,
+    required WidgetRef ref,
     required MapEventClick event,
     required Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
   }) async {
@@ -269,19 +274,36 @@ class _MapContent extends HookConsumerWidget {
     final code = item.property.code;
     final name = item.property.name;
 
+    // 都道府県コードを解決してディープリンクルートを構築する
+    final prefectures =
+        ref
+            .read(parameterSetProvider)
+            .whenOrNull(data: (p) => p.earthquake.prefectures) ??
+        [];
+
     if (isCity) {
       final cityNode = _findCityByCode(code);
+      final prefCode = prefectureCodeOfCity(code, prefectures);
+      final intensityHistoryRoute = prefCode != null
+          ? IntensityHistoryRoute(prefectureCode: prefCode, cityCode: code)
+          : null;
       await showAreaPopup(
         context,
         areaName: name,
         maxIntensity: cityNode?.maxIntensity,
+        intensityHistoryRoute: intensityHistoryRoute,
       );
     } else {
       final region = _findRegionByCode(code);
+      final prefInfo = prefectureOfRegionCode(code, prefectures);
+      final intensityHistoryRoute = prefInfo != null
+          ? IntensityHistoryRoute(prefectureCode: prefInfo.code)
+          : null;
       await showAreaPopup(
         context,
         areaName: name,
         maxIntensity: region?.maxIntensity,
+        intensityHistoryRoute: intensityHistoryRoute,
       );
     }
   }

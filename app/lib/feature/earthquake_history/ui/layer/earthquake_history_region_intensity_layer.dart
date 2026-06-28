@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -29,6 +30,7 @@ class EarthquakeHistoryRegionIntensityLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
+    final enqueue = useMapOperationQueue();
 
     useEffect(
       () {
@@ -36,46 +38,55 @@ class EarthquakeHistoryRegionIntensityLayer extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(() async {
-          try {
-            final fillColor = _buildFillColorExpression(intensity, colorModel);
+        unawaited(
+          enqueue(() async {
+            try {
+              final fillColor = _buildFillColorExpression(
+                intensity,
+                colorModel,
+              );
 
-            await styleController.addLayer(
-              FillStyleLayer(
-                id: _fillLayerId,
-                sourceId: 'eqmonitor_map',
-                sourceLayerId: 'areaForecastLocalE',
-                paint: {
-                  'fill-color': fillColor,
-                  'fill-opacity': 0.6,
-                },
-              ),
-            );
+              await styleController.addLayer(
+                FillStyleLayer(
+                  id: _fillLayerId,
+                  sourceId: 'eqmonitor_map',
+                  sourceLayerId: 'areaForecastLocalE',
+                  paint: {
+                    'fill-color': fillColor,
+                    'fill-opacity': 0.6,
+                  },
+                ),
+              );
 
-            await styleController.addLayer(
-              const LineStyleLayer(
-                id: _lineLayerId,
-                sourceId: 'eqmonitor_map',
-                sourceLayerId: 'areaForecastLocalE',
-                paint: {
-                  'line-color': '#ffffff',
-                  'line-width': 0.5,
-                  'line-opacity': 0.8,
-                },
-              ),
-            );
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }());
+              await styleController.addLayer(
+                const LineStyleLayer(
+                  id: _lineLayerId,
+                  sourceId: 'eqmonitor_map',
+                  sourceLayerId: 'areaForecastLocalE',
+                  paint: {
+                    'line-color': '#ffffff',
+                    'line-width': 0.5,
+                    'line-opacity': 0.8,
+                  },
+                ),
+              );
+            } on Exception catch (e) {
+              talker.log(e);
+            }
+          }),
+        );
 
-        return () async {
-          try {
-            await styleController.removeLayer(_lineLayerId);
-            await styleController.removeLayer(_fillLayerId);
-          } on Exception catch (e) {
-            talker.log(e);
-          }
+        return () {
+          unawaited(
+            enqueue(() async {
+              try {
+                await styleController.removeLayer(_lineLayerId);
+                await styleController.removeLayer(_fillLayerId);
+              } on Exception catch (e) {
+                talker.log(e);
+              }
+            }),
+          );
         };
       },
       [styleController, intensity, colorModel],

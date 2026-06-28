@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'start_repository.dart';
+part of 'eew_list_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -11,41 +11,43 @@ part of 'start_repository.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(startRepository)
-final startRepositoryProvider = StartRepositoryProvider._();
+@ProviderFor(eewListRepository)
+final eewListRepositoryProvider = EewListRepositoryProvider._();
 
-final class StartRepositoryProvider
+final class EewListRepositoryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<StartRepository>,
-          StartRepository,
-          FutureOr<StartRepository>
+          AsyncValue<EewListRepository>,
+          EewListRepository,
+          FutureOr<EewListRepository>
         >
-    with $FutureModifier<StartRepository>, $FutureProvider<StartRepository> {
-  StartRepositoryProvider._()
+    with
+        $FutureModifier<EewListRepository>,
+        $FutureProvider<EewListRepository> {
+  EewListRepositoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'startRepositoryProvider',
+        name: r'eewListRepositoryProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$startRepositoryHash();
+  String debugGetCreateSourceHash() => _$eewListRepositoryHash();
 
   @$internal
   @override
-  $FutureProviderElement<StartRepository> $createElement(
+  $FutureProviderElement<EewListRepository> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<StartRepository> create(Ref ref) {
-    return startRepository(ref);
+  FutureOr<EewListRepository> create(Ref ref) {
+    return eewListRepository(ref);
   }
 }
 
-String _$startRepositoryHash() => r'63b74d41e2a06fe9e535d06c22793a720c0dfa88';
+String _$eewListRepositoryHash() => r'87aa8a2c7296a774452b66a1b5c0a6306385f219';

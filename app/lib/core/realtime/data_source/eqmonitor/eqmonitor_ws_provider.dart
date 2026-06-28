@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket/web_socket.dart';
 
@@ -24,33 +27,64 @@ final class EqmonitorWebSocketTicketRefreshDelayCalculator {
 
 @Riverpod(keepAlive: true)
 Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
-  // MEMO(YumNumm): WebSocket接続時にticketがあればよく、追従する必要はないので、read
   final ticket = await ref.read(eqmonitorWebSocketTicketProvider.future);
-
-  final ws = await WebSocket.connect(
-    Uri.parse(ticket.url),
-  );
+  final ws = await WebSocket.connect(Uri.parse(ticket.url));
   ref.onDispose(() => ws.close().ignore());
   return ws;
 }
 
 /// WebSocket イベントストリーム。
+///
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
-/// CloseReceived 検知時に eqmonitorWebSocket を invalidate して再接続をトリガーする。
-@riverpod
-Stream<WebSocketEvent> eqmonitorWsEventStream(Ref ref) async* {
-  final websocket = await ref.watch(eqmonitorWebSocketProvider.future);
-  await for (final event in websocket.events) {
-    yield event;
-    if (event case CloseReceived(:final code, :final reason)) {
-      talker.warning(
-        'EQMonitor WebSocket: closed with code $code and reason $reason',
-      );
-      ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
-      return;
+/// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
+/// アプリ resume 時はバックオフをリセットして即座に再接続する。
+@Riverpod(keepAlive: true)
+class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
+  var _retryCount = 0;
+
+  @override
+  Stream<WebSocketEvent> build() async* {
+    ref.listen(appLifecycleProvider, (_, next) {
+      if (next == AppLifecycleState.resumed) {
+        _retryCount = 0;
+        ref.invalidate(eqmonitorWebSocketTicketProvider, asReload: true);
+        ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
+      }
+    });
+
+    try {
+      final websocket = await ref.watch(eqmonitorWebSocketProvider.future);
+      _retryCount = 0;
+
+      await for (final event in websocket.events) {
+        yield event;
+        if (event case CloseReceived(:final code, :final reason)) {
+          talker.warning(
+            'EQMonitor WebSocket: closed with code=$code reason=$reason',
+          );
+          break;
+        }
+      }
+    } on Exception catch (e) {
+      talker.error('EQMonitor WebSocket: connection failed', e);
     }
+
+    final delaySeconds = math.min(
+      math.pow(2, _retryCount).toInt(),
+      60,
+    );
+    _retryCount++;
+    talker.info(
+      'EQMonitor WebSocket: reconnecting in ${delaySeconds}s '
+      '(attempt $_retryCount)',
+    );
+
+    final timer = Timer(Duration(seconds: delaySeconds), () {
+      ref.invalidate(eqmonitorWebSocketTicketProvider, asReload: true);
+      ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
+    });
+    ref.onDispose(timer.cancel);
   }
-  ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
 }
 
 @riverpod

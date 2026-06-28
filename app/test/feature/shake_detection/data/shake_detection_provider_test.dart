@@ -73,14 +73,6 @@ void main() {
         );
         await pumpEventQueue();
 
-        controller.add(
-          const RealtimeEvent.snapshot(
-            eews: [],
-            earthquakes: [],
-            shakes: [],
-            source: RealtimeSource.eqmonitor,
-          ),
-        );
         await pumpEventQueue();
 
         final result = subscription.read();

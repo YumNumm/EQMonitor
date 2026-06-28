@@ -13,7 +13,9 @@ import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.
 import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
+import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/intensity_history_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/knet_waveform_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_media_page.dart';
@@ -160,6 +162,30 @@ class EarthquakeHistoryRoute extends GoRouteData with $EarthquakeHistoryRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeHistoryPage(initialParameter: $extra);
+}
+
+@TypedGoRoute<EewHistoryRoute>(path: '/eew-history')
+class EewHistoryRoute extends GoRouteData with $EewHistoryRoute {
+  const EewHistoryRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EewHistoryPage();
+}
+
+@TypedGoRoute<IntensityHistoryRoute>(path: '/intensity-history')
+class IntensityHistoryRoute extends GoRouteData with $IntensityHistoryRoute {
+  const IntensityHistoryRoute({this.prefectureCode, this.cityCode});
+
+  final String? prefectureCode;
+  final String? cityCode;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      IntensityHistoryPage(
+        initialPrefectureCode: prefectureCode,
+        initialCityCode: cityCode,
+      );
 }
 
 @TypedGoRoute<EarthquakeSearchResultRoute>(

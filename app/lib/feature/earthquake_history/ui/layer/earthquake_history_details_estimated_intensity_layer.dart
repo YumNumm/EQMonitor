@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -28,68 +29,74 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
       return const SizedBox.shrink();
     }
 
+    final enqueue = useMapOperationQueue();
+
     useEffect(
       () {
         var disposed = false;
 
-        unawaited(() async {
-          await styleController.addSource(
-            VectorSource(
-              id: _sourceId,
-              url: 'pmtiles://$tileUrl',
-              volatile: true,
-            ),
-          );
+        unawaited(
+          enqueue(() async {
+            await styleController.addSource(
+              VectorSource(
+                id: _sourceId,
+                url: 'pmtiles://$tileUrl',
+                volatile: true,
+              ),
+            );
 
-          if (disposed) {
-            return;
-          }
+            if (disposed) {
+              return;
+            }
 
-          await styleController.addLayer(
-            const FillStyleLayer(
-              id: _fillLayerId,
-              sourceId: _sourceId,
-              sourceLayerId: 'seismic_intensity',
-              paint: {
-                'fill-opacity': 1,
-                'fill-color': ['get', 'fill'],
-              },
-            ),
-            belowLayerId: BaseLayer.areaForecastLocalELine.name,
-          );
+            await styleController.addLayer(
+              const FillStyleLayer(
+                id: _fillLayerId,
+                sourceId: _sourceId,
+                sourceLayerId: 'seismic_intensity',
+                paint: {
+                  'fill-opacity': 1,
+                  'fill-color': ['get', 'fill'],
+                },
+              ),
+              belowLayerId: BaseLayer.areaForecastLocalELine.name,
+            );
 
-          if (disposed) {
-            return;
-          }
+            if (disposed) {
+              return;
+            }
 
-          await styleController.addLayer(
-            const LineStyleLayer(
-              id: _lineLayerId,
-              sourceId: _sourceId,
-              sourceLayerId: 'seismic_intensity',
-              paint: {
-                'line-opacity': 1,
-                'line-color': ['get', 'fill'],
-                'line-width': 0.5,
-              },
-            ),
-            belowLayerId: BaseLayer.areaForecastLocalELine.name,
-          );
-        }());
+            await styleController.addLayer(
+              const LineStyleLayer(
+                id: _lineLayerId,
+                sourceId: _sourceId,
+                sourceLayerId: 'seismic_intensity',
+                paint: {
+                  'line-opacity': 1,
+                  'line-color': ['get', 'fill'],
+                  'line-width': 0.5,
+                },
+              ),
+              belowLayerId: BaseLayer.areaForecastLocalELine.name,
+            );
+          }),
+        );
 
         return () {
           disposed = true;
-          unawaited(() async {
-            try {
-              await styleController.removeLayer(_lineLayerId);
-            } on Exception catch (_) {}
-            try {
-              await styleController.removeLayer(_fillLayerId);
-            } on Exception catch (_) {}
-            try {
-              await styleController.removeSource(_sourceId);
-            } on Exception catch (_) {}
-          }());
+          unawaited(
+            enqueue(() async {
+              try {
+                await styleController.removeLayer(_lineLayerId);
+              } on Exception catch (_) {}
+              try {
+                await styleController.removeLayer(_fillLayerId);
+              } on Exception catch (_) {}
+              try {
+                await styleController.removeSource(_sourceId);
+              } on Exception catch (_) {}
+            }),
+          );
         };
       },
       [styleController, tileUrl],

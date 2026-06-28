@@ -1,7 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/connectivity/connectivity_provider.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
-import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -27,7 +26,7 @@ class ConnectionStatusCard extends ConsumerWidget {
         'ネットワーク未接続',
         palette.statusDanger,
       ),
-      (true, WsPhase.connected) => (
+      (true, .connected) => (
         Icons.cell_tower_rounded,
         'リアルタイム 接続',
         palette.statusSuccess,

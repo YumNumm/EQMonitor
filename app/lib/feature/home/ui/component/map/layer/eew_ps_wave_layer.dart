@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -74,6 +75,7 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
     final latestPWaveGeoJson = useRef<String?>(null);
     final latestSWaveGeoJson = useRef<String?>(null);
     final wasEewActive = useRef(false);
+    final enqueue = useMapOperationQueue();
 
     useEffect(
       () {
@@ -81,70 +83,82 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(() async {
-          await (
-            styleController.addSource(
-              GeoJsonSource(
-                id: EewPsWaveLayer.sourceId.pWave,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': <Map<String, dynamic>>[],
-                }),
+        unawaited(
+          enqueue(() async {
+            await (
+              styleController.addSource(
+                GeoJsonSource(
+                  id: EewPsWaveLayer.sourceId.pWave,
+                  data: jsonEncode({
+                    'type': 'FeatureCollection',
+                    'features': <Map<String, dynamic>>[],
+                  }),
+                ),
               ),
-            ),
-            styleController.addSource(
-              GeoJsonSource(
-                id: EewPsWaveLayer.sourceId.sWave,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': <Map<String, dynamic>>[],
-                }),
+              styleController.addSource(
+                GeoJsonSource(
+                  id: EewPsWaveLayer.sourceId.sWave,
+                  data: jsonEncode({
+                    'type': 'FeatureCollection',
+                    'features': <Map<String, dynamic>>[],
+                  }),
+                ),
               ),
-            ),
-          ).wait;
+            ).wait;
 
-          await (
-            styleController.addLayer(
-              LineStyleLayer(
-                id: EewPsWaveLayer.layerId.pWaveLine,
-                sourceId: EewPsWaveLayer.sourceId.pWave,
-                paint: const {
-                  'line-color': '#0000FF',
-                  'line-width': 1,
-                },
+            await (
+              styleController.addLayer(
+                LineStyleLayer(
+                  id: EewPsWaveLayer.layerId.pWaveLine,
+                  sourceId: EewPsWaveLayer.sourceId.pWave,
+                  paint: const {
+                    'line-color': '#0000FF',
+                    'line-width': 1,
+                  },
+                ),
               ),
-            ),
-            styleController.addLayer(
-              LineStyleLayer(
-                id: EewPsWaveLayer.layerId.sWaveLine,
-                sourceId: EewPsWaveLayer.sourceId.sWave,
-                paint: const {
-                  'line-color': ['get', 'lineColor'],
-                  'line-width': 2,
-                },
+              styleController.addLayer(
+                LineStyleLayer(
+                  id: EewPsWaveLayer.layerId.sWaveLine,
+                  sourceId: EewPsWaveLayer.sourceId.sWave,
+                  paint: const {
+                    'line-color': ['get', 'lineColor'],
+                    'line-width': 2,
+                  },
+                ),
               ),
-            ),
-            styleController.addLayer(
-              FillStyleLayer(
-                id: EewPsWaveLayer.layerId.sWaveFill,
-                sourceId: EewPsWaveLayer.sourceId.sWave,
-                paint: const {
-                  'fill-color': ['get', 'fillColor'],
-                  'fill-opacity': 0.2,
-                },
+              styleController.addLayer(
+                FillStyleLayer(
+                  id: EewPsWaveLayer.layerId.sWaveFill,
+                  sourceId: EewPsWaveLayer.sourceId.sWave,
+                  paint: const {
+                    'fill-color': ['get', 'fillColor'],
+                    'fill-opacity': 0.2,
+                  },
+                ),
               ),
-            ),
-          ).wait;
+            ).wait;
 
-          isInitialized.value = true;
-        }());
+            isInitialized.value = true;
+          }),
+        );
 
-        return () async {
-          await styleController.removeLayer(EewPsWaveLayer.layerId.pWaveLine);
-          await styleController.removeLayer(EewPsWaveLayer.layerId.sWaveLine);
-          await styleController.removeLayer(EewPsWaveLayer.layerId.sWaveFill);
-          await styleController.removeSource(EewPsWaveLayer.sourceId.pWave);
-          await styleController.removeSource(EewPsWaveLayer.sourceId.sWave);
+        return () {
+          unawaited(
+            enqueue(() async {
+              await styleController.removeLayer(
+                EewPsWaveLayer.layerId.pWaveLine,
+              );
+              await styleController.removeLayer(
+                EewPsWaveLayer.layerId.sWaveLine,
+              );
+              await styleController.removeLayer(
+                EewPsWaveLayer.layerId.sWaveFill,
+              );
+              await styleController.removeSource(EewPsWaveLayer.sourceId.pWave);
+              await styleController.removeSource(EewPsWaveLayer.sourceId.sWave);
+            }),
+          );
         };
       },
       [styleController],

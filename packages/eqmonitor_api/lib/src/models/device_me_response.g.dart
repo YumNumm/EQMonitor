@@ -20,7 +20,7 @@ _DeviceMeResponse _$DeviceMeResponseFromJson(
     ),
     registrationType: $checkedConvert(
       'registrationType',
-      (v) => $enumDecode(_$DeviceRegistrationTypeEnumMap, v),
+      (v) => DeviceRegistrationType.fromJson(v as Map<String, dynamic>),
     ),
     userId: $checkedConvert('userId', (v) => v as String?),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
@@ -49,9 +49,4 @@ const _$DeviceLocaleEnumMap = {
   DeviceLocale.ja: 'ja',
   DeviceLocale.en: 'en',
   DeviceLocale.zh: 'zh',
-};
-
-const _$DeviceRegistrationTypeEnumMap = {
-  DeviceRegistrationType.appCheck: 'APP_CHECK',
-  DeviceRegistrationType.challenge: 'CHALLENGE',
 };

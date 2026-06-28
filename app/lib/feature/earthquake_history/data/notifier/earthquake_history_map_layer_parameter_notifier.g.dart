@@ -43,7 +43,7 @@ final class EarthquakeHistoryMapLayerParameterNotifierProvider
 }
 
 String _$earthquakeHistoryMapLayerParameterNotifierHash() =>
-    r'2fcceaed2f335a0c111c0fb68523f5e481ccf94b';
+    r'8b701b4f09faea950751a9a7bd92becfdb7397c8';
 
 abstract class _$EarthquakeHistoryMapLayerParameterNotifier
     extends $AsyncNotifier<EarthquakeHistoryMapLayerParameter> {

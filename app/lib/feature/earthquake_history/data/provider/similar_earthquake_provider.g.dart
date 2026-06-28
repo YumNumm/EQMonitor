@@ -11,55 +11,73 @@ part of 'similar_earthquake_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(similarEarthquake)
-final similarEarthquakeProvider = SimilarEarthquakeFamily._();
+@ProviderFor(nearbyEarthquake)
+final nearbyEarthquakeProvider = NearbyEarthquakeFamily._();
 
-final class SimilarEarthquakeProvider
+final class NearbyEarthquakeProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<SimilarEarthquakeItem>>,
-          List<SimilarEarthquakeItem>,
-          FutureOr<List<SimilarEarthquakeItem>>
+          AsyncValue<List<EarthquakePartial>>,
+          List<EarthquakePartial>,
+          FutureOr<List<EarthquakePartial>>
         >
     with
-        $FutureModifier<List<SimilarEarthquakeItem>>,
-        $FutureProvider<List<SimilarEarthquakeItem>> {
-  SimilarEarthquakeProvider._({
-    required SimilarEarthquakeFamily super.from,
-    required String super.argument,
+        $FutureModifier<List<EarthquakePartial>>,
+        $FutureProvider<List<EarthquakePartial>> {
+  NearbyEarthquakeProvider._({
+    required NearbyEarthquakeFamily super.from,
+    required (String, double, double, int?, api.EarthquakeSortBy, api.SortOrder)
+    super.argument,
   }) : super(
          retry: null,
-         name: r'similarEarthquakeProvider',
+         name: r'nearbyEarthquakeProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$similarEarthquakeHash();
+  String debugGetCreateSourceHash() => _$nearbyEarthquakeHash();
 
   @override
   String toString() {
-    return r'similarEarthquakeProvider'
+    return r'nearbyEarthquakeProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
   @override
-  $FutureProviderElement<List<SimilarEarthquakeItem>> $createElement(
+  $FutureProviderElement<List<EarthquakePartial>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<SimilarEarthquakeItem>> create(Ref ref) {
-    final argument = this.argument as String;
-    return similarEarthquake(ref, argument);
+  FutureOr<List<EarthquakePartial>> create(Ref ref) {
+    final argument =
+        this.argument
+            as (
+              String,
+              double,
+              double,
+              int?,
+              api.EarthquakeSortBy,
+              api.SortOrder,
+            );
+    return nearbyEarthquake(
+      ref,
+      argument.$1,
+      argument.$2,
+      argument.$3,
+      argument.$4,
+      argument.$5,
+      argument.$6,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is SimilarEarthquakeProvider && other.argument == argument;
+    return other is NearbyEarthquakeProvider && other.argument == argument;
   }
 
   @override
@@ -68,26 +86,35 @@ final class SimilarEarthquakeProvider
   }
 }
 
-String _$similarEarthquakeHash() => r'484e2ad3e85bc2fdebd8d279ae12fd66f18242e1';
+String _$nearbyEarthquakeHash() => r'2e8fe5b4b86563f9e8fdf6e2c6284137d5d080cd';
 
-final class SimilarEarthquakeFamily extends $Family
+final class NearbyEarthquakeFamily extends $Family
     with
         $FunctionalFamilyOverride<
-          FutureOr<List<SimilarEarthquakeItem>>,
-          String
+          FutureOr<List<EarthquakePartial>>,
+          (String, double, double, int?, api.EarthquakeSortBy, api.SortOrder)
         > {
-  SimilarEarthquakeFamily._()
+  NearbyEarthquakeFamily._()
     : super(
         retry: null,
-        name: r'similarEarthquakeProvider',
+        name: r'nearbyEarthquakeProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  SimilarEarthquakeProvider call(String eventId) =>
-      SimilarEarthquakeProvider._(argument: eventId, from: this);
+  NearbyEarthquakeProvider call(
+    String excludeEventId,
+    double latitude,
+    double longitude,
+    int? depth,
+    api.EarthquakeSortBy sortBy,
+    api.SortOrder sortOrder,
+  ) => NearbyEarthquakeProvider._(
+    argument: (excludeEventId, latitude, longitude, depth, sortBy, sortOrder),
+    from: this,
+  );
 
   @override
-  String toString() => r'similarEarthquakeProvider';
+  String toString() => r'nearbyEarthquakeProvider';
 }

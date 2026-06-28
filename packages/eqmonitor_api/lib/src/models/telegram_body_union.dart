@@ -66,6 +66,11 @@ sealed class TelegramBodyUnion with _$TelegramBodyUnion {
     required String type,
   }) = TelegramBodyUnionEarthquakeNankaiTelegramBody;
   
+  @JsonSerializable()
+  const factory TelegramBodyUnion.fallbackTelegramBody({
+    required String type,
+  }) = TelegramBodyUnionFallbackTelegramBody;
+  
 
   factory TelegramBodyUnion.fromJson(Map<String, Object?> json) =>
       switch (json['type']) {

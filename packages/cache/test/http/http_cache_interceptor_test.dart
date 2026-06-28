@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/native.dart';
@@ -72,6 +75,97 @@ void main() {
     );
     final updated = await dio.get<dynamic>(path);
     expect((updated.data as Map)['v'], 2);
+  });
+
+  test('復元可能なエントリがあれば if-none-match を付与する', () async {
+    const path = '/v2/earthquake';
+    final dio = buildDio();
+    final adapter = DioAdapter(dio: dio);
+
+    adapter.onGet(
+      path,
+      (s) =>
+          s.reply(200, {'items': <dynamic>[]}, headers: jsonHeaders('W/"v1"')),
+    );
+    await dio.get<dynamic>(path);
+
+    adapter.onGet(
+      path,
+      (s) => s.reply(
+        304,
+        '',
+        headers: {
+          'etag': ['W/"v1"'],
+        },
+      ),
+    );
+    final second = await dio.get<dynamic>(path);
+
+    expect(second.requestOptions.headers['if-none-match'], 'W/"v1"');
+    expect((second.data as Map)['items'], <dynamic>[]);
+  });
+
+  test('復元元が無い場合は上流の if-none-match を除去して 200 を取得', () async {
+    const path = '/v2/earthquake';
+    final dio = buildDio();
+    final adapter = DioAdapter(dio: dio);
+
+    // ストアは空。Repository など上流が付与した if-none-match だけが存在する状況。
+    adapter.onGet(
+      path,
+      (s) =>
+          s.reply(200, {'items': <dynamic>[]}, headers: jsonHeaders('W/"v1"')),
+    );
+
+    final res = await dio.get<dynamic>(
+      path,
+      options: Options(headers: {'if-none-match': 'W/"stale"'}),
+    );
+
+    // 復元元が無いので条件付きリクエストにせず、フルの 200 を取得できる。
+    expect((res.data as Map)['items'], <dynamic>[]);
+    expect(res.requestOptions.headers.containsKey('if-none-match'), isFalse);
+  });
+
+  test('ストアの body が壊れている場合も if-none-match を除去', () async {
+    const path = '/v2/earthquake';
+    final store = HttpCacheStore(
+      db: db,
+      schemaVersion: 1,
+      appBuild: '3.0.0+100',
+    );
+    final dio = Dio(BaseOptions(baseUrl: 'https://v2.api.eqmonitor.app'))
+      ..interceptors.add(HttpCacheInterceptor(store));
+    final adapter = DioAdapter(dio: dio);
+
+    // eTag は持つが body が JSON として壊れているエントリを直接書き込む。
+    final key = store.primaryKeyForUrl(
+      RequestOptions(path: path, baseUrl: 'https://v2.api.eqmonitor.app'),
+    );
+    await store.write(
+      HttpCacheEntry(
+        key: key,
+        statusCode: 200,
+        eTag: 'W/"v1"',
+        headers: const {
+          'content-type': ['application/json'],
+        },
+        responseType: 'json',
+        body: Uint8List.fromList(utf8.encode('{ broken json')),
+        updatedAtMs: 0,
+      ),
+    );
+
+    adapter.onGet(
+      path,
+      (s) =>
+          s.reply(200, {'items': <dynamic>[]}, headers: jsonHeaders('W/"v2"')),
+    );
+
+    final res = await dio.get<dynamic>(path);
+
+    expect((res.data as Map)['items'], <dynamic>[]);
+    expect(res.requestOptions.headers.containsKey('if-none-match'), isFalse);
   });
 
   test('schemaVersion 変更で旧 body が復元されない', () async {

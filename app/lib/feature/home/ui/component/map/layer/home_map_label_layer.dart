@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/feature/home/data/model/home_map_label_parameter.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_map_label_parameter_notifier.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class HomeMapLabelLayer extends HookConsumerWidget {
     final isInitialized = useRef(false);
     final latestParam = useRef(param);
     latestParam.value = param;
+    final enqueue = useMapOperationQueue();
 
     useEffect(
       () {
@@ -29,20 +31,26 @@ class HomeMapLabelLayer extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(() async {
-          await _addLayers(
-            styleController: styleController,
-            param: latestParam.value,
-          );
-          isInitialized.value = true;
-        }());
+        unawaited(
+          enqueue(() async {
+            await _addLayers(
+              styleController: styleController,
+              param: latestParam.value,
+            );
+            isInitialized.value = true;
+          }),
+        );
 
-        return () async {
-          for (final id in [_regionLabelLayerId, _cityLabelLayerId]) {
-            try {
-              await styleController.removeLayer(id);
-            } on Exception catch (_) {}
-          }
+        return () {
+          unawaited(
+            enqueue(() async {
+              for (final id in [_regionLabelLayerId, _cityLabelLayerId]) {
+                try {
+                  await styleController.removeLayer(id);
+                } on Exception catch (_) {}
+              }
+            }),
+          );
         };
       },
       [styleController],
@@ -53,10 +61,11 @@ class HomeMapLabelLayer extends HookConsumerWidget {
         if (styleController == null || !isInitialized.value) {
           return null;
         }
-        unawaited(_updateLayers(
-          styleController: styleController,
-          param: param,
-        ));
+        unawaited(
+          enqueue(
+            () => _updateLayers(styleController: styleController, param: param),
+          ),
+        );
         return null;
       },
       [styleController, param],
