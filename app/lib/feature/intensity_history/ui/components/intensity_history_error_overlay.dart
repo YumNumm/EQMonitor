@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final intensityHistoryErrorOverlayActionProvider =
@@ -19,15 +20,30 @@ class IntensityHistoryErrorOverlayAction {
 
     return showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog.adaptive(
+      builder: (context) => AlertDialog(
         title: const Text('エラー詳細'),
-        content: SingleChildScrollView(
-          child: SelectableText(details),
+        content: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 520, maxHeight: 320),
+          child: SingleChildScrollView(
+            child: SelectableText(details),
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('閉じる'),
+          ),
+          FilledButton.icon(
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: details));
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('エラー詳細をコピーしました')),
+                );
+              }
+            },
+            icon: const Icon(Icons.copy_rounded, size: 18),
+            label: const Text('コピー'),
           ),
         ],
       ),
@@ -63,9 +79,8 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
           color: colorScheme.errorContainer,
           borderRadius: BorderRadius.circular(8),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 8, 8),
+            padding: const EdgeInsets.all(12),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(Icons.error_outline, color: colorScheme.error),
                 const SizedBox(width: 12),
@@ -81,26 +96,23 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '最大震度の取得に失敗しました。地図は操作できます。',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onErrorContainer,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () => action.showDetails(
-                            context: context,
-                            error: error,
-                            stackTrace: stackTrace,
-                          ),
-                          child: const Text('詳細を見る'),
-                        ),
-                      ),
                     ],
                   ),
+                ),
+                const SizedBox(width: 8),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    minimumSize: const Size(0, 36),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  onPressed: () => action.showDetails(
+                    context: context,
+                    error: error,
+                    stackTrace: stackTrace,
+                  ),
+                  child: const Text('詳細を見る'),
                 ),
               ],
             ),
