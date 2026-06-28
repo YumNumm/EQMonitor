@@ -5,9 +5,14 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/nearby_earthquake_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/similar_earthquake_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/nearby_earthquake_parameter_sheet.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -20,8 +25,6 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
   });
 
   final Earthquake earthquake;
-
-  static const _initialDisplayCount = 5;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +42,7 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
 
     final sortBy = useState(api.EarthquakeSortBy.originTime);
     final sortOrder = useState(api.SortOrder.desc);
-    final showAll = useState(false);
+    final searchParam = useState(const NearbyEarthquakeParameter());
     final intensityColor = ref.watch(intensityColorProvider);
     final theme = Theme.of(context);
 
@@ -51,6 +54,7 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
         depth,
         sortBy.value,
         sortOrder.value,
+        searchParam.value,
       ),
     );
 
@@ -65,8 +69,25 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
           api.EarthquakeSortBy.depth => api.SortOrder.asc,
           _ => api.SortOrder.desc,
         };
-        showAll.value = false;
       }
+    }
+
+    Future<void> onShowAll() async {
+      final param = searchParam.value;
+      await EarthquakeHistoryRoute(
+        $extra: EarthquakeHistoryParameter(
+          latitudeGte: coordinates.latitude - param.latitudeOffset,
+          latitudeLte: coordinates.latitude + param.latitudeOffset,
+          longitudeGte: coordinates.longitude - param.longitudeOffset,
+          longitudeLte: coordinates.longitude + param.longitudeOffset,
+          depthGte: depth != null
+              ? (depth - param.depthOffset).clamp(0, 9999)
+              : null,
+          depthLte: depth != null ? depth + param.depthOffset : null,
+          sortBy: sortBy.value.toEarthquakeSortBy,
+          sortOrder: sortOrder.value.toSortOrder,
+        ),
+      ).push<void>(context);
     }
 
     return BorderedContainer(
@@ -75,14 +96,43 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-            child: Text(
-              'この震源の近傍で発生した地震',
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+            padding: const EdgeInsets.fromLTRB(12, 0, 4, 4),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'この震源の近傍で発生した地震',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.tune, size: 20),
+                  tooltip: '探索パラメータを変更',
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () async {
+                    final result =
+                        await showModalBottomSheet<NearbyEarthquakeParameter>(
+                      context: context,
+                      builder: (_) => NearbyEarthquakeParameterSheet(
+                        initial: searchParam.value,
+                        hasDepth: depth != null,
+                      ),
+                    );
+                    if (result != null) {
+                      searchParam.value = result;
+                    }
+                  },
+                ),
+              ],
             ),
           ),
+          _ParameterSummary(
+            parameter: searchParam.value,
+            hasDepth: depth != null,
+          ),
+          const SizedBox(height: 4),
           _SortButtonRow(
             sortBy: sortBy.value,
             sortOrder: sortOrder.value,
@@ -122,6 +172,7 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
                           depth,
                           sortBy.value,
                           sortOrder.value,
+                          searchParam.value,
                         ),
                       ),
                       child: const Text('再試行'),
@@ -143,8 +194,8 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
               ),
             AsyncData(value: final items) => _NearbyEarthquakeList(
                 items: items,
-                showAll: showAll,
                 intensityColor: intensityColor,
+                onShowAll: onShowAll,
               ),
           },
         ],
@@ -153,32 +204,54 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
   }
 }
 
-class _NearbyEarthquakeList extends StatelessWidget {
-  const _NearbyEarthquakeList({
-    required this.items,
-    required this.showAll,
-    required this.intensityColor,
+class _ParameterSummary extends StatelessWidget {
+  const _ParameterSummary({
+    required this.parameter,
+    required this.hasDepth,
   });
 
-  final List<EarthquakePartial> items;
-  final ValueNotifier<bool> showAll;
-  final IntensityColorModel intensityColor;
+  final NearbyEarthquakeParameter parameter;
+  final bool hasDepth;
 
   @override
   Widget build(BuildContext context) {
-    final displayItems = showAll.value
-        ? items
-        : items.take(SimilarEarthquakeCard._initialDisplayCount).toList();
-    final hasMore =
-        items.length > SimilarEarthquakeCard._initialDisplayCount;
+    final theme = Theme.of(context);
+    final latStr = '緯度±${parameter.latitudeOffset.toStringAsFixed(1)}°';
+    final lngStr = '経度±${parameter.longitudeOffset.toStringAsFixed(1)}°';
+    final depthStr = hasDepth ? '  深さ±${parameter.depthOffset}km' : '';
 
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Text(
+        '$latStr  $lngStr$depthStr',
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+}
+
+class _NearbyEarthquakeList extends StatelessWidget {
+  const _NearbyEarthquakeList({
+    required this.items,
+    required this.intensityColor,
+    required this.onShowAll,
+  });
+
+  final List<EarthquakePartial> items;
+  final IntensityColorModel intensityColor;
+  final Future<void> Function() onShowAll;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
-        for (final item in displayItems) ...[
+        for (final item in items) ...[
           EarthquakeHistoryListTile(
             item: item,
             intensityColor: intensityColor,
-            onTap: () => EarthquakeHistoryDetailsRoute(
+            onTap: () async => EarthquakeHistoryDetailsRoute(
               eventId: item.eventId,
             ).push<void>(context),
             showBackgroundColor: false,
@@ -187,16 +260,13 @@ class _NearbyEarthquakeList extends StatelessWidget {
           ),
           const Divider(height: 1, indent: 12, endIndent: 12),
         ],
-        if (hasMore && !showAll.value)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            child: TextButton(
-              onPressed: () => showAll.value = true,
-              child: Text(
-                'すべて表示（残り${items.length - SimilarEarthquakeCard._initialDisplayCount}件）',
-              ),
-            ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          child: TextButton(
+            onPressed: onShowAll,
+            child: const Text('すべて表示'),
           ),
+        ),
       ],
     );
   }
