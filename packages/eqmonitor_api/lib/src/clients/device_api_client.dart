@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../models/challenge_response.dart';
+import '../models/create_region_slot_request.dart';
 import '../models/device_location_request.dart';
 import '../models/device_location_response.dart';
 import '../models/device_me_response.dart';
@@ -15,9 +16,13 @@ import '../models/earthquake_settings_request.dart';
 import '../models/earthquake_settings_response.dart';
 import '../models/eew_settings_request.dart';
 import '../models/eew_settings_response.dart';
+import '../models/eew_warning_config_request.dart';
+import '../models/eew_warning_config_response.dart';
 import '../models/kind.dart';
 import '../models/live_activity_token_request.dart';
 import '../models/live_activity_token_response.dart';
+import '../models/notification_defaults_request.dart';
+import '../models/notification_defaults_response.dart';
 import '../models/notification_settings_request.dart';
 import '../models/notification_settings_response.dart';
 import '../models/region_setting_patch_request.dart';
@@ -26,11 +31,14 @@ import '../models/region_setting_response.dart';
 import '../models/shake_detection_setting_request.dart';
 import '../models/shake_detection_setting_response.dart';
 import '../models/shake_detection_sub_region_response.dart';
+import '../models/slot_response.dart';
 import '../models/tsunami_region_setting_patch_request.dart';
 import '../models/tsunami_region_setting_request.dart';
 import '../models/tsunami_region_setting_response.dart';
 import '../models/tsunami_settings_request.dart';
 import '../models/tsunami_settings_response.dart';
+import '../models/update_region_slot_request.dart';
+import '../models/upsert_singleton_slot_request.dart';
 import '../models/v2_device_me_apns_kind_request_body.dart';
 import '../models/v2_device_me_fcm_request_body.dart';
 
@@ -212,6 +220,81 @@ abstract class DeviceApiClient {
     @Path('regionId') required String regionId,
   });
 
+  /// 通知スロット一覧を取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsSlots)
+  Future<HttpResponse<List<SlotResponse>>> getV2DeviceMeSettingsSlots();
+
+  /// 現在地スロットを取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsSlotsCurrentLocation)
+  Future<HttpResponse<SlotResponse>> getV2DeviceMeSettingsSlotsCurrentLocation();
+
+  /// 現在地スロットを upsert
+  @PUT(DeviceApiClientUrls.putV2DeviceMeSettingsSlotsCurrentLocation)
+  Future<HttpResponse<SlotResponse>> putV2DeviceMeSettingsSlotsCurrentLocation({
+    @Body() required UpsertSingletonSlotRequest body,
+  });
+
+  /// 現在地スロットを削除
+  @DELETE(DeviceApiClientUrls.deleteV2DeviceMeSettingsSlotsCurrentLocation)
+  Future<HttpResponse<void>> deleteV2DeviceMeSettingsSlotsCurrentLocation();
+
+  /// 全国スロットを取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsSlotsNationwide)
+  Future<HttpResponse<SlotResponse>> getV2DeviceMeSettingsSlotsNationwide();
+
+  /// 全国スロットを upsert
+  @PUT(DeviceApiClientUrls.putV2DeviceMeSettingsSlotsNationwide)
+  Future<HttpResponse<SlotResponse>> putV2DeviceMeSettingsSlotsNationwide({
+    @Body() required UpsertSingletonSlotRequest body,
+  });
+
+  /// 全国スロットを削除
+  @DELETE(DeviceApiClientUrls.deleteV2DeviceMeSettingsSlotsNationwide)
+  Future<HttpResponse<void>> deleteV2DeviceMeSettingsSlotsNationwide();
+
+  /// 地域スロット一覧を取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsSlotsRegions)
+  Future<HttpResponse<List<SlotResponse>>> getV2DeviceMeSettingsSlotsRegions();
+
+  /// 地域スロットを作成（プラン制約チェックあり）
+  @POST(DeviceApiClientUrls.postV2DeviceMeSettingsSlotsRegions)
+  Future<HttpResponse<SlotResponse>> postV2DeviceMeSettingsSlotsRegions({
+    @Body() required CreateRegionSlotRequest body,
+  });
+
+  /// 地域スロットを更新
+  @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsSlotsRegionsSlotId)
+  Future<HttpResponse<SlotResponse>> patchV2DeviceMeSettingsSlotsRegionsSlotId({
+    @Path('slotId') required String slotId,
+    @Body() required UpdateRegionSlotRequest body,
+  });
+
+  /// 地域スロットを削除
+  @DELETE(DeviceApiClientUrls.deleteV2DeviceMeSettingsSlotsRegionsSlotId)
+  Future<HttpResponse<void>> deleteV2DeviceMeSettingsSlotsRegionsSlotId({
+    @Path('slotId') required String slotId,
+  });
+
+  /// 通知デフォルト設定を取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsNotificationDefaults)
+  Future<HttpResponse<NotificationDefaultsResponse>> getV2DeviceMeSettingsNotificationDefaults();
+
+  /// 通知デフォルト設定を更新（Free プランは sound/interruption_level 変更不可）
+  @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsNotificationDefaults)
+  Future<HttpResponse<NotificationDefaultsResponse>> patchV2DeviceMeSettingsNotificationDefaults({
+    @Body() required NotificationDefaultsRequest body,
+  });
+
+  /// EEW 警報設定を取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsEewWarning)
+  Future<HttpResponse<EewWarningConfigResponse>> getV2DeviceMeSettingsEewWarning();
+
+  /// EEW 警報設定を更新（Free プランは nationwide 不可）
+  @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsEewWarning)
+  Future<HttpResponse<EewWarningConfigResponse>> patchV2DeviceMeSettingsEewWarning({
+    @Body() required EewWarningConfigRequest body,
+  });
+
   /// Live Activity updateToken一覧を取得
   @GET(DeviceApiClientUrls.getV2DeviceMeLiveActivity)
   Future<HttpResponse<List<LiveActivityTokenResponse>>> getV2DeviceMeLiveActivity();
@@ -302,6 +385,36 @@ abstract class DeviceApiClientUrls {
 	static const patchV2DeviceMeSettingsTsunamiRegionsRegionId = "/v2/device/me/settings/tsunami/regions/{regionId}";
 	/// /v2/device/me/settings/tsunami/regions/{regionId}
 	static const deleteV2DeviceMeSettingsTsunamiRegionsRegionId = "/v2/device/me/settings/tsunami/regions/{regionId}";
+	/// /v2/device/me/settings/slots
+	static const getV2DeviceMeSettingsSlots = "/v2/device/me/settings/slots";
+	/// /v2/device/me/settings/slots/current-location
+	static const getV2DeviceMeSettingsSlotsCurrentLocation = "/v2/device/me/settings/slots/current-location";
+	/// /v2/device/me/settings/slots/current-location
+	static const putV2DeviceMeSettingsSlotsCurrentLocation = "/v2/device/me/settings/slots/current-location";
+	/// /v2/device/me/settings/slots/current-location
+	static const deleteV2DeviceMeSettingsSlotsCurrentLocation = "/v2/device/me/settings/slots/current-location";
+	/// /v2/device/me/settings/slots/nationwide
+	static const getV2DeviceMeSettingsSlotsNationwide = "/v2/device/me/settings/slots/nationwide";
+	/// /v2/device/me/settings/slots/nationwide
+	static const putV2DeviceMeSettingsSlotsNationwide = "/v2/device/me/settings/slots/nationwide";
+	/// /v2/device/me/settings/slots/nationwide
+	static const deleteV2DeviceMeSettingsSlotsNationwide = "/v2/device/me/settings/slots/nationwide";
+	/// /v2/device/me/settings/slots/regions
+	static const getV2DeviceMeSettingsSlotsRegions = "/v2/device/me/settings/slots/regions";
+	/// /v2/device/me/settings/slots/regions
+	static const postV2DeviceMeSettingsSlotsRegions = "/v2/device/me/settings/slots/regions";
+	/// /v2/device/me/settings/slots/regions/{slotId}
+	static const patchV2DeviceMeSettingsSlotsRegionsSlotId = "/v2/device/me/settings/slots/regions/{slotId}";
+	/// /v2/device/me/settings/slots/regions/{slotId}
+	static const deleteV2DeviceMeSettingsSlotsRegionsSlotId = "/v2/device/me/settings/slots/regions/{slotId}";
+	/// /v2/device/me/settings/notification-defaults
+	static const getV2DeviceMeSettingsNotificationDefaults = "/v2/device/me/settings/notification-defaults";
+	/// /v2/device/me/settings/notification-defaults
+	static const patchV2DeviceMeSettingsNotificationDefaults = "/v2/device/me/settings/notification-defaults";
+	/// /v2/device/me/settings/eew-warning
+	static const getV2DeviceMeSettingsEewWarning = "/v2/device/me/settings/eew-warning";
+	/// /v2/device/me/settings/eew-warning
+	static const patchV2DeviceMeSettingsEewWarning = "/v2/device/me/settings/eew-warning";
 	/// /v2/device/me/live-activity
 	static const getV2DeviceMeLiveActivity = "/v2/device/me/live-activity";
 	/// /v2/device/me/live-activity/{liveActivityId}/token

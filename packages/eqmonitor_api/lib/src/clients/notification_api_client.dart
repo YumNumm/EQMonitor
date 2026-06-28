@@ -12,6 +12,8 @@ import '../models/test_notification_request.dart';
 import '../models/test_notification_response.dart';
 import '../models/test_scenario_request.dart';
 import '../models/test_scenario_response.dart';
+import '../models/test_scenario_type_request.dart';
+import '../models/test_scenario_type_response.dart';
 
 part 'notification_api_client.g.dart';
 
@@ -47,6 +49,12 @@ abstract class NotificationApiClient {
   Future<HttpResponse<TestScenarioResponse>> postV2DeviceMeNotificationTestScenario({
     @Body() required TestScenarioRequest body,
   });
+
+  /// シナリオを指定してテスト通知を送信。通知パイプラインを通してメッセージを生成し、[テスト/TEST] プレフィックス付きでこのデバイスにのみ配信する
+  @POST(NotificationApiClientUrls.postV2DeviceMeNotificationTestScenarioType)
+  Future<HttpResponse<TestScenarioTypeResponse>> postV2DeviceMeNotificationTestScenarioType({
+    @Body() required TestScenarioTypeRequest body,
+  });
 }
 
 
@@ -61,5 +69,7 @@ abstract class NotificationApiClientUrls {
 	static const postV2DeviceMeNotificationTest = "/v2/device/me/notification/test";
 	/// /v2/device/me/notification/test-scenario
 	static const postV2DeviceMeNotificationTestScenario = "/v2/device/me/notification/test-scenario";
+	/// /v2/device/me/notification/test-scenario-type
+	static const postV2DeviceMeNotificationTestScenarioType = "/v2/device/me/notification/test-scenario-type";
 }
 
