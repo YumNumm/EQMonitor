@@ -10,7 +10,9 @@ import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mappi
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_error_overlay.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_legend.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_navigation_back_button.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/region_floating_panel.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
@@ -211,7 +213,16 @@ class _MapContent extends HookConsumerWidget {
               child: SafeArea(child: IntensityHistoryLegend()),
             ),
 
-            // 戻るボタン（左上、Lv2のときのみ表示）
+            if (!isCityState)
+              const Positioned(
+                top: 0,
+                left: 0,
+                child: IntensityHistoryNavigationBackButton(),
+              ),
+
+            const IntensityHistoryErrorOverlay(),
+
+            // 全国表示へ戻るボタン（左上、Lv2のときのみ表示）
             if (isCityState)
               Positioned(
                 top: 0,
@@ -227,9 +238,12 @@ class _MapContent extends HookConsumerWidget {
                           notifier.backToPrefecture();
                           _zoomToJapan(context);
                         },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Icon(Icons.arrow_back_rounded),
+                        child: const Tooltip(
+                          message: '全国表示に戻る',
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Icon(Icons.public_rounded),
+                          ),
                         ),
                       ),
                     ),
