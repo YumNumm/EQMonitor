@@ -11,7 +11,10 @@ import 'package:maplibre/maplibre.dart';
 
 /// 電文発表時刻基準での静的PS波到達円レイヤー
 class EewStaticPsWaveLayer extends HookConsumerWidget {
-  const EewStaticPsWaveLayer({required this.eew, super.key});
+  const EewStaticPsWaveLayer({
+    required this.eew,
+    super.key,
+  });
 
   final EewTelegramItem? eew;
 
@@ -25,8 +28,33 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final travelTimeMap = ref.watch(travelTimeDepthMapProvider);
-    final isInitialized = useRef(false);
+    // レイヤー初期化処理のFuture。更新・破棄処理が初期化完了を待つために保持する
+    final initFuture = useRef<Future<void>?>(null);
 
+    // source / layer の追加は styleController が変化したときに一度だけ行う。
+    // eew / travelTimeMap の変化で再初期化すると、非同期なクリーンアップ完了前に
+    // addSource が走り「already exists」例外となるため、初期化と更新を分離する。
+    useEffect(
+      () {
+        if (styleController == null) {
+          return null;
+        }
+
+        final future = _initializeLayers(styleController);
+        initFuture.value = future;
+
+        return () {
+          initFuture.value = null;
+          unawaited(() async {
+            await future;
+            await _removeLayers(styleController);
+          }());
+        };
+      },
+      [styleController],
+    );
+
+    // eew / travelTimeMap の変化に追従してデータのみ更新する
     useEffect(
       () {
         if (styleController == null) {
@@ -34,15 +62,15 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
         }
 
         unawaited(() async {
-          await _initializeLayers(styleController);
-          isInitialized.value = true;
-          await _updateLayers(styleController, eew, travelTimeMap);
+          await initFuture.value;
+          await _updateLayers(
+            styleController,
+            eew,
+            travelTimeMap,
+          );
         }());
 
-        return () async {
-          isInitialized.value = false;
-          await _removeLayers(styleController);
-        };
+        return null;
       },
       [styleController, eew, travelTimeMap],
     );
@@ -51,6 +79,9 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
   }
 
   Future<void> _initializeLayers(StyleController styleController) async {
+    // ホットリロードや前インスタンスの破棄処理との競合により既に source/layer が
+    // 残っている場合に「already exists」例外となるため、追加前に削除を試みる。
+    await _removeLayers(styleController);
     await (
       styleController.addSource(
         GeoJsonSource(
@@ -107,11 +138,22 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
   }
 
   Future<void> _removeLayers(StyleController styleController) async {
-    await styleController.removeLayer(_pWaveLayerId);
-    await styleController.removeLayer(_sWaveLayerId);
-    await styleController.removeLayer(_sWaveFillLayerId);
-    await styleController.removeSource(_pWaveSourceId);
-    await styleController.removeSource(_sWaveSourceId);
+    // layer は source を参照するため、layer → source の順で削除する。
+    // 存在しない場合の例外は無視する。
+    for (final layerId in [_pWaveLayerId, _sWaveLayerId, _sWaveFillLayerId]) {
+      try {
+        await styleController.removeLayer(layerId);
+      } on Exception {
+        // ignore
+      }
+    }
+    for (final sourceId in [_pWaveSourceId, _sWaveSourceId]) {
+      try {
+        await styleController.removeSource(sourceId);
+      } on Exception {
+        // ignore
+      }
+    }
   }
 
   Future<void> _updateLayers(
