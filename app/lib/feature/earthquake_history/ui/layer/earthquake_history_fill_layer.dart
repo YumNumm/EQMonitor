@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
@@ -61,6 +62,8 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final enqueue = useMapOperationQueue();
+
     useEffect(
       () {
         final addedLayerIds = <String>[];
@@ -76,33 +79,35 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
           }
         }
 
-        unawaited(() async {
-          try {
-            final layers = fillLayerBuilder.build(
-              intensity: intensity,
-              colorModel: colorModel,
-              mode: mode,
-              showingLpgmIntensity: showingLpgmIntensity,
-              parameter: parameter,
-            );
-            for (final layer in layers) {
-              if (disposed) {
-                return;
-              }
-              await styleController.addLayer(
-                layer,
-                belowLayerId: BaseLayer.areaForecastLocalELine.name,
+        unawaited(
+          enqueue(() async {
+            try {
+              final layers = fillLayerBuilder.build(
+                intensity: intensity,
+                colorModel: colorModel,
+                mode: mode,
+                showingLpgmIntensity: showingLpgmIntensity,
+                parameter: parameter,
               );
-              addedLayerIds.add(layer.id);
+              for (final layer in layers) {
+                if (disposed) {
+                  return;
+                }
+                await styleController.addLayer(
+                  layer,
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                );
+                addedLayerIds.add(layer.id);
+              }
+            } on Exception catch (e) {
+              talker.log(e);
             }
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }());
+          }),
+        );
 
         return () {
           disposed = true;
-          unawaited(removeAdded());
+          unawaited(enqueue(removeAdded));
         };
       },
       [

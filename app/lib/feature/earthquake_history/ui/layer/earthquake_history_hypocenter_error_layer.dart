@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/map/hypocenter_error_range_util.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
@@ -31,6 +32,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final enqueue = useMapOperationQueue();
 
     useEffect(
       () {
@@ -38,70 +40,76 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(() async {
-          try {
-            final coords = earthquake.hypocenter?.coordinates;
-            if (coords is! CoordinateLatLng) {
-              return;
-            }
+        unawaited(
+          enqueue(() async {
+            try {
+              final coords = earthquake.hypocenter?.coordinates;
+              if (coords is! CoordinateLatLng) {
+                return;
+              }
 
-            final polygon = hypocenterErrorPolygon(
-              coords.latitude,
-              coords.longitude,
-            );
+              final polygon = hypocenterErrorPolygon(
+                coords.latitude,
+                coords.longitude,
+              );
 
-            await styleController.addSource(
-              GeoJsonSource(
-                id: _sourceId,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': [
-                    {
-                      'type': 'Feature',
-                      'geometry': {
-                        'type': 'Polygon',
-                        'coordinates': [polygon],
+              await styleController.addSource(
+                GeoJsonSource(
+                  id: _sourceId,
+                  data: jsonEncode({
+                    'type': 'FeatureCollection',
+                    'features': [
+                      {
+                        'type': 'Feature',
+                        'geometry': {
+                          'type': 'Polygon',
+                          'coordinates': [polygon],
+                        },
+                        'properties': <String, dynamic>{},
                       },
-                      'properties': <String, dynamic>{},
-                    },
-                  ],
-                }),
-              ),
-            );
+                    ],
+                  }),
+                ),
+              );
 
-            await styleController.addLayer(
-              LineStyleLayer(
-                id: _layerId,
-                sourceId: _sourceId,
-                paint: {
-                  'line-color': isDark ? '#ffffff' : '#000000',
-                  'line-cap': 'round',
-                  'line-join': 'round',
-                  'line-width': 1.5,
-                  'line-blur': 0.2,
-                  'line-dasharray': [4, 2],
-                  'line-opacity': [
-                    'step',
-                    ['zoom'],
-                    0.0,
-                    parameter.hypocenterErrorMinZoom,
-                    1.0,
-                  ],
-                },
-              ),
-            );
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }());
+              await styleController.addLayer(
+                LineStyleLayer(
+                  id: _layerId,
+                  sourceId: _sourceId,
+                  paint: {
+                    'line-color': isDark ? '#ffffff' : '#000000',
+                    'line-cap': 'round',
+                    'line-join': 'round',
+                    'line-width': 1.5,
+                    'line-blur': 0.2,
+                    'line-dasharray': [4, 2],
+                    'line-opacity': [
+                      'step',
+                      ['zoom'],
+                      0.0,
+                      parameter.hypocenterErrorMinZoom,
+                      1.0,
+                    ],
+                  },
+                ),
+              );
+            } on Exception catch (e) {
+              talker.log(e);
+            }
+          }),
+        );
 
-        return () async {
-          try {
-            await styleController.removeLayer(_layerId);
-            await styleController.removeSource(_sourceId);
-          } on Exception catch (e) {
-            talker.log(e);
-          }
+        return () {
+          unawaited(
+            enqueue(() async {
+              try {
+                await styleController.removeLayer(_layerId);
+                await styleController.removeSource(_sourceId);
+              } on Exception catch (e) {
+                talker.log(e);
+              }
+            }),
+          );
         };
       },
       [styleController, earthquake, isDark, parameter],

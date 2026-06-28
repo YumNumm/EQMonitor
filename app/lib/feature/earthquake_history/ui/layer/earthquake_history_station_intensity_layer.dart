@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -57,6 +58,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
     final iconData = ref.watch(intensityIconProvider).value;
+    final enqueue = useMapOperationQueue();
 
     useEffect(
       () {
@@ -67,172 +69,176 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         var disposed = false;
         var iconLayerAdded = false;
 
-        unawaited(() async {
-          try {
-            final geoJson = showingLpgmIntensity
-                ? _buildLpgmGeoJson(intensity, colorModel)
-                : _buildGeoJson(intensity, colorModel);
+        unawaited(
+          enqueue(() async {
+            try {
+              final geoJson = showingLpgmIntensity
+                  ? _buildLpgmGeoJson(intensity, colorModel)
+                  : _buildGeoJson(intensity, colorModel);
 
-            if (disposed) {
-              return;
-            }
-            await styleController.addSource(
-              GeoJsonSource(id: _sourceId, data: geoJson),
-            );
+              if (disposed) {
+                return;
+              }
+              await styleController.addSource(
+                GeoJsonSource(id: _sourceId, data: geoJson),
+              );
 
-            if (disposed) {
-              return;
-            }
+              if (disposed) {
+                return;
+              }
 
-            // アイコン画像が揃っている場合はレイヤー追加前に登録する
-            final cachedBytes = iconData?.toMapStyleImages;
-            if (cachedBytes != null) {
-              await styleController.addImages(cachedBytes);
-            }
+              // アイコン画像が揃っている場合はレイヤー追加前に登録する
+              final cachedBytes = iconData?.toMapStyleImages;
+              if (cachedBytes != null) {
+                await styleController.addImages(cachedBytes);
+              }
 
-            if (disposed) {
-              return;
-            }
-            await styleController.addLayer(
-              CircleStyleLayer(
-                id: _circleLayerId,
-                sourceId: _sourceId,
-                minZoom: parameter.stationMinZoom,
-                layout: const {
-                  'circle-sort-key': ['get', 'sortKey'],
-                },
-                paint: {
-                  'circle-radius': switch (stationDisplayMode) {
-                    StationDisplayMode.allMinimized => [
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      4,
-                      parameter.stationCircleRadiusMin * 2,
-                      10,
-                      parameter.stationCircleRadiusMax * 1.25,
-                    ],
-                    StationDisplayMode.normal => [
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      4,
-                      parameter.stationCircleRadiusMin,
-                      10,
-                      parameter.stationCircleRadiusMax,
-                    ],
-                    StationDisplayMode.maxFocused => [
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      4,
-                      [
-                        'case',
-                        ['get', 'isFocused'],
-                        parameter.stationCircleRadiusMin * 1.5,
-                        parameter.stationCircleRadiusMin * 0.5,
-                      ],
-                      10,
-                      [
-                        'case',
-                        ['get', 'isFocused'],
-                        parameter.stationCircleRadiusMax * 1.25,
-                        parameter.stationCircleRadiusMax * 0.875,
-                      ],
-                    ],
-                  },
-                  'circle-color': ['get', 'color'],
-                  'circle-stroke-color': '#ffffff',
-                  'circle-stroke-width': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    4,
-                    0.3,
-                    10,
-                    1.5,
-                  ],
-                },
-              ),
-            );
-
-            if (disposed) {
-              return;
-            }
-            if (iconData != null) {
+              if (disposed) {
+                return;
+              }
               await styleController.addLayer(
-                SymbolStyleLayer(
-                  id: _iconLayerId,
+                CircleStyleLayer(
+                  id: _circleLayerId,
                   sourceId: _sourceId,
                   minZoom: parameter.stationMinZoom,
-                  layout: {
-                    'icon-image': ['get', 'iconId'],
-                    'icon-allow-overlap': true,
-                    'icon-ignore-placement': true,
-                    'symbol-sort-key': ['get', 'sortKey'],
-                    'icon-size': [
+                  layout: const {
+                    'circle-sort-key': ['get', 'sortKey'],
+                  },
+                  paint: {
+                    'circle-radius': switch (stationDisplayMode) {
+                      StationDisplayMode.allMinimized => [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        4,
+                        parameter.stationCircleRadiusMin * 2,
+                        10,
+                        parameter.stationCircleRadiusMax * 1.25,
+                      ],
+                      StationDisplayMode.normal => [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        4,
+                        parameter.stationCircleRadiusMin,
+                        10,
+                        parameter.stationCircleRadiusMax,
+                      ],
+                      StationDisplayMode.maxFocused => [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        4,
+                        [
+                          'case',
+                          ['get', 'isFocused'],
+                          parameter.stationCircleRadiusMin * 1.5,
+                          parameter.stationCircleRadiusMin * 0.5,
+                        ],
+                        10,
+                        [
+                          'case',
+                          ['get', 'isFocused'],
+                          parameter.stationCircleRadiusMax * 1.25,
+                          parameter.stationCircleRadiusMax * 0.875,
+                        ],
+                      ],
+                    },
+                    'circle-color': ['get', 'color'],
+                    'circle-stroke-color': '#ffffff',
+                    'circle-stroke-width': [
                       'interpolate',
                       ['linear'],
                       ['zoom'],
-                      3,
-                      parameter.stationIconSizeMin,
-                      7,
-                      parameter.stationIconSizeMid,
-                      20,
-                      parameter.stationIconSizeMax,
+                      4,
+                      0.3,
+                      10,
+                      1.5,
                     ],
                   },
                 ),
               );
-              iconLayerAdded = true;
-            }
 
-            if (disposed) {
-              return;
-            }
-            if (showStationLabel) {
-              await styleController.addLayer(
-                SymbolStyleLayer(
-                  id: _labelLayerId,
-                  sourceId: _sourceId,
-                  minZoom: parameter.stationLabelMinZoom,
-                  layout: {
-                    'text-field': ['get', 'name'],
-                    'text-size': 10,
-                    'text-offset': [0, 1.2],
-                    'text-anchor': 'top',
-                    'text-allow-overlap': false,
-                    'text-ignore-placement': true,
-                  },
-                  paint: {
-                    'text-color': '#ffffff',
-                    'text-halo-color': '#000000',
-                    'text-halo-width': 1,
-                  },
-                ),
-              );
-            }
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }());
+              if (disposed) {
+                return;
+              }
+              if (iconData != null) {
+                await styleController.addLayer(
+                  SymbolStyleLayer(
+                    id: _iconLayerId,
+                    sourceId: _sourceId,
+                    minZoom: parameter.stationMinZoom,
+                    layout: {
+                      'icon-image': ['get', 'iconId'],
+                      'icon-allow-overlap': true,
+                      'icon-ignore-placement': true,
+                      'symbol-sort-key': ['get', 'sortKey'],
+                      'icon-size': [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        3,
+                        parameter.stationIconSizeMin,
+                        7,
+                        parameter.stationIconSizeMid,
+                        20,
+                        parameter.stationIconSizeMax,
+                      ],
+                    },
+                  ),
+                );
+                iconLayerAdded = true;
+              }
 
-        return () {
-          disposed = true;
-          unawaited(() async {
-            try {
+              if (disposed) {
+                return;
+              }
               if (showStationLabel) {
-                await styleController.removeLayer(_labelLayerId);
+                await styleController.addLayer(
+                  SymbolStyleLayer(
+                    id: _labelLayerId,
+                    sourceId: _sourceId,
+                    minZoom: parameter.stationLabelMinZoom,
+                    layout: {
+                      'text-field': ['get', 'name'],
+                      'text-size': 10,
+                      'text-offset': [0, 1.2],
+                      'text-anchor': 'top',
+                      'text-allow-overlap': false,
+                      'text-ignore-placement': true,
+                    },
+                    paint: {
+                      'text-color': '#ffffff',
+                      'text-halo-color': '#000000',
+                      'text-halo-width': 1,
+                    },
+                  ),
+                );
               }
-              if (iconLayerAdded) {
-                await styleController.removeLayer(_iconLayerId);
-              }
-              await styleController.removeLayer(_circleLayerId);
-              await styleController.removeSource(_sourceId);
             } on Exception catch (e) {
               talker.log(e);
             }
-          }());
+          }),
+        );
+
+        return () {
+          disposed = true;
+          unawaited(
+            enqueue(() async {
+              try {
+                if (showStationLabel) {
+                  await styleController.removeLayer(_labelLayerId);
+                }
+                if (iconLayerAdded) {
+                  await styleController.removeLayer(_iconLayerId);
+                }
+                await styleController.removeLayer(_circleLayerId);
+                await styleController.removeSource(_sourceId);
+              } on Exception catch (e) {
+                talker.log(e);
+              }
+            }),
+          );
         };
       },
       [
