@@ -161,9 +161,11 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
 
   @override
   Future<HttpResponse<HighestIntensityResponse>>
-  getV2EarthquakeIntensityPrefectureHighest() async {
+  getV2EarthquakeIntensityPrefectureHighest({
+    List<TelegramStatus> statuses = const [.normal],
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'statuses': statuses};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<HighestIntensityResponse>>(
@@ -192,9 +194,10 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   Future<HttpResponse<HighestIntensityResponse>>
   getV2EarthquakeIntensityPrefectureCodeCityHighest({
     required String code,
+    List<TelegramStatus> statuses = const [.normal],
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'statuses': statuses};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<HighestIntensityResponse>>(

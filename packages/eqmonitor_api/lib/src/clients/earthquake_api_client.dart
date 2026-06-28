@@ -95,12 +95,15 @@ abstract class EarthquakeApiClient {
 
   /// 都道府県ごとの過去最高震度一覧
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityPrefectureHighest)
-  Future<HttpResponse<HighestIntensityResponse>> getV2EarthquakeIntensityPrefectureHighest();
+  Future<HttpResponse<HighestIntensityResponse>> getV2EarthquakeIntensityPrefectureHighest({
+    @Query('statuses') List<TelegramStatus> statuses = const [.normal],
+  });
 
   /// 指定都道府県内の市区町村ごとの過去最高震度一覧
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityPrefectureCodeCityHighest)
   Future<HttpResponse<HighestIntensityResponse>> getV2EarthquakeIntensityPrefectureCodeCityHighest({
     @Path('code') required String code,
+    @Query('statuses') List<TelegramStatus> statuses = const [.normal],
   });
 
   /// [limit] - 1~100 の整数(string).
