@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
@@ -176,7 +175,17 @@ final class _OnboardingTestAssetBundle extends CachingAssetBundle {
   ]);
 
   @override
-  Future<ByteData> load(String key) async => ByteData.view(
-    _transparentPng.buffer,
-  );
+  Future<ByteData> load(String key) async {
+    if (key == 'AssetManifest.bin') {
+      final data = const StandardMessageCodec().encodeMessage({
+        'assets/images/icon.png': [
+          {'asset': 'assets/images/icon.png'},
+        ],
+      });
+      if (data != null) {
+        return data;
+      }
+    }
+    return ByteData.view(_transparentPng.buffer);
+  }
 }

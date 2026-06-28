@@ -68,8 +68,8 @@ class OnboardingPage extends HookConsumerWidget {
     }, [pageController]);
 
     final setStepNavigation = useCallback<_SetStepNavigation>(({
-      required _OnboardingStep step,
-      required _StepNavigationState state,
+      required step,
+      required state,
     }) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!context.mounted || step != _steps[currentPage.value]) {

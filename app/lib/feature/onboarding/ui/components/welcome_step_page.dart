@@ -19,10 +19,15 @@ class _WelcomeStepPage extends HookConsumerWidget {
         deviceProvisioningMutation is MutationPending;
 
     Future<void> startProvisioning() async {
-      await DeviceProvisioningNotifier.provisionMutation.run(
-        ref,
-        (tsx) async => tsx.get(deviceProvisioningProvider.notifier).provision(),
-      );
+      try {
+        await DeviceProvisioningNotifier.provisionMutation.run(
+          ref,
+          (tsx) async =>
+              tsx.get(deviceProvisioningProvider.notifier).provision(),
+        );
+      } on Exception {
+        // MutationError is observed by ref.listen and shown in a dialog.
+      }
     }
 
     void retryProvisioning() {
