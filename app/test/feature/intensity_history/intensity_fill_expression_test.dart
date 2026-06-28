@@ -97,5 +97,45 @@ void main() {
           .toHexStringRGB();
       expect(color, equals(expectedColor));
     });
+
+    test('propertyKey を省略した場合は code が使われる', () {
+      const pairs = [
+        (code: '010', intensity: JmaIntensity.four),
+      ];
+
+      final result = buildIntensityMatchExpression(pairs, colorModel);
+
+      expect(result[1], equals(<Object>['get', 'code']));
+    });
+
+    test('propertyKey に regioncode を指定すると get 式に反映される', () {
+      const pairs = [
+        (code: '0110100', intensity: JmaIntensity.four),
+        (code: '0110200', intensity: JmaIntensity.fiveLower),
+      ];
+
+      final result = buildIntensityMatchExpression(
+        pairs,
+        colorModel,
+        propertyKey: 'regioncode',
+      );
+
+      // ['match', ['get','regioncode'], '0110100', c1, '0110200', c2, 'rgba(0,0,0,0)']
+      expect(result[0], equals('match'));
+      expect(result[1], equals(<Object>['get', 'regioncode']));
+      expect(result[2], equals('0110100'));
+      final expectedColor1 = colorModel
+          .fromJmaIntensity(JmaIntensity.four)
+          .background
+          .toHexStringRGB();
+      expect(result[3], equals(expectedColor1));
+      expect(result[4], equals('0110200'));
+      final expectedColor2 = colorModel
+          .fromJmaIntensity(JmaIntensity.fiveLower)
+          .background
+          .toHexStringRGB();
+      expect(result[5], equals(expectedColor2));
+      expect(result.last, equals('rgba(0,0,0,0)'));
+    });
   });
 }

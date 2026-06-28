@@ -143,7 +143,13 @@ class IntensityFillLayer extends HookConsumerWidget {
                   (e) => (code: e.code, intensity: e.intensity.toJmaIntensity),
                 )
                 .toList();
-            final fillColor = buildIntensityMatchExpression(pairs, colorModel);
+            // areaInformationCityQuake のフィーチャ照合プロパティは `regioncode`。
+            // (earthquake_history_fill_layer.dart の cityCodeFilter 参照)
+            final fillColor = buildIntensityMatchExpression(
+              pairs,
+              colorModel,
+              propertyKey: 'regioncode',
+            );
 
             if (disposed) {
               return;
