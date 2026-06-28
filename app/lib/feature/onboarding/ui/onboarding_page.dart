@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
+import 'package:eqmonitor/feature/onboarding/ui/component/onboarding_provisioning_error_details_dialog.dart';
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_custom_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
@@ -122,9 +123,7 @@ class OnboardingPage extends HookConsumerWidget {
       try {
         // EEW: 現在地, minJmaIntensity=JmaIntensity.four (default)
         await ref.read(eewSettingsProvider.future);
-        await ref
-            .read(eewSettingsProvider.notifier)
-            .addCurrentLocationRegion();
+        await ref.read(eewSettingsProvider.notifier).addCurrentLocationRegion();
 
         // 地震情報: 現在地, minJmaIntensity=JmaIntensity.one
         await ref.read(earthquakeNotificationSettingsProvider.future);
@@ -245,8 +244,8 @@ class OnboardingPage extends HookConsumerWidget {
     }
 
     // 戻るボタン表示/有効
-    final showBack = currentPage.value > 0 &&
-        currentStep != _OnboardingStep.complete;
+    final showBack =
+        currentPage.value > 0 && currentStep != _OnboardingStep.complete;
     final isBackEnabled = showBack && !isProcessing.value;
 
     return Scaffold(
@@ -273,8 +272,7 @@ class OnboardingPage extends HookConsumerWidget {
                   locationPermission: locationPermission.value,
                   selectedPreset: selectedPreset.value,
                   settingsSaveError: settingsSaveError.value,
-                  onPresetSelected: (preset) =>
-                      selectedPreset.value = preset,
+                  onPresetSelected: (preset) => selectedPreset.value = preset,
                 ),
               ),
             ),
@@ -331,12 +329,11 @@ class _StepPage extends StatelessWidget {
         notificationPermission: notificationPermission,
         locationPermission: locationPermission,
       ),
-      _OnboardingStep.notificationSettings =>
-        _NotificationSettingsStepContent(
-          selectedPreset: selectedPreset,
-          onPresetSelected: onPresetSelected,
-          saveError: settingsSaveError,
-        ),
+      _OnboardingStep.notificationSettings => _NotificationSettingsStepContent(
+        selectedPreset: selectedPreset,
+        onPresetSelected: onPresetSelected,
+        saveError: settingsSaveError,
+      ),
       _OnboardingStep.complete => const _CompleteStepContent(),
     };
   }
@@ -401,7 +398,8 @@ class _DeviceRegistrationStepContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ds = Theme.of(context).designSystemThemeExtension;
-    final hasError = error != null;
+    final errorDetails = error;
+    final hasError = errorDetails != null;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ds.spacing.lg),
@@ -415,9 +413,7 @@ class _DeviceRegistrationStepContent extends StatelessWidget {
           ),
           SizedBox(height: ds.spacing.sm),
           Text(
-            hasError
-                ? 'デバイスの登録に失敗しました'
-                : 'サーバーにデバイスを登録しています...',
+            hasError ? 'デバイスの登録に失敗しました' : 'サーバーにデバイスを登録しています...',
             style: ds.typography.bodyLarge.copyWith(
               color: hasError
                   ? ds.palette.statusDanger
@@ -455,10 +451,31 @@ class _DeviceRegistrationStepContent extends StatelessWidget {
                 ),
                 if (hasError) ...[
                   SizedBox(height: ds.spacing.lg),
-                  FilledButton.icon(
-                    onPressed: onRetry,
-                    icon: const Icon(Icons.refresh_rounded, size: 18),
-                    label: const Text('再試行'),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: ds.spacing.sm,
+                    runSpacing: ds.spacing.sm,
+                    children: [
+                      FilledButton.icon(
+                        onPressed: onRetry,
+                        icon: const Icon(Icons.refresh_rounded, size: 18),
+                        label: const Text('再試行'),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () async => showDialog<void>(
+                          context: context,
+                          builder: (context) =>
+                              OnboardingProvisioningErrorDetailsDialog(
+                                details: errorDetails,
+                              ),
+                        ),
+                        icon: const Icon(
+                          Icons.info_outline_rounded,
+                          size: 18,
+                        ),
+                        label: const Text('詳細情報を見る'),
+                      ),
+                    ],
                   ),
                 ],
               ],
@@ -487,13 +504,14 @@ class _PermissionsStepContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ds = Theme.of(context).designSystemThemeExtension;
-    final anyDenied = notificationPermission == _PermissionState.denied ||
+    final anyDenied =
+        notificationPermission == _PermissionState.denied ||
         notificationPermission == _PermissionState.deniedForever ||
         locationPermission == _PermissionState.denied ||
         locationPermission == _PermissionState.deniedForever;
     final anyDeniedForever =
         notificationPermission == _PermissionState.deniedForever ||
-            locationPermission == _PermissionState.deniedForever;
+        locationPermission == _PermissionState.deniedForever;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ds.spacing.lg),
@@ -703,9 +721,7 @@ class _PresetCard extends StatelessWidget {
           color: ds.color.surfaceCard,
           borderRadius: BorderRadius.circular(ds.shape.card),
           border: Border.all(
-            color: isSelected
-                ? ds.palette.brandPrimary
-                : ds.color.outlineSoft,
+            color: isSelected ? ds.palette.brandPrimary : ds.color.outlineSoft,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -1043,8 +1059,7 @@ class _BottomBar extends StatelessWidget {
                       backgroundColor: ds.palette.brandPrimary,
                       foregroundColor: ds.textColor.inverse,
                       shape: RoundedSuperellipseBorder(
-                        borderRadius:
-                            BorderRadius.circular(ds.shape.button),
+                        borderRadius: BorderRadius.circular(ds.shape.button),
                       ),
                     ),
                     child: Text(
