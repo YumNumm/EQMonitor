@@ -35,7 +35,9 @@ class _TermOfServicePageBody extends HookWidget {
     );
     final data = markdownBody.data;
     if (data == null) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
     }
     return Markdown(
       data: data,
@@ -47,6 +49,7 @@ class _TermOfServicePageBody extends HookWidget {
         }
         await launchUrl(uri);
       },
+      
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/feature/devices/data/model/apns_token_kind.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -13,11 +12,11 @@ void main() {
     final client = api.ApiClient(dio);
 
     await client.device.patchV2DeviceMeApnsKind(
-      kind: ApnsTokenKind.notification.json,
+      kind: .notification,
       body: const api.V2DeviceMeApnsKindRequestBody(token: 'apns-token'),
     );
     await client.device.patchV2DeviceMeApnsKind(
-      kind: ApnsTokenKind.liveActivityStart.json,
+      kind: .liveActivityStart,
       body: const api.V2DeviceMeApnsKindRequestBody(
         token: 'push-to-start-token',
       ),

@@ -23,28 +23,30 @@ abstract class KyoshinObservationPointsParameter
 
 @freezed
 abstract class KyoshinObservationPoint with _$KyoshinObservationPoint {
-  @JsonSerializable(fieldRename: .snake)
   const factory KyoshinObservationPoint({
     required KyoshinObservationPointType type,
-    required String sourceType,
+    @JsonKey(name: 'source_type') required String sourceType,
     required String name,
     required String code,
-    required String? prefectureCode,
-    required String? regionCode,
-    required bool isSuspended,
+    @JsonKey(name: 'prefecture_code') required String? prefectureCode,
+    @JsonKey(name: 'region_code') required String? regionCode,
+    @JsonKey(name: 'is_suspended') required bool isSuspended,
     required LatLng location,
     required KyoshinObservationPointMapPoint? point,
-    required double? arv400,
+    @JsonKey(name: 'arv_400') required double? arv400,
   }) = _KyoshinObservationPoint;
 
   factory KyoshinObservationPoint.fromJson(Map<String, dynamic> json) =>
       _$KyoshinObservationPointFromJson(json);
 }
 
-@JsonEnum(fieldRename: FieldRename.snake)
+@JsonEnum()
 enum KyoshinObservationPointType {
+  @JsonValue('K_NET')
   kNet,
+  @JsonValue('KIK_NET')
   kikNet,
+  @JsonValue('UNKNOWN')
   unknown,
 }
 

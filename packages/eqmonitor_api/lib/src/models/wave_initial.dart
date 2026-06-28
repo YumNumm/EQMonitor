@@ -4,12 +4,11 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+/// 押し | 引き
 @JsonEnum()
 enum WaveInitial {
-  /// 押し
   @JsonValue('PUSH')
   push('PUSH'),
-  /// 引き
   @JsonValue('PULL')
   pull('PULL');
 

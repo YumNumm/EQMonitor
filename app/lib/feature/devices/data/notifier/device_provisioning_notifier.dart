@@ -20,7 +20,6 @@ enum DeviceProvisioningStatus { required, notRequired }
 
 @Riverpod(keepAlive: true)
 class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
-  static final provisionMutation = Mutation<void>();
 
   late final _retryController = RetryController();
   RetryControllerState get retryState => _retryController.state;
@@ -42,6 +41,8 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
     return DeviceProvisioningStatus.notRequired;
   }
 
+
+  static final provisionMutation = Mutation<void>();
   Future<void> provision() async {
     final repo = ref.read(deviceProvisioningRepositoryProvider);
     final deviceRepo = await ref.read(deviceRepositoryProvider.future);

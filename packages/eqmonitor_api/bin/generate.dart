@@ -1069,39 +1069,11 @@ void _patchConstPropertiesToTyped(File openapiFile) {
         continue;
       }
 
-      // anyOf / oneOf 内の const メンバーを変換
-      for (final unionKey in ['anyOf', 'oneOf']) {
-        final members = prop[unionKey];
-        if (members is! List) {
-          continue;
-        }
-
-        // 全メンバーが const であれば enum に変換
-        final enumResult = _tryConvertToEnum(prop, unionKey, members);
-        if (enumResult != null) {
-          props[key] = enumResult;
-          patchCount++;
-          continue;
-        }
-
-        // const メンバーを個別に型付きに変換
-        for (var i = 0; i < members.length; i++) {
-          final m = members[i];
-          if (m is Map<String, Object?> && m.containsKey('const')) {
-            final replaced = _constToTyped(m);
-            if (replaced != null) {
-              members[i] = replaced;
-              patchCount++;
-            }
-          }
-        }
-
-        // 変換後に全メンバーが同じ type を持つ場合、anyOf を単一型に畳む。
-        final collapsed = _collapseUniformAnyOf(prop, unionKey, members);
-        if (collapsed != null) {
-          props[key] = collapsed;
-          patchCount++;
-        }
+      final unionPatched = _patchUnionOnMap(prop);
+      if (unionPatched != null) {
+        props[key] = unionPatched;
+        patchCount++;
+        continue;
       }
 
       // プロパティ直下の const を変換（nullable を除去）
@@ -1119,8 +1091,21 @@ void _patchConstPropertiesToTyped(File openapiFile) {
   /// JSON ツリーを再帰的に走査し、`properties` を持つ全てのオブジェクトに
   /// const パッチを適用する。components.schemas だけでなく、paths 内の
   /// インラインスキーマやネストされたオブジェクト定義も処理する。
+  ///
+  /// `components.schemas.DeviceRegistrationType` のようにスキーマ自体が
+  /// `anyOf` を持つケースもここで畳む。
   void walkAndPatch(Object? node) {
     if (node is Map<String, Object?>) {
+      if (node.containsKey('anyOf') || node.containsKey('oneOf')) {
+        final unionPatched = _patchUnionOnMap(node);
+        if (unionPatched != null) {
+          node
+            ..clear()
+            ..addAll(unionPatched);
+          patchCount++;
+        }
+      }
+
       final props = node['properties'];
       if (props is Map<String, Object?>) {
         patchProperties(props);
@@ -1139,8 +1124,39 @@ void _patchConstPropertiesToTyped(File openapiFile) {
   if (patchCount > 0) {
     const encoder = JsonEncoder.withIndent('  ');
     openapiFile.writeAsStringSync(encoder.convert(openapi));
-    stdout.writeln('  $patchCount const プロパティを型付きに変換しました');
+    stdout.writeln('  $patchCount 件の OpenAPI union/const スキーマを型付きに変換しました');
   }
+}
+
+/// `anyOf` / `oneOf` union を swagger_parser が解釈できる単一スキーマに変換する。
+Map<String, Object?>? _patchUnionOnMap(Map<String, Object?> target) {
+  for (final unionKey in ['anyOf', 'oneOf']) {
+    final members = target[unionKey];
+    if (members is! List) {
+      continue;
+    }
+
+    // 全メンバーが const であれば enum に変換
+    final enumResult = _tryConvertToEnum(target, unionKey, members);
+    if (enumResult != null) {
+      return enumResult;
+    }
+
+    // const メンバーを個別に型付きに変換
+    for (var i = 0; i < members.length; i++) {
+      final m = members[i];
+      if (m is Map<String, Object?> && m.containsKey('const')) {
+        final replaced = _constToTyped(m);
+        if (replaced != null) {
+          members[i] = replaced;
+        }
+      }
+    }
+
+    // 変換後に全メンバーが同じ type を持つ場合、anyOf を単一型に畳む。
+    return _collapseUniformAnyOf(target, unionKey, members);
+  }
+  return null;
 }
 
 /// `anyOf` / `oneOf` の全非 null メンバーが文字列 `const` である場合に、
@@ -1267,6 +1283,7 @@ Map<String, Object?>? _collapseUniformAnyOf(
   final firstMember = typedMembers.first;
   for (final subKey in [
     'type',
+    'enum',
     'items',
     'format',
     'pattern',

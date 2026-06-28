@@ -17,7 +17,8 @@ abstract class DeviceMeResponse with _$DeviceMeResponse {
     required String id,
     required DeviceType type,
     required DeviceLocale locale,
-    required DeviceRegistrationType registrationType,
+    @JsonKey(includeIfNull: true)
+    required DeviceRegistrationType? registrationType,
     @JsonKey(includeIfNull: true)
     required String? userId,
     required DateTime createdAt,

@@ -66,7 +66,7 @@ _KyoshinObservationPoint _$KyoshinObservationPointFromJson(
                 v as Map<String, dynamic>,
               ),
       ),
-      arv400: $checkedConvert('arv400', (v) => (v as num?)?.toDouble()),
+      arv400: $checkedConvert('arv_400', (v) => (v as num?)?.toDouble()),
     );
     return val;
   },
@@ -75,6 +75,7 @@ _KyoshinObservationPoint _$KyoshinObservationPointFromJson(
     'prefectureCode': 'prefecture_code',
     'regionCode': 'region_code',
     'isSuspended': 'is_suspended',
+    'arv400': 'arv_400',
   },
 );
 
@@ -90,13 +91,13 @@ Map<String, dynamic> _$KyoshinObservationPointToJson(
   'is_suspended': instance.isSuspended,
   'location': instance.location,
   'point': instance.point,
-  'arv400': instance.arv400,
+  'arv_400': instance.arv400,
 };
 
 const _$KyoshinObservationPointTypeEnumMap = {
-  KyoshinObservationPointType.kNet: 'k_net',
-  KyoshinObservationPointType.kikNet: 'kik_net',
-  KyoshinObservationPointType.unknown: 'unknown',
+  KyoshinObservationPointType.kNet: 'K_NET',
+  KyoshinObservationPointType.kikNet: 'KIK_NET',
+  KyoshinObservationPointType.unknown: 'UNKNOWN',
 };
 
 _KyoshinObservationPointMapPoint _$KyoshinObservationPointMapPointFromJson(

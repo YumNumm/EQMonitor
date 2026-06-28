@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DeviceMeResponse {
 
- String get id; DeviceType get type; DeviceLocale get locale; DeviceRegistrationType get registrationType;@JsonKey(includeIfNull: true) String? get userId; DateTime get createdAt; DateTime get updatedAt;
+ String get id; DeviceType get type; DeviceLocale get locale;@JsonKey(includeIfNull: true) DeviceRegistrationType? get registrationType;@JsonKey(includeIfNull: true) String? get userId; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of DeviceMeResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $DeviceMeResponseCopyWith<$Res>  {
   factory $DeviceMeResponseCopyWith(DeviceMeResponse value, $Res Function(DeviceMeResponse) _then) = _$DeviceMeResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, DeviceType type, DeviceLocale locale, DeviceRegistrationType registrationType,@JsonKey(includeIfNull: true) String? userId, DateTime createdAt, DateTime updatedAt
+ String id, DeviceType type, DeviceLocale locale,@JsonKey(includeIfNull: true) DeviceRegistrationType? registrationType,@JsonKey(includeIfNull: true) String? userId, DateTime createdAt, DateTime updatedAt
 });
 
 
-$DeviceRegistrationTypeCopyWith<$Res> get registrationType;
+
 
 }
 /// @nodoc
@@ -65,28 +65,19 @@ class _$DeviceMeResponseCopyWithImpl<$Res>
 
 /// Create a copy of DeviceMeResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? locale = null,Object? registrationType = null,Object? userId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? locale = null,Object? registrationType = freezed,Object? userId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as DeviceType,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as DeviceLocale,registrationType: null == registrationType ? _self.registrationType : registrationType // ignore: cast_nullable_to_non_nullable
-as DeviceRegistrationType,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as DeviceLocale,registrationType: freezed == registrationType ? _self.registrationType : registrationType // ignore: cast_nullable_to_non_nullable
+as DeviceRegistrationType?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
-/// Create a copy of DeviceMeResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$DeviceRegistrationTypeCopyWith<$Res> get registrationType {
-  
-  return $DeviceRegistrationTypeCopyWith<$Res>(_self.registrationType, (value) {
-    return _then(_self.copyWith(registrationType: value));
-  });
-}
+
 }
 
 
@@ -168,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DeviceType type,  DeviceLocale locale,  DeviceRegistrationType registrationType, @JsonKey(includeIfNull: true)  String? userId,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(includeIfNull: true)  DeviceRegistrationType? registrationType, @JsonKey(includeIfNull: true)  String? userId,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeviceMeResponse() when $default != null:
 return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.userId,_that.createdAt,_that.updatedAt);case _:
@@ -189,7 +180,7 @@ return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DeviceType type,  DeviceLocale locale,  DeviceRegistrationType registrationType, @JsonKey(includeIfNull: true)  String? userId,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(includeIfNull: true)  DeviceRegistrationType? registrationType, @JsonKey(includeIfNull: true)  String? userId,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _DeviceMeResponse():
 return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.userId,_that.createdAt,_that.updatedAt);case _:
@@ -209,7 +200,7 @@ return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DeviceType type,  DeviceLocale locale,  DeviceRegistrationType registrationType, @JsonKey(includeIfNull: true)  String? userId,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(includeIfNull: true)  DeviceRegistrationType? registrationType, @JsonKey(includeIfNull: true)  String? userId,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _DeviceMeResponse() when $default != null:
 return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.userId,_that.createdAt,_that.updatedAt);case _:
@@ -224,13 +215,13 @@ return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.us
 @JsonSerializable()
 
 class _DeviceMeResponse implements DeviceMeResponse {
-  const _DeviceMeResponse({required this.id, required this.type, required this.locale, required this.registrationType, @JsonKey(includeIfNull: true) required this.userId, required this.createdAt, required this.updatedAt});
+  const _DeviceMeResponse({required this.id, required this.type, required this.locale, @JsonKey(includeIfNull: true) required this.registrationType, @JsonKey(includeIfNull: true) required this.userId, required this.createdAt, required this.updatedAt});
   factory _DeviceMeResponse.fromJson(Map<String, dynamic> json) => _$DeviceMeResponseFromJson(json);
 
 @override final  String id;
 @override final  DeviceType type;
 @override final  DeviceLocale locale;
-@override final  DeviceRegistrationType registrationType;
+@override@JsonKey(includeIfNull: true) final  DeviceRegistrationType? registrationType;
 @override@JsonKey(includeIfNull: true) final  String? userId;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
@@ -268,11 +259,11 @@ abstract mixin class _$DeviceMeResponseCopyWith<$Res> implements $DeviceMeRespon
   factory _$DeviceMeResponseCopyWith(_DeviceMeResponse value, $Res Function(_DeviceMeResponse) _then) = __$DeviceMeResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, DeviceType type, DeviceLocale locale, DeviceRegistrationType registrationType,@JsonKey(includeIfNull: true) String? userId, DateTime createdAt, DateTime updatedAt
+ String id, DeviceType type, DeviceLocale locale,@JsonKey(includeIfNull: true) DeviceRegistrationType? registrationType,@JsonKey(includeIfNull: true) String? userId, DateTime createdAt, DateTime updatedAt
 });
 
 
-@override $DeviceRegistrationTypeCopyWith<$Res> get registrationType;
+
 
 }
 /// @nodoc
@@ -285,29 +276,20 @@ class __$DeviceMeResponseCopyWithImpl<$Res>
 
 /// Create a copy of DeviceMeResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? locale = null,Object? registrationType = null,Object? userId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? locale = null,Object? registrationType = freezed,Object? userId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_DeviceMeResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as DeviceType,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as DeviceLocale,registrationType: null == registrationType ? _self.registrationType : registrationType // ignore: cast_nullable_to_non_nullable
-as DeviceRegistrationType,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as DeviceLocale,registrationType: freezed == registrationType ? _self.registrationType : registrationType // ignore: cast_nullable_to_non_nullable
+as DeviceRegistrationType?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
 
-/// Create a copy of DeviceMeResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$DeviceRegistrationTypeCopyWith<$Res> get registrationType {
-  
-  return $DeviceRegistrationTypeCopyWith<$Res>(_self.registrationType, (value) {
-    return _then(_self.copyWith(registrationType: value));
-  });
-}
+
 }
 
 // dart format on

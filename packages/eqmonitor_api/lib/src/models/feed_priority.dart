@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+/// const: "CRITICAL" | const: "HIGH" | const: "NORMAL" | const: "LOW"
 @JsonEnum()
 enum FeedPriority {
   @JsonValue('CRITICAL')

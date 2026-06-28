@@ -4,15 +4,13 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+/// 微弱 | 観測中 | 重要
 @JsonEnum()
 enum ObservationMaxHeightCondition {
-  /// 微弱
   @JsonValue('MINOR')
   minor('MINOR'),
-  /// 観測中
   @JsonValue('OBSERVING')
   observing('OBSERVING'),
-  /// 重要
   @JsonValue('IMPORTANT')
   important('IMPORTANT');
 

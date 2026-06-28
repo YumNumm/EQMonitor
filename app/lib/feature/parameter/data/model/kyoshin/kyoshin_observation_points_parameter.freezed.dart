@@ -305,7 +305,7 @@ $ParameterMetadataCopyWith<$Res> get metadata {
 /// @nodoc
 mixin _$KyoshinObservationPoint {
 
- KyoshinObservationPointType get type; String get sourceType; String get name; String get code; String? get prefectureCode; String? get regionCode; bool get isSuspended; LatLng get location; KyoshinObservationPointMapPoint? get point; double? get arv400;
+ KyoshinObservationPointType get type;@JsonKey(name: 'source_type') String get sourceType; String get name; String get code;@JsonKey(name: 'prefecture_code') String? get prefectureCode;@JsonKey(name: 'region_code') String? get regionCode;@JsonKey(name: 'is_suspended') bool get isSuspended; LatLng get location; KyoshinObservationPointMapPoint? get point;@JsonKey(name: 'arv_400') double? get arv400;
 /// Create a copy of KyoshinObservationPoint
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -338,7 +338,7 @@ abstract mixin class $KyoshinObservationPointCopyWith<$Res>  {
   factory $KyoshinObservationPointCopyWith(KyoshinObservationPoint value, $Res Function(KyoshinObservationPoint) _then) = _$KyoshinObservationPointCopyWithImpl;
 @useResult
 $Res call({
- KyoshinObservationPointType type, String sourceType, String name, String code, String? prefectureCode, String? regionCode, bool isSuspended, LatLng location, KyoshinObservationPointMapPoint? point, double? arv400
+ KyoshinObservationPointType type,@JsonKey(name: 'source_type') String sourceType, String name, String code,@JsonKey(name: 'prefecture_code') String? prefectureCode,@JsonKey(name: 'region_code') String? regionCode,@JsonKey(name: 'is_suspended') bool isSuspended, LatLng location, KyoshinObservationPointMapPoint? point,@JsonKey(name: 'arv_400') double? arv400
 });
 
 
@@ -464,7 +464,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( KyoshinObservationPointType type,  String sourceType,  String name,  String code,  String? prefectureCode,  String? regionCode,  bool isSuspended,  LatLng location,  KyoshinObservationPointMapPoint? point,  double? arv400)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( KyoshinObservationPointType type, @JsonKey(name: 'source_type')  String sourceType,  String name,  String code, @JsonKey(name: 'prefecture_code')  String? prefectureCode, @JsonKey(name: 'region_code')  String? regionCode, @JsonKey(name: 'is_suspended')  bool isSuspended,  LatLng location,  KyoshinObservationPointMapPoint? point, @JsonKey(name: 'arv_400')  double? arv400)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _KyoshinObservationPoint() when $default != null:
 return $default(_that.type,_that.sourceType,_that.name,_that.code,_that.prefectureCode,_that.regionCode,_that.isSuspended,_that.location,_that.point,_that.arv400);case _:
@@ -485,7 +485,7 @@ return $default(_that.type,_that.sourceType,_that.name,_that.code,_that.prefectu
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( KyoshinObservationPointType type,  String sourceType,  String name,  String code,  String? prefectureCode,  String? regionCode,  bool isSuspended,  LatLng location,  KyoshinObservationPointMapPoint? point,  double? arv400)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( KyoshinObservationPointType type, @JsonKey(name: 'source_type')  String sourceType,  String name,  String code, @JsonKey(name: 'prefecture_code')  String? prefectureCode, @JsonKey(name: 'region_code')  String? regionCode, @JsonKey(name: 'is_suspended')  bool isSuspended,  LatLng location,  KyoshinObservationPointMapPoint? point, @JsonKey(name: 'arv_400')  double? arv400)  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinObservationPoint():
 return $default(_that.type,_that.sourceType,_that.name,_that.code,_that.prefectureCode,_that.regionCode,_that.isSuspended,_that.location,_that.point,_that.arv400);case _:
@@ -505,7 +505,7 @@ return $default(_that.type,_that.sourceType,_that.name,_that.code,_that.prefectu
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( KyoshinObservationPointType type,  String sourceType,  String name,  String code,  String? prefectureCode,  String? regionCode,  bool isSuspended,  LatLng location,  KyoshinObservationPointMapPoint? point,  double? arv400)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( KyoshinObservationPointType type, @JsonKey(name: 'source_type')  String sourceType,  String name,  String code, @JsonKey(name: 'prefecture_code')  String? prefectureCode, @JsonKey(name: 'region_code')  String? regionCode, @JsonKey(name: 'is_suspended')  bool isSuspended,  LatLng location,  KyoshinObservationPointMapPoint? point, @JsonKey(name: 'arv_400')  double? arv400)?  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinObservationPoint() when $default != null:
 return $default(_that.type,_that.sourceType,_that.name,_that.code,_that.prefectureCode,_that.regionCode,_that.isSuspended,_that.location,_that.point,_that.arv400);case _:
@@ -517,22 +517,22 @@ return $default(_that.type,_that.sourceType,_that.name,_that.code,_that.prefectu
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(fieldRename: .snake)
 class _KyoshinObservationPoint implements KyoshinObservationPoint {
-  const _KyoshinObservationPoint({required this.type, required this.sourceType, required this.name, required this.code, required this.prefectureCode, required this.regionCode, required this.isSuspended, required this.location, required this.point, required this.arv400});
+  const _KyoshinObservationPoint({required this.type, @JsonKey(name: 'source_type') required this.sourceType, required this.name, required this.code, @JsonKey(name: 'prefecture_code') required this.prefectureCode, @JsonKey(name: 'region_code') required this.regionCode, @JsonKey(name: 'is_suspended') required this.isSuspended, required this.location, required this.point, @JsonKey(name: 'arv_400') required this.arv400});
   factory _KyoshinObservationPoint.fromJson(Map<String, dynamic> json) => _$KyoshinObservationPointFromJson(json);
 
 @override final  KyoshinObservationPointType type;
-@override final  String sourceType;
+@override@JsonKey(name: 'source_type') final  String sourceType;
 @override final  String name;
 @override final  String code;
-@override final  String? prefectureCode;
-@override final  String? regionCode;
-@override final  bool isSuspended;
+@override@JsonKey(name: 'prefecture_code') final  String? prefectureCode;
+@override@JsonKey(name: 'region_code') final  String? regionCode;
+@override@JsonKey(name: 'is_suspended') final  bool isSuspended;
 @override final  LatLng location;
 @override final  KyoshinObservationPointMapPoint? point;
-@override final  double? arv400;
+@override@JsonKey(name: 'arv_400') final  double? arv400;
 
 /// Create a copy of KyoshinObservationPoint
 /// with the given fields replaced by the non-null parameter values.
@@ -567,7 +567,7 @@ abstract mixin class _$KyoshinObservationPointCopyWith<$Res> implements $Kyoshin
   factory _$KyoshinObservationPointCopyWith(_KyoshinObservationPoint value, $Res Function(_KyoshinObservationPoint) _then) = __$KyoshinObservationPointCopyWithImpl;
 @override @useResult
 $Res call({
- KyoshinObservationPointType type, String sourceType, String name, String code, String? prefectureCode, String? regionCode, bool isSuspended, LatLng location, KyoshinObservationPointMapPoint? point, double? arv400
+ KyoshinObservationPointType type,@JsonKey(name: 'source_type') String sourceType, String name, String code,@JsonKey(name: 'prefecture_code') String? prefectureCode,@JsonKey(name: 'region_code') String? regionCode,@JsonKey(name: 'is_suspended') bool isSuspended, LatLng location, KyoshinObservationPointMapPoint? point,@JsonKey(name: 'arv_400') double? arv400
 });
 
 

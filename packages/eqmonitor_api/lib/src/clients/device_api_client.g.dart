@@ -155,7 +155,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<void>> patchV2DeviceMeApnsKind({
-    required String kind,
+    required Kind kind,
     required V2DeviceMeApnsKindRequestBody body,
   }) async {
     final _extra = <String, dynamic>{};
@@ -167,7 +167,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/me/apns/${kind}',
+            '/v2/device/me/apns/${kind.toJson()}',
             queryParameters: queryParameters,
             data: _data,
           )

@@ -271,6 +271,7 @@ export 'models/get_v2_subscription_me_response_union.dart';
 export 'models/admin_replay_file_detail_response_item.dart';
 export 'models/event_type.dart';
 export 'models/environment.dart';
+export 'models/kind.dart';
 export 'models/priority.dart';
 export 'models/status.dart';
 export 'models/is_canceled.dart';

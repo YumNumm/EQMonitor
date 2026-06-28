@@ -1,0 +1,190 @@
+part of '../page/onboarding_page.dart';
+
+class _OnboardingBottomBar extends StatelessWidget {
+  const _OnboardingBottomBar({
+    required this.currentPage,
+    required this.totalPages,
+    required this.buttonLabel,
+    required this.isNextEnabled,
+    required this.isBackEnabled,
+    required this.onNext,
+    required this.onPrevious,
+  });
+
+  final int currentPage;
+  final int totalPages;
+  final String buttonLabel;
+  final bool isNextEnabled;
+  final bool isBackEnabled;
+  final Future<void> Function() onNext;
+  final Future<void> Function()? onPrevious;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final designSystem = theme.designSystemThemeExtension;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        designSystem.spacing.lg,
+        designSystem.spacing.xl,
+        designSystem.spacing.lg,
+        designSystem.spacing.xxl,
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              totalPages,
+              (index) => _PageDot(
+                isActive: index == currentPage,
+                color: designSystem.palette.brandPrimary,
+                inactiveColor: designSystem.color.outlineSoft,
+              ),
+            ),
+          ),
+          SizedBox(height: designSystem.spacing.xl),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            spacing: designSystem.spacing.sm,
+            children: [
+              AnimatedSize(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOutCubic,
+                alignment: Alignment.centerLeft,
+                child: (onPrevious != null)
+                    ? IconButton.filledTonal(
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                        ),
+                        onPressed: isBackEnabled ? onPrevious : null,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: theme.colorScheme.secondaryContainer,
+                          foregroundColor:
+                              theme.colorScheme.onSecondaryContainer,
+                          shape: RoundedSuperellipseBorder(
+                            borderRadius: BorderRadius.circular(
+                              designSystem.shape.button,
+                            ),
+                          ),
+                          padding: EdgeInsets.all(designSystem.spacing.md),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+              Expanded(
+                child: FilledButton(
+                  onPressed: isNextEnabled ? onNext : null,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: designSystem.palette.brandPrimary,
+                    foregroundColor: designSystem.textColor.inverse,
+                    shape: RoundedSuperellipseBorder(
+                      borderRadius: BorderRadius.circular(
+                        designSystem.shape.button,
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      vertical: designSystem.spacing.md,
+                    ),
+                  ),
+                  child: Text(
+                    buttonLabel,
+                    style: designSystem.typography.titleSmall.copyWith(
+                      color: isNextEnabled
+                          ? designSystem.textColor.inverse
+                          : designSystem.textColor.secondary,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+            alignment: Alignment.bottomCenter,
+            child: (currentPage == 0)
+                ? Padding(
+                    padding:
+                        EdgeInsets.symmetric(
+                          horizontal: designSystem.spacing.md,
+                        ) +
+                        EdgeInsets.only(top: designSystem.spacing.md),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          const TextSpan(text: '次へ をタップすることで '),
+                          TextSpan(
+                            text: '利用規約',
+                            style: designSystem.typography.bodySmall.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.6,
+                              ),
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => const TermOfServiceRoute(
+                                $extra: null,
+                              ).push<void>(context),
+                          ),
+                          const TextSpan(text: ' と '),
+                          TextSpan(
+                            text: 'プライバシーポリシー',
+                            style: designSystem.typography.bodySmall.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.6,
+                              ),
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => const PrivacyPolicyRoute(
+                                $extra: null,
+                              ).push<void>(context),
+                          ),
+                          const TextSpan(text: ' に同意したとみなされます'),
+                        ],
+                        style: designSystem.typography.bodySmall.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : const SizedBox(
+                    width: double.infinity,
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PageDot extends StatelessWidget {
+  const _PageDot({
+    required this.isActive,
+    required this.color,
+    required this.inactiveColor,
+  });
+
+  final bool isActive;
+  final Color color;
+  final Color inactiveColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOutCubic,
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      width: isActive ? 24 : 8,
+      height: 8,
+      decoration: BoxDecoration(
+        color: isActive ? color : inactiveColor,
+        borderRadius: BorderRadius.circular(999),
+      ),
+    );
+  }
+}

@@ -4,12 +4,11 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+/// 新しく追加された場合 | 更新された場合
 @JsonEnum()
 enum Revise {
-  /// 新しく追加された場合
   @JsonValue('ADDITION')
   addition('ADDITION'),
-  /// 更新された場合
   @JsonValue('UPDATE')
   update('UPDATE');
 

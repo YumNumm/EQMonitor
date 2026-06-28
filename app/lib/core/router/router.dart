@@ -95,12 +95,22 @@ GoRouter goRouter(Ref ref) => GoRouter(
       return null;
     }
 
-    final isCompleted = ref.read(onboardingCompletedProvider);
-    if (!isCompleted && state.matchedLocation != '/onboarding') {
-      return '/onboarding';
+    final isOnboardingCompleted = ref.read(onboardingCompletedProvider);
+    if (!isOnboardingCompleted) {
+      if ([
+            const OnboardingRoute().location,
+            const TermOfServiceRoute($extra: null).location,
+            const PrivacyPolicyRoute($extra: null).location,
+            const LicenseRoute().location,
+          ].contains(state.matchedLocation) ||
+          state.matchedLocation.startsWith(const DebugRoute().location)) {
+        return null;
+      } else {
+        return const OnboardingRoute().location;
+      }
     }
 
-    if (isCompleted && ref.read(buildConfigProvider).isBetaTesting) {
+    if (isOnboardingCompleted && ref.read(buildConfigProvider).isBetaTesting) {
       final betaAgreed = ref.read(betaTestingAgreedProvider);
       if (!betaAgreed && state.matchedLocation != '/beta-warning') {
         return '/beta-warning';

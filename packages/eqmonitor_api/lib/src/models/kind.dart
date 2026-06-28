@@ -4,15 +4,15 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// 巨大 | 高い
+/// const: "NOTIFICATION" | const: "LIVE_ACTIVITY_START"
 @JsonEnum()
-enum QualitativeHeight {
-  @JsonValue('ENORMOUS')
-  enormous('ENORMOUS'),
-  @JsonValue('HIGH')
-  high('HIGH');
+enum Kind {
+  @JsonValue('NOTIFICATION')
+  notification('NOTIFICATION'),
+  @JsonValue('LIVE_ACTIVITY_START')
+  liveActivityStart('LIVE_ACTIVITY_START');
 
-  const QualitativeHeight(this.json);
+  const Kind(this.json);
 
   final String? json;
   String toJson() {

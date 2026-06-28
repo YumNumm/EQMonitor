@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+/// const: "ONE_HOUR_EARTHQUAKE_COUNT" | const: "ACCUMULATIVE_EARTHQUAKE_COUNT" | const: "EARTHQUAKE_COUNT"
 @JsonEnum()
 enum FeedTelegramType {
   @JsonValue('ONE_HOUR_EARTHQUAKE_COUNT')

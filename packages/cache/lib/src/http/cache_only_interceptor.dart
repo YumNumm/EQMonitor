@@ -16,6 +16,9 @@ class CacheOnlyInterceptor extends Interceptor {
     final cacheMiss = DioException(
       requestOptions: options,
       error: const CacheMissException(),
+      type: .cancel,
+      message: 'Cacheミスのため、リクエストをキャンセルします',
+      stackTrace: StackTrace.current,
     );
     if (options.method.toUpperCase() != 'GET') {
       handler.reject(cacheMiss);

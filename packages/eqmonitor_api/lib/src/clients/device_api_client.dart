@@ -15,6 +15,7 @@ import '../models/earthquake_settings_request.dart';
 import '../models/earthquake_settings_response.dart';
 import '../models/eew_settings_request.dart';
 import '../models/eew_settings_response.dart';
+import '../models/kind.dart';
 import '../models/live_activity_token_request.dart';
 import '../models/live_activity_token_response.dart';
 import '../models/notification_settings_request.dart';
@@ -66,7 +67,7 @@ abstract class DeviceApiClient {
   /// APNsトークンを更新
   @PATCH(DeviceApiClientUrls.patchV2DeviceMeApnsKind)
   Future<HttpResponse<void>> patchV2DeviceMeApnsKind({
-    @Path('kind') required String kind,
+    @Path('kind') required Kind kind,
     @Body() required V2DeviceMeApnsKindRequestBody body,
   });
 
