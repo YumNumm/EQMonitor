@@ -1,11 +1,15 @@
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-@JsonEnum(fieldRename: .snake)
+@JsonEnum()
 enum ParameterType {
+  @JsonValue('JMA_CODE_TABLE')
   jmaCodeTable,
+  @JsonValue('KYOSHIN_OBSERVATION_POINTS')
   kyoshinObservationPoints,
+  @JsonValue('EARTHQUAKE_STATIONS')
   earthquakeStations,
+  @JsonValue('TSUNAMI_STATIONS')
   tsunamiStations,
 }
 
@@ -18,9 +22,9 @@ extension ParameterTypeApiExtension on ParameterType {
   };
 
   api.ParameterType get toApiParameterType => switch (this) {
-    .jmaCodeTable => api.ParameterType.jmaCodeTable,
-    .kyoshinObservationPoints => api.ParameterType.kyoshinObservationPoints,
-    .earthquakeStations => api.ParameterType.earthquakeStations,
-    .tsunamiStations => api.ParameterType.tsunamiStations,
+    .jmaCodeTable => .jmaCodeTable,
+    .kyoshinObservationPoints => .kyoshinObservationPoints,
+    .earthquakeStations => .earthquakeStations,
+    .tsunamiStations => .tsunamiStations,
   };
 }

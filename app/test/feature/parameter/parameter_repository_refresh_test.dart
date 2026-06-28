@@ -124,20 +124,12 @@ Map<String, Object?> _parameterJson(String type) => switch (type) {
   _ => throw StateError('Unexpected parameter type: $type'),
 };
 
-String _apiTypeToSnake(String apiType) => switch (apiType) {
-  'JMA_CODE_TABLE' => 'jma_code_table',
-  'KYOSHIN_OBSERVATION_POINTS' => 'kyoshin_observation_points',
-  'EARTHQUAKE_STATIONS' => 'earthquake_stations',
-  'TSUNAMI_STATIONS' => 'tsunami_stations',
-  _ => throw StateError('Unexpected API type: $apiType'),
-};
-
 Map<String, Object?> _metadataJson(String apiType) => {
-  'type': _apiTypeToSnake(apiType),
+  'type': apiType,
   'schema_version': 1,
   'source_version': 'test',
   'source_updated_at': null,
   'generated_at': '2026-06-04T00:00:00Z',
   'source_urls': <String>[],
-  'sha256': _apiTypeToSnake(apiType),
+  'sha256': apiType,
 };

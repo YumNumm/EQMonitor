@@ -42,26 +42,7 @@ final class ParameterRepository {
 
   Future<ParameterSet> fetch(api.ApiClient client) async {
     final manifestResponse = await client.parameters.getV2ParametersManifest();
-    // Convert the API manifest (UPPER_CASE type values) to the app's local
-    // manifest format (snake_case type values) so the app model can parse it.
-    final appManifest = ParameterManifest(
-      parameters: [
-        for (final item in manifestResponse.data.parameters)
-          ParameterManifestItem(
-            type: ParameterType.values.firstWhere(
-              (t) => t.toApiParameterType == item.type,
-            ),
-            schemaVersion: (item.schemaVersion as num).toInt(),
-            sourceVersion: item.sourceVersion,
-            sourceUpdatedAt: item.sourceUpdatedAt,
-            sourceUrls: item.sourceUrls,
-            sha256: item.sha256,
-            sizeBytes: item.sizeBytes.toInt(),
-            url: item.url,
-          ),
-      ],
-    );
-    final manifestJson = jsonEncode(appManifest.toJson());
+    final manifestJson = jsonEncode(manifestResponse.data.toJson());
     final parameterJsonByType = <ParameterType, String>{};
 
     for (final type in ParameterType.values) {

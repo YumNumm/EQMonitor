@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "type": "earthquake_stations",
+    "type": "EARTHQUAKE_STATIONS",
     "schema_version": 1,
     "source_version": "20260312",
     "source_updated_at": "2026-03-12T12:00:00+09:00",

@@ -1,7 +1,7 @@
 {
   "parameters": [
     {
-      "type": "jma_code_table",
+      "type": "JMA_CODE_TABLE",
       "schema_version": 1,
       "source_version": "20260430-69617bc33dd66589f4ff63e82e98d6f0d2283071b4905903b450784e3adfaf5beb66e3588e71252da6e0f4a6a4faada3",
       "source_updated_at": null,
@@ -16,7 +16,7 @@
       "url": "/v2/parameters/jma_code_table"
     },
     {
-      "type": "earthquake_stations",
+      "type": "EARTHQUAKE_STATIONS",
       "schema_version": 1,
       "source_version": "20260312",
       "source_updated_at": "2026-03-12T12:00:00+09:00",
@@ -30,7 +30,7 @@
       "url": "/v2/parameters/earthquake_stations"
     },
     {
-      "type": "tsunami_stations",
+      "type": "TSUNAMI_STATIONS",
       "schema_version": 1,
       "source_version": "20260312",
       "source_updated_at": "2026-03-12T12:00:00+09:00",
@@ -44,7 +44,7 @@
       "url": "/v2/parameters/tsunami_stations"
     },
     {
-      "type": "kyoshin_observation_points",
+      "type": "KYOSHIN_OBSERVATION_POINTS",
       "schema_version": 1,
       "source_version": "v2026.05.03",
       "source_updated_at": "2026-05-03T06:46:46Z",
