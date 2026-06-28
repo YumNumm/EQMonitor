@@ -1,0 +1,12 @@
+version = 1
+name = "EQMonitor"
+
+[setup]
+script = ""
+
+[setup.darwin]
+script = '''
+mise trust -y "$PWD/mise.toml"
+mise install
+mise exec -- dart pub get
+'''
