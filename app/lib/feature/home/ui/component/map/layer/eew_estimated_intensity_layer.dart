@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/estimated_intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
@@ -23,6 +24,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
 
     final isInitialized = useRef(false);
     final latestRegionMaxIntensities = useRef<List<EewForecastRegionInfo>>([]);
+    final enqueue = useMapOperationQueue();
 
     // regionごとの最大震度を取ったもの
     final regionMaxIntensities = useMemoized(() {
@@ -46,48 +48,56 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(() async {
-          await JmaIntensity.values
-              .where((intensity) => intensity != JmaIntensity.unknown)
-              .map((intensity) {
-                final layerId = _getLayerId(intensity);
-                final color = colorModel.fromJmaIntensity(intensity).background;
+        unawaited(
+          enqueue(() async {
+            await JmaIntensity.values
+                .where((intensity) => intensity != JmaIntensity.unknown)
+                .map((intensity) {
+                  final layerId = _getLayerId(intensity);
+                  final color = colorModel
+                      .fromJmaIntensity(intensity)
+                      .background;
 
-                final codes = regionMaxIntensities
-                    .where((r) => r.intensity == intensity)
-                    .map((r) => r.code)
-                    .toList();
+                  final codes = regionMaxIntensities
+                      .where((r) => r.intensity == intensity)
+                      .map((r) => r.code)
+                      .toList();
 
-                return styleController.addLayer(
-                  FillStyleLayer(
-                    id: layerId,
-                    sourceId: 'eqmonitor_map',
-                    sourceLayerId: 'areaForecastLocalEew',
-                    filter: buildEewAreaCodeFilter(codes),
-                    paint: {
-                      'fill-color': color.toHexString(),
-                      'fill-opacity': 0.7,
-                    },
-                  ),
-                );
-              })
-              .wait;
+                  return styleController.addLayer(
+                    FillStyleLayer(
+                      id: layerId,
+                      sourceId: 'eqmonitor_map',
+                      sourceLayerId: 'areaForecastLocalEew',
+                      filter: buildEewAreaCodeFilter(codes),
+                      paint: {
+                        'fill-color': color.toHexString(),
+                        'fill-opacity': 0.7,
+                      },
+                    ),
+                  );
+                })
+                .wait;
 
-          isInitialized.value = true;
-          await _updateEewEstimatedIntensityFilters(
-            styleController: styleController,
-            regionMaxIntensities: latestRegionMaxIntensities.value,
+            isInitialized.value = true;
+            await _updateEewEstimatedIntensityFilters(
+              styleController: styleController,
+              regionMaxIntensities: latestRegionMaxIntensities.value,
+            );
+          }),
+        );
+
+        return () {
+          unawaited(
+            enqueue(() async {
+              final futures = JmaIntensity.values
+                  .where((intensity) => intensity != JmaIntensity.unknown)
+                  .map(
+                    (intensity) =>
+                        styleController.removeLayer(_getLayerId(intensity)),
+                  );
+              await Future.wait(futures);
+            }),
           );
-        }());
-
-        return () async {
-          final futures = JmaIntensity.values
-              .where((intensity) => intensity != JmaIntensity.unknown)
-              .map(
-                (intensity) =>
-                    styleController.removeLayer(_getLayerId(intensity)),
-              );
-          await Future.wait(futures);
         };
       },
       [styleController, colorModel],
