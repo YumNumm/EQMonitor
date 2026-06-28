@@ -14,6 +14,7 @@ List<RouteBase> get $appRoutes => [
   $betaTestingWarningRoute,
   $earthquakeHistoryRoute,
   $eewHistoryRoute,
+  $intensityHistoryRoute,
   $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
   $shakeDetectionHistoryRoute,
@@ -145,6 +146,43 @@ mixin $EewHistoryRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/eew-history');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $intensityHistoryRoute => GoRouteData.$route(
+  path: '/intensity-history',
+  factory: $IntensityHistoryRoute._fromState,
+);
+
+mixin $IntensityHistoryRoute on GoRouteData {
+  static IntensityHistoryRoute _fromState(GoRouterState state) =>
+      IntensityHistoryRoute(
+        prefectureCode: state.uri.queryParameters['prefecture-code'],
+        cityCode: state.uri.queryParameters['city-code'],
+      );
+
+  IntensityHistoryRoute get _self => this as IntensityHistoryRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/intensity-history',
+    queryParams: {
+      if (_self.prefectureCode != null) 'prefecture-code': _self.prefectureCode,
+      if (_self.cityCode != null) 'city-code': _self.cityCode,
+    },
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

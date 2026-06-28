@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/material.dart';
 
 /// 観測点タップ時のポップアップ
@@ -23,10 +26,13 @@ Future<void> showStationPopup(
 }
 
 /// 区域タップ時のポップアップ
+///
+/// [intensityHistoryRoute] を指定すると「この地域の最大震度履歴」ボタンを表示する。
 Future<void> showAreaPopup(
   BuildContext context, {
   required String areaName,
   required JmaIntensity? maxIntensity,
+  IntensityHistoryRoute? intensityHistoryRoute,
 }) {
   return showModalBottomSheet(
     context: context,
@@ -34,6 +40,7 @@ Future<void> showAreaPopup(
     builder: (context) => _AreaPopupBody(
       areaName: areaName,
       maxIntensity: maxIntensity,
+      intensityHistoryRoute: intensityHistoryRoute,
     ),
   );
 }
@@ -116,10 +123,12 @@ class _AreaPopupBody extends StatelessWidget {
   const _AreaPopupBody({
     required this.areaName,
     required this.maxIntensity,
+    this.intensityHistoryRoute,
   });
 
   final String areaName;
   final JmaIntensity? maxIntensity;
+  final IntensityHistoryRoute? intensityHistoryRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -166,6 +175,17 @@ class _AreaPopupBody extends StatelessWidget {
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
+            if (intensityHistoryRoute != null) ...[
+              const SizedBox(height: 8),
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  unawaited(intensityHistoryRoute!.push<void>(context));
+                },
+                icon: const Icon(Icons.bar_chart_outlined),
+                label: const Text('この地域の最大震度履歴'),
+              ),
+            ],
           ],
         ),
       ),
