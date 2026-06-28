@@ -29,7 +29,13 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('ERROR!'), findsOneWidget);
+    expect(find.text('震度情報を取得できません'), findsOneWidget);
+    expect(find.text('詳細を見る'), findsOneWidget);
+
+    await tester.tap(find.text('詳細を見る'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('エラー詳細'), findsOneWidget);
     expect(find.textContaining('prefecture failed'), findsOneWidget);
   });
 
@@ -55,6 +61,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('ERROR!'), findsNothing);
+    expect(find.text('震度情報を取得できません'), findsNothing);
+    expect(find.text('詳細を見る'), findsNothing);
   });
 }

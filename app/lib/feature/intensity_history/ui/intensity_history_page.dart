@@ -87,6 +87,7 @@ class _MapContent extends HookConsumerWidget {
     final state = ref.watch(intensityHistoryControllerProvider);
     final notifier = ref.read(intensityHistoryControllerProvider.notifier);
     final isCityState = state is IntensityHistoryStateCity;
+    final canNavigateBack = Navigator.canPop(context);
 
     // ディープリンク初期化: 初回レンダリング後に実行
     useEffect(
@@ -160,98 +161,88 @@ class _MapContent extends HookConsumerWidget {
       styleString: styleString,
     );
 
-    return PopScope(
-      canPop: !isCityState,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop && isCityState) {
-          notifier.backToPrefecture();
-          _zoomToJapan(context);
-        }
-      },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            MapLibreMap(
-              options: mapOptions,
-              onEvent: (event) async {
-                if (event is MapEventClick) {
-                  final jmaMap = await ref.read(jmaMapProvider.future);
-                  if (!context.mounted) {
-                    return;
-                  }
-                  await _handleTap(
-                    context: context,
-                    ref: ref,
-                    event: event,
-                    jmaMap: jmaMap,
-                    state: state,
-                  );
+    return Scaffold(
+      body: Stack(
+        children: [
+          MapLibreMap(
+            options: mapOptions,
+            onEvent: (event) async {
+              if (event is MapEventClick) {
+                final jmaMap = await ref.read(jmaMapProvider.future);
+                if (!context.mounted) {
+                  return;
                 }
-              },
-              children: const [IntensityFillLayer()],
-            ),
+                await _handleTap(
+                  context: context,
+                  ref: ref,
+                  event: event,
+                  jmaMap: jmaMap,
+                  state: state,
+                );
+              }
+            },
+            children: const [IntensityFillLayer()],
+          ),
 
-            // フローティングパネル（上部中央）
-            const Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: SafeArea(
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: RegionFloatingPanel(),
-                  ),
+          // フローティングパネル（上部中央）
+          const Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: RegionFloatingPanel(),
                 ),
               ),
             ),
+          ),
 
-            // 凡例（右下）
-            const Positioned(
-              bottom: 8,
-              right: 8,
-              child: SafeArea(child: IntensityHistoryLegend()),
-            ),
+          // 凡例（右下）
+          const Positioned(
+            bottom: 8,
+            right: 8,
+            child: SafeArea(child: IntensityHistoryLegend()),
+          ),
 
-            if (!isCityState)
-              const Positioned(
-                top: 0,
-                left: 0,
-                child: IntensityHistoryNavigationBackButton(),
-              ),
+          const Positioned(
+            top: 0,
+            left: 0,
+            child: IntensityHistoryNavigationBackButton(),
+          ),
 
-            const IntensityHistoryErrorOverlay(),
+          const IntensityHistoryErrorOverlay(),
 
-            // 全国表示へ戻るボタン（左上、Lv2のときのみ表示）
-            if (isCityState)
-              Positioned(
-                top: 0,
-                left: 0,
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Card(
-                      elevation: 2,
-                      clipBehavior: Clip.hardEdge,
-                      child: InkWell(
-                        onTap: () {
-                          notifier.backToPrefecture();
-                          _zoomToJapan(context);
-                        },
-                        child: const Tooltip(
-                          message: '全国表示に戻る',
-                          child: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Icon(Icons.public_rounded),
-                          ),
+          // 全国表示へ戻るボタン（左上、Lv2のときのみ表示）
+          if (isCityState)
+            Positioned(
+              top: canNavigateBack ? 56 : 0,
+              left: 0,
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Card(
+                    elevation: 2,
+                    clipBehavior: Clip.hardEdge,
+                    child: InkWell(
+                      onTap: () {
+                        notifier.backToPrefecture();
+                        _zoomToJapan(context);
+                      },
+                      child: const Tooltip(
+                        message: '全国表示に戻る',
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.public_rounded),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
