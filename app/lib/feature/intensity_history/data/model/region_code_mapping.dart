@@ -62,3 +62,21 @@ List<String> cityCodesOfPrefecture(
   }
   return const [];
 }
+
+/// 細分区域コードから所属都道府県コードと名前を返す。
+///
+/// [regionCode] に一致する `regions[].code` を持つ都道府県を検索する。
+/// 一致する都道府県が存在しない場合は `null` を返す。
+({String code, String name})? prefectureOfRegionCode(
+  String regionCode,
+  List<EarthquakeParameterPrefectureItem> prefectures,
+) {
+  for (final pref in prefectures) {
+    for (final region in pref.regions) {
+      if (region.code == regionCode) {
+        return (code: pref.code, name: pref.name.ja);
+      }
+    }
+  }
+  return null;
+}

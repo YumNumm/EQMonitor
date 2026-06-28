@@ -87,6 +87,25 @@ void main() {
     });
   });
 
+  group('prefectureOfRegionCode', () {
+    test('細分区域コードから正しく都道府県コードと名前を返す', () {
+      final result = prefectureOfRegionCode('0110100', _testPrefectures);
+      expect(result?.code, '0100');
+      expect(result?.name, 'pref-0100');
+    });
+
+    test('別の都道府県の細分区域コードも正しく解決できる', () {
+      final result = prefectureOfRegionCode('0210100', _testPrefectures);
+      expect(result?.code, '0200');
+      expect(result?.name, 'pref-0200');
+    });
+
+    test('存在しない細分区域 code の場合は null を返す', () {
+      final result = prefectureOfRegionCode('9999999', _testPrefectures);
+      expect(result, isNull);
+    });
+  });
+
   group('cityCodesOfPrefecture', () {
     test('都道府県配下の全市区町村 code を返す', () {
       final result = cityCodesOfPrefecture('0100', _testPrefectures);
