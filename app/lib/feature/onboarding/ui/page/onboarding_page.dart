@@ -33,6 +33,12 @@ part '../components/welcome_step_page.dart';
 part '../model/onboarding_permission_status.dart';
 part '../model/onboarding_step.dart';
 
+typedef _SetStepNavigation =
+    void Function({
+      required _OnboardingStep step,
+      required _StepNavigationState state,
+    });
+
 class OnboardingPage extends HookConsumerWidget {
   const OnboardingPage({super.key});
 
@@ -47,24 +53,31 @@ class OnboardingPage extends HookConsumerWidget {
     );
     final designSystem = Theme.of(context).designSystemThemeExtension;
 
-    Future<void> animateToNext() async {
+    final animateToNext = useCallback<Future<void> Function()>(() async {
       await pageController.nextPage(
         duration: const Duration(milliseconds: 280),
         curve: Curves.easeOutCubic,
       );
-    }
+    }, [pageController]);
 
-    Future<void> goToNext() async {
-      unawaited(HapticFeedback.mediumImpact());
-      await stepNavigation.value.onNext?.call();
-    }
-
-    Future<void> goToPrevious() async {
+    final goToPrevious = useCallback<Future<void> Function()>(() async {
       await pageController.previousPage(
         duration: const Duration(milliseconds: 280),
         curve: Curves.easeOutCubic,
       );
-    }
+    }, [pageController]);
+
+    final setStepNavigation = useCallback<_SetStepNavigation>(({
+      required _OnboardingStep step,
+      required _StepNavigationState state,
+    }) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!context.mounted || step != _steps[currentPage.value]) {
+          return;
+        }
+        stepNavigation.value = state;
+      });
+    }, [currentPage, stepNavigation]);
 
     void onPageChanged(int index) {
       currentPage.value = index;
@@ -78,14 +91,9 @@ class OnboardingPage extends HookConsumerWidget {
         currentPage.value > 0 && currentStep != _OnboardingStep.complete;
     final isBackEnabled = showBack && !navigation.isProcessing;
 
-    void setStepNavigation({
-      required _OnboardingStep step,
-      required _StepNavigationState state,
-    }) {
-      if (step != currentStep) {
-        return;
-      }
-      stepNavigation.value = state;
+    Future<void> goToNext() async {
+      unawaited(HapticFeedback.mediumImpact());
+      await stepNavigation.value.onNext?.call();
     }
 
     return Scaffold(
@@ -137,11 +145,7 @@ class _OnboardingScope extends InheritedWidget {
   final _OnboardingStep currentStep;
   final Future<void> Function() nextPage;
   final Future<void> Function() previousPage;
-  final void Function({
-    required _OnboardingStep step,
-    required _StepNavigationState state,
-  })
-  setStepNavigation;
+  final _SetStepNavigation setStepNavigation;
 
   static _OnboardingScope of(BuildContext context) {
     final scope = context
@@ -154,10 +158,7 @@ class _OnboardingScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_OnboardingScope oldWidget) =>
-      currentStep != oldWidget.currentStep ||
-      nextPage != oldWidget.nextPage ||
-      previousPage != oldWidget.previousPage ||
-      setStepNavigation != oldWidget.setStepNavigation;
+      currentStep != oldWidget.currentStep;
 }
 
 class _StepNavigationState {

@@ -37,10 +37,10 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
 
     Future<void> onNext() async {
       switch (selectedPreset.value) {
-        case _NotificationPreset.recommended:
-        case _NotificationPreset.advanced:
+        case .recommended:
+        case .advanced:
           await saveRecommendedSettings();
-        case _NotificationPreset.custom:
+        case .custom:
           if (!context.mounted) {
             return;
           }
@@ -71,10 +71,12 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
     }, [scope, selectedPreset.value, isProcessing.value]);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
+      padding: EdgeInsets.symmetric(
+        horizontal: designSystem.spacing.lg,
+      ),
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             SizedBox(height: designSystem.spacing.xxxxl),
             Text(
@@ -91,10 +93,8 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
             SizedBox(height: designSystem.spacing.xl),
             _PresetCard(
               title: '推奨設定',
-              isSelected:
-                  selectedPreset.value == _NotificationPreset.recommended,
-              onTap: () =>
-                  selectedPreset.value = _NotificationPreset.recommended,
+              isSelected: selectedPreset.value == .recommended,
+              onTap: () => selectedPreset.value = .recommended,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -116,8 +116,8 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
             SizedBox(height: designSystem.spacing.md),
             _PresetCard(
               title: 'カスタム',
-              isSelected: selectedPreset.value == _NotificationPreset.custom,
-              onTap: () => selectedPreset.value = _NotificationPreset.custom,
+              isSelected: selectedPreset.value == .custom,
+              onTap: () => selectedPreset.value = .custom,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -206,7 +206,8 @@ class _PresetCard extends StatelessWidget {
             color: isSelected
                 ? designSystem.palette.brandPrimary
                 : designSystem.color.outlineSoft,
-            width: isSelected ? 2 : 1,
+            width: isSelected ? 2 : 0,
+            strokeAlign: BorderSide.strokeAlignOutside,
           ),
         ),
         child: Column(
@@ -224,12 +225,10 @@ class _PresetCard extends StatelessWidget {
                   size: 20,
                 ),
                 SizedBox(width: designSystem.spacing.sm),
-                Text(
-                  title,
-                  style: designSystem.typography.titleMedium.copyWith(
-                    color: isSelected
-                        ? designSystem.palette.brandPrimary
-                        : designSystem.textColor.primary,
+                Expanded(
+                  child: Text(
+                    title,
+                    style: designSystem.typography.titleMedium,
                   ),
                 ),
                 if (badge != null) ...[
@@ -249,7 +248,7 @@ class _PresetCard extends StatelessWidget {
                       badge!,
                       style: designSystem.typography.labelSmall.copyWith(
                         color: designSystem.palette.brandPrimary,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ),

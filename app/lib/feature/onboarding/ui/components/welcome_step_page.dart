@@ -11,11 +11,8 @@ class _WelcomeStepPage extends HookConsumerWidget {
     final deviceProvisioningMutation = ref.watch(
       DeviceProvisioningNotifier.provisionMutation,
     );
-    final provisionStarted = useRef(false);
-
     final isProvisioned =
-        deviceProvisioningStatus.value ==
-            DeviceProvisioningStatus.notRequired ||
+        deviceProvisioningStatus.value == .notRequired ||
         deviceProvisioningMutation is MutationSuccess;
     final isProcessing =
         deviceProvisioningStatus.isLoading ||
@@ -63,16 +60,24 @@ class _WelcomeStepPage extends HookConsumerWidget {
       }
     });
 
-    useEffect(() {
-      if (deviceProvisioningStatus.value == DeviceProvisioningStatus.required &&
-          !provisionStarted.value &&
-          deviceProvisioningMutation is! MutationPending &&
-          deviceProvisioningMutation is! MutationSuccess) {
-        provisionStarted.value = true;
-        unawaited(startProvisioning());
-      }
-      return null;
-    }, [deviceProvisioningStatus, deviceProvisioningMutation]);
+    useEffect(
+      () {
+        if (deviceProvisioningStatus.value == .required &&
+            deviceProvisioningMutation is MutationIdle) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!context.mounted) {
+              return;
+            }
+            unawaited(startProvisioning());
+          });
+        }
+        return null;
+      },
+      [
+        deviceProvisioningStatus,
+        deviceProvisioningMutation,
+      ],
+    );
 
     useEffect(() {
       scope.setStepNavigation(

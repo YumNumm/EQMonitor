@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
@@ -6,6 +7,7 @@ import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exc
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -62,6 +64,10 @@ Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
     ],
     child: MaterialApp(
       theme: theme,
+      builder: (context, child) => DefaultAssetBundle(
+        bundle: _OnboardingTestAssetBundle(),
+        child: child ?? const SizedBox.shrink(),
+      ),
       home: const OnboardingPage(),
     ),
   );
@@ -70,6 +76,7 @@ Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
 final class _ControlledDeviceProvisioningNotifier
     extends DeviceProvisioningNotifier {
   final _provisionCompleter = Completer<void>();
+  UnexpectedProvisioningException? _provisioningError;
 
   @override
   Future<DeviceProvisioningStatus> build() async =>
@@ -78,6 +85,10 @@ final class _ControlledDeviceProvisioningNotifier
   @override
   Future<void> provision() async {
     await _provisionCompleter.future;
+    final error = _provisioningError;
+    if (error != null) {
+      throw error;
+    }
     state = const AsyncData(DeviceProvisioningStatus.notRequired);
   }
 
@@ -86,8 +97,86 @@ final class _ControlledDeviceProvisioningNotifier
   }
 
   void failProvisioning() {
-    _provisionCompleter.completeError(
-      const UnexpectedProvisioningException(cause: 'test failure'),
+    _provisioningError = const UnexpectedProvisioningException(
+      cause: 'test failure',
     );
+    _provisionCompleter.complete();
   }
+}
+
+final class _OnboardingTestAssetBundle extends CachingAssetBundle {
+  static final _transparentPng = Uint8List.fromList([
+    0x89,
+    0x50,
+    0x4E,
+    0x47,
+    0x0D,
+    0x0A,
+    0x1A,
+    0x0A,
+    0x00,
+    0x00,
+    0x00,
+    0x0D,
+    0x49,
+    0x48,
+    0x44,
+    0x52,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x08,
+    0x06,
+    0x00,
+    0x00,
+    0x00,
+    0x1F,
+    0x15,
+    0xC4,
+    0x89,
+    0x00,
+    0x00,
+    0x00,
+    0x0A,
+    0x49,
+    0x44,
+    0x41,
+    0x54,
+    0x78,
+    0x9C,
+    0x63,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x05,
+    0x00,
+    0x01,
+    0x0D,
+    0x0A,
+    0x2D,
+    0xB4,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x49,
+    0x45,
+    0x4E,
+    0x44,
+    0xAE,
+    0x42,
+    0x60,
+    0x82,
+  ]);
+
+  @override
+  Future<ByteData> load(String key) async => ByteData.view(
+    _transparentPng.buffer,
+  );
 }
