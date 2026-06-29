@@ -5,42 +5,7 @@ import 'package:eqmonitor/feature/settings/data/contact/contact_url_builder.dart
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('builds contact URL with app and encoded iOS device metadata', () {
-    const builder = ContactUrlBuilder();
-
-    final url = builder.build(
-      deviceId: 'device-uuid',
-      appVersion: '1.2.3',
-      buildNumber: '456',
-      os: 'iOS 18.0',
-      deviceInfo: const {
-        'platform': 'ios',
-        'model': 'iPhone 16 Pro',
-        'machine': 'iPhone17,1',
-        'isPhysicalDevice': true,
-      },
-    );
-
-    expect(url.scheme, 'https');
-    expect(url.host, 'eqmonitor.app');
-    expect(url.path, '/contact');
-    expect(url.queryParameters, {
-      'deviceId': 'device-uuid',
-      'appVersion': '1.2.3',
-      'buildNumber': '456',
-      'os': 'iOS 18.0',
-      'deviceInfo': jsonEncode({
-        'platform': 'ios',
-        'model': 'iPhone 16 Pro',
-        'machine': 'iPhone17,1',
-        'isPhysicalDevice': true,
-      }),
-    });
-    expect(url.toString(), contains('os=iOS%2018.0'));
-    expect(url.toString(), contains('deviceInfo=%7B'));
-  });
-
-  test('builds contact URL from iOS device info', () {
+  test('builds contact URL from iOS device info with selected fields', () {
     const builder = ContactUrlBuilder();
     final ios = IosDeviceInfo.fromMap({
       'name': 'iPhone',
@@ -72,18 +37,24 @@ void main() {
       buildNumber: '456',
       deviceInfo: ios,
     );
-    final deviceInfo = jsonDecode(url.queryParameters['deviceInfo']!);
+    final deviceInfo =
+        jsonDecode(url.queryParameters['deviceInfo']!) as Map<String, dynamic>;
 
+    expect(url.scheme, 'https');
+    expect(url.host, 'eqmonitor.app');
+    expect(url.path, '/contact');
+    expect(url.queryParameters['deviceId'], 'device-uuid');
+    expect(url.queryParameters['appVersion'], '1.2.3');
+    expect(url.queryParameters['buildNumber'], '456');
     expect(url.queryParameters['os'], 'iOS 18.0');
     expect(deviceInfo, containsPair('platform', 'ios'));
     expect(deviceInfo, containsPair('modelName', 'iPhone 16 Pro'));
-    expect(
-      deviceInfo,
-      containsPair('utsname', containsPair('machine', 'iPhone17,1')),
-    );
+    expect(deviceInfo, containsPair('machine', 'iPhone17,1'));
+    expect(deviceInfo, containsPair('isPhysicalDevice', true));
+    expect(deviceInfo, hasLength(4));
   });
 
-  test('builds contact URL from Android device info', () {
+  test('builds contact URL from Android device info with selected fields', () {
     const builder = ContactUrlBuilder();
     final android = AndroidDeviceInfo.fromMap({
       'version': {
@@ -128,11 +99,16 @@ void main() {
       buildNumber: '456',
       deviceInfo: android,
     );
-    final deviceInfo = jsonDecode(url.queryParameters['deviceInfo']!);
+    final deviceInfo =
+        jsonDecode(url.queryParameters['deviceInfo']!) as Map<String, dynamic>;
 
     expect(url.queryParameters['os'], 'Android 15');
     expect(deviceInfo, containsPair('platform', 'android'));
+    expect(deviceInfo, containsPair('brand', 'Google'));
     expect(deviceInfo, containsPair('model', 'Pixel 9 Pro'));
-    expect(deviceInfo, containsPair('version', containsPair('sdkInt', 35)));
+    expect(deviceInfo, containsPair('manufacturer', 'Google'));
+    expect(deviceInfo, containsPair('sdkInt', 35));
+    expect(deviceInfo, containsPair('isPhysicalDevice', true));
+    expect(deviceInfo, hasLength(6));
   });
 }
