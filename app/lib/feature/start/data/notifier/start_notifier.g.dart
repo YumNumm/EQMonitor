@@ -35,7 +35,7 @@ final class StartNotifierProvider
   StartNotifier create() => StartNotifier();
 }
 
-String _$startNotifierHash() => r'df406add3f047c02ea8659dc5bff5dad049a4f3b';
+String _$startNotifierHash() => r'f634afb86dfe07569d1e9ec4e6453ce20e353958';
 
 abstract class _$StartNotifier extends $AsyncNotifier<api.StartResponse> {
   FutureOr<api.StartResponse> build();

@@ -13,4 +13,8 @@ class StartNotifier extends _$StartNotifier
 
   @override
   Future<api.StartResponse> build() => cachedBuild();
+
+  void setDebugOverride(api.StartResponse response) {
+    state = AsyncData(response);
+  }
 }
