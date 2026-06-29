@@ -7,20 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-typedef ContactUrlLauncher = Future<bool> Function(Uri url);
-
 final contactTargetPlatformProvider = Provider<TargetPlatform>(
   (_) => defaultTargetPlatform,
-);
-
-final contactUrlBuilderProvider = Provider<ContactUrlBuilder>(
-  (_) => const ContactUrlBuilder(),
 );
 
 final contactUrlProvider = FutureProvider<Uri>((ref) async {
   final deviceId = await ref.read(deviceIdProvider.future);
   final packageInfo = ref.read(packageInfoProvider);
-  final builder = ref.read(contactUrlBuilderProvider);
+  const builder = ContactUrlBuilder();
 
   return switch (ref.read(contactTargetPlatformProvider)) {
     TargetPlatform.android => builder.buildForAndroid(
@@ -39,22 +33,27 @@ final contactUrlProvider = FutureProvider<Uri>((ref) async {
   };
 });
 
-final contactUrlLauncherProvider = Provider<ContactUrlLauncher>(
-  (_) =>
-      (url) => launchUrl(url, mode: LaunchMode.externalApplication),
+final contactUrlLauncherProvider = Provider<Future<bool> Function(Uri)>(
+  (_) => (url) => launchUrl(url, mode: LaunchMode.externalApplication),
 );
 
-final contactActionProvider = Provider<ContactAction>(
-  (_) => const ContactAction(),
+final openContactProvider =
+    Provider<Future<void> Function(WidgetRef, BuildContext)>(
+  (_) => openContactPage,
 );
 
-class ContactAction {
-  const ContactAction();
-
-  Future<void> open(WidgetRef ref, BuildContext context) async {
+Future<void> openContactPage(WidgetRef ref, BuildContext context) async {
+  try {
     final url = await ref.read(contactUrlProvider.future);
     final launched = await ref.read(contactUrlLauncherProvider)(url);
     if (!context.mounted || launched) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('問い合わせページを開けませんでした')),
+    );
+  } on Exception {
+    if (!context.mounted) {
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(

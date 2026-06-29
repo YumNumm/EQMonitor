@@ -46,12 +46,12 @@ void main() {
     expect(find.text('問い合わせ'), findsOneWidget);
   });
 
-  testWidgets('contact tile delegates opening to ContactAction', (
+  testWidgets('contact tile delegates to openContactProvider', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
-    final action = _RecordingContactAction();
+    var opened = false;
 
     await tester.pumpWidget(
       ProviderScope(
@@ -64,7 +64,9 @@ void main() {
           ),
           adsOptOutProvider.overrideWithValue(false),
           buildConfigProvider.overrideWithValue(_buildConfig),
-          contactActionProvider.overrideWithValue(action),
+          openContactProvider.overrideWithValue(
+            (_, __) async => opened = true,
+          ),
           packageInfoProvider.overrideWithValue(_packageInfo),
         ],
         child: const _TestApp(home: SettingsPage()),
@@ -79,7 +81,7 @@ void main() {
     );
     await tester.tap(find.text('問い合わせ'));
 
-    expect(action._opened, true);
+    expect(opened, true);
   });
 }
 
@@ -104,15 +106,6 @@ final _packageInfo = PackageInfo(
   version: '1.2.3',
   buildNumber: '456',
 );
-
-class _RecordingContactAction extends ContactAction {
-  var _opened = false;
-
-  @override
-  Future<void> open(WidgetRef ref, BuildContext context) async {
-    _opened = true;
-  }
-}
 
 class _TestApp extends StatelessWidget {
   const _TestApp({required this.home});
