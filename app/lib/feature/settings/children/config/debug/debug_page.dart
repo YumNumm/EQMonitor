@@ -15,6 +15,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_c
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -584,63 +585,115 @@ class _StartApiDebugSection extends ConsumerWidget {
             title: const Text('エラー'),
             subtitle: Text(error.toString()),
           ),
-          _ when startAsync.hasValue => Column(
-            children: [
-              if (startAsync.hasError)
-                ListTile(
-                  dense: true,
-                  leading: const Icon(Icons.warning_amber),
-                  title: const Text('再検証エラー（stale 表示中）'),
-                  subtitle: Text(startAsync.error.toString()),
-                ),
-              ListTile(
-                dense: true,
-                title: const Text('maintenance.enabled'),
-                trailing: Text(
-                  startAsync.value!.flags.maintenance.enabled.toString(),
-                ),
-              ),
-              if (startAsync.value!.flags.maintenance.message != null)
-                ListTile(
-                  dense: true,
-                  title: const Text('maintenance.message'),
-                  subtitle: Text(startAsync.value!.flags.maintenance.message!),
-                ),
-              ListTile(
-                dense: true,
-                title: const Text('latest.version'),
-                trailing: Text(
-                  startAsync.value!.app.version.latest?.version ?? '(なし)',
-                ),
-              ),
-              ListTile(
-                dense: true,
-                title: const Text('latest.showWhatsNew'),
-                trailing: Text(
-                  startAsync.value!.app.version.latest?.showWhatsNew
-                          .toString() ??
-                      '-',
-                ),
-              ),
-              ListTile(
-                dense: true,
-                title: const Text('requiredVersions'),
-                subtitle: Text(
-                  startAsync.value!.app.version.requiredVersions
-                          .map((r) => r.version)
-                          .join(', ')
-                          .isNotEmpty
-                      ? startAsync.value!.app.version.requiredVersions
-                            .map((r) => r.version)
-                            .join(', ')
-                      : '(なし)',
-                ),
-              ),
-            ],
+          _ when startAsync.hasValue => _StartApiDebugContent(
+            data: startAsync.value!,
+            hasError: startAsync.hasError,
+            error: startAsync.error,
           ),
           _ => const SizedBox.shrink(),
         },
       ],
     );
+  }
+}
+
+class _StartApiDebugContent extends ConsumerWidget {
+  const _StartApiDebugContent({
+    required this.data,
+    required this.hasError,
+    required this.error,
+  });
+
+  final api.StartResponse data;
+  final bool hasError;
+  final Object? error;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        if (hasError)
+          ListTile(
+            dense: true,
+            leading: const Icon(Icons.warning_amber),
+            title: const Text('再検証エラー（stale 表示中）'),
+            subtitle: Text(error.toString()),
+          ),
+        AppSwitchListTile(
+          title: 'maintenance.enabled',
+          subtitle: 'メンテナンスモード',
+          value: data.flags.maintenance.enabled,
+          onChanged: (v) => _override(
+            ref,
+            data.copyWith(
+              flags: data.flags.copyWith(
+                maintenance: data.flags.maintenance.copyWith(enabled: v),
+              ),
+            ),
+          ),
+        ),
+        if (data.flags.maintenance.message != null)
+          ListTile(
+            dense: true,
+            title: const Text('maintenance.message'),
+            subtitle: Text(data.flags.maintenance.message!),
+          ),
+        AppSwitchListTile(
+          title: 'flags.ads_enabled',
+          subtitle: '広告有効フラグ',
+          value: data.flags.adsEnabled,
+          onChanged: (v) => _override(
+            ref,
+            data.copyWith(
+              flags: data.flags.copyWith(adsEnabled: v),
+            ),
+          ),
+        ),
+        ListTile(
+          dense: true,
+          title: const Text('latest.version'),
+          trailing: Text(
+            data.app.version.latest?.version ?? '(なし)',
+          ),
+        ),
+        AppSwitchListTile(
+          title: 'latest.showWhatsNew',
+          subtitle: "What's New バナー表示",
+          value: data.app.version.latest?.showWhatsNew ?? false,
+          onChanged: data.app.version.latest != null
+              ? (v) => _override(
+                    ref,
+                    data.copyWith(
+                      app: data.app.copyWith(
+                        version: data.app.version.copyWith(
+                          latest: data.app.version.latest!.copyWith(
+                            showWhatsNew: v,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+              : null,
+        ),
+        ListTile(
+          dense: true,
+          title: const Text('requiredVersions'),
+          subtitle: Text(
+            data.app.version.requiredVersions
+                    .map((r) => r.version)
+                    .join(', ')
+                    .isNotEmpty
+                ? data.app.version.requiredVersions
+                      .map((r) => r.version)
+                      .join(', ')
+                : '(なし)',
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _override(WidgetRef ref, api.StartResponse response) {
+    ref.read(startProvider.notifier).setDebugOverride(response);
   }
 }
