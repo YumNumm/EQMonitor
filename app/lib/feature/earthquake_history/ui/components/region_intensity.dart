@@ -10,7 +10,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
-import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -594,23 +593,17 @@ class _LpgmCityTile extends HookConsumerWidget {
               spacing: 6,
               runSpacing: 6,
               children: city.stations.map((station) {
-                final hasPeriods =
-                    station.intensity?.prePeriods?.isNotEmpty ?? false;
-                final lpgmIntensity = station.intensity?.maxLpgmIntensity;
-
                 return ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(8),
-                    onTap: hasPeriods
-                        ? () => showModalBottomSheet<void>(
-                              context: context,
-                              clipBehavior: Clip.antiAlias,
-                              builder: (_) => LpgmStationDetailSheet(
-                                station: station,
-                              ),
-                            )
-                        : null,
+                    onTap: () => showModalBottomSheet<void>(
+                      context: context,
+                      clipBehavior: Clip.antiAlias,
+                      builder: (_) => LpgmStationDetailSheet(
+                        station: station,
+                      ),
+                    ),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -622,22 +615,9 @@ class _LpgmCityTile extends HookConsumerWidget {
                         ),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            station.station.name.ja,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                          if (lpgmIntensity != null) ...[
-                            const SizedBox(width: 4),
-                            JmaLpgmIntensityIcon(
-                              intensity: lpgmIntensity,
-                              type: IntensityIconType.filled,
-                              size: 18,
-                            ),
-                          ],
-                        ],
+                      child: Text(
+                        station.station.name.ja,
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ),
                   ),
