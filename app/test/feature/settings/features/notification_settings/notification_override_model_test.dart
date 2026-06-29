@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('ApiSlotOverrideConverter', () {
     test('converts SlotOverride to NotificationOverride', () {
-      final apiOverride = api.SlotOverride(
+      const apiOverride = api.SlotOverride(
         minJmaIntensity: api.MinJmaIntensity.value5minus,
         sound: 'alert_sound',
         interruptionLevel: api.InterruptionLevel.critical,

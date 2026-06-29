@@ -136,8 +136,7 @@ final class _SlotApiAdapter implements HttpClientAdapter {
       return _jsonResponse('null', statusCode: 204);
     }
 
-    if (path.endsWith('/nationwide') &&
-        (method == 'PUT' || method == 'GET')) {
+    if (path.endsWith('/nationwide') && (method == 'PUT' || method == 'GET')) {
       return _jsonResponse(jsonEncode(_nationwideSlot));
     }
 
@@ -176,7 +175,7 @@ ResponseBody _jsonResponse(String body, {int statusCode = 200}) =>
       },
     );
 
-final _currentLocationSlot = {
+final Map<String, Object?> _currentLocationSlot = {
   'id': 'slot-cl',
   'slot_type': 'current_location',
   'region_id': null,
@@ -194,7 +193,7 @@ final _currentLocationSlot = {
   'updated_at': '2026-06-30T00:00:00Z',
 };
 
-final _regionSlot = {
+final Map<String, Object?> _regionSlot = {
   'id': 'slot-region',
   'slot_type': 'region',
   'region_id': 130000,
@@ -212,7 +211,7 @@ final _regionSlot = {
   'updated_at': '2026-06-30T00:00:00Z',
 };
 
-final _nationwideSlot = {
+final Map<String, Object?> _nationwideSlot = {
   'id': 'slot-nw',
   'slot_type': 'nationwide',
   'region_id': null,
@@ -230,9 +229,12 @@ final _nationwideSlot = {
   'updated_at': '2026-06-30T00:00:00Z',
 };
 
-final _slotsListResponse = [_currentLocationSlot, _regionSlot];
+final List<Map<String, Object?>> _slotsListResponse = [
+  _currentLocationSlot,
+  _regionSlot,
+];
 
-const _eewWarningResponse = {
+const Map<String, String?> _eewWarningResponse = {
   'target': 'current_location_only',
   'nationwide_interruption_level': null,
 };

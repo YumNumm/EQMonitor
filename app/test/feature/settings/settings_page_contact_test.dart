@@ -65,7 +65,7 @@ void main() {
           adsOptOutProvider.overrideWithValue(false),
           buildConfigProvider.overrideWithValue(_buildConfig),
           openContactProvider.overrideWithValue(
-            (_, __) async => opened = true,
+            (_, _) async => opened = true,
           ),
           packageInfoProvider.overrideWithValue(_packageInfo),
         ],
