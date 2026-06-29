@@ -9,17 +9,17 @@ part 'eew_warning_config_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class EewWarningConfigNotifier extends _$EewWarningConfigNotifier {
-  static final updateMutation = Mutation<void>();
-
   @override
   Future<EewWarningSettings> build() async {
     final status = await ref.watch(deviceProvisioningProvider.future);
-    if (status != DeviceProvisioningStatus.notRequired) {
+    if (status != .notRequired) {
       throw StateError('Device not provisioned');
     }
     final repo = await ref.watch(notificationSlotRepositoryProvider.future);
     return repo.getEewWarningConfig();
   }
+
+  static final updateConfigMutation = Mutation<void>();
 
   Future<void> updateConfig({
     EewWarningTarget? target,

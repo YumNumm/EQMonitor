@@ -131,11 +131,4 @@ void main() {
     });
   });
 
-  group('NotificationSlotType.label', () {
-    test('returns correct labels', () {
-      expect(NotificationSlotType.currentLocation.label, '現在地');
-      expect(NotificationSlotType.nationwide.label, '全国');
-      expect(NotificationSlotType.region.label, '地域');
-    });
-  });
 }

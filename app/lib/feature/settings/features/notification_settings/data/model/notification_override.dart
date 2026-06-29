@@ -16,19 +16,7 @@ abstract class NotificationOverride with _$NotificationOverride {
 // InterruptionLevel のアプリ側 enum
 // API の InterruptionLevel / DefaultInterruptionLevel / NationwideInterruptionLevel
 // をアプリ内で統一的に扱う
-enum InterruptionLevel {
-  passive,
-  active,
-  timeSensitive,
-  critical;
-
-  String get label => switch (this) {
-    .passive => 'サイレント',
-    .active => '通常',
-    .timeSensitive => '即時',
-    .critical => '重大な通知',
-  };
-}
+enum InterruptionLevel { passive, active, timeSensitive, critical }
 
 extension ApiSlotOverrideConverter on api.SlotOverride {
   NotificationOverride toNotificationOverride() => NotificationOverride(
@@ -40,42 +28,42 @@ extension ApiSlotOverrideConverter on api.SlotOverride {
 
 extension ApiInterruptionLevelConverter on api.InterruptionLevel {
   InterruptionLevel get toAppInterruptionLevel => switch (this) {
-    .passive => InterruptionLevel.passive,
-    .active => InterruptionLevel.active,
-    .timeSensitive => InterruptionLevel.timeSensitive,
-    .critical => InterruptionLevel.critical,
+    .passive => .passive,
+    .active => .active,
+    .timeSensitive => .timeSensitive,
+    .critical => .critical,
   };
 }
 
 extension ApiDefaultInterruptionLevelConverter on api.DefaultInterruptionLevel {
   InterruptionLevel get toAppInterruptionLevel => switch (this) {
-    .passive => InterruptionLevel.passive,
-    .active => InterruptionLevel.active,
-    .timeSensitive => InterruptionLevel.timeSensitive,
-    .critical => InterruptionLevel.critical,
+    .passive => .passive,
+    .active => .active,
+    .timeSensitive => .timeSensitive,
+    .critical => .critical,
   };
 }
 
 extension ApiNationwideInterruptionLevelConverter
     on api.NationwideInterruptionLevel {
   InterruptionLevel get toAppInterruptionLevel => switch (this) {
-    .passive => InterruptionLevel.passive,
-    .active => InterruptionLevel.active,
+    .passive => .passive,
+    .active => .active,
   };
 }
 
 extension InterruptionLevelToApi on InterruptionLevel {
   api.InterruptionLevel get toApiInterruptionLevel => switch (this) {
-    .passive => api.InterruptionLevel.passive,
-    .active => api.InterruptionLevel.active,
-    .timeSensitive => api.InterruptionLevel.timeSensitive,
-    .critical => api.InterruptionLevel.critical,
+    .passive => .passive,
+    .active => .active,
+    .timeSensitive => .timeSensitive,
+    .critical => .critical,
   };
 
   api.NationwideInterruptionLevel? get toApiNationwideInterruptionLevel =>
       switch (this) {
-        .passive => api.NationwideInterruptionLevel.passive,
-        .active => api.NationwideInterruptionLevel.active,
+        .passive => .passive,
+        .active => .active,
         _ => null,
       };
 }
@@ -83,7 +71,8 @@ extension InterruptionLevelToApi on InterruptionLevel {
 extension NotificationOverrideToApi on NotificationOverride {
   api.SlotOverride toApiSlotOverride() => api.SlotOverride(
     minJmaIntensity:
-        minJmaIntensity.toApiMinJmaIntensity ?? api.MinJmaIntensity.value4,
+        minJmaIntensity.toApiMinJmaIntensity ??
+        (throw StateError('unknown intensity cannot be serialized')),
     sound: sound,
     interruptionLevel: interruptionLevel.toApiInterruptionLevel,
   );
