@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'notification_tier.dart';
+import 'default_interruption_level.dart';
 
 part 'earthquake_settings_request.freezed.dart';
 part 'earthquake_settings_request.g.dart';
@@ -14,8 +14,10 @@ abstract class EarthquakeSettingsRequest with _$EarthquakeSettingsRequest {
   const factory EarthquakeSettingsRequest({
     @JsonKey(includeIfNull: false)
     bool? enabled,
-    @JsonKey(includeIfNull: false,name: 'notification_tiers')
-    List<NotificationTier>? notificationTiers,
+    @JsonKey(includeIfNull: false,name: 'default_sound')
+    String? defaultSound,
+    @JsonKey(includeIfNull: false,name: 'default_interruption_level')
+    DefaultInterruptionLevel? defaultInterruptionLevel,
     @JsonKey(includeIfNull: false,name: 'estimated_intensity_enabled')
     bool? estimatedIntensityEnabled,
     @JsonKey(includeIfNull: false,name: 'collapse_notification')

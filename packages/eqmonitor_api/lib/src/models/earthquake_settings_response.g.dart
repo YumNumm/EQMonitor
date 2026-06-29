@@ -16,11 +16,10 @@ _EarthquakeSettingsResponse _$EarthquakeSettingsResponseFromJson(
   ($checkedConvert) {
     final val = _EarthquakeSettingsResponse(
       enabled: $checkedConvert('enabled', (v) => v as bool),
-      notificationTiers: $checkedConvert(
-        'notification_tiers',
-        (v) => (v as List<dynamic>)
-            .map((e) => NotificationTier.fromJson(e as Map<String, dynamic>))
-            .toList(),
+      defaultSound: $checkedConvert('default_sound', (v) => v as String),
+      defaultInterruptionLevel: $checkedConvert(
+        'default_interruption_level',
+        (v) => $enumDecode(_$DefaultInterruptionLevelEnumMap, v),
       ),
       estimatedIntensityEnabled: $checkedConvert(
         'estimated_intensity_enabled',
@@ -34,7 +33,8 @@ _EarthquakeSettingsResponse _$EarthquakeSettingsResponseFromJson(
     return val;
   },
   fieldKeyMap: const {
-    'notificationTiers': 'notification_tiers',
+    'defaultSound': 'default_sound',
+    'defaultInterruptionLevel': 'default_interruption_level',
     'estimatedIntensityEnabled': 'estimated_intensity_enabled',
     'collapseNotification': 'collapse_notification',
   },
@@ -44,7 +44,15 @@ Map<String, dynamic> _$EarthquakeSettingsResponseToJson(
   _EarthquakeSettingsResponse instance,
 ) => <String, dynamic>{
   'enabled': instance.enabled,
-  'notification_tiers': instance.notificationTiers,
+  'default_sound': instance.defaultSound,
+  'default_interruption_level': instance.defaultInterruptionLevel,
   'estimated_intensity_enabled': instance.estimatedIntensityEnabled,
   'collapse_notification': instance.collapseNotification,
+};
+
+const _$DefaultInterruptionLevelEnumMap = {
+  DefaultInterruptionLevel.passive: 'passive',
+  DefaultInterruptionLevel.active: 'active',
+  DefaultInterruptionLevel.timeSensitive: 'time_sensitive',
+  DefaultInterruptionLevel.critical: 'critical',
 };

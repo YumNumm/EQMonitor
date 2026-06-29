@@ -5,7 +5,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
-enum EarthquakeDefaultInterruptionLevel {
+enum DefaultInterruptionLevel {
   @JsonValue('passive')
   passive('passive'),
   @JsonValue('active')
@@ -15,7 +15,7 @@ enum EarthquakeDefaultInterruptionLevel {
   @JsonValue('critical')
   critical('critical');
 
-  const EarthquakeDefaultInterruptionLevel(this.json);
+  const DefaultInterruptionLevel(this.json);
 
   final String? json;
   String toJson() {

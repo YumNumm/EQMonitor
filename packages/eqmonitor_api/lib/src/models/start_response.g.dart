@@ -21,9 +21,7 @@ _StartResponse _$StartResponseFromJson(Map<String, dynamic> json) =>
         ),
         planConstraints: $checkedConvert(
           'plan_constraints',
-          (v) => v == null
-              ? null
-              : PlanConstraints.fromJson(v as Map<String, dynamic>),
+          (v) => PlanConstraintVariants.fromJson(v as Map<String, dynamic>),
         ),
       );
       return val;
@@ -33,5 +31,5 @@ Map<String, dynamic> _$StartResponseToJson(_StartResponse instance) =>
     <String, dynamic>{
       'flags': instance.flags,
       'app': instance.app,
-      'plan_constraints': ?instance.planConstraints,
+      'plan_constraints': instance.planConstraints,
     };

@@ -23,11 +23,12 @@ _DeviceMeResponse _$DeviceMeResponseFromJson(
       (v) => $enumDecodeNullable(_$DeviceRegistrationTypeEnumMap, v),
     ),
     userId: $checkedConvert('userId', (v) => v as String?),
+    isPro: $checkedConvert('is_pro', (v) => v as bool),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
   );
   return val;
-});
+}, fieldKeyMap: const {'isPro': 'is_pro'});
 
 Map<String, dynamic> _$DeviceMeResponseToJson(_DeviceMeResponse instance) =>
     <String, dynamic>{
@@ -36,6 +37,7 @@ Map<String, dynamic> _$DeviceMeResponseToJson(_DeviceMeResponse instance) =>
       'locale': instance.locale,
       'registrationType': instance.registrationType,
       'userId': instance.userId,
+      'is_pro': instance.isPro,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

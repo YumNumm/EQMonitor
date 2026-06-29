@@ -14,6 +14,12 @@ abstract class NotificationSettingsResponse with _$NotificationSettingsResponse 
     required bool tsunamiEnabled,
     @JsonKey(name: 'training_enabled')
     required bool trainingEnabled,
+    @JsonKey(name: 'nankai_extraordinary_enabled')
+    required bool nankaiExtraordinaryEnabled,
+    @JsonKey(name: 'nankai_regular_enabled')
+    required bool nankaiRegularEnabled,
+    @JsonKey(name: 'hokkaido3ren_offshore_enabled')
+    required bool hokkaido3renOffshoreEnabled,
   }) = _NotificationSettingsResponse;
   
   factory NotificationSettingsResponse.fromJson(Map<String, Object?> json) => _$NotificationSettingsResponseFromJson(json);
