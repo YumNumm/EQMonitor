@@ -26,7 +26,16 @@ final class NearbyEarthquakeProvider
         $FutureProvider<List<EarthquakePartial>> {
   NearbyEarthquakeProvider._({
     required NearbyEarthquakeFamily super.from,
-    required (String, NearbyEarthquakeSearchParameter) super.argument,
+    required (
+      String,
+      double,
+      double,
+      int?,
+      api.EarthquakeSortBy,
+      api.SortOrder,
+      NearbyEarthquakeParameter,
+    )
+    super.argument,
   }) : super(
          retry: null,
          name: r'nearbyEarthquakeProvider',
@@ -53,8 +62,27 @@ final class NearbyEarthquakeProvider
 
   @override
   FutureOr<List<EarthquakePartial>> create(Ref ref) {
-    final argument = this.argument as (String, NearbyEarthquakeSearchParameter);
-    return nearbyEarthquake(ref, argument.$1, argument.$2);
+    final argument =
+        this.argument
+            as (
+              String,
+              double,
+              double,
+              int?,
+              api.EarthquakeSortBy,
+              api.SortOrder,
+              NearbyEarthquakeParameter,
+            );
+    return nearbyEarthquake(
+      ref,
+      argument.$1,
+      argument.$2,
+      argument.$3,
+      argument.$4,
+      argument.$5,
+      argument.$6,
+      argument.$7,
+    );
   }
 
   @override
@@ -68,13 +96,21 @@ final class NearbyEarthquakeProvider
   }
 }
 
-String _$nearbyEarthquakeHash() => r'2e2f7f434a100e34c6ba1e36d199bcdd94c5b61b';
+String _$nearbyEarthquakeHash() => r'9acd54d1431d49138ec6e08a200d2b2cb4c29447';
 
 final class NearbyEarthquakeFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<List<EarthquakePartial>>,
-          (String, NearbyEarthquakeSearchParameter)
+          (
+            String,
+            double,
+            double,
+            int?,
+            api.EarthquakeSortBy,
+            api.SortOrder,
+            NearbyEarthquakeParameter,
+          )
         > {
   NearbyEarthquakeFamily._()
     : super(
@@ -87,9 +123,22 @@ final class NearbyEarthquakeFamily extends $Family
 
   NearbyEarthquakeProvider call(
     String excludeEventId,
-    NearbyEarthquakeSearchParameter parameter,
+    double latitude,
+    double longitude,
+    int? depth,
+    api.EarthquakeSortBy sortBy,
+    api.SortOrder sortOrder,
+    NearbyEarthquakeParameter parameter,
   ) => NearbyEarthquakeProvider._(
-    argument: (excludeEventId, parameter),
+    argument: (
+      excludeEventId,
+      latitude,
+      longitude,
+      depth,
+      sortBy,
+      sortOrder,
+      parameter,
+    ),
     from: this,
   );
 
