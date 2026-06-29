@@ -133,17 +133,11 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
     state = AsyncData(nextState);
     if (removesCurrentLocation && !value.any((e) => e.isCurrentLocation)) {
       final slots = ref.read(notificationSlotsProvider).value ?? [];
-      final hasCurrentLocationSlot = slots.any(
-        (s) => s.slotType == NotificationSlotType.currentLocation,
+      const lifecycle = BackgroundLocationMonitoringLifecycle();
+      await lifecycle.stopIfUnused(
+        slots: slots,
+        shakeDetectionState: nextState,
       );
-      if (!hasCurrentLocationSlot) {
-        const lifecycle = BackgroundLocationMonitoringLifecycle();
-        await lifecycle.stopIfUnused(
-          eewSettings: null,
-          earthquakeSettings: null,
-          shakeDetectionState: nextState,
-        );
-      }
     }
   }
 
