@@ -1,6 +1,8 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/nearby_earthquake_search_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'similar_earthquake_provider.g.dart';
@@ -9,27 +11,22 @@ part 'similar_earthquake_provider.g.dart';
 Future<List<EarthquakePartial>> nearbyEarthquake(
   Ref ref,
   String excludeEventId,
-  double latitude,
-  double longitude,
-  int? depth,
-  api.EarthquakeSortBy sortBy,
-  api.SortOrder sortOrder,
+  NearbyEarthquakeSearchParameter parameter,
 ) async {
   final repository = await ref.watch(
     earthquakeHistoryRepositoryProvider.future,
   );
+  final historyParameter = parameter.toHistoryParameter();
   final response = await repository.fetchEarthquakeList(
-    latitudeGte: latitude - 0.5,
-    latitudeLte: latitude + 0.5,
-    longitudeGte: longitude - 0.5,
-    longitudeLte: longitude + 0.5,
-    depthGte: depth != null ? (depth - 50).clamp(0, 9999) : null,
-    depthLte: depth != null ? depth + 50 : null,
-    sortBy: sortBy,
-    sortOrder: sortOrder,
-    limit: 50,
+    latitudeGte: historyParameter.latitudeGte,
+    latitudeLte: historyParameter.latitudeLte,
+    longitudeGte: historyParameter.longitudeGte,
+    longitudeLte: historyParameter.longitudeLte,
+    depthGte: historyParameter.depthGte,
+    depthLte: historyParameter.depthLte,
+    sortBy: historyParameter.sortBy?.toApiEarthquakeSortBy,
+    sortOrder: historyParameter.sortOrder?.toApiSortOrder,
+    limit: parameter.fetchLimit,
   );
-  return response.items
-      .where((e) => e.eventId != excludeEventId)
-      .toList();
+  return response.items.where((e) => e.eventId != excludeEventId).toList();
 }

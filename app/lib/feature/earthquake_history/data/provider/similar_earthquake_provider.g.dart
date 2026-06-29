@@ -26,8 +26,7 @@ final class NearbyEarthquakeProvider
         $FutureProvider<List<EarthquakePartial>> {
   NearbyEarthquakeProvider._({
     required NearbyEarthquakeFamily super.from,
-    required (String, double, double, int?, api.EarthquakeSortBy, api.SortOrder)
-    super.argument,
+    required (String, NearbyEarthquakeSearchParameter) super.argument,
   }) : super(
          retry: null,
          name: r'nearbyEarthquakeProvider',
@@ -54,25 +53,8 @@ final class NearbyEarthquakeProvider
 
   @override
   FutureOr<List<EarthquakePartial>> create(Ref ref) {
-    final argument =
-        this.argument
-            as (
-              String,
-              double,
-              double,
-              int?,
-              api.EarthquakeSortBy,
-              api.SortOrder,
-            );
-    return nearbyEarthquake(
-      ref,
-      argument.$1,
-      argument.$2,
-      argument.$3,
-      argument.$4,
-      argument.$5,
-      argument.$6,
-    );
+    final argument = this.argument as (String, NearbyEarthquakeSearchParameter);
+    return nearbyEarthquake(ref, argument.$1, argument.$2);
   }
 
   @override
@@ -86,13 +68,13 @@ final class NearbyEarthquakeProvider
   }
 }
 
-String _$nearbyEarthquakeHash() => r'2e8fe5b4b86563f9e8fdf6e2c6284137d5d080cd';
+String _$nearbyEarthquakeHash() => r'2e2f7f434a100e34c6ba1e36d199bcdd94c5b61b';
 
 final class NearbyEarthquakeFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<List<EarthquakePartial>>,
-          (String, double, double, int?, api.EarthquakeSortBy, api.SortOrder)
+          (String, NearbyEarthquakeSearchParameter)
         > {
   NearbyEarthquakeFamily._()
     : super(
@@ -105,13 +87,9 @@ final class NearbyEarthquakeFamily extends $Family
 
   NearbyEarthquakeProvider call(
     String excludeEventId,
-    double latitude,
-    double longitude,
-    int? depth,
-    api.EarthquakeSortBy sortBy,
-    api.SortOrder sortOrder,
+    NearbyEarthquakeSearchParameter parameter,
   ) => NearbyEarthquakeProvider._(
-    argument: (excludeEventId, latitude, longitude, depth, sortBy, sortOrder),
+    argument: (excludeEventId, parameter),
     from: this,
   );
 
