@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -91,14 +92,20 @@ class SettingsPage extends ConsumerWidget {
                     mode: LaunchMode.externalApplication,
                   ),
                 ),
+                ListTile(
+                  title: const Text('問い合わせ'),
+                  subtitle: const Text('アプリ情報を付与して問い合わせページを開きます'),
+                  leading: const Icon(Icons.contact_support_outlined),
+                  onTap: () async =>
+                      ref.read(openContactProvider)(ref, context),
+                ),
                 AppSwitchListTile(
                   title: '広告を非表示',
                   value: ref.watch(adsOptOutProvider),
-                  onChanged: (_) =>
-                      AdsOptOutNotifier.saveMutation.run(
-                          ref,
-                          (tsx) async => tsx.get(adsOptOutProvider.notifier).toggle(),
-                      ),
+                  onChanged: (_) => AdsOptOutNotifier.saveMutation.run(
+                    ref,
+                    (tsx) async => tsx.get(adsOptOutProvider.notifier).toggle(),
+                  ),
                 ),
                 Center(
                   child: Text(
