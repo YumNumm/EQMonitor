@@ -17,9 +17,7 @@ import 'package:eqmonitor/feature/notification/data/model/general_notification_s
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/general_notification_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -506,9 +504,7 @@ class _SettingsProviderStatusSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eew = ref.watch(eewSettingsProvider);
-    final earthquake = ref.watch(earthquakeNotificationSettingsProvider);
-    final general = ref.watch(generalNotificationSettingsProvider);
+    final slots = ref.watch(notificationSlotsProvider);
     final shakeDetection = ref.watch(shakeDetectionSettingsProvider);
 
     return _SectionCard(
@@ -517,9 +513,7 @@ class _SettingsProviderStatusSection extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _ProviderStatusRow(label: 'EEW設定', state: eew),
-          _ProviderStatusRow(label: '地震通知設定', state: earthquake),
-          _ProviderStatusRow(label: '全般通知設定', state: general),
+          _ProviderStatusRow(label: '通知スロット', state: slots),
           _ProviderStatusRow(label: '揺れ検知設定', state: shakeDetection),
         ],
       ),
