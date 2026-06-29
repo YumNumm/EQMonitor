@@ -7,6 +7,7 @@ class _OnboardingBottomBar extends StatelessWidget {
     required this.buttonLabel,
     required this.isNextEnabled,
     required this.isBackEnabled,
+    required this.isProcessing,
     required this.onNext,
     required this.onPrevious,
   });
@@ -16,6 +17,7 @@ class _OnboardingBottomBar extends StatelessWidget {
   final String buttonLabel;
   final bool isNextEnabled;
   final bool isBackEnabled;
+  final bool isProcessing;
   final Future<void> Function() onNext;
   final Future<void> Function()? onPrevious;
 
@@ -88,14 +90,37 @@ class _OnboardingBottomBar extends StatelessWidget {
                       vertical: designSystem.spacing.md,
                     ),
                   ),
-                  child: Text(
-                    buttonLabel,
-                    style: designSystem.typography.titleSmall.copyWith(
-                      color: isNextEnabled
-                          ? designSystem.textColor.inverse
-                          : designSystem.textColor.secondary,
-                    ),
-                  ),
+                  child: isProcessing
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: designSystem.spacing.sm,
+                        children: [
+                          SizedBox.square(
+                            dimension: 16,
+                            child: CircularProgressIndicator.adaptive(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation(
+                                designSystem.textColor.secondary,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'デバイスを登録しています...',
+                            style:
+                                designSystem.typography.titleSmall.copyWith(
+                                  color: designSystem.textColor.secondary,
+                                ),
+                          ),
+                        ],
+                      )
+                    : Text(
+                        buttonLabel,
+                        style: designSystem.typography.titleSmall.copyWith(
+                          color: isNextEnabled
+                              ? designSystem.textColor.inverse
+                              : designSystem.textColor.secondary,
+                        ),
+                      ),
                 ),
               ),
             ],
