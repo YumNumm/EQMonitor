@@ -656,7 +656,7 @@ class _EewWarningSettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(EewWarningConfigNotifier.updateMutation, (_, next) {
+    ref.listen(EewWarningConfigNotifier.updateConfigMutation, (_, next) {
       if (next is MutationError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -670,7 +670,7 @@ class _EewWarningSettingsPage extends ConsumerWidget {
     final target = ref.watch(eewWarningConfigProvider).value?.target;
 
     Future<void> select(EewWarningTarget value) async {
-      await EewWarningConfigNotifier.updateMutation.run(ref, (tsx) async {
+      await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
         await tsx
             .get(eewWarningConfigProvider.notifier)
             .updateConfig(target: value);
@@ -1139,4 +1139,11 @@ class _AndroidNotificationSettingsTile extends StatelessWidget {
       ),
     );
   }
+}
+
+extension on EewWarningTarget {
+  String get label => switch (this) {
+    .currentLocationOnly => '現在地のみ',
+    .currentLocationAndNationwide => '現在地＋全国',
+  };
 }

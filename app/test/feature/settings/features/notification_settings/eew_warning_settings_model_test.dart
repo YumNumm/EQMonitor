@@ -34,14 +34,6 @@ void main() {
   });
 
   group('EewWarningTarget', () {
-    test('label returns correct Japanese text', () {
-      expect(EewWarningTarget.currentLocationOnly.label, '現在地のみ');
-      expect(
-        EewWarningTarget.currentLocationAndNationwide.label,
-        '現在地＋全国',
-      );
-    });
-
     test('toApiTarget roundtrips correctly', () {
       expect(
         EewWarningTarget.currentLocationOnly.toApiTarget,

@@ -8,19 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-const List<JmaIntensity> _selectableIntensities = [
-  JmaIntensity.zero,
-  JmaIntensity.one,
-  JmaIntensity.two,
-  JmaIntensity.three,
-  JmaIntensity.four,
-  JmaIntensity.fiveLower,
-  JmaIntensity.fiveUpper,
-  JmaIntensity.sixLower,
-  JmaIntensity.sixUpper,
-  JmaIntensity.seven,
-];
-
 class SlotDetailPage extends HookConsumerWidget {
   const SlotDetailPage({
     required this.slotId,
@@ -28,16 +15,29 @@ class SlotDetailPage extends HookConsumerWidget {
     super.key,
   });
 
+  static const List<JmaIntensity> _selectableIntensities = [
+    JmaIntensity.zero,
+    JmaIntensity.one,
+    JmaIntensity.two,
+    JmaIntensity.three,
+    JmaIntensity.four,
+    JmaIntensity.fiveLower,
+    JmaIntensity.fiveUpper,
+    JmaIntensity.sixLower,
+    JmaIntensity.sixUpper,
+    JmaIntensity.seven,
+  ];
+
   final String slotId;
   final bool isPro;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final slot = ref
-        .watch(notificationSlotsProvider)
-        .value
-        ?.where((s) => s.id == slotId)
-        .firstOrNull;
+    final slot = ref.watch(
+      notificationSlotsProvider.select(
+        (v) => v.value?.where((s) => s.id == slotId).firstOrNull,
+      ),
+    );
 
     void listenError(Mutation<void> mutation, String message) {
       ref.listen(mutation, (_, next) {
@@ -69,7 +69,16 @@ class SlotDetailPage extends HookConsumerWidget {
       '地域の削除に失敗しました',
     );
 
-    final title = slot == null ? '通知設定' : '${_slotName(slot)}の通知設定';
+    final String title;
+    if (slot == null) {
+      title = '通知設定';
+    } else {
+      final slotName = switch (slot.slotType) {
+        NotificationSlotType.region => slot.regionName ?? slot.slotType.label,
+        _ => slot.slotType.label,
+      };
+      title = '$slotNameの通知設定';
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
@@ -121,83 +130,86 @@ class SlotDetailPage extends HookConsumerWidget {
             ),
     );
   }
+
+  Future<void> _updateSlot(
+    WidgetRef ref,
+    NotificationSlot slot, {
+    bool? eewEnabled,
+    JmaIntensity? eewMinIntensity,
+    bool? earthquakeEnabled,
+    JmaIntensity? earthquakeMinIntensity,
+  }) async {
+    final resolvedEewEnabled = eewEnabled ?? slot.eewEnabled;
+    final resolvedEewMinIntensity = eewMinIntensity ?? slot.eewMinIntensity;
+    final resolvedEarthquakeEnabled =
+        earthquakeEnabled ?? slot.earthquakeEnabled;
+    final resolvedEarthquakeMinIntensity =
+        earthquakeMinIntensity ?? slot.earthquakeMinIntensity;
+
+    try {
+      switch (slot.slotType) {
+        case NotificationSlotType.currentLocation:
+          await NotificationSlotsNotifier.putCurrentLocationMutation.run(
+            ref,
+            (tsx) async {
+              await tsx
+                  .get(notificationSlotsProvider.notifier)
+                  .putCurrentLocation(
+                    eewEnabled: resolvedEewEnabled,
+                    eewMinIntensity: resolvedEewMinIntensity,
+                    eewOverrides: slot.eewOverrides,
+                    earthquakeEnabled: resolvedEarthquakeEnabled,
+                    earthquakeMinIntensity: resolvedEarthquakeMinIntensity,
+                    earthquakeOverrides: slot.earthquakeOverrides,
+                  );
+            },
+          );
+        case NotificationSlotType.nationwide:
+          await NotificationSlotsNotifier.putNationwideMutation.run(
+            ref,
+            (tsx) async {
+              await tsx
+                  .get(notificationSlotsProvider.notifier)
+                  .putNationwide(
+                    eewEnabled: resolvedEewEnabled,
+                    eewMinIntensity: resolvedEewMinIntensity,
+                    eewOverrides: slot.eewOverrides,
+                    earthquakeEnabled: resolvedEarthquakeEnabled,
+                    earthquakeMinIntensity: resolvedEarthquakeMinIntensity,
+                    earthquakeOverrides: slot.earthquakeOverrides,
+                  );
+            },
+          );
+        case NotificationSlotType.region:
+          await NotificationSlotsNotifier.updateRegionMutation.run(
+            ref,
+            (tsx) async {
+              await tsx
+                  .get(notificationSlotsProvider.notifier)
+                  .updateRegion(
+                    slotId: slot.id,
+                    eewEnabled: resolvedEewEnabled,
+                    eewMinIntensity: resolvedEewMinIntensity,
+                    eewOverrides: slot.eewOverrides,
+                    earthquakeEnabled: resolvedEarthquakeEnabled,
+                    earthquakeMinIntensity: resolvedEarthquakeMinIntensity,
+                    earthquakeOverrides: slot.earthquakeOverrides,
+                  );
+            },
+          );
+      }
+    } on Object {
+      return;
+    }
+  }
 }
 
-String _slotName(NotificationSlot slot) => switch (slot.slotType) {
-  NotificationSlotType.currentLocation => '現在地',
-  NotificationSlotType.nationwide => '全国',
-  NotificationSlotType.region => slot.regionName ?? '地域',
-};
-
-Future<void> _updateSlot(
-  WidgetRef ref,
-  NotificationSlot slot, {
-  bool? eewEnabled,
-  JmaIntensity? eewMinIntensity,
-  bool? earthquakeEnabled,
-  JmaIntensity? earthquakeMinIntensity,
-}) async {
-  final resolvedEewEnabled = eewEnabled ?? slot.eewEnabled;
-  final resolvedEewMinIntensity = eewMinIntensity ?? slot.eewMinIntensity;
-  final resolvedEarthquakeEnabled = earthquakeEnabled ?? slot.earthquakeEnabled;
-  final resolvedEarthquakeMinIntensity =
-      earthquakeMinIntensity ?? slot.earthquakeMinIntensity;
-
-  try {
-    switch (slot.slotType) {
-      case NotificationSlotType.currentLocation:
-        await NotificationSlotsNotifier.putCurrentLocationMutation.run(
-          ref,
-          (tsx) async {
-            await tsx
-                .get(notificationSlotsProvider.notifier)
-                .putCurrentLocation(
-                  eewEnabled: resolvedEewEnabled,
-                  eewMinIntensity: resolvedEewMinIntensity,
-                  eewOverrides: slot.eewOverrides,
-                  earthquakeEnabled: resolvedEarthquakeEnabled,
-                  earthquakeMinIntensity: resolvedEarthquakeMinIntensity,
-                  earthquakeOverrides: slot.earthquakeOverrides,
-                );
-          },
-        );
-      case NotificationSlotType.nationwide:
-        await NotificationSlotsNotifier.putNationwideMutation.run(
-          ref,
-          (tsx) async {
-            await tsx
-                .get(notificationSlotsProvider.notifier)
-                .putNationwide(
-                  eewEnabled: resolvedEewEnabled,
-                  eewMinIntensity: resolvedEewMinIntensity,
-                  eewOverrides: slot.eewOverrides,
-                  earthquakeEnabled: resolvedEarthquakeEnabled,
-                  earthquakeMinIntensity: resolvedEarthquakeMinIntensity,
-                  earthquakeOverrides: slot.earthquakeOverrides,
-                );
-          },
-        );
-      case NotificationSlotType.region:
-        await NotificationSlotsNotifier.updateRegionMutation.run(
-          ref,
-          (tsx) async {
-            await tsx
-                .get(notificationSlotsProvider.notifier)
-                .updateRegion(
-                  slotId: slot.id,
-                  eewEnabled: resolvedEewEnabled,
-                  eewMinIntensity: resolvedEewMinIntensity,
-                  eewOverrides: slot.eewOverrides,
-                  earthquakeEnabled: resolvedEarthquakeEnabled,
-                  earthquakeMinIntensity: resolvedEarthquakeMinIntensity,
-                  earthquakeOverrides: slot.earthquakeOverrides,
-                );
-          },
-        );
-    }
-  } on Object {
-    return;
-  }
+extension NotificationSlotTypeLabel on NotificationSlotType {
+  String get label => switch (this) {
+    .currentLocation => '現在地',
+    .nationwide => '全国',
+    .region => '地域',
+  };
 }
 
 class _NotificationConditionCard extends StatelessWidget {
@@ -279,25 +291,26 @@ class _IntensityDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolved = value != null && _selectableIntensities.contains(value)
+    final resolved =
+        value != null && SlotDetailPage._selectableIntensities.contains(value)
         ? value
         : JmaIntensity.three;
 
-    return DropdownButton<JmaIntensity>(
-      value: resolved,
-      underline: const SizedBox.shrink(),
-      onChanged: enabled
-          ? (next) {
-              if (next != null) {
-                onChanged(next);
-              }
-            }
-          : null,
-      items: [
-        for (final intensity in _selectableIntensities)
-          DropdownMenuItem(
+    return DropdownMenu<JmaIntensity>(
+      initialSelection: resolved,
+      enabled: enabled,
+      requestFocusOnTap: false,
+      width: 160,
+      onSelected: (next) {
+        if (next != null) {
+          onChanged(next);
+        }
+      },
+      dropdownMenuEntries: [
+        for (final intensity in SlotDetailPage._selectableIntensities)
+          DropdownMenuEntry(
             value: intensity,
-            child: Text('震度${intensity.label}'),
+            label: '震度${intensity.label}',
           ),
       ],
     );
