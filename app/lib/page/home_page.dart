@@ -13,7 +13,8 @@ import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:eqmonitor/feature/start/ui/component/maintenance_banner.dart';
 import 'package:eqmonitor/feature/start/ui/component/whats_new_banner.dart';
@@ -87,8 +88,12 @@ class _SheetBody extends ConsumerWidget {
     });
 
     final hasCurrentLocationRegion = ref.watch(
-      eewSettingsProvider.select(
-        (s) => s.value?.regions.any((r) => r.isCurrentLocation) ?? false,
+      notificationSlotsProvider.select(
+        (s) =>
+            s.value?.any(
+              (slot) => slot.slotType == NotificationSlotType.currentLocation,
+            ) ??
+            false,
       ),
     );
     final permission = ref.watch(backgroundLocationPermissionProvider).value;

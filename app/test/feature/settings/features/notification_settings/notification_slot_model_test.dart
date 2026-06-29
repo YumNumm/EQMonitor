@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('ApiSlotResponseConverter', () {
     test('converts region slot with all fields', () {
-      final response = api.SlotResponse(
+      const response = api.SlotResponse(
         id: 'slot-1',
         slotType: api.SlotType.region,
         regionId: 130000,
@@ -55,7 +55,7 @@ void main() {
     });
 
     test('converts current_location slot with nullable fields', () {
-      final response = api.SlotResponse(
+      const response = api.SlotResponse(
         id: 'slot-cl',
         slotType: api.SlotType.currentLocation,
         regionId: null,
@@ -85,7 +85,7 @@ void main() {
     });
 
     test('converts nationwide slot', () {
-      final response = api.SlotResponse(
+      const response = api.SlotResponse(
         id: 'slot-nw',
         slotType: api.SlotType.nationwide,
         regionId: null,

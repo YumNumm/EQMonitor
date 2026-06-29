@@ -1,7 +1,6 @@
 import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_notification_settings.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_notification_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 
 final class BackgroundLocationUpdateRetry {
@@ -30,27 +29,21 @@ final class BackgroundLocationMonitoringPolicy {
   const BackgroundLocationMonitoringPolicy();
 
   bool shouldMonitor({
-    required EewNotificationSettings? eewSettings,
-    required EarthquakeNotificationSettings? earthquakeSettings,
+    required List<NotificationSlot> slots,
     required ShakeDetectionState? shakeDetectionState,
   }) =>
-      eewSettings?.regions.any((r) => r.isCurrentLocation) == true ||
-      earthquakeSettings?.regions.any((r) => r.isCurrentLocation) == true ||
+      slots.any((s) => s.slotType == NotificationSlotType.currentLocation) ||
       shakeDetectionState?.entries.any((e) => e.isCurrentLocation) == true;
 
   bool shouldStop({
-    required EewNotificationSettings? eewSettings,
-    required EarthquakeNotificationSettings? earthquakeSettings,
+    required List<NotificationSlot>? slots,
     required ShakeDetectionState? shakeDetectionState,
   }) {
-    if (eewSettings == null ||
-        earthquakeSettings == null ||
-        shakeDetectionState == null) {
+    if (slots == null || shakeDetectionState == null) {
       return false;
     }
     return !shouldMonitor(
-      eewSettings: eewSettings,
-      earthquakeSettings: earthquakeSettings,
+      slots: slots,
       shakeDetectionState: shakeDetectionState,
     );
   }
@@ -64,13 +57,11 @@ final class BackgroundLocationMonitoringLifecycle {
   final BackgroundLocationMonitoringPolicy policy;
 
   Future<void> stopIfUnused({
-    required EewNotificationSettings? eewSettings,
-    required EarthquakeNotificationSettings? earthquakeSettings,
+    required List<NotificationSlot>? slots,
     required ShakeDetectionState? shakeDetectionState,
   }) async {
     if (!policy.shouldStop(
-      eewSettings: eewSettings,
-      earthquakeSettings: earthquakeSettings,
+      slots: slots,
       shakeDetectionState: shakeDetectionState,
     )) {
       return;

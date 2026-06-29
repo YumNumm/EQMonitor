@@ -3,7 +3,6 @@ import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -133,17 +132,11 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
     state = AsyncData(nextState);
     if (removesCurrentLocation && !value.any((e) => e.isCurrentLocation)) {
       final slots = ref.read(notificationSlotsProvider).value ?? [];
-      final hasCurrentLocationSlot = slots.any(
-        (s) => s.slotType == NotificationSlotType.currentLocation,
+      const lifecycle = BackgroundLocationMonitoringLifecycle();
+      await lifecycle.stopIfUnused(
+        slots: slots,
+        shakeDetectionState: nextState,
       );
-      if (!hasCurrentLocationSlot) {
-        const lifecycle = BackgroundLocationMonitoringLifecycle();
-        await lifecycle.stopIfUnused(
-          eewSettings: null,
-          earthquakeSettings: null,
-          shakeDetectionState: nextState,
-        );
-      }
     }
   }
 

@@ -3,8 +3,8 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,24 +34,12 @@ Stream<void> backgroundLocationService(Ref ref) async* {
 
 Future<void> _ensureMonitoring(Ref ref) async {
   try {
-    final eewSettings = await (() async {
+    final slots = await (() async {
       try {
-        return await ref.read(eewSettingsProvider.future);
+        return await ref.read(notificationSlotsProvider.future);
       } on Object catch (e, st) {
-        talker.error('[BackgroundLocation] read EEW settings failed', e, st);
-        return null;
-      }
-    })();
-    final earthquakeSettings = await (() async {
-      try {
-        return await ref.read(earthquakeNotificationSettingsProvider.future);
-      } on Object catch (e, st) {
-        talker.error(
-          '[BackgroundLocation] read earthquake settings failed',
-          e,
-          st,
-        );
-        return null;
+        talker.error('[BackgroundLocation] read slots failed', e, st);
+        return <NotificationSlot>[];
       }
     })();
     final shakeDetectionState = await (() async {
@@ -66,12 +54,12 @@ Future<void> _ensureMonitoring(Ref ref) async {
         return null;
       }
     })();
-    const policy = BackgroundLocationMonitoringPolicy();
-    if (!policy.shouldMonitor(
-      eewSettings: eewSettings,
-      earthquakeSettings: earthquakeSettings,
-      shakeDetectionState: shakeDetectionState,
-    )) {
+    final hasCurrentLocation = slots.any(
+      (s) => s.slotType == NotificationSlotType.currentLocation,
+    );
+    final hasShakeCurrentLocation =
+        shakeDetectionState?.entries.any((e) => e.isCurrentLocation) ?? false;
+    if (!hasCurrentLocation && !hasShakeCurrentLocation) {
       return;
     }
     await BackgroundLocationTracker.startMonitoring();
@@ -94,37 +82,23 @@ Future<void> _applyPendingLocation(Ref ref) async {
 
 Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
   try {
-    final settings = await (() async {
+    final slots = await (() async {
       try {
-        return await ref.read(eewSettingsProvider.future);
+        return await ref.read(notificationSlotsProvider.future);
       } on Object catch (e, st) {
-        talker.error('[BackgroundLocation] read EEW settings failed', e, st);
-        return null;
+        talker.error('[BackgroundLocation] read slots failed', e, st);
+        return <NotificationSlot>[];
       }
     })();
-    final prevEewRegion = settings?.regions
-        .where((r) => r.isCurrentLocation)
+    final currentLocationSlot = slots
+        .where((s) => s.slotType == NotificationSlotType.currentLocation)
         .firstOrNull;
-    final prevRegionCode = prevEewRegion?.regionId;
-    final prevRegionName = prevEewRegion?.regionName;
-
-    final earthquakeSettings = await (() async {
-      try {
-        return await ref.read(earthquakeNotificationSettingsProvider.future);
-      } on Object catch (e, st) {
-        talker.error(
-          '[BackgroundLocation] read earthquake settings failed',
-          e,
-          st,
-        );
-        return null;
-      }
-    })();
-    final prevEqRegion = earthquakeSettings?.regions
-        .where((r) => r.isCurrentLocation)
-        .firstOrNull;
-    final prevCityCode = prevEqRegion?.cityCode;
-    final prevCityName = prevEqRegion?.cityName;
+    final prevRegionCode = currentLocationSlot?.regionId;
+    final prevRegionName = currentLocationSlot?.regionName;
+    // 統合スロットモデルでは EEW / 地震情報のリージョンが1つに統合されているため、
+    // city 情報も同じ current_location スロットから取得する。
+    final prevCityCode = currentLocationSlot?.cityCode;
+    final prevCityName = currentLocationSlot?.cityName;
 
     final resolver = await ref.read(jmaRegionResolverProvider.future);
     // EEW 用の area_forecast_local_eew コード
@@ -144,44 +118,26 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
     // 揺れ検知用の cityCode は resolver から直接取得する。
     final shakeCityCode = resolver.resolveCityCode(latitude, longitude);
 
-    // EEW リージョン更新
+    // スロットリージョン更新（EEW と地震情報が統合されたので1回で済む）
     var didUpdateEew = false;
     String? eewError;
     try {
       didUpdateEew = await retry.run(
-        action: () => ref
-            .read(eewSettingsProvider.notifier)
-            .updateCurrentLocationRegion(regionCode: code, regionName: name),
+        action: () async {
+          await ref
+              .read(notificationSlotsProvider.notifier)
+              .updateCurrentLocationRegion(regionCode: code, regionName: name);
+          return true;
+        },
       );
     } on Object catch (e, st) {
-      talker.error('[BackgroundLocation] update EEW location failed', e, st);
+      talker.error('[BackgroundLocation] update slot location failed', e, st);
       eewError = e.toString();
     }
 
-    // 地震通知リージョン更新 (city まで解決できた場合のみ)
-    var didUpdateEarthquake = false;
-    String? earthquakeError;
-    try {
-      if (earthquakeResolution != null) {
-        didUpdateEarthquake = await retry.run(
-          action: () => ref
-              .read(earthquakeNotificationSettingsProvider.notifier)
-              .updateCurrentLocationRegion(
-                regionCode: earthquakeResolution.regionCode,
-                regionName: earthquakeResolution.regionName,
-                cityCode: earthquakeResolution.cityCode,
-                cityName: earthquakeResolution.cityName,
-              ),
-        );
-      }
-    } on Object catch (e, st) {
-      talker.error(
-        '[BackgroundLocation] update earthquake location failed',
-        e,
-        st,
-      );
-      earthquakeError = e.toString();
-    }
+    // 地震情報は統合スロットで一緒に更新されるため、個別更新不要。
+    final didUpdateEarthquake = didUpdateEew;
+    const String? earthquakeError = null;
 
     // 揺れ検知 sub_region 更新
     var didUpdateShake = false;

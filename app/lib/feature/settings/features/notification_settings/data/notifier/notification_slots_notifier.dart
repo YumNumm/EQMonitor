@@ -2,7 +2,6 @@ import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
-import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
@@ -63,8 +62,9 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
   Future<void> deleteCurrentLocation() async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
     await repo.deleteCurrentLocation();
+    // invalidateSelf前にトラッキング停止を試みる（stale state回避）
+    await _stopLocationTrackingIfNeeded();
     ref.invalidateSelf();
-    await _stopLocationTrackingIfUnused();
   }
 
   Future<void> putNationwide({
@@ -155,7 +155,7 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     ref.invalidateSelf();
   }
 
-  Future<void> updateCurrentLocationRegion({
+  Future<bool> updateCurrentLocationRegion({
     required int regionCode,
     String? regionName,
   }) async {
@@ -164,24 +164,20 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
         .where((s) => s.slotType == NotificationSlotType.currentLocation)
         .firstOrNull;
     if (existing == null || existing.regionId == regionCode) {
-      return;
+      return false;
     }
-    // 現在地スロットの場合は putCurrentLocation で更新
-    // （regionId はスロットの属性ではなく、位置情報更新時に別途処理される）
     ref.invalidateSelf();
+    return true;
   }
 
-  Future<void> _stopLocationTrackingIfUnused() async {
-    final current = state.value ?? [];
-    final hasCurrentLocation = current.any(
-      (s) => s.slotType == NotificationSlotType.currentLocation,
-    );
-    if (!hasCurrentLocation) {
-      const lifecycle = BackgroundLocationMonitoringLifecycle();
-      await lifecycle.stopIfUnused(
-        eewSettings: null,
-        earthquakeSettings: null,
-        shakeDetectionState: null,
+  Future<void> _stopLocationTrackingIfNeeded() async {
+    try {
+      await BackgroundLocationTracker.stopMonitoring();
+    } on Object catch (e, st) {
+      talker.error(
+        '[NotificationSlots] BackgroundLocationTracker.stopMonitoring',
+        e,
+        st,
       );
     }
   }

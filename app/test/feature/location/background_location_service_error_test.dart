@@ -1,8 +1,6 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_notification_settings.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_notification_settings.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
@@ -42,13 +40,12 @@ void main() {
     expect(attempts, 3);
   });
 
-  test('BackgroundLocationMonitoringPolicy monitors EEW current location', () {
+  test('BackgroundLocationMonitoringPolicy monitors slot current location', () {
     const policy = BackgroundLocationMonitoringPolicy();
-    const models = _BackgroundLocationServiceTestModels();
+    const models = _TestModels();
 
     final shouldMonitor = policy.shouldMonitor(
-      eewSettings: models.eewSettings(hasCurrentLocation: true),
-      earthquakeSettings: null,
+      slots: [models.currentLocationSlot()],
       shakeDetectionState: models.shakeDetectionState(
         hasCurrentLocation: false,
       ),
@@ -58,32 +55,13 @@ void main() {
   });
 
   test(
-    'BackgroundLocationMonitoringPolicy monitors earthquake current location',
-    () {
-      const policy = BackgroundLocationMonitoringPolicy();
-      const models = _BackgroundLocationServiceTestModels();
-
-      final shouldMonitor = policy.shouldMonitor(
-        eewSettings: models.eewSettings(hasCurrentLocation: false),
-        earthquakeSettings: models.earthquakeSettings(hasCurrentLocation: true),
-        shakeDetectionState: null,
-      );
-
-      expect(shouldMonitor, isTrue);
-    },
-  );
-
-  test(
     'BackgroundLocationMonitoringPolicy monitors shake current location',
     () {
       const policy = BackgroundLocationMonitoringPolicy();
-      const models = _BackgroundLocationServiceTestModels();
+      const models = _TestModels();
 
       final shouldMonitor = policy.shouldMonitor(
-        eewSettings: models.eewSettings(hasCurrentLocation: false),
-        earthquakeSettings: models.earthquakeSettings(
-          hasCurrentLocation: false,
-        ),
+        slots: [],
         shakeDetectionState: models.shakeDetectionState(
           hasCurrentLocation: true,
         ),
@@ -95,11 +73,10 @@ void main() {
 
   test('BackgroundLocationMonitoringPolicy skips without current location', () {
     const policy = BackgroundLocationMonitoringPolicy();
-    const models = _BackgroundLocationServiceTestModels();
+    const models = _TestModels();
 
     final shouldMonitor = policy.shouldMonitor(
-      eewSettings: models.eewSettings(hasCurrentLocation: false),
-      earthquakeSettings: models.earthquakeSettings(hasCurrentLocation: false),
+      slots: [models.regionSlot()],
       shakeDetectionState: models.shakeDetectionState(
         hasCurrentLocation: false,
       ),
@@ -110,11 +87,10 @@ void main() {
 
   test('BackgroundLocationMonitoringPolicy stops without current location', () {
     const policy = BackgroundLocationMonitoringPolicy();
-    const models = _BackgroundLocationServiceTestModels();
+    const models = _TestModels();
 
     final shouldStop = policy.shouldStop(
-      eewSettings: models.eewSettings(hasCurrentLocation: false),
-      earthquakeSettings: models.earthquakeSettings(hasCurrentLocation: false),
+      slots: [models.regionSlot()],
       shakeDetectionState: models.shakeDetectionState(
         hasCurrentLocation: false,
       ),
@@ -125,14 +101,11 @@ void main() {
 
   test('BackgroundLocationMonitoringPolicy keeps monitoring when unknown', () {
     const policy = BackgroundLocationMonitoringPolicy();
-    const models = _BackgroundLocationServiceTestModels();
+    const models = _TestModels();
 
     final shouldStop = policy.shouldStop(
-      eewSettings: models.eewSettings(hasCurrentLocation: false),
-      earthquakeSettings: null,
-      shakeDetectionState: models.shakeDetectionState(
-        hasCurrentLocation: false,
-      ),
+      slots: [models.regionSlot()],
+      shakeDetectionState: null,
     );
 
     expect(shouldStop, isFalse);
@@ -142,11 +115,10 @@ void main() {
     'BackgroundLocationMonitoringPolicy keeps monitoring with current location',
     () {
       const policy = BackgroundLocationMonitoringPolicy();
-      const models = _BackgroundLocationServiceTestModels();
+      const models = _TestModels();
 
       final shouldStop = policy.shouldStop(
-        eewSettings: models.eewSettings(hasCurrentLocation: false),
-        earthquakeSettings: models.earthquakeSettings(hasCurrentLocation: true),
+        slots: [models.currentLocationSlot()],
         shakeDetectionState: models.shakeDetectionState(
           hasCurrentLocation: false,
         ),
@@ -157,27 +129,39 @@ void main() {
   );
 }
 
-final class _BackgroundLocationServiceTestModels {
-  const _BackgroundLocationServiceTestModels();
+final class _TestModels {
+  const _TestModels();
 
-  EewNotificationSettings eewSettings({required bool hasCurrentLocation}) =>
-      EewNotificationSettings(
-        enabled: true,
-        startLiveActivity: true,
-        onePointEnabled: true,
-        regions: [
-          if (hasCurrentLocation) notificationRegion(isCurrentLocation: true),
-        ],
-      );
+  NotificationSlot currentLocationSlot() => const NotificationSlot(
+    id: 'slot-cl',
+    slotType: NotificationSlotType.currentLocation,
+    regionId: 9011,
+    regionName: '東京地方',
+    cityCode: null,
+    cityName: null,
+    displayOrder: 0,
+    eewEnabled: true,
+    eewMinIntensity: JmaIntensity.four,
+    eewOverrides: null,
+    earthquakeEnabled: true,
+    earthquakeMinIntensity: JmaIntensity.one,
+    earthquakeOverrides: null,
+  );
 
-  EarthquakeNotificationSettings earthquakeSettings({
-    required bool hasCurrentLocation,
-  }) => EarthquakeNotificationSettings(
-    enabled: true,
-    estimatedIntensityEnabled: false,
-    regions: [
-      if (hasCurrentLocation) notificationRegion(isCurrentLocation: true),
-    ],
+  NotificationSlot regionSlot() => const NotificationSlot(
+    id: 'slot-region',
+    slotType: NotificationSlotType.region,
+    regionId: 130000,
+    regionName: '東京都',
+    cityCode: null,
+    cityName: null,
+    displayOrder: 1,
+    eewEnabled: true,
+    eewMinIntensity: JmaIntensity.four,
+    eewOverrides: null,
+    earthquakeEnabled: true,
+    earthquakeMinIntensity: JmaIntensity.four,
+    earthquakeOverrides: null,
   );
 
   ShakeDetectionState shakeDetectionState({required bool hasCurrentLocation}) =>
@@ -193,13 +177,5 @@ final class _BackgroundLocationServiceTestModels {
             ),
         ],
         availableSubRegions: <ShakeDetectionSubRegion>[],
-      );
-
-  NotificationRegion notificationRegion({required bool isCurrentLocation}) =>
-      NotificationRegion(
-        regionId: 1,
-        regionName: 'テスト',
-        isCurrentLocation: isCurrentLocation,
-        minJmaIntensity: JmaIntensity.four,
       );
 }

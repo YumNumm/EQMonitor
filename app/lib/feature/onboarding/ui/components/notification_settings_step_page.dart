@@ -15,14 +15,13 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
       isProcessing.value = true;
       saveError.value = null;
       try {
-        await ref.read(eewSettingsProvider.future);
-        await ref.read(eewSettingsProvider.notifier).addCurrentLocationRegion();
-
-        await ref.read(earthquakeNotificationSettingsProvider.future);
-        await ref
-            .read(earthquakeNotificationSettingsProvider.notifier)
-            .addCurrentLocationRegion(minIntensity: JmaIntensity.one);
-
+        final notifier = ref.read(notificationSlotsProvider.notifier);
+        await notifier.putCurrentLocation(
+          eewEnabled: true,
+          eewMinIntensity: JmaIntensity.four,
+          earthquakeEnabled: true,
+          earthquakeMinIntensity: JmaIntensity.one,
+        );
         if (context.mounted) {
           isProcessing.value = false;
           await scope.nextPage();
@@ -38,7 +37,6 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
     Future<void> onNext() async {
       switch (selectedPreset.value) {
         case .recommended:
-        case .advanced:
           await saveRecommendedSettings();
         case .custom:
           if (!context.mounted) {
@@ -46,7 +44,7 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
           }
           await Navigator.of(context).push<void>(
             MaterialPageRoute<void>(
-              builder: (_) => const OnboardingCustomSettingsPage(),
+              builder: (_) => const _OnboardingCustomSettingsWrapper(),
             ),
           );
           if (context.mounted) {
@@ -76,7 +74,7 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
       ),
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: .stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: designSystem.spacing.xxxxl),
             Text(
@@ -107,7 +105,7 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
                     designSystem: designSystem,
                   ),
                   _BulletItem(
-                    text: '現在地で震度1以上を観測',
+                    text: '現在地で震度1以上の地震情報',
                     designSystem: designSystem,
                   ),
                 ],
@@ -122,37 +120,12 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _BulletItem(
-                    text: '緊急地震速報と地震情報について、追加で1地域まで指定',
+                    text: '通知する地域や震度を細かく設定できます',
                     designSystem: designSystem,
                   ),
                   _BulletItem(
-                    text: '現在地の緊急地震速報(警報)有無',
+                    text: 'Proではさらに通知音や割り込みレベルを設定できます',
                     designSystem: designSystem,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: designSystem.spacing.md),
-            _PresetCard(
-              title: '高度な設定',
-              badge: 'PRO',
-              isSelected: selectedPreset.value == _NotificationPreset.advanced,
-              onTap: () => selectedPreset.value = _NotificationPreset.advanced,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _BulletItem(
-                    text: '緊急地震速報と地震情報について、追加で最大5地域まで指定',
-                    designSystem: designSystem,
-                  ),
-                  _BulletItem(
-                    text: '予想震度や観測震度に合わせた通知音・通知割り込みレベルのカスタマイズ',
-                    designSystem: designSystem,
-                  ),
-                  SizedBox(height: designSystem.spacing.sm),
-                  OutlinedButton(
-                    onPressed: () {},
-                    child: const Text('課金について見る'),
                   ),
                 ],
               ),
@@ -174,17 +147,24 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
   }
 }
 
+class _OnboardingCustomSettingsWrapper extends StatelessWidget {
+  const _OnboardingCustomSettingsWrapper();
+
+  @override
+  Widget build(BuildContext context) {
+    return const NotificationSettingsPage();
+  }
+}
+
 class _PresetCard extends StatelessWidget {
   const _PresetCard({
     required this.title,
     required this.isSelected,
     required this.onTap,
     required this.child,
-    this.badge,
   });
 
   final String title;
-  final String? badge;
   final bool isSelected;
   final VoidCallback onTap;
   final Widget child;
@@ -231,28 +211,6 @@ class _PresetCard extends StatelessWidget {
                     style: designSystem.typography.titleMedium,
                   ),
                 ),
-                if (badge != null) ...[
-                  SizedBox(width: designSystem.spacing.xs),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: designSystem.spacing.xs,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: designSystem.palette.brandPrimary.withValues(
-                        alpha: 0.15,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      badge!,
-                      style: designSystem.typography.labelSmall.copyWith(
-                        color: designSystem.palette.brandPrimary,
-                        fontWeight: .bold,
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
             SizedBox(height: designSystem.spacing.sm),
