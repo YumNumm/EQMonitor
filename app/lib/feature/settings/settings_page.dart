@@ -94,10 +94,9 @@ class SettingsPage extends ConsumerWidget {
                 ),
                 ListTile(
                   title: const Text('問い合わせ'),
-                  subtitle: const Text('アプリ情報を付与して問い合わせページを開きます'),
                   leading: const Icon(Icons.contact_support_outlined),
                   onTap: () async =>
-                      ref.read(openContactProvider)(ref, context),
+                      ref.read(openContactProvider).call(ref, context),
                 ),
                 AppSwitchListTile(
                   title: '広告を非表示',
