@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'plan_constraints.dart';
+import 'plan_constraint_variants.dart';
 import 'start_app.dart';
 import 'start_flags.dart';
 
@@ -16,8 +16,8 @@ abstract class StartResponse with _$StartResponse {
   const factory StartResponse({
     required StartFlags flags,
     required StartApp app,
-    @JsonKey(includeIfNull: false,name: 'plan_constraints')
-    PlanConstraints? planConstraints,
+    @JsonKey(name: 'plan_constraints')
+    required PlanConstraintVariants planConstraints,
   }) = _StartResponse;
   
   factory StartResponse.fromJson(Map<String, Object?> json) => _$StartResponseFromJson(json);

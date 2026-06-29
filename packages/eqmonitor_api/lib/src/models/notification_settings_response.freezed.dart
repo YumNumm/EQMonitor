@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationSettingsResponse {
 
-@JsonKey(name: 'tsunami_enabled') bool get tsunamiEnabled;@JsonKey(name: 'training_enabled') bool get trainingEnabled;
+@JsonKey(name: 'tsunami_enabled') bool get tsunamiEnabled;@JsonKey(name: 'training_enabled') bool get trainingEnabled;@JsonKey(name: 'nankai_extraordinary_enabled') bool get nankaiExtraordinaryEnabled;@JsonKey(name: 'nankai_regular_enabled') bool get nankaiRegularEnabled;@JsonKey(name: 'hokkaido3ren_offshore_enabled') bool get hokkaido3renOffshoreEnabled;
 /// Create a copy of NotificationSettingsResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $NotificationSettingsResponseCopyWith<NotificationSettingsResponse> get copyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationSettingsResponse&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationSettingsResponse&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled)&&(identical(other.nankaiExtraordinaryEnabled, nankaiExtraordinaryEnabled) || other.nankaiExtraordinaryEnabled == nankaiExtraordinaryEnabled)&&(identical(other.nankaiRegularEnabled, nankaiRegularEnabled) || other.nankaiRegularEnabled == nankaiRegularEnabled)&&(identical(other.hokkaido3renOffshoreEnabled, hokkaido3renOffshoreEnabled) || other.hokkaido3renOffshoreEnabled == hokkaido3renOffshoreEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,tsunamiEnabled,trainingEnabled);
+int get hashCode => Object.hash(runtimeType,tsunamiEnabled,trainingEnabled,nankaiExtraordinaryEnabled,nankaiRegularEnabled,hokkaido3renOffshoreEnabled);
 
 @override
 String toString() {
-  return 'NotificationSettingsResponse(tsunamiEnabled: $tsunamiEnabled, trainingEnabled: $trainingEnabled)';
+  return 'NotificationSettingsResponse(tsunamiEnabled: $tsunamiEnabled, trainingEnabled: $trainingEnabled, nankaiExtraordinaryEnabled: $nankaiExtraordinaryEnabled, nankaiRegularEnabled: $nankaiRegularEnabled, hokkaido3renOffshoreEnabled: $hokkaido3renOffshoreEnabled)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $NotificationSettingsResponseCopyWith<$Res>  {
   factory $NotificationSettingsResponseCopyWith(NotificationSettingsResponse value, $Res Function(NotificationSettingsResponse) _then) = _$NotificationSettingsResponseCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'tsunami_enabled') bool tsunamiEnabled,@JsonKey(name: 'training_enabled') bool trainingEnabled
+@JsonKey(name: 'tsunami_enabled') bool tsunamiEnabled,@JsonKey(name: 'training_enabled') bool trainingEnabled,@JsonKey(name: 'nankai_extraordinary_enabled') bool nankaiExtraordinaryEnabled,@JsonKey(name: 'nankai_regular_enabled') bool nankaiRegularEnabled,@JsonKey(name: 'hokkaido3ren_offshore_enabled') bool hokkaido3renOffshoreEnabled
 });
 
 
@@ -65,10 +65,13 @@ class _$NotificationSettingsResponseCopyWithImpl<$Res>
 
 /// Create a copy of NotificationSettingsResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? tsunamiEnabled = null,Object? trainingEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? tsunamiEnabled = null,Object? trainingEnabled = null,Object? nankaiExtraordinaryEnabled = null,Object? nankaiRegularEnabled = null,Object? hokkaido3renOffshoreEnabled = null,}) {
   return _then(_self.copyWith(
 tsunamiEnabled: null == tsunamiEnabled ? _self.tsunamiEnabled : tsunamiEnabled // ignore: cast_nullable_to_non_nullable
 as bool,trainingEnabled: null == trainingEnabled ? _self.trainingEnabled : trainingEnabled // ignore: cast_nullable_to_non_nullable
+as bool,nankaiExtraordinaryEnabled: null == nankaiExtraordinaryEnabled ? _self.nankaiExtraordinaryEnabled : nankaiExtraordinaryEnabled // ignore: cast_nullable_to_non_nullable
+as bool,nankaiRegularEnabled: null == nankaiRegularEnabled ? _self.nankaiRegularEnabled : nankaiRegularEnabled // ignore: cast_nullable_to_non_nullable
+as bool,hokkaido3renOffshoreEnabled: null == hokkaido3renOffshoreEnabled ? _self.hokkaido3renOffshoreEnabled : hokkaido3renOffshoreEnabled // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -154,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'tsunami_enabled')  bool tsunamiEnabled, @JsonKey(name: 'training_enabled')  bool trainingEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'tsunami_enabled')  bool tsunamiEnabled, @JsonKey(name: 'training_enabled')  bool trainingEnabled, @JsonKey(name: 'nankai_extraordinary_enabled')  bool nankaiExtraordinaryEnabled, @JsonKey(name: 'nankai_regular_enabled')  bool nankaiRegularEnabled, @JsonKey(name: 'hokkaido3ren_offshore_enabled')  bool hokkaido3renOffshoreEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationSettingsResponse() when $default != null:
-return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
+return $default(_that.tsunamiEnabled,_that.trainingEnabled,_that.nankaiExtraordinaryEnabled,_that.nankaiRegularEnabled,_that.hokkaido3renOffshoreEnabled);case _:
   return orElse();
 
 }
@@ -175,10 +178,10 @@ return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'tsunami_enabled')  bool tsunamiEnabled, @JsonKey(name: 'training_enabled')  bool trainingEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'tsunami_enabled')  bool tsunamiEnabled, @JsonKey(name: 'training_enabled')  bool trainingEnabled, @JsonKey(name: 'nankai_extraordinary_enabled')  bool nankaiExtraordinaryEnabled, @JsonKey(name: 'nankai_regular_enabled')  bool nankaiRegularEnabled, @JsonKey(name: 'hokkaido3ren_offshore_enabled')  bool hokkaido3renOffshoreEnabled)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationSettingsResponse():
-return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
+return $default(_that.tsunamiEnabled,_that.trainingEnabled,_that.nankaiExtraordinaryEnabled,_that.nankaiRegularEnabled,_that.hokkaido3renOffshoreEnabled);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +198,10 @@ return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'tsunami_enabled')  bool tsunamiEnabled, @JsonKey(name: 'training_enabled')  bool trainingEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'tsunami_enabled')  bool tsunamiEnabled, @JsonKey(name: 'training_enabled')  bool trainingEnabled, @JsonKey(name: 'nankai_extraordinary_enabled')  bool nankaiExtraordinaryEnabled, @JsonKey(name: 'nankai_regular_enabled')  bool nankaiRegularEnabled, @JsonKey(name: 'hokkaido3ren_offshore_enabled')  bool hokkaido3renOffshoreEnabled)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationSettingsResponse() when $default != null:
-return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
+return $default(_that.tsunamiEnabled,_that.trainingEnabled,_that.nankaiExtraordinaryEnabled,_that.nankaiRegularEnabled,_that.hokkaido3renOffshoreEnabled);case _:
   return null;
 
 }
@@ -210,11 +213,14 @@ return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
 @JsonSerializable()
 
 class _NotificationSettingsResponse implements NotificationSettingsResponse {
-  const _NotificationSettingsResponse({@JsonKey(name: 'tsunami_enabled') required this.tsunamiEnabled, @JsonKey(name: 'training_enabled') required this.trainingEnabled});
+  const _NotificationSettingsResponse({@JsonKey(name: 'tsunami_enabled') required this.tsunamiEnabled, @JsonKey(name: 'training_enabled') required this.trainingEnabled, @JsonKey(name: 'nankai_extraordinary_enabled') required this.nankaiExtraordinaryEnabled, @JsonKey(name: 'nankai_regular_enabled') required this.nankaiRegularEnabled, @JsonKey(name: 'hokkaido3ren_offshore_enabled') required this.hokkaido3renOffshoreEnabled});
   factory _NotificationSettingsResponse.fromJson(Map<String, dynamic> json) => _$NotificationSettingsResponseFromJson(json);
 
 @override@JsonKey(name: 'tsunami_enabled') final  bool tsunamiEnabled;
 @override@JsonKey(name: 'training_enabled') final  bool trainingEnabled;
+@override@JsonKey(name: 'nankai_extraordinary_enabled') final  bool nankaiExtraordinaryEnabled;
+@override@JsonKey(name: 'nankai_regular_enabled') final  bool nankaiRegularEnabled;
+@override@JsonKey(name: 'hokkaido3ren_offshore_enabled') final  bool hokkaido3renOffshoreEnabled;
 
 /// Create a copy of NotificationSettingsResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationSettingsResponse&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationSettingsResponse&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled)&&(identical(other.nankaiExtraordinaryEnabled, nankaiExtraordinaryEnabled) || other.nankaiExtraordinaryEnabled == nankaiExtraordinaryEnabled)&&(identical(other.nankaiRegularEnabled, nankaiRegularEnabled) || other.nankaiRegularEnabled == nankaiRegularEnabled)&&(identical(other.hokkaido3renOffshoreEnabled, hokkaido3renOffshoreEnabled) || other.hokkaido3renOffshoreEnabled == hokkaido3renOffshoreEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,tsunamiEnabled,trainingEnabled);
+int get hashCode => Object.hash(runtimeType,tsunamiEnabled,trainingEnabled,nankaiExtraordinaryEnabled,nankaiRegularEnabled,hokkaido3renOffshoreEnabled);
 
 @override
 String toString() {
-  return 'NotificationSettingsResponse(tsunamiEnabled: $tsunamiEnabled, trainingEnabled: $trainingEnabled)';
+  return 'NotificationSettingsResponse(tsunamiEnabled: $tsunamiEnabled, trainingEnabled: $trainingEnabled, nankaiExtraordinaryEnabled: $nankaiExtraordinaryEnabled, nankaiRegularEnabled: $nankaiRegularEnabled, hokkaido3renOffshoreEnabled: $hokkaido3renOffshoreEnabled)';
 }
 
 
@@ -249,7 +255,7 @@ abstract mixin class _$NotificationSettingsResponseCopyWith<$Res> implements $No
   factory _$NotificationSettingsResponseCopyWith(_NotificationSettingsResponse value, $Res Function(_NotificationSettingsResponse) _then) = __$NotificationSettingsResponseCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'tsunami_enabled') bool tsunamiEnabled,@JsonKey(name: 'training_enabled') bool trainingEnabled
+@JsonKey(name: 'tsunami_enabled') bool tsunamiEnabled,@JsonKey(name: 'training_enabled') bool trainingEnabled,@JsonKey(name: 'nankai_extraordinary_enabled') bool nankaiExtraordinaryEnabled,@JsonKey(name: 'nankai_regular_enabled') bool nankaiRegularEnabled,@JsonKey(name: 'hokkaido3ren_offshore_enabled') bool hokkaido3renOffshoreEnabled
 });
 
 
@@ -266,10 +272,13 @@ class __$NotificationSettingsResponseCopyWithImpl<$Res>
 
 /// Create a copy of NotificationSettingsResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? tsunamiEnabled = null,Object? trainingEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? tsunamiEnabled = null,Object? trainingEnabled = null,Object? nankaiExtraordinaryEnabled = null,Object? nankaiRegularEnabled = null,Object? hokkaido3renOffshoreEnabled = null,}) {
   return _then(_NotificationSettingsResponse(
 tsunamiEnabled: null == tsunamiEnabled ? _self.tsunamiEnabled : tsunamiEnabled // ignore: cast_nullable_to_non_nullable
 as bool,trainingEnabled: null == trainingEnabled ? _self.trainingEnabled : trainingEnabled // ignore: cast_nullable_to_non_nullable
+as bool,nankaiExtraordinaryEnabled: null == nankaiExtraordinaryEnabled ? _self.nankaiExtraordinaryEnabled : nankaiExtraordinaryEnabled // ignore: cast_nullable_to_non_nullable
+as bool,nankaiRegularEnabled: null == nankaiRegularEnabled ? _self.nankaiRegularEnabled : nankaiRegularEnabled // ignore: cast_nullable_to_non_nullable
+as bool,hokkaido3renOffshoreEnabled: null == hokkaido3renOffshoreEnabled ? _self.hokkaido3renOffshoreEnabled : hokkaido3renOffshoreEnabled // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

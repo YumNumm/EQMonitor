@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StartResponse {
 
- StartFlags get flags; StartApp get app;@JsonKey(includeIfNull: false, name: 'plan_constraints') PlanConstraints? get planConstraints;
+ StartFlags get flags; StartApp get app;@JsonKey(name: 'plan_constraints') PlanConstraintVariants get planConstraints;
 /// Create a copy of StartResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $StartResponseCopyWith<$Res>  {
   factory $StartResponseCopyWith(StartResponse value, $Res Function(StartResponse) _then) = _$StartResponseCopyWithImpl;
 @useResult
 $Res call({
- StartFlags flags, StartApp app,@JsonKey(includeIfNull: false, name: 'plan_constraints') PlanConstraints? planConstraints
+ StartFlags flags, StartApp app,@JsonKey(name: 'plan_constraints') PlanConstraintVariants planConstraints
 });
 
 
-$StartFlagsCopyWith<$Res> get flags;$StartAppCopyWith<$Res> get app;$PlanConstraintsCopyWith<$Res>? get planConstraints;
+$StartFlagsCopyWith<$Res> get flags;$StartAppCopyWith<$Res> get app;$PlanConstraintVariantsCopyWith<$Res> get planConstraints;
 
 }
 /// @nodoc
@@ -65,12 +65,12 @@ class _$StartResponseCopyWithImpl<$Res>
 
 /// Create a copy of StartResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? flags = null,Object? app = null,Object? planConstraints = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? flags = null,Object? app = null,Object? planConstraints = null,}) {
   return _then(_self.copyWith(
 flags: null == flags ? _self.flags : flags // ignore: cast_nullable_to_non_nullable
 as StartFlags,app: null == app ? _self.app : app // ignore: cast_nullable_to_non_nullable
-as StartApp,planConstraints: freezed == planConstraints ? _self.planConstraints : planConstraints // ignore: cast_nullable_to_non_nullable
-as PlanConstraints?,
+as StartApp,planConstraints: null == planConstraints ? _self.planConstraints : planConstraints // ignore: cast_nullable_to_non_nullable
+as PlanConstraintVariants,
   ));
 }
 /// Create a copy of StartResponse
@@ -95,12 +95,9 @@ $StartAppCopyWith<$Res> get app {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$PlanConstraintsCopyWith<$Res>? get planConstraints {
-    if (_self.planConstraints == null) {
-    return null;
-  }
-
-  return $PlanConstraintsCopyWith<$Res>(_self.planConstraints!, (value) {
+$PlanConstraintVariantsCopyWith<$Res> get planConstraints {
+  
+  return $PlanConstraintVariantsCopyWith<$Res>(_self.planConstraints, (value) {
     return _then(_self.copyWith(planConstraints: value));
   });
 }
@@ -185,7 +182,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StartFlags flags,  StartApp app, @JsonKey(includeIfNull: false, name: 'plan_constraints')  PlanConstraints? planConstraints)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StartFlags flags,  StartApp app, @JsonKey(name: 'plan_constraints')  PlanConstraintVariants planConstraints)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StartResponse() when $default != null:
 return $default(_that.flags,_that.app,_that.planConstraints);case _:
@@ -206,7 +203,7 @@ return $default(_that.flags,_that.app,_that.planConstraints);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StartFlags flags,  StartApp app, @JsonKey(includeIfNull: false, name: 'plan_constraints')  PlanConstraints? planConstraints)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StartFlags flags,  StartApp app, @JsonKey(name: 'plan_constraints')  PlanConstraintVariants planConstraints)  $default,) {final _that = this;
 switch (_that) {
 case _StartResponse():
 return $default(_that.flags,_that.app,_that.planConstraints);case _:
@@ -226,7 +223,7 @@ return $default(_that.flags,_that.app,_that.planConstraints);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StartFlags flags,  StartApp app, @JsonKey(includeIfNull: false, name: 'plan_constraints')  PlanConstraints? planConstraints)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StartFlags flags,  StartApp app, @JsonKey(name: 'plan_constraints')  PlanConstraintVariants planConstraints)?  $default,) {final _that = this;
 switch (_that) {
 case _StartResponse() when $default != null:
 return $default(_that.flags,_that.app,_that.planConstraints);case _:
@@ -241,12 +238,12 @@ return $default(_that.flags,_that.app,_that.planConstraints);case _:
 @JsonSerializable()
 
 class _StartResponse implements StartResponse {
-  const _StartResponse({required this.flags, required this.app, @JsonKey(includeIfNull: false, name: 'plan_constraints') this.planConstraints});
+  const _StartResponse({required this.flags, required this.app, @JsonKey(name: 'plan_constraints') required this.planConstraints});
   factory _StartResponse.fromJson(Map<String, dynamic> json) => _$StartResponseFromJson(json);
 
 @override final  StartFlags flags;
 @override final  StartApp app;
-@override@JsonKey(includeIfNull: false, name: 'plan_constraints') final  PlanConstraints? planConstraints;
+@override@JsonKey(name: 'plan_constraints') final  PlanConstraintVariants planConstraints;
 
 /// Create a copy of StartResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -281,11 +278,11 @@ abstract mixin class _$StartResponseCopyWith<$Res> implements $StartResponseCopy
   factory _$StartResponseCopyWith(_StartResponse value, $Res Function(_StartResponse) _then) = __$StartResponseCopyWithImpl;
 @override @useResult
 $Res call({
- StartFlags flags, StartApp app,@JsonKey(includeIfNull: false, name: 'plan_constraints') PlanConstraints? planConstraints
+ StartFlags flags, StartApp app,@JsonKey(name: 'plan_constraints') PlanConstraintVariants planConstraints
 });
 
 
-@override $StartFlagsCopyWith<$Res> get flags;@override $StartAppCopyWith<$Res> get app;@override $PlanConstraintsCopyWith<$Res>? get planConstraints;
+@override $StartFlagsCopyWith<$Res> get flags;@override $StartAppCopyWith<$Res> get app;@override $PlanConstraintVariantsCopyWith<$Res> get planConstraints;
 
 }
 /// @nodoc
@@ -298,12 +295,12 @@ class __$StartResponseCopyWithImpl<$Res>
 
 /// Create a copy of StartResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? flags = null,Object? app = null,Object? planConstraints = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? flags = null,Object? app = null,Object? planConstraints = null,}) {
   return _then(_StartResponse(
 flags: null == flags ? _self.flags : flags // ignore: cast_nullable_to_non_nullable
 as StartFlags,app: null == app ? _self.app : app // ignore: cast_nullable_to_non_nullable
-as StartApp,planConstraints: freezed == planConstraints ? _self.planConstraints : planConstraints // ignore: cast_nullable_to_non_nullable
-as PlanConstraints?,
+as StartApp,planConstraints: null == planConstraints ? _self.planConstraints : planConstraints // ignore: cast_nullable_to_non_nullable
+as PlanConstraintVariants,
   ));
 }
 
@@ -329,12 +326,9 @@ $StartAppCopyWith<$Res> get app {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$PlanConstraintsCopyWith<$Res>? get planConstraints {
-    if (_self.planConstraints == null) {
-    return null;
-  }
-
-  return $PlanConstraintsCopyWith<$Res>(_self.planConstraints!, (value) {
+$PlanConstraintVariantsCopyWith<$Res> get planConstraints {
+  
+  return $PlanConstraintVariantsCopyWith<$Res>(_self.planConstraints, (value) {
     return _then(_self.copyWith(planConstraints: value));
   });
 }

@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'notification_tier.dart';
+import 'default_interruption_level.dart';
 
 part 'eew_settings_response.freezed.dart';
 part 'eew_settings_response.g.dart';
@@ -13,12 +13,12 @@ part 'eew_settings_response.g.dart';
 abstract class EewSettingsResponse with _$EewSettingsResponse {
   const factory EewSettingsResponse({
     required bool enabled,
-    @JsonKey(name: 'notification_tiers')
-    required List<NotificationTier> notificationTiers,
+    @JsonKey(name: 'default_sound')
+    required String defaultSound,
+    @JsonKey(name: 'default_interruption_level')
+    required DefaultInterruptionLevel defaultInterruptionLevel,
     @JsonKey(name: 'start_live_activity')
     required bool startLiveActivity,
-    @JsonKey(name: 'one_point_enabled')
-    required bool onePointEnabled,
     @JsonKey(name: 'collapse_notification')
     required bool collapseNotification,
     @JsonKey(name: 'warning_enabled')

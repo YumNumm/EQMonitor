@@ -21,13 +21,8 @@ import '../models/eew_warning_config_response.dart';
 import '../models/kind.dart';
 import '../models/live_activity_token_request.dart';
 import '../models/live_activity_token_response.dart';
-import '../models/notification_defaults_request.dart';
-import '../models/notification_defaults_response.dart';
 import '../models/notification_settings_request.dart';
 import '../models/notification_settings_response.dart';
-import '../models/region_setting_patch_request.dart';
-import '../models/region_setting_request.dart';
-import '../models/region_setting_response.dart';
 import '../models/shake_detection_setting_request.dart';
 import '../models/shake_detection_setting_response.dart';
 import '../models/shake_detection_sub_region_response.dart';
@@ -99,35 +94,6 @@ abstract class DeviceApiClient {
     @Body() required EarthquakeSettingsRequest body,
   });
 
-  /// 地震通知リージョン設定一覧を取得
-  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsEarthquakeRegions)
-  Future<HttpResponse<List<RegionSettingResponse>>> getV2DeviceMeSettingsEarthquakeRegions();
-
-  /// 地震通知リージョン設定を一括更新（全件上書き）
-  @PUT(DeviceApiClientUrls.putV2DeviceMeSettingsEarthquakeRegions)
-  Future<HttpResponse<List<RegionSettingResponse>>> putV2DeviceMeSettingsEarthquakeRegions({
-    @Body() required List<RegionSettingRequest> body,
-  });
-
-  /// 特定のリージョン設定を取得
-  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsEarthquakeRegionsRegionId)
-  Future<HttpResponse<RegionSettingResponse>> getV2DeviceMeSettingsEarthquakeRegionsRegionId({
-    @Path('regionId') required num regionId,
-  });
-
-  /// 特定のリージョン設定を更新
-  @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsEarthquakeRegionsRegionId)
-  Future<HttpResponse<RegionSettingResponse>> patchV2DeviceMeSettingsEarthquakeRegionsRegionId({
-    @Path('regionId') required num regionId,
-    @Body() required RegionSettingPatchRequest body,
-  });
-
-  /// 特定のリージョン設定を削除
-  @DELETE(DeviceApiClientUrls.deleteV2DeviceMeSettingsEarthquakeRegionsRegionId)
-  Future<HttpResponse<void>> deleteV2DeviceMeSettingsEarthquakeRegionsRegionId({
-    @Path('regionId') required num regionId,
-  });
-
   /// EEW通知設定を取得
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsEew)
   Future<HttpResponse<EewSettingsResponse>> getV2DeviceMeSettingsEew();
@@ -136,35 +102,6 @@ abstract class DeviceApiClient {
   @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsEew)
   Future<HttpResponse<EewSettingsResponse>> patchV2DeviceMeSettingsEew({
     @Body() required EewSettingsRequest body,
-  });
-
-  /// EEW通知リージョン設定一覧を取得
-  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsEewRegions)
-  Future<HttpResponse<List<RegionSettingResponse>>> getV2DeviceMeSettingsEewRegions();
-
-  /// EEW通知リージョン設定を一括更新（全件上書き）
-  @PUT(DeviceApiClientUrls.putV2DeviceMeSettingsEewRegions)
-  Future<HttpResponse<List<RegionSettingResponse>>> putV2DeviceMeSettingsEewRegions({
-    @Body() required List<RegionSettingRequest> body,
-  });
-
-  /// 特定のリージョン設定を取得
-  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsEewRegionsRegionId)
-  Future<HttpResponse<RegionSettingResponse>> getV2DeviceMeSettingsEewRegionsRegionId({
-    @Path('regionId') required num regionId,
-  });
-
-  /// 特定のリージョン設定を更新
-  @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsEewRegionsRegionId)
-  Future<HttpResponse<RegionSettingResponse>> patchV2DeviceMeSettingsEewRegionsRegionId({
-    @Path('regionId') required num regionId,
-    @Body() required RegionSettingPatchRequest body,
-  });
-
-  /// 特定のリージョン設定を削除
-  @DELETE(DeviceApiClientUrls.deleteV2DeviceMeSettingsEewRegionsRegionId)
-  Future<HttpResponse<void>> deleteV2DeviceMeSettingsEewRegionsRegionId({
-    @Path('regionId') required num regionId,
   });
 
   /// 揺れ検知通知設定一覧を取得
@@ -275,16 +212,6 @@ abstract class DeviceApiClient {
     @Path('slotId') required String slotId,
   });
 
-  /// 通知デフォルト設定を取得
-  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsNotificationDefaults)
-  Future<HttpResponse<NotificationDefaultsResponse>> getV2DeviceMeSettingsNotificationDefaults();
-
-  /// 通知デフォルト設定を更新（Free プランは sound/interruption_level 変更不可）
-  @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsNotificationDefaults)
-  Future<HttpResponse<NotificationDefaultsResponse>> patchV2DeviceMeSettingsNotificationDefaults({
-    @Body() required NotificationDefaultsRequest body,
-  });
-
   /// EEW 警報設定を取得
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsEewWarning)
   Future<HttpResponse<EewWarningConfigResponse>> getV2DeviceMeSettingsEewWarning();
@@ -341,30 +268,10 @@ abstract class DeviceApiClientUrls {
 	static const getV2DeviceMeSettingsEarthquake = "/v2/device/me/settings/earthquake";
 	/// /v2/device/me/settings/earthquake
 	static const patchV2DeviceMeSettingsEarthquake = "/v2/device/me/settings/earthquake";
-	/// /v2/device/me/settings/earthquake/regions
-	static const getV2DeviceMeSettingsEarthquakeRegions = "/v2/device/me/settings/earthquake/regions";
-	/// /v2/device/me/settings/earthquake/regions
-	static const putV2DeviceMeSettingsEarthquakeRegions = "/v2/device/me/settings/earthquake/regions";
-	/// /v2/device/me/settings/earthquake/regions/{regionId}
-	static const getV2DeviceMeSettingsEarthquakeRegionsRegionId = "/v2/device/me/settings/earthquake/regions/{regionId}";
-	/// /v2/device/me/settings/earthquake/regions/{regionId}
-	static const patchV2DeviceMeSettingsEarthquakeRegionsRegionId = "/v2/device/me/settings/earthquake/regions/{regionId}";
-	/// /v2/device/me/settings/earthquake/regions/{regionId}
-	static const deleteV2DeviceMeSettingsEarthquakeRegionsRegionId = "/v2/device/me/settings/earthquake/regions/{regionId}";
 	/// /v2/device/me/settings/eew
 	static const getV2DeviceMeSettingsEew = "/v2/device/me/settings/eew";
 	/// /v2/device/me/settings/eew
 	static const patchV2DeviceMeSettingsEew = "/v2/device/me/settings/eew";
-	/// /v2/device/me/settings/eew/regions
-	static const getV2DeviceMeSettingsEewRegions = "/v2/device/me/settings/eew/regions";
-	/// /v2/device/me/settings/eew/regions
-	static const putV2DeviceMeSettingsEewRegions = "/v2/device/me/settings/eew/regions";
-	/// /v2/device/me/settings/eew/regions/{regionId}
-	static const getV2DeviceMeSettingsEewRegionsRegionId = "/v2/device/me/settings/eew/regions/{regionId}";
-	/// /v2/device/me/settings/eew/regions/{regionId}
-	static const patchV2DeviceMeSettingsEewRegionsRegionId = "/v2/device/me/settings/eew/regions/{regionId}";
-	/// /v2/device/me/settings/eew/regions/{regionId}
-	static const deleteV2DeviceMeSettingsEewRegionsRegionId = "/v2/device/me/settings/eew/regions/{regionId}";
 	/// /v2/device/me/settings/shake-detection
 	static const getV2DeviceMeSettingsShakeDetection = "/v2/device/me/settings/shake-detection";
 	/// /v2/device/me/settings/shake-detection
@@ -407,10 +314,6 @@ abstract class DeviceApiClientUrls {
 	static const patchV2DeviceMeSettingsSlotsRegionsSlotId = "/v2/device/me/settings/slots/regions/{slotId}";
 	/// /v2/device/me/settings/slots/regions/{slotId}
 	static const deleteV2DeviceMeSettingsSlotsRegionsSlotId = "/v2/device/me/settings/slots/regions/{slotId}";
-	/// /v2/device/me/settings/notification-defaults
-	static const getV2DeviceMeSettingsNotificationDefaults = "/v2/device/me/settings/notification-defaults";
-	/// /v2/device/me/settings/notification-defaults
-	static const patchV2DeviceMeSettingsNotificationDefaults = "/v2/device/me/settings/notification-defaults";
 	/// /v2/device/me/settings/eew-warning
 	static const getV2DeviceMeSettingsEewWarning = "/v2/device/me/settings/eew-warning";
 	/// /v2/device/me/settings/eew-warning

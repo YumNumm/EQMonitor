@@ -21,6 +21,8 @@ abstract class DeviceMeResponse with _$DeviceMeResponse {
     required DeviceRegistrationType? registrationType,
     @JsonKey(includeIfNull: true)
     required String? userId,
+    @JsonKey(name: 'is_pro')
+    required bool isPro,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _DeviceMeResponse;

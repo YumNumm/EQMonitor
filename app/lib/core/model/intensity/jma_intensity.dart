@@ -166,3 +166,37 @@ extension JmaIntensityToApiMin on JmaIntensity {
     JmaIntensity.seven => .value7,
   };
 }
+
+extension ApiEewMinIntensityConverter on api.EewMinIntensity {
+  JmaIntensity get toJmaIntensity => switch (this) {
+    .value0 => .zero,
+    .value1 => .one,
+    .value2 => .two,
+    .value3 => .three,
+    .value4 => .four,
+    .value5unknown => .fiveUnknown,
+    .value5minus => .fiveLower,
+    .value5plus => .fiveUpper,
+    .value6unknown => .sixLower,
+    .value6minus => .sixLower,
+    .value6plus => .sixUpper,
+    .value7 => .seven,
+  };
+}
+
+extension ApiEarthquakeMinIntensityConverter on api.EarthquakeMinIntensity {
+  JmaIntensity get toJmaIntensity => switch (this) {
+    .value0 => .zero,
+    .value1 => .one,
+    .value2 => .two,
+    .value3 => .three,
+    .value4 => .four,
+    .value5unknown => .fiveUnknown,
+    .value5minus => .fiveLower,
+    .value5plus => .fiveUpper,
+    .value6unknown => .sixLower,
+    .value6minus => .sixLower,
+    .value6plus => .sixUpper,
+    .value7 => .seven,
+  };
+}
