@@ -1,13 +1,11 @@
 import 'package:background_location_tracker/background_location_tracker.dart';
-import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/device_notification_settings_repository.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,33 +24,25 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
     if (status != DeviceProvisioningStatus.notRequired) {
       throw StateError('Device not provisioned');
     }
-    final deviceId = await ref.watch(deviceIdProvider.future);
-    final repo = await ref.watch(
-      deviceNotificationSettingsRepositoryProvider.future,
-    );
-    final (entriesResult, subRegionsResult) = await (
-      repo.getShakeDetectionSettings(deviceId),
-      repo.getShakeDetectionSubRegions(deviceId),
+    final apiClient = await ref.watch(apiClientProvider.future);
+    final (entriesResponse, subRegionsResponse) = await (
+      apiClient.device.getV2DeviceMeSettingsShakeDetection(),
+      apiClient.device.getV2DeviceMeSettingsShakeDetectionSubRegions(),
     ).wait;
-    final rawEntries = switch (entriesResult) {
-      Success(:final value) => value,
-      Failure(:final exception) => throw exception,
-    };
-    final subRegions = switch (subRegionsResult) {
-      Success(:final value) => value,
-      Failure(:final exception) => throw exception,
-    };
+    final rawEntries = entriesResponse.data
+        .map(_shakeEntryFromResponse)
+        .toList();
+    final subRegions = subRegionsResponse.data
+        .map(
+          (r) => ShakeDetectionSubRegion(id: r.id, code: r.code, name: r.name),
+        )
+        .toList();
     return (
       entries: _resolveNames(rawEntries, subRegions),
       availableSubRegions: subRegions,
     );
   }
 
-  /// バックグラウンド位置更新時に現在地エントリのsub_region_idを更新する。
-  /// 現在地エントリが存在しない場合は何もしない（追加はユーザー操作で行う）。
-  /// [cityCode] は market区町村コード（areaInformationCity）。対応するサブ地域が
-  /// availableSubRegions に見つからない場合は null のまま維持する。
-  /// 更新が実行された場合は true、変化なしまたはスキップの場合は false を返す。
   Future<bool> updateCurrentLocationSubRegion(String? cityCode) async {
     final current = await future;
     final existing = current.entries
@@ -73,48 +63,29 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
       return false;
     }
 
-    final deviceId = await ref.read(deviceIdProvider.future);
-    final repo = await ref.read(
-      deviceNotificationSettingsRepositoryProvider.future,
-    );
+    final apiClient = await ref.read(apiClientProvider.future);
     final updated = current.entries.map((e) {
       return e.isCurrentLocation ? e.copyWith(subRegionId: newSubRegionId) : e;
     }).toList();
-    final result = await repo.putShakeDetectionSettings(
-      deviceId: deviceId,
-      entries: updated,
+    final response = await apiClient.device.putV2DeviceMeSettingsShakeDetection(
+      body: updated.map(_toApiRequest).toList(),
     );
-    switch (result) {
-      case Success(:final value):
-        state = AsyncData((
-          entries: _resolveNames(value, current.availableSubRegions),
-          availableSubRegions: current.availableSubRegions,
-        ));
-        return true;
-      case Failure(:final exception):
-        talker.error(
-          '[ShakeDetection] updateCurrentLocationSubRegion failure',
-          exception,
-        );
-        throw exception;
-    }
+    final value = response.data.map(_shakeEntryFromResponse).toList();
+    state = AsyncData((
+      entries: _resolveNames(value, current.availableSubRegions),
+      availableSubRegions: current.availableSubRegions,
+    ));
+    return true;
   }
 
   Future<void> addCurrentLocation({
     api.ShakeDetectionLevel level = api.ShakeDetectionLevel.medium,
   }) async {
     final current = state.requireValue;
-    talker.debug(
-      '[ShakeDetection] addCurrentLocation: entries=${current.entries.length}, '
-      'hasCurrentLocation=${current.entries.any((e) => e.isCurrentLocation)}',
-    );
     if (current.entries.any((e) => e.isCurrentLocation)) {
       return;
     }
-    final deviceId = await ref.read(deviceIdProvider.future);
-    final repo = await ref.read(
-      deviceNotificationSettingsRepositoryProvider.future,
-    );
+    final apiClient = await ref.read(apiClientProvider.future);
     final updated = [
       ...current.entries,
       ShakeDetectionEntry(
@@ -125,35 +96,22 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
         isCurrentLocation: true,
       ),
     ];
-    final result = await repo.putShakeDetectionSettings(
-      deviceId: deviceId,
-      entries: updated,
+    final response = await apiClient.device.putV2DeviceMeSettingsShakeDetection(
+      body: updated.map(_toApiRequest).toList(),
     );
-    talker.debug('[ShakeDetection] putShakeDetectionSettings result: $result');
-    switch (result) {
-      case Success(:final value):
-        talker.debug(
-          '[ShakeDetection] putShakeDetectionSettings success: entries=${value.length}',
-        );
-        state = AsyncData((
-          entries: _resolveNames(value, current.availableSubRegions),
-          availableSubRegions: current.availableSubRegions,
-        ));
-        try {
-          await BackgroundLocationTracker.startMonitoring();
-        } on Object catch (e, st) {
-          talker.error(
-            '[ShakeDetection] BackgroundLocationTracker.startMonitoring',
-            e,
-            st,
-          );
-        }
-      case Failure(:final exception):
-        talker.error(
-          '[ShakeDetection] putShakeDetectionSettings failure',
-          exception,
-        );
-        throw exception;
+    final value = response.data.map(_shakeEntryFromResponse).toList();
+    state = AsyncData((
+      entries: _resolveNames(value, current.availableSubRegions),
+      availableSubRegions: current.availableSubRegions,
+    ));
+    try {
+      await BackgroundLocationTracker.startMonitoring();
+    } on Object catch (e, st) {
+      talker.error(
+        '[ShakeDetection] BackgroundLocationTracker.startMonitoring',
+        e,
+        st,
+      );
     }
   }
 
@@ -162,54 +120,30 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
     final removesCurrentLocation = current.entries.any(
       (e) => e.id == entryId && e.isCurrentLocation,
     );
-    final deviceId = await ref.read(deviceIdProvider.future);
-    final repo = await ref.read(
-      deviceNotificationSettingsRepositoryProvider.future,
-    );
+    final apiClient = await ref.read(apiClientProvider.future);
     final updated = current.entries.where((e) => e.id != entryId).toList();
-    final result = await repo.putShakeDetectionSettings(
-      deviceId: deviceId,
-      entries: updated,
+    final response = await apiClient.device.putV2DeviceMeSettingsShakeDetection(
+      body: updated.map(_toApiRequest).toList(),
     );
-    switch (result) {
-      case Success(:final value):
-        final nextState = (
-          entries: _resolveNames(value, current.availableSubRegions),
-          availableSubRegions: current.availableSubRegions,
+    final value = response.data.map(_shakeEntryFromResponse).toList();
+    final nextState = (
+      entries: _resolveNames(value, current.availableSubRegions),
+      availableSubRegions: current.availableSubRegions,
+    );
+    state = AsyncData(nextState);
+    if (removesCurrentLocation && !value.any((e) => e.isCurrentLocation)) {
+      final slots = ref.read(notificationSlotsProvider).value ?? [];
+      final hasCurrentLocationSlot = slots.any(
+        (s) => s.slotType == NotificationSlotType.currentLocation,
+      );
+      if (!hasCurrentLocationSlot) {
+        const lifecycle = BackgroundLocationMonitoringLifecycle();
+        await lifecycle.stopIfUnused(
+          eewSettings: null,
+          earthquakeSettings: null,
+          shakeDetectionState: nextState,
         );
-        state = AsyncData(nextState);
-        if (removesCurrentLocation && !value.any((e) => e.isCurrentLocation)) {
-          final eewSettings = await (() async {
-            try {
-              return await ref.read(eewSettingsProvider.future);
-            } on Object catch (e, st) {
-              talker.error('[ShakeDetection] read EEW settings failed', e, st);
-              return null;
-            }
-          })();
-          final earthquakeSettings = await (() async {
-            try {
-              return await ref.read(
-                earthquakeNotificationSettingsProvider.future,
-              );
-            } on Object catch (e, st) {
-              talker.error(
-                '[ShakeDetection] read earthquake settings failed',
-                e,
-                st,
-              );
-              return null;
-            }
-          })();
-          const lifecycle = BackgroundLocationMonitoringLifecycle();
-          await lifecycle.stopIfUnused(
-            eewSettings: eewSettings,
-            earthquakeSettings: earthquakeSettings,
-            shakeDetectionState: nextState,
-          );
-        }
-      case Failure(:final exception):
-        throw exception;
+      }
     }
   }
 
@@ -218,26 +152,18 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
     api.ShakeDetectionLevel newLevel,
   ) async {
     final current = state.requireValue;
-    final deviceId = await ref.read(deviceIdProvider.future);
-    final repo = await ref.read(
-      deviceNotificationSettingsRepositoryProvider.future,
-    );
+    final apiClient = await ref.read(apiClientProvider.future);
     final updated = current.entries.map((e) {
       return e.id == entryId ? e.copyWith(minLevel: newLevel) : e;
     }).toList();
-    final result = await repo.putShakeDetectionSettings(
-      deviceId: deviceId,
-      entries: updated,
+    final response = await apiClient.device.putV2DeviceMeSettingsShakeDetection(
+      body: updated.map(_toApiRequest).toList(),
     );
-    switch (result) {
-      case Success(:final value):
-        state = AsyncData((
-          entries: _resolveNames(value, current.availableSubRegions),
-          availableSubRegions: current.availableSubRegions,
-        ));
-      case Failure(:final exception):
-        throw exception;
-    }
+    final value = response.data.map(_shakeEntryFromResponse).toList();
+    state = AsyncData((
+      entries: _resolveNames(value, current.availableSubRegions),
+      availableSubRegions: current.availableSubRegions,
+    ));
   }
 
   List<ShakeDetectionEntry> _resolveNames(
@@ -251,3 +177,20 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
     return e.copyWith(subRegionName: name);
   }).toList();
 }
+
+ShakeDetectionEntry _shakeEntryFromResponse(
+  api.ShakeDetectionSettingResponse r,
+) => ShakeDetectionEntry(
+  id: r.id,
+  subRegionId: r.subRegionId,
+  subRegionName: null,
+  minLevel: r.minLevel,
+  isCurrentLocation: r.isCurrentLocation,
+);
+
+api.ShakeDetectionSettingRequest _toApiRequest(ShakeDetectionEntry e) =>
+    api.ShakeDetectionSettingRequest(
+      subRegionId: e.subRegionId,
+      minLevel: e.minLevel,
+      isCurrentLocation: e.isCurrentLocation,
+    );

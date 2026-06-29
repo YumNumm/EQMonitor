@@ -7,7 +7,11 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/general_notification_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -35,13 +39,15 @@ class _Body extends HookConsumerWidget {
     final selectedPreset = useState(_NotificationPreset.recommended);
     final eewForecastEnabled = useState(true);
     final earthquakeEnabled = useState(true);
-    final eewWarningTarget = useState(_EewWarningTarget.currentLocationOnly);
     final liveActivityEnabled = useState(true);
     final estimatedIntensityEnabled = useState(true);
-    final start = ref.watch(startProvider).value;
-    final isPro = start?.planConstraints?.isPro ?? false;
 
-    ref.listen(GeneralNotificationSettingsNotifier.saveMutation, (_, next) {
+    // 暫定: Freeプランの制約を使用（RevenueCat統合時にユーザーのプラン状態へ差し替え）
+    final constraints = ref.watch(startProvider).value?.planConstraints.free;
+    final isPro = constraints?.isPro ?? false;
+    final maxRegions = constraints?.maxRegions.toInt() ?? 1;
+
+    ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (_, next) {
       if (next is MutationError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -72,10 +78,10 @@ class _Body extends HookConsumerWidget {
                 MaterialPageRoute<void>(
                   builder: (_) => _CustomNotificationSettingsPage(
                     isPro: isPro,
+                    maxRegions: maxRegions,
                     settings: _CustomNotificationSettingsDraft(
                       eewForecastEnabled: eewForecastEnabled.value,
                       earthquakeEnabled: earthquakeEnabled.value,
-                      eewWarningTarget: eewWarningTarget.value,
                       liveActivityEnabled: liveActivityEnabled.value,
                       estimatedIntensityEnabled:
                           estimatedIntensityEnabled.value,
@@ -84,8 +90,6 @@ class _Body extends HookConsumerWidget {
                         eewForecastEnabled.value = value,
                     onEarthquakeChanged: (value) =>
                         earthquakeEnabled.value = value,
-                    onEewWarningTargetChanged: (value) =>
-                        eewWarningTarget.value = value,
                     onLiveActivityChanged: (value) =>
                         liveActivityEnabled.value = value,
                     onEstimatedIntensityChanged: (value) =>
@@ -110,23 +114,9 @@ enum _NotificationPreset {
   custom,
 }
 
-enum _EewWarningTarget {
-  currentLocationOnly,
-  currentLocationAndNationwide,
-}
-
-extension _EewWarningTargetLabel on _EewWarningTarget {
-  String get label => switch (this) {
-    _EewWarningTarget.currentLocationOnly => '現在地のみ',
-    _EewWarningTarget.currentLocationAndNationwide => '現在地 + 全国',
-  };
-}
-
 final _notificationSettingsDesignMutation = Mutation<void>();
 
 typedef _BoolSettingChanged = Future<void> Function({required bool value});
-typedef _EewWarningTargetChanged =
-    Future<void> Function({required _EewWarningTarget value});
 
 class _MasterNotificationControl extends StatelessWidget {
   const _MasterNotificationControl({
@@ -366,17 +356,115 @@ class _CustomPresetTrailing extends StatelessWidget {
   }
 }
 
+class _CustomNotificationSettingsDraft {
+  const _CustomNotificationSettingsDraft({
+    required this.eewForecastEnabled,
+    required this.earthquakeEnabled,
+    required this.liveActivityEnabled,
+    required this.estimatedIntensityEnabled,
+  });
+
+  final bool eewForecastEnabled;
+  final bool earthquakeEnabled;
+  final bool liveActivityEnabled;
+  final bool estimatedIntensityEnabled;
+}
+
+class _CustomNotificationSettingsPage extends HookConsumerWidget {
+  const _CustomNotificationSettingsPage({
+    required this.isPro,
+    required this.maxRegions,
+    required this.settings,
+    required this.onEewForecastChanged,
+    required this.onEarthquakeChanged,
+    required this.onLiveActivityChanged,
+    required this.onEstimatedIntensityChanged,
+  });
+
+  final bool isPro;
+  final int maxRegions;
+  final _CustomNotificationSettingsDraft settings;
+  final ValueChanged<bool> onEewForecastChanged;
+  final ValueChanged<bool> onEarthquakeChanged;
+  final ValueChanged<bool> onLiveActivityChanged;
+  final ValueChanged<bool> onEstimatedIntensityChanged;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eewForecastEnabled = useState(settings.eewForecastEnabled);
+    final earthquakeEnabled = useState(settings.earthquakeEnabled);
+    final liveActivityEnabled = useState(settings.liveActivityEnabled);
+    final estimatedIntensityEnabled = useState(
+      settings.estimatedIntensityEnabled,
+    );
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('カスタム設定')),
+      body: ListView(
+        padding: const EdgeInsets.only(top: 16, bottom: 24),
+        children: [
+          if (!isPro) const _ProUpsellBanner(),
+          const SettingsSectionHeader(text: '通知の種類'),
+          _CustomSettingsSection(
+            isPro: isPro,
+            eewForecastEnabled: eewForecastEnabled.value,
+            earthquakeEnabled: earthquakeEnabled.value,
+            liveActivityEnabled: liveActivityEnabled.value,
+            estimatedIntensityEnabled: estimatedIntensityEnabled.value,
+            onEewForecastChanged: ({required value}) async {
+              await _notificationSettingsDesignMutation.run(
+                ref,
+                (_) async {
+                  eewForecastEnabled.value = value;
+                  onEewForecastChanged(value);
+                },
+              );
+            },
+            onEarthquakeChanged: ({required value}) async {
+              await _notificationSettingsDesignMutation.run(
+                ref,
+                (_) async {
+                  earthquakeEnabled.value = value;
+                  onEarthquakeChanged(value);
+                },
+              );
+            },
+            onLiveActivityChanged: ({required value}) async {
+              await _notificationSettingsDesignMutation.run(
+                ref,
+                (_) async {
+                  liveActivityEnabled.value = value;
+                  onLiveActivityChanged(value);
+                },
+              );
+            },
+            onEstimatedIntensityChanged: ({required value}) async {
+              await _notificationSettingsDesignMutation.run(
+                ref,
+                (_) async {
+                  estimatedIntensityEnabled.value = value;
+                  onEstimatedIntensityChanged(value);
+                },
+              );
+            },
+          ),
+          const SettingsSectionHeader(text: '通知地域'),
+          _SlotListSection(isPro: isPro, maxRegions: maxRegions),
+        ],
+      ),
+    );
+  }
+}
+
 class _CustomSettingsSection extends StatelessWidget {
   const _CustomSettingsSection({
     required this.isPro,
     required this.eewForecastEnabled,
     required this.earthquakeEnabled,
-    required this.eewWarningTarget,
     required this.liveActivityEnabled,
     required this.estimatedIntensityEnabled,
     required this.onEewForecastChanged,
     required this.onEarthquakeChanged,
-    required this.onEewWarningTargetChanged,
     required this.onLiveActivityChanged,
     required this.onEstimatedIntensityChanged,
   });
@@ -384,12 +472,10 @@ class _CustomSettingsSection extends StatelessWidget {
   final bool isPro;
   final bool eewForecastEnabled;
   final bool earthquakeEnabled;
-  final _EewWarningTarget eewWarningTarget;
   final bool liveActivityEnabled;
   final bool estimatedIntensityEnabled;
   final _BoolSettingChanged onEewForecastChanged;
   final _BoolSettingChanged onEarthquakeChanged;
-  final _EewWarningTargetChanged onEewWarningTargetChanged;
   final _BoolSettingChanged onLiveActivityChanged;
   final _BoolSettingChanged onEstimatedIntensityChanged;
 
@@ -431,13 +517,7 @@ class _CustomSettingsSection extends StatelessWidget {
             onChanged: onEarthquakeChanged,
           ),
           const Divider(height: 1),
-          _EewWarningDetailTile(
-            title: '緊急地震速報(警報)',
-            subtitle: eewWarningTarget.label,
-            target: eewWarningTarget,
-            isPro: isPro,
-            onChanged: onEewWarningTargetChanged,
-          ),
+          _EewWarningDetailTile(isPro: isPro),
           const Divider(height: 1),
           _InlineSwitchTile(
             title: 'Live Activity',
@@ -470,119 +550,6 @@ class _CustomSettingsSection extends StatelessWidget {
             subtitle: isPro ? '通常またはサイレントで通知できます' : 'Proで利用できます',
             locked: !isPro,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CustomNotificationSettingsDraft {
-  const _CustomNotificationSettingsDraft({
-    required this.eewForecastEnabled,
-    required this.earthquakeEnabled,
-    required this.eewWarningTarget,
-    required this.liveActivityEnabled,
-    required this.estimatedIntensityEnabled,
-  });
-
-  final bool eewForecastEnabled;
-  final bool earthquakeEnabled;
-  final _EewWarningTarget eewWarningTarget;
-  final bool liveActivityEnabled;
-  final bool estimatedIntensityEnabled;
-}
-
-class _CustomNotificationSettingsPage extends HookConsumerWidget {
-  const _CustomNotificationSettingsPage({
-    required this.isPro,
-    required this.settings,
-    required this.onEewForecastChanged,
-    required this.onEarthquakeChanged,
-    required this.onEewWarningTargetChanged,
-    required this.onLiveActivityChanged,
-    required this.onEstimatedIntensityChanged,
-  });
-
-  final bool isPro;
-  final _CustomNotificationSettingsDraft settings;
-  final ValueChanged<bool> onEewForecastChanged;
-  final ValueChanged<bool> onEarthquakeChanged;
-  final ValueChanged<_EewWarningTarget> onEewWarningTargetChanged;
-  final ValueChanged<bool> onLiveActivityChanged;
-  final ValueChanged<bool> onEstimatedIntensityChanged;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final eewForecastEnabled = useState(settings.eewForecastEnabled);
-    final earthquakeEnabled = useState(settings.earthquakeEnabled);
-    final eewWarningTarget = useState(settings.eewWarningTarget);
-    final liveActivityEnabled = useState(settings.liveActivityEnabled);
-    final estimatedIntensityEnabled = useState(
-      settings.estimatedIntensityEnabled,
-    );
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('カスタム設定')),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 16, bottom: 24),
-        children: [
-          if (!isPro) const _ProUpsellBanner(),
-          const SettingsSectionHeader(text: '通知の種類'),
-          _CustomSettingsSection(
-            isPro: isPro,
-            eewForecastEnabled: eewForecastEnabled.value,
-            earthquakeEnabled: earthquakeEnabled.value,
-            eewWarningTarget: eewWarningTarget.value,
-            liveActivityEnabled: liveActivityEnabled.value,
-            estimatedIntensityEnabled: estimatedIntensityEnabled.value,
-            onEewForecastChanged: ({required value}) async {
-              await _notificationSettingsDesignMutation.run(
-                ref,
-                (_) async {
-                  eewForecastEnabled.value = value;
-                  onEewForecastChanged(value);
-                },
-              );
-            },
-            onEarthquakeChanged: ({required value}) async {
-              await _notificationSettingsDesignMutation.run(
-                ref,
-                (_) async {
-                  earthquakeEnabled.value = value;
-                  onEarthquakeChanged(value);
-                },
-              );
-            },
-            onEewWarningTargetChanged: ({required value}) async {
-              await _notificationSettingsDesignMutation.run(
-                ref,
-                (_) async {
-                  eewWarningTarget.value = value;
-                  onEewWarningTargetChanged(value);
-                },
-              );
-            },
-            onLiveActivityChanged: ({required value}) async {
-              await _notificationSettingsDesignMutation.run(
-                ref,
-                (_) async {
-                  liveActivityEnabled.value = value;
-                  onLiveActivityChanged(value);
-                },
-              );
-            },
-            onEstimatedIntensityChanged: ({required value}) async {
-              await _notificationSettingsDesignMutation.run(
-                ref,
-                (_) async {
-                  estimatedIntensityEnabled.value = value;
-                  onEstimatedIntensityChanged(value);
-                },
-              );
-            },
-          ),
-          const SettingsSectionHeader(text: '通知先'),
-          _SlotSummarySection(isPro: isPro),
         ],
       ),
     );
@@ -661,53 +628,55 @@ class _NotificationConditionDetailPage extends StatelessWidget {
   }
 }
 
-class _EewWarningDetailTile extends StatelessWidget {
-  const _EewWarningDetailTile({
-    required this.title,
-    required this.subtitle,
-    required this.target,
-    required this.isPro,
-    required this.onChanged,
-  });
+class _EewWarningDetailTile extends ConsumerWidget {
+  const _EewWarningDetailTile({required this.isPro});
 
-  final String title;
-  final String subtitle;
-  final _EewWarningTarget target;
   final bool isPro;
-  final _EewWarningTargetChanged onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final target = ref.watch(eewWarningConfigProvider).value?.target;
     return ListTile(
-      title: Text(title),
-      subtitle: Text(subtitle),
+      title: const Text('緊急地震速報(警報)'),
+      subtitle: Text(target?.label ?? '読み込み中…'),
       trailing: const Icon(Icons.chevron_right),
       onTap: () async => Navigator.of(context).push<void>(
         MaterialPageRoute<void>(
-          builder: (_) => _EewWarningSettingsPage(
-            target: target,
-            isPro: isPro,
-            onChanged: onChanged,
-          ),
+          builder: (_) => _EewWarningSettingsPage(isPro: isPro),
         ),
       ),
     );
   }
 }
 
-class _EewWarningSettingsPage extends StatelessWidget {
-  const _EewWarningSettingsPage({
-    required this.target,
-    required this.isPro,
-    required this.onChanged,
-  });
+class _EewWarningSettingsPage extends ConsumerWidget {
+  const _EewWarningSettingsPage({required this.isPro});
 
-  final _EewWarningTarget target;
   final bool isPro;
-  final _EewWarningTargetChanged onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(EewWarningConfigNotifier.updateMutation, (_, next) {
+      if (next is MutationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('設定の保存に失敗しました: ${next.error}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    });
+
+    final target = ref.watch(eewWarningConfigProvider).value?.target;
+
+    Future<void> select(EewWarningTarget value) async {
+      await EewWarningConfigNotifier.updateMutation.run(ref, (tsx) async {
+        await tsx
+            .get(eewWarningConfigProvider.notifier)
+            .updateConfig(target: value);
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('緊急地震速報(警報)')),
       body: ListView(
@@ -717,20 +686,17 @@ class _EewWarningSettingsPage extends StatelessWidget {
           _TargetOptionTile(
             title: '現在地のみ',
             subtitle: '現在地が警報対象になったときに通知します',
-            selected: target == _EewWarningTarget.currentLocationOnly,
+            selected: target == EewWarningTarget.currentLocationOnly,
             locked: false,
-            onTap: () async => onChanged(
-              value: _EewWarningTarget.currentLocationOnly,
-            ),
+            onTap: () async => select(EewWarningTarget.currentLocationOnly),
           ),
           _TargetOptionTile(
             title: '現在地 + 全国',
             subtitle: isPro ? '全国の警報も通知します' : 'Proで利用できます',
-            selected: target == _EewWarningTarget.currentLocationAndNationwide,
+            selected: target == EewWarningTarget.currentLocationAndNationwide,
             locked: !isPro,
-            onTap: () async => onChanged(
-              value: _EewWarningTarget.currentLocationAndNationwide,
-            ),
+            onTap: () async =>
+                select(EewWarningTarget.currentLocationAndNationwide),
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -829,31 +795,92 @@ class _TargetOptionTile extends StatelessWidget {
   }
 }
 
-class _SlotSummarySection extends StatelessWidget {
-  const _SlotSummarySection({required this.isPro});
+class _SlotListSection extends ConsumerWidget {
+  const _SlotListSection({
+    required this.isPro,
+    required this.maxRegions,
+  });
 
   final bool isPro;
+  final int maxRegions;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
 
+    final slotsAsync = ref.watch(notificationSlotsProvider);
+    final slots = [...?slotsAsync.value]
+      ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
+
+    final regionSlotCount = slots
+        .where((s) => s.slotType == NotificationSlotType.region)
+        .length;
+    final canAddRegion = isPro || regionSlotCount < maxRegions;
+
+    final tiles = <Widget>[];
+    var regionIndex = 0;
+    for (final slot in slots) {
+      final bool isActive;
+      if (slot.slotType == NotificationSlotType.region) {
+        regionIndex++;
+        isActive = isPro || regionIndex <= maxRegions;
+      } else {
+        isActive = true;
+      }
+      tiles.add(
+        _SlotListTile(
+          slot: slot,
+          isActive: isActive,
+          onTap: isActive
+              ? () async => Navigator.of(context).push<void>(
+                  MaterialPageRoute<void>(
+                    builder: (_) =>
+                        SlotDetailPage(slotId: slot.id, isPro: isPro),
+                  ),
+                )
+              : null,
+        ),
+      );
+    }
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SettingValueTile(
-          title: '現在地',
-          subtitle: '緊急地震速報(予報)・地震情報の震度閾値を設定できます',
-        ),
-        const Divider(height: 1),
-        const _SettingValueTile(
-          title: '全国',
-          subtitle: '全国通知のON/OFFと震度閾値を設定できます',
-        ),
-        const Divider(height: 1),
-        _SettingValueTile(
-          title: '地域',
-          subtitle: isPro ? '最大5地域まで設定できます' : 'Freeでは共有1地域まで設定できます',
+        if (slotsAsync.isLoading && slots.isEmpty)
+          const Padding(
+            padding: EdgeInsets.all(24),
+            child: Center(child: CircularProgressIndicator.adaptive()),
+          ),
+        if (slotsAsync.hasError && !slotsAsync.isLoading)
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: spacing.lg,
+              vertical: spacing.md,
+            ),
+            child: Text(
+              'スロットの読み込みに失敗しました',
+              style: designSystem.typography.bodySmall.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+            ),
+          ),
+        ...tiles,
+        Padding(
+          padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
+          child: FilledButton.tonalIcon(
+            onPressed: canAddRegion
+                ? () => ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('地域の追加は今後のアップデートで対応予定です'),
+                    ),
+                  )
+                : null,
+            icon: const Icon(Icons.add),
+            label: Text(
+              isPro ? '地域を追加' : '地域を追加（$regionSlotCount/$maxRegions）',
+            ),
+          ),
         ),
         Padding(
           padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
@@ -865,6 +892,45 @@ class _SlotSummarySection extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _SlotListTile extends StatelessWidget {
+  const _SlotListTile({
+    required this.slot,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  final NotificationSlot slot;
+  final bool isActive;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final (icon, title) = switch (slot.slotType) {
+      NotificationSlotType.currentLocation => ('📍', '現在地'),
+      NotificationSlotType.nationwide => ('🌐', '全国'),
+      NotificationSlotType.region => ('📍', slot.regionName ?? '地域'),
+    };
+
+    final eewText = slot.eewEnabled
+        ? 'EEW: 震度${slot.eewMinIntensity?.label ?? '-'}以上'
+        : 'EEW: 無効';
+    final earthquakeText = slot.earthquakeEnabled
+        ? '地震情報: 震度${slot.earthquakeMinIntensity?.label ?? '-'}以上'
+        : '地震情報: 無効';
+
+    final textColor = isActive ? null : Theme.of(context).disabledColor;
+
+    return ListTile(
+      enabled: isActive,
+      leading: Text(icon, style: const TextStyle(fontSize: 20)),
+      title: Text(title, style: TextStyle(color: textColor)),
+      subtitle: Text('$eewText・$earthquakeText'),
+      trailing: isActive ? const Icon(Icons.chevron_right) : const _ProBadge(),
+      onTap: onTap,
     );
   }
 }
