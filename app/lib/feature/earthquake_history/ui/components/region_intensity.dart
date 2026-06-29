@@ -9,6 +9,8 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/inten
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -555,7 +557,7 @@ class _CityTile extends HookWidget {
   }
 }
 
-class _LpgmCityTile extends HookWidget {
+class _LpgmCityTile extends HookConsumerWidget {
   const _LpgmCityTile({
     required this.city,
     required this.eventId,
@@ -565,17 +567,16 @@ class _LpgmCityTile extends HookWidget {
   final String? eventId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isExpanded = useState(false);
     final hasStations = city.stations.isNotEmpty;
-
     final trailing = _buildTrailing(
       hasChildren: hasStations,
       isExpanded: isExpanded.value,
     );
 
     return Column(
-      crossAxisAlignment: .start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
           visualDensity: VisualDensity.compact,
@@ -588,10 +589,60 @@ class _LpgmCityTile extends HookWidget {
         ),
         if (isExpanded.value)
           Padding(
-            padding: const .only(left: 32),
-            child: Text(
-              city.stations.map((s) => s.station.name.ja).join(', '),
-              style: const TextStyle(fontSize: 12),
+            padding: const EdgeInsets.only(left: 32, right: 8, bottom: 4),
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: city.stations.map((station) {
+                final hasPeriods =
+                    station.intensity?.prePeriods?.isNotEmpty ?? false;
+                final lpgmIntensity = station.intensity?.maxLpgmIntensity;
+
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: hasPeriods
+                        ? () => showModalBottomSheet<void>(
+                              context: context,
+                              clipBehavior: Clip.antiAlias,
+                              builder: (_) => LpgmStationDetailSheet(
+                                station: station,
+                              ),
+                            )
+                        : null,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.outlineVariant,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            station.station.name.ja,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          if (lpgmIntensity != null) ...[
+                            const SizedBox(width: 4),
+                            JmaLpgmIntensityIcon(
+                              intensity: lpgmIntensity,
+                              type: IntensityIconType.filled,
+                              size: 18,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           )
         else
