@@ -1,4 +1,6 @@
+import 'package:eqmonitor/core/component/error/error_message_builder.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_error_dialog.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -39,35 +41,22 @@ class SlotDetailPage extends HookConsumerWidget {
       ),
     );
 
-    void listenError(Mutation<void> mutation, String message) {
+    void listenMutationError(Mutation<void> mutation) {
       ref.listen(mutation, (_, next) {
-        if (next is MutationError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('$message: ${next.error}'),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
+        if (next is MutationError && context.mounted) {
+          showNotificationSettingsErrorDialog(
+            context: context,
+            error: next.error,
+            errorMessageBuilder: ref.read(errorMessageBuilderProvider),
           );
         }
       });
     }
 
-    listenError(
-      NotificationSlotsNotifier.putCurrentLocationMutation,
-      '設定の保存に失敗しました',
-    );
-    listenError(
-      NotificationSlotsNotifier.putNationwideMutation,
-      '設定の保存に失敗しました',
-    );
-    listenError(
-      NotificationSlotsNotifier.updateRegionMutation,
-      '設定の保存に失敗しました',
-    );
-    listenError(
-      NotificationSlotsNotifier.removeRegionMutation,
-      '地域の削除に失敗しました',
-    );
+    listenMutationError(NotificationSlotsNotifier.putCurrentLocationMutation);
+    listenMutationError(NotificationSlotsNotifier.putNationwideMutation);
+    listenMutationError(NotificationSlotsNotifier.updateRegionMutation);
+    listenMutationError(NotificationSlotsNotifier.removeRegionMutation);
 
     final String title;
     if (slot == null) {

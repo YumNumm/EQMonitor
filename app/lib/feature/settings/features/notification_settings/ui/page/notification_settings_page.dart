@@ -1,5 +1,7 @@
 import 'package:app_settings/app_settings.dart';
+import 'package:eqmonitor/core/component/error/error_message_builder.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_error_dialog.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
@@ -48,12 +50,11 @@ class _Body extends HookConsumerWidget {
     final maxRegions = constraints?.maxRegions.toInt() ?? 1;
 
     ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (_, next) {
-      if (next is MutationError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('設定の保存に失敗しました: ${next.error}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+      if (next is MutationError && context.mounted) {
+        showNotificationSettingsErrorDialog(
+          context: context,
+          error: next.error,
+          errorMessageBuilder: ref.read(errorMessageBuilderProvider),
         );
       }
     });
@@ -657,12 +658,11 @@ class _EewWarningSettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(EewWarningConfigNotifier.updateConfigMutation, (_, next) {
-      if (next is MutationError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('設定の保存に失敗しました: ${next.error}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+      if (next is MutationError && context.mounted) {
+        showNotificationSettingsErrorDialog(
+          context: context,
+          error: next.error,
+          errorMessageBuilder: ref.read(errorMessageBuilderProvider),
         );
       }
     });
