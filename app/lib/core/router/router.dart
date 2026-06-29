@@ -57,8 +57,6 @@ import 'package:eqmonitor/feature/settings/children/config/earthquake_history/ea
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/estimated_intensity_color_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_settings_page.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/shake_detection_settings_page.dart';
 import 'package:eqmonitor/feature/settings/settings_page.dart';
@@ -344,8 +342,6 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
     TypedGoRoute<NotificationSettingsRoute>(
       path: 'notification',
       routes: [
-        TypedGoRoute<EewSettingsRoute>(path: 'eew'),
-        TypedGoRoute<EarthquakeSettingsRoute>(path: 'earthquake'),
         TypedGoRoute<ShakeDetectionSettingsRoute>(path: 'shake'),
         TypedGoRoute<NotificationHistoryRoute>(path: 'history'),
       ],
@@ -451,23 +447,6 @@ class NotificationSettingsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const NotificationSettingsPage();
-}
-
-class EewSettingsRoute extends GoRouteData with $EewSettingsRoute {
-  const EewSettingsRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const EewSettingsPage();
-}
-
-class EarthquakeSettingsRoute extends GoRouteData
-    with $EarthquakeSettingsRoute {
-  const EarthquakeSettingsRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const EarthquakeSettingsPage();
 }
 
 class ShakeDetectionSettingsRoute extends GoRouteData
