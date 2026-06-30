@@ -64,6 +64,49 @@ void main() {
     });
   });
 
+  group('updateRegion', () {
+    test('sends default eew minimum intensity when enabling eew', () async {
+      await repository.updateRegion(
+        slotId: 'slot-123',
+        eewEnabled: true,
+        earthquakeEnabled: false,
+      );
+
+      expect(adapter.lastRequestBody!['eew_enabled'], isTrue);
+      expect(
+        adapter.lastRequestBody!['eew_min_intensity'],
+        api.JmaIntensity.value3,
+      );
+      expect(adapter.lastRequestBody!['earthquake_enabled'], isFalse);
+      expect(
+        adapter.lastRequestBody!.containsKey('earthquake_min_intensity'),
+        isFalse,
+      );
+    });
+
+    test(
+      'sends default earthquake minimum intensity when enabling earthquake',
+      () async {
+        await repository.updateRegion(
+          slotId: 'slot-123',
+          eewEnabled: false,
+          earthquakeEnabled: true,
+        );
+
+        expect(adapter.lastRequestBody!['eew_enabled'], isFalse);
+        expect(
+          adapter.lastRequestBody!.containsKey('eew_min_intensity'),
+          isFalse,
+        );
+        expect(adapter.lastRequestBody!['earthquake_enabled'], isTrue);
+        expect(
+          adapter.lastRequestBody!['earthquake_min_intensity'],
+          api.JmaIntensity.value3,
+        );
+      },
+    );
+  });
+
   group('removeRegion', () {
     test('sends delete request', () async {
       await repository.removeRegion(slotId: 'slot-123');
