@@ -15,6 +15,10 @@ _NotificationSettingsRequest _$NotificationSettingsRequestFromJson(
   json,
   ($checkedConvert) {
     final val = _NotificationSettingsRequest(
+      notificationEnabled: $checkedConvert(
+        'notification_enabled',
+        (v) => v as bool?,
+      ),
       tsunamiEnabled: $checkedConvert('tsunami_enabled', (v) => v as bool?),
       trainingEnabled: $checkedConvert('training_enabled', (v) => v as bool?),
       nankaiExtraordinaryEnabled: $checkedConvert(
@@ -33,6 +37,7 @@ _NotificationSettingsRequest _$NotificationSettingsRequestFromJson(
     return val;
   },
   fieldKeyMap: const {
+    'notificationEnabled': 'notification_enabled',
     'tsunamiEnabled': 'tsunami_enabled',
     'trainingEnabled': 'training_enabled',
     'nankaiExtraordinaryEnabled': 'nankai_extraordinary_enabled',
@@ -44,6 +49,7 @@ _NotificationSettingsRequest _$NotificationSettingsRequestFromJson(
 Map<String, dynamic> _$NotificationSettingsRequestToJson(
   _NotificationSettingsRequest instance,
 ) => <String, dynamic>{
+  'notification_enabled': ?instance.notificationEnabled,
   'tsunami_enabled': ?instance.tsunamiEnabled,
   'training_enabled': ?instance.trainingEnabled,
   'nankai_extraordinary_enabled': ?instance.nankaiExtraordinaryEnabled,
