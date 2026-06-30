@@ -90,9 +90,9 @@ class _MapContent extends ConsumerWidget {
         else
           EewStaticPsWaveLayer(eew: selectedEew),
         if (selectedEew case final eew?)
-          EewHypocenterLayer(eews: [eew])
+          EewHypocenterLayer(eews: [eew], enableBlink: isSimulation)
         else
-          const EewHypocenterLayer(eews: []),
+          EewHypocenterLayer(eews: const [], enableBlink: isSimulation),
       ],
     );
   }
