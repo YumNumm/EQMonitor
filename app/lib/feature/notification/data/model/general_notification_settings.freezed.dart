@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GeneralNotificationSettings {
 
- bool get tsunamiEnabled; bool get trainingEnabled;
+ bool get tsunamiEnabled; bool get trainingEnabled; bool get nankaiExtraordinaryEnabled; bool get nankaiRegularEnabled; bool get hokkaido3renOffshoreEnabled;
 /// Create a copy of GeneralNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $GeneralNotificationSettingsCopyWith<GeneralNotificationSettings> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GeneralNotificationSettings&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GeneralNotificationSettings&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled)&&(identical(other.nankaiExtraordinaryEnabled, nankaiExtraordinaryEnabled) || other.nankaiExtraordinaryEnabled == nankaiExtraordinaryEnabled)&&(identical(other.nankaiRegularEnabled, nankaiRegularEnabled) || other.nankaiRegularEnabled == nankaiRegularEnabled)&&(identical(other.hokkaido3renOffshoreEnabled, hokkaido3renOffshoreEnabled) || other.hokkaido3renOffshoreEnabled == hokkaido3renOffshoreEnabled));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,tsunamiEnabled,trainingEnabled);
+int get hashCode => Object.hash(runtimeType,tsunamiEnabled,trainingEnabled,nankaiExtraordinaryEnabled,nankaiRegularEnabled,hokkaido3renOffshoreEnabled);
 
 @override
 String toString() {
-  return 'GeneralNotificationSettings(tsunamiEnabled: $tsunamiEnabled, trainingEnabled: $trainingEnabled)';
+  return 'GeneralNotificationSettings(tsunamiEnabled: $tsunamiEnabled, trainingEnabled: $trainingEnabled, nankaiExtraordinaryEnabled: $nankaiExtraordinaryEnabled, nankaiRegularEnabled: $nankaiRegularEnabled, hokkaido3renOffshoreEnabled: $hokkaido3renOffshoreEnabled)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $GeneralNotificationSettingsCopyWith<$Res>  {
   factory $GeneralNotificationSettingsCopyWith(GeneralNotificationSettings value, $Res Function(GeneralNotificationSettings) _then) = _$GeneralNotificationSettingsCopyWithImpl;
 @useResult
 $Res call({
- bool tsunamiEnabled, bool trainingEnabled
+ bool tsunamiEnabled, bool trainingEnabled, bool nankaiExtraordinaryEnabled, bool nankaiRegularEnabled, bool hokkaido3renOffshoreEnabled
 });
 
 
@@ -62,10 +62,13 @@ class _$GeneralNotificationSettingsCopyWithImpl<$Res>
 
 /// Create a copy of GeneralNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? tsunamiEnabled = null,Object? trainingEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? tsunamiEnabled = null,Object? trainingEnabled = null,Object? nankaiExtraordinaryEnabled = null,Object? nankaiRegularEnabled = null,Object? hokkaido3renOffshoreEnabled = null,}) {
   return _then(_self.copyWith(
 tsunamiEnabled: null == tsunamiEnabled ? _self.tsunamiEnabled : tsunamiEnabled // ignore: cast_nullable_to_non_nullable
 as bool,trainingEnabled: null == trainingEnabled ? _self.trainingEnabled : trainingEnabled // ignore: cast_nullable_to_non_nullable
+as bool,nankaiExtraordinaryEnabled: null == nankaiExtraordinaryEnabled ? _self.nankaiExtraordinaryEnabled : nankaiExtraordinaryEnabled // ignore: cast_nullable_to_non_nullable
+as bool,nankaiRegularEnabled: null == nankaiRegularEnabled ? _self.nankaiRegularEnabled : nankaiRegularEnabled // ignore: cast_nullable_to_non_nullable
+as bool,hokkaido3renOffshoreEnabled: null == hokkaido3renOffshoreEnabled ? _self.hokkaido3renOffshoreEnabled : hokkaido3renOffshoreEnabled // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -151,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool tsunamiEnabled,  bool trainingEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool tsunamiEnabled,  bool trainingEnabled,  bool nankaiExtraordinaryEnabled,  bool nankaiRegularEnabled,  bool hokkaido3renOffshoreEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GeneralNotificationSettings() when $default != null:
-return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
+return $default(_that.tsunamiEnabled,_that.trainingEnabled,_that.nankaiExtraordinaryEnabled,_that.nankaiRegularEnabled,_that.hokkaido3renOffshoreEnabled);case _:
   return orElse();
 
 }
@@ -172,10 +175,10 @@ return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool tsunamiEnabled,  bool trainingEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool tsunamiEnabled,  bool trainingEnabled,  bool nankaiExtraordinaryEnabled,  bool nankaiRegularEnabled,  bool hokkaido3renOffshoreEnabled)  $default,) {final _that = this;
 switch (_that) {
 case _GeneralNotificationSettings():
-return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
+return $default(_that.tsunamiEnabled,_that.trainingEnabled,_that.nankaiExtraordinaryEnabled,_that.nankaiRegularEnabled,_that.hokkaido3renOffshoreEnabled);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -192,10 +195,10 @@ return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool tsunamiEnabled,  bool trainingEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool tsunamiEnabled,  bool trainingEnabled,  bool nankaiExtraordinaryEnabled,  bool nankaiRegularEnabled,  bool hokkaido3renOffshoreEnabled)?  $default,) {final _that = this;
 switch (_that) {
 case _GeneralNotificationSettings() when $default != null:
-return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
+return $default(_that.tsunamiEnabled,_that.trainingEnabled,_that.nankaiExtraordinaryEnabled,_that.nankaiRegularEnabled,_that.hokkaido3renOffshoreEnabled);case _:
   return null;
 
 }
@@ -207,11 +210,14 @@ return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
 
 
 class _GeneralNotificationSettings implements GeneralNotificationSettings {
-  const _GeneralNotificationSettings({required this.tsunamiEnabled, required this.trainingEnabled});
+  const _GeneralNotificationSettings({required this.tsunamiEnabled, required this.trainingEnabled, required this.nankaiExtraordinaryEnabled, required this.nankaiRegularEnabled, required this.hokkaido3renOffshoreEnabled});
   
 
 @override final  bool tsunamiEnabled;
 @override final  bool trainingEnabled;
+@override final  bool nankaiExtraordinaryEnabled;
+@override final  bool nankaiRegularEnabled;
+@override final  bool hokkaido3renOffshoreEnabled;
 
 /// Create a copy of GeneralNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -223,16 +229,16 @@ _$GeneralNotificationSettingsCopyWith<_GeneralNotificationSettings> get copyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GeneralNotificationSettings&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GeneralNotificationSettings&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled)&&(identical(other.nankaiExtraordinaryEnabled, nankaiExtraordinaryEnabled) || other.nankaiExtraordinaryEnabled == nankaiExtraordinaryEnabled)&&(identical(other.nankaiRegularEnabled, nankaiRegularEnabled) || other.nankaiRegularEnabled == nankaiRegularEnabled)&&(identical(other.hokkaido3renOffshoreEnabled, hokkaido3renOffshoreEnabled) || other.hokkaido3renOffshoreEnabled == hokkaido3renOffshoreEnabled));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,tsunamiEnabled,trainingEnabled);
+int get hashCode => Object.hash(runtimeType,tsunamiEnabled,trainingEnabled,nankaiExtraordinaryEnabled,nankaiRegularEnabled,hokkaido3renOffshoreEnabled);
 
 @override
 String toString() {
-  return 'GeneralNotificationSettings(tsunamiEnabled: $tsunamiEnabled, trainingEnabled: $trainingEnabled)';
+  return 'GeneralNotificationSettings(tsunamiEnabled: $tsunamiEnabled, trainingEnabled: $trainingEnabled, nankaiExtraordinaryEnabled: $nankaiExtraordinaryEnabled, nankaiRegularEnabled: $nankaiRegularEnabled, hokkaido3renOffshoreEnabled: $hokkaido3renOffshoreEnabled)';
 }
 
 
@@ -243,7 +249,7 @@ abstract mixin class _$GeneralNotificationSettingsCopyWith<$Res> implements $Gen
   factory _$GeneralNotificationSettingsCopyWith(_GeneralNotificationSettings value, $Res Function(_GeneralNotificationSettings) _then) = __$GeneralNotificationSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- bool tsunamiEnabled, bool trainingEnabled
+ bool tsunamiEnabled, bool trainingEnabled, bool nankaiExtraordinaryEnabled, bool nankaiRegularEnabled, bool hokkaido3renOffshoreEnabled
 });
 
 
@@ -260,10 +266,13 @@ class __$GeneralNotificationSettingsCopyWithImpl<$Res>
 
 /// Create a copy of GeneralNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? tsunamiEnabled = null,Object? trainingEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? tsunamiEnabled = null,Object? trainingEnabled = null,Object? nankaiExtraordinaryEnabled = null,Object? nankaiRegularEnabled = null,Object? hokkaido3renOffshoreEnabled = null,}) {
   return _then(_GeneralNotificationSettings(
 tsunamiEnabled: null == tsunamiEnabled ? _self.tsunamiEnabled : tsunamiEnabled // ignore: cast_nullable_to_non_nullable
 as bool,trainingEnabled: null == trainingEnabled ? _self.trainingEnabled : trainingEnabled // ignore: cast_nullable_to_non_nullable
+as bool,nankaiExtraordinaryEnabled: null == nankaiExtraordinaryEnabled ? _self.nankaiExtraordinaryEnabled : nankaiExtraordinaryEnabled // ignore: cast_nullable_to_non_nullable
+as bool,nankaiRegularEnabled: null == nankaiRegularEnabled ? _self.nankaiRegularEnabled : nankaiRegularEnabled // ignore: cast_nullable_to_non_nullable
+as bool,hokkaido3renOffshoreEnabled: null == hokkaido3renOffshoreEnabled ? _self.hokkaido3renOffshoreEnabled : hokkaido3renOffshoreEnabled // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
