@@ -40,7 +40,7 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
       _ => null,
     };
 
-    final sortBy = useState(api.EarthquakeSortBy.originTime);
+    final sortBy = useState(api.EarthquakeSortBy.maxIntensity);
     final sortOrder = useState(api.SortOrder.desc);
     final searchParam = useState(const NearbyEarthquakeParameter());
     final intensityColor = ref.watch(intensityColorProvider);
@@ -96,13 +96,19 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 0, 4, 4),
+            padding: const EdgeInsets.fromLTRB(12, 0, 4, 0),
             child: Row(
               children: [
+                Icon(
+                  Icons.location_searching,
+                  size: 18,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: 6),
                 Expanded(
                   child: Text(
                     'この震源の近傍で発生した地震',
-                    style: theme.textTheme.titleSmall?.copyWith(
+                    style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
