@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
@@ -24,22 +26,35 @@ class IntensityHistoryLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Card.outlined(
+      clipBehavior: .antiAlias,
       color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.85),
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 4,
-          children: [
-            for (final level in _levels)
-              JmaIntensityIcon(
-                intensity: level,
-                type: IntensityIconType.filled,
-                size: 28,
-              ),
-          ],
+      elevation: 0,
+      shape: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 2,
+          sigmaY: 2,
+          tileMode: .decal,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Wrap(
+            spacing: 4,
+            runSpacing: 4,
+            alignment: .end,
+            children: _levels
+                .map(
+                  (level) => JmaIntensityIcon(
+                    intensity: level,
+                    type: IntensityIconType.filled,
+                    size: 28,
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
     );

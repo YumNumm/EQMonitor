@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/notification/data/notifier/general_notificatio
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
@@ -42,7 +43,11 @@ class _Body extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notificationsEnabled = useState(true);
+    final notificationsEnabled = ref.watch(
+      generalNotificationSettingsProvider.select(
+        (s) => s.value?.notificationEnabled ?? true,
+      ),
+    );
     final selectedPreset = ref.watch(notificationPresetProvider);
 
     final constraints = ref.watch(startProvider).value?.planConstraints.free;
@@ -80,10 +85,20 @@ class _Body extends HookConsumerWidget {
       padding: const EdgeInsets.only(top: 16, bottom: 24),
       children: [
         _MasterNotificationControl(
-          value: notificationsEnabled.value,
-          onChanged: (value) => notificationsEnabled.value = value,
+          value: notificationsEnabled,
+          onChanged: (value) async {
+            await GeneralNotificationSettingsNotifier.updateSettingsMutation
+                .run(
+                  ref,
+                  (tsx) async {
+                    await tsx
+                        .get(generalNotificationSettingsProvider.notifier)
+                        .updateSettings(notificationEnabled: value);
+                  },
+                );
+          },
         ),
-        if (notificationsEnabled.value) ...[
+        if (notificationsEnabled) ...[
           const SettingsSectionHeader(text: '通知条件'),
           _PresetOptionGroup(
             selectedPreset: selectedPreset,
@@ -669,7 +684,9 @@ class _EewWarningSettingsPage extends ConsumerWidget {
       }
     });
 
-    final target = ref.watch(eewWarningConfigProvider).value?.target;
+    final config = ref.watch(eewWarningConfigProvider).value;
+    final target = config?.target;
+    final nationwideLevel = config?.nationwideInterruptionLevel;
     final warningEnabled =
         ref.watch(eewGlobalSettingsProvider).value?.warningEnabled ?? true;
 
@@ -677,7 +694,21 @@ class _EewWarningSettingsPage extends ConsumerWidget {
       await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
         await tsx
             .get(eewWarningConfigProvider.notifier)
-            .updateConfig(target: value);
+            .updateConfig(
+              target: value,
+              nationwideInterruptionLevel:
+                  value == EewWarningTarget.currentLocationAndNationwide
+                  ? InterruptionLevel.active
+                  : null,
+            );
+      });
+    }
+
+    Future<void> updateNationwideLevel(InterruptionLevel value) async {
+      await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
+        await tsx
+            .get(eewWarningConfigProvider.notifier)
+            .updateConfig(nationwideInterruptionLevel: value);
       });
     }
 
@@ -718,6 +749,25 @@ class _EewWarningSettingsPage extends ConsumerWidget {
             onTap: () async =>
                 select(EewWarningTarget.currentLocationAndNationwide),
           ),
+          if (target == EewWarningTarget.currentLocationAndNationwide) ...[
+            const SettingsSectionHeader(text: '全国の割り込みレベル'),
+            RadioGroup<InterruptionLevel>(
+              groupValue: nationwideLevel,
+              onChanged: (v) async => updateNationwideLevel(v!),
+              child: const Column(
+                children: [
+                  RadioListTile<InterruptionLevel>(
+                    title: Text('通常'),
+                    value: InterruptionLevel.active,
+                  ),
+                  RadioListTile<InterruptionLevel>(
+                    title: Text('サイレント'),
+                    value: InterruptionLevel.passive,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );

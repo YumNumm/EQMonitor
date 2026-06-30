@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
+import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/region_floating_panel.dart';
@@ -76,5 +77,43 @@ void main() {
 
     expect(find.text('北海道'), findsOneWidget);
     expect(find.text('全国'), findsNothing);
+  });
+
+  testWidgets('市区町村選択状態で市区町村名と都道府県名が表示される', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final preferences = await SharedPreferences.getInstance();
+
+    final container = ProviderContainer(
+      overrides: [
+        app_prefs.sharedPreferencesProvider.overrideWithValue(
+          app_prefs.SharedPreferencesAsync(preferences),
+        ),
+        prefectureHighestProvider.overrideWith((_) async => []),
+        cityHighestProvider('0400').overrideWith((_) async => []),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    container
+        .read(intensityHistoryControllerProvider.notifier)
+        .focusPrefecture(code: '0400', name: '宮城県');
+    container
+        .read(intensityHistoryControllerProvider.notifier)
+        .selectCity(code: '0410000', name: '仙台市');
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(
+          home: Scaffold(
+            body: RegionFloatingPanel(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('宮城県'), findsOneWidget);
+    expect(find.text('仙台市'), findsOneWidget);
   });
 }

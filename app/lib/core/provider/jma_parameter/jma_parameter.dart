@@ -3,6 +3,7 @@ import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 export 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
+export 'package:eqmonitor/feature/parameter/data/model/shindo_db/shindo_db_stations_parameter.dart';
 export 'package:eqmonitor/feature/parameter/data/model/tsunami/tsunami_parameter.dart';
 
 part 'jma_parameter.g.dart';
@@ -10,6 +11,7 @@ part 'jma_parameter.g.dart';
 typedef JmaParameterState = ({
   EarthquakeParameter earthquake,
   TsunamiParameter tsunami,
+  ShindoDbStationsParameter shindoDbStations,
 });
 
 @Riverpod(keepAlive: true)
@@ -18,5 +20,6 @@ Future<JmaParameterState> jmaParameter(Ref ref) async {
   return (
     earthquake: parameterSet.earthquake,
     tsunami: parameterSet.tsunami,
+    shindoDbStations: parameterSet.shindoDbStations,
   );
 }

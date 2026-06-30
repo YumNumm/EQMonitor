@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/estimated_i
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -27,18 +28,21 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
     final enqueue = useMapOperationQueue();
 
     // regionごとの最大震度を取ったもの
-    final regionMaxIntensities = useMemoized(() {
-      return eewRegions
-          .groupListsBy((element) => element.code)
-          .map(
-            (key, values) => MapEntry(
-              key,
-              values.sortedBy((e) => e.intensity.orderIndex).last,
-            ),
-          )
-          .values
-          .toList();
-    }, [eewRegions]);
+    final regionMaxIntensities = useMemoized(
+      () {
+        return eewRegions
+            .groupListsBy((element) => element.code)
+            .map(
+              (key, values) => MapEntry(
+                key,
+                values.sortedBy((e) => e.intensity.orderIndex).last,
+              ),
+            )
+            .values
+            .toList();
+      },
+      [eewRegions],
+    );
     latestRegionMaxIntensities.value = regionMaxIntensities;
 
     // レイヤーの初期化
@@ -53,7 +57,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
             await JmaIntensity.values
                 .where((intensity) => intensity != JmaIntensity.unknown)
                 .map((intensity) {
-                  final layerId = _getLayerId(intensity);
+                  final layerId = intensity.layerId;
                   final color = colorModel
                       .fromJmaIntensity(intensity)
                       .background;
@@ -67,13 +71,14 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
                     FillStyleLayer(
                       id: layerId,
                       sourceId: 'eqmonitor_map',
-                      sourceLayerId: 'areaForecastLocalEew',
+                      sourceLayerId: 'areaForecastLocalE',
                       filter: buildEewAreaCodeFilter(codes),
                       paint: {
                         'fill-color': color.toHexString(),
-                        'fill-opacity': 0.7,
+                        'fill-opacity': 1,
                       },
                     ),
+                    belowLayerId: BaseLayer.areaForecastLocalELine.name,
                   );
                 })
                 .wait;
@@ -93,7 +98,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
                   .where((intensity) => intensity != JmaIntensity.unknown)
                   .map(
                     (intensity) =>
-                        styleController.removeLayer(_getLayerId(intensity)),
+                        styleController.removeLayer(intensity.layerId),
                   );
               await Future.wait(futures);
             }),
@@ -138,17 +143,13 @@ Future<void> _updateEewEstimatedIntensityFilters({
             .map((r) => r.code)
             .toList();
         return styleController.updateFilter(
-          id: _getLayerId(intensity),
+          id: intensity.layerId,
           filter: buildEewAreaCodeFilter(codes),
         );
       })
       .wait;
 }
 
-String _getLayerId(JmaIntensity intensity) {
-  final base = intensity.label
-      .replaceAll('-', 'low')
-      .replaceAll('+', 'high')
-      .replaceAll('不明', 'unknown');
-  return 'eew-estimated-intensity-fill-$base';
+extension on JmaIntensity {
+  String get layerId => 'eew-estimated-intensity-fill-$name';
 }

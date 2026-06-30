@@ -16,5 +16,7 @@ sealed class IntensityHistoryState with _$IntensityHistoryState {
   const factory IntensityHistoryState.city({
     required String prefectureCode,
     required String prefectureName,
+    String? selectedCityCode,
+    String? selectedCityName,
   }) = IntensityHistoryStateCity;
 }

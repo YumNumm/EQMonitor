@@ -97,6 +97,9 @@ class $AssetsParametersGen {
   /// File path: assets/parameters/manifest.json
   String get manifest => 'assets/parameters/manifest.json';
 
+  /// File path: assets/parameters/shindo_db_stations.json
+  String get shindoDbStations => 'assets/parameters/shindo_db_stations.json';
+
   /// File path: assets/parameters/tsunami_stations.json
   String get tsunamiStations => 'assets/parameters/tsunami_stations.json';
 
@@ -106,6 +109,7 @@ class $AssetsParametersGen {
     jmaCodeTable,
     kyoshinObservationPoints,
     manifest,
+    shindoDbStations,
     tsunamiStations,
   ];
 }

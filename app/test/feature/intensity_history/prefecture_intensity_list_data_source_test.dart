@@ -7,8 +7,8 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_searc
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/city_intensity_page.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/city_intensity_list_data_source.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/prefecture_intensity_page.dart';
+import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_intensity_list_data_source.dart';
 import 'package:eqmonitor/feature/intensity_history/data/repository/intensity_highest_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
@@ -29,37 +29,35 @@ const _parameter = EarthquakeParameter(
   prefectures: [],
 );
 
-EarthquakePartial _earthquake(String eventId, {DateTime? originTime}) =>
-    EarthquakePartial(
-      eventId: eventId,
-      status: TelegramStatus.normal,
-      originTime: originTime,
-      originTimePrecision: OriginTimePrecision.second,
-      arrivalTime: null,
-      dataSource: EarthquakeDataSource.jmaIntensityDatabase,
-      hypocenter: null,
-      intensity: null,
-      earthquakeType: EarthquakeType.normal,
-      telegramTypes: const [],
-      estimatedIntensityTileUrl: null,
-    );
+EarthquakePartial _earthquake(String eventId) => EarthquakePartial(
+  eventId: eventId,
+  status: TelegramStatus.normal,
+  originTime: null,
+  originTimePrecision: OriginTimePrecision.second,
+  arrivalTime: null,
+  dataSource: EarthquakeDataSource.jmaIntensityDatabase,
+  hypocenter: null,
+  intensity: null,
+  earthquakeType: EarthquakeType.normal,
+  telegramTypes: const [],
+  estimatedIntensityTileUrl: null,
+);
 
 IntensityAreaSearchItem _item({
   JmaIntensity? intensity = JmaIntensity.one,
-  DateTime? originTime,
 }) => IntensityAreaSearchItem(
   eventId: 'e1',
   area: IntensityAreaInfo(
-    code: 'city-1',
-    name: '仙台市',
+    code: '0400',
+    name: '宮城県',
     intensity: intensity,
     lpgmIntensity: null,
   ),
-  earthquake: _earthquake('e1', originTime: originTime),
+  earthquake: _earthquake('e1'),
 );
 
-class _FakeCityIntensityRepository extends IntensityHighestRepository {
-  _FakeCityIntensityRepository()
+class _FakePrefectureIntensityRepository extends IntensityHighestRepository {
+  _FakePrefectureIntensityRepository()
     : super(earthquake: api.ApiClient(Dio()).earthquake);
 
   final cursors = <String?>[];
@@ -67,45 +65,45 @@ class _FakeCityIntensityRepository extends IntensityHighestRepository {
   List<IntensityAreaSearchItem> items = const [];
 
   @override
-  Future<CityIntensityPage> fetchCityIntensityList({
-    required String cityCode,
-    required String cityName,
+  Future<PrefectureIntensityPage> fetchPrefectureIntensityList({
+    required String prefectureCode,
+    required String prefectureName,
     required EarthquakeParameter parameter,
     required int limit,
     String? cursor,
   }) async {
     cursors.add(cursor);
-    return CityIntensityPage(items: items, nextToken: nextToken);
+    return PrefectureIntensityPage(items: items, nextToken: nextToken);
   }
 }
 
-CityIntensityListDataSource _dataSource(
-  _FakeCityIntensityRepository repository,
-) => CityIntensityListDataSource(
+PrefectureIntensityListDataSource _dataSource(
+  _FakePrefectureIntensityRepository repository,
+) => PrefectureIntensityListDataSource(
   repository: repository,
-  cityCode: 'city-1',
-  cityName: '仙台市',
+  prefectureCode: '0400',
+  prefectureName: '宮城県',
   parameter: _parameter,
 );
 
 void main() {
-  group('CityIntensityListDataSource.groupBy', () {
+  group('PrefectureIntensityListDataSource.groupBy', () {
     test('震度ラベルでグループ化', () {
-      final ds = _dataSource(_FakeCityIntensityRepository());
-      final key = ds.groupBy(_item(originTime: DateTime.utc(2026, 6, 27)));
-      expect(key, '震度1');
+      final ds = _dataSource(_FakePrefectureIntensityRepository());
+      final key = ds.groupBy(_item(intensity: JmaIntensity.fiveUpper));
+      expect(key, '震度5+');
     });
 
     test('震度がない場合は不明でグループ化', () {
-      final ds = _dataSource(_FakeCityIntensityRepository());
+      final ds = _dataSource(_FakePrefectureIntensityRepository());
       expect(ds.groupBy(_item(intensity: null)), '震度不明');
     });
   });
 
-  group('CityIntensityListDataSource.load', () {
+  group('PrefectureIntensityListDataSource.load', () {
     test('Refresh は cursor=null で10件取得し、Append は追加取得しない', () async {
-      final repo = _FakeCityIntensityRepository()
-        ..items = [_item(originTime: DateTime.utc(2026, 6, 27))]
+      final repo = _FakePrefectureIntensityRepository()
+        ..items = [_item()]
         ..nextToken = 'next-1';
       final ds = _dataSource(repo);
 
@@ -118,8 +116,8 @@ void main() {
     });
 
     test('Success の appendKey は null になる', () async {
-      final repo = _FakeCityIntensityRepository()
-        ..items = [_item(originTime: DateTime.utc(2026, 6, 27))]
+      final repo = _FakePrefectureIntensityRepository()
+        ..items = [_item()]
         ..nextToken = 'tok';
       final ds = _dataSource(repo);
       final result = await ds.load(const Refresh());

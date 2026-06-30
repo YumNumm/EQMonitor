@@ -52,4 +52,4 @@ final class EarthquakeHistoryRepositoryProvider
 }
 
 String _$earthquakeHistoryRepositoryHash() =>
-    r'cc977a936429b9398b20432b23a827f69bc182f2';
+    r'0b41710d0460324be4e6c30ee9283412634031f7';

@@ -30,6 +30,7 @@ class PushNotificationRepository {
   }) => Result.capture(() async {
     final response = await _api.device.patchV2DeviceMeSettingsNotification(
       body: api.NotificationSettingsRequest(
+        notificationEnabled: settings.notificationEnabled,
         tsunamiEnabled: settings.tsunamiEnabled,
         trainingEnabled: settings.trainingEnabled,
         nankaiExtraordinaryEnabled: settings.nankaiExtraordinaryEnabled,

@@ -95,6 +95,7 @@ class _FakeGeneralNotificationSettingsNotifier
   @override
   Future<GeneralNotificationSettings> build() async =>
       const GeneralNotificationSettings(
+        notificationEnabled: true,
         tsunamiEnabled: true,
         trainingEnabled: true,
         nankaiExtraordinaryEnabled: true,

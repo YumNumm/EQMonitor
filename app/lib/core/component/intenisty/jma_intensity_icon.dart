@@ -99,7 +99,7 @@ class JmaIntensityIcon extends ConsumerWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: bg,
-            borderRadius: BorderRadius.circular(size / 5),
+            borderRadius: BorderRadius.circular(size / 4),
           ),
           child: Center(
             child: FittedBox(

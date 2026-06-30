@@ -84,4 +84,5 @@ const _$ParameterTypeEnumMap = {
   ParameterType.kyoshinObservationPoints: 'KYOSHIN_OBSERVATION_POINTS',
   ParameterType.earthquakeStations: 'EARTHQUAKE_STATIONS',
   ParameterType.tsunamiStations: 'TSUNAMI_STATIONS',
+  ParameterType.shindoDbStations: 'SHINDO_DB_STATIONS',
 };
