@@ -11,17 +11,21 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
     final saveError = useState<String?>(null);
     final isProcessing = useState(false);
 
+    Future<void> createCurrentLocationSlot() async {
+      final notifier = ref.read(notificationSlotsProvider.notifier);
+      await notifier.putCurrentLocation(
+        eewEnabled: true,
+        eewMinIntensity: JmaIntensity.four,
+        earthquakeEnabled: true,
+        earthquakeMinIntensity: JmaIntensity.one,
+      );
+    }
+
     Future<void> saveRecommendedSettings() async {
       isProcessing.value = true;
       saveError.value = null;
       try {
-        final notifier = ref.read(notificationSlotsProvider.notifier);
-        await notifier.putCurrentLocation(
-          eewEnabled: true,
-          eewMinIntensity: JmaIntensity.four,
-          earthquakeEnabled: true,
-          earthquakeMinIntensity: JmaIntensity.one,
-        );
+        await createCurrentLocationSlot();
         if (context.mounted) {
           isProcessing.value = false;
           await scope.nextPage();
@@ -39,9 +43,21 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
         case .recommended:
           await saveRecommendedSettings();
         case .custom:
+          isProcessing.value = true;
+          saveError.value = null;
+          try {
+            await createCurrentLocationSlot();
+          } on Exception catch (e) {
+            if (context.mounted) {
+              isProcessing.value = false;
+              saveError.value = e.toString();
+            }
+            return;
+          }
           if (!context.mounted) {
             return;
           }
+          isProcessing.value = false;
           await Navigator.of(context).push<void>(
             MaterialPageRoute<void>(
               builder: (_) => const _OnboardingCustomSettingsWrapper(),

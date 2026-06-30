@@ -5,17 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notification_slot.freezed.dart';
 
-enum NotificationSlotType {
-  currentLocation,
-  nationwide,
-  region;
-
-  String get label => switch (this) {
-    .currentLocation => '現在地',
-    .nationwide => '全国',
-    .region => '地域',
-  };
-}
+enum NotificationSlotType { currentLocation, nationwide, region }
 
 @freezed
 abstract class NotificationSlot with _$NotificationSlot {
@@ -47,9 +37,7 @@ extension ApiSlotResponseConverter on api.SlotResponse {
     displayOrder: displayOrder.toInt(),
     eewEnabled: eewEnabled,
     eewMinIntensity: eewMinIntensity?.toJmaIntensity,
-    eewOverrides: eewOverrides
-        ?.map((o) => o.toNotificationOverride())
-        .toList(),
+    eewOverrides: eewOverrides?.map((o) => o.toNotificationOverride()).toList(),
     earthquakeEnabled: earthquakeEnabled,
     earthquakeMinIntensity: earthquakeMinIntensity?.toJmaIntensity,
     earthquakeOverrides: earthquakeOverrides
@@ -60,8 +48,8 @@ extension ApiSlotResponseConverter on api.SlotResponse {
 
 extension ApiSlotTypeConverter on api.SlotType {
   NotificationSlotType get toAppSlotType => switch (this) {
-    .currentLocation => NotificationSlotType.currentLocation,
-    .nationwide => NotificationSlotType.nationwide,
-    .region => NotificationSlotType.region,
+    .currentLocation => .currentLocation,
+    .nationwide => .nationwide,
+    .region => .region,
   };
 }

@@ -4,15 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'eew_warning_settings.freezed.dart';
 
-enum EewWarningTarget {
-  currentLocationOnly,
-  currentLocationAndNationwide;
-
-  String get label => switch (this) {
-    .currentLocationOnly => '現在地のみ',
-    .currentLocationAndNationwide => '現在地＋全国',
-  };
-}
+enum EewWarningTarget { currentLocationOnly, currentLocationAndNationwide }
 
 @freezed
 abstract class EewWarningSettings with _$EewWarningSettings {
@@ -32,15 +24,14 @@ extension ApiEewWarningConfigResponseConverter on api.EewWarningConfigResponse {
 
 extension ApiTargetConverter on api.Target {
   EewWarningTarget get toAppTarget => switch (this) {
-    .currentLocationOnly => EewWarningTarget.currentLocationOnly,
-    .currentLocationAndNationwide =>
-      EewWarningTarget.currentLocationAndNationwide,
+    .currentLocationOnly => .currentLocationOnly,
+    .currentLocationAndNationwide => .currentLocationAndNationwide,
   };
 }
 
 extension EewWarningTargetToApi on EewWarningTarget {
   api.Target get toApiTarget => switch (this) {
-    .currentLocationOnly => api.Target.currentLocationOnly,
-    .currentLocationAndNationwide => api.Target.currentLocationAndNationwide,
+    .currentLocationOnly => .currentLocationOnly,
+    .currentLocationAndNationwide => .currentLocationAndNationwide,
   };
 }

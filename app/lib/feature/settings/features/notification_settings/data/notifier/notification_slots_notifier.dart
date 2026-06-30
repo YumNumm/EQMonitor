@@ -2,8 +2,10 @@ import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
+import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -12,23 +14,17 @@ part 'notification_slots_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
-  static final putCurrentLocationMutation = Mutation<void>();
-  static final deleteCurrentLocationMutation = Mutation<void>();
-  static final putNationwideMutation = Mutation<void>();
-  static final deleteNationwideMutation = Mutation<void>();
-  static final addRegionMutation = Mutation<void>();
-  static final updateRegionMutation = Mutation<void>();
-  static final removeRegionMutation = Mutation<void>();
-
   @override
   Future<List<NotificationSlot>> build() async {
     final status = await ref.watch(deviceProvisioningProvider.future);
-    if (status != DeviceProvisioningStatus.notRequired) {
+    if (status != .notRequired) {
       throw StateError('Device not provisioned');
     }
     final repo = await ref.watch(notificationSlotRepositoryProvider.future);
     return repo.getSlots();
   }
+
+  static final putCurrentLocationMutation = Mutation<void>();
 
   Future<void> putCurrentLocation({
     bool? eewEnabled,
@@ -59,13 +55,26 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     ref.invalidateSelf();
   }
 
+  static final deleteCurrentLocationMutation = Mutation<void>();
+
   Future<void> deleteCurrentLocation() async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
     await repo.deleteCurrentLocation();
-    // invalidateSelf前にトラッキング停止を試みる（stale state回避）
-    await _stopLocationTrackingIfNeeded();
+    final currentSlots = ref.read(notificationSlotsProvider).value ?? [];
+    final slotsWithoutCurrentLocation = currentSlots
+        .where((s) => s.slotType != NotificationSlotType.currentLocation)
+        .toList();
+    final shakeDetectionState =
+        ref.read(shakeDetectionSettingsProvider).value;
+    const lifecycle = BackgroundLocationMonitoringLifecycle();
+    await lifecycle.stopIfUnused(
+      slots: slotsWithoutCurrentLocation,
+      shakeDetectionState: shakeDetectionState,
+    );
     ref.invalidateSelf();
   }
+
+  static final putNationwideMutation = Mutation<void>();
 
   Future<void> putNationwide({
     bool? eewEnabled,
@@ -87,11 +96,15 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     ref.invalidateSelf();
   }
 
+  static final deleteNationwideMutation = Mutation<void>();
+
   Future<void> deleteNationwide() async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
     await repo.deleteNationwide();
     ref.invalidateSelf();
   }
+
+  static final addRegionMutation = Mutation<void>();
 
   Future<void> addRegion({
     required int regionId,
@@ -121,6 +134,8 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     ref.invalidateSelf();
   }
 
+  static final updateRegionMutation = Mutation<void>();
+
   Future<void> updateRegion({
     required String slotId,
     String? regionName,
@@ -149,6 +164,8 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     ref.invalidateSelf();
   }
 
+  static final removeRegionMutation = Mutation<void>();
+
   Future<void> removeRegion({required String slotId}) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
     await repo.removeRegion(slotId: slotId);
@@ -161,24 +178,22 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
   }) async {
     final current = await future;
     final existing = current
-        .where((s) => s.slotType == NotificationSlotType.currentLocation)
+        .where((s) => s.slotType == .currentLocation)
         .firstOrNull;
     if (existing == null || existing.regionId == regionCode) {
       return false;
     }
+    final repo = await ref.read(notificationSlotRepositoryProvider.future);
+    await repo.putCurrentLocation(
+      eewEnabled: existing.eewEnabled,
+      eewMinIntensity: existing.eewMinIntensity,
+      eewOverrides: existing.eewOverrides,
+      earthquakeEnabled: existing.earthquakeEnabled,
+      earthquakeMinIntensity: existing.earthquakeMinIntensity,
+      earthquakeOverrides: existing.earthquakeOverrides,
+    );
     ref.invalidateSelf();
     return true;
   }
 
-  Future<void> _stopLocationTrackingIfNeeded() async {
-    try {
-      await BackgroundLocationTracker.stopMonitoring();
-    } on Object catch (e, st) {
-      talker.error(
-        '[NotificationSlots] BackgroundLocationTracker.stopMonitoring',
-        e,
-        st,
-      );
-    }
-  }
 }

@@ -121,6 +121,7 @@ class OnboardingPage extends HookConsumerWidget {
                 buttonLabel: navigation.buttonLabel,
                 isNextEnabled: navigation.isNextEnabled,
                 isBackEnabled: isBackEnabled,
+                isProcessing: navigation.isProcessing,
                 onNext: goToNext,
                 onPrevious: showBack ? goToPrevious : null,
               ),

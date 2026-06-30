@@ -128,12 +128,4 @@ void main() {
     });
   });
 
-  group('InterruptionLevel.label', () {
-    test('returns correct Japanese labels', () {
-      expect(InterruptionLevel.passive.label, 'サイレント');
-      expect(InterruptionLevel.active.label, '通常');
-      expect(InterruptionLevel.timeSensitive.label, '即時');
-      expect(InterruptionLevel.critical.label, '重大な通知');
-    });
-  });
 }

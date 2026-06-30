@@ -10,16 +10,12 @@ part of 'ads_server_flag_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Start API実装前のスタブ。サーバから取得した ads_enabled フラグに置き換える。
 
 @ProviderFor(adsServerFlag)
 final adsServerFlagProvider = AdsServerFlagProvider._();
 
-/// Start API実装前のスタブ。サーバから取得した ads_enabled フラグに置き換える。
-
 final class AdsServerFlagProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  /// Start API実装前のスタブ。サーバから取得した ads_enabled フラグに置き換える。
   AdsServerFlagProvider._()
     : super(
         from: null,
@@ -53,4 +49,4 @@ final class AdsServerFlagProvider extends $FunctionalProvider<bool, bool, bool>
   }
 }
 
-String _$adsServerFlagHash() => r'0bdda0b35cfe3662737d173f830ff5c8942f832b';
+String _$adsServerFlagHash() => r'16e99704d3100060368507c0b7def5b45942ccfe';
