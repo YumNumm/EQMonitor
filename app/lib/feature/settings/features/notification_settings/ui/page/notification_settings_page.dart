@@ -15,6 +15,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:flutter/material.dart';
@@ -853,11 +854,13 @@ class _SlotListSection extends ConsumerWidget {
           padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
           child: FilledButton.tonalIcon(
             onPressed: canAddRegion
-                ? () => ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('地域の追加は今後のアップデートで対応予定です'),
-                    ),
-                  )
+                ? () async {
+                    await Navigator.of(context).push<void>(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const RegionPickerPage(),
+                      ),
+                    );
+                  }
                 : null,
             icon: const Icon(Icons.add),
             label: Text(
