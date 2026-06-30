@@ -76,4 +76,16 @@ class PushNotificationRepository {
         );
     return response.data.toTestScenarioDeliveryResult;
   });
+
+  Future<Result<TestScenarioTypeDeliveryResult, Exception>>
+  sendTestScenarioType({
+    required String deviceId,
+    required TestScenarioType scenario,
+  }) => Result.capture(() async {
+    final response = await _api.notification
+        .postV2DeviceMeNotificationTestScenarioType(
+          body: scenario.toApiRequest,
+        );
+    return response.data.toTestScenarioTypeDeliveryResult;
+  });
 }
