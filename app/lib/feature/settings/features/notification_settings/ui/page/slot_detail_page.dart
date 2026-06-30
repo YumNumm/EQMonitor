@@ -4,8 +4,10 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -81,20 +83,42 @@ class SlotDetailPage extends HookConsumerWidget {
                   enabled: slot.eewEnabled,
                   minIntensity: slot.eewMinIntensity,
                   isPro: isPro,
+                  overrides: slot.eewOverrides ?? [],
                   onEnabledChanged: (next) =>
                       _updateSlot(ref, slot, eewEnabled: next),
                   onMinIntensityChanged: (next) =>
                       _updateSlot(ref, slot, eewMinIntensity: next),
+                  onOverrideTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => OverrideEditPage(
+                        slotId: slot.id,
+                        slotType: slot.slotType,
+                        overrideType: OverrideType.eew,
+                        currentOverrides: slot.eewOverrides ?? [],
+                      ),
+                    ),
+                  ),
                 ),
                 const SettingsSectionHeader(text: '地震情報'),
                 _NotificationConditionCard(
                   enabled: slot.earthquakeEnabled,
                   minIntensity: slot.earthquakeMinIntensity,
                   isPro: isPro,
+                  overrides: slot.earthquakeOverrides ?? [],
                   onEnabledChanged: (next) =>
                       _updateSlot(ref, slot, earthquakeEnabled: next),
                   onMinIntensityChanged: (next) =>
                       _updateSlot(ref, slot, earthquakeMinIntensity: next),
+                  onOverrideTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => OverrideEditPage(
+                        slotId: slot.id,
+                        slotType: slot.slotType,
+                        overrideType: OverrideType.earthquake,
+                        currentOverrides: slot.earthquakeOverrides ?? [],
+                      ),
+                    ),
+                  ),
                 ),
                 if (slot.slotType == NotificationSlotType.region) ...[
                   const SettingsSectionHeader(text: '削除'),
@@ -206,15 +230,19 @@ class _NotificationConditionCard extends StatelessWidget {
     required this.enabled,
     required this.minIntensity,
     required this.isPro,
+    required this.overrides,
     required this.onEnabledChanged,
     required this.onMinIntensityChanged,
+    required this.onOverrideTap,
   });
 
   final bool enabled;
   final JmaIntensity? minIntensity;
   final bool isPro;
+  final List<NotificationOverride> overrides;
   final ValueChanged<bool> onEnabledChanged;
   final ValueChanged<JmaIntensity> onMinIntensityChanged;
+  final VoidCallback onOverrideTap;
 
   @override
   Widget build(BuildContext context) {
@@ -256,11 +284,21 @@ class _NotificationConditionCard extends StatelessWidget {
             ),
           ),
           const Divider(height: 1),
-          _LockedSettingTile(
-            title: '震度別設定',
-            subtitle: isPro ? '震度ごとに通知をオーバーライドできます' : 'Proで利用できます',
-            locked: !isPro,
-          ),
+          if (isPro)
+            ListTile(
+              title: const Text('震度別設定'),
+              subtitle: overrides.isEmpty
+                  ? const Text('震度ごとに通知をオーバーライドできます')
+                  : Text('${overrides.length}件の設定'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: onOverrideTap,
+            )
+          else
+            const _LockedSettingTile(
+              title: '震度別設定',
+              subtitle: 'Proで利用できます',
+              locked: true,
+            ),
         ],
       ),
     );
