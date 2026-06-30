@@ -35,6 +35,7 @@ abstract class Earthquake with _$Earthquake {
 extension EarthquakeApiExtension on api.Earthquake {
   Earthquake toEarthquake({
     required EarthquakeParameter parameter,
+    ShindoDbStationsParameter? shindoDbStations,
   }) => Earthquake(
     eventId: eventId,
     status: status.toTelegramStatus,
@@ -50,6 +51,7 @@ extension EarthquakeApiExtension on api.Earthquake {
     estimatedIntensityTileUrl: estimatedIntensityTile,
     intensity: intensity?.toEarthquakeIntensity(
       parameter: parameter,
+      shindoDbStations: shindoDbStations,
     ),
   );
 }

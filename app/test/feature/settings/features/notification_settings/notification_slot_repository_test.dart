@@ -64,6 +64,49 @@ void main() {
     });
   });
 
+  group('updateRegion', () {
+    test('sends default eew minimum intensity when enabling eew', () async {
+      await repository.updateRegion(
+        slotId: 'slot-123',
+        eewEnabled: true,
+        earthquakeEnabled: false,
+      );
+
+      expect(adapter.lastRequestBody!['eew_enabled'], isTrue);
+      expect(
+        adapter.lastRequestBody!['eew_min_intensity'],
+        api.JmaIntensity.value3,
+      );
+      expect(adapter.lastRequestBody!['earthquake_enabled'], isFalse);
+      expect(
+        adapter.lastRequestBody!.containsKey('earthquake_min_intensity'),
+        isFalse,
+      );
+    });
+
+    test(
+      'sends default earthquake minimum intensity when enabling earthquake',
+      () async {
+        await repository.updateRegion(
+          slotId: 'slot-123',
+          eewEnabled: false,
+          earthquakeEnabled: true,
+        );
+
+        expect(adapter.lastRequestBody!['eew_enabled'], isFalse);
+        expect(
+          adapter.lastRequestBody!.containsKey('eew_min_intensity'),
+          isFalse,
+        );
+        expect(adapter.lastRequestBody!['earthquake_enabled'], isTrue);
+        expect(
+          adapter.lastRequestBody!['earthquake_min_intensity'],
+          api.JmaIntensity.value3,
+        );
+      },
+    );
+  });
+
   group('removeRegion', () {
     test('sends delete request', () async {
       await repository.removeRegion(slotId: 'slot-123');
@@ -92,6 +135,17 @@ void main() {
         EewWarningTarget.currentLocationAndNationwide,
       );
       expect(settings.nationwideInterruptionLevel, InterruptionLevel.active);
+    });
+  });
+
+  group('patchEewGlobalSettings', () {
+    test('sends warningEnabled as warning_enabled', () async {
+      final settings = await repository.patchEewGlobalSettings(
+        warningEnabled: false,
+      );
+
+      expect(settings.warningEnabled, isFalse);
+      expect(adapter.lastRequestBody!['warning_enabled'], isFalse);
     });
   });
 }
@@ -160,6 +214,14 @@ final class _SlotApiAdapter implements HttpClientAdapter {
       return _jsonResponse(
         jsonEncode(_eewWarningResponseNationwide),
       );
+    }
+
+    if (path.endsWith('/eew') && method == 'GET') {
+      return _jsonResponse(jsonEncode(_eewGlobalResponseEnabled));
+    }
+
+    if (path.endsWith('/eew') && method == 'PATCH') {
+      return _jsonResponse(jsonEncode(_eewGlobalResponseDisabled));
     }
 
     throw UnimplementedError('Unhandled: $method $path');
@@ -242,4 +304,22 @@ const Map<String, String?> _eewWarningResponse = {
 const _eewWarningResponseNationwide = {
   'target': 'current_location_and_nationwide',
   'nationwide_interruption_level': 'active',
+};
+
+const Map<String, Object?> _eewGlobalResponseEnabled = {
+  'enabled': true,
+  'default_sound': 'default',
+  'default_interruption_level': 'active',
+  'start_live_activity': true,
+  'collapse_notification': true,
+  'warning_enabled': true,
+};
+
+const Map<String, Object?> _eewGlobalResponseDisabled = {
+  'enabled': true,
+  'default_sound': 'default',
+  'default_interruption_level': 'active',
+  'start_live_activity': true,
+  'collapse_notification': true,
+  'warning_enabled': false,
 };

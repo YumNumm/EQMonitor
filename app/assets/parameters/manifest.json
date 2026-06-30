@@ -3,58 +3,66 @@
     {
       "type": "JMA_CODE_TABLE",
       "schema_version": 1,
-      "source_version": "20260430-69617bc33dd66589f4ff63e82e98d6f0d2283071b4905903b450784e3adfaf5beb66e3588e71252da6e0f4a6a4faada3",
+      "source_version": "20260623-f05993a871ae055a5dc39a97ea590d4a3a53a0c2d04428e987fe4009148b96849f5eb799cc97f0013c03571f03d09414",
       "source_updated_at": null,
-      "generated_at": "2026-05-04T10:13:05.981Z",
       "source_urls": [
         "https://xml.kishou.go.jp/tec_material.html",
-        "https://xml.kishou.go.jp/jmaxml_20260430_Code.zip",
+        "https://xml.kishou.go.jp/jmaxml_20260623_Code.zip",
         "https://www.data.jma.go.jp/developer/jma_multilingual.xlsx"
       ],
-      "sha256": "d6e474372d490b9df54e43fb31a668237e323507894a34ef345e84ba3c76bf41",
-      "size_bytes": 604764,
-      "url": "/v2/parameters/jma_code_table"
+      "sha256": "a1242f71167c31846066b3c1c40779c26b5c1d383980d0260a5e7b10479a58c8",
+      "size_bytes": 604716,
+      "url": "/v2/parameters/JMA_CODE_TABLE"
     },
     {
       "type": "EARTHQUAKE_STATIONS",
       "schema_version": 1,
-      "source_version": "20260312",
-      "source_updated_at": "2026-03-12T12:00:00+09:00",
-      "generated_at": "2026-05-04T10:13:05.981Z",
+      "source_version": "20260723",
+      "source_updated_at": "2026-07-23T12:00:00+09:00",
       "source_urls": [
         "https://api.dmdata.jp/v2/parameter/earthquake/station",
         "https://www.data.jma.go.jp/developer/jma_multilingual.xlsx"
       ],
-      "sha256": "889cd8de2f023508ec8223941f291e65b60e9121abdc68bfeafd8249aa5520d1",
-      "size_bytes": 4395226,
-      "url": "/v2/parameters/earthquake_stations"
+      "sha256": "6d5a420bda7cbc8b15e8232bc2ad4d4d803232831d70c01290eef3c1933728b1",
+      "size_bytes": 4394090,
+      "url": "/v2/parameters/EARTHQUAKE_STATIONS"
     },
     {
       "type": "TSUNAMI_STATIONS",
       "schema_version": 1,
-      "source_version": "20260312",
-      "source_updated_at": "2026-03-12T12:00:00+09:00",
-      "generated_at": "2026-05-04T10:13:05.981Z",
+      "source_version": "20260723",
+      "source_updated_at": "2026-07-23T12:00:00+09:00",
       "source_urls": [
         "https://api.dmdata.jp/v2/parameter/tsunami/station",
         "https://www.data.jma.go.jp/developer/jma_multilingual.xlsx"
       ],
-      "sha256": "ee99a5353933c1dcd1f324c1ff9d45426654730c9082e362e082fa3d002990f3",
-      "size_bytes": 299167,
-      "url": "/v2/parameters/tsunami_stations"
+      "sha256": "b8c911b502a66fe5fa74cacd1d66f934e7352ae0cb6df2655e43fd8f72ce6be3",
+      "size_bytes": 299119,
+      "url": "/v2/parameters/TSUNAMI_STATIONS"
     },
     {
       "type": "KYOSHIN_OBSERVATION_POINTS",
       "schema_version": 1,
       "source_version": "v2026.05.03",
       "source_updated_at": "2026-05-03T06:46:46Z",
-      "generated_at": "2026-05-04T10:13:05.981Z",
       "source_urls": [
-        "https://github.com/ingen084/kyoshin-monitor-observation-points/releases/download/v2026.05.03/intensity-points.json"
+        "https://github.com/ingen084/kyoshin-monitor-observation-points/releases/download/v2026.05.03/intensity-points.json",
+        "https://api.dmdata.jp/v2/parameter/earthquake/station",
+        "https://www.j-shis.bosai.go.jp/map/api/sstrct/V2/meshinfo.geojson"
       ],
-      "sha256": "1387a4e6ab250248618cc30f6c7d8c558b6d5d2032e3b581e30ac5ffb7b27696",
-      "size_bytes": 816522,
-      "url": "/v2/parameters/kyoshin_observation_points"
+      "sha256": "64bc6462f3db956a25284264d94604ff62c68ea3c533941f2900a1d411f3ff12",
+      "size_bytes": 816612,
+      "url": "/v2/parameters/KYOSHIN_OBSERVATION_POINTS"
+    },
+    {
+      "type": "SHINDO_DB_STATIONS",
+      "schema_version": 1,
+      "source_version": "20260626",
+      "source_updated_at": null,
+      "source_urls": [],
+      "sha256": "0bd5e67bb9ffead6586a3e118d8710425fe080dca4a32829155ef77f8974f6ca",
+      "size_bytes": 877597,
+      "url": "/v2/parameters/SHINDO_DB_STATIONS"
     }
   ]
 }

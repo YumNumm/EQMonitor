@@ -23,6 +23,7 @@ Future<EarthquakeHistoryRepository> earthquakeHistoryRepository(
   return EarthquakeHistoryRepository(
     api: await ref.watch(apiClientProvider.future),
     earthquakeParameter: jmaParam.earthquake,
+    shindoDbStations: jmaParam.shindoDbStations,
   );
 }
 
@@ -30,10 +31,12 @@ class EarthquakeHistoryRepository {
   EarthquakeHistoryRepository({
     required api.ApiClient api,
     required this.earthquakeParameter,
+    required this.shindoDbStations,
   }) : _api = api;
 
   final api.ApiClient _api;
   final EarthquakeParameter earthquakeParameter;
+  final ShindoDbStationsParameter shindoDbStations;
 
   Iterable<EarthquakeParameterRegionItem> get _allRegions =>
       earthquakeParameter.prefectures.expand((p) => p.regions);
@@ -139,6 +142,7 @@ class EarthquakeHistoryRepository {
     );
     return response.data.earthquake.toEarthquake(
       parameter: earthquakeParameter,
+      shindoDbStations: shindoDbStations,
     );
   }
 
