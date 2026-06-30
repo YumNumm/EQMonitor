@@ -32,6 +32,9 @@ class PushNotificationRepository {
       body: api.NotificationSettingsRequest(
         tsunamiEnabled: settings.tsunamiEnabled,
         trainingEnabled: settings.trainingEnabled,
+        nankaiExtraordinaryEnabled: settings.nankaiExtraordinaryEnabled,
+        nankaiRegularEnabled: settings.nankaiRegularEnabled,
+        hokkaido3renOffshoreEnabled: settings.hokkaido3renOffshoreEnabled,
       ),
     );
     return response.data.toGeneralNotificationSettings;

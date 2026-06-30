@@ -8,6 +8,9 @@ abstract class GeneralNotificationSettings with _$GeneralNotificationSettings {
   const factory GeneralNotificationSettings({
     required bool tsunamiEnabled,
     required bool trainingEnabled,
+    required bool nankaiExtraordinaryEnabled,
+    required bool nankaiRegularEnabled,
+    required bool hokkaido3renOffshoreEnabled,
   }) = _GeneralNotificationSettings;
 }
 
@@ -17,5 +20,8 @@ extension GeneralNotificationSettingsApiExtension
       GeneralNotificationSettings(
         tsunamiEnabled: tsunamiEnabled,
         trainingEnabled: trainingEnabled,
+        nankaiExtraordinaryEnabled: nankaiExtraordinaryEnabled,
+        nankaiRegularEnabled: nankaiRegularEnabled,
+        hokkaido3renOffshoreEnabled: hokkaido3renOffshoreEnabled,
       );
 }

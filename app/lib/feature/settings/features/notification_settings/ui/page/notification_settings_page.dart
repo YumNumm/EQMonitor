@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
+import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
@@ -14,6 +15,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
@@ -41,9 +43,8 @@ class _Body extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationsEnabled = useState(true);
-    final selectedPreset = useState(_NotificationPreset.recommended);
+    final selectedPreset = ref.watch(notificationPresetProvider);
 
-    // 暫定: Freeプランの制約を使用（RevenueCat統合時にユーザーのプラン状態へ差し替え）
     final constraints = ref.watch(startProvider).value?.planConstraints.free;
     final isPro = constraints?.isPro ?? false;
     final maxRegions = constraints?.maxRegions.toInt() ?? 1;
@@ -58,6 +59,20 @@ class _Body extends HookConsumerWidget {
       }
     });
 
+    ref.listen(
+      GeneralNotificationSettingsNotifier.updateSettingsMutation,
+      (_, next) {
+        if (next is MutationError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('設定の保存に失敗しました: ${next.error}'),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      },
+    );
+
     return ListView(
       padding: const EdgeInsets.only(top: 16, bottom: 24),
       children: [
@@ -68,10 +83,11 @@ class _Body extends HookConsumerWidget {
         if (notificationsEnabled.value) ...[
           const SettingsSectionHeader(text: '通知条件'),
           _PresetOptionGroup(
-            selectedPreset: selectedPreset.value,
-            onChanged: (preset) => selectedPreset.value = preset,
+            selectedPreset: selectedPreset,
+            onChanged: (preset) =>
+                ref.read(notificationPresetProvider.notifier).select(preset),
             onCustomSettingsTap: () async {
-              if (selectedPreset.value != _NotificationPreset.custom) {
+              if (selectedPreset != NotificationPreset.custom) {
                 return;
               }
               await Navigator.of(context).push<void>(
@@ -84,6 +100,8 @@ class _Body extends HookConsumerWidget {
               );
             },
           ),
+          const SettingsSectionHeader(text: 'その他の通知'),
+          const _GeneralNotificationSettingsSection(),
         ],
         const SettingsSectionHeader(text: 'ツール'),
         const _NotificationHistoryTile(),
@@ -92,11 +110,6 @@ class _Body extends HookConsumerWidget {
       ],
     );
   }
-}
-
-enum _NotificationPreset {
-  recommended,
-  custom,
 }
 
 
@@ -162,8 +175,8 @@ class _PresetOptionGroup extends StatelessWidget {
     required this.onCustomSettingsTap,
   });
 
-  final _NotificationPreset selectedPreset;
-  final ValueChanged<_NotificationPreset> onChanged;
+  final NotificationPreset selectedPreset;
+  final ValueChanged<NotificationPreset> onChanged;
   final VoidCallback onCustomSettingsTap;
 
   @override
@@ -193,17 +206,17 @@ class _PresetOptionGroup extends StatelessWidget {
           _PresetOptionTile(
             title: '推奨設定',
             subtitle: '現在地を中心に、必要な通知を自動で受け取ります',
-            isSelected: selectedPreset == _NotificationPreset.recommended,
-            onTap: () => onChanged(_NotificationPreset.recommended),
+            isSelected: selectedPreset == NotificationPreset.recommended,
+            onTap: () => onChanged(NotificationPreset.recommended),
           ),
           const Divider(height: 1),
           _PresetOptionTile(
             title: 'カスタム',
             subtitle: '通知の種類ごとに条件を細かく設定します',
-            isSelected: selectedPreset == _NotificationPreset.custom,
-            onTap: () => onChanged(_NotificationPreset.custom),
+            isSelected: selectedPreset == NotificationPreset.custom,
+            onTap: () => onChanged(NotificationPreset.custom),
             trailing: _CustomPresetTrailing(
-              enabled: selectedPreset == _NotificationPreset.custom,
+              enabled: selectedPreset == NotificationPreset.custom,
               onTap: onCustomSettingsTap,
             ),
           ),
@@ -989,6 +1002,116 @@ class _SettingValueTile extends StatelessWidget {
     return ListTile(
       title: Text(title),
       subtitle: Text(subtitle),
+    );
+  }
+}
+
+class _GeneralNotificationSettingsSection extends ConsumerWidget {
+  const _GeneralNotificationSettingsSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settingsAsync = ref.watch(generalNotificationSettingsProvider);
+    final settings = settingsAsync.value;
+    if (settings == null) {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }
+
+    final designSystem = context.designSystem;
+    final color = designSystem.color;
+    final spacing = designSystem.spacing;
+    final shape = designSystem.shape;
+
+    return Card.outlined(
+      margin: EdgeInsets.fromLTRB(
+        spacing.lg,
+        spacing.sm,
+        spacing.lg,
+        spacing.md,
+      ),
+      color: color.surfaceCard,
+      clipBehavior: Clip.antiAlias,
+      elevation: 0,
+      shape: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(shape.card),
+        side: BorderSide(color: color.outlineSoft),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _InlineSwitchTile(
+            title: '津波通知',
+            subtitle: settings.tsunamiEnabled ? '通知する' : '通知しない',
+            value: settings.tsunamiEnabled,
+            onChanged: ({required value}) async {
+              await GeneralNotificationSettingsNotifier.updateSettingsMutation
+                  .run(ref, (tsx) async {
+                await tsx
+                    .get(generalNotificationSettingsProvider.notifier)
+                    .updateSettings(tsunamiEnabled: value);
+              });
+            },
+          ),
+          const Divider(height: 1),
+          _InlineSwitchTile(
+            title: '訓練通知',
+            subtitle: settings.trainingEnabled ? '通知する' : '通知しない',
+            value: settings.trainingEnabled,
+            onChanged: ({required value}) async {
+              await GeneralNotificationSettingsNotifier.updateSettingsMutation
+                  .run(ref, (tsx) async {
+                await tsx
+                    .get(generalNotificationSettingsProvider.notifier)
+                    .updateSettings(trainingEnabled: value);
+              });
+            },
+          ),
+          const Divider(height: 1),
+          _InlineSwitchTile(
+            title: '南海トラフ臨時情報',
+            subtitle:
+                settings.nankaiExtraordinaryEnabled ? '通知する' : '通知しない',
+            value: settings.nankaiExtraordinaryEnabled,
+            onChanged: ({required value}) async {
+              await GeneralNotificationSettingsNotifier.updateSettingsMutation
+                  .run(ref, (tsx) async {
+                await tsx
+                    .get(generalNotificationSettingsProvider.notifier)
+                    .updateSettings(nankaiExtraordinaryEnabled: value);
+              });
+            },
+          ),
+          const Divider(height: 1),
+          _InlineSwitchTile(
+            title: '南海トラフ定例情報',
+            subtitle: settings.nankaiRegularEnabled ? '通知する' : '通知しない',
+            value: settings.nankaiRegularEnabled,
+            onChanged: ({required value}) async {
+              await GeneralNotificationSettingsNotifier.updateSettingsMutation
+                  .run(ref, (tsx) async {
+                await tsx
+                    .get(generalNotificationSettingsProvider.notifier)
+                    .updateSettings(nankaiRegularEnabled: value);
+              });
+            },
+          ),
+          const Divider(height: 1),
+          _InlineSwitchTile(
+            title: '北海道三連動（十勝沖）',
+            subtitle:
+                settings.hokkaido3renOffshoreEnabled ? '通知する' : '通知しない',
+            value: settings.hokkaido3renOffshoreEnabled,
+            onChanged: ({required value}) async {
+              await GeneralNotificationSettingsNotifier.updateSettingsMutation
+                  .run(ref, (tsx) async {
+                await tsx
+                    .get(generalNotificationSettingsProvider.notifier)
+                    .updateSettings(hokkaido3renOffshoreEnabled: value);
+              });
+            },
+          ),
+        ],
+      ),
     );
   }
 }

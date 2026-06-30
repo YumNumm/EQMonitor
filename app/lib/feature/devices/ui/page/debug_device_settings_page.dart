@@ -577,11 +577,22 @@ class _NotificationSettingsSection extends HookConsumerWidget {
     final isBusy = useState(false);
     final tsunami = useState(settings?.tsunamiEnabled ?? false);
     final training = useState(settings?.trainingEnabled ?? false);
+    final nankaiExtraordinary = useState(
+      settings?.nankaiExtraordinaryEnabled ?? false,
+    );
+    final nankaiRegular = useState(settings?.nankaiRegularEnabled ?? false);
+    final hokkaido3ren = useState(
+      settings?.hokkaido3renOffshoreEnabled ?? false,
+    );
 
     ref.listen(_notificationSettingsProvider(deviceId), (_, next) {
       if (next.value != null) {
         tsunami.value = next.requireValue.tsunamiEnabled;
         training.value = next.requireValue.trainingEnabled;
+        nankaiExtraordinary.value =
+            next.requireValue.nankaiExtraordinaryEnabled;
+        nankaiRegular.value = next.requireValue.nankaiRegularEnabled;
+        hokkaido3ren.value = next.requireValue.hokkaido3renOffshoreEnabled;
       }
     });
 
@@ -599,6 +610,9 @@ class _NotificationSettingsSection extends HookConsumerWidget {
         settings: GeneralNotificationSettings(
           tsunamiEnabled: tsunami.value,
           trainingEnabled: training.value,
+          nankaiExtraordinaryEnabled: nankaiExtraordinary.value,
+          nankaiRegularEnabled: nankaiRegular.value,
+          hokkaido3renOffshoreEnabled: hokkaido3ren.value,
         ),
       );
       isBusy.value = false;
