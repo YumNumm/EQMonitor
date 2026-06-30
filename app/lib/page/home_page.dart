@@ -125,48 +125,52 @@ class _SheetBody extends ConsumerWidget {
         borderRadius: BorderRadius.circular(designSystem.shape.card),
         side: BorderSide(color: color.outlineSoft),
       ),
-      child: Column(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.bar_chart_outlined),
-            title: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: '都道府県別 ',
-                    style: typography.bodySmall.copyWith(
-                      fontWeight: .bold,
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          visualDensity: .compact,
+        ),
+        child: Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.bar_chart_outlined),
+              title: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '都道府県別 ',
+                      style: typography.bodySmall.copyWith(
+                        fontWeight: .bold,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: '最大震度',
-                    style: typography.titleSmall,
-                  ),
-                ],
+                    TextSpan(
+                      text: '最大震度',
+                      style: typography.titleSmall,
+                    ),
+                  ],
+                ),
               ),
+              onTap: () async =>
+                  const IntensityHistoryRoute().push<void>(context),
             ),
-            subtitle: Text(
-              '地域ごとの最大震度履歴をマップで確認します',
-              style: typography.bodySmall,
+            Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
+            ListTile(
+              title: Text('緊急地震速報の履歴', style: typography.titleSmall),
+              onTap: () async => const EewHistoryRoute().push<void>(context),
             ),
-            onTap: () async =>
-                const IntensityHistoryRoute().push<void>(context),
-          ),
-          Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
-          ListTile(
-            leading: const Icon(Icons.settings_outlined),
-            title: Text('設定', style: typography.titleSmall),
-            subtitle: Text('表示設定や地図の動作を調整します', style: typography.bodySmall),
-            onTap: () async => const SettingsRoute().push<void>(context),
-          ),
-          Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
-          ListTile(
-            leading: const Icon(Icons.bug_report_outlined),
-            title: Text('デバッグページ', style: typography.titleSmall),
-            subtitle: Text('開発者向けの確認画面を開きます', style: typography.bodySmall),
-            onTap: () async => const DebugRoute().push<void>(context),
-          ),
-        ],
+            Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
+            ListTile(
+              leading: const Icon(Icons.settings_outlined),
+              title: Text('設定', style: typography.titleSmall),
+              onTap: () async => const SettingsRoute().push<void>(context),
+            ),
+            Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
+            ListTile(
+              leading: const Icon(Icons.bug_report_outlined),
+              title: Text('デバッグページ', style: typography.titleSmall),
+              onTap: () async => const DebugRoute().push<void>(context),
+            ),
+          ],
+        ),
       ),
     );
 
