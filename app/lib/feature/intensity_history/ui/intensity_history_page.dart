@@ -161,27 +161,43 @@ class _MapContent extends HookConsumerWidget {
       styleString: styleString,
     );
 
+    final mapController = useRef<MapController?>(null);
+
     return Scaffold(
       body: Stack(
         children: [
           MapLibreMap(
+            onMapCreated: (controller) => mapController.value = controller,
             options: mapOptions,
             onEvent: (event) async {
-              if (event is MapEventClick) {
+              if (event is MapEventClick || event is MapEventLongClick) {
                 final jmaMap = await ref.read(jmaMapProvider.future);
-                if (!context.mounted) {
+                final controller = mapController.value;
+                if (!context.mounted || controller == null) {
                   return;
                 }
                 await _handleTap(
+                  mapController: controller,
                   context: context,
                   ref: ref,
-                  event: event,
+                  screenPoint: switch (event) {
+                    MapEventClick(:final screenPoint) => screenPoint,
+                    MapEventLongClick(:final screenPoint) => screenPoint,
+                    _ => throw UnimplementedError(),
+                  },
+                  point: switch (event) {
+                    MapEventClick(:final point) => point,
+                    MapEventLongClick(:final point) => point,
+                    _ => throw UnimplementedError(),
+                  },
                   jmaMap: jmaMap,
                   state: state,
                 );
               }
             },
-            children: const [IntensityFillLayer()],
+            children: const [
+              IntensityFillLayer(),
+            ],
           ),
 
           // フローティングパネル（上部中央）
@@ -248,18 +264,15 @@ class _MapContent extends HookConsumerWidget {
   }
 
   Future<void> _handleTap({
+    required MapController mapController,
     required BuildContext context,
     required WidgetRef ref,
-    required MapEventClick event,
+    required Offset screenPoint,
+    required Geographic point,
     required Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
     required IntensityHistoryState state,
   }) async {
-    final mapController = MapController.maybeOf(context);
-    if (mapController == null) {
-      return;
-    }
-
-    final hits = mapController.queryLayers(event.screenPoint);
+    final hits = mapController.queryLayers(screenPoint);
     if (hits.isEmpty) {
       return;
     }
@@ -271,7 +284,7 @@ class _MapContent extends HookConsumerWidget {
       return;
     }
 
-    final latLng = JmaMap_LatLng(lat: event.point.lat, lng: event.point.lon);
+    final latLng = JmaMap_LatLng(lat: point.lat, lng: point.lon);
 
     if (hitCity && state is IntensityHistoryStateCity) {
       // Lv2: 市区町村タップ → 詳細モーダル

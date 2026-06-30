@@ -29,14 +29,23 @@ class EewForecastRegionLayer extends HookConsumerWidget {
   static const _sourceId = 'eqmonitor_map';
   static const _sourceLayerId = 'areaForecastLocalE';
   static const _warningLayerId = 'eew-details-warning-fill';
+  static const _warningLineLayerId = 'eew-details-warning-line';
   static const _emptyFilter = <Object>['==', '1', '2'];
 
-  static String _intensityLayerId(JmaIntensity intensity) {
+  static String _intensityFillLayerId(JmaIntensity intensity) {
     final base = intensity.label
         .replaceAll('-', 'low')
         .replaceAll('+', 'high')
         .replaceAll('不明', 'unknown');
     return 'eew-details-intensity-fill-$base';
+  }
+
+  static String _intensityLineLayerId(JmaIntensity intensity) {
+    final base = intensity.label
+        .replaceAll('-', 'low')
+        .replaceAll('+', 'high')
+        .replaceAll('不明', 'unknown');
+    return 'eew-details-intensity-line-$base';
   }
 
   static const List<JmaIntensity> _intensityLevels = [
@@ -86,11 +95,11 @@ class EewForecastRegionLayer extends HookConsumerWidget {
 
     final isInitialized = useRef(false);
 
+    final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
     // 震度別レイヤーの初期化（intensity モードのみ）
     useEffect(
       () {
-        if (styleController == null ||
-            displayMode != EewDisplayMode.intensity) {
+        if (styleController == null || displayMode != .intensity) {
           return null;
         }
 
@@ -103,7 +112,8 @@ class EewForecastRegionLayer extends HookConsumerWidget {
               return;
             }
             final color = colorModel.fromJmaIntensity(intensity).background;
-            final layerId = _intensityLayerId(intensity);
+            final fillId = _intensityFillLayerId(intensity);
+            final lineId = _intensityLineLayerId(intensity);
             final codes = intensityCodes[intensity] ?? const [];
             final initialFilter = codes.isEmpty
                 ? _emptyFilter
@@ -114,7 +124,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
                   ];
             await styleController.addLayer(
               FillStyleLayer(
-                id: layerId,
+                id: fillId,
                 sourceId: _sourceId,
                 sourceLayerId: _sourceLayerId,
                 filter: initialFilter,
@@ -124,7 +134,21 @@ class EewForecastRegionLayer extends HookConsumerWidget {
                 },
               ),
             );
-            addedIds.add(layerId);
+            await styleController.addLayer(
+              LineStyleLayer(
+                id: lineId,
+                sourceId: _sourceId,
+                sourceLayerId: _sourceLayerId,
+                filter: initialFilter,
+                paint: {
+                  'line-color': isDarkMode ? '#FFFFFF' : '#000000',
+                  'line-width': 1,
+                },
+              ),
+            );
+            addedIds
+              ..add(fillId)
+              ..add(lineId);
           }
           isInitialized.value = true;
         }());
@@ -143,13 +167,13 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           }());
         };
       },
-      [styleController, displayMode, colorModel],
+      [styleController, displayMode, colorModel, isDarkMode],
     );
 
     // 警報レイヤーの初期化（warning モードのみ）
     useEffect(
       () {
-        if (styleController == null || displayMode != EewDisplayMode.warning) {
+        if (styleController == null || displayMode != .warning) {
           return null;
         }
 
@@ -170,11 +194,24 @@ class EewForecastRegionLayer extends HookConsumerWidget {
               sourceLayerId: _sourceLayerId,
               filter: initialWarningFilter,
               paint: const {
-                'fill-color': '#FF0000',
+                'fill-color': '#DD0000',
                 'fill-opacity': 1,
               },
             ),
             belowLayerId: BaseLayer.areaForecastLocalELine.name,
+          );
+          await styleController.addLayer(
+            LineStyleLayer(
+              id: _warningLineLayerId,
+              sourceId: _sourceId,
+              sourceLayerId: _sourceLayerId,
+              filter: initialWarningFilter,
+              paint: {
+                'line-color': isDarkMode ? '#FFFFFF' : '#222222',
+                'line-width': 1,
+              },
+            ),
+            aboveLayerId: _warningLayerId,
           );
           if (!disposed) {
             isInitialized.value = true;
@@ -193,7 +230,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           }());
         };
       },
-      [styleController, displayMode],
+      [styleController, displayMode, isDarkMode],
     );
 
     // 震度モード: フィルター更新
@@ -216,7 +253,11 @@ class EewForecastRegionLayer extends HookConsumerWidget {
                     ['literal', codes],
                   ];
             await styleController.updateFilter(
-              id: _intensityLayerId(intensity),
+              id: _intensityFillLayerId(intensity),
+              filter: filter,
+            );
+            await styleController.updateFilter(
+              id: _intensityLineLayerId(intensity),
               filter: filter,
             );
           }
