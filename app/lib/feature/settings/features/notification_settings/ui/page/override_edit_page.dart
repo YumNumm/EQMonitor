@@ -53,16 +53,16 @@ class OverrideEditPage extends HookConsumerWidget {
         ?.where((s) => s.id == slotId)
         .firstOrNull;
 
-    final overrides = switch (overrideType) {
-      OverrideType.eew => slot?.eewOverrides,
-      OverrideType.earthquake => slot?.earthquakeOverrides,
-    } ??
+    final overrides =
+        switch (overrideType) {
+          OverrideType.eew => slot?.eewOverrides,
+          OverrideType.earthquake => slot?.earthquakeOverrides,
+        } ??
         currentOverrides;
 
     final sorted = List<NotificationOverride>.of(overrides)
       ..sort(
-        (a, b) =>
-            a.minJmaIntensity.orderIndex - b.minJmaIntensity.orderIndex,
+        (a, b) => a.minJmaIntensity.orderIndex - b.minJmaIntensity.orderIndex,
       );
 
     final title = switch (overrideType) {
@@ -193,10 +193,10 @@ class OverrideEditPage extends HookConsumerWidget {
       return;
     }
 
-    final updated = [...sorted, result]..sort(
-      (a, b) =>
-          a.minJmaIntensity.orderIndex - b.minJmaIntensity.orderIndex,
-    );
+    final updated = [...sorted, result]
+      ..sort(
+        (a, b) => a.minJmaIntensity.orderIndex - b.minJmaIntensity.orderIndex,
+      );
 
     await _saveOverrides(ref, slot, updated);
   }
@@ -357,7 +357,7 @@ class _OverrideTile extends StatelessWidget {
             leading: _IntensityBadge(intensity: entry.minJmaIntensity),
             title: Text('震度${entry.minJmaIntensity.label}以上'),
             subtitle: Text(
-              '${_soundLabel(entry.sound)} / ${entry.interruptionLevel.label}',
+              '${_soundLabel(entry.sound)} / ${entry.interruptionLevel.name}',
             ),
             trailing: const Icon(Icons.chevron_right),
           ),
@@ -499,7 +499,7 @@ class _OverrideFormDialogState extends State<_OverrideFormDialog> {
                 children: [
                   for (final level in InterruptionLevel.values)
                     RadioListTile<InterruptionLevel>(
-                      title: Text(level.label),
+                      title: Text(level.name),
                       value: level,
                       contentPadding: EdgeInsets.zero,
                       dense: true,
