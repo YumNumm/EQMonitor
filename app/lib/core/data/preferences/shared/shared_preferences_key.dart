@@ -28,6 +28,7 @@ enum SharedPreferencesKey {
   autoReturnToRealtime('auto_return_to_realtime'),
   earthquakeHistoryMapLayerParameter('earthquake_history_map_layer_parameter'),
   homeMapLabelParameter('home_map_label_parameter'),
+  estimatedIntensityNoticeShown('estimated_intensity_notice_shown'),
   ;
 
   const SharedPreferencesKey(this.key);
