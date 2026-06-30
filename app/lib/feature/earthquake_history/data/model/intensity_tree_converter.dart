@@ -259,7 +259,7 @@ class IntensityTreeConverter {
         foundRegion.code,
         () => _LpgmPrefectureData(region: foundRegion!),
       );
-      prefData.addStation(foundCity, stationCode);
+      prefData.addStation(foundCity, stationItem);
     }
 
     return result;
@@ -275,20 +275,16 @@ class IntensityTreeConverter {
       final cities = <CityLpgmIntensityNode>[];
       for (final entry in prefData.cityStations.entries) {
         final city = entry.key;
-        final stationCodes = entry.value;
-        final stationNodes = stationCodes
-            .map((code) {
-              final stItem = stationParam[code];
+        final stationItems = entry.value;
+        final stationNodes = stationItems
+            .map((stationItem) {
+              final stItem = stationParam[stationItem.code];
               if (stItem == null) {
                 return null;
               }
               return StationLpgmIntensityNode(
                 station: stItem,
-                intensity: IntensityStation(
-                  code: code,
-                  name: code,
-                  sva: null,
-                  prePeriods: null,
+                intensity: stationItem.toIntensityStation.copyWith(
                   maxIntensity: null,
                   maxLpgmIntensity: levelLpgm,
                 ),
@@ -416,13 +412,17 @@ class _LpgmPrefectureData {
   _LpgmPrefectureData({required this.region});
 
   final EarthquakeParameterRegionItem region;
-  final Map<EarthquakeParameterCityItem, List<String>> cityStations = {};
+  final Map<EarthquakeParameterCityItem, List<api.IntensityStationItem>>
+  cityStations = {};
 
   void addCity(EarthquakeParameterCityItem city) {
     cityStations.putIfAbsent(city, () => []);
   }
 
-  void addStation(EarthquakeParameterCityItem city, String stationCode) {
-    cityStations.putIfAbsent(city, () => []).add(stationCode);
+  void addStation(
+    EarthquakeParameterCityItem city,
+    api.IntensityStationItem stationItem,
+  ) {
+    cityStations.putIfAbsent(city, () => []).add(stationItem);
   }
 }
