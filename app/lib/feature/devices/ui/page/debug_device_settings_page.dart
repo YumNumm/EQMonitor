@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
@@ -68,6 +69,10 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
                   ),
                 if (deviceIdAsync.hasValue)
                   _TestScenarioSection(
+                    deviceId: deviceIdAsync.requireValue,
+                  ),
+                if (deviceIdAsync.hasValue)
+                  _TestScenarioTypeSection(
                     deviceId: deviceIdAsync.requireValue,
                   ),
                 if (deviceIdAsync.hasValue)
@@ -575,8 +580,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
     );
     final settings = settingsAsync.value;
     final isBusy = useState(false);
-    final notificationEnabled =
-        useState(settings?.notificationEnabled ?? true);
+    final notificationEnabled = useState(settings?.notificationEnabled ?? true);
     final tsunami = useState(settings?.tsunamiEnabled ?? false);
     final training = useState(settings?.trainingEnabled ?? false);
     final nankaiExtraordinary = useState(
@@ -589,8 +593,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
 
     ref.listen(_notificationSettingsProvider(deviceId), (_, next) {
       if (next.value != null) {
-        notificationEnabled.value =
-            next.requireValue.notificationEnabled;
+        notificationEnabled.value = next.requireValue.notificationEnabled;
         tsunami.value = next.requireValue.tsunamiEnabled;
         training.value = next.requireValue.trainingEnabled;
         nankaiExtraordinary.value =
@@ -873,6 +876,112 @@ class _TestScenarioSection extends HookConsumerWidget {
                   : result.telegramTypes.join(', '),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class _TestScenarioTypeSection extends HookConsumerWidget {
+  const _TestScenarioTypeSection({required this.deviceId});
+
+  final String deviceId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedScenario = useState(TestScenarioType.eewWarning);
+    final isPending = useState(false);
+
+    Future<void> run() async {
+      if (isPending.value) {
+        return;
+      }
+      isPending.value = true;
+      final messenger = ScaffoldMessenger.of(context);
+      final notificationRepository = await ref.read(
+        pushNotificationRepositoryProvider.future,
+      );
+      final result = await notificationRepository.sendTestScenarioType(
+        deviceId: deviceId,
+        scenario: selectedScenario.value,
+      );
+      isPending.value = false;
+      if (!context.mounted) {
+        return;
+      }
+      switch (result) {
+        case Success(:final value):
+          await showAdaptiveDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog.adaptive(
+              title: Text(value.scenario),
+              content: SingleChildScrollView(
+                child: SelectableText(
+                  value.prettyJson,
+                  style: const TextStyle(
+                    fontFamily: FontFamily.googleSansCode,
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('閉じる'),
+                ),
+              ],
+            ),
+          );
+        case Failure(:final exception):
+          messenger.showSnackBar(
+            SnackBar(
+              content: Text('実行に失敗: $exception'),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+      }
+    }
+
+    return _SectionCard(
+      title: 'テストシナリオ種別実行',
+      subtitle:
+          'シナリオ種別を指定して通知パイプラインを実行し、'
+          'この端末にのみテスト通知を配信します',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          DropdownButtonFormField<TestScenarioType>(
+            initialValue: selectedScenario.value,
+            decoration: const InputDecoration(
+              labelText: 'シナリオ種別',
+              border: OutlineInputBorder(),
+            ),
+            items: [
+              for (final scenario in TestScenarioType.values)
+                DropdownMenuItem(
+                  value: scenario,
+                  child: Text(scenario.displayLabel),
+                ),
+            ],
+            onChanged: isPending.value
+                ? null
+                : (value) {
+                    if (value != null) {
+                      selectedScenario.value = value;
+                    }
+                  },
+          ),
+          const SizedBox(height: 12),
+          FilledButton.icon(
+            onPressed: isPending.value ? null : () async => run(),
+            icon: isPending.value
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                  )
+                : const Icon(Icons.play_arrow),
+            label: const Text('シナリオ種別を実行'),
+          ),
         ],
       ),
     );
