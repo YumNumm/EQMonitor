@@ -575,6 +575,8 @@ class _NotificationSettingsSection extends HookConsumerWidget {
     );
     final settings = settingsAsync.value;
     final isBusy = useState(false);
+    final notificationEnabled =
+        useState(settings?.notificationEnabled ?? true);
     final tsunami = useState(settings?.tsunamiEnabled ?? false);
     final training = useState(settings?.trainingEnabled ?? false);
     final nankaiExtraordinary = useState(
@@ -587,6 +589,8 @@ class _NotificationSettingsSection extends HookConsumerWidget {
 
     ref.listen(_notificationSettingsProvider(deviceId), (_, next) {
       if (next.value != null) {
+        notificationEnabled.value =
+            next.requireValue.notificationEnabled;
         tsunami.value = next.requireValue.tsunamiEnabled;
         training.value = next.requireValue.trainingEnabled;
         nankaiExtraordinary.value =
@@ -608,6 +612,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
       final result = await notificationRepository.patchNotificationSettings(
         deviceId: deviceId,
         settings: GeneralNotificationSettings(
+          notificationEnabled: notificationEnabled.value,
           tsunamiEnabled: tsunami.value,
           trainingEnabled: training.value,
           nankaiExtraordinaryEnabled: nankaiExtraordinary.value,

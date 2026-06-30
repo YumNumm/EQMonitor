@@ -28,6 +28,9 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
         await createCurrentLocationSlot();
         if (context.mounted) {
           isProcessing.value = false;
+          ref
+              .read(notificationPresetProvider.notifier)
+              .select(NotificationPreset.recommended);
           await scope.nextPage();
         }
       } on Exception catch (e) {
@@ -58,6 +61,9 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
             return;
           }
           isProcessing.value = false;
+          ref
+              .read(notificationPresetProvider.notifier)
+              .select(NotificationPreset.custom);
           await Navigator.of(context).push<void>(
             MaterialPageRoute<void>(
               builder: (_) => const _OnboardingCustomSettingsWrapper(),

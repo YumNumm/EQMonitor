@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exc
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/component/onboarding_provisioning_error_details_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

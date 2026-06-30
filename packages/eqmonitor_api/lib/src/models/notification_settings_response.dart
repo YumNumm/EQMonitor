@@ -10,6 +10,8 @@ part 'notification_settings_response.g.dart';
 @Freezed()
 abstract class NotificationSettingsResponse with _$NotificationSettingsResponse {
   const factory NotificationSettingsResponse({
+    @JsonKey(name: 'notification_enabled')
+    required bool notificationEnabled,
     @JsonKey(name: 'tsunami_enabled')
     required bool tsunamiEnabled,
     @JsonKey(name: 'training_enabled')
