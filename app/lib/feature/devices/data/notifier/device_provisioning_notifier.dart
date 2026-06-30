@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/exception/dio_exception_mapper.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
@@ -89,5 +90,9 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
     });
 
     state = const AsyncData(DeviceProvisioningStatus.notRequired);
+
+    try {
+      await ref.read(pushTokenSyncProvider.notifier).sync();
+    } on Object catch (_) {}
   }
 }
