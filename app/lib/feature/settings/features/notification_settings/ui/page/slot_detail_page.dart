@@ -19,19 +19,6 @@ class SlotDetailPage extends HookConsumerWidget {
     super.key,
   });
 
-  static const List<JmaIntensity> _selectableIntensities = [
-    JmaIntensity.zero,
-    JmaIntensity.one,
-    JmaIntensity.two,
-    JmaIntensity.three,
-    JmaIntensity.four,
-    JmaIntensity.fiveLower,
-    JmaIntensity.fiveUpper,
-    JmaIntensity.sixLower,
-    JmaIntensity.sixUpper,
-    JmaIntensity.seven,
-  ];
-
   final String slotId;
   final bool isPro;
 
@@ -319,7 +306,7 @@ class _IntensityDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resolved =
-        value != null && SlotDetailPage._selectableIntensities.contains(value)
+        value != null && JmaIntensity.selectableValues.contains(value)
         ? value
         : JmaIntensity.three;
 
@@ -334,7 +321,7 @@ class _IntensityDropdown extends StatelessWidget {
         }
       },
       dropdownMenuEntries: [
-        for (final intensity in SlotDetailPage._selectableIntensities)
+        for (final intensity in JmaIntensity.selectableValues)
           DropdownMenuEntry(
             value: intensity,
             label: '震度${intensity.label}',

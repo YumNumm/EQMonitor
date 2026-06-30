@@ -63,6 +63,20 @@ enum JmaIntensity {
     .sixUpper => 9,
     .seven => 10,
   };
+
+  /// 通知設定 UI で選択可能な震度の一覧（unknown / fiveUnknown を除く）
+  static const List<JmaIntensity> selectableValues = [
+    JmaIntensity.zero,
+    JmaIntensity.one,
+    JmaIntensity.two,
+    JmaIntensity.three,
+    JmaIntensity.four,
+    JmaIntensity.fiveLower,
+    JmaIntensity.fiveUpper,
+    JmaIntensity.sixLower,
+    JmaIntensity.sixUpper,
+    JmaIntensity.seven,
+  ];
 }
 
 extension ApiJmaIntensityConverter on api.JmaIntensity {
