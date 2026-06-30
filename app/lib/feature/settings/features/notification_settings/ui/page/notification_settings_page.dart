@@ -1,7 +1,6 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:eqmonitor/core/component/error/error_message_builder.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_error_dialog.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
@@ -17,6 +16,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_error_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
@@ -49,9 +49,12 @@ class _Body extends HookConsumerWidget {
     final isPro = constraints?.isPro ?? false;
     final maxRegions = constraints?.maxRegions.toInt() ?? 1;
 
-    ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (_, next) {
+    ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
-        showNotificationSettingsErrorDialog(
+        await showNotificationSettingsErrorDialog(
           context: context,
           error: next.error,
           errorMessageBuilder: ref.read(errorMessageBuilderProvider),
@@ -111,7 +114,6 @@ class _Body extends HookConsumerWidget {
     );
   }
 }
-
 
 class _MasterNotificationControl extends StatelessWidget {
   const _MasterNotificationControl({
@@ -363,8 +365,9 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eewSettings = ref.watch(eewGlobalSettingsProvider).value;
-    final earthquakeSettings =
-        ref.watch(earthquakeGlobalSettingsProvider).value;
+    final earthquakeSettings = ref
+        .watch(earthquakeGlobalSettingsProvider)
+        .value;
 
     ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (_, next) {
       if (next is MutationError && context.mounted) {
@@ -475,7 +478,7 @@ class _CustomSettingsSection extends StatelessWidget {
   final Future<void> Function({required bool value}) onEarthquakeChanged;
   final Future<void> Function({required bool value}) onLiveActivityChanged;
   final Future<void> Function({required bool value})
-      onEstimatedIntensityChanged;
+  onEstimatedIntensityChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -633,10 +636,12 @@ class _EewWarningDetailTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final warningEnabled =
+        ref.watch(eewGlobalSettingsProvider).value?.warningEnabled ?? true;
     final target = ref.watch(eewWarningConfigProvider).value?.target;
     return ListTile(
       title: const Text('緊急地震速報(警報)'),
-      subtitle: Text(target?.label ?? '読み込み中…'),
+      subtitle: Text(warningEnabled ? target?.label ?? '読み込み中…' : '無効'),
       trailing: const Icon(Icons.chevron_right),
       onTap: () async => Navigator.of(context).push<void>(
         MaterialPageRoute<void>(
@@ -654,9 +659,9 @@ class _EewWarningSettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(EewWarningConfigNotifier.updateConfigMutation, (_, next) {
+    ref.listen(EewWarningConfigNotifier.updateConfigMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
-        showNotificationSettingsErrorDialog(
+        await showNotificationSettingsErrorDialog(
           context: context,
           error: next.error,
           errorMessageBuilder: ref.read(errorMessageBuilderProvider),
@@ -665,6 +670,8 @@ class _EewWarningSettingsPage extends ConsumerWidget {
     });
 
     final target = ref.watch(eewWarningConfigProvider).value?.target;
+    final warningEnabled =
+        ref.watch(eewGlobalSettingsProvider).value?.warningEnabled ?? true;
 
     Future<void> select(EewWarningTarget value) async {
       await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
@@ -679,6 +686,22 @@ class _EewWarningSettingsPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.only(top: 16, bottom: 24),
         children: [
+          const SettingsSectionHeader(text: '通知状態'),
+          _InlineSwitchTile(
+            title: '緊急地震速報(警報)を通知',
+            subtitle: warningEnabled ? '通知する' : '通知しない',
+            value: warningEnabled,
+            onChanged: ({required value}) async {
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
+                ref,
+                (tsx) async {
+                  await tsx
+                      .get(eewGlobalSettingsProvider.notifier)
+                      .updateSettings(warningEnabled: value);
+                },
+              );
+            },
+          ),
           const SettingsSectionHeader(text: '通知対象'),
           _TargetOptionTile(
             title: '現在地のみ',
@@ -694,12 +717,6 @@ class _EewWarningSettingsPage extends ConsumerWidget {
             locked: !isPro,
             onTap: () async =>
                 select(EewWarningTarget.currentLocationAndNationwide),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Text(
-              '現在のAPI仕様では、緊急地震速報(警報)自体の無効化はありません。',
-            ),
           ),
         ],
       ),
@@ -1046,10 +1063,10 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
                   .run(ref, (tsx) async {
-                await tsx
-                    .get(generalNotificationSettingsProvider.notifier)
-                    .updateSettings(tsunamiEnabled: value);
-              });
+                    await tsx
+                        .get(generalNotificationSettingsProvider.notifier)
+                        .updateSettings(tsunamiEnabled: value);
+                  });
             },
           ),
           const Divider(height: 1),
@@ -1060,25 +1077,24 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
                   .run(ref, (tsx) async {
-                await tsx
-                    .get(generalNotificationSettingsProvider.notifier)
-                    .updateSettings(trainingEnabled: value);
-              });
+                    await tsx
+                        .get(generalNotificationSettingsProvider.notifier)
+                        .updateSettings(trainingEnabled: value);
+                  });
             },
           ),
           const Divider(height: 1),
           _InlineSwitchTile(
             title: '南海トラフ臨時情報',
-            subtitle:
-                settings.nankaiExtraordinaryEnabled ? '通知する' : '通知しない',
+            subtitle: settings.nankaiExtraordinaryEnabled ? '通知する' : '通知しない',
             value: settings.nankaiExtraordinaryEnabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
                   .run(ref, (tsx) async {
-                await tsx
-                    .get(generalNotificationSettingsProvider.notifier)
-                    .updateSettings(nankaiExtraordinaryEnabled: value);
-              });
+                    await tsx
+                        .get(generalNotificationSettingsProvider.notifier)
+                        .updateSettings(nankaiExtraordinaryEnabled: value);
+                  });
             },
           ),
           const Divider(height: 1),
@@ -1089,25 +1105,24 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
                   .run(ref, (tsx) async {
-                await tsx
-                    .get(generalNotificationSettingsProvider.notifier)
-                    .updateSettings(nankaiRegularEnabled: value);
-              });
+                    await tsx
+                        .get(generalNotificationSettingsProvider.notifier)
+                        .updateSettings(nankaiRegularEnabled: value);
+                  });
             },
           ),
           const Divider(height: 1),
           _InlineSwitchTile(
             title: '北海道三連動（十勝沖）',
-            subtitle:
-                settings.hokkaido3renOffshoreEnabled ? '通知する' : '通知しない',
+            subtitle: settings.hokkaido3renOffshoreEnabled ? '通知する' : '通知しない',
             value: settings.hokkaido3renOffshoreEnabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
                   .run(ref, (tsx) async {
-                await tsx
-                    .get(generalNotificationSettingsProvider.notifier)
-                    .updateSettings(hokkaido3renOffshoreEnabled: value);
-              });
+                    await tsx
+                        .get(generalNotificationSettingsProvider.notifier)
+                        .updateSettings(hokkaido3renOffshoreEnabled: value);
+                  });
             },
           ),
         ],
