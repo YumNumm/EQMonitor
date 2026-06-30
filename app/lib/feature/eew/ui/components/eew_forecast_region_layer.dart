@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,7 +27,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
   final EewDisplayMode displayMode;
 
   static const _sourceId = 'eqmonitor_map';
-  static const _sourceLayerId = 'areaForecastLocalEew';
+  static const _sourceLayerId = 'areaForecastLocalE';
   static const _warningLayerId = 'eew-details-warning-fill';
   static const _emptyFilter = <Object>['==', '1', '2'];
 
@@ -75,7 +76,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
               .map((r) => r.code)
               .toList(),
       };
-    }, [eew]);
+    }, [eew, displayMode]);
 
     // 警報発表区域の region code 一覧
     final warningCodes = useMemoized(() {
@@ -170,9 +171,10 @@ class EewForecastRegionLayer extends HookConsumerWidget {
               filter: initialWarningFilter,
               paint: const {
                 'fill-color': '#FF0000',
-                'fill-opacity': 0.4,
+                'fill-opacity': 1,
               },
             ),
+            belowLayerId: BaseLayer.areaForecastLocalELine.name,
           );
           if (!disposed) {
             isInitialized.value = true;

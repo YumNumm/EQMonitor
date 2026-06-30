@@ -44,16 +44,6 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
         title: const Text('緊急地震速報の履歴'),
         actions: [
           if (simulation != null) ...[
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  '第${simulation.currentIndex + 1}報 / '
-                  '${simulation.totalReports}報',
-                  style: theme.textTheme.bodySmall,
-                ),
-              ),
-            ),
             IconButton(
               icon: Icon(
                 simulation.isPlaying ? Icons.pause : Icons.play_arrow,
