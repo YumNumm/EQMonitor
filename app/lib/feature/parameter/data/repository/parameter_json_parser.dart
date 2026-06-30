@@ -39,12 +39,19 @@ final class ParameterJsonParser {
       parameterJsonByType[ParameterType.tsunamiStations] ??
           (throw const FormatException('Missing tsunami_stations parameter')),
     );
+    final shindoDbStations = parseShindoDbStations(
+      parameterJsonByType[ParameterType.shindoDbStations] ??
+          (throw const FormatException(
+            'Missing shindo_db_stations parameter',
+          )),
+    );
     return ParameterSet(
       manifest: manifest,
       jmaCodeTable: jmaCodeTable,
       kyoshinObservationPoints: kyoshinObservationPoints,
       earthquake: earthquake,
       tsunami: tsunami,
+      shindoDbStations: shindoDbStations,
     );
   }
 
@@ -61,6 +68,9 @@ final class ParameterJsonParser {
   TsunamiParameter parseTsunami(String source) =>
       TsunamiParameter.fromJson(decodeObject(source));
 
+  ShindoDbStationsParameter parseShindoDbStations(String source) =>
+      ShindoDbStationsParameter.fromJson(decodeObject(source));
+
   void parseParameter({
     required ParameterType type,
     required String source,
@@ -74,6 +84,8 @@ final class ParameterJsonParser {
         parseEarthquake(source);
       case ParameterType.tsunamiStations:
         parseTsunami(source);
+      case ParameterType.shindoDbStations:
+        parseShindoDbStations(source);
     }
   }
 

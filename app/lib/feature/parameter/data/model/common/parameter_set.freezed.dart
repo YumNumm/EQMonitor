@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParameterSet {
 
- ParameterManifest get manifest; JmaCodeTableParameter get jmaCodeTable; KyoshinObservationPointsParameter get kyoshinObservationPoints; EarthquakeParameter get earthquake; TsunamiParameter get tsunami;
+ ParameterManifest get manifest; JmaCodeTableParameter get jmaCodeTable; KyoshinObservationPointsParameter get kyoshinObservationPoints; EarthquakeParameter get earthquake; TsunamiParameter get tsunami; ShindoDbStationsParameter get shindoDbStations;
 /// Create a copy of ParameterSet
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ParameterSetCopyWith<ParameterSet> get copyWith => _$ParameterSetCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParameterSet&&(identical(other.manifest, manifest) || other.manifest == manifest)&&(identical(other.jmaCodeTable, jmaCodeTable) || other.jmaCodeTable == jmaCodeTable)&&(identical(other.kyoshinObservationPoints, kyoshinObservationPoints) || other.kyoshinObservationPoints == kyoshinObservationPoints)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&(identical(other.tsunami, tsunami) || other.tsunami == tsunami));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParameterSet&&(identical(other.manifest, manifest) || other.manifest == manifest)&&(identical(other.jmaCodeTable, jmaCodeTable) || other.jmaCodeTable == jmaCodeTable)&&(identical(other.kyoshinObservationPoints, kyoshinObservationPoints) || other.kyoshinObservationPoints == kyoshinObservationPoints)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&(identical(other.tsunami, tsunami) || other.tsunami == tsunami)&&(identical(other.shindoDbStations, shindoDbStations) || other.shindoDbStations == shindoDbStations));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,manifest,jmaCodeTable,kyoshinObservationPoints,earthquake,tsunami);
+int get hashCode => Object.hash(runtimeType,manifest,jmaCodeTable,kyoshinObservationPoints,earthquake,tsunami,shindoDbStations);
 
 @override
 String toString() {
-  return 'ParameterSet(manifest: $manifest, jmaCodeTable: $jmaCodeTable, kyoshinObservationPoints: $kyoshinObservationPoints, earthquake: $earthquake, tsunami: $tsunami)';
+  return 'ParameterSet(manifest: $manifest, jmaCodeTable: $jmaCodeTable, kyoshinObservationPoints: $kyoshinObservationPoints, earthquake: $earthquake, tsunami: $tsunami, shindoDbStations: $shindoDbStations)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $ParameterSetCopyWith<$Res>  {
   factory $ParameterSetCopyWith(ParameterSet value, $Res Function(ParameterSet) _then) = _$ParameterSetCopyWithImpl;
 @useResult
 $Res call({
- ParameterManifest manifest, JmaCodeTableParameter jmaCodeTable, KyoshinObservationPointsParameter kyoshinObservationPoints, EarthquakeParameter earthquake, TsunamiParameter tsunami
+ ParameterManifest manifest, JmaCodeTableParameter jmaCodeTable, KyoshinObservationPointsParameter kyoshinObservationPoints, EarthquakeParameter earthquake, TsunamiParameter tsunami, ShindoDbStationsParameter shindoDbStations
 });
 
 
-$ParameterManifestCopyWith<$Res> get manifest;$JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable;$KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints;$EarthquakeParameterCopyWith<$Res> get earthquake;$TsunamiParameterCopyWith<$Res> get tsunami;
+$ParameterManifestCopyWith<$Res> get manifest;$JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable;$KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints;$EarthquakeParameterCopyWith<$Res> get earthquake;$TsunamiParameterCopyWith<$Res> get tsunami;$ShindoDbStationsParameterCopyWith<$Res> get shindoDbStations;
 
 }
 /// @nodoc
@@ -62,14 +62,15 @@ class _$ParameterSetCopyWithImpl<$Res>
 
 /// Create a copy of ParameterSet
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? manifest = null,Object? jmaCodeTable = null,Object? kyoshinObservationPoints = null,Object? earthquake = null,Object? tsunami = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? manifest = null,Object? jmaCodeTable = null,Object? kyoshinObservationPoints = null,Object? earthquake = null,Object? tsunami = null,Object? shindoDbStations = null,}) {
   return _then(_self.copyWith(
 manifest: null == manifest ? _self.manifest : manifest // ignore: cast_nullable_to_non_nullable
 as ParameterManifest,jmaCodeTable: null == jmaCodeTable ? _self.jmaCodeTable : jmaCodeTable // ignore: cast_nullable_to_non_nullable
 as JmaCodeTableParameter,kyoshinObservationPoints: null == kyoshinObservationPoints ? _self.kyoshinObservationPoints : kyoshinObservationPoints // ignore: cast_nullable_to_non_nullable
 as KyoshinObservationPointsParameter,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameter,tsunami: null == tsunami ? _self.tsunami : tsunami // ignore: cast_nullable_to_non_nullable
-as TsunamiParameter,
+as TsunamiParameter,shindoDbStations: null == shindoDbStations ? _self.shindoDbStations : shindoDbStations // ignore: cast_nullable_to_non_nullable
+as ShindoDbStationsParameter,
   ));
 }
 /// Create a copy of ParameterSet
@@ -116,6 +117,15 @@ $TsunamiParameterCopyWith<$Res> get tsunami {
   
   return $TsunamiParameterCopyWith<$Res>(_self.tsunami, (value) {
     return _then(_self.copyWith(tsunami: value));
+  });
+}/// Create a copy of ParameterSet
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ShindoDbStationsParameterCopyWith<$Res> get shindoDbStations {
+  
+  return $ShindoDbStationsParameterCopyWith<$Res>(_self.shindoDbStations, (value) {
+    return _then(_self.copyWith(shindoDbStations: value));
   });
 }
 }
@@ -199,10 +209,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami,  ShindoDbStationsParameter shindoDbStations)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParameterSet() when $default != null:
-return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints,_that.earthquake,_that.tsunami);case _:
+return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints,_that.earthquake,_that.tsunami,_that.shindoDbStations);case _:
   return orElse();
 
 }
@@ -220,10 +230,10 @@ return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami,  ShindoDbStationsParameter shindoDbStations)  $default,) {final _that = this;
 switch (_that) {
 case _ParameterSet():
-return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints,_that.earthquake,_that.tsunami);case _:
+return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints,_that.earthquake,_that.tsunami,_that.shindoDbStations);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -240,10 +250,10 @@ return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami,  ShindoDbStationsParameter shindoDbStations)?  $default,) {final _that = this;
 switch (_that) {
 case _ParameterSet() when $default != null:
-return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints,_that.earthquake,_that.tsunami);case _:
+return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints,_that.earthquake,_that.tsunami,_that.shindoDbStations);case _:
   return null;
 
 }
@@ -255,7 +265,7 @@ return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints
 
 
 class _ParameterSet implements ParameterSet {
-  const _ParameterSet({required this.manifest, required this.jmaCodeTable, required this.kyoshinObservationPoints, required this.earthquake, required this.tsunami});
+  const _ParameterSet({required this.manifest, required this.jmaCodeTable, required this.kyoshinObservationPoints, required this.earthquake, required this.tsunami, required this.shindoDbStations});
   
 
 @override final  ParameterManifest manifest;
@@ -263,6 +273,7 @@ class _ParameterSet implements ParameterSet {
 @override final  KyoshinObservationPointsParameter kyoshinObservationPoints;
 @override final  EarthquakeParameter earthquake;
 @override final  TsunamiParameter tsunami;
+@override final  ShindoDbStationsParameter shindoDbStations;
 
 /// Create a copy of ParameterSet
 /// with the given fields replaced by the non-null parameter values.
@@ -274,16 +285,16 @@ _$ParameterSetCopyWith<_ParameterSet> get copyWith => __$ParameterSetCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParameterSet&&(identical(other.manifest, manifest) || other.manifest == manifest)&&(identical(other.jmaCodeTable, jmaCodeTable) || other.jmaCodeTable == jmaCodeTable)&&(identical(other.kyoshinObservationPoints, kyoshinObservationPoints) || other.kyoshinObservationPoints == kyoshinObservationPoints)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&(identical(other.tsunami, tsunami) || other.tsunami == tsunami));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParameterSet&&(identical(other.manifest, manifest) || other.manifest == manifest)&&(identical(other.jmaCodeTable, jmaCodeTable) || other.jmaCodeTable == jmaCodeTable)&&(identical(other.kyoshinObservationPoints, kyoshinObservationPoints) || other.kyoshinObservationPoints == kyoshinObservationPoints)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&(identical(other.tsunami, tsunami) || other.tsunami == tsunami)&&(identical(other.shindoDbStations, shindoDbStations) || other.shindoDbStations == shindoDbStations));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,manifest,jmaCodeTable,kyoshinObservationPoints,earthquake,tsunami);
+int get hashCode => Object.hash(runtimeType,manifest,jmaCodeTable,kyoshinObservationPoints,earthquake,tsunami,shindoDbStations);
 
 @override
 String toString() {
-  return 'ParameterSet(manifest: $manifest, jmaCodeTable: $jmaCodeTable, kyoshinObservationPoints: $kyoshinObservationPoints, earthquake: $earthquake, tsunami: $tsunami)';
+  return 'ParameterSet(manifest: $manifest, jmaCodeTable: $jmaCodeTable, kyoshinObservationPoints: $kyoshinObservationPoints, earthquake: $earthquake, tsunami: $tsunami, shindoDbStations: $shindoDbStations)';
 }
 
 
@@ -294,11 +305,11 @@ abstract mixin class _$ParameterSetCopyWith<$Res> implements $ParameterSetCopyWi
   factory _$ParameterSetCopyWith(_ParameterSet value, $Res Function(_ParameterSet) _then) = __$ParameterSetCopyWithImpl;
 @override @useResult
 $Res call({
- ParameterManifest manifest, JmaCodeTableParameter jmaCodeTable, KyoshinObservationPointsParameter kyoshinObservationPoints, EarthquakeParameter earthquake, TsunamiParameter tsunami
+ ParameterManifest manifest, JmaCodeTableParameter jmaCodeTable, KyoshinObservationPointsParameter kyoshinObservationPoints, EarthquakeParameter earthquake, TsunamiParameter tsunami, ShindoDbStationsParameter shindoDbStations
 });
 
 
-@override $ParameterManifestCopyWith<$Res> get manifest;@override $JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable;@override $KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints;@override $EarthquakeParameterCopyWith<$Res> get earthquake;@override $TsunamiParameterCopyWith<$Res> get tsunami;
+@override $ParameterManifestCopyWith<$Res> get manifest;@override $JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable;@override $KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints;@override $EarthquakeParameterCopyWith<$Res> get earthquake;@override $TsunamiParameterCopyWith<$Res> get tsunami;@override $ShindoDbStationsParameterCopyWith<$Res> get shindoDbStations;
 
 }
 /// @nodoc
@@ -311,14 +322,15 @@ class __$ParameterSetCopyWithImpl<$Res>
 
 /// Create a copy of ParameterSet
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? manifest = null,Object? jmaCodeTable = null,Object? kyoshinObservationPoints = null,Object? earthquake = null,Object? tsunami = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? manifest = null,Object? jmaCodeTable = null,Object? kyoshinObservationPoints = null,Object? earthquake = null,Object? tsunami = null,Object? shindoDbStations = null,}) {
   return _then(_ParameterSet(
 manifest: null == manifest ? _self.manifest : manifest // ignore: cast_nullable_to_non_nullable
 as ParameterManifest,jmaCodeTable: null == jmaCodeTable ? _self.jmaCodeTable : jmaCodeTable // ignore: cast_nullable_to_non_nullable
 as JmaCodeTableParameter,kyoshinObservationPoints: null == kyoshinObservationPoints ? _self.kyoshinObservationPoints : kyoshinObservationPoints // ignore: cast_nullable_to_non_nullable
 as KyoshinObservationPointsParameter,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameter,tsunami: null == tsunami ? _self.tsunami : tsunami // ignore: cast_nullable_to_non_nullable
-as TsunamiParameter,
+as TsunamiParameter,shindoDbStations: null == shindoDbStations ? _self.shindoDbStations : shindoDbStations // ignore: cast_nullable_to_non_nullable
+as ShindoDbStationsParameter,
   ));
 }
 
@@ -366,6 +378,15 @@ $TsunamiParameterCopyWith<$Res> get tsunami {
   
   return $TsunamiParameterCopyWith<$Res>(_self.tsunami, (value) {
     return _then(_self.copyWith(tsunami: value));
+  });
+}/// Create a copy of ParameterSet
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ShindoDbStationsParameterCopyWith<$Res> get shindoDbStations {
+  
+  return $ShindoDbStationsParameterCopyWith<$Res>(_self.shindoDbStations, (value) {
+    return _then(_self.copyWith(shindoDbStations: value));
   });
 }
 }

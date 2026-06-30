@@ -1,0 +1,11 @@
+{
+  "metadata": {
+    "type": "SHINDO_DB_STATIONS",
+    "schema_version": 1,
+    "source_version": "20260626",
+    "source_updated_at": null,
+    "source_urls": [],
+    "sha256": ""
+  },
+  "stations": []
+}

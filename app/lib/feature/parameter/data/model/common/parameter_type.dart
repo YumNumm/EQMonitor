@@ -11,6 +11,8 @@ enum ParameterType {
   earthquakeStations,
   @JsonValue('TSUNAMI_STATIONS')
   tsunamiStations,
+  @JsonValue('SHINDO_DB_STATIONS')
+  shindoDbStations,
 }
 
 extension ParameterTypeApiExtension on ParameterType {
@@ -19,6 +21,7 @@ extension ParameterTypeApiExtension on ParameterType {
     .kyoshinObservationPoints => 'kyoshin_observation_points',
     .earthquakeStations => 'earthquake_stations',
     .tsunamiStations => 'tsunami_stations',
+    .shindoDbStations => 'shindo_db_stations',
   };
 
   api.ParameterType get toApiParameterType => switch (this) {
@@ -26,5 +29,6 @@ extension ParameterTypeApiExtension on ParameterType {
     .kyoshinObservationPoints => .kyoshinObservationPoints,
     .earthquakeStations => .earthquakeStations,
     .tsunamiStations => .tsunamiStations,
+    .shindoDbStations => .shindoDbStations,
   };
 }

@@ -16,13 +16,18 @@ Future<IntensityTreeConverter> intensityTreeConverter(Ref ref) async {
   );
   return IntensityTreeConverter(
     parameter: jmaParam.earthquake,
+    shindoDbStations: jmaParam.shindoDbStations,
   );
 }
 
 class IntensityTreeConverter {
-  const IntensityTreeConverter({required this.parameter});
+  const IntensityTreeConverter({
+    required this.parameter,
+    this.shindoDbStations,
+  });
 
   final EarthquakeParameter parameter;
+  final ShindoDbStationsParameter? shindoDbStations;
 
   Iterable<EarthquakeParameterPrefectureItem> get _allPrefectures =>
       parameter.prefectures;
@@ -30,17 +35,46 @@ class IntensityTreeConverter {
   Iterable<EarthquakeParameterRegionItem> get _allRegions =>
       parameter.prefectures.expand((p) => p.regions);
 
-  Map<String, EarthquakeParameterStationItem> _stationParamMap() => {
-    for (final region in _allRegions)
-      for (final city in region.cities)
-        for (final station in city.stations) station.code: station,
-  };
+  Map<String, EarthquakeParameterStationItem> _stationParamMap() {
+    final map = <String, EarthquakeParameterStationItem>{
+      for (final region in _allRegions)
+        for (final city in region.cities)
+          for (final station in city.stations) station.code: station,
+    };
+    if (shindoDbStations != null) {
+      for (final station in shindoDbStations!.stations) {
+        map.putIfAbsent(
+          station.code,
+          station.toEarthquakeParameterStationItem,
+        );
+      }
+    }
+    return map;
+  }
 
-  Map<String, String> _stationCityCodeMap() => {
-    for (final region in _allRegions)
-      for (final city in region.cities)
-        for (final station in city.stations) station.code: city.code,
-  };
+  Map<String, String> _stationCityCodeMap() {
+    final map = <String, String>{
+      for (final region in _allRegions)
+        for (final city in region.cities)
+          for (final station in city.stations) station.code: city.code,
+    };
+    if (shindoDbStations != null) {
+      final cityPrefixMap = _cityIdentificationPrefixMap();
+      for (final station in shindoDbStations!.stations) {
+        if (map.containsKey(station.code)) {
+          continue;
+        }
+        final prefix = station.code.length >= 5
+            ? station.code.substring(0, 5)
+            : station.code;
+        final city = cityPrefixMap[prefix];
+        if (city != null) {
+          map[station.code] = city.code;
+        }
+      }
+    }
+    return map;
+  }
 
   Map<String, EarthquakeParameterPrefectureItem> _cityPrefectureMap() => {
     for (final prefecture in _allPrefectures)

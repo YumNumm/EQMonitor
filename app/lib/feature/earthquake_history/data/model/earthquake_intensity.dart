@@ -28,8 +28,12 @@ abstract class EarthquakeIntensity with _$EarthquakeIntensity {
 extension EarthquakeIntensityApiExtension on api.Intensity {
   EarthquakeIntensity toEarthquakeIntensity({
     required EarthquakeParameter parameter,
+    ShindoDbStationsParameter? shindoDbStations,
   }) {
-    final converter = IntensityTreeConverter(parameter: parameter);
+    final converter = IntensityTreeConverter(
+      parameter: parameter,
+      shindoDbStations: shindoDbStations,
+    );
     return EarthquakeIntensity(
       maxIntensity: maxIntensity.toJmaIntensity,
       maxLpgmIntensity: maxLpgmIntensity?.toJmaLpgmIntensity,

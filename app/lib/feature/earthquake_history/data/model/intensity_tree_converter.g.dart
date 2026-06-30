@@ -51,4 +51,4 @@ final class IntensityTreeConverterProvider
 }
 
 String _$intensityTreeConverterHash() =>
-    r'2dee6bba4ca7e0f661a5ebd9dacf31ebf8afe637';
+    r'07728a2eb9e6c482ba770b21fe133dc565fb1ec2';

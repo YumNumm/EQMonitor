@@ -7,4 +7,5 @@ export 'common/parameter_type.dart';
 export 'earthquake/earthquake_parameter.dart';
 export 'jma_code_table/jma_code_table_parameter.dart';
 export 'kyoshin/kyoshin_observation_points_parameter.dart';
+export 'shindo_db/shindo_db_stations_parameter.dart';
 export 'tsunami/tsunami_parameter.dart';
