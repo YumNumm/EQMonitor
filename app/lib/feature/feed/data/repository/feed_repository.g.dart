@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'device_repository.dart';
+part of 'feed_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -11,41 +11,41 @@ part of 'device_repository.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(deviceRepository)
-final deviceRepositoryProvider = DeviceRepositoryProvider._();
+@ProviderFor(feedRepository)
+final feedRepositoryProvider = FeedRepositoryProvider._();
 
-final class DeviceRepositoryProvider
+final class FeedRepositoryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<DeviceRepository>,
-          DeviceRepository,
-          FutureOr<DeviceRepository>
+          AsyncValue<FeedRepository>,
+          FeedRepository,
+          FutureOr<FeedRepository>
         >
-    with $FutureModifier<DeviceRepository>, $FutureProvider<DeviceRepository> {
-  DeviceRepositoryProvider._()
+    with $FutureModifier<FeedRepository>, $FutureProvider<FeedRepository> {
+  FeedRepositoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'deviceRepositoryProvider',
+        name: r'feedRepositoryProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$deviceRepositoryHash();
+  String debugGetCreateSourceHash() => _$feedRepositoryHash();
 
   @$internal
   @override
-  $FutureProviderElement<DeviceRepository> $createElement(
+  $FutureProviderElement<FeedRepository> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<DeviceRepository> create(Ref ref) {
-    return deviceRepository(ref);
+  FutureOr<FeedRepository> create(Ref ref) {
+    return feedRepository(ref);
   }
 }
 
-String _$deviceRepositoryHash() => r'6437cccb393c96e7a509bbe719579bee0ac82085';
+String _$feedRepositoryHash() => r'7955fb003e2452cf2aae157ac23926620b7e1721';

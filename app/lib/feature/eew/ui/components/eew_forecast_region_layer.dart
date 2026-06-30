@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -28,8 +29,6 @@ class EewForecastRegionLayer extends HookConsumerWidget {
 
   static const _sourceId = 'eqmonitor_map';
   static const _sourceLayerId = 'areaForecastLocalE';
-  static const _intensityFillLayerId = 'eew-details-intensity-fill';
-  static const _intensityLineLayerId = 'eew-details-intensity-line';
   static const _warningLayerId = 'eew-details-warning-fill';
   static const _warningLineLayerId = 'eew-details-warning-line';
 
@@ -51,11 +50,9 @@ class EewForecastRegionLayer extends HookConsumerWidget {
     final colorModel = ref.watch(intensityColorProvider);
     final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
 
-    // 震度別の match expression 用データを構築
-    // code → 色 のマッピングを1つの match expression にまとめる
-    final intensityData = useMemoized(() {
+    final regionMaxIntensities = useMemoized(() {
       final regions = eew?.forecastIntensity?.regions ?? const [];
-      final maxByRegion = regions
+      return regions
           .groupListsBy((e) => e.code)
           .map(
             (key, values) => MapEntry(
@@ -65,105 +62,96 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           )
           .values
           .toList();
-
-      final matchEntries = <Object>[];
-      final allCodes = <String>[];
-      for (final intensity in _intensityLevels) {
-        final codes = maxByRegion
-            .where((r) => r.intensity == intensity)
-            .map((r) => r.code)
-            .toList();
-        if (codes.isEmpty) {
-          continue;
-        }
-        final color = colorModel.fromJmaIntensity(intensity).background;
-        matchEntries
-          ..add(codes.length == 1 ? codes.first : codes)
-          ..add(color.toHexString());
-        allCodes.addAll(codes);
-      }
-      return (matchEntries: matchEntries, allCodes: allCodes);
-    }, [eew, colorModel]);
+    }, [eew]);
 
     final warningCodes = useMemoized(() {
       final zones = eew?.warning?.regions ?? const [];
       return zones.where((z) => z.hadWarning).map((z) => z.code).toList();
     }, [eew]);
 
-    // 震度モード: fill + line の2レイヤーのみ
-    // match expression で code → 色 を1レイヤーで表現
+    final isIntensityInitialized = useRef(false);
+
+    // 震度モード: 震度レベルごとに1レイヤー作成し、filter のみ更新する
     useEffect(
       () {
         if (styleController == null ||
-            displayMode != EewDisplayMode.intensity ||
-            intensityData.allCodes.isEmpty) {
+            displayMode != EewDisplayMode.intensity) {
           return null;
         }
 
-        var disposed = false;
-        final fillColor = <Object>[
-          'match',
-          ['get', 'code'],
-          ...intensityData.matchEntries,
-          'transparent',
-        ];
-        final filter = <Object>[
-          'in',
-          ['get', 'code'],
-          ['literal', intensityData.allCodes],
-        ];
-
         unawaited(() async {
-          if (disposed) {
-            return;
-          }
-          await styleController.addLayer(
-            FillStyleLayer(
-              id: _intensityFillLayerId,
-              sourceId: _sourceId,
-              sourceLayerId: _sourceLayerId,
-              filter: filter,
-              paint: {
-                'fill-color': fillColor,
-                'fill-opacity': 0.7,
-              },
-            ),
-          );
-          if (disposed) {
-            return;
-          }
-          await styleController.addLayer(
-            LineStyleLayer(
-              id: _intensityLineLayerId,
-              sourceId: _sourceId,
-              sourceLayerId: _sourceLayerId,
-              filter: filter,
-              paint: {
-                'line-color': isDarkMode ? '#FFFFFF' : '#000000',
-                'line-width': 1,
-              },
-            ),
+          await _intensityLevels
+              .map((intensity) {
+                final color =
+                    colorModel.fromJmaIntensity(intensity).background;
+                final codes = regionMaxIntensities
+                    .where((r) => r.intensity == intensity)
+                    .map((r) => r.code)
+                    .toList();
+                return styleController.addLayer(
+                  FillStyleLayer(
+                    id: intensity._detailLayerId,
+                    sourceId: _sourceId,
+                    sourceLayerId: _sourceLayerId,
+                    filter: buildEewAreaCodeFilter(codes),
+                    paint: {
+                      'fill-color': color.toHexString(),
+                      'fill-opacity': 0.7,
+                    },
+                  ),
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                );
+              })
+              .wait;
+          isIntensityInitialized.value = true;
+          await _updateIntensityFilters(
+            styleController: styleController,
+            regionMaxIntensities: regionMaxIntensities,
           );
         }());
 
         return () {
-          disposed = true;
-          unawaited(() async {
-            try {
-              await styleController.removeLayer(_intensityLineLayerId);
-            } on Exception {
-              // ignore
-            }
-            try {
-              await styleController.removeLayer(_intensityFillLayerId);
-            } on Exception {
-              // ignore
-            }
-          }());
+          isIntensityInitialized.value = false;
+          unawaited(
+            _intensityLevels
+                .map((intensity) async {
+                  try {
+                    await styleController.removeLayer(
+                      intensity._detailLayerId,
+                    );
+                  } on Exception {
+                    // ignore
+                  }
+                })
+                .wait,
+          );
         };
       },
-      [styleController, displayMode, intensityData, isDarkMode],
+      [styleController, displayMode, colorModel],
     );
+
+    // 震度モード: データ更新
+    useEffect(
+      () {
+        if (styleController == null ||
+            displayMode != EewDisplayMode.intensity ||
+            !isIntensityInitialized.value) {
+          return null;
+        }
+
+        unawaited(
+          _updateIntensityFilters(
+            styleController: styleController,
+            regionMaxIntensities: regionMaxIntensities,
+          ),
+        );
+
+        return null;
+      },
+      [styleController, displayMode, regionMaxIntensities],
+    );
+
+    final warningCleanupDone = useRef<Future<void>>(Future.value());
 
     // 警報モード: fill + line の2レイヤー
     useEffect(
@@ -174,7 +162,6 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           return null;
         }
 
-        var disposed = false;
         final filter = <Object>[
           'in',
           ['get', 'code'],
@@ -182,9 +169,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
         ];
 
         unawaited(() async {
-          if (disposed) {
-            return;
-          }
+          await warningCleanupDone.value;
           await styleController.addLayer(
             FillStyleLayer(
               id: _warningLayerId,
@@ -198,9 +183,6 @@ class EewForecastRegionLayer extends HookConsumerWidget {
             ),
             belowLayerId: BaseLayer.areaForecastLocalELine.name,
           );
-          if (disposed) {
-            return;
-          }
           await styleController.addLayer(
             LineStyleLayer(
               id: _warningLineLayerId,
@@ -212,13 +194,11 @@ class EewForecastRegionLayer extends HookConsumerWidget {
                 'line-width': 1,
               },
             ),
-            aboveLayerId: _warningLayerId,
           );
         }());
 
         return () {
-          disposed = true;
-          unawaited(() async {
+          warningCleanupDone.value = () async {
             try {
               await styleController.removeLayer(_warningLineLayerId);
             } on Exception {
@@ -229,7 +209,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
             } on Exception {
               // ignore
             }
-          }());
+          }();
         };
       },
       [styleController, displayMode, warningCodes, isDarkMode],
@@ -237,4 +217,26 @@ class EewForecastRegionLayer extends HookConsumerWidget {
 
     return const SizedBox.shrink();
   }
+}
+
+Future<void> _updateIntensityFilters({
+  required StyleController styleController,
+  required List<EewForecastRegionInfo> regionMaxIntensities,
+}) async {
+  await EewForecastRegionLayer._intensityLevels
+      .map((intensity) {
+        final codes = regionMaxIntensities
+            .where((r) => r.intensity == intensity)
+            .map((r) => r.code)
+            .toList();
+        return styleController.updateFilter(
+          id: intensity._detailLayerId,
+          filter: buildEewAreaCodeFilter(codes),
+        );
+      })
+      .wait;
+}
+
+extension on JmaIntensity {
+  String get _detailLayerId => 'eew-details-intensity-fill-$name';
 }

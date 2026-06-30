@@ -5,10 +5,12 @@ import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/estimated_intensity_notice_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/current_location_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/estimated_intensity_notice_dialog.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/similar_earthquake_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -61,13 +63,13 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   }
 }
 
-class _LoadedContent extends HookWidget {
+class _LoadedContent extends HookConsumerWidget {
   const _LoadedContent({required this.earthquake});
 
   final Earthquake earthquake;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final hasEstimated = earthquake.estimatedIntensityTileUrl != null;
     final hasLpgm = earthquake.intensity?.maxLpgmIntensity != null;
 
@@ -75,6 +77,26 @@ class _LoadedContent extends HookWidget {
       hasEstimated
           ? IntensityDisplayMode.estimated
           : IntensityDisplayMode.jma,
+    );
+
+    final noticeShown = ref.watch(estimatedIntensityNoticeShownProvider);
+
+    useEffect(
+      () {
+        if (hasEstimated && !noticeShown) {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            if (!context.mounted) {
+              return;
+            }
+            await EstimatedIntensityNoticeDialog.show(context);
+            await ref
+                .read(estimatedIntensityNoticeShownProvider.notifier)
+                .markShown();
+          });
+        }
+        return null;
+      },
+      [hasEstimated, noticeShown],
     );
 
     final availableModes = [

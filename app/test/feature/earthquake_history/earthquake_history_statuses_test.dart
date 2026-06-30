@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
+import 'package:eqmonitor/feature/parameter/data/model/shindo_db/shindo_db_stations_parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -42,7 +43,21 @@ void main() {
 final class _FakeEarthquakeHistoryRepository
     extends EarthquakeHistoryRepository {
   _FakeEarthquakeHistoryRepository()
-    : super(api: api.ApiClient(Dio()), earthquakeParameter: _parameter);
+    : super(
+        api: api.ApiClient(Dio()),
+        earthquakeParameter: _parameter,
+        shindoDbStations: const ShindoDbStationsParameter(
+          metadata: ParameterMetadata(
+            type: .shindoDbStations,
+            schemaVersion: 1,
+            sourceVersion: 'test',
+            sourceUpdatedAt: null,
+            sourceUrls: [],
+            sha256: 'test',
+          ),
+          stations: [],
+        ),
+      );
 
   final listStatuses = <List<api.TelegramStatus>?>[];
 

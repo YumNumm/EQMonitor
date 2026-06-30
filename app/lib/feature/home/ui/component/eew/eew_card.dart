@@ -16,10 +16,16 @@ import 'package:intl/intl.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
 
 class EewCard extends ConsumerWidget {
-  const EewCard({required this.eew, required this.index, super.key});
+  const EewCard({
+    required this.eew,
+    required this.index,
+    this.nowOverride,
+    super.key,
+  });
 
   final EewTelegramItem eew;
   final String? index;
+  final DateTime? nowOverride;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,7 +71,7 @@ class EewCard extends ConsumerWidget {
     final localRegion = localForecastRegion(eew, regionCode);
     final localForecastIntensity = localRegion?.intensity;
 
-    final nowValue = now.asData?.value;
+    final nowValue = nowOverride ?? now.asData?.value;
     final localIsArrived = localRegion?.isArrived ?? false;
     final localArrivalTime = localRegion?.arrivalTime;
     final hasArrived =
