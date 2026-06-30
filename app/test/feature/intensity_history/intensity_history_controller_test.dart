@@ -26,6 +26,8 @@ void main() {
       final city = state as IntensityHistoryStateCity;
       expect(city.prefectureCode, '0100');
       expect(city.prefectureName, '北海道');
+      expect(city.selectedCityCode, isNull);
+      expect(city.selectedCityName, isNull);
     });
 
     test('backToPrefecture で Prefecture 状態に戻る', () {
@@ -60,6 +62,68 @@ void main() {
       final city = state as IntensityHistoryStateCity;
       expect(city.prefectureCode, '0200');
       expect(city.prefectureName, '青森県');
+    });
+
+    test('focusPrefecture で市区町村も同時に選択できる', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      container
+          .read(intensityHistoryControllerProvider.notifier)
+          .focusPrefecture(
+            code: '0400',
+            name: '宮城県',
+            selectedCityCode: '0410000',
+            selectedCityName: '仙台市',
+          );
+
+      final state = container.read(intensityHistoryControllerProvider);
+      final city = state as IntensityHistoryStateCity;
+      expect(city.prefectureCode, '0400');
+      expect(city.prefectureName, '宮城県');
+      expect(city.selectedCityCode, '0410000');
+      expect(city.selectedCityName, '仙台市');
+    });
+
+    test('selectCity でフォーカス中の市区町村を選択する', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      container
+          .read(intensityHistoryControllerProvider.notifier)
+          .focusPrefecture(code: '0400', name: '宮城県');
+      container
+          .read(intensityHistoryControllerProvider.notifier)
+          .selectCity(code: '0410000', name: '仙台市');
+
+      final state = container.read(intensityHistoryControllerProvider);
+      final city = state as IntensityHistoryStateCity;
+      expect(city.selectedCityCode, '0410000');
+      expect(city.selectedCityName, '仙台市');
+    });
+
+    test('deselectCity で都道府県フォーカスを保ったまま市区町村選択を解除する', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      container
+          .read(intensityHistoryControllerProvider.notifier)
+          .focusPrefecture(
+            code: '0400',
+            name: '宮城県',
+            selectedCityCode: '0410000',
+            selectedCityName: '仙台市',
+          );
+      container
+          .read(intensityHistoryControllerProvider.notifier)
+          .deselectCity();
+
+      final state = container.read(intensityHistoryControllerProvider);
+      final city = state as IntensityHistoryStateCity;
+      expect(city.prefectureCode, '0400');
+      expect(city.prefectureName, '宮城県');
+      expect(city.selectedCityCode, isNull);
+      expect(city.selectedCityName, isNull);
     });
   });
 }

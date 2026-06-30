@@ -5,41 +5,41 @@ import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'city_intensity_list_data_source.g.dart';
+part 'prefecture_intensity_list_data_source.g.dart';
 
 @riverpod
-Future<CityIntensityListDataSource> cityIntensityListDataSource(
+Future<PrefectureIntensityListDataSource> prefectureIntensityListDataSource(
   Ref ref,
-  String cityCode,
-  String cityName,
+  String prefectureCode,
+  String prefectureName,
 ) async {
   final repository = await ref.watch(intensityHighestRepositoryProvider.future);
   final parameterSet = await ref.watch(parameterSetProvider.future);
-  final dataSource = CityIntensityListDataSource(
+  final dataSource = PrefectureIntensityListDataSource(
     repository: repository,
-    cityCode: cityCode,
-    cityName: cityName,
+    prefectureCode: prefectureCode,
+    prefectureName: prefectureName,
     parameter: parameterSet.earthquake,
   );
   ref.onDispose(dataSource.dispose);
   return dataSource;
 }
 
-class CityIntensityListDataSource
+class PrefectureIntensityListDataSource
     extends GroupedDataSource<String?, String, IntensityAreaSearchItem> {
-  CityIntensityListDataSource({
+  PrefectureIntensityListDataSource({
     required IntensityHighestRepository repository,
-    required String cityCode,
-    required String cityName,
+    required String prefectureCode,
+    required String prefectureName,
     required EarthquakeParameter parameter,
   }) : _repository = repository,
-       _cityCode = cityCode,
-       _cityName = cityName,
+       _prefectureCode = prefectureCode,
+       _prefectureName = prefectureName,
        _parameter = parameter;
 
   final IntensityHighestRepository _repository;
-  final String _cityCode;
-  final String _cityName;
+  final String _prefectureCode;
+  final String _prefectureName;
   final EarthquakeParameter _parameter;
 
   @override
@@ -64,9 +64,9 @@ class CityIntensityListDataSource
     String? cursor,
   ) async {
     try {
-      final page = await _repository.fetchCityIntensityList(
-        cityCode: _cityCode,
-        cityName: _cityName,
+      final page = await _repository.fetchPrefectureIntensityList(
+        prefectureCode: _prefectureCode,
+        prefectureName: _prefectureName,
         parameter: _parameter,
         cursor: cursor,
         limit: 10,

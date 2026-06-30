@@ -22,7 +22,6 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final eewsAsyncValue = ref.watch(eewsByEventIdProvider(eventId));
     final simulation = ref.watch(eewSimulationProvider);
     final selectedIndex = useState<int?>(null);

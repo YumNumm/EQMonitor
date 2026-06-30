@@ -61,7 +61,7 @@ final class IntensityHistoryControllerProvider
 }
 
 String _$intensityHistoryControllerHash() =>
-    r'eea7b62666ba91a423f5868ab25dd8f76a2d4fd0';
+    r'39ac4878f184430a09694268de5b16fbb76b1bca';
 
 /// 地域別最大震度マップのフォーカス状態を管理する Notifier。
 ///

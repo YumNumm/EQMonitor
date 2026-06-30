@@ -129,7 +129,22 @@ class _SheetBody extends ConsumerWidget {
         children: [
           ListTile(
             leading: const Icon(Icons.bar_chart_outlined),
-            title: Text('都道府県別 最大震度', style: typography.titleSmall),
+            title: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '都道府県別 ',
+                    style: typography.bodySmall.copyWith(
+                      fontWeight: .bold,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '最大震度',
+                    style: typography.titleSmall,
+                  ),
+                ],
+              ),
+            ),
             subtitle: Text(
               '地域ごとの最大震度履歴をマップで確認します',
               style: typography.bodySmall,

@@ -43,10 +43,26 @@ class IntensityHistoryPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
 
+    final paramAsync = ref.watch(parameterSetProvider);
+    final initialPrefName = paramAsync.whenOrNull(
+      data: (p) {
+        final code = initialPrefectureCode;
+        if (code == null) {
+          return null;
+        }
+        return p.earthquake.prefectures
+            .where((pref) => pref.code == code)
+            .firstOrNull
+            ?.name
+            .ja;
+      },
+    );
+
     return switch (mapConfiguration) {
       AsyncData(:final value) when value.styleString != null => _MapContent(
         styleString: value.styleString!,
         initialPrefectureCode: initialPrefectureCode,
+        initialPrefectureName: initialPrefName ?? initialPrefectureCode ?? '',
         initialCityCode: initialCityCode,
       ),
       AsyncError(:final error) => Scaffold(
@@ -64,11 +80,13 @@ class _MapContent extends HookConsumerWidget {
   const _MapContent({
     required this.styleString,
     required this.initialPrefectureCode,
+    required this.initialPrefectureName,
     required this.initialCityCode,
   });
 
   final String styleString;
   final String? initialPrefectureCode;
+  final String initialPrefectureName;
   final String? initialCityCode;
 
   static const _regionSourceLayerId = 'areaForecastLocalE';
@@ -88,34 +106,42 @@ class _MapContent extends HookConsumerWidget {
     final notifier = ref.read(intensityHistoryControllerProvider.notifier);
     final isCityState = state is IntensityHistoryStateCity;
     final canNavigateBack = Navigator.canPop(context);
+    final mapController = useRef<MapController?>(null);
+    final isMapCreated = useState(false);
+    final didInitializeDeepLink = useRef(false);
+    final parameterAsync = ref.watch(parameterSetProvider);
 
-    // ディープリンク初期化: 初回レンダリング後に実行
+    // ディープリンク初期化: MapController 作成後に一度だけ実行
     useEffect(
       () {
+        if (didInitializeDeepLink.value || !isMapCreated.value) {
+          return null;
+        }
         final prefCode = initialPrefectureCode;
         if (prefCode == null) {
           return null;
         }
+        final controller = mapController.value;
+        if (controller == null) {
+          return null;
+        }
 
-        final paramAsync = ref.read(parameterSetProvider);
-        final prefectures = paramAsync.whenOrNull(
+        final prefectures = parameterAsync.whenOrNull(
           data: (p) => p.earthquake.prefectures,
         );
-        var prefName = prefCode;
-        if (prefectures != null) {
-          final pref = prefectures.where((p) => p.code == prefCode).firstOrNull;
-          if (pref != null) {
-            prefName = pref.name.ja;
-          }
+        if (prefectures == null) {
+          return null;
         }
+        var prefName = prefCode;
+        final pref = prefectures.where((p) => p.code == prefCode).firstOrNull;
+        if (pref != null) {
+          prefName = pref.name.ja;
+        }
+        didInitializeDeepLink.value = true;
         notifier.focusPrefecture(code: prefCode, name: prefName);
 
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
+        unawaited(() async {
           if (!context.mounted) {
-            return;
-          }
-          final mapController = MapController.maybeOf(context);
-          if (mapController == null) {
             return;
           }
 
@@ -128,10 +154,10 @@ class _MapContent extends HookConsumerWidget {
             final bounds = _buildPrefectureBounds(
               prefCode: prefCode,
               jmaMap: jmaMap,
-              prefectures: prefectures ?? [],
+              prefectures: prefectures,
             );
             if (bounds != null) {
-              await mapController.fitBounds(
+              await controller.fitBounds(
                 bounds: bounds,
                 padding: const EdgeInsets.all(48),
               );
@@ -147,13 +173,20 @@ class _MapContent extends HookConsumerWidget {
               context,
               cityCode: cityCode,
               cityName: cityCode,
+              regionName: initialPrefectureName,
             );
           }
-        });
+        }());
 
         return null;
       },
-      const [],
+      [
+        isMapCreated.value,
+        initialPrefectureCode,
+        initialPrefectureName,
+        initialCityCode,
+        parameterAsync,
+      ],
     );
 
     final mapOptions = calculateJapanViewMapOptions(
@@ -161,13 +194,14 @@ class _MapContent extends HookConsumerWidget {
       styleString: styleString,
     );
 
-    final mapController = useRef<MapController?>(null);
-
     return Scaffold(
       body: Stack(
         children: [
           MapLibreMap(
-            onMapCreated: (controller) => mapController.value = controller,
+            onMapCreated: (controller) {
+              mapController.value = controller;
+              isMapCreated.value = true;
+            },
             options: mapOptions,
             onEvent: (event) async {
               if (event is MapEventClick || event is MapEventLongClick) {
@@ -244,7 +278,10 @@ class _MapContent extends HookConsumerWidget {
                     child: InkWell(
                       onTap: () {
                         notifier.backToPrefecture();
-                        _zoomToJapan(context);
+                        final controller = mapController.value;
+                        if (controller != null) {
+                          _zoomToJapan(controller);
+                        }
                       },
                       child: const Tooltip(
                         message: '全国表示に戻る',
@@ -274,6 +311,12 @@ class _MapContent extends HookConsumerWidget {
   }) async {
     final hits = mapController.queryLayers(screenPoint);
     if (hits.isEmpty) {
+      if (state is IntensityHistoryStateCity) {
+        ref
+            .read(intensityHistoryControllerProvider.notifier)
+            .backToPrefecture();
+        _zoomToJapan(mapController);
+      }
       return;
     }
 
@@ -287,7 +330,7 @@ class _MapContent extends HookConsumerWidget {
     final latLng = JmaMap_LatLng(lat: point.lat, lng: point.lon);
 
     if (hitCity && state is IntensityHistoryStateCity) {
-      // Lv2: 市区町村タップ → 詳細モーダル
+      // Lv2: 市区町村タップ
       final mapData = jmaMap.areaInformationCity;
       final result = JmaMapUtility().findNearestItem(latLng, mapData);
       final item = result.item;
@@ -298,6 +341,41 @@ class _MapContent extends HookConsumerWidget {
       final cityCode = item.property.code;
       final cityName = item.property.name;
 
+      final paramAsync = ref.read(parameterSetProvider);
+      final prefectures =
+          paramAsync.whenOrNull(data: (p) => p.earthquake.prefectures) ?? [];
+
+      final cityPrefCode = prefectureCodeOfCity(cityCode, prefectures);
+      if (cityPrefCode != null && cityPrefCode != state.prefectureCode) {
+        // 別の都道府県の市区町村 → その都道府県にフォーカス切り替え
+        final prefInfo = prefectures
+            .where((p) => p.code == cityPrefCode)
+            .firstOrNull;
+        if (prefInfo == null) {
+          return;
+        }
+        ref
+            .read(intensityHistoryControllerProvider.notifier)
+            .focusPrefecture(
+              code: prefInfo.code,
+              name: prefInfo.name.ja,
+              selectedCityCode: cityCode,
+              selectedCityName: cityName,
+            );
+        final bounds = _buildPrefectureBounds(
+          prefCode: prefInfo.code,
+          jmaMap: jmaMap,
+          prefectures: prefectures,
+        );
+        if (bounds != null && context.mounted) {
+          await mapController.fitBounds(
+            bounds: bounds,
+            padding: const EdgeInsets.all(48),
+          );
+        }
+        return;
+      }
+
       final prefCode = state.prefectureCode;
       final cityHighest = ref
           .read(cityHighestProvider(prefCode))
@@ -307,6 +385,16 @@ class _MapContent extends HookConsumerWidget {
         summary = cityHighest.where((e) => e.code == cityCode).firstOrNull;
       }
 
+      if (state.selectedCityCode != cityCode) {
+        ref
+            .read(intensityHistoryControllerProvider.notifier)
+            .selectCity(
+              code: cityCode,
+              name: cityName,
+            );
+        return;
+      }
+
       if (!context.mounted) {
         return;
       }
@@ -314,6 +402,7 @@ class _MapContent extends HookConsumerWidget {
         context,
         cityCode: cityCode,
         cityName: cityName,
+        regionName: state.prefectureName,
         summary: summary,
       );
     } else if (hitRegion && state is IntensityHistoryStatePrefecture) {
@@ -347,13 +436,10 @@ class _MapContent extends HookConsumerWidget {
         prefectures: prefectures,
       );
       if (bounds != null && context.mounted) {
-        final c = MapController.maybeOf(context);
-        if (c != null) {
-          await c.fitBounds(
-            bounds: bounds,
-            padding: const EdgeInsets.all(48),
-          );
-        }
+        await mapController.fitBounds(
+          bounds: bounds,
+          padding: const EdgeInsets.all(48),
+        );
       }
     }
   }
@@ -415,13 +501,9 @@ class _MapContent extends HookConsumerWidget {
     );
   }
 
-  void _zoomToJapan(BuildContext context) {
-    final c = MapController.maybeOf(context);
-    if (c == null) {
-      return;
-    }
+  void _zoomToJapan(MapController mapController) {
     unawaited(
-      c.fitBounds(
+      mapController.fitBounds(
         bounds: _japanBounds,
         padding: const EdgeInsets.all(32),
       ),

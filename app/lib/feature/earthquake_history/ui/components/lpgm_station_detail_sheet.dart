@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
@@ -123,25 +122,25 @@ class _PrePeriodsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final sorted = [...prePeriods]
-      ..sort((a, b) => a.band.compareTo(b.band));
+    final sorted = [...prePeriods]..sort((a, b) => a.band.compareTo(b.band));
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
+      spacing: 8,
       children: [
         Text(
-          '周期別階級',
+          '長周期地震動の周期別階級',
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.bold,
             fontFamily: FontFamily.notoSansJP,
           ),
         ),
-        const SizedBox(height: 8),
         Table(
           border: TableBorder.all(
             color: theme.colorScheme.outlineVariant,
           ),
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          defaultVerticalAlignment: .middle,
+
           children: [
             TableRow(
               decoration: BoxDecoration(
@@ -158,7 +157,31 @@ class _PrePeriodsTable extends StatelessWidget {
               children: [
                 _headerCell('階級', theme),
                 ...sorted.map(
-                  (p) => _intensityCell(p.lpgmIntensity, theme),
+                  (p) {
+                    final color = colorModel.fromJmaLpgmIntensity(
+                      p.lpgmIntensity,
+                    );
+                    return TableCell(
+                      verticalAlignment: .fill,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 6,
+                          horizontal: 4,
+                        ),
+                        color: color.background,
+                        child: Center(
+                          child: Text(
+                            p.lpgmIntensity.label,
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: color.foreground,
+                              fontFamily: FontFamily.googleSansCode,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -176,7 +199,9 @@ class _PrePeriodsTable extends StatelessWidget {
         Text(
           '※ SVA: 絶対速度応答スペクトル (cm/s)',
           style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+            color: theme.colorScheme.onSurface,
+            fontFamily: FontFamily.googleSansCode,
+            fontFamilyFallback: [FontFamily.notoSansJP],
           ),
         ),
       ],
@@ -192,27 +217,8 @@ class _PrePeriodsTable extends StatelessWidget {
             text,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.notoSansJP,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _intensityCell(JmaLpgmIntensity intensity, ThemeData theme) {
-    final color = colorModel.fromJmaLpgmIntensity(intensity);
-    return TableCell(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-        color: color.background,
-        child: Center(
-          child: Text(
-            intensity.label,
-            style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color.foreground,
               fontFamily: FontFamily.googleSansCode,
+              fontFamilyFallback: [FontFamily.notoSansJP],
             ),
           ),
         ),

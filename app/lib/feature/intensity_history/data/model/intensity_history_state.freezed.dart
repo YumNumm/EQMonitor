@@ -119,11 +119,11 @@ return city(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  prefecture,TResult Function( String prefectureCode,  String prefectureName)?  city,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  prefecture,TResult Function( String prefectureCode,  String prefectureName,  String? selectedCityCode,  String? selectedCityName)?  city,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case IntensityHistoryStatePrefecture() when prefecture != null:
 return prefecture();case IntensityHistoryStateCity() when city != null:
-return city(_that.prefectureCode,_that.prefectureName);case _:
+return city(_that.prefectureCode,_that.prefectureName,_that.selectedCityCode,_that.selectedCityName);case _:
   return orElse();
 
 }
@@ -141,11 +141,11 @@ return city(_that.prefectureCode,_that.prefectureName);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  prefecture,required TResult Function( String prefectureCode,  String prefectureName)  city,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  prefecture,required TResult Function( String prefectureCode,  String prefectureName,  String? selectedCityCode,  String? selectedCityName)  city,}) {final _that = this;
 switch (_that) {
 case IntensityHistoryStatePrefecture():
 return prefecture();case IntensityHistoryStateCity():
-return city(_that.prefectureCode,_that.prefectureName);}
+return city(_that.prefectureCode,_that.prefectureName,_that.selectedCityCode,_that.selectedCityName);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -159,11 +159,11 @@ return city(_that.prefectureCode,_that.prefectureName);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  prefecture,TResult? Function( String prefectureCode,  String prefectureName)?  city,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  prefecture,TResult? Function( String prefectureCode,  String prefectureName,  String? selectedCityCode,  String? selectedCityName)?  city,}) {final _that = this;
 switch (_that) {
 case IntensityHistoryStatePrefecture() when prefecture != null:
 return prefecture();case IntensityHistoryStateCity() when city != null:
-return city(_that.prefectureCode,_that.prefectureName);case _:
+return city(_that.prefectureCode,_that.prefectureName,_that.selectedCityCode,_that.selectedCityName);case _:
   return null;
 
 }
@@ -207,11 +207,13 @@ String toString() {
 
 
 class IntensityHistoryStateCity implements IntensityHistoryState {
-  const IntensityHistoryStateCity({required this.prefectureCode, required this.prefectureName});
+  const IntensityHistoryStateCity({required this.prefectureCode, required this.prefectureName, this.selectedCityCode, this.selectedCityName});
   
 
  final  String prefectureCode;
  final  String prefectureName;
+ final  String? selectedCityCode;
+ final  String? selectedCityName;
 
 /// Create a copy of IntensityHistoryState
 /// with the given fields replaced by the non-null parameter values.
@@ -223,16 +225,16 @@ $IntensityHistoryStateCityCopyWith<IntensityHistoryStateCity> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityHistoryStateCity&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.prefectureName, prefectureName) || other.prefectureName == prefectureName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityHistoryStateCity&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.prefectureName, prefectureName) || other.prefectureName == prefectureName)&&(identical(other.selectedCityCode, selectedCityCode) || other.selectedCityCode == selectedCityCode)&&(identical(other.selectedCityName, selectedCityName) || other.selectedCityName == selectedCityName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,prefectureCode,prefectureName);
+int get hashCode => Object.hash(runtimeType,prefectureCode,prefectureName,selectedCityCode,selectedCityName);
 
 @override
 String toString() {
-  return 'IntensityHistoryState.city(prefectureCode: $prefectureCode, prefectureName: $prefectureName)';
+  return 'IntensityHistoryState.city(prefectureCode: $prefectureCode, prefectureName: $prefectureName, selectedCityCode: $selectedCityCode, selectedCityName: $selectedCityName)';
 }
 
 
@@ -243,7 +245,7 @@ abstract mixin class $IntensityHistoryStateCityCopyWith<$Res> implements $Intens
   factory $IntensityHistoryStateCityCopyWith(IntensityHistoryStateCity value, $Res Function(IntensityHistoryStateCity) _then) = _$IntensityHistoryStateCityCopyWithImpl;
 @useResult
 $Res call({
- String prefectureCode, String prefectureName
+ String prefectureCode, String prefectureName, String? selectedCityCode, String? selectedCityName
 });
 
 
@@ -260,11 +262,13 @@ class _$IntensityHistoryStateCityCopyWithImpl<$Res>
 
 /// Create a copy of IntensityHistoryState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? prefectureCode = null,Object? prefectureName = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? prefectureCode = null,Object? prefectureName = null,Object? selectedCityCode = freezed,Object? selectedCityName = freezed,}) {
   return _then(IntensityHistoryStateCity(
 prefectureCode: null == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
 as String,prefectureName: null == prefectureName ? _self.prefectureName : prefectureName // ignore: cast_nullable_to_non_nullable
-as String,
+as String,selectedCityCode: freezed == selectedCityCode ? _self.selectedCityCode : selectedCityCode // ignore: cast_nullable_to_non_nullable
+as String?,selectedCityName: freezed == selectedCityName ? _self.selectedCityName : selectedCityName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

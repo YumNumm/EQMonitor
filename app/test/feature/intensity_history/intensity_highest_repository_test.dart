@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_intensity_page.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/prefecture_intensity_page.dart';
 import 'package:eqmonitor/feature/intensity_history/data/repository/intensity_highest_repository.dart';
+import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -30,12 +33,6 @@ HighestIntensityItem _item({
   earthquake: _partial('evt-$code'),
 );
 
-IntensityCitySearchItem _citySearchItem(JmaIntensity intensity) =>
-    IntensityCitySearchItem(
-      intensity: intensity,
-      earthquake: _partial('evt-city'),
-    );
-
 // ---------------------------------------------------------------------------
 // Fake repository
 // ---------------------------------------------------------------------------
@@ -46,7 +43,8 @@ class _FakeIntensityHighestRepository extends IntensityHighestRepository {
 
   List<HighestIntensityItem> prefectureItems = const [];
   List<HighestIntensityItem> cityItems = const [];
-  List<IntensityCitySearchItem> cityIntensityItems = const [];
+  List<IntensityAreaSearchItem> cityIntensityItems = const [];
+  List<IntensityAreaSearchItem> prefectureIntensityItems = const [];
   String? nextToken;
 
   @override
@@ -64,11 +62,27 @@ class _FakeIntensityHighestRepository extends IntensityHighestRepository {
   @override
   Future<CityIntensityPage> fetchCityIntensityList({
     required String cityCode,
+    required String cityName,
+    required EarthquakeParameter parameter,
     required int limit,
     String? cursor,
   }) async {
     return CityIntensityPage(
       items: cityIntensityItems,
+      nextToken: nextToken,
+    );
+  }
+
+  @override
+  Future<PrefectureIntensityPage> fetchPrefectureIntensityList({
+    required String prefectureCode,
+    required String prefectureName,
+    required EarthquakeParameter parameter,
+    required int limit,
+    String? cursor,
+  }) async {
+    return PrefectureIntensityPage(
+      items: prefectureIntensityItems,
       nextToken: nextToken,
     );
   }
@@ -127,37 +141,6 @@ void main() {
       expect(result.length, 1);
       expect(result[0].code, '0110100');
       expect(result[0].intensity, JmaIntensity.value4);
-    });
-  });
-
-  group('IntensityHighestRepository.fetchCityIntensityList', () {
-    test('items と nextToken を CityIntensityPage に詰めて返す', () async {
-      final repo = _FakeIntensityHighestRepository()
-        ..cityIntensityItems = [
-          _citySearchItem(JmaIntensity.value3),
-          _citySearchItem(JmaIntensity.value4),
-        ]
-        ..nextToken = 'next-cursor';
-
-      final page = await repo.fetchCityIntensityList(
-        cityCode: '0110100',
-        limit: 20,
-      );
-      expect(page.items.length, 2);
-      expect(page.nextToken, 'next-cursor');
-      expect(page.items[0].intensity, JmaIntensity.value3);
-    });
-
-    test('nextToken が null の場合は CityIntensityPage.nextToken が null', () async {
-      final repo = _FakeIntensityHighestRepository()
-        ..cityIntensityItems = []
-        ..nextToken = null;
-
-      final page = await repo.fetchCityIntensityList(
-        cityCode: '0110100',
-        limit: 20,
-      );
-      expect(page.nextToken, isNull);
     });
   });
 }
