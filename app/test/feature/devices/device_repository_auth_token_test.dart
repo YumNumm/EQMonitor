@@ -26,6 +26,7 @@ void main() {
       final repository = DeviceRepository(
         api.ApiClient(dio),
         authRepository,
+        dio,
         apnsEnvironment: api.ApnsEnvironment.development,
       );
 
@@ -55,6 +56,7 @@ void main() {
       final repository = DeviceRepository(
         api.ApiClient(dio),
         authRepository,
+        dio,
         apnsEnvironment: api.ApnsEnvironment.development,
       );
 
@@ -95,6 +97,7 @@ void main() {
       final repository = DeviceRepository(
         api.ApiClient(dio),
         authRepository,
+        dio,
         apnsEnvironment: api.ApnsEnvironment.development,
       );
 
@@ -129,6 +132,7 @@ void main() {
       final repository = DeviceRepository(
         api.ApiClient(dio),
         authRepository,
+        dio,
         apnsEnvironment: api.ApnsEnvironment.development,
       );
 
@@ -160,6 +164,7 @@ void main() {
       final repository = DeviceRepository(
         api.ApiClient(dio),
         authRepository,
+        dio,
         apnsEnvironment: api.ApnsEnvironment.development,
       );
 

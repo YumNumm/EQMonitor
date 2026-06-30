@@ -36,6 +36,12 @@ class DeviceProvisioningRepository {
   String? readLegacyDeviceId() =>
       _prefs.getString(SharedPreferencesKey.legacyDeviceId.key);
 
+  bool wasMigratedFromLegacy() =>
+      _prefs.getBool(SharedPreferencesKey.deviceMigratedFromLegacy.key) ?? false;
+
+  Future<void> markMigratedFromLegacy() =>
+      _prefs.setBool(SharedPreferencesKey.deviceMigratedFromLegacy.key, true);
+
   WorkflowRunner buildRunner() => WorkflowRunner(persistence: _persistence);
 
   /// 現在のトークンと保存済みハッシュを比較して同期スナップショットを返す。

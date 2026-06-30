@@ -30,6 +30,7 @@ void main() {
     final repository = DeviceRepository(
       api.ApiClient(dio),
       _MemoryDeviceAuthRepository(),
+      dio,
       apnsEnvironment: api.ApnsEnvironment.development,
       isApplePlatform: true,
     );
