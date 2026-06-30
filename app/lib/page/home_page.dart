@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
+import 'package:eqmonitor/feature/home/ui/component/sheet/home_feed_sheet.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
@@ -211,6 +212,8 @@ class _SheetBody extends ConsumerWidget {
                           .toList(),
                     ),
                   const HomeEarthquakeHistorySheet(),
+                  SizedBox(height: spacing.md),
+                  const HomeFeedSheet(),
                   SizedBox(height: spacing.lg),
                   actionsCard,
                 ],
