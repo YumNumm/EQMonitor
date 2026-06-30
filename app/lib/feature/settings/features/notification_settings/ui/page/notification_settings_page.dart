@@ -11,6 +11,8 @@ import 'package:eqmonitor/feature/notification/data/repository/push_notification
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
@@ -39,10 +41,6 @@ class _Body extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationsEnabled = useState(true);
     final selectedPreset = useState(_NotificationPreset.recommended);
-    final eewForecastEnabled = useState(true);
-    final earthquakeEnabled = useState(true);
-    final liveActivityEnabled = useState(true);
-    final estimatedIntensityEnabled = useState(true);
 
     // 暫定: Freeプランの制約を使用（RevenueCat統合時にユーザーのプラン状態へ差し替え）
     final constraints = ref.watch(startProvider).value?.planConstraints.free;
@@ -80,21 +78,6 @@ class _Body extends HookConsumerWidget {
                   builder: (_) => _CustomNotificationSettingsPage(
                     isPro: isPro,
                     maxRegions: maxRegions,
-                    settings: _CustomNotificationSettingsDraft(
-                      eewForecastEnabled: eewForecastEnabled.value,
-                      earthquakeEnabled: earthquakeEnabled.value,
-                      liveActivityEnabled: liveActivityEnabled.value,
-                      estimatedIntensityEnabled:
-                          estimatedIntensityEnabled.value,
-                    ),
-                    onEewForecastChanged: (value) =>
-                        eewForecastEnabled.value = value,
-                    onEarthquakeChanged: (value) =>
-                        earthquakeEnabled.value = value,
-                    onLiveActivityChanged: (value) =>
-                        liveActivityEnabled.value = value,
-                    onEstimatedIntensityChanged: (value) =>
-                        estimatedIntensityEnabled.value = value,
                   ),
                 ),
               );
@@ -115,9 +98,6 @@ enum _NotificationPreset {
   custom,
 }
 
-final _notificationSettingsDesignMutation = Mutation<void>();
-
-typedef _BoolSettingChanged = Future<void> Function({required bool value});
 
 class _MasterNotificationControl extends StatelessWidget {
   const _MasterNotificationControl({
@@ -357,46 +337,43 @@ class _CustomPresetTrailing extends StatelessWidget {
   }
 }
 
-class _CustomNotificationSettingsDraft {
-  const _CustomNotificationSettingsDraft({
-    required this.eewForecastEnabled,
-    required this.earthquakeEnabled,
-    required this.liveActivityEnabled,
-    required this.estimatedIntensityEnabled,
-  });
-
-  final bool eewForecastEnabled;
-  final bool earthquakeEnabled;
-  final bool liveActivityEnabled;
-  final bool estimatedIntensityEnabled;
-}
-
-class _CustomNotificationSettingsPage extends HookConsumerWidget {
+class _CustomNotificationSettingsPage extends ConsumerWidget {
   const _CustomNotificationSettingsPage({
     required this.isPro,
     required this.maxRegions,
-    required this.settings,
-    required this.onEewForecastChanged,
-    required this.onEarthquakeChanged,
-    required this.onLiveActivityChanged,
-    required this.onEstimatedIntensityChanged,
   });
 
   final bool isPro;
   final int maxRegions;
-  final _CustomNotificationSettingsDraft settings;
-  final ValueChanged<bool> onEewForecastChanged;
-  final ValueChanged<bool> onEarthquakeChanged;
-  final ValueChanged<bool> onLiveActivityChanged;
-  final ValueChanged<bool> onEstimatedIntensityChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eewForecastEnabled = useState(settings.eewForecastEnabled);
-    final earthquakeEnabled = useState(settings.earthquakeEnabled);
-    final liveActivityEnabled = useState(settings.liveActivityEnabled);
-    final estimatedIntensityEnabled = useState(
-      settings.estimatedIntensityEnabled,
+    final eewSettings = ref.watch(eewGlobalSettingsProvider).value;
+    final earthquakeSettings =
+        ref.watch(earthquakeGlobalSettingsProvider).value;
+
+    ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (_, next) {
+      if (next is MutationError && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('設定の保存に失敗しました: ${next.error}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    });
+    ref.listen(
+      EarthquakeGlobalSettingsNotifier.updateSettingsMutation,
+      (_, next) {
+        if (next is MutationError && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('設定の保存に失敗しました: ${next.error}'),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      },
     );
 
     return Scaffold(
@@ -408,43 +385,48 @@ class _CustomNotificationSettingsPage extends HookConsumerWidget {
           const SettingsSectionHeader(text: '通知の種類'),
           _CustomSettingsSection(
             isPro: isPro,
-            eewForecastEnabled: eewForecastEnabled.value,
-            earthquakeEnabled: earthquakeEnabled.value,
-            liveActivityEnabled: liveActivityEnabled.value,
-            estimatedIntensityEnabled: estimatedIntensityEnabled.value,
+            eewForecastEnabled: eewSettings?.enabled ?? true,
+            earthquakeEnabled: earthquakeSettings?.enabled ?? true,
+            liveActivityEnabled: eewSettings?.startLiveActivity ?? true,
+            estimatedIntensityEnabled:
+                earthquakeSettings?.estimatedIntensityEnabled ?? true,
             onEewForecastChanged: ({required value}) async {
-              await _notificationSettingsDesignMutation.run(
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
                 ref,
-                (_) async {
-                  eewForecastEnabled.value = value;
-                  onEewForecastChanged(value);
+                (tsx) async {
+                  await tsx
+                      .get(eewGlobalSettingsProvider.notifier)
+                      .updateSettings(enabled: value);
                 },
               );
             },
             onEarthquakeChanged: ({required value}) async {
-              await _notificationSettingsDesignMutation.run(
+              await EarthquakeGlobalSettingsNotifier.updateSettingsMutation.run(
                 ref,
-                (_) async {
-                  earthquakeEnabled.value = value;
-                  onEarthquakeChanged(value);
+                (tsx) async {
+                  await tsx
+                      .get(earthquakeGlobalSettingsProvider.notifier)
+                      .updateSettings(enabled: value);
                 },
               );
             },
             onLiveActivityChanged: ({required value}) async {
-              await _notificationSettingsDesignMutation.run(
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
                 ref,
-                (_) async {
-                  liveActivityEnabled.value = value;
-                  onLiveActivityChanged(value);
+                (tsx) async {
+                  await tsx
+                      .get(eewGlobalSettingsProvider.notifier)
+                      .updateSettings(startLiveActivity: value);
                 },
               );
             },
             onEstimatedIntensityChanged: ({required value}) async {
-              await _notificationSettingsDesignMutation.run(
+              await EarthquakeGlobalSettingsNotifier.updateSettingsMutation.run(
                 ref,
-                (_) async {
-                  estimatedIntensityEnabled.value = value;
-                  onEstimatedIntensityChanged(value);
+                (tsx) async {
+                  await tsx
+                      .get(earthquakeGlobalSettingsProvider.notifier)
+                      .updateSettings(estimatedIntensityEnabled: value);
                 },
               );
             },
@@ -475,10 +457,11 @@ class _CustomSettingsSection extends StatelessWidget {
   final bool earthquakeEnabled;
   final bool liveActivityEnabled;
   final bool estimatedIntensityEnabled;
-  final _BoolSettingChanged onEewForecastChanged;
-  final _BoolSettingChanged onEarthquakeChanged;
-  final _BoolSettingChanged onLiveActivityChanged;
-  final _BoolSettingChanged onEstimatedIntensityChanged;
+  final Future<void> Function({required bool value}) onEewForecastChanged;
+  final Future<void> Function({required bool value}) onEarthquakeChanged;
+  final Future<void> Function({required bool value}) onLiveActivityChanged;
+  final Future<void> Function({required bool value})
+      onEstimatedIntensityChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -568,7 +551,7 @@ class _NotificationDetailTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final bool enabled;
-  final _BoolSettingChanged onChanged;
+  final Future<void> Function({required bool value}) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -600,7 +583,7 @@ class _NotificationConditionDetailPage extends StatelessWidget {
 
   final String title;
   final bool enabled;
-  final _BoolSettingChanged onChanged;
+  final Future<void> Function({required bool value}) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -721,7 +704,7 @@ class _InlineSwitchTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final bool value;
-  final _BoolSettingChanged onChanged;
+  final Future<void> Function({required bool value}) onChanged;
 
   @override
   Widget build(BuildContext context) {

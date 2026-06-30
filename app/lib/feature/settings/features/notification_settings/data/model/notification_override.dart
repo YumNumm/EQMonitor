@@ -60,6 +60,14 @@ extension InterruptionLevelToApi on InterruptionLevel {
     .critical => .critical,
   };
 
+  api.DefaultInterruptionLevel get toApiDefaultInterruptionLevel =>
+      switch (this) {
+        .passive => api.DefaultInterruptionLevel.passive,
+        .active => api.DefaultInterruptionLevel.active,
+        .timeSensitive => api.DefaultInterruptionLevel.timeSensitive,
+        .critical => api.DefaultInterruptionLevel.critical,
+      };
+
   api.NationwideInterruptionLevel? get toApiNationwideInterruptionLevel =>
       switch (this) {
         .passive => .passive,

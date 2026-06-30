@@ -1,5 +1,7 @@
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_global_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_global_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
@@ -163,5 +165,61 @@ class NotificationSlotRepository {
       ),
     );
     return response.data.toEewWarningSettings();
+  }
+
+  // ─── EEW Global Settings ───
+
+  Future<EewGlobalSettings> getEewGlobalSettings() async {
+    final response = await _api.device.getV2DeviceMeSettingsEew();
+    return response.data.toEewGlobalSettings();
+  }
+
+  Future<EewGlobalSettings> patchEewGlobalSettings({
+    bool? enabled,
+    String? defaultSound,
+    InterruptionLevel? defaultInterruptionLevel,
+    bool? startLiveActivity,
+    bool? collapseNotification,
+    bool? warningEnabled,
+  }) async {
+    final response = await _api.device.patchV2DeviceMeSettingsEew(
+      body: api.EewSettingsRequest(
+        enabled: enabled,
+        defaultSound: defaultSound,
+        defaultInterruptionLevel:
+            defaultInterruptionLevel?.toApiDefaultInterruptionLevel,
+        startLiveActivity: startLiveActivity,
+        collapseNotification: collapseNotification,
+        warningEnabled: warningEnabled,
+      ),
+    );
+    return response.data.toEewGlobalSettings();
+  }
+
+  // ─── Earthquake Global Settings ───
+
+  Future<EarthquakeGlobalSettings> getEarthquakeGlobalSettings() async {
+    final response = await _api.device.getV2DeviceMeSettingsEarthquake();
+    return response.data.toEarthquakeGlobalSettings();
+  }
+
+  Future<EarthquakeGlobalSettings> patchEarthquakeGlobalSettings({
+    bool? enabled,
+    String? defaultSound,
+    InterruptionLevel? defaultInterruptionLevel,
+    bool? estimatedIntensityEnabled,
+    bool? collapseNotification,
+  }) async {
+    final response = await _api.device.patchV2DeviceMeSettingsEarthquake(
+      body: api.EarthquakeSettingsRequest(
+        enabled: enabled,
+        defaultSound: defaultSound,
+        defaultInterruptionLevel:
+            defaultInterruptionLevel?.toApiDefaultInterruptionLevel,
+        estimatedIntensityEnabled: estimatedIntensityEnabled,
+        collapseNotification: collapseNotification,
+      ),
+    );
+    return response.data.toEarthquakeGlobalSettings();
   }
 }
