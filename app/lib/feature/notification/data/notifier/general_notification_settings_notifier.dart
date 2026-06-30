@@ -29,6 +29,7 @@ class GeneralNotificationSettingsNotifier
   }
 
   Future<void> updateSettings({
+    bool? notificationEnabled,
     bool? tsunamiEnabled,
     bool? trainingEnabled,
     bool? nankaiExtraordinaryEnabled,
@@ -41,6 +42,8 @@ class GeneralNotificationSettingsNotifier
     final result = await repo.patchNotificationSettings(
       deviceId: deviceId,
       settings: current.copyWith(
+        notificationEnabled:
+            notificationEnabled ?? current.notificationEnabled,
         tsunamiEnabled: tsunamiEnabled ?? current.tsunamiEnabled,
         trainingEnabled: trainingEnabled ?? current.trainingEnabled,
         nankaiExtraordinaryEnabled:

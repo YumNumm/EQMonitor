@@ -130,6 +130,8 @@ class _Body extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBusy = useState(false);
+    final notificationEnabled =
+        useState(settings?.notificationEnabled ?? true);
     final tsunami = useState(settings?.tsunamiEnabled ?? false);
     final training = useState(settings?.trainingEnabled ?? false);
     final nankaiExtraordinary = useState(
@@ -141,6 +143,7 @@ class _Body extends HookConsumerWidget {
     );
 
     useEffect(() {
+      notificationEnabled.value = settings?.notificationEnabled ?? true;
       tsunami.value = settings?.tsunamiEnabled ?? false;
       training.value = settings?.trainingEnabled ?? false;
       nankaiExtraordinary.value =
@@ -262,6 +265,7 @@ class _Body extends HookConsumerWidget {
         final result = await repo.patchNotificationSettings(
           deviceId: deviceId,
           settings: GeneralNotificationSettings(
+            notificationEnabled: notificationEnabled.value,
             tsunamiEnabled: tsunami.value,
             trainingEnabled: training.value,
             nankaiExtraordinaryEnabled: nankaiExtraordinary.value,
