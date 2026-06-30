@@ -1,8 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_provider.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -60,25 +65,34 @@ void main() {
     } on Error catch (_) {}
   });
 
-  group('EqmonitorWebSocketTicketRefreshDelayCalculator', () {
-    test('short-lived ticket refresh is delayed to avoid retry loops', () {
-      const calculator = EqmonitorWebSocketTicketRefreshDelayCalculator();
-      final now = DateTime.utc(2026, 6, 4, 12);
-      final expiresAt = now.add(const Duration(seconds: 10));
+  group('eqmonitorWebSocketTicket', () {
+    test('does not refresh only because the ticket expires while listened', () {
+      fakeAsync((async) {
+        final adapter = _RealtimeTicketAdapter();
+        final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+          ..httpClientAdapter = adapter;
+        final container = ProviderContainer(
+          overrides: [
+            apiClientProvider.overrideWith((ref) async => api.ApiClient(dio)),
+          ],
+        );
+        addTearDown(container.dispose);
 
-      final delay = calculator.calculate(now: now, expiresAt: expiresAt);
+        container.listen(eqmonitorWebSocketTicketProvider, (_, _) {});
+        container.read(eqmonitorWebSocketTicketProvider.future).ignore();
+        async.flushMicrotasks();
+        async.elapse(Duration.zero);
+        async.flushMicrotasks();
 
-      expect(delay, const Duration(seconds: 5));
-    });
+        final ticket = container.read(eqmonitorWebSocketTicketProvider).value;
+        expect(ticket?.url, 'wss://example.com/ws?ticket=1');
+        expect(adapter.requestCount, 1);
 
-    test('returns (expiresAt - now - 30s) when positive', () {
-      const calculator = EqmonitorWebSocketTicketRefreshDelayCalculator();
-      final now = DateTime.utc(2026, 6, 4, 12);
-      final expiresAt = now.add(const Duration(minutes: 5));
+        async.elapse(const Duration(seconds: 20));
+        async.flushMicrotasks();
 
-      final delay = calculator.calculate(now: now, expiresAt: expiresAt);
-
-      expect(delay, const Duration(minutes: 4, seconds: 30));
+        expect(adapter.requestCount, 1);
+      });
     });
   });
 
@@ -126,8 +140,8 @@ void main() {
       await _pumpUntilListening(ws1);
 
       ws1.emitClose(1000, 'normal');
-      for (var i = 0; i < 200 && connectCount < 2; i++) {
-        await Future<void>.delayed(Duration.zero);
+      for (var i = 0; i < 30 && connectCount < 2; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
       }
 
       expect(connectCount, 2);
@@ -141,4 +155,35 @@ void main() {
       expect(value, isA<TextDataReceived>());
     });
   });
+}
+
+final class _RealtimeTicketAdapter implements HttpClientAdapter {
+  // ignore: omit_obvious_property_types
+  int requestCount = 0;
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    requestCount++;
+    final issuedAt = DateTime.now().toUtc();
+    return ResponseBody.fromString(
+      jsonEncode({
+        'url': 'wss://example.com/ws?ticket=$requestCount',
+        'expiresAt': issuedAt
+            .add(const Duration(seconds: 45))
+            .toIso8601String(),
+        'issuedAt': issuedAt.toIso8601String(),
+      }),
+      200,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
+    );
+  }
+
+  @override
+  void close({bool force = false}) {}
 }
