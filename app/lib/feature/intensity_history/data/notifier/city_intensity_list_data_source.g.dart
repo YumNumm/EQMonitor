@@ -27,7 +27,7 @@ final class CityIntensityListDataSourceProvider
         $FutureProvider<CityIntensityListDataSource> {
   CityIntensityListDataSourceProvider._({
     required CityIntensityListDataSourceFamily super.from,
-    required String super.argument,
+    required (String, String) super.argument,
   }) : super(
          retry: null,
          name: r'cityIntensityListDataSourceProvider',
@@ -43,7 +43,7 @@ final class CityIntensityListDataSourceProvider
   String toString() {
     return r'cityIntensityListDataSourceProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -54,8 +54,8 @@ final class CityIntensityListDataSourceProvider
 
   @override
   FutureOr<CityIntensityListDataSource> create(Ref ref) {
-    final argument = this.argument as String;
-    return cityIntensityListDataSource(ref, argument);
+    final argument = this.argument as (String, String);
+    return cityIntensityListDataSource(ref, argument.$1, argument.$2);
   }
 
   @override
@@ -71,13 +71,13 @@ final class CityIntensityListDataSourceProvider
 }
 
 String _$cityIntensityListDataSourceHash() =>
-    r'2ca34b78ad73c76ad2ae0a941b961c3377434469';
+    r'da55d6c2db826c57ef2dc5ff390aa50d7ae6465e';
 
 final class CityIntensityListDataSourceFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<CityIntensityListDataSource>,
-          String
+          (String, String)
         > {
   CityIntensityListDataSourceFamily._()
     : super(
@@ -88,8 +88,11 @@ final class CityIntensityListDataSourceFamily extends $Family
         isAutoDispose: true,
       );
 
-  CityIntensityListDataSourceProvider call(String cityCode) =>
-      CityIntensityListDataSourceProvider._(argument: cityCode, from: this);
+  CityIntensityListDataSourceProvider call(String cityCode, String cityName) =>
+      CityIntensityListDataSourceProvider._(
+        argument: (cityCode, cityName),
+        from: this,
+      );
 
   @override
   String toString() => r'cityIntensityListDataSourceProvider';

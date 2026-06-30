@@ -11,7 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart'
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/city_intensity_list_data_source.dart';
+import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_intensity_list_data_source.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -20,45 +20,41 @@ import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-/// 市区町村の詳細モーダルを表示する。
-///
-/// サマリ(地域名・最高震度バッジ・件数・代表地震)と
-/// ページネーション付きの過去地震一覧を表示する。
-Future<void> showCityDetailModal(
+/// 都道府県の詳細モーダルを表示する。
+Future<void> showPrefectureDetailModal(
   BuildContext context, {
-  required String cityCode,
-  required String cityName,
-  required String regionName,
+  required String prefectureCode,
+  required String prefectureName,
   HighestIntensityEntry? summary,
 }) => showModalBottomSheet<void>(
   context: context,
   isScrollControlled: true,
   clipBehavior: Clip.antiAlias,
-  builder: (context) => _CityDetailModal(
-    cityCode: cityCode,
-    cityName: cityName,
+  builder: (context) => _PrefectureDetailModal(
+    prefectureCode: prefectureCode,
+    prefectureName: prefectureName,
     summary: summary,
-    regionName: regionName,
   ),
 );
 
-class _CityDetailModal extends ConsumerWidget {
-  const _CityDetailModal({
-    required this.cityCode,
-    required this.cityName,
-    required this.regionName,
+class _PrefectureDetailModal extends ConsumerWidget {
+  const _PrefectureDetailModal({
+    required this.prefectureCode,
+    required this.prefectureName,
     required this.summary,
   });
 
-  final String cityCode;
-  final String cityName;
-  final String regionName;
+  final String prefectureCode;
+  final String prefectureName;
   final HighestIntensityEntry? summary;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSourceAsync = ref.watch(
-      cityIntensityListDataSourceProvider(cityCode, cityName),
+      prefectureIntensityListDataSourceProvider(
+        prefectureCode,
+        prefectureName,
+      ),
     );
 
     return DraggableScrollableSheet(
@@ -66,102 +62,86 @@ class _CityDetailModal extends ConsumerWidget {
       initialChildSize: 0.6,
       minChildSize: 0.3,
       maxChildSize: 0.95,
-      builder: (context, scrollController) {
-        return dataSourceAsync.when(
-          loading: () => _buildShell(
-            scrollController: scrollController,
-            context: context,
-            child: const _Skeleton(),
-          ),
-          error: (error, stackTrace) => _buildShell(
-            scrollController: scrollController,
-            context: context,
-            child: SliverToBoxAdapter(
-              child: ErrorCard(error: error),
+      builder: (context, scrollController) => CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          const SliverToBoxAdapter(child: _DragHandle()),
+          SliverToBoxAdapter(
+            child: _PrefectureSummarySection(
+              prefectureName: prefectureName,
+              summary: summary,
             ),
           ),
-          data: (dataSource) => _buildShell(
-            scrollController: scrollController,
-            context: context,
-            child: _PagingBody(
-              dataSource: dataSource,
-              cityName: cityName,
-            ),
-            footer: _ShowAllHistoryButton(
-              regionSearchType: RegionSearchType.city,
-              regionCode: cityCode,
-              regionName: cityName,
+          SliverToBoxAdapter(
+            child: Divider(
+              height: 0,
+              color: Theme.of(context).colorScheme.outlineVariant,
             ),
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildShell({
-    required BuildContext context,
-    required ScrollController scrollController,
-    required Widget child,
-    Widget? footer,
-  }) {
-    final theme = Theme.of(context);
-    return CustomScrollView(
-      controller: scrollController,
-      slivers: [
-        // ドラッグハンドル
-        SliverToBoxAdapter(
-          child: Center(
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2),
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+          dataSourceAsync.when(
+            loading: () => const _Skeleton(),
+            error: (error, stackTrace) => SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: ErrorCard(error: error),
               ),
             ),
+            data: (dataSource) => _PagingBody(
+              dataSource: dataSource,
+              prefectureName: prefectureName,
+            ),
           ),
-        ),
-        // サマリ
-        SliverToBoxAdapter(
-          child: _SummarySection(
-            regionName: regionName,
-            cityName: cityName,
-            summary: summary,
+          if (dataSourceAsync.hasValue)
+            SliverToBoxAdapter(
+              child: _ShowAllHistoryButton(
+                regionSearchType: RegionSearchType.prefecture,
+                regionCode: prefectureCode,
+                regionName: prefectureName,
+              ),
+            ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: MediaQuery.paddingOf(context).bottom + 16),
           ),
-        ),
-        // 区切り
-        SliverToBoxAdapter(
-          child: Divider(height: 0, color: theme.colorScheme.outlineVariant),
-        ),
-        // 一覧 or ローディング or エラー
-        child,
-        if (footer != null) SliverToBoxAdapter(child: footer),
-        // BottomPadding
-        SliverToBoxAdapter(
-          child: SizedBox(height: MediaQuery.paddingOf(context).bottom + 16),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
-class _SummarySection extends StatelessWidget {
-  const _SummarySection({
-    required this.regionName,
-    required this.cityName,
+class _DragHandle extends StatelessWidget {
+  const _DragHandle();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        width: 36,
+        height: 4,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+        ),
+      ),
+    );
+  }
+}
+
+class _PrefectureSummarySection extends StatelessWidget {
+  const _PrefectureSummarySection({
+    required this.prefectureName,
     required this.summary,
   });
 
-  final String regionName;
-  final String cityName;
+  final String prefectureName;
   final HighestIntensityEntry? summary;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
     final entry = summary;
+    final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
     final eq = entry?.earthquake;
     final originTime = eq?.originTime;
     final hypocenter = eq?.hypocenter;
@@ -183,21 +163,11 @@ class _SummarySection extends StatelessWidget {
                 const SizedBox(width: 12),
               ],
               Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      regionName,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    Text(
-                      cityName,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  prefectureName,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -245,11 +215,11 @@ class _SummarySection extends StatelessWidget {
 class _PagingBody extends ConsumerWidget {
   const _PagingBody({
     required this.dataSource,
-    required this.cityName,
+    required this.prefectureName,
   });
 
-  final CityIntensityListDataSource dataSource;
-  final String cityName;
+  final PrefectureIntensityListDataSource dataSource;
+  final String prefectureName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -268,7 +238,7 @@ class _PagingBody extends ConsumerWidget {
             item: item.earthquake,
             intensityColor: intensityColor,
             areaInfo: item.area,
-            areaName: cityName,
+            areaName: prefectureName,
             onTap: () async {
               await EarthquakeHistoryDetailsRoute(
                 eventId: item.eventId,
@@ -355,7 +325,6 @@ class _IntensityHeader extends StatelessWidget {
   }
 }
 
-/// Sliver として使うスケルトン（CustomScrollView の slivers 内で使用）。
 class _Skeleton extends StatelessWidget {
   const _Skeleton();
 
@@ -363,11 +332,11 @@ class _Skeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverSkeletonizer(
       child: SliverList.builder(
-        itemCount: 5,
+        itemCount: 6,
         itemBuilder: (_, _) => const ListTile(
           leading: CircleAvatar(radius: 18),
           title: Text('宮城県沖'),
-          subtitle: Text('2026/06/27 12:34発生'),
+          subtitle: Text('震度7 / 2026/06/27 12:34発生'),
           trailing: Text('M6.0'),
         ),
       ),
@@ -375,7 +344,6 @@ class _Skeleton extends StatelessWidget {
   }
 }
 
-/// 通常の Widget として使うスケルトン（SliverGroupedPagingList の loading widget 用）。
 class _SkeletonBox extends StatelessWidget {
   const _SkeletonBox({this.itemCount = 5});
 
@@ -391,7 +359,7 @@ class _SkeletonBox extends StatelessWidget {
             const ListTile(
               leading: CircleAvatar(radius: 18),
               title: Text('宮城県沖'),
-              subtitle: Text('震度7 / 2026/06/27 12:34発生'),
+              subtitle: Text('2026/06/27 12:34発生'),
               trailing: Text('M6.0'),
             ),
         ],

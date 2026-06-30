@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -79,14 +80,16 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
           }
           final sim = ref.read(eewSimulationProvider);
           if (sim == null) {
-            unawaited(_updateGeoJson(
-              styleController,
-              pWaveGeoJson: _emptyGeoJson,
-              sWaveGeoJson: _emptyGeoJson,
-              latestP: latestPWaveGeoJson,
-              latestS: latestSWaveGeoJson,
-              initFuture: initFuture,
-            ));
+            unawaited(
+              _updateGeoJson(
+                styleController,
+                pWaveGeoJson: _emptyGeoJson,
+                sWaveGeoJson: _emptyGeoJson,
+                latestP: latestPWaveGeoJson,
+                latestS: latestSWaveGeoJson,
+                initFuture: initFuture,
+              ),
+            );
             return;
           }
 
@@ -98,14 +101,16 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
               !hypocenter.hasLatLng ||
               hypocenter.depth == null ||
               currentReport.isPlum) {
-            unawaited(_updateGeoJson(
-              styleController,
-              pWaveGeoJson: _emptyGeoJson,
-              sWaveGeoJson: _emptyGeoJson,
-              latestP: latestPWaveGeoJson,
-              latestS: latestSWaveGeoJson,
-              initFuture: initFuture,
-            ));
+            unawaited(
+              _updateGeoJson(
+                styleController,
+                pWaveGeoJson: _emptyGeoJson,
+                sWaveGeoJson: _emptyGeoJson,
+                latestP: latestPWaveGeoJson,
+                latestS: latestSWaveGeoJson,
+                initFuture: initFuture,
+              ),
+            );
             return;
           }
 
@@ -168,14 +173,16 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
             'features': sWaveFeatures,
           });
 
-          unawaited(_updateGeoJson(
-            styleController,
-            pWaveGeoJson: pGeoJson,
-            sWaveGeoJson: sGeoJson,
-            latestP: latestPWaveGeoJson,
-            latestS: latestSWaveGeoJson,
-            initFuture: initFuture,
-          ));
+          unawaited(
+            _updateGeoJson(
+              styleController,
+              pWaveGeoJson: pGeoJson,
+              sWaveGeoJson: sGeoJson,
+              latestP: latestPWaveGeoJson,
+              latestS: latestSWaveGeoJson,
+              initFuture: initFuture,
+            ),
+          );
         }
 
         animationController.addListener(listener);
@@ -225,9 +232,10 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
           sourceId: _sWaveSourceId,
           paint: {
             'fill-color': ['get', 'fillColor'],
-            'fill-opacity': 0.2,
+            'fill-opacity': 0.1,
           },
         ),
+        belowLayerId: BaseLayer.areaForecastLocalELine.name,
       ),
     ).wait;
   }

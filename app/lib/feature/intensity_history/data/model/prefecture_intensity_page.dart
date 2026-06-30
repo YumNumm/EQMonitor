@@ -1,13 +1,13 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'city_intensity_page.freezed.dart';
+part 'prefecture_intensity_page.freezed.dart';
 
-/// 市区町村の過去地震一覧ページ。
+/// 都道府県の過去地震一覧ページ。
 @freezed
-abstract class CityIntensityPage with _$CityIntensityPage {
-  const factory CityIntensityPage({
+abstract class PrefectureIntensityPage with _$PrefectureIntensityPage {
+  const factory PrefectureIntensityPage({
     required List<IntensityAreaSearchItem> items,
     required String? nextToken,
-  }) = _CityIntensityPage;
+  }) = _PrefectureIntensityPage;
 }

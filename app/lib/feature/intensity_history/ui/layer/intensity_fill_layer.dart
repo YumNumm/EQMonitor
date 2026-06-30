@@ -11,7 +11,7 @@ import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_hig
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_expression.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -30,13 +30,18 @@ class IntensityFillLayer extends HookConsumerWidget {
   // --- Layer ID 定数 ---
   static const _lv1FillLayerId = 'intensity-history-lv1-fill';
   static const _lv2FillLayerId = 'intensity-history-lv2-city-fill';
+  static const _selectedCityDimLayerId =
+      'intensity-history-lv2-selected-city-dim';
   static const _dimFillLayerId = 'intensity-history-lv2-dim-fill';
+  static const _selectedCityLineLayerId =
+      'intensity-history-lv2-selected-city-line';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
     final state = ref.watch(intensityHistoryControllerProvider);
+    final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
 
     // --- パラメーター (AsyncValue) ---
     final parameterAsync = ref.watch(parameterSetProvider);
@@ -51,6 +56,9 @@ class IntensityFillLayer extends HookConsumerWidget {
     // --- Lv2: 市区町村最高震度 (City 状態のときのみ) ---
     final selectedPrefCode = state is IntensityHistoryStateCity
         ? state.prefectureCode
+        : null;
+    final selectedCityCode = state is IntensityHistoryStateCity
+        ? state.selectedCityCode
         : null;
     final cityHighestAsync = selectedPrefCode != null
         ? ref.watch(cityHighestProvider(selectedPrefCode))
@@ -172,6 +180,45 @@ class IntensityFillLayer extends HookConsumerWidget {
             if (disposed) {
               return;
             }
+            final dimAnchorLayerId = selectedCityCode == null
+                ? _lv2FillLayerId
+                : _selectedCityDimLayerId;
+
+            if (selectedCityCode != null) {
+              final selectedCityCodes = cityCodesOfPrefecture(
+                selectedPrefCode,
+                prefectures,
+              );
+              await styleController.addLayer(
+                FillStyleLayer(
+                  id: _selectedCityDimLayerId,
+                  sourceId: 'eqmonitor_map',
+                  sourceLayerId: 'areaInformationCityQuake',
+                  filter: <Object>[
+                    'all',
+                    <Object>[
+                      'in',
+                      <Object>['get', 'regioncode'],
+                      <Object>['literal', selectedCityCodes],
+                    ],
+                    <Object>[
+                      '!=',
+                      <Object>['get', 'regioncode'],
+                      selectedCityCode,
+                    ],
+                  ],
+                  paint: const {
+                    'fill-color': '#000000',
+                    'fill-opacity': 0.55,
+                  },
+                ),
+                aboveLayerId: _lv2FillLayerId,
+              );
+            }
+
+            if (disposed) {
+              return;
+            }
             // ディムオーバーレイ: 選択都道府県の細分区域コードを除外した全エリアを半透明黒で覆う
             final selectedRegionCodes = regionCodesOfPrefecture(
               selectedPrefCode,
@@ -197,7 +244,30 @@ class IntensityFillLayer extends HookConsumerWidget {
                   'fill-opacity': 0.45,
                 },
               ),
-              belowLayerId: BaseLayer.areaForecastLocalELine.name,
+              aboveLayerId: dimAnchorLayerId,
+            );
+
+            if (selectedCityCode == null || disposed) {
+              return;
+            }
+
+            await styleController.addLayer(
+              LineStyleLayer(
+                id: _selectedCityLineLayerId,
+                sourceId: 'eqmonitor_map',
+                sourceLayerId: 'areaInformationCityQuake',
+                filter: <Object>[
+                  '==',
+                  <Object>['get', 'regioncode'],
+                  selectedCityCode,
+                ],
+                paint: {
+                  'line-color': isDarkMode ? '#FFFFFF' : '#000000',
+                  'line-width': 4,
+                  'line-opacity': 0.95,
+                },
+              ),
+              aboveLayerId: BaseLayer.areaForecastLocalELine.name,
             );
           } on Exception catch (e) {
             talker.log(e);
@@ -207,7 +277,12 @@ class IntensityFillLayer extends HookConsumerWidget {
         return () {
           disposed = true;
           unawaited(() async {
-            for (final id in [_lv2FillLayerId, _dimFillLayerId]) {
+            for (final id in [
+              _selectedCityLineLayerId,
+              _dimFillLayerId,
+              _selectedCityDimLayerId,
+              _lv2FillLayerId,
+            ]) {
               try {
                 await styleController.removeLayer(id);
               } on Exception catch (e) {
@@ -221,8 +296,10 @@ class IntensityFillLayer extends HookConsumerWidget {
         styleController,
         prefectures,
         selectedPrefCode,
+        selectedCityCode,
         cityHighest,
         colorModel,
+        isDarkMode,
       ],
     );
 

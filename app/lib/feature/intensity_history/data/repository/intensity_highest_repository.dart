@@ -1,6 +1,9 @@
 import 'package:eqmonitor/core/api/api_client_provider.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_intensity_page.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/prefecture_intensity_page.dart';
+import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -40,17 +43,50 @@ class IntensityHighestRepository {
   /// 指定市区町村の過去地震一覧を取得する（ページネーション）。
   Future<CityIntensityPage> fetchCityIntensityList({
     required String cityCode,
+    required String cityName,
+    required EarthquakeParameter parameter,
     required int limit,
     String? cursor,
   }) async {
     final response = await _earthquake.getV2EarthquakeIntensityCityCode(
       code: cityCode,
+      sortBy: EarthquakeSortBy.maxIntensity,
       limit: limit.toString(),
       cursor: cursor,
     );
+    final appResponse = response.data.toAppResponse(
+      parameter: parameter,
+      areaCode: cityCode,
+      areaName: cityName,
+    );
     return CityIntensityPage(
-      items: response.data.items,
-      nextToken: response.data.nextToken,
+      items: appResponse.items,
+      nextToken: appResponse.nextToken,
+    );
+  }
+
+  /// 指定都道府県の過去地震一覧を取得する（ページネーション）。
+  Future<PrefectureIntensityPage> fetchPrefectureIntensityList({
+    required String prefectureCode,
+    required String prefectureName,
+    required EarthquakeParameter parameter,
+    required int limit,
+    String? cursor,
+  }) async {
+    final response = await _earthquake.getV2EarthquakeIntensityPrefectureCode(
+      code: prefectureCode,
+      sortBy: EarthquakeSortBy.maxIntensity,
+      limit: limit.toString(),
+      cursor: cursor,
+    );
+    final appResponse = response.data.toAppResponse(
+      parameter: parameter,
+      areaCode: prefectureCode,
+      areaName: prefectureName,
+    );
+    return PrefectureIntensityPage(
+      items: appResponse.items,
+      nextToken: appResponse.nextToken,
     );
   }
 }

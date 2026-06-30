@@ -185,7 +185,12 @@ class _EewMainCard extends StatelessWidget {
             showArrived: showArrived,
           ),
           Padding(
-            padding: EdgeInsets.all(spacing.xs),
+            padding: EdgeInsets.only(
+              top: spacing.xs,
+              left: spacing.sm,
+              right: spacing.sm,
+              bottom: spacing.xs,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
