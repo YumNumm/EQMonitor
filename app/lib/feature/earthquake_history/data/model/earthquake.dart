@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -19,6 +20,7 @@ abstract class Earthquake with _$Earthquake {
     required OriginTimePrecision originTimePrecision,
     required DateTime? arrivalTime,
     required EarthquakeDataSource dataSource,
+    required List<EarthquakeTelegramType> telegramTypes,
     required EarthquakeHypocenter? hypocenter,
     required EarthquakeIntensity? intensity,
 
@@ -40,6 +42,10 @@ extension EarthquakeApiExtension on api.Earthquake {
     originTimePrecision: originTimePrecision.toOriginTimePrecision,
     arrivalTime: arrivalTime,
     dataSource: datasource.toEarthquakeDataSource,
+    telegramTypes: telegrams
+        .map((e) => e.telegram.type.toEarthquakeTelegramTypeOrNull)
+        .whereType<EarthquakeTelegramType>()
+        .toList(),
     hypocenter: hypocenter?.toEarthquakeHypocenter,
     estimatedIntensityTileUrl: estimatedIntensityTile,
     intensity: intensity?.toEarthquakeIntensity(

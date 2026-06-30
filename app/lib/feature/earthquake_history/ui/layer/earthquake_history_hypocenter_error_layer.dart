@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/util/map/hypocenter_error_range_util.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -48,9 +49,16 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
                 return;
               }
 
+              final decimalPlaces =
+                  earthquake.telegramTypes.contains(
+                    EarthquakeTelegramType.vxse61,
+                  )
+                  ? 3
+                  : 1;
               final polygon = hypocenterErrorPolygon(
-                coords.latitude,
-                coords.longitude,
+                lat: coords.latitude,
+                lon: coords.longitude,
+                decimalPlaces: decimalPlaces,
               );
 
               await styleController.addSource(
