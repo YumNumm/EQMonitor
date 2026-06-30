@@ -44,8 +44,9 @@ class _Body extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationsEnabled = ref.watch(
-      generalNotificationSettingsProvider
-          .select((s) => s.value?.notificationEnabled ?? true),
+      generalNotificationSettingsProvider.select(
+        (s) => s.value?.notificationEnabled ?? true,
+      ),
     );
     final selectedPreset = ref.watch(notificationPresetProvider);
 
@@ -86,14 +87,15 @@ class _Body extends HookConsumerWidget {
         _MasterNotificationControl(
           value: notificationsEnabled,
           onChanged: (value) async {
-            await GeneralNotificationSettingsNotifier.updateSettingsMutation.run(
-              ref,
-              (tsx) async {
-                await tsx
-                    .get(generalNotificationSettingsProvider.notifier)
-                    .updateSettings(notificationEnabled: value);
-              },
-            );
+            await GeneralNotificationSettingsNotifier.updateSettingsMutation
+                .run(
+                  ref,
+                  (tsx) async {
+                    await tsx
+                        .get(generalNotificationSettingsProvider.notifier)
+                        .updateSettings(notificationEnabled: value);
+                  },
+                );
           },
         ),
         if (notificationsEnabled) ...[
@@ -649,10 +651,12 @@ class _EewWarningDetailTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final warningEnabled =
+        ref.watch(eewGlobalSettingsProvider).value?.warningEnabled ?? true;
     final target = ref.watch(eewWarningConfigProvider).value?.target;
     return ListTile(
       title: const Text('緊急地震速報(警報)'),
-      subtitle: Text(target?.label ?? '読み込み中…'),
+      subtitle: Text(warningEnabled ? target?.label ?? '読み込み中…' : '無効'),
       trailing: const Icon(Icons.chevron_right),
       onTap: () async => Navigator.of(context).push<void>(
         MaterialPageRoute<void>(
@@ -683,16 +687,20 @@ class _EewWarningSettingsPage extends ConsumerWidget {
     final config = ref.watch(eewWarningConfigProvider).value;
     final target = config?.target;
     final nationwideLevel = config?.nationwideInterruptionLevel;
+    final warningEnabled =
+        ref.watch(eewGlobalSettingsProvider).value?.warningEnabled ?? true;
 
     Future<void> select(EewWarningTarget value) async {
       await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
-        await tsx.get(eewWarningConfigProvider.notifier).updateConfig(
-          target: value,
-          nationwideInterruptionLevel:
-              value == EewWarningTarget.currentLocationAndNationwide
+        await tsx
+            .get(eewWarningConfigProvider.notifier)
+            .updateConfig(
+              target: value,
+              nationwideInterruptionLevel:
+                  value == EewWarningTarget.currentLocationAndNationwide
                   ? InterruptionLevel.active
                   : null,
-        );
+            );
       });
     }
 
@@ -709,6 +717,22 @@ class _EewWarningSettingsPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.only(top: 16, bottom: 24),
         children: [
+          const SettingsSectionHeader(text: '通知状態'),
+          _InlineSwitchTile(
+            title: '緊急地震速報(警報)を通知',
+            subtitle: warningEnabled ? '通知する' : '通知しない',
+            value: warningEnabled,
+            onChanged: ({required value}) async {
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
+                ref,
+                (tsx) async {
+                  await tsx
+                      .get(eewGlobalSettingsProvider.notifier)
+                      .updateSettings(warningEnabled: value);
+                },
+              );
+            },
+          ),
           const SettingsSectionHeader(text: '通知対象'),
           _TargetOptionTile(
             title: '現在地のみ',
@@ -744,12 +768,6 @@ class _EewWarningSettingsPage extends ConsumerWidget {
               ),
             ),
           ],
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Text(
-              '現在のAPI仕様では、緊急地震速報(警報)自体の無効化はありません。',
-            ),
-          ),
         ],
       ),
     );

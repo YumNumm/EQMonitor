@@ -18,6 +18,15 @@ abstract class NotificationOverride with _$NotificationOverride {
 // をアプリ内で統一的に扱う
 enum InterruptionLevel { passive, active, timeSensitive, critical }
 
+extension InterruptionLevelLabel on InterruptionLevel {
+  String get label => switch (this) {
+    .passive => '通常',
+    .active => 'アクティブ',
+    .timeSensitive => '時間重要',
+    .critical => 'クリティカル',
+  };
+}
+
 extension ApiSlotOverrideConverter on api.SlotOverride {
   NotificationOverride toNotificationOverride() => NotificationOverride(
     minJmaIntensity: minJmaIntensity.toJmaIntensity,

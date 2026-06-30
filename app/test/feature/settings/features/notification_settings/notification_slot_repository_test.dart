@@ -94,6 +94,17 @@ void main() {
       expect(settings.nationwideInterruptionLevel, InterruptionLevel.active);
     });
   });
+
+  group('patchEewGlobalSettings', () {
+    test('sends warningEnabled as warning_enabled', () async {
+      final settings = await repository.patchEewGlobalSettings(
+        warningEnabled: false,
+      );
+
+      expect(settings.warningEnabled, isFalse);
+      expect(adapter.lastRequestBody!['warning_enabled'], isFalse);
+    });
+  });
 }
 
 final class _SlotApiAdapter implements HttpClientAdapter {
@@ -160,6 +171,14 @@ final class _SlotApiAdapter implements HttpClientAdapter {
       return _jsonResponse(
         jsonEncode(_eewWarningResponseNationwide),
       );
+    }
+
+    if (path.endsWith('/eew') && method == 'GET') {
+      return _jsonResponse(jsonEncode(_eewGlobalResponseEnabled));
+    }
+
+    if (path.endsWith('/eew') && method == 'PATCH') {
+      return _jsonResponse(jsonEncode(_eewGlobalResponseDisabled));
     }
 
     throw UnimplementedError('Unhandled: $method $path');
@@ -242,4 +261,22 @@ const Map<String, String?> _eewWarningResponse = {
 const _eewWarningResponseNationwide = {
   'target': 'current_location_and_nationwide',
   'nationwide_interruption_level': 'active',
+};
+
+const Map<String, Object?> _eewGlobalResponseEnabled = {
+  'enabled': true,
+  'default_sound': 'default',
+  'default_interruption_level': 'active',
+  'start_live_activity': true,
+  'collapse_notification': true,
+  'warning_enabled': true,
+};
+
+const Map<String, Object?> _eewGlobalResponseDisabled = {
+  'enabled': true,
+  'default_sound': 'default',
+  'default_interruption_level': 'active',
+  'start_live_activity': true,
+  'collapse_notification': true,
+  'warning_enabled': false,
 };
