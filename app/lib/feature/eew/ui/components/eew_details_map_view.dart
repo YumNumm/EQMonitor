@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_forecast_region_layer.dart';
+import 'package:eqmonitor/feature/eew/ui/components/eew_simulation_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_static_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -18,6 +19,7 @@ class EewDetailsMapView extends HookConsumerWidget {
     required this.displayMode,
     required this.initialCenter,
     required this.initZoom,
+    this.isSimulation = false,
     super.key,
   });
 
@@ -25,6 +27,7 @@ class EewDetailsMapView extends HookConsumerWidget {
   final Geographic initialCenter;
   final double initZoom;
   final EewDisplayMode displayMode;
+  final bool isSimulation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,6 +40,7 @@ class EewDetailsMapView extends HookConsumerWidget {
         initialCenter: initialCenter,
         initZoom: initZoom,
         displayMode: displayMode,
+        isSimulation: isSimulation,
       ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
       _ => const Center(child: CircularProgressIndicator.adaptive()),
@@ -51,6 +55,7 @@ class _MapContent extends ConsumerWidget {
     required this.displayMode,
     required this.initialCenter,
     required this.initZoom,
+    required this.isSimulation,
   });
 
   final String styleString;
@@ -58,6 +63,7 @@ class _MapContent extends ConsumerWidget {
   final Geographic initialCenter;
   final double initZoom;
   final EewDisplayMode displayMode;
+  final bool isSimulation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -79,7 +85,10 @@ class _MapContent extends ConsumerWidget {
       options: mapOptions,
       children: [
         EewForecastRegionLayer(eew: selectedEew, displayMode: displayMode),
-        EewStaticPsWaveLayer(eew: selectedEew),
+        if (isSimulation)
+          const EewSimulationPsWaveLayer()
+        else
+          EewStaticPsWaveLayer(eew: selectedEew),
         if (selectedEew case final eew?)
           EewHypocenterLayer(eews: [eew])
         else

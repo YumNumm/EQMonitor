@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -98,9 +99,31 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
               ? displayedEews[idx]
               : null;
 
+          final initialCenter =
+              eews
+                  .map((eew) => eew.hypocenter)
+                  .nonNulls
+                  .where((h) => h.hasLatLng)
+                  .firstOrNull
+                  ?.let(
+                    (h) => Geographic(
+                      lat: h.latitude!,
+                      lon: h.longitude!,
+                    ),
+                  ) ??
+              const Geographic(lat: 35.6895, lon: 139.6917);
+
+          if (simulation != null) {
+            return _SimulationView(
+              selectedEew: selectedEew,
+              displayMode: displayMode.value,
+              initialCenter: initialCenter,
+            );
+          }
+
           return Column(
             children: [
-              if (simulation == null && sortedEews.length > 1)
+              if (sortedEews.length > 1)
                 _SimulationStartBanner(
                   onStart: () => ref
                       .read(eewSimulationProvider.notifier)
@@ -113,19 +136,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
                   onSelect: (index) => selectedIndex.value = index,
                   selectedEew: selectedEew,
                   displayMode: displayMode.value,
-                  initialCenter:
-                      eews
-                          .map((eew) => eew.hypocenter)
-                          .nonNulls
-                          .where((h) => h.hasLatLng)
-                          .firstOrNull
-                          ?.let(
-                            (h) => Geographic(
-                              lat: h.latitude!,
-                              lon: h.longitude!,
-                            ),
-                          ) ??
-                      const Geographic(lat: 35.6895, lon: 139.6917),
+                  initialCenter: initialCenter,
                   initZoom: 5,
                 ),
               ),
@@ -138,6 +149,45 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
           onReload: () async => ref.refresh(eewsByEventIdProvider(eventId)),
         ),
       ),
+    );
+  }
+}
+
+class _SimulationView extends ConsumerWidget {
+  const _SimulationView({
+    required this.selectedEew,
+    required this.displayMode,
+    required this.initialCenter,
+  });
+
+  final EewTelegramItem? selectedEew;
+  final EewDisplayMode displayMode;
+  final Geographic initialCenter;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final simulation = ref.watch(eewSimulationProvider);
+    final currentEew = simulation?.currentReport ?? selectedEew;
+
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: EewDetailsMapView(
+            selectedEew: currentEew,
+            displayMode: displayMode,
+            initialCenter: initialCenter,
+            initZoom: 5,
+            isSimulation: true,
+          ),
+        ),
+        if (currentEew != null)
+          Positioned(
+            left: 8,
+            right: 8,
+            bottom: MediaQuery.of(context).padding.bottom + 8,
+            child: EewCard(eew: currentEew, index: null),
+          ),
+      ],
     );
   }
 }

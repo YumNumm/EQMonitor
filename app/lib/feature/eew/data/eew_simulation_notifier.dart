@@ -10,11 +10,13 @@ class EewSimulationState {
     required this.reports,
     required this.currentIndex,
     required this.isPlaying,
+    required this.startedAt,
   });
 
   final List<EewTelegramItem> reports;
   final int currentIndex;
   final bool isPlaying;
+  final DateTime startedAt;
 
   int get totalReports => reports.length;
   EewTelegramItem get currentReport => reports[currentIndex];
@@ -24,10 +26,12 @@ class EewSimulationState {
     List<EewTelegramItem>? reports,
     int? currentIndex,
     bool? isPlaying,
+    DateTime? startedAt,
   }) => EewSimulationState(
     reports: reports ?? this.reports,
     currentIndex: currentIndex ?? this.currentIndex,
     isPlaying: isPlaying ?? this.isPlaying,
+    startedAt: startedAt ?? this.startedAt,
   );
 }
 
@@ -53,6 +57,7 @@ class EewSimulation extends _$EewSimulation {
       reports: sorted,
       currentIndex: 0,
       isPlaying: true,
+      startedAt: DateTime.now(),
     );
     _scheduleNext();
   }
