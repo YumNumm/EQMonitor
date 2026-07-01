@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
@@ -71,10 +72,12 @@ class SlotDetailPage extends HookConsumerWidget {
                   minIntensity: slot.eewMinIntensity,
                   isPro: isPro,
                   overrides: slot.eewOverrides ?? [],
-                  onEnabledChanged: (next) =>
-                      _updateSlot(ref, slot, eewEnabled: next),
-                  onMinIntensityChanged: (next) =>
-                      _updateSlot(ref, slot, eewMinIntensity: next),
+                  onEnabledChanged: (next) => ref
+                      .read(slotUpdateActionProvider)
+                      .execute(ref, slot, eewEnabled: next),
+                  onMinIntensityChanged: (next) => ref
+                      .read(slotUpdateActionProvider)
+                      .execute(ref, slot, eewMinIntensity: next),
                   onOverrideTap: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (_) => OverrideEditPage(
@@ -92,10 +95,12 @@ class SlotDetailPage extends HookConsumerWidget {
                   minIntensity: slot.earthquakeMinIntensity,
                   isPro: isPro,
                   overrides: slot.earthquakeOverrides ?? [],
-                  onEnabledChanged: (next) =>
-                      _updateSlot(ref, slot, earthquakeEnabled: next),
-                  onMinIntensityChanged: (next) =>
-                      _updateSlot(ref, slot, earthquakeMinIntensity: next),
+                  onEnabledChanged: (next) => ref
+                      .read(slotUpdateActionProvider)
+                      .execute(ref, slot, earthquakeEnabled: next),
+                  onMinIntensityChanged: (next) => ref
+                      .read(slotUpdateActionProvider)
+                      .execute(ref, slot, earthquakeMinIntensity: next),
                   onOverrideTap: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (_) => OverrideEditPage(
@@ -131,77 +136,6 @@ class SlotDetailPage extends HookConsumerWidget {
     );
   }
 
-  Future<void> _updateSlot(
-    WidgetRef ref,
-    NotificationSlot slot, {
-    bool? eewEnabled,
-    JmaIntensity? eewMinIntensity,
-    bool? earthquakeEnabled,
-    JmaIntensity? earthquakeMinIntensity,
-  }) async {
-    final resolvedEewEnabled = eewEnabled ?? slot.eewEnabled;
-    final resolvedEewMinIntensity = eewMinIntensity ?? slot.eewMinIntensity;
-    final resolvedEarthquakeEnabled =
-        earthquakeEnabled ?? slot.earthquakeEnabled;
-    final resolvedEarthquakeMinIntensity =
-        earthquakeMinIntensity ?? slot.earthquakeMinIntensity;
-
-    try {
-      switch (slot.slotType) {
-        case NotificationSlotType.currentLocation:
-          await NotificationSlotsNotifier.putCurrentLocationMutation.run(
-            ref,
-            (tsx) async {
-              await tsx
-                  .get(notificationSlotsProvider.notifier)
-                  .putCurrentLocation(
-                    eewEnabled: resolvedEewEnabled,
-                    eewMinIntensity: resolvedEewMinIntensity,
-                    eewOverrides: slot.eewOverrides,
-                    earthquakeEnabled: resolvedEarthquakeEnabled,
-                    earthquakeMinIntensity: resolvedEarthquakeMinIntensity,
-                    earthquakeOverrides: slot.earthquakeOverrides,
-                  );
-            },
-          );
-        case NotificationSlotType.nationwide:
-          await NotificationSlotsNotifier.putNationwideMutation.run(
-            ref,
-            (tsx) async {
-              await tsx
-                  .get(notificationSlotsProvider.notifier)
-                  .putNationwide(
-                    eewEnabled: resolvedEewEnabled,
-                    eewMinIntensity: resolvedEewMinIntensity,
-                    eewOverrides: slot.eewOverrides,
-                    earthquakeEnabled: resolvedEarthquakeEnabled,
-                    earthquakeMinIntensity: resolvedEarthquakeMinIntensity,
-                    earthquakeOverrides: slot.earthquakeOverrides,
-                  );
-            },
-          );
-        case NotificationSlotType.region:
-          await NotificationSlotsNotifier.updateRegionMutation.run(
-            ref,
-            (tsx) async {
-              await tsx
-                  .get(notificationSlotsProvider.notifier)
-                  .updateRegion(
-                    slotId: slot.id,
-                    eewEnabled: resolvedEewEnabled,
-                    eewMinIntensity: resolvedEewMinIntensity,
-                    eewOverrides: slot.eewOverrides,
-                    earthquakeEnabled: resolvedEarthquakeEnabled,
-                    earthquakeMinIntensity: resolvedEarthquakeMinIntensity,
-                    earthquakeOverrides: slot.earthquakeOverrides,
-                  );
-            },
-          );
-      }
-    } on Object {
-      return;
-    }
-  }
 }
 
 extension NotificationSlotTypeLabel on NotificationSlotType {
