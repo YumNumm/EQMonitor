@@ -1,0 +1,20 @@
+import 'package:eqmonitor/core/util/converter/color_converter.dart';
+import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'map_colors.freezed.dart';
+part 'map_colors.g.dart';
+
+@freezed
+abstract class MapColors with _$MapColors {
+  const factory MapColors({
+    @ColorJsonConverter() required Color background,
+    @ColorJsonConverter() required Color worldLand,
+    @ColorJsonConverter() required Color worldLine,
+    @ColorJsonConverter() required Color japanLand,
+    @ColorJsonConverter() required Color japanLine,
+  }) = _MapColors;
+
+  factory MapColors.fromJson(Map<String, dynamic> json) =>
+      _$MapColorsFromJson(json);
+}
