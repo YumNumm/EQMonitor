@@ -1,14 +1,9 @@
-import 'dart:async';
-
-import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/model/jma_code_table/jma_code_table_parameter.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/city_picker_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod/experimental/mutation.dart';
 
 class RegionPickerPage extends HookConsumerWidget {
   const RegionPickerPage({super.key});
@@ -31,29 +26,6 @@ class RegionPickerPage extends HookConsumerWidget {
     final regions = jmaCodeTableAsync.value?.codeTables.areaForecastLocalEew;
 
     final filteredRegions = _filterRegions(regions, searchText.value);
-
-    ref.listen(NotificationSlotsNotifier.addRegionMutation, (_, next) {
-      if (next is MutationError) {
-        final error = next.error;
-        if (error is DioException && error.response?.statusCode == 402) {
-          unawaited(showProUpgradeDialog(context));
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('地域の追加に失敗しました: $error'),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
-        }
-      }
-      if (next is MutationSuccess) {
-        Navigator.of(context).pop();
-      }
-    });
-
-    final isAdding =
-        ref.watch(NotificationSlotsNotifier.addRegionMutation)
-            is MutationPending;
 
     return Scaffold(
       appBar: AppBar(title: const Text('地域を選択')),
@@ -80,7 +52,6 @@ class RegionPickerPage extends HookConsumerWidget {
               ],
             ),
           ),
-          if (isAdding) const LinearProgressIndicator(),
           Expanded(
             child: switch (jmaCodeTableAsync) {
               AsyncLoading() => const Center(
@@ -95,18 +66,14 @@ class RegionPickerPage extends HookConsumerWidget {
                   final region = filteredRegions[index];
                   return _RegionListTile(
                     region: region,
-                    enabled: !isAdding,
                     onTap: () async {
-                      await NotificationSlotsNotifier.addRegionMutation.run(
-                        ref,
-                        (tsx) async {
-                          await tsx
-                              .get(notificationSlotsProvider.notifier)
-                              .addRegion(
-                                regionId: int.parse(region.code),
-                                regionName: region.name.ja,
-                              );
-                        },
+                      await Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => CityPickerPage(
+                            regionCode: region.code,
+                            regionName: region.name.ja,
+                          ),
+                        ),
                       );
                     },
                   );
@@ -142,22 +109,19 @@ class RegionPickerPage extends HookConsumerWidget {
 class _RegionListTile extends StatelessWidget {
   const _RegionListTile({
     required this.region,
-    required this.enabled,
     required this.onTap,
   });
 
   final JmaCodeTableItem region;
-  final bool enabled;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      enabled: enabled,
       title: Text(region.name.ja),
       subtitle: Text(region.code),
-      trailing: const Icon(Icons.add),
-      onTap: enabled ? onTap : null,
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
     );
   }
 }

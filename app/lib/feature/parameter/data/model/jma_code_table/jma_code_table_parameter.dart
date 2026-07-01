@@ -21,6 +21,7 @@ abstract class JmaCodeTableCodeTables with _$JmaCodeTableCodeTables {
   const factory JmaCodeTableCodeTables({
     required List<JmaCodeTableItem> areaForecastLocalEew,
     required List<JmaCodeTableItem> areaInformationPrefectureEarthquake,
+    required List<JmaCodeTableCityItem> areaInformationCity,
     required List<JmaCodeTableItem> areaEpicenter,
     required List<JmaCodeTableItem> areaEpicenterAbbreviation,
     required List<JmaCodeTableItem> areaEpicenterDetail,
@@ -28,6 +29,21 @@ abstract class JmaCodeTableCodeTables with _$JmaCodeTableCodeTables {
 
   factory JmaCodeTableCodeTables.fromJson(Map<String, dynamic> json) =>
       _$JmaCodeTableCodeTablesFromJson(json);
+}
+
+@freezed
+abstract class JmaCodeTableCityItem with _$JmaCodeTableCityItem {
+  const factory JmaCodeTableCityItem({
+    required String code,
+    required LocalizedName name,
+    @JsonKey(name: 'parent_area_forecast_local_eew_code')
+    required String parentAreaForecastLocalEewCode,
+    @JsonKey(name: 'parent_area_information_prefecture_earthquake_code')
+    required String parentAreaInformationPrefectureEarthquakeCode,
+  }) = _JmaCodeTableCityItem;
+
+  factory JmaCodeTableCityItem.fromJson(Map<String, dynamic> json) =>
+      _$JmaCodeTableCityItemFromJson(json);
 }
 
 @freezed
