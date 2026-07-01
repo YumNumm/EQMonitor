@@ -233,12 +233,14 @@ class ThemeColorSet with _$ThemeColorSet {
     required StatusColors status,
     required IntensityColors intensity,
     required EstimatedIntensityColors estimatedIntensity,
-    required MapColors mapColors,
+    @JsonKey(name: 'map') required MapColors mapColors,
   }) = _ThemeColorSet;
 
   factory ThemeColorSet.fromJson(Map<String, dynamic> json) => _$ThemeColorSetFromJson(json);
 }
 ```
+
+全 `Color` フィールドには既存の `ColorJsonConverter` を適用する（`@ColorJsonConverter()` アノテーション、またはクラスレベルの `@JsonSerializable(converters: [ColorJsonConverter()])` で一括指定）。これにより `#RRGGBB` 文字列と `Color` の相互変換が行われる。
 
 ### StatusColors
 
@@ -256,10 +258,12 @@ class StatusColors with _$StatusColors {
 ### IntensityColorEntry / IntensityTextColor
 
 ```dart
-@freezed
+@Freezed(unionKey: 'type')
 sealed class IntensityTextColor with _$IntensityTextColor {
+  @FreezedUnionValue('auto')
   const factory IntensityTextColor.auto() = IntensityTextColorAuto;
-  const factory IntensityTextColor.manual({required Color color}) = IntensityTextColorManual;
+  @FreezedUnionValue('manual')
+  const factory IntensityTextColor.manual({@ColorJsonConverter() required Color color}) = IntensityTextColorManual;
 }
 
 @freezed
@@ -436,7 +440,7 @@ ThemeData buildTheme(ThemeColorSet colorSet, Brightness brightness) {
 
 ### SharedPreferences マイグレーション
 
-旧 `intensity_color` キーのJSONデータを新 `AppTheme` フォーマットに変換するマイグレーション関数を提供し、初回起動時に自動変換する。
+旧 `intensity_color` キーおよび `estimated_intensity_color` キーのJSONデータを新 `AppTheme` フォーマットに変換するマイグレーション関数を提供し、初回起動時に自動変換する。両方のキーのカスタム設定を保持する。
 
 ## バリデーション
 
