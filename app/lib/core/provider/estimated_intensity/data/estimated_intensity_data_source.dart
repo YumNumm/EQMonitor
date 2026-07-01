@@ -27,7 +27,7 @@ class EstimatedIntensityDataSource {
     for (final point in points) {
       final epicenterDistance =
           distanceCalcular.as(
-            lat_long_2.LengthUnit.Kilometer,
+            .Kilometer,
             lat_long_2.LatLng(point.lat, point.lon),
             lat_long_2.LatLng(hypocenter.lat, hypocenter.lon),
           ) -

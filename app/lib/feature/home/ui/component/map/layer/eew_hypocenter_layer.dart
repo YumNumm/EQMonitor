@@ -47,11 +47,26 @@ class EewHypocenterLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
 
-    final showEews = eews.where((eew) {
-      return (eew.hypocenter?.hasLatLng ?? false) && !eew.isCanceled;
-    });
-    final normalEews = showEews.where((eew) => !eew.isPlum).toList();
-    final lowPreciseEews = showEews.where((eew) => eew.isPlum).toList();
+    final hypocenterEews = useMemoized(
+      () {
+        final normal = <EewTelegramItem>[];
+        final lowPrecise = <EewTelegramItem>[];
+        for (final eew in eews) {
+          if (!(eew.hypocenter?.hasLatLng ?? false) || eew.isCanceled) {
+            continue;
+          }
+          if (eew.isLowPreciseHypocenter) {
+            lowPrecise.add(eew);
+          } else {
+            normal.add(eew);
+          }
+        }
+        return (normal: normal, lowPrecise: lowPrecise);
+      },
+      [eews],
+    );
+    final normalEews = hypocenterEews.normal;
+    final lowPreciseEews = hypocenterEews.lowPrecise;
 
     final isInitialized = useRef(false);
 
@@ -71,10 +86,12 @@ class EewHypocenterLayer extends HookConsumerWidget {
       [enableBlink],
     );
 
-    final displayNormalEews =
-        isVisible.value ? normalEews : <EewTelegramItem>[];
-    final displayLowPreciseEews =
-        isVisible.value ? lowPreciseEews : <EewTelegramItem>[];
+    final displayNormalEews = isVisible.value
+        ? normalEews
+        : <EewTelegramItem>[];
+    final displayLowPreciseEews = isVisible.value
+        ? lowPreciseEews
+        : <EewTelegramItem>[];
 
     useEffect(
       () {
@@ -163,16 +180,14 @@ class EewHypocenterLayer extends HookConsumerWidget {
               id: sourceId.normal,
               data: jsonEncode({
                 'type': 'FeatureCollection',
-                'features':
-                    displayNormalEews.map(_convertEew).toList(),
+                'features': displayNormalEews.map(_convertEew).toList(),
               }),
             ),
             styleController.updateGeoJsonSource(
               id: sourceId.lowPrecise,
               data: jsonEncode({
                 'type': 'FeatureCollection',
-                'features':
-                    displayLowPreciseEews.map(_convertEew).toList(),
+                'features': displayLowPreciseEews.map(_convertEew).toList(),
               }),
             ),
           ).wait;
@@ -203,16 +218,14 @@ class EewHypocenterLayer extends HookConsumerWidget {
                   id: sourceId.normal,
                   data: jsonEncode({
                     'type': 'FeatureCollection',
-                    'features':
-                        displayNormalEews.map(_convertEew).toList(),
+                    'features': displayNormalEews.map(_convertEew).toList(),
                   }),
                 ),
                 styleController.updateGeoJsonSource(
                   id: sourceId.lowPrecise,
                   data: jsonEncode({
                     'type': 'FeatureCollection',
-                    'features':
-                        displayLowPreciseEews.map(_convertEew).toList(),
+                    'features': displayLowPreciseEews.map(_convertEew).toList(),
                   }),
                 ),
               ).wait;
