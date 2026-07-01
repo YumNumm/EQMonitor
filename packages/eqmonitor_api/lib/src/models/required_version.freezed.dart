@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RequiredVersion {
 
- String get version;@JsonKey(includeIfNull: false) String? get message;
+@JsonKey(includeIfNull: false) String? get version;@JsonKey(includeIfNull: false, name: 'build_number') int? get buildNumber;@JsonKey(includeIfNull: false) String? get message;
 /// Create a copy of RequiredVersion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RequiredVersionCopyWith<RequiredVersion> get copyWith => _$RequiredVersionCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequiredVersion&&(identical(other.version, version) || other.version == version)&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequiredVersion&&(identical(other.version, version) || other.version == version)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.message, message) || other.message == message));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,version,message);
+int get hashCode => Object.hash(runtimeType,version,buildNumber,message);
 
 @override
 String toString() {
-  return 'RequiredVersion(version: $version, message: $message)';
+  return 'RequiredVersion(version: $version, buildNumber: $buildNumber, message: $message)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RequiredVersionCopyWith<$Res>  {
   factory $RequiredVersionCopyWith(RequiredVersion value, $Res Function(RequiredVersion) _then) = _$RequiredVersionCopyWithImpl;
 @useResult
 $Res call({
- String version,@JsonKey(includeIfNull: false) String? message
+@JsonKey(includeIfNull: false) String? version,@JsonKey(includeIfNull: false, name: 'build_number') int? buildNumber,@JsonKey(includeIfNull: false) String? message
 });
 
 
@@ -65,10 +65,11 @@ class _$RequiredVersionCopyWithImpl<$Res>
 
 /// Create a copy of RequiredVersion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? version = null,Object? message = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? version = freezed,Object? buildNumber = freezed,Object? message = freezed,}) {
   return _then(_self.copyWith(
-version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
-as String,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String?,buildNumber: freezed == buildNumber ? _self.buildNumber : buildNumber // ignore: cast_nullable_to_non_nullable
+as int?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version, @JsonKey(includeIfNull: false)  String? message)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false, name: 'build_number')  int? buildNumber, @JsonKey(includeIfNull: false)  String? message)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RequiredVersion() when $default != null:
-return $default(_that.version,_that.message);case _:
+return $default(_that.version,_that.buildNumber,_that.message);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.version,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version, @JsonKey(includeIfNull: false)  String? message)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false, name: 'build_number')  int? buildNumber, @JsonKey(includeIfNull: false)  String? message)  $default,) {final _that = this;
 switch (_that) {
 case _RequiredVersion():
-return $default(_that.version,_that.message);case _:
+return $default(_that.version,_that.buildNumber,_that.message);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.version,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version, @JsonKey(includeIfNull: false)  String? message)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  String? version, @JsonKey(includeIfNull: false, name: 'build_number')  int? buildNumber, @JsonKey(includeIfNull: false)  String? message)?  $default,) {final _that = this;
 switch (_that) {
 case _RequiredVersion() when $default != null:
-return $default(_that.version,_that.message);case _:
+return $default(_that.version,_that.buildNumber,_that.message);case _:
   return null;
 
 }
@@ -210,10 +211,11 @@ return $default(_that.version,_that.message);case _:
 @JsonSerializable()
 
 class _RequiredVersion implements RequiredVersion {
-  const _RequiredVersion({required this.version, @JsonKey(includeIfNull: false) this.message});
+  const _RequiredVersion({@JsonKey(includeIfNull: false) this.version, @JsonKey(includeIfNull: false, name: 'build_number') this.buildNumber, @JsonKey(includeIfNull: false) this.message});
   factory _RequiredVersion.fromJson(Map<String, dynamic> json) => _$RequiredVersionFromJson(json);
 
-@override final  String version;
+@override@JsonKey(includeIfNull: false) final  String? version;
+@override@JsonKey(includeIfNull: false, name: 'build_number') final  int? buildNumber;
 @override@JsonKey(includeIfNull: false) final  String? message;
 
 /// Create a copy of RequiredVersion
@@ -229,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RequiredVersion&&(identical(other.version, version) || other.version == version)&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RequiredVersion&&(identical(other.version, version) || other.version == version)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.message, message) || other.message == message));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,version,message);
+int get hashCode => Object.hash(runtimeType,version,buildNumber,message);
 
 @override
 String toString() {
-  return 'RequiredVersion(version: $version, message: $message)';
+  return 'RequiredVersion(version: $version, buildNumber: $buildNumber, message: $message)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$RequiredVersionCopyWith<$Res> implements $RequiredVersion
   factory _$RequiredVersionCopyWith(_RequiredVersion value, $Res Function(_RequiredVersion) _then) = __$RequiredVersionCopyWithImpl;
 @override @useResult
 $Res call({
- String version,@JsonKey(includeIfNull: false) String? message
+@JsonKey(includeIfNull: false) String? version,@JsonKey(includeIfNull: false, name: 'build_number') int? buildNumber,@JsonKey(includeIfNull: false) String? message
 });
 
 
@@ -266,10 +268,11 @@ class __$RequiredVersionCopyWithImpl<$Res>
 
 /// Create a copy of RequiredVersion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? version = null,Object? message = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? version = freezed,Object? buildNumber = freezed,Object? message = freezed,}) {
   return _then(_RequiredVersion(
-version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
-as String,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String?,buildNumber: freezed == buildNumber ? _self.buildNumber : buildNumber // ignore: cast_nullable_to_non_nullable
+as int?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

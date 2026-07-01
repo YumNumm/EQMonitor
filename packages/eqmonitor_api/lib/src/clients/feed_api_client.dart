@@ -9,6 +9,8 @@ import '../models/feed_create_response.dart';
 import '../models/feed_list_response.dart';
 import '../models/v2_feeds_admin_request_body.dart';
 
+import '../models/telegram_status.dart';
+
 part 'feed_api_client.g.dart';
 
 @RestApi()
@@ -22,6 +24,7 @@ abstract class FeedApiClient {
     @Query('important') String? important,
     @Query('locale') String? locale = 'ja',
     @Query('limit') String? limit = '20',
+    @Query('statuses') List<TelegramStatus> statuses = const [.normal],
   });
 
   /// Feed作成（管理者のみ）

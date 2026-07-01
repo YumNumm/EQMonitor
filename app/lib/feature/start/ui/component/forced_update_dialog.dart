@@ -70,9 +70,13 @@ class _ForcedUpdateWrapperState extends ConsumerState<ForcedUpdateWrapper> {
     }
 
     for (final req in requiredVersions) {
+      final versionStr = req.version;
+      if (versionStr == null) {
+        continue;
+      }
       Version required;
       try {
-        required = Version.parse(req.version);
+        required = Version.parse(versionStr);
       } on FormatException {
         continue;
       }

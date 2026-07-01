@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LatestVersion {
 
- String get version; DateTime get date;@JsonKey(name: 'show_whats_new') bool get showWhatsNew;@JsonKey(includeIfNull: false, name: 'whats_new') WhatsNew? get whatsNew;
+ String get version; DateTime get date;@JsonKey(name: 'show_whats_new') bool get showWhatsNew;@JsonKey(includeIfNull: false, name: 'build_number') int? get buildNumber;@JsonKey(includeIfNull: false, name: 'whats_new') WhatsNew? get whatsNew;
 /// Create a copy of LatestVersion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $LatestVersionCopyWith<LatestVersion> get copyWith => _$LatestVersionCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LatestVersion&&(identical(other.version, version) || other.version == version)&&(identical(other.date, date) || other.date == date)&&(identical(other.showWhatsNew, showWhatsNew) || other.showWhatsNew == showWhatsNew)&&(identical(other.whatsNew, whatsNew) || other.whatsNew == whatsNew));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LatestVersion&&(identical(other.version, version) || other.version == version)&&(identical(other.date, date) || other.date == date)&&(identical(other.showWhatsNew, showWhatsNew) || other.showWhatsNew == showWhatsNew)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.whatsNew, whatsNew) || other.whatsNew == whatsNew));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,version,date,showWhatsNew,whatsNew);
+int get hashCode => Object.hash(runtimeType,version,date,showWhatsNew,buildNumber,whatsNew);
 
 @override
 String toString() {
-  return 'LatestVersion(version: $version, date: $date, showWhatsNew: $showWhatsNew, whatsNew: $whatsNew)';
+  return 'LatestVersion(version: $version, date: $date, showWhatsNew: $showWhatsNew, buildNumber: $buildNumber, whatsNew: $whatsNew)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $LatestVersionCopyWith<$Res>  {
   factory $LatestVersionCopyWith(LatestVersion value, $Res Function(LatestVersion) _then) = _$LatestVersionCopyWithImpl;
 @useResult
 $Res call({
- String version, DateTime date,@JsonKey(name: 'show_whats_new') bool showWhatsNew,@JsonKey(includeIfNull: false, name: 'whats_new') WhatsNew? whatsNew
+ String version, DateTime date,@JsonKey(name: 'show_whats_new') bool showWhatsNew,@JsonKey(includeIfNull: false, name: 'build_number') int? buildNumber,@JsonKey(includeIfNull: false, name: 'whats_new') WhatsNew? whatsNew
 });
 
 
@@ -65,12 +65,13 @@ class _$LatestVersionCopyWithImpl<$Res>
 
 /// Create a copy of LatestVersion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? version = null,Object? date = null,Object? showWhatsNew = null,Object? whatsNew = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? version = null,Object? date = null,Object? showWhatsNew = null,Object? buildNumber = freezed,Object? whatsNew = freezed,}) {
   return _then(_self.copyWith(
 version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,showWhatsNew: null == showWhatsNew ? _self.showWhatsNew : showWhatsNew // ignore: cast_nullable_to_non_nullable
-as bool,whatsNew: freezed == whatsNew ? _self.whatsNew : whatsNew // ignore: cast_nullable_to_non_nullable
+as bool,buildNumber: freezed == buildNumber ? _self.buildNumber : buildNumber // ignore: cast_nullable_to_non_nullable
+as int?,whatsNew: freezed == whatsNew ? _self.whatsNew : whatsNew // ignore: cast_nullable_to_non_nullable
 as WhatsNew?,
   ));
 }
@@ -168,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version,  DateTime date, @JsonKey(name: 'show_whats_new')  bool showWhatsNew, @JsonKey(includeIfNull: false, name: 'whats_new')  WhatsNew? whatsNew)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version,  DateTime date, @JsonKey(name: 'show_whats_new')  bool showWhatsNew, @JsonKey(includeIfNull: false, name: 'build_number')  int? buildNumber, @JsonKey(includeIfNull: false, name: 'whats_new')  WhatsNew? whatsNew)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LatestVersion() when $default != null:
-return $default(_that.version,_that.date,_that.showWhatsNew,_that.whatsNew);case _:
+return $default(_that.version,_that.date,_that.showWhatsNew,_that.buildNumber,_that.whatsNew);case _:
   return orElse();
 
 }
@@ -189,10 +190,10 @@ return $default(_that.version,_that.date,_that.showWhatsNew,_that.whatsNew);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version,  DateTime date, @JsonKey(name: 'show_whats_new')  bool showWhatsNew, @JsonKey(includeIfNull: false, name: 'whats_new')  WhatsNew? whatsNew)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version,  DateTime date, @JsonKey(name: 'show_whats_new')  bool showWhatsNew, @JsonKey(includeIfNull: false, name: 'build_number')  int? buildNumber, @JsonKey(includeIfNull: false, name: 'whats_new')  WhatsNew? whatsNew)  $default,) {final _that = this;
 switch (_that) {
 case _LatestVersion():
-return $default(_that.version,_that.date,_that.showWhatsNew,_that.whatsNew);case _:
+return $default(_that.version,_that.date,_that.showWhatsNew,_that.buildNumber,_that.whatsNew);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +210,10 @@ return $default(_that.version,_that.date,_that.showWhatsNew,_that.whatsNew);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version,  DateTime date, @JsonKey(name: 'show_whats_new')  bool showWhatsNew, @JsonKey(includeIfNull: false, name: 'whats_new')  WhatsNew? whatsNew)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version,  DateTime date, @JsonKey(name: 'show_whats_new')  bool showWhatsNew, @JsonKey(includeIfNull: false, name: 'build_number')  int? buildNumber, @JsonKey(includeIfNull: false, name: 'whats_new')  WhatsNew? whatsNew)?  $default,) {final _that = this;
 switch (_that) {
 case _LatestVersion() when $default != null:
-return $default(_that.version,_that.date,_that.showWhatsNew,_that.whatsNew);case _:
+return $default(_that.version,_that.date,_that.showWhatsNew,_that.buildNumber,_that.whatsNew);case _:
   return null;
 
 }
@@ -224,12 +225,13 @@ return $default(_that.version,_that.date,_that.showWhatsNew,_that.whatsNew);case
 @JsonSerializable()
 
 class _LatestVersion implements LatestVersion {
-  const _LatestVersion({required this.version, required this.date, @JsonKey(name: 'show_whats_new') required this.showWhatsNew, @JsonKey(includeIfNull: false, name: 'whats_new') this.whatsNew});
+  const _LatestVersion({required this.version, required this.date, @JsonKey(name: 'show_whats_new') required this.showWhatsNew, @JsonKey(includeIfNull: false, name: 'build_number') this.buildNumber, @JsonKey(includeIfNull: false, name: 'whats_new') this.whatsNew});
   factory _LatestVersion.fromJson(Map<String, dynamic> json) => _$LatestVersionFromJson(json);
 
 @override final  String version;
 @override final  DateTime date;
 @override@JsonKey(name: 'show_whats_new') final  bool showWhatsNew;
+@override@JsonKey(includeIfNull: false, name: 'build_number') final  int? buildNumber;
 @override@JsonKey(includeIfNull: false, name: 'whats_new') final  WhatsNew? whatsNew;
 
 /// Create a copy of LatestVersion
@@ -245,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LatestVersion&&(identical(other.version, version) || other.version == version)&&(identical(other.date, date) || other.date == date)&&(identical(other.showWhatsNew, showWhatsNew) || other.showWhatsNew == showWhatsNew)&&(identical(other.whatsNew, whatsNew) || other.whatsNew == whatsNew));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LatestVersion&&(identical(other.version, version) || other.version == version)&&(identical(other.date, date) || other.date == date)&&(identical(other.showWhatsNew, showWhatsNew) || other.showWhatsNew == showWhatsNew)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.whatsNew, whatsNew) || other.whatsNew == whatsNew));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,version,date,showWhatsNew,whatsNew);
+int get hashCode => Object.hash(runtimeType,version,date,showWhatsNew,buildNumber,whatsNew);
 
 @override
 String toString() {
-  return 'LatestVersion(version: $version, date: $date, showWhatsNew: $showWhatsNew, whatsNew: $whatsNew)';
+  return 'LatestVersion(version: $version, date: $date, showWhatsNew: $showWhatsNew, buildNumber: $buildNumber, whatsNew: $whatsNew)';
 }
 
 
@@ -265,7 +267,7 @@ abstract mixin class _$LatestVersionCopyWith<$Res> implements $LatestVersionCopy
   factory _$LatestVersionCopyWith(_LatestVersion value, $Res Function(_LatestVersion) _then) = __$LatestVersionCopyWithImpl;
 @override @useResult
 $Res call({
- String version, DateTime date,@JsonKey(name: 'show_whats_new') bool showWhatsNew,@JsonKey(includeIfNull: false, name: 'whats_new') WhatsNew? whatsNew
+ String version, DateTime date,@JsonKey(name: 'show_whats_new') bool showWhatsNew,@JsonKey(includeIfNull: false, name: 'build_number') int? buildNumber,@JsonKey(includeIfNull: false, name: 'whats_new') WhatsNew? whatsNew
 });
 
 
@@ -282,12 +284,13 @@ class __$LatestVersionCopyWithImpl<$Res>
 
 /// Create a copy of LatestVersion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? version = null,Object? date = null,Object? showWhatsNew = null,Object? whatsNew = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? version = null,Object? date = null,Object? showWhatsNew = null,Object? buildNumber = freezed,Object? whatsNew = freezed,}) {
   return _then(_LatestVersion(
 version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,showWhatsNew: null == showWhatsNew ? _self.showWhatsNew : showWhatsNew // ignore: cast_nullable_to_non_nullable
-as bool,whatsNew: freezed == whatsNew ? _self.whatsNew : whatsNew // ignore: cast_nullable_to_non_nullable
+as bool,buildNumber: freezed == buildNumber ? _self.buildNumber : buildNumber // ignore: cast_nullable_to_non_nullable
+as int?,whatsNew: freezed == whatsNew ? _self.whatsNew : whatsNew // ignore: cast_nullable_to_non_nullable
 as WhatsNew?,
   ));
 }

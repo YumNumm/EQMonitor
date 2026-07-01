@@ -12,6 +12,9 @@ part 'highest_intensity_response.g.dart';
 @Freezed()
 abstract class HighestIntensityResponse with _$HighestIntensityResponse {
   const factory HighestIntensityResponse({
+    /// このレスポンスで最高震度集計を生成した時刻
+    @JsonKey(name: 'aggregated_at')
+    required DateTime aggregatedAt,
     required List<HighestIntensityItem> items,
   }) = _HighestIntensityResponse;
   

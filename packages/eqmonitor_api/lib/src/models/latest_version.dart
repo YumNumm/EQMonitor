@@ -16,6 +16,8 @@ abstract class LatestVersion with _$LatestVersion {
     required DateTime date,
     @JsonKey(name: 'show_whats_new')
     required bool showWhatsNew,
+    @JsonKey(includeIfNull: false,name: 'build_number')
+    int? buildNumber,
     @JsonKey(includeIfNull: false,name: 'whats_new')
     WhatsNew? whatsNew,
   }) = _LatestVersion;

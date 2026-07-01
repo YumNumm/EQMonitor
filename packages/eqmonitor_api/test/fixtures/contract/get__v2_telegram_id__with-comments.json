@@ -8,9 +8,7 @@
     "status": "NORMAL",
     "info_type": "PUBLICATION",
     "editorial_office": "気象庁",
-    "publishing_office": [
-      "気象庁"
-    ],
+    "publishing_office": ["気象庁"],
     "press_at": "2025-12-15T12:03:00.000Z",
     "report_at": "2025-12-15T12:03:02.000Z",
     "info_kind": "震源・震度に関する情報",
@@ -23,9 +21,7 @@
     "free_form_comment": "○○地方では揺れに注意してください。",
     "warning": {
       "text": "余震に注意してください。",
-      "codes": [
-        "0215"
-      ]
+      "codes": ["0215"]
     }
   }
 }

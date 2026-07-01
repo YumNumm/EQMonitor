@@ -10,7 +10,10 @@ part 'required_version.g.dart';
 @Freezed()
 abstract class RequiredVersion with _$RequiredVersion {
   const factory RequiredVersion({
-    required String version,
+    @JsonKey(includeIfNull: false)
+    String? version,
+    @JsonKey(includeIfNull: false,name: 'build_number')
+    int? buildNumber,
     @JsonKey(includeIfNull: false)
     String? message,
   }) = _RequiredVersion;

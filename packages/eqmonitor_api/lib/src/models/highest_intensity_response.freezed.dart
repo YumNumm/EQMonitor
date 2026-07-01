@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$HighestIntensityResponse {
 
- List<HighestIntensityItem> get items;
+/// このレスポンスで最高震度集計を生成した時刻
+@JsonKey(name: 'aggregated_at') DateTime get aggregatedAt; List<HighestIntensityItem> get items;
 /// Create a copy of HighestIntensityResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $HighestIntensityResponseCopyWith<HighestIntensityResponse> get copyWith => _$Hi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HighestIntensityResponse&&const DeepCollectionEquality().equals(other.items, items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HighestIntensityResponse&&(identical(other.aggregatedAt, aggregatedAt) || other.aggregatedAt == aggregatedAt)&&const DeepCollectionEquality().equals(other.items, items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items));
+int get hashCode => Object.hash(runtimeType,aggregatedAt,const DeepCollectionEquality().hash(items));
 
 @override
 String toString() {
-  return 'HighestIntensityResponse(items: $items)';
+  return 'HighestIntensityResponse(aggregatedAt: $aggregatedAt, items: $items)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $HighestIntensityResponseCopyWith<$Res>  {
   factory $HighestIntensityResponseCopyWith(HighestIntensityResponse value, $Res Function(HighestIntensityResponse) _then) = _$HighestIntensityResponseCopyWithImpl;
 @useResult
 $Res call({
- List<HighestIntensityItem> items
+@JsonKey(name: 'aggregated_at') DateTime aggregatedAt, List<HighestIntensityItem> items
 });
 
 
@@ -65,9 +66,10 @@ class _$HighestIntensityResponseCopyWithImpl<$Res>
 
 /// Create a copy of HighestIntensityResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? aggregatedAt = null,Object? items = null,}) {
   return _then(_self.copyWith(
-items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+aggregatedAt: null == aggregatedAt ? _self.aggregatedAt : aggregatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<HighestIntensityItem>,
   ));
 }
@@ -153,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<HighestIntensityItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'aggregated_at')  DateTime aggregatedAt,  List<HighestIntensityItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HighestIntensityResponse() when $default != null:
-return $default(_that.items);case _:
+return $default(_that.aggregatedAt,_that.items);case _:
   return orElse();
 
 }
@@ -174,10 +176,10 @@ return $default(_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<HighestIntensityItem> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'aggregated_at')  DateTime aggregatedAt,  List<HighestIntensityItem> items)  $default,) {final _that = this;
 switch (_that) {
 case _HighestIntensityResponse():
-return $default(_that.items);case _:
+return $default(_that.aggregatedAt,_that.items);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +196,10 @@ return $default(_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<HighestIntensityItem> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'aggregated_at')  DateTime aggregatedAt,  List<HighestIntensityItem> items)?  $default,) {final _that = this;
 switch (_that) {
 case _HighestIntensityResponse() when $default != null:
-return $default(_that.items);case _:
+return $default(_that.aggregatedAt,_that.items);case _:
   return null;
 
 }
@@ -209,9 +211,11 @@ return $default(_that.items);case _:
 @JsonSerializable()
 
 class _HighestIntensityResponse implements HighestIntensityResponse {
-  const _HighestIntensityResponse({required final  List<HighestIntensityItem> items}): _items = items;
+  const _HighestIntensityResponse({@JsonKey(name: 'aggregated_at') required this.aggregatedAt, required final  List<HighestIntensityItem> items}): _items = items;
   factory _HighestIntensityResponse.fromJson(Map<String, dynamic> json) => _$HighestIntensityResponseFromJson(json);
 
+/// このレスポンスで最高震度集計を生成した時刻
+@override@JsonKey(name: 'aggregated_at') final  DateTime aggregatedAt;
  final  List<HighestIntensityItem> _items;
 @override List<HighestIntensityItem> get items {
   if (_items is EqualUnmodifiableListView) return _items;
@@ -233,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HighestIntensityResponse&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HighestIntensityResponse&&(identical(other.aggregatedAt, aggregatedAt) || other.aggregatedAt == aggregatedAt)&&const DeepCollectionEquality().equals(other._items, _items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items));
+int get hashCode => Object.hash(runtimeType,aggregatedAt,const DeepCollectionEquality().hash(_items));
 
 @override
 String toString() {
-  return 'HighestIntensityResponse(items: $items)';
+  return 'HighestIntensityResponse(aggregatedAt: $aggregatedAt, items: $items)';
 }
 
 
@@ -253,7 +257,7 @@ abstract mixin class _$HighestIntensityResponseCopyWith<$Res> implements $Highes
   factory _$HighestIntensityResponseCopyWith(_HighestIntensityResponse value, $Res Function(_HighestIntensityResponse) _then) = __$HighestIntensityResponseCopyWithImpl;
 @override @useResult
 $Res call({
- List<HighestIntensityItem> items
+@JsonKey(name: 'aggregated_at') DateTime aggregatedAt, List<HighestIntensityItem> items
 });
 
 
@@ -270,9 +274,10 @@ class __$HighestIntensityResponseCopyWithImpl<$Res>
 
 /// Create a copy of HighestIntensityResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? aggregatedAt = null,Object? items = null,}) {
   return _then(_HighestIntensityResponse(
-items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+aggregatedAt: null == aggregatedAt ? _self.aggregatedAt : aggregatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<HighestIntensityItem>,
   ));
 }

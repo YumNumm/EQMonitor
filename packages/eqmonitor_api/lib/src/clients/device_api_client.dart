@@ -21,6 +21,8 @@ import '../models/eew_warning_config_response.dart';
 import '../models/kind.dart';
 import '../models/live_activity_token_request.dart';
 import '../models/live_activity_token_response.dart';
+import '../models/migrate_request.dart';
+import '../models/migration_response.dart';
 import '../models/notification_settings_request.dart';
 import '../models/notification_settings_response.dart';
 import '../models/shake_detection_setting_request.dart';
@@ -244,6 +246,12 @@ abstract class DeviceApiClient {
   Future<HttpResponse<DeviceLocationResponse>> putV2DeviceMeLocation({
     @Body() required DeviceLocationRequest body,
   });
+
+  /// 旧 Supabase のデバイス設定を新 DB に移行
+  @POST(DeviceApiClientUrls.postV2DeviceMeMigrate)
+  Future<HttpResponse<MigrationResponse>> postV2DeviceMeMigrate({
+    @Body() required MigrateRequest body,
+  });
 }
 
 
@@ -326,5 +334,7 @@ abstract class DeviceApiClientUrls {
 	static const deleteV2DeviceMeLiveActivityLiveActivityIdToken = "/v2/device/me/live-activity/{liveActivityId}/token";
 	/// /v2/device/me/location
 	static const putV2DeviceMeLocation = "/v2/device/me/location";
+	/// /v2/device/me/migrate
+	static const postV2DeviceMeMigrate = "/v2/device/me/migrate";
 }
 
