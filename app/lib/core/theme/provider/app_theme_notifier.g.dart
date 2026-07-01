@@ -52,7 +52,7 @@ final class AppThemeNotifierProvider
   }
 }
 
-String _$appThemeNotifierHash() => r'9b6e02067530b1d6e66bf11be6af81b968d8eab0';
+String _$appThemeNotifierHash() => r'306422224c30e787c4759c8684e8ac08f052dea5';
 
 abstract class _$AppThemeNotifier
     extends $Notifier<({AppTheme darkTheme, AppTheme lightTheme})> {

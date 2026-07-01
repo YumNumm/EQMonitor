@@ -3,5 +3,5 @@ import 'package:flutter/material.dart';
 
 extension DesignSystemBuildContextX on BuildContext {
   DesignSystemThemeExtension get designSystem =>
-      Theme.of(this).designSystemThemeExtension;
+      Theme.of(this).extension<DesignSystemThemeExtension>()!;
 }
