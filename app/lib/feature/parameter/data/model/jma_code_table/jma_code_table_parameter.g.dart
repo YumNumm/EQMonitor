@@ -50,6 +50,14 @@ _JmaCodeTableCodeTables _$JmaCodeTableCodeTablesFromJson(
             .map((e) => JmaCodeTableItem.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
+      areaInformationCity: $checkedConvert(
+        'area_information_city',
+        (v) => (v as List<dynamic>)
+            .map(
+              (e) => JmaCodeTableCityItem.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
+      ),
       areaEpicenter: $checkedConvert(
         'area_epicenter',
         (v) => (v as List<dynamic>)
@@ -75,6 +83,7 @@ _JmaCodeTableCodeTables _$JmaCodeTableCodeTablesFromJson(
     'areaForecastLocalEew': 'area_forecast_local_eew',
     'areaInformationPrefectureEarthquake':
         'area_information_prefecture_earthquake',
+    'areaInformationCity': 'area_information_city',
     'areaEpicenter': 'area_epicenter',
     'areaEpicenterAbbreviation': 'area_epicenter_abbreviation',
     'areaEpicenterDetail': 'area_epicenter_detail',
@@ -87,9 +96,51 @@ Map<String, dynamic> _$JmaCodeTableCodeTablesToJson(
   'area_forecast_local_eew': instance.areaForecastLocalEew,
   'area_information_prefecture_earthquake':
       instance.areaInformationPrefectureEarthquake,
+  'area_information_city': instance.areaInformationCity,
   'area_epicenter': instance.areaEpicenter,
   'area_epicenter_abbreviation': instance.areaEpicenterAbbreviation,
   'area_epicenter_detail': instance.areaEpicenterDetail,
+};
+
+_JmaCodeTableCityItem _$JmaCodeTableCityItemFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_JmaCodeTableCityItem',
+  json,
+  ($checkedConvert) {
+    final val = _JmaCodeTableCityItem(
+      code: $checkedConvert('code', (v) => v as String),
+      name: $checkedConvert(
+        'name',
+        (v) => LocalizedName.fromJson(v as Map<String, dynamic>),
+      ),
+      parentAreaForecastLocalEewCode: $checkedConvert(
+        'parent_area_forecast_local_eew_code',
+        (v) => v as String,
+      ),
+      parentAreaInformationPrefectureEarthquakeCode: $checkedConvert(
+        'parent_area_information_prefecture_earthquake_code',
+        (v) => v as String,
+      ),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'parentAreaForecastLocalEewCode': 'parent_area_forecast_local_eew_code',
+    'parentAreaInformationPrefectureEarthquakeCode':
+        'parent_area_information_prefecture_earthquake_code',
+  },
+);
+
+Map<String, dynamic> _$JmaCodeTableCityItemToJson(
+  _JmaCodeTableCityItem instance,
+) => <String, dynamic>{
+  'code': instance.code,
+  'name': instance.name,
+  'parent_area_forecast_local_eew_code':
+      instance.parentAreaForecastLocalEewCode,
+  'parent_area_information_prefecture_earthquake_code':
+      instance.parentAreaInformationPrefectureEarthquakeCode,
 };
 
 _JmaCodeTableItem _$JmaCodeTableItemFromJson(Map<String, dynamic> json) =>
