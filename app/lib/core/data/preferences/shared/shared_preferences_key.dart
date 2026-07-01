@@ -30,6 +30,9 @@ enum SharedPreferencesKey {
   earthquakeHistoryMapLayerParameter('earthquake_history_map_layer_parameter'),
   homeMapLabelParameter('home_map_label_parameter'),
   estimatedIntensityNoticeShown('estimated_intensity_notice_shown'),
+  isEstimatedIntensityOnEewReplayAllowed(
+    'is_estimated_intensity_on_eew_replay_allowed',
+  ),
   ;
 
   const SharedPreferencesKey(this.key);

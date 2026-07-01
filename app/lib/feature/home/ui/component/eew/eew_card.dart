@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -20,12 +21,14 @@ class EewCard extends ConsumerWidget {
     required this.eew,
     required this.index,
     this.nowOverride,
+    this.userRegionEstimate,
     super.key,
   });
 
   final EewTelegramItem eew;
   final String? index;
   final DateTime? nowOverride;
+  final EewEstimatedRegion? userRegionEstimate;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,20 +72,29 @@ class EewCard extends ConsumerWidget {
     }
 
     final localRegion = localForecastRegion(eew, regionCode);
-    final localForecastIntensity = localRegion?.intensity;
+
+    // JMAのlocalRegionがない場合、推定値をフォールバック
+    final estimate = userRegionEstimate;
+    final effectiveLocalIntensity =
+        localRegion?.intensity ?? estimate?.jmaIntensity;
+    final effectiveRegionName = regionDisplayName ?? estimate?.regionName;
+
+    // 到達時間: JMA値を優先、なければ推定値
+    final effectiveArrivalTime =
+        localRegion?.arrivalTime ?? estimate?.sWaveArrivalTime;
+    final effectiveIsArrived =
+        localRegion?.isArrived ?? estimate?.isArrived ?? false;
 
     final nowValue = nowOverride ?? now.asData?.value;
-    final localIsArrived = localRegion?.isArrived ?? false;
-    final localArrivalTime = localRegion?.arrivalTime;
     final hasArrived =
-        localIsArrived ||
-        (localArrivalTime != null &&
+        effectiveIsArrived ||
+        (effectiveArrivalTime != null &&
             nowValue != null &&
-            nowValue.isAfter(localArrivalTime));
+            nowValue.isAfter(effectiveArrivalTime));
 
     int? secondsUntilArrival;
-    if (!hasArrived && localArrivalTime != null && nowValue != null) {
-      final diff = localArrivalTime.difference(nowValue).inSeconds;
+    if (!hasArrived && effectiveArrivalTime != null && nowValue != null) {
+      final diff = effectiveArrivalTime.difference(nowValue).inSeconds;
       if (diff > 0) {
         secondsUntilArrival = diff;
       }
@@ -99,13 +111,13 @@ class EewCard extends ConsumerWidget {
           eew: eew,
           isWarning: isWarning,
           happenedTime: happenedTime,
-          localForecastIntensity: localForecastIntensity,
-          regionDisplayName: regionDisplayName,
+          localForecastIntensity: effectiveLocalIntensity,
+          regionDisplayName: effectiveRegionName,
           secondsUntilArrival: secondsUntilArrival,
           showArrived:
-              localRegion != null &&
+              (localRegion != null || estimate != null) &&
               (hasArrived ||
-                  (localArrivalTime != null && secondsUntilArrival == null)),
+                  (effectiveArrivalTime != null && secondsUntilArrival == null)),
         ),
         if (eew.status != TelegramStatus.normal)
           Center(
@@ -167,7 +179,9 @@ class _EewMainCard extends StatelessWidget {
         : _forecastHeaderColor;
 
     final showLocalForecast =
-        localForecastIntensity != null &&
+        (localForecastIntensity != null ||
+            secondsUntilArrival != null ||
+            showArrived) &&
         regionDisplayName != null &&
         regionDisplayName!.isNotEmpty;
 
@@ -213,7 +227,7 @@ class _EewMainCard extends StatelessWidget {
                     if (showLocalForecast) ...[
                       SizedBox(width: spacing.sm),
                       _EewLocalForecastSection(
-                        intensity: localForecastIntensity!,
+                        intensity: localForecastIntensity,
                         regionDisplayName: regionDisplayName!,
                       ),
                     ],
@@ -469,7 +483,7 @@ class _EewLocalForecastSection extends StatelessWidget {
     required this.regionDisplayName,
   });
 
-  final JmaIntensity intensity;
+  final JmaIntensity? intensity;
   final String regionDisplayName;
 
   @override
@@ -500,8 +514,10 @@ class _EewLocalForecastSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 2),
-        JmaIntensityIcon(intensity: intensity, type: .filled),
+        if (intensity != null) ...[
+          const SizedBox(height: 2),
+          JmaIntensityIcon(intensity: intensity!, type: .filled),
+        ],
       ],
     );
   }

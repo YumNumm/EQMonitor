@@ -20,6 +20,7 @@ class EewDetailsMapView extends HookConsumerWidget {
     required this.initialCenter,
     required this.initZoom,
     this.isSimulation = false,
+    this.additionalRegions,
     super.key,
   });
 
@@ -28,6 +29,7 @@ class EewDetailsMapView extends HookConsumerWidget {
   final double initZoom;
   final EewDisplayMode displayMode;
   final bool isSimulation;
+  final List<EewForecastRegionInfo>? additionalRegions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,6 +43,7 @@ class EewDetailsMapView extends HookConsumerWidget {
         initZoom: initZoom,
         displayMode: displayMode,
         isSimulation: isSimulation,
+        additionalRegions: additionalRegions,
       ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
       _ => const Center(child: CircularProgressIndicator.adaptive()),
@@ -56,6 +59,7 @@ class _MapContent extends ConsumerWidget {
     required this.initialCenter,
     required this.initZoom,
     required this.isSimulation,
+    this.additionalRegions,
   });
 
   final String styleString;
@@ -64,6 +68,7 @@ class _MapContent extends ConsumerWidget {
   final double initZoom;
   final EewDisplayMode displayMode;
   final bool isSimulation;
+  final List<EewForecastRegionInfo>? additionalRegions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -84,7 +89,11 @@ class _MapContent extends ConsumerWidget {
     return MapLibreMap(
       options: mapOptions,
       children: [
-        EewForecastRegionLayer(eew: selectedEew, displayMode: displayMode),
+        EewForecastRegionLayer(
+          eew: selectedEew,
+          displayMode: displayMode,
+          additionalRegions: additionalRegions,
+        ),
         if (isSimulation)
           const EewSimulationPsWaveLayer()
         else
