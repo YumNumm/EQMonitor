@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
+import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
@@ -146,6 +147,34 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('KyoshinMonitor'),
               leading: const Icon(Icons.list),
               onTap: () async => const DebugKyoshinMonitorRoute().push(context),
+            ),
+            Builder(
+              builder: (context) {
+                final isAllowed = ref.watch(
+                  estimatedIntensityOnEewReplayAllowedProvider,
+                );
+                return ListTile(
+                  title: const Text('EEW 推定震度表示'),
+                  subtitle: Text(
+                    'EEW詳細画面で距離減衰式による推定震度を表示',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  leading: const Icon(Icons.layers),
+                  trailing: AppSwitch(
+                    value: isAllowed,
+                    onChanged: (value) async => ref
+                        .read(
+                          estimatedIntensityOnEewReplayAllowedProvider.notifier,
+                        )
+                        .save(isEnabled: value),
+                  ),
+                  onTap: () async => ref
+                      .read(
+                        estimatedIntensityOnEewReplayAllowedProvider.notifier,
+                      )
+                      .save(isEnabled: !isAllowed),
+                );
+              },
             ),
             ListTile(
               title: const Text('EEW Card'),
@@ -675,17 +704,17 @@ class _StartApiDebugContent extends ConsumerWidget {
           value: data.app.version.latest?.showWhatsNew ?? false,
           onChanged: data.app.version.latest != null
               ? (v) => _override(
-                    ref,
-                    data.copyWith(
-                      app: data.app.copyWith(
-                        version: data.app.version.copyWith(
-                          latest: data.app.version.latest!.copyWith(
-                            showWhatsNew: v,
-                          ),
+                  ref,
+                  data.copyWith(
+                    app: data.app.copyWith(
+                      version: data.app.version.copyWith(
+                        latest: data.app.version.latest!.copyWith(
+                          showWhatsNew: v,
                         ),
                       ),
                     ),
-                  )
+                  ),
+                )
               : null,
         ),
         ListTile(
