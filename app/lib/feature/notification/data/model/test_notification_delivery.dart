@@ -60,9 +60,9 @@ extension TestNotificationFrameworkDisplay on TestNotificationFramework {
 
 extension TestNotificationKindDisplay on TestNotificationKind {
   String get displayLabel => switch (this) {
-    .silent => 'Silent',
-    .normal => 'Normal',
-    .critical => 'Critical',
+    .silent => 'サイレント',
+    .normal => '通常',
+    .critical => 'クリティカル',
   };
 }
 
