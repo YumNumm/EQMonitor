@@ -23,6 +23,7 @@ class _EewApiClient implements EewApiClient {
 
   @override
   Future<HttpResponse<EewListResponse>> getV2Eew({
+    List<TelegramStatus> statuses = const [.normal],
     String? limit,
     String? cursor,
     String? magnitudeLte,
@@ -37,6 +38,7 @@ class _EewApiClient implements EewApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
       r'limit': limit,
       r'cursor': cursor,
       r'magnitudeLte': magnitudeLte,

@@ -87,29 +87,26 @@ class EewForecastRegionLayer extends HookConsumerWidget {
         }
 
         unawaited(() async {
-          await _intensityLevels
-              .map((intensity) {
-                final color =
-                    colorModel.fromJmaIntensity(intensity).background;
-                final codes = regionMaxIntensities
-                    .where((r) => r.intensity == intensity)
-                    .map((r) => r.code)
-                    .toList();
-                return styleController.addLayer(
-                  FillStyleLayer(
-                    id: intensity._detailLayerId,
-                    sourceId: _sourceId,
-                    sourceLayerId: _sourceLayerId,
-                    filter: buildEewAreaCodeFilter(codes),
-                    paint: {
-                      'fill-color': color.toHexString(),
-                      'fill-opacity': 0.7,
-                    },
-                  ),
-                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
-                );
-              })
-              .wait;
+          await _intensityLevels.map((intensity) {
+            final color = colorModel.fromJmaIntensity(intensity).background;
+            final codes = regionMaxIntensities
+                .where((r) => r.intensity == intensity)
+                .map((r) => r.code)
+                .toList();
+            return styleController.addLayer(
+              FillStyleLayer(
+                id: intensity._detailLayerId,
+                sourceId: _sourceId,
+                sourceLayerId: _sourceLayerId,
+                filter: buildEewAreaCodeFilter(codes),
+                paint: {
+                  'fill-color': color.toHexString(),
+                  'fill-opacity': 0.7,
+                },
+              ),
+              belowLayerId: BaseLayer.areaForecastLocalELine.name,
+            );
+          }).wait;
           isIntensityInitialized.value = true;
           await _updateIntensityFilters(
             styleController: styleController,
@@ -120,17 +117,15 @@ class EewForecastRegionLayer extends HookConsumerWidget {
         return () {
           isIntensityInitialized.value = false;
           unawaited(
-            _intensityLevels
-                .map((intensity) async {
-                  try {
-                    await styleController.removeLayer(
-                      intensity._detailLayerId,
-                    );
-                  } on Exception {
-                    // ignore
-                  }
-                })
-                .wait,
+            _intensityLevels.map((intensity) async {
+              try {
+                await styleController.removeLayer(
+                  intensity._detailLayerId,
+                );
+              } on Exception {
+                // ignore
+              }
+            }).wait,
           );
         };
       },
@@ -230,18 +225,16 @@ Future<void> _updateIntensityFilters({
   required StyleController styleController,
   required List<EewForecastRegionInfo> regionMaxIntensities,
 }) async {
-  await EewForecastRegionLayer._intensityLevels
-      .map((intensity) {
-        final codes = regionMaxIntensities
-            .where((r) => r.intensity == intensity)
-            .map((r) => r.code)
-            .toList();
-        return styleController.updateFilter(
-          id: intensity._detailLayerId,
-          filter: buildEewAreaCodeFilter(codes),
-        );
-      })
-      .wait;
+  await EewForecastRegionLayer._intensityLevels.map((intensity) {
+    final codes = regionMaxIntensities
+        .where((r) => r.intensity == intensity)
+        .map((r) => r.code)
+        .toList();
+    return styleController.updateFilter(
+      id: intensity._detailLayerId,
+      filter: buildEewAreaCodeFilter(codes),
+    );
+  }).wait;
 }
 
 extension on JmaIntensity {

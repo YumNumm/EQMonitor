@@ -10,18 +10,32 @@ part of 'highest_intensity_response.dart';
 
 _HighestIntensityResponse _$HighestIntensityResponseFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('_HighestIntensityResponse', json, ($checkedConvert) {
-  final val = _HighestIntensityResponse(
-    items: $checkedConvert(
-      'items',
-      (v) => (v as List<dynamic>)
-          .map((e) => HighestIntensityItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    ),
-  );
-  return val;
-});
+) => $checkedCreate(
+  '_HighestIntensityResponse',
+  json,
+  ($checkedConvert) {
+    final val = _HighestIntensityResponse(
+      aggregatedAt: $checkedConvert(
+        'aggregated_at',
+        (v) => DateTime.parse(v as String),
+      ),
+      items: $checkedConvert(
+        'items',
+        (v) => (v as List<dynamic>)
+            .map(
+              (e) => HighestIntensityItem.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
+      ),
+    );
+    return val;
+  },
+  fieldKeyMap: const {'aggregatedAt': 'aggregated_at'},
+);
 
 Map<String, dynamic> _$HighestIntensityResponseToJson(
   _HighestIntensityResponse instance,
-) => <String, dynamic>{'items': instance.items};
+) => <String, dynamic>{
+  'aggregated_at': instance.aggregatedAt.toIso8601String(),
+  'items': instance.items,
+};

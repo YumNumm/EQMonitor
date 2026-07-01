@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$JmaCodeTableParameterCodeTables {
 
-@JsonKey(name: 'area_forecast_local_eew') List<JmaCodeTableAreaForecastLocalEewItem> get areaForecastLocalEew;@JsonKey(name: 'area_information_prefecture_earthquake') List<JmaCodeTableItem> get areaInformationPrefectureEarthquake;@JsonKey(name: 'area_epicenter') List<JmaCodeTableItem> get areaEpicenter;@JsonKey(name: 'area_epicenter_abbreviation') List<JmaCodeTableItem> get areaEpicenterAbbreviation;@JsonKey(name: 'area_epicenter_detail') List<JmaCodeTableItem> get areaEpicenterDetail;
+@JsonKey(name: 'area_forecast_local_eew') List<JmaCodeTableAreaForecastLocalEewItem> get areaForecastLocalEew;@JsonKey(name: 'area_information_prefecture_earthquake') List<JmaCodeTableItem> get areaInformationPrefectureEarthquake;@JsonKey(name: 'area_information_city') List<JmaCodeTableAreaInformationCityItem> get areaInformationCity;@JsonKey(name: 'area_epicenter') List<JmaCodeTableItem> get areaEpicenter;@JsonKey(name: 'area_epicenter_abbreviation') List<JmaCodeTableItem> get areaEpicenterAbbreviation;@JsonKey(name: 'area_epicenter_detail') List<JmaCodeTableItem> get areaEpicenterDetail;
 /// Create a copy of JmaCodeTableParameterCodeTables
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $JmaCodeTableParameterCodeTablesCopyWith<JmaCodeTableParameterCodeTables> get co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JmaCodeTableParameterCodeTables&&const DeepCollectionEquality().equals(other.areaForecastLocalEew, areaForecastLocalEew)&&const DeepCollectionEquality().equals(other.areaInformationPrefectureEarthquake, areaInformationPrefectureEarthquake)&&const DeepCollectionEquality().equals(other.areaEpicenter, areaEpicenter)&&const DeepCollectionEquality().equals(other.areaEpicenterAbbreviation, areaEpicenterAbbreviation)&&const DeepCollectionEquality().equals(other.areaEpicenterDetail, areaEpicenterDetail));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JmaCodeTableParameterCodeTables&&const DeepCollectionEquality().equals(other.areaForecastLocalEew, areaForecastLocalEew)&&const DeepCollectionEquality().equals(other.areaInformationPrefectureEarthquake, areaInformationPrefectureEarthquake)&&const DeepCollectionEquality().equals(other.areaInformationCity, areaInformationCity)&&const DeepCollectionEquality().equals(other.areaEpicenter, areaEpicenter)&&const DeepCollectionEquality().equals(other.areaEpicenterAbbreviation, areaEpicenterAbbreviation)&&const DeepCollectionEquality().equals(other.areaEpicenterDetail, areaEpicenterDetail));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(areaForecastLocalEew),const DeepCollectionEquality().hash(areaInformationPrefectureEarthquake),const DeepCollectionEquality().hash(areaEpicenter),const DeepCollectionEquality().hash(areaEpicenterAbbreviation),const DeepCollectionEquality().hash(areaEpicenterDetail));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(areaForecastLocalEew),const DeepCollectionEquality().hash(areaInformationPrefectureEarthquake),const DeepCollectionEquality().hash(areaInformationCity),const DeepCollectionEquality().hash(areaEpicenter),const DeepCollectionEquality().hash(areaEpicenterAbbreviation),const DeepCollectionEquality().hash(areaEpicenterDetail));
 
 @override
 String toString() {
-  return 'JmaCodeTableParameterCodeTables(areaForecastLocalEew: $areaForecastLocalEew, areaInformationPrefectureEarthquake: $areaInformationPrefectureEarthquake, areaEpicenter: $areaEpicenter, areaEpicenterAbbreviation: $areaEpicenterAbbreviation, areaEpicenterDetail: $areaEpicenterDetail)';
+  return 'JmaCodeTableParameterCodeTables(areaForecastLocalEew: $areaForecastLocalEew, areaInformationPrefectureEarthquake: $areaInformationPrefectureEarthquake, areaInformationCity: $areaInformationCity, areaEpicenter: $areaEpicenter, areaEpicenterAbbreviation: $areaEpicenterAbbreviation, areaEpicenterDetail: $areaEpicenterDetail)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $JmaCodeTableParameterCodeTablesCopyWith<$Res>  {
   factory $JmaCodeTableParameterCodeTablesCopyWith(JmaCodeTableParameterCodeTables value, $Res Function(JmaCodeTableParameterCodeTables) _then) = _$JmaCodeTableParameterCodeTablesCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'area_forecast_local_eew') List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew,@JsonKey(name: 'area_information_prefecture_earthquake') List<JmaCodeTableItem> areaInformationPrefectureEarthquake,@JsonKey(name: 'area_epicenter') List<JmaCodeTableItem> areaEpicenter,@JsonKey(name: 'area_epicenter_abbreviation') List<JmaCodeTableItem> areaEpicenterAbbreviation,@JsonKey(name: 'area_epicenter_detail') List<JmaCodeTableItem> areaEpicenterDetail
+@JsonKey(name: 'area_forecast_local_eew') List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew,@JsonKey(name: 'area_information_prefecture_earthquake') List<JmaCodeTableItem> areaInformationPrefectureEarthquake,@JsonKey(name: 'area_information_city') List<JmaCodeTableAreaInformationCityItem> areaInformationCity,@JsonKey(name: 'area_epicenter') List<JmaCodeTableItem> areaEpicenter,@JsonKey(name: 'area_epicenter_abbreviation') List<JmaCodeTableItem> areaEpicenterAbbreviation,@JsonKey(name: 'area_epicenter_detail') List<JmaCodeTableItem> areaEpicenterDetail
 });
 
 
@@ -65,11 +65,12 @@ class _$JmaCodeTableParameterCodeTablesCopyWithImpl<$Res>
 
 /// Create a copy of JmaCodeTableParameterCodeTables
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? areaForecastLocalEew = null,Object? areaInformationPrefectureEarthquake = null,Object? areaEpicenter = null,Object? areaEpicenterAbbreviation = null,Object? areaEpicenterDetail = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? areaForecastLocalEew = null,Object? areaInformationPrefectureEarthquake = null,Object? areaInformationCity = null,Object? areaEpicenter = null,Object? areaEpicenterAbbreviation = null,Object? areaEpicenterDetail = null,}) {
   return _then(_self.copyWith(
 areaForecastLocalEew: null == areaForecastLocalEew ? _self.areaForecastLocalEew : areaForecastLocalEew // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableAreaForecastLocalEewItem>,areaInformationPrefectureEarthquake: null == areaInformationPrefectureEarthquake ? _self.areaInformationPrefectureEarthquake : areaInformationPrefectureEarthquake // ignore: cast_nullable_to_non_nullable
-as List<JmaCodeTableItem>,areaEpicenter: null == areaEpicenter ? _self.areaEpicenter : areaEpicenter // ignore: cast_nullable_to_non_nullable
+as List<JmaCodeTableItem>,areaInformationCity: null == areaInformationCity ? _self.areaInformationCity : areaInformationCity // ignore: cast_nullable_to_non_nullable
+as List<JmaCodeTableAreaInformationCityItem>,areaEpicenter: null == areaEpicenter ? _self.areaEpicenter : areaEpicenter // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableItem>,areaEpicenterAbbreviation: null == areaEpicenterAbbreviation ? _self.areaEpicenterAbbreviation : areaEpicenterAbbreviation // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableItem>,areaEpicenterDetail: null == areaEpicenterDetail ? _self.areaEpicenterDetail : areaEpicenterDetail // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableItem>,
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'area_forecast_local_eew')  List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew, @JsonKey(name: 'area_information_prefecture_earthquake')  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, @JsonKey(name: 'area_epicenter')  List<JmaCodeTableItem> areaEpicenter, @JsonKey(name: 'area_epicenter_abbreviation')  List<JmaCodeTableItem> areaEpicenterAbbreviation, @JsonKey(name: 'area_epicenter_detail')  List<JmaCodeTableItem> areaEpicenterDetail)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'area_forecast_local_eew')  List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew, @JsonKey(name: 'area_information_prefecture_earthquake')  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, @JsonKey(name: 'area_information_city')  List<JmaCodeTableAreaInformationCityItem> areaInformationCity, @JsonKey(name: 'area_epicenter')  List<JmaCodeTableItem> areaEpicenter, @JsonKey(name: 'area_epicenter_abbreviation')  List<JmaCodeTableItem> areaEpicenterAbbreviation, @JsonKey(name: 'area_epicenter_detail')  List<JmaCodeTableItem> areaEpicenterDetail)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _JmaCodeTableParameterCodeTables() when $default != null:
-return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthquake,_that.areaEpicenter,_that.areaEpicenterAbbreviation,_that.areaEpicenterDetail);case _:
+return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthquake,_that.areaInformationCity,_that.areaEpicenter,_that.areaEpicenterAbbreviation,_that.areaEpicenterDetail);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthq
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'area_forecast_local_eew')  List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew, @JsonKey(name: 'area_information_prefecture_earthquake')  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, @JsonKey(name: 'area_epicenter')  List<JmaCodeTableItem> areaEpicenter, @JsonKey(name: 'area_epicenter_abbreviation')  List<JmaCodeTableItem> areaEpicenterAbbreviation, @JsonKey(name: 'area_epicenter_detail')  List<JmaCodeTableItem> areaEpicenterDetail)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'area_forecast_local_eew')  List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew, @JsonKey(name: 'area_information_prefecture_earthquake')  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, @JsonKey(name: 'area_information_city')  List<JmaCodeTableAreaInformationCityItem> areaInformationCity, @JsonKey(name: 'area_epicenter')  List<JmaCodeTableItem> areaEpicenter, @JsonKey(name: 'area_epicenter_abbreviation')  List<JmaCodeTableItem> areaEpicenterAbbreviation, @JsonKey(name: 'area_epicenter_detail')  List<JmaCodeTableItem> areaEpicenterDetail)  $default,) {final _that = this;
 switch (_that) {
 case _JmaCodeTableParameterCodeTables():
-return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthquake,_that.areaEpicenter,_that.areaEpicenterAbbreviation,_that.areaEpicenterDetail);case _:
+return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthquake,_that.areaInformationCity,_that.areaEpicenter,_that.areaEpicenterAbbreviation,_that.areaEpicenterDetail);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthq
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'area_forecast_local_eew')  List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew, @JsonKey(name: 'area_information_prefecture_earthquake')  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, @JsonKey(name: 'area_epicenter')  List<JmaCodeTableItem> areaEpicenter, @JsonKey(name: 'area_epicenter_abbreviation')  List<JmaCodeTableItem> areaEpicenterAbbreviation, @JsonKey(name: 'area_epicenter_detail')  List<JmaCodeTableItem> areaEpicenterDetail)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'area_forecast_local_eew')  List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew, @JsonKey(name: 'area_information_prefecture_earthquake')  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, @JsonKey(name: 'area_information_city')  List<JmaCodeTableAreaInformationCityItem> areaInformationCity, @JsonKey(name: 'area_epicenter')  List<JmaCodeTableItem> areaEpicenter, @JsonKey(name: 'area_epicenter_abbreviation')  List<JmaCodeTableItem> areaEpicenterAbbreviation, @JsonKey(name: 'area_epicenter_detail')  List<JmaCodeTableItem> areaEpicenterDetail)?  $default,) {final _that = this;
 switch (_that) {
 case _JmaCodeTableParameterCodeTables() when $default != null:
-return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthquake,_that.areaEpicenter,_that.areaEpicenterAbbreviation,_that.areaEpicenterDetail);case _:
+return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthquake,_that.areaInformationCity,_that.areaEpicenter,_that.areaEpicenterAbbreviation,_that.areaEpicenterDetail);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthq
 @JsonSerializable()
 
 class _JmaCodeTableParameterCodeTables implements JmaCodeTableParameterCodeTables {
-  const _JmaCodeTableParameterCodeTables({@JsonKey(name: 'area_forecast_local_eew') required final  List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew, @JsonKey(name: 'area_information_prefecture_earthquake') required final  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, @JsonKey(name: 'area_epicenter') required final  List<JmaCodeTableItem> areaEpicenter, @JsonKey(name: 'area_epicenter_abbreviation') required final  List<JmaCodeTableItem> areaEpicenterAbbreviation, @JsonKey(name: 'area_epicenter_detail') required final  List<JmaCodeTableItem> areaEpicenterDetail}): _areaForecastLocalEew = areaForecastLocalEew,_areaInformationPrefectureEarthquake = areaInformationPrefectureEarthquake,_areaEpicenter = areaEpicenter,_areaEpicenterAbbreviation = areaEpicenterAbbreviation,_areaEpicenterDetail = areaEpicenterDetail;
+  const _JmaCodeTableParameterCodeTables({@JsonKey(name: 'area_forecast_local_eew') required final  List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew, @JsonKey(name: 'area_information_prefecture_earthquake') required final  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, @JsonKey(name: 'area_information_city') required final  List<JmaCodeTableAreaInformationCityItem> areaInformationCity, @JsonKey(name: 'area_epicenter') required final  List<JmaCodeTableItem> areaEpicenter, @JsonKey(name: 'area_epicenter_abbreviation') required final  List<JmaCodeTableItem> areaEpicenterAbbreviation, @JsonKey(name: 'area_epicenter_detail') required final  List<JmaCodeTableItem> areaEpicenterDetail}): _areaForecastLocalEew = areaForecastLocalEew,_areaInformationPrefectureEarthquake = areaInformationPrefectureEarthquake,_areaInformationCity = areaInformationCity,_areaEpicenter = areaEpicenter,_areaEpicenterAbbreviation = areaEpicenterAbbreviation,_areaEpicenterDetail = areaEpicenterDetail;
   factory _JmaCodeTableParameterCodeTables.fromJson(Map<String, dynamic> json) => _$JmaCodeTableParameterCodeTablesFromJson(json);
 
  final  List<JmaCodeTableAreaForecastLocalEewItem> _areaForecastLocalEew;
@@ -228,6 +229,13 @@ class _JmaCodeTableParameterCodeTables implements JmaCodeTableParameterCodeTable
   if (_areaInformationPrefectureEarthquake is EqualUnmodifiableListView) return _areaInformationPrefectureEarthquake;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_areaInformationPrefectureEarthquake);
+}
+
+ final  List<JmaCodeTableAreaInformationCityItem> _areaInformationCity;
+@override@JsonKey(name: 'area_information_city') List<JmaCodeTableAreaInformationCityItem> get areaInformationCity {
+  if (_areaInformationCity is EqualUnmodifiableListView) return _areaInformationCity;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_areaInformationCity);
 }
 
  final  List<JmaCodeTableItem> _areaEpicenter;
@@ -265,16 +273,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JmaCodeTableParameterCodeTables&&const DeepCollectionEquality().equals(other._areaForecastLocalEew, _areaForecastLocalEew)&&const DeepCollectionEquality().equals(other._areaInformationPrefectureEarthquake, _areaInformationPrefectureEarthquake)&&const DeepCollectionEquality().equals(other._areaEpicenter, _areaEpicenter)&&const DeepCollectionEquality().equals(other._areaEpicenterAbbreviation, _areaEpicenterAbbreviation)&&const DeepCollectionEquality().equals(other._areaEpicenterDetail, _areaEpicenterDetail));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JmaCodeTableParameterCodeTables&&const DeepCollectionEquality().equals(other._areaForecastLocalEew, _areaForecastLocalEew)&&const DeepCollectionEquality().equals(other._areaInformationPrefectureEarthquake, _areaInformationPrefectureEarthquake)&&const DeepCollectionEquality().equals(other._areaInformationCity, _areaInformationCity)&&const DeepCollectionEquality().equals(other._areaEpicenter, _areaEpicenter)&&const DeepCollectionEquality().equals(other._areaEpicenterAbbreviation, _areaEpicenterAbbreviation)&&const DeepCollectionEquality().equals(other._areaEpicenterDetail, _areaEpicenterDetail));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_areaForecastLocalEew),const DeepCollectionEquality().hash(_areaInformationPrefectureEarthquake),const DeepCollectionEquality().hash(_areaEpicenter),const DeepCollectionEquality().hash(_areaEpicenterAbbreviation),const DeepCollectionEquality().hash(_areaEpicenterDetail));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_areaForecastLocalEew),const DeepCollectionEquality().hash(_areaInformationPrefectureEarthquake),const DeepCollectionEquality().hash(_areaInformationCity),const DeepCollectionEquality().hash(_areaEpicenter),const DeepCollectionEquality().hash(_areaEpicenterAbbreviation),const DeepCollectionEquality().hash(_areaEpicenterDetail));
 
 @override
 String toString() {
-  return 'JmaCodeTableParameterCodeTables(areaForecastLocalEew: $areaForecastLocalEew, areaInformationPrefectureEarthquake: $areaInformationPrefectureEarthquake, areaEpicenter: $areaEpicenter, areaEpicenterAbbreviation: $areaEpicenterAbbreviation, areaEpicenterDetail: $areaEpicenterDetail)';
+  return 'JmaCodeTableParameterCodeTables(areaForecastLocalEew: $areaForecastLocalEew, areaInformationPrefectureEarthquake: $areaInformationPrefectureEarthquake, areaInformationCity: $areaInformationCity, areaEpicenter: $areaEpicenter, areaEpicenterAbbreviation: $areaEpicenterAbbreviation, areaEpicenterDetail: $areaEpicenterDetail)';
 }
 
 
@@ -285,7 +293,7 @@ abstract mixin class _$JmaCodeTableParameterCodeTablesCopyWith<$Res> implements 
   factory _$JmaCodeTableParameterCodeTablesCopyWith(_JmaCodeTableParameterCodeTables value, $Res Function(_JmaCodeTableParameterCodeTables) _then) = __$JmaCodeTableParameterCodeTablesCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'area_forecast_local_eew') List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew,@JsonKey(name: 'area_information_prefecture_earthquake') List<JmaCodeTableItem> areaInformationPrefectureEarthquake,@JsonKey(name: 'area_epicenter') List<JmaCodeTableItem> areaEpicenter,@JsonKey(name: 'area_epicenter_abbreviation') List<JmaCodeTableItem> areaEpicenterAbbreviation,@JsonKey(name: 'area_epicenter_detail') List<JmaCodeTableItem> areaEpicenterDetail
+@JsonKey(name: 'area_forecast_local_eew') List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew,@JsonKey(name: 'area_information_prefecture_earthquake') List<JmaCodeTableItem> areaInformationPrefectureEarthquake,@JsonKey(name: 'area_information_city') List<JmaCodeTableAreaInformationCityItem> areaInformationCity,@JsonKey(name: 'area_epicenter') List<JmaCodeTableItem> areaEpicenter,@JsonKey(name: 'area_epicenter_abbreviation') List<JmaCodeTableItem> areaEpicenterAbbreviation,@JsonKey(name: 'area_epicenter_detail') List<JmaCodeTableItem> areaEpicenterDetail
 });
 
 
@@ -302,11 +310,12 @@ class __$JmaCodeTableParameterCodeTablesCopyWithImpl<$Res>
 
 /// Create a copy of JmaCodeTableParameterCodeTables
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? areaForecastLocalEew = null,Object? areaInformationPrefectureEarthquake = null,Object? areaEpicenter = null,Object? areaEpicenterAbbreviation = null,Object? areaEpicenterDetail = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? areaForecastLocalEew = null,Object? areaInformationPrefectureEarthquake = null,Object? areaInformationCity = null,Object? areaEpicenter = null,Object? areaEpicenterAbbreviation = null,Object? areaEpicenterDetail = null,}) {
   return _then(_JmaCodeTableParameterCodeTables(
 areaForecastLocalEew: null == areaForecastLocalEew ? _self._areaForecastLocalEew : areaForecastLocalEew // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableAreaForecastLocalEewItem>,areaInformationPrefectureEarthquake: null == areaInformationPrefectureEarthquake ? _self._areaInformationPrefectureEarthquake : areaInformationPrefectureEarthquake // ignore: cast_nullable_to_non_nullable
-as List<JmaCodeTableItem>,areaEpicenter: null == areaEpicenter ? _self._areaEpicenter : areaEpicenter // ignore: cast_nullable_to_non_nullable
+as List<JmaCodeTableItem>,areaInformationCity: null == areaInformationCity ? _self._areaInformationCity : areaInformationCity // ignore: cast_nullable_to_non_nullable
+as List<JmaCodeTableAreaInformationCityItem>,areaEpicenter: null == areaEpicenter ? _self._areaEpicenter : areaEpicenter // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableItem>,areaEpicenterAbbreviation: null == areaEpicenterAbbreviation ? _self._areaEpicenterAbbreviation : areaEpicenterAbbreviation // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableItem>,areaEpicenterDetail: null == areaEpicenterDetail ? _self._areaEpicenterDetail : areaEpicenterDetail // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableItem>,

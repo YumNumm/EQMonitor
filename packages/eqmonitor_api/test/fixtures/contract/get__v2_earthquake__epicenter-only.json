@@ -24,9 +24,7 @@
         }
       },
       "datasource": "JMA_DISASTER_INFORMATION_XML",
-      "telegram_types": [
-        "VXSE52"
-      ],
+      "telegram_types": ["VXSE52"],
       "earthquake_type": "NORMAL"
     }
   ]

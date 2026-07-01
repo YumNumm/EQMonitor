@@ -27,6 +27,7 @@ class _FeedApiClient implements FeedApiClient {
     String? important,
     String? locale = 'ja',
     String? limit = '20',
+    List<TelegramStatus> statuses = const [.normal],
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -34,6 +35,7 @@ class _FeedApiClient implements FeedApiClient {
       r'important': important,
       r'locale': locale,
       r'limit': limit,
+      r'statuses': statuses,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};

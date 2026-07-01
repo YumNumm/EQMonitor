@@ -11,14 +11,19 @@ part of 'required_version.dart';
 _RequiredVersion _$RequiredVersionFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_RequiredVersion', json, ($checkedConvert) {
       final val = _RequiredVersion(
-        version: $checkedConvert('version', (v) => v as String),
+        version: $checkedConvert('version', (v) => v as String?),
+        buildNumber: $checkedConvert(
+          'build_number',
+          (v) => (v as num?)?.toInt(),
+        ),
         message: $checkedConvert('message', (v) => v as String?),
       );
       return val;
-    });
+    }, fieldKeyMap: const {'buildNumber': 'build_number'});
 
 Map<String, dynamic> _$RequiredVersionToJson(_RequiredVersion instance) =>
     <String, dynamic>{
-      'version': instance.version,
+      'version': ?instance.version,
+      'build_number': ?instance.buildNumber,
       'message': ?instance.message,
     };

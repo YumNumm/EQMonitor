@@ -29,6 +29,9 @@ abstract class EewTelegramItem with _$EewTelegramItem {
     EewAccuracyInfo? accuracy,
   }) = _EewTelegramItem;
   const EewTelegramItem._();
+
+  /// PLUM法・レベル法・１点法の震源は低精度アイコンで表示する。
+  bool get isLowPreciseHypocenter => isPlum || accuracy == null || accuracy?.epicenter == 1;
 }
 
 @Freezed()
