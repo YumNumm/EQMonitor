@@ -10,9 +10,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EewHypocenterLayer extends HookConsumerWidget {
-  const EewHypocenterLayer({required this.eews, super.key});
+  const EewHypocenterLayer({
+    required this.eews,
+    this.enableBlink = false,
+    super.key,
+  });
 
   final List<EewTelegramItem> eews;
+  final bool enableBlink;
 
   static const ({String lowPrecise, String normal}) sourceId = (
     normal: 'eew-hypocenter-normal',
@@ -49,6 +54,27 @@ class EewHypocenterLayer extends HookConsumerWidget {
     final lowPreciseEews = showEews.where((eew) => eew.isPlum).toList();
 
     final isInitialized = useRef(false);
+
+    // 点滅制御
+    final isVisible = useState(true);
+    useEffect(
+      () {
+        if (!enableBlink) {
+          isVisible.value = true;
+          return null;
+        }
+        final timer = Timer.periodic(const Duration(milliseconds: 500), (_) {
+          isVisible.value = !isVisible.value;
+        });
+        return timer.cancel;
+      },
+      [enableBlink],
+    );
+
+    final displayNormalEews =
+        isVisible.value ? normalEews : <EewTelegramItem>[];
+    final displayLowPreciseEews =
+        isVisible.value ? lowPreciseEews : <EewTelegramItem>[];
 
     useEffect(
       () {
@@ -132,20 +158,21 @@ class EewHypocenterLayer extends HookConsumerWidget {
             ),
           ).wait;
           isInitialized.value = true;
-          // 初期化完了後、既に届いていた EEW データをソースに反映する
           await (
             styleController.updateGeoJsonSource(
               id: sourceId.normal,
               data: jsonEncode({
                 'type': 'FeatureCollection',
-                'features': normalEews.map(_convertEew).toList(),
+                'features':
+                    displayNormalEews.map(_convertEew).toList(),
               }),
             ),
             styleController.updateGeoJsonSource(
               id: sourceId.lowPrecise,
               data: jsonEncode({
                 'type': 'FeatureCollection',
-                'features': lowPreciseEews.map(_convertEew).toList(),
+                'features':
+                    displayLowPreciseEews.map(_convertEew).toList(),
               }),
             ),
           ).wait;
@@ -176,14 +203,16 @@ class EewHypocenterLayer extends HookConsumerWidget {
                   id: sourceId.normal,
                   data: jsonEncode({
                     'type': 'FeatureCollection',
-                    'features': normalEews.map(_convertEew).toList(),
+                    'features':
+                        displayNormalEews.map(_convertEew).toList(),
                   }),
                 ),
                 styleController.updateGeoJsonSource(
                   id: sourceId.lowPrecise,
                   data: jsonEncode({
                     'type': 'FeatureCollection',
-                    'features': lowPreciseEews.map(_convertEew).toList(),
+                    'features':
+                        displayLowPreciseEews.map(_convertEew).toList(),
                   }),
                 ),
               ).wait;
@@ -195,7 +224,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
 
         return null;
       },
-      [styleController, normalEews, lowPreciseEews],
+      [styleController, displayNormalEews, displayLowPreciseEews],
     );
 
     return const SizedBox.shrink();

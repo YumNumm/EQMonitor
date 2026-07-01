@@ -33,6 +33,17 @@ extension EarthquakeTelegramTypeApiExtension on api.EarthquakeTelegramType {
   };
 }
 
+extension TelegramTypeApiEarthquakeExtension on api.TelegramType {
+  EarthquakeTelegramType? get toEarthquakeTelegramTypeOrNull => switch (this) {
+    .vxse51 => .vxse51,
+    .vxse52 => .vxse52,
+    .vxse53 => .vxse53,
+    .vxse61 => .vxse61,
+    .vxse62 => .vxse62,
+    _ => null,
+  };
+}
+
 extension EarthquakeTelegramTypeToApiExtension on EarthquakeTelegramType {
   api.EarthquakeTelegramType get toApiEarthquakeTelegramType => switch (this) {
     .vxse51 => .vxse51,

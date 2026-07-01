@@ -14,6 +14,7 @@ import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
+import 'package:eqmonitor/feature/feed/ui/page/feed_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/intensity_history_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.dart';
@@ -850,6 +851,15 @@ class ChangelogRoute extends GoRouteData with $ChangelogRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ChangelogPage();
+}
+
+@TypedGoRoute<FeedRoute>(path: '/feed')
+class FeedRoute extends GoRouteData with $FeedRoute {
+  const FeedRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const FeedPage();
 }
 
 @TypedGoRoute<TsunamiDetailsRoute>(path: '/tsunami/:tsunamiId')

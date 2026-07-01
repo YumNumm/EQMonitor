@@ -24,10 +24,12 @@ enum SharedPreferencesKey {
   lastFcmTokenHash('last_fcm_token_hash'),
   lastApnsTokenHash('last_apns_token_hash'),
   lastApnsPushToStartTokenHash('last_apns_push_to_start_token_hash'),
+  deviceMigratedFromLegacy('device_migrated_from_legacy'),
   adsOptOut('ads_opt_out'),
   autoReturnToRealtime('auto_return_to_realtime'),
   earthquakeHistoryMapLayerParameter('earthquake_history_map_layer_parameter'),
   homeMapLabelParameter('home_map_label_parameter'),
+  estimatedIntensityNoticeShown('estimated_intensity_notice_shown'),
   ;
 
   const SharedPreferencesKey(this.key);

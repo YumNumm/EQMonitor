@@ -34,6 +34,12 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
         'data_source',
         (v) => $enumDecode(_$EarthquakeDataSourceEnumMap, v),
       ),
+      telegramTypes: $checkedConvert(
+        'telegram_types',
+        (v) => (v as List<dynamic>)
+            .map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
+            .toList(),
+      ),
       hypocenter: $checkedConvert(
         'hypocenter',
         (v) => v == null
@@ -59,6 +65,7 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
     'originTimePrecision': 'origin_time_precision',
     'arrivalTime': 'arrival_time',
     'dataSource': 'data_source',
+    'telegramTypes': 'telegram_types',
     'estimatedIntensityTileUrl': 'estimated_intensity_tile_url',
   },
 );
@@ -72,6 +79,9 @@ Map<String, dynamic> _$EarthquakeToJson(_Earthquake instance) =>
           _$OriginTimePrecisionEnumMap[instance.originTimePrecision]!,
       'arrival_time': instance.arrivalTime?.toIso8601String(),
       'data_source': _$EarthquakeDataSourceEnumMap[instance.dataSource]!,
+      'telegram_types': instance.telegramTypes
+          .map((e) => _$EarthquakeTelegramTypeEnumMap[e]!)
+          .toList(),
       'hypocenter': instance.hypocenter,
       'intensity': instance.intensity,
       'estimated_intensity_tile_url': instance.estimatedIntensityTileUrl,
@@ -96,4 +106,14 @@ const _$EarthquakeDataSourceEnumMap = {
   EarthquakeDataSource.jmaIntensityDatabase: 'JMA_INTENSITY_DATABASE',
   EarthquakeDataSource.jmaDisasterInformationXml:
       'JMA_DISASTER_INFORMATION_XML',
+};
+
+const _$EarthquakeTelegramTypeEnumMap = {
+  EarthquakeTelegramType.vxse51: 'vxse51',
+  EarthquakeTelegramType.vxse52: 'vxse52',
+  EarthquakeTelegramType.vxse53: 'vxse53',
+  EarthquakeTelegramType.vxse61: 'vxse61',
+  EarthquakeTelegramType.vxse62: 'vxse62',
+  EarthquakeTelegramType.vxse45Forecast: 'vxse45Forecast',
+  EarthquakeTelegramType.vxse45Warning: 'vxse45Warning',
 };

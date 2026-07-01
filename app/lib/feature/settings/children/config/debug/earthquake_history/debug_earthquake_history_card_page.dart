@@ -301,6 +301,7 @@ class _DebugBody extends HookWidget {
       originTimePrecision: OriginTimePrecision.second,
       arrivalTime: null,
       dataSource: EarthquakeDataSource.jmaDisasterInformationXml,
+      telegramTypes: const [],
       hypocenter: const EarthquakeHypocenter(
         code: '330',
         name: '東京都',

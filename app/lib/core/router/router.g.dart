@@ -23,6 +23,7 @@ List<RouteBase> get $appRoutes => [
   $homeRoute,
   $talkerRoute,
   $settingsRoute,
+  $feedRoute,
   $tsunamiDetailsRoute,
   $paywallRoute,
   $subscriptionSettingsRoute,
@@ -1663,6 +1664,29 @@ bool _$boolConverter(String value) {
     default:
       throw UnsupportedError('Cannot convert "$value" into a bool.');
   }
+}
+
+RouteBase get $feedRoute =>
+    GoRouteData.$route(path: '/feed', factory: $FeedRoute._fromState);
+
+mixin $FeedRoute on GoRouteData {
+  static FeedRoute _fromState(GoRouterState state) => const FeedRoute();
+
+  @override
+  String get location => GoRouteData.$location('/feed');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $tsunamiDetailsRoute => GoRouteData.$route(

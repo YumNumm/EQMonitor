@@ -19,6 +19,12 @@ part 'device_provisioning_notifier.g.dart';
 
 enum DeviceProvisioningStatus { required, notRequired }
 
+@riverpod
+bool deviceMigratedFromLegacy(Ref ref) {
+  final repo = ref.watch(deviceProvisioningRepositoryProvider);
+  return repo.wasMigratedFromLegacy();
+}
+
 @Riverpod(keepAlive: true)
 class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
 
@@ -59,6 +65,7 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
             deviceId: deviceId,
             oldDeviceId: legacy,
           );
+          await repo.markMigratedFromLegacy();
         } else {
           final result = await deviceRepo.registerDevice(
             deviceId: deviceId,

@@ -254,6 +254,7 @@ class FakeDeviceRepository extends DeviceRepository {
        super(
          api.ApiClient(Dio()),
          _MemoryDeviceAuthRepository(),
+         Dio(),
          apnsEnvironment: api.ApnsEnvironment.development,
        );
 

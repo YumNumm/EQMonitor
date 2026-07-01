@@ -50,8 +50,9 @@ class _Body extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationsEnabled = ref.watch(
-      generalNotificationSettingsProvider
-          .select((s) => s.value?.notificationEnabled ?? true),
+      generalNotificationSettingsProvider.select(
+        (s) => s.value?.notificationEnabled ?? true,
+      ),
     );
     final selectedPreset = ref.watch(notificationPresetProvider);
 
@@ -92,14 +93,15 @@ class _Body extends HookConsumerWidget {
         _MasterNotificationControl(
           value: notificationsEnabled,
           onChanged: (value) async {
-            await GeneralNotificationSettingsNotifier.updateSettingsMutation.run(
-              ref,
-              (tsx) async {
-                await tsx
-                    .get(generalNotificationSettingsProvider.notifier)
-                    .updateSettings(notificationEnabled: value);
-              },
-            );
+            await GeneralNotificationSettingsNotifier.updateSettingsMutation
+                .run(
+                  ref,
+                  (tsx) async {
+                    await tsx
+                        .get(generalNotificationSettingsProvider.notifier)
+                        .updateSettings(notificationEnabled: value);
+                  },
+                );
           },
         ),
         if (notificationsEnabled) ...[
@@ -658,10 +660,12 @@ class _EewWarningDetailTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final warningEnabled =
+        ref.watch(eewGlobalSettingsProvider).value?.warningEnabled ?? true;
     final target = ref.watch(eewWarningConfigProvider).value?.target;
     return ListTile(
       title: const Text('緊急地震速報(警報)'),
-      subtitle: Text(target?.label ?? '読み込み中…'),
+      subtitle: Text(warningEnabled ? target?.label ?? '読み込み中…' : '無効'),
       trailing: const Icon(Icons.chevron_right),
       onTap: () async => Navigator.of(context).push<void>(
         MaterialPageRoute<void>(
@@ -709,13 +713,15 @@ class _EewWarningSettingsPage extends ConsumerWidget {
 
     Future<void> select(EewWarningTarget value) async {
       await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
-        await tsx.get(eewWarningConfigProvider.notifier).updateConfig(
-          target: value,
-          nationwideInterruptionLevel:
-              value == EewWarningTarget.currentLocationAndNationwide
+        await tsx
+            .get(eewWarningConfigProvider.notifier)
+            .updateConfig(
+              target: value,
+              nationwideInterruptionLevel:
+                  value == EewWarningTarget.currentLocationAndNationwide
                   ? InterruptionLevel.active
                   : null,
-        );
+            );
       });
     }
 

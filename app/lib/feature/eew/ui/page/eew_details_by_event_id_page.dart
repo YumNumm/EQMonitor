@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/extension/let_ex.dart';
+import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
@@ -158,6 +159,17 @@ class _SimulationView extends ConsumerWidget {
     final simulation = ref.watch(eewSimulationProvider);
     final currentEew = simulation?.currentReport ?? selectedEew;
 
+    // timeTickerProvider を watch して毎秒リビルドさせる
+    ref.watch(timeTickerProvider());
+
+    // シミュレーション仮想時刻: P/S波円と同じ計算
+    DateTime? virtualNow;
+    if (simulation != null) {
+      final firstReportTime = simulation.reports.first.reportTime;
+      final elapsed = DateTime.now().difference(simulation.startedAt);
+      virtualNow = firstReportTime.add(elapsed);
+    }
+
     return Stack(
       children: [
         Positioned.fill(
@@ -174,7 +186,11 @@ class _SimulationView extends ConsumerWidget {
             left: 8,
             right: 8,
             bottom: MediaQuery.of(context).padding.bottom + 8,
-            child: EewCard(eew: currentEew, index: null),
+            child: EewCard(
+              eew: currentEew,
+              index: null,
+              nowOverride: virtualNow,
+            ),
           ),
       ],
     );

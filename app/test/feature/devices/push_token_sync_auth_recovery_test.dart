@@ -169,6 +169,7 @@ final class _UnauthenticatedDeviceRepository extends DeviceRepository {
     : super(
         api.ApiClient(Dio()),
         _MemoryDeviceAuthRepository(),
+        Dio(),
         apnsEnvironment: api.ApnsEnvironment.development,
       );
 
@@ -193,6 +194,7 @@ final class _RecoveringDeviceRepository extends DeviceRepository {
     : super(
         api.ApiClient(Dio()),
         _MemoryDeviceAuthRepository(),
+        Dio(),
         apnsEnvironment: api.ApnsEnvironment.development,
       );
 

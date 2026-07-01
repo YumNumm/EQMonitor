@@ -10,6 +10,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_slot_repository.g.dart';
 
+const JmaIntensity defaultNotificationSlotMinIntensity = JmaIntensity.three;
+
 @Riverpod(keepAlive: true)
 Future<NotificationSlotRepository> notificationSlotRepository(Ref ref) async =>
     NotificationSlotRepository(await ref.watch(apiClientProvider.future));
@@ -34,18 +36,27 @@ class NotificationSlotRepository {
     JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
-    final response =
-        await _api.device.putV2DeviceMeSettingsSlotsCurrentLocation(
-      body: api.UpsertSingletonSlotRequest(
-        eewEnabled: eewEnabled,
-        eewMinIntensity: eewMinIntensity?.toApiJmaIntensity,
-        eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
-        earthquakeEnabled: earthquakeEnabled,
-        earthquakeMinIntensity: earthquakeMinIntensity?.toApiJmaIntensity,
-        earthquakeOverrides:
-            earthquakeOverrides?.map((o) => o.toApiSlotOverride()).toList(),
-      ),
-    );
+    final response = await _api.device
+        .putV2DeviceMeSettingsSlotsCurrentLocation(
+          body: api.UpsertSingletonSlotRequest(
+            eewEnabled: eewEnabled,
+            eewMinIntensity: resolveNotificationSlotMinIntensity(
+              enabled: eewEnabled,
+              minIntensity: eewMinIntensity,
+            )?.toApiJmaIntensity,
+            eewOverrides: eewOverrides
+                ?.map((o) => o.toApiSlotOverride())
+                .toList(),
+            earthquakeEnabled: earthquakeEnabled,
+            earthquakeMinIntensity: resolveNotificationSlotMinIntensity(
+              enabled: earthquakeEnabled,
+              minIntensity: earthquakeMinIntensity,
+            )?.toApiJmaIntensity,
+            earthquakeOverrides: earthquakeOverrides
+                ?.map((o) => o.toApiSlotOverride())
+                .toList(),
+          ),
+        );
     return response.data.toNotificationSlot();
   }
 
@@ -64,12 +75,19 @@ class NotificationSlotRepository {
     final response = await _api.device.putV2DeviceMeSettingsSlotsNationwide(
       body: api.UpsertSingletonSlotRequest(
         eewEnabled: eewEnabled,
-        eewMinIntensity: eewMinIntensity?.toApiJmaIntensity,
+        eewMinIntensity: resolveNotificationSlotMinIntensity(
+          enabled: eewEnabled,
+          minIntensity: eewMinIntensity,
+        )?.toApiJmaIntensity,
         eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
         earthquakeEnabled: earthquakeEnabled,
-        earthquakeMinIntensity: earthquakeMinIntensity?.toApiJmaIntensity,
-        earthquakeOverrides:
-            earthquakeOverrides?.map((o) => o.toApiSlotOverride()).toList(),
+        earthquakeMinIntensity: resolveNotificationSlotMinIntensity(
+          enabled: earthquakeEnabled,
+          minIntensity: earthquakeMinIntensity,
+        )?.toApiJmaIntensity,
+        earthquakeOverrides: earthquakeOverrides
+            ?.map((o) => o.toApiSlotOverride())
+            .toList(),
       ),
     );
     return response.data.toNotificationSlot();
@@ -98,12 +116,19 @@ class NotificationSlotRepository {
         cityCode: cityCode,
         cityName: cityName,
         eewEnabled: eewEnabled,
-        eewMinIntensity: eewMinIntensity?.toApiJmaIntensity,
+        eewMinIntensity: resolveNotificationSlotMinIntensity(
+          enabled: eewEnabled,
+          minIntensity: eewMinIntensity,
+        )?.toApiJmaIntensity,
         eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
         earthquakeEnabled: earthquakeEnabled,
-        earthquakeMinIntensity: earthquakeMinIntensity?.toApiJmaIntensity,
-        earthquakeOverrides:
-            earthquakeOverrides?.map((o) => o.toApiSlotOverride()).toList(),
+        earthquakeMinIntensity: resolveNotificationSlotMinIntensity(
+          enabled: earthquakeEnabled,
+          minIntensity: earthquakeMinIntensity,
+        )?.toApiJmaIntensity,
+        earthquakeOverrides: earthquakeOverrides
+            ?.map((o) => o.toApiSlotOverride())
+            .toList(),
       ),
     );
     return response.data.toNotificationSlot();
@@ -121,22 +146,31 @@ class NotificationSlotRepository {
     JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
-    final response =
-        await _api.device.patchV2DeviceMeSettingsSlotsRegionsSlotId(
-      slotId: slotId,
-      body: api.UpdateRegionSlotRequest(
-        regionName: regionName,
-        cityCode: cityCode,
-        cityName: cityName,
-        eewEnabled: eewEnabled,
-        eewMinIntensity: eewMinIntensity?.toApiJmaIntensity,
-        eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
-        earthquakeEnabled: earthquakeEnabled,
-        earthquakeMinIntensity: earthquakeMinIntensity?.toApiJmaIntensity,
-        earthquakeOverrides:
-            earthquakeOverrides?.map((o) => o.toApiSlotOverride()).toList(),
-      ),
-    );
+    final response = await _api.device
+        .patchV2DeviceMeSettingsSlotsRegionsSlotId(
+          slotId: slotId,
+          body: api.UpdateRegionSlotRequest(
+            regionName: regionName,
+            cityCode: cityCode,
+            cityName: cityName,
+            eewEnabled: eewEnabled,
+            eewMinIntensity: resolveNotificationSlotMinIntensity(
+              enabled: eewEnabled,
+              minIntensity: eewMinIntensity,
+            )?.toApiJmaIntensity,
+            eewOverrides: eewOverrides
+                ?.map((o) => o.toApiSlotOverride())
+                .toList(),
+            earthquakeEnabled: earthquakeEnabled,
+            earthquakeMinIntensity: resolveNotificationSlotMinIntensity(
+              enabled: earthquakeEnabled,
+              minIntensity: earthquakeMinIntensity,
+            )?.toApiJmaIntensity,
+            earthquakeOverrides: earthquakeOverrides
+                ?.map((o) => o.toApiSlotOverride())
+                .toList(),
+          ),
+        );
     return response.data.toNotificationSlot();
   }
 
@@ -222,4 +256,14 @@ class NotificationSlotRepository {
     );
     return response.data.toEarthquakeGlobalSettings();
   }
+}
+
+JmaIntensity? resolveNotificationSlotMinIntensity({
+  required bool? enabled,
+  required JmaIntensity? minIntensity,
+}) {
+  if (enabled != true) {
+    return minIntensity;
+  }
+  return minIntensity ?? defaultNotificationSlotMinIntensity;
 }

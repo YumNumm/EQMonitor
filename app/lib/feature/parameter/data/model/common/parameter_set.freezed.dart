@@ -78,7 +78,7 @@ as ShindoDbStationsParameter,
 @override
 @pragma('vm:prefer-inline')
 $ParameterManifestCopyWith<$Res> get manifest {
-  
+
   return $ParameterManifestCopyWith<$Res>(_self.manifest, (value) {
     return _then(_self.copyWith(manifest: value));
   });
@@ -87,7 +87,7 @@ $ParameterManifestCopyWith<$Res> get manifest {
 @override
 @pragma('vm:prefer-inline')
 $JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable {
-  
+
   return $JmaCodeTableParameterCopyWith<$Res>(_self.jmaCodeTable, (value) {
     return _then(_self.copyWith(jmaCodeTable: value));
   });
@@ -96,7 +96,7 @@ $JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable {
 @override
 @pragma('vm:prefer-inline')
 $KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints {
-  
+
   return $KyoshinObservationPointsParameterCopyWith<$Res>(_self.kyoshinObservationPoints, (value) {
     return _then(_self.copyWith(kyoshinObservationPoints: value));
   });
@@ -105,7 +105,7 @@ $KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints {
 @override
 @pragma('vm:prefer-inline')
 $EarthquakeParameterCopyWith<$Res> get earthquake {
-  
+
   return $EarthquakeParameterCopyWith<$Res>(_self.earthquake, (value) {
     return _then(_self.copyWith(earthquake: value));
   });
@@ -114,7 +114,7 @@ $EarthquakeParameterCopyWith<$Res> get earthquake {
 @override
 @pragma('vm:prefer-inline')
 $TsunamiParameterCopyWith<$Res> get tsunami {
-  
+
   return $TsunamiParameterCopyWith<$Res>(_self.tsunami, (value) {
     return _then(_self.copyWith(tsunami: value));
   });
@@ -123,7 +123,7 @@ $TsunamiParameterCopyWith<$Res> get tsunami {
 @override
 @pragma('vm:prefer-inline')
 $ShindoDbStationsParameterCopyWith<$Res> get shindoDbStations {
-  
+
   return $ShindoDbStationsParameterCopyWith<$Res>(_self.shindoDbStations, (value) {
     return _then(_self.copyWith(shindoDbStations: value));
   });
@@ -266,7 +266,7 @@ return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints
 
 class _ParameterSet implements ParameterSet {
   const _ParameterSet({required this.manifest, required this.jmaCodeTable, required this.kyoshinObservationPoints, required this.earthquake, required this.tsunami, required this.shindoDbStations});
-  
+
 
 @override final  ParameterManifest manifest;
 @override final  JmaCodeTableParameter jmaCodeTable;
@@ -339,7 +339,7 @@ as ShindoDbStationsParameter,
 @override
 @pragma('vm:prefer-inline')
 $ParameterManifestCopyWith<$Res> get manifest {
-  
+
   return $ParameterManifestCopyWith<$Res>(_self.manifest, (value) {
     return _then(_self.copyWith(manifest: value));
   });
@@ -348,7 +348,7 @@ $ParameterManifestCopyWith<$Res> get manifest {
 @override
 @pragma('vm:prefer-inline')
 $JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable {
-  
+
   return $JmaCodeTableParameterCopyWith<$Res>(_self.jmaCodeTable, (value) {
     return _then(_self.copyWith(jmaCodeTable: value));
   });
@@ -357,7 +357,7 @@ $JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable {
 @override
 @pragma('vm:prefer-inline')
 $KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints {
-  
+
   return $KyoshinObservationPointsParameterCopyWith<$Res>(_self.kyoshinObservationPoints, (value) {
     return _then(_self.copyWith(kyoshinObservationPoints: value));
   });
@@ -366,7 +366,7 @@ $KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints {
 @override
 @pragma('vm:prefer-inline')
 $EarthquakeParameterCopyWith<$Res> get earthquake {
-  
+
   return $EarthquakeParameterCopyWith<$Res>(_self.earthquake, (value) {
     return _then(_self.copyWith(earthquake: value));
   });
@@ -375,7 +375,7 @@ $EarthquakeParameterCopyWith<$Res> get earthquake {
 @override
 @pragma('vm:prefer-inline')
 $TsunamiParameterCopyWith<$Res> get tsunami {
-  
+
   return $TsunamiParameterCopyWith<$Res>(_self.tsunami, (value) {
     return _then(_self.copyWith(tsunami: value));
   });
@@ -384,7 +384,7 @@ $TsunamiParameterCopyWith<$Res> get tsunami {
 @override
 @pragma('vm:prefer-inline')
 $ShindoDbStationsParameterCopyWith<$Res> get shindoDbStations {
-  
+
   return $ShindoDbStationsParameterCopyWith<$Res>(_self.shindoDbStations, (value) {
     return _then(_self.copyWith(shindoDbStations: value));
   });

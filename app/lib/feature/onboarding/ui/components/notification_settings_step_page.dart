@@ -5,6 +5,95 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isMigrated = ref.watch(deviceMigratedFromLegacyProvider);
+    if (isMigrated) {
+      return const _MigratedNotificationSettingsStepPage();
+    }
+    return const _NewUserNotificationSettingsStepPage();
+  }
+}
+
+class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
+  const _MigratedNotificationSettingsStepPage();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scope = _OnboardingScope.of(context);
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+
+    useEffect(() {
+      scope.setStepNavigation(
+        step: _OnboardingStep.notificationSettings,
+        state: _StepNavigationState(
+          buttonLabel: '次へ',
+          isNextEnabled: true,
+          isProcessing: false,
+          onNext: scope.nextPage,
+        ),
+      );
+      return null;
+    }, [scope]);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: designSystem.spacing.lg,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(height: designSystem.spacing.xxxxl),
+          Text(
+            '通知設定',
+            style: designSystem.typography.displayMedium,
+          ),
+          SizedBox(height: designSystem.spacing.sm),
+          Text(
+            '前バージョンの通知設定を引き継ぎました',
+            style: designSystem.typography.bodyLarge.copyWith(
+              color: designSystem.textColor.secondary,
+            ),
+          ),
+          SizedBox(height: designSystem.spacing.xl),
+          Container(
+            padding: EdgeInsets.all(designSystem.spacing.md),
+            decoration: BoxDecoration(
+              color: designSystem.color.surfaceCard,
+              borderRadius: BorderRadius.circular(designSystem.shape.card),
+              border: Border.all(
+                color: designSystem.palette.statusSuccess.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.check_circle_outline,
+                  color: designSystem.palette.statusSuccess,
+                ),
+                SizedBox(width: designSystem.spacing.sm),
+                Expanded(
+                  child: Text(
+                    '通知の地域や震度の設定がそのまま引き継がれています。'
+                    '設定はいつでも変更できます。',
+                    style: designSystem.typography.bodySmall.copyWith(
+                      color: designSystem.textColor.secondary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Spacer(),
+        ],
+      ),
+    );
+  }
+}
+
+class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
+  const _NewUserNotificationSettingsStepPage();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
     final designSystem = Theme.of(context).designSystemThemeExtension;
     final selectedPreset = useState<_NotificationPreset?>(null);
