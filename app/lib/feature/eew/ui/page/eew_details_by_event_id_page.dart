@@ -2,17 +2,23 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/extension/let_ex.dart';
+import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/eew/data/provider/eew_estimated_region_intensity_provider.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
+import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lat_lng/lat_lng.dart' as lat_lng;
 import 'package:maplibre/maplibre.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -143,7 +149,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
   }
 }
 
-class _SimulationView extends ConsumerWidget {
+class _SimulationView extends HookConsumerWidget {
   const _SimulationView({
     required this.selectedEew,
     required this.displayMode,
@@ -158,6 +164,9 @@ class _SimulationView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final simulation = ref.watch(eewSimulationProvider);
     final currentEew = simulation?.currentReport ?? selectedEew;
+    final isEstimatedAllowed = ref.watch(
+      estimatedIntensityOnEewReplayAllowedProvider,
+    );
 
     // timeTickerProvider を watch して毎秒リビルドさせる
     ref.watch(timeTickerProvider());
@@ -170,6 +179,49 @@ class _SimulationView extends ConsumerWidget {
       virtualNow = firstReportTime.add(elapsed);
     }
 
+    // 推定震度の取得
+    final estimatedRegions = isEstimatedAllowed && currentEew != null
+        ? ref.watch(eewEstimatedRegionIntensityProvider(currentEew)).value
+        : null;
+
+    // JMAとのマージ（additionalRegions用: JMAにないregionのみ）
+    final additionalRegions = useMemoized(() {
+      if (estimatedRegions == null || currentEew == null) {
+        return null;
+      }
+      final jmaCodes = (currentEew.forecastIntensity?.regions ?? [])
+          .map((r) => r.code)
+          .toSet();
+      return estimatedRegions
+          .where((e) => !jmaCodes.contains(e.regionCode))
+          .where((e) => e.jmaIntensity != null)
+          .map((e) => e.toForecastRegionInfo())
+          .toList();
+    }, [estimatedRegions, currentEew]);
+
+    // ユーザー現在地regionの推定値
+    final positionAsync = ref.watch(locationStreamProvider);
+    final position = positionAsync.value;
+    final regionItem = position != null
+        ? ref
+              .watch(
+                jmaMapAreaForecastLocalEInsideProvider(
+                  lat_lng.LatLng(position.latitude, position.longitude),
+                ),
+              )
+              .value
+        : null;
+    final userRegionCode = regionItem?.property?.code;
+
+    final userEstimate = useMemoized(() {
+      if (estimatedRegions == null || userRegionCode == null) {
+        return null;
+      }
+      return estimatedRegions.firstWhereOrNull(
+        (e) => e.regionCode == userRegionCode,
+      );
+    }, [estimatedRegions, userRegionCode]);
+
     return Stack(
       children: [
         Positioned.fill(
@@ -179,6 +231,7 @@ class _SimulationView extends ConsumerWidget {
             initialCenter: initialCenter,
             initZoom: 5,
             isSimulation: true,
+            additionalRegions: additionalRegions,
           ),
         ),
         if (currentEew != null)
@@ -190,6 +243,7 @@ class _SimulationView extends ConsumerWidget {
               eew: currentEew,
               index: null,
               nowOverride: virtualNow,
+              userRegionEstimate: isEstimatedAllowed ? userEstimate : null,
             ),
           ),
       ],
@@ -249,7 +303,7 @@ class _DisplayModeSelector extends StatelessWidget {
   }
 }
 
-class _ResponsiveLayout extends StatelessWidget {
+class _ResponsiveLayout extends HookConsumerWidget {
   const _ResponsiveLayout({
     required this.eews,
     required this.selectedIndex,
@@ -269,7 +323,34 @@ class _ResponsiveLayout extends StatelessWidget {
   final double initZoom;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isEstimatedAllowed = ref.watch(
+      estimatedIntensityOnEewReplayAllowedProvider,
+    );
+
+    // 推定震度の取得
+    final estimatedRegions =
+        isEstimatedAllowed && selectedEew != null
+            ? ref
+                  .watch(eewEstimatedRegionIntensityProvider(selectedEew!))
+                  .value
+            : null;
+
+    // JMAとのマージ（additionalRegions用: JMAにないregionのみ）
+    final additionalRegions = useMemoized(() {
+      if (estimatedRegions == null || selectedEew == null) {
+        return null;
+      }
+      final jmaCodes = (selectedEew!.forecastIntensity?.regions ?? [])
+          .map((r) => r.code)
+          .toSet();
+      return estimatedRegions
+          .where((e) => !jmaCodes.contains(e.regionCode))
+          .where((e) => e.jmaIntensity != null)
+          .map((e) => e.toForecastRegionInfo())
+          .toList();
+    }, [estimatedRegions, selectedEew]);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final isLandscape = constraints.maxWidth > constraints.maxHeight;
@@ -285,6 +366,7 @@ class _ResponsiveLayout extends StatelessWidget {
           displayMode: displayMode,
           initialCenter: initialCenter,
           initZoom: initZoom,
+          additionalRegions: additionalRegions,
         );
 
         if (isLandscape) {
