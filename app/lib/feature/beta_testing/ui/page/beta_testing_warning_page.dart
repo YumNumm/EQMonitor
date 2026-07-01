@@ -19,7 +19,7 @@ class BetaTestingWarningPage extends ConsumerWidget {
     final ds = Theme.of(context).designSystemThemeExtension;
 
     return Scaffold(
-      backgroundColor: ds.color.backgroundDefault,
+      backgroundColor: ds.colorTheme.surfaceContainerLow,
       body: CustomScrollView(
         slivers: [
           SliverSafeArea(
@@ -60,12 +60,12 @@ class _WarningHeader extends StatelessWidget {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: ds.palette.statusWarning.withValues(alpha: 0.15),
+              color: ds.colorTheme.status.warning.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(ds.shape.lg),
             ),
             child: Icon(
               Icons.warning_amber_rounded,
-              color: ds.palette.statusWarning,
+              color: ds.colorTheme.status.warning,
               size: 36,
             ),
           ),
@@ -73,14 +73,14 @@ class _WarningHeader extends StatelessWidget {
           Text(
             'Beta 版をご利用の\n前に',
             style: ds.typography.headlineLarge.copyWith(
-              color: ds.textColor.primary,
+              color: ds.colorTheme.onSurface,
             ),
           ),
           SizedBox(height: ds.spacing.sm),
           Text(
             'このアプリは現在ベータテスト中です。以下の事項をご確認のうえ、同意いただける場合のみご利用ください。',
             style: ds.typography.bodyLarge.copyWith(
-              color: ds.textColor.secondary,
+              color: ds.colorTheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -128,9 +128,9 @@ class _WarningCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: ds.color.surfaceCard,
+        color: ds.colorTheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(ds.shape.card),
-        border: Border.all(color: ds.color.outlineSoft),
+        border: Border.all(color: ds.colorTheme.outlineVariant),
       ),
       padding: EdgeInsets.all(ds.spacing.lg),
       child: Row(
@@ -140,14 +140,14 @@ class _WarningCard extends StatelessWidget {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              color: ds.palette.statusWarning.withValues(alpha: 0.15),
+              color: ds.colorTheme.status.warning.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
                 '${index + 1}',
                 style: ds.typography.labelMedium.copyWith(
-                  color: ds.palette.statusWarning,
+                  color: ds.colorTheme.status.warning,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -158,7 +158,7 @@ class _WarningCard extends StatelessWidget {
             child: Text(
               warning,
               style: ds.typography.bodyMedium.copyWith(
-                color: ds.textColor.primary,
+                color: ds.colorTheme.onSurface,
               ),
             ),
           ),
@@ -199,7 +199,7 @@ class _AgreementBottom extends ConsumerWidget {
                   }
                 },
                 style: FilledButton.styleFrom(
-                  backgroundColor: ds.palette.statusWarning,
+                  backgroundColor: ds.colorTheme.status.warning,
                   foregroundColor: const Color(0xFF0F141A),
                   padding: EdgeInsets.symmetric(vertical: ds.spacing.lg),
                   shape: RoundedSuperellipseBorder(
@@ -219,7 +219,7 @@ class _AgreementBottom extends ConsumerWidget {
             Text(
               '同意しない場合は、アプリストアから最新の正式版アプリをダウンロードしてください。',
               style: ds.typography.bodySmall.copyWith(
-                color: ds.textColor.tertiary,
+                color: ds.colorTheme.outline,
               ),
               textAlign: TextAlign.center,
             ),

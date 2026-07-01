@@ -111,7 +111,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
           Text(
             'リアルタイムの地震情報と\n緊急地震速報をお届けします',
             style: designSystem.typography.bodyLarge.copyWith(
-              color: designSystem.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
           const Spacer(),

@@ -15,7 +15,7 @@ class HomeFeedSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
     final typography = designSystem.typography;
@@ -23,12 +23,12 @@ class HomeFeedSheet extends ConsumerWidget {
 
     return Card.outlined(
       margin: EdgeInsets.zero,
-      color: color.surfaceCard,
+      color: colorTheme.surfaceContainerHigh,
       clipBehavior: Clip.antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -124,7 +124,7 @@ class _HomeFeedSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     final spacing = context.designSystem.spacing;
     final shape = context.designSystem.shape;
-    final color = context.designSystem.color;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Padding(
       padding: EdgeInsets.all(spacing.lg),
@@ -136,7 +136,7 @@ class _HomeFeedSkeleton extends StatelessWidget {
               Container(
                 height: 44,
                 decoration: BoxDecoration(
-                  color: color.surfaceRaised,
+                  color: colorTheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(shape.md),
                 ),
               ),

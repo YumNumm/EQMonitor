@@ -18,9 +18,9 @@ class ShakeDetectionHistoryPage extends ConsumerWidget {
     final ds = context.designSystem;
 
     return Scaffold(
-      backgroundColor: ds.color.backgroundDefault,
+      backgroundColor: ds.colorTheme.surfaceContainerLow,
       appBar: AppBar(
-        backgroundColor: ds.color.backgroundDefault,
+        backgroundColor: ds.colorTheme.surfaceContainerLow,
         title: const Text('揺れ検知履歴'),
       ),
       body: events.isEmpty
@@ -58,13 +58,13 @@ class _EmptyState extends StatelessWidget {
           Icon(
             Icons.sensors_off_rounded,
             size: 48,
-            color: ds.textColor.tertiary,
+            color: ds.colorTheme.outline,
           ),
           const SizedBox(height: 12),
           Text(
             '履歴なし',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: ds.textColor.secondary,
+              color: ds.colorTheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 4),
@@ -72,7 +72,7 @@ class _EmptyState extends StatelessWidget {
             'このセッション中に揺れ検知イベントが\n受信されていません',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: ds.textColor.tertiary,
+              color: ds.colorTheme.outline,
             ),
           ),
         ],
@@ -100,7 +100,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Material(
-        color: ds.color.surfaceCard,
+        color: ds.colorTheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(ds.shape.card),
         child: InkWell(
           borderRadius: BorderRadius.circular(ds.shape.card),
@@ -120,7 +120,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                           Text(
                             _timeFormat.format(event.createdAt.toLocal()),
                             style: theme.textTheme.titleSmall?.copyWith(
-                              color: ds.textColor.primary,
+                              color: ds.colorTheme.onSurface,
                               fontFamily: FontFamily.googleSansCode,
                             ),
                           ),
@@ -128,7 +128,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                             const SizedBox(width: 6),
                             _TagChip(
                               label: 'リプレイ',
-                              color: ds.color.surfaceEmphasis,
+                              color: ds.colorTheme.surfaceContainerHighest,
                             ),
                           ],
                           if (event.mergedEewEventId != null) ...[
@@ -146,7 +146,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                         '${event.minLat.toStringAsFixed(2)}–${event.maxLat.toStringAsFixed(2)}°N  '
                         '${event.minLng.toStringAsFixed(2)}–${event.maxLng.toStringAsFixed(2)}°E',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: ds.textColor.tertiary,
+                          color: ds.colorTheme.outline,
                           fontFamily: FontFamily.googleSansCode,
                         ),
                       ),
@@ -155,7 +155,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                 ),
                 Icon(
                   Icons.chevron_right_rounded,
-                  color: ds.textColor.tertiary,
+                  color: ds.colorTheme.outline,
                 ),
               ],
             ),

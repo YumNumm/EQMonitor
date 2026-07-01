@@ -234,9 +234,9 @@ class _Sheet extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
           decoration: BoxDecoration(
-            color: ds.color.surfaceDefault,
+            color: ds.colorTheme.surface,
             borderRadius: BorderRadius.circular(ds.shape.sheet),
-            border: Border.all(color: ds.color.outlineSoft),
+            border: Border.all(color: ds.colorTheme.outlineVariant),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -255,12 +255,12 @@ class _Sheet extends StatelessWidget {
                           Text(
                             '揺れ検知イベント',
                             style: Theme.of(context).textTheme.titleSmall
-                                ?.copyWith(color: ds.textColor.primary),
+                                ?.copyWith(color: ds.colorTheme.onSurface),
                           ),
                           Text(
                             _levelLabel(event.level),
                             style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: ds.textColor.secondary),
+                                ?.copyWith(color: ds.colorTheme.onSurfaceVariant),
                           ),
                         ],
                       ),
@@ -268,8 +268,8 @@ class _Sheet extends StatelessWidget {
                     if (event.isReplay)
                       _TagBadge(
                         label: 'リプレイ',
-                        color: ds.color.surfaceEmphasis,
-                        textColor: ds.textColor.secondary,
+                        color: ds.colorTheme.surfaceContainerHighest,
+                        textColor: ds.colorTheme.onSurfaceVariant,
                       ),
                   ],
                 ),
@@ -409,7 +409,7 @@ class _InfoRow extends StatelessWidget {
             child: Text(
               label,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: ds.textColor.tertiary,
+                color: ds.colorTheme.outline,
               ),
             ),
           ),
@@ -417,7 +417,7 @@ class _InfoRow extends StatelessWidget {
             child: Text(
               value,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: ds.textColor.primary,
+                color: ds.colorTheme.onSurface,
                 fontFamily: mono ? FontFamily.googleSansCode : null,
               ),
             ),

@@ -16,10 +16,9 @@ class BasicModalSheet extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final shape = designSystem.shape;
     final spacing = designSystem.spacing;
-    final textColor = designSystem.textColor;
 
     return SafeArea(
       bottom: false,
@@ -31,12 +30,12 @@ class BasicModalSheet extends HookWidget {
           );
           final isLandscape = size.width > size.height;
           final sheet = Sheet(
-            backgroundColor: color.surfaceDefault,
+            backgroundColor: colorTheme.surface,
             shape: RoundedSuperellipseBorder(
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(shape.sheet),
               ),
-              side: BorderSide(color: color.outlineSoft),
+              side: BorderSide(color: colorTheme.outlineVariant),
             ),
             initialExtent: size.height * 0.2,
             physics: const SnapSheetPhysics(
@@ -62,7 +61,7 @@ class BasicModalSheet extends HookWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(shape.pill),
-                    color: textColor.tertiary.withValues(alpha: 0.48),
+                    color: colorTheme.outline.withValues(alpha: 0.48),
                   ),
                 ),
                 Expanded(child: child),

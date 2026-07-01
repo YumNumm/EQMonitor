@@ -20,7 +20,7 @@ class HomeEarthquakeList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -41,9 +41,9 @@ class HomeEarthquakeList extends StatelessWidget {
                   item: item,
                   showBackgroundColor: false,
                   intensityIconSize: 32,
-                  titleTextColor: textColor.primary,
-                  descriptionTextColor: textColor.secondary,
-                  magnitudeTextColor: textColor.primary,
+                  titleTextColor: colorTheme.onSurface,
+                  descriptionTextColor: colorTheme.onSurfaceVariant,
+                  magnitudeTextColor: colorTheme.onSurface,
                   dense: true,
                   contentPadding: .zero,
                   showCurrentLocationIntensity: showCurrentLocationIntensity,

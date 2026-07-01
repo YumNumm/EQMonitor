@@ -19,7 +19,7 @@ class ShakeDetectionCard extends ConsumerWidget {
     );
 
     final designSystem = Theme.of(context).designSystemThemeExtension;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -29,10 +29,10 @@ class ShakeDetectionCard extends ConsumerWidget {
         elevation: 0,
         clipBehavior: Clip.antiAlias,
         margin: EdgeInsets.zero,
-        color: color.surfaceCard,
+        color: colorTheme.surfaceContainerHigh,
         shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(shape.card),
-          side: BorderSide(color: color.outlineSoft),
+          side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -126,7 +126,7 @@ class _ShakeDetectionCardBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = Theme.of(context).designSystemThemeExtension;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
 
     final regions = regionsAsync.asData?.value ?? {};
@@ -142,7 +142,7 @@ class _ShakeDetectionCardBody extends StatelessWidget {
           Text(
             '${event.pointCount}地点で検知',
             style: typography.labelMedium.copyWith(
-              color: textColor.secondary,
+              color: colorTheme.onSurfaceVariant,
             ),
           ),
           if (regionsAsync.isLoading) ...[
@@ -161,7 +161,7 @@ class _ShakeDetectionCardBody extends StatelessWidget {
                 child: Text(
                   entry.value.join(' '),
                   style: typography.bodySmall.copyWith(
-                    color: textColor.secondary,
+                    color: colorTheme.onSurfaceVariant,
                   ),
                 ),
               ),

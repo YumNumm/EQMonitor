@@ -97,7 +97,7 @@ class OnboardingPage extends HookConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: designSystem.color.backgroundDefault,
+      backgroundColor: designSystem.colorTheme.surfaceContainerLow,
       body: _OnboardingScope(
         currentStep: currentStep,
         nextPage: animateToNext,

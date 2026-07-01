@@ -120,7 +120,7 @@ class _MasterEarthquakeControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
     final typography = designSystem.typography;
@@ -138,9 +138,9 @@ class _MasterEarthquakeControl extends StatelessWidget {
               vertical: spacing.md,
             ),
             decoration: BoxDecoration(
-              color: value ? color.surfaceEmphasis : color.surfaceCard,
+              color: value ? colorTheme.surfaceContainerHighest : colorTheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(shape.pill),
-              border: Border.all(color: color.outlineSoft),
+              border: Border.all(color: colorTheme.outlineVariant),
             ),
             child: Row(
               children: [
@@ -148,7 +148,7 @@ class _MasterEarthquakeControl extends StatelessWidget {
                   child: Text(
                     '通知を受け取る',
                     style: typography.titleMedium.copyWith(
-                      color: designSystem.textColor.primary,
+                      color: designSystem.colorTheme.onSurface,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

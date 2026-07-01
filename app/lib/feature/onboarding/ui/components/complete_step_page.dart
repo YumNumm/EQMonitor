@@ -47,14 +47,14 @@ class _CompleteStepPage extends HookConsumerWidget {
           Text(
             'EQMonitor で日本の地震情報をリアルタイムに確認できます',
             style: designSystem.typography.bodyLarge.copyWith(
-              color: designSystem.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
           const Spacer(),
           Center(
             child: _OnboardingCompleteHero(
-              color: designSystem.palette.statusSuccess,
-              backgroundColor: designSystem.color.surfaceRaised,
+              color: designSystem.colorTheme.status.success,
+              backgroundColor: designSystem.colorTheme.surfaceContainerLow,
             ),
           ),
           const Spacer(flex: 2),

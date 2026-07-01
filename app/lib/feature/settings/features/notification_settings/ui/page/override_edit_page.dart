@@ -311,7 +311,7 @@ class _OverrideTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -339,12 +339,12 @@ class _OverrideTile extends StatelessWidget {
         ),
         child: Card.outlined(
           margin: EdgeInsets.zero,
-          color: color.surfaceCard,
+          color: colorTheme.surfaceContainerHigh,
           clipBehavior: Clip.antiAlias,
           elevation: 0,
           shape: RoundedSuperellipseBorder(
             borderRadius: BorderRadius.circular(shape.card),
-            side: BorderSide(color: color.outlineSoft),
+            side: BorderSide(color: colorTheme.outlineVariant),
           ),
           child: ListTile(
             onTap: onTap,

@@ -14,9 +14,9 @@ class SubscriptionSettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statusAsync = ref.watch(subscriptionProvider);
-    final color = context.designSystem.color;
+    final colorTheme = context.designSystem.colorTheme;
     return Scaffold(
-      backgroundColor: color.backgroundDefault,
+      backgroundColor: colorTheme.surfaceContainerLow,
       appBar: AppBar(title: const Text('EQMonitor Pro')),
       body: statusAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -44,7 +44,7 @@ class _ActiveSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final color = context.designSystem.color;
+    final colorTheme = context.designSystem.colorTheme;
     final flow = ref.watch(paywallFlowProvider);
     final restoreState = ref.watch(
       SubscriptionNotifier.restorePurchasesMutation,
@@ -63,9 +63,9 @@ class _ActiveSection extends ConsumerWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: color.surfaceCard,
+            color: colorTheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: color.outlineSoft),
+            border: Border.all(color: colorTheme.outlineVariant),
           ),
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -124,7 +124,7 @@ class _InactiveSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final color = context.designSystem.color;
+    final colorTheme = context.designSystem.colorTheme;
     final flow = ref.watch(paywallFlowProvider);
     final restoreState = ref.watch(
       SubscriptionNotifier.restorePurchasesMutation,
@@ -136,9 +136,9 @@ class _InactiveSection extends ConsumerWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: color.surfaceCard,
+            color: colorTheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: color.outlineSoft),
+            border: Border.all(color: colorTheme.outlineVariant),
           ),
           padding: const EdgeInsets.all(20),
           child: Column(

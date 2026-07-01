@@ -29,10 +29,10 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = context.designSystem.color;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Scaffold(
-      backgroundColor: color.backgroundDefault,
+      backgroundColor: colorTheme.surfaceContainerLow,
       body: const Stack(
         children: [
           HomeMapView(),
@@ -53,7 +53,7 @@ class _SheetBody extends ConsumerWidget {
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
     final shakeEvents = ref.watch(shakeDetectionVisibleProvider);
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
 
@@ -120,11 +120,11 @@ class _SheetBody extends ConsumerWidget {
     final actionsCard = Card(
       margin: EdgeInsets.zero,
       elevation: 0,
-      color: color.surfaceCard,
+      color: colorTheme.surfaceContainerHigh,
       clipBehavior: Clip.antiAlias,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.card),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(

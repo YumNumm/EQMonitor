@@ -18,7 +18,7 @@ class TsunamiEarthquakeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final hypo = earthquake.hypocenter;
 
     final magnitudeStr = hypo.magnitude.type == MagnitudeType.normal
@@ -36,7 +36,7 @@ class TsunamiEarthquakeCard extends StatelessWidget {
       child: Card(
         shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: color.outlineSoft),
+          side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
@@ -55,7 +55,7 @@ class TsunamiEarthquakeCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: designSystem.textColor.primary,
+                    color: designSystem.colorTheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -63,7 +63,7 @@ class TsunamiEarthquakeCard extends StatelessWidget {
                   '$timeStr  $magnitudeStr  $depthStr',
                   style: TextStyle(
                     fontSize: 13,
-                    color: designSystem.textColor.secondary,
+                    color: designSystem.colorTheme.onSurfaceVariant,
                   ),
                 ),
               ],

@@ -41,8 +41,8 @@ class _OnboardingBottomBar extends StatelessWidget {
               totalPages,
               (index) => _PageDot(
                 isActive: index == currentPage,
-                color: designSystem.palette.brandPrimary,
-                inactiveColor: designSystem.color.outlineSoft,
+                color: designSystem.colorTheme.primary,
+                inactiveColor: designSystem.colorTheme.outlineVariant,
               ),
             ),
           ),
@@ -79,8 +79,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                 child: FilledButton(
                   onPressed: isNextEnabled ? onNext : null,
                   style: FilledButton.styleFrom(
-                    backgroundColor: designSystem.palette.brandPrimary,
-                    foregroundColor: designSystem.textColor.inverse,
+                    backgroundColor: designSystem.colorTheme.primary,
+                    foregroundColor: designSystem.colorTheme.onInverseSurface,
                     shape: RoundedSuperellipseBorder(
                       borderRadius: BorderRadius.circular(
                         designSystem.shape.button,
@@ -100,7 +100,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                             child: CircularProgressIndicator.adaptive(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation(
-                                designSystem.textColor.secondary,
+                                designSystem.colorTheme.onSurfaceVariant,
                               ),
                             ),
                           ),
@@ -108,7 +108,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                             'デバイスを登録しています...',
                             style:
                                 designSystem.typography.titleSmall.copyWith(
-                                  color: designSystem.textColor.secondary,
+                                  color: designSystem.colorTheme.onSurfaceVariant,
                                 ),
                           ),
                         ],
@@ -117,8 +117,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                         buttonLabel,
                         style: designSystem.typography.titleSmall.copyWith(
                           color: isNextEnabled
-                              ? designSystem.textColor.inverse
-                              : designSystem.textColor.secondary,
+                              ? designSystem.colorTheme.onInverseSurface
+                              : designSystem.colorTheme.onSurfaceVariant,
                         ),
                       ),
                 ),

@@ -101,7 +101,7 @@ class EewCard extends ConsumerWidget {
     }
 
     final designSystem = Theme.of(context).designSystemThemeExtension;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
 
     return Stack(
       alignment: Alignment.center,
@@ -127,7 +127,7 @@ class EewCard extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 100,
                   fontWeight: FontWeight.w700,
-                  color: textColor.secondary.withValues(alpha: 0.2),
+                  color: colorTheme.onSurfaceVariant.withValues(alpha: 0.2),
                   fontFamily: codeFontFamily,
                   letterSpacing: -0.5,
                 ),
@@ -164,7 +164,7 @@ class _EewMainCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = Theme.of(context).designSystemThemeExtension;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
     final forecastIntensity = eew.forecastIntensity;
@@ -173,7 +173,7 @@ class _EewMainCard extends StatelessWidget {
     final maxLpgmIntensity = forecastIntensity?.maxLpgmIntensity;
 
     final headerBackgroundColor = eew.isCanceled
-        ? color.surfaceRaised
+        ? colorTheme.surfaceContainerLow
         : isWarning
         ? _warningHeaderColor
         : _forecastHeaderColor;
@@ -189,10 +189,10 @@ class _EewMainCard extends StatelessWidget {
       elevation: 0,
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.zero,
-      color: color.surfaceCard,
+      color: colorTheme.surfaceContainerHigh,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -388,14 +388,14 @@ class _EewMaxIntensitySection extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = Theme.of(context).designSystemThemeExtension;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           '最大震度',
-          style: typography.labelMedium.copyWith(color: textColor.secondary),
+          style: typography.labelMedium.copyWith(color: colorTheme.onSurfaceVariant),
         ),
         const SizedBox(height: 2),
         JmaIntensityIcon(intensity: maxIntensity, type: .filled),
@@ -417,7 +417,7 @@ class _EewHypocenterSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = Theme.of(context).designSystemThemeExtension;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final hypocenter = eew.hypocenter;
     final timeLabel = (eew.originTime == null || eew.isPlum) ? '地震検知' : '地震発生';
@@ -459,7 +459,7 @@ class _EewHypocenterSection extends StatelessWidget {
               style: typography.labelLarge.copyWith(
                 fontFamily: codeFontFamily,
                 letterSpacing: -0.5,
-                color: textColor.secondary,
+                color: colorTheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(width: 4),
@@ -490,7 +490,7 @@ class _EewLocalForecastSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = Theme.of(context).designSystemThemeExtension;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
 
     return Column(
       mainAxisSize: .min,
@@ -501,7 +501,7 @@ class _EewLocalForecastSection extends StatelessWidget {
             Icon(
               Icons.location_on,
               size: 9,
-              color: textColor.secondary,
+              color: colorTheme.onSurfaceVariant,
             ),
             const SizedBox(width: 2),
             Flexible(
@@ -560,7 +560,7 @@ class _BackgroundIndexText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = Theme.of(context).designSystemThemeExtension.textColor;
+    final colorTheme = Theme.of(context).designSystemThemeExtension.colorTheme;
 
     return Center(
       child: FittedBox(
@@ -570,7 +570,7 @@ class _BackgroundIndexText extends StatelessWidget {
             fontSize: 100,
             fontWeight: FontWeight.w700,
             fontFamily: codeFontFamily,
-            color: textColor.secondary.withValues(alpha: 0.3),
+            color: colorTheme.onSurfaceVariant.withValues(alpha: 0.3),
           ),
         ),
       ),
@@ -587,11 +587,11 @@ class _SecondaryLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = Theme.of(context).designSystemThemeExtension;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
 
     return Text(
       text,
-      style: typography.labelSmall.copyWith(color: textColor.secondary),
+      style: typography.labelSmall.copyWith(color: colorTheme.onSurfaceVariant),
     );
   }
 }
@@ -605,7 +605,7 @@ class _MagnitudeRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = Theme.of(context).designSystemThemeExtension;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -614,7 +614,7 @@ class _MagnitudeRow extends StatelessWidget {
       children: [
         Text(
           'M ',
-          style: typography.labelSmall.copyWith(color: textColor.secondary),
+          style: typography.labelSmall.copyWith(color: colorTheme.onSurfaceVariant),
         ),
         if (magnitude != null)
           Text(
@@ -640,7 +640,7 @@ class _DepthRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = Theme.of(context).designSystemThemeExtension;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -649,7 +649,7 @@ class _DepthRow extends StatelessWidget {
       children: [
         Text(
           '深さ ',
-          style: typography.labelSmall.copyWith(color: textColor.secondary),
+          style: typography.labelSmall.copyWith(color: colorTheme.onSurfaceVariant),
         ),
         if (depth == null)
           Text('不明', style: typography.titleLarge)
@@ -665,7 +665,7 @@ class _DepthRow extends StatelessWidget {
           ),
           Text(
             'km以上',
-            style: typography.labelSmall.copyWith(color: textColor.secondary),
+            style: typography.labelSmall.copyWith(color: colorTheme.onSurfaceVariant),
           ),
         ] else ...[
           Text(
@@ -678,7 +678,7 @@ class _DepthRow extends StatelessWidget {
           Text(
             ' km',
             style: typography.labelSmall.copyWith(
-              color: textColor.secondary,
+              color: colorTheme.onSurfaceVariant,
             ),
           ),
         ],

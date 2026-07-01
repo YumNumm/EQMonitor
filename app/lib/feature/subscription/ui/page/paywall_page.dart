@@ -25,13 +25,13 @@ class PaywallPage extends ConsumerWidget {
     final isPurchasing = purchaseState is MutationPending;
     final isRestoring = restoreState is MutationPending;
     final isBusy = isPurchasing || isRestoring;
-    final color = context.designSystem.color;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Scaffold(
-      backgroundColor: color.backgroundDefault,
+      backgroundColor: colorTheme.surfaceContainerLow,
       appBar: AppBar(
         title: const Text('EQMonitor Pro'),
-        backgroundColor: color.backgroundDefault,
+        backgroundColor: colorTheme.surfaceContainerLow,
         elevation: 0,
       ),
       body: ListView(
@@ -87,14 +87,14 @@ class _PaywallHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final color = context.designSystem.color;
+    final colorTheme = context.designSystem.colorTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: color.surfaceEmphasis,
+            color: colorTheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(999),
           ),
           child: Text(
@@ -158,12 +158,12 @@ class _BenefitsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = context.designSystem.color;
+    final colorTheme = context.designSystem.colorTheme;
     return Container(
       decoration: BoxDecoration(
-        color: color.surfaceCard,
+        color: colorTheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: color.outlineSoft),
+        border: Border.all(color: colorTheme.outlineVariant),
       ),
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -214,10 +214,10 @@ class _PlanCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final color = context.designSystem.color;
+    final colorTheme = context.designSystem.colorTheme;
     return Container(
       decoration: BoxDecoration(
-        color: color.surfaceEmphasis,
+        color: colorTheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: theme.colorScheme.primary, width: 1.5),
       ),
@@ -311,7 +311,7 @@ class _AutoRenewNotice extends StatelessWidget {
       '自動的に更新されます。解約は App Store / Google Play の '
       'サブスクリプション管理画面からいつでも行えます。',
       style: theme.textTheme.bodySmall?.copyWith(
-        color: context.designSystem.color.outlineStrong,
+        color: context.designSystem.colorTheme.outline,
       ),
       textAlign: TextAlign.center,
     );

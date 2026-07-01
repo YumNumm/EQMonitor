@@ -21,7 +21,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
     final homeAsync = ref.watch(homeConfigurationProvider);
@@ -62,12 +62,12 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
 
         return Card.outlined(
           margin: EdgeInsets.zero,
-          color: color.surfaceCard,
+          color: colorTheme.surfaceContainerHigh,
           clipBehavior: Clip.antiAlias,
           elevation: 0,
           shape: RoundedSuperellipseBorder(
             borderRadius: BorderRadius.circular(shape.card),
-            side: BorderSide(color: color.outlineSoft),
+            side: BorderSide(color: colorTheme.outlineVariant),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -175,11 +175,11 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
       },
       loading: () => Card.outlined(
         margin: EdgeInsets.zero,
-        color: color.surfaceCard,
+        color: colorTheme.surfaceContainerHigh,
         elevation: 0,
         shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(shape.card),
-          side: BorderSide(color: color.outlineSoft),
+          side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: const _HomeEarthquakeHistorySheetSkeleton(),
       ),
@@ -196,7 +196,7 @@ class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
 
     return Padding(
       padding: EdgeInsets.all(spacing.lg),
@@ -208,7 +208,7 @@ class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
               height: 18,
               width: 120,
               decoration: BoxDecoration(
-                color: color.surfaceRaised,
+                color: colorTheme.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(shape.sm),
               ),
             ),
@@ -216,7 +216,7 @@ class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
             Container(
               height: 44,
               decoration: BoxDecoration(
-                color: color.surfaceRaised,
+                color: colorTheme.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(shape.md),
               ),
             ),

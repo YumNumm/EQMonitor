@@ -168,7 +168,7 @@ class _NotificationConditionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -179,12 +179,12 @@ class _NotificationConditionCard extends StatelessWidget {
         spacing.lg,
         spacing.md,
       ),
-      color: color.surfaceCard,
+      color: colorTheme.surfaceContainerHigh,
       clipBehavior: Clip.antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -280,7 +280,7 @@ class _LockedSettingTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = locked
         ? Theme.of(context).disabledColor
-        : context.designSystem.textColor.primary;
+        : context.designSystem.colorTheme.onSurface;
 
     return ListTile(
       enabled: !locked,

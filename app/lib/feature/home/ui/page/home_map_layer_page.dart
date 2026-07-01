@@ -22,19 +22,19 @@ class HomeMapLayerPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
     final expandedSection = useState<_MapLayerSection?>(null);
 
     return Scaffold(
-      backgroundColor: color.backgroundDefault,
+      backgroundColor: colorTheme.surfaceContainerLow,
       body: CustomScrollView(
         primary: true,
         slivers: [
           SliverAppBar(
             pinned: true,
-            backgroundColor: color.backgroundDefault,
+            backgroundColor: colorTheme.surfaceContainerLow,
             surfaceTintColor: Colors.transparent,
             titleSpacing: 0,
             leading: IconButton(
@@ -189,7 +189,7 @@ class _SettingsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
     final typography = designSystem.typography;
@@ -202,7 +202,7 @@ class _SettingsSection extends StatelessWidget {
             height: 1,
             indent: spacing.xl,
             endIndent: spacing.xl,
-            color: color.outlineSoft,
+            color: colorTheme.outlineVariant,
           ),
         );
       }
@@ -212,11 +212,11 @@ class _SettingsSection extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       elevation: 0,
-      color: color.surfaceRaised,
+      color: colorTheme.surfaceContainerLow,
       clipBehavior: Clip.antiAlias,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.sheet),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         children: [
@@ -236,7 +236,7 @@ class _SettingsSection extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: color.surfaceEmphasis,
+                      color: colorTheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(shape.md),
                     ),
                     child: Icon(
@@ -279,7 +279,7 @@ class _SettingsSection extends StatelessWidget {
             child: isExpanded
                 ? Column(
                     children: [
-                      Divider(height: 1, color: color.outlineSoft),
+                      Divider(height: 1, color: colorTheme.outlineVariant),
                       Column(children: sectionChildren),
                     ],
                   )
@@ -479,7 +479,7 @@ class _SettingActionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
 
@@ -510,7 +510,7 @@ class _SettingActionTile extends StatelessWidget {
               await onPressed();
             },
             style: FilledButton.styleFrom(
-              backgroundColor: color.surfaceEmphasis,
+              backgroundColor: colorTheme.surfaceContainerHighest,
               foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
             child: Text(actionLabel),
