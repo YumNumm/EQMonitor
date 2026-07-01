@@ -20,6 +20,8 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_error_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_forecast_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
@@ -525,16 +527,12 @@ class _CustomSettingsSection extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _NotificationDetailTile(
-            title: '緊急地震速報(予報)',
-            subtitle: eewForecastEnabled ? '有効: 現在地 震度4以上' : '無効',
+          _EewForecastDetailTile(
             enabled: eewForecastEnabled,
             onChanged: onEewForecastChanged,
           ),
           const Divider(height: 1),
-          _NotificationDetailTile(
-            title: '地震情報',
-            subtitle: earthquakeEnabled ? '有効: 現在地 震度1以上' : '無効',
+          _EarthquakeInfoDetailTile(
             enabled: earthquakeEnabled,
             onChanged: onEarthquakeChanged,
           ),
@@ -587,33 +585,25 @@ class _CustomSettingsSection extends StatelessWidget {
   }
 }
 
-class _NotificationDetailTile extends StatelessWidget {
-  const _NotificationDetailTile({
-    required this.title,
-    required this.subtitle,
+class _EewForecastDetailTile extends StatelessWidget {
+  const _EewForecastDetailTile({
     required this.enabled,
     required this.onChanged,
   });
 
-  final String title;
-  final String subtitle;
   final bool enabled;
   final Future<void> Function({required bool value}) onChanged;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(title),
-      subtitle: Text(subtitle),
+      title: const Text('緊急地震速報(予報)'),
+      subtitle: Text(enabled ? '有効: 現在地 震度4以上' : '無効'),
       trailing: const Icon(Icons.chevron_right),
       onTap: () async {
         await Navigator.of(context).push<void>(
           MaterialPageRoute<void>(
-            builder: (_) => _NotificationConditionDetailPage(
-              title: title,
-              enabled: enabled,
-              onChanged: onChanged,
-            ),
+            builder: (_) => const EewForecastSettingsPage(),
           ),
         );
       },
@@ -621,40 +611,28 @@ class _NotificationDetailTile extends StatelessWidget {
   }
 }
 
-class _NotificationConditionDetailPage extends StatelessWidget {
-  const _NotificationConditionDetailPage({
-    required this.title,
+class _EarthquakeInfoDetailTile extends StatelessWidget {
+  const _EarthquakeInfoDetailTile({
     required this.enabled,
     required this.onChanged,
   });
 
-  final String title;
   final bool enabled;
   final Future<void> Function({required bool value}) onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 16, bottom: 24),
-        children: [
-          _MasterNotificationControl(
-            value: enabled,
-            onChanged: (value) async => onChanged(value: value),
+    return ListTile(
+      title: const Text('地震情報'),
+      subtitle: Text(enabled ? '有効: 現在地 震度1以上' : '無効'),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () async {
+        await Navigator.of(context).push<void>(
+          MaterialPageRoute<void>(
+            builder: (_) => const EarthquakeInfoSettingsPage(),
           ),
-          const SettingsSectionHeader(text: '条件'),
-          _SettingValueTile(
-            title: '通知状態',
-            subtitle: enabled ? '有効' : '無効',
-          ),
-          if (enabled)
-            const _SettingValueTile(
-              title: '対象',
-              subtitle: '現在地 / 全国 / 地域スロット',
-            ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -1053,24 +1031,6 @@ class _ProBadge extends StatelessWidget {
           style: TextStyle(color: colorScheme.onPrimaryContainer),
         ),
       ),
-    );
-  }
-}
-
-class _SettingValueTile extends StatelessWidget {
-  const _SettingValueTile({
-    required this.title,
-    required this.subtitle,
-  });
-
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      subtitle: Text(subtitle),
     );
   }
 }
