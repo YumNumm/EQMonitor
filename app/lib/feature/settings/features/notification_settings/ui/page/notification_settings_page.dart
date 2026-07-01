@@ -665,7 +665,21 @@ class _EewWarningSettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final warningEnabled = ref.watch(
+      eewGlobalSettingsProvider.select((s) => s.value?.warningEnabled ?? true),
+    );
+
     ref.listen(EewWarningConfigNotifier.updateConfigMutation, (_, next) async {
+      if (next is MutationError && context.mounted) {
+        await showNotificationSettingsErrorDialog(
+          context: context,
+          error: next.error,
+          errorMessageBuilder: ref.read(errorMessageBuilderProvider),
+        );
+      }
+    });
+
+    ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
         await showNotificationSettingsErrorDialog(
           context: context,
@@ -704,19 +718,32 @@ class _EewWarningSettingsPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.only(top: 16, bottom: 24),
         children: [
+          _MasterNotificationControl(
+            value: warningEnabled,
+            onChanged: (value) async {
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
+                ref,
+                (tsx) async {
+                  await tsx
+                      .get(eewGlobalSettingsProvider.notifier)
+                      .updateSettings(warningEnabled: value);
+                },
+              );
+            },
+          ),
           const SettingsSectionHeader(text: '通知対象'),
           _TargetOptionTile(
             title: '現在地のみ',
             subtitle: '現在地が警報対象になったときに通知します',
             selected: target == EewWarningTarget.currentLocationOnly,
-            locked: false,
+            locked: !warningEnabled,
             onTap: () async => select(EewWarningTarget.currentLocationOnly),
           ),
           _TargetOptionTile(
             title: '現在地 + 全国',
             subtitle: isPro ? '全国の警報も通知します' : 'Proで利用できます',
             selected: target == EewWarningTarget.currentLocationAndNationwide,
-            locked: !isPro,
+            locked: !isPro || !warningEnabled,
             onTap: () async =>
                 select(EewWarningTarget.currentLocationAndNationwide),
           ),
@@ -724,27 +751,30 @@ class _EewWarningSettingsPage extends ConsumerWidget {
             const SettingsSectionHeader(text: '全国の割り込みレベル'),
             RadioGroup<InterruptionLevel>(
               groupValue: nationwideLevel,
-              onChanged: (v) async => updateNationwideLevel(v!),
-              child: const Column(
+              onChanged: (v) async {
+                if (!warningEnabled) {
+                  return;
+                }
+                if (v != null) {
+                  await updateNationwideLevel(v);
+                }
+              },
+              child: Column(
                 children: [
                   RadioListTile<InterruptionLevel>(
-                    title: Text('通常'),
+                    title: const Text('通常'),
                     value: InterruptionLevel.active,
+                    enabled: warningEnabled,
                   ),
                   RadioListTile<InterruptionLevel>(
-                    title: Text('サイレント'),
+                    title: const Text('サイレント'),
                     value: InterruptionLevel.passive,
+                    enabled: warningEnabled,
                   ),
                 ],
               ),
             ),
           ],
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Text(
-              '現在のAPI仕様では、緊急地震速報(警報)自体の無効化はありません。',
-            ),
-          ),
         ],
       ),
     );
