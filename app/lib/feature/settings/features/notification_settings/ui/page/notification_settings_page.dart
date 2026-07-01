@@ -97,7 +97,7 @@ class _Body extends HookConsumerWidget {
           },
         ),
         if (notificationsEnabled) ...[
-          const SettingsSectionHeader(text: '通知条件'),
+          const SettingsSectionHeader(text: '通知プリセット'),
           _PresetOptionGroup(
             selectedPreset: selectedPreset,
             onChanged: (preset) =>
@@ -116,8 +116,6 @@ class _Body extends HookConsumerWidget {
               );
             },
           ),
-          const SettingsSectionHeader(text: 'その他の通知'),
-          const _GeneralNotificationSettingsSection(),
         ],
         const SettingsSectionHeader(text: 'ツール'),
         const _NotificationHistoryTile(),
@@ -229,7 +227,13 @@ class _PresetOptionGroup extends StatelessWidget {
             title: 'カスタム',
             subtitle: '通知の種類ごとに条件を細かく設定します',
             isSelected: selectedPreset == NotificationPreset.custom,
-            onTap: () => onChanged(NotificationPreset.custom),
+            onTap: () {
+              if (selectedPreset == NotificationPreset.custom) {
+                onCustomSettingsTap();
+              } else {
+                onChanged(NotificationPreset.custom);
+              }
+            },
             trailing: _CustomPresetTrailing(
               enabled: selectedPreset == NotificationPreset.custom,
               onTap: onCustomSettingsTap,
@@ -1055,6 +1059,7 @@ class _SettingValueTile extends StatelessWidget {
   }
 }
 
+// ignore: unused_element
 class _GeneralNotificationSettingsSection extends ConsumerWidget {
   const _GeneralNotificationSettingsSection();
 
