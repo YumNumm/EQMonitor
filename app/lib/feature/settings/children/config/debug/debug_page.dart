@@ -639,6 +639,19 @@ class _StartApiDebugContent extends ConsumerWidget {
             subtitle: Text(data.flags.maintenance.message!),
           ),
         AppSwitchListTile(
+          title: 'planConstraints.isPro',
+          subtitle: 'EQMonitor Pro サブスクリプション',
+          value: data.planConstraints.free.isPro,
+          onChanged: (v) => _override(
+            ref,
+            data.copyWith(
+              planConstraints: data.planConstraints.copyWith(
+                free: data.planConstraints.free.copyWith(isPro: v),
+              ),
+            ),
+          ),
+        ),
+        AppSwitchListTile(
           title: 'flags.ads_enabled',
           subtitle: '広告有効フラグ',
           value: data.flags.adsEnabled,
