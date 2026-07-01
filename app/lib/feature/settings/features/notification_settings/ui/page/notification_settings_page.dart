@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/notification/data/notifier/general_notificatio
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
@@ -17,6 +18,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_error_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
@@ -1106,37 +1108,23 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _InlineSwitchTile(
-            title: '津波通知',
-            subtitle: settings.tsunamiEnabled ? '通知する' : '通知しない',
-            value: settings.tsunamiEnabled,
-            onChanged: ({required value}) async {
-              await GeneralNotificationSettingsNotifier.updateSettingsMutation
-                  .run(ref, (tsx) async {
-                    await tsx
-                        .get(generalNotificationSettingsProvider.notifier)
-                        .updateSettings(tsunamiEnabled: value);
-                  });
-            },
+          ListTile(
+            enabled: false,
+            title: const Text('津波通知'),
+            subtitle: const Text('現在実装中です。今後のアップデートで利用可能になります。'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const ComingSoonBadge(),
+                SizedBox(width: spacing.sm),
+                AppSwitch(value: settings.tsunamiEnabled, onChanged: null),
+              ],
+            ),
           ),
           const Divider(height: 1),
-          _InlineSwitchTile(
-            title: '訓練通知',
-            subtitle: settings.trainingEnabled ? '通知する' : '通知しない',
-            value: settings.trainingEnabled,
-            onChanged: ({required value}) async {
-              await GeneralNotificationSettingsNotifier.updateSettingsMutation
-                  .run(ref, (tsx) async {
-                    await tsx
-                        .get(generalNotificationSettingsProvider.notifier)
-                        .updateSettings(trainingEnabled: value);
-                  });
-            },
-          ),
-          const Divider(height: 1),
-          _InlineSwitchTile(
-            title: '南海トラフ臨時情報',
-            subtitle: settings.nankaiExtraordinaryEnabled ? '通知する' : '通知しない',
+          InfoNotificationTile(
+            title: '南海トラフ地震関連解説情報(定例外)',
+            subtitleText: '南海トラフ沿いで異常な現象が観測され、その現象が南海トラフ沿いの大規模な地震と関連するかどうか調査を開始・解説・終了した場合等に発表 ',
             value: settings.nankaiExtraordinaryEnabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
@@ -1146,11 +1134,22 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
                         .updateSettings(nankaiExtraordinaryEnabled: value);
                   });
             },
+            bottomSheetTitle: '南海トラフ地震関連解説情報(定例外)',
+            bottomSheetLinks: const [
+              InfoLink(
+                title: '「南海トラフ地震に関連する情報」について',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/info_criterion.html',
+              ),
+              InfoLink(
+                title: '「南海トラフ地震臨時情報」が発表されたときの防災対応',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/bosai.html',
+              ),
+            ],
           ),
           const Divider(height: 1),
-          _InlineSwitchTile(
-            title: '南海トラフ定例情報',
-            subtitle: settings.nankaiRegularEnabled ? '通知する' : '通知しない',
+          InfoNotificationTile(
+            title: '南海トラフ地震関連解説情報(定例)',
+            subtitleText: '「南海トラフ沿いの地震に関する評価検討会」の定例会合における調査結果を発表 ',
             value: settings.nankaiRegularEnabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
@@ -1160,11 +1159,22 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
                         .updateSettings(nankaiRegularEnabled: value);
                   });
             },
+            bottomSheetTitle: '南海トラフ地震関連解説情報(定例)',
+            bottomSheetLinks: const [
+              InfoLink(
+                title: '「南海トラフ地震に関連する情報」について',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/info_criterion.html',
+              ),
+              InfoLink(
+                title: '南海トラフ沿いの地震に関する評価検討会とは',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/assessment.html',
+              ),
+            ],
           ),
           const Divider(height: 1),
-          _InlineSwitchTile(
-            title: '北海道三連動（十勝沖）',
-            subtitle: settings.hokkaido3renOffshoreEnabled ? '通知する' : '通知しない',
+          InfoNotificationTile(
+            title: '北海道・三陸沖後発地震注意情報',
+            subtitleText: '北海道の根室沖から東北地方の三陸沖の巨大地震の想定震源域やその周辺でMw7.0以上の地震が発生し、大規模地震の発生可能性が平常時より相対的に高まっている際に「北海道・三陸沖後発地震注意情報」を発表 ',
             value: settings.hokkaido3renOffshoreEnabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
@@ -1174,6 +1184,17 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
                         .updateSettings(hokkaido3renOffshoreEnabled: value);
                   });
             },
+            bottomSheetTitle: '北海道・三陸沖後発地震注意情報',
+            bottomSheetLinks: const [
+              InfoLink(
+                title: '「北海道・三陸沖後発地震注意情報」について',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nceq/info_guide.html',
+              ),
+              InfoLink(
+                title: '配信資料に関する仕様 No.40701 ～北海道・三陸沖後発地震注意情報～',
+                url: 'https://www.data.jma.go.jp/suishin/shiyou/pdf/no40701',
+              ),
+            ],
           ),
         ],
       ),
