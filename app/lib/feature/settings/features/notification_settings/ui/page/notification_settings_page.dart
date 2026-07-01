@@ -416,6 +416,8 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
         padding: const EdgeInsets.only(top: 16, bottom: 24),
         children: [
           if (!isPro) const _ProUpsellBanner(),
+          const SettingsSectionHeader(text: '通知地域'),
+          _SlotListSection(isPro: isPro, maxRegions: maxRegions),
           const SettingsSectionHeader(text: '通知の種類'),
           _CustomSettingsSection(
             isPro: isPro,
@@ -465,8 +467,8 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
               );
             },
           ),
-          const SettingsSectionHeader(text: '通知地域'),
-          _SlotListSection(isPro: isPro, maxRegions: maxRegions),
+          const SettingsSectionHeader(text: 'その他の通知'),
+          const _GeneralNotificationSettingsSection(),
         ],
       ),
     );
@@ -545,7 +547,7 @@ class _CustomSettingsSection extends StatelessWidget {
           ),
           const Divider(height: 1),
           _InlineSwitchTile(
-            title: '推計震度',
+            title: '推計震度分布図',
             subtitle: estimatedIntensityEnabled ? '通知する' : '通知しない',
             value: estimatedIntensityEnabled,
             onChanged: onEstimatedIntensityChanged,
@@ -553,20 +555,29 @@ class _CustomSettingsSection extends StatelessWidget {
           const Divider(height: 1),
           _LockedSettingTile(
             title: '通知音・割り込みレベル',
-            subtitle: isPro ? '種類ごとに変更できます' : 'Freeでは固定です',
+            subtitle: isPro
+                ? '種類ごとに変更できます'
+                : '通知音・割り込みレベルの変更、続報通知の上書き設定ができます',
             locked: !isPro,
+            onTap: isPro ? null : () => const PaywallRoute().push<void>(context),
           ),
           const Divider(height: 1),
           _LockedSettingTile(
             title: '震度別の音設定',
             subtitle: isPro ? '震度ごとに音と割り込みを変更できます' : 'Proで利用できます',
             locked: !isPro,
+            onTap: isPro ? null : () => const PaywallRoute().push<void>(context),
           ),
           const Divider(height: 1),
           _LockedSettingTile(
-            title: '1点検知',
-            subtitle: isPro ? '通常またはサイレントで通知できます' : 'Proで利用できます',
+            title: '低精度の緊急地震速報',
+            subtitle: '50gal超えのレベル法, 1点検知の低精度の緊急地震速報(予報)',
             locked: !isPro,
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('この機能は現在準備中です')),
+              );
+            },
           ),
         ],
       ),
@@ -792,23 +803,21 @@ class _LockedSettingTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.locked,
+    this.onTap,
   });
 
   final String title;
   final String subtitle;
   final bool locked;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final textColor = locked
-        ? Theme.of(context).disabledColor
-        : context.designSystem.textColor.primary;
-
     return ListTile(
-      enabled: !locked,
-      title: Text(title, style: TextStyle(color: textColor)),
+      title: Text(title),
       subtitle: Text(subtitle),
       trailing: locked ? const _ProBadge() : const Icon(Icons.chevron_right),
+      onTap: onTap,
     );
   }
 }
@@ -964,7 +973,12 @@ class _SlotListTile extends StatelessWidget {
     final (icon, title) = switch (slot.slotType) {
       NotificationSlotType.currentLocation => ('📍', '現在地'),
       NotificationSlotType.nationwide => ('🌐', '全国'),
-      NotificationSlotType.region => ('📍', slot.regionName ?? '地域'),
+      NotificationSlotType.region => (
+        '📍',
+        slot.cityName != null
+            ? '${slot.regionName ?? '地域'} ${slot.cityName}'
+            : slot.regionName ?? '地域',
+      ),
     };
 
     final eewText = slot.eewEnabled
@@ -1059,7 +1073,6 @@ class _SettingValueTile extends StatelessWidget {
   }
 }
 
-// ignore: unused_element
 class _GeneralNotificationSettingsSection extends ConsumerWidget {
   const _GeneralNotificationSettingsSection();
 
