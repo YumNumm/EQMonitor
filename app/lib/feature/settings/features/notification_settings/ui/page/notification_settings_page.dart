@@ -22,8 +22,10 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_error_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_forecast_settings_page.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/sound_interruption_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -559,14 +561,26 @@ class _CustomSettingsSection extends StatelessWidget {
                 ? '種類ごとに変更できます'
                 : '通知音・割り込みレベルの変更、続報通知の上書き設定ができます',
             locked: !isPro,
-            onTap: isPro ? null : () => const PaywallRoute().push<void>(context),
+            onTap: isPro
+                ? () => Navigator.of(context).push<void>(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const SoundInterruptionSettingsPage(),
+                    ),
+                  )
+                : () => const PaywallRoute().push<void>(context),
           ),
           const Divider(height: 1),
           _LockedSettingTile(
             title: '震度別の音設定',
             subtitle: isPro ? '震度ごとに音と割り込みを変更できます' : 'Proで利用できます',
             locked: !isPro,
-            onTap: isPro ? null : () => const PaywallRoute().push<void>(context),
+            onTap: isPro
+                ? () => Navigator.of(context).push<void>(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const PerIntensitySoundSettingsPage(),
+                    ),
+                  )
+                : () => const PaywallRoute().push<void>(context),
           ),
           const Divider(height: 1),
           _LockedSettingTile(
