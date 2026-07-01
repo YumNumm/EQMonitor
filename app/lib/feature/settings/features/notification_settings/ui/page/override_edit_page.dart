@@ -2,19 +2,13 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 enum OverrideType { eew, earthquake }
-
-const _presetSounds = [
-  'default',
-  'eew_warning',
-  'eew_forecast',
-  'earthquake',
-];
 
 const List<JmaIntensity> _overrideIntensities = [
   JmaIntensity.zero,
@@ -215,7 +209,7 @@ class OverrideEditPage extends HookConsumerWidget {
       builder: (context) => _OverrideFormDialog(
         availableIntensities: [current.minJmaIntensity],
         initialIntensity: current.minJmaIntensity,
-        initialSound: current.sound,
+        initialSound: NotificationSound.fromApiValue(current.sound),
         initialInterruptionLevel: current.interruptionLevel,
         isEditing: true,
       ),
@@ -399,14 +393,14 @@ class _OverrideFormDialog extends StatefulWidget {
   const _OverrideFormDialog({
     required this.availableIntensities,
     required this.initialIntensity,
-    this.initialSound = 'default',
+    this.initialSound = NotificationSound.defaultSound,
     this.initialInterruptionLevel = InterruptionLevel.active,
     this.isEditing = false,
   });
 
   final List<JmaIntensity> availableIntensities;
   final JmaIntensity initialIntensity;
-  final String initialSound;
+  final NotificationSound initialSound;
   final InterruptionLevel initialInterruptionLevel;
   final bool isEditing;
 
@@ -416,7 +410,7 @@ class _OverrideFormDialog extends StatefulWidget {
 
 class _OverrideFormDialogState extends State<_OverrideFormDialog> {
   late JmaIntensity _selectedIntensity;
-  late String _selectedSound;
+  late NotificationSound _selectedSound;
   late InterruptionLevel _selectedInterruptionLevel;
 
   @override
@@ -465,7 +459,7 @@ class _OverrideFormDialogState extends State<_OverrideFormDialog> {
               style: Theme.of(context).textTheme.labelLarge,
             ),
             const SizedBox(height: 8),
-            DropdownButton<String>(
+            DropdownButton<NotificationSound>(
               value: _selectedSound,
               isExpanded: true,
               onChanged: (next) {
@@ -474,10 +468,10 @@ class _OverrideFormDialogState extends State<_OverrideFormDialog> {
                 }
               },
               items: [
-                for (final sound in _presetSounds)
+                for (final sound in NotificationSound.values)
                   DropdownMenuItem(
                     value: sound,
-                    child: Text(_soundLabel(sound)),
+                    child: Text(sound.displayName),
                   ),
               ],
             ),
@@ -519,7 +513,7 @@ class _OverrideFormDialogState extends State<_OverrideFormDialog> {
           onPressed: () => Navigator.of(context).pop(
             NotificationOverride(
               minJmaIntensity: _selectedIntensity,
-              sound: _selectedSound,
+              sound: _selectedSound.apiValue,
               interruptionLevel: _selectedInterruptionLevel,
             ),
           ),
