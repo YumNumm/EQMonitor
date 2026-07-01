@@ -1,7 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
@@ -14,7 +13,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_i
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// [EarthquakeHistoryListTile] の各種デザインをプレビューするデバッグページ。
 ///
@@ -22,13 +20,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// - 検索対象地域の震度情報
 /// - 海外遠地地震情報
 /// - 海外の大規模な火山の噴火
-class DebugEarthquakeHistoryListTilePage extends ConsumerWidget {
+class DebugEarthquakeHistoryListTilePage extends StatelessWidget {
   const DebugEarthquakeHistoryListTilePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColor = ref.watch(intensityColorProvider);
-
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('地震履歴 ListTile Debug')),
       body: ListView(
@@ -37,7 +33,6 @@ class DebugEarthquakeHistoryListTilePage extends ConsumerWidget {
           for (final intensity in _domesticIntensities)
             EarthquakeHistoryListTile(
               item: _domesticEarthquake(maxIntensity: intensity),
-              intensityColor: intensityColor,
               onTap: () {},
             ),
           const _SectionHeader('検索対象地域の震度情報'),
@@ -46,7 +41,6 @@ class DebugEarthquakeHistoryListTilePage extends ConsumerWidget {
               item: _domesticEarthquake(maxIntensity: entry.maxIntensity),
               areaInfo: entry.areaInfo,
               areaName: entry.areaInfo.name,
-              intensityColor: intensityColor,
               onTap: () {},
             ),
           const _SectionHeader('海外遠地地震情報'),
@@ -72,13 +66,11 @@ class DebugEarthquakeHistoryListTilePage extends ConsumerWidget {
               telegramTypes: const [],
               estimatedIntensityTileUrl: null,
             ),
-            intensityColor: intensityColor,
             onTap: () {},
           ),
           const _SectionHeader('海外の大規模な火山の噴火'),
           EarthquakeHistoryListTile(
             item: _foreignVolcanoEruption(),
-            intensityColor: intensityColor,
             onTap: () {},
           ),
           const SizedBox(height: 32),

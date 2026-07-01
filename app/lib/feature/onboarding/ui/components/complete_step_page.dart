@@ -6,7 +6,7 @@ class _CompleteStepPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final completeMutation = ref.watch(OnboardingCompleted.completeMutation);
     final isProcessing = completeMutation is MutationPending;
 

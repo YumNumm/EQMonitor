@@ -1,7 +1,5 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
@@ -44,7 +42,6 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
     final sortBy = useState(api.EarthquakeSortBy.maxIntensity);
     final sortOrder = useState(api.SortOrder.desc);
     final searchParam = useState(const NearbyEarthquakeParameter());
-    final intensityColor = ref.watch(intensityColorProvider);
     final theme = Theme.of(context);
 
     final asyncItems = ref.watch(
@@ -201,7 +198,6 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
               ),
             AsyncData(value: final items) => _NearbyEarthquakeList(
                 items: items,
-                intensityColor: intensityColor,
                 onShowAll: onShowAll,
               ),
           },
@@ -242,12 +238,10 @@ class _ParameterSummary extends StatelessWidget {
 class _NearbyEarthquakeList extends StatelessWidget {
   const _NearbyEarthquakeList({
     required this.items,
-    required this.intensityColor,
     required this.onShowAll,
   });
 
   final List<EarthquakePartial> items;
-  final IntensityColorModel intensityColor;
   final Future<void> Function() onShowAll;
 
   @override
@@ -257,7 +251,6 @@ class _NearbyEarthquakeList extends StatelessWidget {
         for (final item in items) ...[
           EarthquakeHistoryListTile(
             item: item,
-            intensityColor: intensityColor,
             onTap: () async => EarthquakeHistoryDetailsRoute(
               eventId: item.eventId,
             ).push<void>(context),

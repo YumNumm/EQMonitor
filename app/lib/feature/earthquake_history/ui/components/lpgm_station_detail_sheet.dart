@@ -1,11 +1,10 @@
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,7 +19,7 @@ class LpgmStationDetailSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colorModel = ref.watch(intensityColorProvider);
+    final intensityColors = context.designSystem.colorTheme.intensity;
     final intensity = station.intensity;
     final prePeriods = intensity?.prePeriods;
 
@@ -49,7 +48,7 @@ class LpgmStationDetailSheet extends ConsumerWidget {
               const SizedBox(height: 16),
               _PrePeriodsTable(
                 prePeriods: prePeriods,
-                colorModel: colorModel,
+                intensityColors: intensityColors,
               ),
             ],
             const SizedBox(height: 16),
@@ -113,11 +112,11 @@ class _Header extends ConsumerWidget {
 class _PrePeriodsTable extends StatelessWidget {
   const _PrePeriodsTable({
     required this.prePeriods,
-    required this.colorModel,
+    required this.intensityColors,
   });
 
   final List<PrePeriod> prePeriods;
-  final IntensityColorModel colorModel;
+  final IntensityColors intensityColors;
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +157,7 @@ class _PrePeriodsTable extends StatelessWidget {
                 _headerCell('階級', theme),
                 ...sorted.map(
                   (p) {
-                    final color = colorModel.fromJmaLpgmIntensity(
+                    final entry = intensityColors.fromJmaLpgmIntensity(
                       p.lpgmIntensity,
                     );
                     return TableCell(
@@ -168,13 +167,13 @@ class _PrePeriodsTable extends StatelessWidget {
                           vertical: 6,
                           horizontal: 4,
                         ),
-                        color: color.background,
+                        color: entry.background,
                         child: Center(
                           child: Text(
                             p.lpgmIntensity.label,
                             style: theme.textTheme.labelMedium?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: color.foreground,
+                              color: entry.resolvedForeground,
                               fontFamily: FontFamily.googleSansCode,
                             ),
                           ),

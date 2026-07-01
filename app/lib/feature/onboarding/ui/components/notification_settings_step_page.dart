@@ -19,7 +19,7 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
 
     useEffect(() {
       scope.setStepNavigation(
@@ -95,7 +95,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final selectedPreset = useState<_NotificationPreset?>(null);
     final saveError = useState<String?>(null);
     final isProcessing = useState(false);
@@ -282,7 +282,7 @@ class _PresetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
 
     return GestureDetector(
       onTap: onTap,

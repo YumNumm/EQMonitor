@@ -1,7 +1,6 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
@@ -105,7 +104,6 @@ class _CityDetailModal extends ConsumerWidget {
     required Widget child,
     Widget? footer,
   }) {
-    final theme = Theme.of(context);
     return CustomScrollView(
       controller: scrollController,
       slivers: [
@@ -254,8 +252,6 @@ class _PagingBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final intensityColor = ref.watch(intensityColorProvider);
     return SliverGroupedPagingList<String?, String, IntensityAreaSearchItem>(
       dataSource: dataSource,
       stickyHeader: true,
@@ -267,7 +263,6 @@ class _PagingBody extends ConsumerWidget {
         children: [
           EarthquakeHistoryListTile(
             item: item.earthquake,
-            intensityColor: intensityColor,
             areaInfo: item.area,
             areaName: cityName,
             onTap: () async {

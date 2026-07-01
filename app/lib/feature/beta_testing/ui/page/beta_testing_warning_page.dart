@@ -17,7 +17,7 @@ class BetaTestingWarningPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ds = Theme.of(context).designSystemThemeExtension;
+    final ds = context.designSystem;
 
     return Scaffold(
       backgroundColor: ds.colorTheme.surfaceContainerLow,

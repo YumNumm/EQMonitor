@@ -6,7 +6,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final deviceProvisioningStatus = ref.watch(deviceProvisioningProvider);
     final deviceProvisioningMutation = ref.watch(
       DeviceProvisioningNotifier.provisionMutation,

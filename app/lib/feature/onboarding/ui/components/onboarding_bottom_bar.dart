@@ -23,8 +23,7 @@ class _OnboardingBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final designSystem = theme.designSystemThemeExtension;
+    final designSystem = context.designSystem;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(

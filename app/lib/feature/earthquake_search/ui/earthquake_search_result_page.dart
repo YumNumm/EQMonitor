@@ -6,9 +6,9 @@ import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
@@ -301,9 +301,9 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
       maxIntensityText,
     ].where((e) => e != null && e.isNotEmpty).join('\n');
 
-    final intensityColorState = ref.watch(intensityColorProvider);
+    final intensityColors = context.designSystem.colorTheme.intensity;
     final intensityColor = localIntensity != null
-        ? intensityColorState.fromJmaIntensity(localIntensity).background
+        ? intensityColors.fromJmaIntensity(localIntensity).background
         : null;
 
     final magnitudeText = _formatMagnitude(hypocenter?.magnitude);

@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class PinnedActiveEewSection extends ConsumerWidget {
     if (eews.isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
-    final spacing = Theme.of(context).designSystemThemeExtension.spacing;
+    final spacing = context.designSystem.spacing;
     return SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.all(spacing.sm),

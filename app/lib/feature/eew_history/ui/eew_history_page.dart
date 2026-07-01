@@ -1,8 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart';
@@ -37,7 +34,6 @@ class EewHistoryPage extends HookConsumerWidget {
         data: (dataSource) => _PagingBody(
           dataSource: dataSource,
           parameter: parameter,
-          intensityColor: ref.watch(intensityColorProvider),
           onRefresh: () => dataSource.refresh(),
         ),
       ),
@@ -49,13 +45,11 @@ class _PagingBody extends StatelessWidget {
   const _PagingBody({
     required this.dataSource,
     required this.parameter,
-    required this.intensityColor,
     required this.onRefresh,
   });
 
   final EewListDataSource dataSource;
   final ValueNotifier<EewListParameter> parameter;
-  final IntensityColorModel intensityColor;
   final Future<void> Function() onRefresh;
 
   @override
@@ -86,7 +80,6 @@ class _PagingBody extends StatelessWidget {
               children: [
                 EewHistoryListTile(
                   item: item,
-                  intensityColor: intensityColor,
                   visualDensity: VisualDensity.compact,
                   onTap: () async => EewDetailsByEventIdRoute(
                     eventId: item.eventId,
@@ -154,7 +147,7 @@ class _DateHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final spacing = theme.designSystemThemeExtension.spacing;
+    final spacing = context.designSystem.spacing;
     return Container(
       color: context.designSystem.colorTheme.surfaceContainer,
       padding: EdgeInsets.symmetric(

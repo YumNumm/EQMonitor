@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/decoration/warning_stripe_decoration.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
@@ -100,7 +100,7 @@ class EewCard extends ConsumerWidget {
       }
     }
 
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
 
     return Stack(
@@ -163,7 +163,7 @@ class _EewMainCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
@@ -266,7 +266,7 @@ class _EewCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final typography = designSystem.typography;
     final spacing = designSystem.spacing;
 
@@ -303,7 +303,7 @@ class _EewCardHeader extends StatelessWidget {
               fontWeight: .w700,
               color: Colors.white,
             ),
-            overflow: .visible,
+            overflow: TextOverflow.visible,
           ),
         ],
       ),
@@ -386,7 +386,7 @@ class _EewMaxIntensitySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final typography = designSystem.typography;
     final colorTheme = designSystem.colorTheme;
 
@@ -415,7 +415,7 @@ class _EewHypocenterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final typography = designSystem.typography;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
@@ -488,7 +488,7 @@ class _EewLocalForecastSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final typography = designSystem.typography;
     final colorTheme = designSystem.colorTheme;
 
@@ -530,7 +530,7 @@ class _EewLpgmSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final typography = designSystem.typography;
     final spacing = designSystem.spacing;
 
@@ -560,7 +560,7 @@ class _BackgroundIndexText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorTheme = Theme.of(context).designSystemThemeExtension.colorTheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Center(
       child: FittedBox(
@@ -585,7 +585,7 @@ class _SecondaryLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final typography = designSystem.typography;
     final colorTheme = designSystem.colorTheme;
 
@@ -603,7 +603,7 @@ class _MagnitudeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final typography = designSystem.typography;
     final colorTheme = designSystem.colorTheme;
 
@@ -638,7 +638,7 @@ class _DepthRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final typography = designSystem.typography;
     final colorTheme = designSystem.colorTheme;
 

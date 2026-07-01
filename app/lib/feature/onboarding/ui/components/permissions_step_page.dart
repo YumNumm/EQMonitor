@@ -6,7 +6,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final notificationPermission = useState(_PermissionState.notRequested);
     final locationPermission = useState(_PermissionState.notRequested);
     final isProcessing = useState(false);

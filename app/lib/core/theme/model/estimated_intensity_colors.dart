@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/theme/model/intensity_color_entry.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -17,4 +18,18 @@ abstract class EstimatedIntensityColors with _$EstimatedIntensityColors {
 
   factory EstimatedIntensityColors.fromJson(Map<String, dynamic> json) =>
       _$EstimatedIntensityColorsFromJson(json);
+}
+
+extension EstimatedIntensityColorsLookup on EstimatedIntensityColors {
+  IntensityColorEntry fromJmaIntensity(JmaIntensity intensity) =>
+      switch (intensity) {
+        JmaIntensity.four => four,
+        JmaIntensity.fiveUnknown => fiveLower,
+        JmaIntensity.fiveLower => fiveLower,
+        JmaIntensity.fiveUpper => fiveUpper,
+        JmaIntensity.sixLower => sixLower,
+        JmaIntensity.sixUpper => sixUpper,
+        JmaIntensity.seven => seven,
+        _ => four, // fallback for intensities below 4
+      };
 }

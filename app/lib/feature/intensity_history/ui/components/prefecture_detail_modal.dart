@@ -1,8 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
@@ -114,7 +113,6 @@ class _DragHandle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Center(
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
@@ -224,8 +222,6 @@ class _PagingBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final intensityColor = ref.watch(intensityColorProvider);
     return SliverGroupedPagingList<String?, String, IntensityAreaSearchItem>(
       dataSource: dataSource,
       stickyHeader: true,
@@ -237,7 +233,6 @@ class _PagingBody extends ConsumerWidget {
         children: [
           EarthquakeHistoryListTile(
             item: item.earthquake,
-            intensityColor: intensityColor,
             areaInfo: item.area,
             areaName: prefectureName,
             onTap: () async {

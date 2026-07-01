@@ -2,28 +2,26 @@ import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/jma_forecast_intensity.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// JMA震度階級の各地の震度ツリー表示
-class JmaIntensityContent extends HookConsumerWidget {
+class JmaIntensityContent extends HookWidget {
   const JmaIntensityContent({required this.item, super.key});
 
   final Earthquake item;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colorModel = ref.watch(intensityColorProvider);
+  Widget build(BuildContext context) {
+    final intensityColors = context.designSystem.colorTheme.intensity;
     final intensity = item.intensity;
     if (intensity == null) {
       return const SizedBox.shrink();
@@ -66,7 +64,7 @@ class JmaIntensityContent extends HookConsumerWidget {
               (entry) => _PreliminaryIntensityLevelSection(
                 intensity: entry.key,
                 regions: entry.value,
-                dividerColor: colorModel.fromJmaIntensity(entry.key).background,
+                dividerColor: intensityColors.fromJmaIntensity(entry.key).background,
               ),
             ),
         ],
@@ -80,7 +78,7 @@ class JmaIntensityContent extends HookConsumerWidget {
               intensity: entry.key,
               prefectures: entry.value,
               eventId: item.eventId,
-              dividerColor: colorModel.fromJmaIntensity(entry.key).background,
+              dividerColor: intensityColors.fromJmaIntensity(entry.key).background,
             ),
           )
           .toList(),
@@ -89,14 +87,14 @@ class JmaIntensityContent extends HookConsumerWidget {
 }
 
 /// 長周期地震動階級の各地のツリー表示
-class LpgmIntensityContent extends HookConsumerWidget {
+class LpgmIntensityContent extends HookWidget {
   const LpgmIntensityContent({required this.item, super.key});
 
   final Earthquake item;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colorModel = ref.watch(intensityColorProvider);
+  Widget build(BuildContext context) {
+    final intensityColors = context.designSystem.colorTheme.intensity;
     final intensity = item.intensity;
     if (intensity == null) {
       return const SizedBox.shrink();
@@ -130,7 +128,7 @@ class LpgmIntensityContent extends HookConsumerWidget {
               intensity: entry.key,
               prefectures: entry.value,
               eventId: item.eventId,
-              dividerColor: colorModel
+              dividerColor: intensityColors
                   .fromJmaLpgmIntensity(entry.key)
                   .background,
             ),
@@ -556,7 +554,7 @@ class _CityTile extends HookWidget {
   }
 }
 
-class _LpgmCityTile extends HookConsumerWidget {
+class _LpgmCityTile extends HookWidget {
   const _LpgmCityTile({
     required this.city,
     required this.eventId,
@@ -566,7 +564,7 @@ class _LpgmCityTile extends HookConsumerWidget {
   final String? eventId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final isExpanded = useState(false);
     final hasStations = city.stations.isNotEmpty;
     final trailing = _buildTrailing(

@@ -52,7 +52,7 @@ class OnboardingPage extends HookConsumerWidget {
     final stepNavigation = useState(
       _StepNavigationState.initial(_steps.first),
     );
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
 
     final animateToNext = useCallback<Future<void> Function()>(() async {
       await pageController.nextPage(
