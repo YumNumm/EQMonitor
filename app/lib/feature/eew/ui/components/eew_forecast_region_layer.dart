@@ -21,11 +21,13 @@ class EewForecastRegionLayer extends HookConsumerWidget {
   const EewForecastRegionLayer({
     required this.eew,
     required this.displayMode,
+    this.additionalRegions,
     super.key,
   });
 
   final EewTelegramItem? eew;
   final EewDisplayMode displayMode;
+  final List<EewForecastRegionInfo>? additionalRegions;
 
   static const _sourceId = 'eqmonitor_map';
   static const _sourceLayerId = 'areaForecastLocalE';
@@ -51,7 +53,10 @@ class EewForecastRegionLayer extends HookConsumerWidget {
     final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
 
     final regionMaxIntensities = useMemoized(() {
-      final regions = eew?.forecastIntensity?.regions ?? const [];
+      final regions = [
+        ...eew?.forecastIntensity?.regions ?? const [],
+        ...?additionalRegions,
+      ];
       return regions
           .groupListsBy((e) => e.code)
           .map(
@@ -62,7 +67,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           )
           .values
           .toList();
-    }, [eew]);
+    }, [eew, additionalRegions]);
 
     final warningCodes = useMemoized(() {
       final zones = eew?.warning?.regions ?? const [];
