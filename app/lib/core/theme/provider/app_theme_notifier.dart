@@ -63,7 +63,7 @@ class AppThemeNotifier extends _$AppThemeNotifier {
       return const Failure(
         AppThemeImportException('JSONの解析に失敗しました'),
       );
-    } on Exception catch (_) {
+    } on Object catch (_) {
       return const Failure(
         AppThemeImportException('テーマJSONの内容が不正です'),
       );
