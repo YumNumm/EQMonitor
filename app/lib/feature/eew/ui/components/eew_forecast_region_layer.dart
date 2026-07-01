@@ -53,7 +53,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
     final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
 
     final regionMaxIntensities = useMemoized(() {
-      final regions = [
+      final regions = <EewForecastRegionInfo>[
         ...eew?.forecastIntensity?.regions ?? const [],
         ...?additionalRegions,
       ];
@@ -62,7 +62,9 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           .map(
             (key, values) => MapEntry(
               key,
-              values.sortedBy((e) => e.intensity.orderIndex).last,
+              values
+                  .sortedBy<num>((e) => e.intensity.orderIndex)
+                  .last,
             ),
           )
           .values
