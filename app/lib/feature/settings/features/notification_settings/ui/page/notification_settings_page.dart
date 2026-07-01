@@ -902,6 +902,8 @@ class _SlotListSection extends ConsumerWidget {
     final slots = [...?slotsAsync.value]
       ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
 
+    final hasNationwide = slots
+        .any((s) => s.slotType == NotificationSlotType.nationwide);
     final regionSlotCount = slots
         .where((s) => s.slotType == NotificationSlotType.region)
         .length;
@@ -955,6 +957,29 @@ class _SlotListSection extends ConsumerWidget {
             ),
           ),
         ...tiles,
+        if (!hasNationwide)
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              spacing.lg,
+              spacing.sm,
+              spacing.lg,
+              0,
+            ),
+            child: FilledButton.tonalIcon(
+              onPressed: () async {
+                await NotificationSlotsNotifier.putNationwideMutation.run(
+                  ref,
+                  (tsx) async {
+                    await tsx
+                        .get(notificationSlotsProvider.notifier)
+                        .putNationwide();
+                  },
+                );
+              },
+              icon: const Icon(Icons.public),
+              label: const Text('全国を追加'),
+            ),
+          ),
         Padding(
           padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
           child: FilledButton.tonalIcon(
