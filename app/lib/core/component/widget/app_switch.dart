@@ -86,7 +86,7 @@ class AppSwitch extends HookWidget {
                             width: 2,
                           ),
                           Border.all(
-                            color: theme.colorScheme.primary.withValues(
+                            color: colorTheme.primary.withValues(
                               alpha: 0.5,
                             ),
                             width: 0,

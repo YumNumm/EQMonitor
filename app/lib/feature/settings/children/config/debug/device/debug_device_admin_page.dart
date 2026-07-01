@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
@@ -191,7 +192,7 @@ class _Body extends HookConsumerWidget {
             messenger.showSnackBar(
               SnackBar(
                 content: Text('登録に失敗しました: $exception'),
-                backgroundColor: Theme.of(context).colorScheme.error,
+                backgroundColor: context.designSystem.colorTheme.error,
               ),
             );
         }
@@ -218,7 +219,7 @@ class _Body extends HookConsumerWidget {
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
+                foregroundColor: context.designSystem.colorTheme.error,
               ),
               child: const Text('削除'),
             ),
@@ -245,7 +246,7 @@ class _Body extends HookConsumerWidget {
             messenger.showSnackBar(
               SnackBar(
                 content: Text('削除に失敗しました: $exception'),
-                backgroundColor: Theme.of(context).colorScheme.error,
+                backgroundColor: context.designSystem.colorTheme.error,
               ),
             );
         }
@@ -286,7 +287,7 @@ class _Body extends HookConsumerWidget {
             messenger.showSnackBar(
               SnackBar(
                 content: Text('更新に失敗しました: $exception'),
-                backgroundColor: Theme.of(context).colorScheme.error,
+                backgroundColor: context.designSystem.colorTheme.error,
               ),
             );
         }
@@ -324,7 +325,7 @@ class _Body extends HookConsumerWidget {
           Text(
             '未登録（またはこの端末 ID のレコードがありません）',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: context.designSystem.colorTheme.onSurfaceVariant,
             ),
           )
         else ...[
@@ -341,7 +342,7 @@ class _Body extends HookConsumerWidget {
         Text(
           'デバイスレコードの更新は API 上 PUT（登録と同じエンドポイント）です。',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            color: context.designSystem.colorTheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 12),
@@ -448,7 +449,7 @@ class _InfoRow extends StatelessWidget {
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           ),

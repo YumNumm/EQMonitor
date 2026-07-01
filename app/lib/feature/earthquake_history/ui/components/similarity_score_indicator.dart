@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/similarity_level.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class SimilarityScoreIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final filledCount = level.filledCount;
 
     return Row(
@@ -26,8 +27,8 @@ class SimilarityScoreIndicator extends StatelessWidget {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: i < filledCount
-                      ? colorScheme.primary
-                      : colorScheme.surfaceContainerHighest,
+                      ? colorTheme.primary
+                      : colorTheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -39,7 +40,7 @@ class SimilarityScoreIndicator extends StatelessWidget {
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.bold,
-            color: colorScheme.onSurfaceVariant,
+            color: colorTheme.onSurfaceVariant,
           ),
         ),
       ],

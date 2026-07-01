@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -102,7 +103,7 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
                 Icon(
                   Icons.location_searching,
                   size: 18,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: context.designSystem.colorTheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 6),
                 Expanded(
@@ -193,7 +194,7 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
                   child: Text(
                     '該当する地震がありません',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                      color: context.designSystem.colorTheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -231,7 +232,7 @@ class _ParameterSummary extends StatelessWidget {
       child: Text(
         '$latStr  $lngStr$depthStr',
         style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
+          color: context.designSystem.colorTheme.onSurfaceVariant,
         ),
       ),
     );

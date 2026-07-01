@@ -178,7 +178,7 @@ class _TimelineEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final timeStr = DateFormat('yyyy/MM/dd HH:mm').format(
       entry.time.toLocal(),
     );
@@ -199,11 +199,11 @@ class _TimelineEntry extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: entry.isLast
                         ? designSystem.colorTheme.outline
-                        : colorScheme.primary,
+                        : colorTheme.primary,
                     border: Border.all(
                       color: entry.isLast
                           ? designSystem.colorTheme.outline
-                          : colorScheme.primary,
+                          : colorTheme.primary,
                       width: 2,
                     ),
                   ),

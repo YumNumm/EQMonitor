@@ -237,11 +237,11 @@ class _BackgroundLocationPermissionBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     return Padding(
       padding: EdgeInsets.only(bottom: bottomSpacing),
       child: Material(
-        color: colorScheme.errorContainer,
+        color: colorTheme.errorContainer,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
@@ -252,7 +252,7 @@ class _BackgroundLocationPermissionBanner extends StatelessWidget {
               children: [
                 Icon(
                   Icons.location_off_outlined,
-                  color: colorScheme.onErrorContainer,
+                  color: colorTheme.onErrorContainer,
                   size: 20,
                 ),
                 const SizedBox(width: 12),
@@ -263,13 +263,13 @@ class _BackgroundLocationPermissionBanner extends StatelessWidget {
                       Text(
                         '位置情報の「常に許可」が必要です',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: colorScheme.onErrorContainer,
+                          color: colorTheme.onErrorContainer,
                         ),
                       ),
                       Text(
                         'バックグラウンド位置更新が無効のため、通知は過去の位置情報を使用しています',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onErrorContainer,
+                          color: colorTheme.onErrorContainer,
                         ),
                       ),
                     ],
@@ -277,7 +277,7 @@ class _BackgroundLocationPermissionBanner extends StatelessWidget {
                 ),
                 Icon(
                   Icons.arrow_forward_ios,
-                  color: colorScheme.onErrorContainer,
+                  color: colorTheme.onErrorContainer,
                   size: 14,
                 ),
               ],

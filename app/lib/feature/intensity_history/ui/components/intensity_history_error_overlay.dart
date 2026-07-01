@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,7 +66,7 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
     }
 
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
     final action = ref.read(intensityHistoryErrorOverlayActionProvider);
 
     return Positioned(
@@ -76,13 +77,13 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
         top: false,
         child: Material(
           elevation: 4,
-          color: colorScheme.errorContainer,
+          color: designSystem.colorTheme.errorContainer,
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                Icon(Icons.error_outline, color: colorScheme.error),
+                Icon(Icons.error_outline, color: designSystem.colorTheme.error),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -92,7 +93,7 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
                       Text(
                         '震度情報を取得できません',
                         style: theme.textTheme.titleSmall?.copyWith(
-                          color: colorScheme.onErrorContainer,
+                          color: designSystem.colorTheme.onErrorContainer,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

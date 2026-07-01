@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/inten
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,7 +20,6 @@ class LpgmStationDetailSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final colorModel = ref.watch(intensityColorProvider);
     final intensity = station.intensity;
     final prePeriods = intensity?.prePeriods;
@@ -37,7 +37,7 @@ class LpgmStationDetailSheet extends ConsumerWidget {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                  color: context.designSystem.colorTheme.onSurfaceVariant.withValues(
                     alpha: 0.4,
                   ),
                   borderRadius: BorderRadius.circular(2),
@@ -99,7 +99,7 @@ class _Header extends ConsumerWidget {
                 Text(
                   '最大 ${sva.toStringAsFixed(1)} cm/s',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: context.designSystem.colorTheme.onSurfaceVariant,
                   ),
                 ),
             ],
@@ -137,14 +137,14 @@ class _PrePeriodsTable extends StatelessWidget {
         ),
         Table(
           border: TableBorder.all(
-            color: theme.colorScheme.outlineVariant,
+            color: context.designSystem.colorTheme.outlineVariant,
           ),
           defaultVerticalAlignment: .middle,
 
           children: [
             TableRow(
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest,
+                color: context.designSystem.colorTheme.surfaceContainerHighest,
               ),
               children: [
                 _headerCell('周期', theme),
@@ -199,7 +199,7 @@ class _PrePeriodsTable extends StatelessWidget {
         Text(
           '※ SVA: 絶対速度応答スペクトル (cm/s)',
           style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onSurface,
+            color: context.designSystem.colorTheme.onSurface,
             fontFamily: FontFamily.googleSansCode,
             fontFamilyFallback: [FontFamily.notoSansJP],
           ),
@@ -275,14 +275,14 @@ class _RelatedLinksCard extends StatelessWidget {
                 Icon(
                   Icons.open_in_new,
                   size: 16,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: context.designSystem.colorTheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   '気象庁ホームページ',
                   style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: context.designSystem.colorTheme.onSurfaceVariant,
                     fontFamily: FontFamily.notoSansJP,
                   ),
                 ),
@@ -297,9 +297,9 @@ class _RelatedLinksCard extends StatelessWidget {
                   child: Text(
                     link.title,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.primary,
+                      color: context.designSystem.colorTheme.primary,
                       decoration: TextDecoration.underline,
-                      decorationColor: theme.colorScheme.primary,
+                      decorationColor: context.designSystem.colorTheme.primary,
                       fontFamily: FontFamily.notoSansJP,
                     ),
                   ),

@@ -2,6 +2,7 @@ library;
 
 import 'dart:async';
 
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';

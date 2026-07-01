@@ -99,7 +99,7 @@ class _PageContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     final center = Geographic(
       lat: (event.minLat + event.maxLat) / 2,
@@ -187,7 +187,7 @@ class _PageContent extends HookConsumerWidget {
                     shape: WidgetStatePropertyAll(
                       RoundedSuperellipseBorder(
                         side: BorderSide(
-                          color: colorScheme.primary.withValues(alpha: 0.2),
+                          color: colorTheme.primary.withValues(alpha: 0.2),
                         ),
                         borderRadius: BorderRadius.circular(128),
                       ),
@@ -195,7 +195,7 @@ class _PageContent extends HookConsumerWidget {
                   ),
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () => context.pop(),
-                  color: colorScheme.primary,
+                  color: colorTheme.primary,
                   padding: const EdgeInsets.all(12),
                 ),
               ),

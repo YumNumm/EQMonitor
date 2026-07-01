@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -28,7 +29,7 @@ class IntensityHistoryLegend extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card.outlined(
       clipBehavior: .antiAlias,
-      color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.85),
+      color: context.designSystem.colorTheme.surface.withValues(alpha: 0.85),
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(8),

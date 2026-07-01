@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
@@ -171,7 +172,7 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
                 Text(
                   description,
                   style: textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: context.designSystem.colorTheme.onSurfaceVariant,
                   ),
                 ),
               ],

@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -296,7 +297,7 @@ class _SectionHeader extends StatelessWidget {
       child: Text(
         title,
         style: theme.textTheme.labelLarge?.copyWith(
-          color: theme.colorScheme.primary,
+          color: context.designSystem.colorTheme.primary,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -320,12 +321,12 @@ class _EewNavigationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: ListTile(
-        leading: Icon(Icons.warning_amber_rounded, color: colorScheme.error),
+        leading: Icon(Icons.warning_amber_rounded, color: colorTheme.error),
         title: Text(
           '緊急地震速報（$count報）',
           style: theme.textTheme.bodyMedium?.copyWith(

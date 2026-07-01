@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 
 class SettingsSectionHeader extends StatelessWidget {
@@ -14,7 +15,7 @@ class SettingsSectionHeader extends StatelessWidget {
       child: Text(
         text,
         style: textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.secondary,
+          color: context.designSystem.colorTheme.secondary,
         ),
       ),
     );

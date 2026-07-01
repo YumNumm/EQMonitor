@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_tex
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_intensity_list_data_source.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -117,7 +118,7 @@ class _CityDetailModal extends ConsumerWidget {
               height: 4,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2),
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.3),
               ),
             ),
           ),
@@ -132,7 +133,7 @@ class _CityDetailModal extends ConsumerWidget {
         ),
         // 区切り
         SliverToBoxAdapter(
-          child: Divider(height: 0, color: theme.colorScheme.outlineVariant),
+          child: Divider(height: 0, color: context.designSystem.colorTheme.outlineVariant),
         ),
         // 一覧 or ローディング or エラー
         child,
@@ -188,7 +189,7 @@ class _SummarySection extends StatelessWidget {
                     Text(
                       regionName,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                        color: context.designSystem.colorTheme.onSurfaceVariant,
                       ),
                     ),
                     Text(
@@ -207,7 +208,7 @@ class _SummarySection extends StatelessWidget {
             Text(
               'この震度を観測した地震: ${entry.count}件',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface,
+                color: context.designSystem.colorTheme.onSurface,
               ),
             ),
             if (eq != null) ...[
@@ -278,7 +279,7 @@ class _PagingBody extends ConsumerWidget {
           Divider(
             height: 0,
             thickness: 0,
-            color: theme.colorScheme.onInverseSurface,
+            color: context.designSystem.colorTheme.onInverseSurface,
           ),
         ],
       ),
@@ -343,12 +344,12 @@ class _IntensityHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      color: theme.colorScheme.surfaceContainer,
+      color: context.designSystem.colorTheme.surfaceContainer,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Text(
         intensity,
         style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.onSurface,
+          color: context.designSystem.colorTheme.onSurface,
         ),
       ),
     );

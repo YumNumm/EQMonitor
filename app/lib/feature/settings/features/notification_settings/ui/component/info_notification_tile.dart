@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
@@ -65,7 +66,7 @@ class InfoNotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final primaryColor = context.designSystem.colorTheme.primary;
 
     return ListTile(
       title: Text(title),
@@ -107,18 +108,18 @@ class ComingSoonBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer,
+        color: colorTheme.primaryContainer,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         child: Text(
           '準備中',
-          style: TextStyle(color: colorScheme.onPrimaryContainer),
+          style: TextStyle(color: colorTheme.onPrimaryContainer),
         ),
       ),
     );

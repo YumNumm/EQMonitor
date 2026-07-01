@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,7 @@ class EarthquakeLpgmIntensityCard extends StatelessWidget {
                 Text(
                   '最大長周期地震動階級',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: context.designSystem.colorTheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 2),

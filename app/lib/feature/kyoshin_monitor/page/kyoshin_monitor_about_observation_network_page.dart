@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -7,7 +8,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -21,7 +22,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
               spacing: 16,
               children: [
                 Card(
-                  color: colorScheme.secondaryContainer,
+                  color: designSystem.colorTheme.secondaryContainer,
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: _ObservationNetworkSection(
@@ -33,8 +34,8 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                         '2017年11月より本格的な統合運用が開始され、「MOWLAS: モウラス」(Monitoring of Waves on Land and Seafloor: 陸海統合地震津波火山観測網)と名付けられました',
                       ],
                       url: 'https://www.mowlas.bosai.go.jp/mowlas/',
-                      titleColor: colorScheme.onSecondaryContainer,
-                      descriptionColor: colorScheme.onSecondaryContainer
+                      titleColor: designSystem.colorTheme.onSecondaryContainer,
+                      descriptionColor: designSystem.colorTheme.onSecondaryContainer
                           .withValues(alpha: 0.8),
                     ),
                   ),
@@ -178,7 +179,7 @@ class _ObservationNetworkSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
     final textTheme = theme.textTheme;
 
     return Column(
@@ -198,7 +199,7 @@ class _ObservationNetworkSection extends StatelessWidget {
                 ),
               ),
               if (url != null)
-                Icon(Icons.open_in_new, size: 16, color: colorScheme.primary),
+                Icon(Icons.open_in_new, size: 16, color: designSystem.colorTheme.primary),
             ],
           ),
         ),
@@ -208,7 +209,7 @@ class _ObservationNetworkSection extends StatelessWidget {
           style: textTheme.bodyMedium?.copyWith(
             color:
                 descriptionColor ??
-                colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                designSystem.colorTheme.onSurfaceVariant.withValues(alpha: 0.8),
             height: 1.5,
           ),
         ),
@@ -225,17 +226,16 @@ class _LinkItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return InkWell(
       onTap: () async => launchUrlString(url),
       child: Row(
         children: [
           Expanded(
-            child: Text(title, style: TextStyle(color: colorScheme.primary)),
+            child: Text(title, style: TextStyle(color: designSystem.colorTheme.primary)),
           ),
-          Icon(Icons.open_in_new, size: 16, color: colorScheme.primary),
+          Icon(Icons.open_in_new, size: 16, color: designSystem.colorTheme.primary),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/app_group_values_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug_app_group_action.dart';
@@ -95,7 +96,7 @@ class _SectionHeader extends StatelessWidget {
       child: Text(
         title,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
+          color: context.designSystem.colorTheme.primary,
         ),
       ),
     );

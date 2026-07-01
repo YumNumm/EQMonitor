@@ -75,7 +75,7 @@ class _ActiveSection extends ConsumerWidget {
                 children: [
                   Icon(
                     Icons.workspace_premium_rounded,
-                    color: theme.colorScheme.primary,
+                    color: colorTheme.primary,
                   ),
                   const SizedBox(width: 8),
                   Text('現在のプラン', style: textTheme.labelMedium),

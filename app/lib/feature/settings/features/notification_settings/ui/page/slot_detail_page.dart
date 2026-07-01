@@ -298,13 +298,13 @@ class _DeleteRegionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return ListTile(
-      leading: Icon(Icons.delete_outline, color: colorScheme.error),
+      leading: Icon(Icons.delete_outline, color: colorTheme.error),
       title: Text(
         'この地域を削除',
-        style: TextStyle(color: colorScheme.error),
+        style: TextStyle(color: colorTheme.error),
       ),
       onTap: onTap,
     );
@@ -316,18 +316,18 @@ class _ProBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer,
+        color: colorTheme.primaryContainer,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         child: Text(
           'Pro',
-          style: TextStyle(color: colorScheme.onPrimaryContainer),
+          style: TextStyle(color: colorTheme.onPrimaryContainer),
         ),
       ),
     );

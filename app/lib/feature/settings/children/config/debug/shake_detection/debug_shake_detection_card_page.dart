@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class DebugShakeDetectionCardPage extends HookConsumerWidget {
             child: Text(
               'パラメータ（下記はいずれも検証用の表示です。実データではありません）',
               style: _paramLabelStyle.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -160,7 +161,7 @@ class DebugShakeDetectionCardPage extends HookConsumerWidget {
             child: Text(
               'よく使う組み合わせを並べています。上のパラメータとは独立です。',
               style: _paramLabelStyle.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           ),

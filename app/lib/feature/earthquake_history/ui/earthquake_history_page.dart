@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
@@ -127,7 +128,7 @@ class _PagingBody extends StatelessWidget {
                 Divider(
                   height: 0,
                   thickness: 0,
-                  color: theme.colorScheme.onInverseSurface,
+                  color: context.designSystem.colorTheme.onInverseSurface,
                 ),
               ],
             ),
@@ -202,7 +203,7 @@ class _DateHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final spacing = theme.designSystemThemeExtension.spacing;
     return Container(
-      color: theme.colorScheme.surfaceContainer,
+      color: context.designSystem.colorTheme.surfaceContainer,
       padding: EdgeInsets.symmetric(
         horizontal: spacing.lg,
         vertical: spacing.xs,
@@ -210,7 +211,7 @@ class _DateHeader extends StatelessWidget {
       child: Text(
         date,
         style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.onSurface,
+          color: context.designSystem.colorTheme.onSurface,
         ),
       ),
     );

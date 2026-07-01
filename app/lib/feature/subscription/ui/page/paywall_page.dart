@@ -189,7 +189,7 @@ class _BenefitRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(benefit.icon, color: theme.colorScheme.primary, size: 24),
+          Icon(benefit.icon, color: context.designSystem.colorTheme.primary, size: 24),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -219,7 +219,7 @@ class _PlanCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorTheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: theme.colorScheme.primary, width: 1.5),
+        border: Border.all(color: colorTheme.primary, width: 1.5),
       ),
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -236,13 +236,13 @@ class _PlanCard extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
+                  color: colorTheme.primary,
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
                   'おすすめ',
                   style: textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onPrimary,
+                    color: colorTheme.onPrimary,
                   ),
                 ),
               ),

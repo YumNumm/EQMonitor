@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_map_label_parameter_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -44,7 +45,7 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
                   height: 4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(2),
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                    color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.3),
                   ),
                 ),
               ),
@@ -67,7 +68,7 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
                 ),
               ),
 
-              _header(theme, '表示切替'),
+              _header(context, theme, '表示切替'),
               SwitchListTile(
                 title: const Text('地域ラベル (areaForecastLocalE)'),
                 value: value.showRegionLabel,
@@ -81,19 +82,19 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
                     notifier.save(value.copyWith(showCityLabel: v)),
               ),
 
-              _header(theme, 'ズーム閾値 (表示開始)'),
+              _header(context, theme, 'ズーム閾値 (表示開始)'),
               _slider('地域ラベル', value.regionLabelMinZoom, 1, 15, (v) =>
                 notifier.save(value.copyWith(regionLabelMinZoom: v))),
               _slider('市区町村ラベル', value.cityLabelMinZoom, 1, 15, (v) =>
                 notifier.save(value.copyWith(cityLabelMinZoom: v))),
 
-              _header(theme, 'テキストサイズ'),
+              _header(context, theme, 'テキストサイズ'),
               _slider('地域', value.regionTextSize, 6, 24, (v) =>
                 notifier.save(value.copyWith(regionTextSize: v))),
               _slider('市区町村', value.cityTextSize, 6, 24, (v) =>
                 notifier.save(value.copyWith(cityTextSize: v))),
 
-              _header(theme, 'テキストスタイル'),
+              _header(context, theme, 'テキストスタイル'),
               _slider('Halo幅', value.textHaloWidth, 0, 3, (v) =>
                 notifier.save(value.copyWith(textHaloWidth: v))),
 
@@ -105,13 +106,13 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
     );
   }
 
-  Widget _header(ThemeData theme, String title) {
+  Widget _header(BuildContext context, ThemeData theme, String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 4),
       child: Text(
         title,
         style: theme.textTheme.labelLarge?.copyWith(
-          color: theme.colorScheme.primary,
+          color: context.designSystem.colorTheme.primary,
         ),
       ),
     );

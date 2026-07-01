@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/jma_forecast_intensity.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -144,21 +145,20 @@ class LpgmIntensityContent extends HookConsumerWidget {
 class _PreliminaryBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: theme.colorScheme.errorContainer,
+          color: context.designSystem.colorTheme.errorContainer,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: theme.colorScheme.onErrorContainer),
+          border: Border.all(color: context.designSystem.colorTheme.onErrorContainer),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Text(
             '速報',
             style: TextStyle(
-              color: theme.colorScheme.onErrorContainer,
+              color: context.designSystem.colorTheme.onErrorContainer,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -611,7 +611,7 @@ class _LpgmCityTile extends HookConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Theme.of(context).colorScheme.outlineVariant,
+                          color: context.designSystem.colorTheme.outlineVariant,
                         ),
                         borderRadius: BorderRadius.circular(8),
                       ),

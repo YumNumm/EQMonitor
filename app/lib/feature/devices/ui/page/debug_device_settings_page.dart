@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
@@ -125,7 +126,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
     final tokenPresent = ref.watch(_deviceTokenPresentProvider);
 
     final isLoading = provisionMutation is MutationPending;
-    final scheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     final statusText = switch (provisionStatus) {
       AsyncData(:final value) =>
@@ -137,25 +138,25 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
     final retryChip = switch (retryState.value) {
       RetryIdle() => _StatusChip(
         label: 'アイドル',
-        color: scheme.secondaryContainer,
-        textColor: scheme.onSecondaryContainer,
+        color: colorTheme.secondaryContainer,
+        textColor: colorTheme.onSecondaryContainer,
       ),
       RetryRunning(:final attempt) => _StatusChip(
         label: '実行中 (試行 ${attempt + 1})',
-        color: scheme.tertiaryContainer,
-        textColor: scheme.onTertiaryContainer,
+        color: colorTheme.tertiaryContainer,
+        textColor: colorTheme.onTertiaryContainer,
         icon: Icons.sync,
       ),
       RetryWaiting(:final attempt) => _StatusChip(
         label: '待機中 (試行 ${attempt + 1}, ${waitRemaining.value.inSeconds}s後)',
-        color: scheme.secondaryContainer,
-        textColor: scheme.onSecondaryContainer,
+        color: colorTheme.secondaryContainer,
+        textColor: colorTheme.onSecondaryContainer,
         icon: Icons.schedule,
       ),
       RetryExhausted(:final lastError) => _StatusChip(
         label: '失敗: ${lastError.userMessage}',
-        color: scheme.errorContainer,
-        textColor: scheme.onErrorContainer,
+        color: colorTheme.errorContainer,
+        textColor: colorTheme.onErrorContainer,
         icon: Icons.error_outline,
       ),
     };
@@ -196,7 +197,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
               Text(
                 'リトライ状態: ',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: scheme.onSurfaceVariant,
+                  color: colorTheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(width: 4),
@@ -208,7 +209,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
             Text(
               (retryState.value as RetryWaiting).lastError.userMessage,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: scheme.onSurfaceVariant,
+                color: colorTheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -300,7 +301,7 @@ class _NotificationPermissionSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final permAsync = ref.watch(_osNotificationPermissionProvider);
-    final scheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return _SectionCard(
       title: '通知許可状態（OS）',
@@ -346,7 +347,7 @@ class _NotificationPermissionSection extends ConsumerWidget {
         ),
         AsyncError(:final error) => Text(
           'エラー: $error',
-          style: TextStyle(color: scheme.error),
+          style: TextStyle(color: colorTheme.error),
         ),
         _ => const Center(
           child: Padding(
@@ -398,7 +399,7 @@ class _DeviceInfoSection extends ConsumerWidget {
         ),
         AsyncError(:final error) => Text(
           'デバイス情報の取得に失敗: $error',
-          style: TextStyle(color: Theme.of(context).colorScheme.error),
+          style: TextStyle(color: context.designSystem.colorTheme.error),
         ),
         _ => const Center(
           child: Padding(
@@ -465,26 +466,26 @@ class _TokenStatusRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final (icon, color, statusText) = switch (kindState) {
-      SyncedTokenState() => (Icons.check_circle, scheme.primary, '同期済み'),
-      PendingTokenState() => (Icons.sync, scheme.secondary, '同期待ち'),
+      SyncedTokenState() => (Icons.check_circle, colorTheme.primary, '同期済み'),
+      PendingTokenState() => (Icons.sync, colorTheme.secondary, '同期待ち'),
       FailedTokenState(:final error) => (
         Icons.error_outline,
-        scheme.error,
+        colorTheme.error,
         'エラー: ${error.userMessage}',
       ),
       AbsentTokenState() => (
         Icons.radio_button_unchecked,
-        scheme.outline,
+        colorTheme.outline,
         '未取得',
       ),
       NotApplicableTokenState() => (
         Icons.remove_circle_outline,
-        scheme.outline,
+        colorTheme.outline,
         '非対応',
       ),
-      null => (Icons.hourglass_empty, scheme.outline, '…'),
+      null => (Icons.hourglass_empty, colorTheme.outline, '…'),
     };
 
     return Row(
@@ -537,15 +538,15 @@ class _ProviderStatusRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final (icon, color, statusText) = switch (state) {
-      AsyncData() => (Icons.check_circle, scheme.primary, 'ロード済み'),
+      AsyncData() => (Icons.check_circle, colorTheme.primary, 'ロード済み'),
       AsyncError(:final error) => (
         Icons.error_outline,
-        scheme.error,
+        colorTheme.error,
         'エラー: ${error.runtimeType}',
       ),
-      _ => (Icons.hourglass_empty, scheme.outline, 'ロード中…'),
+      _ => (Icons.hourglass_empty, colorTheme.outline, 'ロード中…'),
     };
 
     return Padding(
@@ -640,7 +641,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
           messenger.showSnackBar(
             SnackBar(
               content: Text('更新に失敗しました: $exception'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.designSystem.colorTheme.error,
             ),
           );
       }
@@ -741,7 +742,7 @@ class _TestNotificationSection extends HookConsumerWidget {
           messenger.showSnackBar(
             SnackBar(
               content: Text('送信に失敗: $exception'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.designSystem.colorTheme.error,
             ),
           );
       }
@@ -826,7 +827,7 @@ class _TestScenarioSection extends HookConsumerWidget {
           messenger.showSnackBar(
             SnackBar(
               content: Text('実行に失敗: $exception'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.designSystem.colorTheme.error,
             ),
           );
       }
@@ -935,7 +936,7 @@ class _TestScenarioTypeSection extends HookConsumerWidget {
           messenger.showSnackBar(
             SnackBar(
               content: Text('実行に失敗: $exception'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.designSystem.colorTheme.error,
             ),
           );
       }
@@ -1013,7 +1014,7 @@ class _HistorySection extends ConsumerWidget {
         AsyncData(:final value) when value.isEmpty => Text(
           '履歴はまだありません',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            color: context.designSystem.colorTheme.onSurfaceVariant,
           ),
         ),
         AsyncData(:final value) => ListView.separated(
@@ -1026,7 +1027,7 @@ class _HistorySection extends ConsumerWidget {
         ),
         AsyncError(:final error) => Text(
           '履歴の取得に失敗: $error',
-          style: TextStyle(color: Theme.of(context).colorScheme.error),
+          style: TextStyle(color: context.designSystem.colorTheme.error),
         ),
         _ => const Center(
           child: Padding(
@@ -1065,9 +1066,9 @@ class _NotificationHistoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final ok = item.result == PushNotificationDeliveryResult.ok;
-    final resultColor = ok ? scheme.primary : scheme.error;
+    final resultColor = ok ? colorTheme.primary : colorTheme.error;
     final subtitle = [
       item.framework.displayLabel,
       item.result.displayLabel,
@@ -1145,12 +1146,12 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Card(
         elevation: 0,
-        color: scheme.surfaceContainerHighest.withValues(alpha: 0.65),
+        color: colorTheme.surfaceContainerHighest.withValues(alpha: 0.65),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -1175,7 +1176,7 @@ class _SectionCard extends StatelessWidget {
                                 Theme.of(
                                   context,
                                 ).textTheme.bodySmall?.copyWith(
-                                  color: scheme.onSurfaceVariant,
+                                  color: colorTheme.onSurfaceVariant,
                                 ),
                           ),
                         ],
@@ -1213,7 +1214,7 @@ class _KeyValueRow extends StatelessWidget {
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           ),

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -153,7 +154,7 @@ class _MetricsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final info = result.stationInfo;
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     return Card(
       margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Padding(
@@ -183,7 +184,7 @@ class _MetricsHeader extends StatelessWidget {
                   Text(
                     '計測震度 ${result.rawInt.toStringAsFixed(1)}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
+                      color: colorTheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -340,7 +341,7 @@ class _TimeSeriesChart extends StatelessWidget {
     }
 
     final pad = ((maxY - minY) * 0.1).abs().clamp(0.1, double.infinity);
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 12, 16, 8),
@@ -354,7 +355,7 @@ class _TimeSeriesChart extends StatelessWidget {
               spots: spots,
               dotData: const FlDotData(show: false),
               barWidth: 1,
-              color: colorScheme.primary,
+              color: colorTheme.primary,
             ),
           ],
           titlesData: FlTitlesData(
@@ -391,17 +392,17 @@ class _TimeSeriesChart extends StatelessWidget {
           ),
           borderData: FlBorderData(
             border: Border(
-              bottom: BorderSide(color: colorScheme.outline),
-              left: BorderSide(color: colorScheme.outline),
+              bottom: BorderSide(color: colorTheme.outline),
+              left: BorderSide(color: colorTheme.outline),
             ),
           ),
           gridData: FlGridData(
             getDrawingHorizontalLine: (v) => FlLine(
-              color: colorScheme.outlineVariant,
+              color: colorTheme.outlineVariant,
               strokeWidth: 0.5,
             ),
             getDrawingVerticalLine: (v) => FlLine(
-              color: colorScheme.outlineVariant,
+              color: colorTheme.outlineVariant,
               strokeWidth: 0.5,
             ),
           ),
@@ -462,7 +463,7 @@ class _SpectrumChart extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selected = useState(0); // 0=Sa 1=Sv 2=Sd
-    final cs = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final sp = spectrum;
     final (vals, unit, label) = switch (selected.value) {
       1 => (sp.sv, 'cm/s', '速度応答スペクトル Sv (h=5%)'),
@@ -514,7 +515,7 @@ class _SpectrumChart extends HookWidget {
                   LineChartBarData(
                     spots: spots,
                     dotData: const FlDotData(show: false),
-                    color: cs.primary,
+                    color: colorTheme.primary,
                     isCurved: true,
                   ),
                 ],
@@ -555,15 +556,15 @@ class _SpectrumChart extends HookWidget {
                 ),
                 borderData: FlBorderData(
                   border: Border(
-                    bottom: BorderSide(color: cs.outline),
-                    left: BorderSide(color: cs.outline),
+                    bottom: BorderSide(color: colorTheme.outline),
+                    left: BorderSide(color: colorTheme.outline),
                   ),
                 ),
                 gridData: FlGridData(
                   getDrawingHorizontalLine: (v) =>
-                      FlLine(color: cs.outlineVariant, strokeWidth: 0.5),
+                      FlLine(color: colorTheme.outlineVariant, strokeWidth: 0.5),
                   getDrawingVerticalLine: (v) =>
-                      FlLine(color: cs.outlineVariant, strokeWidth: 0.5),
+                      FlLine(color: colorTheme.outlineVariant, strokeWidth: 0.5),
                 ),
               ),
               duration: Duration.zero,
@@ -599,7 +600,7 @@ class _FourierChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final freqs = spectrum.frequencies;
     final amps = spectrum.amplitudes;
 
@@ -639,7 +640,7 @@ class _FourierChart extends StatelessWidget {
                     spots: spots,
                     dotData: const FlDotData(show: false),
                     barWidth: 1.5,
-                    color: cs.secondary,
+                    color: colorTheme.secondary,
                   ),
                 ],
                 titlesData: FlTitlesData(
@@ -681,15 +682,15 @@ class _FourierChart extends StatelessWidget {
                 ),
                 borderData: FlBorderData(
                   border: Border(
-                    bottom: BorderSide(color: cs.outline),
-                    left: BorderSide(color: cs.outline),
+                    bottom: BorderSide(color: colorTheme.outline),
+                    left: BorderSide(color: colorTheme.outline),
                   ),
                 ),
                 gridData: FlGridData(
                   getDrawingHorizontalLine: (v) =>
-                      FlLine(color: cs.outlineVariant, strokeWidth: 0.5),
+                      FlLine(color: colorTheme.outlineVariant, strokeWidth: 0.5),
                   getDrawingVerticalLine: (v) =>
-                      FlLine(color: cs.outlineVariant, strokeWidth: 0.5),
+                      FlLine(color: colorTheme.outlineVariant, strokeWidth: 0.5),
                 ),
               ),
               duration: Duration.zero,

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/estimation_timeline_entry.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/first_height_timeline_entry.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/kind_timeline_entry.dart';
@@ -103,7 +104,7 @@ class _TimelineBody extends StatelessWidget {
           return TableSpan(
             extent: const FixedTableSpanExtent(_headerRowHeight),
             backgroundDecoration: TableSpanDecoration(
-              color: theme.colorScheme.surfaceContainerHighest,
+              color: context.designSystem.colorTheme.surfaceContainerHighest,
             ),
           );
         }
@@ -112,7 +113,7 @@ class _TimelineBody extends StatelessWidget {
           _SectionRowSpec() => TableSpan(
             extent: const FixedTableSpanExtent(_sectionRowHeight),
             backgroundDecoration: TableSpanDecoration(
-              color: theme.colorScheme.surfaceContainerLow,
+              color: context.designSystem.colorTheme.surfaceContainerLow,
             ),
           ),
           _DataRowSpec() => const TableSpan(

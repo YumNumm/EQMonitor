@@ -80,7 +80,7 @@ class _Body extends HookConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('設定の保存に失敗しました: ${next.error}'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.designSystem.colorTheme.error,
             ),
           );
         }
@@ -325,7 +325,7 @@ class _PresetSelectionMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Container(
       width: 24,
@@ -333,7 +333,7 @@ class _PresetSelectionMark extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: isSelected ? color.primary : designSystem.colorTheme.outline,
+          color: isSelected ? colorTheme.primary : designSystem.colorTheme.outline,
           width: isSelected ? 6 : 3,
         ),
       ),
@@ -399,7 +399,7 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('設定の保存に失敗しました: ${next.error}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: context.designSystem.colorTheme.error,
           ),
         );
       }
@@ -411,7 +411,7 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('設定の保存に失敗しました: ${next.error}'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.designSystem.colorTheme.error,
             ),
           );
         }
@@ -952,7 +952,7 @@ class _SlotListSection extends ConsumerWidget {
             child: Text(
               'スロットの読み込みに失敗しました',
               style: designSystem.typography.bodySmall.copyWith(
-                color: Theme.of(context).colorScheme.error,
+                color: context.designSystem.colorTheme.error,
               ),
             ),
           ),
@@ -1061,7 +1061,7 @@ class _ProUpsellBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
 
@@ -1069,7 +1069,7 @@ class _ProUpsellBanner extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(spacing.lg, 0, spacing.lg, spacing.md),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: colorScheme.primaryContainer,
+          color: colorTheme.primaryContainer,
           borderRadius: BorderRadius.circular(designSystem.shape.card),
         ),
         child: Padding(
@@ -1077,7 +1077,7 @@ class _ProUpsellBanner extends StatelessWidget {
           child: Text(
             'EQMonitor Proにすると、地域枠の追加、震度別の音、割り込みレベル、1点検知、EEW警報の全国通知を設定できます。',
             style: designSystem.typography.bodyMedium.copyWith(
-              color: colorScheme.onPrimaryContainer,
+              color: colorTheme.onPrimaryContainer,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -1092,18 +1092,18 @@ class _ProBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer,
+        color: colorTheme.primaryContainer,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         child: Text(
           'Pro',
-          style: TextStyle(color: colorScheme.onPrimaryContainer),
+          style: TextStyle(color: colorTheme.onPrimaryContainer),
         ),
       ),
     );
@@ -1285,7 +1285,7 @@ class _TestNotificationTile extends HookConsumerWidget {
           messenger.showSnackBar(
             SnackBar(
               content: Text('送信に失敗しました: $exception'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.designSystem.colorTheme.error,
             ),
           );
       }

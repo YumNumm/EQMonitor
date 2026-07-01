@@ -97,7 +97,7 @@ class EarthquakeInfoSettingsPage extends HookConsumerWidget {
               child: Text(
                 '各地域の詳細設定は、通知地域から変更できます',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  color: context.designSystem.colorTheme.onSurfaceVariant,
                 ),
               ),
             ),

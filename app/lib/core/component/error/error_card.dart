@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_message_builder.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:flutter/material.dart';
@@ -33,18 +34,18 @@ class ErrorCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     final message = ref
         .read(errorMessageBuilderProvider)
         .build(
           error: error,
           onDioExceptionStatusOverride: onDioExceptionStatusOverride,
         );
-    final colorScheme = theme.colorScheme;
 
     return Center(
       child: Card(
         margin: margin,
-        color: color ?? theme.colorScheme.errorContainer,
+        color: color ?? designSystem.colorTheme.errorContainer,
         child: Padding(
           padding: padding ?? EdgeInsets.zero,
           child: Column(
@@ -54,14 +55,14 @@ class ErrorCard extends ConsumerWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.error, size: 36, color: colorScheme.error),
+                  Icon(Icons.error, size: 36, color: designSystem.colorTheme.error),
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(
                       title ?? 'ERROR!',
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: colorScheme.onErrorContainer,
+                        color: designSystem.colorTheme.onErrorContainer,
                       ),
                     ),
                   ),
@@ -71,7 +72,7 @@ class ErrorCard extends ConsumerWidget {
               Text(
                 message,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onErrorContainer,
+                  color: designSystem.colorTheme.onErrorContainer,
                   fontFamily: FontFamily.googleSansCode,
                 ),
               ),
@@ -80,7 +81,7 @@ class ErrorCard extends ConsumerWidget {
                 Text(
                   msg,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onErrorContainer,
+                    color: designSystem.colorTheme.onErrorContainer,
                     fontFamily: FontFamily.googleSansCode,
                   ),
                 ),
@@ -96,9 +97,9 @@ class ErrorCard extends ConsumerWidget {
                   icon: const Icon(Icons.refresh),
                   label: const Text('再読み込み'),
                   style: FilledButton.styleFrom(
-                    backgroundColor: colorScheme.error,
-                    foregroundColor: colorScheme.onError,
-                    iconColor: colorScheme.onError,
+                    backgroundColor: designSystem.colorTheme.error,
+                    foregroundColor: designSystem.colorTheme.onError,
+                    iconColor: designSystem.colorTheme.onError,
                   ),
                 ),
               ],

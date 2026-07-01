@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 
 class BorderedContainer extends StatelessWidget {
@@ -22,15 +23,15 @@ class BorderedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designSystem = context.designSystem;
 
     final card = Card(
       clipBehavior: Clip.antiAlias,
       elevation: elevation,
-      color: accentColor ?? theme.colorScheme.surfaceContainer,
+      color: accentColor ?? designSystem.colorTheme.surfaceContainer,
       shape: RoundedSuperellipseBorder(
         side: BorderSide(
-          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+          color: designSystem.colorTheme.onSurfaceVariant.withValues(alpha: 0.3),
         ),
         borderRadius: borderRadius,
       ),

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
@@ -105,8 +106,7 @@ class _LoadedContent extends HookConsumerWidget {
       if (hasEstimated) IntensityDisplayMode.estimated,
     ];
 
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return Scaffold(
       body: Stack(
@@ -153,7 +153,7 @@ class _LoadedContent extends HookConsumerWidget {
                     shape: WidgetStatePropertyAll(
                       RoundedSuperellipseBorder(
                         side: BorderSide(
-                          color: colorScheme.primary.withValues(alpha: 0.2),
+                          color: designSystem.colorTheme.primary.withValues(alpha: 0.2),
                         ),
                         borderRadius: BorderRadius.circular(128),
                       ),
@@ -161,7 +161,7 @@ class _LoadedContent extends HookConsumerWidget {
                   ),
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () => context.pop(),
-                  color: colorScheme.primary,
+                  color: designSystem.colorTheme.primary,
                   padding: const EdgeInsets.all(12),
                 ),
               ),
@@ -179,8 +179,7 @@ class _TelegramListButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -191,8 +190,8 @@ class _TelegramListButton extends StatelessWidget {
         label: const Text('電文一覧を見る'),
         style: FilledButton.styleFrom(
           minimumSize: const Size(double.infinity, 48),
-          backgroundColor: colorScheme.secondaryContainer,
-          foregroundColor: colorScheme.onSecondaryContainer,
+          backgroundColor: designSystem.colorTheme.secondaryContainer,
+          foregroundColor: designSystem.colorTheme.onSecondaryContainer,
         ),
       ),
     );

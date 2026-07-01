@@ -135,7 +135,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                             const SizedBox(width: 6),
                             _TagChip(
                               label: 'EEW結合済',
-                              color: theme.colorScheme.secondaryContainer,
+                              color: ds.colorTheme.secondaryContainer,
                             ),
                           ],
                         ],
@@ -233,7 +233,7 @@ class _TagChip extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: Theme.of(context).colorScheme.onSecondaryContainer,
+          color: context.designSystem.colorTheme.onSecondaryContainer,
         ),
       ),
     );

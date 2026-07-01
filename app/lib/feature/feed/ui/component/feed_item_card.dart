@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -135,7 +136,7 @@ class FeedItemListTileContent extends StatelessWidget {
               Text(
                 dateStr,
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: context.designSystem.colorTheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -145,7 +146,7 @@ class FeedItemListTileContent extends StatelessWidget {
         Icon(
           Icons.chevron_right_rounded,
           size: 18,
-          color: theme.colorScheme.onSurfaceVariant,
+          color: context.designSystem.colorTheme.onSurfaceVariant,
         ),
       ],
     );
@@ -204,7 +205,7 @@ class FeedTypeBadge extends StatelessWidget {
     return Text(
       label,
       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            color: context.designSystem.colorTheme.onSurfaceVariant,
           ),
     );
   }
@@ -236,7 +237,7 @@ class _FeedDetailSheet extends StatelessWidget {
             width: 32,
             height: 4,
             decoration: BoxDecoration(
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              color: context.designSystem.colorTheme.onSurfaceVariant.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -271,7 +272,7 @@ class _FeedDetailSheet extends StatelessWidget {
           Text(
             '有効期限: ${_formatExpires(item.expiresAt!)}',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+              color: context.designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
         ],

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -128,7 +129,7 @@ class _ThemeSelector extends ConsumerWidget {
     );
 
     return BorderedContainer(
-      accentColor: Theme.of(context).colorScheme.secondaryContainer,
+      accentColor: context.designSystem.colorTheme.secondaryContainer,
       margin: const EdgeInsets.all(16),
       child: Column(
         children: [

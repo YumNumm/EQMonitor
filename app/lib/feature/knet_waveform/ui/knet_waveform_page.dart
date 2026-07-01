@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_credentials_provider.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_directory_provider.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _UnconfiguredView extends StatelessWidget {
             Icon(
               Icons.lock_outline,
               size: 64,
-              color: Theme.of(context).colorScheme.outline,
+              color: context.designSystem.colorTheme.outline,
             ),
             const SizedBox(height: 16),
             Text(
@@ -95,7 +96,7 @@ class _ConfiguredView extends StatelessWidget {
             Icon(
               Icons.sensors,
               size: 64,
-              color: Theme.of(context).colorScheme.primary,
+              color: context.designSystem.colorTheme.primary,
             ),
             const SizedBox(height: 16),
             Text(

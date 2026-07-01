@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_credentials_provider.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -162,7 +163,7 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
                 icon: const Icon(Icons.delete_outline),
                 label: const Text('認証情報を削除'),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.error,
+                  foregroundColor: context.designSystem.colorTheme.error,
                 ),
                 onPressed: () async {
                   await KnetCredentialsNotifier.clearMutation.run(
@@ -193,8 +194,8 @@ class _VerifyResultBanner extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: success
-            ? Theme.of(context).colorScheme.primaryContainer
-            : Theme.of(context).colorScheme.errorContainer,
+            ? context.designSystem.colorTheme.primaryContainer
+            : context.designSystem.colorTheme.errorContainer,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -202,8 +203,8 @@ class _VerifyResultBanner extends StatelessWidget {
           Icon(
             success ? Icons.check_circle_outline : Icons.error_outline,
             color: success
-                ? Theme.of(context).colorScheme.onPrimaryContainer
-                : Theme.of(context).colorScheme.onErrorContainer,
+                ? context.designSystem.colorTheme.onPrimaryContainer
+                : context.designSystem.colorTheme.onErrorContainer,
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -211,8 +212,8 @@ class _VerifyResultBanner extends StatelessWidget {
               success ? '認証に成功しました' : '認証に失敗しました。IDまたはパスワードを確認してください。',
               style: TextStyle(
                 color: success
-                    ? Theme.of(context).colorScheme.onPrimaryContainer
-                    : Theme.of(context).colorScheme.onErrorContainer,
+                    ? context.designSystem.colorTheme.onPrimaryContainer
+                    : context.designSystem.colorTheme.onErrorContainer,
               ),
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nied_api_client/nied_api_client.dart';
@@ -170,7 +171,7 @@ class _InfoItem extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+            color: context.designSystem.colorTheme.onSurfaceVariant,
           ),
         ),
         Text(
@@ -210,7 +211,7 @@ class _DetailSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              color: context.designSystem.colorTheme.onSurfaceVariant.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(2),
             ),
           ),

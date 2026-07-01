@@ -241,7 +241,7 @@ class _SettingsSection extends StatelessWidget {
                     ),
                     child: Icon(
                       icon,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: context.designSystem.colorTheme.primary,
                     ),
                   ),
                   SizedBox(width: spacing.md),
@@ -266,7 +266,7 @@ class _SettingsSection extends StatelessWidget {
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      color: context.designSystem.colorTheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -501,7 +501,7 @@ class _SettingActionTile extends StatelessWidget {
           Text(
             subtitle,
             style: typography.bodySmall.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: context.designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
           SizedBox(height: spacing.md),
@@ -511,7 +511,7 @@ class _SettingActionTile extends StatelessWidget {
             },
             style: FilledButton.styleFrom(
               backgroundColor: colorTheme.surfaceContainerHighest,
-              foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              foregroundColor: context.designSystem.colorTheme.onPrimaryContainer,
             ),
             child: Text(actionLabel),
           ),

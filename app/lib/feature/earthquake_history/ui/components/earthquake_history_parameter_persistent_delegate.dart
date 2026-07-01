@@ -11,6 +11,7 @@ import 'package:eqmonitor/core/component/chip/region_intensity_filter_chip.dart'
 import 'package:eqmonitor/core/component/chip/sort_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/telegram_type_filter_chip.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class EarthquakeHistoryParameterPersistentDelegate
     bool overlapsContent,
   ) {
     return ColoredBox(
-      color: Theme.of(context).colorScheme.surface,
+      color: context.designSystem.colorTheme.surface,
       child: _FilterChipBar(
         parameter: parameter,
         onChanged: onChanged,

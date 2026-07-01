@@ -13,7 +13,7 @@ class HomeMapLayerHeroIllustration extends HookWidget {
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final shape = designSystem.shape;
-    final primary = Theme.of(context).colorScheme.primary;
+    final primary = context.designSystem.colorTheme.primary;
     final primarySoft = Color.lerp(colorTheme.surfaceContainerHighest, primary, 0.35)!;
     final controller = useAnimationController(
       duration: const Duration(seconds: 12),
@@ -94,7 +94,7 @@ class _LayerLabelChip extends StatelessWidget {
         child: Text(
           label,
           style: typography.labelMedium.copyWith(
-            color: Theme.of(context).colorScheme.onSurface,
+            color: context.designSystem.colorTheme.onSurface,
             fontWeight: FontWeight.w700,
           ),
         ),

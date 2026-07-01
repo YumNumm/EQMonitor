@@ -139,7 +139,7 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
             child: Text(
               '震度別の音設定で個別にオーバーライドすることもできます',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           ),

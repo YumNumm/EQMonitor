@@ -62,9 +62,9 @@ class _OnboardingBottomBar extends StatelessWidget {
                         ),
                         onPressed: isBackEnabled ? onPrevious : null,
                         style: FilledButton.styleFrom(
-                          backgroundColor: theme.colorScheme.secondaryContainer,
+                          backgroundColor: context.designSystem.colorTheme.secondaryContainer,
                           foregroundColor:
-                              theme.colorScheme.onSecondaryContainer,
+                              context.designSystem.colorTheme.onSecondaryContainer,
                           shape: RoundedSuperellipseBorder(
                             borderRadius: BorderRadius.circular(
                               designSystem.shape.button,
@@ -143,7 +143,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                           TextSpan(
                             text: '利用規約',
                             style: designSystem.typography.bodySmall.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(
+                              color: context.designSystem.colorTheme.onSurface.withValues(
                                 alpha: 0.6,
                               ),
                               decoration: TextDecoration.underline,
@@ -157,7 +157,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                           TextSpan(
                             text: 'プライバシーポリシー',
                             style: designSystem.typography.bodySmall.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(
+                              color: context.designSystem.colorTheme.onSurface.withValues(
                                 alpha: 0.6,
                               ),
                               decoration: TextDecoration.underline,
@@ -170,7 +170,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                           const TextSpan(text: ' に同意したとみなされます'),
                         ],
                         style: designSystem.typography.bodySmall.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
+                          color: context.designSystem.colorTheme.onSurface.withValues(
                             alpha: 0.6,
                           ),
                         ),

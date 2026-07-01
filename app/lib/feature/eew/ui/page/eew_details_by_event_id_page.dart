@@ -15,6 +15,7 @@ import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -396,9 +397,9 @@ class _SimulationStartBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     return Material(
-      color: theme.colorScheme.primaryContainer,
+      color: designSystem.colorTheme.primaryContainer,
       child: InkWell(
         onTap: onStart,
         child: Padding(
@@ -407,20 +408,20 @@ class _SimulationStartBanner extends StatelessWidget {
             children: [
               Icon(
                 Icons.play_circle_outline,
-                color: theme.colorScheme.onPrimaryContainer,
+                color: designSystem.colorTheme.onPrimaryContainer,
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'シミュレーション再生: 各報を実際の時間間隔で再生します',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: designSystem.colorTheme.onPrimaryContainer,
                   ),
                 ),
               ),
               Icon(
                 Icons.chevron_right,
-                color: theme.colorScheme.onPrimaryContainer,
+                color: designSystem.colorTheme.onPrimaryContainer,
               ),
             ],
           ),

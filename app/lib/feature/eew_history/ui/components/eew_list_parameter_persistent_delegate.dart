@@ -1,4 +1,5 @@
 import 'package:core/core.dart' show Date;
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
@@ -21,7 +22,7 @@ class EewListParameterPersistentDelegate
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return ColoredBox(
-      color: Theme.of(context).colorScheme.surface,
+      color: context.designSystem.colorTheme.surface,
       child: _FilterChipBar(parameter: parameter, onChanged: onChanged),
     );
   }

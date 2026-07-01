@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
@@ -387,7 +388,7 @@ class _AppCheckSection extends ConsumerWidget {
             AsyncLoading() => const Text('取得中...'),
             AsyncError(:final error) => Text(
               'エラー: $error',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+              style: TextStyle(color: context.designSystem.colorTheme.error),
             ),
             AsyncData(:final value) => Text(
               value ?? 'null',
@@ -508,7 +509,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
             title: const Text('読み込みエラー'),
             subtitle: Text(
               error.toString(),
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+              style: TextStyle(color: context.designSystem.colorTheme.error),
             ),
           ),
           AsyncData(:final value) => Column(
