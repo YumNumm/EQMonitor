@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$FeedEarthquakeNankaiData {
 
 /// const: "EARTHQUAKE_NANKAI"
- String get type; InfoType get infoType; FeedTelegramType get telegramType;@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? get earthquakeInfo;@JsonKey(includeIfNull: false) String? get nextAdvisory;@JsonKey(includeIfNull: false) String? get text;
+ String get type; InfoType get infoType; String get telegramType;@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? get earthquakeInfo;@JsonKey(includeIfNull: false) String? get nextAdvisory;@JsonKey(includeIfNull: false) String? get text;
 /// Create a copy of FeedEarthquakeNankaiData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $FeedEarthquakeNankaiDataCopyWith<$Res>  {
   factory $FeedEarthquakeNankaiDataCopyWith(FeedEarthquakeNankaiData value, $Res Function(FeedEarthquakeNankaiData) _then) = _$FeedEarthquakeNankaiDataCopyWithImpl;
 @useResult
 $Res call({
- String type, InfoType infoType, FeedTelegramType telegramType,@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? earthquakeInfo,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text
+ String type, InfoType infoType, String telegramType,@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? earthquakeInfo,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text
 });
 
 
@@ -71,7 +71,7 @@ class _$FeedEarthquakeNankaiDataCopyWithImpl<$Res>
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
 as InfoType,telegramType: null == telegramType ? _self.telegramType : telegramType // ignore: cast_nullable_to_non_nullable
-as FeedTelegramType,earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
+as String,earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
 as FeedNankaiEarthquakeInfo?,nextAdvisory: freezed == nextAdvisory ? _self.nextAdvisory : nextAdvisory // ignore: cast_nullable_to_non_nullable
 as String?,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -171,7 +171,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  InfoType infoType,  FeedTelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  InfoType infoType,  String telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FeedEarthquakeNankaiData() when $default != null:
 return $default(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInfo,_that.nextAdvisory,_that.text);case _:
@@ -192,7 +192,7 @@ return $default(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInf
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  InfoType infoType,  FeedTelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  InfoType infoType,  String telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)  $default,) {final _that = this;
 switch (_that) {
 case _FeedEarthquakeNankaiData():
 return $default(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInfo,_that.nextAdvisory,_that.text);case _:
@@ -212,7 +212,7 @@ return $default(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInf
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  InfoType infoType,  FeedTelegramType telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  InfoType infoType,  String telegramType, @JsonKey(includeIfNull: false)  FeedNankaiEarthquakeInfo? earthquakeInfo, @JsonKey(includeIfNull: false)  String? nextAdvisory, @JsonKey(includeIfNull: false)  String? text)?  $default,) {final _that = this;
 switch (_that) {
 case _FeedEarthquakeNankaiData() when $default != null:
 return $default(_that.type,_that.infoType,_that.telegramType,_that.earthquakeInfo,_that.nextAdvisory,_that.text);case _:
@@ -233,7 +233,7 @@ class _FeedEarthquakeNankaiData implements FeedEarthquakeNankaiData {
 /// const: "EARTHQUAKE_NANKAI"
 @override final  String type;
 @override final  InfoType infoType;
-@override final  FeedTelegramType telegramType;
+@override final  String telegramType;
 @override@JsonKey(includeIfNull: false) final  FeedNankaiEarthquakeInfo? earthquakeInfo;
 @override@JsonKey(includeIfNull: false) final  String? nextAdvisory;
 @override@JsonKey(includeIfNull: false) final  String? text;
@@ -271,7 +271,7 @@ abstract mixin class _$FeedEarthquakeNankaiDataCopyWith<$Res> implements $FeedEa
   factory _$FeedEarthquakeNankaiDataCopyWith(_FeedEarthquakeNankaiData value, $Res Function(_FeedEarthquakeNankaiData) _then) = __$FeedEarthquakeNankaiDataCopyWithImpl;
 @override @useResult
 $Res call({
- String type, InfoType infoType, FeedTelegramType telegramType,@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? earthquakeInfo,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text
+ String type, InfoType infoType, String telegramType,@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? earthquakeInfo,@JsonKey(includeIfNull: false) String? nextAdvisory,@JsonKey(includeIfNull: false) String? text
 });
 
 
@@ -293,7 +293,7 @@ class __$FeedEarthquakeNankaiDataCopyWithImpl<$Res>
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
 as InfoType,telegramType: null == telegramType ? _self.telegramType : telegramType // ignore: cast_nullable_to_non_nullable
-as FeedTelegramType,earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
+as String,earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
 as FeedNankaiEarthquakeInfo?,nextAdvisory: freezed == nextAdvisory ? _self.nextAdvisory : nextAdvisory // ignore: cast_nullable_to_non_nullable
 as String?,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String?,
