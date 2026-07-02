@@ -19,7 +19,7 @@ struct EewContentState: Codable, Hashable {
     let type: String
     let hypocenterName: String?
     let magnitude: Double?
-    let depth: Int?
+    let depth: Double?
     let time: String?
     let isOriginTime: Bool?
     let maxIntensity: String?
