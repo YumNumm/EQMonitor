@@ -9,6 +9,7 @@ import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
 import 'package:eqmonitor/core/fcm/channels.dart';
@@ -137,6 +138,9 @@ Future<void> _main() async {
       'Uncaught fatal exception',
     );
   };
+  if (!kDebugMode) {
+    ErrorWidget.builder = buildFatalErrorWidget;
+  }
   PlatformDispatcher.instance.onError = (exception, stackTrace) {
     talker.handle(
       exception,
