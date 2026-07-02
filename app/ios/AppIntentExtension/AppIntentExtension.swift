@@ -7,22 +7,25 @@
 
 import AppIntents
 
-// スパイク用ダミー（Task 7 で本実装に置き換えて削除）
-struct PingIntent: AppIntent {
-    static var title: LocalizedStringResource { "EQMonitor 接続確認" }
-
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        .result(dialog: "OK")
-    }
-}
-
 struct EQMonitorShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
-            intent: PingIntent(),
-            phrases: ["\(.applicationName)で接続確認"],
-            shortTitle: "接続確認",
+            intent: GetLatestEarthquakesIntent(),
+            phrases: [
+                "\(.applicationName)で最新の地震を確認",
+                "\(.applicationName)で地震情報を見る",
+            ],
+            shortTitle: "最新の地震",
             systemImageName: "waveform.path.ecg"
+        )
+        AppShortcut(
+            intent: GetEarthquakesNearMeIntent(),
+            phrases: [
+                "\(.applicationName)で現在地の地震を確認",
+                "\(.applicationName)で近くの地震を見る",
+            ],
+            shortTitle: "現在地の地震",
+            systemImageName: "location"
         )
     }
 }
