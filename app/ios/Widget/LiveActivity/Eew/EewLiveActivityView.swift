@@ -29,6 +29,7 @@ extension View {
 @available(iOS 16.1, *)
 struct HeaderContainer: View {
     let isWarning: Bool
+    let isCanceled: Bool
     let headline: String?
     let serialNo: Int?
     let isFinal: Bool
@@ -38,7 +39,7 @@ struct HeaderContainer: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            StripePattern(isWarning: isWarning)
+            stripePattern
                 .frame(height: stripeHeight)
 
             HStack(alignment: .center, spacing: 8) {
@@ -55,7 +56,7 @@ struct HeaderContainer: View {
                         .foregroundColor(eewHeaderSecondaryTextColor)
 
                     // headline: "XXXで地震" または警報時 "XX YYで強い揺れ"
-                    if let headline = headline, !headline.isEmpty {
+                    if let headline = headline, !headline.isEmpty, !isCanceled {
                         Text(headline)
                             .font(.system(size: 15, weight: .heavy))
                             .foregroundColor(.primary)
@@ -102,9 +103,24 @@ struct HeaderContainer: View {
         .clipShape(ContainerRelativeShape())
     }
 
+    private var stripePattern: StripePattern {
+        if isCanceled {
+            return StripePattern(colors: [
+                Color(red: 0.5, green: 0.5, blue: 0.5),
+                Color(red: 0.25, green: 0.25, blue: 0.25),
+            ])
+        }
+        return StripePattern(isWarning: isWarning)
+    }
+
     private var eewTypeLabelWithSerial: String {
-        let typeLabel = isWarning ? "緊急地震速報(警報)" : "緊急地震速報(予報)"
-        if let serialNo = serialNo {
+        let typeLabel: String
+        if isCanceled {
+            typeLabel = "緊急地震速報(取消)"
+        } else {
+            typeLabel = isWarning ? "緊急地震速報(警報)" : "緊急地震速報(予報)"
+        }
+        if let serialNo = serialNo, serialNo > 0 {
             if isFinal {
                 return "\(typeLabel) 第\(serialNo)報(最終)"
             } else {
@@ -115,7 +131,9 @@ struct HeaderContainer: View {
     }
 
     private var backgroundColor: Color {
-        if isWarning {
+        if isCanceled {
+            return Color(red: 0.4, green: 0.4, blue: 0.4)
+        } else if isWarning {
             return Color(red: 0.7, green: 0.1, blue: 0.1)
         } else {
             return Color(red: 0.8, green: 0.4, blue: 0.05)
@@ -135,6 +153,7 @@ struct EewLockScreenView: View {
         VStack(spacing: 0) {
             HeaderContainer(
                 isWarning: state.isWarning ?? false,
+                isCanceled: state.isCanceled == true,
                 headline: state.headline,
                 serialNo: state.serialNo,
                 isFinal: state.isFinal ?? false,
@@ -191,6 +210,12 @@ struct EewLockScreenView: View {
 
     private var detailsView: some View {
         VStack(alignment: .leading, spacing: 4) {
+            if state.isCanceled == true {
+                Text("緊急地震速報は取り消されました")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.primary)
+            }
+
             if let hypocenterName = state.hypocenterName {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text(
@@ -201,6 +226,7 @@ struct EewLockScreenView: View {
                         .font(.system(size: 16, weight: .heavy))
                         .foregroundColor(.primary)
                         .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                 }
             }
 
@@ -230,7 +256,7 @@ struct EewLockScreenView: View {
                         }
                     }
                     if let depth = state.depth {
-                        depthView(depth: depth)
+                        depthView(depth: Int(depth))
                     }
                 }
             }

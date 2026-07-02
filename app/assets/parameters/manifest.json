@@ -10,8 +10,8 @@
         "https://xml.kishou.go.jp/jmaxml_20260623_Code.zip",
         "https://www.data.jma.go.jp/developer/jma_multilingual.xlsx"
       ],
-      "sha256": "a1242f71167c31846066b3c1c40779c26b5c1d383980d0260a5e7b10479a58c8",
-      "size_bytes": 604716,
+      "sha256": "50bb8f25a1ca718b2c3b0951067ada7abe5f6c61fe504824e55ec309d883a530",
+      "size_bytes": 1641655,
       "url": "/v2/parameters/JMA_CODE_TABLE"
     },
     {
@@ -21,10 +21,11 @@
       "source_updated_at": "2026-07-23T12:00:00+09:00",
       "source_urls": [
         "https://api.dmdata.jp/v2/parameter/earthquake/station",
-        "https://www.data.jma.go.jp/developer/jma_multilingual.xlsx"
+        "https://www.data.jma.go.jp/developer/jma_multilingual.xlsx",
+        "https://www.j-shis.bosai.go.jp/map/api/sstrct/V2/meshinfo.geojson"
       ],
-      "sha256": "6d5a420bda7cbc8b15e8232bc2ad4d4d803232831d70c01290eef3c1933728b1",
-      "size_bytes": 4394090,
+      "sha256": "0afcd7ac2dd3425065d4c65f0a4e364abaa91f34ad030f312c77899214f79462",
+      "size_bytes": 4546875,
       "url": "/v2/parameters/EARTHQUAKE_STATIONS"
     },
     {
