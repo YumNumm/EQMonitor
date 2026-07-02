@@ -52,10 +52,14 @@ class EarthquakeAPIService {
     /// 地震情報一覧を取得
     /// - Parameters:
     ///   - limit: 取得件数（デフォルト10件）
+    ///   - minIntensity: 最小震度（指定時は intensityGte で絞り込み）
     /// - Returns: Widget表示用の地震情報配列
-    func fetchEarthquakes(limit: Int = 10) async throws -> [EarthquakeDisplayItem] {
+    func fetchEarthquakes(
+        limit: Int = 10,
+        minIntensity: Components.Schemas.JmaIntensity? = nil
+    ) async throws -> [EarthquakeDisplayItem] {
         let response = try await client.getV2Earthquake(
-            query: .init(limit: String(limit))
+            query: .init(limit: String(limit), intensityGte: minIntensity)
         )
         switch response {
         case .ok(let okResponse):
@@ -76,11 +80,16 @@ class EarthquakeAPIService {
     /// - Parameters:
     ///   - regionCode: 震度細分区域コード
     ///   - limit: 取得件数（デフォルト10件）
+    ///   - minIntensity: 最小震度（指定時は intensityGte で絞り込み）
     /// - Returns: Widget表示用の地震情報配列
-    func fetchEarthquakesByRegion(regionCode: String, limit: Int = 10) async throws -> [EarthquakeDisplayItem] {
+    func fetchEarthquakesByRegion(
+        regionCode: String,
+        limit: Int = 10,
+        minIntensity: Components.Schemas.JmaIntensity? = nil
+    ) async throws -> [EarthquakeDisplayItem] {
         let response = try await client.getV2EarthquakeIntensityRegionByCode(
             path: .init(code: regionCode),
-            query: .init(limit: String(limit))
+            query: .init(limit: String(limit), intensityGte: minIntensity)
         )
         switch response {
         case .ok(let okResponse):
@@ -98,10 +107,14 @@ class EarthquakeAPIService {
     // MARK: - Fetch Earthquakes by Prefecture / City
 
     /// 都道府県別の地震情報を取得
-    func fetchEarthquakesByPrefecture(prefectureCode: String, limit: Int = 10) async throws -> [EarthquakeDisplayItem] {
+    func fetchEarthquakesByPrefecture(
+        prefectureCode: String,
+        limit: Int = 10,
+        minIntensity: Components.Schemas.JmaIntensity? = nil
+    ) async throws -> [EarthquakeDisplayItem] {
         let response = try await client.getV2EarthquakeIntensityPrefectureByCode(
             path: .init(code: prefectureCode),
-            query: .init(limit: String(limit))
+            query: .init(limit: String(limit), intensityGte: minIntensity)
         )
         switch response {
         case .ok(let okResponse):
@@ -117,10 +130,14 @@ class EarthquakeAPIService {
     }
 
     /// 市区町村別の地震情報を取得
-    func fetchEarthquakesByCity(cityCode: String, limit: Int = 10) async throws -> [EarthquakeDisplayItem] {
+    func fetchEarthquakesByCity(
+        cityCode: String,
+        limit: Int = 10,
+        minIntensity: Components.Schemas.JmaIntensity? = nil
+    ) async throws -> [EarthquakeDisplayItem] {
         let response = try await client.getV2EarthquakeIntensityCityByCode(
             path: .init(code: cityCode),
-            query: .init(limit: String(limit))
+            query: .init(limit: String(limit), intensityGte: minIntensity)
         )
         switch response {
         case .ok(let okResponse):
