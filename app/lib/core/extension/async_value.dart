@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_positional_boolean_parameters
 
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // https://zenn.dev/k9i/articles/b8c333e1bb8b9b
@@ -44,19 +43,5 @@ extension AsyncValueX<T> on AsyncValue<T> {
       error: error,
       loading: loading,
     );
-  }
-
-  /// エラー時にスナックバーを表示する
-  void showSnackbarOnError(
-    BuildContext context, {
-    String defaultMessage = 'エラーが発生しました',
-  }) {
-    if (!isLoading && hasError) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(
-        SnackBar(content: Text(error?.toString() ?? 'エラーが発生しました')),
-      );
-    }
   }
 }
