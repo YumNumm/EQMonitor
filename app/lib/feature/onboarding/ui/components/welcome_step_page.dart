@@ -36,12 +36,13 @@ class _WelcomeStepPage extends HookConsumerWidget {
     }
 
     ref.listen(deviceProvisioningProvider, (_, next) {
-      if (next case AsyncError(:final error)) {
+      if (next case AsyncError(:final error, :final stackTrace)) {
         unawaited(
           _showDeviceRegistrationErrorDialog(
             context: context,
             message: 'デバイスの状態確認に失敗しました',
-            details: error.toString(),
+            error: error,
+            stackTrace: stackTrace,
             onRetry: retryProvisioning,
           ),
         );
@@ -58,7 +59,8 @@ class _WelcomeStepPage extends HookConsumerWidget {
           _showDeviceRegistrationErrorDialog(
             context: context,
             message: errorMessage,
-            details: next.error.toString(),
+            error: next.error,
+            stackTrace: next.stackTrace,
             onRetry: retryProvisioning,
           ),
         );
@@ -126,7 +128,8 @@ class _WelcomeStepPage extends HookConsumerWidget {
 Future<void> _showDeviceRegistrationErrorDialog({
   required BuildContext context,
   required String message,
-  required String details,
+  required Object error,
+  required StackTrace? stackTrace,
   required VoidCallback onRetry,
 }) async {
   if (!context.mounted) {
@@ -150,10 +153,10 @@ Future<void> _showDeviceRegistrationErrorDialog({
           child: const Text('再試行'),
         ),
         TextButton(
-          onPressed: () async => showDialog<void>(
-            context: context,
-            builder: (context) =>
-                OnboardingProvisioningErrorDetailsDialog(details: details),
+          onPressed: () => showErrorDetailsSheet(
+            context,
+            error: error,
+            stackTrace: stackTrace,
           ),
           child: const Text('詳細'),
         ),

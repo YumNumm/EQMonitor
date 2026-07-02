@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
@@ -122,6 +123,7 @@ GoRouter goRouter(Ref ref) => GoRouter(
     FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
   ],
   debugLogDiagnostics: kDebugMode,
+  errorBuilder: (context, state) => FatalErrorScreen(error: state.error),
 );
 
 class GoRouterRedirectException implements Exception {
