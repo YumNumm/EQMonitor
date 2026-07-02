@@ -242,7 +242,7 @@ jobs:
           if-no-files-found: error
 
   deploy-ios:
-    name: Deploy iOS
+    name: Deploy iOS (App Store Connect)
     needs:
       - build-ios
       - define-matrix
