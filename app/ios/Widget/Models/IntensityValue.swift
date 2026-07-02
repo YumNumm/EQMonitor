@@ -122,9 +122,9 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
     /// テキスト色（コントラスト改善版）
     var textColor: Color {
         switch self {
-        case .one, .four:
+        case .zero, .one, .four:
             return .black
-        case .zero, .two, .three:
+        case .two, .three:
             return .white
         default:
             return .white
