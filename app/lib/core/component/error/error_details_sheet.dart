@@ -44,7 +44,10 @@ class _ErrorDetailsSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final summary = ref.read(errorMessageBuilderProvider).build(error: error);
-    final deviceId = ref.watch(deviceIdProvider).value ?? '(取得中)';
+    final deviceId = switch (ref.watch(deviceIdProvider)) {
+      AsyncData(:final value) => value,
+      _ => '(取得中)',
+    };
     final packageInfo = ref.watch(packageInfoProvider);
     final os = _osString(ref);
 
