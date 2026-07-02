@@ -62,12 +62,10 @@ class HomeFeedSheet extends ConsumerWidget {
                     ),
             AsyncError<FeedNotifierState>(:final error) => ErrorCard(
                 error: error,
-                margin: EdgeInsets.zero,
                 onReload: () async => ref.invalidate(
                   feedProvider,
                   asReload: true,
                 ),
-                padding: const EdgeInsets.all(8),
               ),
             _ => const _HomeFeedSkeleton(),
           },

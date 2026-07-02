@@ -118,7 +118,6 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                             ),
                     AsyncError(:final error) => ErrorCard(
                       error: error,
-                      margin: EdgeInsets.zero,
                       onReload: () async {
                         ref.invalidate(
                           homeEarthquakeHistoryParameterProvider,
@@ -129,7 +128,6 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                           asReload: true,
                         );
                       },
-                      padding: const EdgeInsets.all(8),
                     ),
                     _ => const _HomeEarthquakeHistorySheetSkeleton(),
                   };
@@ -138,12 +136,10 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                 loading: () => const _HomeEarthquakeHistorySheetSkeleton(),
                 error: (error, _) => ErrorCard(
                   error: error,
-                  margin: EdgeInsets.zero,
                   onReload: () async => ref.invalidate(
                     homeEarthquakeHistoryParameterProvider,
                     asReload: true,
                   ),
-                  padding: const EdgeInsets.all(8),
                 ),
               ),
               Padding(
