@@ -4,11 +4,12 @@
     "schema_version": 1,
     "source_version": "v2026.05.03",
     "source_updated_at": "2026-05-03T06:46:46Z",
-    "generated_at": "2026-05-04T10:13:05.981Z",
     "source_urls": [
-      "https://github.com/ingen084/kyoshin-monitor-observation-points/releases/download/v2026.05.03/intensity-points.json"
+      "https://github.com/ingen084/kyoshin-monitor-observation-points/releases/download/v2026.05.03/intensity-points.json",
+      "https://api.dmdata.jp/v2/parameter/earthquake/station",
+      "https://www.j-shis.bosai.go.jp/map/api/sstrct/V2/meshinfo.geojson"
     ],
-    "sha256": "01265630124849f43e0d1f5043256c8d823288050ee6d197dd96a7f0f7d4d3a4"
+    "sha256": "e5a0417f62af9f02ae2d425e91355d13eef28a23822bb0d1beeb83a9034ffbd0"
   },
   "points": [
     {
