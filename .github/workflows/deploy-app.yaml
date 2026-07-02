@@ -402,7 +402,9 @@ jobs:
   deploy-android-firebase-app-distribution:
     name: Deploy Android (Firebase App Distribution)
     needs: build-android
-    runs-on: ubuntu-24.04-arm
+    # firebase-tools は linux-arm64 バイナリを配布しておらず、aqua registry の
+    # supported_envs も amd64 のみ。arm ランナーでは mise --locked が失敗するため x64 を使う
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
