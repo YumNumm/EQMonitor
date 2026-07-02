@@ -37,6 +37,7 @@ class _PagingBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: dataSource.refresh,
+      edgeOffset: MediaQuery.paddingOf(context).top + kToolbarHeight,
       child: CustomScrollView(
         slivers: [
           const SliverAppBar(
@@ -66,15 +67,14 @@ class _PagingBody extends StatelessWidget {
           SliverToBoxAdapter(
             child: AppendLoadStateBuilder(
               dataSource: dataSource,
-              builder: (context, hasMore, isLoading) =>
-                  !hasMore && !isLoading
-                      ? const Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Center(
-                            child: Text('すべてのお知らせを表示しました'),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
+              builder: (context, hasMore, isLoading) => !hasMore && !isLoading
+                  ? const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(
+                        child: Text('すべてのお知らせを表示しました'),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
           ),
         ],
