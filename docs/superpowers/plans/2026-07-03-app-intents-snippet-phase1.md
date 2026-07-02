@@ -1,10 +1,12 @@
 # App Intents 対応 Phase 1（SnippetIntent 地震情報カード）実装計画
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+>
+> **Tracking Issue:** https://github.com/YumNumm/EQMonitor/issues/1418
 
 **Goal:** Siri・Spotlight・ショートカットから、アプリを開かずに「最新の地震情報」「現在地の地震」をカードUI（Interactive Snippet）で確認でき、結果値をオートメーションに渡せるようにする。
 
-**Architecture:** 新規 App Intents Extension（iOS 26.0、ヘッドレス実行）に Intent 群を配置し、既存 Widget 拡張の Models / Services（`EarthquakeDisplayItem`・`EarthquakeAPIClient`・`WidgetRegionResolver`）をターゲットメンバーシップで共有する。UI は新設の `DesignTokens`（アプリの ColorThemeExtension と同値の色・GoogleSans フォント）で実装し、表記ロジックは Flutter 実装を正として修正する。
+**Architecture:** 新規 App Intents Extension（iOS 26.0、ヘッドレス実行）に Intent 群を配置し、既存 Widget 拡張の Models / Services（`EarthquakeDisplayItem`・`EarthquakeAPIService`・`WidgetRegionResolver`）をターゲットメンバーシップで共有する。UI は新設の `DesignTokens`（アプリの ColorThemeExtension と同値の色・GoogleSans フォント）で実装し、表記ロジックは Flutter 実装を正として修正する。
 
 **Tech Stack:** Swift / AppIntents (SnippetIntent, AppEntity, AppEnum) / SwiftUI / swift-openapi-generator 生成クライアント（EQMonitorAPI）/ Swift Testing / xcodeproj ruby gem（ターゲット追加）
 
@@ -28,6 +30,54 @@ xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Debug
   CODE_SIGNING_ALLOWED=NO build 2>&1 | tail -5
 # 期待: ** BUILD SUCCEEDED **
 ```
+
+## 実装前提: 既存シンボルの正確な定義（コード検証済み・厳守）
+
+> 本計画の草案は一部シンボル名を誤っていた。以降のタスクのコード例より、**この表の実名を正とする**。タスク内コードに旧名が残っていたら実名へ読み替えること。
+
+**Xcode ターゲット / プロジェクト（`app/ios/Runner.xcodeproj/project.pbxproj`）**
+- 既存ターゲットは 3 つ: `Runner`(16.0) / `WidgetExtension`(26.0) / `FcmServiceExtension`(16.0)。**ウィジェットのターゲット名は `WidgetExtension`**（"Widget" ではない。ソースフォルダ名だけが `Widget/`）。**テストターゲットは存在しない**（Task 2 で新規作成する）。
+- `WidgetExtension` の `PRODUCT_BUNDLE_IDENTIFIER = "net.yumnumm.eqmonitor${APP_ID_SUFFIX}.Widget"`、`IPHONEOS_DEPLOYMENT_TARGET = 26.0`。
+- ローカル SPM 参照は `XCLocalSwiftPackageReference "Packages/EQMonitorAPI"`（`app/ios/Packages/EQMonitorAPI/`）。プロダクト名 `EQMonitorAPI`。WidgetExtension には既にリンク済み。
+
+**`EarthquakeDisplayItem`（`app/ios/Widget/Models/EarthquakeDisplayItem.swift`）** — `struct ...: Identifiable, Equatable`
+- プロパティ: `id: String`（**`eventId` ではない**。値は `partial.event_id`）／`hypocenterName: String`／`magnitude: String`（表示文字列）／`magnitudeValue: Double?`／`maxIntensity: IntensityValue?`／`depth: String`／`originTime: Date`／`formattedTime: String`（**`dateText` ではない**）／`latitude`/`longitude: Double?`／`status: TelegramStatus`。
+- **`title` プロパティは無い**（震源名は `hypocenterName`、リストのカードタイトルは項目3 `ResolvedWidgetRegion.title` の責務）。
+- フォーマットは全て **`private static func`**（internal 化して単体テストするのが Task 2）:
+  - `formatTime(_ date: Date) -> String`: `"MM/dd HH:mm"` + `ja_JP` + `Asia/Tokyo`、末尾に `"頃"` 連結。
+  - `formatMagnitude(_ magnitude: Components.Schemas.Magnitude?) -> String`: `.NORMAL`→`"M%.1f"`／`.UNKNOWN`→`"M不明"`／`.OVER_M8`→**現状 `"M8以上"`**（Task 2 で `"M8超"` に変更）。
+  - `formatDepth(_ depth: Components.Schemas.Depth?) -> String`: `.SHALLOW`→`"ごく浅い"`／`.NORMAL`→`"\(Int(value))km"`／`.OVER_700`→`"700km以上"`／`.UNKNOWN`→**現状 `"不明"`**（Task 2 で空文字に変更）。
+- 震源名フォールバックは **init 内**（static ではない）: `detailed?.name ?? name ?? "震源地不明"`。
+
+**`EarthquakeAPIService`（`app/ios/Widget/Services/EarthquakeAPIClient.swift`）** — **クラス名は `EarthquakeAPIService`**（`EarthquakeAPIClient` ではない）。共有は `EarthquakeAPIService.shared`。
+- `fetchEarthquakes(limit: Int = 10)` → `client.getV2Earthquake(query: .init(limit:))`
+- `fetchEarthquakesByRegion(regionCode: String, limit: Int = 10)` → `getV2EarthquakeIntensityRegionByCode(path:query:)`
+- `fetchEarthquakesByPrefecture(prefectureCode: String, limit: Int = 10)`
+- `fetchEarthquakesByCity(cityCode: String, limit: Int = 10)`
+- 各メソッドは現状 `intensityGte` を渡していないが、**生成クライアントの `Input.Query` は `intensityGte: Components.Schemas.JmaIntensity?` を既に保持**（region/pref/city/nationwide すべて）。→ Task 3 は「Service メソッドに引数を足して Query に渡す」だけでよく、生成コード改変は不要。
+
+**`WidgetRegionResolver`（`app/ios/Widget/Services/WidgetRegionResolver.swift`）** — `enum`（static メソッド集）
+- `static func resolve(regionType: RegionType) -> ResolvedWidgetRegion`。`ResolvedWidgetRegion { plan: WidgetFetchPlan; title: String; compactTitle: String }`。
+- `WidgetFetchPlan`: `.nationwide` / `.region(code: String)` / `.prefecture(code: String)` / `.city(code: String)`。
+- App Group suiteName = `"group.net.yumnumm.eqmonitor"`。キー（`private enum Key` の `static let` 文字列）: `isPro` / `widgetRegionSearchType` / `widgetRegionCode` / `widgetRegionName` / `currentLocationRegionCode` / `currentLocationRegionName`。
+- `.region(code:)` は `.currentLocation` 分岐でのみ生成。現在地未設定時は全国フォールバックする（Task 8 でこれを「未取得」として明示エラーにする）。
+
+**`IntensityValue`（`app/ios/Widget/Models/IntensityValue.swift`）** — `enum ...: String, Codable, CaseIterable, Comparable`
+- ケース: `.zero`..`.four`, `.fiveLowerNoInput`="!5-", `.fiveLower`="5-", `.fiveUpper`="5+", `.sixLowerNoInput`="!6-", `.sixLower`="6-", `.sixUpper`="6+", `.seven`="7"。
+- 表示系: `displayString`（**`label` は無い**。"5弱" 等）／`mainNumber`／`subText`／`formattedParts: (main, sub)`。色: `backgroundColor: Color`／`textColor: Color`／`dangerLevel: Int`。変換: `init?(from jmaIntensity: Components.Schemas.JmaIntensity?)`。
+
+**`IntensityBadge`（`app/ios/Widget/Views/EarthquakeWidgetView.swift` 内, internal）**
+- メンバ: `let intensity: (main: String, sub: String?)` / `let backgroundColor: Color` / `let textColor: Color` / `var size: CGFloat = 40`。`cornerRatio` 引数は現状無い（Task 7 で追加する場合はここに足す）。
+
+**`DesignSystem.swift`（`extension Color`）** — 色は全て `dynamic(light:dark:)` の**light/dark 2値ペア**。命名は `eq` プレフィックス:
+- `eqBg`=`0xF1F4F8`/`0x0F141A`、`eqSurface`=`0xFFFFFF`/`0x171E26`、`eqCard`=`0xEDF1F6`/`0x232D38`、`eqBrand`=`0x2F6FE0`/`0x4D8DFF`、`eqBrandContainer`/`eqOutlineSoft`/`eqTextPrimary`/`eqTextSecondary`/`eqTextTertiary` ほか。`eqGlass(cornerRadius:tint:)` あり。
+
+**`jma_code_table.json`（`app/assets/parameters/`, 約1.6MB）**
+- `{ metadata, code_tables }`。`code_tables.area_information_prefecture_earthquake`（**配列**47件, 各 `{code, name:{ja,...多言語}}`）／`area_information_city`（**配列**4361件, 各 `{code, name:{ja}, parent_area_...}` — city は `name.ja` のみ）。
+
+**フォント実ファイル名（`app/assets/fonts/`）**
+- `GoogleSansFlex/GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf`（1個）
+- `GoogleSansCode/GoogleSansCode[MONO,wght].ttf` と `GoogleSansCode-Italic[MONO,wght].ttf`
 
 ---
 
@@ -119,7 +169,7 @@ require 'xcodeproj'
 
 project = Xcodeproj::Project.open(File.expand_path('../Runner.xcodeproj', __dir__))
 runner = project.targets.find { |t| t.name == 'Runner' }
-widget = project.targets.find { |t| t.name == 'Widget' }
+widget = project.targets.find { |t| t.name == 'WidgetExtension' } # 実ターゲット名は WidgetExtension
 
 target = project.new_target(:app_extension, 'AppIntentsExtension', :ios, '26.0')
 
@@ -195,12 +245,16 @@ git add app/ios && git commit -m "feat(ios): App Intents Extension ターゲッ�
 - Modify: `app/ios/Widget/Views/EarthquakeWidgetView.swift` / `MapEarthquakeWidgetView.swift`（深さ空文字時の非表示対応）
 
 **Interfaces:**
-- Consumes: `EarthquakeDisplayItem`（既存）
-- Produces: 修正済みフォーマット関数。`formatMagnitude` / `formatDate(origin:arrival:)` / `formatDepth` / `resolveTitle` は internal にして単体テスト可能にする。
+- Consumes: `EarthquakeDisplayItem`（既存）、`Components.Schemas.Magnitude`（`._type: .NORMAL|.UNKNOWN|.OVER_M8`, `.value: Double?`）、`Components.Schemas.Depth`（同様に `._type` + `.value`）、`IntensityValue`（`.displayString` を使う。`label` は無い）
+- Produces: 既存の `private static` フォーマット関数を **internal static へ昇格**（シグネチャは実物を維持）:
+  - `formatMagnitude(_ magnitude: Components.Schemas.Magnitude?) -> String`（`.OVER_M8` を "M8超" に）
+  - `formatTime(origin: Date?, arrival: Date?) -> String`（**新シグネチャ**。現行 `formatTime(_ date: Date)` を置換。"yyyy/MM/dd HH:mm頃発生"／arrival フォールバック時 "頃検知"）
+  - `formatDepth(_ depth: Components.Schemas.Depth?) -> String`（`.UNKNOWN`/`value` 無しを空文字に）
+  - `resolveTitle(hypocenterName: String?, maxIntensity: IntensityValue?) -> String`（**新規**。現行の init 内フォールバック `"震源地不明"` をこれに置換）
 
 - [ ] **Step 1: テストターゲット追加スクリプトを作成・実行**
 
-`app/ios/scripts/add_widget_models_tests.rb`（unit_test_bundle ターゲット `WidgetModelsTests` を作成し、`Widget/Models/*.swift` と `Widget/Services/WidgetRegionResolver.swift` をコンパイル対象に追加、EQMonitorAPI 依存を付与。TEST_HOST は設定しない）。Task 1 のスクリプトを参考に同構造で書く。
+`app/ios/scripts/add_widget_models_tests.rb`（`unit_test_bundle` ターゲット `WidgetModelsTests` を新規作成 — 既存テストターゲットは無い。`Widget/Models/*.swift` と `Widget/Services/WidgetRegionResolver.swift` をコンパイル対象に追加し、`EQMonitorAPI` プロダクト依存を付与、`IPHONEOS_DEPLOYMENT_TARGET = 26.0`、`TEST_HOST` は設定しない）。Task 1 のスクリプトを参考に同構造で書く（`widget = ...find { |t| t.name == 'WidgetExtension' }` からビルド設定を借用）。
 
 ```bash
 cd app/ios && ruby scripts/add_widget_models_tests.rb
@@ -212,86 +266,98 @@ cd app/ios && ruby scripts/add_widget_models_tests.rb
 
 ```swift
 import Testing
-@testable import WidgetModelsTests_Sources // ターゲット直コンパイルのため実際は import 不要。internal アクセスで参照
+import EQMonitorAPI
+// Widget/Models・Widget/Services のソースを本テストターゲットへ直接コンパイルするため
+// アプリ/ウィジェットの import は不要（internal 参照で到達）。
 
 struct FormatTests {
+    private func jst(_ iso: String) -> Date { ISO8601DateFormatter().date(from: iso)! }
+
     @Test func magnitudeOver8() {
-        #expect(EarthquakeDisplayItem.formatMagnitude(condition: "M over", value: 8.0) == "M8超")
+        // Components.Schemas.Magnitude のメンバワイズ init のラベルは生成コードで確認して合わせる
+        let mag = Components.Schemas.Magnitude(_type: .OVER_M8, value: nil)
+        #expect(EarthquakeDisplayItem.formatMagnitude(mag) == "M8超")
+    }
+    @Test func magnitudeNormal() {
+        let mag = Components.Schemas.Magnitude(_type: .NORMAL, value: 8.0)
+        #expect(EarthquakeDisplayItem.formatMagnitude(mag) == "M8.0")
     }
     @Test func dateWithOriginTime() {
-        // 2026-07-03T10:15:00+09:00 origin_time
-        #expect(EarthquakeDisplayItem.formatDate(origin: "2026-07-03T10:15:00+09:00", arrival: nil)
+        #expect(EarthquakeDisplayItem.formatTime(origin: jst("2026-07-03T10:15:00+09:00"), arrival: nil)
                 == "2026/07/03 10:15頃発生")
     }
     @Test func dateFallsBackToArrival() {
-        #expect(EarthquakeDisplayItem.formatDate(origin: nil, arrival: "2026-07-03T10:15:00+09:00")
+        #expect(EarthquakeDisplayItem.formatTime(origin: nil, arrival: jst("2026-07-03T10:15:00+09:00"))
                 == "2026/07/03 10:15頃検知")
     }
     @Test func unknownDepthIsEmpty() {
-        #expect(EarthquakeDisplayItem.formatDepth(nil) == "")
+        #expect(EarthquakeDisplayItem.formatDepth(Components.Schemas.Depth(_type: .UNKNOWN, value: nil)) == "")
     }
     @Test func hypocenterFallbackUsesIntensity() {
-        #expect(EarthquakeDisplayItem.resolveTitle(name: nil, detailedName: nil, maxIntensity: .fiveLower)
+        #expect(EarthquakeDisplayItem.resolveTitle(hypocenterName: nil, maxIntensity: .fiveLower)
                 == "最大震度5弱を観測")
     }
 }
 ```
 
-※ 既存の `formatDepth` 等は private static のため、internal に変更した上で上記シグネチャに合わせてリファクタする。日時テストは `TimeZone(identifier: "Asia/Tokyo")` 固定である前提。
+※ `Components.Schemas.Magnitude`/`Depth` のメンバワイズ init の引数ラベル（`_type:value:` 等）は生成 `Types.swift` で確認して合わせる（TDD の最初のコンパイルで判明する）。日時テストは `Asia/Tokyo` 固定前提。`resolveTitle` は `maxIntensity.displayString`（"5弱" 等）を使う。
 
 - [ ] **Step 3: テスト実行で失敗を確認**
 
 ```bash
 cd app/ios && xcodebuild test -workspace Runner.xcworkspace -scheme WidgetModelsTests \
   -destination 'platform=iOS Simulator,name=iPhone 17' 2>&1 | tail -20
-# 期待: コンパイルエラーまたはテスト失敗（M8以上 != M8超 等）
+# 期待: コンパイルエラーまたはテスト失敗（"M8以上" != "M8超" 等）
 ```
 
 （スキームが自動生成されない場合は `xcodebuild -list` で確認し、shared scheme を追加する）
 
 - [ ] **Step 4: 実装修正**
 
-`EarthquakeDisplayItem.swift` の修正点:
+`EarthquakeDisplayItem.swift` の既存 `private static` 関数を internal 化して修正:
 
 ```swift
-// 1. M8超（現: "M8以上"）
-static func formatMagnitude(condition: String?, value: Double?) -> String {
-    if let value { return String(format: "M%.1f", value) }
-    if condition == "M over" { return "M8超" }
-    return "M不明"
+// 1. M8超（現: .OVER_M8 -> "M8以上"）。他ケースは現状維持
+static func formatMagnitude(_ magnitude: Components.Schemas.Magnitude?) -> String {
+    guard let mag = magnitude else { return "M不明" }
+    switch mag._type {
+    case .NORMAL:  return mag.value.map { String(format: "M%.1f", $0) } ?? "M不明"
+    case .UNKNOWN: return "M不明"
+    case .OVER_M8: return "M8超"   // ← 変更点
+    }
 }
 
-// 2. yyyy/MM/dd HH:mm頃発生 ／ 頃検知（現: "MM/dd HH:mm頃"）
-static func formatDate(origin: String?, arrival: String?) -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy/MM/dd HH:mm"
-    formatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-    if let origin, let date = parseISO8601(origin) {
-        return formatter.string(from: date) + "頃発生"
-    }
-    if let arrival, let date = parseISO8601(arrival) {
-        return formatter.string(from: date) + "頃検知"
-    }
+// 2. yyyy/MM/dd HH:mm頃発生 ／ 頃検知（現: formatTime(_ date: Date) -> "MM/dd HH:mm頃"）
+static func formatTime(origin: Date?, arrival: Date?) -> String {
+    let f = DateFormatter()
+    f.dateFormat = "yyyy/MM/dd HH:mm"
+    f.locale = Locale(identifier: "ja_JP")
+    f.timeZone = TimeZone(identifier: "Asia/Tokyo")
+    if let origin  { return f.string(from: origin)  + "頃発生" }
+    if let arrival { return f.string(from: arrival) + "頃検知" }
     return ""
 }
 
-// 3. 深さ不明は空文字（現: "不明"）。View 側は depth.isEmpty で行ごと非表示
+// 3. 深さ不明/未取得は空文字（現: "不明"）。View 側は depth.isEmpty で行ごと非表示
 static func formatDepth(_ depth: Components.Schemas.Depth?) -> String {
     guard let d = depth else { return "" }
-    // 既存の ごく浅い / km / 700km以上 分岐は変更しない
-    ...
+    switch d._type {
+    case .SHALLOW:  return "ごく浅い"
+    case .NORMAL:   return d.value.map { "\(Int($0))km" } ?? ""   // ← 変更点
+    case .OVER_700: return "700km以上"
+    case .UNKNOWN:  return ""                                     // ← 変更点
+    }
 }
 
-// 4. 震源名フォールバック（現: "震源地不明"）
-static func resolveTitle(name: String?, detailedName: String?, maxIntensity: IntensityValue?) -> String {
-    if let detailedName { return detailedName }
-    if let name { return name }
-    if let maxIntensity { return "最大震度\(maxIntensity.label)を観測" }
+// 4. 震源名フォールバック（現: init 内で "震源地不明"）
+static func resolveTitle(hypocenterName: String?, maxIntensity: IntensityValue?) -> String {
+    if let name = hypocenterName, !name.isEmpty { return name }
+    if let maxIntensity { return "最大震度\(maxIntensity.displayString)を観測" }
     return ""
 }
 ```
 
-既存の `init(from:)` 群をこれらの関数を通すよう更新し、`EarthquakeWidgetView` / `MapEarthquakeWidgetView` で `depth` が空文字のとき「深さ」表示行を出さないようにする。
+`init(from:)` 群を更新: (a) `originTime` に加え **arrival 相当のフィールドを partial から取得**（API スキーマで `arrival_time` 等の実フィールド名を確認。現行モデルは origin のみ保持のため、必要なら `formattedTime` を `formatTime(origin:arrival:)` 経由で組み立てる）。(b) `hypocenterName` が `"震源地不明"` になっていた箇所を `resolveTitle(hypocenterName:maxIntensity:)` 経由に置換。(c) `EarthquakeWidgetView` / `MapEarthquakeWidgetView` で `depth.isEmpty` のとき「深さ」表示行を出さない。
 
 - [ ] **Step 5: テストが通ることを確認（Step 3 と同コマンド、期待: TEST SUCCEEDED）**
 
@@ -305,17 +371,18 @@ git add app/ios && git commit -m "fix(ios/widget): 表記ロジックをアプ�
 
 ---
 
-### Task 3: EarthquakeAPIClient に震度フィルタ（intensityGte）を追加
+### Task 3: EarthquakeAPIService に震度フィルタ（intensityGte）を追加
 
 **Files:**
-- Modify: `app/ios/Widget/Services/EarthquakeAPIClient.swift`
+- Modify: `app/ios/Widget/Services/EarthquakeAPIClient.swift`（型名は **`EarthquakeAPIService`**、ファイル名は `EarthquakeAPIClient.swift`）
 
 **Interfaces:**
-- Produces: 各 fetch メソッドに `minIntensity: Components.Schemas.JmaIntensity? = nil` を追加した新シグネチャ。
+- Produces: `EarthquakeAPIService` の各 fetch メソッドに `minIntensity: Components.Schemas.JmaIntensity? = nil` を追加した新シグネチャ。
   - `fetchEarthquakes(limit:minIntensity:)`
   - `fetchEarthquakesByRegion(regionCode:limit:minIntensity:)`
   - `fetchEarthquakesByPrefecture(prefectureCode:limit:minIntensity:)`
   - `fetchEarthquakesByCity(cityCode:limit:minIntensity:)`
+- 前提: 生成クライアントの `Input.Query` は **既に `intensityGte: Components.Schemas.JmaIntensity?` を保持**（nationwide/region/pref/city すべて）。生成コード改変は不要。Service メソッドに引数を足して Query に渡すだけ。
 
 - [ ] **Step 1: 4メソッドに引数を追加し、query に `intensityGte: minIntensity` を渡す**
 
@@ -331,7 +398,7 @@ func fetchEarthquakes(
 }
 ```
 
-（生成コードの query init が `intensityGte` を受けることを `getV2Earthquake` の `Input.Query` 定義で確認。ラベル名が異なる場合は生成定義に合わせる）
+（region/pref/city も同様に各 `query: .init(...)` に `intensityGte: minIntensity` を追記。ラベル名は生成定義どおり `intensityGte`）
 
 - [ ] **Step 2: 共通ビルドで BUILD SUCCEEDED を確認**
 
@@ -339,7 +406,7 @@ func fetchEarthquakes(
 
 ```bash
 git add app/ios/Widget/Services/EarthquakeAPIClient.swift
-git commit -m "feat(ios/widget): EarthquakeAPIClient に最小震度フィルタを追加"
+git commit -m "feat(ios/widget): EarthquakeAPIService に最小震度フィルタを追加"
 ```
 
 ---
@@ -417,7 +484,9 @@ enum AppFonts {
 
 日本語グリフはヒラギノに自動フォールバックされる（NotoSansJP はバンドルしない。サイズ削減のため）。
 
-- [ ] **Step 3: DesignSystem.swift の色定数（bg #F1F4F8 → #F5F8FC、card #EDF1F6 → #EAF0F7 等）を DesignTokens 参照に置換**
+- [ ] **Step 3: `DesignSystem.swift` の既存色定数を DesignTokens 参照に置換**
+
+実名は `eqBg`(現 `0xF1F4F8`/`0x0F141A`) / `eqSurface` / `eqCard`(現 `0xEDF1F6`/`0x232D38`) / `eqBrand` など（`eq` プレフィックスの light/dark 2値ペア）。アプリ同値化に伴い bg→`0xF5F8FC`、card→`0xEAF0F7` 等へ更新する場合は **light/dark 両値を DesignTokens 側で定義**し、`extension Color` の各定数を `DesignTokens.*` へ委譲する（`eqGlass` / `eqSurfaceGradient` などレイアウト・質感系は Phase 3 まで現状維持）。変更する light 値がアプリの `ColorThemeExtension`（`app/lib/core/theme/`）と一致することを実装時に確認。
 
 - [ ] **Step 4: 共通ビルド + 既存ウィジェットのスクリーンショットで色ズレ解消を目視確認**
 
@@ -592,7 +661,7 @@ git add app/ios && git commit -m "feat(ios/intents): 最小震度 AppEnum を追
 - Modify: `app/ios/AppIntentsExtension/AppIntentsExtension.swift`（PingIntent 削除）
 
 **Interfaces:**
-- Consumes: `EarthquakeAPIClient.fetch*(…minIntensity:)`（Task 3）、`RegionEntity`（Task 5）、`MinIntensityOption`（Task 6）、`DesignTokens`/`AppFonts`（Task 4）、`EarthquakeDisplayItem`（Task 2）
+- Consumes: `EarthquakeAPIService.fetch*(…minIntensity:)`（Task 3）、`RegionEntity`（Task 5）、`MinIntensityOption`（Task 6）、`DesignTokens`/`AppFonts`（Task 4）、`EarthquakeDisplayItem`（Task 2）
 - Produces:
   - `struct EarthquakeEntity: AppEntity`（id=eventId、hypocenterName・magnitude・depth・maxIntensity・occurredAt の `@Property` 群）— オートメーションの後続アクションで参照可能
   - `struct GetLatestEarthquakesIntent: AppIntent` — `perform() -> ReturnsValue<[EarthquakeEntity]> & ShowsSnippetIntent`
@@ -620,12 +689,12 @@ struct EarthquakeEntity: AppEntity, Identifiable {
     }
 
     init(item: EarthquakeDisplayItem) {
-        self.id = item.eventId
+        self.id = item.id                               // ← EarthquakeDisplayItem.id（eventId ではない）
         self.hypocenterName = item.hypocenterName
         self.magnitude = item.magnitude
         self.depth = item.depth
-        self.maxIntensity = item.maxIntensity?.label ?? "不明"
-        self.occurredAt = item.dateText
+        self.maxIntensity = item.maxIntensity?.displayString ?? "不明"  // ← displayString（label は無い）
+        self.occurredAt = item.formattedTime            // ← formattedTime（dateText ではない）
     }
 }
 
@@ -635,7 +704,7 @@ struct EarthquakeEntityQuery: EntityQuery {
 }
 ```
 
-（`EarthquakeDisplayItem` のプロパティ名は実物に合わせる。`eventId` が現状モデルにない場合は Task 2 で追加）
+（`EarthquakeDisplayItem` の実プロパティ: `id` / `hypocenterName` / `magnitude` / `depth` / `maxIntensity: IntensityValue?` / `formattedTime`。`title` プロパティは無い — 表示タイトルは `hypocenterName`（Task 2 の `resolveTitle` 適用済み）を使う）
 
 - [ ] **Step 2: メイン Intent とスニペット Intent を実装**
 
@@ -713,7 +782,7 @@ enum IntentError: Error, CustomLocalizedStringResourceConvertible {
 }
 ```
 
-補助: `EarthquakeFetcher.fetch(plan:limit:minIntensity:)` は `WidgetFetchPlan` に応じて `EarthquakeAPIClient` の4メソッドへ分岐する薄い static 関数として `AppIntentsExtension/EarthquakeFetcher.swift` に実装（Widget 側 Provider にある分岐ロジックを流用）。0件時はエラーにせず空配列を返す。
+補助: `EarthquakeFetcher.fetch(plan:limit:minIntensity:)` は `WidgetFetchPlan` に応じて `EarthquakeAPIService.shared` の4メソッド（`fetchEarthquakes` / `fetchEarthquakesByRegion` / `fetchEarthquakesByPrefecture` / `fetchEarthquakesByCity`）へ分岐する薄い static 関数として `AppIntentsExtension/EarthquakeFetcher.swift` に実装（Widget 側 Provider にある分岐ロジックを流用）。0件時はエラーにせず空配列を返す。`EarthquakeAPIService`/`WidgetFetchPlan`/`EarthquakeDisplayItem`/`IntensityValue` を AppIntentsExtension から参照するため、これらのソースを **AppIntentsExtension のターゲットメンバーシップにも追加**する（Task 1 スクリプトまたは追補スクリプトで file reference をターゲットに追加。EQMonitorAPI 依存は Task 1 で付与済み）。
 
 - [ ] **Step 3: SnippetView を新デザインで実装**
 
@@ -740,7 +809,7 @@ struct EarthquakeSnippetView: View {
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, minHeight: 60)
             } else {
-                ForEach(items, id: \.eventId) { item in
+                ForEach(items, id: \.id) { item in   // ← EarthquakeDisplayItem.id
                     EarthquakeSnippetRow(item: item)
                 }
             }
@@ -760,10 +829,17 @@ struct EarthquakeSnippetRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            IntensityBadge(intensity: item.maxIntensity, size: 40, cornerRatio: 0.25)
+            // 既存 IntensityBadge のメンバ: intensity:(main,sub) / backgroundColor / textColor / size(+今回 cornerRatio 追加)
+            IntensityBadge(
+                intensity: item.maxIntensity?.formattedParts ?? ("—", nil),
+                backgroundColor: item.maxIntensity?.backgroundColor ?? .gray,
+                textColor: item.maxIntensity?.textColor ?? .white,
+                size: 40,
+                cornerRatio: 0.25
+            )
             VStack(alignment: .leading, spacing: 2) {
-                Text(item.title).font(AppFonts.flex(size: 14, weight: .bold))
-                Text([item.dateText, item.depth.isEmpty ? nil : "深さ \(item.depth)"]
+                Text(item.hypocenterName).font(AppFonts.flex(size: 14, weight: .bold)) // title プロパティは無い
+                Text([item.formattedTime, item.depth.isEmpty ? nil : "深さ \(item.depth)"]
                     .compactMap { $0 }.joined(separator: " "))
                     .font(AppFonts.code(size: 11))
                     .foregroundStyle(.secondary)
@@ -780,7 +856,7 @@ struct EarthquakeSnippetRow: View {
 }
 ```
 
-（`IntensityBadge` は既存 EarthquakeWidgetView 内のものを共有ファイルへ移動し、`cornerRatio` 引数化 + weight を bold に修正して両方から使う）
+（`IntensityBadge` は既存 `EarthquakeWidgetView.swift` 内の internal 定義を共有ファイルへ移動し、`var cornerRatio: CGFloat = 0.0` を追加して角丸を `size * cornerRatio` で算出するよう修正。既存呼び出し2箇所＋Map版は引数省略でデフォルト維持）
 
 - [ ] **Step 4: PingIntent を削除し、共通ビルドで BUILD SUCCEEDED を確認**
 

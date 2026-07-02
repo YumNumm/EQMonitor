@@ -22,6 +22,8 @@ class EarthquakeHistoryParameterPersistentDelegate
     required this.onChanged,
   });
 
+  static const double height = 48;
+
   final EarthquakeHistoryParameter parameter;
   final void Function(EarthquakeHistoryParameter) onChanged;
 
@@ -41,10 +43,10 @@ class EarthquakeHistoryParameterPersistentDelegate
   }
 
   @override
-  double get maxExtent => 48;
+  double get maxExtent => height;
 
   @override
-  double get minExtent => 48;
+  double get minExtent => height;
 
   @override
   bool shouldRebuild(

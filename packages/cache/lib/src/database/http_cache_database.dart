@@ -21,4 +21,6 @@ class CacheDatabase extends _$CacheDatabase {
       (delete(httpCacheEntries)..where((t) => t.key.equals(key))).go();
 
   Future<void> clear() => delete(httpCacheEntries).go();
+
+  Future<void> vacuum() => customStatement('VACUUM');
 }
