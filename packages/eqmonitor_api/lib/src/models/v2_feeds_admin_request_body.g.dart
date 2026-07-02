@@ -14,7 +14,7 @@ _V2FeedsAdminRequestBody _$V2FeedsAdminRequestBodyFromJson(
   final val = _V2FeedsAdminRequestBody(
     feedType: $checkedConvert(
       'feedType',
-      (v) => $enumDecode(_$FeedTypeEnumMap, v),
+      (v) => $enumDecode(_$FeedCreateTypeEnumMap, v),
     ),
     priority: $checkedConvert(
       'priority',
@@ -49,10 +49,10 @@ Map<String, dynamic> _$V2FeedsAdminRequestBodyToJson(
   'expiresAt': ?instance.expiresAt,
 };
 
-const _$FeedTypeEnumMap = {
-  FeedType.appUpdate: 'APP_UPDATE',
-  FeedType.incident: 'INCIDENT',
-  FeedType.developerMessage: 'DEVELOPER_MESSAGE',
+const _$FeedCreateTypeEnumMap = {
+  FeedCreateType.appUpdate: 'APP_UPDATE',
+  FeedCreateType.incident: 'INCIDENT',
+  FeedCreateType.developerMessage: 'DEVELOPER_MESSAGE',
 };
 
 const _$PriorityEnumMap = {

@@ -4,17 +4,9 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// const: "EARTHQUAKE_NOTICE" | const: "EARTHQUAKE_EXPLANATION" | const: "EARTHQUAKE_COUNTS" | const: "EARTHQUAKE_NANKAI" | const: "APP_UPDATE" | const: "INCIDENT" | const: "DEVELOPER_MESSAGE"
+/// const: "APP_UPDATE" | const: "INCIDENT" | const: "DEVELOPER_MESSAGE"
 @JsonEnum()
-enum FeedType {
-  @JsonValue('EARTHQUAKE_NOTICE')
-  earthquakeNotice('EARTHQUAKE_NOTICE'),
-  @JsonValue('EARTHQUAKE_EXPLANATION')
-  earthquakeExplanation('EARTHQUAKE_EXPLANATION'),
-  @JsonValue('EARTHQUAKE_COUNTS')
-  earthquakeCounts('EARTHQUAKE_COUNTS'),
-  @JsonValue('EARTHQUAKE_NANKAI')
-  earthquakeNankai('EARTHQUAKE_NANKAI'),
+enum FeedCreateType {
   @JsonValue('APP_UPDATE')
   appUpdate('APP_UPDATE'),
   @JsonValue('INCIDENT')
@@ -22,7 +14,7 @@ enum FeedType {
   @JsonValue('DEVELOPER_MESSAGE')
   developerMessage('DEVELOPER_MESSAGE');
 
-  const FeedType(this.json);
+  const FeedCreateType(this.json);
 
   final String? json;
   String toJson() {

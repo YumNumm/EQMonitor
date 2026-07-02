@@ -25,6 +25,8 @@ abstract class EarthquakeStation with _$EarthquakeStation {
     required String sourceStatus,
     required String owner,
     required ParameterLocation location,
+    @JsonKey(includeIfNull: true,name: 'arv_400')
+    required num? arv400,
   }) = _EarthquakeStation;
   
   factory EarthquakeStation.fromJson(Map<String, Object?> json) => _$EarthquakeStationFromJson(json);

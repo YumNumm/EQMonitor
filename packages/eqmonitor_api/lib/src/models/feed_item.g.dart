@@ -55,6 +55,10 @@ Map<String, dynamic> _$FeedItemToJson(_FeedItem instance) => <String, dynamic>{
 };
 
 const _$FeedTypeEnumMap = {
+  FeedType.earthquakeNotice: 'EARTHQUAKE_NOTICE',
+  FeedType.earthquakeExplanation: 'EARTHQUAKE_EXPLANATION',
+  FeedType.earthquakeCounts: 'EARTHQUAKE_COUNTS',
+  FeedType.earthquakeNankai: 'EARTHQUAKE_NANKAI',
   FeedType.appUpdate: 'APP_UPDATE',
   FeedType.incident: 'INCIDENT',
   FeedType.developerMessage: 'DEVELOPER_MESSAGE',
