@@ -184,6 +184,7 @@ export 'models/feed_developer_message_data.dart';
 export 'models/feed_item_data_union.dart';
 export 'models/feed_item.dart';
 export 'models/feed_list_response.dart';
+export 'models/feed_detail_response.dart';
 export 'models/feed_create_type.dart';
 export 'models/feed_create_response.dart';
 export 'models/parameter_type.dart';
