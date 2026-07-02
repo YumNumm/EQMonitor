@@ -34,6 +34,7 @@ enum SharedPreferencesKey {
     'is_estimated_intensity_on_eew_replay_allowed',
   ),
   widgetRegionSelection('widget_region_selection'),
+  httpCacheDisabled('http_cache_disabled'),
   ;
 
   const SharedPreferencesKey(this.key);

@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
+import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
@@ -18,6 +20,7 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider).value;
+    final cacheSize = ref.watch(httpCacheSizeProvider);
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
@@ -112,6 +115,34 @@ class SettingsPage extends ConsumerWidget {
                     (tsx) async => tsx.get(adsOptOutProvider.notifier).toggle(),
                   ),
                 ),
+                const SettingsSectionHeader(text: 'キャッシュ'),
+                ListTile(
+                  title: const Text('HTTPキャッシュ'),
+                  leading: const Icon(Icons.storage_outlined),
+                  subtitle: Text(
+                    cacheSize.when(
+                      data: formatBytes,
+                      loading: () => '計算中…',
+                      error: (_, _) => '取得に失敗しました',
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: const Text('HTTPキャッシュを削除'),
+                  leading: const Icon(Icons.delete_outline),
+                  onTap: () async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    final store = await ref.read(
+                      httpCacheStoreProvider.future,
+                    );
+                    await store.clearAll();
+                    await store.vacuum();
+                    ref.invalidate(httpCacheSizeProvider);
+                    messenger.showSnackBar(
+                      const SnackBar(content: Text('HTTPキャッシュを削除しました')),
+                    );
+                  },
+                ),
                 Center(
                   child: Text(
                     'Powered by Flutter',
@@ -146,6 +177,16 @@ class SettingsPage extends ConsumerWidget {
       ),
     );
   }
+}
+
+String formatBytes(int bytes) {
+  if (bytes < 1024) {
+    return '$bytes B';
+  }
+  if (bytes < 1024 * 1024) {
+    return '${(bytes / 1024).toStringAsFixed(1)} KB';
+  }
+  return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
 }
 
 class _AppVersionInformation extends HookConsumerWidget {
