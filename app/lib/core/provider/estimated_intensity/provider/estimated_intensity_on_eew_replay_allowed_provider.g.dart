@@ -47,7 +47,7 @@ final class EstimatedIntensityOnEewReplayAllowedProvider
 }
 
 String _$estimatedIntensityOnEewReplayAllowedHash() =>
-    r'c6174f75e608769601ee17efea9d19e41b5da4d1';
+    r'56dbff49630888f39e938ea4c42d114a2bd0c634';
 
 abstract class _$EstimatedIntensityOnEewReplayAllowed extends $Notifier<bool> {
   bool build();

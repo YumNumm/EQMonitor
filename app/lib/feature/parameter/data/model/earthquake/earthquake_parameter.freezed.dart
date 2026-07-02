@@ -11,7 +11,6 @@ part of 'earthquake_parameter.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$EarthquakeParameter {
 
@@ -22,8 +21,6 @@ mixin _$EarthquakeParameter {
 @pragma('vm:prefer-inline')
 $EarthquakeParameterCopyWith<EarthquakeParameter> get copyWith => _$EarthquakeParameterCopyWithImpl<EarthquakeParameter>(this as EarthquakeParameter, _$identity);
 
-  /// Serializes this EarthquakeParameter to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeParameter&&(identical(other.metadata, metadata) || other.metadata == metadata)&&const DeepCollectionEquality().equals(other.prefectures, prefectures));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,metadata,const DeepCollectionEquality().hash(prefectures));
 
@@ -216,11 +213,11 @@ return $default(_that.metadata,_that.prefectures);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _EarthquakeParameter implements EarthquakeParameter {
   const _EarthquakeParameter({required this.metadata, required final  List<EarthquakeParameterPrefectureItem> prefectures}): _prefectures = prefectures;
-  factory _EarthquakeParameter.fromJson(Map<String, dynamic> json) => _$EarthquakeParameterFromJson(json);
+  
 
 @override final  ParameterMetadata metadata;
  final  List<EarthquakeParameterPrefectureItem> _prefectures;
@@ -237,17 +234,14 @@ class _EarthquakeParameter implements EarthquakeParameter {
 @pragma('vm:prefer-inline')
 _$EarthquakeParameterCopyWith<_EarthquakeParameter> get copyWith => __$EarthquakeParameterCopyWithImpl<_EarthquakeParameter>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$EarthquakeParameterToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeParameter&&(identical(other.metadata, metadata) || other.metadata == metadata)&&const DeepCollectionEquality().equals(other._prefectures, _prefectures));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,metadata,const DeepCollectionEquality().hash(_prefectures));
 
@@ -301,7 +295,6 @@ $ParameterMetadataCopyWith<$Res> get metadata {
 }
 }
 
-
 /// @nodoc
 mixin _$EarthquakeParameterPrefectureItem {
 
@@ -312,8 +305,6 @@ mixin _$EarthquakeParameterPrefectureItem {
 @pragma('vm:prefer-inline')
 $EarthquakeParameterPrefectureItemCopyWith<EarthquakeParameterPrefectureItem> get copyWith => _$EarthquakeParameterPrefectureItemCopyWithImpl<EarthquakeParameterPrefectureItem>(this as EarthquakeParameterPrefectureItem, _$identity);
 
-  /// Serializes this EarthquakeParameterPrefectureItem to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -321,7 +312,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeParameterPrefectureItem&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.regions, regions));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,name,const DeepCollectionEquality().hash(regions));
 
@@ -507,11 +498,11 @@ return $default(_that.code,_that.name,_that.regions);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _EarthquakeParameterPrefectureItem implements EarthquakeParameterPrefectureItem {
   const _EarthquakeParameterPrefectureItem({required this.code, required this.name, required final  List<EarthquakeParameterRegionItem> regions}): _regions = regions;
-  factory _EarthquakeParameterPrefectureItem.fromJson(Map<String, dynamic> json) => _$EarthquakeParameterPrefectureItemFromJson(json);
+  
 
 @override final  String code;
 @override final  LocalizedName name;
@@ -529,17 +520,14 @@ class _EarthquakeParameterPrefectureItem implements EarthquakeParameterPrefectur
 @pragma('vm:prefer-inline')
 _$EarthquakeParameterPrefectureItemCopyWith<_EarthquakeParameterPrefectureItem> get copyWith => __$EarthquakeParameterPrefectureItemCopyWithImpl<_EarthquakeParameterPrefectureItem>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$EarthquakeParameterPrefectureItemToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeParameterPrefectureItem&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other._regions, _regions));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,name,const DeepCollectionEquality().hash(_regions));
 
@@ -594,7 +582,6 @@ $LocalizedNameCopyWith<$Res> get name {
 }
 }
 
-
 /// @nodoc
 mixin _$EarthquakeParameterRegionItem {
 
@@ -605,8 +592,6 @@ mixin _$EarthquakeParameterRegionItem {
 @pragma('vm:prefer-inline')
 $EarthquakeParameterRegionItemCopyWith<EarthquakeParameterRegionItem> get copyWith => _$EarthquakeParameterRegionItemCopyWithImpl<EarthquakeParameterRegionItem>(this as EarthquakeParameterRegionItem, _$identity);
 
-  /// Serializes this EarthquakeParameterRegionItem to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -614,7 +599,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeParameterRegionItem&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&const DeepCollectionEquality().equals(other.cities, cities));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,name,kana,const DeepCollectionEquality().hash(cities));
 
@@ -801,11 +786,11 @@ return $default(_that.code,_that.name,_that.kana,_that.cities);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _EarthquakeParameterRegionItem implements EarthquakeParameterRegionItem {
   const _EarthquakeParameterRegionItem({required this.code, required this.name, required this.kana, required final  List<EarthquakeParameterCityItem> cities}): _cities = cities;
-  factory _EarthquakeParameterRegionItem.fromJson(Map<String, dynamic> json) => _$EarthquakeParameterRegionItemFromJson(json);
+  
 
 @override final  String code;
 @override final  LocalizedName name;
@@ -824,17 +809,14 @@ class _EarthquakeParameterRegionItem implements EarthquakeParameterRegionItem {
 @pragma('vm:prefer-inline')
 _$EarthquakeParameterRegionItemCopyWith<_EarthquakeParameterRegionItem> get copyWith => __$EarthquakeParameterRegionItemCopyWithImpl<_EarthquakeParameterRegionItem>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$EarthquakeParameterRegionItemToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeParameterRegionItem&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&const DeepCollectionEquality().equals(other._cities, _cities));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,name,kana,const DeepCollectionEquality().hash(_cities));
 
@@ -890,7 +872,6 @@ $LocalizedNameCopyWith<$Res> get name {
 }
 }
 
-
 /// @nodoc
 mixin _$EarthquakeParameterCityItem {
 
@@ -901,8 +882,6 @@ mixin _$EarthquakeParameterCityItem {
 @pragma('vm:prefer-inline')
 $EarthquakeParameterCityItemCopyWith<EarthquakeParameterCityItem> get copyWith => _$EarthquakeParameterCityItemCopyWithImpl<EarthquakeParameterCityItem>(this as EarthquakeParameterCityItem, _$identity);
 
-  /// Serializes this EarthquakeParameterCityItem to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -910,7 +889,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeParameterCityItem&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&const DeepCollectionEquality().equals(other.stations, stations));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,name,kana,const DeepCollectionEquality().hash(stations));
 
@@ -1097,11 +1076,11 @@ return $default(_that.code,_that.name,_that.kana,_that.stations);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _EarthquakeParameterCityItem implements EarthquakeParameterCityItem {
   const _EarthquakeParameterCityItem({required this.code, required this.name, required this.kana, required final  List<EarthquakeParameterStationItem> stations}): _stations = stations;
-  factory _EarthquakeParameterCityItem.fromJson(Map<String, dynamic> json) => _$EarthquakeParameterCityItemFromJson(json);
+  
 
 @override final  String code;
 @override final  LocalizedName name;
@@ -1120,17 +1099,14 @@ class _EarthquakeParameterCityItem implements EarthquakeParameterCityItem {
 @pragma('vm:prefer-inline')
 _$EarthquakeParameterCityItemCopyWith<_EarthquakeParameterCityItem> get copyWith => __$EarthquakeParameterCityItemCopyWithImpl<_EarthquakeParameterCityItem>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$EarthquakeParameterCityItemToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeParameterCityItem&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&const DeepCollectionEquality().equals(other._stations, _stations));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,name,kana,const DeepCollectionEquality().hash(_stations));
 
@@ -1186,19 +1162,16 @@ $LocalizedNameCopyWith<$Res> get name {
 }
 }
 
-
 /// @nodoc
 mixin _$EarthquakeParameterStationItem {
 
- String get code; String get noCode; LocalizedName get name; String? get kana; EarthquakeStationStatus get status; String get sourceStatus; String get owner; LatLng get location;@JsonKey(name: 'arv_400') double? get arv400;
+ String get code; String get noCode; LocalizedName get name; String? get kana; EarthquakeStationStatus get status; String get sourceStatus; String get owner; LatLng get location; double? get arv400;
 /// Create a copy of EarthquakeParameterStationItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $EarthquakeParameterStationItemCopyWith<EarthquakeParameterStationItem> get copyWith => _$EarthquakeParameterStationItemCopyWithImpl<EarthquakeParameterStationItem>(this as EarthquakeParameterStationItem, _$identity);
 
-  /// Serializes this EarthquakeParameterStationItem to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -1206,7 +1179,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeParameterStationItem&&(identical(other.code, code) || other.code == code)&&(identical(other.noCode, noCode) || other.noCode == noCode)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.status, status) || other.status == status)&&(identical(other.sourceStatus, sourceStatus) || other.sourceStatus == sourceStatus)&&(identical(other.owner, owner) || other.owner == owner)&&(identical(other.location, location) || other.location == location)&&(identical(other.arv400, arv400) || other.arv400 == arv400));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,noCode,name,kana,status,sourceStatus,owner,location,arv400);
 
@@ -1223,7 +1196,7 @@ abstract mixin class $EarthquakeParameterStationItemCopyWith<$Res>  {
   factory $EarthquakeParameterStationItemCopyWith(EarthquakeParameterStationItem value, $Res Function(EarthquakeParameterStationItem) _then) = _$EarthquakeParameterStationItemCopyWithImpl;
 @useResult
 $Res call({
- String code, String noCode, LocalizedName name, String? kana, EarthquakeStationStatus status, String sourceStatus, String owner, LatLng location,@JsonKey(name: 'arv_400') double? arv400
+ String code, String noCode, LocalizedName name, String? kana, EarthquakeStationStatus status, String sourceStatus, String owner, LatLng location, double? arv400
 });
 
 
@@ -1345,7 +1318,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location, @JsonKey(name: 'arv_400')  double? arv400)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location,  double? arv400)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeParameterStationItem() when $default != null:
 return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that.sourceStatus,_that.owner,_that.location,_that.arv400);case _:
@@ -1366,7 +1339,7 @@ return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location, @JsonKey(name: 'arv_400')  double? arv400)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location,  double? arv400)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeParameterStationItem():
 return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that.sourceStatus,_that.owner,_that.location,_that.arv400);case _:
@@ -1386,7 +1359,7 @@ return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location, @JsonKey(name: 'arv_400')  double? arv400)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location,  double? arv400)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeParameterStationItem() when $default != null:
 return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that.sourceStatus,_that.owner,_that.location,_that.arv400);case _:
@@ -1399,10 +1372,10 @@ return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that
 
 /// @nodoc
 
-@JsonSerializable(fieldRename: .snake)
+
 class _EarthquakeParameterStationItem implements EarthquakeParameterStationItem {
-  const _EarthquakeParameterStationItem({required this.code, required this.noCode, required this.name, required this.kana, required this.status, required this.sourceStatus, required this.owner, required this.location, @JsonKey(name: 'arv_400') this.arv400});
-  factory _EarthquakeParameterStationItem.fromJson(Map<String, dynamic> json) => _$EarthquakeParameterStationItemFromJson(json);
+  const _EarthquakeParameterStationItem({required this.code, required this.noCode, required this.name, required this.kana, required this.status, required this.sourceStatus, required this.owner, required this.location, this.arv400});
+  
 
 @override final  String code;
 @override final  String noCode;
@@ -1412,7 +1385,7 @@ class _EarthquakeParameterStationItem implements EarthquakeParameterStationItem 
 @override final  String sourceStatus;
 @override final  String owner;
 @override final  LatLng location;
-@override@JsonKey(name: 'arv_400') final  double? arv400;
+@override final  double? arv400;
 
 /// Create a copy of EarthquakeParameterStationItem
 /// with the given fields replaced by the non-null parameter values.
@@ -1420,17 +1393,14 @@ class _EarthquakeParameterStationItem implements EarthquakeParameterStationItem 
 @pragma('vm:prefer-inline')
 _$EarthquakeParameterStationItemCopyWith<_EarthquakeParameterStationItem> get copyWith => __$EarthquakeParameterStationItemCopyWithImpl<_EarthquakeParameterStationItem>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$EarthquakeParameterStationItemToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeParameterStationItem&&(identical(other.code, code) || other.code == code)&&(identical(other.noCode, noCode) || other.noCode == noCode)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.status, status) || other.status == status)&&(identical(other.sourceStatus, sourceStatus) || other.sourceStatus == sourceStatus)&&(identical(other.owner, owner) || other.owner == owner)&&(identical(other.location, location) || other.location == location)&&(identical(other.arv400, arv400) || other.arv400 == arv400));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,noCode,name,kana,status,sourceStatus,owner,location,arv400);
 
@@ -1447,7 +1417,7 @@ abstract mixin class _$EarthquakeParameterStationItemCopyWith<$Res> implements $
   factory _$EarthquakeParameterStationItemCopyWith(_EarthquakeParameterStationItem value, $Res Function(_EarthquakeParameterStationItem) _then) = __$EarthquakeParameterStationItemCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String noCode, LocalizedName name, String? kana, EarthquakeStationStatus status, String sourceStatus, String owner, LatLng location,@JsonKey(name: 'arv_400') double? arv400
+ String code, String noCode, LocalizedName name, String? kana, EarthquakeStationStatus status, String sourceStatus, String owner, LatLng location, double? arv400
 });
 
 

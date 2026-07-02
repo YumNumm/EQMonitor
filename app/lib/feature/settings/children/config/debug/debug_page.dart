@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/provider/chuck_provider.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
@@ -66,6 +67,11 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async => ref
                   .read(debugProvider.notifier)
                   .save(isEnabled: !isDebugEnabled),
+            ),
+            ListTile(
+              title: const Text('Chuck'),
+              leading: const Icon(Icons.list),
+              onTap: () async => ref.read(chuckProvider).showInspector(),
             ),
             ListTile(
               title: const Text('Flavor'),

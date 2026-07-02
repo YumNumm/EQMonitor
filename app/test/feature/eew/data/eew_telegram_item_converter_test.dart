@@ -121,7 +121,8 @@ void main() {
         ),
       );
       final converted = apiEew.toEewTelegramItem;
-      expect(converted.hypocenter!.hasLatLng, isTrue);
+      expect(converted.hypocenter!.latitude, isNotNull);
+      expect(converted.hypocenter!.longitude, isNotNull);
       expect(converted.hypocenter!.latitude, 35.5);
       expect(converted.hypocenter!.longitude, 137.5);
       expect(converted.hypocenter!.detailedCode, '350a');

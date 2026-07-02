@@ -52,7 +52,9 @@ class EewHypocenterLayer extends HookConsumerWidget {
         final normal = <EewTelegramItem>[];
         final lowPrecise = <EewTelegramItem>[];
         for (final eew in eews) {
-          if (!(eew.hypocenter?.hasLatLng ?? false) || eew.isCanceled) {
+          if (eew.hypocenter?.latitude == null ||
+              eew.hypocenter?.longitude == null ||
+              eew.isCanceled) {
             continue;
           }
           if (eew.isLowPreciseHypocenter) {

@@ -694,16 +694,18 @@ void _patchParameterDataResponseUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/parameter_data_response_union.dart');
   const body = '''
 switch ((json['metadata'] as Map<String, Object?>?)?['type']) {
-        'jma_code_table' =>
+        'JMA_CODE_TABLE' =>
           ParameterDataResponseUnionJmaCodeTableParameter.fromJson(json),
-        'kyoshin_observation_points' =>
+        'KYOSHIN_OBSERVATION_POINTS' =>
           ParameterDataResponseUnionKyoshinObservationPointsParameter.fromJson(
             json,
           ),
-        'earthquake_stations' =>
+        'EARTHQUAKE_STATIONS' =>
           ParameterDataResponseUnionEarthquakeStationsParameter.fromJson(json),
-        'tsunami_stations' =>
+        'TSUNAMI_STATIONS' =>
           ParameterDataResponseUnionTsunamiStationsParameter.fromJson(json),
+        'SHINDO_DB_STATIONS' =>
+          ParameterDataResponseUnionShindoDbStationsParameter.fromJson(json),
         final value => throw ArgumentError.value(
           value,
           'metadata.type',

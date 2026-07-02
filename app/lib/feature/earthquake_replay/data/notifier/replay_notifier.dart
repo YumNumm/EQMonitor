@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:earthquake_replay/earthquake_replay.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_isolate_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -41,6 +42,8 @@ class ReplayNotifier extends _$ReplayNotifier {
       playbackSpeed: 1,
     );
     ref.read(appClockProvider.notifier).enterReplay(file.data.first.time);
+    unawaited(ref.read(kyoshinMonitorAnalyzerIsolateProvider.future));
+    unawaited(ref.read(estimatedIntensityIsolateProvider.future));
     await _rebuildTo(0);
     play();
   }

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +27,7 @@ class EewTable extends StatelessWidget {
           primary: true,
           child: DataTable(
             horizontalMargin: 0,
-            columnSpacing: 10,
+            columnSpacing: 4,
             showCheckboxColumn: false,
             border: TableBorder.symmetric(
               borderRadius: BorderRadius.circular(8),
@@ -36,16 +37,15 @@ class EewTable extends StatelessWidget {
                 .map(
                   (e) => DataColumn(
                     label: Row(
+                      spacing: 2,
                       children: [
                         Text(e.name),
-                        if (e.tooltip != null) ...[
-                          const SizedBox(width: 4),
+                        if (e.tooltip != null)
                           Tooltip(
                             message: e.tooltip,
                             triggerMode: TooltipTriggerMode.tap,
                             child: const Icon(Icons.info_outline),
                           ),
-                        ],
                       ],
                     ),
                     numeric: e.isNumeric,
@@ -70,7 +70,19 @@ class EewTable extends StatelessWidget {
                       : colorScheme.surfaceContainer;
                 }),
                 cells: _EewTableColumn.values
-                    .map((c) => DataCell(Text(c.value(eew).value)))
+                    .map(
+                      (c) => DataCell(
+                        Text(
+                          c.value(eew).value,
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            fontFamily: codeFontFamily,
+                            fontFamilyFallback: japaneseFontFamilyFallback,
+                            letterSpacing: -0.5,
+                            fontFeatures: [const FontFeature.tabularFigures()],
+                          ),
+                        ),
+                      ),
+                    )
                     .toList(),
               );
             }),
@@ -112,51 +124,57 @@ enum _EewTableColumn {
 
 extension _EewTableColumnEx on _EewTableColumn {
   _EewTableColumnValue value(EewTelegramItem eew) => switch (this) {
-    _EewTableColumn.serialNo => _EewTableColumnValue(
+    .serialNo => _EewTableColumnValue(
       value: eew.serialNo.toString(),
       isNumeric: true,
     ),
-    _EewTableColumn.reportTime => _EewTableColumnValue(
+    .reportTime => _EewTableColumnValue(
       value: DateFormat('yyyy/MM/dd HH:mm:ss').format(eew.reportTime.toLocal()),
       isNumeric: false,
     ),
-    _EewTableColumn.elapsedTime => _EewTableColumnValue(
+    .elapsedTime => _EewTableColumnValue(
       value: eew.arrivalTime != null
           ? '+${eew.reportTime.difference(eew.arrivalTime!).inSeconds}秒'
           : '',
       isNumeric: false,
     ),
-    _EewTableColumn.epicenterName => _EewTableColumnValue(
+    .epicenterName => _EewTableColumnValue(
       value: eew.hypocenter?.name ?? '',
       isNumeric: false,
     ),
-    _EewTableColumn.epicenterLatitude => _EewTableColumnValue(
+    .epicenterLatitude => _EewTableColumnValue(
       value: () {
         final hypo = eew.hypocenter;
-        if (hypo != null && hypo.hasLatLng) {
+        if (hypo != null && hypo.latitude != null) {
           return hypo.latitude!.toString();
         }
         return '';
       }(),
       isNumeric: true,
     ),
-    _EewTableColumn.epicenterLongitude => _EewTableColumnValue(
+    .epicenterLongitude => _EewTableColumnValue(
       value: () {
         final hypo = eew.hypocenter;
-        if (hypo != null && hypo.hasLatLng) {
+        if (hypo != null && hypo.longitude != null) {
           return hypo.longitude!.toString();
         }
         return '';
       }(),
       isNumeric: true,
     ),
-    _EewTableColumn.magnitude => _EewTableColumnValue(
-      value: eew.hypocenter?.magnitude != null
+    .magnitude => _EewTableColumnValue(
+      value: !eew.isPlum && eew.hypocenter?.magnitude != null
           ? 'M${eew.hypocenter!.magnitude}'
           : '',
       isNumeric: true,
     ),
-    _EewTableColumn.maxIntensity => _EewTableColumnValue(
+    .epicenterDepth => _EewTableColumnValue(
+      value: !eew.isPlum && eew.hypocenter?.depth != null
+          ? '${eew.hypocenter!.depth}km'
+          : '',
+      isNumeric: true,
+    ),
+    .maxIntensity => _EewTableColumnValue(
       value: () {
         final intensity = eew.forecastIntensity;
         if (intensity == null) {
@@ -171,11 +189,7 @@ extension _EewTableColumnEx on _EewTableColumn {
       }(),
       isNumeric: false,
     ),
-    _EewTableColumn.epicenterDepth => _EewTableColumnValue(
-      value: eew.hypocenter?.depth != null ? '${eew.hypocenter!.depth}km' : '',
-      isNumeric: true,
-    ),
-    _EewTableColumn.maxLongPeriodIntensity => _EewTableColumnValue(
+    .maxLongPeriodIntensity => _EewTableColumnValue(
       value: () {
         final lpgmIntensity = eew.forecastIntensity?.maxLpgmIntensity;
         if (lpgmIntensity == null) {
@@ -185,15 +199,15 @@ extension _EewTableColumnEx on _EewTableColumn {
       }(),
       isNumeric: false,
     ),
-    _EewTableColumn.accuracy when eew.accuracy != null => _EewTableColumnValue(
+    .accuracy when eew.accuracy != null => _EewTableColumnValue(
       value: '${eew.accuracy!.depth}',
       isNumeric: true,
     ),
-    _EewTableColumn.accuracy => const _EewTableColumnValue(
+    .accuracy => const _EewTableColumnValue(
       value: '',
       isNumeric: false,
     ),
-    _EewTableColumn.type => _EewTableColumnValue(
+    .type => _EewTableColumnValue(
       value: (eew.isWarning ?? false) ? '緊急地震速報 (警報)' : '緊急地震速報 (予報)',
       isNumeric: false,
     ),

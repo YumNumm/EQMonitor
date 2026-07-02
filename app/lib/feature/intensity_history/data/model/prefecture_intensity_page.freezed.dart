@@ -208,7 +208,7 @@ return $default(_that.items,_that.nextToken);case _:
 
 class _PrefectureIntensityPage implements PrefectureIntensityPage {
   const _PrefectureIntensityPage({required final  List<IntensityAreaSearchItem> items, required this.nextToken}): _items = items;
-
+  
 
  final  List<IntensityAreaSearchItem> _items;
 @override List<IntensityAreaSearchItem> get items {

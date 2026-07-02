@@ -55,16 +55,18 @@ sealed class ParameterDataResponseUnion with _$ParameterDataResponseUnion {
 
   factory ParameterDataResponseUnion.fromJson(Map<String, Object?> json) =>
       switch ((json['metadata'] as Map<String, Object?>?)?['type']) {
-        'jma_code_table' =>
+        'JMA_CODE_TABLE' =>
           ParameterDataResponseUnionJmaCodeTableParameter.fromJson(json),
-        'kyoshin_observation_points' =>
+        'KYOSHIN_OBSERVATION_POINTS' =>
           ParameterDataResponseUnionKyoshinObservationPointsParameter.fromJson(
             json,
           ),
-        'earthquake_stations' =>
+        'EARTHQUAKE_STATIONS' =>
           ParameterDataResponseUnionEarthquakeStationsParameter.fromJson(json),
-        'tsunami_stations' =>
+        'TSUNAMI_STATIONS' =>
           ParameterDataResponseUnionTsunamiStationsParameter.fromJson(json),
+        'SHINDO_DB_STATIONS' =>
+          ParameterDataResponseUnionShindoDbStationsParameter.fromJson(json),
         final value => throw ArgumentError.value(
           value,
           'metadata.type',

@@ -41,7 +41,6 @@ EewTelegramItem _eew({
   hypocenter: EewHypocenterInfo(
     code: '350',
     name: 'テスト震源',
-    hasLatLng: hasLatLng,
     latitude: hasLatLng ? latitude : null,
     longitude: hasLatLng ? longitude : null,
     depth: depth,

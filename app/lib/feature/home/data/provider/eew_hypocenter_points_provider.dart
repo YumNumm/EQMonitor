@@ -13,7 +13,8 @@ List<Feature<Point>> eewHypocenterPoints(Ref ref) {
         if (e.isCanceled) {
           return false;
         }
-        return e.hypocenter?.hasLatLng ?? false;
+        return e.hypocenter?.latitude != null &&
+            e.hypocenter?.longitude != null;
       })
       .map((eew) {
         final hypocenter = eew.hypocenter!;

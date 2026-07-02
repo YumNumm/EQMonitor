@@ -9,9 +9,9 @@ import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:eqmonitor/feature/eew/data/provider/eew_estimated_region_intensity_provider.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
+import 'package:eqmonitor/feature/eew/ui/hook/use_eew_estimated_regions.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -99,7 +99,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
               eews
                   .map((eew) => eew.hypocenter)
                   .nonNulls
-                  .where((h) => h.hasLatLng)
+                  .where((h) => h.latitude != null && h.longitude != null)
                   .firstOrNull
                   ?.let(
                     (h) => Geographic(
@@ -179,24 +179,17 @@ class _SimulationView extends HookConsumerWidget {
       virtualNow = firstReportTime.add(elapsed);
     }
 
-    // 推定震度の取得
-    final estimatedRegions = isEstimatedAllowed && currentEew != null
-        ? ref.watch(eewEstimatedRegionIntensityProvider(currentEew)).value
-        : null;
+    final estimatedRegions = useEewEstimatedRegionsWithStaleCache(
+      ref: ref,
+      eew: currentEew,
+      isEnabled: isEstimatedAllowed,
+    );
 
-    // JMAとのマージ（additionalRegions用: JMAにないregionのみ）
     final additionalRegions = useMemoized(() {
       if (estimatedRegions == null || currentEew == null) {
         return null;
       }
-      final jmaCodes = (currentEew.forecastIntensity?.regions ?? [])
-          .map((r) => r.code)
-          .toSet();
-      return estimatedRegions
-          .where((e) => !jmaCodes.contains(e.regionCode))
-          .where((e) => e.jmaIntensity != null)
-          .map((e) => e.toForecastRegionInfo())
-          .toList();
+      return estimatedRegions.additionalForecastRegionsFor(eew: currentEew);
     }, [estimatedRegions, currentEew]);
 
     // ユーザー現在地regionの推定値
@@ -328,27 +321,17 @@ class _ResponsiveLayout extends HookConsumerWidget {
       estimatedIntensityOnEewReplayAllowedProvider,
     );
 
-    // 推定震度の取得
-    final estimatedRegions =
-        isEstimatedAllowed && selectedEew != null
-            ? ref
-                  .watch(eewEstimatedRegionIntensityProvider(selectedEew!))
-                  .value
-            : null;
+    final estimatedRegions = useEewEstimatedRegionsWithStaleCache(
+      ref: ref,
+      eew: selectedEew,
+      isEnabled: isEstimatedAllowed,
+    );
 
-    // JMAとのマージ（additionalRegions用: JMAにないregionのみ）
     final additionalRegions = useMemoized(() {
       if (estimatedRegions == null || selectedEew == null) {
         return null;
       }
-      final jmaCodes = (selectedEew!.forecastIntensity?.regions ?? [])
-          .map((r) => r.code)
-          .toSet();
-      return estimatedRegions
-          .where((e) => !jmaCodes.contains(e.regionCode))
-          .where((e) => e.jmaIntensity != null)
-          .map((e) => e.toForecastRegionInfo())
-          .toList();
+      return estimatedRegions.additionalForecastRegionsFor(eew: selectedEew!);
     }, [estimatedRegions, selectedEew]);
 
     return LayoutBuilder(

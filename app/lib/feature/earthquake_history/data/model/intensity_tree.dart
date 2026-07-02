@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
+import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter_json_converters.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -22,6 +23,7 @@ abstract class PrefectureIntensityNode with _$PrefectureIntensityNode {
 @freezed
 abstract class IntensityPrefecture with _$IntensityPrefecture {
   const factory IntensityPrefecture({
+    @EarthquakeParameterPrefectureItemJsonConverter()
     required EarthquakeParameterPrefectureItem prefecture,
     required JmaIntensity? maxIntensity,
   }) = _IntensityPrefecture;
@@ -33,6 +35,7 @@ abstract class IntensityPrefecture with _$IntensityPrefecture {
 @freezed
 abstract class IntensityRegion with _$IntensityRegion {
   const factory IntensityRegion({
+    @EarthquakeParameterRegionItemJsonConverter()
     required EarthquakeParameterRegionItem region,
     required JmaIntensity? maxIntensity,
   }) = _IntensityRegion;
@@ -45,6 +48,7 @@ abstract class IntensityRegion with _$IntensityRegion {
 @freezed
 abstract class CityIntensityNode with _$CityIntensityNode {
   const factory CityIntensityNode({
+    @EarthquakeParameterCityItemJsonConverter()
     required EarthquakeParameterCityItem city,
     required JmaIntensity? maxIntensity,
     required List<StationIntensityNode> stations,
@@ -59,6 +63,7 @@ abstract class CityIntensityNode with _$CityIntensityNode {
 @freezed
 abstract class StationIntensityNode with _$StationIntensityNode {
   const factory StationIntensityNode({
+    @EarthquakeParameterStationItemJsonConverter()
     required EarthquakeParameterStationItem station,
     required IntensityStation? intensity,
   }) = _StationIntensityNode;

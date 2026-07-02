@@ -77,7 +77,7 @@ as List<ShindoDbStationItem>,
 @override
 @pragma('vm:prefer-inline')
 $ParameterMetadataCopyWith<$Res> get metadata {
-
+  
   return $ParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -294,7 +294,7 @@ as List<ShindoDbStationItem>,
 @override
 @pragma('vm:prefer-inline')
 $ParameterMetadataCopyWith<$Res> get metadata {
-
+  
   return $ParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -501,7 +501,7 @@ return $default(_that.code,_that.name,_that.location);case _:
 
 class _ShindoDbStationItem implements ShindoDbStationItem {
   const _ShindoDbStationItem({required this.code, required this.name, required this.location});
-
+  
 
 @override final  String code;
 @override final  String name;

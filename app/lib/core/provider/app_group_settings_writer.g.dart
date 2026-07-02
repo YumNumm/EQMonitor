@@ -12,7 +12,7 @@ part of 'app_group_settings_writer.dart';
 // ignore_for_file: type=lint, type=warning
 /// アプリ本体の設定を iOS App Group UserDefaults へ同期する。
 ///
-/// [telegramUrlProvider] / [isProProvider] / [widgetRegionNotifierProvider] を
+/// [telegramUrlProvider] / [isProProvider] / [widgetRegionProvider] を
 /// watch するため、URL 変更・Pro 状態変化・任意地域の選択/解除が Widget に即時
 /// 反映される。現在地の地域コードは位置権限が許可済みのときのみベストエフォートで
 /// 書き込む（新規の権限要求はしない）。位置変化への追従は
@@ -25,7 +25,7 @@ final appGroupSettingsWriterProvider = AppGroupSettingsWriterProvider._();
 
 /// アプリ本体の設定を iOS App Group UserDefaults へ同期する。
 ///
-/// [telegramUrlProvider] / [isProProvider] / [widgetRegionNotifierProvider] を
+/// [telegramUrlProvider] / [isProProvider] / [widgetRegionProvider] を
 /// watch するため、URL 変更・Pro 状態変化・任意地域の選択/解除が Widget に即時
 /// 反映される。現在地の地域コードは位置権限が許可済みのときのみベストエフォートで
 /// 書き込む（新規の権限要求はしない）。位置変化への追従は
@@ -38,7 +38,7 @@ final class AppGroupSettingsWriterProvider
     with $FutureModifier<void>, $FutureProvider<void> {
   /// アプリ本体の設定を iOS App Group UserDefaults へ同期する。
   ///
-  /// [telegramUrlProvider] / [isProProvider] / [widgetRegionNotifierProvider] を
+  /// [telegramUrlProvider] / [isProProvider] / [widgetRegionProvider] を
   /// watch するため、URL 変更・Pro 状態変化・任意地域の選択/解除が Widget に即時
   /// 反映される。現在地の地域コードは位置権限が許可済みのときのみベストエフォートで
   /// 書き込む（新規の権限要求はしない）。位置変化への追従は
@@ -71,4 +71,4 @@ final class AppGroupSettingsWriterProvider
 }
 
 String _$appGroupSettingsWriterHash() =>
-    r'70c172c56686a2d41d2a0bd6cd5731750218f82b';
+    r'8eb19d86fa0d236cff2f90e6893a85c24a6a3784';

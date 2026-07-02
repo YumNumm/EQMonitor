@@ -125,7 +125,7 @@ class HomeMapCameraState extends _$HomeMapCameraState {
 
   LngLatBounds _calculateBounds(List<EewTelegramItem> eews) {
     final validEews = eews.where((e) {
-      return e.hypocenter?.hasLatLng ?? false;
+      return e.hypocenter?.latitude != null && e.hypocenter?.longitude != null;
     }).toList();
 
     if (validEews.isEmpty) {

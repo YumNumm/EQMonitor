@@ -169,7 +169,9 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     }
 
     final hypocenter = eew.hypocenter;
-    if (hypocenter == null || !hypocenter.hasLatLng) {
+    if (hypocenter == null ||
+        hypocenter.latitude == null ||
+        hypocenter.longitude == null) {
       await _clearLayers(styleController);
       return;
     }

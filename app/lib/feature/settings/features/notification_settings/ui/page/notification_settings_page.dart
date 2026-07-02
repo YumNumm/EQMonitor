@@ -585,7 +585,7 @@ class _CustomSettingsSection extends StatelessWidget {
           const Divider(height: 1),
           LockedSettingTile(
             title: '低精度の緊急地震速報',
-            subtitle: '50gal超えのレベル法, 1点検知の低精度の緊急地震速報(予報)',
+            subtitle: '100gal超えのレベル法, 1点検知の低精度の緊急地震速報(予報)',
             locked: !isPro,
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(

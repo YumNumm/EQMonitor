@@ -82,7 +82,6 @@ class DebugEewCardPage extends HookConsumerWidget {
       final hypo = EewHypocenterInfo(
         code: '001',
         name: hypocenterName.text.isEmpty ? '不明' : hypocenterName.text,
-        hasLatLng: true,
         latitude: 38,
         longitude: 142,
         magnitude: mag,
@@ -572,7 +571,6 @@ final _kSampleEews = <EewTelegramItem>[
     hypocenter: const EewHypocenterInfo(
       code: 's1',
       name: '東京湾',
-      hasLatLng: true,
       magnitude: 5.4,
       depth: 80,
     ),
@@ -595,7 +593,6 @@ final _kSampleEews = <EewTelegramItem>[
     hypocenter: const EewHypocenterInfo(
       code: 's2',
       name: '南海トラフ付近',
-      hasLatLng: true,
       magnitude: 8.4,
       depth: 10,
     ),
@@ -619,7 +616,6 @@ final _kSampleEews = <EewTelegramItem>[
     hypocenter: const EewHypocenterInfo(
       code: 's3',
       name: '青森県東方沖',
-      hasLatLng: true,
     ),
     forecastIntensity: const EewForecastIntensityInfo(
       regions: [],
@@ -641,7 +637,6 @@ final _kSampleEews = <EewTelegramItem>[
     hypocenter: const EewHypocenterInfo(
       code: 's4',
       name: '取消テスト',
-      hasLatLng: true,
       magnitude: 3,
       depth: 10,
     ),
@@ -660,7 +655,6 @@ final _kSampleEews = <EewTelegramItem>[
     hypocenter: const EewHypocenterInfo(
       code: 's6',
       name: 'テスト電文',
-      hasLatLng: true,
       magnitude: 4.5,
       depth: 12,
     ),
@@ -683,7 +677,6 @@ final _kSampleEews = <EewTelegramItem>[
     hypocenter: const EewHypocenterInfo(
       code: 's5',
       name: '訓練',
-      hasLatLng: true,
       magnitude: 6,
       depth: 20,
     ),

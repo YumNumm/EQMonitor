@@ -117,7 +117,8 @@ class EewCard extends ConsumerWidget {
           showArrived:
               (localRegion != null || estimate != null) &&
               (hasArrived ||
-                  (effectiveArrivalTime != null && secondsUntilArrival == null)),
+                  (effectiveArrivalTime != null &&
+                      secondsUntilArrival == null)),
         ),
         if (eew.status != TelegramStatus.normal)
           Center(
@@ -183,7 +184,8 @@ class _EewMainCard extends StatelessWidget {
             secondsUntilArrival != null ||
             showArrived) &&
         regionDisplayName != null &&
-        regionDisplayName!.isNotEmpty;
+        regionDisplayName!.isNotEmpty &&
+        localForecastIntensity != null;
 
     return Card(
       elevation: 0,
@@ -215,29 +217,34 @@ class _EewMainCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  spacing: spacing.sm,
                   children: [
-                    _EewMaxIntensitySection(maxIntensity: maxIntensity),
-                    SizedBox(width: spacing.sm),
+                    _EewMaxIntensitySection(
+                      maxIntensity: maxIntensity,
+                      depth: eew.hypocenter?.depth ?? 0,
+                    ),
                     Expanded(
                       child: _EewHypocenterSection(
                         eew: eew,
                         happenedTime: happenedTime,
                       ),
                     ),
-                    if (showLocalForecast) ...[
-                      SizedBox(width: spacing.sm),
+                    if (showLocalForecast)
                       _EewLocalForecastSection(
                         intensity: localForecastIntensity,
                         regionDisplayName: regionDisplayName!,
                       ),
-                    ],
                   ],
                 ),
                 if (maxLpgmIntensity != null &&
-                    maxLpgmIntensity != JmaLpgmIntensity.zero) ...[
-                  SizedBox(height: spacing.sm),
+                    maxLpgmIntensity != JmaLpgmIntensity.zero)
                   _EewLpgmSection(intensity: maxLpgmIntensity),
-                ],
+                if (eew.hypocenter?.depth case final depth?
+                    when depth < 150 && maxIntensity == .unknown)
+                  Text(
+                    '震源の深さが150km以上のため、予想震度は発表されていません',
+                    style: designSystem.typography.labelMedium,
+                  ),
               ],
             ),
           ),
@@ -380,24 +387,29 @@ class _EewCardHeader extends StatelessWidget {
 }
 
 class _EewMaxIntensitySection extends StatelessWidget {
-  const _EewMaxIntensitySection({required this.maxIntensity});
+  const _EewMaxIntensitySection({
+    required this.maxIntensity,
+    required this.depth,
+  });
 
   final JmaIntensity maxIntensity;
+  final int depth;
 
   @override
   Widget build(BuildContext context) {
     final designSystem = Theme.of(context).designSystemThemeExtension;
     final typography = designSystem.typography;
     final textColor = designSystem.textColor;
+    final spacing = designSystem.spacing;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
+      spacing: spacing.xs,
       children: [
         Text(
           '最大震度',
           style: typography.labelMedium.copyWith(color: textColor.secondary),
         ),
-        const SizedBox(height: 2),
         JmaIntensityIcon(intensity: maxIntensity, type: .filled),
       ],
     );

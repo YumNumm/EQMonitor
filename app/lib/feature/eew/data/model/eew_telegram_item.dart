@@ -30,8 +30,8 @@ abstract class EewTelegramItem with _$EewTelegramItem {
   }) = _EewTelegramItem;
   const EewTelegramItem._();
 
-  /// PLUM法・レベル法・１点法の震源は低精度アイコンで表示する。
-  bool get isLowPreciseHypocenter => isPlum || accuracy == null || accuracy?.epicenter == 1;
+  bool get isLowPreciseHypocenter =>
+      isPlum || accuracy == null || accuracy?.epicenter == 1;
 }
 
 @Freezed()
@@ -39,7 +39,6 @@ abstract class EewHypocenterInfo with _$EewHypocenterInfo {
   const factory EewHypocenterInfo({
     required String code,
     required String name,
-    required bool hasLatLng,
     String? detailedCode,
     String? detailedName,
     double? latitude,
@@ -97,11 +96,77 @@ abstract class EewWarningZoneInfo with _$EewWarningZoneInfo {
 
 @Freezed()
 abstract class EewAccuracyInfo with _$EewAccuracyInfo {
+  /* See: https://github.com/YumNumm/eqmonitor-backend/blob/b08ea2a864962074278e59a7c3012c2eb9822c44/packages/database/src/transformers/eew-transformer.ts#L128-L138
+    {
+      epicenter: eew.accuracy.epicenters[0],
+      hypocenter: eew.accuracy.epicenters[1],
+      depth: eew.accuracy.depth,
+      magnitude_calculation: eew.accuracy.magnitudeCalculation,
+      number_of_magnitude_calculation:
+        eew.accuracy.numberOfMagnitudeCalculation,
+    }
+    */
   const factory EewAccuracyInfo({
+    /// 震央位置の精度値（0〜9）
+    ///
+    /// 0 : 不明
+    /// 1 : P波/S波レベル越え、IPF法(1点)、または「仮定震源要素」の場合（気象庁データ）
+    /// 2 : IPF法(2点)（気象庁データ）
+    /// 3 : IPF法(3点/4点)（気象庁データ）
+    /// 4 : IPF法(5点以上)（気象庁データ）
+    /// 5 : 防災科研システム(4点以下、または精度情報なし)（2023-09-26 14時以降は出現しない）
+    /// 6 : 防災科研システム(5点以上)（Hi-netデータ）（2023-09-26 14時以降は出現しない）
+    /// 7 : EPOS(海域[観測網外])（2023-09-26 14時以降は出現しない）
+    /// 8 : EPOS(内陸[観測網内])（2023-09-26 14時以降は出現しない）
     required int epicenter,
+
+    /// 震源位置の精度値（0〜9）
+    ///
+    /// 値が 1, 9 以外については気象庁の部内システムでの利用（予告無く変更することがあります）。
+    ///
+    /// 0 : 不明
+    /// 1 : P波/S波レベル越え、IPF法(1点)、または「仮定震源要素」の場合
+    /// 2 : IPF法(2点)
+    /// 3 : IPF法(3点/4点)
+    /// 4 : IPF法(5点以上)
+    /// 9 : 震源とマグニチュードに基づく震度予測手法での精度が最終報相当
+    ///     （推定震源とマグニチュードはこれ以降変化しません。
+    ///     ただし、PLUM法により予測震度が今後変化する可能性はあります。）
     required int hypocenter,
+
+    /// 深さの精度値（0〜9）
+    ///
+    /// 0 : 不明
+    /// 1 : P波/S波レベル越え、IPF法(1点)、または「仮定震源要素」の場合
+    /// 2 : IPF法(2点)
+    /// 3 : IPF法(3点/4点)
+    /// 4 : IPF法(5点以上)
+    /// 5 : 防災科研システム(4点以下、または精度情報なし)（2023-09-26 14時以降は出現しない）
+    /// 6 : 防災科研システム(5点以上)（Hi-netデータ）（2023-09-26 14時以降は出現しない）
+    /// 7 : EPOS(海域[観測網外])（2023-09-26 14時以降は出現しない）
+    /// 8 : EPOS(内陸[観測網内])（2023-09-26 14時以降は出現しない）
     required int depth,
+
+    /// マグニチュードの精度値（0〜9）
+    ///
+    /// 0 : 不明
+    /// 2 : 速度マグニチュード（2023-09-26 14時から）、
+    ///     防災科研システム（Hi-netデータ）（2023-09-26 14時まで）
+    /// 3 : 全相P相
+    /// 4 : P相/全相混在
+    /// 5 : 全点全相
+    /// 6 : EPOS
+    /// 8 : P波/S波レベル越え、または「仮定震源要素」の場合
     required int magnitudeCalculation,
+
+    /// マグニチュード計算使用観測点数（0〜9）
+    ///
+    /// 0 : 不明
+    /// 1 : 1点、P波/S波レベル越え、または「仮定震源要素」の場合
+    /// 2 : 2点
+    /// 3 : 3点
+    /// 4 : 4点
+    /// 5 : 5点以上
     required int numberOfMagnitudeCalculation,
   }) = _EewAccuracyInfo;
 }
@@ -139,7 +204,6 @@ extension on api.EewHypocenter {
       detailedName: detailed?.name,
       latitude: coordinates?.latitude.toDouble(),
       longitude: coordinates?.longitude.toDouble(),
-      hasLatLng: coordinates != null,
       magnitude: magnitude?.toDouble(),
       depth: depth,
     );

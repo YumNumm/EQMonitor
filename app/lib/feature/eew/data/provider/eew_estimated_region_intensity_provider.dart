@@ -1,10 +1,9 @@
-import 'dart:isolate';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/extension/double_to_jma_forecast_intensity.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_intensity_data_source.dart';
-import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_isolate_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
@@ -14,110 +13,67 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_estimated_region_intensity_provider.g.dart';
 
-typedef _RegionStation = ({
-  String regionCode,
-  String regionName,
-  CalculationPoint point,
-});
-
-typedef _ComputeArgs = ({
-  double jmaMagnitude,
-  int depth,
-  double lat,
-  double lon,
-  List<CalculationPoint> points,
-});
-
-List<double> _computeIntensities(_ComputeArgs args) {
-  final calculator = EstimatedIntensityDataSource();
-  return calculator
-      .getEstimatedIntensity(
-        points: args.points,
-        jmaMagnitude: args.jmaMagnitude,
-        depth: args.depth,
-        hypocenter: (lat: args.lat, lon: args.lon),
-      )
-      .toList();
-}
-
 @riverpod
 Future<List<EewEstimatedRegion>> eewEstimatedRegionIntensity(
   Ref ref,
   EewTelegramItem eew,
 ) async {
   final hypocenter = eew.hypocenter;
+  final accuracy = eew.accuracy;
+  final depth = hypocenter?.depth;
   if (hypocenter == null ||
-      !hypocenter.hasLatLng ||
+      hypocenter.latitude == null ||
+      hypocenter.longitude == null ||
       hypocenter.magnitude == null ||
-      hypocenter.depth == null) {
+      hypocenter.depth == null ||
+      eew.isPlum ||
+      accuracy == null ||
+      accuracy.epicenter == 1 ||
+      depth == null ||
+      depth >= 150) {
     return [];
   }
 
-  final parameter = await ref.read(jmaParameterProvider.future);
+  final stationIndex = await ref.watch(
+    estimatedIntensityStationIndexProvider.future,
+  );
+  if (stationIndex.regionStations.isEmpty) {
+    return [];
+  }
+
+  final isolate = await ref.watch(estimatedIntensityIsolateProvider.future);
   final travelTimeTables = ref.read(travelTimeProvider);
 
-  // station一覧を構築
-  final stations = <_RegionStation>[];
-  for (final prefecture in parameter.earthquake.prefectures) {
-    for (final region in prefecture.regions) {
-      for (final city in region.cities) {
-        for (final station in city.stations) {
-          if (station.arv400 == null) {
-            continue;
-          }
-          stations.add((
-            regionCode: region.code,
-            regionName: region.name.ja,
-            point: (
-              lat: station.location.lat,
-              lon: station.location.lon,
-              arv400: station.arv400!,
-            ),
-          ));
-        }
-      }
-    }
-  }
-
-  if (stations.isEmpty) {
-    return [];
-  }
-
-  final points = stations.map((s) => s.point).toList();
-
-  // Isolateで推定震度を計算
-  final intensities = await Isolate.run(
-    () => _computeIntensities((
-      jmaMagnitude: hypocenter.magnitude!,
-      depth: hypocenter.depth!,
-      lat: hypocenter.latitude!,
-      lon: hypocenter.longitude!,
-      points: points,
-    )),
+  final intensities = await isolate.computeSingle(
+    jmaMagnitude: hypocenter.magnitude!,
+    depth: hypocenter.depth!,
+    lat: hypocenter.latitude!,
+    lon: hypocenter.longitude!,
   );
+
+  final stations = stationIndex.regionStations;
 
   // regionCode単位で最大震度を集約
   final regionMap = <String, (String name, double maxIntensity)>{};
   for (var i = 0; i < stations.length; i++) {
-    final s = stations[i];
-    final current = regionMap[s.regionCode];
+    final station = stations[i];
+    final current = regionMap[station.regionCode];
     if (current == null || intensities[i] > current.$2) {
-      regionMap[s.regionCode] = (s.regionName, intensities[i]);
+      regionMap[station.regionCode] = (station.regionName, intensities[i]);
     }
   }
 
   // 各regionの代表点(最大震度stationの位置)の震源距離からS波到達時刻を算出
   final regionStationMap = <String, CalculationPoint>{};
   for (var i = 0; i < stations.length; i++) {
-    final s = stations[i];
-    final current = regionMap[s.regionCode];
+    final station = stations[i];
+    final current = regionMap[station.regionCode];
     if (current != null && intensities[i] == current.$2) {
-      regionStationMap[s.regionCode] = s.point;
+      regionStationMap[station.regionCode] = station.point;
     }
   }
 
   final originTime = eew.originTime;
-  final depth = hypocenter.depth!;
   const distanceCalc = latlong2.Distance();
 
   return regionMap.entries.map((entry) {
@@ -168,9 +124,8 @@ double? _lookupSWaveTravelTime(
   int depth,
   double distanceKm,
 ) {
-  final depthTables =
-      tables.table.where((t) => t.depth == depth).toList()
-        ..sort((a, b) => a.distance.compareTo(b.distance));
+  final depthTables = tables.table.where((t) => t.depth == depth).toList()
+    ..sort((a, b) => a.distance.compareTo(b.distance));
 
   if (depthTables.isEmpty) {
     return null;

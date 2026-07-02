@@ -52,7 +52,7 @@ final class WidgetRegionNotifierProvider
 }
 
 String _$widgetRegionNotifierHash() =>
-    r'3e867dc2e08ca5c84ccfe34493fa88ff8e9e872b';
+    r'00e1dc6d29c38d6d4394ffda17af5fd0f392d470';
 
 /// ホーム画面ウィジェットの「任意地域」表示に使う地域選択を永続化する。
 ///
