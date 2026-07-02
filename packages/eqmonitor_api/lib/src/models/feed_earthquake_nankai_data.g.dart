@@ -17,10 +17,7 @@ _FeedEarthquakeNankaiData _$FeedEarthquakeNankaiDataFromJson(
       'infoType',
       (v) => $enumDecode(_$InfoTypeEnumMap, v),
     ),
-    telegramType: $checkedConvert(
-      'telegramType',
-      (v) => $enumDecode(_$FeedTelegramTypeEnumMap, v),
-    ),
+    telegramType: $checkedConvert('telegramType', (v) => v as String),
     earthquakeInfo: $checkedConvert(
       'earthquakeInfo',
       (v) => v == null
@@ -49,10 +46,4 @@ const _$InfoTypeEnumMap = {
   InfoType.correction: 'CORRECTION',
   InfoType.delay: 'DELAY',
   InfoType.cancellation: 'CANCELLATION',
-};
-
-const _$FeedTelegramTypeEnumMap = {
-  FeedTelegramType.oneHourEarthquakeCount: 'ONE_HOUR_EARTHQUAKE_COUNT',
-  FeedTelegramType.accumulativeEarthquakeCount: 'ACCUMULATIVE_EARTHQUAKE_COUNT',
-  FeedTelegramType.earthquakeCount: 'EARTHQUAKE_COUNT',
 };

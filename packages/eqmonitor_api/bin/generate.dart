@@ -35,6 +35,10 @@ void main(List<String> args) async {
     });
   }
 
+  await _step('FeedEarthquakeNankaiData.telegramType をパッチ', () async {
+    _patchNankaiTelegramType(openapiFile);
+  });
+
   await _step('OpenAPI の const プロパティを型付きに変換', () async {
     _patchConstPropertiesToTyped(openapiFile);
   });
@@ -1040,6 +1044,42 @@ void _patchRemainingDynamic(Directory libDir) {
       stdout.writeln('  Patched: $fileName');
     }
   }
+}
+
+/// バックエンドの OpenAPI では `FeedEarthquakeNankaiData.telegramType` が
+/// `FeedTelegramType`（地震回数系の enum）を `$ref` しているが、実際の
+/// レスポンスは `"NANKAI"` を返すため、そのままではデシリアライズ時に
+/// CheckedFromJsonException が発生する。
+///
+/// バックエンド側のスキーマが修正されるまで、ここで `$ref` を
+/// `{"const": "NANKAI"}` に置き換える（後段の `_patchConstPropertiesToTyped`
+/// が `String` 型に変換する）。スキーマが既に修正済みなら何もしない。
+void _patchNankaiTelegramType(File openapiFile) {
+  if (!openapiFile.existsSync()) {
+    return;
+  }
+
+  final openapi =
+      jsonDecode(openapiFile.readAsStringSync()) as Map<String, Object?>;
+  final components = openapi['components'] as Map<String, Object?>?;
+  final schemas = components?['schemas'] as Map<String, Object?>?;
+  final nankai = schemas?['FeedEarthquakeNankaiData'] as Map<String, Object?>?;
+  final props = nankai?['properties'] as Map<String, Object?>?;
+  final telegramType = props?['telegramType'] as Map<String, Object?>?;
+
+  if (telegramType == null ||
+      telegramType[r'$ref'] != '#/components/schemas/FeedTelegramType') {
+    stdout.writeln('  Skip (telegramType は FeedTelegramType を参照していません)');
+    return;
+  }
+
+  props!['telegramType'] = <String, Object?>{'const': 'NANKAI'};
+
+  const encoder = JsonEncoder.withIndent('  ');
+  openapiFile.writeAsStringSync(encoder.convert(openapi));
+  stdout.writeln(
+    '  Patched: FeedEarthquakeNankaiData.telegramType → const "NANKAI"',
+  );
 }
 
 /// OpenAPI スキーマ内の `const` プロパティを swagger_parser が理解できる
