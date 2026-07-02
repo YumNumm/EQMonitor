@@ -1,5 +1,5 @@
 import 'package:app_settings/app_settings.dart';
-import 'package:eqmonitor/core/component/error/error_message_builder.dart';
+import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -19,7 +19,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_error_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_forecast_settings_page.dart';
@@ -66,11 +65,7 @@ class _Body extends HookConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showNotificationSettingsErrorDialog(
-          context: context,
-          error: next.error,
-          errorMessageBuilder: ref.read(errorMessageBuilderProvider),
-        );
+        await showErrorDialog(context, error: next.error);
       }
     });
 
@@ -78,11 +73,7 @@ class _Body extends HookConsumerWidget {
       GeneralNotificationSettingsNotifier.updateSettingsMutation,
       (_, next) async {
         if (next is MutationError && context.mounted) {
-          await showNotificationSettingsErrorDialog(
-            context: context,
-            error: next.error,
-            errorMessageBuilder: ref.read(errorMessageBuilderProvider),
-          );
+          await showErrorDialog(context, error: next.error);
         }
       },
     );
@@ -396,22 +387,14 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
 
     ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
-        await showNotificationSettingsErrorDialog(
-          context: context,
-          error: next.error,
-          errorMessageBuilder: ref.read(errorMessageBuilderProvider),
-        );
+        await showErrorDialog(context, error: next.error);
       }
     });
     ref.listen(
       EarthquakeGlobalSettingsNotifier.updateSettingsMutation,
       (_, next) async {
         if (next is MutationError && context.mounted) {
-          await showNotificationSettingsErrorDialog(
-            context: context,
-            error: next.error,
-            errorMessageBuilder: ref.read(errorMessageBuilderProvider),
-          );
+          await showErrorDialog(context, error: next.error);
         }
       },
     );
@@ -693,21 +676,13 @@ class _EewWarningSettingsPage extends ConsumerWidget {
 
     ref.listen(EewWarningConfigNotifier.updateConfigMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
-        await showNotificationSettingsErrorDialog(
-          context: context,
-          error: next.error,
-          errorMessageBuilder: ref.read(errorMessageBuilderProvider),
-        );
+        await showErrorDialog(context, error: next.error);
       }
     });
 
     ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
-        await showNotificationSettingsErrorDialog(
-          context: context,
-          error: next.error,
-          errorMessageBuilder: ref.read(errorMessageBuilderProvider),
-        );
+        await showErrorDialog(context, error: next.error);
       }
     });
 
@@ -882,11 +857,7 @@ class _SlotListSection extends ConsumerWidget {
 
     ref.listen(NotificationSlotsNotifier.putNationwideMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
-        await showNotificationSettingsErrorDialog(
-          context: context,
-          error: next.error,
-          errorMessageBuilder: ref.read(errorMessageBuilderProvider),
-        );
+        await showErrorDialog(context, error: next.error);
       }
     });
 

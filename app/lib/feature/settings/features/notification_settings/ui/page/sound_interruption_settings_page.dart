@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/component/error/error_message_builder.dart';
+import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -6,7 +6,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -22,22 +21,14 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
 
     ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
-        await showNotificationSettingsErrorDialog(
-          context: context,
-          error: next.error,
-          errorMessageBuilder: ref.read(errorMessageBuilderProvider),
-        );
+        await showErrorDialog(context, error: next.error);
       }
     });
     ref.listen(
       EarthquakeGlobalSettingsNotifier.updateSettingsMutation,
       (_, next) async {
         if (next is MutationError && context.mounted) {
-          await showNotificationSettingsErrorDialog(
-            context: context,
-            error: next.error,
-            errorMessageBuilder: ref.read(errorMessageBuilderProvider),
-          );
+          await showErrorDialog(context, error: next.error);
         }
       },
     );
