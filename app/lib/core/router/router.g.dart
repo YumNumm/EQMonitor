@@ -586,6 +586,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugAppGroupRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'shared-preferences',
+          factory: $DebugSharedPreferencesRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'intensity-icon',
           factory: $DebugIntensityIconRoute._fromState,
         ),
@@ -1341,6 +1345,28 @@ mixin $DebugAppGroupRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/app-group');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugSharedPreferencesRoute on GoRouteData {
+  static DebugSharedPreferencesRoute _fromState(GoRouterState state) =>
+      const DebugSharedPreferencesRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/shared-preferences');
 
   @override
   void go(BuildContext context) => context.go(location);

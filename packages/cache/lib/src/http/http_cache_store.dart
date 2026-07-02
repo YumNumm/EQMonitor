@@ -52,6 +52,8 @@ class HttpCacheStore {
 
   Future<void> clearAll() => db.clear();
 
+  Future<void> vacuum() => db.vacuum();
+
   String primaryKeyForUrl(RequestOptions options) => buildHttpCacheKey(
     schemaVersion: schemaVersion,
     appBuild: appBuild,

@@ -50,6 +50,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navi
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_shared_preferences_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/telemetry/debug_telemetry_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_tsunami_details_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/tsunami_telegram_timeline_debug_page.dart';
@@ -379,6 +380,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
+        TypedGoRoute<DebugSharedPreferencesRoute>(path: 'shared-preferences'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
         TypedGoRoute<DebugTelemetryRoute>(path: 'telemetry'),
         TypedGoRoute<DebugTsunamiDetailsRoute>(
@@ -452,7 +454,8 @@ class NotificationSettingsRoute extends GoRouteData
       const NotificationSettingsPage();
 }
 
-class HomeWidgetSettingsRoute extends GoRouteData with $HomeWidgetSettingsRoute {
+class HomeWidgetSettingsRoute extends GoRouteData
+    with $HomeWidgetSettingsRoute {
   const HomeWidgetSettingsRoute();
 
   @override
@@ -709,6 +712,16 @@ class DebugAppGroupRoute extends GoRouteData with $DebugAppGroupRoute {
   }
 }
 
+class DebugSharedPreferencesRoute extends GoRouteData
+    with $DebugSharedPreferencesRoute {
+  const DebugSharedPreferencesRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugSharedPreferencesPage();
+  }
+}
+
 class DebugIntensityIconRoute extends GoRouteData
     with $DebugIntensityIconRoute {
   const DebugIntensityIconRoute();
@@ -868,8 +881,7 @@ class FeedRoute extends GoRouteData with $FeedRoute {
   const FeedRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const FeedPage();
+  Widget build(BuildContext context, GoRouterState state) => const FeedPage();
 }
 
 @TypedGoRoute<TsunamiDetailsRoute>(path: '/tsunami/:tsunamiId')
