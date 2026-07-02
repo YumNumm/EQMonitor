@@ -228,7 +228,7 @@ abstract class DeviceApiClient {
   @GET(DeviceApiClientUrls.getV2DeviceMeLiveActivity)
   Future<HttpResponse<List<LiveActivityTokenResponse>>> getV2DeviceMeLiveActivity();
 
-  /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。
+  /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。配信には使用されず、Start送信からToken受信までの遅延計測にのみ用いる。
   @PUT(DeviceApiClientUrls.putV2DeviceMeLiveActivityLiveActivityIdToken)
   Future<HttpResponse<LiveActivityTokenResponse>> putV2DeviceMeLiveActivityLiveActivityIdToken({
     @Path('liveActivityId') required String liveActivityId,

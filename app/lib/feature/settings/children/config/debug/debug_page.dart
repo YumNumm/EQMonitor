@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:eqmonitor/core/api/http_cache_disabled_provider.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/chuck_provider.dart';
@@ -135,6 +136,29 @@ class _DebugWidget extends ConsumerWidget {
                 leading: const Icon(Icons.widgets_outlined),
                 onTap: () => const DebugAppGroupRoute().push<void>(context),
               ),
+            ListTile(
+              title: const Text('SharedPreferences'),
+              subtitle: const Text('保存されている Key-Value の一覧・編集'),
+              leading: const Icon(Icons.data_object),
+              onTap: () async =>
+                  const DebugSharedPreferencesRoute().push<void>(context),
+            ),
+            Builder(
+              builder: (context) {
+                final isDisabled = ref.watch(httpCacheDisabledProvider);
+                return ListTile(
+                  title: const Text('HTTPキャッシュを無効化'),
+                  subtitle: const Text('キャッシュの読み書きをスキップします'),
+                  leading: const Icon(Icons.cached),
+                  trailing: AppSwitch(
+                    value: isDisabled,
+                    onChanged: (value) async => ref
+                        .read(httpCacheDisabledProvider.notifier)
+                        .save(isDisabled: value),
+                  ),
+                );
+              },
+            ),
             ListTile(
               title: const Text('Telemetry Events'),
               leading: const Icon(Icons.analytics_outlined),

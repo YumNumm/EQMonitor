@@ -42,14 +42,15 @@ class ErrorMessageBuilder {
         return advancedErrorMessage;
       }
       return switch (error.type) {
-        DioExceptionType.badCertificate => 'SSL証明書が不正です',
-        DioExceptionType.badResponse => 'サーバーからのレスポンスが不正です',
-        DioExceptionType.connectionTimeout => 'サーバーとの接続がタイムアウトしました',
-        DioExceptionType.receiveTimeout => 'サーバーからのレスポンスがタイムアウトしました',
-        DioExceptionType.sendTimeout => 'サーバーへのリクエストがタイムアウトしました',
-        DioExceptionType.connectionError => 'サーバーとの接続に失敗しました。ネットワーク接続を確認してください',
-        DioExceptionType.unknown => '不明なエラーが発生しました',
-        DioExceptionType.cancel => 'キャンセルされました',
+        .badCertificate => 'SSL証明書が不正です',
+        .badResponse => 'サーバーからのレスポンスが不正です',
+        .connectionTimeout => 'サーバーとの接続がタイムアウトしました',
+        .receiveTimeout => 'サーバーからのレスポンスがタイムアウトしました',
+        .sendTimeout => 'サーバーへのリクエストがタイムアウトしました',
+        .connectionError => 'サーバーとの接続に失敗しました。ネットワーク接続を確認してください',
+        .unknown => '不明なエラーが発生しました',
+        .cancel => 'キャンセルされました',
+        .transformTimeout => '変換がタイムアウトしました',
       };
     }
     return 'エラーが発生しました\n'

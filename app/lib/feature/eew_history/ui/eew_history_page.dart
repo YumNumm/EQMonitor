@@ -62,6 +62,10 @@ class _PagingBody extends StatelessWidget {
     final theme = Theme.of(context);
     return RefreshIndicator(
       onRefresh: onRefresh,
+      edgeOffset:
+          MediaQuery.paddingOf(context).top +
+          kToolbarHeight +
+          EewListParameterPersistentDelegate.height,
       child: CustomScrollView(
         slivers: [
           const SliverAppBar(

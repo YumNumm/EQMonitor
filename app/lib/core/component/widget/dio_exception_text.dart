@@ -9,14 +9,15 @@ class DioExceptionText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = switch (exception.type) {
-      DioExceptionType.connectionTimeout ||
-      DioExceptionType.sendTimeout ||
-      DioExceptionType.receiveTimeout => '接続がタイムアウトしました',
-      DioExceptionType.badResponse => '不正なレスポンスが返されました',
-      DioExceptionType.cancel => 'リクエストがキャンセルされました',
-      DioExceptionType.badCertificate => '証明書のエラーが発生しました',
-      DioExceptionType.connectionError => '接続エラーが発生しました',
-      DioExceptionType.unknown => 'その他のエラーが発生しました',
+      .connectionTimeout ||
+      .sendTimeout ||
+      .receiveTimeout => '接続がタイムアウトしました',
+      .badResponse => '不正なレスポンスが返されました',
+      .cancel => 'リクエストがキャンセルされました',
+      .badCertificate => '証明書のエラーが発生しました',
+      .connectionError => '接続エラーが発生しました',
+      .unknown => 'その他のエラーが発生しました',
+      .transformTimeout => '変換がタイムアウトしました',
     };
     final errorCode = exception.type.index + 12000;
     final errorCodeText = ' (エラーコード: $errorCode)';

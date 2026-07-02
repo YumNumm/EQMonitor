@@ -15,8 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$V2FeedsAdminRequestBody {
 
-/// const: "APP_UPDATE" | const: "INCIDENT" | const: "DEVELOPER_MESSAGE"
- FeedType get feedType;/// const: "CRITICAL" | const: "HIGH" | const: "NORMAL" | const: "LOW"
+ FeedCreateType get feedType;/// const: "CRITICAL" | const: "HIGH" | const: "NORMAL" | const: "LOW"
  Priority get priority; bool get isImportant; String get publishedAt; Data get data; List<Translations> get translations;@JsonKey(includeIfNull: false) String? get expiresAt;
 /// Create a copy of V2FeedsAdminRequestBody
 /// with the given fields replaced by the non-null parameter values.
@@ -50,7 +49,7 @@ abstract mixin class $V2FeedsAdminRequestBodyCopyWith<$Res>  {
   factory $V2FeedsAdminRequestBodyCopyWith(V2FeedsAdminRequestBody value, $Res Function(V2FeedsAdminRequestBody) _then) = _$V2FeedsAdminRequestBodyCopyWithImpl;
 @useResult
 $Res call({
- FeedType feedType, Priority priority, bool isImportant, String publishedAt, Data data, List<Translations> translations,@JsonKey(includeIfNull: false) String? expiresAt
+ FeedCreateType feedType, Priority priority, bool isImportant, String publishedAt, Data data, List<Translations> translations,@JsonKey(includeIfNull: false) String? expiresAt
 });
 
 
@@ -70,7 +69,7 @@ class _$V2FeedsAdminRequestBodyCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? feedType = null,Object? priority = null,Object? isImportant = null,Object? publishedAt = null,Object? data = null,Object? translations = null,Object? expiresAt = freezed,}) {
   return _then(_self.copyWith(
 feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
-as FeedType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
+as FeedCreateType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
 as Priority,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
 as bool,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
 as String,data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
@@ -170,7 +169,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( FeedType feedType,  Priority priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( FeedCreateType feedType,  Priority priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _V2FeedsAdminRequestBody() when $default != null:
 return $default(_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.data,_that.translations,_that.expiresAt);case _:
@@ -191,7 +190,7 @@ return $default(_that.feedType,_that.priority,_that.isImportant,_that.publishedA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( FeedType feedType,  Priority priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( FeedCreateType feedType,  Priority priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)  $default,) {final _that = this;
 switch (_that) {
 case _V2FeedsAdminRequestBody():
 return $default(_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.data,_that.translations,_that.expiresAt);case _:
@@ -211,7 +210,7 @@ return $default(_that.feedType,_that.priority,_that.isImportant,_that.publishedA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( FeedType feedType,  Priority priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( FeedCreateType feedType,  Priority priority,  bool isImportant,  String publishedAt,  Data data,  List<Translations> translations, @JsonKey(includeIfNull: false)  String? expiresAt)?  $default,) {final _that = this;
 switch (_that) {
 case _V2FeedsAdminRequestBody() when $default != null:
 return $default(_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.data,_that.translations,_that.expiresAt);case _:
@@ -229,8 +228,7 @@ class _V2FeedsAdminRequestBody implements V2FeedsAdminRequestBody {
   const _V2FeedsAdminRequestBody({required this.feedType, required this.priority, required this.isImportant, required this.publishedAt, required this.data, required final  List<Translations> translations, @JsonKey(includeIfNull: false) this.expiresAt}): _translations = translations;
   factory _V2FeedsAdminRequestBody.fromJson(Map<String, dynamic> json) => _$V2FeedsAdminRequestBodyFromJson(json);
 
-/// const: "APP_UPDATE" | const: "INCIDENT" | const: "DEVELOPER_MESSAGE"
-@override final  FeedType feedType;
+@override final  FeedCreateType feedType;
 /// const: "CRITICAL" | const: "HIGH" | const: "NORMAL" | const: "LOW"
 @override final  Priority priority;
 @override final  bool isImportant;
@@ -278,7 +276,7 @@ abstract mixin class _$V2FeedsAdminRequestBodyCopyWith<$Res> implements $V2Feeds
   factory _$V2FeedsAdminRequestBodyCopyWith(_V2FeedsAdminRequestBody value, $Res Function(_V2FeedsAdminRequestBody) _then) = __$V2FeedsAdminRequestBodyCopyWithImpl;
 @override @useResult
 $Res call({
- FeedType feedType, Priority priority, bool isImportant, String publishedAt, Data data, List<Translations> translations,@JsonKey(includeIfNull: false) String? expiresAt
+ FeedCreateType feedType, Priority priority, bool isImportant, String publishedAt, Data data, List<Translations> translations,@JsonKey(includeIfNull: false) String? expiresAt
 });
 
 
@@ -298,7 +296,7 @@ class __$V2FeedsAdminRequestBodyCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? feedType = null,Object? priority = null,Object? isImportant = null,Object? publishedAt = null,Object? data = null,Object? translations = null,Object? expiresAt = freezed,}) {
   return _then(_V2FeedsAdminRequestBody(
 feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
-as FeedType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
+as FeedCreateType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
 as Priority,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
 as bool,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
 as String,data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable

@@ -207,6 +207,24 @@ jobs:
           echo "--------------------------------"
           ls -lah .
 
+      # Firebase App Distribution 用に ad-hoc(release-testing) 署名の IPA も同じアーカイブから生成。
+      # -allowProvisioningUpdates により Apple Developer 登録済み端末を含む ad-hoc プロファイルが自動生成される。
+      - name: Create Ad-Hoc IPA
+        working-directory: app
+        run: |
+          KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
+          xcodebuild -exportArchive \
+            -archivePath build/ios/Runner.xcarchive \
+            -exportOptionsPlist ios/ExportOptionsAdHoc.plist \
+            -exportPath adhoc \
+            -allowProvisioningUpdates \
+            -authenticationKeyIssuerID "$APP_STORE_CONNECT_API_ISSUER_ID" \
+            -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
+            -authenticationKeyPath "$KEY_PATH" \
+          | xcbeautify --renderer github-actions
+          echo "--------------------------------"
+          ls -lah adhoc
+
       # https://github.com/actions/upload-artifact
       - name: Upload ipa as artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -215,8 +233,16 @@ jobs:
           path: app/EQMonitor.ipa
           if-no-files-found: error
 
+      # https://github.com/actions/upload-artifact
+      - name: Upload ad-hoc ipa as artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: EQMonitor-ios-adhoc.ipa
+          path: app/adhoc/EQMonitor.ipa
+          if-no-files-found: error
+
   deploy-ios:
-    name: Deploy iOS
+    name: Deploy iOS (App Store Connect)
     needs:
       - build-ios
       - define-matrix
@@ -306,6 +332,98 @@ jobs:
           export ASC_LOCALE="ja"
           pnpm -C scripts/testflight install --frozen-lockfile
           pnpm -C scripts/testflight run distribute
+
+  deploy-ios-firebase-app-distribution:
+    name: Deploy iOS (Firebase App Distribution)
+    needs:
+      - build-ios
+      - define-matrix
+    # firebase-tools は linux-arm64 バイナリを配布しておらず arm ランナー不可のため x64 を使う
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    environment:
+      name: EQMonitor-iOS
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Extract SOPS Age Key File
+        run: |
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml.example mise.local.toml
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        with:
+          install_args: "firebase yq"
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
+      - name: Download artifact ipa
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: EQMonitor-ios-adhoc.ipa
+          path: build
+
+      - name: List files & rename
+        run: |
+          ls -lah build/
+          mv build/*.ipa build/app.ipa
+          echo "--------------------------------"
+          ls -lah build/
+
+      - name: Output release version
+        run: |
+          VERSION=$(yq .version app/pubspec.yaml -r)
+          REF_NAME=$(git rev-parse --abbrev-ref HEAD)
+          echo "[$VERSION - $REF_NAME]" > changelog.tmp
+
+      - name: Output git log
+        run: |
+          # LAST TAG
+           LAST_TAG=$(git describe --tags --abbrev=0)
+           git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
+
+           # 最大2000文字
+           head -c 2000 changelog.tmp > changelog.txt
+           if [ "$(wc -c < changelog.txt)" -gt 2000 ]; then
+             echo '...' >> changelog.txt
+           fi
+
+      # https://github.com/google-github-actions/auth
+      - name: Authenticate to Google Cloud Platform
+        id: auth
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
+          token_format: access_token
+
+      - name: Upload to Firebase App Distribution
+        env:
+          FIREBASE_APP_ID: 1:179553945248:ios:a738f33a18702c7f6fabc5
+        run: |
+          firebase appdistribution:distribute \
+            --app "$FIREBASE_APP_ID" \
+            --release-notes-file "changelog.txt" \
+            --groups "main" \
+            build/app.ipa
 
   build-android:
     name: Build Android
