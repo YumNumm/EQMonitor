@@ -1021,105 +1021,47 @@ git commit -m "refactor(error): intensity_history/onboarding の詳細ダイア�
 
 ---
 
-## Task 7: `showSnackbarOnError` を `ErrorMessageBuilder` 経由に
+## Task 7: 未使用の `showSnackbarOnError` を削除
 
-`app/lib/core/extension/async_value.dart` の `showSnackbarOnError` が `error.toString()` を生表示している問題を修正し、`ErrorMessageBuilder` の日本語メッセージを表示する。provider 参照のため `WidgetRef` を引数に追加する（**現状 0 呼び出しのため移行対象なし**）。
-
-> **実行前確認（Global Constraints の注記1）**: このタスクは未使用コードへの変更。人間の判断が「修正」の場合のみ本タスクを実行する。「削除」なら拡張ごと削除、「据え置き」なら本タスクをスキップする。
+**人間の決定（2026-07-03）: 削除する。** `app/lib/core/extension/async_value.dart` の `showSnackbarOnError` は `error.toString()` を生表示していたが、コードベース全体で **0 箇所からしか呼ばれていない**（定義のみ）。YAGNI に従い、拡張メソッドごと削除する。
 
 **Files:**
-- Modify: `app/lib/core/extension/async_value.dart`
-- Test: `app/test/core/extension/async_value_test.dart`
+- Modify: `app/lib/core/extension/async_value.dart`（`showSnackbarOnError` を削除。他メンバーがあれば維持）
 
 **Interfaces:**
-- Produces（新シグネチャ）:
-  ```dart
-  extension AsyncValueX<T> on AsyncValue<T> {
-    void showSnackbarOnError(WidgetRef ref, BuildContext context);
-  }
-  ```
-  未使用だった `defaultMessage` 引数は廃止（メッセージは `ErrorMessageBuilder` が生成）。
-- Consumes: `errorMessageBuilderProvider`
+- 削除: `extension AsyncValueX<T> on AsyncValue<T>` の `showSnackbarOnError`
+- 影響: 呼び出し 0 箇所のため移行対象なし
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [ ] **Step 1: 現行ファイルを確認**
 
-`app/test/core/extension/async_value_test.dart`:
-```dart
-import 'package:eqmonitor/core/extension/async_value.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+Run: `cd app && sed -n '1,80p' lib/core/extension/async_value.dart` で全体を読み、`AsyncValueX` に `showSnackbarOnError` 以外のメンバーがあるか確認する。
+- `showSnackbarOnError` が唯一のメンバーなら拡張全体（と未使用になる import）を削除する。
+- 他メンバーがあれば `showSnackbarOnError` メソッドと、それが唯一の利用者だった import のみを削除する。
 
-void main() {
-  testWidgets('エラー時に日本語メッセージの SnackBar を出す', (tester) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp(
-          home: Scaffold(
-            body: Consumer(
-              builder: (context, ref, _) => ElevatedButton(
-                onPressed: () => const AsyncError<int>(
-                  'boom',
-                  StackTrace.empty,
-                ).showSnackbarOnError(ref, context),
-                child: const Text('go'),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    await tester.tap(find.text('go'));
-    await tester.pump();
-    expect(find.byType(SnackBar), findsOneWidget);
-    expect(find.textContaining('エラー'), findsOneWidget);
-  });
-}
-```
+- [ ] **Step 2: 削除**
 
-- [ ] **Step 2: テストが落ちることを確認**
+`showSnackbarOnError` を削除する。削除により未使用になる import（例: `showSnackbarOnError` 専用だった `flutter/material.dart` 等）は analyze の unused_import に従い除去する。
 
-Run: `cd app && flutter test test/core/extension/async_value_test.dart`
-Expected: FAIL（現行シグネチャは `WidgetRef` を取らない）
+- [ ] **Step 3: 呼び出しが無いことを再確認**
 
-- [ ] **Step 3: 実装**
+Run: `cd app && grep -rn "showSnackbarOnError" lib test`
+Expected: マッチなし
 
-`app/lib/core/extension/async_value.dart` の該当拡張メソッドを置き換える:
-```dart
-import 'package:eqmonitor/core/component/error/error_message_builder.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+- [ ] **Step 4: analyze**
 
-extension AsyncValueX<T> on AsyncValue<T> {
-  void showSnackbarOnError(WidgetRef ref, BuildContext context) {
-    if (!isLoading && hasError) {
-      final message = ref
-          .read(errorMessageBuilderProvider)
-          .build(error: error ?? 'エラーが発生しました');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
-    }
-  }
-}
-```
-- 既存 import・他の拡張メンバー（あれば）は維持する。実装者は現行ファイル全体を読み、`AsyncValueX` の他メンバーを壊さないこと。
+Run: `cd app && dart analyze lib/core/extension/async_value.dart`
+Expected: 未使用 import・未定義参照が無い
 
-- [ ] **Step 4: テストが通ることを確認**
+- [ ] **Step 5: 関連テストが壊れていないことを確認**
 
-Run: `cd app && flutter test test/core/extension/async_value_test.dart`
+Run: `cd app && flutter test test/core/extension` （ディレクトリが存在する範囲。無ければ analyze 通過をもって可とする）
 Expected: PASS
-
-- [ ] **Step 5: analyze**
-
-Run: `cd app && dart analyze lib/core/extension/async_value.dart test/core/extension/async_value_test.dart`
-Expected: 当該ファイルに関する警告なし
 
 - [ ] **Step 6: commit**
 
 ```bash
-git add app/lib/core/extension/async_value.dart app/test/core/extension/async_value_test.dart
-git commit -m "fix(error): showSnackbarOnError を ErrorMessageBuilder 経由に"
+git add app/lib/core/extension/async_value.dart
+git commit -m "refactor(error): 未使用の showSnackbarOnError を削除"
 ```
 
 ---
