@@ -63,26 +63,31 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
 
     /// Components.Schemas.EarthquakePartial からの変換初期化
     init(from partial: Components.Schemas.EarthquakePartial) {
+        let maxIntensity = IntensityValue(from: partial.intensity?.value1.max_intensity)
         self.id = partial.event_id
-        self.hypocenterName = partial.hypocenter?.value1.detailed?.value1.name
-            ?? partial.hypocenter?.value1.name
-            ?? "震源地不明"
+        self.hypocenterName = Self.resolveTitle(
+            name: partial.hypocenter?.value1.name,
+            detailedName: partial.hypocenter?.value1.detailed?.value1.name,
+            maxIntensity: maxIntensity
+        )
         self.magnitude = Self.formatMagnitude(partial.hypocenter?.value1.magnitude)
         self.magnitudeValue = partial.hypocenter?.value1.magnitude.value
-        self.maxIntensity = IntensityValue(from: partial.intensity?.value1.max_intensity)
+        self.maxIntensity = maxIntensity
         self.depth = Self.formatDepth(partial.hypocenter?.value1.depth)
         self.latitude = partial.hypocenter?.value1.coordinates?.value1.latitude
         self.longitude = partial.hypocenter?.value1.coordinates?.value1.longitude
         self.status = TelegramStatus(from: partial.status)
 
-        // 発生時刻の処理
-        let effectiveTime = partial.origin_time ?? partial.arrival_time
-        if let time = effectiveTime {
+        // 発生時刻の処理（origin_time 優先、無ければ検知時刻）
+        if let time = partial.origin_time {
             self.originTime = time
-            self.formattedTime = Self.formatTime(time)
+            self.formattedTime = Self.formatTime(time, isArrival: false)
+        } else if let time = partial.arrival_time {
+            self.originTime = time
+            self.formattedTime = Self.formatTime(time, isArrival: true)
         } else {
             self.originTime = Date()
-            self.formattedTime = "時刻不明"
+            self.formattedTime = ""
         }
     }
 
@@ -104,29 +109,33 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
         regionIntensity: Components.Schemas.JmaIntensity,
         earthquake partial: Components.Schemas.EarthquakePartial
     ) {
+        // 地域の震度情報を優先（検索結果の場合）
+        let maxIntensity = IntensityValue(from: regionIntensity)
+            ?? IntensityValue(from: partial.intensity?.value1.max_intensity)
         self.id = partial.event_id
-        self.hypocenterName = partial.hypocenter?.value1.detailed?.value1.name
-            ?? partial.hypocenter?.value1.name
-            ?? "震源地不明"
+        self.hypocenterName = Self.resolveTitle(
+            name: partial.hypocenter?.value1.name,
+            detailedName: partial.hypocenter?.value1.detailed?.value1.name,
+            maxIntensity: maxIntensity
+        )
         self.magnitude = Self.formatMagnitude(partial.hypocenter?.value1.magnitude)
         self.magnitudeValue = partial.hypocenter?.value1.magnitude.value
         self.depth = Self.formatDepth(partial.hypocenter?.value1.depth)
         self.latitude = partial.hypocenter?.value1.coordinates?.value1.latitude
         self.longitude = partial.hypocenter?.value1.coordinates?.value1.longitude
         self.status = TelegramStatus(from: partial.status)
+        self.maxIntensity = maxIntensity
 
-        // 地域の震度情報を優先（検索結果の場合）
-        self.maxIntensity = IntensityValue(from: regionIntensity)
-            ?? IntensityValue(from: partial.intensity?.value1.max_intensity)
-
-        // 発生時刻の処理
-        let effectiveTime = partial.origin_time ?? partial.arrival_time
-        if let time = effectiveTime {
+        // 発生時刻の処理（origin_time 優先、無ければ検知時刻）
+        if let time = partial.origin_time {
             self.originTime = time
-            self.formattedTime = Self.formatTime(time)
+            self.formattedTime = Self.formatTime(time, isArrival: false)
+        } else if let time = partial.arrival_time {
+            self.originTime = time
+            self.formattedTime = Self.formatTime(time, isArrival: true)
         } else {
             self.originTime = Date()
-            self.formattedTime = "時刻不明"
+            self.formattedTime = ""
         }
     }
 
@@ -150,24 +159,28 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
         self.maxIntensity = maxIntensity
         self.depth = depth
         self.originTime = originTime
-        self.formattedTime = Self.formatTime(originTime)
+        self.formattedTime = Self.formatTime(originTime, isArrival: false)
         self.latitude = latitude
         self.longitude = longitude
         self.status = status
     }
 
-    // MARK: - Private Helpers
+    // MARK: - Formatting Helpers
+    // 表記はアプリ本体（app/lib/feature/earthquake_history/ 配下）を正とする。
+    // internal なのは WidgetModelsTests で表記の一致を検証するため。
 
-    private static func formatTime(_ date: Date) -> String {
+    /// 発生/検知時刻の表示文字列を生成
+    /// - Parameter isArrival: origin_time が無く arrival_time で代替した場合 true
+    static func formatTime(_ date: Date, isArrival: Bool) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd HH:mm"
+        formatter.dateFormat = "yyyy/MM/dd HH:mm"
         formatter.locale = Locale(identifier: "ja_JP")
         formatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-        return formatter.string(from: date) + "頃"
+        return formatter.string(from: date) + (isArrival ? "頃検知" : "頃発生")
     }
 
     /// マグニチュードの表示文字列を生成
-    private static func formatMagnitude(_ magnitude: Components.Schemas.Magnitude?) -> String {
+    static func formatMagnitude(_ magnitude: Components.Schemas.Magnitude?) -> String {
         guard let mag = magnitude else { return "M不明" }
         switch mag._type {
         case .NORMAL:
@@ -178,13 +191,13 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
         case .UNKNOWN:
             return "M不明"
         case .OVER_M8:
-            return "M8以上"
+            return "M8超"
         }
     }
 
-    /// 深さの表示文字列を生成
-    private static func formatDepth(_ depth: Components.Schemas.Depth?) -> String {
-        guard let d = depth else { return "不明" }
+    /// 深さの表示文字列を生成。不明は空文字（View 側で表示ごと省略する）
+    static func formatDepth(_ depth: Components.Schemas.Depth?) -> String {
+        guard let d = depth else { return "" }
         switch d._type {
         case .SHALLOW:
             return "ごく浅い"
@@ -192,12 +205,25 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
             if let value = d.value {
                 return "\(Int(value))km"
             }
-            return "不明"
+            return ""
         case .OVER_700:
             return "700km以上"
         case .UNKNOWN:
-            return "不明"
+            return ""
         }
+    }
+
+    /// タイトル（震源名）の解決。震源名が無い場合は「最大震度◯を観測」に
+    /// フォールバックする（アプリの earthquake_history_list_tile と同じ規則）
+    static func resolveTitle(
+        name: String?,
+        detailedName: String?,
+        maxIntensity: IntensityValue?
+    ) -> String {
+        if let detailedName { return detailedName }
+        if let name { return name }
+        if let maxIntensity { return "最大震度\(maxIntensity.displayString)を観測" }
+        return ""
     }
 
     // MARK: - Mock Data for Preview

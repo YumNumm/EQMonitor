@@ -254,9 +254,11 @@ struct EarthquakeRow: View {
                             .font(.system(size: 11).monospaced())
                             .foregroundStyle(Color.eqTextSecondary)
 
-                        Text("深さ\(earthquake.depth)")
-                            .font(.system(size: 11))
-                            .foregroundStyle(Color.eqTextTertiary)
+                        if !earthquake.depth.isEmpty {
+                            Text("深さ\(earthquake.depth)")
+                                .font(.system(size: 11))
+                                .foregroundStyle(Color.eqTextTertiary)
+                        }
 
                         Spacer()
 

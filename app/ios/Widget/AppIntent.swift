@@ -8,23 +8,7 @@
 import WidgetKit
 import AppIntents
 
-enum RegionType: String, AppEnum {
-    case currentLocation
-    case specificRegion
-    case nationwide
-
-    static var typeDisplayRepresentation: TypeDisplayRepresentation {
-        "表示範囲"
-    }
-
-    static var caseDisplayRepresentations: [RegionType: DisplayRepresentation] {
-        [
-            .currentLocation: "現在地",
-            .specificRegion: "アプリで選択した地域",
-            .nationwide: "全国"
-        ]
-    }
-}
+// RegionType は Shared/RegionType.swift へ移動（WidgetRegionResolver と共有するため）
 
 struct EarthquakeWidgetIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "地震履歴設定" }
