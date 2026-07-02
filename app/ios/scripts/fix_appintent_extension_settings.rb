@@ -7,7 +7,12 @@ project = Xcodeproj::Project.open(File.expand_path('../Runner.xcodeproj', __dir_
 target = project.targets.find { |t| t.name == 'AppIntentExtension' }
 raise 'AppIntentExtension target not found' unless target
 
+# APP_ID_SUFFIX 等の供給元（Widget/Fcm と同じ base configuration）
+env_xcconfig = project.files.find { |f| f.real_path.to_s.end_with?('Flutter/Environment.xcconfig') }
+raise 'Environment.xcconfig file ref not found' unless env_xcconfig
+
 target.build_configurations.each do |config|
+  config.base_configuration_reference = env_xcconfig
   config.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] =
     'net.yumnumm.eqmonitor${APP_ID_SUFFIX}.AppIntentExtension'
   config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '26.0'
