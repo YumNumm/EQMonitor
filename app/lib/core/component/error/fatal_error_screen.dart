@@ -73,13 +73,21 @@ Widget buildFatalErrorWidget(FlutterErrorDetails details) {
           const SizedBox(height: 12),
           const Text(
             '問題が発生しました',
-            style: TextStyle(color: Color(0xFFE6E1E5), fontSize: 16),
+            style: TextStyle(
+              color: Color(0xFFE6E1E5),
+              fontSize: 16,
+              decoration: TextDecoration.none,
+            ),
           ),
           if (kDebugMode) ...[
             const SizedBox(height: 8),
             Text(
               '${details.exception}',
-              style: const TextStyle(color: Color(0xFFB0AEB8), fontSize: 12),
+              style: const TextStyle(
+                color: Color(0xFFB0AEB8),
+                fontSize: 12,
+                decoration: TextDecoration.none,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
