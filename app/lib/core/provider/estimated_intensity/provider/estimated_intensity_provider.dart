@@ -3,9 +3,10 @@ import 'dart:isolate';
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_intensity_data_source.dart';
-import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/parameter/data/model/kyoshin/kyoshin_observation_points_parameter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,8 +15,9 @@ part 'estimated_intensity_provider.g.dart';
 
 typedef _CachedPoint = ({
   String regionCode,
-  String cityCode,
-  EarthquakeParameterStationItem station,
+  double lat,
+  double lon,
+  double arv400,
 });
 
 typedef _EewHypocenterInput = ({
@@ -61,15 +63,17 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   @override
   Future<List<EstimatedIntensityPoint>> build() async {
     ref.listen(eewAliveTelegramProvider, (_, next) async {
-      final parameter = await ref.read(jmaParameterProvider.future);
-      final result = await calcInIsolate(next ?? [], parameter.earthquake);
+      final kyoshinParam =
+          await ref.read(kyoshinObservationPointsProvider.future);
+      final result = await calcInIsolate(next ?? [], kyoshinParam);
       state = AsyncData(result.toList());
     });
-    final parameter = await ref.read(jmaParameterProvider.future);
+    final kyoshinParam =
+        await ref.read(kyoshinObservationPointsProvider.future);
 
     final result = await calcInIsolate(
       ref.read(eewAliveTelegramProvider) ?? [],
-      parameter.earthquake,
+      kyoshinParam,
     );
     return result.toList();
   }
@@ -79,9 +83,9 @@ class EstimatedIntensity extends _$EstimatedIntensity {
 
   List<EstimatedIntensityPoint> calc(
     List<EewTelegramItem> eews,
-    EarthquakeParameter parameter,
+    KyoshinObservationPointsParameter kyoshinParam,
   ) {
-    _cachedPoints ??= _generateCachedPoints(parameter);
+    _cachedPoints ??= _generateCachedPoints(kyoshinParam);
     _calculationPoints ??= _generateCalculationPoints(_cachedPoints!);
 
     final targetEews = eews
@@ -114,8 +118,6 @@ class EstimatedIntensity extends _$EstimatedIntensity {
       for (var i = 0; i < intensities.length; i++)
         EstimatedIntensityPoint(
           regionCode: _cachedPoints![i].regionCode,
-          cityCode: _cachedPoints![i].cityCode,
-          station: _cachedPoints![i].station,
           intensity: intensities[i],
         ),
     ];
@@ -123,9 +125,9 @@ class EstimatedIntensity extends _$EstimatedIntensity {
 
   Future<Iterable<EstimatedIntensityPoint>> calcInIsolate(
     List<EewTelegramItem> eews,
-    EarthquakeParameter parameter,
+    KyoshinObservationPointsParameter kyoshinParam,
   ) async {
-    _cachedPoints ??= _generateCachedPoints(parameter);
+    _cachedPoints ??= _generateCachedPoints(kyoshinParam);
     _calculationPoints ??= _generateCalculationPoints(_cachedPoints!);
 
     final targetEews = eews
@@ -163,27 +165,27 @@ class EstimatedIntensity extends _$EstimatedIntensity {
       for (var i = 0; i < intensities.length; i++)
         EstimatedIntensityPoint(
           regionCode: cachedPoints[i].regionCode,
-          cityCode: cachedPoints[i].cityCode,
-          station: cachedPoints[i].station,
           intensity: intensities[i],
         ),
     ];
   }
 
-  List<_CachedPoint> _generateCachedPoints(EarthquakeParameter earthquake) {
+  List<_CachedPoint> _generateCachedPoints(
+    KyoshinObservationPointsParameter kyoshinParam,
+  ) {
     final result = <_CachedPoint>[];
-    for (final prefecture in earthquake.prefectures) {
-      for (final region in prefecture.regions) {
-        for (final city in region.cities) {
-          for (final station in city.stations) {
-            result.add((
-              regionCode: region.code,
-              cityCode: city.code,
-              station: station,
-            ));
-          }
-        }
+    for (final point in kyoshinParam.points) {
+      if (point.regionCode == null ||
+          point.arv400 == null ||
+          point.isSuspended) {
+        continue;
       }
+      result.add((
+        regionCode: point.regionCode!,
+        lat: point.location.lat,
+        lon: point.location.lon,
+        arv400: point.arv400!,
+      ));
     }
     return result;
   }
@@ -192,30 +194,8 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     Iterable<_CachedPoint> points,
   ) => [
     for (final p in points)
-      if (p.station.arv400 case final arv400?)
-        (
-          lat: p.station.location.lat,
-          lon: p.station.location.lon,
-          arv400: arv400,
-        ),
+      (lat: p.lat, lon: p.lon, arv400: p.arv400),
   ];
-}
-
-@Riverpod(keepAlive: true)
-Stream<Map<String, double>> estimatedIntensityCity(Ref ref) async* {
-  final estimatedIntensity = ref.watch(estimatedIntensityProvider).value;
-  if (estimatedIntensity != null) {
-    final map = <String, double>{};
-    for (final item in estimatedIntensity) {
-      final currentValue = map[item.cityCode];
-      if (currentValue == null) {
-        map[item.cityCode] = item.intensity;
-      } else {
-        map[item.cityCode] = math.max(currentValue, item.intensity);
-      }
-    }
-    yield map;
-  }
 }
 
 @Riverpod(keepAlive: true)
@@ -239,8 +219,6 @@ Stream<Map<String, double>> estimatedIntensityRegion(Ref ref) async* {
 abstract class EstimatedIntensityPoint with _$EstimatedIntensityPoint {
   const factory EstimatedIntensityPoint({
     required String regionCode,
-    required String cityCode,
-    required EarthquakeParameterStationItem station,
     required double intensity,
   }) = _EstimatedIntensityPoint;
 }

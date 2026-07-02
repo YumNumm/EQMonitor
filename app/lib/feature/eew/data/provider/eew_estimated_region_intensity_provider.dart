@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/extension/double_to_jma_forecast_intensity.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_intensity_data_source.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
@@ -53,30 +54,34 @@ Future<List<EewEstimatedRegion>> eewEstimatedRegionIntensity(
     return [];
   }
 
-  final parameter = await ref.read(jmaParameterProvider.future);
+  final kyoshinParam =
+      await ref.read(kyoshinObservationPointsProvider.future);
+  final earthquakeParam = await ref.read(jmaParameterProvider.future);
   final travelTimeTables = ref.read(travelTimeProvider);
 
-  // station一覧を構築
-  final stations = <_RegionStation>[];
-  for (final prefecture in parameter.earthquake.prefectures) {
-    for (final region in prefecture.regions) {
-      for (final city in region.cities) {
-        for (final station in city.stations) {
-          if (station.arv400 == null) {
-            continue;
-          }
-          stations.add((
-            regionCode: region.code,
-            regionName: region.name.ja,
-            point: (
-              lat: station.location.lat,
-              lon: station.location.lon,
-              arv400: station.arv400!,
-            ),
-          ));
-        }
-      }
+  final regionNameLookup = <String, String>{};
+  for (final pref in earthquakeParam.earthquake.prefectures) {
+    for (final region in pref.regions) {
+      regionNameLookup[region.code] = region.name.ja;
     }
+  }
+
+  final stations = <_RegionStation>[];
+  for (final point in kyoshinParam.points) {
+    if (point.regionCode == null ||
+        point.arv400 == null ||
+        point.isSuspended) {
+      continue;
+    }
+    stations.add((
+      regionCode: point.regionCode!,
+      regionName: regionNameLookup[point.regionCode!] ?? point.name,
+      point: (
+        lat: point.location.lat,
+        lon: point.location.lon,
+        arv400: point.arv400!,
+      ),
+    ));
   }
 
   if (stations.isEmpty) {

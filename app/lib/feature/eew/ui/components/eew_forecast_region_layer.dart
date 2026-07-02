@@ -15,8 +15,8 @@ import 'package:maplibre/maplibre.dart';
 
 /// EEW震度予報区域レイヤー
 ///
-/// `displayMode` に応じて、府県地震予報区（areaForecastLocalEew）を
-/// 予想震度別 or 警報発表区域として塗りつぶす。
+/// `displayMode` に応じて、府県予報区（areaForecastLocalE）を
+/// 推計震度別 or 警報発表区域として塗りつぶす。
 class EewForecastRegionLayer extends HookConsumerWidget {
   const EewForecastRegionLayer({
     required this.eew,

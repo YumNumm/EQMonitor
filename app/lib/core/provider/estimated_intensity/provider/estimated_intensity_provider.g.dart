@@ -40,7 +40,7 @@ final class EstimatedIntensityProvider
 }
 
 String _$estimatedIntensityHash() =>
-    r'7d4a7ab6464fb10687621b297aa471d0ef199596';
+    r'e18c2e7e0507a17a619036bef243fe4d045ebd14';
 
 abstract class _$EstimatedIntensity
     extends $AsyncNotifier<List<EstimatedIntensityPoint>> {
@@ -68,48 +68,6 @@ abstract class _$EstimatedIntensity
     element.handleCreate(ref, build);
   }
 }
-
-@ProviderFor(estimatedIntensityCity)
-final estimatedIntensityCityProvider = EstimatedIntensityCityProvider._();
-
-final class EstimatedIntensityCityProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<Map<String, double>>,
-          Map<String, double>,
-          Stream<Map<String, double>>
-        >
-    with
-        $FutureModifier<Map<String, double>>,
-        $StreamProvider<Map<String, double>> {
-  EstimatedIntensityCityProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'estimatedIntensityCityProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$estimatedIntensityCityHash();
-
-  @$internal
-  @override
-  $StreamProviderElement<Map<String, double>> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
-
-  @override
-  Stream<Map<String, double>> create(Ref ref) {
-    return estimatedIntensityCity(ref);
-  }
-}
-
-String _$estimatedIntensityCityHash() =>
-    r'd260dc423fc1c3c73e9ce87ab6e57ac836789ae0';
 
 @ProviderFor(estimatedIntensityRegion)
 final estimatedIntensityRegionProvider = EstimatedIntensityRegionProvider._();

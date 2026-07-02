@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EstimatedIntensityPoint {
 
- String get regionCode; String get cityCode; EarthquakeParameterStationItem get station; double get intensity;
+ String get regionCode; double get intensity;
 /// Create a copy of EstimatedIntensityPoint
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $EstimatedIntensityPointCopyWith<EstimatedIntensityPoint> get copyWith => _$Esti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EstimatedIntensityPoint&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.station, station) || other.station == station)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EstimatedIntensityPoint&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,regionCode,cityCode,station,intensity);
+int get hashCode => Object.hash(runtimeType,regionCode,intensity);
 
 @override
 String toString() {
-  return 'EstimatedIntensityPoint(regionCode: $regionCode, cityCode: $cityCode, station: $station, intensity: $intensity)';
+  return 'EstimatedIntensityPoint(regionCode: $regionCode, intensity: $intensity)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $EstimatedIntensityPointCopyWith<$Res>  {
   factory $EstimatedIntensityPointCopyWith(EstimatedIntensityPoint value, $Res Function(EstimatedIntensityPoint) _then) = _$EstimatedIntensityPointCopyWithImpl;
 @useResult
 $Res call({
- String regionCode, String cityCode, EarthquakeParameterStationItem station, double intensity
+ String regionCode, double intensity
 });
 
 
-$EarthquakeParameterStationItemCopyWith<$Res> get station;
+
 
 }
 /// @nodoc
@@ -62,25 +62,14 @@ class _$EstimatedIntensityPointCopyWithImpl<$Res>
 
 /// Create a copy of EstimatedIntensityPoint
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? regionCode = null,Object? cityCode = null,Object? station = null,Object? intensity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? regionCode = null,Object? intensity = null,}) {
   return _then(_self.copyWith(
 regionCode: null == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
-as String,cityCode: null == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
-as String,station: null == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
-as EarthquakeParameterStationItem,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as String,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
-/// Create a copy of EstimatedIntensityPoint
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EarthquakeParameterStationItemCopyWith<$Res> get station {
-  
-  return $EarthquakeParameterStationItemCopyWith<$Res>(_self.station, (value) {
-    return _then(_self.copyWith(station: value));
-  });
-}
+
 }
 
 
@@ -162,10 +151,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String regionCode,  String cityCode,  EarthquakeParameterStationItem station,  double intensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String regionCode,  double intensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EstimatedIntensityPoint() when $default != null:
-return $default(_that.regionCode,_that.cityCode,_that.station,_that.intensity);case _:
+return $default(_that.regionCode,_that.intensity);case _:
   return orElse();
 
 }
@@ -183,10 +172,10 @@ return $default(_that.regionCode,_that.cityCode,_that.station,_that.intensity);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String regionCode,  String cityCode,  EarthquakeParameterStationItem station,  double intensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String regionCode,  double intensity)  $default,) {final _that = this;
 switch (_that) {
 case _EstimatedIntensityPoint():
-return $default(_that.regionCode,_that.cityCode,_that.station,_that.intensity);case _:
+return $default(_that.regionCode,_that.intensity);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +192,10 @@ return $default(_that.regionCode,_that.cityCode,_that.station,_that.intensity);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String regionCode,  String cityCode,  EarthquakeParameterStationItem station,  double intensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String regionCode,  double intensity)?  $default,) {final _that = this;
 switch (_that) {
 case _EstimatedIntensityPoint() when $default != null:
-return $default(_that.regionCode,_that.cityCode,_that.station,_that.intensity);case _:
+return $default(_that.regionCode,_that.intensity);case _:
   return null;
 
 }
@@ -218,12 +207,10 @@ return $default(_that.regionCode,_that.cityCode,_that.station,_that.intensity);c
 
 
 class _EstimatedIntensityPoint implements EstimatedIntensityPoint {
-  const _EstimatedIntensityPoint({required this.regionCode, required this.cityCode, required this.station, required this.intensity});
+  const _EstimatedIntensityPoint({required this.regionCode, required this.intensity});
   
 
 @override final  String regionCode;
-@override final  String cityCode;
-@override final  EarthquakeParameterStationItem station;
 @override final  double intensity;
 
 /// Create a copy of EstimatedIntensityPoint
@@ -236,16 +223,16 @@ _$EstimatedIntensityPointCopyWith<_EstimatedIntensityPoint> get copyWith => __$E
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EstimatedIntensityPoint&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.station, station) || other.station == station)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EstimatedIntensityPoint&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,regionCode,cityCode,station,intensity);
+int get hashCode => Object.hash(runtimeType,regionCode,intensity);
 
 @override
 String toString() {
-  return 'EstimatedIntensityPoint(regionCode: $regionCode, cityCode: $cityCode, station: $station, intensity: $intensity)';
+  return 'EstimatedIntensityPoint(regionCode: $regionCode, intensity: $intensity)';
 }
 
 
@@ -256,11 +243,11 @@ abstract mixin class _$EstimatedIntensityPointCopyWith<$Res> implements $Estimat
   factory _$EstimatedIntensityPointCopyWith(_EstimatedIntensityPoint value, $Res Function(_EstimatedIntensityPoint) _then) = __$EstimatedIntensityPointCopyWithImpl;
 @override @useResult
 $Res call({
- String regionCode, String cityCode, EarthquakeParameterStationItem station, double intensity
+ String regionCode, double intensity
 });
 
 
-@override $EarthquakeParameterStationItemCopyWith<$Res> get station;
+
 
 }
 /// @nodoc
@@ -273,26 +260,15 @@ class __$EstimatedIntensityPointCopyWithImpl<$Res>
 
 /// Create a copy of EstimatedIntensityPoint
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? regionCode = null,Object? cityCode = null,Object? station = null,Object? intensity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? regionCode = null,Object? intensity = null,}) {
   return _then(_EstimatedIntensityPoint(
 regionCode: null == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
-as String,cityCode: null == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
-as String,station: null == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
-as EarthquakeParameterStationItem,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as String,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
 
-/// Create a copy of EstimatedIntensityPoint
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EarthquakeParameterStationItemCopyWith<$Res> get station {
-  
-  return $EarthquakeParameterStationItemCopyWith<$Res>(_self.station, (value) {
-    return _then(_self.copyWith(station: value));
-  });
-}
+
 }
 
 // dart format on
