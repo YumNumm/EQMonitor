@@ -65,14 +65,14 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
     init(from partial: Components.Schemas.EarthquakePartial) {
         self.id = partial.event_id
         self.hypocenterName = partial.hypocenter?.value1.detailed?.value1.name
-            ?? partial.hypocenter?.value1.value.name
+            ?? partial.hypocenter?.value1.name
             ?? "震源地不明"
         self.magnitude = Self.formatMagnitude(partial.hypocenter?.value1.magnitude)
         self.magnitudeValue = partial.hypocenter?.value1.magnitude.value
         self.maxIntensity = IntensityValue(from: partial.intensity?.value1.max_intensity)
         self.depth = Self.formatDepth(partial.hypocenter?.value1.depth)
-        self.latitude = partial.hypocenter?.value1.coordinates.latitude
-        self.longitude = partial.hypocenter?.value1.coordinates.longitude
+        self.latitude = partial.hypocenter?.value1.coordinates?.value1.latitude
+        self.longitude = partial.hypocenter?.value1.coordinates?.value1.longitude
         self.status = TelegramStatus(from: partial.status)
 
         // 発生時刻の処理
@@ -86,22 +86,37 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
         }
     }
 
-    /// Components.Schemas.IntensityRegionSearchItem からの変換初期化
+    /// 地域/都道府県/市区町村の震度検索結果からの変換初期化
+    /// 3 種の検索アイテムは構造が同一（震度 + EarthquakePartial）なので共通化する
     init(from searchItem: Components.Schemas.IntensityRegionSearchItem) {
-        let partial = searchItem.earthquake
+        self.init(regionIntensity: searchItem.intensity, earthquake: searchItem.earthquake)
+    }
+
+    init(from searchItem: Components.Schemas.IntensityPrefectureSearchItem) {
+        self.init(regionIntensity: searchItem.intensity, earthquake: searchItem.earthquake)
+    }
+
+    init(from searchItem: Components.Schemas.IntensityCitySearchItem) {
+        self.init(regionIntensity: searchItem.intensity, earthquake: searchItem.earthquake)
+    }
+
+    private init(
+        regionIntensity: Components.Schemas.JmaIntensity,
+        earthquake partial: Components.Schemas.EarthquakePartial
+    ) {
         self.id = partial.event_id
         self.hypocenterName = partial.hypocenter?.value1.detailed?.value1.name
-            ?? partial.hypocenter?.value1.value.name
+            ?? partial.hypocenter?.value1.name
             ?? "震源地不明"
         self.magnitude = Self.formatMagnitude(partial.hypocenter?.value1.magnitude)
         self.magnitudeValue = partial.hypocenter?.value1.magnitude.value
         self.depth = Self.formatDepth(partial.hypocenter?.value1.depth)
-        self.latitude = partial.hypocenter?.value1.coordinates.latitude
-        self.longitude = partial.hypocenter?.value1.coordinates.longitude
+        self.latitude = partial.hypocenter?.value1.coordinates?.value1.latitude
+        self.longitude = partial.hypocenter?.value1.coordinates?.value1.longitude
         self.status = TelegramStatus(from: partial.status)
 
         // 地域の震度情報を優先（検索結果の場合）
-        self.maxIntensity = IntensityValue(from: searchItem.intensity)
+        self.maxIntensity = IntensityValue(from: regionIntensity)
             ?? IntensityValue(from: partial.intensity?.value1.max_intensity)
 
         // 発生時刻の処理

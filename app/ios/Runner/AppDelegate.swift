@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import WidgetKit
 import flutter_local_notifications
 import background_location_tracker
 
@@ -35,6 +36,29 @@ import background_location_tracker
       forPlugin: "AppGroupMethodChannel"
     ) {
       AppGroupMethodChannel.register(with: registrar)
+    }
+
+    // Register the widget reload method channel.
+    // Flutter が App Group UserDefaults を更新したあとに `reloadTimelines` を
+    // 呼び出すと、ホーム画面ウィジェットのタイムラインを再読み込みする。
+    if let registrar = engineBridge.pluginRegistry.registrar(
+      forPlugin: "WidgetReloadMethodChannel"
+    ) {
+      let channel = FlutterMethodChannel(
+        name: "net.yumnumm.eqmonitor/widget",
+        binaryMessenger: registrar.messenger()
+      )
+      channel.setMethodCallHandler { call, result in
+        switch call.method {
+        case "reloadTimelines":
+          if #available(iOS 14.0, *) {
+            WidgetCenter.shared.reloadAllTimelines()
+          }
+          result(nil)
+        default:
+          result(FlutterMethodNotImplemented)
+        }
+      }
     }
   }
 }

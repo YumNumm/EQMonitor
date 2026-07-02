@@ -21,6 +21,12 @@ do
     # flutterやFLUTTERで始まる項目は出力しないようにしています。
     lowercase_item=$(echo "$item" | tr '[:upper:]' '[:lower:]')
     if [[ $lowercase_item != flutter* ]]; then
+        # xcconfig は `//` 以降を行コメントとして切り捨てるため、URL の `https://`
+        # がホスト名ごと欠落する。空変数参照 `$()` を割り込ませてトークンを分断し、
+        # 展開後は元の `//` に戻る標準ワークアラウンドを適用する。$() を評価させず
+        # リテラルとして書き出すため、変数経由で置換文字列に埋め込む。
+        empty_ref='$()'
+        item=${item//:\/\//:/${empty_ref}/}
         echo "Extracting environment variable: $item"
         echo "$item" >> "$OUTPUT_FILE"
     fi

@@ -13,7 +13,6 @@ struct EQMonitorWidgetBundle: WidgetBundle {
     var body: some Widget {
         EarthquakeWidget()
         MapEarthquakeWidget()
-        WidgetControl()
         if #available(iOS 16.1, *) {
             EewLiveActivityWidget()
             ShakeDetectionLiveActivityWidget()

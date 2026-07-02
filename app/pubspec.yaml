@@ -185,6 +185,7 @@ dev_dependencies:
   json_serializable: ^6.9.0
   riverpod_generator: ^4.0.0+1
   riverpod_lint: ^3.0.3
+  shared_preferences_platform_interface: ^2.4.0
   test: ^1.29.0
   theme_tailor: ^3.1.3
 

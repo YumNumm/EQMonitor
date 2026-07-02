@@ -2,17 +2,55 @@
   "items": [
     {
       "id": "00000000-0000-0000-0000-000000000002",
-      "event_ids": [
-        "20110311144600"
-      ],
+      "event_ids": ["20110311144600"],
+      "is_active": true,
       "is_canceled": false,
-      "forecast_region_count": 8,
-      "telegram_count": 3,
-      "telegram_types": [
-        "VTSE41",
-        "VTSE51",
-        "VTSE52"
-      ]
+      "updated_at": "2011-03-11 05:50:00+00",
+      "earthquakes": [
+        {
+          "origin_time": "2011-03-11 05:46:00+00",
+          "arrival_time": "2011-03-11 05:46:00+00",
+          "hypocenter": {
+            "code": "287",
+            "name": "三陸沖",
+            "coordinates": {
+              "latitude": 38.1,
+              "longitude": 142.9
+            },
+            "magnitude": {
+              "type": "NORMAL",
+              "value": 9.0
+            },
+            "depth": {
+              "type": "NORMAL",
+              "value": 24
+            }
+          }
+        }
+      ],
+      "latest_telegrams": [
+        {
+          "id": "00000000-0000-0000-0000-000000000010",
+          "type": "VTSE52",
+          "serial_no": 3,
+          "title": "大津波警報・津波警報・津波注意報",
+          "editorial_office": "気象庁本庁",
+          "publishing_office": ["気象庁"],
+          "pressed_at": "2011-03-11 05:49:00+00",
+          "reported_at": "2011-03-11 05:49:00+00",
+          "info_kind": "津波警報・注意報・予報a"
+        }
+      ],
+      "regions": [
+        {
+          "code": "100",
+          "name": "岩手県",
+          "kind": "MAJOR_WARNING",
+          "last_kind": "WARNING",
+          "stations": []
+        }
+      ],
+      "offshore_stations": []
     }
   ]
 }

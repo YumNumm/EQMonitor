@@ -33,6 +33,7 @@ enum SharedPreferencesKey {
   isEstimatedIntensityOnEewReplayAllowed(
     'is_estimated_intensity_on_eew_replay_allowed',
   ),
+  widgetRegionSelection('widget_region_selection'),
   ;
 
   const SharedPreferencesKey(this.key);

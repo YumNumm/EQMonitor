@@ -81,15 +81,7 @@ struct LargeWidgetView: View {
         return Array(entry.earthquakes.prefix(maxCount))
     }
 
-    private var headerTitle: String {
-        switch entry.configuration.regionType {
-        case .nationwide: return "全国の地震履歴"
-        case .currentLocation: return "現在地の地震履歴"
-        case .specificRegion:
-            if let region = entry.configuration.region { return "\(region.name)の地震履歴" }
-            return "地震履歴"
-        }
-    }
+    private var headerTitle: String { entry.title }
 }
 
 // MARK: - Small
@@ -160,18 +152,7 @@ struct SmallWidgetView: View {
         }
     }
 
-    private var headerTitle: String {
-        switch entry.configuration.regionType {
-        case .nationwide: return "地震履歴"
-        case .currentLocation: return "現在地"
-        case .specificRegion:
-            if let region = entry.configuration.region {
-                let name = region.name
-                return name.count > 8 ? String(name.prefix(8)) + "…" : name
-            }
-            return "地震履歴"
-        }
-    }
+    private var headerTitle: String { entry.compactTitle }
 }
 
 // MARK: - Header
@@ -348,22 +329,14 @@ struct IntensityBadge: View {
     let textColor: Color
     var size: CGFloat = 40
 
+    /// サブ表示が「弱以上」など2文字以上なら小さめ＆縮小許可でバッジ内に収める
+    private var isLongSub: Bool { (intensity.sub?.count ?? 0) >= 2 }
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [backgroundColor.opacity(0.88), backgroundColor],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
-                        .strokeBorder(.white.opacity(0.18), lineWidth: 0.5)
-                )
+                .fill(backgroundColor)
                 .frame(width: size, height: size)
-                .shadow(color: backgroundColor.opacity(0.35), radius: size * 0.1, y: size * 0.04)
 
             HStack(alignment: .lastTextBaseline, spacing: 1) {
                 Text(intensity.main)
@@ -372,11 +345,15 @@ struct IntensityBadge: View {
 
                 if let sub = intensity.sub {
                     Text(sub)
-                        .font(.system(size: size * 0.27, weight: .bold))
+                        .font(.system(size: isLongSub ? size * 0.18 : size * 0.27, weight: .bold))
                         .foregroundStyle(textColor)
                         .baselineOffset(-1)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
                 }
             }
+            .padding(.horizontal, 2)
+            .frame(width: size, height: size)
         }
     }
 }
@@ -489,12 +466,14 @@ struct IntensityView: View {
 } timeline: {
     EarthquakeEntry(
         date: .now,
-        configuration: EarthquakeWidgetIntent(
-            regionType: .specificRegion,
-            region: RegionEntity(id: "350", name: "東京都２３区")
-        ),
+        configuration: EarthquakeWidgetIntent(regionType: .specificRegion),
         earthquakes: EarthquakeDisplayItem.mockData,
-        error: nil
+        error: nil,
+        resolved: ResolvedWidgetRegion(
+            plan: .prefecture(code: "13"),
+            title: "東京都の地震履歴",
+            compactTitle: "東京都"
+        )
     )
 }
 

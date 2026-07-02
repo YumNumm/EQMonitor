@@ -7,6 +7,7 @@
 
 import Foundation
 import UserNotifications
+import WidgetKit
 
 class NotificationService: UNNotificationServiceExtension {
 
@@ -37,6 +38,12 @@ class NotificationService: UNNotificationServiceExtension {
                 eventId: eventId,
                 payload: payloadStr
             )
+        }
+
+        // 地震情報の通知（VXSE* テレグラム）はウィジェットの地震履歴を更新しうるため、
+        // 受信時にタイムラインを再読み込みし、15分ポーリングを待たず即時反映する。
+        if channelId.hasPrefix("VXSE") {
+            WidgetCenter.shared.reloadAllTimelines()
         }
 
         contentHandler(bestAttemptContent!)
