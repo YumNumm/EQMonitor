@@ -10,20 +10,41 @@ part of 'app_group_settings_writer.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// apiServerUrl と debugMode を App Groups UserDefaults に書き込む。
-/// telegramUrlProvider を watch するため、デバッグ画面での URL 変更も Widget に即時反映される。
+/// アプリ本体の設定を iOS App Group UserDefaults へ同期する。
+///
+/// [telegramUrlProvider] / [isProProvider] / [widgetRegionNotifierProvider] を
+/// watch するため、URL 変更・Pro 状態変化・任意地域の選択/解除が Widget に即時
+/// 反映される。現在地の地域コードは位置権限が許可済みのときのみベストエフォートで
+/// 書き込む（新規の権限要求はしない）。位置変化への追従は
+/// `backgroundLocationService` 側で別途行う。
+///
+/// 書き込み内容が実際に変化したときだけ Widget のタイムライン再読み込みを要求する。
 
 @ProviderFor(appGroupSettingsWriter)
 final appGroupSettingsWriterProvider = AppGroupSettingsWriterProvider._();
 
-/// apiServerUrl と debugMode を App Groups UserDefaults に書き込む。
-/// telegramUrlProvider を watch するため、デバッグ画面での URL 変更も Widget に即時反映される。
+/// アプリ本体の設定を iOS App Group UserDefaults へ同期する。
+///
+/// [telegramUrlProvider] / [isProProvider] / [widgetRegionNotifierProvider] を
+/// watch するため、URL 変更・Pro 状態変化・任意地域の選択/解除が Widget に即時
+/// 反映される。現在地の地域コードは位置権限が許可済みのときのみベストエフォートで
+/// 書き込む（新規の権限要求はしない）。位置変化への追従は
+/// `backgroundLocationService` 側で別途行う。
+///
+/// 書き込み内容が実際に変化したときだけ Widget のタイムライン再読み込みを要求する。
 
 final class AppGroupSettingsWriterProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
-  /// apiServerUrl と debugMode を App Groups UserDefaults に書き込む。
-  /// telegramUrlProvider を watch するため、デバッグ画面での URL 変更も Widget に即時反映される。
+  /// アプリ本体の設定を iOS App Group UserDefaults へ同期する。
+  ///
+  /// [telegramUrlProvider] / [isProProvider] / [widgetRegionNotifierProvider] を
+  /// watch するため、URL 変更・Pro 状態変化・任意地域の選択/解除が Widget に即時
+  /// 反映される。現在地の地域コードは位置権限が許可済みのときのみベストエフォートで
+  /// 書き込む（新規の権限要求はしない）。位置変化への追従は
+  /// `backgroundLocationService` 側で別途行う。
+  ///
+  /// 書き込み内容が実際に変化したときだけ Widget のタイムライン再読み込みを要求する。
   AppGroupSettingsWriterProvider._()
     : super(
         from: null,
@@ -50,4 +71,4 @@ final class AppGroupSettingsWriterProvider
 }
 
 String _$appGroupSettingsWriterHash() =>
-    r'd08613148683519b69ceb4a4569504ccb94c10b8';
+    r'70c172c56686a2d41d2a0bd6cd5731750218f82b';

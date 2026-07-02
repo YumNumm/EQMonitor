@@ -20,6 +20,7 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
     case fiveLowerNoInput = "!5-"  // 5弱以上未入電
     case fiveLower = "5-"
     case fiveUpper = "5+"
+    case sixLowerNoInput = "!6-"  // 6弱以上未入電
     case sixLower = "6-"
     case sixUpper = "6+"
     case seven = "7"
@@ -35,7 +36,7 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
         case .four: return 4
         case .fiveLowerNoInput, .fiveLower: return 5
         case .fiveUpper: return 6
-        case .sixLower: return 7
+        case .sixLowerNoInput, .sixLower: return 7
         case .sixUpper: return 8
         case .seven: return 9
         }
@@ -58,6 +59,7 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
         case .fiveLowerNoInput: return "5弱以上未入電"
         case .fiveLower: return "5弱"
         case .fiveUpper: return "5強"
+        case .sixLowerNoInput: return "6弱以上未入電"
         case .sixLower: return "6弱"
         case .sixUpper: return "6強"
         case .seven: return "7"
@@ -73,7 +75,7 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
         case .three: return "3"
         case .four: return "4"
         case .fiveLowerNoInput, .fiveLower, .fiveUpper: return "5"
-        case .sixLower, .sixUpper: return "6"
+        case .sixLowerNoInput, .sixLower, .sixUpper: return "6"
         case .seven: return "7"
         }
     }
@@ -81,7 +83,7 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
     /// 震度のサブ表示（弱/強）
     var subText: String? {
         switch self {
-        case .fiveLowerNoInput: return "弱以上"
+        case .fiveLowerNoInput, .sixLowerNoInput: return "弱以上"
         case .fiveLower, .sixLower: return "弱"
         case .fiveUpper, .sixUpper: return "強"
         default: return nil
@@ -93,40 +95,42 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
         return (mainNumber, subText)
     }
 
-    /// 背景色（コントラスト改善版）
+    /// 背景色。アプリ本体の `IntensityColorModel.eqmonitor()` と一致させる。
+    /// 未入電（!5-/!6-）は API 変換規則（!5-→5弱色, !6-→6弱色）に倣う。
     var backgroundColor: Color {
         switch self {
         case .zero:
-            return Color(red: 0.6, green: 0.6, blue: 0.6) // グレー
+            return Color(rgb: 0xFFFFFF)
         case .one:
-            return Color(red: 0.9, green: 0.9, blue: 0.9) // 白に近い
+            return Color(rgb: 0x40C4FF) // lightBlueAccent
         case .two:
-            return Color(red: 0.3, green: 0.7, blue: 0.95) // 水色
+            return Color(rgb: 0xB9F6CA) // greenAccent.shade100
         case .three:
-            return Color(red: 0.1, green: 0.45, blue: 0.9) // 青
+            return Color(rgb: 0x00C853) // greenAccent.shade700
         case .four:
-            return Color(red: 0.9, green: 0.75, blue: 0.1) // 黄色（暗め）
+            return Color(rgb: 0xFFEE58) // yellow.shade400
         case .fiveLowerNoInput, .fiveLower:
-            return Color(red: 0.95, green: 0.5, blue: 0.1) // オレンジ
+            return Color(rgb: 0xFFC107) // amber
         case .fiveUpper:
-            return Color(red: 0.9, green: 0.3, blue: 0.1) // 濃いオレンジ
-        case .sixLower:
-            return Color(red: 0.9, green: 0.15, blue: 0.2) // 赤
+            return Color(rgb: 0xEF6C00) // orange.shade800
+        case .sixLowerNoInput, .sixLower:
+            return Color(rgb: 0xFF2800)
         case .sixUpper:
-            return Color(red: 0.75, green: 0.05, blue: 0.15) // 濃い赤
+            return Color(rgb: 0xA50021)
         case .seven:
-            return Color(red: 0.5, green: 0.05, blue: 0.35) // 紫
+            return Color(rgb: 0xC800FF)
         }
     }
 
-    /// テキスト色（コントラスト改善版）
+    /// テキスト色。アプリ本体の `IntensityColorModel.eqmonitor()` が持つ前景色に一致させる。
+    /// eqmonitor() は輝度自動判定ではなく明示指定（震度1/3/5強は黒）を採用しているため、
+    /// 完全一致させるにはその指定を踏襲する必要がある。
     var textColor: Color {
         switch self {
-        case .zero, .one, .four:
+        case .zero, .one, .two, .three, .four,
+             .fiveLowerNoInput, .fiveLower, .fiveUpper:
             return .black
-        case .two, .three:
-            return .white
-        default:
+        case .sixLowerNoInput, .sixLower, .sixUpper, .seven:
             return .white
         }
     }
@@ -137,7 +141,7 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
         case .zero, .one: return 0
         case .two, .three: return 1
         case .four, .fiveLowerNoInput, .fiveLower: return 2
-        case .fiveUpper, .sixLower: return 3
+        case .fiveUpper, .sixLowerNoInput, .sixLower: return 3
         case .sixUpper, .seven: return 4
         }
     }
@@ -156,6 +160,7 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
         case ._excl_5_hyphen_: self = .fiveLowerNoInput
         case ._5_hyphen_: self = .fiveLower
         case ._5_plus_: self = .fiveUpper
+        case ._excl_6_hyphen_: self = .sixLowerNoInput
         case ._6_hyphen_: self = .sixLower
         case ._6_plus_: self = .sixUpper
         case ._7: self = .seven

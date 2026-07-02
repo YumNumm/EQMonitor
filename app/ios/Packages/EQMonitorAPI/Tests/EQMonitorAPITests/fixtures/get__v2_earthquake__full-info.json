@@ -4,11 +4,14 @@
       "event_id": "20251215120000",
       "status": "NORMAL",
       "origin_time": "2026-06-06T02:18:33.007Z",
+      "arrival_time": "2026-06-06 02:18:40+00",
       "origin_time_precision": "SECOND",
       "hypocenter": {
-        "value": {
-          "code": "311",
-          "name": "茨城県北部"
+        "code": "311",
+        "name": "茨城県北部",
+        "detailed": {
+          "code": "3110",
+          "name": "茨城県北部（詳細）"
         },
         "coordinates": {
           "latitude": 36.7,
@@ -24,9 +27,12 @@
         }
       },
       "intensity": {
-        "max_intensity": "4"
+        "max_intensity": "4",
+        "max_lpgm_intensity": "1"
       },
-      "datasource": "JMA_DISASTER_INFORMATION_XML"
+      "datasource": "JMA_DISASTER_INFORMATION_XML",
+      "telegram_types": ["VXSE51", "VXSE52", "VXSE53"],
+      "earthquake_type": "NORMAL"
     }
   ]
 }

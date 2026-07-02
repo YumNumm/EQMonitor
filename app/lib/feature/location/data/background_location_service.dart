@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:background_location_tracker/background_location_tracker.dart';
+import 'package:eqmonitor/core/provider/app_group_preferences.dart';
+import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/provider/widget_timeline_reloader.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
@@ -139,6 +144,10 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
     final didUpdateEarthquake = didUpdateEew;
     const String? earthquakeError = null;
 
+    // ホーム画面ウィジェット「現在地」表示用に App Group へ現在地の
+    // 一次細分化地域を反映する（iOS のみ）。
+    await _syncCurrentLocationToAppGroup(ref, earthquakeResolution);
+
     // 揺れ検知 sub_region 更新
     var didUpdateShake = false;
     String? shakeError;
@@ -175,6 +184,28 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
     );
   } on Object catch (e, st) {
     talker.error('[BackgroundLocation] applyLocation failed', e, st);
+  }
+}
+
+Future<void> _syncCurrentLocationToAppGroup(
+  Ref ref,
+  EarthquakeRegionResolution? resolution,
+) async {
+  if (!Platform.isIOS) {
+    return;
+  }
+  try {
+    final prefs = await ref.read(appGroupPreferencesProvider.future);
+    final changed = await writeCurrentLocationRegionToAppGroup(
+      prefs,
+      regionCode: resolution?.regionCode,
+      regionName: resolution?.regionName,
+    );
+    if (changed) {
+      await reloadWidgetTimelines();
+    }
+  } on Object catch (e, st) {
+    talker.error('[BackgroundLocation] sync app group failed', e, st);
   }
 }
 

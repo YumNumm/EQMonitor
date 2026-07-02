@@ -58,6 +58,7 @@ import 'package:eqmonitor/feature/settings/children/config/earthquake_history/ea
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/estimated_intensity_color_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
+import 'package:eqmonitor/feature/settings/features/home_widget_settings/ui/page/home_widget_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/shake_detection_settings_page.dart';
 import 'package:eqmonitor/feature/settings/settings_page.dart';
@@ -348,6 +349,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
       ],
     ),
     TypedGoRoute<EarthquakeHistoryConfigRoute>(path: 'earthquake-history'),
+    TypedGoRoute<HomeWidgetSettingsRoute>(path: 'home-widget'),
     TypedGoRoute<AboutThisAppRoute>(path: 'about-this-app'),
     TypedGoRoute<ChangelogRoute>(path: 'changelog'),
     TypedGoRoute<DebugRoute>(
@@ -448,6 +450,14 @@ class NotificationSettingsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const NotificationSettingsPage();
+}
+
+class HomeWidgetSettingsRoute extends GoRouteData with $HomeWidgetSettingsRoute {
+  const HomeWidgetSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const HomeWidgetSettingsPage();
 }
 
 class ShakeDetectionSettingsRoute extends GoRouteData

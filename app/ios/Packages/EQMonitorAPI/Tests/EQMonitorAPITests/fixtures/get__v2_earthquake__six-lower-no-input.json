@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "event_id": "20260601090000",
+      "status": "NORMAL",
+      "origin_time": "2026-06-01 09:00:00+00",
+      "arrival_time": "2026-06-01 09:00:10+00",
+      "origin_time_precision": "SECOND",
+      "hypocenter": {
+        "code": "390",
+        "name": "宮城県沖",
+        "coordinates": {
+          "latitude": 38.3,
+          "longitude": 142.2
+        },
+        "magnitude": {
+          "type": "OVER_M8"
+        },
+        "depth": {
+          "type": "UNKNOWN"
+        }
+      },
+      "intensity": {
+        "max_intensity": "!6-"
+      },
+      "datasource": "JMA_DISASTER_INFORMATION_XML",
+      "telegram_types": ["VXSE51", "VXSE53"],
+      "earthquake_type": "NORMAL"
+    }
+  ]
+}

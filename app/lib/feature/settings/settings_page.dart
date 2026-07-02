@@ -70,6 +70,12 @@ class SettingsPage extends ConsumerWidget {
                   onTap: () async =>
                       const EarthquakeHistoryConfigRoute().push(context),
                 ),
+                ListTile(
+                  title: const Text('ホーム画面ウィジェット'),
+                  leading: const Icon(Icons.widgets_outlined),
+                  onTap: () async =>
+                      const HomeWidgetSettingsRoute().push<void>(context),
+                ),
                 const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
                 ListTile(
                   title: const Text('変更履歴'),
