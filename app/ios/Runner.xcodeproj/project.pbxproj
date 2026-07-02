@@ -13,6 +13,7 @@
 		06C54F953E3BD230BCDE7A3F /* EarthquakeDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */; };
 		06ECEBF5580E9E46FF6E6B4D /* WidgetRegionResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B6DA9CE2EEF26041AC4AA5 /* WidgetRegionResolver.swift */; };
 		1209177840DD3D17C94E1B5D /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
+		148E1710922ECC78935B0F1B /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09B0693317F839417671E186 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		184FB8BC5F4302620BDD2667 /* EarthquakeDisplayItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */; };
 		2151DA831C4D53D6DDA591BA /* EQMonitorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 295B9FA31E1F0C562110F4A0 /* EQMonitorAPI */; };
@@ -23,6 +24,7 @@
 		2C755225A37C4C6116012293 /* EarthquakeDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */; };
 		31B47243D58CBA9240C181FA /* WidgetRegionResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B6DA9CE2EEF26041AC4AA5 /* WidgetRegionResolver.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		42AE86200FF1EB824EDFBD5F /* GoogleSansCode[MONO,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61F759DEA69779A5080005D8 /* GoogleSansCode[MONO,wght].ttf */; };
 		460F18C0D79451920BDB7DBD /* EQMonitorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = BC34B83B5D16BD405E6A31AB /* EQMonitorAPI */; };
 		47E5E897BFDE09208D2DBE5F /* TelegramStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */; };
 		4A6E6F82172719E05F9BD593 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD5D302A98B76C01E6D49E1B /* GoogleService-Info.plist */; };
@@ -52,11 +54,14 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		9960E2AAD6D7C4F16928DDFD /* jma_code_table.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CBCF4697AA1879785D2E137 /* jma_code_table.json */; };
+		A3B5B9968DB246E0B08A8C01 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF843E9B82869CED39772C0 /* DesignTokens.swift */; };
 		A47F6602271A89052A753BD0 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
 		AABB00032F30A00100000003 /* EQMonitorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = AABB00022F30A00100000002 /* EQMonitorAPI */; };
 		B4B358134720AB041967E6FF /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		BC0CFBCC72CE2AE431EFB5A8 /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		BFEAEC9B65D462419D75AB02 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
+		C905E0E780206CF2C8BD7D24 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF843E9B82869CED39772C0 /* DesignTokens.swift */; };
 		E8CFD3E6506B946469164594 /* ColorRGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */; };
 /* End PBXBuildFile section */
 
@@ -122,6 +127,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		09B0693317F839417671E186 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; name = "GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf"; path = "../assets/fonts/GoogleSansFlex/GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = LiveActivityUtil.xcframework; sourceTree = "<group>"; };
@@ -130,6 +136,7 @@
 		3993800175F9E9F9140BCEE0 /* WidgetModelsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WidgetModelsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		4F115C452BE9682B00DAAD73 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = SOURCE_ROOT; };
+		61F759DEA69779A5080005D8 /* GoogleSansCode[MONO,wght].ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; name = "GoogleSansCode[MONO,wght].ttf"; path = "../assets/fonts/GoogleSansCode/GoogleSansCode[MONO,wght].ttf"; sourceTree = "<group>"; };
 		62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDisplayItem.swift; sourceTree = "<group>"; };
 		687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorRGB.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -162,11 +169,13 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9CBCF4697AA1879785D2E137 /* jma_code_table.json */ = {isa = PBXFileReference; includeInIndex = 1; name = jma_code_table.json; path = ../assets/parameters/jma_code_table.json; sourceTree = "<group>"; };
 		AB5330C1132EC785A60DE272 /* EarthquakeAPIClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeAPIClient.swift; sourceTree = "<group>"; };
 		AD5D302A98B76C01E6D49E1B /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B6B6DA9CE2EEF26041AC4AA5 /* WidgetRegionResolver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolver.swift; sourceTree = "<group>"; };
 		C90F30E033EFA7F3A113F856 /* RegionType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegionType.swift; sourceTree = "<group>"; };
 		C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDisplayItemTests.swift; sourceTree = "<group>"; };
+		CEF843E9B82869CED39772C0 /* DesignTokens.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelegramStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -273,12 +282,20 @@
 			path = Frameworks;
 			sourceTree = "<group>";
 		};
+		350740DFB98F1F20FD8318FB /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				09B0693317F839417671E186 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf */,
+				61F759DEA69779A5080005D8 /* GoogleSansCode[MONO,wght].ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 		3770F148FEB3FAEFF53D21CE /* WidgetModelsTests */ = {
 			isa = PBXGroup;
 			children = (
 				C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */,
 			);
-			name = WidgetModelsTests;
 			path = WidgetModelsTests;
 			sourceTree = "<group>";
 		};
@@ -342,6 +359,8 @@
 				AD5D302A98B76C01E6D49E1B /* GoogleService-Info.plist */,
 				EB0182E4C221D99352C4222C /* Shared */,
 				3770F148FEB3FAEFF53D21CE /* WidgetModelsTests */,
+				350740DFB98F1F20FD8318FB /* Fonts */,
+				F8BCF7FBC6A9336C62FA711E /* Parameters */,
 			);
 			sourceTree = "<group>";
 		};
@@ -386,9 +405,17 @@
 				AB5330C1132EC785A60DE272 /* EarthquakeAPIClient.swift */,
 				C90F30E033EFA7F3A113F856 /* RegionType.swift */,
 				687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */,
+				CEF843E9B82869CED39772C0 /* DesignTokens.swift */,
 			);
-			name = Shared;
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		F8BCF7FBC6A9336C62FA711E /* Parameters */ = {
+			isa = PBXGroup;
+			children = (
+				9CBCF4697AA1879785D2E137 /* jma_code_table.json */,
+			);
+			name = Parameters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -571,6 +598,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				148E1710922ECC78935B0F1B /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */,
+				42AE86200FF1EB824EDFBD5F /* GoogleSansCode[MONO,wght].ttf in Resources */,
+				9960E2AAD6D7C4F16928DDFD /* jma_code_table.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,6 +704,7 @@
 				2BD20D9F1CCF6217A42DB419 /* EarthquakeAPIClient.swift in Sources */,
 				B4B358134720AB041967E6FF /* RegionType.swift in Sources */,
 				7724022D3264FDED2D2ADB7D /* ColorRGB.swift in Sources */,
+				C905E0E780206CF2C8BD7D24 /* DesignTokens.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -702,6 +733,7 @@
 				85A2A5E4E14A505A334823DE /* EarthquakeAPIClient.swift in Sources */,
 				BC0CFBCC72CE2AE431EFB5A8 /* RegionType.swift in Sources */,
 				03155D2EC2B76909DF1A4693 /* ColorRGB.swift in Sources */,
+				A3B5B9968DB246E0B08A8C01 /* DesignTokens.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
