@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/fcm/notification_deep_link.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
@@ -5,15 +6,16 @@ import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_pro
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:telemetry_store/telemetry_store.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 part 'firebase_messaging_interaction.g.dart';
 
-String? _pendingNotificationEventId;
+NotificationDeepLink? _pendingNotificationDeepLink;
 
-String? consumePendingNotificationEventId() {
-  final eventId = _pendingNotificationEventId;
-  _pendingNotificationEventId = null;
-  return eventId;
+NotificationDeepLink? consumePendingNotificationDeepLink() {
+  final link = _pendingNotificationDeepLink;
+  _pendingNotificationDeepLink = null;
+  return link;
 }
 
 @Riverpod(keepAlive: true)
@@ -30,10 +32,9 @@ Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
       initialMessage,
       coldStart: true,
     );
-    final eventId = initialMessage.data['eventId'] as String?;
-    if (eventId != null) {
-      _pendingNotificationEventId = eventId;
-    }
+    _pendingNotificationDeepLink = NotificationDeepLink.fromData(
+      initialMessage.data,
+    );
     yield initialMessage;
   }
 
@@ -44,11 +45,14 @@ Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
       message,
       coldStart: false,
     );
-    final eventId = message.data['eventId'] as String?;
-    if (eventId != null) {
-      await ref
-          .read(goRouterProvider)
-          .push(EarthquakeHistoryDetailsRoute(eventId: eventId).location);
+    final link = NotificationDeepLink.fromData(message.data);
+    switch (link) {
+      case NotificationRouteLink(:final location):
+        await ref.read(goRouterProvider).push(location);
+      case NotificationUrlLink(:final uri):
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      case null:
+        break;
     }
     yield message;
   }
