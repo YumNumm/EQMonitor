@@ -76,6 +76,10 @@ Future<void> main() async {
             body: Center(
               child: ErrorCard(
                 error: error,
+                // ブートストラップ失敗時のフォールバックでは Provider が未 override のため
+                // 詳細/問い合わせを押すと未実装 Provider で二次クラッシュする。抑制する。
+                showDetails: false,
+                showContact: false,
               ),
             ),
           ),
