@@ -2,7 +2,6 @@ import 'package:telemetry_store/src/models/live_activity_end_reason.dart';
 import 'package:telemetry_store/src/models/live_activity_type.dart';
 import 'package:telemetry_store/src/models/notification_framework.dart';
 import 'package:telemetry_store/src/models/telemetry_event.dart';
-import 'package:telemetry_store/src/models/user_action_type.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -52,13 +51,6 @@ void main() {
       );
       expect(event.eventType, 'error');
     });
-
-    test('userAction', () {
-      const event = TelemetryEvent.userAction(
-        action: UserActionType.screenView,
-      );
-      expect(event.eventType, 'user_action');
-    });
   });
 
   group('TelemetryEvent.eventId', () {
@@ -75,13 +67,6 @@ void main() {
       const event = TelemetryEvent.notificationReceived(
         framework: NotificationFramework.fcm,
         channelId: 'eew_warning',
-      );
-      expect(event.eventId, isNull);
-    });
-
-    test('userAction has no eventId', () {
-      const event = TelemetryEvent.userAction(
-        action: UserActionType.screenView,
       );
       expect(event.eventId, isNull);
     });
@@ -172,17 +157,6 @@ void main() {
         'error_type': 'token_sync_failed',
         'message': 'Connection refused',
         'stack_trace': '#0 main (test.dart:1)',
-      });
-    });
-
-    test('userAction with params', () {
-      const event = TelemetryEvent.userAction(
-        action: UserActionType.screenView,
-        params: {'screen': 'earthquake_detail', 'id': '123'},
-      );
-      expect(event.toPayload(), {
-        'action': 'screenView',
-        'params': {'screen': 'earthquake_detail', 'id': '123'},
       });
     });
   });
