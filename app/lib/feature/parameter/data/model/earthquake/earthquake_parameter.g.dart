@@ -184,9 +184,9 @@ Map<String, dynamic> _$EarthquakeParameterStationItemToJson(
 };
 
 const _$EarthquakeStationStatusEnumMap = {
-  EarthquakeStationStatus.operating: 'operating',
-  EarthquakeStationStatus.changed: 'changed',
-  EarthquakeStationStatus.valueNew: 'new',
-  EarthquakeStationStatus.abolished: 'abolished',
-  EarthquakeStationStatus.unknown: 'unknown',
+  EarthquakeStationStatus.operating: 'OPERATING',
+  EarthquakeStationStatus.changed: 'CHANGED',
+  EarthquakeStationStatus.valueNew: 'NEW',
+  EarthquakeStationStatus.abolished: 'ABOLISHED',
+  EarthquakeStationStatus.unknown: 'UNKNOWN',
 };

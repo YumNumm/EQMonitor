@@ -78,12 +78,16 @@ abstract class EarthquakeParameterStationItem
       _$EarthquakeParameterStationItemFromJson(json);
 }
 
-@JsonEnum(fieldRename: FieldRename.snake)
+@JsonEnum()
 enum EarthquakeStationStatus {
+  @JsonValue('OPERATING')
   operating,
+  @JsonValue('CHANGED')
   changed,
-  @JsonValue('new')
+  @JsonValue('NEW')
   valueNew,
+  @JsonValue('ABOLISHED')
   abolished,
+  @JsonValue('UNKNOWN')
   unknown,
 }
