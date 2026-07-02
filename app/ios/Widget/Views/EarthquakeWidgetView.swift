@@ -325,40 +325,7 @@ struct CompactEarthquakeRow: View {
 
 // MARK: - Shared Components
 
-struct IntensityBadge: View {
-    let intensity: (main: String, sub: String?)
-    let backgroundColor: Color
-    let textColor: Color
-    var size: CGFloat = 40
-
-    /// サブ表示が「弱以上」など2文字以上なら小さめ＆縮小許可でバッジ内に収める
-    private var isLongSub: Bool { (intensity.sub?.count ?? 0) >= 2 }
-
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
-                .fill(backgroundColor)
-                .frame(width: size, height: size)
-
-            HStack(alignment: .lastTextBaseline, spacing: 1) {
-                Text(intensity.main)
-                    .font(.system(size: size * 0.5, weight: .heavy).monospacedDigit())
-                    .foregroundStyle(textColor)
-
-                if let sub = intensity.sub {
-                    Text(sub)
-                        .font(.system(size: isLongSub ? size * 0.18 : size * 0.27, weight: .bold))
-                        .foregroundStyle(textColor)
-                        .baselineOffset(-1)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.6)
-                }
-            }
-            .padding(.horizontal, 2)
-            .frame(width: size, height: size)
-        }
-    }
-}
+// IntensityBadge は Shared/IntensityBadge.swift へ移動（スニペットと共有するため）
 
 private struct StatusBadge: View {
     let text: String
