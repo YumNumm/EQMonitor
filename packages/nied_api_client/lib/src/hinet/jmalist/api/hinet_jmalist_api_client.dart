@@ -41,10 +41,7 @@ class HinetJmalistApiClient {
   ///
   /// [_dio] に紐づく Cookie 保存(`CookieManager`/`PersistCookieJar`)は
   /// 呼び出し側([HinetApiClient]生成時)で設定済みであることを前提とする。
-  Future<bool> login({
-    required String userId,
-    required String password,
-  }) async {
+  Future<bool> login({required String userId, required String password}) async {
     final response = await _dio.post<dynamic>(
       '$_baseUrl/auth/?LANG=ja',
       data: FormData.fromMap({'auth_un': userId, 'auth_pw': password}),

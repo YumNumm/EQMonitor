@@ -32,10 +32,7 @@ class SeismicityRepository {
 
       await _cache.save(
         span,
-        SeismicityCachedDataset(
-          events: events,
-          generatedAt: layer.generatedAt,
-        ),
+        SeismicityCachedDataset(events: events, generatedAt: layer.generatedAt),
       );
 
       return SeismicityDataset(

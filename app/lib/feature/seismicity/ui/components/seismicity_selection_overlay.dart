@@ -28,10 +28,8 @@ class SeismicitySelectionOverlay extends HookWidget {
       ignoring: !enabled,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onPanStart: (details) =>
-            selection.startDrag(details.localPosition),
-        onPanUpdate: (details) =>
-            selection.updateDrag(details.localPosition),
+        onPanStart: (details) => selection.startDrag(details.localPosition),
+        onPanUpdate: (details) => selection.updateDrag(details.localPosition),
         onPanEnd: (_) => _handleDragEnd(context, selection),
         child: CustomPaint(
           painter: _SelectionPainter(
@@ -44,10 +42,7 @@ class SeismicitySelectionOverlay extends HookWidget {
     );
   }
 
-  void _handleDragEnd(
-    BuildContext context,
-    RectangleSelectionState selection,
-  ) {
+  void _handleDragEnd(BuildContext context, RectangleSelectionState selection) {
     // 退化した(ほぼ動いていない)矩形は useRectangleSelection.endDrag が
     // null を返すため、ここでは選択なしとして扱う。
     final rect = selection.endDrag();

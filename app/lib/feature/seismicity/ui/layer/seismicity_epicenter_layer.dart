@@ -32,55 +32,52 @@ class SeismicityEpicenterLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final enqueue = useMapOperationQueue();
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
+      unawaited(
+        enqueue(() async {
+          try {
+            await styleController.addSource(
+              GeoJsonSource(
+                id: _sourceId,
+                data: jsonEncode(_toGeoJson(events)),
+              ),
+            );
+            await styleController.addLayer(
+              CircleStyleLayer(
+                id: _layerId,
+                sourceId: _sourceId,
+                paint: {
+                  'circle-color': _colorExpression(colorMode),
+                  'circle-radius': _radiusExpression(),
+                  'circle-opacity': 0.75,
+                  'circle-stroke-width': 0.5,
+                  'circle-stroke-color': '#00000080',
+                },
+              ),
+            );
+          } on Exception catch (e) {
+            talker.log(e);
+          }
+        }),
+      );
+
+      return () {
         unawaited(
           enqueue(() async {
             try {
-              await styleController.addSource(
-                GeoJsonSource(
-                  id: _sourceId,
-                  data: jsonEncode(_toGeoJson(events)),
-                ),
-              );
-              await styleController.addLayer(
-                CircleStyleLayer(
-                  id: _layerId,
-                  sourceId: _sourceId,
-                  paint: {
-                    'circle-color': _colorExpression(colorMode),
-                    'circle-radius': _radiusExpression(),
-                    'circle-opacity': 0.75,
-                    'circle-stroke-width': 0.5,
-                    'circle-stroke-color': '#00000080',
-                  },
-                ),
-              );
+              await styleController.removeLayer(_layerId);
+              await styleController.removeSource(_sourceId);
             } on Exception catch (e) {
               talker.log(e);
             }
           }),
         );
-
-        return () {
-          unawaited(
-            enqueue(() async {
-              try {
-                await styleController.removeLayer(_layerId);
-                await styleController.removeSource(_sourceId);
-              } on Exception catch (e) {
-                talker.log(e);
-              }
-            }),
-          );
-        };
-      },
-      [styleController, events, colorMode],
-    );
+      };
+    }, [styleController, events, colorMode]);
 
     return const SizedBox.shrink();
   }

@@ -93,8 +93,7 @@ class SeismicityPage extends HookConsumerWidget {
                 child: SeismicityAnalysisPanel(
                   events: const SeismicityBoundsFilter().filter(
                     events: switch (datasetAsync) {
-                      AsyncData(:final SeismicityDataset value) =>
-                        value.events,
+                      AsyncData(:final SeismicityDataset value) => value.events,
                       _ => const <SeismicityEvent>[],
                     },
                     minLatitude: selectedBounds.value!.minLatitude,
