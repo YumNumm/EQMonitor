@@ -24,6 +24,7 @@ List<RouteBase> get $appRoutes => [
   $talkerRoute,
   $settingsRoute,
   $feedRoute,
+  $feedDetailsRoute,
   $tsunamiDetailsRoute,
   $paywallRoute,
   $subscriptionSettingsRoute,
@@ -504,6 +505,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
       factory: $EarthquakeHistoryConfigRoute._fromState,
     ),
     GoRouteData.$route(
+      path: 'home-widget',
+      factory: $HomeWidgetSettingsRoute._fromState,
+    ),
+    GoRouteData.$route(
       path: 'about-this-app',
       factory: $AboutThisAppRoute._fromState,
     ),
@@ -567,6 +572,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
         GoRouteData.$route(
           path: 'app-group',
           factory: $DebugAppGroupRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'shared-preferences',
+          factory: $DebugSharedPreferencesRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'intensity-icon',
@@ -895,6 +904,27 @@ mixin $EarthquakeHistoryConfigRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/earthquake-history');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $HomeWidgetSettingsRoute on GoRouteData {
+  static HomeWidgetSettingsRoute _fromState(GoRouterState state) =>
+      const HomeWidgetSettingsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/home-widget');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1273,6 +1303,28 @@ mixin $DebugAppGroupRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugSharedPreferencesRoute on GoRouteData {
+  static DebugSharedPreferencesRoute _fromState(GoRouterState state) =>
+      const DebugSharedPreferencesRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/shared-preferences');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $DebugIntensityIconRoute on GoRouteData {
   static DebugIntensityIconRoute _fromState(GoRouterState state) =>
       const DebugIntensityIconRoute();
@@ -1631,6 +1683,36 @@ mixin $FeedRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $feedDetailsRoute => GoRouteData.$route(
+  path: '/feed/source/:telegramHash',
+  factory: $FeedDetailsRoute._fromState,
+);
+
+mixin $FeedDetailsRoute on GoRouteData {
+  static FeedDetailsRoute _fromState(GoRouterState state) =>
+      FeedDetailsRoute(telegramHash: state.pathParameters['telegramHash']!);
+
+  FeedDetailsRoute get _self => this as FeedDetailsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/feed/source/${Uri.encodeComponent(_self.telegramHash)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $tsunamiDetailsRoute => GoRouteData.$route(
   path: '/tsunami/:tsunamiId',
   factory: $TsunamiDetailsRoute._fromState,
@@ -1757,4 +1839,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'94a1b296878f3f46bb36ba80d72304a37551dd92';
+String _$goRouterHash() => r'76321d82bfa6bf7161d1c756b5ca5ad3d5102c7c';

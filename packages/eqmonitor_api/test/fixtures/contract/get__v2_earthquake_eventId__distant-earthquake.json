@@ -27,9 +27,7 @@
       "intensity_tree": [
         {
           "intensity": "1",
-          "regions": [
-            "9910"
-          ]
+          "regions": ["9910"]
         }
       ]
     },

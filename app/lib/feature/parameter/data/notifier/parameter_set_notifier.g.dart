@@ -42,7 +42,7 @@ abstract class _$ParameterSetNotifier extends $AsyncNotifier<ParameterSet> {
   FutureOr<ParameterSet> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<ParameterSet>, ParameterSet>;
     final element =
         ref.element
@@ -52,6 +52,6 @@ abstract class _$ParameterSetNotifier extends $AsyncNotifier<ParameterSet> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

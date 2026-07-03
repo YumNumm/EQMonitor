@@ -41,7 +41,7 @@ abstract class _$ThemeModeNotifier extends $AsyncNotifier<ThemeMode> {
   FutureOr<ThemeMode> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<ThemeMode>, ThemeMode>;
     final element =
         ref.element
@@ -51,7 +51,7 @@ abstract class _$ThemeModeNotifier extends $AsyncNotifier<ThemeMode> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -94,7 +94,7 @@ abstract class _$BrightnessNotifier extends $Notifier<ui.Brightness> {
   ui.Brightness build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ui.Brightness, ui.Brightness>;
     final element =
         ref.element
@@ -104,6 +104,6 @@ abstract class _$BrightnessNotifier extends $Notifier<ui.Brightness> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

@@ -14,9 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$KindTimelineEntry {
 
-// 追跡項目のフィールド
- TsunamiWarningKind get kind;// 電文メタ
- String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
+ TsunamiWarningKind get kind; String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
 /// Create a copy of KindTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -216,9 +214,7 @@ class _KindTimelineEntry implements KindTimelineEntry {
   const _KindTimelineEntry({required this.kind, required this.telegramId, required this.headline, required this.title, required this.publishedAt, required this.revokedAt});
   
 
-// 追跡項目のフィールド
 @override final  TsunamiWarningKind kind;
-// 電文メタ
 @override final  String telegramId;
 @override final  String? headline;
 @override final  String title;

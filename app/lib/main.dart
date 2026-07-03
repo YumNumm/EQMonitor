@@ -9,6 +9,7 @@ import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
 import 'package:eqmonitor/core/fcm/channels.dart';
@@ -16,6 +17,7 @@ import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
+import 'package:eqmonitor/core/provider/app_links_interaction.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -75,6 +77,10 @@ Future<void> main() async {
             body: Center(
               child: ErrorCard(
                 error: error,
+                // ブートストラップ失敗時のフォールバックでは Provider が未 override のため
+                // 詳細/問い合わせを押すと未実装 Provider で二次クラッシュする。抑制する。
+                showDetails: false,
+                showContact: false,
               ),
             ),
           ),
@@ -137,6 +143,9 @@ Future<void> _main() async {
       'Uncaught fatal exception',
     );
   };
+  if (!kDebugMode) {
+    ErrorWidget.builder = buildFatalErrorWidget;
+  }
   PlatformDispatcher.instance.onError = (exception, stackTrace) {
     talker.handle(
       exception,
@@ -252,6 +261,7 @@ Future<void> _main() async {
   container.read(autoReturnWatcherProvider);
   container.listen(backgroundLocationServiceProvider, (_, _) {});
   container.listen(firebaseMessagingInteractionProvider, (_, _) {});
+  container.listen(appLinksInteractionProvider, (_, _) {});
   unawaited(container.read(pushTokenSyncWiringProvider.future));
   if (!kIsWeb) {
     unawaited(() async {

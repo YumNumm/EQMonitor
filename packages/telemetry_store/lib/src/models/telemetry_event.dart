@@ -2,7 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:telemetry_store/src/models/live_activity_end_reason.dart';
 import 'package:telemetry_store/src/models/live_activity_type.dart';
 import 'package:telemetry_store/src/models/notification_framework.dart';
-import 'package:telemetry_store/src/models/user_action_type.dart';
 
 part 'telemetry_event.freezed.dart';
 
@@ -48,11 +47,6 @@ sealed class TelemetryEvent with _$TelemetryEvent {
     String? stackTrace,
   }) = ErrorTelemetryEvent;
 
-  const factory TelemetryEvent.userAction({
-    required UserActionType action,
-    Map<String, dynamic>? params,
-  }) = UserActionEvent;
-
   const factory TelemetryEvent.appLaunch({
     required String launchType,
     required String appVersion,
@@ -78,7 +72,6 @@ sealed class TelemetryEvent with _$TelemetryEvent {
     LiveActivityUpdatedEvent() => 'live_activity_updated',
     LiveActivityEndedEvent() => 'live_activity_ended',
     ErrorTelemetryEvent() => 'error',
-    UserActionEvent() => 'user_action',
     AppLaunchEvent() => 'app_launch',
   };
 
@@ -136,10 +129,6 @@ sealed class TelemetryEvent with _$TelemetryEvent {
         'message': message,
         'stack_trace': ?stackTrace,
       },
-    UserActionEvent(:final action, :final params) => {
-      'action': action.name,
-      'params': ?params,
-    },
     AppLaunchEvent(
       :final launchType,
       :final appVersion,

@@ -22,8 +22,8 @@ extension TsunamiStationObservationFirstHeightApiExt
   TsunamiObservationFirstHeight toDomain() => TsunamiObservationFirstHeight(
     arrivalTime: arrivalTime,
     initial: initial?.toDomain(),
-    isUnidentifiable: isUnidentifiable as bool?,
-    isMissing: isMissing as bool?,
+    isUnidentifiable: isUnidentifiable,
+    isMissing: isMissing,
     revise: revise?.toDomain(),
   );
 }

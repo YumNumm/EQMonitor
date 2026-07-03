@@ -9,7 +9,6 @@ import 'feed_comments.dart';
 import 'feed_earthquake_count.dart';
 import 'feed_naming.dart';
 import 'feed_nankai_earthquake_info.dart';
-import 'feed_telegram_type.dart';
 import 'info_type.dart';
 
 part 'feed_item_data_union.freezed.dart';
@@ -56,7 +55,9 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
     /// const: "EARTHQUAKE_NANKAI"
     required String type,
     required InfoType infoType,
-    required FeedTelegramType telegramType,
+
+    /// const: "NANKAI"
+    required String telegramType,
     @JsonKey(includeIfNull: false)
     FeedNankaiEarthquakeInfo? earthquakeInfo,
     @JsonKey(includeIfNull: false)

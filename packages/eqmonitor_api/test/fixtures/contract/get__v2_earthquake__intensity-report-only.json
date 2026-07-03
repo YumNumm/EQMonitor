@@ -8,9 +8,7 @@
         "max_intensity": "5+"
       },
       "datasource": "JMA_DISASTER_INFORMATION_XML",
-      "telegram_types": [
-        "VXSE51"
-      ],
+      "telegram_types": ["VXSE51"],
       "earthquake_type": "NORMAL"
     }
   ]

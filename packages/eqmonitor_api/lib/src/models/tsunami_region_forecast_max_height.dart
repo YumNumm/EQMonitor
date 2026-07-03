@@ -13,20 +13,20 @@ part 'tsunami_region_forecast_max_height.g.dart';
 @Freezed()
 abstract class TsunamiRegionForecastMaxHeight with _$TsunamiRegionForecastMaxHeight {
   const factory TsunamiRegionForecastMaxHeight({
-    /// 10m超となるときに出現 数値情報より大きいことを示す場合に出現.
-    /// const: true.
-    @JsonKey(name: 'is_over')
-    required bool isOver,
-
-    /// const: true
-    @JsonKey(name: 'is_important')
-    required bool isImportant,
-
     /// 津波の予想される高さ 定性的表現をする場合は出現しない
     @JsonKey(includeIfNull: false)
     num? value,
+
+    /// 10m超となるときに出現 数値情報より大きいことを示す場合に出現.
+    /// const: true.
+    @JsonKey(includeIfNull: false,name: 'is_over')
+    bool? isOver,
     @JsonKey(includeIfNull: false)
     QualitativeHeight? qualitative,
+
+    /// const: true
+    @JsonKey(includeIfNull: false,name: 'is_important')
+    bool? isImportant,
     @JsonKey(includeIfNull: false)
     Revise? revise,
   }) = _TsunamiRegionForecastMaxHeight;

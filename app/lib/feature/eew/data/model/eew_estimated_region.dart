@@ -28,3 +28,18 @@ extension EewEstimatedRegionConversion on EewEstimatedRegion {
     isArrived: isArrived,
   );
 }
+
+extension EewEstimatedRegionList on List<EewEstimatedRegion> {
+  /// JMA 予報区域に含まれない推定震度のみを返す（地図の additionalRegions 用）。
+  List<EewForecastRegionInfo> additionalForecastRegionsFor({
+    required EewTelegramItem eew,
+  }) {
+    final jmaCodes = (eew.forecastIntensity?.regions ?? [])
+        .map((region) => region.code)
+        .toSet();
+    return where((region) => !jmaCodes.contains(region.regionCode))
+        .where((region) => region.jmaIntensity != null)
+        .map((region) => region.toForecastRegionInfo())
+        .toList();
+  }
+}

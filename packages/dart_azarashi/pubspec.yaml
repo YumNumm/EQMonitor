@@ -20,10 +20,9 @@ dependencies:
   libserialport_plus: ^0.1.0
 
 dev_dependencies:
-  altive_lints: ^2.3.0
   build_runner: ^2.7.1
   eqmonitor_lints:
     path: ../eqmonitor_lints
-  freezed: ^3.2.3
+  freezed: ^4.0.0-dev.3
   json_serializable: ^6.11.1
   test: ^1.29.0

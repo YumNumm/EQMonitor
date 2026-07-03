@@ -8,74 +8,21 @@
 import WidgetKit
 import AppIntents
 
-enum RegionType: String, AppEnum {
-    case currentLocation
-    case specificRegion
-    case nationwide
-
-    static var typeDisplayRepresentation: TypeDisplayRepresentation {
-        "表示範囲"
-    }
-
-    static var caseDisplayRepresentations: [RegionType: DisplayRepresentation] {
-        [
-            .currentLocation: "現在地",
-            .specificRegion: "指定地域",
-            .nationwide: "全国"
-        ]
-    }
-}
-
-struct RegionEntity: AppEntity {
-    let id: String
-    let name: String
-
-    static var typeDisplayRepresentation: TypeDisplayRepresentation {
-        "地域"
-    }
-
-    var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(title: "\(name)")
-    }
-
-    static var defaultQuery = RegionEntityQuery()
-}
-
-struct RegionEntityQuery: EntityQuery {
-    func entities(for identifiers: [String]) async throws -> [RegionEntity] {
-        let allRegions = RegionLoader.loadRegions()
-        return allRegions
-            .filter { identifiers.contains($0.code) }
-            .map { RegionEntity(id: $0.code, name: $0.name) }
-    }
-
-    func suggestedEntities() async throws -> [RegionEntity] {
-        let allRegions = RegionLoader.loadRegions()
-        // 最初の20件を表示
-        return allRegions.prefix(20).map { RegionEntity(id: $0.code, name: $0.name) }
-    }
-
-    func defaultResult() async -> RegionEntity? {
-        // デフォルトは東京都23区
-        return RegionEntity(id: "350", name: "東京都２３区")
-    }
-}
+// RegionType は Shared/RegionType.swift へ移動（WidgetRegionResolver と共有するため）
 
 struct EarthquakeWidgetIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "地震履歴設定" }
-    static var description: IntentDescription { "表示する地域を選択してください" }
+    static var description: IntentDescription {
+        "表示する範囲を選択してください。「アプリで選択した地域」はEQMonitor Proで、アプリの設定画面から地域を指定できます。"
+    }
 
     @Parameter(title: "表示範囲", default: .nationwide)
     var regionType: RegionType
 
-    @Parameter(title: "地域")
-    var region: RegionEntity?
-
     init() {}
 
-    init(regionType: RegionType, region: RegionEntity? = nil) {
+    init(regionType: RegionType) {
         self.regionType = regionType
-        self.region = region
     }
 }
 

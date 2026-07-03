@@ -52,7 +52,7 @@ final class ReplayNotifierProvider
   }
 }
 
-String _$replayNotifierHash() => r'b92526c58cc968dba537cbc115893f539e606997';
+String _$replayNotifierHash() => r'c35b4bbb0b59a581ce0565ccf9f024524865d48e';
 
 /// EQRP リプレイファイルの再生を司り、再生時刻と各フレームを
 /// 本物の表示パイプライン（appClock / [eewProvider] / [kyoshinMonitorProvider]）
@@ -62,7 +62,7 @@ abstract class _$ReplayNotifier extends $Notifier<ReplayState?> {
   ReplayState? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ReplayState?, ReplayState?>;
     final element =
         ref.element
@@ -72,6 +72,6 @@ abstract class _$ReplayNotifier extends $Notifier<ReplayState?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

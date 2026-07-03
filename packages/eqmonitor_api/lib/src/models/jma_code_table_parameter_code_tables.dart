@@ -5,6 +5,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'jma_code_table_area_forecast_local_eew_item.dart';
+import 'jma_code_table_area_information_city_item.dart';
 import 'jma_code_table_item.dart';
 
 part 'jma_code_table_parameter_code_tables.freezed.dart';
@@ -17,6 +18,8 @@ abstract class JmaCodeTableParameterCodeTables with _$JmaCodeTableParameterCodeT
     required List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew,
     @JsonKey(name: 'area_information_prefecture_earthquake')
     required List<JmaCodeTableItem> areaInformationPrefectureEarthquake,
+    @JsonKey(name: 'area_information_city')
+    required List<JmaCodeTableAreaInformationCityItem> areaInformationCity,
     @JsonKey(name: 'area_epicenter')
     required List<JmaCodeTableItem> areaEpicenter,
     @JsonKey(name: 'area_epicenter_abbreviation')

@@ -1,15 +1,51 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+String feedItemDataText(FeedItemData data) => switch (data) {
+  FeedItemDataEarthquakeNotice(:final text) => text,
+  FeedItemDataEarthquakeExplanation(:final text) => text,
+  FeedItemDataEarthquakeCounts(:final text) => text ?? '',
+  FeedItemDataEarthquakeNankai(:final text) => text ?? '',
+  FeedItemDataAppUpdate(:final version) => 'バージョン ${version ?? ""}',
+  FeedItemDataIncident() => '障害情報',
+  FeedItemDataDeveloperMessage() => '開発者メッセージ',
+};
+
+String? feedItemUrl(FeedItemData data) => switch (data) {
+  FeedItemDataAppUpdate(:final url) => url,
+  FeedItemDataIncident(:final url) => url,
+  FeedItemDataDeveloperMessage(:final url) => url,
+  _ => null,
+};
+
+String _feedTypeLabel(FeedItemData data) => switch (data) {
+  FeedItemDataEarthquakeNotice() => '地震情報',
+  FeedItemDataEarthquakeExplanation() => '地震解説',
+  FeedItemDataEarthquakeCounts() => '地震回数',
+  FeedItemDataEarthquakeNankai() => '南海トラフ',
+  FeedItemDataAppUpdate() => 'アップデート',
+  FeedItemDataIncident() => '障害情報',
+  FeedItemDataDeveloperMessage() => 'お知らせ',
+};
+
+Future<void> _openUrl(String url) async {
+  final uri = Uri.tryParse(url);
+  if (uri == null || !await canLaunchUrl(uri)) {
+    return;
+  }
+  await launchUrl(uri, mode: LaunchMode.externalApplication);
+}
 
 class FeedItemCard extends StatelessWidget {
   const FeedItemCard({required this.item, super.key});
 
-  final api.FeedItem item;
+  final FeedItem item;
 
-  static Future<void> showDetail(BuildContext context, api.FeedItem item) {
+  static Future<void> showDetail(BuildContext context, FeedItem item) {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -29,7 +65,7 @@ class FeedItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateStr = _formatPublishedAt(item.publishedAt);
+    final dateStr = DateFormat('yyyy/MM/dd HH:mm').format(item.publishedAt);
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -71,7 +107,7 @@ class FeedItemCard extends StatelessWidget {
               if (item.title == null && item.summary == null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  dataText(item.data),
+                  feedItemDataText(item.data),
                   style: theme.textTheme.bodySmall,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
@@ -83,39 +119,18 @@ class FeedItemCard extends StatelessWidget {
       ),
     );
   }
-
-  static String dataText(api.FeedItemDataUnion data) => switch (data) {
-        api.FeedItemDataUnionFeedEarthquakeNoticeData(:final text) => text,
-        api.FeedItemDataUnionFeedEarthquakeExplanationData(:final text) => text,
-        api.FeedItemDataUnionFeedEarthquakeCountsData(:final text) =>
-          text ?? '',
-        api.FeedItemDataUnionFeedEarthquakeNankaiData(:final text) =>
-          text ?? '',
-        api.FeedItemDataUnionFeedAppUpdateData(:final version) =>
-          'バージョン ${version ?? ""}',
-        api.FeedItemDataUnionFeedIncidentData() => '障害情報',
-        api.FeedItemDataUnionFeedDeveloperMessageData() => '開発者メッセージ',
-      };
-
-  static String _formatPublishedAt(String publishedAt) {
-    final dt = DateTime.tryParse(publishedAt)?.toLocal();
-    if (dt == null) {
-      return publishedAt;
-    }
-    return DateFormat('yyyy/MM/dd HH:mm').format(dt);
-  }
 }
 
 class FeedItemListTileContent extends StatelessWidget {
   const FeedItemListTileContent({required this.item, super.key});
 
-  final api.FeedItem item;
+  final FeedItem item;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateStr = FeedItemCard._formatPublishedAt(item.publishedAt);
-    final title = item.title ?? item.summary ?? FeedItemCard.dataText(item.data);
+    final dateStr = DateFormat('yyyy/MM/dd HH:mm').format(item.publishedAt);
+    final title = item.title ?? item.summary ?? feedItemDataText(item.data);
 
     return Row(
       children: [
@@ -156,15 +171,15 @@ class FeedItemListTileContent extends StatelessWidget {
 class FeedPriorityBadge extends StatelessWidget {
   const FeedPriorityBadge({required this.priority, super.key});
 
-  final api.FeedPriority priority;
+  final FeedPriority priority;
 
   @override
   Widget build(BuildContext context) {
     final (color, label) = switch (priority) {
-      api.FeedPriority.critical => (Colors.red, '緊急'),
-      api.FeedPriority.high => (Colors.orange, '重要'),
-      api.FeedPriority.normal => (Colors.blue, '通常'),
-      api.FeedPriority.low => (Colors.grey, '低'),
+      FeedPriority.critical => (Colors.red, '緊急'),
+      FeedPriority.high => (Colors.orange, '重要'),
+      FeedPriority.normal => (Colors.blue, '通常'),
+      FeedPriority.low => (Colors.grey, '低'),
     };
 
     return Container(
@@ -188,25 +203,15 @@ class FeedPriorityBadge extends StatelessWidget {
 class FeedTypeBadge extends StatelessWidget {
   const FeedTypeBadge({required this.data, super.key});
 
-  final api.FeedItemDataUnion data;
+  final FeedItemData data;
 
   @override
   Widget build(BuildContext context) {
-    final label = switch (data) {
-      api.FeedItemDataUnionFeedEarthquakeNoticeData() => '地震情報',
-      api.FeedItemDataUnionFeedEarthquakeExplanationData() => '地震解説',
-      api.FeedItemDataUnionFeedEarthquakeCountsData() => '地震回数',
-      api.FeedItemDataUnionFeedEarthquakeNankaiData() => '南海トラフ',
-      api.FeedItemDataUnionFeedAppUpdateData() => 'アップデート',
-      api.FeedItemDataUnionFeedIncidentData() => '障害情報',
-      api.FeedItemDataUnionFeedDeveloperMessageData() => 'お知らせ',
-    };
-
     return Text(
-      label,
+      _feedTypeLabel(data),
       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: context.designSystem.colorTheme.onSurfaceVariant,
-          ),
+        color: context.designSystem.colorTheme.onSurfaceVariant,
+      ),
     );
   }
 }
@@ -217,16 +222,14 @@ class _FeedDetailSheet extends StatelessWidget {
     required this.scrollController,
   });
 
-  final api.FeedItem item;
+  final FeedItem item;
   final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final publishedAt = DateTime.tryParse(item.publishedAt)?.toLocal();
-    final dateStr = publishedAt != null
-        ? DateFormat('yyyy年MM月dd日 HH:mm').format(publishedAt)
-        : item.publishedAt;
+    final dateStr = DateFormat('yyyy年MM月dd日 HH:mm').format(item.publishedAt);
+    final url = feedItemUrl(item.data);
 
     return ListView(
       controller: scrollController,
@@ -263,14 +266,31 @@ class _FeedDetailSheet extends StatelessWidget {
         const SizedBox(height: 16),
         const Divider(),
         const SizedBox(height: 16),
-        Text(
-          FeedItemCard.dataText(item.data),
-          style: theme.textTheme.bodyMedium,
+        MarkdownBody(
+          data: feedItemDataText(item.data),
+          softLineBreak: true,
+          styleSheet: MarkdownStyleSheet.fromTheme(theme),
+          onTapLink: (text, href, title) async {
+            if (href != null) {
+              await _openUrl(href);
+            }
+          },
         ),
+        if (url != null) ...[
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: FilledButton.tonalIcon(
+              onPressed: () => _openUrl(url),
+              icon: const Icon(Icons.open_in_new, size: 18),
+              label: const Text('リンクを開く'),
+            ),
+          ),
+        ],
         if (item.expiresAt != null) ...[
           const SizedBox(height: 16),
           Text(
-            '有効期限: ${_formatExpires(item.expiresAt!)}',
+            '有効期限: ${DateFormat('yyyy年MM月dd日 HH:mm').format(item.expiresAt!)}',
             style: theme.textTheme.bodySmall?.copyWith(
               color: context.designSystem.colorTheme.onSurfaceVariant,
             ),
@@ -278,13 +298,5 @@ class _FeedDetailSheet extends StatelessWidget {
         ],
       ],
     );
-  }
-
-  String _formatExpires(String expiresAt) {
-    final dt = DateTime.tryParse(expiresAt)?.toLocal();
-    if (dt == null) {
-      return expiresAt;
-    }
-    return DateFormat('yyyy年MM月dd日 HH:mm').format(dt);
   }
 }

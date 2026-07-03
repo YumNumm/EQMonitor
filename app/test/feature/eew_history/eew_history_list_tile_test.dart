@@ -37,7 +37,6 @@ void main() {
       hypocenter: const EewHypocenterInfo(
         code: '100',
         name: '宮城県沖',
-        hasLatLng: false,
         magnitude: 6.2,
       ),
       forecastIntensity: const EewForecastIntensityInfo(
@@ -92,7 +91,6 @@ void main() {
       hypocenter: const EewHypocenterInfo(
         code: '200',
         name: '岩手県沖',
-        hasLatLng: false,
         magnitude: 7,
       ),
       forecastIntensity: const EewForecastIntensityInfo(
@@ -147,7 +145,6 @@ void main() {
       hypocenter: const EewHypocenterInfo(
         code: '300',
         name: '千葉県北西部',
-        hasLatLng: false,
         magnitude: 4.5,
       ),
       forecastIntensity: const EewForecastIntensityInfo(

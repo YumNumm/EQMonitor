@@ -27,34 +27,18 @@
       "intensity_tree": [
         {
           "intensity": "4",
-          "regions": [
-            "2200"
-          ],
-          "stations": [
-            "4411201",
-            "4411202"
-          ]
+          "regions": ["2200"],
+          "stations": ["4411201", "4411202"]
         },
         {
           "intensity": "3",
-          "regions": [
-            "2210",
-            "2220"
-          ],
-          "stations": [
-            "4411203",
-            "4411204",
-            "4411205"
-          ]
+          "regions": ["2210", "2220"],
+          "stations": ["4411203", "4411204", "4411205"]
         },
         {
           "intensity": "2",
-          "regions": [
-            "2230"
-          ],
-          "stations": [
-            "4411206"
-          ]
+          "regions": ["2230"],
+          "stations": ["4411206"]
         }
       ]
     },
@@ -70,9 +54,7 @@
           "status": "NORMAL",
           "info_type": "PUBLICATION",
           "editorial_office": "気象庁",
-          "publishing_office": [
-            "気象庁"
-          ],
+          "publishing_office": ["気象庁"],
           "press_at": "2025-12-15T12:01:00.000Z",
           "report_at": "2025-12-15T12:01:02.000Z",
           "info_kind": "震度速報",
@@ -92,9 +74,7 @@
           "status": "NORMAL",
           "info_type": "PUBLICATION",
           "editorial_office": "気象庁",
-          "publishing_office": [
-            "気象庁"
-          ],
+          "publishing_office": ["気象庁"],
           "press_at": "2025-12-15T12:03:00.000Z",
           "report_at": "2025-12-15T12:03:02.000Z",
           "info_kind": "震源・震度に関する情報",

@@ -23,10 +23,10 @@ extension TsunamiStationObservationMaxHeightApiExt
   TsunamiObservationMaxHeight toDomain() => TsunamiObservationMaxHeight(
     dateTime: observedAt,
     value: value?.toDouble(),
-    isOver: isOver as bool?,
-    isRising: isRising as bool?,
+    isOver: isOver,
+    isRising: isRising,
     condition: condition?.toDomain(),
-    isMissing: isMissing as bool?,
+    isMissing: isMissing,
     revise: revise?.toDomain(),
   );
 }

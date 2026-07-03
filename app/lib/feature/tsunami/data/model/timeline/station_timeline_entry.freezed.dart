@@ -14,9 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StationForecastTimelineEntry {
 
-// 追跡項目のフィールド
- DateTime? get highTideAt; DateTime? get firstHeightArrivalTime; FirstHeightCondition? get firstHeightCondition; Revise? get firstHeightRevise;// 電文メタ
- String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
+ DateTime? get highTideAt; DateTime? get firstHeightArrivalTime; FirstHeightCondition? get firstHeightCondition; Revise? get firstHeightRevise; String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
 /// Create a copy of StationForecastTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -219,12 +217,10 @@ class _StationForecastTimelineEntry implements StationForecastTimelineEntry {
   const _StationForecastTimelineEntry({required this.highTideAt, required this.firstHeightArrivalTime, required this.firstHeightCondition, required this.firstHeightRevise, required this.telegramId, required this.headline, required this.title, required this.publishedAt, required this.revokedAt});
   
 
-// 追跡項目のフィールド
 @override final  DateTime? highTideAt;
 @override final  DateTime? firstHeightArrivalTime;
 @override final  FirstHeightCondition? firstHeightCondition;
 @override final  Revise? firstHeightRevise;
-// 電文メタ
 @override final  String telegramId;
 @override final  String? headline;
 @override final  String title;
@@ -299,11 +295,7 @@ as DateTime?,
 /// @nodoc
 mixin _$StationObservationTimelineEntry {
 
-// 追跡項目のフィールド
- String? get sensor;// first_height フィールド
- DateTime? get firstHeightArrivalTime; WaveInitial? get firstHeightInitial; bool? get firstHeightIsUnidentifiable; bool? get firstHeightIsMissing; Revise? get firstHeightRevise;// max_height フィールド (null = 未観測)
- DateTime? get maxHeightDateTime; double? get maxHeightValue; bool? get maxHeightIsOver; bool? get maxHeightIsRising; ObservationMaxHeightCondition? get maxHeightCondition; bool? get maxHeightIsMissing; Revise? get maxHeightRevise;// 電文メタ
- String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
+ String? get sensor; DateTime? get firstHeightArrivalTime; WaveInitial? get firstHeightInitial; bool? get firstHeightIsUnidentifiable; bool? get firstHeightIsMissing; Revise? get firstHeightRevise; DateTime? get maxHeightDateTime; double? get maxHeightValue; bool? get maxHeightIsOver; bool? get maxHeightIsRising; ObservationMaxHeightCondition? get maxHeightCondition; bool? get maxHeightIsMissing; Revise? get maxHeightRevise; String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
 /// Create a copy of StationObservationTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -515,15 +507,12 @@ class _StationObservationTimelineEntry implements StationObservationTimelineEntr
   const _StationObservationTimelineEntry({required this.sensor, required this.firstHeightArrivalTime, required this.firstHeightInitial, required this.firstHeightIsUnidentifiable, required this.firstHeightIsMissing, required this.firstHeightRevise, required this.maxHeightDateTime, required this.maxHeightValue, required this.maxHeightIsOver, required this.maxHeightIsRising, required this.maxHeightCondition, required this.maxHeightIsMissing, required this.maxHeightRevise, required this.telegramId, required this.headline, required this.title, required this.publishedAt, required this.revokedAt});
   
 
-// 追跡項目のフィールド
 @override final  String? sensor;
-// first_height フィールド
 @override final  DateTime? firstHeightArrivalTime;
 @override final  WaveInitial? firstHeightInitial;
 @override final  bool? firstHeightIsUnidentifiable;
 @override final  bool? firstHeightIsMissing;
 @override final  Revise? firstHeightRevise;
-// max_height フィールド (null = 未観測)
 @override final  DateTime? maxHeightDateTime;
 @override final  double? maxHeightValue;
 @override final  bool? maxHeightIsOver;
@@ -531,7 +520,6 @@ class _StationObservationTimelineEntry implements StationObservationTimelineEntr
 @override final  ObservationMaxHeightCondition? maxHeightCondition;
 @override final  bool? maxHeightIsMissing;
 @override final  Revise? maxHeightRevise;
-// 電文メタ
 @override final  String telegramId;
 @override final  String? headline;
 @override final  String title;

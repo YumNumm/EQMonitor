@@ -103,7 +103,7 @@ abstract class _$QzssSerialPortConnection
   QzssSerialPortState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<QzssSerialPortState, QzssSerialPortState>;
     final element =
         ref.element
@@ -113,7 +113,7 @@ abstract class _$QzssSerialPortConnection
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -162,7 +162,7 @@ abstract class _$LatestQzssDcReport extends $Notifier<QzssDcReport?> {
   QzssDcReport? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<QzssDcReport?, QzssDcReport?>;
     final element =
         ref.element
@@ -172,6 +172,6 @@ abstract class _$LatestQzssDcReport extends $Notifier<QzssDcReport?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

@@ -9,42 +9,28 @@ import UIKit
 
 // MARK: - Adaptive Color Palette
 
+// 色の実体は Shared/DesignTokens.swift（アプリ本体と同値）。
+// ここでは既存 View が参照する eq* 名のエイリアスのみを提供する。
 extension Color {
     // background
-    static let eqBg = dynamic(light: 0xF1F4F8, dark: 0x0F141A)
-    static let eqSurface = dynamic(light: 0xFFFFFF, dark: 0x171E26)
-    static let eqCard = dynamic(light: 0xEDF1F6, dark: 0x232D38)
+    static let eqBg = DesignTokens.bg
+    static let eqSurface = DesignTokens.surface
+    static let eqCard = DesignTokens.card
 
     // brand
-    static let eqBrand = dynamic(light: 0x2F6FE0, dark: 0x4D8DFF)
-    static let eqBrandContainer = dynamic(light: 0xE2EAF9, dark: 0x24344A)
+    static let eqBrand = DesignTokens.brand
+    static let eqBrandContainer = DesignTokens.brandContainer
 
     // outline
-    static let eqOutlineSoft = dynamic(light: 0xD7DEE7, dark: 0x3A4654)
+    static let eqOutlineSoft = DesignTokens.outlineSoft
 
     // text
-    static let eqTextPrimary = dynamic(light: 0x10151B, dark: 0xF3F6FA)
-    static let eqTextSecondary = dynamic(light: 0x44505E, dark: 0xC4CCD7)
-    static let eqTextTertiary = dynamic(light: 0x6B7787, dark: 0x98A5B5)
-
-    /// ライト/ダークで切り替わる動的カラーを生成する
-    private static func dynamic(light: UInt, dark: UInt) -> Color {
-        Color(uiColor: UIColor { traits in
-            UIColor(rgb: traits.userInterfaceStyle == .dark ? dark : light)
-        })
-    }
+    static let eqTextPrimary = DesignTokens.textPrimary
+    static let eqTextSecondary = DesignTokens.textSecondary
+    static let eqTextTertiary = DesignTokens.textTertiary
 }
 
-private extension UIColor {
-    convenience init(rgb: UInt) {
-        self.init(
-            red: CGFloat((rgb >> 16) & 0xFF) / 255.0,
-            green: CGFloat((rgb >> 8) & 0xFF) / 255.0,
-            blue: CGFloat(rgb & 0xFF) / 255.0,
-            alpha: 1.0
-        )
-    }
-}
+// Color(rgb:) は Shared/ColorRGB.swift へ移動（IntensityValue と共有するため）
 
 // MARK: - Surface Gradient
 

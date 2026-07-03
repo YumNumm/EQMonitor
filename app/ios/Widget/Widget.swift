@@ -13,6 +13,26 @@ struct EarthquakeEntry: TimelineEntry {
     let configuration: EarthquakeWidgetIntent
     let earthquakes: [EarthquakeDisplayItem]
     let error: String?
+    /// フォールバック後の実効タイトル（medium / large 用）
+    let title: String
+    /// フォールバック後の実効タイトル（small 用）
+    let compactTitle: String
+
+    init(
+        date: Date,
+        configuration: EarthquakeWidgetIntent,
+        earthquakes: [EarthquakeDisplayItem],
+        error: String?,
+        resolved: ResolvedWidgetRegion? = nil
+    ) {
+        self.date = date
+        self.configuration = configuration
+        self.earthquakes = earthquakes
+        self.error = error
+        let resolved = resolved ?? WidgetRegionResolver.resolve(regionType: configuration.regionType)
+        self.title = resolved.title
+        self.compactTitle = resolved.compactTitle
+    }
 }
 
 struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
@@ -39,39 +59,18 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
 
     func timeline(for configuration: EarthquakeWidgetIntent, in context: Context) async -> Timeline<EarthquakeEntry> {
         let currentDate = Date()
+        let resolved = WidgetRegionResolver.resolve(regionType: configuration.regionType)
 
         do {
             let apiService = EarthquakeAPIService.shared
-
-            // 地域コードを決定
-            let regionCode: String? = {
-                switch configuration.regionType {
-                case .nationwide:
-                    return nil
-                case .currentLocation:
-                    // TODO(YumNumm): 位置情報をUserDefaultsから取ってくる
-                    return "350"
-                case .specificRegion:
-                    return configuration.region?.id
-                }
-            }()
-
-            let earthquakes: [EarthquakeDisplayItem]
-
-            if let code = regionCode {
-                earthquakes = try await apiService.fetchEarthquakesByRegion(
-                    regionCode: code,
-                    limit: 10
-                )
-            } else {
-                earthquakes = try await apiService.fetchEarthquakes(limit: 10)
-            }
+            let earthquakes = try await fetch(plan: resolved.plan, using: apiService)
 
             let entry = EarthquakeEntry(
                 date: currentDate,
                 configuration: configuration,
                 earthquakes: earthquakes,
-                error: nil
+                error: nil,
+                resolved: resolved
             )
 
             // 15分後に更新
@@ -83,7 +82,8 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
                 date: currentDate,
                 configuration: configuration,
                 earthquakes: [],
-                error: error.errorDescription
+                error: error.errorDescription,
+                resolved: resolved
             )
 
             // エラー時は5分後に再試行
@@ -95,11 +95,28 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
                 date: currentDate,
                 configuration: configuration,
                 earthquakes: [],
-                error: "不明なエラー: \(error.localizedDescription)"
+                error: "不明なエラー: \(error.localizedDescription)",
+                resolved: resolved
             )
 
             let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: currentDate)!
             return Timeline(entries: [entry], policy: .after(nextUpdate))
+        }
+    }
+
+    private func fetch(
+        plan: WidgetFetchPlan,
+        using apiService: EarthquakeAPIService
+    ) async throws -> [EarthquakeDisplayItem] {
+        switch plan {
+        case .nationwide:
+            return try await apiService.fetchEarthquakes(limit: 10)
+        case .region(let code):
+            return try await apiService.fetchEarthquakesByRegion(regionCode: code, limit: 10)
+        case .prefecture(let code):
+            return try await apiService.fetchEarthquakesByPrefecture(prefectureCode: code, limit: 10)
+        case .city(let code):
+            return try await apiService.fetchEarthquakesByCity(cityCode: code, limit: 10)
         }
     }
 }
@@ -150,12 +167,14 @@ struct EarthquakeWidget: Widget {
 } timeline: {
     EarthquakeEntry(
         date: .now,
-        configuration: EarthquakeWidgetIntent(
-            regionType: .specificRegion,
-            region: RegionEntity(id: "350", name: "東京都２３区")
-        ),
+        configuration: EarthquakeWidgetIntent(regionType: .specificRegion),
         earthquakes: EarthquakeDisplayItem.mockData,
-        error: nil
+        error: nil,
+        resolved: ResolvedWidgetRegion(
+            plan: .prefecture(code: "13"),
+            title: "東京都の地震履歴",
+            compactTitle: "東京都"
+        )
     )
 }
 

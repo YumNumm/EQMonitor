@@ -15,10 +15,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiRegionEstimationFirstHeight {
 
-/// 早いところでは既に津波到達と推定.
+/// 1観測地点以上で第1波の時刻を明瞭に観測した場合
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;/// 早いところでは既に津波到達と推定.
 /// const: true.
-@JsonKey(name: 'is_already_arrived') bool get isAlreadyArrived;/// 1観測地点以上で第1波の時刻を明瞭に観測した場合
-@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;@JsonKey(includeIfNull: false) Revise? get revise;
+@JsonKey(includeIfNull: false, name: 'is_already_arrived') bool? get isAlreadyArrived;@JsonKey(includeIfNull: false) Revise? get revise;
 /// Create a copy of TsunamiRegionEstimationFirstHeight
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +31,16 @@ $TsunamiRegionEstimationFirstHeightCopyWith<TsunamiRegionEstimationFirstHeight> 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiRegionEstimationFirstHeight&&(identical(other.isAlreadyArrived, isAlreadyArrived) || other.isAlreadyArrived == isAlreadyArrived)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.revise, revise) || other.revise == revise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiRegionEstimationFirstHeight&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.isAlreadyArrived, isAlreadyArrived) || other.isAlreadyArrived == isAlreadyArrived)&&(identical(other.revise, revise) || other.revise == revise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isAlreadyArrived,arrivalTime,revise);
+int get hashCode => Object.hash(runtimeType,arrivalTime,isAlreadyArrived,revise);
 
 @override
 String toString() {
-  return 'TsunamiRegionEstimationFirstHeight(isAlreadyArrived: $isAlreadyArrived, arrivalTime: $arrivalTime, revise: $revise)';
+  return 'TsunamiRegionEstimationFirstHeight(arrivalTime: $arrivalTime, isAlreadyArrived: $isAlreadyArrived, revise: $revise)';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $TsunamiRegionEstimationFirstHeightCopyWith<$Res>  {
   factory $TsunamiRegionEstimationFirstHeightCopyWith(TsunamiRegionEstimationFirstHeight value, $Res Function(TsunamiRegionEstimationFirstHeight) _then) = _$TsunamiRegionEstimationFirstHeightCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'is_already_arrived') bool isAlreadyArrived,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) Revise? revise
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false, name: 'is_already_arrived') bool? isAlreadyArrived,@JsonKey(includeIfNull: false) Revise? revise
 });
 
 
@@ -68,11 +68,11 @@ class _$TsunamiRegionEstimationFirstHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiRegionEstimationFirstHeight
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isAlreadyArrived = null,Object? arrivalTime = freezed,Object? revise = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? arrivalTime = freezed,Object? isAlreadyArrived = freezed,Object? revise = freezed,}) {
   return _then(_self.copyWith(
-isAlreadyArrived: null == isAlreadyArrived ? _self.isAlreadyArrived : isAlreadyArrived // ignore: cast_nullable_to_non_nullable
-as bool,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
+arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,isAlreadyArrived: freezed == isAlreadyArrived ? _self.isAlreadyArrived : isAlreadyArrived // ignore: cast_nullable_to_non_nullable
+as bool?,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
 as Revise?,
   ));
 }
@@ -158,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'is_already_arrived')  bool isAlreadyArrived, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false, name: 'is_already_arrived')  bool? isAlreadyArrived, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiRegionEstimationFirstHeight() when $default != null:
-return $default(_that.isAlreadyArrived,_that.arrivalTime,_that.revise);case _:
+return $default(_that.arrivalTime,_that.isAlreadyArrived,_that.revise);case _:
   return orElse();
 
 }
@@ -179,10 +179,10 @@ return $default(_that.isAlreadyArrived,_that.arrivalTime,_that.revise);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'is_already_arrived')  bool isAlreadyArrived, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Revise? revise)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false, name: 'is_already_arrived')  bool? isAlreadyArrived, @JsonKey(includeIfNull: false)  Revise? revise)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiRegionEstimationFirstHeight():
-return $default(_that.isAlreadyArrived,_that.arrivalTime,_that.revise);case _:
+return $default(_that.arrivalTime,_that.isAlreadyArrived,_that.revise);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +199,10 @@ return $default(_that.isAlreadyArrived,_that.arrivalTime,_that.revise);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'is_already_arrived')  bool isAlreadyArrived, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false, name: 'is_already_arrived')  bool? isAlreadyArrived, @JsonKey(includeIfNull: false)  Revise? revise)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiRegionEstimationFirstHeight() when $default != null:
-return $default(_that.isAlreadyArrived,_that.arrivalTime,_that.revise);case _:
+return $default(_that.arrivalTime,_that.isAlreadyArrived,_that.revise);case _:
   return null;
 
 }
@@ -214,14 +214,14 @@ return $default(_that.isAlreadyArrived,_that.arrivalTime,_that.revise);case _:
 @JsonSerializable()
 
 class _TsunamiRegionEstimationFirstHeight implements TsunamiRegionEstimationFirstHeight {
-  const _TsunamiRegionEstimationFirstHeight({@JsonKey(name: 'is_already_arrived') required this.isAlreadyArrived, @JsonKey(includeIfNull: false, name: 'arrival_time') this.arrivalTime, @JsonKey(includeIfNull: false) this.revise});
+  const _TsunamiRegionEstimationFirstHeight({@JsonKey(includeIfNull: false, name: 'arrival_time') this.arrivalTime, @JsonKey(includeIfNull: false, name: 'is_already_arrived') this.isAlreadyArrived, @JsonKey(includeIfNull: false) this.revise});
   factory _TsunamiRegionEstimationFirstHeight.fromJson(Map<String, dynamic> json) => _$TsunamiRegionEstimationFirstHeightFromJson(json);
 
-/// 早いところでは既に津波到達と推定.
-/// const: true.
-@override@JsonKey(name: 'is_already_arrived') final  bool isAlreadyArrived;
 /// 1観測地点以上で第1波の時刻を明瞭に観測した場合
 @override@JsonKey(includeIfNull: false, name: 'arrival_time') final  DateTime? arrivalTime;
+/// 早いところでは既に津波到達と推定.
+/// const: true.
+@override@JsonKey(includeIfNull: false, name: 'is_already_arrived') final  bool? isAlreadyArrived;
 @override@JsonKey(includeIfNull: false) final  Revise? revise;
 
 /// Create a copy of TsunamiRegionEstimationFirstHeight
@@ -237,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiRegionEstimationFirstHeight&&(identical(other.isAlreadyArrived, isAlreadyArrived) || other.isAlreadyArrived == isAlreadyArrived)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.revise, revise) || other.revise == revise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiRegionEstimationFirstHeight&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.isAlreadyArrived, isAlreadyArrived) || other.isAlreadyArrived == isAlreadyArrived)&&(identical(other.revise, revise) || other.revise == revise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isAlreadyArrived,arrivalTime,revise);
+int get hashCode => Object.hash(runtimeType,arrivalTime,isAlreadyArrived,revise);
 
 @override
 String toString() {
-  return 'TsunamiRegionEstimationFirstHeight(isAlreadyArrived: $isAlreadyArrived, arrivalTime: $arrivalTime, revise: $revise)';
+  return 'TsunamiRegionEstimationFirstHeight(arrivalTime: $arrivalTime, isAlreadyArrived: $isAlreadyArrived, revise: $revise)';
 }
 
 
@@ -257,7 +257,7 @@ abstract mixin class _$TsunamiRegionEstimationFirstHeightCopyWith<$Res> implemen
   factory _$TsunamiRegionEstimationFirstHeightCopyWith(_TsunamiRegionEstimationFirstHeight value, $Res Function(_TsunamiRegionEstimationFirstHeight) _then) = __$TsunamiRegionEstimationFirstHeightCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'is_already_arrived') bool isAlreadyArrived,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) Revise? revise
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false, name: 'is_already_arrived') bool? isAlreadyArrived,@JsonKey(includeIfNull: false) Revise? revise
 });
 
 
@@ -274,11 +274,11 @@ class __$TsunamiRegionEstimationFirstHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiRegionEstimationFirstHeight
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isAlreadyArrived = null,Object? arrivalTime = freezed,Object? revise = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? arrivalTime = freezed,Object? isAlreadyArrived = freezed,Object? revise = freezed,}) {
   return _then(_TsunamiRegionEstimationFirstHeight(
-isAlreadyArrived: null == isAlreadyArrived ? _self.isAlreadyArrived : isAlreadyArrived // ignore: cast_nullable_to_non_nullable
-as bool,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
+arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,isAlreadyArrived: freezed == isAlreadyArrived ? _self.isAlreadyArrived : isAlreadyArrived // ignore: cast_nullable_to_non_nullable
+as bool?,revise: freezed == revise ? _self.revise : revise // ignore: cast_nullable_to_non_nullable
 as Revise?,
   ));
 }

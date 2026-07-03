@@ -30,7 +30,6 @@ EewTelegramItem _makeEew({
         ? EewHypocenterInfo(
             code: '350',
             name: 'テスト震源',
-            hasLatLng: false,
             magnitude: magnitude,
             depth: depth,
           )

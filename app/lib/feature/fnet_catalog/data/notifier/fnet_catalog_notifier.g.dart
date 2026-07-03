@@ -91,7 +91,7 @@ abstract class _$FnetCatalogNotifier extends $AsyncNotifier<List<FnetEvent>> {
   FutureOr<List<FnetEvent>> build({required int year, int? month});
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<List<FnetEvent>>, List<FnetEvent>>;
     final element =
         ref.element
@@ -101,7 +101,7 @@ abstract class _$FnetCatalogNotifier extends $AsyncNotifier<List<FnetEvent>> {
               Object?,
               Object?
             >;
-    element.handleCreate(
+    return element.handleCreate(
       ref,
       () => build(year: _$args.year, month: _$args.month),
     );

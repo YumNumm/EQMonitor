@@ -107,7 +107,7 @@ abstract class _$EewAliveTelegram extends $Notifier<List<EewTelegramItem>?> {
   List<EewTelegramItem>? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<List<EewTelegramItem>?, List<EewTelegramItem>?>;
     final element =
@@ -118,7 +118,7 @@ abstract class _$EewAliveTelegram extends $Notifier<List<EewTelegramItem>?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

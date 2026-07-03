@@ -27,6 +27,7 @@ class _FeedApiClient implements FeedApiClient {
     String? important,
     String? locale = 'ja',
     String? limit = '20',
+    List<TelegramStatus> statuses = const [.normal],
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -34,6 +35,7 @@ class _FeedApiClient implements FeedApiClient {
       r'important': important,
       r'locale': locale,
       r'limit': limit,
+      r'statuses': statuses,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -52,6 +54,38 @@ class _FeedApiClient implements FeedApiClient {
     late FeedListResponse _value;
     try {
       _value = FeedListResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<FeedDetailResponse>> getV2FeedsSourceTelegramHash({
+    required String telegramHash,
+    String? locale = 'ja',
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'locale': locale};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HttpResponse<FeedDetailResponse>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v2/feeds/source/${telegramHash}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late FeedDetailResponse _value;
+    try {
+      _value = FeedDetailResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

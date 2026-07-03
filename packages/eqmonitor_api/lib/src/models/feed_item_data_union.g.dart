@@ -142,10 +142,7 @@ _$FeedItemDataUnionFeedEarthquakeNankaiDataFromJson(
         'infoType',
         (v) => $enumDecode(_$InfoTypeEnumMap, v),
       ),
-      telegramType: $checkedConvert(
-        'telegramType',
-        (v) => $enumDecode(_$FeedTelegramTypeEnumMap, v),
-      ),
+      telegramType: $checkedConvert('telegramType', (v) => v as String),
       earthquakeInfo: $checkedConvert(
         'earthquakeInfo',
         (v) => v == null
@@ -171,12 +168,6 @@ Map<String, dynamic> _$FeedItemDataUnionFeedEarthquakeNankaiDataToJson(
   'nextAdvisory': ?instance.nextAdvisory,
   'text': ?instance.text,
   'runtimeType': instance.$type,
-};
-
-const _$FeedTelegramTypeEnumMap = {
-  FeedTelegramType.oneHourEarthquakeCount: 'ONE_HOUR_EARTHQUAKE_COUNT',
-  FeedTelegramType.accumulativeEarthquakeCount: 'ACCUMULATIVE_EARTHQUAKE_COUNT',
-  FeedTelegramType.earthquakeCount: 'EARTHQUAKE_COUNT',
 };
 
 FeedItemDataUnionFeedAppUpdateData _$FeedItemDataUnionFeedAppUpdateDataFromJson(

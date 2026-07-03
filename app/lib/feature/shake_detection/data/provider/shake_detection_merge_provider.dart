@@ -39,11 +39,13 @@ String? _findMergedEew(
   const distance = latlong2.Distance();
 
   for (final eew in eews) {
-    final hypo = eew.hypocenter;
-    if (hypo == null || !hypo.hasLatLng) {
+    final hypocenter = eew.hypocenter;
+    if (hypocenter == null ||
+        hypocenter.latitude == null ||
+        hypocenter.longitude == null) {
       continue;
     }
-    final depth = hypo.depth;
+    final depth = hypocenter.depth;
     final originTime = eew.originTime;
     if (depth == null || originTime == null) {
       continue;
@@ -60,7 +62,7 @@ String? _findMergedEew(
 
     final distKm = distance.as(
       latlong2.LengthUnit.Kilometer,
-      latlong2.LatLng(hypo.latitude!, hypo.longitude!),
+      latlong2.LatLng(hypocenter.latitude!, hypocenter.longitude!),
       latlong2.LatLng(centerLat, centerLng),
     );
 

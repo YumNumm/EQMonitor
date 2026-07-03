@@ -15,12 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeHistoryMapLayerParameter {
 
-// ズーム閾値
- double get regionToCity; double get stationMinZoom; double get stationLabelMinZoom; double get hypocenterFadeZoom; double get hypocenterErrorMinZoom;// 塗りつぶし透明度
- double get regionFillOpacity; double get regionLineOpacity; double get cityFillOpacity;// 観測点サイズ (circle-radius interpolation)
- double get stationCircleRadiusMin; double get stationCircleRadiusMax;// 観測点アイコンサイズ (icon-size interpolation)
- double get stationIconSizeMin; double get stationIconSizeMid; double get stationIconSizeMax;// 震央マーカー
- double get hypocenterIconSizeMin; double get hypocenterIconSizeMax; double get hypocenterFadeOpacity;
+ double get regionToCity; double get stationMinZoom; double get stationLabelMinZoom; double get hypocenterFadeZoom; double get hypocenterErrorMinZoom; double get regionFillOpacity; double get regionLineOpacity; double get cityFillOpacity; double get stationCircleRadiusMin; double get stationCircleRadiusMax; double get stationIconSizeMin; double get stationIconSizeMid; double get stationIconSizeMax; double get hypocenterIconSizeMin; double get hypocenterIconSizeMax; double get hypocenterFadeOpacity;
 /// Create a copy of EarthquakeHistoryMapLayerParameter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -232,24 +227,19 @@ class _EarthquakeHistoryMapLayerParameter implements EarthquakeHistoryMapLayerPa
   const _EarthquakeHistoryMapLayerParameter({this.regionToCity = 8, this.stationMinZoom = 8, this.stationLabelMinZoom = 9, this.hypocenterFadeZoom = 8, this.hypocenterErrorMinZoom = 8, this.regionFillOpacity = 0.6, this.regionLineOpacity = 0.8, this.cityFillOpacity = 0.6, this.stationCircleRadiusMin = 2, this.stationCircleRadiusMax = 8, this.stationIconSizeMin = 0.025, this.stationIconSizeMid = 0.18, this.stationIconSizeMax = 0.6, this.hypocenterIconSizeMin = 0.15, this.hypocenterIconSizeMax = 0.4, this.hypocenterFadeOpacity = 0.6});
   factory _EarthquakeHistoryMapLayerParameter.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryMapLayerParameterFromJson(json);
 
-// ズーム閾値
 @override@JsonKey() final  double regionToCity;
 @override@JsonKey() final  double stationMinZoom;
 @override@JsonKey() final  double stationLabelMinZoom;
 @override@JsonKey() final  double hypocenterFadeZoom;
 @override@JsonKey() final  double hypocenterErrorMinZoom;
-// 塗りつぶし透明度
 @override@JsonKey() final  double regionFillOpacity;
 @override@JsonKey() final  double regionLineOpacity;
 @override@JsonKey() final  double cityFillOpacity;
-// 観測点サイズ (circle-radius interpolation)
 @override@JsonKey() final  double stationCircleRadiusMin;
 @override@JsonKey() final  double stationCircleRadiusMax;
-// 観測点アイコンサイズ (icon-size interpolation)
 @override@JsonKey() final  double stationIconSizeMin;
 @override@JsonKey() final  double stationIconSizeMid;
 @override@JsonKey() final  double stationIconSizeMax;
-// 震央マーカー
 @override@JsonKey() final  double hypocenterIconSizeMin;
 @override@JsonKey() final  double hypocenterIconSizeMax;
 @override@JsonKey() final  double hypocenterFadeOpacity;

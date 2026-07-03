@@ -47,7 +47,7 @@ abstract class _$HomeConfigurationNotifier
   FutureOr<HomeConfigurationModel> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<AsyncValue<HomeConfigurationModel>, HomeConfigurationModel>;
@@ -62,6 +62,6 @@ abstract class _$HomeConfigurationNotifier
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

@@ -73,7 +73,7 @@ abstract class _$AppClock extends $Notifier<TimeMode> {
   TimeMode build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<TimeMode, TimeMode>;
     final element =
         ref.element
@@ -83,7 +83,7 @@ abstract class _$AppClock extends $Notifier<TimeMode> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

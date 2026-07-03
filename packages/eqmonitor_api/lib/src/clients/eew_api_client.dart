@@ -11,6 +11,8 @@ import '../models/eew_latest_response.dart';
 import '../models/eew_list_response.dart';
 import '../models/jma_intensity.dart';
 
+import '../models/telegram_status.dart';
+
 part 'eew_api_client.g.dart';
 
 @RestApi()
@@ -36,6 +38,7 @@ abstract class EewApiClient {
   /// [originTimeLte] - 日付 (例: 2024-01-01).
   @GET(EewApiClientUrls.getV2Eew)
   Future<HttpResponse<EewListResponse>> getV2Eew({
+    @Query('statuses') List<TelegramStatus> statuses = const [.normal],
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
     @Query('magnitudeLte') String? magnitudeLte,

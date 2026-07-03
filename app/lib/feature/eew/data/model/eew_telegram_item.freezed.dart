@@ -415,7 +415,7 @@ $EewAccuracyInfoCopyWith<$Res>? get accuracy {
 /// @nodoc
 mixin _$EewHypocenterInfo {
 
- String get code; String get name; bool get hasLatLng; String? get detailedCode; String? get detailedName; double? get latitude; double? get longitude; String? get coordinateCondition; double? get magnitude; int? get depth;
+ String get code; String get name; String? get detailedCode; String? get detailedName; double? get latitude; double? get longitude; String? get coordinateCondition; double? get magnitude; int? get depth;
 /// Create a copy of EewHypocenterInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -426,16 +426,16 @@ $EewHypocenterInfoCopyWith<EewHypocenterInfo> get copyWith => _$EewHypocenterInf
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewHypocenterInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.hasLatLng, hasLatLng) || other.hasLatLng == hasLatLng)&&(identical(other.detailedCode, detailedCode) || other.detailedCode == detailedCode)&&(identical(other.detailedName, detailedName) || other.detailedName == detailedName)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.coordinateCondition, coordinateCondition) || other.coordinateCondition == coordinateCondition)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewHypocenterInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.detailedCode, detailedCode) || other.detailedCode == detailedCode)&&(identical(other.detailedName, detailedName) || other.detailedName == detailedName)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.coordinateCondition, coordinateCondition) || other.coordinateCondition == coordinateCondition)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,code,name,hasLatLng,detailedCode,detailedName,latitude,longitude,coordinateCondition,magnitude,depth);
+int get hashCode => Object.hash(runtimeType,code,name,detailedCode,detailedName,latitude,longitude,coordinateCondition,magnitude,depth);
 
 @override
 String toString() {
-  return 'EewHypocenterInfo(code: $code, name: $name, hasLatLng: $hasLatLng, detailedCode: $detailedCode, detailedName: $detailedName, latitude: $latitude, longitude: $longitude, coordinateCondition: $coordinateCondition, magnitude: $magnitude, depth: $depth)';
+  return 'EewHypocenterInfo(code: $code, name: $name, detailedCode: $detailedCode, detailedName: $detailedName, latitude: $latitude, longitude: $longitude, coordinateCondition: $coordinateCondition, magnitude: $magnitude, depth: $depth)';
 }
 
 
@@ -446,7 +446,7 @@ abstract mixin class $EewHypocenterInfoCopyWith<$Res>  {
   factory $EewHypocenterInfoCopyWith(EewHypocenterInfo value, $Res Function(EewHypocenterInfo) _then) = _$EewHypocenterInfoCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, bool hasLatLng, String? detailedCode, String? detailedName, double? latitude, double? longitude, String? coordinateCondition, double? magnitude, int? depth
+ String code, String name, String? detailedCode, String? detailedName, double? latitude, double? longitude, String? coordinateCondition, double? magnitude, int? depth
 });
 
 
@@ -463,12 +463,11 @@ class _$EewHypocenterInfoCopyWithImpl<$Res>
 
 /// Create a copy of EewHypocenterInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? hasLatLng = null,Object? detailedCode = freezed,Object? detailedName = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? coordinateCondition = freezed,Object? magnitude = freezed,Object? depth = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? detailedCode = freezed,Object? detailedName = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? coordinateCondition = freezed,Object? magnitude = freezed,Object? depth = freezed,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,hasLatLng: null == hasLatLng ? _self.hasLatLng : hasLatLng // ignore: cast_nullable_to_non_nullable
-as bool,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
+as String,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
 as String?,detailedName: freezed == detailedName ? _self.detailedName : detailedName // ignore: cast_nullable_to_non_nullable
 as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
@@ -560,10 +559,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  bool hasLatLng,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  String? coordinateCondition,  double? magnitude,  int? depth)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  String? coordinateCondition,  double? magnitude,  int? depth)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewHypocenterInfo() when $default != null:
-return $default(_that.code,_that.name,_that.hasLatLng,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
+return $default(_that.code,_that.name,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
   return orElse();
 
 }
@@ -581,10 +580,10 @@ return $default(_that.code,_that.name,_that.hasLatLng,_that.detailedCode,_that.d
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  bool hasLatLng,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  String? coordinateCondition,  double? magnitude,  int? depth)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  String? coordinateCondition,  double? magnitude,  int? depth)  $default,) {final _that = this;
 switch (_that) {
 case _EewHypocenterInfo():
-return $default(_that.code,_that.name,_that.hasLatLng,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
+return $default(_that.code,_that.name,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -601,10 +600,10 @@ return $default(_that.code,_that.name,_that.hasLatLng,_that.detailedCode,_that.d
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  bool hasLatLng,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  String? coordinateCondition,  double? magnitude,  int? depth)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  String? coordinateCondition,  double? magnitude,  int? depth)?  $default,) {final _that = this;
 switch (_that) {
 case _EewHypocenterInfo() when $default != null:
-return $default(_that.code,_that.name,_that.hasLatLng,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
+return $default(_that.code,_that.name,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
   return null;
 
 }
@@ -616,12 +615,11 @@ return $default(_that.code,_that.name,_that.hasLatLng,_that.detailedCode,_that.d
 
 
 class _EewHypocenterInfo implements EewHypocenterInfo {
-  const _EewHypocenterInfo({required this.code, required this.name, required this.hasLatLng, this.detailedCode, this.detailedName, this.latitude, this.longitude, this.coordinateCondition, this.magnitude, this.depth});
+  const _EewHypocenterInfo({required this.code, required this.name, this.detailedCode, this.detailedName, this.latitude, this.longitude, this.coordinateCondition, this.magnitude, this.depth});
   
 
 @override final  String code;
 @override final  String name;
-@override final  bool hasLatLng;
 @override final  String? detailedCode;
 @override final  String? detailedName;
 @override final  double? latitude;
@@ -640,16 +638,16 @@ _$EewHypocenterInfoCopyWith<_EewHypocenterInfo> get copyWith => __$EewHypocenter
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewHypocenterInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.hasLatLng, hasLatLng) || other.hasLatLng == hasLatLng)&&(identical(other.detailedCode, detailedCode) || other.detailedCode == detailedCode)&&(identical(other.detailedName, detailedName) || other.detailedName == detailedName)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.coordinateCondition, coordinateCondition) || other.coordinateCondition == coordinateCondition)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewHypocenterInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.detailedCode, detailedCode) || other.detailedCode == detailedCode)&&(identical(other.detailedName, detailedName) || other.detailedName == detailedName)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.coordinateCondition, coordinateCondition) || other.coordinateCondition == coordinateCondition)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,code,name,hasLatLng,detailedCode,detailedName,latitude,longitude,coordinateCondition,magnitude,depth);
+int get hashCode => Object.hash(runtimeType,code,name,detailedCode,detailedName,latitude,longitude,coordinateCondition,magnitude,depth);
 
 @override
 String toString() {
-  return 'EewHypocenterInfo(code: $code, name: $name, hasLatLng: $hasLatLng, detailedCode: $detailedCode, detailedName: $detailedName, latitude: $latitude, longitude: $longitude, coordinateCondition: $coordinateCondition, magnitude: $magnitude, depth: $depth)';
+  return 'EewHypocenterInfo(code: $code, name: $name, detailedCode: $detailedCode, detailedName: $detailedName, latitude: $latitude, longitude: $longitude, coordinateCondition: $coordinateCondition, magnitude: $magnitude, depth: $depth)';
 }
 
 
@@ -660,7 +658,7 @@ abstract mixin class _$EewHypocenterInfoCopyWith<$Res> implements $EewHypocenter
   factory _$EewHypocenterInfoCopyWith(_EewHypocenterInfo value, $Res Function(_EewHypocenterInfo) _then) = __$EewHypocenterInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, bool hasLatLng, String? detailedCode, String? detailedName, double? latitude, double? longitude, String? coordinateCondition, double? magnitude, int? depth
+ String code, String name, String? detailedCode, String? detailedName, double? latitude, double? longitude, String? coordinateCondition, double? magnitude, int? depth
 });
 
 
@@ -677,12 +675,11 @@ class __$EewHypocenterInfoCopyWithImpl<$Res>
 
 /// Create a copy of EewHypocenterInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? hasLatLng = null,Object? detailedCode = freezed,Object? detailedName = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? coordinateCondition = freezed,Object? magnitude = freezed,Object? depth = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? detailedCode = freezed,Object? detailedName = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? coordinateCondition = freezed,Object? magnitude = freezed,Object? depth = freezed,}) {
   return _then(_EewHypocenterInfo(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,hasLatLng: null == hasLatLng ? _self.hasLatLng : hasLatLng // ignore: cast_nullable_to_non_nullable
-as bool,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
+as String,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
 as String?,detailedName: freezed == detailedName ? _self.detailedName : detailedName // ignore: cast_nullable_to_non_nullable
 as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
@@ -1802,7 +1799,59 @@ as bool,
 /// @nodoc
 mixin _$EewAccuracyInfo {
 
- int get epicenter; int get hypocenter; int get depth; int get magnitudeCalculation; int get numberOfMagnitudeCalculation;
+/// 震央位置の精度値（0〜9）
+///
+/// 0 : 不明
+/// 1 : P波/S波レベル越え、IPF法(1点)、または「仮定震源要素」の場合（気象庁データ）
+/// 2 : IPF法(2点)（気象庁データ）
+/// 3 : IPF法(3点/4点)（気象庁データ）
+/// 4 : IPF法(5点以上)（気象庁データ）
+/// 5 : 防災科研システム(4点以下、または精度情報なし)（2023-09-26 14時以降は出現しない）
+/// 6 : 防災科研システム(5点以上)（Hi-netデータ）（2023-09-26 14時以降は出現しない）
+/// 7 : EPOS(海域[観測網外])（2023-09-26 14時以降は出現しない）
+/// 8 : EPOS(内陸[観測網内])（2023-09-26 14時以降は出現しない）
+ int get epicenter;/// 震源位置の精度値（0〜9）
+///
+/// 値が 1, 9 以外については気象庁の部内システムでの利用（予告無く変更することがあります）。
+///
+/// 0 : 不明
+/// 1 : P波/S波レベル越え、IPF法(1点)、または「仮定震源要素」の場合
+/// 2 : IPF法(2点)
+/// 3 : IPF法(3点/4点)
+/// 4 : IPF法(5点以上)
+/// 9 : 震源とマグニチュードに基づく震度予測手法での精度が最終報相当
+///     （推定震源とマグニチュードはこれ以降変化しません。
+///     ただし、PLUM法により予測震度が今後変化する可能性はあります。）
+ int get hypocenter;/// 深さの精度値（0〜9）
+///
+/// 0 : 不明
+/// 1 : P波/S波レベル越え、IPF法(1点)、または「仮定震源要素」の場合
+/// 2 : IPF法(2点)
+/// 3 : IPF法(3点/4点)
+/// 4 : IPF法(5点以上)
+/// 5 : 防災科研システム(4点以下、または精度情報なし)（2023-09-26 14時以降は出現しない）
+/// 6 : 防災科研システム(5点以上)（Hi-netデータ）（2023-09-26 14時以降は出現しない）
+/// 7 : EPOS(海域[観測網外])（2023-09-26 14時以降は出現しない）
+/// 8 : EPOS(内陸[観測網内])（2023-09-26 14時以降は出現しない）
+ int get depth;/// マグニチュードの精度値（0〜9）
+///
+/// 0 : 不明
+/// 2 : 速度マグニチュード（2023-09-26 14時から）、
+///     防災科研システム（Hi-netデータ）（2023-09-26 14時まで）
+/// 3 : 全相P相
+/// 4 : P相/全相混在
+/// 5 : 全点全相
+/// 6 : EPOS
+/// 8 : P波/S波レベル越え、または「仮定震源要素」の場合
+ int get magnitudeCalculation;/// マグニチュード計算使用観測点数（0〜9）
+///
+/// 0 : 不明
+/// 1 : 1点、P波/S波レベル越え、または「仮定震源要素」の場合
+/// 2 : 2点
+/// 3 : 3点
+/// 4 : 4点
+/// 5 : 5点以上
+ int get numberOfMagnitudeCalculation;
 /// Create a copy of EewAccuracyInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2001,10 +2050,62 @@ class _EewAccuracyInfo implements EewAccuracyInfo {
   const _EewAccuracyInfo({required this.epicenter, required this.hypocenter, required this.depth, required this.magnitudeCalculation, required this.numberOfMagnitudeCalculation});
   
 
+/// 震央位置の精度値（0〜9）
+///
+/// 0 : 不明
+/// 1 : P波/S波レベル越え、IPF法(1点)、または「仮定震源要素」の場合（気象庁データ）
+/// 2 : IPF法(2点)（気象庁データ）
+/// 3 : IPF法(3点/4点)（気象庁データ）
+/// 4 : IPF法(5点以上)（気象庁データ）
+/// 5 : 防災科研システム(4点以下、または精度情報なし)（2023-09-26 14時以降は出現しない）
+/// 6 : 防災科研システム(5点以上)（Hi-netデータ）（2023-09-26 14時以降は出現しない）
+/// 7 : EPOS(海域[観測網外])（2023-09-26 14時以降は出現しない）
+/// 8 : EPOS(内陸[観測網内])（2023-09-26 14時以降は出現しない）
 @override final  int epicenter;
+/// 震源位置の精度値（0〜9）
+///
+/// 値が 1, 9 以外については気象庁の部内システムでの利用（予告無く変更することがあります）。
+///
+/// 0 : 不明
+/// 1 : P波/S波レベル越え、IPF法(1点)、または「仮定震源要素」の場合
+/// 2 : IPF法(2点)
+/// 3 : IPF法(3点/4点)
+/// 4 : IPF法(5点以上)
+/// 9 : 震源とマグニチュードに基づく震度予測手法での精度が最終報相当
+///     （推定震源とマグニチュードはこれ以降変化しません。
+///     ただし、PLUM法により予測震度が今後変化する可能性はあります。）
 @override final  int hypocenter;
+/// 深さの精度値（0〜9）
+///
+/// 0 : 不明
+/// 1 : P波/S波レベル越え、IPF法(1点)、または「仮定震源要素」の場合
+/// 2 : IPF法(2点)
+/// 3 : IPF法(3点/4点)
+/// 4 : IPF法(5点以上)
+/// 5 : 防災科研システム(4点以下、または精度情報なし)（2023-09-26 14時以降は出現しない）
+/// 6 : 防災科研システム(5点以上)（Hi-netデータ）（2023-09-26 14時以降は出現しない）
+/// 7 : EPOS(海域[観測網外])（2023-09-26 14時以降は出現しない）
+/// 8 : EPOS(内陸[観測網内])（2023-09-26 14時以降は出現しない）
 @override final  int depth;
+/// マグニチュードの精度値（0〜9）
+///
+/// 0 : 不明
+/// 2 : 速度マグニチュード（2023-09-26 14時から）、
+///     防災科研システム（Hi-netデータ）（2023-09-26 14時まで）
+/// 3 : 全相P相
+/// 4 : P相/全相混在
+/// 5 : 全点全相
+/// 6 : EPOS
+/// 8 : P波/S波レベル越え、または「仮定震源要素」の場合
 @override final  int magnitudeCalculation;
+/// マグニチュード計算使用観測点数（0〜9）
+///
+/// 0 : 不明
+/// 1 : 1点、P波/S波レベル越え、または「仮定震源要素」の場合
+/// 2 : 2点
+/// 3 : 3点
+/// 4 : 4点
+/// 5 : 5点以上
 @override final  int numberOfMagnitudeCalculation;
 
 /// Create a copy of EewAccuracyInfo

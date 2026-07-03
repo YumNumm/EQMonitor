@@ -79,7 +79,11 @@ class _PagingBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
-
+      edgeOffset:
+          MediaQuery.paddingOf(context).top +
+          kToolbarHeight +
+          AdSize.banner.height.toDouble() +
+          EarthquakeHistoryParameterPersistentDelegate.height,
       child: CustomScrollView(
         slivers: [
           SliverAppBar(

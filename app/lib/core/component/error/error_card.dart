@@ -1,7 +1,8 @@
+import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/component/error/error_message_builder.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
+import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -9,27 +10,25 @@ class ErrorCard extends ConsumerWidget {
   const ErrorCard({
     required this.error,
     super.key,
-    this.onDioExceptionStatusOverride,
-    this.color,
-    this.suffixMessage,
     this.title,
-    this.padding = const EdgeInsets.all(16),
-    this.margin = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.suffixMessage,
     this.onReload,
+    this.stackTrace,
+    this.showDetails = true,
+    this.showContact = true,
+    this.onDioExceptionStatusOverride,
   });
 
   final Object error;
-  final Color? color;
   final String? title;
   final String? suffixMessage;
-  final EdgeInsets? padding;
-  final EdgeInsets? margin;
-
-  /// DioExceptionで、StatusCodeがある時に　エラーメッセージを上書きする
-  final String? Function(int statusCode)? onDioExceptionStatusOverride;
-
-  /// 再読み込み
   final Future<void> Function()? onReload;
+  final StackTrace? stackTrace;
+  final bool showDetails;
+  final bool showContact;
+
+  /// DioExceptionで、StatusCodeがある時にエラーメッセージを上書きする
+  final String? Function(int statusCode)? onDioExceptionStatusOverride;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,69 +41,66 @@ class ErrorCard extends ConsumerWidget {
           onDioExceptionStatusOverride: onDioExceptionStatusOverride,
         );
 
-    return Center(
-      child: Card(
-        margin: margin,
-        color: color ?? designSystem.colorTheme.errorContainer,
-        child: Padding(
-          padding: padding ?? EdgeInsets.zero,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.error, size: 36, color: designSystem.colorTheme.error),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: Text(
-                      title ?? 'ERROR!',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: designSystem.colorTheme.onErrorContainer,
-                      ),
-                    ),
-                  ),
-                ],
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: designSystem.colorTheme.surfaceContainerHighest,
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.error_outline_rounded,
+              color: designSystem.colorTheme.error,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title ?? 'エラーが発生しました',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 8),
-              Text(
-                message,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: designSystem.colorTheme.onErrorContainer,
-                  fontFamily: FontFamily.googleSansCode,
-                ),
-              ),
-              if (suffixMessage case final msg?) ...[
-                const SizedBox(height: 8),
-                Text(
-                  msg,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: designSystem.colorTheme.onErrorContainer,
-                    fontFamily: FontFamily.googleSansCode,
-                  ),
-                ),
-              ],
-              if (onReload case final reload?) ...[
-                const SizedBox(height: 8),
-                FilledButton.tonalIcon(
-                  onPressed: () =>
-                      FullScreenCircularProgressIndicator.showUntil(
-                        context,
-                        reload,
-                      ),
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('再読み込み'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: designSystem.colorTheme.error,
-                    foregroundColor: designSystem.colorTheme.onError,
-                    iconColor: designSystem.colorTheme.onError,
-                  ),
-                ),
-              ],
+            ),
+            const SizedBox(height: 4),
+            Text(message, style: theme.textTheme.bodyMedium),
+            if (suffixMessage case final suffix?) ...[
+              const SizedBox(height: 4),
+              Text(suffix, style: theme.textTheme.bodyMedium),
             ],
-          ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                if (onReload case final reload?)
+                  FilledButton.tonalIcon(
+                    onPressed: () => FullScreenCircularProgressIndicator
+                        .showUntil(context, reload),
+                    icon: const Icon(Icons.refresh_rounded, size: 18),
+                    label: const Text('再試行'),
+                  ),
+                if (showDetails)
+                  TextButton(
+                    onPressed: () => showErrorDetailsSheet(
+                      context,
+                      error: error,
+                      stackTrace: stackTrace,
+                    ),
+                    child: const Text('詳細'),
+                  ),
+                if (showContact)
+                  TextButton(
+                    onPressed: () async {
+                      final open = ref.read(openContactProvider);
+                      await open(ref, context);
+                    },
+                    child: const Text('問い合わせ'),
+                  ),
+              ],
+            ),
+          ],
         ),
       ),
     );

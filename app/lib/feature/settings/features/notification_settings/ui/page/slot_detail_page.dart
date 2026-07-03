@@ -1,13 +1,14 @@
-import 'package:eqmonitor/core/component/error/error_message_builder.dart';
+import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_error_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -34,11 +35,7 @@ class SlotDetailPage extends HookConsumerWidget {
     void listenMutationError(Mutation<void> mutation) {
       ref.listen(mutation, (_, next) async {
         if (next is MutationError && context.mounted) {
-          await showNotificationSettingsErrorDialog(
-            context: context,
-            error: next.error,
-            errorMessageBuilder: ref.read(errorMessageBuilderProvider),
-          );
+          await showErrorDialog(context, error: next.error);
         }
       });
     }
@@ -215,10 +212,11 @@ class _NotificationConditionCard extends StatelessWidget {
               onTap: onOverrideTap,
             )
           else
-            const _LockedSettingTile(
+            LockedSettingTile(
               title: '震度別設定',
               subtitle: 'Proで利用できます',
               locked: true,
+              onTap: () => const PaywallRoute().push<void>(context),
             ),
         ],
       ),
@@ -265,32 +263,6 @@ class _IntensityDropdown extends StatelessWidget {
   }
 }
 
-class _LockedSettingTile extends StatelessWidget {
-  const _LockedSettingTile({
-    required this.title,
-    required this.subtitle,
-    required this.locked,
-  });
-
-  final String title;
-  final String subtitle;
-  final bool locked;
-
-  @override
-  Widget build(BuildContext context) {
-    final textColor = locked
-        ? Theme.of(context).disabledColor
-        : context.designSystem.colorTheme.onSurface;
-
-    return ListTile(
-      enabled: !locked,
-      title: Text(title, style: TextStyle(color: textColor)),
-      subtitle: Text(subtitle),
-      trailing: locked ? const _ProBadge() : const Icon(Icons.chevron_right),
-    );
-  }
-}
-
 class _DeleteRegionTile extends StatelessWidget {
   const _DeleteRegionTile({required this.onTap});
 
@@ -307,29 +279,6 @@ class _DeleteRegionTile extends StatelessWidget {
         style: TextStyle(color: colorTheme.error),
       ),
       onTap: onTap,
-    );
-  }
-}
-
-class _ProBadge extends StatelessWidget {
-  const _ProBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    final colorTheme = context.designSystem.colorTheme;
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorTheme.primaryContainer,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        child: Text(
-          'Pro',
-          style: TextStyle(color: colorTheme.onPrimaryContainer),
-        ),
-      ),
     );
   }
 }

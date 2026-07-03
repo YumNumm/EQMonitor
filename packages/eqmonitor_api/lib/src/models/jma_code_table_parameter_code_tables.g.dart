@@ -31,6 +31,16 @@ _JmaCodeTableParameterCodeTables _$JmaCodeTableParameterCodeTablesFromJson(
             .map((e) => JmaCodeTableItem.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
+      areaInformationCity: $checkedConvert(
+        'area_information_city',
+        (v) => (v as List<dynamic>)
+            .map(
+              (e) => JmaCodeTableAreaInformationCityItem.fromJson(
+                e as Map<String, dynamic>,
+              ),
+            )
+            .toList(),
+      ),
       areaEpicenter: $checkedConvert(
         'area_epicenter',
         (v) => (v as List<dynamic>)
@@ -56,6 +66,7 @@ _JmaCodeTableParameterCodeTables _$JmaCodeTableParameterCodeTablesFromJson(
     'areaForecastLocalEew': 'area_forecast_local_eew',
     'areaInformationPrefectureEarthquake':
         'area_information_prefecture_earthquake',
+    'areaInformationCity': 'area_information_city',
     'areaEpicenter': 'area_epicenter',
     'areaEpicenterAbbreviation': 'area_epicenter_abbreviation',
     'areaEpicenterDetail': 'area_epicenter_detail',
@@ -68,6 +79,7 @@ Map<String, dynamic> _$JmaCodeTableParameterCodeTablesToJson(
   'area_forecast_local_eew': instance.areaForecastLocalEew,
   'area_information_prefecture_earthquake':
       instance.areaInformationPrefectureEarthquake,
+  'area_information_city': instance.areaInformationCity,
   'area_epicenter': instance.areaEpicenter,
   'area_epicenter_abbreviation': instance.areaEpicenterAbbreviation,
   'area_epicenter_detail': instance.areaEpicenterDetail,

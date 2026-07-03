@@ -62,7 +62,8 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
       () => eews.where((eew) {
         final hypo = eew.hypocenter;
         return hypo != null &&
-            hypo.hasLatLng &&
+            hypo.latitude != null &&
+            hypo.longitude != null &&
             hypo.depth != null &&
             eew.originTime != null &&
             !eew.isCanceled &&
@@ -262,7 +263,9 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
 
     for (final eew in eews) {
       final hypocenter = eew.hypocenter;
-      if (hypocenter == null || !hypocenter.hasLatLng) {
+      if (hypocenter == null ||
+          hypocenter.latitude == null ||
+          hypocenter.longitude == null) {
         continue;
       }
       final depth = hypocenter.depth;

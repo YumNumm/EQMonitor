@@ -1,7 +1,7 @@
+import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final intensityHistoryErrorOverlayActionProvider =
@@ -17,38 +17,7 @@ class IntensityHistoryErrorOverlayAction {
     required Object error,
     required StackTrace? stackTrace,
   }) {
-    final details = stackTrace == null ? '$error' : '$error\n\n$stackTrace';
-
-    return showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('エラー詳細'),
-        content: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 520, maxHeight: 320),
-          child: SingleChildScrollView(
-            child: SelectableText(details),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('閉じる'),
-          ),
-          FilledButton.icon(
-            onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: details));
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('エラー詳細をコピーしました')),
-                );
-              }
-            },
-            icon: const Icon(Icons.copy_rounded, size: 18),
-            label: const Text('コピー'),
-          ),
-        ],
-      ),
-    );
+    return showErrorDetailsSheet(context, error: error, stackTrace: stackTrace);
   }
 }
 

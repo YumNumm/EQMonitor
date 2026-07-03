@@ -1099,7 +1099,7 @@ public struct Client: APIProtocol {
             }
         )
     }
-    /// デバイスを登録してJWTを返す。X-Firebase-AppCheck または X-Challenge-Code/X-Challenge-Response が必要。
+    /// デバイスを登録してJWTを返す。X-Firebase-AppCheck または X-Challenge-Code/X-Challenge-Response ヘッダーが存在する場合はそれぞれ検証を試みるが、検証失敗時も registrationType=null として登録を続行する。
     ///
     /// - Remark: HTTP `POST /v2/device`.
     /// - Remark: Generated from `#/paths//v2/device/post(postV2Device)`.
@@ -1156,12 +1156,6 @@ public struct Client: APIProtocol {
                         preconditionFailure("bestContentType chose an invalid content type.")
                     }
                     return .created(.init(body: body))
-                case 400:
-                    return .badRequest(.init())
-                case 401:
-                    return .unauthorized(.init())
-                case 403:
-                    return .forbidden(.init())
                 case 500:
                     let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
                     let body: Operations.postV2Device.Output.InternalServerError.Body
@@ -1754,434 +1748,6 @@ public struct Client: APIProtocol {
             }
         )
     }
-    /// 地震通知リージョン設定一覧を取得
-    ///
-    /// - Remark: HTTP `GET /v2/device/me/settings/earthquake/regions`.
-    /// - Remark: Generated from `#/paths//v2/device/me/settings/earthquake/regions/get(getV2DeviceMeSettingsEarthquakeRegions)`.
-    public func getV2DeviceMeSettingsEarthquakeRegions(_ input: Operations.getV2DeviceMeSettingsEarthquakeRegions.Input) async throws -> Operations.getV2DeviceMeSettingsEarthquakeRegions.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.getV2DeviceMeSettingsEarthquakeRegions.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/device/me/settings/earthquake/regions",
-                    parameters: []
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .get
-                )
-                suppressMutabilityWarning(&request)
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                return (request, nil)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 200:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2DeviceMeSettingsEarthquakeRegions.Output.Ok.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            [Components.Schemas.RegionSettingResponse].self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .ok(.init(body: body))
-                case 404:
-                    return .notFound(.init())
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2DeviceMeSettingsEarthquakeRegions.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
-    /// 地震通知リージョン設定を一括更新（全件上書き）
-    ///
-    /// - Remark: HTTP `PUT /v2/device/me/settings/earthquake/regions`.
-    /// - Remark: Generated from `#/paths//v2/device/me/settings/earthquake/regions/put(putV2DeviceMeSettingsEarthquakeRegions)`.
-    public func putV2DeviceMeSettingsEarthquakeRegions(_ input: Operations.putV2DeviceMeSettingsEarthquakeRegions.Input) async throws -> Operations.putV2DeviceMeSettingsEarthquakeRegions.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.putV2DeviceMeSettingsEarthquakeRegions.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/device/me/settings/earthquake/regions",
-                    parameters: []
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .put
-                )
-                suppressMutabilityWarning(&request)
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                let body: OpenAPIRuntime.HTTPBody?
-                switch input.body {
-                case let .json(value):
-                    body = try converter.setRequiredRequestBodyAsJSON(
-                        value,
-                        headerFields: &request.headerFields,
-                        contentType: "application/json; charset=utf-8"
-                    )
-                }
-                return (request, body)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 200:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.putV2DeviceMeSettingsEarthquakeRegions.Output.Ok.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            [Components.Schemas.RegionSettingResponse].self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .ok(.init(body: body))
-                case 400:
-                    return .badRequest(.init())
-                case 404:
-                    return .notFound(.init())
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.putV2DeviceMeSettingsEarthquakeRegions.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
-    /// 特定のリージョン設定を取得
-    ///
-    /// - Remark: HTTP `GET /v2/device/me/settings/earthquake/regions/{regionId}`.
-    /// - Remark: Generated from `#/paths//v2/device/me/settings/earthquake/regions/{regionId}/get(getV2DeviceMeSettingsEarthquakeRegionsByRegionId)`.
-    public func getV2DeviceMeSettingsEarthquakeRegionsByRegionId(_ input: Operations.getV2DeviceMeSettingsEarthquakeRegionsByRegionId.Input) async throws -> Operations.getV2DeviceMeSettingsEarthquakeRegionsByRegionId.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.getV2DeviceMeSettingsEarthquakeRegionsByRegionId.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/device/me/settings/earthquake/regions/{}",
-                    parameters: [
-                        input.path.regionId
-                    ]
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .get
-                )
-                suppressMutabilityWarning(&request)
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                return (request, nil)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 200:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2DeviceMeSettingsEarthquakeRegionsByRegionId.Output.Ok.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.RegionSettingResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .ok(.init(body: body))
-                case 404:
-                    return .notFound(.init())
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2DeviceMeSettingsEarthquakeRegionsByRegionId.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
-    /// 特定のリージョン設定を更新
-    ///
-    /// - Remark: HTTP `PATCH /v2/device/me/settings/earthquake/regions/{regionId}`.
-    /// - Remark: Generated from `#/paths//v2/device/me/settings/earthquake/regions/{regionId}/patch(patchV2DeviceMeSettingsEarthquakeRegionsByRegionId)`.
-    public func patchV2DeviceMeSettingsEarthquakeRegionsByRegionId(_ input: Operations.patchV2DeviceMeSettingsEarthquakeRegionsByRegionId.Input) async throws -> Operations.patchV2DeviceMeSettingsEarthquakeRegionsByRegionId.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.patchV2DeviceMeSettingsEarthquakeRegionsByRegionId.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/device/me/settings/earthquake/regions/{}",
-                    parameters: [
-                        input.path.regionId
-                    ]
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .patch
-                )
-                suppressMutabilityWarning(&request)
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                let body: OpenAPIRuntime.HTTPBody?
-                switch input.body {
-                case let .json(value):
-                    body = try converter.setRequiredRequestBodyAsJSON(
-                        value,
-                        headerFields: &request.headerFields,
-                        contentType: "application/json; charset=utf-8"
-                    )
-                }
-                return (request, body)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 200:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.patchV2DeviceMeSettingsEarthquakeRegionsByRegionId.Output.Ok.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.RegionSettingResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .ok(.init(body: body))
-                case 400:
-                    return .badRequest(.init())
-                case 404:
-                    return .notFound(.init())
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.patchV2DeviceMeSettingsEarthquakeRegionsByRegionId.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
-    /// 特定のリージョン設定を削除
-    ///
-    /// - Remark: HTTP `DELETE /v2/device/me/settings/earthquake/regions/{regionId}`.
-    /// - Remark: Generated from `#/paths//v2/device/me/settings/earthquake/regions/{regionId}/delete(deleteV2DeviceMeSettingsEarthquakeRegionsByRegionId)`.
-    public func deleteV2DeviceMeSettingsEarthquakeRegionsByRegionId(_ input: Operations.deleteV2DeviceMeSettingsEarthquakeRegionsByRegionId.Input) async throws -> Operations.deleteV2DeviceMeSettingsEarthquakeRegionsByRegionId.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.deleteV2DeviceMeSettingsEarthquakeRegionsByRegionId.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/device/me/settings/earthquake/regions/{}",
-                    parameters: [
-                        input.path.regionId
-                    ]
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .delete
-                )
-                suppressMutabilityWarning(&request)
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                return (request, nil)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 204:
-                    return .noContent(.init())
-                case 404:
-                    return .notFound(.init())
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.deleteV2DeviceMeSettingsEarthquakeRegionsByRegionId.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
     /// EEW通知設定を取得
     ///
     /// - Remark: HTTP `GET /v2/device/me/settings/eew`.
@@ -2330,434 +1896,6 @@ public struct Client: APIProtocol {
                 case 500:
                     let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
                     let body: Operations.patchV2DeviceMeSettingsEew.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
-    /// EEW通知リージョン設定一覧を取得
-    ///
-    /// - Remark: HTTP `GET /v2/device/me/settings/eew/regions`.
-    /// - Remark: Generated from `#/paths//v2/device/me/settings/eew/regions/get(getV2DeviceMeSettingsEewRegions)`.
-    public func getV2DeviceMeSettingsEewRegions(_ input: Operations.getV2DeviceMeSettingsEewRegions.Input) async throws -> Operations.getV2DeviceMeSettingsEewRegions.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.getV2DeviceMeSettingsEewRegions.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/device/me/settings/eew/regions",
-                    parameters: []
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .get
-                )
-                suppressMutabilityWarning(&request)
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                return (request, nil)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 200:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2DeviceMeSettingsEewRegions.Output.Ok.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            [Components.Schemas.RegionSettingResponse].self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .ok(.init(body: body))
-                case 404:
-                    return .notFound(.init())
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2DeviceMeSettingsEewRegions.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
-    /// EEW通知リージョン設定を一括更新（全件上書き）
-    ///
-    /// - Remark: HTTP `PUT /v2/device/me/settings/eew/regions`.
-    /// - Remark: Generated from `#/paths//v2/device/me/settings/eew/regions/put(putV2DeviceMeSettingsEewRegions)`.
-    public func putV2DeviceMeSettingsEewRegions(_ input: Operations.putV2DeviceMeSettingsEewRegions.Input) async throws -> Operations.putV2DeviceMeSettingsEewRegions.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.putV2DeviceMeSettingsEewRegions.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/device/me/settings/eew/regions",
-                    parameters: []
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .put
-                )
-                suppressMutabilityWarning(&request)
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                let body: OpenAPIRuntime.HTTPBody?
-                switch input.body {
-                case let .json(value):
-                    body = try converter.setRequiredRequestBodyAsJSON(
-                        value,
-                        headerFields: &request.headerFields,
-                        contentType: "application/json; charset=utf-8"
-                    )
-                }
-                return (request, body)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 200:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.putV2DeviceMeSettingsEewRegions.Output.Ok.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            [Components.Schemas.RegionSettingResponse].self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .ok(.init(body: body))
-                case 400:
-                    return .badRequest(.init())
-                case 404:
-                    return .notFound(.init())
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.putV2DeviceMeSettingsEewRegions.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
-    /// 特定のリージョン設定を取得
-    ///
-    /// - Remark: HTTP `GET /v2/device/me/settings/eew/regions/{regionId}`.
-    /// - Remark: Generated from `#/paths//v2/device/me/settings/eew/regions/{regionId}/get(getV2DeviceMeSettingsEewRegionsByRegionId)`.
-    public func getV2DeviceMeSettingsEewRegionsByRegionId(_ input: Operations.getV2DeviceMeSettingsEewRegionsByRegionId.Input) async throws -> Operations.getV2DeviceMeSettingsEewRegionsByRegionId.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.getV2DeviceMeSettingsEewRegionsByRegionId.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/device/me/settings/eew/regions/{}",
-                    parameters: [
-                        input.path.regionId
-                    ]
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .get
-                )
-                suppressMutabilityWarning(&request)
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                return (request, nil)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 200:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2DeviceMeSettingsEewRegionsByRegionId.Output.Ok.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.RegionSettingResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .ok(.init(body: body))
-                case 404:
-                    return .notFound(.init())
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2DeviceMeSettingsEewRegionsByRegionId.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
-    /// 特定のリージョン設定を更新
-    ///
-    /// - Remark: HTTP `PATCH /v2/device/me/settings/eew/regions/{regionId}`.
-    /// - Remark: Generated from `#/paths//v2/device/me/settings/eew/regions/{regionId}/patch(patchV2DeviceMeSettingsEewRegionsByRegionId)`.
-    public func patchV2DeviceMeSettingsEewRegionsByRegionId(_ input: Operations.patchV2DeviceMeSettingsEewRegionsByRegionId.Input) async throws -> Operations.patchV2DeviceMeSettingsEewRegionsByRegionId.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.patchV2DeviceMeSettingsEewRegionsByRegionId.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/device/me/settings/eew/regions/{}",
-                    parameters: [
-                        input.path.regionId
-                    ]
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .patch
-                )
-                suppressMutabilityWarning(&request)
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                let body: OpenAPIRuntime.HTTPBody?
-                switch input.body {
-                case let .json(value):
-                    body = try converter.setRequiredRequestBodyAsJSON(
-                        value,
-                        headerFields: &request.headerFields,
-                        contentType: "application/json; charset=utf-8"
-                    )
-                }
-                return (request, body)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 200:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.patchV2DeviceMeSettingsEewRegionsByRegionId.Output.Ok.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.RegionSettingResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .ok(.init(body: body))
-                case 400:
-                    return .badRequest(.init())
-                case 404:
-                    return .notFound(.init())
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.patchV2DeviceMeSettingsEewRegionsByRegionId.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
-    /// 特定のリージョン設定を削除
-    ///
-    /// - Remark: HTTP `DELETE /v2/device/me/settings/eew/regions/{regionId}`.
-    /// - Remark: Generated from `#/paths//v2/device/me/settings/eew/regions/{regionId}/delete(deleteV2DeviceMeSettingsEewRegionsByRegionId)`.
-    public func deleteV2DeviceMeSettingsEewRegionsByRegionId(_ input: Operations.deleteV2DeviceMeSettingsEewRegionsByRegionId.Input) async throws -> Operations.deleteV2DeviceMeSettingsEewRegionsByRegionId.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.deleteV2DeviceMeSettingsEewRegionsByRegionId.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/device/me/settings/eew/regions/{}",
-                    parameters: [
-                        input.path.regionId
-                    ]
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .delete
-                )
-                suppressMutabilityWarning(&request)
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                return (request, nil)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 204:
-                    return .noContent(.init())
-                case 404:
-                    return .notFound(.init())
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.deleteV2DeviceMeSettingsEewRegionsByRegionId.Output.InternalServerError.Body
                     let chosenContentType = try converter.bestContentType(
                         received: contentType,
                         options: [
@@ -3050,6 +2188,1686 @@ public struct Client: APIProtocol {
             }
         )
     }
+    /// 津波通知設定を取得
+    ///
+    /// - Remark: HTTP `GET /v2/device/me/settings/tsunami`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/tsunami/get(getV2DeviceMeSettingsTsunami)`.
+    public func getV2DeviceMeSettingsTsunami(_ input: Operations.getV2DeviceMeSettingsTsunami.Input) async throws -> Operations.getV2DeviceMeSettingsTsunami.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2DeviceMeSettingsTsunami.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/tsunami",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsTsunami.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.TsunamiSettingsResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsTsunami.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 津波通知設定を更新
+    ///
+    /// - Remark: HTTP `PATCH /v2/device/me/settings/tsunami`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/tsunami/patch(patchV2DeviceMeSettingsTsunami)`.
+    public func patchV2DeviceMeSettingsTsunami(_ input: Operations.patchV2DeviceMeSettingsTsunami.Input) async throws -> Operations.patchV2DeviceMeSettingsTsunami.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.patchV2DeviceMeSettingsTsunami.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/tsunami",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .patch
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.patchV2DeviceMeSettingsTsunami.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.TsunamiSettingsResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 400:
+                    return .badRequest(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.patchV2DeviceMeSettingsTsunami.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 津波通知リージョン設定一覧を取得
+    ///
+    /// - Remark: HTTP `GET /v2/device/me/settings/tsunami/regions`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/tsunami/regions/get(getV2DeviceMeSettingsTsunamiRegions)`.
+    public func getV2DeviceMeSettingsTsunamiRegions(_ input: Operations.getV2DeviceMeSettingsTsunamiRegions.Input) async throws -> Operations.getV2DeviceMeSettingsTsunamiRegions.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2DeviceMeSettingsTsunamiRegions.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/tsunami/regions",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsTsunamiRegions.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            [Components.Schemas.TsunamiRegionSettingResponse].self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsTsunamiRegions.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 津波通知リージョン設定を新規作成（同一予報区コードが既存の場合は上書き）
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/settings/tsunami/regions`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/tsunami/regions/post(postV2DeviceMeSettingsTsunamiRegions)`.
+    public func postV2DeviceMeSettingsTsunamiRegions(_ input: Operations.postV2DeviceMeSettingsTsunamiRegions.Input) async throws -> Operations.postV2DeviceMeSettingsTsunamiRegions.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.postV2DeviceMeSettingsTsunamiRegions.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/tsunami/regions",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .post
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 201:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeSettingsTsunamiRegions.Output.Created.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.TsunamiRegionSettingResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .created(.init(body: body))
+                case 400:
+                    return .badRequest(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeSettingsTsunamiRegions.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 特定の津波リージョン設定を取得
+    ///
+    /// - Remark: HTTP `GET /v2/device/me/settings/tsunami/regions/{regionId}`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/tsunami/regions/{regionId}/get(getV2DeviceMeSettingsTsunamiRegionsByRegionId)`.
+    public func getV2DeviceMeSettingsTsunamiRegionsByRegionId(_ input: Operations.getV2DeviceMeSettingsTsunamiRegionsByRegionId.Input) async throws -> Operations.getV2DeviceMeSettingsTsunamiRegionsByRegionId.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2DeviceMeSettingsTsunamiRegionsByRegionId.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/tsunami/regions/{}",
+                    parameters: [
+                        input.path.regionId
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsTsunamiRegionsByRegionId.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.TsunamiRegionSettingResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 404:
+                    return .notFound(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsTsunamiRegionsByRegionId.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 特定の津波リージョン設定を更新
+    ///
+    /// - Remark: HTTP `PATCH /v2/device/me/settings/tsunami/regions/{regionId}`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/tsunami/regions/{regionId}/patch(patchV2DeviceMeSettingsTsunamiRegionsByRegionId)`.
+    public func patchV2DeviceMeSettingsTsunamiRegionsByRegionId(_ input: Operations.patchV2DeviceMeSettingsTsunamiRegionsByRegionId.Input) async throws -> Operations.patchV2DeviceMeSettingsTsunamiRegionsByRegionId.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.patchV2DeviceMeSettingsTsunamiRegionsByRegionId.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/tsunami/regions/{}",
+                    parameters: [
+                        input.path.regionId
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .patch
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.patchV2DeviceMeSettingsTsunamiRegionsByRegionId.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.TsunamiRegionSettingResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 400:
+                    return .badRequest(.init())
+                case 404:
+                    return .notFound(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.patchV2DeviceMeSettingsTsunamiRegionsByRegionId.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 特定の津波リージョン設定を削除
+    ///
+    /// - Remark: HTTP `DELETE /v2/device/me/settings/tsunami/regions/{regionId}`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/tsunami/regions/{regionId}/delete(deleteV2DeviceMeSettingsTsunamiRegionsByRegionId)`.
+    public func deleteV2DeviceMeSettingsTsunamiRegionsByRegionId(_ input: Operations.deleteV2DeviceMeSettingsTsunamiRegionsByRegionId.Input) async throws -> Operations.deleteV2DeviceMeSettingsTsunamiRegionsByRegionId.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.deleteV2DeviceMeSettingsTsunamiRegionsByRegionId.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/tsunami/regions/{}",
+                    parameters: [
+                        input.path.regionId
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .delete
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 204:
+                    return .noContent(.init())
+                case 404:
+                    return .notFound(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.deleteV2DeviceMeSettingsTsunamiRegionsByRegionId.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 通知スロット一覧を取得
+    ///
+    /// - Remark: HTTP `GET /v2/device/me/settings/slots`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/get(getV2DeviceMeSettingsSlots)`.
+    public func getV2DeviceMeSettingsSlots(_ input: Operations.getV2DeviceMeSettingsSlots.Input) async throws -> Operations.getV2DeviceMeSettingsSlots.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2DeviceMeSettingsSlots.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsSlots.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            [Components.Schemas.SlotResponse].self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsSlots.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 現在地スロットを取得
+    ///
+    /// - Remark: HTTP `GET /v2/device/me/settings/slots/current-location`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/current-location/get(getV2DeviceMeSettingsSlotsCurrentLocation)`.
+    public func getV2DeviceMeSettingsSlotsCurrentLocation(_ input: Operations.getV2DeviceMeSettingsSlotsCurrentLocation.Input) async throws -> Operations.getV2DeviceMeSettingsSlotsCurrentLocation.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2DeviceMeSettingsSlotsCurrentLocation.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots/current-location",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsSlotsCurrentLocation.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.SlotResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 404:
+                    return .notFound(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsSlotsCurrentLocation.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 現在地スロットを upsert
+    ///
+    /// - Remark: HTTP `PUT /v2/device/me/settings/slots/current-location`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/current-location/put(putV2DeviceMeSettingsSlotsCurrentLocation)`.
+    public func putV2DeviceMeSettingsSlotsCurrentLocation(_ input: Operations.putV2DeviceMeSettingsSlotsCurrentLocation.Input) async throws -> Operations.putV2DeviceMeSettingsSlotsCurrentLocation.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.putV2DeviceMeSettingsSlotsCurrentLocation.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots/current-location",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .put
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.putV2DeviceMeSettingsSlotsCurrentLocation.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.SlotResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 400:
+                    return .badRequest(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.putV2DeviceMeSettingsSlotsCurrentLocation.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 現在地スロットを削除
+    ///
+    /// - Remark: HTTP `DELETE /v2/device/me/settings/slots/current-location`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/current-location/delete(deleteV2DeviceMeSettingsSlotsCurrentLocation)`.
+    public func deleteV2DeviceMeSettingsSlotsCurrentLocation(_ input: Operations.deleteV2DeviceMeSettingsSlotsCurrentLocation.Input) async throws -> Operations.deleteV2DeviceMeSettingsSlotsCurrentLocation.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.deleteV2DeviceMeSettingsSlotsCurrentLocation.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots/current-location",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .delete
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 204:
+                    return .noContent(.init())
+                case 404:
+                    return .notFound(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.deleteV2DeviceMeSettingsSlotsCurrentLocation.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 全国スロットを取得
+    ///
+    /// - Remark: HTTP `GET /v2/device/me/settings/slots/nationwide`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/nationwide/get(getV2DeviceMeSettingsSlotsNationwide)`.
+    public func getV2DeviceMeSettingsSlotsNationwide(_ input: Operations.getV2DeviceMeSettingsSlotsNationwide.Input) async throws -> Operations.getV2DeviceMeSettingsSlotsNationwide.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2DeviceMeSettingsSlotsNationwide.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots/nationwide",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsSlotsNationwide.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.SlotResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 404:
+                    return .notFound(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsSlotsNationwide.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 全国スロットを upsert
+    ///
+    /// - Remark: HTTP `PUT /v2/device/me/settings/slots/nationwide`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/nationwide/put(putV2DeviceMeSettingsSlotsNationwide)`.
+    public func putV2DeviceMeSettingsSlotsNationwide(_ input: Operations.putV2DeviceMeSettingsSlotsNationwide.Input) async throws -> Operations.putV2DeviceMeSettingsSlotsNationwide.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.putV2DeviceMeSettingsSlotsNationwide.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots/nationwide",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .put
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.putV2DeviceMeSettingsSlotsNationwide.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.SlotResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 400:
+                    return .badRequest(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.putV2DeviceMeSettingsSlotsNationwide.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 全国スロットを削除
+    ///
+    /// - Remark: HTTP `DELETE /v2/device/me/settings/slots/nationwide`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/nationwide/delete(deleteV2DeviceMeSettingsSlotsNationwide)`.
+    public func deleteV2DeviceMeSettingsSlotsNationwide(_ input: Operations.deleteV2DeviceMeSettingsSlotsNationwide.Input) async throws -> Operations.deleteV2DeviceMeSettingsSlotsNationwide.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.deleteV2DeviceMeSettingsSlotsNationwide.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots/nationwide",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .delete
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 204:
+                    return .noContent(.init())
+                case 404:
+                    return .notFound(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.deleteV2DeviceMeSettingsSlotsNationwide.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 地域スロット一覧を取得
+    ///
+    /// - Remark: HTTP `GET /v2/device/me/settings/slots/regions`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/regions/get(getV2DeviceMeSettingsSlotsRegions)`.
+    public func getV2DeviceMeSettingsSlotsRegions(_ input: Operations.getV2DeviceMeSettingsSlotsRegions.Input) async throws -> Operations.getV2DeviceMeSettingsSlotsRegions.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2DeviceMeSettingsSlotsRegions.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots/regions",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsSlotsRegions.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            [Components.Schemas.SlotResponse].self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsSlotsRegions.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 地域スロットを作成（プラン制約チェックあり）
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/settings/slots/regions`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/regions/post(postV2DeviceMeSettingsSlotsRegions)`.
+    public func postV2DeviceMeSettingsSlotsRegions(_ input: Operations.postV2DeviceMeSettingsSlotsRegions.Input) async throws -> Operations.postV2DeviceMeSettingsSlotsRegions.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.postV2DeviceMeSettingsSlotsRegions.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots/regions",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .post
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 201:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeSettingsSlotsRegions.Output.Created.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.SlotResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .created(.init(body: body))
+                case 400:
+                    return .badRequest(.init())
+                case 402:
+                    return .code402(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeSettingsSlotsRegions.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 地域スロットを更新
+    ///
+    /// - Remark: HTTP `PATCH /v2/device/me/settings/slots/regions/{slotId}`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/regions/{slotId}/patch(patchV2DeviceMeSettingsSlotsRegionsBySlotId)`.
+    public func patchV2DeviceMeSettingsSlotsRegionsBySlotId(_ input: Operations.patchV2DeviceMeSettingsSlotsRegionsBySlotId.Input) async throws -> Operations.patchV2DeviceMeSettingsSlotsRegionsBySlotId.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.patchV2DeviceMeSettingsSlotsRegionsBySlotId.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots/regions/{}",
+                    parameters: [
+                        input.path.slotId
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .patch
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.patchV2DeviceMeSettingsSlotsRegionsBySlotId.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.SlotResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 400:
+                    return .badRequest(.init())
+                case 404:
+                    return .notFound(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.patchV2DeviceMeSettingsSlotsRegionsBySlotId.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 地域スロットを削除
+    ///
+    /// - Remark: HTTP `DELETE /v2/device/me/settings/slots/regions/{slotId}`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/slots/regions/{slotId}/delete(deleteV2DeviceMeSettingsSlotsRegionsBySlotId)`.
+    public func deleteV2DeviceMeSettingsSlotsRegionsBySlotId(_ input: Operations.deleteV2DeviceMeSettingsSlotsRegionsBySlotId.Input) async throws -> Operations.deleteV2DeviceMeSettingsSlotsRegionsBySlotId.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.deleteV2DeviceMeSettingsSlotsRegionsBySlotId.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/slots/regions/{}",
+                    parameters: [
+                        input.path.slotId
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .delete
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 204:
+                    return .noContent(.init())
+                case 404:
+                    return .notFound(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.deleteV2DeviceMeSettingsSlotsRegionsBySlotId.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// EEW 警報設定を取得
+    ///
+    /// - Remark: HTTP `GET /v2/device/me/settings/eew-warning`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/eew-warning/get(getV2DeviceMeSettingsEewWarning)`.
+    public func getV2DeviceMeSettingsEewWarning(_ input: Operations.getV2DeviceMeSettingsEewWarning.Input) async throws -> Operations.getV2DeviceMeSettingsEewWarning.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2DeviceMeSettingsEewWarning.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/eew-warning",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsEewWarning.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.EewWarningConfigResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2DeviceMeSettingsEewWarning.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// EEW 警報設定を更新（Free プランは nationwide 不可）
+    ///
+    /// - Remark: HTTP `PATCH /v2/device/me/settings/eew-warning`.
+    /// - Remark: Generated from `#/paths//v2/device/me/settings/eew-warning/patch(patchV2DeviceMeSettingsEewWarning)`.
+    public func patchV2DeviceMeSettingsEewWarning(_ input: Operations.patchV2DeviceMeSettingsEewWarning.Input) async throws -> Operations.patchV2DeviceMeSettingsEewWarning.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.patchV2DeviceMeSettingsEewWarning.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/settings/eew-warning",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .patch
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.patchV2DeviceMeSettingsEewWarning.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.EewWarningConfigResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 400:
+                    return .badRequest(.init())
+                case 402:
+                    return .code402(.init())
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.patchV2DeviceMeSettingsEewWarning.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
     /// Live Activity updateToken一覧を取得
     ///
     /// - Remark: HTTP `GET /v2/device/me/live-activity`.
@@ -3295,22 +4113,22 @@ public struct Client: APIProtocol {
             }
         )
     }
-    /// デバッグ用: Live Activity の 4 報シーケンス（start + 3 updates）を再生する
+    /// デバイスの現在地を更新
     ///
-    /// - Remark: HTTP `POST /v2/device/me/live-activity/test-scenario`.
-    /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test-scenario/post(postV2DeviceMeLiveActivityTestScenario)`.
-    public func postV2DeviceMeLiveActivityTestScenario(_ input: Operations.postV2DeviceMeLiveActivityTestScenario.Input) async throws -> Operations.postV2DeviceMeLiveActivityTestScenario.Output {
+    /// - Remark: HTTP `PUT /v2/device/me/location`.
+    /// - Remark: Generated from `#/paths//v2/device/me/location/put(putV2DeviceMeLocation)`.
+    public func putV2DeviceMeLocation(_ input: Operations.putV2DeviceMeLocation.Input) async throws -> Operations.putV2DeviceMeLocation.Output {
         try await client.send(
             input: input,
-            forOperation: Operations.postV2DeviceMeLiveActivityTestScenario.id,
+            forOperation: Operations.putV2DeviceMeLocation.id,
             serializer: { input in
                 let path = try converter.renderedPath(
-                    template: "/v2/device/me/live-activity/test-scenario",
+                    template: "/v2/device/me/location",
                     parameters: []
                 )
                 var request: HTTPTypes.HTTPRequest = .init(
                     soar_path: path,
-                    method: .post
+                    method: .put
                 )
                 suppressMutabilityWarning(&request)
                 converter.setAcceptHeader(
@@ -3332,7 +4150,7 @@ public struct Client: APIProtocol {
                 switch response.status.code {
                 case 200:
                     let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.postV2DeviceMeLiveActivityTestScenario.Output.Ok.Body
+                    let body: Operations.putV2DeviceMeLocation.Output.Ok.Body
                     let chosenContentType = try converter.bestContentType(
                         received: contentType,
                         options: [
@@ -3342,7 +4160,7 @@ public struct Client: APIProtocol {
                     switch chosenContentType {
                     case "application/json":
                         body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.LiveActivityTestScenarioResponse.self,
+                            Components.Schemas.DeviceLocationResponse.self,
                             from: responseBody,
                             transforming: { value in
                                 .json(value)
@@ -3352,31 +4170,13 @@ public struct Client: APIProtocol {
                         preconditionFailure("bestContentType chose an invalid content type.")
                     }
                     return .ok(.init(body: body))
+                case 400:
+                    return .badRequest(.init())
                 case 404:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.postV2DeviceMeLiveActivityTestScenario.Output.NotFound.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.NotFoundResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .notFound(.init(body: body))
+                    return .notFound(.init())
                 case 500:
                     let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.postV2DeviceMeLiveActivityTestScenario.Output.InternalServerError.Body
+                    let body: Operations.putV2DeviceMeLocation.Output.InternalServerError.Body
                     let chosenContentType = try converter.bestContentType(
                         received: contentType,
                         options: [
@@ -3959,7 +4759,483 @@ public struct Client: APIProtocol {
             }
         )
     }
-    /// 地震情報一覧
+    /// 指定したイベントIDの実データをDBから取得し、実際の通知パイプラインを通してこのデバイスにのみ通知を配信する（EEW + VXSE51/52/53）
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/notification/test-scenario`.
+    /// - Remark: Generated from `#/paths//v2/device/me/notification/test-scenario/post(postV2DeviceMeNotificationTestScenario)`.
+    public func postV2DeviceMeNotificationTestScenario(_ input: Operations.postV2DeviceMeNotificationTestScenario.Input) async throws -> Operations.postV2DeviceMeNotificationTestScenario.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.postV2DeviceMeNotificationTestScenario.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/notification/test-scenario",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .post
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeNotificationTestScenario.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.TestScenarioResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 404:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeNotificationTestScenario.Output.NotFound.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.NotFoundResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .notFound(.init(body: body))
+                case 503:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeNotificationTestScenario.Output.ServiceUnavailable.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ServiceUnavailableResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .serviceUnavailable(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// シナリオを指定してテスト通知を送信。通知パイプラインを通してメッセージを生成し、[テスト/TEST] プレフィックス付きでこのデバイスにのみ配信する
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/notification/test-scenario-type`.
+    /// - Remark: Generated from `#/paths//v2/device/me/notification/test-scenario-type/post(postV2DeviceMeNotificationTestScenarioType)`.
+    public func postV2DeviceMeNotificationTestScenarioType(_ input: Operations.postV2DeviceMeNotificationTestScenarioType.Input) async throws -> Operations.postV2DeviceMeNotificationTestScenarioType.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.postV2DeviceMeNotificationTestScenarioType.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/notification/test-scenario-type",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .post
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeNotificationTestScenarioType.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.TestScenarioTypeResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 404:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeNotificationTestScenarioType.Output.NotFound.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.NotFoundResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .notFound(.init(body: body))
+                case 503:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeNotificationTestScenarioType.Output.ServiceUnavailable.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ServiceUnavailableResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .serviceUnavailable(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// クライアント側テレメトリイベントをバッチで受信
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/telemetry/events`.
+    /// - Remark: Generated from `#/paths//v2/device/me/telemetry/events/post(postV2DeviceMeTelemetryEvents)`.
+    public func postV2DeviceMeTelemetryEvents(_ input: Operations.postV2DeviceMeTelemetryEvents.Input) async throws -> Operations.postV2DeviceMeTelemetryEvents.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.postV2DeviceMeTelemetryEvents.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/telemetry/events",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .post
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeTelemetryEvents.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.TelemetryEventsResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 401:
+                    return .unauthorized(.init())
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 旧 Supabase のデバイス設定を新 DB に移行
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/migrate`.
+    /// - Remark: Generated from `#/paths//v2/device/me/migrate/post(postV2DeviceMeMigrate)`.
+    public func postV2DeviceMeMigrate(_ input: Operations.postV2DeviceMeMigrate.Input) async throws -> Operations.postV2DeviceMeMigrate.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.postV2DeviceMeMigrate.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/device/me/migrate",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .post
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeMigrate.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.MigrationResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 400:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeMigrate.Output.BadRequest.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.BadRequestResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .badRequest(.init(body: body))
+                case 401:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeMigrate.Output.Unauthorized.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.UnauthorizedResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .unauthorized(.init(body: body))
+                case 404:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeMigrate.Output.NotFound.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.NotFoundResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .notFound(.init(body: body))
+                case 409:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeMigrate.Output.Conflict.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ConflictResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .conflict(.init(body: body))
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.postV2DeviceMeMigrate.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 地震情報一覧。sortByでmagnitude/max_intensity/max_lpgm_intensity/depth/origin_timeを指定した場合、NULL値は常に末尾に配置されます。カーソルベースのページネーション(cursor)はevent_idに基づくため、sortByがevent_id以外の場合はcursorと併用できません（1ページ目の取得のみ対応）。
     ///
     /// - Remark: HTTP `GET /v2/earthquake`.
     /// - Remark: Generated from `#/paths//v2/earthquake/get(getV2Earthquake)`.
@@ -4037,6 +5313,20 @@ public struct Client: APIProtocol {
                     in: &request,
                     style: .form,
                     explode: true,
+                    name: "maxLpgmIntensityLte",
+                    value: input.query.maxLpgmIntensityLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "maxLpgmIntensityGte",
+                    value: input.query.maxLpgmIntensityGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
                     name: "originTimeGte",
                     value: input.query.originTimeGte
                 )
@@ -4053,6 +5343,69 @@ public struct Client: APIProtocol {
                     explode: true,
                     name: "statuses",
                     value: input.query.statuses
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "epicenterCodes",
+                    value: input.query.epicenterCodes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "epicenterDetailCode",
+                    value: input.query.epicenterDetailCode
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "earthquakeType",
+                    value: input.query.earthquakeType
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "datasource",
+                    value: input.query.datasource
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "telegramTypes",
+                    value: input.query.telegramTypes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "latitudeGte",
+                    value: input.query.latitudeGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "latitudeLte",
+                    value: input.query.latitudeLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "longitudeGte",
+                    value: input.query.longitudeGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "longitudeLte",
+                    value: input.query.longitudeLte
                 )
                 try converter.setQueryItemAsURI(
                     in: &request,
@@ -4280,6 +5633,188 @@ public struct Client: APIProtocol {
             }
         )
     }
+    /// 都道府県ごとの過去最高震度一覧
+    ///
+    /// - Remark: HTTP `GET /v2/earthquake/intensity/prefecture/highest`.
+    /// - Remark: Generated from `#/paths//v2/earthquake/intensity/prefecture/highest/get(getV2EarthquakeIntensityPrefectureHighest)`.
+    public func getV2EarthquakeIntensityPrefectureHighest(_ input: Operations.getV2EarthquakeIntensityPrefectureHighest.Input) async throws -> Operations.getV2EarthquakeIntensityPrefectureHighest.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2EarthquakeIntensityPrefectureHighest.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/earthquake/intensity/prefecture/highest",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "statuses",
+                    value: input.query.statuses
+                )
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2EarthquakeIntensityPrefectureHighest.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.HighestIntensityResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2EarthquakeIntensityPrefectureHighest.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 指定都道府県内の市区町村ごとの過去最高震度一覧
+    ///
+    /// - Remark: HTTP `GET /v2/earthquake/intensity/prefecture/{code}/city/highest`.
+    /// - Remark: Generated from `#/paths//v2/earthquake/intensity/prefecture/{code}/city/highest/get(getV2EarthquakeIntensityPrefectureByCodeCityHighest)`.
+    public func getV2EarthquakeIntensityPrefectureByCodeCityHighest(_ input: Operations.getV2EarthquakeIntensityPrefectureByCodeCityHighest.Input) async throws -> Operations.getV2EarthquakeIntensityPrefectureByCodeCityHighest.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2EarthquakeIntensityPrefectureByCodeCityHighest.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/earthquake/intensity/prefecture/{}/city/highest",
+                    parameters: [
+                        input.path.code
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "statuses",
+                    value: input.query.statuses
+                )
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2EarthquakeIntensityPrefectureByCodeCityHighest.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.HighestIntensityResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2EarthquakeIntensityPrefectureByCodeCityHighest.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
+    /// 震度細分区域コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。
+    ///
     /// - Remark: HTTP `GET /v2/earthquake/intensity/region/{code}`.
     /// - Remark: Generated from `#/paths//v2/earthquake/intensity/region/{code}/get(getV2EarthquakeIntensityRegionByCode)`.
     public func getV2EarthquakeIntensityRegionByCode(_ input: Operations.getV2EarthquakeIntensityRegionByCode.Input) async throws -> Operations.getV2EarthquakeIntensityRegionByCode.Output {
@@ -4358,6 +5893,20 @@ public struct Client: APIProtocol {
                     in: &request,
                     style: .form,
                     explode: true,
+                    name: "maxLpgmIntensityLte",
+                    value: input.query.maxLpgmIntensityLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "maxLpgmIntensityGte",
+                    value: input.query.maxLpgmIntensityGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
                     name: "originTimeGte",
                     value: input.query.originTimeGte
                 )
@@ -4374,6 +5923,69 @@ public struct Client: APIProtocol {
                     explode: true,
                     name: "statuses",
                     value: input.query.statuses
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "epicenterCodes",
+                    value: input.query.epicenterCodes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "epicenterDetailCode",
+                    value: input.query.epicenterDetailCode
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "earthquakeType",
+                    value: input.query.earthquakeType
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "datasource",
+                    value: input.query.datasource
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "telegramTypes",
+                    value: input.query.telegramTypes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "latitudeGte",
+                    value: input.query.latitudeGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "latitudeLte",
+                    value: input.query.latitudeLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "longitudeGte",
+                    value: input.query.longitudeGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "longitudeLte",
+                    value: input.query.longitudeLte
                 )
                 try converter.setQueryItemAsURI(
                     in: &request,
@@ -4475,6 +6087,8 @@ public struct Client: APIProtocol {
             }
         )
     }
+    /// 都道府県コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。
+    ///
     /// - Remark: HTTP `GET /v2/earthquake/intensity/prefecture/{code}`.
     /// - Remark: Generated from `#/paths//v2/earthquake/intensity/prefecture/{code}/get(getV2EarthquakeIntensityPrefectureByCode)`.
     public func getV2EarthquakeIntensityPrefectureByCode(_ input: Operations.getV2EarthquakeIntensityPrefectureByCode.Input) async throws -> Operations.getV2EarthquakeIntensityPrefectureByCode.Output {
@@ -4553,6 +6167,20 @@ public struct Client: APIProtocol {
                     in: &request,
                     style: .form,
                     explode: true,
+                    name: "maxLpgmIntensityLte",
+                    value: input.query.maxLpgmIntensityLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "maxLpgmIntensityGte",
+                    value: input.query.maxLpgmIntensityGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
                     name: "originTimeGte",
                     value: input.query.originTimeGte
                 )
@@ -4569,6 +6197,69 @@ public struct Client: APIProtocol {
                     explode: true,
                     name: "statuses",
                     value: input.query.statuses
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "epicenterCodes",
+                    value: input.query.epicenterCodes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "epicenterDetailCode",
+                    value: input.query.epicenterDetailCode
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "earthquakeType",
+                    value: input.query.earthquakeType
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "datasource",
+                    value: input.query.datasource
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "telegramTypes",
+                    value: input.query.telegramTypes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "latitudeGte",
+                    value: input.query.latitudeGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "latitudeLte",
+                    value: input.query.latitudeLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "longitudeGte",
+                    value: input.query.longitudeGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "longitudeLte",
+                    value: input.query.longitudeLte
                 )
                 try converter.setQueryItemAsURI(
                     in: &request,
@@ -4670,6 +6361,8 @@ public struct Client: APIProtocol {
             }
         )
     }
+    /// 市区町村コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。
+    ///
     /// - Remark: HTTP `GET /v2/earthquake/intensity/city/{code}`.
     /// - Remark: Generated from `#/paths//v2/earthquake/intensity/city/{code}/get(getV2EarthquakeIntensityCityByCode)`.
     public func getV2EarthquakeIntensityCityByCode(_ input: Operations.getV2EarthquakeIntensityCityByCode.Input) async throws -> Operations.getV2EarthquakeIntensityCityByCode.Output {
@@ -4748,6 +6441,20 @@ public struct Client: APIProtocol {
                     in: &request,
                     style: .form,
                     explode: true,
+                    name: "maxLpgmIntensityLte",
+                    value: input.query.maxLpgmIntensityLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "maxLpgmIntensityGte",
+                    value: input.query.maxLpgmIntensityGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
                     name: "originTimeGte",
                     value: input.query.originTimeGte
                 )
@@ -4764,6 +6471,69 @@ public struct Client: APIProtocol {
                     explode: true,
                     name: "statuses",
                     value: input.query.statuses
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "epicenterCodes",
+                    value: input.query.epicenterCodes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "epicenterDetailCode",
+                    value: input.query.epicenterDetailCode
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "earthquakeType",
+                    value: input.query.earthquakeType
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "datasource",
+                    value: input.query.datasource
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "telegramTypes",
+                    value: input.query.telegramTypes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "latitudeGte",
+                    value: input.query.latitudeGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "latitudeLte",
+                    value: input.query.latitudeLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "longitudeGte",
+                    value: input.query.longitudeGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "longitudeLte",
+                    value: input.query.longitudeLte
                 )
                 try converter.setQueryItemAsURI(
                     in: &request,
@@ -4865,6 +6635,8 @@ public struct Client: APIProtocol {
             }
         )
     }
+    /// 観測点コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。
+    ///
     /// - Remark: HTTP `GET /v2/earthquake/intensity/station/{code}`.
     /// - Remark: Generated from `#/paths//v2/earthquake/intensity/station/{code}/get(getV2EarthquakeIntensityStationByCode)`.
     public func getV2EarthquakeIntensityStationByCode(_ input: Operations.getV2EarthquakeIntensityStationByCode.Input) async throws -> Operations.getV2EarthquakeIntensityStationByCode.Output {
@@ -4943,6 +6715,20 @@ public struct Client: APIProtocol {
                     in: &request,
                     style: .form,
                     explode: true,
+                    name: "maxLpgmIntensityLte",
+                    value: input.query.maxLpgmIntensityLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "maxLpgmIntensityGte",
+                    value: input.query.maxLpgmIntensityGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
                     name: "originTimeGte",
                     value: input.query.originTimeGte
                 )
@@ -4959,6 +6745,69 @@ public struct Client: APIProtocol {
                     explode: true,
                     name: "statuses",
                     value: input.query.statuses
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "epicenterCodes",
+                    value: input.query.epicenterCodes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "epicenterDetailCode",
+                    value: input.query.epicenterDetailCode
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "earthquakeType",
+                    value: input.query.earthquakeType
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "datasource",
+                    value: input.query.datasource
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "telegramTypes",
+                    value: input.query.telegramTypes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "latitudeGte",
+                    value: input.query.latitudeGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "latitudeLte",
+                    value: input.query.latitudeLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "longitudeGte",
+                    value: input.query.longitudeGte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "longitudeLte",
+                    value: input.query.longitudeLte
                 )
                 try converter.setQueryItemAsURI(
                     in: &request,
@@ -5029,201 +6878,6 @@ public struct Client: APIProtocol {
                 case 500:
                     let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
                     let body: Operations.getV2EarthquakeIntensityStationByCode.Output.InternalServerError.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.InternalServerErrorResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .internalServerError(.init(body: body))
-                default:
-                    return .undocumented(
-                        statusCode: response.status.code,
-                        .init(
-                            headerFields: response.headerFields,
-                            body: responseBody
-                        )
-                    )
-                }
-            }
-        )
-    }
-    /// - Remark: HTTP `GET /v2/earthquake/epicenter/{code}`.
-    /// - Remark: Generated from `#/paths//v2/earthquake/epicenter/{code}/get(getV2EarthquakeEpicenterByCode)`.
-    public func getV2EarthquakeEpicenterByCode(_ input: Operations.getV2EarthquakeEpicenterByCode.Input) async throws -> Operations.getV2EarthquakeEpicenterByCode.Output {
-        try await client.send(
-            input: input,
-            forOperation: Operations.getV2EarthquakeEpicenterByCode.id,
-            serializer: { input in
-                let path = try converter.renderedPath(
-                    template: "/v2/earthquake/epicenter/{}",
-                    parameters: [
-                        input.path.code
-                    ]
-                )
-                var request: HTTPTypes.HTTPRequest = .init(
-                    soar_path: path,
-                    method: .get
-                )
-                suppressMutabilityWarning(&request)
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "limit",
-                    value: input.query.limit
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "cursor",
-                    value: input.query.cursor
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "magnitudeLte",
-                    value: input.query.magnitudeLte
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "magnitudeGte",
-                    value: input.query.magnitudeGte
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "depthLte",
-                    value: input.query.depthLte
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "depthGte",
-                    value: input.query.depthGte
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "intensityLte",
-                    value: input.query.intensityLte
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "intensityGte",
-                    value: input.query.intensityGte
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "originTimeGte",
-                    value: input.query.originTimeGte
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "originTimeLte",
-                    value: input.query.originTimeLte
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "statuses",
-                    value: input.query.statuses
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "sortBy",
-                    value: input.query.sortBy
-                )
-                try converter.setQueryItemAsURI(
-                    in: &request,
-                    style: .form,
-                    explode: true,
-                    name: "sortOrder",
-                    value: input.query.sortOrder
-                )
-                converter.setAcceptHeader(
-                    in: &request.headerFields,
-                    contentTypes: input.headers.accept
-                )
-                return (request, nil)
-            },
-            deserializer: { response, responseBody in
-                switch response.status.code {
-                case 200:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2EarthquakeEpicenterByCode.Output.Ok.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.EpicenterSearchResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .ok(.init(body: body))
-                case 400:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2EarthquakeEpicenterByCode.Output.BadRequest.Body
-                    let chosenContentType = try converter.bestContentType(
-                        received: contentType,
-                        options: [
-                            "application/json"
-                        ]
-                    )
-                    switch chosenContentType {
-                    case "application/json":
-                        body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.BadRequestResponse.self,
-                            from: responseBody,
-                            transforming: { value in
-                                .json(value)
-                            }
-                        )
-                    default:
-                        preconditionFailure("bestContentType chose an invalid content type.")
-                    }
-                    return .badRequest(.init(body: body))
-                case 500:
-                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2EarthquakeEpicenterByCode.Output.InternalServerError.Body
                     let chosenContentType = try converter.bestContentType(
                         received: contentType,
                         options: [
@@ -5342,6 +6996,13 @@ public struct Client: APIProtocol {
                     explode: true,
                     name: "originTimeLte",
                     value: input.query.originTimeLte
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "statuses",
+                    value: input.query.statuses
                 )
                 try converter.setQueryItemAsURI(
                     in: &request,
@@ -5814,6 +7475,13 @@ public struct Client: APIProtocol {
                     explode: true,
                     name: "important",
                     value: input.query.important
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "statuses",
+                    value: input.query.statuses
                 )
                 converter.setAcceptHeader(
                     in: &request.headerFields,
@@ -6735,6 +8403,117 @@ public struct Client: APIProtocol {
             }
         )
     }
+    /// - Remark: HTTP `GET /v2/telegram/eventId/{eventId}/details`.
+    /// - Remark: Generated from `#/paths//v2/telegram/eventId/{eventId}/details/get(getV2TelegramEventIdByEventIdDetails)`.
+    public func getV2TelegramEventIdByEventIdDetails(_ input: Operations.getV2TelegramEventIdByEventIdDetails.Input) async throws -> Operations.getV2TelegramEventIdByEventIdDetails.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.getV2TelegramEventIdByEventIdDetails.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/v2/telegram/eventId/{}/details",
+                    parameters: [
+                        input.path.eventId
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "statuses",
+                    value: input.query.statuses
+                )
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2TelegramEventIdByEventIdDetails.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.TelegramEventDetailsResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 400:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2TelegramEventIdByEventIdDetails.Output.BadRequest.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.BadRequestResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .badRequest(.init(body: body))
+                case 500:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2TelegramEventIdByEventIdDetails.Output.InternalServerError.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.InternalServerErrorResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .internalServerError(.init(body: body))
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
     /// - Remark: HTTP `GET /v2/telegram/{id}`.
     /// - Remark: Generated from `#/paths//v2/telegram/{id}/get(getV2TelegramById)`.
     public func getV2TelegramById(_ input: Operations.getV2TelegramById.Input) async throws -> Operations.getV2TelegramById.Output {
@@ -6904,6 +8683,13 @@ public struct Client: APIProtocol {
                     in: &request,
                     style: .form,
                     explode: true,
+                    name: "isActive",
+                    value: input.query.isActive
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
                     name: "createdAtGte",
                     value: input.query.createdAtGte
                 )
@@ -7054,7 +8840,7 @@ public struct Client: APIProtocol {
                     switch chosenContentType {
                     case "application/json":
                         body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.TsunamiDetailResponse.self,
+                            Components.Schemas.TsunamiState.self,
                             from: responseBody,
                             transforming: { value in
                                 .json(value)
@@ -7142,18 +8928,20 @@ public struct Client: APIProtocol {
             }
         )
     }
-    /// 現在有効な津波情報一覧（VTSE41 の revoke_at が未経過）
+    /// 津波情報の電文履歴（pressed_at 降順）
     ///
-    /// - Remark: HTTP `GET /v2/tsunami/active`.
-    /// - Remark: Generated from `#/paths//v2/tsunami/active/get(getV2TsunamiActive)`.
-    public func getV2TsunamiActive(_ input: Operations.getV2TsunamiActive.Input) async throws -> Operations.getV2TsunamiActive.Output {
+    /// - Remark: HTTP `GET /v2/tsunami/{tsunamiId}/telegrams`.
+    /// - Remark: Generated from `#/paths//v2/tsunami/{tsunamiId}/telegrams/get(getV2TsunamiByTsunamiIdTelegrams)`.
+    public func getV2TsunamiByTsunamiIdTelegrams(_ input: Operations.getV2TsunamiByTsunamiIdTelegrams.Input) async throws -> Operations.getV2TsunamiByTsunamiIdTelegrams.Output {
         try await client.send(
             input: input,
-            forOperation: Operations.getV2TsunamiActive.id,
+            forOperation: Operations.getV2TsunamiByTsunamiIdTelegrams.id,
             serializer: { input in
                 let path = try converter.renderedPath(
-                    template: "/v2/tsunami/active",
-                    parameters: []
+                    template: "/v2/tsunami/{}/telegrams",
+                    parameters: [
+                        input.path.tsunamiId
+                    ]
                 )
                 var request: HTTPTypes.HTTPRequest = .init(
                     soar_path: path,
@@ -7170,7 +8958,7 @@ public struct Client: APIProtocol {
                 switch response.status.code {
                 case 200:
                     let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2TsunamiActive.Output.Ok.Body
+                    let body: Operations.getV2TsunamiByTsunamiIdTelegrams.Output.Ok.Body
                     let chosenContentType = try converter.bestContentType(
                         received: contentType,
                         options: [
@@ -7180,7 +8968,7 @@ public struct Client: APIProtocol {
                     switch chosenContentType {
                     case "application/json":
                         body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.TsunamiListResponse.self,
+                            Components.Schemas.TsunamiTelegramsResponse.self,
                             from: responseBody,
                             transforming: { value in
                                 .json(value)
@@ -7190,9 +8978,53 @@ public struct Client: APIProtocol {
                         preconditionFailure("bestContentType chose an invalid content type.")
                     }
                     return .ok(.init(body: body))
+                case 400:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2TsunamiByTsunamiIdTelegrams.Output.BadRequest.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.BadRequestResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .badRequest(.init(body: body))
+                case 404:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.getV2TsunamiByTsunamiIdTelegrams.Output.NotFound.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.NotFoundResponse.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .notFound(.init(body: body))
                 case 500:
                     let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
-                    let body: Operations.getV2TsunamiActive.Output.InternalServerError.Body
+                    let body: Operations.getV2TsunamiByTsunamiIdTelegrams.Output.InternalServerError.Body
                     let chosenContentType = try converter.bestContentType(
                         received: contentType,
                         options: [
@@ -7224,7 +9056,7 @@ public struct Client: APIProtocol {
             }
         )
     }
-    /// 津波情報詳細
+    /// 津波情報詳細（マージ済み状態）
     ///
     /// - Remark: HTTP `GET /v2/tsunami/{tsunamiId}`.
     /// - Remark: Generated from `#/paths//v2/tsunami/{tsunamiId}/get(getV2TsunamiByTsunamiId)`.
@@ -7264,7 +9096,7 @@ public struct Client: APIProtocol {
                     switch chosenContentType {
                     case "application/json":
                         body = try await converter.getResponseBodyAsJSON(
-                            Components.Schemas.TsunamiDetailResponse.self,
+                            Components.Schemas.TsunamiState.self,
                             from: responseBody,
                             transforming: { value in
                                 .json(value)

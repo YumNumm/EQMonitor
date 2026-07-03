@@ -98,7 +98,7 @@ private struct MapInfoOverlay: View {
             VStack(alignment: .leading, spacing: compact ? 1 : 3) {
                 HStack(spacing: 4) {
                     Text(earthquake.hypocenterName)
-                        .font(.system(size: compact ? 13 : 16, weight: .bold))
+                        .font(AppFonts.flex(size: compact ? 13 : 16, weight: .bold))
                         .foregroundStyle(Color.eqTextPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
@@ -116,19 +116,21 @@ private struct MapInfoOverlay: View {
 
                 HStack(spacing: 5) {
                     Text(earthquake.magnitude)
-                        .font(.system(size: compact ? 11 : 13, weight: .bold).monospacedDigit())
+                        .font(AppFonts.code(size: compact ? 11 : 13, weight: .bold))
                         .foregroundStyle(Color.eqBrand)
 
-                    Text("深さ\(earthquake.depth)")
-                        .font(.system(size: compact ? 10 : 12))
-                        .foregroundStyle(Color.eqTextSecondary)
+                    if !earthquake.depth.isEmpty {
+                        Text("深さ\(earthquake.depth)")
+                            .font(AppFonts.flex(size: compact ? 10 : 12))
+                            .foregroundStyle(Color.eqTextSecondary)
+                    }
 
                     if !compact {
                         Text("·")
                             .foregroundStyle(Color.eqTextTertiary)
 
                         Text(earthquake.formattedTime)
-                            .font(.system(size: 12).monospacedDigit())
+                            .font(AppFonts.code(size: 12))
                             .foregroundStyle(Color.eqTextTertiary)
                     }
                 }

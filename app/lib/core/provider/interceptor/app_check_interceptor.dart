@@ -2,16 +2,26 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'app_check_interceptor.g.dart';
 
 typedef AppCheckTokenGetter = Future<String?> Function();
 
+@Riverpod(keepAlive: true)
+AppCheckInterceptor appCheckInterceptor(Ref ref) {
+  return AppCheckInterceptor(
+    getToken: FirebaseAppCheck.instance.getToken,
+    getLimitedUseToken: FirebaseAppCheck.instance.getLimitedUseToken,
+  );
+}
+
 class AppCheckInterceptor extends Interceptor {
   AppCheckInterceptor({
-    AppCheckTokenGetter? getToken,
-    AppCheckTokenGetter? getLimitedUseToken,
-  }) : _getToken = getToken ?? FirebaseAppCheck.instance.getToken,
-       _getLimitedUseToken =
-           getLimitedUseToken ?? FirebaseAppCheck.instance.getLimitedUseToken;
+    required AppCheckTokenGetter getToken,
+    required AppCheckTokenGetter getLimitedUseToken,
+  }) : _getToken = getToken,
+       _getLimitedUseToken = getLimitedUseToken;
 
   final AppCheckTokenGetter _getToken;
   final AppCheckTokenGetter _getLimitedUseToken;

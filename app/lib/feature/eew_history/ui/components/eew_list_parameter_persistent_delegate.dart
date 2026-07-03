@@ -15,11 +15,17 @@ class EewListParameterPersistentDelegate
     required this.onChanged,
   });
 
+  static const double height = 48;
+
   final EewListParameter parameter;
   final void Function(EewListParameter) onChanged;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return ColoredBox(
       color: context.designSystem.colorTheme.surface,
       child: _FilterChipBar(parameter: parameter, onChanged: onChanged),
@@ -27,10 +33,10 @@ class EewListParameterPersistentDelegate
   }
 
   @override
-  double get maxExtent => 48;
+  double get maxExtent => height;
 
   @override
-  double get minExtent => 48;
+  double get minExtent => height;
 
   @override
   bool shouldRebuild(covariant EewListParameterPersistentDelegate old) =>

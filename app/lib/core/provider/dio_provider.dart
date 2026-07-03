@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/api/http_cache_disabled_provider.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
-import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/chuck_provider.dart';
 import 'package:eqmonitor/core/provider/dio_base_options.dart';
 import 'package:eqmonitor/core/provider/interceptor/app_check_interceptor.dart';
 import 'package:eqmonitor/core/provider/interceptor/device_auth_token_interceptor.dart';
@@ -22,11 +23,14 @@ part 'dio_provider.g.dart';
 Future<Dio> dio(Ref ref) async {
   final package = ref.watch(packageInfoProvider);
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
-  final deviceId = await ref.watch(deviceIdProvider.future);
+  final appCheckInterceptor = ref.watch(appCheckInterceptorProvider);
+  final deviceIdInterceptor = await ref.watch(
+    deviceIdInterceptorProvider.future,
+  );
   final deviceAuthTokenInterceptor = await ref.watch(
     deviceAuthTokenInterceptorProvider.future,
   );
-  final httpCache = await ref.watch(httpCacheStoreProvider.future);
+  final httpCacheDisabled = ref.watch(httpCacheDisabledProvider);
 
   final dio = Dio(buildApiBaseOptions(baseUrl: telegramUrl.restApiUrl));
   dio.options.headers.addAll({
@@ -35,13 +39,21 @@ Future<Dio> dio(Ref ref) async {
   });
   dio.options.connectTimeout = const Duration(milliseconds: 10000);
   dio.options.sendTimeout = const Duration(milliseconds: 10000);
-  dio.interceptors.add(AppCheckInterceptor());
-  dio.interceptors.add(DeviceIdInterceptor(deviceId: deviceId));
+  dio.interceptors.add(appCheckInterceptor);
+  dio.interceptors.add(deviceIdInterceptor);
   dio.interceptors.add(deviceAuthTokenInterceptor);
+
+  final chuck = ref.watch(chuckProvider);
+  dio.interceptors.add(chuck.dioInterceptor);
+
   // ETag/304 透過キャッシュ。onResponse は登録順に実行されるため
   // TalkerDioLogger より前に置く。304 ヒット時は handler.resolve で
   // キャッシュ復元して短絡し、以降のロガーには到達しない。
-  dio.interceptors.add(HttpCacheInterceptor(httpCache));
+  // デバッグでキャッシュ無効化された場合はインターセプタ自体を登録しない。
+  if (!httpCacheDisabled) {
+    final httpCache = await ref.watch(httpCacheStoreProvider.future);
+    dio.interceptors.add(HttpCacheInterceptor(httpCache));
+  }
   dio.interceptors.add(
     TalkerDioLogger(
       settings: TalkerDioLoggerSettings(

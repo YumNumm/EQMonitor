@@ -14,9 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EstimationFirstHeightTimelineEntry {
 
-// 追跡項目のフィールド
- DateTime? get arrivalTime; bool? get isAlreadyArrived; Revise? get revise;// 電文メタ
- String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
+ DateTime? get arrivalTime; bool? get isAlreadyArrived; Revise? get revise; String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
 /// Create a copy of EstimationFirstHeightTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -218,11 +216,9 @@ class _EstimationFirstHeightTimelineEntry implements EstimationFirstHeightTimeli
   const _EstimationFirstHeightTimelineEntry({required this.arrivalTime, required this.isAlreadyArrived, required this.revise, required this.telegramId, required this.headline, required this.title, required this.publishedAt, required this.revokedAt});
   
 
-// 追跡項目のフィールド
 @override final  DateTime? arrivalTime;
 @override final  bool? isAlreadyArrived;
 @override final  Revise? revise;
-// 電文メタ
 @override final  String telegramId;
 @override final  String? headline;
 @override final  String title;
@@ -296,9 +292,7 @@ as DateTime?,
 /// @nodoc
 mixin _$EstimationMaxHeightTimelineEntry {
 
-// 追跡項目のフィールド
- DateTime? get dateTime; double? get value; bool? get isOver; QualitativeHeight? get qualitative; bool? get isObserving; Revise? get revise;// 電文メタ
- String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
+ DateTime? get dateTime; double? get value; bool? get isOver; QualitativeHeight? get qualitative; bool? get isObserving; Revise? get revise; String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
 /// Create a copy of EstimationMaxHeightTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -503,14 +497,12 @@ class _EstimationMaxHeightTimelineEntry implements EstimationMaxHeightTimelineEn
   const _EstimationMaxHeightTimelineEntry({required this.dateTime, required this.value, required this.isOver, required this.qualitative, required this.isObserving, required this.revise, required this.telegramId, required this.headline, required this.title, required this.publishedAt, required this.revokedAt});
   
 
-// 追跡項目のフィールド
 @override final  DateTime? dateTime;
 @override final  double? value;
 @override final  bool? isOver;
 @override final  QualitativeHeight? qualitative;
 @override final  bool? isObserving;
 @override final  Revise? revise;
-// 電文メタ
 @override final  String telegramId;
 @override final  String? headline;
 @override final  String title;

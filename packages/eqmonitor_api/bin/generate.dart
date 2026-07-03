@@ -28,12 +28,14 @@ void main(List<String> args) async {
   if (openapiFile.absolute.path != src.absolute.path) {
     await _step('外部 OpenAPI ファイルをコピー', () async {
       await openapiFile.create(recursive: true);
-      final copied = src.copySync(
-        openapiFile.path,
-      );
+      final copied = src.copySync(openapiFile.path);
       print('copied: ${copied.path}');
     });
   }
+
+  await _step('FeedEarthquakeNankaiData.telegramType をパッチ', () async {
+    _patchNankaiTelegramType(openapiFile);
+  });
 
   await _step('OpenAPI の const プロパティを型付きに変換', () async {
     _patchConstPropertiesToTyped(openapiFile);
@@ -145,6 +147,10 @@ void main(List<String> args) async {
 
   await _step('TelegramBody 参照を TelegramBodyUnion に修正', () async {
     _patchTelegramBodyReference(libDir);
+  });
+
+  await _step('FeedItemData 参照を FeedItemDataUnion に修正', () async {
+    _patchFeedItemDataReference(libDir);
   });
 
   await _step('DeviceLocale デフォルト値パッチ', () async {
@@ -533,9 +539,7 @@ void _patchDynamicQueryParameters(Directory libDir) {
 /// type ごとに異なるスキーマを返すため、アプリ側で type に応じてパースする。
 /// そのため Retrofit 型パラメーターは raw map で受け取る。
 void _patchParameterDataResponseInApiClient(Directory libDir) {
-  final clientFile = File(
-    '${libDir.path}/clients/parameters_api_client.dart',
-  );
+  final clientFile = File('${libDir.path}/clients/parameters_api_client.dart');
   if (!clientFile.existsSync()) {
     return;
   }
@@ -694,16 +698,18 @@ void _patchParameterDataResponseUnionFromJson(Directory libDir) {
   final file = File('${libDir.path}/models/parameter_data_response_union.dart');
   const body = '''
 switch ((json['metadata'] as Map<String, Object?>?)?['type']) {
-        'jma_code_table' =>
+        'JMA_CODE_TABLE' =>
           ParameterDataResponseUnionJmaCodeTableParameter.fromJson(json),
-        'kyoshin_observation_points' =>
+        'KYOSHIN_OBSERVATION_POINTS' =>
           ParameterDataResponseUnionKyoshinObservationPointsParameter.fromJson(
             json,
           ),
-        'earthquake_stations' =>
+        'EARTHQUAKE_STATIONS' =>
           ParameterDataResponseUnionEarthquakeStationsParameter.fromJson(json),
-        'tsunami_stations' =>
+        'TSUNAMI_STATIONS' =>
           ParameterDataResponseUnionTsunamiStationsParameter.fromJson(json),
+        'SHINDO_DB_STATIONS' =>
+          ParameterDataResponseUnionShindoDbStationsParameter.fromJson(json),
         final value => throw ArgumentError.value(
           value,
           'metadata.type',
@@ -815,6 +821,46 @@ void _patchTelegramBodyReference(Directory libDir) {
   }
 }
 
+/// swagger_parser は `FeedItemData` (anyOf ref) を `FeedItemDataUnion`
+/// というクラス名で `feed_item_data_union.dart` に生成するが、
+/// `FeedDetailResponse` 等の参照先は `FeedItemData` / `feed_item_data.dart` のまま。
+/// import パスとクラス名を統一する。
+void _patchFeedItemDataReference(Directory libDir) {
+  final modelsDir = Directory('${libDir.path}/models');
+  if (!modelsDir.existsSync()) {
+    return;
+  }
+
+  for (final entity in modelsDir.listSync()) {
+    if (entity is! File || !entity.path.endsWith('.dart')) {
+      continue;
+    }
+    if (entity.path.endsWith('.g.dart') ||
+        entity.path.endsWith('.freezed.dart')) {
+      continue;
+    }
+
+    var content = entity.readAsStringSync();
+    final original = content;
+
+    content = content.replaceAll(
+      "import 'feed_item_data.dart';",
+      "import 'feed_item_data_union.dart';",
+    );
+    // 単独の `FeedItemData` 参照のみ置換する。`FeedItemDataUnion` や
+    // `FeedItemDataUnionFeedAppUpdateData` 等は単語境界で除外される。
+    content = content.replaceAll(
+      RegExp(r'\bFeedItemData\b'),
+      'FeedItemDataUnion',
+    );
+
+    if (content != original) {
+      entity.writeAsStringSync(content);
+      stdout.writeln('  Patched FeedItemData ref: ${entity.path}');
+    }
+  }
+}
+
 /// swagger_parser は OpenAPI の `format: "date"` も `DateTime` にマッピングする。
 /// originTimeGte / originTimeLte は `yyyy-MM-dd` 文字列として送るため
 /// `String?` に置き換える。
@@ -900,15 +946,9 @@ void _stripTypeLintFromGeneratedHeaders(Directory libDir) {
     var content = file.readAsStringSync();
     final original = content;
 
-    content = content.replaceAll(
-      RegExp(r'type=lint,?\s*'),
-      '',
-    );
+    content = content.replaceAll(RegExp(r'type=lint,?\s*'), '');
     // 末尾にカンマ+空白だけ残った場合を整理
-    content = content.replaceAll(
-      RegExp(r'// ignore_for_file:\s*\n'),
-      '',
-    );
+    content = content.replaceAll(RegExp(r'// ignore_for_file:\s*\n'), '');
 
     if (content != original) {
       file.writeAsStringSync(content);
@@ -1004,9 +1044,7 @@ void _patchRemainingDynamic(Directory libDir) {
       ),
     ],
     // Telegram.body: v.optional(v.unknown())
-    'telegram.dart': [
-      ('dynamic body,', 'Object? body,'),
-    ],
+    'telegram.dart': [('dynamic body,', 'Object? body,')],
     // DeviceRegisterResponse.expiresAt: v.null()
     'device_register_response.dart': [
       ('required dynamic expiresAt,', 'required Object? expiresAt,'),
@@ -1040,6 +1078,42 @@ void _patchRemainingDynamic(Directory libDir) {
   }
 }
 
+/// バックエンドの OpenAPI では `FeedEarthquakeNankaiData.telegramType` が
+/// `FeedTelegramType`（地震回数系の enum）を `$ref` しているが、実際の
+/// レスポンスは `"NANKAI"` を返すため、そのままではデシリアライズ時に
+/// CheckedFromJsonException が発生する。
+///
+/// バックエンド側のスキーマが修正されるまで、ここで `$ref` を
+/// `{"const": "NANKAI"}` に置き換える（後段の `_patchConstPropertiesToTyped`
+/// が `String` 型に変換する）。スキーマが既に修正済みなら何もしない。
+void _patchNankaiTelegramType(File openapiFile) {
+  if (!openapiFile.existsSync()) {
+    return;
+  }
+
+  final openapi =
+      jsonDecode(openapiFile.readAsStringSync()) as Map<String, Object?>;
+  final components = openapi['components'] as Map<String, Object?>?;
+  final schemas = components?['schemas'] as Map<String, Object?>?;
+  final nankai = schemas?['FeedEarthquakeNankaiData'] as Map<String, Object?>?;
+  final props = nankai?['properties'] as Map<String, Object?>?;
+  final telegramType = props?['telegramType'] as Map<String, Object?>?;
+
+  if (telegramType == null ||
+      telegramType[r'$ref'] != '#/components/schemas/FeedTelegramType') {
+    stdout.writeln('  Skip (telegramType は FeedTelegramType を参照していません)');
+    return;
+  }
+
+  props!['telegramType'] = <String, Object?>{'const': 'NANKAI'};
+
+  const encoder = JsonEncoder.withIndent('  ');
+  openapiFile.writeAsStringSync(encoder.convert(openapi));
+  stdout.writeln(
+    '  Patched: FeedEarthquakeNankaiData.telegramType → const "NANKAI"',
+  );
+}
+
 /// OpenAPI スキーマ内の `const` プロパティを swagger_parser が理解できる
 /// 型付きスキーマに変換する。
 ///
@@ -1050,6 +1124,9 @@ void _patchRemainingDynamic(Directory libDir) {
 ///   `{"const": true}`     → `{"type": "boolean", "description": "const: true"}`
 ///   `{"const": 123}`      → `{"type": "integer", "description": "const: 123"}`
 ///   `{"const": 1.5}`      → `{"type": "number", "description": "const: 1.5"}`
+///
+/// 親スキーマの `required` に含まれない const プロパティは `nullable: true` を付与し、
+/// swagger_parser が `bool?` 等のオプショナル型を生成できるようにする。
 ///
 /// `anyOf` / `oneOf` 内の `const` メンバーも同様に変換する。
 /// 変換後の OpenAPI ファイルを上書き保存する。
@@ -1062,7 +1139,13 @@ void _patchConstPropertiesToTyped(File openapiFile) {
   final openapi = jsonDecode(content) as Map<String, Object?>;
   var patchCount = 0;
 
-  void patchProperties(Map<String, Object?> props) {
+  void patchProperties(
+    Map<String, Object?> props, {
+    required List<Object?>? parentRequired,
+  }) {
+    final requiredNames =
+        parentRequired?.whereType<String>().toSet() ?? const <String>{};
+
     for (final key in props.keys.toList()) {
       final prop = props[key];
       if (prop is! Map<String, Object?>) {
@@ -1076,11 +1159,15 @@ void _patchConstPropertiesToTyped(File openapiFile) {
         continue;
       }
 
-      // プロパティ直下の const を変換（nullable を除去）
+      // プロパティ直下の const を型付きに変換
       if (prop.containsKey('const') && !prop.containsKey('type')) {
         final replaced = _constToTyped(prop);
         if (replaced != null) {
-          replaced.remove('nullable');
+          if (requiredNames.contains(key)) {
+            replaced.remove('nullable');
+          } else {
+            replaced['nullable'] = true;
+          }
           props[key] = replaced;
           patchCount++;
         }
@@ -1108,7 +1195,10 @@ void _patchConstPropertiesToTyped(File openapiFile) {
 
       final props = node['properties'];
       if (props is Map<String, Object?>) {
-        patchProperties(props);
+        patchProperties(
+          props,
+          parentRequired: node['required'] as List<Object?>?,
+        );
       }
       // ignore: prefer_foreach
       for (final value in node.values) {
@@ -1305,10 +1395,7 @@ Map<String, Object?>? _collapseUniformAnyOf(
 
   final existingDesc = prop['description'] as String?;
   final memberDesc = descriptions.isNotEmpty ? descriptions.join(' | ') : null;
-  final combinedDesc = [
-    ?existingDesc,
-    ?memberDesc,
-  ].join('\n');
+  final combinedDesc = [?existingDesc, ?memberDesc].join('\n');
   if (combinedDesc.isNotEmpty) {
     result['description'] = combinedDesc;
   }

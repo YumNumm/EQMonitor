@@ -70,7 +70,7 @@ abstract class _$EqMonitorWsStatus extends $Notifier<EqMonitorWsStatusState> {
   EqMonitorWsStatusState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<EqMonitorWsStatusState, EqMonitorWsStatusState>;
     final element =
@@ -81,6 +81,6 @@ abstract class _$EqMonitorWsStatus extends $Notifier<EqMonitorWsStatusState> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

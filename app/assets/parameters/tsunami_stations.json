@@ -2,14 +2,13 @@
   "metadata": {
     "type": "TSUNAMI_STATIONS",
     "schema_version": 1,
-    "source_version": "20260312",
-    "source_updated_at": "2026-03-12T12:00:00+09:00",
-    "generated_at": "2026-05-04T10:13:05.981Z",
+    "source_version": "20260723",
+    "source_updated_at": "2026-07-23T12:00:00+09:00",
     "source_urls": [
       "https://api.dmdata.jp/v2/parameter/tsunami/station",
       "https://www.data.jma.go.jp/developer/jma_multilingual.xlsx"
     ],
-    "sha256": "60ab18865aac3c4a4e9fb9a3b025aeae9e30f768c64a6008aab5031e8a05e58d"
+    "sha256": "8fd56cb65c20a2fda5144bb6f04cb168e289d0749b09ea4f3d52b6e4960044a2"
   },
   "prefectures": [
     {

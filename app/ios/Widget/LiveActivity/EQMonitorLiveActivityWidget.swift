@@ -100,12 +100,13 @@ struct EewCompactTrailingView: View {
 
     var body: some View {
         let isWarning = state.isWarning ?? false
-        Text(isWarning ? "警報" : "予報")
+        let isCanceled = state.isCanceled == true
+        Text(isCanceled ? "取消" : isWarning ? "警報" : "予報")
             .font(.system(size: 10, weight: .heavy))
             .foregroundColor(.white)
             .padding(.horizontal, 5)
             .padding(.vertical, 2)
-            .background(isWarning ? Color.red : Color.orange)
+            .background(isCanceled ? Color.gray : isWarning ? Color.red : Color.orange)
             .clipShape(Capsule())
     }
 }
@@ -140,6 +141,7 @@ struct EewExpandedLeadingView: View {
                     .foregroundColor(.eqTextSecondary)
                 ExpandedIntensityBadge(intensity: intensity)
             }
+            .padding(.leading, 4)
         } else if let intensity = state.intensityValue {
             VStack(alignment: .leading, spacing: 2) {
                 Text("最大震度")
@@ -147,6 +149,7 @@ struct EewExpandedLeadingView: View {
                     .foregroundColor(.eqTextSecondary)
                 ExpandedIntensityBadge(intensity: intensity)
             }
+            .padding(.leading, 4)
         }
     }
 }
@@ -157,7 +160,15 @@ struct EewExpandedTrailingView: View {
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 4) {
-            if let isWarning = state.isWarning {
+            if state.isCanceled == true {
+                Text("取消")
+                    .font(.system(size: 11, weight: .heavy))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(Color.gray)
+                    .clipShape(Capsule())
+            } else if let isWarning = state.isWarning {
                 Text(isWarning ? "警報" : "予報")
                     .font(.system(size: 11, weight: .heavy))
                     .foregroundColor(.white)
@@ -166,7 +177,7 @@ struct EewExpandedTrailingView: View {
                     .background(isWarning ? Color.red : Color.orange)
                     .clipShape(Capsule())
             }
-            if let serialNo = state.serialNo {
+            if let serialNo = state.serialNo, serialNo > 0 {
                 HStack(alignment: .firstTextBaseline, spacing: 0) {
                     Text("第")
                         .font(.system(size: 9, weight: .medium))
@@ -187,14 +198,22 @@ struct EewExpandedCenterView: View {
     let state: EewContentState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 1) {
-            Text(state.isPlum == true || state.isLevel == true ? "検知観測点" : "震源地")
-                .font(.system(size: 9, weight: .medium))
-                .foregroundColor(.eqTextSecondary)
-            if let hypocenterName = state.hypocenterName {
-                Text(hypocenterName)
-                    .font(.system(size: 16, weight: .bold))
-                    .lineLimit(1)
+        if state.isCanceled == true {
+            Text("緊急地震速報は取り消されました")
+                .font(.system(size: 13, weight: .bold))
+                .lineLimit(2)
+                .minimumScaleFactor(0.75)
+        } else {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(state.isPlum == true || state.isLevel == true ? "検知観測点" : "震源地")
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundColor(.eqTextSecondary)
+                if let hypocenterName = state.hypocenterName {
+                    Text(hypocenterName)
+                        .font(.system(size: 16, weight: .bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                }
             }
         }
     }
@@ -222,7 +241,7 @@ struct EewExpandedBottomView: View {
                         Text("深さ")
                             .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.eqTextSecondary)
-                        Text("\(depth)")
+                        Text("\(Int(depth))")
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
                         Text("km")
                             .font(.system(size: 11, weight: .medium))
@@ -235,6 +254,7 @@ struct EewExpandedBottomView: View {
                 ArrivalInfoView(location: location)
             }
         }
+        .padding(.leading, 4)
     }
 }
 
@@ -414,6 +434,9 @@ struct MinimalIntensityBadge: View {
             }
         }
         .foregroundColor(intensity.textColor)
+        .frame(minWidth: 22, minHeight: 22)
+        .background(intensity.backgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: 6))
     }
 }
 

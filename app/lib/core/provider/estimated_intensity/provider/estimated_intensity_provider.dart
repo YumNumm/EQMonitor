@@ -1,8 +1,9 @@
 // ignore_for_file: provider_dependencies
-import 'dart:isolate';
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_intensity_data_source.dart';
+import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_isolate_provider.dart';
+import 'package:eqmonitor/core/provider/estimated_intensity/worker/estimated_intensity_isolate.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -17,44 +18,6 @@ typedef _CachedPoint = ({
   String cityCode,
   EarthquakeParameterStationItem station,
 });
-
-typedef _EewHypocenterInput = ({
-  double jmaMagnitude,
-  int depth,
-  double lat,
-  double lon,
-});
-
-typedef _IntensityComputeArgs = ({
-  List<_EewHypocenterInput> eews,
-  List<CalculationPoint> calculationPoints,
-});
-
-List<double> _computeMaxIntensities(_IntensityComputeArgs args) {
-  final calculator = EstimatedIntensityDataSource();
-  final results = <List<double>>[];
-
-  for (final eew in args.eews) {
-    final result = calculator
-        .getEstimatedIntensity(
-          points: args.calculationPoints,
-          jmaMagnitude: eew.jmaMagnitude,
-          depth: eew.depth,
-          hypocenter: (lat: eew.lat, lon: eew.lon),
-        )
-        .toList();
-    results.add(result);
-  }
-
-  if (results.isEmpty) {
-    return [];
-  }
-
-  return [
-    for (var i = 0; i < results.first.length; i++)
-      results.map((r) => r[i]).reduce(math.max),
-  ];
-}
 
 @Riverpod(keepAlive: true)
 class EstimatedIntensity extends _$EstimatedIntensity {
@@ -75,50 +38,24 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   }
 
   List<_CachedPoint>? _cachedPoints;
-  List<CalculationPoint>? _calculationPoints;
 
   List<EstimatedIntensityPoint> calc(
     List<EewTelegramItem> eews,
     EarthquakeParameter parameter,
   ) {
     _cachedPoints ??= _generateCachedPoints(parameter);
-    _calculationPoints ??= _generateCalculationPoints(_cachedPoints!);
 
-    final targetEews = eews
-        .where((e) => !e.isCanceled && (e.hypocenter?.hasLatLng ?? false))
-        .where((e) {
-          final h = e.hypocenter!;
-          return h.magnitude != null && h.depth != null;
-        })
-        .map((e) {
-          final h = e.hypocenter!;
-          return (
-            jmaMagnitude: h.magnitude!,
-            depth: h.depth!,
-            lat: h.latitude!,
-            lon: h.longitude!,
-          );
-        })
-        .toList();
-
+    final targetEews = _targetHypocenters(eews);
     if (targetEews.isEmpty) {
       return [];
     }
 
-    final intensities = _computeMaxIntensities((
+    final intensities = _computeMaxIntensitiesOnMain(
       eews: targetEews,
-      calculationPoints: _calculationPoints!,
-    ));
+      calculationPoints: _calculationPointsFromCached(_cachedPoints!),
+    );
 
-    return [
-      for (var i = 0; i < intensities.length; i++)
-        EstimatedIntensityPoint(
-          regionCode: _cachedPoints![i].regionCode,
-          cityCode: _cachedPoints![i].cityCode,
-          station: _cachedPoints![i].station,
-          intensity: intensities[i],
-        ),
-    ];
+    return _buildPoints(_cachedPoints!, intensities);
   }
 
   Future<Iterable<EstimatedIntensityPoint>> calcInIsolate(
@@ -126,47 +63,95 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     EarthquakeParameter parameter,
   ) async {
     _cachedPoints ??= _generateCachedPoints(parameter);
-    _calculationPoints ??= _generateCalculationPoints(_cachedPoints!);
 
-    final targetEews = eews
-        .where((e) => !e.isCanceled && (e.hypocenter?.hasLatLng ?? false))
-        .where((e) {
-          final h = e.hypocenter!;
-          return h.magnitude != null && h.depth != null;
-        })
-        .map((e) {
-          final h = e.hypocenter!;
-          return (
-            jmaMagnitude: h.magnitude!,
-            depth: h.depth!,
-            lat: h.latitude!,
-            lon: h.longitude!,
-          );
-        })
-        .toList();
-
+    final targetEews = _targetHypocenters(eews);
     if (targetEews.isEmpty) {
       return [];
     }
 
     final cachedPoints = _cachedPoints!;
-    final calculationPoints = _calculationPoints!;
+    final isolate = await ref.read(estimatedIntensityIsolateProvider.future);
+    final intensities = await isolate.computeMax(eews: targetEews);
 
-    final intensities = await Isolate.run(
-      () => _computeMaxIntensities((
-        eews: targetEews,
-        calculationPoints: calculationPoints,
-      )),
-    );
+    return _buildPoints(cachedPoints, intensities);
+  }
+
+  List<EstimatedIntensityHypocenterInput> _targetHypocenters(
+    List<EewTelegramItem> eews,
+  ) => eews
+      .where(
+        (e) =>
+            !e.isCanceled &&
+            (e.hypocenter?.latitude != null && e.hypocenter?.longitude != null),
+      )
+      .where((e) {
+        final hypocenter = e.hypocenter!;
+        return hypocenter.magnitude != null && hypocenter.depth != null;
+      })
+      .map((e) {
+        final hypocenter = e.hypocenter!;
+        return (
+          jmaMagnitude: hypocenter.magnitude!,
+          depth: hypocenter.depth!,
+          lat: hypocenter.latitude!,
+          lon: hypocenter.longitude!,
+        );
+      })
+      .toList();
+
+  List<EstimatedIntensityPoint> _buildPoints(
+    List<_CachedPoint> cachedPoints,
+    List<double> intensities,
+  ) {
+    final calculationPoints = _calculationPointsFromCached(cachedPoints);
+    if (calculationPoints.length != intensities.length) {
+      return [];
+    }
+
+    var intensityIndex = 0;
+    final points = <EstimatedIntensityPoint>[];
+    for (final cachedPoint in cachedPoints) {
+      if (cachedPoint.station.arv400 == null) {
+        continue;
+      }
+      points.add(
+        EstimatedIntensityPoint(
+          regionCode: cachedPoint.regionCode,
+          cityCode: cachedPoint.cityCode,
+          station: cachedPoint.station,
+          intensity: intensities[intensityIndex++],
+        ),
+      );
+    }
+    return points;
+  }
+
+  List<double> _computeMaxIntensitiesOnMain({
+    required List<EstimatedIntensityHypocenterInput> eews,
+    required List<CalculationPoint> calculationPoints,
+  }) {
+    final calculator = EstimatedIntensityDataSource();
+    final results = <List<double>>[];
+
+    for (final eew in eews) {
+      final result = calculator
+          .getEstimatedIntensity(
+            points: calculationPoints,
+            jmaMagnitude: eew.jmaMagnitude,
+            depth: eew.depth,
+            hypocenter: (lat: eew.lat, lon: eew.lon),
+          )
+          .toList();
+      results.add(result);
+    }
+
+    if (results.isEmpty) {
+      return [];
+    }
 
     return [
-      for (var i = 0; i < intensities.length; i++)
-        EstimatedIntensityPoint(
-          regionCode: cachedPoints[i].regionCode,
-          cityCode: cachedPoints[i].cityCode,
-          station: cachedPoints[i].station,
-          intensity: intensities[i],
-        ),
+      for (var i = 0; i < results.first.length; i++)
+        results.map((result) => result[i]).reduce(math.max),
     ];
   }
 
@@ -188,14 +173,14 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     return result;
   }
 
-  List<CalculationPoint> _generateCalculationPoints(
+  List<CalculationPoint> _calculationPointsFromCached(
     Iterable<_CachedPoint> points,
   ) => [
-    for (final p in points)
-      if (p.station.arv400 case final arv400?)
+    for (final point in points)
+      if (point.station.arv400 case final arv400?)
         (
-          lat: p.station.location.lat,
-          lon: p.station.location.lon,
+          lat: point.station.location.lat,
+          lon: point.station.location.lon,
           arv400: arv400,
         ),
   ];

@@ -17,7 +17,6 @@ import '../models/intensity_region_search_response.dart';
 import '../models/intensity_station_search_response.dart';
 import '../models/jma_intensity.dart';
 import '../models/jma_lpgm_intensity.dart';
-import '../models/similar_earthquake_response.dart';
 import '../models/sort_order.dart';
 
 import '../models/telegram_status.dart';
@@ -30,7 +29,7 @@ part 'earthquake_api_client.g.dart';
 abstract class EarthquakeApiClient {
   factory EarthquakeApiClient(Dio dio, {String? baseUrl}) = _EarthquakeApiClient;
 
-  /// 地震情報一覧.
+  /// 地震情報一覧。sortByでmagnitude/max_intensity/max_lpgm_intensity/depth/origin_timeを指定した場合、NULL値の並び順はPostgreSQLの既定に従います（ASC: 末尾、DESC: 先頭）。カーソルベースのページネーション(cursor)はevent_idに基づくため、sortByがevent_id以外の場合はcursorと併用できません（1ページ目の取得のみ対応）。.
   ///
   /// [limit] - 1~100 の整数(string).
   ///
@@ -83,11 +82,6 @@ abstract class EarthquakeApiClient {
     @Query('longitudeLte') String? longitudeLte,
   });
 
-  @GET(EarthquakeApiClientUrls.getV2EarthquakeEventIdSimilar)
-  Future<HttpResponse<SimilarEarthquakeResponse>> getV2EarthquakeEventIdSimilar({
-    @Path('eventId') required String eventId,
-  });
-
   @GET(EarthquakeApiClientUrls.getV2EarthquakeEventId)
   Future<HttpResponse<EarthquakeDetailResponse>> getV2EarthquakeEventId({
     @Path('eventId') required String eventId,
@@ -106,6 +100,8 @@ abstract class EarthquakeApiClient {
     @Query('statuses') List<TelegramStatus> statuses = const [.normal],
   });
 
+  /// 震度細分区域コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。.
+  ///
   /// [limit] - 1~100 の整数(string).
   ///
   /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
@@ -158,6 +154,8 @@ abstract class EarthquakeApiClient {
     @Query('longitudeLte') String? longitudeLte,
   });
 
+  /// 都道府県コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。.
+  ///
   /// [limit] - 1~100 の整数(string).
   ///
   /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
@@ -210,6 +208,8 @@ abstract class EarthquakeApiClient {
     @Query('longitudeLte') String? longitudeLte,
   });
 
+  /// 市区町村コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。.
+  ///
   /// [limit] - 1~100 の整数(string).
   ///
   /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
@@ -262,6 +262,8 @@ abstract class EarthquakeApiClient {
     @Query('longitudeLte') String? longitudeLte,
   });
 
+  /// 観測点コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。.
+  ///
   /// [limit] - 1~100 の整数(string).
   ///
   /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
@@ -319,8 +321,6 @@ abstract class EarthquakeApiClient {
 abstract class EarthquakeApiClientUrls {
 	/// /v2/earthquake
 	static const getV2Earthquake = "/v2/earthquake";
-	/// /v2/earthquake/{eventId}/similar
-	static const getV2EarthquakeEventIdSimilar = "/v2/earthquake/{eventId}/similar";
 	/// /v2/earthquake/{eventId}
 	static const getV2EarthquakeEventId = "/v2/earthquake/{eventId}";
 	/// /v2/earthquake/intensity/prefecture/highest

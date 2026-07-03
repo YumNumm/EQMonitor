@@ -1,10 +1,9 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -56,19 +55,20 @@ class HomeFeedSheet extends ConsumerWidget {
                       child: const Center(child: Text('お知らせはありません')),
                     )
                   : Column(
-                      children: value.items.take(3).map(
-                        (item) => _HomeFeedListTile(item: item),
-                      ).toList(),
+                      children: value.items
+                          .take(3)
+                          .map(
+                            (item) => _HomeFeedListTile(item: item),
+                          )
+                          .toList(),
                     ),
             AsyncError<FeedNotifierState>(:final error) => ErrorCard(
-                error: error,
-                margin: EdgeInsets.zero,
-                onReload: () async => ref.invalidate(
-                  feedProvider,
-                  asReload: true,
-                ),
-                padding: const EdgeInsets.all(8),
+              error: error,
+              onReload: () async => ref.invalidate(
+                feedProvider,
+                asReload: true,
               ),
+            ),
             _ => const _HomeFeedSkeleton(),
           },
           Padding(
@@ -95,7 +95,7 @@ class HomeFeedSheet extends ConsumerWidget {
 class _HomeFeedListTile extends StatelessWidget {
   const _HomeFeedListTile({required this.item});
 
-  final api.FeedItem item;
+  final FeedItem item;
 
   @override
   Widget build(BuildContext context) {

@@ -1,0 +1,39 @@
+---
+alwaysApply: false
+globs: app/lib/core/provider/estimated_intensity/**/*.dart,app/lib/feature/eew/data/provider/eew_estimated_region_intensity_provider.dart
+---
+
+# EEW推定震度の常駐Isolateパターン
+
+## 背景
+
+EEWリプレイ・シミュレーション時に `Isolate.run()` で毎回新しいIsolateを起動すると、
+数千観測点の距離減衰計算がフレームごとに重くなりUIがカクつく。
+
+## 方針
+
+`KyoshinMonitorAnalyzerIsolate` と同様に、推定震度計算用の常駐Worker Isolateを使う。
+
+- Worker: `app/lib/core/provider/estimated_intensity/worker/estimated_intensity_isolate.dart`
+- Provider: `estimatedIntensityIsolateProvider`（`keepAlive: true`）
+- 観測点キャッシュ: `estimatedIntensityStationIndexProvider`（JMAパラメータから1回構築）
+
+## 利用箇所
+
+- `eewEstimatedRegionIntensityProvider` → `isolate.computeSingle(...)`
+- `EstimatedIntensity.calcInIsolate` → `isolate.computeMax(...)`
+- `ReplayNotifier.loadFile` で `estimatedIntensityIsolateProvider` を事前起動
+
+## 新規計算ロジック追加時
+
+- 重いループはIsolate側（`EstimatedIntensityDataSource`）に置く
+- メインIsolateでは region 集約・走時テーブル参照・UI向け変換のみ行う
+- `Isolate.run()` は使わない（起動コストがリプレイで顕著）
+
+## コード生成
+
+Provider追加・変更後:
+
+```bash
+cd app && mise exec -- dart run build_runner build --delete-conflicting-outputs
+```

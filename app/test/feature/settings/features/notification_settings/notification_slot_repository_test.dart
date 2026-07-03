@@ -47,6 +47,50 @@ void main() {
       expect(adapter.lastRequestBody, isNotNull);
       expect(adapter.lastRequestBody!['eew_enabled'], isTrue);
     });
+
+    test('sends eew_enabled/earthquake_enabled=false when called without '
+        'arguments', () async {
+      await repository.putCurrentLocation();
+
+      expect(adapter.lastRequestBody!['eew_enabled'], isFalse);
+      expect(adapter.lastRequestBody!['earthquake_enabled'], isFalse);
+      expect(
+        adapter.lastRequestBody!.containsKey('eew_min_intensity'),
+        isFalse,
+      );
+      expect(
+        adapter.lastRequestBody!.containsKey('earthquake_min_intensity'),
+        isFalse,
+      );
+    });
+  });
+
+  group('putNationwide', () {
+    test('sends request and returns slot', () async {
+      final slot = await repository.putNationwide(
+        eewEnabled: true,
+        eewMinIntensity: JmaIntensity.four,
+      );
+
+      expect(slot.slotType, NotificationSlotType.nationwide);
+      expect(adapter.lastRequestBody!['eew_enabled'], isTrue);
+    });
+
+    test('sends eew_enabled/earthquake_enabled=false when called without '
+        'arguments', () async {
+      await repository.putNationwide();
+
+      expect(adapter.lastRequestBody!['eew_enabled'], isFalse);
+      expect(adapter.lastRequestBody!['earthquake_enabled'], isFalse);
+      expect(
+        adapter.lastRequestBody!.containsKey('eew_min_intensity'),
+        isFalse,
+      );
+      expect(
+        adapter.lastRequestBody!.containsKey('earthquake_min_intensity'),
+        isFalse,
+      );
+    });
   });
 
   group('addRegion', () {

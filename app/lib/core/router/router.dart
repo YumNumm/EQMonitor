@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
@@ -14,6 +15,7 @@ import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
+import 'package:eqmonitor/feature/feed/ui/page/feed_details_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/intensity_history_page.dart';
@@ -50,12 +52,14 @@ import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navi
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_shared_preferences_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/telemetry/debug_telemetry_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_tsunami_details_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/tsunami_telegram_timeline_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
+import 'package:eqmonitor/feature/settings/features/home_widget_settings/ui/page/home_widget_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/shake_detection_settings_page.dart';
 import 'package:eqmonitor/feature/settings/settings_page.dart';
@@ -65,9 +69,6 @@ import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_pag
 import 'package:eqmonitor/feature/subscription/ui/page/paywall_page.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/subscription_settings_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
-import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
-import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
-import 'package:eqmonitor/feature/telemetry/telemetry_navigator_observer.dart';
 import 'package:eqmonitor/feature/tsunami/ui/tsunami_details_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/splash_page.dart';
@@ -119,12 +120,9 @@ GoRouter goRouter(Ref ref) => GoRouter(
   observers: [
     _NavigatorObserver(talker),
     FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
-    TelemetryNavigatorObserver(
-      recorder: ref.read(telemetryRecorderProvider),
-      uploader: ref.read(telemetryUploaderProvider),
-    ),
   ],
   debugLogDiagnostics: kDebugMode,
+  errorBuilder: (context, state) => FatalErrorScreen(error: state.error),
 );
 
 class GoRouterRedirectException implements Exception {
@@ -338,6 +336,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
       ],
     ),
     TypedGoRoute<EarthquakeHistoryConfigRoute>(path: 'earthquake-history'),
+    TypedGoRoute<HomeWidgetSettingsRoute>(path: 'home-widget'),
     TypedGoRoute<AboutThisAppRoute>(path: 'about-this-app'),
     TypedGoRoute<ChangelogRoute>(path: 'changelog'),
     TypedGoRoute<DebugRoute>(
@@ -367,6 +366,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
+        TypedGoRoute<DebugSharedPreferencesRoute>(path: 'shared-preferences'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
         TypedGoRoute<DebugTelemetryRoute>(path: 'telemetry'),
         TypedGoRoute<DebugTsunamiDetailsRoute>(
@@ -438,6 +438,15 @@ class NotificationSettingsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const NotificationSettingsPage();
+}
+
+class HomeWidgetSettingsRoute extends GoRouteData
+    with $HomeWidgetSettingsRoute {
+  const HomeWidgetSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const HomeWidgetSettingsPage();
 }
 
 class ShakeDetectionSettingsRoute extends GoRouteData
@@ -673,6 +682,16 @@ class DebugAppGroupRoute extends GoRouteData with $DebugAppGroupRoute {
   }
 }
 
+class DebugSharedPreferencesRoute extends GoRouteData
+    with $DebugSharedPreferencesRoute {
+  const DebugSharedPreferencesRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugSharedPreferencesPage();
+  }
+}
+
 class DebugIntensityIconRoute extends GoRouteData
     with $DebugIntensityIconRoute {
   const DebugIntensityIconRoute();
@@ -832,8 +851,18 @@ class FeedRoute extends GoRouteData with $FeedRoute {
   const FeedRoute();
 
   @override
+  Widget build(BuildContext context, GoRouterState state) => const FeedPage();
+}
+
+@TypedGoRoute<FeedDetailsRoute>(path: '/feed/source/:telegramHash')
+class FeedDetailsRoute extends GoRouteData with $FeedDetailsRoute {
+  const FeedDetailsRoute({required this.telegramHash});
+
+  final String telegramHash;
+
+  @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const FeedPage();
+      FeedDetailsPage(telegramHash: telegramHash);
 }
 
 @TypedGoRoute<TsunamiDetailsRoute>(path: '/tsunami/:tsunamiId')

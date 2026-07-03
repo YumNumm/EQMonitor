@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter_converter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'parameter_json_parser.g.dart';
@@ -62,8 +64,27 @@ final class ParameterJsonParser {
     String source,
   ) => KyoshinObservationPointsParameter.fromJson(decodeObject(source));
 
-  EarthquakeParameter parseEarthquake(String source) =>
-      EarthquakeParameter.fromJson(decodeObject(source));
+  EarthquakeParameter parseEarthquake(String source) {
+    final json = decodeObject(source);
+    final response = api.ParameterDataResponseUnion.fromJson(json);
+    return response.map(
+      jmaCodeTableParameter: (_) => throw const FormatException(
+        'Expected earthquake_stations parameter',
+      ),
+      kyoshinObservationPointsParameter: (_) => throw const FormatException(
+        'Expected earthquake_stations parameter',
+      ),
+      earthquakeStationsParameter: (value) => value.toEarthquakeParameter(
+        arv400Index: EarthquakeStationArv400Index.fromJson(json),
+      ),
+      tsunamiStationsParameter: (_) => throw const FormatException(
+        'Expected earthquake_stations parameter',
+      ),
+      shindoDbStationsParameter: (_) => throw const FormatException(
+        'Expected earthquake_stations parameter',
+      ),
+    );
+  }
 
   TsunamiParameter parseTsunami(String source) =>
       TsunamiParameter.fromJson(decodeObject(source));

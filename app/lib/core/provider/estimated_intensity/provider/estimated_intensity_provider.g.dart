@@ -40,14 +40,14 @@ final class EstimatedIntensityProvider
 }
 
 String _$estimatedIntensityHash() =>
-    r'7d4a7ab6464fb10687621b297aa471d0ef199596';
+    r'4ee4711d1fda87afcf37419f0659a942a9aacc9b';
 
 abstract class _$EstimatedIntensity
     extends $AsyncNotifier<List<EstimatedIntensityPoint>> {
   FutureOr<List<EstimatedIntensityPoint>> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -65,7 +65,7 @@ abstract class _$EstimatedIntensity
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

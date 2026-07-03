@@ -1,7 +1,6 @@
 //
 //  EarthquakeWidgetView.swift
 //  Widget
-//
 
 import SwiftUI
 import WidgetKit
@@ -46,20 +45,11 @@ struct LargeWidgetView: View {
                     EQEmptyView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    VStack(spacing: 0) {
-                        ForEach(Array(displayedEarthquakes.enumerated()), id: \.element.id) { index, eq in
-                            EarthquakeRow(
-                                earthquake: eq,
-                                showDivider: index < displayedEarthquakes.count - 1,
-                                availableWidth: geometry.size.width
-                            )
+                    VStack(spacing: 6) {
+                        ForEach(displayedEarthquakes) { eq in
+                            EarthquakeRow(earthquake: eq)
                         }
                     }
-                    .padding(.vertical, 4)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color.eqSurface.opacity(0.6))
-                    )
                     .padding(.horizontal, 12)
                     .padding(.top, 2)
                 }
@@ -81,15 +71,7 @@ struct LargeWidgetView: View {
         return Array(entry.earthquakes.prefix(maxCount))
     }
 
-    private var headerTitle: String {
-        switch entry.configuration.regionType {
-        case .nationwide: return "全国の地震履歴"
-        case .currentLocation: return "現在地の地震履歴"
-        case .specificRegion:
-            if let region = entry.configuration.region { return "\(region.name)の地震履歴" }
-            return "地震履歴"
-        }
-    }
+    private var headerTitle: String { entry.title }
 }
 
 // MARK: - Small
@@ -107,7 +89,7 @@ struct SmallWidgetView: View {
                         .widgetAccentable()
 
                     Text(headerTitle)
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(AppFonts.flex(size: 11, weight: .semibold))
                         .foregroundStyle(Color.eqTextSecondary)
                         .lineLimit(1)
 
@@ -136,18 +118,12 @@ struct SmallWidgetView: View {
                     EQEmptyView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    VStack(spacing: 0) {
-                        ForEach(Array(entry.earthquakes.prefix(3).enumerated()), id: \.element.id) { index, eq in
+                    VStack(spacing: 6) {
+                        ForEach(Array(entry.earthquakes.prefix(3)), id: \.id) { eq in
                             CompactEarthquakeRow(
                                 earthquake: eq,
                                 availableWidth: geometry.size.width - 24
                             )
-                            if index < min(2, entry.earthquakes.count - 1) {
-                                Rectangle()
-                                    .fill(Color.eqOutlineSoft.opacity(0.5))
-                                    .frame(height: 0.5)
-                                    .padding(.horizontal, 12)
-                            }
                         }
                     }
                     .padding(.top, 6)
@@ -160,18 +136,7 @@ struct SmallWidgetView: View {
         }
     }
 
-    private var headerTitle: String {
-        switch entry.configuration.regionType {
-        case .nationwide: return "地震履歴"
-        case .currentLocation: return "現在地"
-        case .specificRegion:
-            if let region = entry.configuration.region {
-                let name = region.name
-                return name.count > 8 ? String(name.prefix(8)) + "…" : name
-            }
-            return "地震履歴"
-        }
-    }
+    private var headerTitle: String { entry.compactTitle }
 }
 
 // MARK: - Header
@@ -202,13 +167,13 @@ private struct WidgetHeader: View {
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(title)
-                    .font(.system(size: 15, weight: .bold))
+                    .font(AppFonts.flex(size: 15, weight: .bold))
                     .foregroundStyle(Color.eqTextPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
 
                 Text("更新 \(formattedTime)")
-                    .font(.system(size: 10))
+                    .font(AppFonts.code(size: 10))
                     .foregroundStyle(Color.eqTextTertiary)
             }
 
@@ -242,60 +207,56 @@ private struct WidgetHeader: View {
 
 struct EarthquakeRow: View {
     let earthquake: EarthquakeDisplayItem
-    let showDivider: Bool
-    let availableWidth: CGFloat
+
+    private var subtitle: String {
+        var parts = [earthquake.formattedTime]
+        if !earthquake.depth.isEmpty {
+            parts.append("深さ\(earthquake.depth)")
+        }
+        return parts.joined(separator: " ")
+    }
 
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .center, spacing: 10) {
-                IntensityBadge(
-                    intensity: earthquake.formattedIntensity,
-                    backgroundColor: earthquake.intensityBackgroundColor,
-                    textColor: earthquake.intensityTextColor
-                )
+        HStack(spacing: 10) {
+            IntensityBadge(
+                intensity: earthquake.formattedIntensity,
+                backgroundColor: earthquake.intensityBackgroundColor,
+                textColor: earthquake.intensityTextColor
+            )
 
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: 4) {
-                        Text(earthquake.hypocenterName)
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundStyle(Color.eqTextPrimary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                            .truncationMode(.tail)
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 4) {
+                    Text(earthquake.hypocenterName)
+                        .font(AppFonts.flex(size: 13, weight: .bold))
+                        .foregroundStyle(Color.eqTextPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .truncationMode(.tail)
 
-                        if let badge = earthquake.statusBadge {
-                            StatusBadge(text: badge)
-                        }
-                    }
-
-                    HStack(spacing: 6) {
-                        Text(earthquake.magnitude)
-                            .font(.system(size: 11).monospaced())
-                            .foregroundStyle(Color.eqTextSecondary)
-
-                        Text("深さ\(earthquake.depth)")
-                            .font(.system(size: 11))
-                            .foregroundStyle(Color.eqTextTertiary)
-
-                        Spacer()
-
-                        Text(earthquake.formattedTime)
-                            .font(.system(size: 11).monospaced())
-                            .foregroundStyle(Color.eqTextTertiary)
+                    if let badge = earthquake.statusBadge {
+                        StatusBadge(text: badge)
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 9)
 
-            if showDivider {
-                Rectangle()
-                    .fill(Color.eqOutlineSoft.opacity(0.5))
-                    .frame(height: 0.5)
-                    .padding(.leading, 56)
+                Text(subtitle)
+                    .font(AppFonts.code(size: 10))
+                    .foregroundStyle(Color.eqTextSecondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
+
+            Spacer(minLength: 4)
+
+            Text(earthquake.magnitude)
+                .font(AppFonts.code(size: 15, weight: .bold))
+                .foregroundStyle(Color.eqTextPrimary)
         }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background(
+            RoundedRectangle(cornerRadius: DesignTokens.radiusSm, style: .continuous)
+                .fill(earthquake.intensityBackgroundColor.opacity(0.4))
+        )
     }
 }
 
@@ -305,8 +266,16 @@ struct CompactEarthquakeRow: View {
     let earthquake: EarthquakeDisplayItem
     let availableWidth: CGFloat
 
+    private var subtitle: String {
+        var parts = [earthquake.formattedTime]
+        if !earthquake.depth.isEmpty {
+            parts.append("深さ\(earthquake.depth)")
+        }
+        return parts.joined(separator: " ")
+    }
+
     var body: some View {
-        HStack(alignment: .center, spacing: 6) {
+        HStack(spacing: 8) {
             IntensityBadge(
                 intensity: earthquake.formattedIntensity,
                 backgroundColor: earthquake.intensityBackgroundColor,
@@ -317,7 +286,7 @@ struct CompactEarthquakeRow: View {
             VStack(alignment: .leading, spacing: 1) {
                 HStack(spacing: 3) {
                     Text(earthquake.hypocenterName)
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(AppFonts.flex(size: 11, weight: .bold))
                         .foregroundStyle(Color.eqTextPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.75)
@@ -328,58 +297,32 @@ struct CompactEarthquakeRow: View {
                     }
                 }
 
-                Text("\(earthquake.magnitude) · \(earthquake.formattedTime)")
-                    .font(.system(size: 9).monospaced())
+                Text(subtitle)
+                    .font(AppFonts.code(size: 9))
                     .foregroundStyle(Color.eqTextTertiary)
                     .lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+
+            Spacer(minLength: 2)
+
+            Text(earthquake.magnitude)
+                .font(AppFonts.code(size: 12, weight: .bold))
+                .foregroundStyle(Color.eqTextPrimary)
         }
+        .padding(.horizontal, 8)
         .padding(.vertical, 5)
+        .background(
+            RoundedRectangle(cornerRadius: DesignTokens.radiusXs, style: .continuous)
+                .fill(earthquake.intensityBackgroundColor.opacity(0.4))
+        )
         .frame(width: availableWidth)
     }
 }
 
 // MARK: - Shared Components
 
-struct IntensityBadge: View {
-    let intensity: (main: String, sub: String?)
-    let backgroundColor: Color
-    let textColor: Color
-    var size: CGFloat = 40
-
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [backgroundColor.opacity(0.88), backgroundColor],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
-                        .strokeBorder(.white.opacity(0.18), lineWidth: 0.5)
-                )
-                .frame(width: size, height: size)
-                .shadow(color: backgroundColor.opacity(0.35), radius: size * 0.1, y: size * 0.04)
-
-            HStack(alignment: .lastTextBaseline, spacing: 1) {
-                Text(intensity.main)
-                    .font(.system(size: size * 0.5, weight: .heavy).monospacedDigit())
-                    .foregroundStyle(textColor)
-
-                if let sub = intensity.sub {
-                    Text(sub)
-                        .font(.system(size: size * 0.27, weight: .bold))
-                        .foregroundStyle(textColor)
-                        .baselineOffset(-1)
-                }
-            }
-        }
-    }
-}
+// IntensityBadge は Shared/IntensityBadge.swift へ移動（スニペットと共有するため）
 
 private struct StatusBadge: View {
     let text: String
@@ -409,12 +352,12 @@ struct EQErrorView: View {
                     .foregroundStyle(.orange)
 
                 Text("取得エラー")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(AppFonts.flex(size: 13, weight: .semibold))
                     .foregroundStyle(Color.eqTextPrimary)
             }
 
             Text(error)
-                .font(.system(size: 11))
+                .font(AppFonts.flex(size: 11))
                 .foregroundStyle(Color.eqTextSecondary)
                 .lineLimit(4)
         }
@@ -430,7 +373,7 @@ struct EQEmptyView: View {
                 .foregroundStyle(Color.eqTextTertiary)
 
             Text("地震情報なし")
-                .font(.system(size: 12))
+                .font(AppFonts.flex(size: 12))
                 .foregroundStyle(Color.eqTextTertiary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -447,12 +390,12 @@ struct IntensityView: View {
     var body: some View {
         HStack(alignment: .lastTextBaseline, spacing: 1) {
             Text(intensity.main)
-                .font(.system(size: mainSize, weight: .bold).monospaced())
+                .font(AppFonts.code(size: mainSize, weight: .bold))
                 .foregroundStyle(Color.eqTextPrimary)
 
             if let sub = intensity.sub {
                 Text(sub)
-                    .font(.system(size: subSize))
+                    .font(AppFonts.code(size: subSize))
                     .foregroundStyle(Color.eqTextPrimary)
                     .baselineOffset(-2)
             }
@@ -489,12 +432,14 @@ struct IntensityView: View {
 } timeline: {
     EarthquakeEntry(
         date: .now,
-        configuration: EarthquakeWidgetIntent(
-            regionType: .specificRegion,
-            region: RegionEntity(id: "350", name: "東京都２３区")
-        ),
+        configuration: EarthquakeWidgetIntent(regionType: .specificRegion),
         earthquakes: EarthquakeDisplayItem.mockData,
-        error: nil
+        error: nil,
+        resolved: ResolvedWidgetRegion(
+            plan: .prefecture(code: "13"),
+            title: "東京都の地震履歴",
+            compactTitle: "東京都"
+        )
     )
 }
 

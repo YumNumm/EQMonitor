@@ -44,7 +44,7 @@ abstract class _$KyoshinMonitorNotifier
   FutureOr<KyoshinMonitorState> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<KyoshinMonitorState>, KyoshinMonitorState>;
     final element =
@@ -55,6 +55,6 @@ abstract class _$KyoshinMonitorNotifier
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

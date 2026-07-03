@@ -98,7 +98,8 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
           final hypocenter = currentReport.hypocenter;
           if (originTime == null ||
               hypocenter == null ||
-              !hypocenter.hasLatLng ||
+              hypocenter.latitude == null ||
+              hypocenter.longitude == null ||
               hypocenter.depth == null ||
               currentReport.isPlum) {
             unawaited(

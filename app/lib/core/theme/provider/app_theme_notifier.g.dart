@@ -59,7 +59,7 @@ abstract class _$AppThemeNotifier
   ({AppTheme darkTheme, AppTheme lightTheme}) build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -77,7 +77,7 @@ abstract class _$AppThemeNotifier
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

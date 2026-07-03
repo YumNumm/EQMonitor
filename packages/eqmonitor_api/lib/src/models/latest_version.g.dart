@@ -17,6 +17,10 @@ _LatestVersion _$LatestVersionFromJson(Map<String, dynamic> json) =>
           version: $checkedConvert('version', (v) => v as String),
           date: $checkedConvert('date', (v) => DateTime.parse(v as String)),
           showWhatsNew: $checkedConvert('show_whats_new', (v) => v as bool),
+          buildNumber: $checkedConvert(
+            'build_number',
+            (v) => (v as num?)?.toInt(),
+          ),
           whatsNew: $checkedConvert(
             'whats_new',
             (v) =>
@@ -27,6 +31,7 @@ _LatestVersion _$LatestVersionFromJson(Map<String, dynamic> json) =>
       },
       fieldKeyMap: const {
         'showWhatsNew': 'show_whats_new',
+        'buildNumber': 'build_number',
         'whatsNew': 'whats_new',
       },
     );
@@ -36,5 +41,6 @@ Map<String, dynamic> _$LatestVersionToJson(_LatestVersion instance) =>
       'version': instance.version,
       'date': instance.date.toIso8601String(),
       'show_whats_new': instance.showWhatsNew,
+      'build_number': ?instance.buildNumber,
       'whats_new': ?instance.whatsNew,
     };

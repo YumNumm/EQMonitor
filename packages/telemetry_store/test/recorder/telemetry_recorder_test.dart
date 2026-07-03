@@ -1,8 +1,8 @@
 import 'package:drift/native.dart';
 import 'package:telemetry_store/src/database/telemetry_database.dart';
+import 'package:telemetry_store/src/models/live_activity_type.dart';
 import 'package:telemetry_store/src/models/notification_framework.dart';
 import 'package:telemetry_store/src/models/telemetry_event.dart';
-import 'package:telemetry_store/src/models/user_action_type.dart';
 import 'package:telemetry_store/src/recorder/telemetry_recorder.dart';
 import 'package:test/test.dart';
 
@@ -42,15 +42,18 @@ void main() {
       expect(row.payload, contains('"channel_id":"eew_warning"'));
     });
 
-    test('inserts userAction event with null eventId', () async {
+    test('inserts liveActivityStarted event with null eventId', () async {
       await recorder.record(
-        const TelemetryEvent.userAction(action: UserActionType.screenView),
+        const TelemetryEvent.liveActivityStarted(
+          activityType: LiveActivityType.eew,
+          activityId: 'la-1',
+        ),
       );
 
       final rows = await db.getUnsyncedEvents();
       expect(rows, hasLength(1));
       expect(rows.first.eventId, isNull);
-      expect(rows.first.eventType, 'user_action');
+      expect(rows.first.eventType, 'live_activity_started');
     });
   });
 
@@ -61,7 +64,7 @@ void main() {
           framework: NotificationFramework.fcm,
           channelId: 'ch1',
         ),
-        const TelemetryEvent.userAction(action: UserActionType.screenView),
+        const TelemetryEvent.notificationOpened(coldStart: false),
       ]);
 
       final rows = await db.getUnsyncedEvents();

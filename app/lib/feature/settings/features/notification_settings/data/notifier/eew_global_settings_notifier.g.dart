@@ -44,7 +44,7 @@ abstract class _$EewGlobalSettingsNotifier
   FutureOr<EewGlobalSettings> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<EewGlobalSettings>, EewGlobalSettings>;
     final element =
@@ -55,6 +55,6 @@ abstract class _$EewGlobalSettingsNotifier
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

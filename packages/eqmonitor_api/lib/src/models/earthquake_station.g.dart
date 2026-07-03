@@ -31,10 +31,15 @@ _EarthquakeStation _$EarthquakeStationFromJson(Map<String, dynamic> json) =>
             'location',
             (v) => ParameterLocation.fromJson(v as Map<String, dynamic>),
           ),
+          arv400: $checkedConvert('arv_400', (v) => v as num?),
         );
         return val;
       },
-      fieldKeyMap: const {'noCode': 'no_code', 'sourceStatus': 'source_status'},
+      fieldKeyMap: const {
+        'noCode': 'no_code',
+        'sourceStatus': 'source_status',
+        'arv400': 'arv_400',
+      },
     );
 
 Map<String, dynamic> _$EarthquakeStationToJson(_EarthquakeStation instance) =>
@@ -47,6 +52,7 @@ Map<String, dynamic> _$EarthquakeStationToJson(_EarthquakeStation instance) =>
       'source_status': instance.sourceStatus,
       'owner': instance.owner,
       'location': instance.location,
+      'arv_400': instance.arv400,
     };
 
 const _$EarthquakeStationStatusEnumMap = {

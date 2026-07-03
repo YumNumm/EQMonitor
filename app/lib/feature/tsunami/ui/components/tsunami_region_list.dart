@@ -67,9 +67,7 @@ class _WarningGroupHeader extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          border: Border(
-            left: BorderSide(color: headerColor, width: 4),
-          ),
+          border: Border(left: BorderSide(color: headerColor, width: 4)),
           color: headerColor.withValues(alpha: 0.1),
         ),
         child: Text(
@@ -98,7 +96,7 @@ class _ForecastRegionCard extends StatelessWidget {
         .where(
           (s) =>
               s.observation != null &&
-              !((s.observation!.firstHeight.isMissing as bool?) ?? false),
+              !(s.observation!.firstHeight.isMissing ?? false),
         )
         .toList();
 
@@ -127,9 +125,7 @@ class _ForecastRegionCard extends StatelessWidget {
             child: _ForecastDetails(region: region),
           ),
           if (observedStations.isNotEmpty)
-            _ObservationExpansion(
-              stations: observedStations,
-            ),
+            _ObservationExpansion(stations: observedStations),
           if (observedStations.isEmpty) const SizedBox(height: 8),
         ],
       ),
@@ -161,7 +157,7 @@ class _ForecastDetails extends StatelessWidget {
         } else if (mh.value != null) {
           final valueStr = '${mh.value}m';
           parts.add(
-            '予想最大波高: ${((mh.isOver as bool?) ?? false) ? '$valueStr超' : valueStr}',
+            '予想最大波高: ${(mh.isOver ?? false) ? '$valueStr超' : valueStr}',
           );
         }
       }
