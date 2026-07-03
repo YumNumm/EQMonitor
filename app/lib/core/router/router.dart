@@ -14,6 +14,7 @@ import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
+import 'package:eqmonitor/feature/feed/ui/page/feed_details_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/intensity_history_page.dart';
@@ -875,6 +876,17 @@ class FeedRoute extends GoRouteData with $FeedRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const FeedPage();
+}
+
+@TypedGoRoute<FeedDetailsRoute>(path: '/feed/source/:telegramHash')
+class FeedDetailsRoute extends GoRouteData with $FeedDetailsRoute {
+  const FeedDetailsRoute({required this.telegramHash});
+
+  final String telegramHash;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      FeedDetailsPage(telegramHash: telegramHash);
 }
 
 @TypedGoRoute<TsunamiDetailsRoute>(path: '/tsunami/:tsunamiId')
