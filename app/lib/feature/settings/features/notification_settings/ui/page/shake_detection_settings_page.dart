@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
@@ -38,19 +38,19 @@ class _Body extends ConsumerWidget {
         stateAsync.value ??
         const (entries: <ShakeDetectionEntry>[], availableSubRegions: []);
 
-    ref.listen(
-      ShakeDetectionSettingsNotifier.addCurrentLocationMutation,
-      (_, next) {
-        if (next is MutationError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('現在地の追加に失敗しました: ${next.error}'),
-              backgroundColor: context.designSystem.colorTheme.error,
-            ),
-          );
-        }
-      },
-    );
+    ref.listen(ShakeDetectionSettingsNotifier.addCurrentLocationMutation, (
+      _,
+      next,
+    ) {
+      if (next is MutationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('現在地の追加に失敗しました: ${next.error}'),
+            backgroundColor: context.designSystem.colorTheme.error,
+          ),
+        );
+      }
+    });
     ref.listen(ShakeDetectionSettingsNotifier.removeEntryMutation, (_, next) {
       if (next is MutationError) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -165,9 +165,7 @@ class _Body extends ConsumerWidget {
                   ? const SizedBox(
                       width: 16,
                       height: 16,
-                      child: CircularProgressIndicator.adaptive(
-                        strokeWidth: 2,
-                      ),
+                      child: CircularProgressIndicator.adaptive(strokeWidth: 2),
                     )
                   : const Text('現在地を追加'),
             ),

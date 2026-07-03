@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
@@ -17,7 +16,12 @@ const _legacyEstimatedIntensityColorKey = 'estimated_intensity_color';
 ///
 /// 旧キーが1つも存在しない場合は `null` を返す（マイグレーション不要）。
 /// 旧キーが存在する場合は、[AppTheme.eqmonitorDefault] をベースに
-/// 震度色のみを旧設定で上書きしたテーマを返し、旧キーを削除する。
+/// 震度色のみを旧設定で上書きしたテーマを返す。
+///
+/// この関数自体は旧キーを削除しない。呼び出し側が新形式の保存に
+/// 成功したことを確認したうえで、旧キーの削除を行うこと
+/// （プロセスが途中で終了しても、旧キーが残っていればマイグレーションを
+/// 再試行できるようにするため）。
 ///
 /// 個々のJSONが不正な形式の場合は、その項目のみデフォルト値にフォールバックする。
 AppTheme? migrateFromLegacyIntensityColors(SharedPreferencesAsync prefs) {
@@ -63,10 +67,6 @@ AppTheme? migrateFromLegacyIntensityColors(SharedPreferencesAsync prefs) {
     );
     darkSet = darkSet.copyWith(estimatedIntensity: migratedEstimatedIntensity);
   }
-
-  // 旧キーを削除（マイグレーションの成否に関わらず、二重変換を防ぐため削除する）
-  unawaited(prefs.remove(_legacyIntensityColorKey));
-  unawaited(prefs.remove(_legacyEstimatedIntensityColorKey));
 
   return defaultTheme.copyWith(light: lightSet, dark: darkSet);
 }

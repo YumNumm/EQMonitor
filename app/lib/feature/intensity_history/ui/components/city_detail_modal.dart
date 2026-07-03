@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -12,7 +13,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_tex
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_intensity_list_data_source.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -76,17 +76,12 @@ class _CityDetailModal extends ConsumerWidget {
           error: (error, stackTrace) => _buildShell(
             scrollController: scrollController,
             context: context,
-            child: SliverToBoxAdapter(
-              child: ErrorCard(error: error),
-            ),
+            child: SliverToBoxAdapter(child: ErrorCard(error: error)),
           ),
           data: (dataSource) => _buildShell(
             scrollController: scrollController,
             context: context,
-            child: _PagingBody(
-              dataSource: dataSource,
-              cityName: cityName,
-            ),
+            child: _PagingBody(dataSource: dataSource, cityName: cityName),
             footer: _ShowAllHistoryButton(
               regionSearchType: RegionSearchType.city,
               regionCode: cityCode,
@@ -116,7 +111,9 @@ class _CityDetailModal extends ConsumerWidget {
               height: 4,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2),
-                color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.3),
+                color: context.designSystem.colorTheme.onSurface.withValues(
+                  alpha: 0.3,
+                ),
               ),
             ),
           ),
@@ -131,7 +128,10 @@ class _CityDetailModal extends ConsumerWidget {
         ),
         // 区切り
         SliverToBoxAdapter(
-          child: Divider(height: 0, color: context.designSystem.colorTheme.outlineVariant),
+          child: Divider(
+            height: 0,
+            color: context.designSystem.colorTheme.outlineVariant,
+          ),
         ),
         // 一覧 or ローディング or エラー
         child,
@@ -242,10 +242,7 @@ class _SummarySection extends StatelessWidget {
 }
 
 class _PagingBody extends ConsumerWidget {
-  const _PagingBody({
-    required this.dataSource,
-    required this.cityName,
-  });
+  const _PagingBody({required this.dataSource, required this.cityName});
 
   final CityIntensityListDataSource dataSource;
   final String cityName;
@@ -255,9 +252,8 @@ class _PagingBody extends ConsumerWidget {
     return SliverGroupedPagingList<String?, String, IntensityAreaSearchItem>(
       dataSource: dataSource,
       stickyHeader: true,
-      headerBuilder: (_, intensity, _) => _IntensityHeader(
-        intensity: intensity,
-      ),
+      headerBuilder: (_, intensity, _) =>
+          _IntensityHeader(intensity: intensity),
       itemBuilder: (context, item, globalIndex, localIndex) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -280,15 +276,10 @@ class _PagingBody extends ConsumerWidget {
       ),
       initialLoadingWidget: const _SkeletonBox(),
       appendLoadingWidget: const _SkeletonBox(itemCount: 2),
-      errorBuilder: (context, error, stackTrace) => ErrorCard(
-        error: error,
-        onReload: () async => dataSource.refresh(),
-      ),
+      errorBuilder: (context, error, stackTrace) =>
+          ErrorCard(error: error, onReload: () async => dataSource.refresh()),
       emptyWidget: const Center(
-        child: Padding(
-          padding: EdgeInsets.all(32),
-          child: Text('震度の記録がありません'),
-        ),
+        child: Padding(padding: EdgeInsets.all(32), child: Text('震度の記録がありません')),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/let_ex.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
@@ -15,7 +16,6 @@ import 'package:eqmonitor/feature/eew/ui/hook/use_eew_estimated_regions.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -36,15 +36,12 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
     final displayMode = useState(EewDisplayMode.intensity);
 
     // Auto-select the latest report during simulation
-    useEffect(
-      () {
-        if (simulation != null && simulation.isPlaying) {
-          selectedIndex.value = simulation.currentIndex;
-        }
-        return null;
-      },
-      [simulation?.currentIndex],
-    );
+    useEffect(() {
+      if (simulation != null && simulation.isPlaying) {
+        selectedIndex.value = simulation.currentIndex;
+      }
+      return null;
+    }, [simulation?.currentIndex]);
 
     return Scaffold(
       appBar: AppBar(
@@ -52,9 +49,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
         actions: [
           if (simulation != null) ...[
             IconButton(
-              icon: Icon(
-                simulation.isPlaying ? Icons.pause : Icons.play_arrow,
-              ),
+              icon: Icon(simulation.isPlaying ? Icons.pause : Icons.play_arrow),
               onPressed: () {
                 if (simulation.isPlaying) {
                   ref.read(eewSimulationProvider.notifier).pause();
@@ -103,10 +98,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
                   .where((h) => h.latitude != null && h.longitude != null)
                   .firstOrNull
                   ?.let(
-                    (h) => Geographic(
-                      lat: h.latitude!,
-                      lon: h.longitude!,
-                    ),
+                    (h) => Geographic(lat: h.latitude!, lon: h.longitude!),
                   ) ??
               const Geographic(lat: 35.6895, lon: 139.6917);
 

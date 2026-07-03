@@ -62,8 +62,8 @@ void main() {
       expect(result!.light!.intensity.seven.background.toARGB32(), 0xFFC800FF);
       expect(result.dark!.intensity.seven.background.toARGB32(), 0xFFC800FF);
       expect(result.light!.intensity.one.background.toARGB32(), 0xFF03B5FF);
-      // 旧キーが削除される
-      expect(prefs.getString('intensity_color'), isNull);
+      // この関数自体は旧キーを削除しない（呼び出し側の保存完了後に削除する）
+      expect(prefs.getString('intensity_color'), isNotNull);
     });
 
     test('旧estimated_intensity_colorキーがある場合はマイグレーションされる', () async {
@@ -82,8 +82,8 @@ void main() {
         result.dark!.estimatedIntensity.four.background.toARGB32(),
         0xFFFFEE58,
       );
-      // 旧キーが削除される
-      expect(prefs.getString('estimated_intensity_color'), isNull);
+      // この関数自体は旧キーを削除しない（呼び出し側の保存完了後に削除する）
+      expect(prefs.getString('estimated_intensity_color'), isNotNull);
     });
 
     test('両方の旧キーがある場合は両方マイグレーションされる', () async {
@@ -100,8 +100,9 @@ void main() {
         result.light!.estimatedIntensity.seven.background.toARGB32(),
         0xFFCE93D8,
       );
-      expect(prefs.getString('intensity_color'), isNull);
-      expect(prefs.getString('estimated_intensity_color'), isNull);
+      // この関数自体は旧キーを削除しない（呼び出し側の保存完了後に削除する）
+      expect(prefs.getString('intensity_color'), isNotNull);
+      expect(prefs.getString('estimated_intensity_color'), isNotNull);
     });
 
     test('不正なJSONの場合はデフォルトのintensityにフォールバックする', () async {
@@ -122,8 +123,8 @@ void main() {
         result.light!.estimatedIntensity.seven.background.toARGB32(),
         0xFFCE93D8,
       );
-      // 不正であっても旧キーは削除される
-      expect(prefs.getString('intensity_color'), isNull);
+      // この関数自体は旧キーを削除しない（呼び出し側の保存完了後に削除する）
+      expect(prefs.getString('intensity_color'), isNotNull);
     });
   });
 }

@@ -224,5 +224,44 @@ void main() {
       final state = container.read(appThemeProvider);
       expect(state.lightTheme.name, 'Custom');
     });
+
+    test('旧intensity_colorキーがある場合、新形式の保存完了後に旧キーが削除される', () async {
+      const legacyJson = '''
+        {
+          "unknown": {"foreground": "#FFFFFFFF", "background": "#FF000000"},
+          "zero": {"foreground": "#FF000000", "background": "#FFFFFFFF"},
+          "one": {"foreground": "#FF000000", "background": "#FF03B5FF"},
+          "two": {"foreground": "#FF000000", "background": "#FF76FF03"},
+          "three": {"foreground": "#FF000000", "background": "#FF00C853"},
+          "four": {"foreground": "#FF000000", "background": "#FFFFEB3B"},
+          "fiveLower": {"foreground": "#FF000000", "background": "#FFFFC107"},
+          "fiveUpper": {"foreground": "#FF000000", "background": "#FFFF6F00"},
+          "sixLower": {"foreground": "#FFFFFFFF", "background": "#FFFF2800"},
+          "sixUpper": {"foreground": "#FFFFFFFF", "background": "#FFA50021"},
+          "seven": {"foreground": "#FFFFFFFF", "background": "#FF123456"}
+        }
+        ''';
+      final container = await _container(
+        initial: {'intensity_color': legacyJson},
+      );
+      addTearDown(container.dispose);
+
+      // build() 時点ではまだ非同期の保存/削除処理が完了していない
+      final state = container.read(appThemeProvider);
+      expect(
+        state.lightTheme.light!.intensity.seven.background.toARGB32(),
+        0xFF123456,
+      );
+
+      // 新形式の保存 → 旧キー削除のチェーンが完了するのを待つ
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+
+      final prefs = container.read(app_prefs.sharedPreferencesProvider);
+      expect(await prefs.getString('intensity_color'), isNull);
+      expect(await prefs.getString('app_theme_light'), isNotNull);
+      expect(await prefs.getString('app_theme_dark'), isNotNull);
+    });
   });
 }

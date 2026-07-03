@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/material.dart';
 
@@ -73,15 +73,14 @@ class _StationPopupBody extends StatelessWidget {
                 height: 4,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(2),
-                  color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.3),
+                  color: context.designSystem.colorTheme.onSurface.withValues(
+                    alpha: 0.3,
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 12),
-            Text(
-              stationName,
-              style: theme.textTheme.titleLarge,
-            ),
+            Text(stationName, style: theme.textTheme.titleLarge),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -147,7 +146,9 @@ class _AreaPopupBody extends StatelessWidget {
                 height: 4,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(2),
-                  color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.3),
+                  color: context.designSystem.colorTheme.onSurface.withValues(
+                    alpha: 0.3,
+                  ),
                 ),
               ),
             ),
@@ -173,7 +174,9 @@ class _AreaPopupBody extends StatelessWidget {
               Text(
                 '観測なし',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.6),
+                  color: context.designSystem.colorTheme.onSurface.withValues(
+                    alpha: 0.6,
+                  ),
                 ),
               ),
             if (intensityHistoryRoute != null) ...[

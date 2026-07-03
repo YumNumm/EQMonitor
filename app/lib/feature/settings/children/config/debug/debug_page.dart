@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:eqmonitor/core/api/http_cache_disabled_provider.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/chuck_provider.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
@@ -33,9 +33,7 @@ class DebugPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Debug Page'),
-      ),
+      appBar: AppBar(title: const Text('Debug Page')),
       body: const _DebugWidget(),
     );
   }
@@ -51,9 +49,7 @@ class _DebugWidget extends ConsumerWidget {
     final buildCfg = ref.watch(buildConfigProvider);
 
     return Theme(
-      data: Theme.of(context).copyWith(
-        visualDensity: .compact,
-      ),
+      data: Theme.of(context).copyWith(visualDensity: .compact),
       child: ListTileTheme(
         dense: true,
         child: ListView(
@@ -325,9 +321,8 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('デバイス・通知'),
               subtitle: const Text('登録・トークン同期・設定・テスト通知・履歴'),
               leading: const Icon(Icons.phonelink_setup),
-              onTap: () async => const DebugDeviceSettingsRoute().push<void>(
-                context,
-              ),
+              onTap: () async =>
+                  const DebugDeviceSettingsRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('通知配信ログ'),
@@ -340,9 +335,8 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('デバイス管理'),
               subtitle: const Text('登録・再登録・削除・通知条件の設定'),
               leading: const Icon(Icons.manage_accounts_outlined),
-              onTap: () async => const DebugDeviceAdminRoute().push<void>(
-                context,
-              ),
+              onTap: () async =>
+                  const DebugDeviceAdminRoute().push<void>(context),
             ),
             const Divider(),
             const _BackgroundLocationDebugSection(),
@@ -448,15 +442,15 @@ class _AppCheckSection extends ConsumerWidget {
               final token = await FirebaseAppCheck.instance
                   .getLimitedUseToken();
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Token: $token')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('Token: $token')));
               }
             } on Exception catch (e) {
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('エラー: $e')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('エラー: $e')));
               }
             }
           },
@@ -717,17 +711,13 @@ class _StartApiDebugContent extends ConsumerWidget {
           value: data.flags.adsEnabled,
           onChanged: (v) => _override(
             ref,
-            data.copyWith(
-              flags: data.flags.copyWith(adsEnabled: v),
-            ),
+            data.copyWith(flags: data.flags.copyWith(adsEnabled: v)),
           ),
         ),
         ListTile(
           dense: true,
           title: const Text('latest.version'),
-          trailing: Text(
-            data.app.version.latest?.version ?? '(なし)',
-          ),
+          trailing: Text(data.app.version.latest?.version ?? '(なし)'),
         ),
         AppSwitchListTile(
           title: 'latest.showWhatsNew',

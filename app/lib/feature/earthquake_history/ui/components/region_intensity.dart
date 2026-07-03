@@ -2,10 +2,10 @@ import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/jma_forecast_intensity.dart';
-import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
@@ -29,17 +29,13 @@ class JmaIntensityContent extends HookWidget {
 
     final intensityTree = useMemoized(() {
       final entries = intensity.intensityTree.entries.toList()
-        ..sort(
-          (a, b) => b.key.orderIndex.compareTo(a.key.orderIndex),
-        );
+        ..sort((a, b) => b.key.orderIndex.compareTo(a.key.orderIndex));
       return Map.fromEntries(entries);
     }, [intensity.intensityTree]);
 
     final regions = useMemoized(() {
       final entries = intensity.regions.entries.toList()
-        ..sort(
-          (a, b) => b.key.orderIndex.compareTo(a.key.orderIndex),
-        );
+        ..sort((a, b) => b.key.orderIndex.compareTo(a.key.orderIndex));
       return Map.fromEntries(entries);
     }, [intensity.regions]);
 
@@ -64,7 +60,9 @@ class JmaIntensityContent extends HookWidget {
               (entry) => _PreliminaryIntensityLevelSection(
                 intensity: entry.key,
                 regions: entry.value,
-                dividerColor: intensityColors.fromJmaIntensity(entry.key).background,
+                dividerColor: intensityColors
+                    .fromJmaIntensity(entry.key)
+                    .background,
               ),
             ),
         ],
@@ -78,7 +76,9 @@ class JmaIntensityContent extends HookWidget {
               intensity: entry.key,
               prefectures: entry.value,
               eventId: item.eventId,
-              dividerColor: intensityColors.fromJmaIntensity(entry.key).background,
+              dividerColor: intensityColors
+                  .fromJmaIntensity(entry.key)
+                  .background,
             ),
           )
           .toList(),
@@ -102,9 +102,7 @@ class LpgmIntensityContent extends HookWidget {
 
     final lpgmTree = useMemoized(() {
       final entries = intensity.lpgmIntensityTree.entries.toList()
-        ..sort(
-          (a, b) => b.key.orderIndex.compareTo(a.key.orderIndex),
-        );
+        ..sort((a, b) => b.key.orderIndex.compareTo(a.key.orderIndex));
       return Map.fromEntries(entries);
     }, [intensity.lpgmIntensityTree]);
 
@@ -113,10 +111,7 @@ class LpgmIntensityContent extends HookWidget {
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: Text(
           '長周期地震動階級のデータはありません',
-          style: TextStyle(
-            fontFamily: FontFamily.notoSansJP,
-            fontSize: 13,
-          ),
+          style: TextStyle(fontFamily: FontFamily.notoSansJP, fontSize: 13),
         ),
       );
     }
@@ -149,7 +144,9 @@ class _PreliminaryBadge extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.designSystem.colorTheme.errorContainer,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: context.designSystem.colorTheme.onErrorContainer),
+          border: Border.all(
+            color: context.designSystem.colorTheme.onErrorContainer,
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -188,11 +185,7 @@ class _PreliminaryIntensityLevelSection extends StatelessWidget {
       visualDensity: .compact,
       titleAlignment: .titleHeight,
       contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-      leading: JmaIntensityIcon(
-        intensity: intensity,
-        type: .filled,
-        size: 40,
-      ),
+      leading: JmaIntensityIcon(intensity: intensity, type: .filled, size: 40),
       title: Row(
         children: [
           Text(
@@ -208,10 +201,7 @@ class _PreliminaryIntensityLevelSection extends StatelessWidget {
         regionNames,
         maxLines: 4,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
-          fontFamily: FontFamily.notoSansJP,
-          fontSize: 13,
-        ),
+        style: const TextStyle(fontFamily: FontFamily.notoSansJP, fontSize: 13),
       ),
     );
   }
@@ -411,10 +401,7 @@ class _LpgmIntensityLevelSection extends HookWidget {
 }
 
 class _PrefectureTile extends HookWidget {
-  const _PrefectureTile({
-    required this.prefecture,
-    required this.eventId,
-  });
+  const _PrefectureTile({required this.prefecture, required this.eventId});
 
   final PrefectureIntensityNode prefecture;
   final String eventId;
@@ -459,10 +446,7 @@ class _PrefectureTile extends HookWidget {
 }
 
 class _LpgmPrefectureTile extends HookWidget {
-  const _LpgmPrefectureTile({
-    required this.prefecture,
-    required this.eventId,
-  });
+  const _LpgmPrefectureTile({required this.prefecture, required this.eventId});
 
   final PrefectureLpgmIntensityNode prefecture;
   final String eventId;
@@ -495,9 +479,7 @@ class _LpgmPrefectureTile extends HookWidget {
             padding: const .only(left: 8),
             child: Column(
               children: prefecture.cities
-                  .map(
-                    (city) => _LpgmCityTile(city: city, eventId: eventId),
-                  )
+                  .map((city) => _LpgmCityTile(city: city, eventId: eventId))
                   .toList(),
             ),
           )
@@ -509,10 +491,7 @@ class _LpgmPrefectureTile extends HookWidget {
 }
 
 class _CityTile extends HookWidget {
-  const _CityTile({
-    required this.city,
-    required this.eventId,
-  });
+  const _CityTile({required this.city, required this.eventId});
 
   final CityIntensityNode city;
   final String? eventId;
@@ -555,10 +534,7 @@ class _CityTile extends HookWidget {
 }
 
 class _LpgmCityTile extends HookWidget {
-  const _LpgmCityTile({
-    required this.city,
-    required this.eventId,
-  });
+  const _LpgmCityTile({required this.city, required this.eventId});
 
   final CityLpgmIntensityNode city;
   final String? eventId;
@@ -598,9 +574,7 @@ class _LpgmCityTile extends HookWidget {
                     onTap: () => showModalBottomSheet<void>(
                       context: context,
                       clipBehavior: Clip.antiAlias,
-                      builder: (_) => LpgmStationDetailSheet(
-                        station: station,
-                      ),
+                      builder: (_) => LpgmStationDetailSheet(station: station),
                     ),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -630,10 +604,7 @@ class _LpgmCityTile extends HookWidget {
   }
 }
 
-Widget? _buildTrailing({
-  required bool hasChildren,
-  required bool isExpanded,
-}) {
+Widget? _buildTrailing({required bool hasChildren, required bool isExpanded}) {
   if (!hasChildren) {
     return null;
   }

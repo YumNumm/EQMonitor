@@ -1,5 +1,5 @@
-import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter/material.dart';
@@ -140,10 +140,7 @@ class DebugShakeDetectionCardPage extends HookConsumerWidget {
           const Divider(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Text(
-              'プレビュー',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
+            child: Text('プレビュー', style: Theme.of(context).textTheme.titleSmall),
           ),
           const SizedBox(height: 8),
           ShakeDetectionCard(event: buildEvent()),

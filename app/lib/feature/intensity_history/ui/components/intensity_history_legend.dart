@@ -1,7 +1,7 @@
 import 'dart:ui';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
@@ -31,15 +31,9 @@ class IntensityHistoryLegend extends StatelessWidget {
       clipBehavior: .antiAlias,
       color: context.designSystem.colorTheme.surface.withValues(alpha: 0.85),
       elevation: 0,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
+      shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.circular(8)),
       child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 2,
-          sigmaY: 2,
-          tileMode: .decal,
-        ),
+        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2, tileMode: .decal),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           child: Wrap(

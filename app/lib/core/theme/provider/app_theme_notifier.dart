@@ -16,6 +16,8 @@ part 'app_theme_notifier.g.dart';
 class AppThemeNotifier extends _$AppThemeNotifier {
   static const _lightKey = 'app_theme_light';
   static const _darkKey = 'app_theme_dark';
+  static const _legacyIntensityColorKey = 'intensity_color';
+  static const _legacyEstimatedIntensityColorKey = 'estimated_intensity_color';
 
   @override
   ({AppTheme lightTheme, AppTheme darkTheme}) build() {
@@ -27,8 +29,15 @@ class AppThemeNotifier extends _$AppThemeNotifier {
         ref.read(sharedPreferencesProvider),
       );
       if (migrated != null) {
-        unawaited(_save(_lightKey, migrated));
-        unawaited(_save(_darkKey, migrated));
+        // 新形式の保存が完了してから旧キーを削除する。
+        // 途中でプロセスが終了しても旧キーが残るため、
+        // 次回起動時にマイグレーションを再試行できる（冪等）。
+        unawaited(
+          Future.wait([
+            _save(_lightKey, migrated),
+            _save(_darkKey, migrated),
+          ]).then((_) => _removeLegacyKeys()),
+        );
         return (lightTheme: migrated, darkTheme: migrated);
       }
     }
@@ -37,6 +46,12 @@ class AppThemeNotifier extends _$AppThemeNotifier {
       lightTheme: savedLight ?? AppTheme.eqmonitorDefault(),
       darkTheme: savedDark ?? AppTheme.eqmonitorDefault(),
     );
+  }
+
+  Future<void> _removeLegacyKeys() async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.remove(_legacyIntensityColorKey);
+    await prefs.remove(_legacyEstimatedIntensityColorKey);
   }
 
   Future<void> setLightTheme(AppTheme theme) async {

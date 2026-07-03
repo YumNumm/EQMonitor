@@ -1,5 +1,5 @@
-import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_credentials_provider.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_directory_provider.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +15,7 @@ class KnetWaveformPage extends ConsumerWidget {
     final credentials = ref.watch(knetCredentialsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('K-NET 強震波形'),
-      ),
+      appBar: AppBar(title: const Text('K-NET 強震波形')),
       body: credentials.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('エラー: $e')),
@@ -104,10 +102,7 @@ class _ConfiguredView extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-            Text(
-              'ユーザー: $userId',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            Text('ユーザー: $userId', style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: () => _openYearPicker(context),

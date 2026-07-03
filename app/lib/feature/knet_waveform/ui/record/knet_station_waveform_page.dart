@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_analysis.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.dart';
@@ -35,10 +35,7 @@ class KnetStationWaveformPage extends HookConsumerWidget {
         bottom: navIndex.value == 0
             ? TabBar(
                 controller: tabController,
-                tabs: List.generate(
-                  tabCount,
-                  (i) => Tab(text: dirs[i].label),
-                ),
+                tabs: List.generate(tabCount, (i) => Tab(text: dirs[i].label)),
               )
             : null,
       ),
@@ -46,14 +43,8 @@ class KnetStationWaveformPage extends HookConsumerWidget {
         selectedIndex: navIndex.value,
         onDestinationSelected: (i) => navIndex.value = i,
         destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.show_chart),
-            label: '波形',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.bar_chart),
-            label: 'スペクトル',
-          ),
+          NavigationDestination(icon: Icon(Icons.show_chart), label: '波形'),
+          NavigationDestination(icon: Icon(Icons.bar_chart), label: 'スペクトル'),
           NavigationDestination(
             icon: Icon(Icons.waterfall_chart),
             label: 'フーリエ',
@@ -79,9 +70,7 @@ class KnetStationWaveformPage extends HookConsumerWidget {
                 ],
                 selected: {waveType.value},
                 onSelectionChanged: (s) => waveType.value = s.first,
-                style: const ButtonStyle(
-                  visualDensity: VisualDensity.compact,
-                ),
+                style: const ButtonStyle(visualDensity: VisualDensity.compact),
               ),
             ),
             Expanded(
@@ -211,10 +200,7 @@ class _MetricsHeader extends StatelessWidget {
                           value: '${analysis!.siValue.toStringAsFixed(2)} cm/s',
                         ),
                       ] else
-                        const _MetricChip(
-                          label: 'PGV/PGD/SI',
-                          value: '計算中…',
-                        ),
+                        const _MetricChip(label: 'PGV/PGD/SI', value: '計算中…'),
                     ],
                   ),
                 ],
@@ -360,10 +346,7 @@ class _TimeSeriesChart extends StatelessWidget {
           ],
           titlesData: FlTitlesData(
             leftTitles: AxisTitles(
-              axisNameWidget: Text(
-                unit,
-                style: const TextStyle(fontSize: 10),
-              ),
+              axisNameWidget: Text(unit, style: const TextStyle(fontSize: 10)),
               sideTitles: SideTitles(
                 showTitles: true,
                 reservedSize: 52,
@@ -397,14 +380,10 @@ class _TimeSeriesChart extends StatelessWidget {
             ),
           ),
           gridData: FlGridData(
-            getDrawingHorizontalLine: (v) => FlLine(
-              color: colorTheme.outlineVariant,
-              strokeWidth: 0.5,
-            ),
-            getDrawingVerticalLine: (v) => FlLine(
-              color: colorTheme.outlineVariant,
-              strokeWidth: 0.5,
-            ),
+            getDrawingHorizontalLine: (v) =>
+                FlLine(color: colorTheme.outlineVariant, strokeWidth: 0.5),
+            getDrawingVerticalLine: (v) =>
+                FlLine(color: colorTheme.outlineVariant, strokeWidth: 0.5),
           ),
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
@@ -561,10 +540,14 @@ class _SpectrumChart extends HookWidget {
                   ),
                 ),
                 gridData: FlGridData(
-                  getDrawingHorizontalLine: (v) =>
-                      FlLine(color: colorTheme.outlineVariant, strokeWidth: 0.5),
-                  getDrawingVerticalLine: (v) =>
-                      FlLine(color: colorTheme.outlineVariant, strokeWidth: 0.5),
+                  getDrawingHorizontalLine: (v) => FlLine(
+                    color: colorTheme.outlineVariant,
+                    strokeWidth: 0.5,
+                  ),
+                  getDrawingVerticalLine: (v) => FlLine(
+                    color: colorTheme.outlineVariant,
+                    strokeWidth: 0.5,
+                  ),
                 ),
               ),
               duration: Duration.zero,
@@ -687,10 +670,14 @@ class _FourierChart extends StatelessWidget {
                   ),
                 ),
                 gridData: FlGridData(
-                  getDrawingHorizontalLine: (v) =>
-                      FlLine(color: colorTheme.outlineVariant, strokeWidth: 0.5),
-                  getDrawingVerticalLine: (v) =>
-                      FlLine(color: colorTheme.outlineVariant, strokeWidth: 0.5),
+                  getDrawingHorizontalLine: (v) => FlLine(
+                    color: colorTheme.outlineVariant,
+                    strokeWidth: 0.5,
+                  ),
+                  getDrawingVerticalLine: (v) => FlLine(
+                    color: colorTheme.outlineVariant,
+                    strokeWidth: 0.5,
+                  ),
                 ),
               ),
               duration: Duration.zero,
