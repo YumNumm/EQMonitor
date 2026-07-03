@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B2B30E0935DA561969A279D /* jma_code_table.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CBCF4697AA1879785D2E137 /* jma_code_table.json */; };
+		249D6465025F226E74A29C18 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09B0693317F839417671E186 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf */; };
+		CE4199B16869AA473ED81368 /* GoogleSansCode[MONO,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61F759DEA69779A5080005D8 /* GoogleSansCode[MONO,wght].ttf */; };
 		010DC8E64C7C76B8F4F166D5 /* EarthquakeDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */; };
 		03155D2EC2B76909DF1A4693 /* ColorRGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */; };
 		0653ECA8737307C2CA836FC7 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
@@ -183,6 +186,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		463834D25A2C7A8F74710E0C /* Exceptions for "AppIntentExtension" folder in "WidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIntentExtension.swift,
+				AppIntentExtensionExtension.swift,
+				Info.plist,
+			);
+			target = 85C54CF82E96C7E700BFBBAB /* WidgetExtension */;
+		};
 		27D62BC32FF6E75000EF6A27 /* Exceptions for "AppIntentExtension" folder in "AppIntentExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -204,6 +216,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				27D62BC32FF6E75000EF6A27 /* Exceptions for "AppIntentExtension" folder in "AppIntentExtension" target */,
+				463834D25A2C7A8F74710E0C /* Exceptions for "AppIntentExtension" folder in "WidgetExtension" target */,
 			);
 			explicitFileTypes = {
 			};
@@ -462,6 +475,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				85C54CFE2E96C7E800BFBBAB /* Widget */,
+				27D62BB62FF6E75000EF6A27 /* AppIntentExtension */,
 			);
 			name = WidgetExtension;
 			packageProductDependencies = (
@@ -612,6 +626,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B2B30E0935DA561969A279D /* jma_code_table.json in Resources */,
+				249D6465025F226E74A29C18 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */,
+				CE4199B16869AA473ED81368 /* GoogleSansCode[MONO,wght].ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
