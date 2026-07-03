@@ -2,6 +2,9 @@ sealed class NotificationDeepLink {
   const NotificationDeepLink();
 
   static const _internalScheme = 'eqmonitor';
+  // 通知(link)とOSディープリンク(app_links)は意図的に同一の許可リストを共用する。
+  // 流入経路によって開ける画面が変わると契約が二重化するため。
+  // `/earthquake-history` を通知 link で受けるのもこの統一の一部。
   static const _allowedPathPrefixes = [
     '/earthquake-history-details/',
     '/feed/source/',
