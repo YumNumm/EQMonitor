@@ -64,9 +64,8 @@ abstract class FeedDetail with _$FeedDetail {
 
 @freezed
 sealed class FeedItemData with _$FeedItemData {
-  const factory FeedItemData.earthquakeNotice({
-    required String text,
-  }) = FeedItemDataEarthquakeNotice;
+  const factory FeedItemData.earthquakeNotice({required String text}) =
+      FeedItemDataEarthquakeNotice;
 
   const factory FeedItemData.earthquakeExplanation({
     required FeedInfoType infoType,
@@ -90,33 +89,23 @@ sealed class FeedItemData with _$FeedItemData {
     String? text,
   }) = FeedItemDataEarthquakeNankai;
 
-  const factory FeedItemData.appUpdate({
-    String? version,
-    String? url,
-  }) = FeedItemDataAppUpdate;
+  const factory FeedItemData.appUpdate({String? version, String? url}) =
+      FeedItemDataAppUpdate;
 
-  const factory FeedItemData.incident({
-    String? url,
-  }) = FeedItemDataIncident;
+  const factory FeedItemData.incident({String? url}) = FeedItemDataIncident;
 
-  const factory FeedItemData.developerMessage({
-    String? url,
-  }) = FeedItemDataDeveloperMessage;
+  const factory FeedItemData.developerMessage({String? url}) =
+      FeedItemDataDeveloperMessage;
 }
 
 @freezed
 abstract class FeedComments with _$FeedComments {
-  const factory FeedComments({
-    required String free,
-  }) = _FeedComments;
+  const factory FeedComments({required String free}) = _FeedComments;
 }
 
 @freezed
 abstract class FeedNaming with _$FeedNaming {
-  const factory FeedNaming({
-    required String text,
-    String? en,
-  }) = _FeedNaming;
+  const factory FeedNaming({required String text, String? en}) = _FeedNaming;
 }
 
 @freezed

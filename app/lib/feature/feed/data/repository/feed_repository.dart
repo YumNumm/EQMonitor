@@ -16,17 +16,16 @@ class FeedRepository {
 
   final api.ApiClient _api;
 
-  Future<FeedListResponse> fetch({
-    String? after,
-  }) async {
+  Future<FeedListResponse> fetch({String? after}) async {
     final response = await _api.feed.getV2Feeds(after: after);
     return response.data.toFeedListResponse();
   }
 
   Future<FeedDetail> fetchByTelegramHash(
-    String telegramHash,
-  ) async {
-    final response = await _api.feed.getV2FeedsSourceTelegramHash(
+    String telegramHash, {
+    api.ApiClient? client,
+  }) async {
+    final response = await (client ?? _api).feed.getV2FeedsSourceTelegramHash(
       telegramHash: telegramHash,
     );
     return response.data.toFeedDetail();
