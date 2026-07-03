@@ -36,20 +36,22 @@ class NotificationSlotRepository {
     JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
+    final resolvedEewEnabled = eewEnabled ?? false;
+    final resolvedEarthquakeEnabled = earthquakeEnabled ?? false;
     final response = await _api.device
         .putV2DeviceMeSettingsSlotsCurrentLocation(
           body: api.UpsertSingletonSlotRequest(
-            eewEnabled: eewEnabled,
+            eewEnabled: resolvedEewEnabled,
             eewMinIntensity: resolveNotificationSlotMinIntensity(
-              enabled: eewEnabled,
+              enabled: resolvedEewEnabled,
               minIntensity: eewMinIntensity,
             )?.toApiJmaIntensity,
             eewOverrides: eewOverrides
                 ?.map((o) => o.toApiSlotOverride())
                 .toList(),
-            earthquakeEnabled: earthquakeEnabled,
+            earthquakeEnabled: resolvedEarthquakeEnabled,
             earthquakeMinIntensity: resolveNotificationSlotMinIntensity(
-              enabled: earthquakeEnabled,
+              enabled: resolvedEarthquakeEnabled,
               minIntensity: earthquakeMinIntensity,
             )?.toApiJmaIntensity,
             earthquakeOverrides: earthquakeOverrides
@@ -72,17 +74,19 @@ class NotificationSlotRepository {
     JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
+    final resolvedEewEnabled = eewEnabled ?? false;
+    final resolvedEarthquakeEnabled = earthquakeEnabled ?? false;
     final response = await _api.device.putV2DeviceMeSettingsSlotsNationwide(
       body: api.UpsertSingletonSlotRequest(
-        eewEnabled: eewEnabled,
+        eewEnabled: resolvedEewEnabled,
         eewMinIntensity: resolveNotificationSlotMinIntensity(
-          enabled: eewEnabled,
+          enabled: resolvedEewEnabled,
           minIntensity: eewMinIntensity,
         )?.toApiJmaIntensity,
         eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
-        earthquakeEnabled: earthquakeEnabled,
+        earthquakeEnabled: resolvedEarthquakeEnabled,
         earthquakeMinIntensity: resolveNotificationSlotMinIntensity(
-          enabled: earthquakeEnabled,
+          enabled: resolvedEarthquakeEnabled,
           minIntensity: earthquakeMinIntensity,
         )?.toApiJmaIntensity,
         earthquakeOverrides: earthquakeOverrides

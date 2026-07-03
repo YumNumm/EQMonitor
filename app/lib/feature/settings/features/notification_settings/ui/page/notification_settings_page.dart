@@ -18,6 +18,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
@@ -934,7 +935,13 @@ class _SlotListSection extends ConsumerWidget {
                   (tsx) async {
                     await tsx
                         .get(notificationSlotsProvider.notifier)
-                        .putNationwide();
+                        .putNationwide(
+                          eewEnabled: true,
+                          eewMinIntensity: defaultNotificationSlotMinIntensity,
+                          earthquakeEnabled: true,
+                          earthquakeMinIntensity:
+                              defaultNotificationSlotMinIntensity,
+                        );
                   },
                 );
               },
