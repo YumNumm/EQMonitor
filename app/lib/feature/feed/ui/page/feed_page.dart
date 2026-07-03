@@ -1,8 +1,7 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_data_source.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
@@ -45,7 +44,7 @@ class _PagingBody extends StatelessWidget {
             centerTitle: false,
             title: Text('お知らせ'),
           ),
-          SliverPagingList<String?, api.FeedItem>(
+          SliverPagingList<String?, FeedItem>(
             dataSource: dataSource,
             builder: (context, item, index) => FeedItemCard(item: item),
             initialLoadingWidget: const _FeedSkeleton(scrollable: false),

@@ -1,5 +1,5 @@
+import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/repository/feed_repository.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,22 +13,22 @@ Future<FeedDataSource> feedDataSource(Ref ref) async {
   return dataSource;
 }
 
-class FeedDataSource extends DataSource<String?, api.FeedItem> {
+class FeedDataSource extends DataSource<String?, FeedItem> {
   FeedDataSource({required FeedRepository repository})
-      : _repository = repository;
+    : _repository = repository;
 
   final FeedRepository _repository;
 
   @override
-  Future<LoadResult<String?, api.FeedItem>> load(
+  Future<LoadResult<String?, FeedItem>> load(
     LoadAction<String?> action,
   ) async => switch (action) {
-        Refresh() => await _fetch(null),
-        Append(:final key) => await _fetch(key),
-        Prepend() => const None(),
-      };
+    Refresh() => await _fetch(null),
+    Append(:final key) => await _fetch(key),
+    Prepend() => const None(),
+  };
 
-  Future<LoadResult<String?, api.FeedItem>> _fetch(String? cursor) async {
+  Future<LoadResult<String?, FeedItem>> _fetch(String? cursor) async {
     try {
       final response = await _repository.fetch(after: cursor);
       return Success(

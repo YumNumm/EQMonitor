@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/api/api_client_provider.dart';
+import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,9 +16,11 @@ class FeedRepository {
 
   final api.ApiClient _api;
 
-  Future<api.FeedListResponse> fetch({String? after}) async {
+  Future<FeedListResponse> fetch({
+    String? after,
+  }) async {
     final response = await _api.feed.getV2Feeds(after: after);
-    return response.data;
+    return response.data.toFeedListResponse();
   }
 
   Future<api.FeedDetailResponse> fetchByTelegramHash(
