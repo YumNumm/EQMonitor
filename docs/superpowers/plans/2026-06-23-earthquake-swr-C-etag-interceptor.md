@@ -55,14 +55,17 @@
 ## Task 0: `packages/cache` パッケージ scaffold + 依存追加
 
 **Files:**
+
 - Create: `packages/cache/pubspec.yaml` / `packages/cache/analysis_options.yaml` / `packages/cache/lib/cache.dart`
 
 **Interfaces:**
+
 - Produces: パッケージ `cache` が workspace に追加され、`dio_cache_interceptor`(`DioCacheInterceptor`/`CacheOptions`/`CachePolicy`/`CacheResponse`/`MemCacheStore`)、`http_cache_drift_store`(`DriftCacheStore`)、dev `http_mock_adapter`(`DioAdapter`) が利用可能。
 
 - [ ] **Step 1: pubspec.yaml 作成**
 
 `packages/cache/pubspec.yaml` (バージョンは Step 4 で実値固定):
+
 ```yaml
 name: cache
 description: HTTP ETag/304 cache + Drift SWR cache infrastructure for EQMonitor.
@@ -81,7 +84,7 @@ dependencies:
   http_cache_drift_store: ^7.0.0
 
 dev_dependencies:
-  altive_lints: ^2.3.0
+  altive_lints: ^3.0.0
   build_runner: ^2.7.1
   eqmonitor_lints:
     path: ../eqmonitor_lints
@@ -94,6 +97,7 @@ dev_dependencies:
 - [ ] **Step 2: analysis_options.yaml**
 
 `packages/cache/analysis_options.yaml`:
+
 ```yaml
 include: package:eqmonitor_lints/analysis_options.yaml
 ```
@@ -101,6 +105,7 @@ include: package:eqmonitor_lints/analysis_options.yaml
 - [ ] **Step 3: barrel export 作成 (最初は空に近い)**
 
 `packages/cache/lib/cache.dart`:
+
 ```dart
 /// EQMonitor のキャッシュ基盤 (HTTP ETag/304 + Drift SWR)。Riverpod 非依存。
 library;
@@ -117,12 +122,14 @@ export 'src/http/http_cache_store.dart';
 cd /Users/ryotaro.onoue/dev/github.com/YumNumm/EQMonitor
 dart pub global run melos bootstrap   # または: melos bootstrap
 ```
+
 Run: `cat packages/cache/pubspec_overrides.yaml 2>/dev/null; cd packages/cache && dart pub deps --style=compact | grep -E 'dio_cache_interceptor|http_cache_core|http_cache_drift_store|drift'`
 Expected: `dio_cache_interceptor` 4.x / `http_cache_core` 1.x / `http_cache_drift_store` 7.x / `drift` が解決。pubspec の制約を解決値に合わせ `^x.y.z` で固定。
 
 - [ ] **Step 5: ストアのクラス名・コンストラクタ・CachePolicy を import 確認**
 
 `packages/cache/tool/_verify_http_cache_api.dart` を作成:
+
 ```dart
 // ignore_for_file: unused_local_variable, avoid_print
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
@@ -134,6 +141,7 @@ void main() {
   print(options.policy);
 }
 ```
+
 Run: `cd packages/cache && dart analyze tool/_verify_http_cache_api.dart`
 Expected: 解析が通る。違えば `http_cache_drift_store` の export を確認し正しい名前 (`databaseName` 等) に直し後続タスクの該当箇所も合わせる。確認後 `tool/_verify_http_cache_api.dart` を削除。
 
@@ -151,10 +159,12 @@ git commit -m "build(cache): scaffold packages/cache for ETag/304 + SWR infra"
 `dio_cache_interceptor` の keyBuilder は「同一リクエストに同一キー」を返す純関数。schema version + app build を prefix し、モデル変更後に旧 body が 304 再生されパース失敗するのを防ぐ。interceptor の keyBuilder と `HttpCacheStore.primaryKeyForUrl` が**同一ロジック**を使うため純関数として切り出す。
 
 **Files:**
+
 - Create: `packages/cache/lib/src/http/http_cache_key.dart`
 - Test: `packages/cache/test/http/http_cache_key_test.dart`
 
 **Interfaces:**
+
 - Produces:
   - `const int kHttpCacheSchemaVersion` (現状 `1`)。計画D の `kCacheSchemaVersion` と同値で同期。
   - `String buildHttpCacheKey({required int schemaVersion, required String appBuild, required RequestOptions options})` — `CacheOptions.defaultCacheKeyBuilder(options)` を base に `v<schemaVersion>:<appBuild>:` を prefix。
@@ -162,6 +172,7 @@ git commit -m "build(cache): scaffold packages/cache for ETag/304 + SWR infra"
 - [ ] **Step 1: 失敗テスト**
 
 `packages/cache/test/http/http_cache_key_test.dart`:
+
 ```dart
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
@@ -225,6 +236,7 @@ Expected: FAIL (`buildHttpCacheKey` undefined / URI not exist)
 - [ ] **Step 3: 実装**
 
 `packages/cache/lib/src/http/http_cache_key.dart`:
+
 ```dart
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
@@ -256,6 +268,7 @@ String buildHttpCacheKey({
 - [ ] **Step 4: 緑** — Run: `cd packages/cache && dart test test/http/http_cache_key_test.dart` → PASS (5)
 
 - [ ] **Step 5: Commit**
+
 ```bash
 git add packages/cache/lib/cache.dart packages/cache/lib/src/http/http_cache_key.dart packages/cache/test/http/http_cache_key_test.dart
 git commit -m "feat(cache): add namespaced HTTP cache key builder + kHttpCacheSchemaVersion"
@@ -268,11 +281,13 @@ git commit -m "feat(cache): add namespaced HTTP cache key builder + kHttpCacheSc
 `CacheStore` をラップし契約書 §3 の API (`evict`/`clearAll`/`primaryKeyForUrl`) を公開。`primaryKeyForUrl` は Task 1 の `buildHttpCacheKey` を使い interceptor の keyBuilder と完全一致させる (計画D の自己修復が「URL → key → evict」を正しく解決するため)。
 
 **Files:**
+
 - Create: `packages/cache/lib/src/http/http_cache_store.dart`
 - Modify: `packages/cache/lib/cache.dart` (export 追加)
 - Test: `packages/cache/test/http/http_cache_store_test.dart`
 
 **Interfaces:**
+
 - Consumes: `kHttpCacheSchemaVersion`/`buildHttpCacheKey` (Task 1)、`dio_cache_interceptor` の `CacheStore`/`MemCacheStore`/`CacheResponse`。
 - Produces:
   - `class HttpCacheStore { HttpCacheStore({required CacheStore store, required int schemaVersion, required String appBuild}); final CacheStore store; final int schemaVersion; final String appBuild; Future<void> evict(String); Future<void> clearAll(); String primaryKeyForUrl(RequestOptions); }`。
@@ -281,6 +296,7 @@ git commit -m "feat(cache): add namespaced HTTP cache key builder + kHttpCacheSc
 - [ ] **Step 1: 失敗テスト**
 
 `packages/cache/test/http/http_cache_store_test.dart`:
+
 ```dart
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
@@ -348,6 +364,7 @@ void main() {
 - [ ] **Step 3: 実装**
 
 `packages/cache/lib/src/http/http_cache_store.dart`:
+
 ```dart
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
@@ -386,6 +403,7 @@ class HttpCacheStore {
 - [ ] **Step 5: analyze + Commit**
 
 Run: `cd packages/cache && dart analyze` → No issues
+
 ```bash
 git add packages/cache/lib/src/http/http_cache_store.dart packages/cache/lib/cache.dart packages/cache/test/http/http_cache_store_test.dart
 git commit -m "feat(cache): add HttpCacheStore wrapper (evict/clearAll/primaryKeyForUrl)"
@@ -398,15 +416,18 @@ git commit -m "feat(cache): add HttpCacheStore wrapper (evict/clearAll/primaryKe
 インターセプタ単体の ETag/304 振る舞いをパッケージ内で回帰ガードし、app 側に typed talker ログを足す。
 
 **Files:**
+
 - Create: `packages/cache/test/http/http_cache_interceptor_test.dart`
 - Modify: `app/lib/core/provider/log/talker.dart`
 
 **Interfaces:**
+
 - Produces: `class HttpCacheLog extends TalkerLog` (`title => 'HttpCache'`)。
 
 - [ ] **Step 1: 統合テスト (ETag 保存・If-None-Match 再送・304 復元・200 更新・名前空間化)**
 
 `packages/cache/test/http/http_cache_interceptor_test.dart`:
+
 ```dart
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
@@ -493,6 +514,7 @@ void main() {
 - [ ] **Step 3: HttpCacheLog 追加 (app)**
 
 `app/lib/core/provider/log/talker.dart` の `GoRouterLog` 直後に:
+
 ```dart
 class HttpCacheLog extends TalkerLog {
   HttpCacheLog(super.message);
@@ -506,6 +528,7 @@ class HttpCacheLog extends TalkerLog {
 - [ ] **Step 4: analyze + Commit**
 
 Run: `cd packages/cache && dart analyze && cd ../../app && dart analyze lib/core/provider/log/talker.dart` → No issues
+
 ```bash
 git add packages/cache/test/http/http_cache_interceptor_test.dart app/lib/core/provider/log/talker.dart
 git commit -m "feat(cache): add ETag/304 integration test + HttpCacheLog"
@@ -518,27 +541,32 @@ git commit -m "feat(cache): add ETag/304 integration test + HttpCacheLog"
 `packages/cache` を app の依存に加え、`DriftCacheStore` を生成して `HttpCacheStore` で包む Riverpod provider を app に置く。`DioCacheInterceptor` を `TalkerDioLogger` の**前**に登録する。
 
 **Files:**
+
 - Modify: `app/pubspec.yaml`
 - Create: `app/lib/core/api/http_cache_store_provider.dart`
 - Modify: `app/lib/core/provider/dio_provider.dart`
 - Test: `app/test/core/api/http_cache_store_provider_test.dart`
 
 **Interfaces:**
+
 - Consumes: `package:cache/cache.dart` の `HttpCacheStore`/`buildHttpCacheKey`/`kHttpCacheSchemaVersion`、`DriftCacheStore`、`packageInfoProvider`。
 - Produces: `@Riverpod(keepAlive: true) HttpCacheStore httpCacheStore(Ref ref)`。`dioProvider` の Dio が ETag/304 を透過処理。計画D が `ref.watch(httpCacheStoreProvider)` で消費。
 
 - [ ] **Step 1: app に cache 依存追加**
 
 `app/pubspec.yaml` の `dependencies` に:
+
 ```yaml
   cache:
     path: ../packages/cache
 ```
+
 Run: `cd app && flutter pub get` → 成功
 
 - [ ] **Step 2: 失敗テスト (provider が HttpCacheStore を供給)**
 
 `app/test/core/api/http_cache_store_provider_test.dart`:
+
 ```dart
 import 'package:cache/cache.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
@@ -570,6 +598,7 @@ void main() {
 - [ ] **Step 4: provider 実装**
 
 `app/lib/core/api/http_cache_store_provider.dart`:
+
 ```dart
 import 'dart:async';
 
@@ -603,12 +632,15 @@ Run: `cd app && dart run build_runner build --delete-conflicting-outputs` → `h
 - [ ] **Step 6: dioProvider に DioCacheInterceptor 登録**
 
 `app/lib/core/provider/dio_provider.dart` に import 追加:
+
 ```dart
 import 'package:cache/cache.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 ```
+
 `deviceAuthTokenInterceptor` の watch 後に `httpCacheStore` を取得し、interceptor 登録列を次の順 (`DioCacheInterceptor` を `TalkerDioLogger` の直前):
+
 ```dart
   final httpCache = ref.watch(httpCacheStoreProvider);
   // ...
@@ -637,6 +669,7 @@ import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 
 Run: `cd app && dart analyze lib/core && flutter test test/core/`
 Expected: No issues / PASS (既存 `dio_list_format_test` 等含め緑)
+
 ```bash
 git add app/pubspec.yaml app/lib/core/api/http_cache_store_provider.dart app/lib/core/api/http_cache_store_provider.g.dart app/lib/core/provider/dio_provider.dart app/test/core/api/http_cache_store_provider_test.dart
 git commit -m "feat(app): wire DioCacheInterceptor (ETag/304) via packages/cache HttpCacheStore"
@@ -655,6 +688,7 @@ melos run analyze
 cd packages/cache && dart test && cd ../../app && flutter test
 cd /Users/ryotaro.onoue/dev/github.com/YumNumm/EQMonitor && dart format --set-exit-if-changed packages/cache app/lib/core/api app/lib/core/provider
 ```
+
 Expected: 全 PASS / No issues
 
 - [ ] **Step 2: PR 作成**
@@ -670,6 +704,7 @@ gh pr create --repo YumNumm/EQMonitor --base develop \
 ## Self-Review
 
 **1. Spec coverage (契約書 §0/§3 + 設計セクション6):**
+
 - `packages/cache` 新設 (Riverpod 非依存) → Task 0。
 - `dio_cache_interceptor` + Drift ストア (`http_cache_drift_store`、旧 db_store は discontinued) → Task 0。
 - `buildHttpCacheKey` + `kHttpCacheSchemaVersion` 名前空間化 → Task 1 (packages/cache)。
@@ -681,12 +716,14 @@ gh pr create --repo YumNumm/EQMonitor --base develop \
 **2. Placeholder scan:** 全コードステップに実コード記載。バージョン/`DriftCacheStore` API は Task 0 の確認ステップで実値固定 (placeholder ではなく検証手順)。
 
 **3. Type consistency:**
+
 - `buildHttpCacheKey({schemaVersion, appBuild, options})` を Task 1 定義 → Task 2 (`primaryKeyForUrl`)・Task 4 (interceptor keyBuilder) で同一使用。
 - `HttpCacheStore.store/schemaVersion/appBuild` を Task 2 公開 → Task 4 が参照。
 - `httpCacheStoreProvider` を Task 4 産出 → 計画D が消費。契約書 §3 の D 消費 API (`evict`/`clearAll`/`primaryKeyForUrl`/`kHttpCacheSchemaVersion`/`httpCacheStore`) と一致。
 - パッケージ境界: `packages/cache` は Riverpod/app を import しない (provider は app)。契約書 §0 と一致。
 
 **4. 懸念点 (実装者へ申し送り):**
+
 - `http_cache_drift_store` の `DriftCacheStore` コンストラクタ (`databasePath` vs `databaseName`) が同期 Provider で確定できない場合、Task 4 のノートで `databaseName` 版優先 → 不可なら `FutureProvider` 化 + 契約書/計画D へ連絡。
 - `CacheOptions.defaultCacheKeyBuilder` / `CacheResponse` / `MemCacheStore` のフィールド名は Task 0 Step 5 で確定。
 - `http_mock_adapter` の `If-None-Match` マッチャは版依存 (304 復元アサートが本質)。

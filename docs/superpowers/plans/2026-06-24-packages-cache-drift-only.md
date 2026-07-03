@@ -25,12 +25,14 @@
 ### Task 1: packages/cache の依存差し替えと Drift スキャフォールド
 
 **Files:**
+
 - Modify: `packages/cache/pubspec.yaml`
 - Create: `packages/cache/lib/src/database/http_cache_entries_table.dart`
 - Create: `packages/cache/lib/src/database/http_cache_database.dart`
 - Create: `packages/cache/build.yaml`（任意・drift options 不要なら省略可）
 
 **Interfaces:**
+
 - Produces: `class HttpCacheEntries extends Table`（DataClass `HttpCacheEntryRow`）, `class CacheDatabase extends _$CacheDatabase { CacheDatabase(super.e); }`
 
 - [ ] **Step 1: pubspec を書き換える**
@@ -58,7 +60,7 @@ dependencies:
   path_provider: ^2.1.5
 
 dev_dependencies:
-  altive_lints: ^2.3.0
+  altive_lints: ^3.0.0
   build_runner: ^2.7.1
   drift_dev: ^2.22.0
   eqmonitor_lints:
@@ -114,10 +116,12 @@ class CacheDatabase extends _$CacheDatabase {
 - [ ] **Step 4: bootstrap して生成する**
 
 Run:
+
 ```bash
 dart pub global run melos bootstrap
 dart pub global run melos exec --scope=cache -- dart run build_runner build --delete-conflicting-outputs
 ```
+
 Expected: `packages/cache/lib/src/database/http_cache_database.g.dart` が生成され、`_$CacheDatabase` が解決する。エラーなし。
 
 - [ ] **Step 5: アナライズ**
@@ -137,10 +141,12 @@ git commit -m "chore(cache): swap deps to drift and scaffold CacheDatabase"
 ### Task 2: CacheDatabase DAO（put/get/delete/clear）
 
 **Files:**
+
 - Modify: `packages/cache/lib/src/database/http_cache_database.dart`
 - Test: `packages/cache/test/database/http_cache_database_test.dart`
 
 **Interfaces:**
+
 - Consumes: `CacheDatabase`, `HttpCacheEntries`, `HttpCacheEntryRow`, `HttpCacheEntriesCompanion`
 - Produces:
   - `Future<HttpCacheEntryRow?> getEntry(String key)`
@@ -254,10 +260,12 @@ git commit -m "feat(cache): add CacheDatabase DAO methods"
 ### Task 3: buildHttpCacheKey を dio_cache_interceptor 非依存に書換
 
 **Files:**
+
 - Modify: `packages/cache/lib/src/http/http_cache_key.dart`
 - Test: `packages/cache/test/http/http_cache_key_test.dart`
 
 **Interfaces:**
+
 - Produces:
   - `const int kHttpCacheSchemaVersion = 1;`
   - `String buildHttpCacheKey({required int schemaVersion, required String appBuild, required Uri url, Map<String, String>? headers, Object? body})`
@@ -311,11 +319,13 @@ git commit -m "refactor(cache): drop dio_cache_interceptor from cache key builde
 ### Task 4: HttpCacheEntry モデル + HttpCacheStore ファサード
 
 **Files:**
+
 - Create: `packages/cache/lib/src/http/http_cache_entry.dart`
 - Modify: `packages/cache/lib/src/http/http_cache_store.dart`
 - Test: `packages/cache/test/http/http_cache_store_test.dart`
 
 **Interfaces:**
+
 - Consumes: `CacheDatabase`, `HttpCacheEntryRow`, `HttpCacheEntriesCompanion`, `buildHttpCacheKey`
 - Produces:
   - `class HttpCacheEntry { key, statusCode, eTag, headers, responseType, body, updatedAtMs }`
@@ -524,10 +534,12 @@ git commit -m "feat(cache): drift-backed HttpCacheStore and HttpCacheEntry"
 ### Task 5: HttpCacheInterceptor（ETag/304）
 
 **Files:**
+
 - Create: `packages/cache/lib/src/http/http_cache_interceptor.dart`
 - Test: `packages/cache/test/http/http_cache_interceptor_test.dart`
 
 **Interfaces:**
+
 - Consumes: `HttpCacheStore`, `HttpCacheEntry`, `dio` の `Interceptor`/`RequestOptions`/`Response`/`Headers`
 - Produces: `class HttpCacheInterceptor extends Interceptor { HttpCacheInterceptor(this.store); }`
 
@@ -758,10 +770,12 @@ git commit -m "feat(cache): self-implemented ETag/304 HttpCacheInterceptor"
 ### Task 6: 本番オープナー + 公開 export
 
 **Files:**
+
 - Create: `packages/cache/lib/src/database/open_http_cache_database.dart`
 - Modify: `packages/cache/lib/cache.dart`
 
 **Interfaces:**
+
 - Consumes: `CacheDatabase`, `drift_flutter` の `driftDatabase`
 - Produces: `CacheDatabase openHttpCacheDatabase()`
 
@@ -796,9 +810,11 @@ export 'src/http/http_cache_store.dart';
 - [ ] **Step 3: パッケージ全体のアナライズとテスト**
 
 Run:
+
 ```bash
 cd packages/cache && dart analyze && flutter test
 ```
+
 Expected: No issues found. / All tests passed.
 
 - [ ] **Step 4: コミット**
@@ -813,12 +829,14 @@ git commit -m "feat(cache): drift_flutter opener and public exports"
 ### Task 7: app 結線の差し替え
 
 **Files:**
+
 - Modify: `app/lib/core/api/http_cache_store_provider.dart`
 - Modify: `app/lib/core/provider/dio_provider.dart`
 - Modify: `app/pubspec.yaml`
 - Regenerate: `app/lib/core/api/http_cache_store_provider.g.dart`
 
 **Interfaces:**
+
 - Consumes: `HttpCacheStore`, `openHttpCacheDatabase`, `HttpCacheInterceptor`, `kHttpCacheSchemaVersion`, `buildHttpCacheKey`
 
 - [ ] **Step 1: http_cache_store_provider を書き換える**
@@ -881,10 +899,12 @@ import 'package:cache/cache.dart';
 - [ ] **Step 4: bootstrap と riverpod 再生成**
 
 Run:
+
 ```bash
 dart pub global run melos bootstrap
 dart pub global run melos exec --scope=eqmonitor -- dart run build_runner build --delete-conflicting-outputs
 ```
+
 Expected: `http_cache_store_provider.g.dart` が `FutureProvider` から `Provider`(同期) へ再生成される。エラーなし。
 
 - [ ] **Step 5: アナライズ**

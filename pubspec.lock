@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-      sha256: "5b7468c326d2f8a4f630056404ca0d291ade42918f4a3c6233618e724f39da8e"
+      sha256: "3b19a47f6ea7c2632760777c78174f47f6aec1e05f0cd611380d4593b8af1dbc"
       url: "https://pub.dev"
     source: hosted
-    version: "92.0.0"
+    version: "96.0.0"
   _flutterfire_internals:
     dependency: transitive
     description:
@@ -34,13 +34,13 @@ packages:
     source: hosted
     version: "0.3.4"
   analyzer:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: analyzer
-      sha256: "70e4b1ef8003c64793a9e268a551a82869a8a96f39deb73dea28084b0e8bf75e"
+      sha256: "0c516bc4ad36a1a75759e54d5047cb9d15cded4459df01aa35a0b5ec7db2c2a0"
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.0"
+    version: "10.2.0"
   analyzer_buffer:
     dependency: transitive
     description:
@@ -421,18 +421,18 @@ packages:
     dependency: transitive
     description:
       name: drift
-      sha256: "970cd188fddb111b26ea6a9b07a62bf5c2432d74147b8122c67044ae3b97e99e"
+      sha256: "6cc0b623c0e83f7080524d8396e9301b1d78b9c66a4fdceeb0f798211303254c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.31.0"
+    version: "2.34.0"
   drift_dev:
     dependency: transitive
     description:
       name: drift_dev
-      sha256: "917184b2fb867b70a548a83bf0d36268423b38d39968c06cce4905683da49587"
+      sha256: "042a5fb507ab5697f67eb55b75cfff2f665701f6606926136d6d4e85f81ff837"
       url: "https://pub.dev"
     source: hosted
-    version: "2.31.0"
+    version: "2.34.1+1"
   dynamic_color:
     dependency: transitive
     description:
@@ -861,13 +861,13 @@ packages:
     source: hosted
     version: "10.3.1"
   flutter_secure_storage_darwin:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: flutter_secure_storage_darwin
-      sha256: "8878c25136a79def1668c75985e8e193d9d7d095453ec28730da0315dc69aee3"
+      sha256: "82329fa5cdf343773b1b6897dea959105a29f092454259edff92f9f6637e8149"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0"
+    version: "0.3.2"
   flutter_secure_storage_linux:
     dependency: transitive
     description:
@@ -2143,26 +2143,18 @@ packages:
     dependency: transitive
     description:
       name: sqlite3
-      sha256: "3145bd74dcdb4fd6f5c6dda4d4e4490a8087d7f286a14dee5d37087290f0f8a2"
+      sha256: "752d9d746052359a2022f588bb979f2e7c4e0f9e4b6a1c3121f7626a1574974b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.9.4"
-  sqlite3_flutter_libs:
-    dependency: transitive
-    description:
-      name: sqlite3_flutter_libs
-      sha256: "3ed7553eee7bb368f8950f58ba29f634e06e813c029aff6a0d60862b96de8454"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.0+eol"
+    version: "3.3.4"
   sqlparser:
     dependency: transitive
     description:
       name: sqlparser
-      sha256: "337e9997f7141ffdd054259128553c348635fa318f7ca492f07a4ab76f850d19"
+      sha256: "40bdddb306a727be9ce510bd2d2b9a6c9db6c586d846ef7b22e3990a2b24f02d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.43.1"
+    version: "0.44.5"
   stack_trace:
     dependency: transitive
     description:
