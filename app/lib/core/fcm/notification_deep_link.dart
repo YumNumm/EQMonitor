@@ -9,7 +9,6 @@ sealed class NotificationDeepLink {
     '/earthquake-history-details/',
     '/feed/source/',
   ];
-  // Exact paths allowed as-is (no trailing segment required)
   static const _allowedExactPaths = ['/earthquake-history'];
 
   static NotificationDeepLink? fromUri(Uri uri) {
