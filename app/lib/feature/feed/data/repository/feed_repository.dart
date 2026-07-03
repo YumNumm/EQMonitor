@@ -19,4 +19,13 @@ class FeedRepository {
     final response = await _api.feed.getV2Feeds(after: after);
     return response.data;
   }
+
+  Future<api.FeedDetailResponse> fetchByTelegramHash(
+    String telegramHash,
+  ) async {
+    final response = await _api.feed.getV2FeedsSourceTelegramHash(
+      telegramHash: telegramHash,
+    );
+    return response.data;
+  }
 }

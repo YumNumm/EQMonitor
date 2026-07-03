@@ -575,6 +575,7 @@ class FeedItemDataUnionFeedEarthquakeNankaiData implements FeedItemDataUnion {
 /// const: "EARTHQUAKE_NANKAI"
 @override final  String type;
  final  InfoType infoType;
+/// const: "NANKAI"
  final  String telegramType;
 @JsonKey(includeIfNull: false) final  FeedNankaiEarthquakeInfo? earthquakeInfo;
 @JsonKey(includeIfNull: false) final  String? nextAdvisory;

@@ -24,6 +24,7 @@ List<RouteBase> get $appRoutes => [
   $talkerRoute,
   $settingsRoute,
   $feedRoute,
+  $feedDetailsRoute,
   $tsunamiDetailsRoute,
   $paywallRoute,
   $subscriptionSettingsRoute,
@@ -1725,6 +1726,36 @@ mixin $FeedRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/feed');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $feedDetailsRoute => GoRouteData.$route(
+  path: '/feed/source/:telegramHash',
+  factory: $FeedDetailsRoute._fromState,
+);
+
+mixin $FeedDetailsRoute on GoRouteData {
+  static FeedDetailsRoute _fromState(GoRouterState state) =>
+      FeedDetailsRoute(telegramHash: state.pathParameters['telegramHash']!);
+
+  FeedDetailsRoute get _self => this as FeedDetailsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/feed/source/${Uri.encodeComponent(_self.telegramHash)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

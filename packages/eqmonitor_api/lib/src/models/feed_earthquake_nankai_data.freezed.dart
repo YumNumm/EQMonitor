@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$FeedEarthquakeNankaiData {
 
 /// const: "EARTHQUAKE_NANKAI"
- String get type; InfoType get infoType; String get telegramType;@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? get earthquakeInfo;@JsonKey(includeIfNull: false) String? get nextAdvisory;@JsonKey(includeIfNull: false) String? get text;
+ String get type; InfoType get infoType;/// const: "NANKAI"
+ String get telegramType;@JsonKey(includeIfNull: false) FeedNankaiEarthquakeInfo? get earthquakeInfo;@JsonKey(includeIfNull: false) String? get nextAdvisory;@JsonKey(includeIfNull: false) String? get text;
 /// Create a copy of FeedEarthquakeNankaiData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -233,6 +234,7 @@ class _FeedEarthquakeNankaiData implements FeedEarthquakeNankaiData {
 /// const: "EARTHQUAKE_NANKAI"
 @override final  String type;
 @override final  InfoType infoType;
+/// const: "NANKAI"
 @override final  String telegramType;
 @override@JsonKey(includeIfNull: false) final  FeedNankaiEarthquakeInfo? earthquakeInfo;
 @override@JsonKey(includeIfNull: false) final  String? nextAdvisory;

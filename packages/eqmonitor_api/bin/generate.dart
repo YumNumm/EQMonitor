@@ -151,6 +151,10 @@ void main(List<String> args) async {
     _patchTelegramBodyReference(libDir);
   });
 
+  await _step('FeedItemData 参照を FeedItemDataUnion に修正', () async {
+    _patchFeedItemDataReference(libDir);
+  });
+
   await _step('DeviceLocale デフォルト値パッチ', () async {
     _patchDeviceLocaleDefault(libDir);
   });
@@ -817,6 +821,46 @@ void _patchTelegramBodyReference(Directory libDir) {
     if (content != original) {
       entity.writeAsStringSync(content);
       stdout.writeln('  Patched TelegramBody ref: ${entity.path}');
+    }
+  }
+}
+
+/// swagger_parser は `FeedItemData` (anyOf ref) を `FeedItemDataUnion`
+/// というクラス名で `feed_item_data_union.dart` に生成するが、
+/// `FeedDetailResponse` 等の参照先は `FeedItemData` / `feed_item_data.dart` のまま。
+/// import パスとクラス名を統一する。
+void _patchFeedItemDataReference(Directory libDir) {
+  final modelsDir = Directory('${libDir.path}/models');
+  if (!modelsDir.existsSync()) {
+    return;
+  }
+
+  for (final entity in modelsDir.listSync()) {
+    if (entity is! File || !entity.path.endsWith('.dart')) {
+      continue;
+    }
+    if (entity.path.endsWith('.g.dart') ||
+        entity.path.endsWith('.freezed.dart')) {
+      continue;
+    }
+
+    var content = entity.readAsStringSync();
+    final original = content;
+
+    content = content.replaceAll(
+      "import 'feed_item_data.dart';",
+      "import 'feed_item_data_union.dart';",
+    );
+    // 単独の `FeedItemData` 参照のみ置換する。`FeedItemDataUnion` や
+    // `FeedItemDataUnionFeedAppUpdateData` 等は単語境界で除外される。
+    content = content.replaceAll(
+      RegExp(r'\bFeedItemData\b'),
+      'FeedItemDataUnion',
+    );
+
+    if (content != original) {
+      entity.writeAsStringSync(content);
+      stdout.writeln('  Patched FeedItemData ref: ${entity.path}');
     }
   }
 }
