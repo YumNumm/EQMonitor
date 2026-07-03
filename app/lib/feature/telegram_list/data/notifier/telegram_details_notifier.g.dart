@@ -11,19 +11,15 @@ part of 'telegram_details_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(telegramDetails)
+@ProviderFor(TelegramDetails)
 final telegramDetailsProvider = TelegramDetailsFamily._();
 
 final class TelegramDetailsProvider
     extends
-        $FunctionalProvider<
-          AsyncValue<Map<String, TelegramDetailResponse>>,
-          Map<String, TelegramDetailResponse>,
-          FutureOr<Map<String, TelegramDetailResponse>>
-        >
-    with
-        $FutureModifier<Map<String, TelegramDetailResponse>>,
-        $FutureProvider<Map<String, TelegramDetailResponse>> {
+        $AsyncNotifierProvider<
+          TelegramDetails,
+          Map<String, TelegramDetailResponse>
+        > {
   TelegramDetailsProvider._({
     required TelegramDetailsFamily super.from,
     required String super.argument,
@@ -47,15 +43,7 @@ final class TelegramDetailsProvider
 
   @$internal
   @override
-  $FutureProviderElement<Map<String, TelegramDetailResponse>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<Map<String, TelegramDetailResponse>> create(Ref ref) {
-    final argument = this.argument as String;
-    return telegramDetails(ref, argument);
-  }
+  TelegramDetails create() => TelegramDetails();
 
   @override
   bool operator ==(Object other) {
@@ -68,11 +56,14 @@ final class TelegramDetailsProvider
   }
 }
 
-String _$telegramDetailsHash() => r'58bcc5388e64fb23de3974cb46bee18acae5efba';
+String _$telegramDetailsHash() => r'86a12b55d0171a7edd486188464be69259933833';
 
 final class TelegramDetailsFamily extends $Family
     with
-        $FunctionalFamilyOverride<
+        $ClassFamilyOverride<
+          TelegramDetails,
+          AsyncValue<Map<String, TelegramDetailResponse>>,
+          Map<String, TelegramDetailResponse>,
           FutureOr<Map<String, TelegramDetailResponse>>,
           String
         > {
@@ -90,4 +81,34 @@ final class TelegramDetailsFamily extends $Family
 
   @override
   String toString() => r'telegramDetailsProvider';
+}
+
+abstract class _$TelegramDetails
+    extends $AsyncNotifier<Map<String, TelegramDetailResponse>> {
+  late final _$args = ref.$arg as String;
+  String get eventId => _$args;
+
+  FutureOr<Map<String, TelegramDetailResponse>> build(String eventId);
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<Map<String, TelegramDetailResponse>>,
+              Map<String, TelegramDetailResponse>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<Map<String, TelegramDetailResponse>>,
+                Map<String, TelegramDetailResponse>
+              >,
+              AsyncValue<Map<String, TelegramDetailResponse>>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, () => build(_$args));
+  }
 }

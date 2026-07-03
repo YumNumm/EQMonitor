@@ -57,10 +57,7 @@ class TelegramListByEventId extends _$TelegramListByEventId {
         ...currentState.items,
         ...data.items.map((e) => e.toTelegramItem),
       ].sorted((a, b) => b.pressAt.compareTo(a.pressAt));
-      return (
-        items: mergedItems,
-        nextToken: data.nextToken,
-      );
+      return (items: mergedItems, nextToken: data.nextToken);
     });
   }
 }

@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
+import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
@@ -48,58 +49,65 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
     final scrollController = useScrollController();
 
     // Pagination: fetch next page when near bottom.
-    useEffect(
-      () {
-        Future<void> onScroll() async {
-          if (scrollController.position.pixels >=
-              scrollController.position.maxScrollExtent - 200) {
-            await ref
-                .read(telegramListByEventIdProvider(eventId).notifier)
-                .fetchNextData();
-          }
+    useEffect(() {
+      Future<void> onScroll() async {
+        if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 200) {
+          await ref
+              .read(telegramListByEventIdProvider(eventId).notifier)
+              .fetchNextData();
         }
+      }
 
-        scrollController.addListener(onScroll);
-        return () => scrollController.removeListener(onScroll);
-      },
-      [scrollController],
-    );
+      scrollController.addListener(onScroll);
+      return () => scrollController.removeListener(onScroll);
+    }, [scrollController]);
 
     return Scaffold(
       appBar: AppBar(title: const Text('電文一覧')),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(
-            telegramListByEventIdProvider(eventId),
-            asReload: true,
-          );
-          ref.invalidate(telegramDetailsProvider(eventId), asReload: true);
-        },
-        child: switch (asyncState) {
-          AsyncData(:final value) => _SectionedList(
-            items: value.items,
-            hasNext: value.hasNext,
-            isLoading: asyncState.isLoading,
-            scrollController: scrollController,
-            details: asyncDetails.value ?? const {},
+      body: Column(
+        children: [
+          CachedDataBanner(values: [asyncDetails]),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(
+                  telegramListByEventIdProvider(eventId),
+                  asReload: true,
+                );
+                ref.invalidate(
+                  telegramDetailsProvider(eventId),
+                  asReload: true,
+                );
+              },
+              child: switch (asyncState) {
+                AsyncData(:final value) => _SectionedList(
+                  items: value.items,
+                  hasNext: value.hasNext,
+                  isLoading: asyncState.isLoading,
+                  scrollController: scrollController,
+                  details: asyncDetails.value ?? const {},
+                ),
+                AsyncError(:final error, :final value?) => _SectionedList(
+                  items: value.items,
+                  hasNext: value.hasNext,
+                  isLoading: false,
+                  scrollController: scrollController,
+                  details: asyncDetails.value ?? const {},
+                  error: error,
+                  onReload: () async =>
+                      ref.refresh(telegramListByEventIdProvider(eventId)),
+                ),
+                AsyncError(:final error) => ErrorCard(
+                  error: error,
+                  onReload: () async =>
+                      ref.refresh(telegramListByEventIdProvider(eventId)),
+                ),
+                _ => const _TelegramListSkeleton(),
+              },
+            ),
           ),
-          AsyncError(:final error, :final value?) => _SectionedList(
-            items: value.items,
-            hasNext: value.hasNext,
-            isLoading: false,
-            scrollController: scrollController,
-            details: asyncDetails.value ?? const {},
-            error: error,
-            onReload: () async =>
-                ref.refresh(telegramListByEventIdProvider(eventId)),
-          ),
-          AsyncError(:final error) => ErrorCard(
-            error: error,
-            onReload: () async =>
-                ref.refresh(telegramListByEventIdProvider(eventId)),
-          ),
-          _ => const _TelegramListSkeleton(),
-        },
+        ],
       ),
     );
   }
@@ -218,10 +226,7 @@ class _SectionedList extends StatelessWidget {
           content: Text('読み込みに失敗しました: $error'),
           actions: [
             if (onReload != null)
-              TextButton(
-                onPressed: onReload,
-                child: const Text('再読み込み'),
-              ),
+              TextButton(onPressed: onReload, child: const Text('再読み込み')),
           ],
         ),
       );
@@ -309,10 +314,7 @@ class _SectionHeader extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _EewNavigationCard extends StatelessWidget {
-  const _EewNavigationCard({
-    required this.count,
-    required this.onTap,
-  });
+  const _EewNavigationCard({required this.count, required this.onTap});
 
   final int count;
   final VoidCallback onTap;
@@ -361,17 +363,9 @@ class _TelegramListSkeleton extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 120,
-                      height: 14,
-                      color: Colors.white,
-                    ),
+                    Container(width: 120, height: 14, color: Colors.white),
                     const SizedBox(height: 8),
-                    Container(
-                      width: 180,
-                      height: 12,
-                      color: Colors.white,
-                    ),
+                    Container(width: 180, height: 12, color: Colors.white),
                     const SizedBox(height: 8),
                     Container(
                       width: double.infinity,

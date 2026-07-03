@@ -121,13 +121,9 @@ class EarthquakeTelegramTile extends ConsumerWidget {
                 ],
               ],
             ),
+            Text(telegram.headline?.toHalfWidth ?? ''),
             Text(
-              telegram.headline?.toHalfWidth ?? '',
-            ),
-            Text(
-              '発表: ${dateFormat.format(
-                telegram.pressAt.toLocal(),
-              )}',
+              '発表: ${dateFormat.format(telegram.pressAt.toLocal())}',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -198,10 +194,7 @@ class _EarthquakeTelegramTileContent extends StatelessWidget {
             HypocenterSummary(quake: quake, diff: hypocenterDiff),
           if (quake != null && regionDiff != null) const SizedBox(height: 8),
           if (regionDiff case final entries?)
-            IntensityRegionList(
-              entries: entries,
-              prefectureMap: prefectureMap,
-            ),
+            IntensityRegionList(entries: entries, prefectureMap: prefectureMap),
         ],
       ),
       .vxse61 =>

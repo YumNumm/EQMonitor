@@ -4,11 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TelegramListTile extends StatelessWidget {
-  const TelegramListTile({
-    required this.telegram,
-    this.onTap,
-    super.key,
-  });
+  const TelegramListTile({required this.telegram, this.onTap, super.key});
 
   final TelegramItem telegram;
   final VoidCallback? onTap;
@@ -39,23 +35,14 @@ class TelegramListTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 4),
-          _InfoRow(
-            label: '電文種別',
-            value: telegram.type.name.toUpperCase(),
-          ),
+          _InfoRow(label: '電文種別', value: telegram.type.name.toUpperCase()),
           if (isEew && serialNo != null)
-            _InfoRow(
-              label: '報数',
-              value: '第$serialNo報',
-            ),
+            _InfoRow(label: '報数', value: '第$serialNo報'),
           _InfoRow(
             label: '発表時刻',
             value: dateFormat.format(telegram.pressAt.toLocal()),
           ),
-          _InfoRow(
-            label: '発表元',
-            value: telegram.publishingOffice.join(', '),
-          ),
+          _InfoRow(label: '発表元', value: telegram.publishingOffice.join(', ')),
           if (telegram.headline != null) ...[
             const SizedBox(height: 4),
             Text(
@@ -85,10 +72,7 @@ class TelegramListTile extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({
-    required this.label,
-    required this.value,
-  });
+  const _InfoRow({required this.label, required this.value});
 
   final String label;
   final String value;
