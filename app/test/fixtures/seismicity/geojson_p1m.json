@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [139.7, 35.6] },
+      "properties": {
+        "event_id": "eq-1",
+        "origin_time": "2026-06-01T12:00:00Z",
+        "magnitude": 4.5,
+        "depth": 30.0,
+        "max_intensity": "4"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [140.1, 36.0] },
+      "properties": {
+        "event_id": "eq-2",
+        "origin_time": "2026-06-02T03:15:00Z",
+        "magnitude": null,
+        "depth": null,
+        "max_intensity": null
+      }
+    }
+  ]
+}
