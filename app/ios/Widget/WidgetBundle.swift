@@ -17,5 +17,9 @@ struct EQMonitorWidgetBundle: WidgetBundle {
             EewLiveActivityWidget()
             ShakeDetectionLiveActivityWidget()
         }
+        if #available(iOS 18.0, *) {
+            OpenEarthquakeHistoryControl()
+            LatestEarthquakeSnippetControl()
+        }
     }
 }

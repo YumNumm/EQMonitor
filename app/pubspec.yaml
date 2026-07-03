@@ -50,6 +50,7 @@ dependency_overrides:
       path: packages/maplibre_webview
 
 dependencies:
+  app_links: ^6.4.0
   app_settings: ^7.0.0
   background_location_tracker:
     path: ../packages/background_location_tracker

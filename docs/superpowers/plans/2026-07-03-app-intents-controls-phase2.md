@@ -6,13 +6,15 @@
 
 **Goal:** コントロールセンター／ロック画面／アクションボタンから「地震履歴を開く」「最新の地震をスニペット表示」できるようにし、スニペットの「アプリで開く」ボタンから地震詳細画面へディープリンクで遷移できるようにする。
 
-**Architecture:** Flutter 側は `FlutterDeepLinkingEnabled` を有効化して go_router に着信 URI を処理させる（Dart コード追加は原則不要、ルート定義は既存）。iOS 側は WidgetExtension ターゲットに `ControlWidget` を2つ追加し、`OpenURLIntent` でディープリンクを発火する。スニペット表示コントロールは Phase 1 の `EarthquakeSnippetIntent` を再利用する。
+**Architecture:** Flutter 側は `app_links` プラグインで OS レベルのディープリンク（`eqmonitor:///<path>`）を受信し、既存の `NotificationDeepLink` の検証ロジック（スキーム + allowlist）を共用して go_router で自前ルーティングする（`FlutterDeepLinkingEnabled` は false のまま）。iOS 側は WidgetExtension ターゲットに `ControlWidget` を2つ追加し、`OpenURLIntent` でディープリンクを発火する。スニペット表示コントロールは Phase 1 の `EarthquakeSnippetIntent` を再利用する。
 
 **Tech Stack:** Swift / WidgetKit ControlWidget (iOS 18+, 本プロジェクトは 26.0) / AppIntents OpenURLIntent / go_router / Flutter deep linking
 
 ## Global Constraints
 
-- ディープリンク URL スキームは `deeplink.eqmonitor.app`（`app/ios/Runner/Info.plist` 登録済み）。URL 形式は `deeplink.eqmonitor.app://app<path>` とし、go_router のパス（例: `/earthquake-history`、`/earthquake-history-details/:eventId`）に対応させる。
+- **`FlutterDeepLinkingEnabled` は `false` のまま変更しない**（Flutter の自動ルーティングは使わない。ユーザー指示 2026-07-03）。OS レベルのディープリンクは `app_links` プラグインで受信し、既存の `NotificationDeepLink`（`app/lib/core/fcm/notification_deep_link.dart`）の検証ロジックを共用して自前でルーティングする。
+- ディープリンク URL は通知の link 契約と同一形式 `eqmonitor:///<path>`（スキーム `eqmonitor`・host 空）。`app/ios/Runner/Info.plist` の CFBundleURLTypes へ `eqmonitor` スキームを追加登録する。
+- **`app/ios/Runner.xcodeproj/project.pbxproj` は編集禁止**（ユーザーが Xcode で操作する。必要になったら操作内容を明示して依頼し完了を待つ）。`Widget/`・`AppIntentExtension/` は synchronized folder のため配下への新規ファイル追加は pbxproj 変更不要。
 - コントロールは WidgetExtension ターゲット（iOS 26.0）に追加し、`EQMonitorWidgetBundle` に登録する。
 - Android 側の挙動は変更しない（`FlutterDeepLinkingEnabled` は iOS の Info.plist キーであり Android に影響しないが、AndroidManifest に intent-filter を追加しないこと＝iOS のみの対応に留める）。
 - コミットは develop から切ったフィーチャーブランチ（例: `feat/app-intents-controls`）。PR は `--repo YumNumm/EQMonitor`、base `develop`。
@@ -20,49 +22,43 @@
 
 ---
 
-### Task 1: FlutterDeepLinkingEnabled 有効化と go_router 遷移検証
+### Task 1: app_links による OS ディープリンク受信（ユーザー承認済み構成）
 
 **Files:**
-- Modify: `app/ios/Runner/Info.plist:48-49`（`FlutterDeepLinkingEnabled` を `true` に）
+- Modify: `app/pubspec.yaml`（`app_links` を dependencies に追加 → `flutter pub get`）
+- Modify: `app/ios/Runner/Info.plist`（CFBundleURLTypes に `eqmonitor` スキームを追加。`FlutterDeepLinkingEnabled` は false のまま）
+- Modify: `app/lib/core/fcm/notification_deep_link.dart`（`fromUri(Uri)` 追加・allowlist に `/earthquake-history` 追加）
+- Create: `app/lib/core/provider/app_links_interaction.dart`（公開 Provider は1つ）
+- Modify: `app/lib/page/splash_page.dart`（コールド起動の pending 消費に app_links 分を追加）
 
 **Interfaces:**
-- Produces: `deeplink.eqmonitor.app://app/<go_router path>` で iOS からアプリ内画面遷移が可能になる。
+- Consumes: `NotificationDeepLink` / `goRouterProvider` / `firebase_messaging_interaction.dart` の pending パターン
+- Produces:
+  - `NotificationDeepLink.fromUri(Uri uri) -> NotificationDeepLink?` — スキーム `eqmonitor` + allowlist（`/earthquake-history-details/`・`/feed/source/`・完全一致 `/earthquake-history`）を検証し `NotificationRouteLink` を返す。https/http は `NotificationUrlLink`（fromData と同じ規則）
+  - `appLinksInteraction`（`@Riverpod(keepAlive: true)` の Stream provider）— `AppLinks().getInitialLink()` は pending に積み splash で消費、`uriLinkStream` は `goRouterProvider.push`
+  - `eqmonitor:///earthquake-history` / `eqmonitor:///earthquake-history-details/{eventId}` で OS からアプリ内遷移が可能になる
 
-- [ ] **Step 1: `false` になっている経緯を確認**
+- [ ] **Step 1: `app_links` を追加し pub get**
 
-```bash
-cd app && git log -S "FlutterDeepLinkingEnabled" --oneline -- ios/Runner/Info.plist
-git log -p -1 -S "FlutterDeepLinkingEnabled" -- ios/Runner/Info.plist | head -40
-```
+- [ ] **Step 2: `NotificationDeepLink.fromUri` と allowlist 拡張を実装（fromData は fromUri を再利用する形にリファクタしてよい）**
 
-意図的に無効化した形跡（コミットメッセージ・関連 Issue）があれば、その理由を解消できるか判断してから進む。単なるテンプレート初期値なら続行。
+- [ ] **Step 3: `appLinksInteraction` provider を実装**（`firebase_messaging_interaction.dart` と同構造。provider は既存のmessaging interactionと同じ場所で ref.watch されるよう配線 — 配線箇所は `firebaseMessagingInteractionProvider` を watch している場所を grep して同じ場所に追加）
 
-- [ ] **Step 2: Info.plist を変更**
+- [ ] **Step 4: Info.plist に `eqmonitor` スキームを追加**（既存の CFBundleURLTypes 配列に dict を追加。`FlutterDeepLinkingEnabled` は変更しない）
 
-```xml
-<key>FlutterDeepLinkingEnabled</key>
-<true/>
-```
-
-- [ ] **Step 3: シミュレータで遷移検証**
+- [ ] **Step 5: `dart analyze` と `dart format` を通し、シミュレータで遷移検証**
 
 ```bash
-cd app && flutter run -d <simulator> &
-# アプリ起動後:
-xcrun simctl openurl booted 'deeplink.eqmonitor.app://app/earthquake-history'
-xcrun simctl openurl booted 'deeplink.eqmonitor.app://app/earthquake-history-details/<実在eventId>'
+xcrun simctl openurl booted 'eqmonitor:///earthquake-history'
+xcrun simctl openurl booted 'eqmonitor:///earthquake-history-details/<実在eventId>'
 ```
 
-期待: 地震履歴／地震詳細画面へ遷移する。遷移しない場合は go_router が受け取る location（host 部の扱い）を `GoRouter.optionURLReflectsImperativeAPIs` やログで確認し、必要なら `redirect` で `uri.host == 'app'` のとき `uri.path` へ誘導する処理を `app/lib/core/router/router.dart` に追加する。
+期待: フォアグラウンド時に地震履歴／地震詳細へ push 遷移。コールド起動（アプリ kill 後に openurl）でも遷移する。
 
-- [ ] **Step 4: Google Sign-In の非干渉確認**
-
-Google ログイン（設定画面）を実行し、コールバック（`com.googleusercontent.apps.*` スキーム）が従来どおり動くことを確認。
-
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add app/ios/Runner/Info.plist app/lib/core/router/ && git commit -m "feat(ios): ディープリンクを有効化"
+git add app/ && git commit -m "feat(app): app_links による OS ディープリンク受信を追加"
 ```
 
 ---
@@ -81,7 +77,7 @@ git add app/ios/Runner/Info.plist app/lib/core/router/ && git commit -m "feat(io
 ```swift
 // EarthquakeSnippetView のフッター（「更新」ボタンの隣）に追加
 if let first = items.first,
-   let url = URL(string: "deeplink.eqmonitor.app://app/earthquake-history-details/\(first.id)") {
+   let url = URL(string: "eqmonitor:///earthquake-history-details/\(first.id)") {
     Button(intent: OpenURLIntent(url)) {
         Label("アプリで開く", systemImage: "arrow.up.forward.app")
     }
@@ -136,7 +132,7 @@ struct OpenEarthquakeHistoryIntent: AppIntent {
 
     func perform() async throws -> some IntentResult & OpensIntent {
         .result(opensIntent: OpenURLIntent(
-            URL(string: "deeplink.eqmonitor.app://app/earthquake-history")!))
+            URL(string: "eqmonitor:///earthquake-history")!))
     }
 }
 ```

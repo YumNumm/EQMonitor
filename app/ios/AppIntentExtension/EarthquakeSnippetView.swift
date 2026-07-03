@@ -25,6 +25,16 @@ struct EarthquakeSnippetView: View {
 
                 Spacer()
 
+                if let first = items.first,
+                   let url = URL(string: "eqmonitor:///earthquake-history-details/\(first.id)") {
+                    Button(intent: OpenURLIntent(url)) {
+                        Label("アプリで開く", systemImage: "arrow.up.forward.app")
+                            .font(.system(size: 13, weight: .semibold))
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(DesignTokens.brand)
+                }
+
                 Button(intent: reloadIntent) {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 13, weight: .semibold))
@@ -41,7 +51,14 @@ struct EarthquakeSnippetView: View {
             } else {
                 VStack(spacing: 6) {
                     ForEach(items) { item in
-                        EarthquakeSnippetRow(item: item)
+                        if let url = URL(string: "eqmonitor:///earthquake-history-details/\(item.id)") {
+                            Button(intent: OpenURLIntent(url)) {
+                                EarthquakeSnippetRow(item: item)
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            EarthquakeSnippetRow(item: item)
+                        }
                     }
                 }
             }
