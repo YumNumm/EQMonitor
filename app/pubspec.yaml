@@ -68,6 +68,8 @@ dependencies:
     path: ../packages/dart_azarashi
   device_info_plus: ^13.1.0
   dio: ^5.8.0+1
+  cookie_jar: ^4.0.8
+  dio_cookie_manager: ^3.2.0
   drift: ^2.22.0
   dynamic_color: ^1.7.0
   earthquake_replay:
