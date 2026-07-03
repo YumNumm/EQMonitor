@@ -45,13 +45,13 @@ final class EewProvider
   }
 }
 
-String _$eewHash() => r'04601b512d60e0eb40d0188f79775715db19111f';
+String _$eewHash() => r'5df2ce02be3290cfd80f64b45a64b86eea25533c';
 
 abstract class _$Eew extends $Notifier<AsyncValue<List<EewTelegramItem>>> {
   AsyncValue<List<EewTelegramItem>> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -69,7 +69,7 @@ abstract class _$Eew extends $Notifier<AsyncValue<List<EewTelegramItem>>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -112,4 +112,4 @@ final class _EewRestProvider
   }
 }
 
-String _$_eewRestHash() => r'86c40a83aeca927f57d8a6897db30fefbcac3b52';
+String _$_eewRestHash() => r'8f688579fc41f21f4679b2c6044b7c922b4c953a';

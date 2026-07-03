@@ -11,7 +11,7 @@ import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'eew_telegram.g.dart';
+part 'eew.g.dart';
 
 @Riverpod(keepAlive: true)
 class Eew extends _$Eew {

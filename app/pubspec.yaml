@@ -18,6 +18,8 @@ dependency_overrides:
   flutter_inappwebview: 6.2.0-beta.3
   # https://github.com/juliansteenbakker/flutter_secure_storage/issues/1119
   flutter_secure_storage_darwin: 0.2.0
+  # chuck_interceptor が引く permission_handler_apple を SwiftPM 対応版(9.4.8+)に固定する
+  permission_handler_apple: ^9.4.8
   maplibre:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
@@ -57,6 +59,7 @@ dependencies:
   cache:
     path: ../packages/cache
   cached_network_image: ^3.4.1
+  chuck_interceptor: ^2.5.1
   clock: ^1.1.2
   collection: ^1.19.1
   connectivity_plus: ^7.1.1
@@ -68,7 +71,7 @@ dependencies:
     path: ../packages/dart_azarashi
   device_info_plus: ^13.1.0
   dio: ^5.8.0+1
-  drift: ^2.22.0
+  drift: ^2.33.0
   dynamic_color: ^1.7.0
   earthquake_replay:
     path: ../packages/earthquake_replay
@@ -159,7 +162,6 @@ dependencies:
       path: sheet
   skeletonizer: ^2.1.3
   soft_edge_blur: ^0.1.3
-  sqlite3_flutter_libs: ^0.6.0+eol
   synchronized: ^3.3.0
   talker_dio_logger: ^5.0.0
   talker_flutter: ^5.0.0
@@ -204,6 +206,9 @@ flutter_gen:
 flutter:
   config:
     enable-swift-package-manager: true
+    # package:sqlite3 v3 はビルドフック(native assets)で libsqlite3 を同梱する。
+    # 無効だと .so が同梱されず drift が起動時にクラッシュするため必須。
+    enable-native-assets: true
   uses-material-design: true
   assets:
     - assets/
