@@ -41,7 +41,7 @@ abstract class _$StartNotifier extends $AsyncNotifier<api.StartResponse> {
   FutureOr<api.StartResponse> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<api.StartResponse>, api.StartResponse>;
     final element =
@@ -52,6 +52,6 @@ abstract class _$StartNotifier extends $AsyncNotifier<api.StartResponse> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

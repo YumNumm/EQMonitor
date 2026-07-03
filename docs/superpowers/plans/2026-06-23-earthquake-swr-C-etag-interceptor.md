@@ -84,7 +84,6 @@ dependencies:
   http_cache_drift_store: ^7.0.0
 
 dev_dependencies:
-  altive_lints: ^3.0.0
   build_runner: ^2.7.1
   eqmonitor_lints:
     path: ../eqmonitor_lints

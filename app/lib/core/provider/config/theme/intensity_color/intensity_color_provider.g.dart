@@ -49,7 +49,7 @@ abstract class _$IntensityColor extends $Notifier<IntensityColorModel> {
   IntensityColorModel build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<IntensityColorModel, IntensityColorModel>;
     final element =
         ref.element
@@ -59,6 +59,6 @@ abstract class _$IntensityColor extends $Notifier<IntensityColorModel> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

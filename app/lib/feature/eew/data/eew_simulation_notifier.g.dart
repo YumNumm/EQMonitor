@@ -49,7 +49,7 @@ abstract class _$EewSimulation extends $Notifier<EewSimulationState?> {
   EewSimulationState? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<EewSimulationState?, EewSimulationState?>;
     final element =
         ref.element
@@ -59,6 +59,6 @@ abstract class _$EewSimulation extends $Notifier<EewSimulationState?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

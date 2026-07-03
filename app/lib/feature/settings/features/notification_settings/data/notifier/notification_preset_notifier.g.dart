@@ -51,7 +51,7 @@ abstract class _$NotificationPresetNotifier
   NotificationPreset build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<NotificationPreset, NotificationPreset>;
     final element =
         ref.element
@@ -61,6 +61,6 @@ abstract class _$NotificationPresetNotifier
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

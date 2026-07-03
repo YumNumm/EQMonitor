@@ -42,7 +42,7 @@ abstract class _$ChangelogNotifier
   FutureOr<api.ChangelogResponse> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<AsyncValue<api.ChangelogResponse>, api.ChangelogResponse>;
@@ -57,6 +57,6 @@ abstract class _$ChangelogNotifier
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

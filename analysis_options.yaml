@@ -5,11 +5,11 @@ analyzer:
     avoid_print: ignore
     document_ignores: ignore
     lines_longer_than_80_chars: ignore
-    omit_local_variable_types: ignore
     unnecessary_async: ignore
   exclude:
     - "**/DerivedData/**"
     - "**/build/**"
+    - "build/**"
 
 plugins:
   eqmonitor_lints_plugin:

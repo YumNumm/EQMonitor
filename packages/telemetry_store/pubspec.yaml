@@ -15,7 +15,6 @@ dependencies:
   shared_preferences: ^2.3.3
 
 dev_dependencies:
-  altive_lints: ^3.0.0
   build_runner: ^2.7.1
   drift_dev: ^2.33.0
   eqmonitor_lints:

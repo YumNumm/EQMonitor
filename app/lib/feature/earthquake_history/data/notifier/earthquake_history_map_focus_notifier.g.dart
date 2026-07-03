@@ -101,7 +101,7 @@ abstract class _$EarthquakeHistoryMapFocus
   EarthquakeIntensityMapFocus? build(String eventId);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<EarthquakeIntensityMapFocus?, EarthquakeIntensityMapFocus?>;
@@ -116,6 +116,6 @@ abstract class _$EarthquakeHistoryMapFocus
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

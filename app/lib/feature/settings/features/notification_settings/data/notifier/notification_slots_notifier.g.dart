@@ -47,7 +47,7 @@ abstract class _$NotificationSlotsNotifier
   FutureOr<List<NotificationSlot>> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<AsyncValue<List<NotificationSlot>>, List<NotificationSlot>>;
@@ -62,6 +62,6 @@ abstract class _$NotificationSlotsNotifier
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

@@ -11,7 +11,6 @@ environment:
 resolution: workspace
 
 dev_dependencies:
-  altive_lints: ^3.0.0
   eqmonitor_lints:
     path: ../eqmonitor_lints
   test: ^1.29.0

@@ -14,9 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ObservationFirstHeightTimelineEntry {
 
-// 追跡項目のフィールド
- DateTime? get arrivalTime; WaveInitial? get initial; bool? get isUnidentifiable; bool? get isMissing; Revise? get revise;// 電文メタ
- String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
+ DateTime? get arrivalTime; WaveInitial? get initial; bool? get isUnidentifiable; bool? get isMissing; Revise? get revise; String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
 /// Create a copy of ObservationFirstHeightTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -220,13 +218,11 @@ class _ObservationFirstHeightTimelineEntry implements ObservationFirstHeightTime
   const _ObservationFirstHeightTimelineEntry({required this.arrivalTime, required this.initial, required this.isUnidentifiable, required this.isMissing, required this.revise, required this.telegramId, required this.headline, required this.title, required this.publishedAt, required this.revokedAt});
   
 
-// 追跡項目のフィールド
 @override final  DateTime? arrivalTime;
 @override final  WaveInitial? initial;
 @override final  bool? isUnidentifiable;
 @override final  bool? isMissing;
 @override final  Revise? revise;
-// 電文メタ
 @override final  String telegramId;
 @override final  String? headline;
 @override final  String title;
@@ -302,9 +298,7 @@ as DateTime?,
 /// @nodoc
 mixin _$ObservationMaxHeightTimelineEntry {
 
-// 追跡項目のフィールド
- DateTime? get dateTime; double? get value; bool? get isOver; bool? get isRising; ObservationMaxHeightCondition? get condition; bool? get isMissing; Revise? get revise;// 電文メタ
- String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
+ DateTime? get dateTime; double? get value; bool? get isOver; bool? get isRising; ObservationMaxHeightCondition? get condition; bool? get isMissing; Revise? get revise; String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
 /// Create a copy of ObservationMaxHeightTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -510,7 +504,6 @@ class _ObservationMaxHeightTimelineEntry implements ObservationMaxHeightTimeline
   const _ObservationMaxHeightTimelineEntry({required this.dateTime, required this.value, required this.isOver, required this.isRising, required this.condition, required this.isMissing, required this.revise, required this.telegramId, required this.headline, required this.title, required this.publishedAt, required this.revokedAt});
   
 
-// 追跡項目のフィールド
 @override final  DateTime? dateTime;
 @override final  double? value;
 @override final  bool? isOver;
@@ -518,7 +511,6 @@ class _ObservationMaxHeightTimelineEntry implements ObservationMaxHeightTimeline
 @override final  ObservationMaxHeightCondition? condition;
 @override final  bool? isMissing;
 @override final  Revise? revise;
-// 電文メタ
 @override final  String telegramId;
 @override final  String? headline;
 @override final  String title;

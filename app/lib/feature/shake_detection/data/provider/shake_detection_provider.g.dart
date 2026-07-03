@@ -49,7 +49,7 @@ abstract class _$ShakeDetection extends $Notifier<List<ShakeDetectionEvent>> {
   List<ShakeDetectionEvent> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<List<ShakeDetectionEvent>, List<ShakeDetectionEvent>>;
     final element =
@@ -60,6 +60,6 @@ abstract class _$ShakeDetection extends $Notifier<List<ShakeDetectionEvent>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

@@ -14,9 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FirstHeightTimelineEntry {
 
-// 追跡項目のフィールド
- DateTime? get arrivalTime; FirstHeightCondition? get condition; Revise? get revise;// 電文メタ
- String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
+ DateTime? get arrivalTime; FirstHeightCondition? get condition; Revise? get revise; String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
 /// Create a copy of FirstHeightTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -218,11 +216,9 @@ class _FirstHeightTimelineEntry implements FirstHeightTimelineEntry {
   const _FirstHeightTimelineEntry({required this.arrivalTime, required this.condition, required this.revise, required this.telegramId, required this.headline, required this.title, required this.publishedAt, required this.revokedAt});
   
 
-// 追跡項目のフィールド
 @override final  DateTime? arrivalTime;
 @override final  FirstHeightCondition? condition;
 @override final  Revise? revise;
-// 電文メタ
 @override final  String telegramId;
 @override final  String? headline;
 @override final  String title;

@@ -41,7 +41,7 @@ abstract class _$NtpConfig extends $AsyncNotifier<NtpConfigModel> {
   FutureOr<NtpConfigModel> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<NtpConfigModel>, NtpConfigModel>;
     final element =
         ref.element
@@ -51,6 +51,6 @@ abstract class _$NtpConfig extends $AsyncNotifier<NtpConfigModel> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

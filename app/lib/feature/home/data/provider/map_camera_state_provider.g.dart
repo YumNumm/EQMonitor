@@ -50,7 +50,7 @@ abstract class _$HomeMapCameraState extends $Notifier<MapCameraState> {
   MapCameraState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<MapCameraState, MapCameraState>;
     final element =
         ref.element
@@ -60,6 +60,6 @@ abstract class _$HomeMapCameraState extends $Notifier<MapCameraState> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

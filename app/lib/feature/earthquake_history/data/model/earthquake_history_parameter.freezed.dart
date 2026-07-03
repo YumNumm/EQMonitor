@@ -15,17 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeHistoryParameter {
 
-// 基本フィルター
- double? get magnitudeLte; double? get magnitudeGte; int? get depthLte; int? get depthGte; JmaIntensity? get intensityLte; JmaIntensity? get intensityGte; List<TelegramStatus>? get statuses;// 震央地名フィルター
- int? get epicenterCode; String? get epicenterName;// 地域の震度フィルター
- RegionSearchType? get regionSearchType; String? get regionCode; String? get regionName; JmaIntensity? get regionIntensityLte; JmaIntensity? get regionIntensityGte;// 地震種別フィルター
- EarthquakeType? get earthquakeType;// 発生時刻範囲フィルター
- Date? get originTimeGte; Date? get originTimeLte;// 長周期地震動階級フィルター
- JmaLpgmIntensity? get maxLpgmIntensityGte; JmaLpgmIntensity? get maxLpgmIntensityLte;// データソースフィルター
- EarthquakeDatasource? get datasource;// 電文種別フィルター
- List<EarthquakeTelegramType>? get telegramTypes;// 緯度経度範囲フィルター
- double? get latitudeGte; double? get latitudeLte; double? get longitudeGte; double? get longitudeLte;// ソート
- EarthquakeSortBy? get sortBy; SortOrder? get sortOrder;
+ double? get magnitudeLte; double? get magnitudeGte; int? get depthLte; int? get depthGte; JmaIntensity? get intensityLte; JmaIntensity? get intensityGte; List<TelegramStatus>? get statuses; int? get epicenterCode; String? get epicenterName; RegionSearchType? get regionSearchType; String? get regionCode; String? get regionName; JmaIntensity? get regionIntensityLte; JmaIntensity? get regionIntensityGte; EarthquakeType? get earthquakeType; Date? get originTimeGte; Date? get originTimeLte; JmaLpgmIntensity? get maxLpgmIntensityGte; JmaLpgmIntensity? get maxLpgmIntensityLte; EarthquakeDatasource? get datasource; List<EarthquakeTelegramType>? get telegramTypes; double? get latitudeGte; double? get latitudeLte; double? get longitudeGte; double? get longitudeLte; EarthquakeSortBy? get sortBy; SortOrder? get sortOrder;
 /// Create a copy of EarthquakeHistoryParameter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -272,7 +262,6 @@ class _EarthquakeHistoryParameter extends EarthquakeHistoryParameter {
   const _EarthquakeHistoryParameter({this.magnitudeLte, this.magnitudeGte, this.depthLte, this.depthGte, this.intensityLte, this.intensityGte, final  List<TelegramStatus>? statuses, this.epicenterCode, this.epicenterName, this.regionSearchType, this.regionCode, this.regionName, this.regionIntensityLte, this.regionIntensityGte, this.earthquakeType, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.datasource, final  List<EarthquakeTelegramType>? telegramTypes, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte, this.sortBy, this.sortOrder}): _statuses = statuses,_telegramTypes = telegramTypes,super._();
   factory _EarthquakeHistoryParameter.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryParameterFromJson(json);
 
-// 基本フィルター
 @override final  double? magnitudeLte;
 @override final  double? magnitudeGte;
 @override final  int? depthLte;
@@ -288,28 +277,20 @@ class _EarthquakeHistoryParameter extends EarthquakeHistoryParameter {
   return EqualUnmodifiableListView(value);
 }
 
-// 震央地名フィルター
 @override final  int? epicenterCode;
 @override final  String? epicenterName;
-// 地域の震度フィルター
 @override final  RegionSearchType? regionSearchType;
 @override final  String? regionCode;
 @override final  String? regionName;
 @override final  JmaIntensity? regionIntensityLte;
 @override final  JmaIntensity? regionIntensityGte;
-// 地震種別フィルター
 @override final  EarthquakeType? earthquakeType;
-// 発生時刻範囲フィルター
 @override final  Date? originTimeGte;
 @override final  Date? originTimeLte;
-// 長周期地震動階級フィルター
 @override final  JmaLpgmIntensity? maxLpgmIntensityGte;
 @override final  JmaLpgmIntensity? maxLpgmIntensityLte;
-// データソースフィルター
 @override final  EarthquakeDatasource? datasource;
-// 電文種別フィルター
  final  List<EarthquakeTelegramType>? _telegramTypes;
-// 電文種別フィルター
 @override List<EarthquakeTelegramType>? get telegramTypes {
   final value = _telegramTypes;
   if (value == null) return null;
@@ -318,12 +299,10 @@ class _EarthquakeHistoryParameter extends EarthquakeHistoryParameter {
   return EqualUnmodifiableListView(value);
 }
 
-// 緯度経度範囲フィルター
 @override final  double? latitudeGte;
 @override final  double? latitudeLte;
 @override final  double? longitudeGte;
 @override final  double? longitudeLte;
-// ソート
 @override final  EarthquakeSortBy? sortBy;
 @override final  SortOrder? sortOrder;
 

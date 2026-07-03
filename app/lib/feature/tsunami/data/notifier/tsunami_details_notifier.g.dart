@@ -88,7 +88,7 @@ abstract class _$TsunamiDetailsNotifier extends $AsyncNotifier<TsunamiState> {
   FutureOr<TsunamiState> build(String tsunamiId);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<TsunamiState>, TsunamiState>;
     final element =
         ref.element
@@ -98,6 +98,6 @@ abstract class _$TsunamiDetailsNotifier extends $AsyncNotifier<TsunamiState> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

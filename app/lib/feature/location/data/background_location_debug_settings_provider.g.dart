@@ -66,7 +66,7 @@ abstract class _$BackgroundLocationDebugSettings
   BackgroundLocationDebugSettingsState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -84,6 +84,6 @@ abstract class _$BackgroundLocationDebugSettings
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

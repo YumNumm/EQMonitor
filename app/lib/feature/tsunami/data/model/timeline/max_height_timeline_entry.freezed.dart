@@ -14,9 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MaxHeightTimelineEntry {
 
-// 追跡項目のフィールド
- double? get value; bool? get isOver; QualitativeHeight? get qualitative; bool? get isImportant; Revise? get revise;// 電文メタ
- String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
+ double? get value; bool? get isOver; QualitativeHeight? get qualitative; bool? get isImportant; Revise? get revise; String get telegramId; String? get headline; String get title; DateTime get publishedAt; DateTime? get revokedAt;
 /// Create a copy of MaxHeightTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -220,13 +218,11 @@ class _MaxHeightTimelineEntry implements MaxHeightTimelineEntry {
   const _MaxHeightTimelineEntry({required this.value, required this.isOver, required this.qualitative, required this.isImportant, required this.revise, required this.telegramId, required this.headline, required this.title, required this.publishedAt, required this.revokedAt});
   
 
-// 追跡項目のフィールド
 @override final  double? value;
 @override final  bool? isOver;
 @override final  QualitativeHeight? qualitative;
 @override final  bool? isImportant;
 @override final  Revise? revise;
-// 電文メタ
 @override final  String telegramId;
 @override final  String? headline;
 @override final  String title;

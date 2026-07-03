@@ -86,7 +86,7 @@ abstract class _$EewsByEventId extends $AsyncNotifier<List<EewTelegramItem>> {
   FutureOr<List<EewTelegramItem>> build(String eventId);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<AsyncValue<List<EewTelegramItem>>, List<EewTelegramItem>>;
@@ -101,6 +101,6 @@ abstract class _$EewsByEventId extends $AsyncNotifier<List<EewTelegramItem>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

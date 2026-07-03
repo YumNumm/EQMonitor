@@ -104,7 +104,7 @@ abstract class _$EqmonitorWsEventStream
   Stream<WebSocketEvent> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<WebSocketEvent>, WebSocketEvent>;
     final element =
         ref.element
@@ -114,7 +114,7 @@ abstract class _$EqmonitorWsEventStream
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

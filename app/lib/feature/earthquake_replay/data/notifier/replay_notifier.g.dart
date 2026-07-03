@@ -62,7 +62,7 @@ abstract class _$ReplayNotifier extends $Notifier<ReplayState?> {
   ReplayState? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ReplayState?, ReplayState?>;
     final element =
         ref.element
@@ -72,6 +72,6 @@ abstract class _$ReplayNotifier extends $Notifier<ReplayState?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

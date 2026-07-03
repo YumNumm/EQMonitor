@@ -11,14 +11,13 @@ environment:
 resolution: workspace
 
 dependency_overrides:
-  flutter_inappwebview: 6.1.5
-  test: ^1.31.2
-  test_api: ^0.7.13
-  freezed: ^4.0.0-dev.3
-  analyzer: ^13.3.0
-  meta: ^1.18.0
-  win32: ^6.3.0
-  xml: ^7.0.1
+  analyzer: ^12.0.0
+  dart_style: 3.1.8
+  freezed: 3.2.6-dev.1
+  mockito: 5.6.4
+  flutter_inappwebview: 6.2.0-beta.3
+  # https://github.com/juliansteenbakker/flutter_secure_storage/issues/1119
+  flutter_secure_storage_darwin: 0.2.0
   maplibre:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
@@ -57,20 +56,19 @@ dependencies:
   cache:
     path: ../packages/cache
   cached_network_image: ^3.4.1
-  chuck_interceptor: ^2.5.1
   clock: ^1.1.2
   collection: ^1.19.1
-  connectivity_plus: ^7.2.0
+  connectivity_plus: ^7.1.1
   core:
     path: ../packages/core
-  crypto: ^3.0.7
+  crypto: ^3.0.6
   cue: ^0.3.1
   dart_azarashi:
     path: ../packages/dart_azarashi
-  device_info_plus: ^13.2.0
-  dio: ^5.10.0
-  drift: ^2.34.0
-  dynamic_color: ^1.8.1
+  device_info_plus: ^13.1.0
+  dio: ^5.8.0+1
+  drift: ^2.22.0
+  dynamic_color: ^1.7.0
   earthquake_replay:
     path: ../packages/earthquake_replay
   eqmonitor_api:
@@ -79,13 +77,13 @@ dependencies:
     path: ../packages/eqmonitor_websocket
   extensions:
     path: ../packages/extensions
-  file_picker: ^11.0.2
-  firebase_analytics: ^12.4.3
-  firebase_app_check: ^0.4.5
-  firebase_app_installations: ^0.4.2
-  firebase_core: ^4.11.0
-  firebase_crashlytics: ^5.2.4
-  firebase_messaging: ^16.4.1
+  file_picker: ^12.0.0-beta.7
+  firebase_analytics: ^12.0.0
+  firebase_app_check: ^0.4.2
+  firebase_app_installations: ^0.4.0
+  firebase_core: ^4.0.0
+  firebase_crashlytics: ^5.0.0
+  firebase_messaging: ^16.0.0
   fl_chart: ^1.2.0
   flutter:
     sdk: flutter
@@ -93,35 +91,35 @@ dependencies:
     git:
       url: https://github.com/mchome/flutter_colorpicker.git
       ref: e9b124896076991fa077f62bdbab3df1a26149d7
-  flutter_hooks: ^0.21.3
+  flutter_hooks: ^0.21.2
   flutter_html: ^3.0.0
   flutter_local_notifications: ^22.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.7.7
-  flutter_secure_storage: ^10.3.1
+  flutter_markdown: ^0.7.5
+  flutter_secure_storage: ^10.0.0
   flutter_sticky_header: ^0.8.0
   flutter_test:
     sdk: flutter
-  flutter_timezone: ^5.1.0
+  flutter_timezone: ^5.0.1
   flutter_udid:
     git:
       url: https://github.com/YumNumm/flutter_udid.git
       ref: d8f72a1e9e09a9f76f4e5051f167b31c5e2af52e
-  freezed_annotation: ^3.1.0
+  freezed_annotation: ^3.0.0
   geobase: ^1.5.0
   geodata: ^1.3.0
-  geolocator: ^14.0.3
-  go_router: ^17.3.0
+  geolocator: ^14.0.1
+  go_router: ^17.0.0
   google_api_availability: ^5.0.1
   google_mobile_ads: ^9.0.0
   hooks_riverpod: ^3.3.2
-  image: ^4.9.1
-  in_app_review: ^2.0.12
+  image: ^4.4.0
+  in_app_review: ^2.0.10
   intl: ^0.20.2
   jma_map:
     path: ../packages/jma_map
-  json_annotation: ^4.12.0
+  json_annotation: ^4.11.0
   knet_api_client:
     path: ../packages/knet_api_client
   knet_waveform_parser:
@@ -133,25 +131,25 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.10.1
-  libserialport_plus: ^0.1.2
+  libserialport_plus: ^0.1.0
   live_activity_util:
     path: ../packages/live_activity_util
   maplibre: ^0.3.5
   nied_api_client:
     path: ../packages/nied_api_client
   ntp: ^2.0.0
-  objective_c: ^9.4.1
-  package_info_plus: ^10.2.0
-  paging_view: ^2.9.0
-  path: ^1.9.1
-  path_provider: ^2.1.6
-  purchases_flutter: ^10.4.0
+  objective_c: ^9.2.2
+  package_info_plus: ^10.1.0
+  paging_view: ^2.8.1
+  path: ^1.9.0
+  path_provider: ^2.1.5
+  purchases_flutter: ^10.0.1
   riverpod: ^3.3.2
   riverpod_annotation: ^4.0.3
   screenshot: 3.0.0
-  sensors_plus: ^7.1.0
-  share_plus: ^13.2.0
-  shared_preferences: ^2.5.5
+  sensors_plus: ^7.0.0
+  share_plus: ^13.1.0
+  shared_preferences: ^2.3.3
   shared_preferences_foundation: ^2.5.6
   sheet:
     git:
@@ -160,17 +158,18 @@ dependencies:
       path: sheet
   skeletonizer: ^2.1.3
   soft_edge_blur: ^0.1.3
-  synchronized: ^3.4.1
-  talker_dio_logger: ^5.1.17
-  talker_flutter: ^5.1.17
+  sqlite3_flutter_libs: ^0.6.0+eol
+  synchronized: ^3.3.0
+  talker_dio_logger: ^5.0.0
+  talker_flutter: ^5.0.0
   telemetry_store:
     path: ../packages/telemetry_store
   theme_tailor_annotation: ^3.1.3
-  timezone: ^0.11.1
-  two_dimensional_scrollables: ^0.5.3
-  upgrader: ^13.5.0
-  url_launcher: ^6.3.2
-  uuid: ^4.5.3
+  timezone: ^0.11.0
+  two_dimensional_scrollables: ^0.5.2
+  upgrader: ^13.0.0
+  url_launcher: ^6.3.1
+  uuid: ^4.5.1
   version: ^3.0.2
   video_player: ^2.11.1
   web_socket: ^1.0.1
@@ -179,19 +178,18 @@ dependencies:
     path: ../packages/workflows
 
 dev_dependencies:
-  altive_lints: ^3.0.0
-  build_runner: ^2.15.0
+  build_runner: ^2.11.1
   eqmonitor_lints:
     path: ../packages/eqmonitor_lints
-  fake_async: ^1.3.3
-  flutter_gen_runner: ^5.14.1
+  fake_async: ^1.3.1
+  flutter_gen_runner: ^5.8.0
   freezed: ^4.0.0-dev.3
   go_router_builder: ^4.3.0
   json_serializable: ^6.14.0
   riverpod_generator: ^4.0.4
   riverpod_lint: ^3.1.4
-  shared_preferences_platform_interface: ^2.4.2
-  test: ^1.31.2
+  shared_preferences_platform_interface: ^2.4.0
+  test: ^1.29.0
   theme_tailor: ^3.1.3
 
 flutter_gen:

@@ -48,7 +48,7 @@ abstract class _$ShakeDetectionSettingsNotifier
   FutureOr<ShakeDetectionState> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<ShakeDetectionState>, ShakeDetectionState>;
     final element =
@@ -59,6 +59,6 @@ abstract class _$ShakeDetectionSettingsNotifier
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

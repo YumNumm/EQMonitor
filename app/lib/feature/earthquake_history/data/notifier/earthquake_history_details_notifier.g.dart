@@ -92,7 +92,7 @@ abstract class _$EarthquakeHistoryDetailsNotifier
   FutureOr<Earthquake> build(String eventId);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<Earthquake>, Earthquake>;
     final element =
         ref.element
@@ -102,6 +102,6 @@ abstract class _$EarthquakeHistoryDetailsNotifier
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

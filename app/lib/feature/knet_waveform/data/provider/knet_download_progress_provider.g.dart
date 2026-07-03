@@ -118,7 +118,7 @@ abstract class _$KnetDownloadProgress
   ({int received, int total})? build(DateTime eventTime);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<({int received, int total})?, ({int received, int total})?>;
@@ -133,6 +133,6 @@ abstract class _$KnetDownloadProgress
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

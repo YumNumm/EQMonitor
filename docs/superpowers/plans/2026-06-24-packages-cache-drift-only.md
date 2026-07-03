@@ -60,7 +60,6 @@ dependencies:
   path_provider: ^2.1.5
 
 dev_dependencies:
-  altive_lints: ^3.0.0
   build_runner: ^2.7.1
   drift_dev: ^2.22.0
   eqmonitor_lints:

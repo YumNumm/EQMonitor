@@ -21,9 +21,7 @@ final class FeedBySourceProvider
           FeedDetail,
           FutureOr<FeedDetail>
         >
-    with
-        $FutureModifier<FeedDetail>,
-        $FutureProvider<FeedDetail> {
+    with $FutureModifier<FeedDetail>, $FutureProvider<FeedDetail> {
   FeedBySourceProvider._({
     required FeedBySourceFamily super.from,
     required String super.argument,
@@ -47,9 +45,8 @@ final class FeedBySourceProvider
 
   @$internal
   @override
-  $FutureProviderElement<FeedDetail> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $FutureProviderElement<FeedDetail> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
   FutureOr<FeedDetail> create(Ref ref) {
@@ -68,7 +65,7 @@ final class FeedBySourceProvider
   }
 }
 
-String _$feedBySourceHash() => r'37807bb92070c3ffd76da7e7f6098d4e050b9a71';
+String _$feedBySourceHash() => r'69a23f2a19bc582cafba40569716fbb954a4ce2a';
 
 final class FeedBySourceFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<FeedDetail>, String> {

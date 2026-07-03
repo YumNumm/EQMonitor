@@ -74,7 +74,7 @@ abstract class _$IntensityHistoryController
   IntensityHistoryState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<IntensityHistoryState, IntensityHistoryState>;
     final element =
         ref.element
@@ -84,6 +84,6 @@ abstract class _$IntensityHistoryController
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

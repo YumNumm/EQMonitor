@@ -47,7 +47,7 @@ abstract class _$KyoshinMonitorSettings
   FutureOr<KyoshinMonitorSettingsModel> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -65,6 +65,6 @@ abstract class _$KyoshinMonitorSettings
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
