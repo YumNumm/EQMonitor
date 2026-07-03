@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/seismicity/ui/layer/seismicity_epicenter_layer
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// 地震活動画面(震央分布 + 矩形選択によるM-T図・積算・深さ断面)。
@@ -102,19 +103,53 @@ class _MapBody extends StatelessWidget {
               child: CircularProgressIndicator(strokeWidth: 2),
             ),
           ),
-        if (datasetAsync case AsyncData(:final value) when value.isFromCache)
+        if (datasetAsync case AsyncData(:final value))
           Positioned(
             top: 8,
             left: 8,
-            child: Card(
-              color: Theme.of(context).colorScheme.errorContainer,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Text('取得失敗のため前回データを表示中'),
-              ),
-            ),
+            child: value.isFromCache
+                ? Card(
+                    color: Theme.of(context).colorScheme.errorContainer,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('取得失敗のため前回データを表示中'),
+                          Text(
+                            _generatedAtLabel(value.generatedAt),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Card(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surface.withValues(alpha: 0.8),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      child: Text(
+                        _generatedAtLabel(value.generatedAt),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ),
           ),
       ],
     );
   }
+
+  static final _generatedAtFormat = DateFormat('yyyy/MM/dd HH:mm');
+
+  static String _generatedAtLabel(DateTime generatedAt) =>
+      '${_generatedAtFormat.format(generatedAt.toLocal())} 時点のデータ';
 }
