@@ -6,23 +6,36 @@ sealed class NotificationDeepLink {
     '/earthquake-history-details/',
     '/feed/source/',
   ];
+  // Exact paths allowed as-is (no trailing segment required)
+  static const _allowedExactPaths = ['/earthquake-history'];
+
+  static NotificationDeepLink? fromUri(Uri uri) {
+    if (uri.scheme == _internalScheme) {
+      if (_allowedExactPaths.contains(uri.path) ||
+          _allowedPathPrefixes.any(uri.path.startsWith)) {
+        return NotificationRouteLink(
+          location: Uri(
+            path: uri.path,
+            query: uri.hasQuery ? uri.query : null,
+          ).toString(),
+        );
+      }
+      return null;
+    }
+    if (uri.scheme == 'https' || uri.scheme == 'http') {
+      return NotificationUrlLink(uri: uri);
+    }
+    return null;
+  }
 
   static NotificationDeepLink? fromData(Map<String, Object?> data) {
     final link = data['link'];
     if (link is String) {
       final uri = Uri.tryParse(link);
       if (uri != null) {
-        if (uri.scheme == _internalScheme &&
-            _allowedPathPrefixes.any(uri.path.startsWith)) {
-          return NotificationRouteLink(
-            location: Uri(
-              path: uri.path,
-              query: uri.hasQuery ? uri.query : null,
-            ).toString(),
-          );
-        }
-        if (uri.scheme == 'https' || uri.scheme == 'http') {
-          return NotificationUrlLink(uri: uri);
+        final result = fromUri(uri);
+        if (result != null) {
+          return result;
         }
       }
     }
