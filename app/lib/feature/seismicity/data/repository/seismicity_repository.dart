@@ -43,16 +43,28 @@ class SeismicityRepository {
         generatedAt: layer.generatedAt,
         isFromCache: false,
       );
-    } on Object {
-      final cached = await _cache.read(span);
-      if (cached == null) {
-        rethrow;
-      }
-      return SeismicityDataset(
-        events: cached.events,
-        generatedAt: cached.generatedAt,
-        isFromCache: true,
-      );
+    } on DioException catch (e, stackTrace) {
+      return _fallbackToCache(span, e, stackTrace);
+    } on StateError catch (e, stackTrace) {
+      return _fallbackToCache(span, e, stackTrace);
     }
+  }
+
+  /// ネットワーク/データ欠損時にローカルキャッシュへフォールバックする。
+  /// キャッシュが存在しない場合は元の例外を再送出する。
+  Future<SeismicityDataset> _fallbackToCache(
+    SeismicitySpan span,
+    Object error,
+    StackTrace stackTrace,
+  ) async {
+    final cached = await _cache.read(span);
+    if (cached == null) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+    return SeismicityDataset(
+      events: cached.events,
+      generatedAt: cached.generatedAt,
+      isFromCache: true,
+    );
   }
 }
