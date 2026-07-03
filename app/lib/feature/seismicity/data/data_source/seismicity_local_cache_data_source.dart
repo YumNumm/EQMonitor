@@ -38,8 +38,16 @@ class SeismicityLocalCacheDataSource {
       return null;
     }
     final content = await file.readAsString();
-    return SeismicityCachedDataset.fromJson(
-      jsonDecode(content) as Map<String, dynamic>,
-    );
+    try {
+      return SeismicityCachedDataset.fromJson(
+        jsonDecode(content) as Map<String, dynamic>,
+      );
+    } on FormatException {
+      // JSON として不正 (破損・途中書き込みなど)。
+      return null;
+    } on TypeError {
+      // JSON としては解釈できるがスキーマが一致しない。
+      return null;
+    }
   }
 }

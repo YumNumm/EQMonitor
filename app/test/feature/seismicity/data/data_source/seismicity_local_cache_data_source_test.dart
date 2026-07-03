@@ -52,4 +52,25 @@ void main() {
 
     expect(await dataSource.read(SeismicitySpan.p12m), isNull);
   });
+
+  test('破損したキャッシュファイルは例外を投げず null を返す', () async {
+    final tempDir = Directory.systemTemp.createTempSync(
+      'seismicity_cache_test_corrupted',
+    );
+    addTearDown(() => tempDir.deleteSync(recursive: true));
+
+    final dataSource = SeismicityLocalCacheDataSource(
+      directoryProvider: () async => tempDir,
+    );
+
+    final cacheDir = Directory('${tempDir.path}/seismicity')
+      ..createSync(recursive: true);
+    final cacheFile = File(
+      '${cacheDir.path}/dataset_${SeismicitySpan.p1m.name}.json',
+    );
+    // 途中で切れた/破損した JSON を模したゴミデータを書き込む。
+    await cacheFile.writeAsString('{"generatedAt": "2026-07-01T00:00:00Z"');
+
+    expect(await dataSource.read(SeismicitySpan.p1m), isNull);
+  });
 }
