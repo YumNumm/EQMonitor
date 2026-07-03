@@ -15,9 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'earthquake_history_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<EarthquakeHistoryRepository> earthquakeHistoryRepository(
-  Ref ref,
-) async {
+Future<EarthquakeHistoryRepository> earthquakeHistoryRepository(Ref ref) async {
   final jmaParam = await ref.watch(jmaParameterProvider.future);
   return EarthquakeHistoryRepository(
     api: await ref.watch(apiClientProvider.future),
@@ -358,24 +356,18 @@ class EarthquakeHistoryRepository {
           ? _regionIntensity(regions, regionCode)
           : _regionIntensity(regions, cityAreaCode);
       if (prefJ != null) {
-        return CurrentLocationIntensityDisplay.quick(
-          intensity: prefJ,
-        );
+        return CurrentLocationIntensityDisplay.quick(intensity: prefJ);
       }
     }
     if (regionAreaCode != null) {
       final cityNode = _findCityNodeByCode(intensityTree, regionAreaCode);
       final j = cityNode?.maxIntensity;
       if (j != null) {
-        return CurrentLocationIntensityDisplay.quick(
-          intensity: j,
-        );
+        return CurrentLocationIntensityDisplay.quick(intensity: j);
       }
       final prefJ = _regionIntensity(regions, regionAreaCode);
       if (prefJ != null) {
-        return CurrentLocationIntensityDisplay.quick(
-          intensity: prefJ,
-        );
+        return CurrentLocationIntensityDisplay.quick(intensity: prefJ);
       }
     }
     return const CurrentLocationIntensityDisplay.none();

@@ -10,17 +10,14 @@ const _revalidatingText = 'キャッシュ表示中・更新を確認してい�
 const _staleErrorText = '最新情報の取得に失敗しました（キャッシュ表示中）';
 
 /// CachedNotifier が裏更新中に流す「キャッシュ由来の値を保持した Loading」状態。
-AsyncValue<String> _cacheRevalidating() =>
-    const AsyncLoading<String>().copyWithPrevious(
-      AsyncData('stale', kind: DataKind.cache),
-    );
+AsyncValue<String> _cacheRevalidating() => const AsyncLoading<String>()
+    .copyWithPrevious(AsyncData('stale', kind: DataKind.cache));
 
 /// 再検証失敗で stale を維持した状態。
-AsyncValue<String> _staleWithError() =>
-    AsyncError<String>(
-      Exception('offline'),
-      StackTrace.empty,
-    ).copyWithPrevious(const AsyncData('stale'));
+AsyncValue<String> _staleWithError() => AsyncError<String>(
+  Exception('offline'),
+  StackTrace.empty,
+).copyWithPrevious(const AsyncData('stale'));
 
 Future<void> _pump(WidgetTester tester, List<AsyncValue<Object?>> values) {
   return tester.pumpWidget(

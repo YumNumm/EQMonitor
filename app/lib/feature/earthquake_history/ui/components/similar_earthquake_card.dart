@@ -19,10 +19,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SimilarEarthquakeCard extends HookConsumerWidget {
-  const SimilarEarthquakeCard({
-    required this.earthquake,
-    super.key,
-  });
+  const SimilarEarthquakeCard({required this.earthquake, super.key});
 
   final Earthquake earthquake;
 
@@ -120,12 +117,12 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
                   onPressed: () async {
                     final result =
                         await showModalBottomSheet<NearbyEarthquakeParameter>(
-                      context: context,
-                      builder: (_) => NearbyEarthquakeParameterSheet(
-                        initial: searchParam.value,
-                        hasDepth: depth != null,
-                      ),
-                    );
+                          context: context,
+                          builder: (_) => NearbyEarthquakeParameterSheet(
+                            initial: searchParam.value,
+                            hasDepth: depth != null,
+                          ),
+                        );
                     if (result != null) {
                       searchParam.value = result;
                     }
@@ -149,62 +146,60 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
           // 値ありを最優先でマッチさせる。
           switch (asyncItems) {
             AsyncValue(:final value?) when value.isEmpty => Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                child: Center(
-                  child: Text(
-                    '該当する地震がありません',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              child: Center(
+                child: Text(
+                  '該当する地震がありません',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
+            ),
             AsyncValue(:final value?) => _NearbyEarthquakeList(
-                items: value,
-                intensityColor: intensityColor,
-                onShowAll: onShowAll,
-              ),
+              items: value,
+              intensityColor: intensityColor,
+              onShowAll: onShowAll,
+            ),
             AsyncError() => Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Row(
-                  children: [
-                    const Icon(Icons.error_outline, size: 16),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        '近傍の地震の取得に失敗しました',
-                        style: theme.textTheme.bodySmall,
-                      ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                children: [
+                  const Icon(Icons.error_outline, size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '近傍の地震の取得に失敗しました',
+                      style: theme.textTheme.bodySmall,
                     ),
-                    TextButton(
-                      onPressed: () => ref.invalidate(
-                        nearbyEarthquakeProvider(
-                          earthquake.eventId,
-                          coordinates.latitude,
-                          coordinates.longitude,
-                          depth,
-                          sortBy.value,
-                          sortOrder.value,
-                          searchParam.value,
-                        ),
-                      ),
-                      child: const Text('再試行'),
-                    ),
-                  ],
-                ),
-              ),
-            _ => const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Center(
-                  child: SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
                   ),
+                  TextButton(
+                    onPressed: () => ref.invalidate(
+                      nearbyEarthquakeProvider(
+                        earthquake.eventId,
+                        coordinates.latitude,
+                        coordinates.longitude,
+                        depth,
+                        sortBy.value,
+                        sortOrder.value,
+                        searchParam.value,
+                      ),
+                    ),
+                    child: const Text('再試行'),
+                  ),
+                ],
+              ),
+            ),
+            _ => const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator.adaptive(strokeWidth: 2),
                 ),
               ),
+            ),
           },
         ],
       ),
@@ -213,10 +208,7 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
 }
 
 class _ParameterSummary extends StatelessWidget {
-  const _ParameterSummary({
-    required this.parameter,
-    required this.hasDepth,
-  });
+  const _ParameterSummary({required this.parameter, required this.hasDepth});
 
   final NearbyEarthquakeParameter parameter;
   final bool hasDepth;
@@ -270,10 +262,7 @@ class _NearbyEarthquakeList extends StatelessWidget {
         ],
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          child: TextButton(
-            onPressed: onShowAll,
-            child: const Text('すべて表示'),
-          ),
+          child: TextButton(onPressed: onShowAll, child: const Text('すべて表示')),
         ),
       ],
     );

@@ -44,8 +44,6 @@ class NearbyEarthquake extends _$NearbyEarthquake
       sortOrder: sortOrder,
       limit: 5,
     );
-    return response.items
-        .where((e) => e.eventId != excludeEventId)
-        .toList();
+    return response.items.where((e) => e.eventId != excludeEventId).toList();
   }
 }

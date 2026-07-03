@@ -25,9 +25,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final detailsState = ref.watch(
-      earthquakeHistoryDetailsProvider(eventId),
-    );
+    final detailsState = ref.watch(earthquakeHistoryDetailsProvider(eventId));
 
     // SWR 再検証中は「値を保持した AsyncLoading」が流れるため、値ありを最優先で
     // マッチさせて stale 表示を維持する (Loading 優先だと全画面スピナーに戻る)。
@@ -37,9 +35,8 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
         appBar: AppBar(),
         body: ErrorCard(
           error: error,
-          onReload: () async => ref.refresh(
-            earthquakeHistoryDetailsProvider(eventId),
-          ),
+          onReload: () async =>
+              ref.refresh(earthquakeHistoryDetailsProvider(eventId)),
         ),
       ),
       _ => Scaffold(
@@ -75,30 +72,25 @@ class _LoadedContent extends HookConsumerWidget {
     final hasLpgm = earthquake.intensity?.maxLpgmIntensity != null;
 
     final displayMode = useState(
-      hasEstimated
-          ? IntensityDisplayMode.estimated
-          : IntensityDisplayMode.jma,
+      hasEstimated ? IntensityDisplayMode.estimated : IntensityDisplayMode.jma,
     );
 
     final noticeShown = ref.watch(estimatedIntensityNoticeShownProvider);
 
-    useEffect(
-      () {
-        if (hasEstimated && !noticeShown) {
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            if (!context.mounted) {
-              return;
-            }
-            await EstimatedIntensityNoticeDialog.show(context);
-            await ref
-                .read(estimatedIntensityNoticeShownProvider.notifier)
-                .markShown();
-          });
-        }
-        return null;
-      },
-      [hasEstimated, noticeShown],
-    );
+    useEffect(() {
+      if (hasEstimated && !noticeShown) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          if (!context.mounted) {
+            return;
+          }
+          await EstimatedIntensityNoticeDialog.show(context);
+          await ref
+              .read(estimatedIntensityNoticeShownProvider.notifier)
+              .markShown();
+        });
+      }
+      return null;
+    }, [hasEstimated, noticeShown]);
 
     final availableModes = [
       IntensityDisplayMode.jma,
