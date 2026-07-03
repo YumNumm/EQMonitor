@@ -50,4 +50,22 @@ void main() {
     // 例外なく完了することを検証する。
     expect(result, isNull);
   });
+
+  testWidgets('ほぼ動かないドラッグ(退化した矩形)では onSelectionEnd を呼ばない', (tester) async {
+    var callCount = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SeismicitySelectionOverlay(
+          enabled: true,
+          onSelectionEnd: (_) => callCount++,
+        ),
+      ),
+    );
+
+    // わずか1論理ピクセルのみ動かす、誤タップ相当のドラッグ。
+    await tester.dragFrom(const Offset(50, 50), const Offset(51, 50));
+    await tester.pumpAndSettle();
+
+    expect(callCount, 0);
+  });
 }

@@ -1,11 +1,17 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_bounds_filter.dart';
+import 'package:eqmonitor/feature/seismicity/data/model/seismicity_bounds.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_color_mode.dart';
+import 'package:eqmonitor/feature/seismicity/data/model/seismicity_dataset.dart';
+import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_span.dart';
 import 'package:eqmonitor/feature/seismicity/data/notifier/seismicity_dataset_notifier.dart';
 import 'package:eqmonitor/feature/seismicity/ui/components/seismicity_color_mode_selector.dart';
+import 'package:eqmonitor/feature/seismicity/ui/components/seismicity_selection_overlay.dart';
 import 'package:eqmonitor/feature/seismicity/ui/components/seismicity_span_selector.dart';
 import 'package:eqmonitor/feature/seismicity/ui/layer/seismicity_epicenter_layer.dart';
+import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_analysis_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,6 +26,8 @@ class SeismicityPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final span = useState(SeismicitySpan.p1m);
     final colorMode = useState(SeismicityColorMode.elapsedTime);
+    final isSelecting = useState(false);
+    final selectedBounds = useState<SeismicityBounds?>(null);
     final mapConfiguration = ref.watch(mapConfigurationProvider);
     final datasetAsync = ref.watch(
       seismicityDatasetNotifierProvider(span.value),
@@ -28,6 +36,21 @@ class SeismicityPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('地震活動'),
+        actions: [
+          IconButton(
+            icon: Icon(
+              isSelecting.value ? Icons.crop_free : Icons.crop_free_outlined,
+            ),
+            tooltip: '矩形選択',
+            isSelected: isSelecting.value,
+            onPressed: () {
+              isSelecting.value = !isSelecting.value;
+              if (!isSelecting.value) {
+                selectedBounds.value = null;
+              }
+            },
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
           child: Padding(
@@ -55,10 +78,33 @@ class SeismicityPage extends HookConsumerWidget {
           styleString: value.styleString!,
           datasetAsync: datasetAsync,
           colorMode: colorMode.value,
+          isSelecting: isSelecting.value,
+          onSelectionEnd: (bounds) => selectedBounds.value = bounds,
         ),
         AsyncError(:final error) => Center(child: ErrorCard(error: error)),
         _ => const Center(child: CircularProgressIndicator.adaptive()),
       },
+      bottomSheet: selectedBounds.value == null
+          ? null
+          : SizedBox(
+              height: MediaQuery.of(context).size.height * 0.45,
+              child: Material(
+                elevation: 8,
+                child: SeismicityAnalysisPanel(
+                  events: const SeismicityBoundsFilter().filter(
+                    events: switch (datasetAsync) {
+                      AsyncData(:final SeismicityDataset value) =>
+                        value.events,
+                      _ => const <SeismicityEvent>[],
+                    },
+                    minLatitude: selectedBounds.value!.minLatitude,
+                    maxLatitude: selectedBounds.value!.maxLatitude,
+                    minLongitude: selectedBounds.value!.minLongitude,
+                    maxLongitude: selectedBounds.value!.maxLongitude,
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }
@@ -68,17 +114,21 @@ class _MapBody extends StatelessWidget {
     required this.styleString,
     required this.datasetAsync,
     required this.colorMode,
+    required this.isSelecting,
+    required this.onSelectionEnd,
   });
 
   final String styleString;
-  final AsyncValue datasetAsync;
+  final AsyncValue<SeismicityDataset> datasetAsync;
   final SeismicityColorMode colorMode;
+  final bool isSelecting;
+  final void Function(SeismicityBounds bounds) onSelectionEnd;
 
   @override
   Widget build(BuildContext context) {
     final events = switch (datasetAsync) {
       AsyncData(:final value) => value.events,
-      _ => const [],
+      _ => const <SeismicityEvent>[],
     };
 
     return Stack(
@@ -92,6 +142,10 @@ class _MapBody extends StatelessWidget {
           children: [
             SeismicityEpicenterLayer(events: events, colorMode: colorMode),
           ],
+        ),
+        SeismicitySelectionOverlay(
+          enabled: isSelecting,
+          onSelectionEnd: onSelectionEnd,
         ),
         if (datasetAsync case AsyncLoading())
           const Positioned(

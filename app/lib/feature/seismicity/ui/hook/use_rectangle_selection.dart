@@ -22,6 +22,10 @@ class RectangleSelectionState {
   /// ドラッグ終了時に確定した矩形(画面座標)を返し、内部状態をリセットする。
   /// ドラッグが開始されていなければ null を返す。
   final Rect? Function() endDrag;
+
+  /// これ未満のドラッグ距離(論理ピクセル)は誤タップ等による退化した矩形と
+  /// みなし、選択を確定しない([endDrag] が null を返す)。
+  static const minimumDragExtent = 4.0;
 }
 
 RectangleSelectionState useRectangleSelection() {
@@ -44,7 +48,12 @@ RectangleSelectionState useRectangleSelection() {
       if (start == null || current == null) {
         return null;
       }
-      return Rect.fromPoints(start, current);
+      final rect = Rect.fromPoints(start, current);
+      if (rect.width.abs() < RectangleSelectionState.minimumDragExtent ||
+          rect.height.abs() < RectangleSelectionState.minimumDragExtent) {
+        return null;
+      }
+      return rect;
     },
   );
 }

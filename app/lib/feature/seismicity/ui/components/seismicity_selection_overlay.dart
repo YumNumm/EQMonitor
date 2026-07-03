@@ -48,6 +48,8 @@ class SeismicitySelectionOverlay extends HookWidget {
     BuildContext context,
     RectangleSelectionState selection,
   ) {
+    // 退化した(ほぼ動いていない)矩形は useRectangleSelection.endDrag が
+    // null を返すため、ここでは選択なしとして扱う。
     final rect = selection.endDrag();
     if (rect == null) {
       return;
