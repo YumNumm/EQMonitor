@@ -3,7 +3,10 @@
 # 参照するため）。@main とAppShortcutsProviderは除外する。
 # 併せてスニペット描画に必要なリソース（地域テーブル・フォント）を
 # WidgetExtension にも同梱する。
-#   ruby scripts/share_intents_with_widget.rb
+#
+# ※注意: xcodeproj gem (1.27) は fileSystemSynchronizedGroups への追記保存時に
+#   既存エントリを落とすバグがあり、実際の反映は pbxproj へのテキスト編集で
+#   行った（2026-07-03）。このスクリプトは意図の記録であり再実行しないこと。
 require 'xcodeproj'
 
 project = Xcodeproj::Project.open(File.expand_path('../Runner.xcodeproj', __dir__))
@@ -20,6 +23,7 @@ unless widget.file_system_synchronized_groups&.include?(sync_group)
   exception.membership_exceptions = [
     'AppIntentExtension.swift',
     'AppIntentExtensionExtension.swift',
+    'Info.plist', # WidgetExtension 自身の Info.plist と衝突するため
   ]
   sync_group.exceptions ||= []
   sync_group.exceptions << exception
