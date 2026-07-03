@@ -11,19 +11,11 @@ part of 'similar_earthquake_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(nearbyEarthquake)
+@ProviderFor(NearbyEarthquake)
 final nearbyEarthquakeProvider = NearbyEarthquakeFamily._();
 
 final class NearbyEarthquakeProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<EarthquakePartial>>,
-          List<EarthquakePartial>,
-          FutureOr<List<EarthquakePartial>>
-        >
-    with
-        $FutureModifier<List<EarthquakePartial>>,
-        $FutureProvider<List<EarthquakePartial>> {
+    extends $AsyncNotifierProvider<NearbyEarthquake, List<EarthquakePartial>> {
   NearbyEarthquakeProvider._({
     required NearbyEarthquakeFamily super.from,
     required (
@@ -56,34 +48,7 @@ final class NearbyEarthquakeProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<EarthquakePartial>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<EarthquakePartial>> create(Ref ref) {
-    final argument =
-        this.argument
-            as (
-              String,
-              double,
-              double,
-              int?,
-              api.EarthquakeSortBy,
-              api.SortOrder,
-              NearbyEarthquakeParameter,
-            );
-    return nearbyEarthquake(
-      ref,
-      argument.$1,
-      argument.$2,
-      argument.$3,
-      argument.$4,
-      argument.$5,
-      argument.$6,
-      argument.$7,
-    );
-  }
+  NearbyEarthquake create() => NearbyEarthquake();
 
   @override
   bool operator ==(Object other) {
@@ -96,11 +61,14 @@ final class NearbyEarthquakeProvider
   }
 }
 
-String _$nearbyEarthquakeHash() => r'9acd54d1431d49138ec6e08a200d2b2cb4c29447';
+String _$nearbyEarthquakeHash() => r'4f7beeb0dcc46f286f4dd51ecbbf90ea60de5b4a';
 
 final class NearbyEarthquakeFamily extends $Family
     with
-        $FunctionalFamilyOverride<
+        $ClassFamilyOverride<
+          NearbyEarthquake,
+          AsyncValue<List<EarthquakePartial>>,
+          List<EarthquakePartial>,
           FutureOr<List<EarthquakePartial>>,
           (
             String,
@@ -144,4 +112,69 @@ final class NearbyEarthquakeFamily extends $Family
 
   @override
   String toString() => r'nearbyEarthquakeProvider';
+}
+
+abstract class _$NearbyEarthquake
+    extends $AsyncNotifier<List<EarthquakePartial>> {
+  late final _$args =
+      ref.$arg
+          as (
+            String,
+            double,
+            double,
+            int?,
+            api.EarthquakeSortBy,
+            api.SortOrder,
+            NearbyEarthquakeParameter,
+          );
+  String get excludeEventId => _$args.$1;
+  double get latitude => _$args.$2;
+  double get longitude => _$args.$3;
+  int? get depth => _$args.$4;
+  api.EarthquakeSortBy get sortBy => _$args.$5;
+  api.SortOrder get sortOrder => _$args.$6;
+  NearbyEarthquakeParameter get parameter => _$args.$7;
+
+  FutureOr<List<EarthquakePartial>> build(
+    String excludeEventId,
+    double latitude,
+    double longitude,
+    int? depth,
+    api.EarthquakeSortBy sortBy,
+    api.SortOrder sortOrder,
+    NearbyEarthquakeParameter parameter,
+  );
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<EarthquakePartial>>,
+              List<EarthquakePartial>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<EarthquakePartial>>,
+                List<EarthquakePartial>
+              >,
+              AsyncValue<List<EarthquakePartial>>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(
+      ref,
+      () => build(
+        _$args.$1,
+        _$args.$2,
+        _$args.$3,
+        _$args.$4,
+        _$args.$5,
+        _$args.$6,
+        _$args.$7,
+      ),
+    );
+  }
 }

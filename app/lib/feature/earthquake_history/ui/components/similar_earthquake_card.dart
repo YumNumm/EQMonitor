@@ -145,16 +145,25 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
             onSortChanged: onSortChanged,
           ),
           const SizedBox(height: 8),
+          // SWR 再検証中の「値を保持した AsyncLoading」で stale 表示を維持するため
+          // 値ありを最優先でマッチさせる。
           switch (asyncItems) {
-            AsyncLoading() => const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
+            AsyncValue(:final value?) when value.isEmpty => Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 child: Center(
-                  child: SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                  child: Text(
+                    '該当する地震がありません',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
+              ),
+            AsyncValue(:final value?) => _NearbyEarthquakeList(
+                items: value,
+                intensityColor: intensityColor,
+                onShowAll: onShowAll,
               ),
             AsyncError() => Padding(
                 padding:
@@ -186,22 +195,15 @@ class SimilarEarthquakeCard extends HookConsumerWidget {
                   ],
                 ),
               ),
-            AsyncData(value: final items) when items.isEmpty => Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            _ => const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
                 child: Center(
-                  child: Text(
-                    '該当する地震がありません',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
                   ),
                 ),
-              ),
-            AsyncData(value: final items) => _NearbyEarthquakeList(
-                items: items,
-                intensityColor: intensityColor,
-                onShowAll: onShowAll,
               ),
           },
         ],

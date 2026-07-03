@@ -86,6 +86,7 @@ final class _FakeEarthquakeHistoryRepository
     double? longitudeLte,
     api.EarthquakeSortBy? sortBy,
     api.SortOrder? sortOrder,
+    api.ApiClient? client,
   }) async {
     listStatuses.add(statuses);
     return EarthquakeListResponse(

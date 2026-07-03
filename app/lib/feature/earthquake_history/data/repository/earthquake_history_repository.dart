@@ -102,8 +102,9 @@ class EarthquakeHistoryRepository {
     double? longitudeLte,
     api.EarthquakeSortBy? sortBy,
     api.SortOrder? sortOrder,
+    api.ApiClient? client,
   }) async {
-    final response = await _api.earthquake.getV2Earthquake(
+    final response = await (client ?? _api).earthquake.getV2Earthquake(
       limit: limit?.toString(),
       cursor: cursor,
       statuses: statuses ?? const [api.TelegramStatus.normal],
