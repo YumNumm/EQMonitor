@@ -84,9 +84,7 @@ private struct EarthquakeSnippetRow: View {
                 intensity: item.formattedIntensity,
                 backgroundColor: item.intensityBackgroundColor,
                 textColor: item.intensityTextColor,
-                size: 38,
-                cornerRatio: 0.25,
-                weight: .bold
+                size: 38
             )
 
             VStack(alignment: .leading, spacing: 2) {
