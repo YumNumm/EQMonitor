@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
@@ -8,6 +9,7 @@ import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
+import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_error_overlay.dart';
@@ -229,22 +231,32 @@ class _MapContent extends HookConsumerWidget {
                 );
               }
             },
-            children: const [
-              IntensityFillLayer(),
-            ],
+            children: const [IntensityFillLayer()],
           ),
 
-          // フローティングパネル（上部中央）
-          const Positioned(
+          // フローティングパネル（上部中央）+ キャッシュ表示バナー
+          Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: SafeArea(
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 8),
-                  child: RegionFloatingPanel(),
-                ),
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: RegionFloatingPanel(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: CachedDataBanner(
+                      values: [
+                        ref.watch(prefectureHighestProvider),
+                        if (state is IntensityHistoryStateCity)
+                          ref.watch(cityHighestProvider(state.prefectureCode)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -388,10 +400,7 @@ class _MapContent extends HookConsumerWidget {
       if (state.selectedCityCode != cityCode) {
         ref
             .read(intensityHistoryControllerProvider.notifier)
-            .selectCity(
-              code: cityCode,
-              name: cityName,
-            );
+            .selectCity(code: cityCode, name: cityName);
         return;
       }
 
