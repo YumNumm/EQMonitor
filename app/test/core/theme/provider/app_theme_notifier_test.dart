@@ -117,9 +117,9 @@ void main() {
       final container = await _container();
       addTearDown(container.dispose);
 
-      final result = _notifier(container).importFromJson(
-        jsonEncode({'name': 'broken'}),
-      );
+      final result = _notifier(
+        container,
+      ).importFromJson(jsonEncode({'name': 'broken'}));
       expect(result, isA<Failure<AppTheme, AppThemeImportException>>());
     });
   });
@@ -149,8 +149,9 @@ void main() {
       final container = await _container();
       addTearDown(container.dispose);
 
-      final exported =
-          _notifier(container).exportToJson(AppTheme.eqmonitorDefault());
+      final exported = _notifier(
+        container,
+      ).exportToJson(AppTheme.eqmonitorDefault());
       expect(() => jsonDecode(exported), returnsNormally);
     });
   });
@@ -175,6 +176,53 @@ void main() {
       expect(state.lightTheme.name, 'Custom');
       // dark は未設定なのでデフォルト
       expect(state.darkTheme.name, 'EQMonitor Default');
+    });
+
+    test('旧intensity_colorキーがある場合はマイグレーションされた状態を返す', () async {
+      const legacyJson = '''
+      {
+        "unknown": {"foreground": "#FFFFFFFF", "background": "#FF000000"},
+        "zero": {"foreground": "#FF000000", "background": "#FFFFFFFF"},
+        "one": {"foreground": "#FF000000", "background": "#FF03B5FF"},
+        "two": {"foreground": "#FF000000", "background": "#FF76FF03"},
+        "three": {"foreground": "#FF000000", "background": "#FF00C853"},
+        "four": {"foreground": "#FF000000", "background": "#FFFFEB3B"},
+        "fiveLower": {"foreground": "#FF000000", "background": "#FFFFC107"},
+        "fiveUpper": {"foreground": "#FF000000", "background": "#FFFF6F00"},
+        "sixLower": {"foreground": "#FFFFFFFF", "background": "#FFFF2800"},
+        "sixUpper": {"foreground": "#FFFFFFFF", "background": "#FFA50021"},
+        "seven": {"foreground": "#FFFFFFFF", "background": "#FF123456"}
+      }
+      ''';
+      final container = await _container(
+        initial: {'intensity_color': legacyJson},
+      );
+      addTearDown(container.dispose);
+
+      final state = container.read(appThemeProvider);
+      expect(
+        state.lightTheme.light!.intensity.seven.background.toARGB32(),
+        0xFF123456,
+      );
+      expect(
+        state.darkTheme.dark!.intensity.seven.background.toARGB32(),
+        0xFF123456,
+      );
+    });
+
+    test('新形式のテーマが既に保存されている場合はマイグレーションを行わない', () async {
+      final theme = AppTheme.eqmonitorDefault().copyWith(name: 'Custom');
+      final json = jsonEncode(theme.toJson());
+      const legacyJson =
+          '{"unknown":{"foreground":"#FFFFFFFF",'
+          '"background":"#FF000000"}}';
+      final container = await _container(
+        initial: {'app_theme_light': json, 'intensity_color': legacyJson},
+      );
+      addTearDown(container.dispose);
+
+      final state = container.read(appThemeProvider);
+      expect(state.lightTheme.name, 'Custom');
     });
   });
 }

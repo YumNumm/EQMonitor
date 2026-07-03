@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/theme/migration/theme_migration.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
@@ -17,9 +19,23 @@ class AppThemeNotifier extends _$AppThemeNotifier {
 
   @override
   ({AppTheme lightTheme, AppTheme darkTheme}) build() {
+    // 既に新形式のテーマが保存されている場合はマイグレーション不要
+    final savedLight = _load(_lightKey);
+    final savedDark = _load(_darkKey);
+    if (savedLight == null && savedDark == null) {
+      final migrated = migrateFromLegacyIntensityColors(
+        ref.read(sharedPreferencesProvider),
+      );
+      if (migrated != null) {
+        unawaited(_save(_lightKey, migrated));
+        unawaited(_save(_darkKey, migrated));
+        return (lightTheme: migrated, darkTheme: migrated);
+      }
+    }
+
     return (
-      lightTheme: _load(_lightKey) ?? AppTheme.eqmonitorDefault(),
-      darkTheme: _load(_darkKey) ?? AppTheme.eqmonitorDefault(),
+      lightTheme: savedLight ?? AppTheme.eqmonitorDefault(),
+      darkTheme: savedDark ?? AppTheme.eqmonitorDefault(),
     );
   }
 
@@ -37,15 +53,11 @@ class AppThemeNotifier extends _$AppThemeNotifier {
     try {
       final decoded = jsonDecode(rawJson);
       if (decoded is! Map<String, dynamic>) {
-        return const Failure(
-          AppThemeImportException('JSONの形式が不正です'),
-        );
+        return const Failure(AppThemeImportException('JSONの形式が不正です'));
       }
       final theme = AppTheme.fromJson(decoded);
       if (theme.version != 1) {
-        return const Failure(
-          AppThemeImportException('未対応のテーマバージョンです'),
-        );
+        return const Failure(AppThemeImportException('未対応のテーマバージョンです'));
       }
       for (final mode in theme.modes) {
         final colorSet = switch (mode) {
@@ -53,20 +65,14 @@ class AppThemeNotifier extends _$AppThemeNotifier {
           ThemeBrightnessMode.dark => theme.dark,
         };
         if (colorSet == null) {
-          return Failure(
-            AppThemeImportException('${mode.name}モードの色定義がありません'),
-          );
+          return Failure(AppThemeImportException('${mode.name}モードの色定義がありません'));
         }
       }
       return Success(theme);
     } on FormatException catch (_) {
-      return const Failure(
-        AppThemeImportException('JSONの解析に失敗しました'),
-      );
+      return const Failure(AppThemeImportException('JSONの解析に失敗しました'));
     } on Object catch (_) {
-      return const Failure(
-        AppThemeImportException('テーマJSONの内容が不正です'),
-      );
+      return const Failure(AppThemeImportException('テーマJSONの内容が不正です'));
     }
   }
 
@@ -79,9 +85,7 @@ class AppThemeNotifier extends _$AppThemeNotifier {
       return null;
     }
     try {
-      return AppTheme.fromJson(
-        jsonDecode(value) as Map<String, dynamic>,
-      );
+      return AppTheme.fromJson(jsonDecode(value) as Map<String, dynamic>);
     } on Exception catch (_) {
       return null;
     }
