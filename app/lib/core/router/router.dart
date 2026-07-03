@@ -46,6 +46,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_de
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_list_tile_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/hinet_seismicity/ui/hinet_seismicity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
@@ -277,9 +278,7 @@ class ShakeDetectionHistoryDetailsRoute extends GoRouteData
       ShakeDetectionHistoryDetailsPage(event: $extra);
 }
 
-@TypedGoRoute<TelegramListByEventIdRoute>(
-  path: '/telegram-list/:eventId',
-)
+@TypedGoRoute<TelegramListByEventIdRoute>(path: '/telegram-list/:eventId')
 class TelegramListByEventIdRoute extends GoRouteData
     with $TelegramListByEventIdRoute {
   const TelegramListByEventIdRoute({required this.eventId});
@@ -402,33 +401,22 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
           routes: [
             TypedGoRoute<AquaRoute>(
               path: 'aqua',
-              routes: [
-                TypedGoRoute<AquaCatalogRoute>(path: 'catalog'),
-              ],
+              routes: [TypedGoRoute<AquaCatalogRoute>(path: 'catalog')],
             ),
             TypedGoRoute<FnetRoute>(
               path: 'fnet',
-              routes: [
-                TypedGoRoute<FnetCatalogRoute>(path: 'catalog'),
-              ],
+              routes: [TypedGoRoute<FnetCatalogRoute>(path: 'catalog')],
             ),
             TypedGoRoute<KnetWaveformRoute>(
               path: 'knet',
               routes: [
-                TypedGoRoute<KnetCredentialsSettingsRoute>(
-                  path: 'settings',
-                ),
-                TypedGoRoute<KnetMediaRoute>(
-                  path: 'media',
-                ),
-                TypedGoRoute<KnetRecordListRoute>(
-                  path: 'records',
-                ),
-                TypedGoRoute<KnetStationWaveformRoute>(
-                  path: 'waveform',
-                ),
+                TypedGoRoute<KnetCredentialsSettingsRoute>(path: 'settings'),
+                TypedGoRoute<KnetMediaRoute>(path: 'media'),
+                TypedGoRoute<KnetRecordListRoute>(path: 'records'),
+                TypedGoRoute<KnetStationWaveformRoute>(path: 'waveform'),
               ],
             ),
+            TypedGoRoute<HinetSeismicityRoute>(path: 'hinet-seismicity'),
           ],
         ),
       ],
@@ -862,6 +850,15 @@ class KnetStationWaveformRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       KnetStationWaveformPage(result: $extra);
+}
+
+class HinetSeismicityRoute extends GoRouteData with $HinetSeismicityRoute {
+  const HinetSeismicityRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const HinetSeismicityPage();
+  }
 }
 
 class KyoshinMonitorAboutRoute extends GoRouteData

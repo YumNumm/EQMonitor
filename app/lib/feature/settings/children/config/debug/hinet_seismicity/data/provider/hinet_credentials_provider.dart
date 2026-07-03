@@ -37,10 +37,7 @@ class HinetCredentialsNotifier extends _$HinetCredentialsNotifier {
     return HinetCredentials(userId: userId, password: password);
   }
 
-  Future<void> save({
-    required String userId,
-    required String password,
-  }) async {
+  Future<void> save({required String userId, required String password}) async {
     final storage = await ref.read(secureStorageProvider.future);
     await storage.write(key: _hinetUserIdKey, value: userId);
     await storage.write(key: _hinetPasswordKey, value: password);

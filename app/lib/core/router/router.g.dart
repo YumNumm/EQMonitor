@@ -681,6 +681,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
                 ),
               ],
             ),
+            GoRouteData.$route(
+              path: 'hinet-seismicity',
+              factory: $HinetSeismicityRoute._fromState,
+            ),
           ],
         ),
       ],
@@ -1723,6 +1727,28 @@ mixin $KnetStationWaveformRoute on GoRouteData {
   @override
   void replace(BuildContext context) =>
       context.replace(location, extra: _self.$extra);
+}
+
+mixin $HinetSeismicityRoute on GoRouteData {
+  static HinetSeismicityRoute _fromState(GoRouterState state) =>
+      const HinetSeismicityRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/nied/hinet-seismicity');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 T? _$convertMapValue<T>(
