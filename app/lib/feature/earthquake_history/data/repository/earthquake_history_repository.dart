@@ -135,8 +135,9 @@ class EarthquakeHistoryRepository {
 
   Future<Earthquake> fetchEarthquakeDetail({
     required String eventId,
+    api.ApiClient? client,
   }) async {
-    final response = await _api.earthquake.getV2EarthquakeEventId(
+    final response = await (client ?? _api).earthquake.getV2EarthquakeEventId(
       eventId: eventId,
     );
     return response.data.earthquake.toEarthquake(
