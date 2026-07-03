@@ -119,9 +119,11 @@ private struct MapInfoOverlay: View {
                         .font(.system(size: compact ? 11 : 13, weight: .bold).monospacedDigit())
                         .foregroundStyle(Color.eqBrand)
 
-                    Text("深さ\(earthquake.depth)")
-                        .font(.system(size: compact ? 10 : 12))
-                        .foregroundStyle(Color.eqTextSecondary)
+                    if !earthquake.depth.isEmpty {
+                        Text("深さ\(earthquake.depth)")
+                            .font(.system(size: compact ? 10 : 12))
+                            .foregroundStyle(Color.eqTextSecondary)
+                    }
 
                     if !compact {
                         Text("·")
