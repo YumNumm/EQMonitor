@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
+import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
@@ -7,6 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+class _FakePrefectureHighest extends PrefectureHighest {
+  @override
+  Future<List<HighestIntensityEntry>> build() async => [];
+}
+
+class _FakeCityHighest extends CityHighest {
+  @override
+  Future<List<HighestIntensityEntry>> build(String prefectureCode) async => [];
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +31,7 @@ void main() {
         app_prefs.sharedPreferencesProvider.overrideWithValue(
           app_prefs.SharedPreferencesAsync(preferences),
         ),
-        prefectureHighestProvider.overrideWith((_) async => []),
+        prefectureHighestProvider.overrideWith(_FakePrefectureHighest.new),
       ],
     );
     addTearDown(container.dispose);
@@ -49,7 +60,7 @@ void main() {
         app_prefs.sharedPreferencesProvider.overrideWithValue(
           app_prefs.SharedPreferencesAsync(preferences),
         ),
-        prefectureHighestProvider.overrideWith((_) async => []),
+        prefectureHighestProvider.overrideWith(_FakePrefectureHighest.new),
       ],
     );
     addTearDown(container.dispose);
@@ -88,8 +99,8 @@ void main() {
         app_prefs.sharedPreferencesProvider.overrideWithValue(
           app_prefs.SharedPreferencesAsync(preferences),
         ),
-        prefectureHighestProvider.overrideWith((_) async => []),
-        cityHighestProvider('0400').overrideWith((_) async => []),
+        prefectureHighestProvider.overrideWith(_FakePrefectureHighest.new),
+        cityHighestProvider('0400').overrideWith(_FakeCityHighest.new),
       ],
     );
     addTearDown(container.dispose);

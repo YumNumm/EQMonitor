@@ -48,14 +48,17 @@ class _FakeIntensityHighestRepository extends IntensityHighestRepository {
   String? nextToken;
 
   @override
-  Future<List<HighestIntensityEntry>> fetchPrefectureHighest() async {
+  Future<List<HighestIntensityEntry>> fetchPrefectureHighest({
+    ApiClient? client,
+  }) async {
     return prefectureItems.map(HighestIntensityEntry.fromApi).toList();
   }
 
   @override
   Future<List<HighestIntensityEntry>> fetchCityHighest(
-    String prefectureCode,
-  ) async {
+    String prefectureCode, {
+    ApiClient? client,
+  }) async {
     return cityItems.map(HighestIntensityEntry.fromApi).toList();
   }
 

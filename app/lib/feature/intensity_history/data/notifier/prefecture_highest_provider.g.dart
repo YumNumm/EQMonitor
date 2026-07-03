@@ -12,21 +12,13 @@ part of 'prefecture_highest_provider.dart';
 // ignore_for_file: type=lint, type=warning
 /// 全都道府県の過去最高震度一覧をキャッシュする provider。
 
-@ProviderFor(prefectureHighest)
+@ProviderFor(PrefectureHighest)
 final prefectureHighestProvider = PrefectureHighestProvider._();
 
 /// 全都道府県の過去最高震度一覧をキャッシュする provider。
-
 final class PrefectureHighestProvider
     extends
-        $FunctionalProvider<
-          AsyncValue<List<HighestIntensityEntry>>,
-          List<HighestIntensityEntry>,
-          FutureOr<List<HighestIntensityEntry>>
-        >
-    with
-        $FutureModifier<List<HighestIntensityEntry>>,
-        $FutureProvider<List<HighestIntensityEntry>> {
+        $AsyncNotifierProvider<PrefectureHighest, List<HighestIntensityEntry>> {
   /// 全都道府県の過去最高震度一覧をキャッシュする provider。
   PrefectureHighestProvider._()
     : super(
@@ -44,14 +36,36 @@ final class PrefectureHighestProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<HighestIntensityEntry>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<HighestIntensityEntry>> create(Ref ref) {
-    return prefectureHighest(ref);
-  }
+  PrefectureHighest create() => PrefectureHighest();
 }
 
-String _$prefectureHighestHash() => r'd16d052760ebd71add8225510f58077037eefd8f';
+String _$prefectureHighestHash() => r'7107dade5fb59d7eaefc99e821a86ee4d90bb3fe';
+
+/// 全都道府県の過去最高震度一覧をキャッシュする provider。
+
+abstract class _$PrefectureHighest
+    extends $AsyncNotifier<List<HighestIntensityEntry>> {
+  FutureOr<List<HighestIntensityEntry>> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<HighestIntensityEntry>>,
+              List<HighestIntensityEntry>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<HighestIntensityEntry>>,
+                List<HighestIntensityEntry>
+              >,
+              AsyncValue<List<HighestIntensityEntry>>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
