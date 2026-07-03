@@ -15,13 +15,13 @@ _$TsunamiRegionEstimationFirstHeightFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _TsunamiRegionEstimationFirstHeight(
-          isAlreadyArrived: $checkedConvert(
-            'is_already_arrived',
-            (v) => v as bool,
-          ),
           arrivalTime: $checkedConvert(
             'arrival_time',
             (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+          isAlreadyArrived: $checkedConvert(
+            'is_already_arrived',
+            (v) => v as bool?,
           ),
           revise: $checkedConvert(
             'revise',
@@ -31,16 +31,16 @@ _$TsunamiRegionEstimationFirstHeightFromJson(Map<String, dynamic> json) =>
         return val;
       },
       fieldKeyMap: const {
-        'isAlreadyArrived': 'is_already_arrived',
         'arrivalTime': 'arrival_time',
+        'isAlreadyArrived': 'is_already_arrived',
       },
     );
 
 Map<String, dynamic> _$TsunamiRegionEstimationFirstHeightToJson(
   _TsunamiRegionEstimationFirstHeight instance,
 ) => <String, dynamic>{
-  'is_already_arrived': instance.isAlreadyArrived,
   'arrival_time': ?instance.arrivalTime?.toIso8601String(),
+  'is_already_arrived': ?instance.isAlreadyArrived,
   'revise': ?instance.revise,
 };
 
