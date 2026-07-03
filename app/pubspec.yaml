@@ -57,6 +57,7 @@ dependencies:
   cache:
     path: ../packages/cache
   cached_network_image: ^3.4.1
+  chuck_interceptor: ^2.5.1
   clock: ^1.1.2
   collection: ^1.19.1
   connectivity_plus: ^7.1.1
