@@ -28,7 +28,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
     lowPrecise: 'eew-hypocenter-low-precise',
   );
 
-  static Map<String, dynamic> _convertEew(EewTelegramItem eew) {
+  static Map<String, dynamic> _convertEew(EewTelegramItem eew, double opacity) {
     final hypo = eew.hypocenter!;
     return {
       'type': 'Feature',
@@ -39,6 +39,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
       'properties': {
         'magnitude': hypo.magnitude,
         'depth': hypo.depth,
+        'opacity': opacity,
       },
     };
   }
@@ -88,12 +89,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
       [enableBlink],
     );
 
-    final displayNormalEews = isVisible.value
-        ? normalEews
-        : <EewTelegramItem>[];
-    final displayLowPreciseEews = isVisible.value
-        ? lowPreciseEews
-        : <EewTelegramItem>[];
+    final iconOpacity = isVisible.value ? 1.0 : 0.75;
 
     useEffect(
       () {
@@ -153,6 +149,9 @@ class EewHypocenterLayer extends HookConsumerWidget {
                     0.4,
                   ],
                 },
+                paint: const {
+                  'icon-opacity': ['get', 'opacity'],
+                },
               ),
             ),
             styleController.addLayer(
@@ -173,6 +172,9 @@ class EewHypocenterLayer extends HookConsumerWidget {
                     0.4,
                   ],
                 },
+                paint: const {
+                  'icon-opacity': ['get', 'opacity'],
+                },
               ),
             ),
           ).wait;
@@ -182,14 +184,18 @@ class EewHypocenterLayer extends HookConsumerWidget {
               id: sourceId.normal,
               data: jsonEncode({
                 'type': 'FeatureCollection',
-                'features': displayNormalEews.map(_convertEew).toList(),
+                'features': normalEews
+                    .map((eew) => _convertEew(eew, iconOpacity))
+                    .toList(),
               }),
             ),
             styleController.updateGeoJsonSource(
               id: sourceId.lowPrecise,
               data: jsonEncode({
                 'type': 'FeatureCollection',
-                'features': displayLowPreciseEews.map(_convertEew).toList(),
+                'features': lowPreciseEews
+                    .map((eew) => _convertEew(eew, iconOpacity))
+                    .toList(),
               }),
             ),
           ).wait;
@@ -220,14 +226,18 @@ class EewHypocenterLayer extends HookConsumerWidget {
                   id: sourceId.normal,
                   data: jsonEncode({
                     'type': 'FeatureCollection',
-                    'features': displayNormalEews.map(_convertEew).toList(),
+                    'features': normalEews
+                        .map((eew) => _convertEew(eew, iconOpacity))
+                        .toList(),
                   }),
                 ),
                 styleController.updateGeoJsonSource(
                   id: sourceId.lowPrecise,
                   data: jsonEncode({
                     'type': 'FeatureCollection',
-                    'features': displayLowPreciseEews.map(_convertEew).toList(),
+                    'features': lowPreciseEews
+                        .map((eew) => _convertEew(eew, iconOpacity))
+                        .toList(),
                   }),
                 ),
               ).wait;
@@ -239,7 +249,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
 
         return null;
       },
-      [styleController, displayNormalEews, displayLowPreciseEews],
+      [styleController, normalEews, lowPreciseEews, iconOpacity],
     );
 
     return const SizedBox.shrink();
