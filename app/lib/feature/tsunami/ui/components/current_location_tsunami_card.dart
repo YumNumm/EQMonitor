@@ -32,19 +32,14 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
     Position position,
   ) {
     final latLng = LatLng(position.latitude, position.longitude);
-    final nearestAsync = ref.watch(
-      jmaMapAreaTsunamiNearestProvider(latLng),
-    );
+    final nearestAsync = ref.watch(jmaMapAreaTsunamiNearestProvider(latLng));
     if (nearestAsync case AsyncData(:final value)) {
       return _buildWithNearest(context, value);
     }
     return const SizedBox.shrink();
   }
 
-  Widget _buildWithNearest(
-    BuildContext context,
-    MapDataItem? nearest,
-  ) {
+  Widget _buildWithNearest(BuildContext context, MapDataItem? nearest) {
     if (nearest == null) {
       return const SizedBox.shrink();
     }
@@ -72,7 +67,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
         .where(
           (s) =>
               s.observation != null &&
-              !((s.observation!.firstHeight.isMissing as bool?) ?? false),
+              !(s.observation!.firstHeight.isMissing ?? false),
         )
         .toList();
 
@@ -90,10 +85,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
             if (stripeColors.isNotEmpty)
               WarningStripeDecoration(colors: stripeColors),
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               color: headerBg,
               child: Text(
                 '${region.name}  ${TsunamiWarningColor.displayName(region.kind)}',
