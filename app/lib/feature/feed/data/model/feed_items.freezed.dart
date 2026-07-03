@@ -577,6 +577,308 @@ $FeedItemDataCopyWith<$Res> get data {
 }
 
 /// @nodoc
+mixin _$FeedDetail {
+
+ String get id; FeedType get feedType; FeedPriority get priority; bool get isImportant; DateTime get publishedAt; DateTime? get expiresAt; String? get title; String? get summary; String? get body; FeedItemData get data;
+/// Create a copy of FeedDetail
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FeedDetailCopyWith<FeedDetail> get copyWith => _$FeedDetailCopyWithImpl<FeedDetail>(this as FeedDetail, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.feedType, feedType) || other.feedType == feedType)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.summary, summary) || other.summary == summary)&&(identical(other.body, body) || other.body == body)&&(identical(other.data, data) || other.data == data));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,feedType,priority,isImportant,publishedAt,expiresAt,title,summary,body,data);
+
+@override
+String toString() {
+  return 'FeedDetail(id: $id, feedType: $feedType, priority: $priority, isImportant: $isImportant, publishedAt: $publishedAt, expiresAt: $expiresAt, title: $title, summary: $summary, body: $body, data: $data)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $FeedDetailCopyWith<$Res>  {
+  factory $FeedDetailCopyWith(FeedDetail value, $Res Function(FeedDetail) _then) = _$FeedDetailCopyWithImpl;
+@useResult
+$Res call({
+ String id, FeedType feedType, FeedPriority priority, bool isImportant, DateTime publishedAt, DateTime? expiresAt, String? title, String? summary, String? body, FeedItemData data
+});
+
+
+$FeedItemDataCopyWith<$Res> get data;
+
+}
+/// @nodoc
+class _$FeedDetailCopyWithImpl<$Res>
+    implements $FeedDetailCopyWith<$Res> {
+  _$FeedDetailCopyWithImpl(this._self, this._then);
+
+  final FeedDetail _self;
+  final $Res Function(FeedDetail) _then;
+
+/// Create a copy of FeedDetail
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? feedType = null,Object? priority = null,Object? isImportant = null,Object? publishedAt = null,Object? expiresAt = freezed,Object? title = freezed,Object? summary = freezed,Object? body = freezed,Object? data = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
+as FeedType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
+as FeedPriority,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
+as bool,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String?,summary: freezed == summary ? _self.summary : summary // ignore: cast_nullable_to_non_nullable
+as String?,body: freezed == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
+as String?,data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as FeedItemData,
+  ));
+}
+/// Create a copy of FeedDetail
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$FeedItemDataCopyWith<$Res> get data {
+  
+  return $FeedItemDataCopyWith<$Res>(_self.data, (value) {
+    return _then(_self.copyWith(data: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [FeedDetail].
+extension FeedDetailPatterns on FeedDetail {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _FeedDetail value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _FeedDetail() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _FeedDetail value)  $default,){
+final _that = this;
+switch (_that) {
+case _FeedDetail():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _FeedDetail value)?  $default,){
+final _that = this;
+switch (_that) {
+case _FeedDetail() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  FeedType feedType,  FeedPriority priority,  bool isImportant,  DateTime publishedAt,  DateTime? expiresAt,  String? title,  String? summary,  String? body,  FeedItemData data)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _FeedDetail() when $default != null:
+return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.expiresAt,_that.title,_that.summary,_that.body,_that.data);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  FeedType feedType,  FeedPriority priority,  bool isImportant,  DateTime publishedAt,  DateTime? expiresAt,  String? title,  String? summary,  String? body,  FeedItemData data)  $default,) {final _that = this;
+switch (_that) {
+case _FeedDetail():
+return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.expiresAt,_that.title,_that.summary,_that.body,_that.data);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  FeedType feedType,  FeedPriority priority,  bool isImportant,  DateTime publishedAt,  DateTime? expiresAt,  String? title,  String? summary,  String? body,  FeedItemData data)?  $default,) {final _that = this;
+switch (_that) {
+case _FeedDetail() when $default != null:
+return $default(_that.id,_that.feedType,_that.priority,_that.isImportant,_that.publishedAt,_that.expiresAt,_that.title,_that.summary,_that.body,_that.data);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _FeedDetail implements FeedDetail {
+  const _FeedDetail({required this.id, required this.feedType, required this.priority, required this.isImportant, required this.publishedAt, required this.expiresAt, required this.title, required this.summary, required this.body, required this.data});
+  
+
+@override final  String id;
+@override final  FeedType feedType;
+@override final  FeedPriority priority;
+@override final  bool isImportant;
+@override final  DateTime publishedAt;
+@override final  DateTime? expiresAt;
+@override final  String? title;
+@override final  String? summary;
+@override final  String? body;
+@override final  FeedItemData data;
+
+/// Create a copy of FeedDetail
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FeedDetailCopyWith<_FeedDetail> get copyWith => __$FeedDetailCopyWithImpl<_FeedDetail>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.feedType, feedType) || other.feedType == feedType)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.isImportant, isImportant) || other.isImportant == isImportant)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.summary, summary) || other.summary == summary)&&(identical(other.body, body) || other.body == body)&&(identical(other.data, data) || other.data == data));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,feedType,priority,isImportant,publishedAt,expiresAt,title,summary,body,data);
+
+@override
+String toString() {
+  return 'FeedDetail(id: $id, feedType: $feedType, priority: $priority, isImportant: $isImportant, publishedAt: $publishedAt, expiresAt: $expiresAt, title: $title, summary: $summary, body: $body, data: $data)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$FeedDetailCopyWith<$Res> implements $FeedDetailCopyWith<$Res> {
+  factory _$FeedDetailCopyWith(_FeedDetail value, $Res Function(_FeedDetail) _then) = __$FeedDetailCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, FeedType feedType, FeedPriority priority, bool isImportant, DateTime publishedAt, DateTime? expiresAt, String? title, String? summary, String? body, FeedItemData data
+});
+
+
+@override $FeedItemDataCopyWith<$Res> get data;
+
+}
+/// @nodoc
+class __$FeedDetailCopyWithImpl<$Res>
+    implements _$FeedDetailCopyWith<$Res> {
+  __$FeedDetailCopyWithImpl(this._self, this._then);
+
+  final _FeedDetail _self;
+  final $Res Function(_FeedDetail) _then;
+
+/// Create a copy of FeedDetail
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? feedType = null,Object? priority = null,Object? isImportant = null,Object? publishedAt = null,Object? expiresAt = freezed,Object? title = freezed,Object? summary = freezed,Object? body = freezed,Object? data = null,}) {
+  return _then(_FeedDetail(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
+as FeedType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
+as FeedPriority,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
+as bool,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String?,summary: freezed == summary ? _self.summary : summary // ignore: cast_nullable_to_non_nullable
+as String?,body: freezed == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
+as String?,data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as FeedItemData,
+  ));
+}
+
+/// Create a copy of FeedDetail
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$FeedItemDataCopyWith<$Res> get data {
+  
+  return $FeedItemDataCopyWith<$Res>(_self.data, (value) {
+    return _then(_self.copyWith(data: value));
+  });
+}
+}
+
+/// @nodoc
 mixin _$FeedItemData {
 
 

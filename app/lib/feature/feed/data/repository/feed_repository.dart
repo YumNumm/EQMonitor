@@ -23,12 +23,12 @@ class FeedRepository {
     return response.data.toFeedListResponse();
   }
 
-  Future<api.FeedDetailResponse> fetchByTelegramHash(
+  Future<FeedDetail> fetchByTelegramHash(
     String telegramHash,
   ) async {
     final response = await _api.feed.getV2FeedsSourceTelegramHash(
       telegramHash: telegramHash,
     );
-    return response.data;
+    return response.data.toFeedDetail();
   }
 }

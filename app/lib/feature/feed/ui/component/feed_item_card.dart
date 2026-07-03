@@ -4,7 +4,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-String _feedDataText(FeedItemData data) => switch (data) {
+String feedItemDataText(FeedItemData data) => switch (data) {
   FeedItemDataEarthquakeNotice(:final text) => text,
   FeedItemDataEarthquakeExplanation(:final text) => text,
   FeedItemDataEarthquakeCounts(:final text) => text ?? '',
@@ -14,7 +14,7 @@ String _feedDataText(FeedItemData data) => switch (data) {
   FeedItemDataDeveloperMessage() => '開発者メッセージ',
 };
 
-String? _feedUrl(FeedItemData data) => switch (data) {
+String? feedItemUrl(FeedItemData data) => switch (data) {
   FeedItemDataAppUpdate(:final url) => url,
   FeedItemDataIncident(:final url) => url,
   FeedItemDataDeveloperMessage(:final url) => url,
@@ -106,7 +106,7 @@ class FeedItemCard extends StatelessWidget {
               if (item.title == null && item.summary == null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  _feedDataText(item.data),
+                  feedItemDataText(item.data),
                   style: theme.textTheme.bodySmall,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
@@ -129,7 +129,7 @@ class FeedItemListTileContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dateStr = DateFormat('yyyy/MM/dd HH:mm').format(item.publishedAt);
-    final title = item.title ?? item.summary ?? _feedDataText(item.data);
+    final title = item.title ?? item.summary ?? feedItemDataText(item.data);
 
     return Row(
       children: [
@@ -228,7 +228,7 @@ class _FeedDetailSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dateStr = DateFormat('yyyy年MM月dd日 HH:mm').format(item.publishedAt);
-    final url = _feedUrl(item.data);
+    final url = feedItemUrl(item.data);
 
     return ListView(
       controller: scrollController,
@@ -266,7 +266,7 @@ class _FeedDetailSheet extends StatelessWidget {
         const Divider(),
         const SizedBox(height: 16),
         MarkdownBody(
-          data: _feedDataText(item.data),
+          data: feedItemDataText(item.data),
           softLineBreak: true,
           styleSheet: MarkdownStyleSheet.fromTheme(theme),
           onTapLink: (text, href, title) async {

@@ -17,13 +17,13 @@ final feedBySourceProvider = FeedBySourceFamily._();
 final class FeedBySourceProvider
     extends
         $FunctionalProvider<
-          AsyncValue<api.FeedDetailResponse>,
-          api.FeedDetailResponse,
-          FutureOr<api.FeedDetailResponse>
+          AsyncValue<FeedDetail>,
+          FeedDetail,
+          FutureOr<FeedDetail>
         >
     with
-        $FutureModifier<api.FeedDetailResponse>,
-        $FutureProvider<api.FeedDetailResponse> {
+        $FutureModifier<FeedDetail>,
+        $FutureProvider<FeedDetail> {
   FeedBySourceProvider._({
     required FeedBySourceFamily super.from,
     required String super.argument,
@@ -47,12 +47,12 @@ final class FeedBySourceProvider
 
   @$internal
   @override
-  $FutureProviderElement<api.FeedDetailResponse> $createElement(
+  $FutureProviderElement<FeedDetail> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<api.FeedDetailResponse> create(Ref ref) {
+  FutureOr<FeedDetail> create(Ref ref) {
     final argument = this.argument as String;
     return feedBySource(ref, argument);
   }
@@ -71,7 +71,7 @@ final class FeedBySourceProvider
 String _$feedBySourceHash() => r'37807bb92070c3ffd76da7e7f6098d4e050b9a71';
 
 final class FeedBySourceFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<api.FeedDetailResponse>, String> {
+    with $FunctionalFamilyOverride<FutureOr<FeedDetail>, String> {
   FeedBySourceFamily._()
     : super(
         retry: null,

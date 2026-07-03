@@ -47,6 +47,22 @@ abstract class FeedItem with _$FeedItem {
 }
 
 @freezed
+abstract class FeedDetail with _$FeedDetail {
+  const factory FeedDetail({
+    required String id,
+    required FeedType feedType,
+    required FeedPriority priority,
+    required bool isImportant,
+    required DateTime publishedAt,
+    required DateTime? expiresAt,
+    required String? title,
+    required String? summary,
+    required String? body,
+    required FeedItemData data,
+  }) = _FeedDetail;
+}
+
+@freezed
 sealed class FeedItemData with _$FeedItemData {
   const factory FeedItemData.earthquakeNotice({
     required String text,
@@ -167,6 +183,24 @@ extension FeedItemApiExtension on api.FeedItem {
     },
     title: title,
     summary: summary,
+    data: data.toFeedItemData(),
+  );
+}
+
+extension FeedDetailResponseApiExtension on api.FeedDetailResponse {
+  FeedDetail toFeedDetail() => FeedDetail(
+    id: id,
+    feedType: feedType.toFeedType(),
+    priority: priority.toFeedPriority(),
+    isImportant: isImportant,
+    publishedAt: DateTime.parse(publishedAt),
+    expiresAt: switch (expiresAt) {
+      final value? => DateTime.tryParse(value),
+      null => null,
+    },
+    title: title,
+    summary: summary,
+    body: body,
     data: data.toFeedItemData(),
   );
 }
