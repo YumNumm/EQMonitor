@@ -13,6 +13,7 @@ const _samplePreBody = '''
 
 class _RecordingAdapter implements HttpClientAdapter {
   final requestedPaths = <String>[];
+  final requestedFormFields = <Map<String, String>>[];
   bool loginShouldSucceed = true;
 
   @override
@@ -22,6 +23,12 @@ class _RecordingAdapter implements HttpClientAdapter {
     Future<void>? cancelFuture,
   ) async {
     requestedPaths.add(options.path);
+    final data = options.data;
+    if (data is FormData) {
+      requestedFormFields.add({
+        for (final field in data.fields) field.key: field.value,
+      });
+    }
     if (!options.path.contains('jmalist.php')) {
       // jmalist.php 以外(= /auth/?LANG=ja へのログインPOST)への応答
       return ResponseBody.fromString(
@@ -84,5 +91,26 @@ void main() {
     expect(progressUpdates.last.completedRequests, 2);
     expect(progressUpdates.last.totalRequests, 2);
     expect(result.events, hasLength(2));
+
+    // jmalist.php 宛てのリクエストは requestedPaths の 2件目以降(0件目は
+    // ログインPOST)なので、対応する requestedFormFields も 1件目以降を見る。
+    final jmalistFormFields = [
+      for (var i = 0; i < adapter.requestedPaths.length; i++)
+        if (adapter.requestedPaths[i].contains('jmalist.php'))
+          adapter.requestedFormFields[i],
+    ];
+    expect(jmalistFormFields, hasLength(2));
+    expect(jmalistFormFields[0], {
+      'list_year': '2026',
+      'list_month': '6',
+      'list_day': '1',
+      'list_span': '7',
+    });
+    expect(jmalistFormFields[1], {
+      'list_year': '2026',
+      'list_month': '6',
+      'list_day': '8',
+      'list_span': '1',
+    });
   });
 }

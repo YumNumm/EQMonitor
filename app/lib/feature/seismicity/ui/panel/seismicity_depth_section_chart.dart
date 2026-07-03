@@ -7,7 +7,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 /// 深さ断面図(緯度方向 / 経度方向の投影切替)。
 ///
 /// Y軸(深さ)は下向きが正のため `reversed: true` 相当の表示にするために
-/// `maxY` を 0、`minY` を負の最大深さとして軸を反転させる。
+/// 深さを負の値としてプロットし、`maxY` を 0 に固定する。`minY` は
+/// fl_chart のオートスケールに委ねる(明示的には設定しない)。
 class SeismicityDepthSectionChart extends HookWidget {
   const SeismicityDepthSectionChart({required this.events, super.key});
 
@@ -70,8 +71,7 @@ class SeismicityDepthSectionChart extends HookWidget {
                         ),
                         bottomTitles: AxisTitles(
                           axisNameWidget: Text(
-                            axis.value ==
-                                    SeismicityDepthProjectionAxis.latitude
+                            axis.value == SeismicityDepthProjectionAxis.latitude
                                 ? '緯度'
                                 : '経度',
                             style: const TextStyle(fontSize: 10),

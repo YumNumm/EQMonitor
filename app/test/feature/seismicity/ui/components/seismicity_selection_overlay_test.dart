@@ -15,10 +15,7 @@ void main() {
               onTap: () => tapped = true,
               child: const SizedBox.expand(),
             ),
-            SeismicitySelectionOverlay(
-              enabled: false,
-              onSelectionEnd: (_) {},
-            ),
+            SeismicitySelectionOverlay(enabled: false, onSelectionEnd: (_) {}),
           ],
         ),
       ),
@@ -28,9 +25,7 @@ void main() {
     expect(tapped, isTrue);
   });
 
-  testWidgets('enabled が true の場合はドラッグ完了で onSelectionEnd を呼ぶ', (
-    tester,
-  ) async {
+  testWidgets('enabled が true の場合はドラッグ完了で onSelectionEnd を呼ぶ', (tester) async {
     SeismicityBounds? result;
     await tester.pumpWidget(
       MaterialApp(
@@ -51,21 +46,10 @@ void main() {
     expect(result, isNull);
   });
 
-  testWidgets('ほぼ動かないドラッグ(退化した矩形)では onSelectionEnd を呼ばない', (tester) async {
-    var callCount = 0;
-    await tester.pumpWidget(
-      MaterialApp(
-        home: SeismicitySelectionOverlay(
-          enabled: true,
-          onSelectionEnd: (_) => callCount++,
-        ),
-      ),
-    );
-
-    // わずか1論理ピクセルのみ動かす、誤タップ相当のドラッグ。
-    await tester.dragFrom(const Offset(50, 50), const Offset(51, 50));
-    await tester.pumpAndSettle();
-
-    expect(callCount, 0);
-  });
+  // 「退化した矩形では onSelectionEnd を呼ばない」ガードは
+  // MapController に依存しない
+  // test/feature/seismicity/ui/hook/use_rectangle_selection_test.dart
+  // で検証済み。このファイルでは MapController が widget tree に
+  // 存在せずどのドラッグでも onSelectionEnd が発火しないため、
+  // ここに同様のテストを置いても無意味(vacuous)になる。
 }
