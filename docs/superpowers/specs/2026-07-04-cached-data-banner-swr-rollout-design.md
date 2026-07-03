@@ -37,12 +37,12 @@ class CachedDataBanner extends StatelessWidget {
 | 条件 | 表示 |
 |---|---|
 | いずれかが `hasValue && hasError` (再検証失敗・stale 維持) | 「最新情報の取得に失敗しました（キャッシュ表示中）」+ 警告アイコン |
-| いずれかが `isRefreshing` (= `isLoading && hasValue`) | 「キャッシュ表示中・更新を確認しています…」+ 回転アイコン |
+| いずれかが `isFromCache` (キャッシュ由来の値を表示中・裏で再検証中) | 「キャッシュ表示中・更新を確認しています…」+ 進行インジケータ |
 | それ以外 (fresh / 初回ロード中 / キャッシュ無し) | `SizedBox.shrink()` (高さゼロ) |
 
 - 出し入れは `AnimatedSize` (または `AnimatedSwitcher`) でスライドイン/アウトし、レイアウトジャンプを緩和する。
 - テーマは `Theme.of(context).colorScheme` から取得 (surfaceContainerHighest 系 + onSurfaceVariant。失敗時は errorContainer 系)。
-- 判定は `AsyncValue` の公開 API のみ使用。riverpod 内部 API (`DataKind`) には依存しない。
+- 判定は `AsyncValue` の公開 API のみ使用。`isFromCache` は riverpod 3 の公開 API (`valueFilled?.kind == DataKind.cache` のラッパ) で、`CachedNotifier` が stale 値に付与する cache マークを正確に検出できる (`isRefreshing` だと通常の invalidate 再取得も「キャッシュ表示中」と誤表示するため採用しない)。riverpod 内部 API (`DataKind`) には本体コードで依存しない。
 - 初回ロード (キャッシュ無し) はバナーを出さない: 画面本体が既存のローディング表現を持つため二重表示になる。
 
 ## セクション2: Notifier 移行 (6 件・案 A)
@@ -76,12 +76,13 @@ Repository 変更の原則:
 
 | 画面 | 渡す values |
 |---|---|
-| 地震詳細ページ (`feature/earthquake_history/ui/earthquake_history_details_page.dart`) | 地震詳細 + 類似地震 (`similar_earthquake_card.dart` が消費) の 2 provider |
+| 地震詳細ページ (`feature/earthquake_history/ui/earthquake_history_details_page.dart`) | 地震詳細のみ。類似地震はカード内ローカル状態 (ソート/探索パラメータの hooks) が family 引数のためページからは同一 provider インスタンスを参照できず、カード内の既存インライン表示 (stale 維持) で完結させる |
 | 電文一覧ページ (`feature/telegram_list/ui/telegram_list_by_event_id_page.dart`) | `telegramDetails` (同ページの電文一覧 API はページングのため SWR 対象外のまま) |
 | 震度履歴マップページ (`feature/intensity_history/ui/intensity_history_page.dart`) | `prefectureHighest` / `cityHighest` — マップ全面 UI のため、バナーは画面上部のオーバーレイとして重ねる (既存 `intensity_history_error_overlay.dart` の配置慣習に合わせる) |
 | フィード詳細ページ (`feature/feed/ui/page/feed_details_page.dart`) | `feedBySource` |
 
 - 設置位置は AppBar 直下 (body 先頭)。Sliver ベースの画面では `SliverToBoxAdapter` でラップ、マップ全面の画面では上部オーバーレイとして配置する。
+- **消費側の値付き Loading 対応**: SWR 化後は「値を保持した `AsyncLoading`」が流れるため、`switch (state) { AsyncLoading() => 全画面スピナー, ... }` のような Loading 優先パターンは stale 即表示を打ち消してしまう。対象画面の switch は値優先 (`AsyncValue(:final value?)` を先頭) に並べ替える (地震詳細ページ・類似地震カードが該当)。`when` を使う画面は `skipLoadingOnRefresh` (既定 true) で問題ないが、再検証失敗で stale を維持するため `skipError: true` を付ける (フィード詳細が該当)。
 - バナーは購読済み `AsyncValue` を受け取るだけで、自身では provider を watch しない (再利用性・テスト容易性のため)。
 
 ## セクション4: エラー処理
@@ -94,8 +95,8 @@ Repository 変更の原則:
 
 ## セクション5: テスト
 
-- `CachedDataBanner` Widget テスト: 3 状態の出し分け (fresh で非表示 / isRefreshing で更新中 / stale+error で失敗表示)、複数 values の合成 (1 つでも該当すれば表示)、優先度 (失敗 > 更新中)。
-- Notifier 移行の代表テスト: family 型 1 件 (`telegramDetails`) で「キャッシュヒット → stale 即 emit → fresh 差し替え」の状態遷移を検証 (既存 `CachedNotifier` テストのパターンを流用)。
+- `CachedDataBanner` Widget テスト: 3 状態の出し分け (fresh で非表示 / isFromCache で更新中 / stale+error で失敗表示)、複数 values の合成 (1 つでも該当すれば表示)、優先度 (失敗 > 更新中)、初回ロード (値なし Loading) で非表示。
+- Notifier 移行の代表テスト: family 型 1 件 (`cityHighest`) で「キャッシュヒット → stale 即 emit → fresh 差し替え」「キャッシュミス → 通常ロード」「再検証失敗 → stale 維持」を検証。既存 `intensity_highest_repository_test` の fixture ヘルパを流用でき、Repository 差し替え (client の identical 判定) で cache-only / 通常経路を区別する (telegram 系はモデル fixture が重いため代表から外した)。
 - 回帰: `melos run analyze` / `melos run test` が緑。既存の呼び出し側テストが provider 名維持により無変更で通ること。
 
 ## セクション6: PR 分割
