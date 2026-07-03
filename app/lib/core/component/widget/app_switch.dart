@@ -20,7 +20,6 @@ class AppSwitch extends HookWidget {
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final shape = designSystem.shape;
-    final theme = Theme.of(context);
     final isEnabled = onChanged != null;
 
     final offThumbColor = colorTheme.surfaceContainer;

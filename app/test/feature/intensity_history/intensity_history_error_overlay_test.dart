@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_error_overlay.dart';
 import 'package:flutter/material.dart';
@@ -37,8 +38,13 @@ void main() {
             (_) async => throw Exception('prefecture failed'),
           ),
         ],
-        child: const MaterialApp(
-          home: Scaffold(
+        child: MaterialApp(
+          theme: ThemeData.light().copyWith(
+            extensions: <ThemeExtension<dynamic>>[
+              DesignSystemThemeExtension.light(),
+            ],
+          ),
+          home: const Scaffold(
             body: Stack(
               children: [
                 SizedBox.expand(),
@@ -77,8 +83,13 @@ void main() {
         overrides: [
           prefectureHighestProvider.overrideWith((_) async => []),
         ],
-        child: const MaterialApp(
-          home: Scaffold(
+        child: MaterialApp(
+          theme: ThemeData.light().copyWith(
+            extensions: <ThemeExtension<dynamic>>[
+              DesignSystemThemeExtension.light(),
+            ],
+          ),
+          home: const Scaffold(
             body: Stack(
               children: [
                 SizedBox.expand(),

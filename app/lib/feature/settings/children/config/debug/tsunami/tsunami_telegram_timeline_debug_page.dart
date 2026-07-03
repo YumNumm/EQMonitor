@@ -81,7 +81,6 @@ class _TimelineBody extends StatelessWidget {
       return const Center(child: Text('電文なし'));
     }
 
-    final theme = Theme.of(context);
     final rows = _buildRows();
 
     // 行数 = ヘッダー行(1) + 各 row spec。

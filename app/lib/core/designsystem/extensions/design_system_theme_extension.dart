@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/extensions/shape_theme_extension.dart';
 import 'package:eqmonitor/core/designsystem/extensions/spacing_theme_extension.dart';
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
+import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,27 @@ class DesignSystemThemeExtension
     required this.shape,
     required this.typography,
   });
+
+  /// テスト用: EQMonitor Default テーマのライトカラーで構築する。
+  factory DesignSystemThemeExtension.light() =>
+      DesignSystemThemeExtension._fromColorTheme(
+        AppTheme.eqmonitorDefault().light!,
+      );
+
+  /// テスト用: EQMonitor Default テーマのダークカラーで構築する。
+  factory DesignSystemThemeExtension.dark() =>
+      DesignSystemThemeExtension._fromColorTheme(
+        AppTheme.eqmonitorDefault().dark!,
+      );
+
+  factory DesignSystemThemeExtension._fromColorTheme(
+    ThemeColorSet colorTheme,
+  ) => DesignSystemThemeExtension(
+    colorTheme: colorTheme,
+    spacing: SpacingThemeExtension.standard(),
+    shape: ShapeThemeExtension.standard(),
+    typography: TypographyThemeExtension.fromColorTheme(colorTheme),
+  );
 
   final ThemeColorSet colorTheme;
   final SpacingThemeExtension spacing;

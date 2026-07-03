@@ -12,7 +12,6 @@ import 'package:eqmonitor/core/component/chip/sort_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/telegram_type_filter_chip.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:flutter/material.dart';
 
@@ -61,7 +60,7 @@ class _FilterChipBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spacing = Theme.of(context).designSystemThemeExtension.spacing;
+    final spacing = context.designSystem.spacing;
 
     final chips = <({int order, bool isActive, Widget chip})>[
       (
