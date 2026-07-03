@@ -14,6 +14,7 @@ List<RouteBase> get $appRoutes => [
   $betaTestingWarningRoute,
   $earthquakeHistoryRoute,
   $eewHistoryRoute,
+  $seismicityRoute,
   $intensityHistoryRoute,
   $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
@@ -148,6 +149,32 @@ mixin $EewHistoryRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/eew-history');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $seismicityRoute => GoRouteData.$route(
+  path: '/seismicity',
+  factory: $SeismicityRoute._fromState,
+);
+
+mixin $SeismicityRoute on GoRouteData {
+  static SeismicityRoute _fromState(GoRouterState state) =>
+      const SeismicityRoute();
+
+  @override
+  String get location => GoRouteData.$location('/seismicity');
 
   @override
   void go(BuildContext context) => context.go(location);

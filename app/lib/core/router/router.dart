@@ -34,6 +34,7 @@ import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
 import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
+import 'package:eqmonitor/feature/seismicity/ui/seismicity_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_page.dart';
@@ -178,6 +179,15 @@ class EewHistoryRoute extends GoRouteData with $EewHistoryRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EewHistoryPage();
+}
+
+@TypedGoRoute<SeismicityRoute>(path: '/seismicity')
+class SeismicityRoute extends GoRouteData with $SeismicityRoute {
+  const SeismicityRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SeismicityPage();
 }
 
 @TypedGoRoute<IntensityHistoryRoute>(path: '/intensity-history')
