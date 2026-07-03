@@ -134,7 +134,7 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
             'fill-opacity': 0.2,
           },
         ),
-        belowLayerId: BaseLayer.areaForecastLocalELine.name,
+        belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
       ),
     ).wait;
   }
