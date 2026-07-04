@@ -75,6 +75,13 @@ class SettingsPage extends ConsumerWidget {
                       const EarthquakeHistoryConfigRoute().push(context),
                 ),
                 ListTile(
+                  title: const Text('地震活動'),
+                  subtitle: const Text('震央分布・M-T図・深さ断面'),
+                  leading: const Icon(Icons.bubble_chart_outlined),
+                  onTap: () async =>
+                      const SeismicityRoute().push<void>(context),
+                ),
+                ListTile(
                   title: const Text('ホーム画面ウィジェット'),
                   leading: const Icon(Icons.widgets_outlined),
                   onTap: () async =>
