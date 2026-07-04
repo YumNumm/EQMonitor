@@ -457,7 +457,22 @@ RouteBase get $settingsRoute => GoRouteData.$route(
   path: '/settings',
   factory: $SettingsRoute._fromState,
   routes: [
-    GoRouteData.$route(path: 'display', factory: $DisplayRoute._fromState),
+    GoRouteData.$route(
+      path: 'display',
+      factory: $DisplayRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'theme',
+          factory: $ThemeSettingsRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'editor/:mode',
+              factory: $ThemeEditorRoute._fromState,
+            ),
+          ],
+        ),
+      ],
+    ),
     GoRouteData.$route(
       path: 'kyoshin-monitor-about',
       factory: $KyoshinMonitorAboutRoute._fromState,
@@ -668,6 +683,52 @@ mixin $DisplayRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/display');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ThemeSettingsRoute on GoRouteData {
+  static ThemeSettingsRoute _fromState(GoRouterState state) =>
+      const ThemeSettingsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/display/theme');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ThemeEditorRoute on GoRouteData {
+  static ThemeEditorRoute _fromState(GoRouterState state) =>
+      ThemeEditorRoute(mode: state.pathParameters['mode']!);
+
+  ThemeEditorRoute get _self => this as ThemeEditorRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/display/theme/editor/${Uri.encodeComponent(_self.mode)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

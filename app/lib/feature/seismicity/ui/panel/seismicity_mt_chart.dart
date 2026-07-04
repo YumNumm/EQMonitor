@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class SeismicityMtChart extends StatelessWidget {
           event.magnitude!,
         ),
     ];
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = context.designSystem.colorTheme;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 12, 16, 8),

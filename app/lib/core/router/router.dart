@@ -4,6 +4,7 @@ import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
 import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
@@ -59,6 +60,8 @@ import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/tsunami
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
+import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_editor_page.dart';
+import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/ui/page/home_widget_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/shake_detection_settings_page.dart';
@@ -294,7 +297,15 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
 @TypedGoRoute<SettingsRoute>(
   path: '/settings',
   routes: [
-    TypedGoRoute<DisplayRoute>(path: 'display'),
+    TypedGoRoute<DisplayRoute>(
+      path: 'display',
+      routes: [
+        TypedGoRoute<ThemeSettingsRoute>(
+          path: 'theme',
+          routes: [TypedGoRoute<ThemeEditorRoute>(path: 'editor/:mode')],
+        ),
+      ],
+    ),
     TypedGoRoute<KyoshinMonitorAboutRoute>(
       path: 'kyoshin-monitor-about',
       routes: [
@@ -396,6 +407,29 @@ class DisplayRoute extends GoRouteData with $DisplayRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const DisplaySettingsPage();
+}
+
+class ThemeSettingsRoute extends GoRouteData with $ThemeSettingsRoute {
+  const ThemeSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ThemeSettingsPage();
+}
+
+class ThemeEditorRoute extends GoRouteData with $ThemeEditorRoute {
+  const ThemeEditorRoute({required this.mode});
+
+  final String mode;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final brightnessMode = ThemeBrightnessMode.values.firstWhere(
+      (e) => e.name == mode,
+      orElse: () => ThemeBrightnessMode.light,
+    );
+    return ThemeEditorPage(mode: brightnessMode);
+  }
 }
 
 class NotificationSettingsRoute extends GoRouteData
