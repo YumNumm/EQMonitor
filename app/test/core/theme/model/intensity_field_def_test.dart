@@ -13,29 +13,32 @@ void main() {
   );
 
   test('intensity 11件 + estimatedIntensity 6件 = 17件の定義が存在する', () {
-    expect(intensityFieldDefs.length, 17);
+    expect(IntensityFieldDefs.all.length, 17);
     expect(
-      intensityFieldDefs
+      IntensityFieldDefs.all
           .where((e) => e.group == IntensityFieldGroup.intensity)
           .length,
       11,
     );
     expect(
-      intensityFieldDefs
+      IntensityFieldDefs.all
           .where((e) => e.group == IntensityFieldGroup.estimatedIntensity)
           .length,
       6,
     );
   });
 
-  test('各定義について entrySetter(base, probeEntry) 後に entryGetter が probeEntry を返す', () {
-    for (final def in intensityFieldDefs) {
-      final updated = def.entrySetter(base, probeEntry);
-      expect(
-        def.entryGetter(updated),
-        probeEntry,
-        reason: '${def.label} の entryGetter/entrySetter が不整合です',
-      );
-    }
-  });
+  test(
+    '各定義について entrySetter(base, probeEntry) 後に entryGetter が probeEntry を返す',
+    () {
+      for (final def in IntensityFieldDefs.all) {
+        final updated = def.entrySetter(base, probeEntry);
+        expect(
+          def.entryGetter(updated),
+          probeEntry,
+          reason: '${def.label} の entryGetter/entrySetter が不整合です',
+        );
+      }
+    },
+  );
 }

@@ -10,11 +10,11 @@ void main() {
   const probe = Color(0xFF123456);
 
   test('全39件のフィールド定義が存在する', () {
-    expect(themeColorFieldDefs.length, 39);
+    expect(ThemeColorFieldDefs.all.length, 39);
   });
 
   test('各定義について setter(base, probe) 後に getter が probe を返す', () {
-    for (final def in themeColorFieldDefs) {
+    for (final def in ThemeColorFieldDefs.all) {
       final updated = def.setter(base, probe);
       expect(
         def.getter(updated),
@@ -26,7 +26,7 @@ void main() {
 
   test('全定義をprobeで書き換えるとtoJsonの全Colorフィールドがprobeになる (ラウンドトリップ)', () {
     var mutated = base;
-    for (final def in themeColorFieldDefs) {
+    for (final def in ThemeColorFieldDefs.all) {
       mutated = def.setter(mutated, probe);
     }
     final json = mutated.toJson();
@@ -36,17 +36,37 @@ void main() {
     // ThemeColorSet.toJson()は@JsonKey(fieldRename: snake)相当のため
     // snake_case キーで出力される(theme_color_set.g.dart参照)。
     const flatColorKeys = [
-      'primary', 'on_primary', 'primary_container', 'on_primary_container',
-      'secondary', 'on_secondary', 'secondary_container',
+      'primary',
+      'on_primary',
+      'primary_container',
+      'on_primary_container',
+      'secondary',
+      'on_secondary',
+      'secondary_container',
       'on_secondary_container',
-      'tertiary', 'on_tertiary', 'tertiary_container', 'on_tertiary_container',
-      'error', 'on_error', 'error_container', 'on_error_container',
-      'surface', 'on_surface', 'on_surface_variant',
-      'surface_container_lowest', 'surface_container_low',
+      'tertiary',
+      'on_tertiary',
+      'tertiary_container',
+      'on_tertiary_container',
+      'error',
+      'on_error',
+      'error_container',
+      'on_error_container',
+      'surface',
+      'on_surface',
+      'on_surface_variant',
+      'surface_container_lowest',
+      'surface_container_low',
       'surface_container',
-      'surface_container_high', 'surface_container_highest',
-      'outline', 'outline_variant', 'inverse_surface', 'on_inverse_surface',
-      'inverse_primary', 'shadow', 'scrim',
+      'surface_container_high',
+      'surface_container_highest',
+      'outline',
+      'outline_variant',
+      'inverse_surface',
+      'on_inverse_surface',
+      'inverse_primary',
+      'shadow',
+      'scrim',
     ];
     for (final key in flatColorKeys) {
       expect(json[key], expectedHex, reason: 'key=$key');
@@ -59,7 +79,11 @@ void main() {
     }
     final map = (json['map'] as MapColors).toJson();
     for (final key in [
-      'background', 'world_land', 'world_line', 'japan_land', 'japan_line',
+      'background',
+      'world_land',
+      'world_line',
+      'japan_land',
+      'japan_line',
     ]) {
       expect(map[key], expectedHex, reason: 'map.$key');
     }
