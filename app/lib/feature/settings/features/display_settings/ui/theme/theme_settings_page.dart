@@ -13,6 +13,7 @@ import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/provider/theme_presets_provider.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_json_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -23,7 +24,7 @@ class ThemeSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('テーマ設定')),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -31,6 +32,8 @@ class ThemeSettingsPage extends StatelessWidget {
             _ModeSection(mode: ThemeBrightnessMode.light),
             SettingsSectionHeader(text: 'ダーク用テーマ'),
             _ModeSection(mode: ThemeBrightnessMode.dark),
+            SettingsSectionHeader(text: 'JSON入出力'),
+            ThemeImportExportSection(),
           ],
         ),
       ),

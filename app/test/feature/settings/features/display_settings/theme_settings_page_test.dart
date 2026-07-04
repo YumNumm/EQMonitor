@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
+import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_settings_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,5 +70,99 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('編集'), findsWidgets);
+  });
+
+  testWidgets('不正なJSONをインポートするとエラーダイアログが表示される', (tester) async {
+    final container = await _container();
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const _TestApp(home: ThemeSettingsPage()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('JSONをインポート'));
+    await tester.tap(find.text('JSONをインポート'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'not json at all');
+    await tester.tap(find.text('インポート'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('インポートに失敗しました'), findsOneWidget);
+  });
+
+  testWidgets('正常なJSONをインポートして適用するとlightテーマに反映される', (tester) async {
+    final container = await _container();
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const _TestApp(home: ThemeSettingsPage()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final imported = AppTheme.eqmonitorDefault().copyWith(
+      name: 'インポートテーマ',
+      modes: const [ThemeBrightnessMode.light],
+      dark: null,
+    );
+    final json = const JsonEncoder().convert(imported.toJson());
+
+    await tester.ensureVisible(find.text('JSONをインポート'));
+    await tester.tap(find.text('JSONをインポート'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), json);
+    await tester.tap(find.text('インポート'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('適用'), findsOneWidget);
+    await tester.tap(find.text('適用'));
+    await tester.pumpAndSettle();
+
+    final state = container.read(appThemeProvider);
+    expect(state.lightTheme.name, 'インポートテーマ');
+  });
+
+  testWidgets('エクスポートするとクリップボードにJSONがコピーされる', (tester) async {
+    final container = await _container();
+    addTearDown(container.dispose);
+
+    final copied = <String>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'Clipboard.setData') {
+          final args = call.arguments as Map<dynamic, dynamic>;
+          copied.add(args['text'] as String);
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const _TestApp(home: ThemeSettingsPage()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('ライトをエクスポート'));
+    await tester.tap(find.text('ライトをエクスポート'));
+    await tester.pumpAndSettle();
+
+    expect(copied, hasLength(1));
+    expect(() => jsonDecode(copied.single), returnsNormally);
   });
 }
