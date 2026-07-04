@@ -47,9 +47,7 @@ class ThemeImportExportSection extends HookConsumerWidget {
         context: context,
         builder: (dialogContext) => HookBuilder(
           builder: (context) {
-            final state = useState<Set<ThemeBrightnessMode>>({
-              ...theme.modes,
-            });
+            final state = useState<Set<ThemeBrightnessMode>>({...theme.modes});
             return AlertDialog.adaptive(
               title: const Text('適用先を選択'),
               content: Column(
@@ -79,8 +77,9 @@ class ThemeImportExportSection extends HookConsumerWidget {
                   child: const Text('キャンセル'),
                 ),
                 FilledButton(
-                  onPressed: () =>
-                      Navigator.of(dialogContext).pop(state.value),
+                  onPressed: state.value.isEmpty
+                      ? null
+                      : () => Navigator.of(dialogContext).pop(state.value),
                   child: const Text('適用'),
                 ),
               ],
@@ -114,8 +113,7 @@ class ThemeImportExportSection extends HookConsumerWidget {
               child: const Text('キャンセル'),
             ),
             FilledButton(
-              onPressed: () =>
-                  Navigator.of(dialogContext).pop(controller.text),
+              onPressed: () => Navigator.of(dialogContext).pop(controller.text),
               child: const Text('インポート'),
             ),
           ],

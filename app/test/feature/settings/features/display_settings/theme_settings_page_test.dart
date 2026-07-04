@@ -127,6 +127,47 @@ void main() {
     expect(state.lightTheme.name, 'インポートテーマ');
   });
 
+  testWidgets('適用先のチェックを全て外すと適用ボタンが無効になる', (tester) async {
+    final container = await _container();
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const _TestApp(home: ThemeSettingsPage()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final imported = AppTheme.eqmonitorDefault().copyWith(name: 'インポートテーマ');
+    final json = const JsonEncoder().convert(imported.toJson());
+
+    await tester.ensureVisible(find.text('JSONをインポート'));
+    await tester.tap(find.text('JSONをインポート'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), json);
+    await tester.tap(find.text('インポート'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('適用先を選択'), findsOneWidget);
+
+    // 全てのチェックボックスを外す
+    // (タップの都度ダイアログが再構築され、既存のwidget参照は無効になるため
+    //  チェック済みのものを毎回検索し直す)
+    final checkedFinder = find.byWidgetPredicate(
+      (widget) => widget is CheckboxListTile && widget.value == true,
+    );
+    while (tester.any(checkedFinder)) {
+      await tester.tap(checkedFinder.first);
+      await tester.pumpAndSettle();
+    }
+
+    final applyButton = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, '適用'),
+    );
+    expect(applyButton.onPressed, isNull);
+  });
+
   testWidgets('エクスポートするとクリップボードにJSONがコピーされる', (tester) async {
     final container = await _container();
     addTearDown(container.dispose);

@@ -26,13 +26,13 @@ class ThemeEditorPage extends ConsumerWidget {
 
   static String _categoryLabel(ThemeColorFieldCategory category) =>
       switch (category) {
-        ThemeColorFieldCategory.primary => 'Primary',
-        ThemeColorFieldCategory.secondary => 'Secondary',
-        ThemeColorFieldCategory.tertiary => 'Tertiary',
-        ThemeColorFieldCategory.error => 'Error',
-        ThemeColorFieldCategory.surface => 'Surface',
-        ThemeColorFieldCategory.status => 'Status',
-        ThemeColorFieldCategory.map => 'Map',
+        ThemeColorFieldCategory.primary => 'プライマリ',
+        ThemeColorFieldCategory.secondary => 'セカンダリ',
+        ThemeColorFieldCategory.tertiary => 'ターシャリ',
+        ThemeColorFieldCategory.error => 'エラー',
+        ThemeColorFieldCategory.surface => 'サーフェス',
+        ThemeColorFieldCategory.status => 'ステータス',
+        ThemeColorFieldCategory.map => 'マップ',
       };
 
   static const _mapCategory = ThemeColorFieldCategory.map;
@@ -99,8 +99,7 @@ class ThemeEditorPage extends ConsumerWidget {
             title: const Text('推計震度配色'),
             children: IntensityFieldDefs.all
                 .where(
-                  (def) =>
-                      def.group == IntensityFieldGroup.estimatedIntensity,
+                  (def) => def.group == IntensityFieldGroup.estimatedIntensity,
                 )
                 .map(
                   (def) => _IntensityFieldTile(
@@ -200,16 +199,11 @@ class _IntensityFieldTile extends StatelessWidget {
               );
             },
           ),
-          if (entry.foreground case IntensityTextColorManual(
-            :final color,
-          ))
+          if (entry.foreground case IntensityTextColorManual(:final color))
             GestureDetector(
               key: ValueKey('intensity-fg-manual-$keySuffix'),
               onTap: () async {
-                final picked = await ThemeEditorPage._pickColor(
-                  context,
-                  color,
-                );
+                final picked = await ThemeEditorPage._pickColor(context, color);
                 if (picked == null) {
                   return;
                 }

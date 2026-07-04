@@ -48,7 +48,7 @@ void main() {
     await container
         .read(themeEditorControllerProvider(ThemeBrightnessMode.light).notifier)
         .updateField(
-          ThemeColorFieldDefs.all.firstWhere((e) => e.label == 'Primary'),
+          ThemeColorFieldDefs.all.firstWhere((e) => e.label == 'プライマリ'),
           probe,
         );
 
@@ -76,9 +76,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Primary'));
+    await tester.tap(find.text('プライマリ'));
     await tester.pumpAndSettle();
-    final primaryTile = find.byKey(const ValueKey('theme_color_field_Primary'));
+    final primaryTile = find.byKey(const ValueKey('theme_color_field_プライマリ'));
     await tester.tap(
       find
           .descendant(of: primaryTile, matching: find.byType(GestureDetector))
