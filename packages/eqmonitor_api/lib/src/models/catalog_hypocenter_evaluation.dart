@@ -4,17 +4,25 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// 震源レコード種別。A:震源レコード、B:群発地震時の震源レコード、D:震源が離れた地震の組の震源レコード
+/// 震源評価（震源決定時の初期条件）。1:深さフリー、2:深さ刻み条件で最適解を求めた、3:深さ固定等、人の判断による、4:Depth phaseを用いた、5:S-Pを用いた、7:参考、8:決定不能または不採用
 @JsonEnum()
-enum CatalogHypocenterRecordType {
-  @JsonValue('A')
-  a('A'),
-  @JsonValue('B')
-  b('B'),
-  @JsonValue('D')
-  d('D');
+enum CatalogHypocenterEvaluation {
+  @JsonValue('1')
+  value1('1'),
+  @JsonValue('2')
+  value2('2'),
+  @JsonValue('3')
+  value3('3'),
+  @JsonValue('4')
+  value4('4'),
+  @JsonValue('5')
+  value5('5'),
+  @JsonValue('7')
+  value7('7'),
+  @JsonValue('8')
+  value8('8');
 
-  const CatalogHypocenterRecordType(this.json);
+  const CatalogHypocenterEvaluation(this.json);
 
   final String? json;
   String toJson() {

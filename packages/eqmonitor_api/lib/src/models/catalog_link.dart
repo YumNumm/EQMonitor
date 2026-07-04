@@ -21,6 +21,6 @@ abstract class CatalogLink with _$CatalogLink {
     @JsonKey(includeIfNull: true,name: 'distance_km')
     required num? distanceKm,
   }) = _CatalogLink;
-  
+
   factory CatalogLink.fromJson(Map<String, Object?> json) => _$CatalogLinkFromJson(json);
 }

@@ -27,8 +27,14 @@ _Catalog _$CatalogFromJson(Map<String, dynamic> json) => $checkedCreate(
             )
             .toList(),
       ),
-      damageScale: $checkedConvert('damage_scale', (v) => v as String?),
-      tsunamiScale: $checkedConvert('tsunami_scale', (v) => v as String?),
+      damageScale: $checkedConvert(
+        'damage_scale',
+        (v) => $enumDecodeNullable(_$CatalogDamageScaleEnumMap, v),
+      ),
+      tsunamiScale: $checkedConvert(
+        'tsunami_scale',
+        (v) => $enumDecodeNullable(_$CatalogTsunamiScaleEnumMap, v),
+      ),
       link: $checkedConvert(
         'link',
         (v) =>
@@ -47,7 +53,29 @@ _Catalog _$CatalogFromJson(Map<String, dynamic> json) => $checkedCreate(
 Map<String, dynamic> _$CatalogToJson(_Catalog instance) => <String, dynamic>{
   'hypocenters': instance.hypocenters,
   'station_records': instance.stationRecords,
-  'damage_scale': instance.damageScale,
-  'tsunami_scale': instance.tsunamiScale,
+  'damage_scale': ?instance.damageScale,
+  'tsunami_scale': ?instance.tsunamiScale,
   'link': ?instance.link,
+};
+
+const _$CatalogDamageScaleEnumMap = {
+  CatalogDamageScale.value1: '1',
+  CatalogDamageScale.value2: '2',
+  CatalogDamageScale.value3: '3',
+  CatalogDamageScale.value4: '4',
+  CatalogDamageScale.value5: '5',
+  CatalogDamageScale.value6: '6',
+  CatalogDamageScale.value7: '7',
+  CatalogDamageScale.x: 'X',
+  CatalogDamageScale.y: 'Y',
+};
+
+const _$CatalogTsunamiScaleEnumMap = {
+  CatalogTsunamiScale.value1: '1',
+  CatalogTsunamiScale.value2: '2',
+  CatalogTsunamiScale.value3: '3',
+  CatalogTsunamiScale.value4: '4',
+  CatalogTsunamiScale.value5: '5',
+  CatalogTsunamiScale.value6: '6',
+  CatalogTsunamiScale.t: 'T',
 };

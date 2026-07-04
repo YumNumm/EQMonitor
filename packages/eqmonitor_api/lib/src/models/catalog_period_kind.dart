@@ -4,17 +4,15 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// 震源レコード種別。A:震源レコード、B:群発地震時の震源レコード、D:震源が離れた地震の組の震源レコード
+/// 周期・周波数の記録形式。FREQUENCY:周波数(Hz)で記録、PERIOD:周期(秒)で記録
 @JsonEnum()
-enum CatalogHypocenterRecordType {
-  @JsonValue('A')
-  a('A'),
-  @JsonValue('B')
-  b('B'),
-  @JsonValue('D')
-  d('D');
+enum CatalogPeriodKind {
+  @JsonValue('FREQUENCY')
+  frequency('FREQUENCY'),
+  @JsonValue('PERIOD')
+  period('PERIOD');
 
-  const CatalogHypocenterRecordType(this.json);
+  const CatalogPeriodKind(this.json);
 
   final String? json;
   String toJson() {

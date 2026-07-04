@@ -16,64 +16,43 @@ _CatalogStationRecord _$CatalogStationRecordFromJson(
   ($checkedConvert) {
     final val = _CatalogStationRecord(
       stationCode: $checkedConvert('station_code', (v) => v as String),
-      intensityRaw: $checkedConvert('intensity_raw', (v) => v as String?),
-      instrumentalIntensity: $checkedConvert(
-        'instrumental_intensity',
-        (v) => v as num?,
+      intensity: $checkedConvert(
+        'intensity',
+        (v) => CatalogStationIntensity.fromJson(v as Map<String, dynamic>),
       ),
-      maxAccelSynthesizedGal: $checkedConvert(
-        'max_accel_synthesized_gal',
-        (v) => v as num?,
-      ),
-      maxAccelNsGal: $checkedConvert('max_accel_ns_gal', (v) => v as num?),
-      maxAccelEwGal: $checkedConvert('max_accel_ew_gal', (v) => v as num?),
-      maxAccelUdGal: $checkedConvert('max_accel_ud_gal', (v) => v as num?),
-      maxAccelPeriodNs: $checkedConvert(
-        'max_accel_period_ns',
-        (v) => v as num?,
-      ),
-      predominantPeriodNs: $checkedConvert(
-        'predominant_period_ns',
-        (v) => v as num?,
-      ),
-      maxAccelPeriodEw: $checkedConvert(
-        'max_accel_period_ew',
-        (v) => v as num?,
-      ),
-      predominantPeriodEw: $checkedConvert(
-        'predominant_period_ew',
-        (v) => v as num?,
-      ),
-      maxAccelPeriodUd: $checkedConvert(
-        'max_accel_period_ud',
-        (v) => v as num?,
-      ),
-      predominantPeriodUd: $checkedConvert(
-        'predominant_period_ud',
-        (v) => v as num?,
-      ),
-      occurrenceTime: $checkedConvert(
-        'occurrence_time',
+      observedAt: $checkedConvert(
+        'observed_at',
         (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      maxAcceleration: $checkedConvert(
+        'max_acceleration',
+        (v) => v == null
+            ? null
+            : CatalogStationMaxAcceleration.fromJson(v as Map<String, dynamic>),
+      ),
+      maxAccelTime: $checkedConvert(
+        'max_accel_time',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      periods: $checkedConvert(
+        'periods',
+        (v) => v == null
+            ? null
+            : CatalogStationPeriods.fromJson(v as Map<String, dynamic>),
+      ),
+      observationCount: $checkedConvert(
+        'observation_count',
+        (v) => (v as num?)?.toInt(),
       ),
     );
     return val;
   },
   fieldKeyMap: const {
     'stationCode': 'station_code',
-    'intensityRaw': 'intensity_raw',
-    'instrumentalIntensity': 'instrumental_intensity',
-    'maxAccelSynthesizedGal': 'max_accel_synthesized_gal',
-    'maxAccelNsGal': 'max_accel_ns_gal',
-    'maxAccelEwGal': 'max_accel_ew_gal',
-    'maxAccelUdGal': 'max_accel_ud_gal',
-    'maxAccelPeriodNs': 'max_accel_period_ns',
-    'predominantPeriodNs': 'predominant_period_ns',
-    'maxAccelPeriodEw': 'max_accel_period_ew',
-    'predominantPeriodEw': 'predominant_period_ew',
-    'maxAccelPeriodUd': 'max_accel_period_ud',
-    'predominantPeriodUd': 'predominant_period_ud',
-    'occurrenceTime': 'occurrence_time',
+    'observedAt': 'observed_at',
+    'maxAcceleration': 'max_acceleration',
+    'maxAccelTime': 'max_accel_time',
+    'observationCount': 'observation_count',
   },
 );
 
@@ -81,17 +60,10 @@ Map<String, dynamic> _$CatalogStationRecordToJson(
   _CatalogStationRecord instance,
 ) => <String, dynamic>{
   'station_code': instance.stationCode,
-  'intensity_raw': instance.intensityRaw,
-  'instrumental_intensity': instance.instrumentalIntensity,
-  'max_accel_synthesized_gal': instance.maxAccelSynthesizedGal,
-  'max_accel_ns_gal': instance.maxAccelNsGal,
-  'max_accel_ew_gal': instance.maxAccelEwGal,
-  'max_accel_ud_gal': instance.maxAccelUdGal,
-  'max_accel_period_ns': instance.maxAccelPeriodNs,
-  'predominant_period_ns': instance.predominantPeriodNs,
-  'max_accel_period_ew': instance.maxAccelPeriodEw,
-  'predominant_period_ew': instance.predominantPeriodEw,
-  'max_accel_period_ud': instance.maxAccelPeriodUd,
-  'predominant_period_ud': instance.predominantPeriodUd,
-  'occurrence_time': ?instance.occurrenceTime?.toIso8601String(),
+  'intensity': instance.intensity,
+  'observed_at': ?instance.observedAt?.toIso8601String(),
+  'max_acceleration': ?instance.maxAcceleration,
+  'max_accel_time': ?instance.maxAccelTime?.toIso8601String(),
+  'periods': ?instance.periods,
+  'observation_count': ?instance.observationCount,
 };
