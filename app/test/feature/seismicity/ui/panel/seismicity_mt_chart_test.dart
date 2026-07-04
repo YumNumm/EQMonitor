@@ -1,13 +1,21 @@
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_mt_chart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+final ThemeData _testTheme = ThemeData.light().copyWith(
+  extensions: [DesignSystemThemeExtension.light()],
+);
+
 void main() {
   testWidgets('イベントが0件でも例外なく描画できる', (tester) async {
     await tester.pumpWidget(
-      const MaterialApp(home: SeismicityMtChart(events: [])),
+      MaterialApp(
+        theme: _testTheme,
+        home: const SeismicityMtChart(events: []),
+      ),
     );
     expect(find.byType(SeismicityMtChart), findsOneWidget);
     expect(find.byType(ScatterChart), findsNothing);
@@ -37,7 +45,10 @@ void main() {
     ];
 
     await tester.pumpWidget(
-      MaterialApp(home: SeismicityMtChart(events: events)),
+      MaterialApp(
+        theme: _testTheme,
+        home: SeismicityMtChart(events: events),
+      ),
     );
     expect(find.byType(ScatterChart), findsNothing);
     expect(find.text('マグニチュードが既知のイベントがありません'), findsOneWidget);
@@ -75,7 +86,10 @@ void main() {
     ];
 
     await tester.pumpWidget(
-      MaterialApp(home: SeismicityMtChart(events: events)),
+      MaterialApp(
+        theme: _testTheme,
+        home: SeismicityMtChart(events: events),
+      ),
     );
 
     final chart = tester.widget<ScatterChart>(find.byType(ScatterChart));

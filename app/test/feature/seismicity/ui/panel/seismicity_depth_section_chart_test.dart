@@ -1,8 +1,13 @@
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_depth_section_chart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+final ThemeData _testTheme = ThemeData.light().copyWith(
+  extensions: [DesignSystemThemeExtension.light()],
+);
 
 void main() {
   testWidgets('深さが既知のイベントが0件(全欠測)の場合はフォールバック表示になる', (tester) async {
@@ -19,7 +24,10 @@ void main() {
     ];
 
     await tester.pumpWidget(
-      MaterialApp(home: SeismicityDepthSectionChart(events: events)),
+      MaterialApp(
+        theme: _testTheme,
+        home: SeismicityDepthSectionChart(events: events),
+      ),
     );
 
     expect(find.byType(ScatterChart), findsNothing);
@@ -28,7 +36,10 @@ void main() {
 
   testWidgets('イベントが0件でもフォールバック表示になる', (tester) async {
     await tester.pumpWidget(
-      const MaterialApp(home: SeismicityDepthSectionChart(events: [])),
+      MaterialApp(
+        theme: _testTheme,
+        home: const SeismicityDepthSectionChart(events: []),
+      ),
     );
 
     expect(find.byType(ScatterChart), findsNothing);
@@ -67,7 +78,10 @@ void main() {
     ];
 
     await tester.pumpWidget(
-      MaterialApp(home: SeismicityDepthSectionChart(events: events)),
+      MaterialApp(
+        theme: _testTheme,
+        home: SeismicityDepthSectionChart(events: events),
+      ),
     );
     expect(find.byType(SeismicityDepthSectionChart), findsOneWidget);
 
