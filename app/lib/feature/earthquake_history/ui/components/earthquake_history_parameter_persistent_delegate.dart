@@ -13,7 +13,10 @@ import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/telegram_type_filter_chip.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter_x.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryParameterPersistentDelegate
     extends SliverPersistentHeaderDelegate {
@@ -51,15 +54,27 @@ class EarthquakeHistoryParameterPersistentDelegate
   ) => parameter != oldDelegate.parameter;
 }
 
-class _FilterChipBar extends StatelessWidget {
+class _FilterChipBar extends ConsumerWidget {
   const _FilterChipBar({required this.parameter, required this.onChanged});
 
   final EarthquakeHistoryParameter parameter;
   final void Function(EarthquakeHistoryParameter) onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final spacing = context.designSystem.spacing;
+
+    // 地域絞り込み中かどうか
+    final isRegionFiltered = parameter is! EarthquakeHistoryParameterAll;
+
+    // 現在の地域コード/種別を取得し、表示名を解決する
+    final regionSel = parameter.regionSelection;
+    final regionName = regionSel != null
+        ? ref
+                  .watch(regionNameProvider(regionSel.$1, regionSel.$2))
+                  .whenOrNull(data: (name) => name) ??
+              regionSel.$2
+        : null;
 
     final chips = <({int order, bool isActive, Widget chip})>[
       (
@@ -68,6 +83,7 @@ class _FilterChipBar extends StatelessWidget {
         chip: SortFilterChip(
           sortBy: parameter.sortBy,
           sortOrder: parameter.sortOrder,
+          sortByLocked: isRegionFiltered,
           onChanged: (sortBy, sortOrder) {
             if (sortBy == null || sortOrder == null) {
               return;
@@ -166,17 +182,14 @@ class _FilterChipBar extends StatelessWidget {
       ),
       (
         order: 8,
-        isActive:
-            parameter is EarthquakeHistoryParameterRegion ||
-            parameter is EarthquakeHistoryParameterPrefecture ||
-            parameter is EarthquakeHistoryParameterCity ||
-            parameter is EarthquakeHistoryParameterStation,
+        isActive: isRegionFiltered,
         chip: RegionIntensityFilterChip(
           regionSearchType: switch (parameter) {
-            EarthquakeHistoryParameterRegion() => .region,
-            EarthquakeHistoryParameterPrefecture() => .prefecture,
-            EarthquakeHistoryParameterCity() => .city,
-            EarthquakeHistoryParameterStation() => .station,
+            EarthquakeHistoryParameterRegion() => RegionSearchType.region,
+            EarthquakeHistoryParameterPrefecture() =>
+              RegionSearchType.prefecture,
+            EarthquakeHistoryParameterCity() => RegionSearchType.city,
+            EarthquakeHistoryParameterStation() => RegionSearchType.station,
             _ => null,
           },
           regionCode: switch (parameter) {
@@ -188,90 +201,72 @@ class _FilterChipBar extends StatelessWidget {
               stationCode,
             _ => null,
           },
+          regionName: regionName,
+          regionIntensityGte: parameter.intensityGte,
+          regionIntensityLte: parameter.intensityLte,
           onChanged: (result) {
-            if (result == null) {
-              onChanged(
-                EarthquakeHistoryParameterAll(
-                  sortBy: parameter.sortBy,
-                  sortOrder: parameter.sortOrder,
-                  intensityGte: parameter.intensityGte,
-                  intensityLte: parameter.intensityLte,
-                  magnitudeGte: parameter.magnitudeGte,
-                  magnitudeLte: parameter.magnitudeLte,
-                  depthGte: parameter.depthGte,
-                  depthLte: parameter.depthLte,
-                  earthquakeType: parameter.earthquakeType,
-                  datasource: parameter.datasource,
-                  telegramTypes: parameter.telegramTypes,
-                  originTimeGte: parameter.originTimeGte,
-                  originTimeLte: parameter.originTimeLte,
-                  maxLpgmIntensityGte: parameter.maxLpgmIntensityGte,
-                  maxLpgmIntensityLte: parameter.maxLpgmIntensityLte,
-                  statuses: parameter.statuses,
-                  latitudeGte: parameter.latitudeGte,
-                  latitudeLte: parameter.latitudeLte,
-                  longitudeGte: parameter.longitudeGte,
-                  longitudeLte: parameter.longitudeLte,
-                  epicenterCodes: parameter.epicenterCodes,
-                ),
-              );
-            }
+            onChanged(
+              result == null ? parameter.toAll() : parameter.withRegion(result),
+            );
           },
         ),
       ),
-      (
-        order: 9,
-        isActive: parameter.datasource != null,
-        chip: DatasourceFilterChip(
-          datasource: parameter.datasource,
-          onChanged: (dataSource) =>
-              onChanged(parameter.copyWith(datasource: dataSource)),
+      // 地域絞り込み中は Datasource(9)/TelegramType(10)/LatLng(11) を含めない
+      if (!isRegionFiltered) ...[
+        (
+          order: 9,
+          isActive: parameter.datasource != null,
+          chip: DatasourceFilterChip(
+            datasource: parameter.datasource,
+            onChanged: (dataSource) =>
+                onChanged(parameter.copyWith(datasource: dataSource)),
+          ),
         ),
-      ),
-      (
-        order: 10,
-        isActive: parameter.telegramTypes != null,
-        chip: TelegramTypeFilterChip(
-          telegramTypes: parameter.telegramTypes,
-          onChanged: (types) =>
-              onChanged(parameter.copyWith(telegramTypes: types)),
+        (
+          order: 10,
+          isActive: parameter.telegramTypes != null,
+          chip: TelegramTypeFilterChip(
+            telegramTypes: parameter.telegramTypes,
+            onChanged: (types) =>
+                onChanged(parameter.copyWith(telegramTypes: types)),
+          ),
         ),
-      ),
-      (
-        order: 11,
-        isActive:
-            parameter.latitudeGte != null ||
-            parameter.latitudeLte != null ||
-            parameter.longitudeGte != null ||
-            parameter.longitudeLte != null,
-        chip: LatLngFilterChip(
-          latitudeGte: parameter.latitudeGte,
-          latitudeLte: parameter.latitudeLte,
-          longitudeGte: parameter.longitudeGte,
-          longitudeLte: parameter.longitudeLte,
-          onChanged: (range) {
-            if (range == null) {
-              onChanged(
-                parameter.copyWith(
-                  latitudeGte: null,
-                  latitudeLte: null,
-                  longitudeGte: null,
-                  longitudeLte: null,
-                ),
-              );
-            } else {
-              onChanged(
-                parameter.copyWith(
-                  latitudeGte: range.latitudeGte,
-                  latitudeLte: range.latitudeLte,
-                  longitudeGte: range.longitudeGte,
-                  longitudeLte: range.longitudeLte,
-                ),
-              );
-            }
-          },
+        (
+          order: 11,
+          isActive:
+              parameter.latitudeGte != null ||
+              parameter.latitudeLte != null ||
+              parameter.longitudeGte != null ||
+              parameter.longitudeLte != null,
+          chip: LatLngFilterChip(
+            latitudeGte: parameter.latitudeGte,
+            latitudeLte: parameter.latitudeLte,
+            longitudeGte: parameter.longitudeGte,
+            longitudeLte: parameter.longitudeLte,
+            onChanged: (range) {
+              if (range == null) {
+                onChanged(
+                  parameter.copyWith(
+                    latitudeGte: null,
+                    latitudeLte: null,
+                    longitudeGte: null,
+                    longitudeLte: null,
+                  ),
+                );
+              } else {
+                onChanged(
+                  parameter.copyWith(
+                    latitudeGte: range.latitudeGte,
+                    latitudeLte: range.latitudeLte,
+                    longitudeGte: range.longitudeGte,
+                    longitudeLte: range.longitudeLte,
+                  ),
+                );
+              }
+            },
+          ),
         ),
-      ),
+      ],
     ];
 
     chips.sort((a, b) {

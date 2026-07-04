@@ -9,12 +9,17 @@ class SortFilterChip extends StatelessWidget {
     this.sortBy,
     this.sortOrder,
     this.onChanged,
+    this.sortByLocked = false,
     super.key,
   });
 
   final EarthquakeSortBy? sortBy;
   final SortOrder? sortOrder;
   final void Function(EarthquakeSortBy?, SortOrder?)? onChanged;
+
+  /// true のとき、モーダル内の並び替え項目選択を非表示にする。
+  /// 地域絞り込み中など sortBy が固定される場合に使用する。
+  final bool sortByLocked;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +36,7 @@ class SortFilterChip extends StatelessWidget {
               builder: (context) => _SortFilterModal(
                 currentSortBy: sortBy,
                 currentSortOrder: sortOrder,
+                sortByLocked: sortByLocked,
               ),
             );
         if (result != null) {
@@ -51,10 +57,15 @@ class SortFilterChip extends StatelessWidget {
 }
 
 class _SortFilterModal extends HookWidget {
-  const _SortFilterModal({this.currentSortBy, this.currentSortOrder});
+  const _SortFilterModal({
+    this.currentSortBy,
+    this.currentSortOrder,
+    this.sortByLocked = false,
+  });
 
   final EarthquakeSortBy? currentSortBy;
   final SortOrder? currentSortOrder;
+  final bool sortByLocked;
 
   @override
   Widget build(BuildContext context) {
@@ -94,24 +105,25 @@ class _SortFilterModal extends HookWidget {
               ),
             ),
             const SizedBox(height: 8),
-            RadioGroup<EarthquakeSortBy>(
-              groupValue: sortBy.value,
-              onChanged: (value) {
-                if (value != null) {
-                  sortBy.value = value;
-                }
-              },
-              child: Column(
-                mainAxisSize: .min,
-                children: [
-                  for (final item in EarthquakeSortBy.values)
-                    RadioListTile<EarthquakeSortBy>(
-                      title: Text(item.label),
-                      value: item,
-                    ),
-                ],
+            if (!sortByLocked)
+              RadioGroup<EarthquakeSortBy>(
+                groupValue: sortBy.value,
+                onChanged: (value) {
+                  if (value != null) {
+                    sortBy.value = value;
+                  }
+                },
+                child: Column(
+                  mainAxisSize: .min,
+                  children: [
+                    for (final item in EarthquakeSortBy.values)
+                      RadioListTile<EarthquakeSortBy>(
+                        title: Text(item.label),
+                        value: item,
+                      ),
+                  ],
+                ),
               ),
-            ),
             const Divider(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
