@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
-import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_settings_page.dart';
 import 'package:flutter/material.dart';
