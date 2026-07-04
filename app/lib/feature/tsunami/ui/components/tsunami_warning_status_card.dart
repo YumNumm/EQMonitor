@@ -15,7 +15,7 @@ class TsunamiWarningStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
 
     final maxKind = TsunamiWarningColor.resolveMaxKind(tsunami.regions);
     final isCanceled = tsunami.isCanceled;
@@ -24,10 +24,10 @@ class TsunamiWarningStatusCard extends StatelessWidget {
         !isCanceled && !isExpired && maxKind != TsunamiWarningKind.forecast;
 
     final headerBg = isCanceled || isExpired
-        ? color.surfaceRaised
+        ? colorTheme.surfaceContainerLow
         : TsunamiWarningColor.headerColor(maxKind);
     final headerFg = isCanceled || isExpired
-        ? designSystem.textColor.primary
+        ? designSystem.colorTheme.onSurface
         : Colors.white;
     final headline = _resolveHeadline(tsunami.latestTelegrams);
 
@@ -37,7 +37,7 @@ class TsunamiWarningStatusCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: color.outlineSoft),
+          side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -76,7 +76,7 @@ class TsunamiWarningStatusCard extends StatelessWidget {
                   headline,
                   style: TextStyle(
                     fontSize: 14,
-                    color: designSystem.textColor.primary,
+                    color: designSystem.colorTheme.onSurface,
                   ),
                 ),
               ),
@@ -86,7 +86,7 @@ class TsunamiWarningStatusCard extends StatelessWidget {
                 '最終更新: ${DateFormat('yyyy/MM/dd HH:mm').format(tsunami.updatedAt.toLocal())}',
                 style: TextStyle(
                   fontSize: 12,
-                  color: designSystem.textColor.secondary,
+                  color: designSystem.colorTheme.onSurfaceVariant,
                 ),
               ),
             ),

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
 import 'package:flutter/material.dart';
@@ -16,41 +17,41 @@ class BetaTestingWarningPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ds = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
 
     return Scaffold(
-      backgroundColor: ds.color.backgroundDefault,
+      backgroundColor: designSystem.colorTheme.surfaceContainerLow,
       body: CustomScrollView(
         slivers: [
           SliverSafeArea(
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                _WarningHeader(ds: ds),
-                SizedBox(height: ds.spacing.lg),
-                _WarningList(ds: ds),
-                SizedBox(height: ds.spacing.xxxxl),
+                _WarningHeader(designSystem: designSystem),
+                SizedBox(height: designSystem.spacing.lg),
+                _WarningList(designSystem: designSystem),
+                SizedBox(height: designSystem.spacing.xxxxl),
               ]),
             ),
           ),
         ],
       ),
-      bottomNavigationBar: _AgreementBottom(ds: ds),
+      bottomNavigationBar: _AgreementBottom(designSystem: designSystem),
     );
   }
 }
 
 class _WarningHeader extends StatelessWidget {
-  const _WarningHeader({required this.ds});
+  const _WarningHeader({required this.designSystem});
 
-  final DesignSystemThemeExtension ds;
+  final DesignSystemThemeExtension designSystem;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        ds.spacing.lg,
-        ds.spacing.xxxxl,
-        ds.spacing.lg,
+        designSystem.spacing.lg,
+        designSystem.spacing.xxxxl,
+        designSystem.spacing.lg,
         0,
       ),
       child: Column(
@@ -60,27 +61,29 @@ class _WarningHeader extends StatelessWidget {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: ds.palette.statusWarning.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(ds.shape.lg),
+              color: designSystem.colorTheme.status.warning.withValues(
+                alpha: 0.15,
+              ),
+              borderRadius: BorderRadius.circular(designSystem.shape.lg),
             ),
             child: Icon(
               Icons.warning_amber_rounded,
-              color: ds.palette.statusWarning,
+              color: designSystem.colorTheme.status.warning,
               size: 36,
             ),
           ),
-          SizedBox(height: ds.spacing.lg),
+          SizedBox(height: designSystem.spacing.lg),
           Text(
             'Beta 版をご利用の\n前に',
-            style: ds.typography.headlineLarge.copyWith(
-              color: ds.textColor.primary,
+            style: designSystem.typography.headlineLarge.copyWith(
+              color: designSystem.colorTheme.onSurface,
             ),
           ),
-          SizedBox(height: ds.spacing.sm),
+          SizedBox(height: designSystem.spacing.sm),
           Text(
             'このアプリは現在ベータテスト中です。以下の事項をご確認のうえ、同意いただける場合のみご利用ください。',
-            style: ds.typography.bodyLarge.copyWith(
-              color: ds.textColor.secondary,
+            style: designSystem.typography.bodyLarge.copyWith(
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -90,22 +93,28 @@ class _WarningHeader extends StatelessWidget {
 }
 
 class _WarningList extends StatelessWidget {
-  const _WarningList({required this.ds});
+  const _WarningList({required this.designSystem});
 
-  final DesignSystemThemeExtension ds;
+  final DesignSystemThemeExtension designSystem;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ds.spacing.lg),
+      padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: Column(
         children: [
           for (final (index, warning) in _warnings.indexed)
             Padding(
               padding: EdgeInsets.only(
-                bottom: index < _warnings.length - 1 ? ds.spacing.md : 0,
+                bottom: index < _warnings.length - 1
+                    ? designSystem.spacing.md
+                    : 0,
               ),
-              child: _WarningCard(warning: warning, index: index, ds: ds),
+              child: _WarningCard(
+                warning: warning,
+                index: index,
+                designSystem: designSystem,
+              ),
             ),
         ],
       ),
@@ -117,22 +126,22 @@ class _WarningCard extends StatelessWidget {
   const _WarningCard({
     required this.warning,
     required this.index,
-    required this.ds,
+    required this.designSystem,
   });
 
   final String warning;
   final int index;
-  final DesignSystemThemeExtension ds;
+  final DesignSystemThemeExtension designSystem;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: ds.color.surfaceCard,
-        borderRadius: BorderRadius.circular(ds.shape.card),
-        border: Border.all(color: ds.color.outlineSoft),
+        color: designSystem.colorTheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(designSystem.shape.card),
+        border: Border.all(color: designSystem.colorTheme.outlineVariant),
       ),
-      padding: EdgeInsets.all(ds.spacing.lg),
+      padding: EdgeInsets.all(designSystem.spacing.lg),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -140,25 +149,27 @@ class _WarningCard extends StatelessWidget {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              color: ds.palette.statusWarning.withValues(alpha: 0.15),
+              color: designSystem.colorTheme.status.warning.withValues(
+                alpha: 0.15,
+              ),
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
                 '${index + 1}',
-                style: ds.typography.labelMedium.copyWith(
-                  color: ds.palette.statusWarning,
+                style: designSystem.typography.labelMedium.copyWith(
+                  color: designSystem.colorTheme.status.warning,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
           ),
-          SizedBox(width: ds.spacing.md),
+          SizedBox(width: designSystem.spacing.md),
           Expanded(
             child: Text(
               warning,
-              style: ds.typography.bodyMedium.copyWith(
-                color: ds.textColor.primary,
+              style: designSystem.typography.bodyMedium.copyWith(
+                color: designSystem.colorTheme.onSurface,
               ),
             ),
           ),
@@ -169,19 +180,19 @@ class _WarningCard extends StatelessWidget {
 }
 
 class _AgreementBottom extends ConsumerWidget {
-  const _AgreementBottom({required this.ds});
+  const _AgreementBottom({required this.designSystem});
 
-  final DesignSystemThemeExtension ds;
+  final DesignSystemThemeExtension designSystem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.fromLTRB(
-          ds.spacing.lg,
-          ds.spacing.md,
-          ds.spacing.lg,
-          ds.spacing.xxl,
+          designSystem.spacing.lg,
+          designSystem.spacing.md,
+          designSystem.spacing.lg,
+          designSystem.spacing.xxl,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -192,34 +203,39 @@ class _AgreementBottom extends ConsumerWidget {
                 onPressed: () async {
                   await BetaTestingAgreed.agreeMutation.run(
                     ref,
-                    (tsx) async => tsx.get(betaTestingAgreedProvider.notifier).agree(),
+                    (tsx) async =>
+                        tsx.get(betaTestingAgreedProvider.notifier).agree(),
                   );
                   if (context.mounted) {
                     context.go('/');
                   }
                 },
                 style: FilledButton.styleFrom(
-                  backgroundColor: ds.palette.statusWarning,
+                  backgroundColor: designSystem.colorTheme.status.warning,
                   foregroundColor: const Color(0xFF0F141A),
-                  padding: EdgeInsets.symmetric(vertical: ds.spacing.lg),
+                  padding: EdgeInsets.symmetric(
+                    vertical: designSystem.spacing.lg,
+                  ),
                   shape: RoundedSuperellipseBorder(
-                    borderRadius: BorderRadius.circular(ds.shape.button),
+                    borderRadius: BorderRadius.circular(
+                      designSystem.shape.button,
+                    ),
                   ),
                 ),
                 child: Text(
                   '同意して利用する',
-                  style: ds.typography.labelLarge.copyWith(
+                  style: designSystem.typography.labelLarge.copyWith(
                     color: const Color(0xFF0F141A),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ),
-            SizedBox(height: ds.spacing.md),
+            SizedBox(height: designSystem.spacing.md),
             Text(
               '同意しない場合は、アプリストアから最新の正式版アプリをダウンロードしてください。',
-              style: ds.typography.bodySmall.copyWith(
-                color: ds.textColor.tertiary,
+              style: designSystem.typography.bodySmall.copyWith(
+                color: designSystem.colorTheme.outline,
               ),
               textAlign: TextAlign.center,
             ),

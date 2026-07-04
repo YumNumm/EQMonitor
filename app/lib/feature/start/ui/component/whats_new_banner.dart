@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
@@ -96,11 +97,11 @@ class _WhatsNewBannerContent extends HookWidget {
       return const SizedBox.shrink();
     }
 
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     return Padding(
       padding: EdgeInsets.only(bottom: bottomSpacing),
       child: Material(
-        color: colorScheme.primaryContainer,
+        color: colorTheme.primaryContainer,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
@@ -111,7 +112,7 @@ class _WhatsNewBannerContent extends HookWidget {
               children: [
                 Icon(
                   Icons.new_releases_outlined,
-                  color: colorScheme.onPrimaryContainer,
+                  color: colorTheme.onPrimaryContainer,
                   size: 20,
                 ),
                 const SizedBox(width: 12),
@@ -119,13 +120,13 @@ class _WhatsNewBannerContent extends HookWidget {
                   child: Text(
                     'v${latest.version} にアップデートしました',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onPrimaryContainer,
+                      color: colorTheme.onPrimaryContainer,
                     ),
                   ),
                 ),
                 Icon(
                   Icons.chevron_right,
-                  color: colorScheme.onPrimaryContainer,
+                  color: colorTheme.onPrimaryContainer,
                   size: 20,
                 ),
               ],

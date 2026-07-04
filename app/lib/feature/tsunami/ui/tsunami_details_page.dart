@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/effective_tsunami_state_provider.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_details_notifier.dart';
@@ -23,7 +24,6 @@ class TsunamiDetailsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(tsunamiDetailsProvider(tsunamiId));
-    final colorScheme = Theme.of(context).colorScheme;
 
     // Prefetch telegrams for overlay
     ref.watch(tsunamiTelegramsProvider(tsunamiId));
@@ -44,15 +44,15 @@ class TsunamiDetailsPage extends HookConsumerWidget {
           ),
         ),
       ),
-      AsyncData() => _buildContent(context, ref, colorScheme),
+      AsyncData() => _buildContent(context, ref),
     };
   }
 
   Widget _buildContent(
     BuildContext context,
     WidgetRef ref,
-    ColorScheme colorScheme,
   ) {
+    final colorTheme = context.designSystem.colorTheme;
     final effectiveState = ref.watch(
       effectiveTsunamiStateProvider(tsunamiId),
     );
@@ -100,7 +100,7 @@ class TsunamiDetailsPage extends HookConsumerWidget {
                     shape: WidgetStatePropertyAll(
                       RoundedSuperellipseBorder(
                         side: BorderSide(
-                          color: colorScheme.primary.withValues(alpha: 0.2),
+                          color: colorTheme.primary.withValues(alpha: 0.2),
                         ),
                         borderRadius: BorderRadius.circular(128),
                       ),
@@ -108,7 +108,7 @@ class TsunamiDetailsPage extends HookConsumerWidget {
                   ),
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () => context.pop(),
-                  color: colorScheme.primary,
+                  color: colorTheme.primary,
                   padding: const EdgeInsets.all(12),
                 ),
               ),

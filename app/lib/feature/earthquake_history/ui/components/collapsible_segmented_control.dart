@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -19,8 +19,7 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final designSystem = theme.designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
 
     final selectedSegment = segments.firstWhere(
@@ -36,7 +35,7 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
           child: Container(
             padding: const .symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: colorScheme.secondaryContainer,
+              color: designSystem.colorTheme.secondaryContainer,
               borderRadius: .circular(8),
             ),
             child: Row(
@@ -46,14 +45,14 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
                 Text(
                   selectedSegment.label,
                   style: theme.textTheme.labelMedium?.copyWith(
-                    color: colorScheme.onSecondaryContainer,
+                    color: designSystem.colorTheme.onSecondaryContainer,
                     fontWeight: .bold,
                   ),
                 ),
                 Icon(
                   Icons.arrow_drop_down,
                   size: 18,
-                  color: colorScheme.onSecondaryContainer,
+                  color: designSystem.colorTheme.onSecondaryContainer,
                 ),
               ],
             ),
@@ -72,7 +71,7 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
           alignment: .centerRight,
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
+              color: designSystem.colorTheme.surfaceContainerHighest,
               borderRadius: .circular(8),
             ),
             child: Row(
@@ -92,7 +91,7 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
                       ),
                       decoration: BoxDecoration(
                         color: segment.value == selected
-                            ? colorScheme.secondaryContainer
+                            ? designSystem.colorTheme.secondaryContainer
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -100,8 +99,8 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
                         segment.label,
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: segment.value == selected
-                              ? colorScheme.onSecondaryContainer
-                              : colorScheme.onSurfaceVariant,
+                              ? designSystem.colorTheme.onSecondaryContainer
+                              : designSystem.colorTheme.onSurfaceVariant,
                           fontWeight: segment.value == selected
                               ? FontWeight.bold
                               : FontWeight.normal,

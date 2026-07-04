@@ -1,7 +1,8 @@
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
@@ -14,7 +15,6 @@ import 'package:intl/intl.dart';
 class EarthquakeHistoryListTile extends StatelessWidget {
   const EarthquakeHistoryListTile({
     required this.item,
-    required this.intensityColor,
     this.areaInfo,
     this.areaName,
     this.onTap,
@@ -47,7 +47,6 @@ class EarthquakeHistoryListTile extends StatelessWidget {
   final bool dense;
   final EdgeInsets? contentPadding;
   final bool showCurrentLocationIntensity;
-  final IntensityColorModel intensityColor;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +56,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
       'areaInfoとareaNameはどちらもnot-null もしくは null である必要がある',
     );
     final theme = Theme.of(context);
+    final intensityColors = context.designSystem.colorTheme.intensity;
 
     final hypocenter = item.hypocenter;
     final intensity = item.intensity;
@@ -95,7 +95,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         };
 
     final maxIntensityColor = maxIntensity != null
-        ? intensityColor.fromJmaIntensity(maxIntensity).background
+        ? intensityColors.fromJmaIntensity(maxIntensity).background
         : null;
 
     final tileBaseColor = switch (earthquakeType) {
@@ -147,7 +147,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
               child: _AreaIntensityChip(
                 areaName: areaName!,
                 intensity: areaIntensity,
-                intensityColor: intensityColor,
+                intensityColors: intensityColors,
               ),
             ),
         ],
@@ -183,26 +183,26 @@ class _AreaIntensityChip extends StatelessWidget {
   const _AreaIntensityChip({
     required this.areaName,
     required this.intensity,
-    required this.intensityColor,
+    required this.intensityColors,
   });
 
   final String areaName;
   final JmaIntensity intensity;
-  final IntensityColorModel intensityColor;
+  final IntensityColors intensityColors;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = intensityColor.fromJmaIntensity(intensity);
+    final entry = intensityColors.fromJmaIntensity(intensity);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: scheme.background,
+        color: entry.background,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         '$areaName 震度${intensity.label}',
         style: TextStyle(
-          color: scheme.foreground,
+          color: entry.resolvedForeground,
           fontWeight: FontWeight.bold,
           fontSize: 12,
         ),

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/selector/city_selector.dart';
 import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class RegionIntensityFilterChip extends StatelessWidget {
           : const Text('地域'),
       onDeleted: _isActive ? () => onChanged?.call(null) : null,
       selected: _isActive,
-      selectedColor: Theme.of(context).colorScheme.secondaryContainer,
+      selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
   }
 

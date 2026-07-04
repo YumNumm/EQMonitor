@@ -15,7 +15,7 @@ class ConnectionStatusCard extends ConsumerWidget {
     );
 
     final designSystem = context.designSystem;
-    final palette = designSystem.palette;
+    final colorTheme = designSystem.colorTheme;
 
     final (IconData icon, String label, Color color) = switch ((
       isConnected,
@@ -24,26 +24,26 @@ class ConnectionStatusCard extends ConsumerWidget {
       (false, _) => (
         Icons.wifi_off_rounded,
         'ネットワーク未接続',
-        palette.statusDanger,
+        colorTheme.error,
       ),
       (true, .connected) => (
         Icons.cell_tower_rounded,
         'リアルタイム 接続',
-        palette.statusSuccess,
+        colorTheme.status.success,
       ),
       (true, _) => (
         Icons.warning_amber_rounded,
         'リアルタイム 接続',
-        palette.statusWarning,
+        colorTheme.status.warning,
       ),
     };
 
     return Card.outlined(
-      color: designSystem.color.surfaceCard.withValues(alpha: 0.92),
+      color: designSystem.colorTheme.surfaceContainerHigh.withValues(alpha: 0.92),
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.md),
-        side: BorderSide(color: designSystem.color.outlineSoft),
+        side: BorderSide(color: designSystem.colorTheme.outlineVariant),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class EewTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return SizedBox.expand(
       child: SingleChildScrollView(
@@ -31,7 +32,7 @@ class EewTable extends StatelessWidget {
             showCheckboxColumn: false,
             border: TableBorder.symmetric(
               borderRadius: BorderRadius.circular(8),
-              outside: BorderSide(color: colorScheme.surface),
+              outside: BorderSide(color: designSystem.colorTheme.surface),
             ),
             columns: _EewTableColumn.values
                 .map(
@@ -63,11 +64,11 @@ class EewTable extends StatelessWidget {
                     : null,
                 color: WidgetStateProperty.resolveWith((states) {
                   if (states.contains(WidgetState.selected)) {
-                    return colorScheme.primaryContainer;
+                    return designSystem.colorTheme.primaryContainer;
                   }
                   return eew.isWarning ?? false
-                      ? colorScheme.errorContainer.withValues(alpha: 0.7)
-                      : colorScheme.surfaceContainer;
+                      ? designSystem.colorTheme.errorContainer.withValues(alpha: 0.7)
+                      : designSystem.colorTheme.surfaceContainer;
                 }),
                 cells: _EewTableColumn.values
                     .map(

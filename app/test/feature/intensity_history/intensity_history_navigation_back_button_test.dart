@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_navigation_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,6 +7,11 @@ void main() {
   testWidgets('戻れる画面では戻るボタンを表示して pop する', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData.light().copyWith(
+          extensions: <ThemeExtension<dynamic>>[
+            DesignSystemThemeExtension.light(),
+          ],
+        ),
         initialRoute: '/detail',
         routes: {
           '/': (_) => const Scaffold(body: Text('home')),

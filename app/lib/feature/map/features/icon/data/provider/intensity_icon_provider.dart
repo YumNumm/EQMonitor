@@ -2,7 +2,8 @@ import 'dart:typed_data';
 
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
+import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
+import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/repository/intensity_icon_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -12,7 +13,8 @@ part 'intensity_icon_provider.g.dart';
 @Riverpod(keepAlive: true)
 Future<IntensityIconData> intensityIcon(Ref ref) async {
   final repository = ref.watch(intensityIconRepositoryProvider);
-  final intensityColorModel = ref.watch(intensityColorProvider);
+  final colorSet = ref.watch(activeColorSetProvider);
+  final brightness = ref.watch(brightnessProvider);
 
   final futures = <Future<void>>[];
   final jmaIntensityMap = <IntensityIconType, Map<JmaIntensity, Uint8List>>{};
@@ -25,7 +27,8 @@ Future<IntensityIconData> intensityIcon(Ref ref) async {
           final bytes = await repository.renderJmaIntensityIcon(
             intensity: intensity,
             type: type,
-            intensityColorModel: intensityColorModel,
+            colorSet: colorSet,
+            brightness: brightness,
           );
           jmaIntensityMap.putIfAbsent(type, () => {});
           jmaIntensityMap[type]![intensity] = bytes;
@@ -40,7 +43,8 @@ Future<IntensityIconData> intensityIcon(Ref ref) async {
           final bytes = await repository.renderJmaLpgmIntensityIcon(
             intensity: intensity,
             type: type,
-            intensityColorModel: intensityColorModel,
+            colorSet: colorSet,
+            brightness: brightness,
           );
           jmaLpgmIntensityMap.putIfAbsent(type, () => {});
           jmaLpgmIntensityMap[type]![intensity] = bytes;

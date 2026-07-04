@@ -58,8 +58,6 @@ import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_t
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/tsunami_telegram_timeline_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
-import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
-import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/estimated_intensity_color_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/ui/page/home_widget_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
@@ -318,15 +316,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
 @TypedGoRoute<SettingsRoute>(
   path: '/settings',
   routes: [
-    TypedGoRoute<DisplayRoute>(
-      path: 'display',
-      routes: [
-        TypedGoRoute<ColorSchemeConfigRoute>(path: 'color-schema'),
-        TypedGoRoute<EstimatedIntensityColorConfigRoute>(
-          path: 'estimated-intensity-color-schema',
-        ),
-      ],
-    ),
+    TypedGoRoute<DisplayRoute>(path: 'display'),
     TypedGoRoute<KyoshinMonitorAboutRoute>(
       path: 'kyoshin-monitor-about',
       routes: [
@@ -516,22 +506,6 @@ class TermOfServiceRoute extends GoRouteData with $TermOfServiceRoute {
       TermOfServicePage(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
-class ColorSchemeConfigRoute extends GoRouteData with $ColorSchemeConfigRoute {
-  const ColorSchemeConfigRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const ColorSchemeConfigPage();
-}
-
-class EstimatedIntensityColorConfigRoute extends GoRouteData
-    with $EstimatedIntensityColorConfigRoute {
-  const EstimatedIntensityColorConfigRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const EstimatedIntensityColorConfigPage();
-}
 
 class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
   const PrivacyPolicyRoute({

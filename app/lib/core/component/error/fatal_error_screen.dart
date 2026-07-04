@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ class FatalErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     return Scaffold(
       body: Center(
         child: Padding(
@@ -20,7 +22,7 @@ class FatalErrorScreen extends StatelessWidget {
               Icon(
                 Icons.error_outline_rounded,
                 size: 48,
-                color: theme.colorScheme.error,
+                color: designSystem.colorTheme.error,
               ),
               const SizedBox(height: 16),
               Text('問題が発生しました', style: theme.textTheme.titleLarge),
@@ -35,7 +37,7 @@ class FatalErrorScreen extends StatelessWidget {
                 Text(
                   '$error',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: designSystem.colorTheme.onSurfaceVariant,
                   ),
                   textAlign: TextAlign.center,
                 ),

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 
 class AppListTile extends StatelessWidget {
@@ -53,10 +54,9 @@ class AppListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final backgroundColor = colorScheme.secondaryContainer;
-    final textColor = colorScheme.onSecondaryContainer;
+    final designSystem = context.designSystem;
+    final backgroundColor = designSystem.colorTheme.secondaryContainer;
+    final textColor = designSystem.colorTheme.onSecondaryContainer;
 
     final shape = RoundedSuperellipseBorder(
       borderRadius: BorderRadius.circular(16),

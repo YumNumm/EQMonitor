@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
+import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
@@ -23,16 +24,9 @@ class MapConfigurationNotifier extends _$MapConfigurationNotifier {
       );
     }
 
+    final colorSet = ref.watch(activeColorSetProvider);
     final util = ref.watch(mapStyleUtilProvider);
-    final styleString = await util.getStyle(
-      colorScheme:
-          savedState.colorScheme ??
-          switch (savedState.theme) {
-            MapTheme.light => MapColorScheme.light(),
-            MapTheme.dark => MapColorScheme.dark(),
-            MapTheme.system => MapColorScheme.light(),
-          },
-    );
+    final styleString = await util.getStyle(mapColors: colorSet.mapColors);
 
     return savedState.copyWith(styleString: styleString);
   }

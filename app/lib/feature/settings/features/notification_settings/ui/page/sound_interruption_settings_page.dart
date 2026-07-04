@@ -130,7 +130,7 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
             child: Text(
               '震度別の音設定で個別にオーバーライドすることもできます',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -160,7 +160,7 @@ class _SoundInterruptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -171,12 +171,12 @@ class _SoundInterruptionCard extends StatelessWidget {
         spacing.lg,
         spacing.md,
       ),
-      color: color.surfaceCard,
+      color: colorTheme.surfaceContainerHigh,
       clipBehavior: Clip.antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

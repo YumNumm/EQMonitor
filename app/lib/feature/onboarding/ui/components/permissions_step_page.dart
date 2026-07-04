@@ -6,7 +6,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final notificationPermission = useState(_PermissionState.notRequested);
     final locationPermission = useState(_PermissionState.notRequested);
     final isProcessing = useState(false);
@@ -106,7 +106,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
             '緊急地震速報や地震情報をリアルタイムに受け取るために、'
             '通知と位置情報を許可してください',
             style: designSystem.typography.bodyLarge.copyWith(
-              color: designSystem.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
           if (anyDenied) ...[
@@ -114,7 +114,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
             Text(
               '設定アプリからいつでも変更できます',
               style: designSystem.typography.bodySmall.copyWith(
-                color: designSystem.textColor.tertiary,
+                color: designSystem.colorTheme.outline,
               ),
             ),
             if (anyDeniedForever) ...[
@@ -129,8 +129,8 @@ class _PermissionsStepPage extends HookConsumerWidget {
           const Spacer(),
           Center(
             child: _OnboardingPermissionsHero(
-              color: designSystem.palette.brandPrimary,
-              backgroundColor: designSystem.color.surfaceRaised,
+              color: designSystem.colorTheme.primary,
+              backgroundColor: designSystem.colorTheme.surfaceContainerLow,
             ),
           ),
           const Spacer(flex: 2),

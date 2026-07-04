@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,7 @@ class _ServerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     return BorderedContainer(
       accentColor: selected ? accentColor : null,
       onPressed: onTap,
@@ -154,7 +155,7 @@ class _ServerTile extends StatelessWidget {
                     Text(
                       description,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                        color: colorTheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -187,12 +188,12 @@ class _UrlRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 12, color: Theme.of(context).colorScheme.outline),
+        Icon(icon, size: 12, color: context.designSystem.colorTheme.outline),
         const SizedBox(width: 4),
         Text(
           '$label: ',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.outline,
+            color: context.designSystem.colorTheme.outline,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -200,7 +201,7 @@ class _UrlRow extends StatelessWidget {
           child: Text(
             url,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: context.designSystem.colorTheme.onSurfaceVariant,
               fontFamily: 'monospace',
             ),
             overflow: TextOverflow.ellipsis,

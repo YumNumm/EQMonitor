@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -66,10 +67,10 @@ class _KyoshinMonitorSource extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
     final textTheme = theme.textTheme;
 
-    final hyperLinkColor = colorScheme.primary;
+    final hyperLinkColor = designSystem.colorTheme.primary;
 
     return Text.rich(
       TextSpan(
@@ -112,7 +113,7 @@ class _DataTypeInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
     final textTheme = theme.textTheme;
 
     return Padding(
@@ -128,7 +129,7 @@ class _DataTypeInfo extends StatelessWidget {
           Text(
             description,
             style: textTheme.bodyMedium!.copyWith(
-              color: colorScheme.onSurfaceVariant,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
         ],

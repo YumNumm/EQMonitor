@@ -1,4 +1,5 @@
 import 'package:dart_azarashi/dart_azarashi.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/qzss_dcr/data/provider/qzss_serial_port_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,7 +12,7 @@ class QzssDcrReportWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final report = ref.watch(latestQzssDcReportProvider);
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     if (report == null) {
       return Card(
@@ -23,20 +24,20 @@ class QzssDcrReportWidget extends HookConsumerWidget {
               Icon(
                 Icons.satellite_alt,
                 size: 48,
-                color: colorScheme.primary.withValues(alpha: 0.5),
+                color: designSystem.colorTheme.primary.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 16),
               Text(
                 '災危通報を受信していません',
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.6),
+                  color: designSystem.colorTheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 'GNSS受信機を接続し、衛星からの信号を受信してください',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.4),
+                  color: designSystem.colorTheme.onSurface.withValues(alpha: 0.4),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -79,7 +80,7 @@ class QzssDcrReportWidget extends HookConsumerWidget {
               children: [
                 Icon(
                   Icons.satellite_alt,
-                  color: colorScheme.primary,
+                  color: designSystem.colorTheme.primary,
                 ),
                 const SizedBox(width: 8),
                 Expanded(

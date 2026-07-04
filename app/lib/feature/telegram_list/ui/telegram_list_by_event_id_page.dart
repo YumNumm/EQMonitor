@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
@@ -48,22 +49,19 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
     final scrollController = useScrollController();
 
     // Pagination: fetch next page when near bottom.
-    useEffect(
-      () {
-        Future<void> onScroll() async {
-          if (scrollController.position.pixels >=
-              scrollController.position.maxScrollExtent - 200) {
-            await ref
-                .read(telegramListByEventIdProvider(eventId).notifier)
-                .fetchNextData();
-          }
+    useEffect(() {
+      Future<void> onScroll() async {
+        if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 200) {
+          await ref
+              .read(telegramListByEventIdProvider(eventId).notifier)
+              .fetchNextData();
         }
+      }
 
-        scrollController.addListener(onScroll);
-        return () => scrollController.removeListener(onScroll);
-      },
-      [scrollController],
-    );
+      scrollController.addListener(onScroll);
+      return () => scrollController.removeListener(onScroll);
+    }, [scrollController]);
 
     return Scaffold(
       appBar: AppBar(title: const Text('電文一覧')),
@@ -218,10 +216,7 @@ class _SectionedList extends StatelessWidget {
           content: Text('読み込みに失敗しました: $error'),
           actions: [
             if (onReload != null)
-              TextButton(
-                onPressed: onReload,
-                child: const Text('再読み込み'),
-              ),
+              TextButton(onPressed: onReload, child: const Text('再読み込み')),
           ],
         ),
       );
@@ -296,7 +291,7 @@ class _SectionHeader extends StatelessWidget {
       child: Text(
         title,
         style: theme.textTheme.labelLarge?.copyWith(
-          color: theme.colorScheme.primary,
+          color: context.designSystem.colorTheme.primary,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -309,10 +304,7 @@ class _SectionHeader extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _EewNavigationCard extends StatelessWidget {
-  const _EewNavigationCard({
-    required this.count,
-    required this.onTap,
-  });
+  const _EewNavigationCard({required this.count, required this.onTap});
 
   final int count;
   final VoidCallback onTap;
@@ -320,12 +312,12 @@ class _EewNavigationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: ListTile(
-        leading: Icon(Icons.warning_amber_rounded, color: colorScheme.error),
+        leading: Icon(Icons.warning_amber_rounded, color: colorTheme.error),
         title: Text(
           '緊急地震速報（$count報）',
           style: theme.textTheme.bodyMedium?.copyWith(
@@ -361,17 +353,9 @@ class _TelegramListSkeleton extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 120,
-                      height: 14,
-                      color: Colors.white,
-                    ),
+                    Container(width: 120, height: 14, color: Colors.white),
                     const SizedBox(height: 8),
-                    Container(
-                      width: 180,
-                      height: 12,
-                      color: Colors.white,
-                    ),
+                    Container(width: 180, height: 12, color: Colors.white),
                     const SizedBox(height: 8),
                     Container(
                       width: double.infinity,

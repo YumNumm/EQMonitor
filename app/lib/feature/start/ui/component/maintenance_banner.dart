@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,14 +20,14 @@ class MaintenanceBanner extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final message = maintenance.message ?? 'メンテナンス中です。しばらくお待ちください。';
     final url = maintenance.url;
 
     return Padding(
       padding: EdgeInsets.only(bottom: bottomSpacing),
       child: Material(
-        color: colorScheme.tertiaryContainer,
+        color: colorTheme.tertiaryContainer,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
@@ -42,7 +43,7 @@ class MaintenanceBanner extends ConsumerWidget {
               children: [
                 Icon(
                   Icons.build_outlined,
-                  color: colorScheme.onTertiaryContainer,
+                  color: colorTheme.onTertiaryContainer,
                   size: 20,
                 ),
                 const SizedBox(width: 12),
@@ -50,14 +51,14 @@ class MaintenanceBanner extends ConsumerWidget {
                   child: Text(
                     message,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onTertiaryContainer,
+                      color: colorTheme.onTertiaryContainer,
                     ),
                   ),
                 ),
                 if (url != null) ...[
                   Icon(
                     Icons.open_in_new,
-                    color: colorScheme.onTertiaryContainer,
+                    color: colorTheme.onTertiaryContainer,
                     size: 16,
                   ),
                 ],

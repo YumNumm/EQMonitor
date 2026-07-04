@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 
 class CustomChip extends StatelessWidget {
@@ -19,9 +20,9 @@ class CustomChip extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: backgroundColor ?? Theme.of(context).colorScheme.surface,
+          color: backgroundColor ?? context.designSystem.colorTheme.surface,
           border: Border.all(
-            color: Theme.of(context).colorScheme.onSurface,
+            color: context.designSystem.colorTheme.onSurface,
             width: borderWidth,
           ),
         ),

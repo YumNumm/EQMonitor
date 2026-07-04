@@ -63,7 +63,7 @@ class _HistoryOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
 
     final entries = _buildTimelineEntries(tsunami);
     final maxKind = TsunamiWarningColor.resolveMaxKind(tsunami.regions);
@@ -91,7 +91,7 @@ class _HistoryOverlay extends StatelessWidget {
               elevation: 8,
               shape: RoundedSuperellipseBorder(
                 borderRadius: BorderRadius.circular(16),
-                side: BorderSide(color: color.outlineSoft),
+                side: BorderSide(color: colorTheme.outlineVariant),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -178,7 +178,7 @@ class _TimelineEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final timeStr = DateFormat('yyyy/MM/dd HH:mm').format(
       entry.time.toLocal(),
     );
@@ -198,12 +198,12 @@ class _TimelineEntry extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: entry.isLast
-                        ? designSystem.textColor.tertiary
-                        : colorScheme.primary,
+                        ? designSystem.colorTheme.outline
+                        : colorTheme.primary,
                     border: Border.all(
                       color: entry.isLast
-                          ? designSystem.textColor.tertiary
-                          : colorScheme.primary,
+                          ? designSystem.colorTheme.outline
+                          : colorTheme.primary,
                       width: 2,
                     ),
                   ),
@@ -212,7 +212,7 @@ class _TimelineEntry extends StatelessWidget {
                   Expanded(
                     child: Container(
                       width: 2,
-                      color: designSystem.textColor.tertiary.withValues(
+                      color: designSystem.colorTheme.outline.withValues(
                         alpha: 0.3,
                       ),
                     ),
@@ -231,7 +231,7 @@ class _TimelineEntry extends StatelessWidget {
                     '$timeStrごろ',
                     style: TextStyle(
                       fontSize: 12,
-                      color: designSystem.textColor.secondary,
+                      color: designSystem.colorTheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 2),

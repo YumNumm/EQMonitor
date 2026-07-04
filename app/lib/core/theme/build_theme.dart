@@ -1,40 +1,43 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/designsystem/extensions/shape_theme_extension.dart';
+import 'package:eqmonitor/core/designsystem/extensions/spacing_theme_extension.dart';
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
-import 'package:eqmonitor/core/theme/custom_colors.dart';
+import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 ThemeData buildTheme({
-  required ColorScheme colorScheme,
-  required CustomColors customColors,
+  required ThemeColorSet colorSet,
+  required Brightness brightness,
 }) {
-  final designSystem = colorScheme.brightness == Brightness.dark
-      ? DesignSystemThemeExtension.dark()
-      : DesignSystemThemeExtension.light();
-  final color = designSystem.color;
-  final textColor = designSystem.textColor;
-  final typography = designSystem.typography;
-  final shape = designSystem.shape;
+  final colorScheme = colorSet.toColorScheme(brightness);
+  final spacing = SpacingThemeExtension.standard();
+  final shape = ShapeThemeExtension.standard();
+  final typography = TypographyThemeExtension.fromColorTheme(colorSet);
+
+  final designSystem = DesignSystemThemeExtension(
+    colorTheme: colorSet,
+    spacing: spacing,
+    shape: shape,
+    typography: typography,
+  );
 
   return ThemeData(
     colorScheme: colorScheme,
-    scaffoldBackgroundColor: color.backgroundDefault,
-    cardColor: color.surfaceDefault,
+    scaffoldBackgroundColor: colorSet.surfaceContainerLow,
+    cardColor: colorSet.surface,
     dialogTheme: DialogThemeData(
-      backgroundColor: color.surfaceDefault,
+      backgroundColor: colorSet.surface,
       surfaceTintColor: Colors.transparent,
     ),
     cardTheme: CardThemeData(
-      color: color.surfaceCard,
+      color: colorSet.surfaceContainerHigh,
       surfaceTintColor: Colors.transparent,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
       ),
     ),
-    extensions: [
-      designSystem,
-      customColors,
-    ],
+    extensions: [designSystem],
     useMaterial3: true,
     textTheme: TextTheme(
       displayLarge: typography.displayLarge,
@@ -55,17 +58,17 @@ ThemeData buildTheme({
     fontFamily: primaryFontFamily,
     fontFamilyFallback: japaneseFontFamilyFallback,
     cupertinoOverrideTheme: CupertinoThemeData(
-      brightness: colorScheme.brightness,
+      brightness: brightness,
       applyThemeToAll: true,
-      primaryColor: colorScheme.primary,
-      scaffoldBackgroundColor: color.surfaceDefault,
-      barBackgroundColor: color.surfaceDefault,
+      primaryColor: colorSet.primary,
+      scaffoldBackgroundColor: colorSet.surface,
+      barBackgroundColor: colorSet.surface,
     ),
     appBarTheme: AppBarTheme(
       surfaceTintColor: Colors.transparent,
       scrolledUnderElevation: 0,
-      backgroundColor: color.backgroundDefault,
-      foregroundColor: textColor.primary,
+      backgroundColor: colorSet.surfaceContainerLow,
+      foregroundColor: colorSet.onSurface,
     ),
     splashFactory: NoSplash.splashFactory,
     // ignore: deprecated_member_use
@@ -82,22 +85,5 @@ ThemeData buildTheme({
         ),
       ),
     ),
-  );
-}
-
-CupertinoThemeData buildCupertinoTheme({
-  required ColorScheme colorScheme,
-  required CustomColors customColors,
-}) {
-  final designSystem = colorScheme.brightness == Brightness.dark
-      ? DesignSystemThemeExtension.dark()
-      : DesignSystemThemeExtension.light();
-
-  return CupertinoThemeData(
-    brightness: colorScheme.brightness,
-    applyThemeToAll: true,
-    primaryColor: colorScheme.primary,
-    scaffoldBackgroundColor: designSystem.color.surfaceDefault,
-    barBackgroundColor: designSystem.color.surfaceDefault,
   );
 }

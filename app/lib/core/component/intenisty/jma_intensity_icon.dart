@@ -1,12 +1,11 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class JmaIntensityIcon extends ConsumerWidget {
+class JmaIntensityIcon extends StatelessWidget {
   const JmaIntensityIcon({
     required this.intensity,
     required this.type,
@@ -23,10 +22,10 @@ class JmaIntensityIcon extends ConsumerWidget {
   final bool showSuffix;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel = ref.watch(intensityColorProvider);
-    final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
-    final (fg, bg) = (colorScheme.foreground, colorScheme.background);
+  Widget build(BuildContext context) {
+    final colorEntry =
+        context.designSystem.colorTheme.intensity.fromJmaIntensity(intensity);
+    final (fg, bg) = (colorEntry.resolvedForeground, colorEntry.background);
     final intensityMainText = intensity.mainText;
     final suffix = intensity.label.contains('-')
         ? '-'

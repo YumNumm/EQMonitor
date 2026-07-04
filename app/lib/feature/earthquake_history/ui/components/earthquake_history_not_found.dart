@@ -17,7 +17,7 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
             Icon(
               Icons.search_off_rounded,
               size: 48,
-              color: designSystem.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
             SizedBox(height: designSystem.spacing.sm),
             Text(
@@ -49,7 +49,7 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
               Icon(
                 Icons.search_rounded,
                 size: 48,
-                color: designSystem.textColor.secondary,
+                color: designSystem.colorTheme.onSurfaceVariant,
               ),
               SizedBox(height: designSystem.spacing.sm),
               Text(

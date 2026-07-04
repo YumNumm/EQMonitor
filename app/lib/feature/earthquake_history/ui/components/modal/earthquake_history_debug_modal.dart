@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_layer_parameter_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -44,7 +45,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                   height: 4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(2),
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                    color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.3),
                   ),
                 ),
               ),
@@ -67,7 +68,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                 ),
               ),
 
-              _header(theme, 'ズーム閾値'),
+              _header(context, 'ズーム閾値'),
               _slider(
                 '地域→市区町村',
                 value.regionToCity,
@@ -104,7 +105,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                 (v) => notifier.save(value.copyWith(hypocenterErrorMinZoom: v)),
               ),
 
-              _header(theme, '塗りつぶし透明度'),
+              _header(context, '塗りつぶし透明度'),
               _slider(
                 '地域 Fill',
                 value.regionFillOpacity,
@@ -127,7 +128,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                 (v) => notifier.save(value.copyWith(cityFillOpacity: v)),
               ),
 
-              _header(theme, '観測点サイズ (circle-radius)'),
+              _header(context, '観測点サイズ (circle-radius)'),
               _slider(
                 '最小 (z4)',
                 value.stationCircleRadiusMin,
@@ -143,7 +144,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                 (v) => notifier.save(value.copyWith(stationCircleRadiusMax: v)),
               ),
 
-              _header(theme, '観測点アイコンサイズ'),
+              _header(context, '観測点アイコンサイズ'),
               _slider(
                 '最小 (z3)',
                 value.stationIconSizeMin,
@@ -166,7 +167,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                 (v) => notifier.save(value.copyWith(stationIconSizeMax: v)),
               ),
 
-              _header(theme, '震央マーカー'),
+              _header(context, '震央マーカー'),
               _slider(
                 'アイコン最小 (z3)',
                 value.hypocenterIconSizeMin,
@@ -197,13 +198,14 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
     );
   }
 
-  Widget _header(ThemeData theme, String title) {
+  Widget _header(BuildContext context, String title) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 4),
       child: Text(
         title,
         style: theme.textTheme.labelLarge?.copyWith(
-          color: theme.colorScheme.primary,
+          color: context.designSystem.colorTheme.primary,
         ),
       ),
     );

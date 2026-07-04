@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,11 @@ Future<void> _pumpAndOpenSheet(WidgetTester tester) async {
         ),
       ],
       child: MaterialApp(
+        theme: ThemeData.light().copyWith(
+          extensions: <ThemeExtension<dynamic>>[
+            DesignSystemThemeExtension.light(),
+          ],
+        ),
         home: Scaffold(
           body: Builder(
             builder: (context) => ElevatedButton(

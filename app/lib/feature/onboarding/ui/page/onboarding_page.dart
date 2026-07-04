@@ -3,6 +3,7 @@ library;
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -51,7 +52,7 @@ class OnboardingPage extends HookConsumerWidget {
     final stepNavigation = useState(
       _StepNavigationState.initial(_steps.first),
     );
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
 
     final animateToNext = useCallback<Future<void> Function()>(() async {
       await pageController.nextPage(
@@ -97,7 +98,7 @@ class OnboardingPage extends HookConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: designSystem.color.backgroundDefault,
+      backgroundColor: designSystem.colorTheme.surfaceContainerLow,
       body: _OnboardingScope(
         currentStep: currentStep,
         nextPage: animateToNext,

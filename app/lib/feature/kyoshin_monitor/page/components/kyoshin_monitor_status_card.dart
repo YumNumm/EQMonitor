@@ -32,11 +32,11 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
     );
 
     return Card.outlined(
-      color: designSystem.color.surfaceCard.withValues(alpha: 0.92),
+      color: designSystem.colorTheme.surfaceContainerHigh.withValues(alpha: 0.92),
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.md),
-        side: BorderSide(color: designSystem.color.outlineSoft),
+        side: BorderSide(color: designSystem.colorTheme.outlineVariant),
       ),
       child: Tooltip(
         message: '強震モニタ',
