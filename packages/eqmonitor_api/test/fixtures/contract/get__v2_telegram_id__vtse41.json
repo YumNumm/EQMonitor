@@ -8,9 +8,11 @@
     "status": "NORMAL",
     "info_type": "PUBLICATION",
     "editorial_office": "気象庁本庁",
-    "publishing_office": ["気象庁"],
-    "press_at": "2011-03-11T05:49:00.000Z",
-    "report_at": "2011-03-11T05:49:02.000Z",
+    "publishing_office": [
+      "気象庁"
+    ],
+    "pressed_at": "2011-03-11T05:49:00.000Z",
+    "reported_at": "2011-03-11T05:49:02.000Z",
     "info_kind": "津波警報・注意報・予報a",
     "info_kind_version": "1.0_0",
     "hash": "stub-hash-vtse41",
@@ -21,7 +23,9 @@
     "free_form_comment": "高いところへ避難してください。",
     "warning": {
       "text": "津波が来るまで絶対に海岸に近づかないでください。",
-      "codes": ["0101"]
+      "codes": [
+        "0101"
+      ]
     }
   }
 }

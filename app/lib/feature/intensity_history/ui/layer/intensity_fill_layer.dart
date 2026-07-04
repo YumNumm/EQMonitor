@@ -66,68 +66,60 @@ class IntensityFillLayer extends HookConsumerWidget {
     final cityHighest = cityHighestAsync?.whenOrNull(data: (v) => v);
 
     // --- Lv1 fill effect ---
-    useEffect(
-      () {
-        if (styleController == null || prefectures == null) {
-          return null;
-        }
-        if (prefectureHighest == null || prefectureHighest.isEmpty) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null || prefectures == null) {
+        return null;
+      }
+      if (prefectureHighest == null || prefectureHighest.isEmpty) {
+        return null;
+      }
 
-        var disposed = false;
+      var disposed = false;
 
+      unawaited(() async {
+        try {
+          // 都道府県コード → 配下の細分区域コード(areaForecastLocalE)に展開
+          final pairs = <({String code, JmaIntensity intensity})>[];
+          for (final entry in prefectureHighest) {
+            final regionCodes = regionCodesOfPrefecture(
+              entry.code,
+              prefectures,
+            );
+            for (final code in regionCodes) {
+              pairs.add((code: code, intensity: entry.intensity));
+            }
+          }
+
+          final fillColor = buildIntensityMatchExpression(pairs, colorModel);
+
+          if (disposed) {
+            return;
+          }
+          await styleController.addLayer(
+            FillStyleLayer(
+              id: _lv1FillLayerId,
+              sourceId: 'eqmonitor_map',
+              sourceLayerId: 'areaForecastLocalE',
+              paint: {'fill-color': fillColor, 'fill-opacity': 0.7},
+            ),
+            belowLayerId: BaseLayer.areaForecastLocalELine.name,
+          );
+        } on Exception catch (e) {
+          talker.log(e);
+        }
+      }());
+
+      return () {
+        disposed = true;
         unawaited(() async {
           try {
-            // 都道府県コード → 配下の細分区域コード(areaForecastLocalE)に展開
-            final pairs = <({String code, JmaIntensity intensity})>[];
-            for (final entry in prefectureHighest) {
-              final regionCodes = regionCodesOfPrefecture(
-                entry.code,
-                prefectures,
-              );
-              for (final code in regionCodes) {
-                pairs.add(
-                  (code: code, intensity: entry.intensity.toJmaIntensity),
-                );
-              }
-            }
-
-            final fillColor = buildIntensityMatchExpression(pairs, colorModel);
-
-            if (disposed) {
-              return;
-            }
-            await styleController.addLayer(
-              FillStyleLayer(
-                id: _lv1FillLayerId,
-                sourceId: 'eqmonitor_map',
-                sourceLayerId: 'areaForecastLocalE',
-                paint: {
-                  'fill-color': fillColor,
-                  'fill-opacity': 0.7,
-                },
-              ),
-              belowLayerId: BaseLayer.areaForecastLocalELine.name,
-            );
+            await styleController.removeLayer(_lv1FillLayerId);
           } on Exception catch (e) {
             talker.log(e);
           }
         }());
-
-        return () {
-          disposed = true;
-          unawaited(() async {
-            try {
-              await styleController.removeLayer(_lv1FillLayerId);
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }());
-        };
-      },
-      [styleController, prefectures, prefectureHighest, colorModel],
-    );
+      };
+    }, [styleController, prefectures, prefectureHighest, colorModel]);
 
     // --- Lv2 city fill + dim effect ---
     useEffect(
@@ -147,9 +139,7 @@ class IntensityFillLayer extends HookConsumerWidget {
           try {
             // 市区町村 code → 最高震度 pairs (api.JmaIntensity → app.JmaIntensity 変換)
             final pairs = cityHighest
-                .map(
-                  (e) => (code: e.code, intensity: e.intensity.toJmaIntensity),
-                )
+                .map((e) => (code: e.code, intensity: e.intensity))
                 .toList();
             // areaInformationCityQuake のフィーチャ照合プロパティは `regioncode`。
             // (earthquake_history_fill_layer.dart の cityCodeFilter 参照)
@@ -169,10 +159,7 @@ class IntensityFillLayer extends HookConsumerWidget {
                 id: _lv2FillLayerId,
                 sourceId: 'eqmonitor_map',
                 sourceLayerId: 'areaInformationCityQuake',
-                paint: {
-                  'fill-color': fillColor,
-                  'fill-opacity': 0.8,
-                },
+                paint: {'fill-color': fillColor, 'fill-opacity': 0.8},
               ),
               belowLayerId: BaseLayer.areaForecastLocalELine.name,
             );
@@ -207,10 +194,7 @@ class IntensityFillLayer extends HookConsumerWidget {
                       selectedCityCode,
                     ],
                   ],
-                  paint: const {
-                    'fill-color': '#000000',
-                    'fill-opacity': 0.55,
-                  },
+                  paint: const {'fill-color': '#000000', 'fill-opacity': 0.55},
                 ),
                 aboveLayerId: _lv2FillLayerId,
               );
@@ -239,10 +223,7 @@ class IntensityFillLayer extends HookConsumerWidget {
                 sourceId: 'eqmonitor_map',
                 sourceLayerId: 'areaForecastLocalE',
                 filter: dimFilter,
-                paint: const {
-                  'fill-color': '#000000',
-                  'fill-opacity': 0.45,
-                },
+                paint: const {'fill-color': '#000000', 'fill-opacity': 0.45},
               ),
               aboveLayerId: dimAnchorLayerId,
             );

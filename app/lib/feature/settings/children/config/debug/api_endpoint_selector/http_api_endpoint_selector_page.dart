@@ -19,7 +19,7 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
 
     final prodRest = buildCfg.restApiUrl;
     final prodWs = buildCfg.wsApiUrl;
-    final devRest = prodRest.replaceAll('api.', 'dev.api.');
+    final devRest = prodRest.replaceAll('v2.api.', 'dev.v2.api.');
     final devWs = prodWs.replaceAll('websocket.', 'dev.websocket.');
     const stubRest = 'https://stub.api.eqmonitor.app';
     final stubWs = devWs;
@@ -37,10 +37,10 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
 
     Future<void> selectPreset(_ServerPreset preset) async {
       final (String rest, String ws) = switch (preset) {
-        _ServerPreset.prod => (prodRest, prodWs),
-        _ServerPreset.dev => (devRest, devWs),
-        _ServerPreset.stub => (stubRest, stubWs),
-        _ServerPreset.custom => (current.restApiUrl, current.wsApiUrl),
+        .prod => (prodRest, prodWs),
+        .dev => (devRest, devWs),
+        .stub => (stubRest, stubWs),
+        .custom => (current.restApiUrl, current.wsApiUrl),
       };
       await ref
           .read(telegramUrlProvider.notifier)
@@ -117,7 +117,8 @@ class _ServerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
     return BorderedContainer(
-      accentColor: selected ? accentColor : null,
+      accentColor: null,
+      elevation: 0,
       onPressed: onTap,
       child: Row(
         children: [
@@ -174,11 +175,7 @@ class _ServerTile extends StatelessWidget {
 }
 
 class _UrlRow extends StatelessWidget {
-  const _UrlRow({
-    required this.icon,
-    required this.label,
-    required this.url,
-  });
+  const _UrlRow({required this.icon, required this.label, required this.url});
 
   final IconData icon;
   final String label;

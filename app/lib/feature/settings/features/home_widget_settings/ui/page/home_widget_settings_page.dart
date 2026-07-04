@@ -75,7 +75,7 @@ class _WidgetRegionSection extends ConsumerWidget {
           title: '任意地域を選択',
           subtitle: region == null
               ? '都道府県または市区町村を指定します'
-              : '${region.name}（${_searchTypeLabel(region.searchType)}）',
+              : '${region.name}（${region.searchType == RegionSearchType.prefecture ? '都道府県' : '市区町村'}）',
           locked: !isPro,
           onTap: pick,
         ),
@@ -83,18 +83,12 @@ class _WidgetRegionSection extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.delete_outline),
             title: const Text('選択を解除'),
-            onTap: () async =>
-                ref.read(widgetRegionProvider.notifier).clear(),
+            onTap: () async => ref.read(widgetRegionProvider.notifier).clear(),
           ),
       ],
     );
   }
 }
-
-String _searchTypeLabel(RegionSearchType type) => switch (type) {
-  RegionSearchType.prefecture => '都道府県',
-  RegionSearchType.city => '市区町村',
-};
 
 class _WidgetRegionPickerPage extends HookWidget {
   const _WidgetRegionPickerPage({this.initial});
@@ -186,7 +180,11 @@ class _WidgetRegionPickerPage extends HookWidget {
                 child: ListTile(
                   leading: const Icon(Icons.place_outlined),
                   title: Text(selectedName.value!),
-                  subtitle: Text(_searchTypeLabel(searchType.value)),
+                  subtitle: Text(
+                    searchType.value == RegionSearchType.prefecture
+                        ? '都道府県'
+                        : '市区町村',
+                  ),
                 ),
               ),
             ],

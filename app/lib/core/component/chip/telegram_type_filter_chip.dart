@@ -1,14 +1,10 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class TelegramTypeFilterChip extends StatelessWidget {
-  const TelegramTypeFilterChip({
-    this.telegramTypes,
-    this.onChanged,
-    super.key,
-  });
+  const TelegramTypeFilterChip({this.telegramTypes, this.onChanged, super.key});
 
   final List<EarthquakeTelegramType>? telegramTypes;
   final ValueChanged<List<EarthquakeTelegramType>?>? onChanged;
@@ -129,9 +125,8 @@ class _TelegramTypeFilterModal extends HookWidget {
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(
-                  selected.value.toList()..sort(
-                    (a, b) => a.index.compareTo(b.index),
-                  ),
+                  selected.value.toList()
+                    ..sort((a, b) => a.index.compareTo(b.index)),
                 ),
                 child: const Text('完了'),
               ),
@@ -145,16 +140,6 @@ class _TelegramTypeFilterModal extends HookWidget {
 }
 
 extension on EarthquakeTelegramType {
-  String get label => switch (this) {
-    EarthquakeTelegramType.vxse51 => '震度速報',
-    EarthquakeTelegramType.vxse52 => '震源に関する情報',
-    EarthquakeTelegramType.vxse53 => '震源・震度に関する情報',
-    EarthquakeTelegramType.vxse61 => '地震の活動状況等に関する情報',
-    EarthquakeTelegramType.vxse62 => '顕著な地震の震源要素更新のお知らせ',
-    EarthquakeTelegramType.vxse45Forecast => '緊急地震速報（予報）',
-    EarthquakeTelegramType.vxse45Warning => '緊急地震速報（警報）',
-  };
-
   String get description => switch (this) {
     EarthquakeTelegramType.vxse51 => 'VXSE51',
     EarthquakeTelegramType.vxse52 => 'VXSE52',

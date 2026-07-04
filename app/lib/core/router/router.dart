@@ -11,8 +11,6 @@ import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dar
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
-import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_details_page.dart';
@@ -202,35 +200,6 @@ class IntensityHistoryRoute extends GoRouteData with $IntensityHistoryRoute {
         initialPrefectureCode: prefectureCode,
         initialCityCode: cityCode,
       );
-}
-
-@TypedGoRoute<EarthquakeSearchResultRoute>(
-  path: '/earthquake-search/:type/:code',
-)
-class EarthquakeSearchResultRoute extends GoRouteData
-    with $EarthquakeSearchResultRoute {
-  const EarthquakeSearchResultRoute({
-    required this.type,
-    required this.code,
-    this.name,
-  });
-
-  final String type;
-  final String code;
-  final String? name;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    final searchType = EarthquakeSearchType.values.firstWhere(
-      (e) => e.name == type,
-      orElse: () => EarthquakeSearchType.region,
-    );
-    return EarthquakeSearchResultPage(
-      type: searchType,
-      code: code,
-      name: name ?? code,
-    );
-  }
 }
 
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(
@@ -503,7 +472,6 @@ class TermOfServiceRoute extends GoRouteData with $TermOfServiceRoute {
   Widget build(BuildContext context, GoRouterState state) =>
       TermOfServicePage(onResult: $extra, showAcceptButton: showAcceptButton);
 }
-
 
 class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
   const PrivacyPolicyRoute({

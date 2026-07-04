@@ -35,10 +35,7 @@ class EarthquakeHistoryParameterPersistentDelegate
   ) {
     return ColoredBox(
       color: context.designSystem.colorTheme.surface,
-      child: _FilterChipBar(
-        parameter: parameter,
-        onChanged: onChanged,
-      ),
+      child: _FilterChipBar(parameter: parameter, onChanged: onChanged),
     );
   }
 
@@ -67,12 +64,16 @@ class _FilterChipBar extends StatelessWidget {
     final chips = <({int order, bool isActive, Widget chip})>[
       (
         order: 0,
-        isActive: parameter.sortBy != null || parameter.sortOrder != null,
+        isActive: true,
         chip: SortFilterChip(
           sortBy: parameter.sortBy,
           sortOrder: parameter.sortOrder,
-          onChanged: (sortBy, sortOrder) =>
-              onChanged(parameter.updateSort(sortBy, sortOrder)),
+          onChanged: (sortBy, sortOrder) {
+            if (sortBy == null || sortOrder == null) {
+              return;
+            }
+            onChanged(parameter.copyWith(sortBy: sortBy, sortOrder: sortOrder));
+          },
         ),
       ),
       (
@@ -82,8 +83,9 @@ class _FilterChipBar extends StatelessWidget {
         chip: IntensityFilterChip(
           min: parameter.intensityGte,
           max: parameter.intensityLte,
-          onChanged: (min, max) =>
-              onChanged(parameter.updateIntensity(min, max)),
+          onChanged: (min, max) => onChanged(
+            parameter.copyWith(intensityGte: min, intensityLte: max),
+          ),
         ),
       ),
       (
@@ -93,8 +95,9 @@ class _FilterChipBar extends StatelessWidget {
         chip: MagnitudeFilterChip(
           min: parameter.magnitudeGte,
           max: parameter.magnitudeLte,
-          onChanged: (min, max) =>
-              onChanged(parameter.updateMagnitude(min, max)),
+          onChanged: (min, max) => onChanged(
+            parameter.copyWith(magnitudeGte: min, magnitudeLte: max),
+          ),
         ),
       ),
       (
@@ -103,7 +106,8 @@ class _FilterChipBar extends StatelessWidget {
         chip: DepthFilterChip(
           min: parameter.depthGte,
           max: parameter.depthLte,
-          onChanged: (min, max) => onChanged(parameter.updateDepth(min, max)),
+          onChanged: (min, max) =>
+              onChanged(parameter.copyWith(depthGte: min, depthLte: max)),
         ),
       ),
       (
@@ -111,7 +115,8 @@ class _FilterChipBar extends StatelessWidget {
         isActive: parameter.earthquakeType != null,
         chip: EarthquakeTypeFilterChip(
           earthquakeType: parameter.earthquakeType,
-          onChanged: (type) => onChanged(parameter.updateEarthquakeType(type)),
+          onChanged: (type) =>
+              onChanged(parameter.copyWith(earthquakeType: type)),
         ),
       ),
       (
@@ -122,9 +127,9 @@ class _FilterChipBar extends StatelessWidget {
           min: parameter.originTimeGte?.toDateTime(),
           max: parameter.originTimeLte?.toDateTime(),
           onChanged: (min, max) => onChanged(
-            parameter.updateOriginTimeRange(
-              min != null ? Date.fromDateTime(min) : null,
-              max != null ? Date.fromDateTime(max) : null,
+            parameter.copyWith(
+              originTimeGte: min != null ? Date.fromDateTime(min) : null,
+              originTimeLte: max != null ? Date.fromDateTime(max) : null,
             ),
           ),
         ),
@@ -137,8 +142,12 @@ class _FilterChipBar extends StatelessWidget {
         chip: LpgmIntensityFilterChip(
           min: parameter.maxLpgmIntensityGte,
           max: parameter.maxLpgmIntensityLte,
-          onChanged: (min, max) =>
-              onChanged(parameter.updateLpgmIntensity(min, max)),
+          onChanged: (min, max) => onChanged(
+            parameter.copyWith(
+              maxLpgmIntensityGte: min,
+              maxLpgmIntensityLte: max,
+            ),
+          ),
         ),
       ),
       (
@@ -146,36 +155,64 @@ class _FilterChipBar extends StatelessWidget {
         isActive: parameter.statuses != null,
         chip: StatusFilterChip(
           statuses: parameter.statuses,
-          onChanged: (statuses) =>
-              onChanged(parameter.updateStatuses(statuses)),
+          onChanged: (statuses) {
+            if (statuses == null) {
+              onChanged(parameter.copyWith(statuses: null));
+            } else {
+              onChanged(parameter.copyWith(statuses: statuses));
+            }
+          },
         ),
       ),
       (
         order: 8,
-        isActive: parameter.regionCode != null,
+        isActive:
+            parameter is EarthquakeHistoryParameterRegion ||
+            parameter is EarthquakeHistoryParameterPrefecture ||
+            parameter is EarthquakeHistoryParameterCity ||
+            parameter is EarthquakeHistoryParameterStation,
         chip: RegionIntensityFilterChip(
-          regionSearchType: parameter.regionSearchType,
-          regionCode: parameter.regionCode,
-          regionName: parameter.regionName,
-          regionIntensityGte: parameter.regionIntensityGte,
-          regionIntensityLte: parameter.regionIntensityLte,
+          regionSearchType: switch (parameter) {
+            EarthquakeHistoryParameterRegion() => .region,
+            EarthquakeHistoryParameterPrefecture() => .prefecture,
+            EarthquakeHistoryParameterCity() => .city,
+            EarthquakeHistoryParameterStation() => .station,
+            _ => null,
+          },
+          regionCode: switch (parameter) {
+            EarthquakeHistoryParameterRegion(:final regionCode) => regionCode,
+            EarthquakeHistoryParameterPrefecture(:final prefectureCode) =>
+              prefectureCode,
+            EarthquakeHistoryParameterCity(:final cityCode) => cityCode,
+            EarthquakeHistoryParameterStation(:final stationCode) =>
+              stationCode,
+            _ => null,
+          },
           onChanged: (result) {
             if (result == null) {
               onChanged(
-                parameter.updateRegion(
-                  regionSearchType: null,
-                  regionCode: null,
-                  regionName: null,
-                ),
-              );
-            } else {
-              onChanged(
-                parameter.updateRegion(
-                  regionSearchType: result.searchType,
-                  regionCode: result.code,
-                  regionName: result.name,
-                  regionIntensityGte: result.intensityGte,
-                  regionIntensityLte: result.intensityLte,
+                EarthquakeHistoryParameterAll(
+                  sortBy: parameter.sortBy,
+                  sortOrder: parameter.sortOrder,
+                  intensityGte: parameter.intensityGte,
+                  intensityLte: parameter.intensityLte,
+                  magnitudeGte: parameter.magnitudeGte,
+                  magnitudeLte: parameter.magnitudeLte,
+                  depthGte: parameter.depthGte,
+                  depthLte: parameter.depthLte,
+                  earthquakeType: parameter.earthquakeType,
+                  datasource: parameter.datasource,
+                  telegramTypes: parameter.telegramTypes,
+                  originTimeGte: parameter.originTimeGte,
+                  originTimeLte: parameter.originTimeLte,
+                  maxLpgmIntensityGte: parameter.maxLpgmIntensityGte,
+                  maxLpgmIntensityLte: parameter.maxLpgmIntensityLte,
+                  statuses: parameter.statuses,
+                  latitudeGte: parameter.latitudeGte,
+                  latitudeLte: parameter.latitudeLte,
+                  longitudeGte: parameter.longitudeGte,
+                  longitudeLte: parameter.longitudeLte,
+                  epicenterCodes: parameter.epicenterCodes,
                 ),
               );
             }
@@ -187,7 +224,8 @@ class _FilterChipBar extends StatelessWidget {
         isActive: parameter.datasource != null,
         chip: DatasourceFilterChip(
           datasource: parameter.datasource,
-          onChanged: (ds) => onChanged(parameter.updateDatasource(ds)),
+          onChanged: (dataSource) =>
+              onChanged(parameter.copyWith(datasource: dataSource)),
         ),
       ),
       (
@@ -195,7 +233,8 @@ class _FilterChipBar extends StatelessWidget {
         isActive: parameter.telegramTypes != null,
         chip: TelegramTypeFilterChip(
           telegramTypes: parameter.telegramTypes,
-          onChanged: (types) => onChanged(parameter.updateTelegramTypes(types)),
+          onChanged: (types) =>
+              onChanged(parameter.copyWith(telegramTypes: types)),
         ),
       ),
       (
@@ -213,11 +252,16 @@ class _FilterChipBar extends StatelessWidget {
           onChanged: (range) {
             if (range == null) {
               onChanged(
-                parameter.updateLatLngRange(),
+                parameter.copyWith(
+                  latitudeGte: null,
+                  latitudeLte: null,
+                  longitudeGte: null,
+                  longitudeLte: null,
+                ),
               );
             } else {
               onChanged(
-                parameter.updateLatLngRange(
+                parameter.copyWith(
                   latitudeGte: range.latitudeGte,
                   latitudeLte: range.latitudeLte,
                   longitudeGte: range.longitudeGte,
@@ -245,9 +289,7 @@ class _FilterChipBar extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         child: Row(
           spacing: spacing.sm,
-          children: [
-            for (final entry in chips) entry.chip,
-          ],
+          children: [for (final entry in chips) entry.chip],
         ),
       ),
     );

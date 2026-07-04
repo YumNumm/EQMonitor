@@ -15,9 +15,7 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
   static final saveMutation = Mutation<void>();
 
   @override
-  Future<HomeConfigurationModel> build() async => load();
-
-  Future<HomeConfigurationModel> load() async {
+  Future<HomeConfigurationModel> build() async {
     try {
       final sharedPreferences = await ref.read(
         sharedPreferencesDataSourceProvider.future,
@@ -77,9 +75,7 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
   Future<void> clearCustomEarthquakeHistoryParameter() async {
     final current = await future;
     await save(
-      current.copyWith(
-        common: current.common.copyWith(parameter: null),
-      ),
+      current.copyWith(common: current.common.copyWith(parameter: null)),
     );
   }
 

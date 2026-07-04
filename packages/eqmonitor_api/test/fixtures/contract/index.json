@@ -366,15 +366,6 @@
     "fixture": "empty"
   },
   {
-    "key": "GET /v2/tsunami/active",
-    "file": "get__v2_tsunami_active__active-warning.json",
-    "fixture": "active-warning"
-  },
-  {
-    "key": "GET /v2/tsunami/active",
-    "file": "get__v2_tsunami_active.json"
-  },
-  {
     "key": "GET /v2/tsunami/by-event-id/:eventId",
     "file": "get__v2_tsunami_byeventid_eventId__active-warning.json",
     "fixture": "active-warning"

@@ -17,7 +17,10 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
   final home = await ref.watch(homeConfigurationProvider.future);
   switch (home.common.earthquakeHistoryScope) {
     case HomeEarthquakeHistoryScope.nationwide:
-      return const EarthquakeHistoryParameter();
+      return const EarthquakeHistoryParameter.all(
+        sortBy: .eventId,
+        sortOrder: .asc,
+      );
     case HomeEarthquakeHistoryScope.currentLocation:
       // Use the current stream state synchronously so that the provider
       // returns null immediately when no position is available (e.g. GPS
@@ -40,12 +43,14 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
       if (city == null) {
         return null;
       }
-      return EarthquakeHistoryParameter(
-        regionSearchType: RegionSearchType.city,
-        regionCode: city.property?.code ?? '',
-        regionName: city.property?.name.isNotEmpty == true
-            ? city.property!.name
-            : null,
+      return EarthquakeHistoryParameter.city(
+        sortBy: .eventId,
+        sortOrder: .asc,
+        cityCode:
+            city.property?.code ??
+            () {
+              throw Exception('city code is null');
+            }(),
       );
     case HomeEarthquakeHistoryScope.custom:
       return home.common.parameter;

@@ -3,7 +3,9 @@
     "event_id": "20251215120000",
     "status": "CANCEL",
     "origin_time_precision": "SECOND",
-    "datasource": "JMA_DISASTER_INFORMATION_XML",
+    "datasources": [
+      "JMA_DISASTER_INFORMATION_XML"
+    ],
     "telegrams": []
   }
 }

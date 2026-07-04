@@ -22,9 +22,11 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
         'origin_time_precision',
         (v) => $enumDecode(_$OriginTimePrecisionEnumMap, v),
       ),
-      datasource: $checkedConvert(
-        'datasource',
-        (v) => $enumDecode(_$EarthquakeDatasourceEnumMap, v),
+      datasources: $checkedConvert(
+        'datasources',
+        (v) => (v as List<dynamic>)
+            .map((e) => $enumDecode(_$EarthquakeDatasourceEnumMap, e))
+            .toList(),
       ),
       telegrams: $checkedConvert(
         'telegrams',
@@ -53,6 +55,10 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
         'estimated_intensity_tile',
         (v) => v as String?,
       ),
+      catalog: $checkedConvert(
+        'catalog',
+        (v) => v == null ? null : Catalog.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
@@ -70,13 +76,14 @@ Map<String, dynamic> _$EarthquakeToJson(_Earthquake instance) =>
       'event_id': instance.eventId,
       'status': instance.status,
       'origin_time_precision': instance.originTimePrecision,
-      'datasource': instance.datasource,
+      'datasources': instance.datasources,
       'telegrams': instance.telegrams,
       'origin_time': ?instance.originTime?.toIso8601String(),
       'arrival_time': ?instance.arrivalTime?.toIso8601String(),
       'hypocenter': ?instance.hypocenter,
       'intensity': ?instance.intensity,
       'estimated_intensity_tile': ?instance.estimatedIntensityTile,
+      'catalog': ?instance.catalog,
     };
 
 const _$TelegramStatusEnumMap = {

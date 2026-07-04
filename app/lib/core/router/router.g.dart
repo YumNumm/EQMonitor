@@ -16,7 +16,6 @@ List<RouteBase> get $appRoutes => [
   $eewHistoryRoute,
   $seismicityRoute,
   $intensityHistoryRoute,
-  $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
   $shakeDetectionHistoryRoute,
   $shakeDetectionHistoryDetailsRoute,
@@ -211,41 +210,6 @@ mixin $IntensityHistoryRoute on GoRouteData {
       if (_self.prefectureCode != null) 'prefecture-code': _self.prefectureCode,
       if (_self.cityCode != null) 'city-code': _self.cityCode,
     },
-  );
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $earthquakeSearchResultRoute => GoRouteData.$route(
-  path: '/earthquake-search/:type/:code',
-  factory: $EarthquakeSearchResultRoute._fromState,
-);
-
-mixin $EarthquakeSearchResultRoute on GoRouteData {
-  static EarthquakeSearchResultRoute _fromState(GoRouterState state) =>
-      EarthquakeSearchResultRoute(
-        type: state.pathParameters['type']!,
-        code: state.pathParameters['code']!,
-        name: state.uri.queryParameters['name'],
-      );
-
-  EarthquakeSearchResultRoute get _self => this as EarthquakeSearchResultRoute;
-
-  @override
-  String get location => GoRouteData.$location(
-    '/earthquake-search/${Uri.encodeComponent(_self.type)}/${Uri.encodeComponent(_self.code)}',
-    queryParams: {if (_self.name != null) 'name': _self.name},
   );
 
   @override

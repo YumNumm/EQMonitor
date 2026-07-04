@@ -15,8 +15,8 @@ _EarthquakeHypocenter _$EarthquakeHypocenterFromJson(
   json,
   ($checkedConvert) {
     final val = _EarthquakeHypocenter(
-      code: $checkedConvert('code', (v) => v as String),
-      name: $checkedConvert('name', (v) => v as String),
+      code: $checkedConvert('code', (v) => v as String?),
+      name: $checkedConvert('name', (v) => v as String?),
       coordinates: $checkedConvert(
         'coordinates',
         (v) =>

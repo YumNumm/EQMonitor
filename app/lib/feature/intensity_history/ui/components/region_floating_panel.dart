@@ -2,13 +2,11 @@ import 'dart:ui';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
-import 'package:eqmonitor/feature/intensity_history/ui/components/prefecture_detail_modal.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -138,12 +136,7 @@ class _CityPanel extends ConsumerWidget {
               );
               return;
             }
-            await showPrefectureDetailModal(
-              context,
-              prefectureCode: prefectureCode,
-              prefectureName: prefectureName,
-              summary: prefectureEntry,
-            );
+            throw UnimplementedError('TODO: 都道府県詳細モーダルを表示する');
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -152,7 +145,7 @@ class _CityPanel extends ConsumerWidget {
               children: [
                 if (entry != null) ...[
                   JmaIntensityIcon(
-                    intensity: entry.intensity.toJmaIntensity,
+                    intensity: entry.intensity,
                     type: IntensityIconType.filled,
                     size: 36,
                   ),

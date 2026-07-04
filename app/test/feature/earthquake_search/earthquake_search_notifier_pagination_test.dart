@@ -1,16 +1,18 @@
 import 'package:core/core.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart' as app;
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
-import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_search/data/notifier/earthquake_search_notifier.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
@@ -22,12 +24,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 void main() {
   test('fetchNextData passes current nextToken as cursor', () async {
     final repository = _FakeEarthquakeHistoryRepository();
-    const parameter = EarthquakeSearchParameter(
-      type: EarthquakeSearchType.region,
-      code: '100',
-      name: '地域',
+    const parameter = EarthquakeHistoryParameter.region(
+      sortBy: EarthquakeSortBy.eventId,
+      sortOrder: SortOrder.desc,
+      regionCode: '100',
     );
-    final provider = earthquakeSearchProvider(parameter);
+    final provider = earthquakeHistoryProvider(parameter);
     final container = ProviderContainer(
       overrides: [
         earthquakeHistoryRepositoryProvider.overrideWith(
@@ -50,7 +52,7 @@ final class _FakeEarthquakeHistoryRepository
     extends EarthquakeHistoryRepository {
   _FakeEarthquakeHistoryRepository()
     : super(
-        api: api.ApiClient(Dio()),
+        earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _parameter,
         shindoDbStations: const ShindoDbStationsParameter(
           metadata: ParameterMetadata(
@@ -68,7 +70,7 @@ final class _FakeEarthquakeHistoryRepository
   final regionCursors = <String?>[];
 
   @override
-  Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByRegion({
+  Future<PaginatedResponse<EarthquakePartialRegion>> searchByRegion({
     required String code,
     int? limit,
     String? cursor,
@@ -78,27 +80,21 @@ final class _FakeEarthquakeHistoryRepository
     int? depthLte,
     JmaIntensity? intensityGte,
     JmaIntensity? intensityLte,
-    List<api.TelegramStatus>? statuses,
+    List<app.TelegramStatus>? statuses,
     List<int>? epicenterCodes,
-    api.EarthquakeType? earthquakeType,
+    EarthquakeType? earthquakeType,
     Date? originTimeGte,
     Date? originTimeLte,
-    api.JmaLpgmIntensity? maxLpgmIntensityGte,
-    api.JmaLpgmIntensity? maxLpgmIntensityLte,
-    api.EarthquakeSortBy? sortBy,
-    api.SortOrder? sortOrder,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+    EarthquakeSortBy? sortBy,
+    SortOrder? sortOrder,
   }) async {
     regionCursors.add(cursor);
-    return PaginatedSearchResponse(
+    return PaginatedResponse(
       items: [
-        IntensityAreaSearchItem(
-          eventId: 'event-${regionCursors.length}',
-          area: const IntensityAreaInfo(
-            code: '100',
-            name: '地域',
-            intensity: null,
-            lpgmIntensity: null,
-          ),
+        EarthquakePartialRegion(
+          regionIntensity: JmaIntensity.three,
           earthquake: _earthquake('event-${regionCursors.length}'),
         ),
       ],
@@ -119,13 +115,13 @@ const _parameter = EarthquakeParameter(
   prefectures: [],
 );
 
-EarthquakePartial _earthquake(String eventId) => EarthquakePartial(
+EarthquakePartialNormal _earthquake(String eventId) => EarthquakePartialNormal(
   eventId: eventId,
   status: app.TelegramStatus.normal,
   originTime: null,
   originTimePrecision: OriginTimePrecision.second,
   arrivalTime: null,
-  dataSource: EarthquakeDataSource.jmaDisasterInformationXml,
+  dataSources: [EarthquakeDataSource.jmaDisasterInformationXml],
   hypocenter: null,
   intensity: null,
   earthquakeType: EarthquakeType.normal,

@@ -125,9 +125,7 @@ class _RegionIntensityPickerPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final searchType = useState(
-      initialSearchType ?? RegionSearchType.prefecture,
-    );
+    final searchType = useState(initialSearchType ?? .prefecture);
     final selectedCode = useState<String?>(initialCode);
     final selectedName = useState<String?>(initialName);
     final intensityGte = useState<JmaIntensity?>(initialIntensityGte);
@@ -145,19 +143,17 @@ class _RegionIntensityPickerPage extends HookConsumerWidget {
         actions: [
           TextButton(
             onPressed: canApply
-                ? () => Navigator.of(context).pop(
-                    (
-                      searchType: searchType.value,
-                      code: selectedCode.value!,
-                      name: selectedName.value ?? '',
-                      intensityGte: useIntensityFilter.value
-                          ? intensityGte.value
-                          : null,
-                      intensityLte: useIntensityFilter.value
-                          ? intensityLte.value
-                          : null,
-                    ),
-                  )
+                ? () => Navigator.of(context).pop((
+                    searchType: searchType.value,
+                    code: selectedCode.value!,
+                    name: selectedName.value ?? '',
+                    intensityGte: useIntensityFilter.value
+                        ? intensityGte.value
+                        : null,
+                    intensityLte: useIntensityFilter.value
+                        ? intensityLte.value
+                        : null,
+                  ))
                 : null,
             child: const Text('決定'),
           ),
@@ -188,10 +184,10 @@ class _RegionIntensityPickerPage extends HookConsumerWidget {
                 const SizedBox(width: 8),
                 ChoiceChip(
                   label: const Text('市区町村'),
-                  selected: searchType.value == RegionSearchType.city,
+                  selected: searchType.value == .city,
                   onSelected: (s) {
                     if (s) {
-                      searchType.value = RegionSearchType.city;
+                      searchType.value = .city;
                       selectedCode.value = null;
                       selectedName.value = null;
                     }

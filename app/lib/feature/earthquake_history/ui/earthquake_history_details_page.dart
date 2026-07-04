@@ -12,7 +12,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/estimated_intensity_notice_dialog.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/similar_earthquake_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -128,7 +127,6 @@ class _LoadedContent extends HookConsumerWidget {
                           DateTime.now().difference(earthquake.originTime!) >
                               const Duration(hours: 24))
                         const AdBanner(),
-                      SimilarEarthquakeCard(earthquake: earthquake),
                       _TelegramListButton(eventId: earthquake.eventId),
                     ],
                   ),

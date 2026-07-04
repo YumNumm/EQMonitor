@@ -23,9 +23,11 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
             'origin_time_precision',
             (v) => $enumDecode(_$OriginTimePrecisionEnumMap, v),
           ),
-          datasource: $checkedConvert(
-            'datasource',
-            (v) => $enumDecode(_$EarthquakeDatasourceEnumMap, v),
+          datasources: $checkedConvert(
+            'datasources',
+            (v) => (v as List<dynamic>)
+                .map((e) => $enumDecode(_$EarthquakeDatasourceEnumMap, e))
+                .toList(),
           ),
           telegramTypes: $checkedConvert(
             'telegram_types',
@@ -80,7 +82,7 @@ Map<String, dynamic> _$EarthquakePartialToJson(_EarthquakePartial instance) =>
       'event_id': instance.eventId,
       'status': instance.status,
       'origin_time_precision': instance.originTimePrecision,
-      'datasource': instance.datasource,
+      'datasources': instance.datasources,
       'telegram_types': instance.telegramTypes,
       'earthquake_type': instance.earthquakeType,
       'origin_time': ?instance.originTime?.toIso8601String(),

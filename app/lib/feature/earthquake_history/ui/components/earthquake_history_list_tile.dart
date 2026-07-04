@@ -4,9 +4,9 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +15,7 @@ import 'package:intl/intl.dart';
 class EarthquakeHistoryListTile extends StatelessWidget {
   const EarthquakeHistoryListTile({
     required this.item,
-    this.areaInfo,
-    this.areaName,
+    required this.searchParameter,
     this.onTap,
     this.showBackgroundColor = true,
     this.intensityIconSize = 40.0,
@@ -31,11 +30,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
   });
 
   final EarthquakePartial item;
-
-  /// 地域検索時にレスポンスに含まれる、検索対象地域の震度情報。
-  /// `areaInfo`と`areaName`はどちらもnot-null もしくは null である必要がある
-  final IntensityAreaInfo? areaInfo;
-  final String? areaName;
+  final EarthquakeHistoryParameter searchParameter;
 
   final void Function()? onTap;
   final bool showBackgroundColor;
@@ -50,20 +45,13 @@ class EarthquakeHistoryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(
-      areaInfo != null && areaName != null ||
-          areaInfo == null && areaName == null,
-      'areaInfoとareaNameはどちらもnot-null もしくは null である必要がある',
-    );
     final theme = Theme.of(context);
     final intensityColors = context.designSystem.colorTheme.intensity;
 
-    final hypocenter = item.hypocenter;
-    final intensity = item.intensity;
+    final earthquake = item.earthquake;
+    final hypocenter = earthquake.hypocenter;
+    final intensity = earthquake.intensity;
     final maxIntensity = intensity?.maxIntensity;
-
-    // 地震種別はサーバ(earthquake_type)から取得する。
-    final earthquakeType = item.earthquakeType;
 
     final hypoName = hypocenter?.name;
     final hypoDetailName = hypocenter?.detailedName;
@@ -79,7 +67,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
     final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
     final depth = hypocenter?.depth;
     final subTitle =
-        switch ((item.originTime, item.arrivalTime)) {
+        switch ((earthquake.originTime, earthquake.arrivalTime)) {
           (final DateTime originTime, _) =>
             '${dateFormatter.format(originTime.toLocal())}頃発生 ',
           (_, final DateTime arrivalTime) =>
@@ -98,14 +86,11 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         ? intensityColors.fromJmaIntensity(maxIntensity).background
         : null;
 
-    final tileBaseColor = switch (earthquakeType) {
+    final tileBaseColor = switch (earthquake.earthquakeType) {
       EarthquakeType.distant => _distantColor,
       EarthquakeType.volcano => _volcanoColor,
       EarthquakeType.normal => maxIntensityColor,
     };
-
-    // 地域検索時に、検索対象地域の震度情報をレスポンスからそのまま表示する。
-    final areaIntensity = areaInfo?.intensity;
 
     final magnitude = hypocenter?.magnitude;
 
@@ -141,18 +126,46 @@ class EarthquakeHistoryListTile extends StatelessWidget {
               ],
             ),
           ),
-          if (areaName != null && areaIntensity != null)
+          if (item is! EarthquakePartialNormal)
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: _AreaIntensityChip(
-                areaName: areaName!,
-                intensity: areaIntensity,
+                // TOOD(YumNumm): EarthquakeParameterから当該オブジェクトを取得して名前を表示する
+                areaName: switch (searchParameter) {
+                  EarthquakeHistoryParameterRegion(:final String regionCode) =>
+                    regionCode,
+                  EarthquakeHistoryParameterPrefecture(
+                    :final String prefectureCode,
+                  ) =>
+                    prefectureCode,
+                  EarthquakeHistoryParameterCity(:final String cityCode) =>
+                    cityCode,
+                  EarthquakeHistoryParameterStation(
+                    :final String stationCode,
+                  ) =>
+                    stationCode,
+                  EarthquakeHistoryParameterAll() => throw StateError(
+                    'EarthquakeHistoryParameterAll is not supported',
+                  ),
+                },
+                intensity: switch (item) {
+                  EarthquakePartialPrefecture(:final prefectureIntensity) =>
+                    prefectureIntensity,
+                  EarthquakePartialRegion(:final regionIntensity) =>
+                    regionIntensity,
+                  EarthquakePartialCity(:final cityIntensity) => cityIntensity,
+                  EarthquakePartialStation(:final stationIntensity) =>
+                    stationIntensity,
+                  EarthquakePartialNormal() => throw StateError(
+                    'EarthquakePartialNormal is not supported',
+                  ),
+                },
                 intensityColors: intensityColors,
               ),
             ),
         ],
       ),
-      leading: switch (earthquakeType) {
+      leading: switch (earthquake.earthquakeType) {
         EarthquakeType.distant => _ForeignEarthquakeIcon(
           size: intensityIconSize,
           color: _distantColor,
@@ -242,11 +255,7 @@ class _ForeignEarthquakeIcon extends StatelessWidget {
           borderRadius: BorderRadius.circular(size / 5),
         ),
         child: Center(
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: size * 0.7,
-          ),
+          child: Icon(icon, color: Colors.white, size: size * 0.7),
         ),
       ),
     );

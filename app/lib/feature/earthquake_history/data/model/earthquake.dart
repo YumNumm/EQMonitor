@@ -19,7 +19,7 @@ abstract class Earthquake with _$Earthquake {
     required DateTime? originTime,
     required OriginTimePrecision originTimePrecision,
     required DateTime? arrivalTime,
-    required EarthquakeDataSource dataSource,
+    required List<EarthquakeDataSource> dataSources,
     required List<EarthquakeTelegramType> telegramTypes,
     required EarthquakeHypocenter? hypocenter,
     required EarthquakeIntensity? intensity,
@@ -42,7 +42,7 @@ extension EarthquakeApiExtension on api.Earthquake {
     originTime: originTime,
     originTimePrecision: originTimePrecision.toOriginTimePrecision,
     arrivalTime: arrivalTime,
-    dataSource: datasource.toEarthquakeDataSource,
+    dataSources: datasources.map((e) => e.toEarthquakeDataSource).toList(),
     telegramTypes: telegrams
         .map((e) => e.telegram.type.toEarthquakeTelegramTypeOrNull)
         .whereType<EarthquakeTelegramType>()

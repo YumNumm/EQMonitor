@@ -1,11 +1,12 @@
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'highest_intensity_entry.freezed.dart';
+part 'highest_intensity_entry.g.dart';
 
-/// [HighestIntensityItem] の app 用ラッパ。
-///
-/// Lv1(都道府県)・Lv2(市区町村)共通で使用する。
 @freezed
 abstract class HighestIntensityEntry with _$HighestIntensityEntry {
   const factory HighestIntensityEntry({
@@ -27,13 +28,17 @@ abstract class HighestIntensityEntry with _$HighestIntensityEntry {
 
   const HighestIntensityEntry._();
 
-  /// [HighestIntensityItem] から変換する。
-  factory HighestIntensityEntry.fromApi(HighestIntensityItem item) =>
+  factory HighestIntensityEntry.fromJson(Map<String, dynamic> json) =>
+      _$HighestIntensityEntryFromJson(json);
+}
+
+extension HighestIntensityEntryApiExtension on api.HighestIntensityItem {
+  HighestIntensityEntry toAppEntry({required EarthquakeParameter parameter}) =>
       HighestIntensityEntry(
-        code: item.code,
-        name: item.name,
-        intensity: item.intensity,
-        count: item.count,
-        earthquake: item.earthquake,
+        code: code,
+        name: name,
+        intensity: intensity.toJmaIntensity,
+        count: count,
+        earthquake: earthquake.toEarthquakePartial(parameter: parameter),
       );
 }

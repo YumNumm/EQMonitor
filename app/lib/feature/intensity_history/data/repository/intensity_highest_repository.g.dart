@@ -52,4 +52,4 @@ final class IntensityHighestRepositoryProvider
 }
 
 String _$intensityHighestRepositoryHash() =>
-    r'273f18b2c2cb53292545bf2bb5c4edefabecdc3f';
+    r'ab5b2d4437f9a776926dd97a49b09df065e1be21';

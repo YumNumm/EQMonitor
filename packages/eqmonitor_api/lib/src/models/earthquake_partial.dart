@@ -24,7 +24,9 @@ abstract class EarthquakePartial with _$EarthquakePartial {
     required TelegramStatus status,
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
-    required EarthquakeDatasource datasource,
+
+    /// 地震データのソースの配列
+    required List<EarthquakeDatasource> datasources,
 
     /// この地震イベントに紐づく電文タイプの配列
     @JsonKey(name: 'telegram_types')

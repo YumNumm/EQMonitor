@@ -31,7 +31,9 @@ class BorderedContainer extends StatelessWidget {
       color: accentColor ?? designSystem.colorTheme.surfaceContainer,
       shape: RoundedSuperellipseBorder(
         side: BorderSide(
-          color: designSystem.colorTheme.onSurfaceVariant.withValues(alpha: 0.3),
+          color: designSystem.colorTheme.onSurfaceVariant.withValues(
+            alpha: 0.3,
+          ),
         ),
         borderRadius: borderRadius,
       ),

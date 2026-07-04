@@ -10,8 +10,8 @@ part 'earthquake_hypocenter.g.dart';
 @freezed
 abstract class EarthquakeHypocenter with _$EarthquakeHypocenter {
   const factory EarthquakeHypocenter({
-    required String code,
-    required String name,
+    required String? code,
+    required String? name,
     required Coordinate? coordinates,
     required EarthquakeMagnitude magnitude,
     required EarthquakeDepth depth,

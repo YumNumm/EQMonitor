@@ -8,7 +8,8 @@ part of 'earthquake_search_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_PaginatedSearchResponse<T> _$PaginatedSearchResponseFromJson<T>(
+_PaginatedSearchResponse<T>
+_$PaginatedSearchResponseFromJson<T extends EarthquakePartial>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
 ) => $checkedCreate('_PaginatedSearchResponse', json, ($checkedConvert) {
@@ -22,7 +23,8 @@ _PaginatedSearchResponse<T> _$PaginatedSearchResponseFromJson<T>(
   return val;
 }, fieldKeyMap: const {'nextToken': 'next_token'});
 
-Map<String, dynamic> _$PaginatedSearchResponseToJson<T>(
+Map<String, dynamic>
+_$PaginatedSearchResponseToJson<T extends EarthquakePartial>(
   _PaginatedSearchResponse<T> instance,
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
