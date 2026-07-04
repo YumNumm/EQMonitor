@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -126,8 +127,8 @@ class _SummaryCard extends StatelessWidget {
                   '未送信: $unsyncedCount件',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: unsyncedCount > 0
-                        ? theme.colorScheme.error
-                        : theme.colorScheme.outline,
+                        ? context.designSystem.colorTheme.error
+                        : context.designSystem.colorTheme.outline,
                   ),
                 ),
               ],
@@ -165,8 +166,8 @@ class _EventTile extends StatelessWidget {
         event.synced ? Icons.cloud_done : Icons.cloud_upload_outlined,
         size: 20,
         color: event.synced
-            ? theme.colorScheme.outline
-            : theme.colorScheme.primary,
+            ? context.designSystem.colorTheme.outline
+            : context.designSystem.colorTheme.primary,
       ),
       title: Text(
         event.eventType,
@@ -186,7 +187,7 @@ class _EventTile extends StatelessWidget {
             Text(
               'eventId: ${event.eventId}',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.outline,
+                color: context.designSystem.colorTheme.outline,
               ),
             ),
         ],
@@ -247,7 +248,7 @@ class _EventTile extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.surfaceContainerHighest,
+                            color: context.designSystem.colorTheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: SelectableText(
@@ -289,7 +290,7 @@ class _DetailRow extends StatelessWidget {
             child: Text(
               label,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.outline,
+                color: context.designSystem.colorTheme.outline,
               ),
             ),
           ),

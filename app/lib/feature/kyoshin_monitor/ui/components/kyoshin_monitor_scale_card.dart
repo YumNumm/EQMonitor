@@ -35,7 +35,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
     };
 
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
 
     // LPGMデータ種別の場合はスケールの代わりにラベルのみ表示
     if (type == null) {
@@ -47,9 +47,9 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
             vertical: designSystem.spacing.md,
           ),
           decoration: BoxDecoration(
-            color: color.surfaceCard.withValues(alpha: 0.9),
+            color: colorTheme.surfaceContainerHigh.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(designSystem.shape.md),
-            border: Border.all(color: color.outlineSoft),
+            border: Border.all(color: colorTheme.outlineVariant),
           ),
           child: Text(
             realtimeDataType.displayName,
@@ -72,9 +72,9 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
           vertical: designSystem.spacing.md,
         ),
         decoration: BoxDecoration(
-          color: color.surfaceCard.withValues(alpha: 0.9),
+          color: colorTheme.surfaceContainerHigh.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(designSystem.shape.md),
-          border: Border.all(color: color.outlineSoft),
+          border: Border.all(color: colorTheme.outlineVariant),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +99,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
               height: 150,
               gradientDirection: KyoshinMonitorScaleGradientDirection.reverse,
               orientation: KyoshinMonitorScaleOrientation.vertical,
-              textColor: designSystem.textColor.primary,
+              textColor: designSystem.colorTheme.onSurface,
               tickInterval: 3,
               textStyle: designSystem.typography.monoSmall.copyWith(
                 textBaseline: TextBaseline.alphabetic,

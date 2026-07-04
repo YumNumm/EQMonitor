@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -11,14 +12,12 @@ import 'package:intl/intl.dart';
 class EewHistoryListTile extends StatelessWidget {
   const EewHistoryListTile({
     required this.item,
-    required this.intensityColor,
     this.onTap,
     this.visualDensity,
     super.key,
   });
 
   final EewTelegramItem item;
-  final IntensityColorModel intensityColor;
   final VoidCallback? onTap;
   final VisualDensity? visualDensity;
 
@@ -37,8 +36,9 @@ class EewHistoryListTile extends StatelessWidget {
         '${dateFormatter.format(time.toLocal())}発生 '
         '${depth != null ? '深さ ${depth}km' : ''}';
 
+    final intensityColors = context.designSystem.colorTheme.intensity;
     final maxIntensityColor = maxIntensity != null
-        ? intensityColor.fromJmaIntensity(maxIntensity).background
+        ? intensityColors.fromJmaIntensity(maxIntensity).background
         : null;
 
     final magnitude = hypocenter?.magnitude != null

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
@@ -89,9 +90,9 @@ class _WsStatusCard extends HookWidget {
       WsPhase.disconnected => '切断',
     };
     final statusColor = switch (wsStatus.phase) {
-      WsPhase.connecting => theme.colorScheme.secondary,
-      WsPhase.connected => theme.colorScheme.primary,
-      WsPhase.disconnected => theme.colorScheme.error,
+      WsPhase.connecting => context.designSystem.colorTheme.secondary,
+      WsPhase.connected => context.designSystem.colorTheme.primary,
+      WsPhase.disconnected => context.designSystem.colorTheme.error,
     };
 
     final pingLabel = wsStatus.lastPingAt == null

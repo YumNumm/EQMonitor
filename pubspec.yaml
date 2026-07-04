@@ -9,6 +9,9 @@ workspace:
   - packages/*
 dependencies:
   melos: ^7.4.0
+dev_dependencies:
+  eqmonitor_lints:
+    path: packages/eqmonitor_lints
 melos:
   repository: https://github.com/YumNumm/EQMonitor
   command:

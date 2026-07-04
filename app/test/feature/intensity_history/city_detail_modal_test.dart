@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/intensity_history/data/model/city_intensity_page.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_intensity_list_data_source.dart';
@@ -98,8 +99,13 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(
-          home: Scaffold(
+        child: MaterialApp(
+          theme: ThemeData.light().copyWith(
+            extensions: <ThemeExtension<dynamic>>[
+              DesignSystemThemeExtension.light(),
+            ],
+          ),
+          home: const Scaffold(
             body: _ModalWrapper(
               cityCode: 'city-1',
               cityName: '仙台市',

@@ -15,11 +15,6 @@ _$TsunamiStationObservationFirstHeightFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _TsunamiStationObservationFirstHeight(
-          isUnidentifiable: $checkedConvert(
-            'is_unidentifiable',
-            (v) => v as bool,
-          ),
-          isMissing: $checkedConvert('is_missing', (v) => v as bool),
           arrivalTime: $checkedConvert(
             'arrival_time',
             (v) => v == null ? null : DateTime.parse(v as String),
@@ -28,6 +23,11 @@ _$TsunamiStationObservationFirstHeightFromJson(Map<String, dynamic> json) =>
             'initial',
             (v) => $enumDecodeNullable(_$WaveInitialEnumMap, v),
           ),
+          isUnidentifiable: $checkedConvert(
+            'is_unidentifiable',
+            (v) => v as bool?,
+          ),
+          isMissing: $checkedConvert('is_missing', (v) => v as bool?),
           revise: $checkedConvert(
             'revise',
             (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
@@ -36,19 +36,19 @@ _$TsunamiStationObservationFirstHeightFromJson(Map<String, dynamic> json) =>
         return val;
       },
       fieldKeyMap: const {
+        'arrivalTime': 'arrival_time',
         'isUnidentifiable': 'is_unidentifiable',
         'isMissing': 'is_missing',
-        'arrivalTime': 'arrival_time',
       },
     );
 
 Map<String, dynamic> _$TsunamiStationObservationFirstHeightToJson(
   _TsunamiStationObservationFirstHeight instance,
 ) => <String, dynamic>{
-  'is_unidentifiable': instance.isUnidentifiable,
-  'is_missing': instance.isMissing,
   'arrival_time': ?instance.arrivalTime?.toIso8601String(),
   'initial': ?instance.initial,
+  'is_unidentifiable': ?instance.isUnidentifiable,
+  'is_missing': ?instance.isMissing,
   'revise': ?instance.revise,
 };
 

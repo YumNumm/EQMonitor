@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
@@ -24,9 +25,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final detailsState = ref.watch(
-      earthquakeHistoryDetailsProvider(eventId),
-    );
+    final detailsState = ref.watch(earthquakeHistoryDetailsProvider(eventId));
 
     return switch (detailsState) {
       AsyncLoading() => Scaffold(
@@ -51,9 +50,8 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
         appBar: AppBar(),
         body: ErrorCard(
           error: error,
-          onReload: () async => ref.refresh(
-            earthquakeHistoryDetailsProvider(eventId),
-          ),
+          onReload: () async =>
+              ref.refresh(earthquakeHistoryDetailsProvider(eventId)),
         ),
       ),
       AsyncData(value: final earthquake) => _LoadedContent(
@@ -74,30 +72,25 @@ class _LoadedContent extends HookConsumerWidget {
     final hasLpgm = earthquake.intensity?.maxLpgmIntensity != null;
 
     final displayMode = useState(
-      hasEstimated
-          ? IntensityDisplayMode.estimated
-          : IntensityDisplayMode.jma,
+      hasEstimated ? IntensityDisplayMode.estimated : IntensityDisplayMode.jma,
     );
 
     final noticeShown = ref.watch(estimatedIntensityNoticeShownProvider);
 
-    useEffect(
-      () {
-        if (hasEstimated && !noticeShown) {
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            if (!context.mounted) {
-              return;
-            }
-            await EstimatedIntensityNoticeDialog.show(context);
-            await ref
-                .read(estimatedIntensityNoticeShownProvider.notifier)
-                .markShown();
-          });
-        }
-        return null;
-      },
-      [hasEstimated, noticeShown],
-    );
+    useEffect(() {
+      if (hasEstimated && !noticeShown) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          if (!context.mounted) {
+            return;
+          }
+          await EstimatedIntensityNoticeDialog.show(context);
+          await ref
+              .read(estimatedIntensityNoticeShownProvider.notifier)
+              .markShown();
+        });
+      }
+      return null;
+    }, [hasEstimated, noticeShown]);
 
     final availableModes = [
       IntensityDisplayMode.jma,
@@ -105,8 +98,7 @@ class _LoadedContent extends HookConsumerWidget {
       if (hasEstimated) IntensityDisplayMode.estimated,
     ];
 
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return Scaffold(
       body: Stack(
@@ -153,7 +145,9 @@ class _LoadedContent extends HookConsumerWidget {
                     shape: WidgetStatePropertyAll(
                       RoundedSuperellipseBorder(
                         side: BorderSide(
-                          color: colorScheme.primary.withValues(alpha: 0.2),
+                          color: designSystem.colorTheme.primary.withValues(
+                            alpha: 0.2,
+                          ),
                         ),
                         borderRadius: BorderRadius.circular(128),
                       ),
@@ -161,7 +155,7 @@ class _LoadedContent extends HookConsumerWidget {
                   ),
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () => context.pop(),
-                  color: colorScheme.primary,
+                  color: designSystem.colorTheme.primary,
                   padding: const EdgeInsets.all(12),
                 ),
               ),
@@ -179,8 +173,7 @@ class _TelegramListButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -191,8 +184,8 @@ class _TelegramListButton extends StatelessWidget {
         label: const Text('電文一覧を見る'),
         style: FilledButton.styleFrom(
           minimumSize: const Size(double.infinity, 48),
-          backgroundColor: colorScheme.secondaryContainer,
-          foregroundColor: colorScheme.onSecondaryContainer,
+          backgroundColor: designSystem.colorTheme.secondaryContainer,
+          foregroundColor: designSystem.colorTheme.onSecondaryContainer,
         ),
       ),
     );

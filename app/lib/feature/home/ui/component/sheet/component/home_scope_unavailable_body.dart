@@ -51,7 +51,7 @@ class _UnavailableContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
     final typography = designSystem.typography;
@@ -66,14 +66,14 @@ class _UnavailableContainer extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(spacing.lg),
         decoration: BoxDecoration(
-          color: color.surfaceRaised,
+          color: colorTheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(shape.lg),
-          border: Border.all(color: color.outlineSoft),
+          border: Border.all(color: colorTheme.outlineVariant),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: designSystem.textColor.secondary),
+            Icon(icon, color: designSystem.colorTheme.onSurfaceVariant),
             SizedBox(height: spacing.sm),
             Text(
               message,

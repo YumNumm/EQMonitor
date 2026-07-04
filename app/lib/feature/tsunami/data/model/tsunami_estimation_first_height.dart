@@ -18,7 +18,7 @@ extension TsunamiEstimationFirstHeightApiExt
     on api.TsunamiRegionEstimationFirstHeight {
   TsunamiEstimationFirstHeight toDomain() => TsunamiEstimationFirstHeight(
     arrivalTime: arrivalTime,
-    isAlreadyArrived: isAlreadyArrived as bool?,
+    isAlreadyArrived: isAlreadyArrived,
     revise: revise?.toDomain(),
   );
 }

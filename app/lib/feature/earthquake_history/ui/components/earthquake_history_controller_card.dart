@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -16,8 +17,7 @@ class EarthquakeHistoryControllerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     const divider = Padding(
       padding: EdgeInsets.symmetric(horizontal: 4),
@@ -27,7 +27,7 @@ class EarthquakeHistoryControllerCard extends StatelessWidget {
     Future<void> hapticFeedback() async => HapticFeedback.lightImpact();
 
     return Card(
-      color: colorScheme.surfaceContainerHighest,
+      color: designSystem.colorTheme.surfaceContainerHighest,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
       shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.circular(12)),

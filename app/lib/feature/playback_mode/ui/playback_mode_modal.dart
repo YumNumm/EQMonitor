@@ -39,7 +39,7 @@ class PlaybackModeModal extends ConsumerWidget {
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
 
     final replay = ref.watch(replayProvider);
 
@@ -52,7 +52,7 @@ class PlaybackModeModal extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.history_rounded, color: textColor.secondary),
+                Icon(Icons.history_rounded, color: colorTheme.onSurfaceVariant),
                 SizedBox(width: spacing.sm),
                 Text('再生モード', style: typography.titleMedium),
               ],
@@ -84,7 +84,7 @@ class _TimeShiftSection extends ConsumerWidget {
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
 
     final mode = ref.watch(appClockProvider);
     final notifier = ref.read(appClockProvider.notifier);
@@ -98,7 +98,7 @@ class _TimeShiftSection extends ConsumerWidget {
       children: [
         Text(
           'タイムシフトを選ぶと強震モニタ・EEW・揺れ検知が指定時刻基準で再生されます。',
-          style: typography.labelSmall.copyWith(color: textColor.secondary),
+          style: typography.labelSmall.copyWith(color: colorTheme.onSurfaceVariant),
         ),
         SizedBox(height: spacing.sm),
         Wrap(
@@ -178,7 +178,7 @@ class _ReplayControls extends ConsumerWidget {
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
 
     final replay = ref.watch(replayProvider);
     final notifier = ref.read(replayProvider.notifier);
@@ -191,7 +191,7 @@ class _ReplayControls extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.movie_rounded, color: textColor.secondary, size: 18),
+            Icon(Icons.movie_rounded, color: colorTheme.onSurfaceVariant, size: 18),
             SizedBox(width: spacing.xs),
             Expanded(
               child: Text(

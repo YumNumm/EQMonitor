@@ -138,7 +138,7 @@ class _MasterNotificationControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
     final typography = designSystem.typography;
@@ -156,9 +156,9 @@ class _MasterNotificationControl extends StatelessWidget {
               vertical: spacing.md,
             ),
             decoration: BoxDecoration(
-              color: value ? color.surfaceEmphasis : color.surfaceCard,
+              color: value ? colorTheme.surfaceContainerHighest : colorTheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(shape.pill),
-              border: Border.all(color: color.outlineSoft),
+              border: Border.all(color: colorTheme.outlineVariant),
             ),
             child: Row(
               children: [
@@ -166,7 +166,7 @@ class _MasterNotificationControl extends StatelessWidget {
                   child: Text(
                     '通知を受け取る',
                     style: typography.titleMedium.copyWith(
-                      color: designSystem.textColor.primary,
+                      color: designSystem.colorTheme.onSurface,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -195,7 +195,7 @@ class _PresetOptionGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -206,12 +206,12 @@ class _PresetOptionGroup extends StatelessWidget {
         spacing.lg,
         spacing.md,
       ),
-      color: color.surfaceCard,
+      color: colorTheme.surfaceContainerHigh,
       clipBehavior: Clip.antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -264,7 +264,7 @@ class _PresetOptionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
 
     return InkWell(
       onTap: onTap,
@@ -284,7 +284,7 @@ class _PresetOptionTile extends StatelessWidget {
                   Text(
                     title,
                     style: designSystem.typography.titleMedium.copyWith(
-                      color: textColor.primary,
+                      color: colorTheme.onSurface,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -292,7 +292,7 @@ class _PresetOptionTile extends StatelessWidget {
                   Text(
                     subtitle,
                     style: designSystem.typography.bodySmall.copyWith(
-                      color: textColor.secondary,
+                      color: colorTheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -317,7 +317,7 @@ class _PresetSelectionMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Container(
       width: 24,
@@ -325,7 +325,7 @@ class _PresetSelectionMark extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: isSelected ? color.primary : designSystem.textColor.tertiary,
+          color: isSelected ? colorTheme.primary : designSystem.colorTheme.outline,
           width: isSelected ? 6 : 3,
         ),
       ),
@@ -356,7 +356,7 @@ class _CustomPresetTrailing extends StatelessWidget {
         SizedBox(
           height: 40,
           child: VerticalDivider(
-            color: designSystem.color.outlineSoft,
+            color: designSystem.colorTheme.outlineVariant,
             thickness: 1,
           ),
         ),
@@ -492,7 +492,7 @@ class _CustomSettingsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -503,12 +503,12 @@ class _CustomSettingsSection extends StatelessWidget {
         spacing.lg,
         spacing.md,
       ),
-      color: color.surfaceCard,
+      color: colorTheme.surfaceContainerHigh,
       clipBehavior: Clip.antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -827,7 +827,7 @@ class _TargetOptionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = locked
         ? Theme.of(context).disabledColor
-        : context.designSystem.textColor.primary;
+        : context.designSystem.colorTheme.onSurface;
 
     return ListTile(
       enabled: !locked,
@@ -915,7 +915,7 @@ class _SlotListSection extends ConsumerWidget {
             child: Text(
               'スロットの読み込みに失敗しました',
               style: designSystem.typography.bodySmall.copyWith(
-                color: Theme.of(context).colorScheme.error,
+                color: context.designSystem.colorTheme.error,
               ),
             ),
           ),
@@ -972,7 +972,7 @@ class _SlotListSection extends ConsumerWidget {
           child: Text(
             'ダウングレード時も設定は保持され、Freeの上限を超える項目は配信時に無効扱いになります。',
             style: designSystem.typography.bodySmall.copyWith(
-              color: designSystem.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
         ),
@@ -1030,7 +1030,7 @@ class _ProUpsellBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
 
@@ -1038,7 +1038,7 @@ class _ProUpsellBanner extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(spacing.lg, 0, spacing.lg, spacing.md),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: colorScheme.primaryContainer,
+          color: colorTheme.primaryContainer,
           borderRadius: BorderRadius.circular(designSystem.shape.card),
         ),
         child: Padding(
@@ -1046,7 +1046,7 @@ class _ProUpsellBanner extends StatelessWidget {
           child: Text(
             'EQMonitor Proにすると、地域枠の追加、震度別の音、割り込みレベル、1点検知、EEW警報の全国通知を設定できます。',
             style: designSystem.typography.bodyMedium.copyWith(
-              color: colorScheme.onPrimaryContainer,
+              color: colorTheme.onPrimaryContainer,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -1068,7 +1068,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
     }
 
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -1079,12 +1079,12 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
         spacing.lg,
         spacing.md,
       ),
-      color: color.surfaceCard,
+      color: colorTheme.surfaceContainerHigh,
       clipBehavior: Clip.antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -1228,7 +1228,7 @@ class _TestNotificationTile extends HookConsumerWidget {
           messenger.showSnackBar(
             SnackBar(
               content: Text('送信に失敗しました: $exception'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.designSystem.colorTheme.error,
             ),
           );
       }

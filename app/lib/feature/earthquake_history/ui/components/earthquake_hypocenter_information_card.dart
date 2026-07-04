@@ -1,8 +1,8 @@
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
@@ -24,19 +24,19 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorScheme = ref.watch(intensityColorProvider);
+    final intensityColors = context.designSystem.colorTheme.intensity;
     final maxIntensity = item.intensity?.maxIntensity;
     final hypocenter = item.hypocenter;
 
-    final colorScheme = maxIntensity != null
-        ? intensityColorScheme.fromJmaIntensity(maxIntensity)
+    final colorEntry = maxIntensity != null
+        ? intensityColors.fromJmaIntensity(maxIntensity)
         : null;
 
     final maxIntensityWidget = maxIntensity != null
         ? _MaxIntensityWidget(intensity: maxIntensity)
         : null;
 
-    final cardBackgroundColor = colorScheme?.background ?? Colors.transparent;
+    final cardBackgroundColor = colorEntry?.background ?? Colors.transparent;
     final cardColor = cardBackgroundColor.withValues(
       alpha: 0.3,
     );

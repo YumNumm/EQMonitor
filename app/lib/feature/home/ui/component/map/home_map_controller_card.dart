@@ -22,24 +22,24 @@ class HomeMapControllerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
     final divider = Padding(
       padding: EdgeInsets.symmetric(horizontal: spacing.xs),
-      child: Divider(height: 0, color: color.outlineSoft),
+      child: Divider(height: 0, color: colorTheme.outlineVariant),
     );
 
     Future<void> hapticFeedback() async => HapticFeedback.lightImpact();
 
     return Card(
-      color: color.surfaceCard.withValues(alpha: 0.92),
+      color: colorTheme.surfaceContainerHigh.withValues(alpha: 0.92),
       clipBehavior: Clip.hardEdge,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.md),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: IntrinsicWidth(
         child: Column(

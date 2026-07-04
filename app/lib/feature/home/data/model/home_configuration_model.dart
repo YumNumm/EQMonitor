@@ -163,10 +163,7 @@ abstract class HomeMapSettings with _$HomeMapSettings {
 
 @freezed
 abstract class HomeCommonSettings with _$HomeCommonSettings {
-  @JsonSerializable(
-    fieldRename: FieldRename.snake,
-    explicitToJson: true,
-  )
+  @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory HomeCommonSettings({
     @Default(false) bool showLocation,
     @Default(HomeEarthquakeHistoryScope.nationwide)

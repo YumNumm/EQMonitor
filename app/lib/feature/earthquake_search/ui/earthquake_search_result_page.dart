@@ -6,10 +6,10 @@ import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
 import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
@@ -36,11 +36,7 @@ class EarthquakeSearchResultPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(
-      EarthquakeSearchParameter(
-        type: type,
-        code: code,
-        name: name,
-      ),
+      EarthquakeSearchParameter(type: type, code: code, name: name),
     );
     final state = ref.watch(earthquakeSearchProvider(parameter.value));
 
@@ -84,10 +80,7 @@ class EarthquakeSearchResultPage extends HookConsumerWidget {
 }
 
 class _SearchParameter extends StatelessWidget {
-  const _SearchParameter({
-    required this.parameter,
-    required this.onChanged,
-  });
+  const _SearchParameter({required this.parameter, required this.onChanged});
 
   final EarthquakeSearchParameter parameter;
   final ValueChanged<EarthquakeSearchParameter> onChanged;
@@ -257,10 +250,7 @@ class _EarthquakeSearchSkeleton extends StatelessWidget {
 }
 
 class _EarthquakeSearchResultListTile extends HookConsumerWidget {
-  const _EarthquakeSearchResultListTile({
-    required this.item,
-    this.onTap,
-  });
+  const _EarthquakeSearchResultListTile({required this.item, this.onTap});
 
   final EarthquakeSearchResultItem item;
   final VoidCallback? onTap;
@@ -301,9 +291,9 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
       maxIntensityText,
     ].where((e) => e != null && e.isNotEmpty).join('\n');
 
-    final intensityColorState = ref.watch(intensityColorProvider);
+    final intensityColors = context.designSystem.colorTheme.intensity;
     final intensityColor = localIntensity != null
-        ? intensityColorState.fromJmaIntensity(localIntensity).background
+        ? intensityColors.fromJmaIntensity(localIntensity).background
         : null;
 
     final magnitudeText = _formatMagnitude(hypocenter?.magnitude);
@@ -313,9 +303,7 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
       onTap: onTap,
       title: Text(
         title,
-        style: theme.textTheme.titleMedium!.copyWith(
-          fontWeight: .bold,
-        ),
+        style: theme.textTheme.titleMedium!.copyWith(fontWeight: .bold),
       ),
       subtitle: Text(
         subTitle,
@@ -326,11 +314,7 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
         ),
       ),
       leading: localIntensity != null
-          ? JmaIntensityIcon(
-              intensity: localIntensity,
-              type: .filled,
-              size: 40,
-            )
+          ? JmaIntensityIcon(intensity: localIntensity, type: .filled, size: 40)
           : null,
       trailing: _MagnitudeText(
         text: magnitudeText,
@@ -355,10 +339,7 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
 }
 
 class _MagnitudeText extends StatelessWidget {
-  const _MagnitudeText({
-    required this.text,
-    required this.style,
-  });
+  const _MagnitudeText({required this.text, required this.style});
 
   final String text;
   final TextStyle style;
@@ -383,10 +364,7 @@ class _MagnitudeText extends StatelessWidget {
         style: style,
         children: [
           TextSpan(text: beforeDot),
-          TextSpan(
-            text: '.',
-            style: style.copyWith(letterSpacing: -2),
-          ),
+          TextSpan(text: '.', style: style.copyWith(letterSpacing: -2)),
           TextSpan(text: afterDot),
         ],
       ),

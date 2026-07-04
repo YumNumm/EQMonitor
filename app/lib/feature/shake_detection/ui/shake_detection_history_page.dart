@@ -15,16 +15,16 @@ class ShakeDetectionHistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final events = ref.watch(shakeDetectionHistoryProvider);
-    final ds = context.designSystem;
+    final designSystem = context.designSystem;
 
     return Scaffold(
-      backgroundColor: ds.color.backgroundDefault,
+      backgroundColor: designSystem.colorTheme.surfaceContainerLow,
       appBar: AppBar(
-        backgroundColor: ds.color.backgroundDefault,
+        backgroundColor: designSystem.colorTheme.surfaceContainerLow,
         title: const Text('揺れ検知履歴'),
       ),
       body: events.isEmpty
-          ? _EmptyState(ds: ds)
+          ? _EmptyState(designSystem: designSystem)
           : ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               itemCount: events.length,
@@ -44,13 +44,13 @@ class ShakeDetectionHistoryPage extends ConsumerWidget {
 }
 
 class _EmptyState extends StatelessWidget {
-  const _EmptyState({required this.ds});
+  const _EmptyState({required this.designSystem});
 
-  final dynamic ds;
+  final dynamic designSystem;
 
   @override
   Widget build(BuildContext context) {
-    final ds = context.designSystem;
+    final designSystem = context.designSystem;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -58,13 +58,13 @@ class _EmptyState extends StatelessWidget {
           Icon(
             Icons.sensors_off_rounded,
             size: 48,
-            color: ds.textColor.tertiary,
+            color: designSystem.colorTheme.outline,
           ),
           const SizedBox(height: 12),
           Text(
             '履歴なし',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: ds.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 4),
@@ -72,7 +72,7 @@ class _EmptyState extends StatelessWidget {
             'このセッション中に揺れ検知イベントが\n受信されていません',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: ds.textColor.tertiary,
+              color: designSystem.colorTheme.outline,
             ),
           ),
         ],
@@ -82,10 +82,7 @@ class _EmptyState extends StatelessWidget {
 }
 
 class _ShakeDetectionHistoryTile extends StatelessWidget {
-  const _ShakeDetectionHistoryTile({
-    required this.event,
-    required this.onTap,
-  });
+  const _ShakeDetectionHistoryTile({required this.event, required this.onTap});
 
   final ShakeDetectionEvent event;
   final VoidCallback onTap;
@@ -94,16 +91,16 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ds = context.designSystem;
+    final designSystem = context.designSystem;
     final theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Material(
-        color: ds.color.surfaceCard,
-        borderRadius: BorderRadius.circular(ds.shape.card),
+        color: designSystem.colorTheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(designSystem.shape.card),
         child: InkWell(
-          borderRadius: BorderRadius.circular(ds.shape.card),
+          borderRadius: BorderRadius.circular(designSystem.shape.card),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -120,7 +117,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                           Text(
                             _timeFormat.format(event.createdAt.toLocal()),
                             style: theme.textTheme.titleSmall?.copyWith(
-                              color: ds.textColor.primary,
+                              color: designSystem.colorTheme.onSurface,
                               fontFamily: FontFamily.googleSansCode,
                             ),
                           ),
@@ -128,14 +125,16 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                             const SizedBox(width: 6),
                             _TagChip(
                               label: 'リプレイ',
-                              color: ds.color.surfaceEmphasis,
+                              color: designSystem
+                                  .colorTheme
+                                  .surfaceContainerHighest,
                             ),
                           ],
                           if (event.mergedEewEventId != null) ...[
                             const SizedBox(width: 6),
                             _TagChip(
                               label: 'EEW結合済',
-                              color: theme.colorScheme.secondaryContainer,
+                              color: designSystem.colorTheme.secondaryContainer,
                             ),
                           ],
                         ],
@@ -146,7 +145,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                         '${event.minLat.toStringAsFixed(2)}–${event.maxLat.toStringAsFixed(2)}°N  '
                         '${event.minLng.toStringAsFixed(2)}–${event.maxLng.toStringAsFixed(2)}°E',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: ds.textColor.tertiary,
+                          color: designSystem.colorTheme.outline,
                           fontFamily: FontFamily.googleSansCode,
                         ),
                       ),
@@ -155,7 +154,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                 ),
                 Icon(
                   Icons.chevron_right_rounded,
-                  color: ds.textColor.tertiary,
+                  color: designSystem.colorTheme.outline,
                 ),
               ],
             ),
@@ -233,7 +232,7 @@ class _TagChip extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: Theme.of(context).colorScheme.onSecondaryContainer,
+          color: context.designSystem.colorTheme.onSecondaryContainer,
         ),
       ),
     );

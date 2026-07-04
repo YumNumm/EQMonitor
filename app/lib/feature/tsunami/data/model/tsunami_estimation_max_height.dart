@@ -22,9 +22,9 @@ extension TsunamiEstimationMaxHeightApiExt
   TsunamiEstimationMaxHeight toDomain() => TsunamiEstimationMaxHeight(
     dateTime: observedAt,
     value: value?.toDouble(),
-    isOver: isOver as bool?,
+    isOver: isOver,
     qualitative: qualitative?.toDomain(),
-    isObserving: isObserving as bool?,
+    isObserving: isObserving,
     revise: revise?.toDomain(),
   );
 }

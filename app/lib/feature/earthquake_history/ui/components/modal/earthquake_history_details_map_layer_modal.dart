@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +24,8 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final backgroundColor = colorScheme.surfaceContainerLow;
+    final designSystem = context.designSystem;
+    final backgroundColor = designSystem.colorTheme.surfaceContainerLow;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -41,7 +41,7 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
                   tileMode: TileMode.mirror,
                 ),
                 inner: ColorFilter.mode(
-                  colorScheme.surfaceContainerLow.withValues(alpha: 0.7),
+                  designSystem.colorTheme.surfaceContainerLow.withValues(alpha: 0.7),
                   BlendMode.srcATop,
                 ),
               ),
@@ -175,13 +175,13 @@ class _LocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return Card.outlined(
       elevation: 0,
       color: isSelected
-          ? colorScheme.primaryContainer
-          : colorScheme.surfaceContainer,
+          ? designSystem.colorTheme.primaryContainer
+          : designSystem.colorTheme.surfaceContainer,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -196,16 +196,16 @@ class _LocationCard extends StatelessWidget {
                   Icon(
                     icon,
                     color: isSelected
-                        ? colorScheme.onPrimaryContainer
-                        : colorScheme.onSurfaceVariant,
+                        ? designSystem.colorTheme.onPrimaryContainer
+                        : designSystem.colorTheme.onSurfaceVariant,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     title,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: isSelected
-                          ? colorScheme.onPrimaryContainer
-                          : colorScheme.onSurfaceVariant,
+                          ? designSystem.colorTheme.onPrimaryContainer
+                          : designSystem.colorTheme.onSurfaceVariant,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

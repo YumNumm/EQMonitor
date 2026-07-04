@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/theme/build_theme.dart';
-import 'package:eqmonitor/core/theme/custom_colors.dart';
+import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
@@ -51,10 +51,9 @@ FilledButton _nextButton(WidgetTester tester) =>
     tester.widget<FilledButton>(find.widgetWithText(FilledButton, '次へ'));
 
 Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
-  const brandBlue = Color(0xFF1E88E5);
   final theme = buildTheme(
-    colorScheme: ColorScheme.fromSeed(seedColor: brandBlue),
-    customColors: const CustomColors(danger: Color(0xFFE53935)),
+    colorSet: AppTheme.eqmonitorDefault().light!,
+    brightness: Brightness.light,
   );
 
   return ProviderScope(

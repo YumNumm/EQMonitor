@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
@@ -76,17 +76,12 @@ class _CityDetailModal extends ConsumerWidget {
           error: (error, stackTrace) => _buildShell(
             scrollController: scrollController,
             context: context,
-            child: SliverToBoxAdapter(
-              child: ErrorCard(error: error),
-            ),
+            child: SliverToBoxAdapter(child: ErrorCard(error: error)),
           ),
           data: (dataSource) => _buildShell(
             scrollController: scrollController,
             context: context,
-            child: _PagingBody(
-              dataSource: dataSource,
-              cityName: cityName,
-            ),
+            child: _PagingBody(dataSource: dataSource, cityName: cityName),
             footer: _ShowAllHistoryButton(
               regionSearchType: RegionSearchType.city,
               regionCode: cityCode,
@@ -104,7 +99,6 @@ class _CityDetailModal extends ConsumerWidget {
     required Widget child,
     Widget? footer,
   }) {
-    final theme = Theme.of(context);
     return CustomScrollView(
       controller: scrollController,
       slivers: [
@@ -117,7 +111,9 @@ class _CityDetailModal extends ConsumerWidget {
               height: 4,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2),
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                color: context.designSystem.colorTheme.onSurface.withValues(
+                  alpha: 0.3,
+                ),
               ),
             ),
           ),
@@ -132,7 +128,10 @@ class _CityDetailModal extends ConsumerWidget {
         ),
         // 区切り
         SliverToBoxAdapter(
-          child: Divider(height: 0, color: theme.colorScheme.outlineVariant),
+          child: Divider(
+            height: 0,
+            color: context.designSystem.colorTheme.outlineVariant,
+          ),
         ),
         // 一覧 or ローディング or エラー
         child,
@@ -188,7 +187,7 @@ class _SummarySection extends StatelessWidget {
                     Text(
                       regionName,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                        color: context.designSystem.colorTheme.onSurfaceVariant,
                       ),
                     ),
                     Text(
@@ -207,7 +206,7 @@ class _SummarySection extends StatelessWidget {
             Text(
               'この震度を観測した地震: ${entry.count}件',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface,
+                color: context.designSystem.colorTheme.onSurface,
               ),
             ),
             if (eq != null) ...[
@@ -243,30 +242,23 @@ class _SummarySection extends StatelessWidget {
 }
 
 class _PagingBody extends ConsumerWidget {
-  const _PagingBody({
-    required this.dataSource,
-    required this.cityName,
-  });
+  const _PagingBody({required this.dataSource, required this.cityName});
 
   final CityIntensityListDataSource dataSource;
   final String cityName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final intensityColor = ref.watch(intensityColorProvider);
     return SliverGroupedPagingList<String?, String, IntensityAreaSearchItem>(
       dataSource: dataSource,
       stickyHeader: true,
-      headerBuilder: (_, intensity, _) => _IntensityHeader(
-        intensity: intensity,
-      ),
+      headerBuilder: (_, intensity, _) =>
+          _IntensityHeader(intensity: intensity),
       itemBuilder: (context, item, globalIndex, localIndex) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           EarthquakeHistoryListTile(
             item: item.earthquake,
-            intensityColor: intensityColor,
             areaInfo: item.area,
             areaName: cityName,
             onTap: () async {
@@ -278,21 +270,16 @@ class _PagingBody extends ConsumerWidget {
           Divider(
             height: 0,
             thickness: 0,
-            color: theme.colorScheme.onInverseSurface,
+            color: context.designSystem.colorTheme.onInverseSurface,
           ),
         ],
       ),
       initialLoadingWidget: const _SkeletonBox(),
       appendLoadingWidget: const _SkeletonBox(itemCount: 2),
-      errorBuilder: (context, error, stackTrace) => ErrorCard(
-        error: error,
-        onReload: () async => dataSource.refresh(),
-      ),
+      errorBuilder: (context, error, stackTrace) =>
+          ErrorCard(error: error, onReload: () async => dataSource.refresh()),
       emptyWidget: const Center(
-        child: Padding(
-          padding: EdgeInsets.all(32),
-          child: Text('震度の記録がありません'),
-        ),
+        child: Padding(padding: EdgeInsets.all(32), child: Text('震度の記録がありません')),
       ),
     );
   }
@@ -343,12 +330,12 @@ class _IntensityHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      color: theme.colorScheme.surfaceContainer,
+      color: context.designSystem.colorTheme.surfaceContainer,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Text(
         intensity,
         style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.onSurface,
+          color: context.designSystem.colorTheme.onSurface,
         ),
       ),
     );

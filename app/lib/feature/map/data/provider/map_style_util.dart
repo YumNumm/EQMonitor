@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:eqmonitor/core/theme/model/map_colors.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
-import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,7 +27,7 @@ class MapStyleUtil {
     return styleFile.path;
   }
 
-  Future<String> getStyle({required MapColorScheme colorScheme}) async {
+  Future<String> getStyle({required MapColors mapColors}) async {
     final json = {
       'version': 8,
       'name': 'EQMonitor Style',
@@ -44,7 +44,7 @@ class MapStyleUtil {
           'id': BaseLayer.background.name,
           'type': 'background',
           'paint': {
-            'background-color': colorScheme.backgroundColor.toHexStringRGB(),
+            'background-color': mapColors.background.toHexStringRGB(),
           },
         },
         // 世界地図（塗りつぶし）
@@ -55,7 +55,7 @@ class MapStyleUtil {
           'source-layer': 'countries',
           'layout': {'visibility': 'visible'},
           'paint': {
-            'fill-color': colorScheme.worldLandColor.toHexStringRGB(),
+            'fill-color': mapColors.worldLand.toHexStringRGB(),
           },
         },
         // 世界地図（境界線）
@@ -66,7 +66,7 @@ class MapStyleUtil {
           'source-layer': 'countries',
           'layout': {'visibility': 'visible'},
           'paint': {
-            'line-color': colorScheme.worldLineColor.toHexStringRGB(),
+            'line-color': mapColors.worldLine.toHexStringRGB(),
             'line-width': [
               'interpolate',
               ['linear'],
@@ -85,7 +85,7 @@ class MapStyleUtil {
           'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalE',
           'paint': {
-            'fill-color': colorScheme.japanLandColor.toHexStringRGB(),
+            'fill-color': mapColors.japanLand.toHexStringRGB(),
           },
         },
         // 緊急地震速報用区域（境界線）
@@ -96,7 +96,7 @@ class MapStyleUtil {
           'source-layer': 'areaForecastLocalEew',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
+            'line-color': mapColors.japanLine.toHexStringRGB(),
             'line-width': [
               'interpolate',
               ['linear'],
@@ -116,7 +116,7 @@ class MapStyleUtil {
           'source-layer': 'areaForecastLocalE',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
+            'line-color': mapColors.japanLine.toHexStringRGB(),
             'line-opacity': [
               'interpolate',
               ['linear'],
@@ -139,7 +139,7 @@ class MapStyleUtil {
           'source-layer': 'areaInformationCityQuake',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
+            'line-color': mapColors.japanLine.toHexStringRGB(),
             'line-width': 0.5,
             'line-opacity': [
               'interpolate',

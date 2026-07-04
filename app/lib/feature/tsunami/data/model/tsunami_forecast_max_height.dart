@@ -20,9 +20,9 @@ extension TsunamiRegionForecastMaxHeightApiExt
     on api.TsunamiRegionForecastMaxHeight {
   TsunamiForecastMaxHeight toDomain() => TsunamiForecastMaxHeight(
     value: value?.toDouble(),
-    isOver: isOver as bool?,
+    isOver: isOver,
     qualitative: qualitative?.toDomain(),
-    isImportant: isImportant as bool?,
+    isImportant: isImportant,
     revise: revise?.toDomain(),
   );
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -35,15 +36,10 @@ class TsunamiDetailsMapView extends HookConsumerWidget {
     return switch (mapConfiguration) {
       AsyncData(:final value) when value.styleString != null =>
         MapLibreEventProvider(
-          child: _MapContent(
-            styleString: value.styleString!,
-            tsunami: tsunami,
-          ),
+          child: _MapContent(styleString: value.styleString!, tsunami: tsunami),
         ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
-      _ => const Center(
-        child: CircularProgressIndicator.adaptive(),
-      ),
+      _ => const Center(child: CircularProgressIndicator.adaptive()),
     };
   }
 }
@@ -53,10 +49,7 @@ const _kDefaultCenter = Geographic(lon: 138, lat: 36.5);
 const _kDefaultZoom = 4.5;
 
 class _MapContent extends HookConsumerWidget {
-  const _MapContent({
-    required this.styleString,
-    required this.tsunami,
-  });
+  const _MapContent({required this.styleString, required this.tsunami});
 
   final String styleString;
   final TsunamiState tsunami;
@@ -178,104 +171,98 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final jmaMapAsync = ref.watch(jmaMapProvider);
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
-        final jmaMap = jmaMapAsync.value;
-        if (jmaMap == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
+      final jmaMap = jmaMapAsync.value;
+      if (jmaMap == null) {
+        return null;
+      }
 
-        var disposed = false;
-        final addedLayerIds = <String>[];
+      var disposed = false;
+      final addedLayerIds = <String>[];
 
-        unawaited(() async {
-          try {
-            final tsunamiMapData = jmaMap.areaTsunami;
-            final geoJson = _buildTsunamiRegionGeoJson(
-              tsunamiMapData,
-              tsunami.regions,
-            );
+      unawaited(() async {
+        try {
+          final tsunamiMapData = jmaMap.areaTsunami;
+          final geoJson = _buildTsunamiRegionGeoJson(
+            tsunamiMapData,
+            tsunami.regions,
+          );
 
+          if (disposed) {
+            return;
+          }
+          await styleController.addSource(
+            GeoJsonSource(id: _MapContent._tsunamiLineSourceId, data: geoJson),
+          );
+
+          // 警報種別ごとにラインレイヤーを追加（重要度順: 予報 → 注意報 → 警報 → 大津波警報）
+          final kindOrder = [
+            TsunamiWarningKind.forecast,
+            TsunamiWarningKind.advisory,
+            TsunamiWarningKind.warning,
+            TsunamiWarningKind.majorWarning,
+          ];
+
+          for (final kind in kindOrder) {
             if (disposed) {
               return;
             }
-            await styleController.addSource(
-              GeoJsonSource(
-                id: _MapContent._tsunamiLineSourceId,
-                data: geoJson,
+
+            final color = TsunamiWarningColor.mapBorderColor(
+              kind,
+            ).toHexStringRGB();
+            final layerId =
+                '${_MapContent._tsunamiLineLayerIdPrefix}${kind.name}';
+            await styleController.addLayer(
+              LineStyleLayer(
+                id: layerId,
+                sourceId: _MapContent._tsunamiLineSourceId,
+                filter: [
+                  '==',
+                  ['get', 'kind'],
+                  kind.name,
+                ],
+                paint: {
+                  'line-color': color,
+                  'line-width': switch (kind) {
+                    .majorWarning => 5.0,
+                    .warning => 4.0,
+                    .advisory => 3.0,
+                    .forecast => 2.0,
+                    .none => 1.0,
+                    .advisoryCancel => 0,
+                    .warningCancel => 0,
+                  },
+                  'line-opacity': 0.9,
+                },
               ),
             );
+            addedLayerIds.add(layerId);
+          }
+        } on Exception catch (e) {
+          talker.log(e);
+        }
+      }());
 
-            // 警報種別ごとにラインレイヤーを追加（重要度順: 予報 → 注意報 → 警報 → 大津波警報）
-            final kindOrder = [
-              TsunamiWarningKind.forecast,
-              TsunamiWarningKind.advisory,
-              TsunamiWarningKind.warning,
-              TsunamiWarningKind.majorWarning,
-            ];
-
-            for (final kind in kindOrder) {
-              if (disposed) {
-                return;
-              }
-
-              final color = TsunamiWarningColor.mapBorderColor(
-                kind,
-              ).toHexStringRGB();
-              final layerId =
-                  '${_MapContent._tsunamiLineLayerIdPrefix}${kind.name}';
-              await styleController.addLayer(
-                LineStyleLayer(
-                  id: layerId,
-                  sourceId: _MapContent._tsunamiLineSourceId,
-                  filter: [
-                    '==',
-                    ['get', 'kind'],
-                    kind.name,
-                  ],
-                  paint: {
-                    'line-color': color,
-                    'line-width': switch (kind) {
-                      .majorWarning => 5.0,
-                      .warning => 4.0,
-                      .advisory => 3.0,
-                      .forecast => 2.0,
-                      .none => 1.0,
-                      .advisoryCancel => 0,
-                      .warningCancel => 0,
-                    },
-                    'line-opacity': 0.9,
-                  },
-                ),
-              );
-              addedLayerIds.add(layerId);
+      return () {
+        disposed = true;
+        unawaited(() async {
+          try {
+            for (final id in addedLayerIds.reversed) {
+              await styleController.removeLayer(id);
             }
+            await styleController.removeSource(
+              _MapContent._tsunamiLineSourceId,
+            );
           } on Exception catch (e) {
             talker.log(e);
           }
         }());
-
-        return () {
-          disposed = true;
-          unawaited(() async {
-            try {
-              for (final id in addedLayerIds.reversed) {
-                await styleController.removeLayer(id);
-              }
-              await styleController.removeSource(
-                _MapContent._tsunamiLineSourceId,
-              );
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }());
-        };
-      },
-      [styleController, jmaMapAsync, tsunami.regions],
-    );
+      };
+    }, [styleController, jmaMapAsync, tsunami.regions]);
 
     return const SizedBox.shrink();
   }
@@ -318,10 +305,7 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
       });
     }
 
-    return jsonEncode({
-      'type': 'FeatureCollection',
-      'features': features,
-    });
+    return jsonEncode({'type': 'FeatureCollection', 'features': features});
   }
 
   /// protobuf バイナリを GeoJSON geometry オブジェクトにデコードする。
@@ -376,88 +360,78 @@ class _TsunamiHypocenterLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
-        final coords = tsunami.earthquakes.firstOrNull?.hypocenter.coordinates;
-        if (coords == null) {
-          return null;
-        }
+      final coords = tsunami.earthquakes.firstOrNull?.hypocenter.coordinates;
+      if (coords == null) {
+        return null;
+      }
 
+      unawaited(() async {
+        try {
+          await styleController.addImageFromAssets(
+            id: _MapContent._hypocenterIconId,
+            asset: Assets.images.map.normalHypocenter.path,
+          );
+
+          await styleController.addSource(
+            GeoJsonSource(
+              id: _MapContent._hypocenterSourceId,
+              data: jsonEncode({
+                'type': 'FeatureCollection',
+                'features': [
+                  {
+                    'type': 'Feature',
+                    'geometry': {
+                      'type': 'Point',
+                      'coordinates': [coords.longitude, coords.latitude],
+                    },
+                    'properties': <String, dynamic>{},
+                  },
+                ],
+              }),
+            ),
+          );
+
+          await styleController.addLayer(
+            const SymbolStyleLayer(
+              id: _MapContent._hypocenterLayerId,
+              sourceId: _MapContent._hypocenterSourceId,
+              layout: {
+                'icon-allow-overlap': true,
+                'icon-ignore-placement': true,
+                'icon-image': _MapContent._hypocenterIconId,
+                'icon-size': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  0.15,
+                  20,
+                  0.4,
+                ],
+              },
+            ),
+          );
+        } on Exception catch (e) {
+          talker.log(e);
+        }
+      }());
+
+      return () {
         unawaited(() async {
           try {
-            await styleController.addImageFromAssets(
-              id: _MapContent._hypocenterIconId,
-              asset: Assets.images.map.normalHypocenter.path,
-            );
-
-            await styleController.addSource(
-              GeoJsonSource(
-                id: _MapContent._hypocenterSourceId,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': [
-                    {
-                      'type': 'Feature',
-                      'geometry': {
-                        'type': 'Point',
-                        'coordinates': [
-                          coords.longitude,
-                          coords.latitude,
-                        ],
-                      },
-                      'properties': <String, dynamic>{},
-                    },
-                  ],
-                }),
-              ),
-            );
-
-            await styleController.addLayer(
-              const SymbolStyleLayer(
-                id: _MapContent._hypocenterLayerId,
-                sourceId: _MapContent._hypocenterSourceId,
-                layout: {
-                  'icon-allow-overlap': true,
-                  'icon-ignore-placement': true,
-                  'icon-image': _MapContent._hypocenterIconId,
-                  'icon-size': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    3,
-                    0.15,
-                    20,
-                    0.4,
-                  ],
-                },
-              ),
-            );
+            await styleController.removeLayer(_MapContent._hypocenterLayerId);
+            await styleController.removeSource(_MapContent._hypocenterSourceId);
           } on Exception catch (e) {
             talker.log(e);
           }
         }());
-
-        return () {
-          unawaited(() async {
-            try {
-              await styleController.removeLayer(
-                _MapContent._hypocenterLayerId,
-              );
-              await styleController.removeSource(
-                _MapContent._hypocenterSourceId,
-              );
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }());
-        };
-      },
-      [styleController, tsunami.earthquakes],
-    );
+      };
+    }, [styleController, tsunami.earthquakes]);
 
     return const SizedBox.shrink();
   }
@@ -477,118 +451,112 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final jmaParamAsync = ref.watch(jmaParameterProvider);
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
-        final jmaParam = jmaParamAsync.value;
-        if (jmaParam == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
+      final jmaParam = jmaParamAsync.value;
+      if (jmaParam == null) {
+        return null;
+      }
 
-        var disposed = false;
-        var labelLayerAdded = false;
+      var disposed = false;
+      var labelLayerAdded = false;
 
+      unawaited(() async {
+        try {
+          final geoJson = _buildObservationStationGeoJson(
+            tsunami,
+            jmaParam.tsunami,
+          );
+
+          if (disposed) {
+            return;
+          }
+          await styleController.addSource(
+            GeoJsonSource(id: _MapContent._stationSourceId, data: geoJson),
+          );
+
+          if (disposed) {
+            return;
+          }
+          await styleController.addLayer(
+            const CircleStyleLayer(
+              id: _MapContent._stationCircleLayerId,
+              sourceId: _MapContent._stationSourceId,
+              paint: {
+                'circle-radius': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  3,
+                  10,
+                  8,
+                ],
+                'circle-color': ['get', 'color'],
+                'circle-stroke-color': '#ffffff',
+                'circle-stroke-width': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  0.3,
+                  10,
+                  1.5,
+                ],
+              },
+            ),
+          );
+
+          if (disposed) {
+            return;
+          }
+          await styleController.addLayer(
+            const SymbolStyleLayer(
+              id: _MapContent._stationLabelLayerId,
+              sourceId: _MapContent._stationSourceId,
+              minZoom: 8,
+              layout: {
+                'text-field': ['get', 'name'],
+                'text-size': 10,
+                'text-offset': [0, 1.2],
+                'text-anchor': 'top',
+                'text-allow-overlap': false,
+                'text-ignore-placement': true,
+              },
+              paint: {
+                'text-color': '#ffffff',
+                'text-halo-color': '#000000',
+                'text-halo-width': 1,
+              },
+            ),
+          );
+          labelLayerAdded = true;
+        } on Exception catch (e) {
+          talker.log(e);
+        }
+      }());
+
+      return () {
+        disposed = true;
         unawaited(() async {
           try {
-            final geoJson = _buildObservationStationGeoJson(
-              tsunami,
-              jmaParam.tsunami,
-            );
-
-            if (disposed) {
-              return;
+            if (labelLayerAdded) {
+              await styleController.removeLayer(
+                _MapContent._stationLabelLayerId,
+              );
             }
-            await styleController.addSource(
-              GeoJsonSource(
-                id: _MapContent._stationSourceId,
-                data: geoJson,
-              ),
+            await styleController.removeLayer(
+              _MapContent._stationCircleLayerId,
             );
-
-            if (disposed) {
-              return;
-            }
-            await styleController.addLayer(
-              const CircleStyleLayer(
-                id: _MapContent._stationCircleLayerId,
-                sourceId: _MapContent._stationSourceId,
-                paint: {
-                  'circle-radius': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    3,
-                    3,
-                    10,
-                    8,
-                  ],
-                  'circle-color': ['get', 'color'],
-                  'circle-stroke-color': '#ffffff',
-                  'circle-stroke-width': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    3,
-                    0.3,
-                    10,
-                    1.5,
-                  ],
-                },
-              ),
-            );
-
-            if (disposed) {
-              return;
-            }
-            await styleController.addLayer(
-              const SymbolStyleLayer(
-                id: _MapContent._stationLabelLayerId,
-                sourceId: _MapContent._stationSourceId,
-                minZoom: 8,
-                layout: {
-                  'text-field': ['get', 'name'],
-                  'text-size': 10,
-                  'text-offset': [0, 1.2],
-                  'text-anchor': 'top',
-                  'text-allow-overlap': false,
-                  'text-ignore-placement': true,
-                },
-                paint: {
-                  'text-color': '#ffffff',
-                  'text-halo-color': '#000000',
-                  'text-halo-width': 1,
-                },
-              ),
-            );
-            labelLayerAdded = true;
+            await styleController.removeSource(_MapContent._stationSourceId);
           } on Exception catch (e) {
             talker.log(e);
           }
         }());
-
-        return () {
-          disposed = true;
-          unawaited(() async {
-            try {
-              if (labelLayerAdded) {
-                await styleController.removeLayer(
-                  _MapContent._stationLabelLayerId,
-                );
-              }
-              await styleController.removeLayer(
-                _MapContent._stationCircleLayerId,
-              );
-              await styleController.removeSource(_MapContent._stationSourceId);
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }());
-        };
-      },
-      [styleController, jmaParamAsync, tsunami],
-    );
+      };
+    }, [styleController, jmaParamAsync, tsunami]);
 
     return const SizedBox.shrink();
   }
@@ -657,18 +625,11 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
           'type': 'Point',
           'coordinates': [location.lon, location.lat],
         },
-        'properties': {
-          'name': obs.name,
-          'color': color,
-          'code': obs.code,
-        },
+        'properties': {'name': obs.name, 'color': color, 'code': obs.code},
       });
     }
 
-    return jsonEncode({
-      'type': 'FeatureCollection',
-      'features': features,
-    });
+    return jsonEncode({'type': 'FeatureCollection', 'features': features});
   }
 
   /// 観測点の色を maxHeight の条件に基づいて決定する。
@@ -689,7 +650,7 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
     }
 
     if (maxHeight.condition == ObservationMaxHeightCondition.observing ||
-        ((maxHeight.isRising as bool?) ?? false)) {
+        (maxHeight.isRising ?? false)) {
       return '#FF9800'; // orange
     }
 
@@ -714,7 +675,7 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
     }
 
     if (maxHeight.condition == ObservationMaxHeightCondition.observing ||
-        ((maxHeight.isRising as bool?) ?? false)) {
+        (maxHeight.isRising ?? false)) {
       return '#FF9800'; // orange
     }
 
@@ -738,15 +699,13 @@ class _MapControllerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Card(
-      color: colorScheme.surfaceContainerHighest,
+      color: colorTheme.surfaceContainerHighest,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () async {
           await HapticFeedback.lightImpact();

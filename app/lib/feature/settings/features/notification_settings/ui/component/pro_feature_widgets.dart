@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 
 class ProBadge extends StatelessWidget {
@@ -5,18 +6,18 @@ class ProBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer,
+        color: colorTheme.primaryContainer,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         child: Text(
           'Pro',
-          style: TextStyle(color: colorScheme.onPrimaryContainer),
+          style: TextStyle(color: colorTheme.onPrimaryContainer),
         ),
       ),
     );

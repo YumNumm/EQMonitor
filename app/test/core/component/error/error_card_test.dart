@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,7 +8,14 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   Widget wrap(Widget child) => ProviderScope(
-    child: MaterialApp(home: Scaffold(body: child)),
+    child: MaterialApp(
+      theme: ThemeData.light().copyWith(
+        extensions: <ThemeExtension<dynamic>>[
+          DesignSystemThemeExtension.light(),
+        ],
+      ),
+      home: Scaffold(body: child),
+    ),
   );
 
   testWidgets('onReload 指定時に再試行ボタンを表示する', (tester) async {

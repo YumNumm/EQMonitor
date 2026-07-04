@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/let_ex.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
@@ -35,15 +36,12 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
     final displayMode = useState(EewDisplayMode.intensity);
 
     // Auto-select the latest report during simulation
-    useEffect(
-      () {
-        if (simulation != null && simulation.isPlaying) {
-          selectedIndex.value = simulation.currentIndex;
-        }
-        return null;
-      },
-      [simulation?.currentIndex],
-    );
+    useEffect(() {
+      if (simulation != null && simulation.isPlaying) {
+        selectedIndex.value = simulation.currentIndex;
+      }
+      return null;
+    }, [simulation?.currentIndex]);
 
     return Scaffold(
       appBar: AppBar(
@@ -51,9 +49,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
         actions: [
           if (simulation != null) ...[
             IconButton(
-              icon: Icon(
-                simulation.isPlaying ? Icons.pause : Icons.play_arrow,
-              ),
+              icon: Icon(simulation.isPlaying ? Icons.pause : Icons.play_arrow),
               onPressed: () {
                 if (simulation.isPlaying) {
                   ref.read(eewSimulationProvider.notifier).pause();
@@ -102,10 +98,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
                   .where((h) => h.latitude != null && h.longitude != null)
                   .firstOrNull
                   ?.let(
-                    (h) => Geographic(
-                      lat: h.latitude!,
-                      lon: h.longitude!,
-                    ),
+                    (h) => Geographic(lat: h.latitude!, lon: h.longitude!),
                   ) ??
               const Geographic(lat: 35.6895, lon: 139.6917);
 
@@ -379,9 +372,9 @@ class _SimulationStartBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     return Material(
-      color: theme.colorScheme.primaryContainer,
+      color: designSystem.colorTheme.primaryContainer,
       child: InkWell(
         onTap: onStart,
         child: Padding(
@@ -390,20 +383,20 @@ class _SimulationStartBanner extends StatelessWidget {
             children: [
               Icon(
                 Icons.play_circle_outline,
-                color: theme.colorScheme.onPrimaryContainer,
+                color: designSystem.colorTheme.onPrimaryContainer,
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'シミュレーション再生: 各報を実際の時間間隔で再生します',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: designSystem.colorTheme.onPrimaryContainer,
                   ),
                 ),
               ),
               Icon(
                 Icons.chevron_right,
-                color: theme.colorScheme.onPrimaryContainer,
+                color: designSystem.colorTheme.onPrimaryContainer,
               ),
             ],
           ),

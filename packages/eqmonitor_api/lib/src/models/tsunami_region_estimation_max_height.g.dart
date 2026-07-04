@@ -15,17 +15,17 @@ _TsunamiRegionEstimationMaxHeight _$TsunamiRegionEstimationMaxHeightFromJson(
   json,
   ($checkedConvert) {
     final val = _TsunamiRegionEstimationMaxHeight(
-      isOver: $checkedConvert('is_over', (v) => v as bool),
-      isObserving: $checkedConvert('is_observing', (v) => v as bool),
       observedAt: $checkedConvert(
         'observed_at',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
       value: $checkedConvert('value', (v) => v as num?),
+      isOver: $checkedConvert('is_over', (v) => v as bool?),
       qualitative: $checkedConvert(
         'qualitative',
         (v) => $enumDecodeNullable(_$QualitativeHeightEnumMap, v),
       ),
+      isObserving: $checkedConvert('is_observing', (v) => v as bool?),
       revise: $checkedConvert(
         'revise',
         (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
@@ -34,20 +34,20 @@ _TsunamiRegionEstimationMaxHeight _$TsunamiRegionEstimationMaxHeightFromJson(
     return val;
   },
   fieldKeyMap: const {
+    'observedAt': 'observed_at',
     'isOver': 'is_over',
     'isObserving': 'is_observing',
-    'observedAt': 'observed_at',
   },
 );
 
 Map<String, dynamic> _$TsunamiRegionEstimationMaxHeightToJson(
   _TsunamiRegionEstimationMaxHeight instance,
 ) => <String, dynamic>{
-  'is_over': instance.isOver,
-  'is_observing': instance.isObserving,
   'observed_at': ?instance.observedAt?.toIso8601String(),
   'value': ?instance.value,
+  'is_over': ?instance.isOver,
   'qualitative': ?instance.qualitative,
+  'is_observing': ?instance.isObserving,
   'revise': ?instance.revise,
 };
 

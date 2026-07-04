@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
@@ -107,7 +108,7 @@ class _Section extends StatelessWidget {
               child: Text(
                 '参照Provider: $providerName',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: context.designSystem.colorTheme.secondary,
                   fontFamily: 'monospace',
                 ),
               ),
@@ -148,7 +149,7 @@ class _JmaIntensityGrid extends ConsumerWidget {
         children: [
           TableRow(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              color: context.designSystem.colorTheme.surfaceContainerHighest,
             ),
             children: const [
               _HeaderCell('震度'),
@@ -215,7 +216,7 @@ class _JmaLpgmIntensityGrid extends ConsumerWidget {
         children: [
           TableRow(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              color: context.designSystem.colorTheme.surfaceContainerHighest,
             ),
             children: const [
               _HeaderCell('階級'),

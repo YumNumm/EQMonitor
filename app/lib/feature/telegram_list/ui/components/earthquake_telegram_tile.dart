@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
@@ -43,7 +44,7 @@ class EarthquakeTelegramTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
     final diffCalculator = ref.watch(earthquakeBodyDiffCalculatorProvider);
 
@@ -107,13 +108,13 @@ class EarthquakeTelegramTile extends ConsumerWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer,
+                      color: designSystem.colorTheme.primaryContainer,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       '#$sequenceNumber',
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onPrimaryContainer,
+                        color: designSystem.colorTheme.onPrimaryContainer,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -129,7 +130,7 @@ class EarthquakeTelegramTile extends ConsumerWidget {
                 telegram.pressAt.toLocal(),
               )}',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+                color: designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
             _EarthquakeTelegramTileContent(
@@ -152,7 +153,7 @@ class EarthquakeTelegramTile extends ConsumerWidget {
                   .join('\n')
                   .toHalfWidth,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+                color: designSystem.colorTheme.onSurfaceVariant,
                 fontSize: 12,
               ),
             ),

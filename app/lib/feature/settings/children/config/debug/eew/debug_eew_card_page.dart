@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
@@ -152,7 +153,7 @@ class DebugEewCardPage extends HookConsumerWidget {
             child: Text(
               'パラメータ（下記はいずれも検証用の表示です。実データではありません）',
               style: _paramLabelStyle.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -435,7 +436,7 @@ class DebugEewCardPage extends HookConsumerWidget {
                         ? '現在地リージョン: $detectedRegionName ($detectedRegionCode)'
                         : '現在地リージョン: 未取得（GPS 許可が必要）',
                     style: _paramLabelStyle.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      color: context.designSystem.colorTheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -539,7 +540,7 @@ class DebugEewCardPage extends HookConsumerWidget {
             child: Text(
               'よく使う組み合わせを並べています。上のパラメータとは独立です。',
               style: _paramLabelStyle.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           ),

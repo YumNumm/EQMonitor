@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -46,7 +47,7 @@ class EstimatedIntensityNoticeDialog extends StatelessWidget {
               'EQMonitorでは、推計震度分布図(250mメッシュ)を'
               'サーバで処理し掲載しています。',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                color: context.designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 8),
@@ -55,9 +56,9 @@ class EstimatedIntensityNoticeDialog extends StatelessWidget {
               child: Text(
                 '推計震度分布図について - 気象庁',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.primary,
+                  color: context.designSystem.colorTheme.primary,
                   decoration: TextDecoration.underline,
-                  decorationColor: theme.colorScheme.primary,
+                  decorationColor: context.designSystem.colorTheme.primary,
                 ),
               ),
             ),

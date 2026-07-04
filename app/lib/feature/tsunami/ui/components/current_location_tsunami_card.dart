@@ -32,19 +32,14 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
     Position position,
   ) {
     final latLng = LatLng(position.latitude, position.longitude);
-    final nearestAsync = ref.watch(
-      jmaMapAreaTsunamiNearestProvider(latLng),
-    );
+    final nearestAsync = ref.watch(jmaMapAreaTsunamiNearestProvider(latLng));
     if (nearestAsync case AsyncData(:final value)) {
       return _buildWithNearest(context, value);
     }
     return const SizedBox.shrink();
   }
 
-  Widget _buildWithNearest(
-    BuildContext context,
-    MapDataItem? nearest,
-  ) {
+  Widget _buildWithNearest(BuildContext context, MapDataItem? nearest) {
     if (nearest == null) {
       return const SizedBox.shrink();
     }
@@ -63,7 +58,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
     }
 
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final stripeColors = TsunamiWarningColor.stripeColors(region.kind);
     final headerBg = TsunamiWarningColor.headerColor(region.kind);
     final distanceKm = nearest.distanceToCoastlineKm;
@@ -72,7 +67,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
         .where(
           (s) =>
               s.observation != null &&
-              !((s.observation!.firstHeight.isMissing as bool?) ?? false),
+              !(s.observation!.firstHeight.isMissing ?? false),
         )
         .toList();
 
@@ -82,7 +77,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
         clipBehavior: Clip.antiAlias,
         shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: color.outlineSoft),
+          side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -90,10 +85,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
             if (stripeColors.isNotEmpty)
               WarningStripeDecoration(colors: stripeColors),
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               color: headerBg,
               child: Text(
                 '${region.name}  ${TsunamiWarningColor.displayName(region.kind)}',
@@ -111,7 +103,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: designSystem.textColor.primary,
+                  color: designSystem.colorTheme.onSurface,
                 ),
               ),
             ),
@@ -122,7 +114,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
                   '海岸線まで約${distanceKm.round()}km',
                   style: TextStyle(
                     fontSize: 13,
-                    color: designSystem.textColor.secondary,
+                    color: designSystem.colorTheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -134,7 +126,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: designSystem.textColor.primary,
+                    color: designSystem.colorTheme.onSurface,
                   ),
                 ),
               ),
