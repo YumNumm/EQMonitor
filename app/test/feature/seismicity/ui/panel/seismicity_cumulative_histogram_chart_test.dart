@@ -1,13 +1,21 @@
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_cumulative_histogram_chart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+final ThemeData _testTheme = ThemeData.light().copyWith(
+  extensions: [DesignSystemThemeExtension.light()],
+);
+
 void main() {
   testWidgets('イベントが0件の場合はフォールバック表示になる', (tester) async {
     await tester.pumpWidget(
-      const MaterialApp(home: SeismicityCumulativeHistogramChart(events: [])),
+      MaterialApp(
+        theme: _testTheme,
+        home: const SeismicityCumulativeHistogramChart(events: []),
+      ),
     );
     expect(find.byType(SeismicityCumulativeHistogramChart), findsOneWidget);
     expect(find.byType(LineChart), findsNothing);
@@ -48,7 +56,10 @@ void main() {
     ];
 
     await tester.pumpWidget(
-      MaterialApp(home: SeismicityCumulativeHistogramChart(events: events)),
+      MaterialApp(
+        theme: _testTheme,
+        home: SeismicityCumulativeHistogramChart(events: events),
+      ),
     );
 
     final lineChart = tester.widget<LineChart>(find.byType(LineChart));

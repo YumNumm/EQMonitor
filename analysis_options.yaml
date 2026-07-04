@@ -22,3 +22,7 @@ plugins:
       avoid_print: true
       avoid_eqmonitor_api_in_ui: true
       avoid_mixed_declaration_categories: true
+  eqmonitor_custom_lints:
+    path: tools/eqmonitor_custom_lints
+    diagnostics:
+      avoid_direct_color_scheme: true

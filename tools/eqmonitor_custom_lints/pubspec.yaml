@@ -1,19 +1,14 @@
 name: eqmonitor_custom_lints
-description: Custom lint rules for EQMonitor (custom_lint plugin package).
+description: Custom analyzer plugin (lint rules) for EQMonitor. Standalone (not in pub workspace) to use analyzer 13 independently of the app workspace.
 publish_to: none
-version: 0.1.0
 
 environment:
-  sdk: ^3.0.0
-  flutter: ">=3.0.0"
+  sdk: ^3.12.0
 
 dependencies:
-  analyzer: ^8.0.0
-  custom_lint_builder: ^0.8.1
-  flutter:
-    sdk: flutter
+  analysis_server_plugin: ^0.3.8
+  analyzer: ^13.0.0
 
 dev_dependencies:
-  custom_lint: ^0.8.1
   path: ^1.9.0
   test: ^1.29.0

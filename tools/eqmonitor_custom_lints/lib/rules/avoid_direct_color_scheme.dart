@@ -1,62 +1,73 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart' hide LintCode;
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
 
-class AvoidDirectColorScheme extends DartLintRule {
-  const AvoidDirectColorScheme() : super(code: _code);
+import '../src/color_scheme_violation_finder.dart';
+
+class AvoidDirectColorScheme extends AnalysisRule {
+  AvoidDirectColorScheme()
+    : super(
+        name: _code.name,
+        description: _code.problemMessage,
+      );
 
   static const _code = LintCode(
-    name: 'avoid_direct_color_scheme',
-    problemMessage: 'Theme.of(context).colorScheme を直接参照せず、'
+    'avoid_direct_color_scheme',
+    'Theme.of(context).colorScheme を直接参照せず、'
         'designSystem.colorTheme を使用してください。',
-    errorSeverity: ErrorSeverity.WARNING,
+    correctionMessage:
+        'context.designSystem.colorTheme 経由でカラーを参照してください。',
+    severity: DiagnosticSeverity.WARNING,
   );
 
-  static const _allowedPathSegments = [
+  static const _allowedPathSuffixes = [
     '/core/theme/build_theme.dart',
     '.g.dart',
     '.freezed.dart',
   ];
 
-  bool _isAllowed(String path) {
+  @override
+  DiagnosticCode get diagnosticCode => _code;
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
+    final path = context.definingUnit.unit.declaredFragment?.source.fullName;
+    if (path != null && _isAllowed(path)) {
+      return;
+    }
+    final visitor = _Visitor(this);
+    registry.addPropertyAccess(this, visitor);
+    registry.addPrefixedIdentifier(this, visitor);
+  }
+
+  static bool _isAllowed(String path) {
     final normalized = path.replaceAll(r'\', '/');
-    return _allowedPathSegments.any(normalized.endsWith);
+    return _allowedPathSuffixes.any(normalized.endsWith);
+  }
+}
+
+class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule);
+
+  final AnalysisRule rule;
+
+  @override
+  void visitPropertyAccess(PropertyAccess node) {
+    if (isColorSchemeOnThemeOf(node.propertyName, node.target)) {
+      rule.reportAtNode(node.propertyName);
+    }
   }
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    ErrorReporter reporter,
-    CustomLintContext context,
-  ) {
-    if (_isAllowed(resolver.path)) {
-      return;
-    }
-
-    context.registry.addPropertyAccess((node) {
-      _reportIfColorSchemeOnThemeData(node.propertyName, node.target, reporter);
-    });
-    context.registry.addPrefixedIdentifier((node) {
-      _reportIfColorSchemeOnThemeData(node.identifier, node.prefix, reporter);
-    });
-  }
-
-  void _reportIfColorSchemeOnThemeData(
-    SimpleIdentifier propertyName,
-    Expression? target,
-    ErrorReporter reporter,
-  ) {
-    if (propertyName.name != 'colorScheme') {
-      return;
-    }
-    final targetType = target?.staticType;
-    if (targetType == null) {
-      return;
-    }
-    final displayName = targetType.getDisplayString();
-    if (displayName == 'ThemeData') {
-      reporter.atNode(propertyName, code);
+  void visitPrefixedIdentifier(PrefixedIdentifier node) {
+    if (isColorSchemeOnThemeOf(node.identifier, node.prefix)) {
+      rule.reportAtNode(node.identifier);
     }
   }
 }

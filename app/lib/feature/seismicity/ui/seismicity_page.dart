@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_bounds_filter.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_bounds.dart';
@@ -162,7 +163,7 @@ class _MapBody extends StatelessWidget {
             left: 8,
             child: value.isFromCache
                 ? Card(
-                    color: Theme.of(context).colorScheme.errorContainer,
+                    color: context.designSystem.colorTheme.errorContainer,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -182,9 +183,8 @@ class _MapBody extends StatelessWidget {
                     ),
                   )
                 : Card(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surface.withValues(alpha: 0.8),
+                    color: context.designSystem.colorTheme.surface
+                        .withValues(alpha: 0.8),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,

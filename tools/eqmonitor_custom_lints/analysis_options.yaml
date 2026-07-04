@@ -1,3 +1,8 @@
 analyzer:
-  plugins:
-    - custom_lint
+  errors:
+    lines_longer_than_80_chars: ignore
+    deprecated_member_use: ignore
+  exclude:
+    # フィクスチャは lint 検出対象のサンプルコードであり、
+    # flutter 非依存のこのパッケージでは型解決できないため除外する。
+    - "test/fixtures/**"
