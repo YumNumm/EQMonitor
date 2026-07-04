@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
@@ -66,7 +67,7 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('追加読み込みに失敗: $exception'),
-                backgroundColor: Theme.of(context).colorScheme.error,
+                backgroundColor: context.designSystem.colorTheme.error,
               ),
             );
           }
@@ -140,7 +141,7 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                       child: Text(
                         '配信ログはまだありません',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          color: context.designSystem.colorTheme.onSurfaceVariant,
                         ),
                       ),
                     ),
@@ -210,9 +211,9 @@ class _NotificationLogTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final ok = item.result == PushNotificationDeliveryResult.ok;
-    final resultColor = ok ? scheme.primary : scheme.error;
+    final resultColor = ok ? colorTheme.primary : colorTheme.error;
     final subtitle = [
       item.framework.displayLabel,
       item.result.displayLabel,
@@ -334,9 +335,7 @@ class _LogDetailSheet extends StatelessWidget {
                               e.$1,
                               style: Theme.of(context).textTheme.labelSmall
                                   ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurfaceVariant,
+                                    color: context.designSystem.colorTheme.onSurfaceVariant,
                                   ),
                             ),
                             const SizedBox(height: 4),

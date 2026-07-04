@@ -36,7 +36,7 @@ class HomeMapView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
 
@@ -54,9 +54,9 @@ class HomeMapView extends ConsumerWidget {
             vertical: spacing.lg,
           ),
           decoration: BoxDecoration(
-            color: color.surfaceCard.withValues(alpha: 0.92),
+            color: colorTheme.surfaceContainerHigh.withValues(alpha: 0.92),
             borderRadius: BorderRadius.circular(designSystem.shape.card),
-            border: Border.all(color: color.outlineSoft),
+            border: Border.all(color: colorTheme.outlineVariant),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

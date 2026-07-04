@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
@@ -93,13 +94,13 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     final content = switch (activeRetry) {
       RetryExhausted(:final lastError) => _BannerTile(
         icon: Icons.error_outline,
-        backgroundColor: colorScheme.errorContainer,
-        foregroundColor: colorScheme.onErrorContainer,
+        backgroundColor: colorTheme.errorContainer,
+        foregroundColor: colorTheme.onErrorContainer,
         message: lastError.userMessage,
         trailing: FilledButton.tonal(
           onPressed: onRetry,
@@ -112,8 +113,8 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
       ),
       RetryRunning(:final attempt) => _BannerTile(
         icon: Icons.sync,
-        backgroundColor: colorScheme.secondaryContainer,
-        foregroundColor: colorScheme.onSecondaryContainer,
+        backgroundColor: colorTheme.secondaryContainer,
+        foregroundColor: colorTheme.onSecondaryContainer,
         message: attempt == 0 ? '通知設定を更新しています…' : '再試行中… ($attempt 回目)',
         trailing: const SizedBox(
           width: 20,
@@ -123,8 +124,8 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
       ),
       RetryIdle() when isLoading => _BannerTile(
         icon: Icons.sync,
-        backgroundColor: colorScheme.secondaryContainer,
-        foregroundColor: colorScheme.onSecondaryContainer,
+        backgroundColor: colorTheme.secondaryContainer,
+        foregroundColor: colorTheme.onSecondaryContainer,
         message: '通知設定を更新しています…',
         trailing: const SizedBox(
           width: 20,
@@ -167,12 +168,12 @@ class _WaitingBanner extends HookWidget {
       return timer.cancel;
     }, [resumeAt]);
 
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     final seconds = remaining.value.inSeconds;
     return _BannerTile(
       icon: Icons.schedule,
-      backgroundColor: colorScheme.tertiaryContainer,
-      foregroundColor: colorScheme.onTertiaryContainer,
+      backgroundColor: colorTheme.tertiaryContainer,
+      foregroundColor: colorTheme.onTertiaryContainer,
       message: seconds > 0 ? '$seconds 秒後に再試行します…' : '再試行しています…',
     );
   }

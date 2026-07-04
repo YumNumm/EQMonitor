@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/nearby_earthquake_parameter.dart';
 import 'package:flutter/material.dart';
 
@@ -49,9 +50,8 @@ class _NearbyEarthquakeParameterSheetState
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: 0.4,
-                  ),
+                  color: context.designSystem.colorTheme.onSurfaceVariant
+                      .withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -140,14 +140,12 @@ class _SliderRow extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(
-              child: Text(label, style: theme.textTheme.bodyMedium),
-            ),
+            Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
             Text(
               displayText,
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
+                color: context.designSystem.colorTheme.primary,
               ),
             ),
           ],

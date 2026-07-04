@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class EarthquakeHistoryMapLegend extends StatelessWidget {
     }
 
     return Card(
-      color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.85),
+      color: context.designSystem.colorTheme.surface.withValues(alpha: 0.85),
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),

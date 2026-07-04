@@ -1,7 +1,7 @@
 // ignore_for_file: annotate_overrides
 
-import 'package:eqmonitor/core/designsystem/extensions/text_color_theme_extension.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
@@ -34,13 +34,10 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
     required this.monoSmall,
   });
 
-  factory TypographyThemeExtension.light(TextColorThemeExtension textColor) =>
-      TypographyThemeExtension._base(textColor);
+  factory TypographyThemeExtension.fromColorTheme(ThemeColorSet colorTheme) =>
+      TypographyThemeExtension._base(colorTheme);
 
-  factory TypographyThemeExtension.dark(TextColorThemeExtension textColor) =>
-      TypographyThemeExtension._base(textColor);
-
-  factory TypographyThemeExtension._base(TextColorThemeExtension textColor) {
+  factory TypographyThemeExtension._base(ThemeColorSet colorTheme) {
     return TypographyThemeExtension(
       displayLarge: TextStyle(
         fontFamily: primaryFontFamily,
@@ -48,7 +45,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 40,
         height: 48 / 40,
         fontWeight: FontWeight.w600,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       displayMedium: TextStyle(
         fontFamily: primaryFontFamily,
@@ -56,7 +53,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 36,
         height: 44 / 36,
         fontWeight: FontWeight.w600,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       headlineLarge: TextStyle(
         fontFamily: primaryFontFamily,
@@ -64,7 +61,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 32,
         height: 40 / 32,
         fontWeight: FontWeight.w600,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       headlineMedium: TextStyle(
         fontFamily: primaryFontFamily,
@@ -72,7 +69,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 28,
         height: 36 / 28,
         fontWeight: FontWeight.w600,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       headlineSmall: TextStyle(
         fontFamily: primaryFontFamily,
@@ -80,7 +77,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 24,
         height: 30 / 24,
         fontWeight: FontWeight.w600,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       titleLarge: TextStyle(
         fontFamily: primaryFontFamily,
@@ -88,7 +85,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 22,
         height: 28 / 22,
         fontWeight: FontWeight.w600,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       titleMedium: TextStyle(
         fontFamily: primaryFontFamily,
@@ -96,7 +93,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 18,
         height: 24 / 18,
         fontWeight: FontWeight.w600,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       titleSmall: TextStyle(
         fontFamily: primaryFontFamily,
@@ -104,7 +101,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 16,
         height: 22 / 16,
         fontWeight: FontWeight.w600,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       bodyLarge: TextStyle(
         fontFamily: primaryFontFamily,
@@ -112,7 +109,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 16,
         height: 24 / 16,
         fontWeight: FontWeight.w400,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       bodyMedium: TextStyle(
         fontFamily: primaryFontFamily,
@@ -120,7 +117,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 14,
         height: 20 / 14,
         fontWeight: FontWeight.w400,
-        color: textColor.secondary,
+        color: colorTheme.onSurfaceVariant,
       ),
       bodySmall: TextStyle(
         fontFamily: primaryFontFamily,
@@ -128,7 +125,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 13,
         height: 18 / 13,
         fontWeight: FontWeight.w400,
-        color: textColor.secondary,
+        color: colorTheme.onSurfaceVariant,
       ),
       labelLarge: TextStyle(
         fontFamily: primaryFontFamily,
@@ -136,7 +133,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 14,
         height: 20 / 14,
         fontWeight: FontWeight.w500,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       labelMedium: TextStyle(
         fontFamily: primaryFontFamily,
@@ -145,7 +142,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         height: 16 / 12,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.2,
-        color: textColor.secondary,
+        color: colorTheme.onSurfaceVariant,
       ),
       labelSmall: TextStyle(
         fontFamily: primaryFontFamily,
@@ -154,7 +151,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         height: 14 / 11,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.2,
-        color: textColor.tertiary,
+        color: colorTheme.outline,
       ),
       monoLarge: TextStyle(
         fontFamily: codeFontFamily,
@@ -162,7 +159,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 16,
         height: 22 / 16,
         fontWeight: FontWeight.w500,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       monoMedium: TextStyle(
         fontFamily: codeFontFamily,
@@ -170,7 +167,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 14,
         height: 20 / 14,
         fontWeight: FontWeight.w500,
-        color: textColor.primary,
+        color: colorTheme.onSurface,
       ),
       monoSmall: TextStyle(
         fontFamily: codeFontFamily,
@@ -178,7 +175,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontSize: 12,
         height: 16 / 12,
         fontWeight: FontWeight.w500,
-        color: textColor.secondary,
+        color: colorTheme.onSurfaceVariant,
       ),
     );
   }

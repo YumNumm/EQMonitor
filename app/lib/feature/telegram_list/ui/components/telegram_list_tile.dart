@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class TelegramListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
 
     final isEew = switch (telegram.type) {
@@ -48,7 +49,7 @@ class TelegramListTile extends StatelessWidget {
             Text(
               telegram.headline!,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+                color: designSystem.colorTheme.onSurfaceVariant,
                 fontSize: 12,
               ),
               maxLines: 2,
@@ -80,14 +81,14 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return Row(
       children: [
         Text(
           '$label: ',
           style: theme.textTheme.bodySmall?.copyWith(
-            color: colorScheme.onSurfaceVariant,
+            color: designSystem.colorTheme.onSurfaceVariant,
             fontSize: 12,
           ),
         ),

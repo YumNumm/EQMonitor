@@ -165,7 +165,7 @@ class _NotificationConditionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -176,12 +176,12 @@ class _NotificationConditionCard extends StatelessWidget {
         spacing.lg,
         spacing.md,
       ),
-      color: color.surfaceCard,
+      color: colorTheme.surfaceContainerHigh,
       clipBehavior: Clip.antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -270,13 +270,13 @@ class _DeleteRegionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return ListTile(
-      leading: Icon(Icons.delete_outline, color: colorScheme.error),
+      leading: Icon(Icons.delete_outline, color: colorTheme.error),
       title: Text(
         'この地域を削除',
-        style: TextStyle(color: colorScheme.error),
+        style: TextStyle(color: colorTheme.error),
       ),
       onTap: onTap,
     );

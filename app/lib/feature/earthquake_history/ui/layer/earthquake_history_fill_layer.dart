@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
+import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
@@ -53,7 +53,8 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
     }
 
     final styleController = MapController.maybeOf(context)?.style;
-    final colorModel = ref.watch(intensityColorProvider);
+    final colorSet = ref.watch(activeColorSetProvider);
+    final colorModel = colorSet.intensity;
     final fillLayerBuilder = useMemoized(
       () => EarthquakeHistoryFillLayerBuilder(modeResolver: modeResolver),
       [modeResolver],
@@ -135,7 +136,7 @@ class EarthquakeHistoryFillLayerBuilder {
 
   List<StyleLayer> build({
     required EarthquakeIntensity intensity,
-    required IntensityColorModel colorModel,
+    required IntensityColors colorModel,
     required EarthquakeHistoryMapLayerMode mode,
     required bool showingLpgmIntensity,
     required EarthquakeHistoryMapLayerParameter parameter,
@@ -161,7 +162,7 @@ class EarthquakeHistoryFillLayerBuilder {
 
   List<StyleLayer> buildJmaLayers({
     required EarthquakeIntensity intensity,
-    required IntensityColorModel colorModel,
+    required IntensityColors colorModel,
     required EarthquakeHistoryMapLayerMode mode,
     required EarthquakeHistoryMapLayerParameter parameter,
   }) {
@@ -215,7 +216,7 @@ class EarthquakeHistoryFillLayerBuilder {
 
   List<StyleLayer> buildLpgmLayers({
     required EarthquakeIntensity intensity,
-    required IntensityColorModel colorModel,
+    required IntensityColors colorModel,
     required EarthquakeHistoryMapLayerMode mode,
     required EarthquakeHistoryMapLayerParameter parameter,
   }) {

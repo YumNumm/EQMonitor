@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/estimated_intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
+import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
@@ -21,7 +21,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-    final colorModel = ref.watch(estimatedIntensityColorProvider);
+    final colorModel = ref.watch(activeColorSetProvider).estimatedIntensity;
 
     final isInitialized = useRef(false);
     final latestRegionMaxIntensities = useRef<List<EewForecastRegionInfo>>([]);

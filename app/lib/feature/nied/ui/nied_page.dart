@@ -7,9 +7,7 @@ class NiedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('NIED'),
-      ),
+      appBar: AppBar(title: const Text('NIED')),
       body: ListView(
         children: [
           ListTile(
@@ -29,6 +27,12 @@ class NiedPage extends StatelessWidget {
             subtitle: const Text('強震観測網 波形データ'),
             leading: const Icon(Icons.show_chart),
             onTap: () async => const KnetWaveformRoute().push<void>(context),
+          ),
+          ListTile(
+            title: const Text('Hi-net 一元化震源ビューア'),
+            subtitle: const Text('デバッグ専用・二次配布禁止データのため非公開'),
+            leading: const Icon(Icons.warning_amber),
+            onTap: () async => const HinetSeismicityRoute().push<void>(context),
           ),
         ],
       ),

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
@@ -39,7 +39,7 @@ class IntensityFillLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-    final colorModel = ref.watch(intensityColorProvider);
+    final colorModel = ref.watch(activeColorSetProvider).intensity;
     final state = ref.watch(intensityHistoryControllerProvider);
     final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
 

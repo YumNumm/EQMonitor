@@ -23,8 +23,7 @@ class _OnboardingBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final designSystem = theme.designSystemThemeExtension;
+    final designSystem = context.designSystem;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -41,8 +40,8 @@ class _OnboardingBottomBar extends StatelessWidget {
               totalPages,
               (index) => _PageDot(
                 isActive: index == currentPage,
-                color: designSystem.palette.brandPrimary,
-                inactiveColor: designSystem.color.outlineSoft,
+                color: designSystem.colorTheme.primary,
+                inactiveColor: designSystem.colorTheme.outlineVariant,
               ),
             ),
           ),
@@ -62,9 +61,9 @@ class _OnboardingBottomBar extends StatelessWidget {
                         ),
                         onPressed: isBackEnabled ? onPrevious : null,
                         style: FilledButton.styleFrom(
-                          backgroundColor: theme.colorScheme.secondaryContainer,
+                          backgroundColor: context.designSystem.colorTheme.secondaryContainer,
                           foregroundColor:
-                              theme.colorScheme.onSecondaryContainer,
+                              context.designSystem.colorTheme.onSecondaryContainer,
                           shape: RoundedSuperellipseBorder(
                             borderRadius: BorderRadius.circular(
                               designSystem.shape.button,
@@ -79,8 +78,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                 child: FilledButton(
                   onPressed: isNextEnabled ? onNext : null,
                   style: FilledButton.styleFrom(
-                    backgroundColor: designSystem.palette.brandPrimary,
-                    foregroundColor: designSystem.textColor.inverse,
+                    backgroundColor: designSystem.colorTheme.primary,
+                    foregroundColor: designSystem.colorTheme.onInverseSurface,
                     shape: RoundedSuperellipseBorder(
                       borderRadius: BorderRadius.circular(
                         designSystem.shape.button,
@@ -100,7 +99,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                             child: CircularProgressIndicator.adaptive(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation(
-                                designSystem.textColor.secondary,
+                                designSystem.colorTheme.onSurfaceVariant,
                               ),
                             ),
                           ),
@@ -108,7 +107,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                             'デバイスを登録しています...',
                             style:
                                 designSystem.typography.titleSmall.copyWith(
-                                  color: designSystem.textColor.secondary,
+                                  color: designSystem.colorTheme.onSurfaceVariant,
                                 ),
                           ),
                         ],
@@ -117,8 +116,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                         buttonLabel,
                         style: designSystem.typography.titleSmall.copyWith(
                           color: isNextEnabled
-                              ? designSystem.textColor.inverse
-                              : designSystem.textColor.secondary,
+                              ? designSystem.colorTheme.onInverseSurface
+                              : designSystem.colorTheme.onSurfaceVariant,
                         ),
                       ),
                 ),
@@ -143,7 +142,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                           TextSpan(
                             text: '利用規約',
                             style: designSystem.typography.bodySmall.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(
+                              color: context.designSystem.colorTheme.onSurface.withValues(
                                 alpha: 0.6,
                               ),
                               decoration: TextDecoration.underline,
@@ -157,7 +156,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                           TextSpan(
                             text: 'プライバシーポリシー',
                             style: designSystem.typography.bodySmall.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(
+                              color: context.designSystem.colorTheme.onSurface.withValues(
                                 alpha: 0.6,
                               ),
                               decoration: TextDecoration.underline,
@@ -170,7 +169,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                           const TextSpan(text: ' に同意したとみなされます'),
                         ],
                         style: designSystem.typography.bodySmall.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
+                          color: context.designSystem.colorTheme.onSurface.withValues(
                             alpha: 0.6,
                           ),
                         ),

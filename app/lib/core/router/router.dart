@@ -34,6 +34,7 @@ import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
 import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
+import 'package:eqmonitor/feature/seismicity/ui/seismicity_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_page.dart';
@@ -45,6 +46,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_de
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_list_tile_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/hinet_seismicity/ui/hinet_seismicity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
@@ -58,8 +60,6 @@ import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_t
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/tsunami_telegram_timeline_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
-import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
-import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/estimated_intensity_color_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/ui/page/home_widget_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
@@ -180,6 +180,15 @@ class EewHistoryRoute extends GoRouteData with $EewHistoryRoute {
       const EewHistoryPage();
 }
 
+@TypedGoRoute<SeismicityRoute>(path: '/seismicity')
+class SeismicityRoute extends GoRouteData with $SeismicityRoute {
+  const SeismicityRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SeismicityPage();
+}
+
 @TypedGoRoute<IntensityHistoryRoute>(path: '/intensity-history')
 class IntensityHistoryRoute extends GoRouteData with $IntensityHistoryRoute {
   const IntensityHistoryRoute({this.prefectureCode, this.cityCode});
@@ -267,9 +276,7 @@ class ShakeDetectionHistoryDetailsRoute extends GoRouteData
       ShakeDetectionHistoryDetailsPage(event: $extra);
 }
 
-@TypedGoRoute<TelegramListByEventIdRoute>(
-  path: '/telegram-list/:eventId',
-)
+@TypedGoRoute<TelegramListByEventIdRoute>(path: '/telegram-list/:eventId')
 class TelegramListByEventIdRoute extends GoRouteData
     with $TelegramListByEventIdRoute {
   const TelegramListByEventIdRoute({required this.eventId});
@@ -318,15 +325,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
 @TypedGoRoute<SettingsRoute>(
   path: '/settings',
   routes: [
-    TypedGoRoute<DisplayRoute>(
-      path: 'display',
-      routes: [
-        TypedGoRoute<ColorSchemeConfigRoute>(path: 'color-schema'),
-        TypedGoRoute<EstimatedIntensityColorConfigRoute>(
-          path: 'estimated-intensity-color-schema',
-        ),
-      ],
-    ),
+    TypedGoRoute<DisplayRoute>(path: 'display'),
     TypedGoRoute<KyoshinMonitorAboutRoute>(
       path: 'kyoshin-monitor-about',
       routes: [
@@ -392,33 +391,22 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
           routes: [
             TypedGoRoute<AquaRoute>(
               path: 'aqua',
-              routes: [
-                TypedGoRoute<AquaCatalogRoute>(path: 'catalog'),
-              ],
+              routes: [TypedGoRoute<AquaCatalogRoute>(path: 'catalog')],
             ),
             TypedGoRoute<FnetRoute>(
               path: 'fnet',
-              routes: [
-                TypedGoRoute<FnetCatalogRoute>(path: 'catalog'),
-              ],
+              routes: [TypedGoRoute<FnetCatalogRoute>(path: 'catalog')],
             ),
             TypedGoRoute<KnetWaveformRoute>(
               path: 'knet',
               routes: [
-                TypedGoRoute<KnetCredentialsSettingsRoute>(
-                  path: 'settings',
-                ),
-                TypedGoRoute<KnetMediaRoute>(
-                  path: 'media',
-                ),
-                TypedGoRoute<KnetRecordListRoute>(
-                  path: 'records',
-                ),
-                TypedGoRoute<KnetStationWaveformRoute>(
-                  path: 'waveform',
-                ),
+                TypedGoRoute<KnetCredentialsSettingsRoute>(path: 'settings'),
+                TypedGoRoute<KnetMediaRoute>(path: 'media'),
+                TypedGoRoute<KnetRecordListRoute>(path: 'records'),
+                TypedGoRoute<KnetStationWaveformRoute>(path: 'waveform'),
               ],
             ),
+            TypedGoRoute<HinetSeismicityRoute>(path: 'hinet-seismicity'),
           ],
         ),
       ],
@@ -516,22 +504,6 @@ class TermOfServiceRoute extends GoRouteData with $TermOfServiceRoute {
       TermOfServicePage(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
-class ColorSchemeConfigRoute extends GoRouteData with $ColorSchemeConfigRoute {
-  const ColorSchemeConfigRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const ColorSchemeConfigPage();
-}
-
-class EstimatedIntensityColorConfigRoute extends GoRouteData
-    with $EstimatedIntensityColorConfigRoute {
-  const EstimatedIntensityColorConfigRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const EstimatedIntensityColorConfigPage();
-}
 
 class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
   const PrivacyPolicyRoute({
@@ -852,6 +824,15 @@ class KnetStationWaveformRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       KnetStationWaveformPage(result: $extra);
+}
+
+class HinetSeismicityRoute extends GoRouteData with $HinetSeismicityRoute {
+  const HinetSeismicityRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const HinetSeismicityPage();
+  }
 }
 
 class KyoshinMonitorAboutRoute extends GoRouteData

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_by_source_provider.dart';
 import 'package:eqmonitor/feature/feed/data/repository/feed_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -7,19 +8,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class _FakeFeedRepository implements FeedRepository {
   _FakeFeedRepository({this.response, this.error});
 
-  final api.FeedDetailResponse? response;
+  final FeedDetail? response;
   final Object? error;
 
   String? lastTelegramHash;
 
   @override
-  Future<api.FeedListResponse> fetch({String? after}) =>
-      throw UnimplementedError();
+  Future<FeedListResponse> fetch({String? after}) => throw UnimplementedError();
 
   @override
-  Future<api.FeedDetailResponse> fetchByTelegramHash(
-    String telegramHash,
-  ) async {
+  Future<FeedDetail> fetchByTelegramHash(String telegramHash) async {
     lastTelegramHash = telegramHash;
     if (error case final error?) {
       throw error;
@@ -46,7 +44,7 @@ void main() {
   );
 
   test('telegramHash を repository に渡して FeedDetailResponse を返す', () async {
-    final repository = _FakeFeedRepository(response: feed);
+    final repository = _FakeFeedRepository(response: feed.toFeedDetail());
     final container = ProviderContainer(
       retry: (retryCount, error) => null,
       overrides: [

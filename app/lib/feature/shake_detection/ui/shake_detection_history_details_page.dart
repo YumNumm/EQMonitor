@@ -19,10 +19,7 @@ import 'package:intl/intl.dart';
 import 'package:maplibre/maplibre.dart';
 
 class ShakeDetectionHistoryDetailsPage extends ConsumerWidget {
-  const ShakeDetectionHistoryDetailsPage({
-    required this.event,
-    super.key,
-  });
+  const ShakeDetectionHistoryDetailsPage({required this.event, super.key});
 
   final ShakeDetectionEvent event;
 
@@ -47,10 +44,7 @@ class ShakeDetectionHistoryDetailsPage extends ConsumerWidget {
 }
 
 class _PageContent extends HookConsumerWidget {
-  const _PageContent({
-    required this.styleString,
-    required this.event,
-  });
+  const _PageContent({required this.styleString, required this.event});
 
   final String styleString;
   final ShakeDetectionEvent event;
@@ -88,10 +82,7 @@ class _PageContent extends HookConsumerWidget {
               ],
             ],
           },
-          'properties': {
-            'fillColor': color,
-            'lineColor': color,
-          },
+          'properties': {'fillColor': color, 'lineColor': color},
         },
       ],
     });
@@ -99,7 +90,7 @@ class _PageContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     final center = Geographic(
       lat: (event.minLat + event.maxLat) / 2,
@@ -187,7 +178,7 @@ class _PageContent extends HookConsumerWidget {
                     shape: WidgetStatePropertyAll(
                       RoundedSuperellipseBorder(
                         side: BorderSide(
-                          color: colorScheme.primary.withValues(alpha: 0.2),
+                          color: colorTheme.primary.withValues(alpha: 0.2),
                         ),
                         borderRadius: BorderRadius.circular(128),
                       ),
@@ -195,7 +186,7 @@ class _PageContent extends HookConsumerWidget {
                   ),
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () => context.pop(),
-                  color: colorScheme.primary,
+                  color: colorTheme.primary,
                   padding: const EdgeInsets.all(12),
                 ),
               ),
@@ -225,7 +216,7 @@ class _Sheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ds = context.designSystem;
+    final designSystem = context.designSystem;
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -234,9 +225,9 @@ class _Sheet extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
           decoration: BoxDecoration(
-            color: ds.color.surfaceDefault,
-            borderRadius: BorderRadius.circular(ds.shape.sheet),
-            border: Border.all(color: ds.color.outlineSoft),
+            color: designSystem.colorTheme.surface,
+            borderRadius: BorderRadius.circular(designSystem.shape.sheet),
+            border: Border.all(color: designSystem.colorTheme.outlineVariant),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -255,12 +246,17 @@ class _Sheet extends StatelessWidget {
                           Text(
                             '揺れ検知イベント',
                             style: Theme.of(context).textTheme.titleSmall
-                                ?.copyWith(color: ds.textColor.primary),
+                                ?.copyWith(
+                                  color: designSystem.colorTheme.onSurface,
+                                ),
                           ),
                           Text(
                             _levelLabel(event.level),
                             style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: ds.textColor.secondary),
+                                ?.copyWith(
+                                  color:
+                                      designSystem.colorTheme.onSurfaceVariant,
+                                ),
                           ),
                         ],
                       ),
@@ -268,8 +264,8 @@ class _Sheet extends StatelessWidget {
                     if (event.isReplay)
                       _TagBadge(
                         label: 'リプレイ',
-                        color: ds.color.surfaceEmphasis,
-                        textColor: ds.textColor.secondary,
+                        color: designSystem.colorTheme.surfaceContainerHighest,
+                        textColor: designSystem.colorTheme.onSurfaceVariant,
                       ),
                   ],
                 ),
@@ -278,40 +274,40 @@ class _Sheet extends StatelessWidget {
                   label: '検知日時',
                   value: _timeFormat.format(event.createdAt.toLocal()),
                   mono: true,
-                  ds: ds,
+                  designSystem: designSystem,
                 ),
                 _InfoRow(
                   label: '観測点数',
                   value: '${event.pointCount} 点',
                   mono: true,
-                  ds: ds,
+                  designSystem: designSystem,
                 ),
                 _InfoRow(
                   label: '緯度範囲',
                   value:
                       '${event.minLat.toStringAsFixed(3)}° – ${event.maxLat.toStringAsFixed(3)}°N',
                   mono: true,
-                  ds: ds,
+                  designSystem: designSystem,
                 ),
                 _InfoRow(
                   label: '経度範囲',
                   value:
                       '${event.minLng.toStringAsFixed(3)}° – ${event.maxLng.toStringAsFixed(3)}°E',
                   mono: true,
-                  ds: ds,
+                  designSystem: designSystem,
                 ),
                 if (event.mergedEewEventId != null)
                   _InfoRow(
                     label: 'EEW結合',
                     value: event.mergedEewEventId!,
                     mono: true,
-                    ds: ds,
+                    designSystem: designSystem,
                   ),
                 _InfoRow(
                   label: 'イベントID',
                   value: event.eventId,
                   mono: true,
-                  ds: ds,
+                  designSystem: designSystem,
                 ),
               ],
             ),
@@ -374,9 +370,9 @@ class _TagBadge extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: textColor,
-        ),
+        style: Theme.of(
+          context,
+        ).textTheme.labelSmall?.copyWith(color: textColor),
       ),
     );
   }
@@ -386,19 +382,19 @@ class _InfoRow extends StatelessWidget {
   const _InfoRow({
     required this.label,
     required this.value,
-    required this.ds,
+    required this.designSystem,
     this.mono = false,
   });
 
   final String label;
   final String value;
   final bool mono;
-  final dynamic ds;
+  final dynamic designSystem;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final ds = context.designSystem;
+    final designSystem = context.designSystem;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -409,7 +405,7 @@ class _InfoRow extends StatelessWidget {
             child: Text(
               label,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: ds.textColor.tertiary,
+                color: designSystem.colorTheme.outline,
               ),
             ),
           ),
@@ -417,7 +413,7 @@ class _InfoRow extends StatelessWidget {
             child: Text(
               value,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: ds.textColor.primary,
+                color: designSystem.colorTheme.onSurface,
                 fontFamily: mono ? FontFamily.googleSansCode : null,
               ),
             ),

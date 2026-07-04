@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/data/tsunami_history_data_source.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -87,10 +88,10 @@ class _TsunamiListTile extends StatelessWidget {
         ? '発表中'
         : '終了';
     final statusColor = item.isCanceled
-        ? theme.colorScheme.outline
+        ? context.designSystem.colorTheme.outline
         : item.isActive
-        ? theme.colorScheme.error
-        : theme.colorScheme.tertiary;
+        ? context.designSystem.colorTheme.error
+        : context.designSystem.colorTheme.tertiary;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -129,14 +130,14 @@ class _TsunamiListTile extends StatelessWidget {
               Text(
                 'EventID: ${item.eventIds.join(", ")}',
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
               Text(
                 '$statusLabel | 地域: ${item.regions.length} | '
                 '電文: ${item.latestTelegrams.length}',
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -155,7 +156,7 @@ class _TsunamiListTile extends StatelessWidget {
         Divider(
           height: 0,
           thickness: 0,
-          color: theme.colorScheme.onInverseSurface,
+          color: context.designSystem.colorTheme.onInverseSurface,
         ),
       ],
     );
@@ -171,12 +172,12 @@ class _DateHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      color: theme.colorScheme.surfaceContainer,
+      color: context.designSystem.colorTheme.surfaceContainer,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Text(
         date,
         style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.onSurface,
+          color: context.designSystem.colorTheme.onSurface,
         ),
       ),
     );

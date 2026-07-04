@@ -26,7 +26,7 @@ class TsunamiObservationStationTile extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: designSystem.textColor.primary,
+              color: designSystem.colorTheme.onSurface,
             ),
           ),
           const SizedBox(height: 2),
@@ -35,7 +35,7 @@ class TsunamiObservationStationTile extends StatelessWidget {
               _formatFirstHeight(firstHeight),
               style: TextStyle(
                 fontSize: 13,
-                color: designSystem.textColor.secondary,
+                color: designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           if (maxHeight != null && !(maxHeight.isMissing ?? false))
@@ -46,7 +46,7 @@ class TsunamiObservationStationTile extends StatelessWidget {
                 fontWeight: _isImportant(maxHeight) ? FontWeight.bold : null,
                 color: _isImportant(maxHeight)
                     ? const Color(0xFFB31A1A)
-                    : designSystem.textColor.secondary,
+                    : designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
         ],

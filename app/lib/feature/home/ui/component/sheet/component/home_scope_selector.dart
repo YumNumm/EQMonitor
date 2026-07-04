@@ -23,7 +23,7 @@ class HomeScopeSelector extends StatelessWidget {
     };
 
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final shape = designSystem.shape;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
@@ -41,13 +41,13 @@ class HomeScopeSelector extends StatelessWidget {
                 .zero,
               ),
               backgroundColor: WidgetStatePropertyAll(
-                color.surfaceRaised,
+                colorTheme.surfaceContainerLow,
               ),
               shape: WidgetStateProperty.all(
                 RoundedSuperellipseBorder(
                   borderRadius: BorderRadius.circular(shape.md),
                   side: BorderSide(
-                    color: color.outlineSoft,
+                    color: colorTheme.outlineVariant,
                   ),
                 ),
               ),
@@ -97,7 +97,7 @@ class HomeScopeSelector extends StatelessWidget {
               child: Text(
                 locationName!,
                 style: typography.bodyMedium.copyWith(
-                  color: designSystem.textColor.secondary,
+                  color: designSystem.colorTheme.onSurfaceVariant,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),

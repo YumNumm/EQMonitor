@@ -17,4 +17,7 @@ export 'src/hinet/aqua/parser/aqua_html_parser.dart';
 export 'src/hinet/aqua/util/focal_mechanism_url_generator.dart';
 export 'src/hinet/fnet/model/fnet_event.dart';
 export 'src/hinet/hinet_api_client.dart';
+export 'src/hinet/jmalist/api/hinet_jmalist_api_client.dart';
+export 'src/hinet/jmalist/model/hinet_jmalist_event.dart';
+export 'src/hinet/jmalist/parser/hinet_jmalist_parser.dart';
 export 'src/nied_api_client.dart';

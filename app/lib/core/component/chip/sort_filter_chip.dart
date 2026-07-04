@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class SortFilterChip extends StatelessWidget {
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(null, null),
       selected: !isDefault,
-      selectedColor: Theme.of(context).colorScheme.secondaryContainer,
+      selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
   }
 }
@@ -61,6 +62,7 @@ class _SortFilterModal extends HookWidget {
     final sortOrder = useState<SortOrder>(currentSortOrder ?? .desc);
 
     final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     final sheetBar = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       width: 36,
@@ -68,7 +70,7 @@ class _SortFilterModal extends HookWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.onSurface,
+        color: designSystem.colorTheme.onSurface,
         boxShadow: const <BoxShadow>[
           BoxShadow(color: Colors.black12, blurRadius: 12),
         ],

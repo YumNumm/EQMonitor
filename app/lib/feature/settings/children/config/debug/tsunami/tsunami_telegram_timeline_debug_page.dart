@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/estimation_timeline_entry.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/first_height_timeline_entry.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/kind_timeline_entry.dart';
@@ -80,7 +81,6 @@ class _TimelineBody extends StatelessWidget {
       return const Center(child: Text('電文なし'));
     }
 
-    final theme = Theme.of(context);
     final rows = _buildRows();
 
     // 行数 = ヘッダー行(1) + 各 row spec。
@@ -103,7 +103,7 @@ class _TimelineBody extends StatelessWidget {
           return TableSpan(
             extent: const FixedTableSpanExtent(_headerRowHeight),
             backgroundDecoration: TableSpanDecoration(
-              color: theme.colorScheme.surfaceContainerHighest,
+              color: context.designSystem.colorTheme.surfaceContainerHighest,
             ),
           );
         }
@@ -112,7 +112,7 @@ class _TimelineBody extends StatelessWidget {
           _SectionRowSpec() => TableSpan(
             extent: const FixedTableSpanExtent(_sectionRowHeight),
             backgroundDecoration: TableSpanDecoration(
-              color: theme.colorScheme.surfaceContainerLow,
+              color: context.designSystem.colorTheme.surfaceContainerLow,
             ),
           ),
           _DataRowSpec() => const TableSpan(

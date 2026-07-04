@@ -1,15 +1,14 @@
 import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/build_theme.dart';
+import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/core/util/widget_to_image.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'intensity_icon_repository.g.dart';
@@ -24,14 +23,13 @@ final class IntensityIconRepository {
   Future<Uint8List> renderJmaIntensityIcon({
     required JmaIntensity intensity,
     required IntensityIconType type,
-    required IntensityColorModel intensityColorModel,
+    required ThemeColorSet colorSet,
+    required Brightness brightness,
   }) async {
     final bytes = await renderWidgetToImageBytes(
       logicalSize: const Size(50, 50),
-      widget: ProviderScope(
-        overrides: [
-          intensityColorProvider.overrideWithValue(intensityColorModel),
-        ],
+      widget: Theme(
+        data: buildTheme(colorSet: colorSet, brightness: brightness),
         child: JmaIntensityIcon(
           intensity: intensity,
           type: type,
@@ -47,14 +45,13 @@ final class IntensityIconRepository {
   Future<Uint8List> renderJmaLpgmIntensityIcon({
     required JmaLpgmIntensity intensity,
     required IntensityIconType type,
-    required IntensityColorModel intensityColorModel,
+    required ThemeColorSet colorSet,
+    required Brightness brightness,
   }) async {
     final bytes = await renderWidgetToImageBytes(
       logicalSize: const Size(50, 50),
-      widget: ProviderScope(
-        overrides: [
-          intensityColorProvider.overrideWithValue(intensityColorModel),
-        ],
+      widget: Theme(
+        data: buildTheme(colorSet: colorSet, brightness: brightness),
         child: JmaLpgmIntensityIcon(
           intensity: intensity,
           type: type,

@@ -1,7 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_item.dart';
@@ -55,7 +53,6 @@ class _SliverListBody extends HookConsumerWidget {
         ),
       ),
       data: (dataSource) => _PagingBody(
-        intensityColor: ref.watch(intensityColorProvider),
         dataSource: dataSource,
         parameter: parameter,
         onParameterChanged: (result) => parameter.value = result,
@@ -71,19 +68,15 @@ class _PagingBody extends StatelessWidget {
     required this.parameter,
     required this.onParameterChanged,
     required this.onRefresh,
-    required this.intensityColor,
   });
 
   final EarthquakeHistoryDataSource dataSource;
   final ValueNotifier<EarthquakeHistoryParameter> parameter;
   final ValueChanged<EarthquakeHistoryParameter> onParameterChanged;
   final Future<void> Function() onRefresh;
-  final IntensityColorModel intensityColor;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return RefreshIndicator(
       onRefresh: onRefresh,
       edgeOffset:
@@ -122,7 +115,6 @@ class _PagingBody extends StatelessWidget {
                   item: item.earthquake,
                   areaInfo: item.areaInfo,
                   areaName: item.areaInfo?.name,
-                  intensityColor: intensityColor,
                   onTap: () async => EarthquakeHistoryDetailsRoute(
                     eventId: item.earthquake.eventId,
                   ).push<void>(context),
@@ -131,7 +123,7 @@ class _PagingBody extends StatelessWidget {
                 Divider(
                   height: 0,
                   thickness: 0,
-                  color: theme.colorScheme.onInverseSurface,
+                  color: context.designSystem.colorTheme.onInverseSurface,
                 ),
               ],
             ),
@@ -204,17 +196,17 @@ class _DateHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final spacing = theme.designSystemThemeExtension.spacing;
+    final designSystem = context.designSystem;
     return Container(
-      color: theme.colorScheme.surfaceContainer,
+      color: designSystem.colorTheme.surfaceContainer,
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.lg,
-        vertical: spacing.xs,
+        horizontal: designSystem.spacing.lg,
+        vertical: designSystem.spacing.xs,
       ),
       child: Text(
         date,
         style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.onSurface,
+          color: designSystem.colorTheme.onSurface,
         ),
       ),
     );

@@ -1,5 +1,5 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_region_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
@@ -18,8 +18,8 @@ class ShakeDetectionCard extends ConsumerWidget {
       shakeDetectionRegionsProvider(event),
     );
 
-    final designSystem = Theme.of(context).designSystemThemeExtension;
-    final color = designSystem.color;
+    final designSystem = context.designSystem;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -29,10 +29,10 @@ class ShakeDetectionCard extends ConsumerWidget {
         elevation: 0,
         clipBehavior: Clip.antiAlias,
         margin: EdgeInsets.zero,
-        color: color.surfaceCard,
+        color: colorTheme.surfaceContainerHigh,
         shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(shape.card),
-          side: BorderSide(color: color.outlineSoft),
+          side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,7 +56,7 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final typography = designSystem.typography;
     final spacing = designSystem.spacing;
 
@@ -124,9 +124,9 @@ class _ShakeDetectionCardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final typography = designSystem.typography;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
 
     final regions = regionsAsync.asData?.value ?? {};
@@ -142,7 +142,7 @@ class _ShakeDetectionCardBody extends StatelessWidget {
           Text(
             '${event.pointCount}地点で検知',
             style: typography.labelMedium.copyWith(
-              color: textColor.secondary,
+              color: colorTheme.onSurfaceVariant,
             ),
           ),
           if (regionsAsync.isLoading) ...[
@@ -161,7 +161,7 @@ class _ShakeDetectionCardBody extends StatelessWidget {
                 child: Text(
                   entry.value.join(' '),
                   style: typography.bodySmall.copyWith(
-                    color: textColor.secondary,
+                    color: colorTheme.onSurfaceVariant,
                   ),
                 ),
               ),

@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
@@ -75,7 +75,7 @@ class _PrefectureDetailModal extends ConsumerWidget {
           SliverToBoxAdapter(
             child: Divider(
               height: 0,
-              color: Theme.of(context).colorScheme.outlineVariant,
+              color: context.designSystem.colorTheme.outlineVariant,
             ),
           ),
           dataSourceAsync.when(
@@ -113,7 +113,6 @@ class _DragHandle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Center(
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
@@ -121,7 +120,7 @@ class _DragHandle extends StatelessWidget {
         height: 4,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2),
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+          color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.3),
         ),
       ),
     );
@@ -177,7 +176,7 @@ class _PrefectureSummarySection extends StatelessWidget {
             Text(
               'この震度を観測した地震: ${entry.count}件',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface,
+                color: context.designSystem.colorTheme.onSurface,
               ),
             ),
             if (eq != null) ...[
@@ -223,8 +222,6 @@ class _PagingBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final intensityColor = ref.watch(intensityColorProvider);
     return SliverGroupedPagingList<String?, String, IntensityAreaSearchItem>(
       dataSource: dataSource,
       stickyHeader: true,
@@ -236,7 +233,6 @@ class _PagingBody extends ConsumerWidget {
         children: [
           EarthquakeHistoryListTile(
             item: item.earthquake,
-            intensityColor: intensityColor,
             areaInfo: item.area,
             areaName: prefectureName,
             onTap: () async {
@@ -248,7 +244,7 @@ class _PagingBody extends ConsumerWidget {
           Divider(
             height: 0,
             thickness: 0,
-            color: theme.colorScheme.onInverseSurface,
+            color: context.designSystem.colorTheme.onInverseSurface,
           ),
         ],
       ),
@@ -313,12 +309,12 @@ class _IntensityHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      color: theme.colorScheme.surfaceContainer,
+      color: context.designSystem.colorTheme.surfaceContainer,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Text(
         intensity,
         style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.onSurface,
+          color: context.designSystem.colorTheme.onSurface,
         ),
       ),
     );

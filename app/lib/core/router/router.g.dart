@@ -14,6 +14,7 @@ List<RouteBase> get $appRoutes => [
   $betaTestingWarningRoute,
   $earthquakeHistoryRoute,
   $eewHistoryRoute,
+  $seismicityRoute,
   $intensityHistoryRoute,
   $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
@@ -148,6 +149,32 @@ mixin $EewHistoryRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/eew-history');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $seismicityRoute => GoRouteData.$route(
+  path: '/seismicity',
+  factory: $SeismicityRoute._fromState,
+);
+
+mixin $SeismicityRoute on GoRouteData {
+  static SeismicityRoute _fromState(GoRouterState state) =>
+      const SeismicityRoute();
+
+  @override
+  String get location => GoRouteData.$location('/seismicity');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -466,20 +493,7 @@ RouteBase get $settingsRoute => GoRouteData.$route(
   path: '/settings',
   factory: $SettingsRoute._fromState,
   routes: [
-    GoRouteData.$route(
-      path: 'display',
-      factory: $DisplayRoute._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'color-schema',
-          factory: $ColorSchemeConfigRoute._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'estimated-intensity-color-schema',
-          factory: $EstimatedIntensityColorConfigRoute._fromState,
-        ),
-      ],
-    ),
+    GoRouteData.$route(path: 'display', factory: $DisplayRoute._fromState),
     GoRouteData.$route(
       path: 'kyoshin-monitor-about',
       factory: $KyoshinMonitorAboutRoute._fromState,
@@ -654,6 +668,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
                 ),
               ],
             ),
+            GoRouteData.$route(
+              path: 'hinet-seismicity',
+              factory: $HinetSeismicityRoute._fromState,
+            ),
           ],
         ),
       ],
@@ -686,51 +704,6 @@ mixin $DisplayRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/display');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $ColorSchemeConfigRoute on GoRouteData {
-  static ColorSchemeConfigRoute _fromState(GoRouterState state) =>
-      const ColorSchemeConfigRoute();
-
-  @override
-  String get location =>
-      GoRouteData.$location('/settings/display/color-schema');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $EstimatedIntensityColorConfigRoute on GoRouteData {
-  static EstimatedIntensityColorConfigRoute _fromState(GoRouterState state) =>
-      const EstimatedIntensityColorConfigRoute();
-
-  @override
-  String get location => GoRouteData.$location(
-    '/settings/display/estimated-intensity-color-schema',
-  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1696,6 +1669,28 @@ mixin $KnetStationWaveformRoute on GoRouteData {
   @override
   void replace(BuildContext context) =>
       context.replace(location, extra: _self.$extra);
+}
+
+mixin $HinetSeismicityRoute on GoRouteData {
+  static HinetSeismicityRoute _fromState(GoRouterState state) =>
+      const HinetSeismicityRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/nied/hinet-seismicity');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 T? _$convertMapValue<T>(

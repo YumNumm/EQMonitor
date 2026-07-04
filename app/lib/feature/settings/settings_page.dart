@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -72,6 +73,13 @@ class SettingsPage extends ConsumerWidget {
                   leading: const Icon(Icons.history),
                   onTap: () async =>
                       const EarthquakeHistoryConfigRoute().push(context),
+                ),
+                ListTile(
+                  title: const Text('地震活動'),
+                  subtitle: const Text('震央分布・M-T図・深さ断面'),
+                  leading: const Icon(Icons.bubble_chart_outlined),
+                  onTap: () async =>
+                      const SeismicityRoute().push<void>(context),
                 ),
                 ListTile(
                   title: const Text('ホーム画面ウィジェット'),
@@ -147,7 +155,7 @@ class SettingsPage extends ConsumerWidget {
                   child: Text(
                     'Powered by Flutter',
                     style: textTheme.bodySmall!.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                      color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.8),
                     ),
                   ),
                 ),
@@ -156,7 +164,7 @@ class SettingsPage extends ConsumerWidget {
                     child: Text(
                       'Debug Mode',
                       style: textTheme.bodySmall!.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(
+                        color: context.designSystem.colorTheme.onSurface.withValues(
                           alpha: 0.8,
                         ),
                       ),
@@ -215,7 +223,7 @@ class _AppVersionInformation extends HookConsumerWidget {
             Text(
               commitLabel,
               style: textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+                color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.65),
               ),
               textAlign: TextAlign.center,
             ),

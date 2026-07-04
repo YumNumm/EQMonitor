@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -37,25 +38,25 @@ class _Body extends ConsumerWidget {
         stateAsync.value ??
         const (entries: <ShakeDetectionEntry>[], availableSubRegions: []);
 
-    ref.listen(
-      ShakeDetectionSettingsNotifier.addCurrentLocationMutation,
-      (_, next) {
-        if (next is MutationError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('現在地の追加に失敗しました: ${next.error}'),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
-        }
-      },
-    );
+    ref.listen(ShakeDetectionSettingsNotifier.addCurrentLocationMutation, (
+      _,
+      next,
+    ) {
+      if (next is MutationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('現在地の追加に失敗しました: ${next.error}'),
+            backgroundColor: context.designSystem.colorTheme.error,
+          ),
+        );
+      }
+    });
     ref.listen(ShakeDetectionSettingsNotifier.removeEntryMutation, (_, next) {
       if (next is MutationError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('地域の削除に失敗しました: ${next.error}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: context.designSystem.colorTheme.error,
           ),
         );
       }
@@ -65,7 +66,7 @@ class _Body extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('震度レベルの更新に失敗しました: ${next.error}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: context.designSystem.colorTheme.error,
           ),
         );
       }
@@ -96,13 +97,13 @@ class _Body extends ConsumerWidget {
                   Icon(
                     Icons.vibration,
                     size: 48,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    color: context.designSystem.colorTheme.onSurfaceVariant,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     '揺れ検知の地域が設定されていません',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      color: context.designSystem.colorTheme.onSurfaceVariant,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -164,9 +165,7 @@ class _Body extends ConsumerWidget {
                   ? const SizedBox(
                       width: 16,
                       height: 16,
-                      child: CircularProgressIndicator.adaptive(
-                        strokeWidth: 2,
-                      ),
+                      child: CircularProgressIndicator.adaptive(strokeWidth: 2),
                     )
                   : const Text('現在地を追加'),
             ),
@@ -256,7 +255,7 @@ class _ErrorBody extends StatelessWidget {
           Icon(
             Icons.error_outline,
             size: 48,
-            color: Theme.of(context).colorScheme.error,
+            color: context.designSystem.colorTheme.error,
           ),
           const SizedBox(height: 16),
           const Text('設定の読み込みに失敗しました'),
