@@ -81,7 +81,7 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
               onPressed: () => Navigator.of(context).pop(
                 EarthquakeHistoryParameter.city(
                   sortBy: .eventId,
-                  sortOrder: .asc,
+                  sortOrder: .desc,
                   cityCode:
                       selectedCode.value ??
                       () {
@@ -190,7 +190,7 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
                   ? () => Navigator.of(context).pop(
                       EarthquakeHistoryParameter.city(
                         sortBy: .eventId,
-                        sortOrder: .asc,
+                        sortOrder: .desc,
                         cityCode:
                             selectedCode.value ??
                             () {
@@ -204,12 +204,12 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
             if (initialParameter is EarthquakeHistoryParameterCity) ...[
               const SizedBox(height: 8),
               OutlinedButton(
-                onPressed: () => Navigator.of(
-                  context,
-                ).pop(const EarthquakeHistoryParameter.all(
-                  sortBy: .eventId,
-                  sortOrder: .asc,
-                )),
+                onPressed: () => Navigator.of(context).pop(
+                  const EarthquakeHistoryParameter.all(
+                    sortBy: .eventId,
+                    sortOrder: .desc,
+                  ),
+                ),
                 child: const Text('設定を解除する'),
               ),
             ],

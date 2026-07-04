@@ -38,7 +38,7 @@ class HomeEarthquakeList extends StatelessWidget {
                   item: item,
                   searchParameter: EarthquakeHistoryParameter.all(
                     sortBy: .eventId,
-                    sortOrder: .asc,
+                    sortOrder: .desc,
                   ),
                   showBackgroundColor: false,
                   intensityIconSize: 32,
