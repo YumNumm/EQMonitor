@@ -27,10 +27,24 @@ class SeismicityEpicenterLayer extends HookConsumerWidget {
   static const _sourceId = 'seismicity-epicenter';
   static const _layerId = 'seismicity-epicenter-circle';
 
+  /// 経過時間色分け時の再計算間隔。色スケールは日〜月単位のため十分な粒度。
+  static const _elapsedTimeRefreshInterval = Duration(minutes: 10);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final enqueue = useMapOperationQueue();
+    final tick = useState(0);
+
+    useEffect(() {
+      if (colorMode != SeismicityColorMode.elapsedTime) {
+        return null;
+      }
+      final timer = Timer.periodic(_elapsedTimeRefreshInterval, (_) {
+        tick.value++;
+      });
+      return timer.cancel;
+    }, [colorMode]);
 
     useEffect(() {
       if (styleController == null) {
@@ -77,7 +91,7 @@ class SeismicityEpicenterLayer extends HookConsumerWidget {
           }),
         );
       };
-    }, [styleController, events, colorMode]);
+    }, [styleController, events, colorMode, tick.value]);
 
     return const SizedBox.shrink();
   }
@@ -97,15 +111,21 @@ class SeismicityEpicenterLayer extends HookConsumerWidget {
             'properties': {
               'event_id': event.eventId,
               'magnitude': event.magnitude ?? 0.0,
-              'elapsed_hours': now
-                  .difference(event.originTime.toUtc())
-                  .inHours
-                  .toDouble(),
+              'elapsed_hours': elapsedHours(
+                originTime: event.originTime,
+                now: now,
+              ),
             },
           },
       ],
     };
   }
+
+  /// [originTime] から [now] までの経過時間(時間単位)。純粋関数としてテスト可能。
+  static double elapsedHours({
+    required DateTime originTime,
+    required DateTime now,
+  }) => now.toUtc().difference(originTime.toUtc()).inHours.toDouble();
 
   /// マグニチュードに応じた円半径(px)。M2〜M7 を 3px〜18px へ線形補間。
   List<dynamic> _radiusExpression() => [
