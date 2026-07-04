@@ -13,6 +13,39 @@ class HinetJmalistFetchProgress {
   final int totalRequests;
 }
 
+/// [HinetJmalistApiClient.fetchRange] の途中(あるチャンク)取得に失敗した場合に
+/// 送出される例外。
+///
+/// 直列の期間分割リクエストのうち、いずれかのチャンクが失敗した時点でループを
+/// 中断し、それまでに取得済みの [partialResult] と、失敗したチャンクの期間
+/// ([failedFrom]/[failedTo])、元の例外([cause])を保持する。呼び出し側は
+/// 部分結果を破棄せず活用するかどうかを判断できる。
+class HinetJmalistPartialFetchException implements Exception {
+  const HinetJmalistPartialFetchException({
+    required this.partialResult,
+    required this.failedFrom,
+    required this.failedTo,
+    required this.cause,
+  });
+
+  /// 失敗するまでに取得できていた結果。
+  final HinetJmalistParseResult partialResult;
+
+  /// 失敗したチャンクの開始日(UTC、この日を含む)。
+  final DateTime failedFrom;
+
+  /// 失敗したチャンクの終了日(UTC、この日を含む)。
+  final DateTime failedTo;
+
+  /// 失敗の原因となった元の例外。
+  final Object cause;
+
+  @override
+  String toString() =>
+      'HinetJmalistPartialFetchException: '
+      '$failedFrom〜$failedTo の取得に失敗しました (cause: $cause)';
+}
+
 /// Hi-net 気象庁一元化処理 震源リスト(`jmalist.php`)の認証付きクライアント。
 ///
 /// フォーム認証(`auth_un`/`auth_pw` POST → `_ssl_auth` Cookie)を行った上で
@@ -69,10 +102,24 @@ class HinetJmalistApiClient {
 
     for (var i = 0; i < chunks.length; i++) {
       final chunk = chunks[i];
-      final text = await _fetchChunk(chunk.start, chunk.days);
-      final result = parser.parse(text);
-      allEvents.addAll(result.events);
-      skippedLineCount += result.skippedLineCount;
+      try {
+        final text = await _fetchChunk(chunk.start, chunk.days);
+        final result = parser.parse(text);
+        allEvents.addAll(result.events);
+        skippedLineCount += result.skippedLineCount;
+      } on Object catch (e) {
+        // 失敗したチャンク以降はリクエストせず、それまでの部分結果を添えて
+        // 例外を送出する(サーバへの再試行・連打を避けるため)。
+        throw HinetJmalistPartialFetchException(
+          partialResult: HinetJmalistParseResult(
+            events: allEvents,
+            skippedLineCount: skippedLineCount,
+          ),
+          failedFrom: chunk.start,
+          failedTo: chunk.start.add(Duration(days: chunk.days - 1)),
+          cause: e,
+        );
+      }
 
       onProgress?.call(
         HinetJmalistFetchProgress(

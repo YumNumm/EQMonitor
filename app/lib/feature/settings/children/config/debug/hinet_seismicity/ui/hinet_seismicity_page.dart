@@ -141,6 +141,11 @@ class _FetchBody extends HookConsumerWidget {
         );
         fetchedEvents.value = result.events;
         skippedLineCount.value = result.skippedLineCount;
+      } on HinetSeismicityPartialFetchException catch (e) {
+        // 途中失敗でも、それまでに取得できたイベントは破棄せず表示する。
+        fetchedEvents.value = e.partialResult.events;
+        skippedLineCount.value = e.partialResult.skippedLineCount;
+        fetchError.value = e;
       } on Object catch (e) {
         fetchError.value = e;
       } finally {
@@ -223,9 +228,14 @@ class _FetchBody extends HookConsumerWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '取得エラー: $error',
+                    error is HinetSeismicityPartialFetchException
+                        ? '一部のみ取得: ${fetchedEvents.value.length}件取得後に'
+                              '中断しました ($error)'
+                        : '取得エラー: $error',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
+                      color: error is HinetSeismicityPartialFetchException
+                          ? Theme.of(context).colorScheme.tertiary
+                          : Theme.of(context).colorScheme.error,
                     ),
                   ),
                 ),

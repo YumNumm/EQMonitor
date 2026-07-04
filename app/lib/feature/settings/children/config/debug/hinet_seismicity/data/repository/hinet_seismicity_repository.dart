@@ -26,6 +26,35 @@ class HinetSeismicityFetchResult {
   final int skippedLineCount;
 }
 
+/// [HinetSeismicityRepository.fetch] が期間の途中で失敗した場合に送出する例外。
+///
+/// [HinetJmalistPartialFetchException] をアプリ層のモデル([SeismicityEvent])
+/// へ変換した上でラップし、UI 側で部分結果を破棄せず表示できるようにする。
+class HinetSeismicityPartialFetchException implements Exception {
+  const HinetSeismicityPartialFetchException({
+    required this.partialResult,
+    required this.failedFrom,
+    required this.failedTo,
+    required this.cause,
+  });
+
+  /// 失敗するまでに取得できていた結果。
+  final HinetSeismicityFetchResult partialResult;
+
+  /// 失敗したチャンクの開始日(UTC、この日を含む)。
+  final DateTime failedFrom;
+
+  /// 失敗したチャンクの終了日(UTC、この日を含む)。
+  final DateTime failedTo;
+
+  /// 失敗の原因となった元の例外。
+  final Object cause;
+
+  @override
+  String toString() =>
+      'Hi-net の取得が $failedFrom〜$failedTo で失敗しました (cause: $cause)';
+}
+
 @Riverpod(keepAlive: true)
 HinetSeismicityRepository hinetSeismicityRepository(Ref ref) =>
     HinetSeismicityRepository(client: ref.watch(niedApiClientProvider));
@@ -50,15 +79,29 @@ class HinetSeismicityRepository {
       throw const HinetLoginException();
     }
 
-    final result = await _client.hinet.jmalist.fetchRange(
-      from: from,
-      to: to,
-      onProgress: onProgress,
-    );
+    try {
+      final result = await _client.hinet.jmalist.fetchRange(
+        from: from,
+        to: to,
+        onProgress: onProgress,
+      );
 
-    return HinetSeismicityFetchResult(
-      events: result.events.map((e) => e.toSeismicityEvent).toList(),
-      skippedLineCount: result.skippedLineCount,
-    );
+      return HinetSeismicityFetchResult(
+        events: result.events.map((e) => e.toSeismicityEvent).toList(),
+        skippedLineCount: result.skippedLineCount,
+      );
+    } on HinetJmalistPartialFetchException catch (e) {
+      throw HinetSeismicityPartialFetchException(
+        partialResult: HinetSeismicityFetchResult(
+          events: e.partialResult.events
+              .map((event) => event.toSeismicityEvent)
+              .toList(),
+          skippedLineCount: e.partialResult.skippedLineCount,
+        ),
+        failedFrom: e.failedFrom,
+        failedTo: e.failedTo,
+        cause: e.cause,
+      );
+    }
   }
 }

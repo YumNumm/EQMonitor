@@ -16,6 +16,10 @@ class _RecordingAdapter implements HttpClientAdapter {
   final requestedFormFields = <Map<String, String>>[];
   bool loginShouldSucceed = true;
 
+  /// jmalist.php への何回目のリクエストで失敗させるか(1始まり、null なら常に成功)。
+  int? failOnJmalistRequestNumber;
+  var _jmalistRequestCount = 0;
+
   @override
   Future<ResponseBody> fetch(
     RequestOptions options,
@@ -39,6 +43,14 @@ class _RecordingAdapter implements HttpClientAdapter {
                 'set-cookie': ['_ssl_auth=dummy-token; Path=/'],
               }
             : {},
+      );
+    }
+    _jmalistRequestCount++;
+    if (failOnJmalistRequestNumber == _jmalistRequestCount) {
+      throw DioException(
+        requestOptions: options,
+        error: 'simulated server error',
+        type: DioExceptionType.badResponse,
       );
     }
     return ResponseBody.fromString(_samplePreBody, 200);
@@ -112,5 +124,35 @@ void main() {
       'list_day': '8',
       'list_span': '1',
     });
+  });
+
+  test('8日間の指定で2件目のjmalistリクエストが失敗すると'
+      'HinetJmalistPartialFetchExceptionへ部分結果を積んで送出し、'
+      '3件目以降のリクエストは行わない', () async {
+    final adapter = _RecordingAdapter()..failOnJmalistRequestNumber = 2;
+    final dio = Dio(BaseOptions(followRedirects: false))
+      ..httpClientAdapter = adapter;
+    final client = HinetJmalistApiClient(dio, requestInterval: Duration.zero);
+
+    Object? thrown;
+    try {
+      await client.fetchRange(
+        from: DateTime.utc(2026, 6, 1),
+        to: DateTime.utc(2026, 6, 8),
+      );
+    } on Object catch (e) {
+      thrown = e;
+    }
+
+    expect(thrown, isA<HinetJmalistPartialFetchException>());
+    final exception = thrown! as HinetJmalistPartialFetchException;
+    expect(exception.partialResult.events, hasLength(1));
+    expect(exception.failedFrom, DateTime.utc(2026, 6, 8));
+    expect(exception.failedTo, DateTime.utc(2026, 6, 8));
+
+    final jmalistRequests = adapter.requestedPaths
+        .where((p) => p.contains('jmalist.php'))
+        .length;
+    expect(jmalistRequests, 2);
   });
 }
