@@ -1,0 +1,20 @@
+name: eqmonitor_custom_lints_example
+description: >
+  Self-hosting example package used to run `dart run custom_lint`
+  against ../test/fixtures (a package cannot depend on itself in pub,
+  so this sibling package depends on eqmonitor_custom_lints via a path
+  dependency and lints the shared fixtures through a symlink).
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  custom_lint: ^0.8.1
+  eqmonitor_custom_lints:
+    path: ..

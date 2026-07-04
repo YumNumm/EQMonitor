@@ -1,0 +1,19 @@
+name: eqmonitor_custom_lints
+description: Custom lint rules for EQMonitor (custom_lint plugin package).
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ^3.0.0
+  flutter: ">=3.0.0"
+
+dependencies:
+  analyzer: ^8.0.0
+  custom_lint_builder: ^0.8.1
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  custom_lint: ^0.8.1
+  path: ^1.9.0
+  test: ^1.29.0
