@@ -17,9 +17,7 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final param = ref.watch(homeMapLabelParameterProvider);
-    final notifier = ref.read(
-      homeMapLabelParameterProvider.notifier,
-    );
+    final notifier = ref.read(homeMapLabelParameterProvider.notifier);
 
     final theme = Theme.of(context);
 
@@ -45,7 +43,9 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
                   height: 4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(2),
-                    color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.3),
+                    color: context.designSystem.colorTheme.onSurface.withValues(
+                      alpha: 0.3,
+                    ),
                   ),
                 ),
               ),
@@ -83,20 +83,45 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
               ),
 
               _header(context, theme, 'ズーム閾値 (表示開始)'),
-              _slider('地域ラベル', value.regionLabelMinZoom, 1, 15, (v) =>
-                notifier.save(value.copyWith(regionLabelMinZoom: v))),
-              _slider('市区町村ラベル', value.cityLabelMinZoom, 1, 15, (v) =>
-                notifier.save(value.copyWith(cityLabelMinZoom: v))),
+              _slider(
+                '地域ラベル',
+                value.regionLabelMinZoom,
+                1,
+                15,
+                (v) => notifier.save(value.copyWith(regionLabelMinZoom: v)),
+              ),
+              _slider(
+                '市区町村ラベル',
+                value.cityLabelMinZoom,
+                1,
+                15,
+                (v) => notifier.save(value.copyWith(cityLabelMinZoom: v)),
+              ),
 
               _header(context, theme, 'テキストサイズ'),
-              _slider('地域', value.regionTextSize, 6, 24, (v) =>
-                notifier.save(value.copyWith(regionTextSize: v))),
-              _slider('市区町村', value.cityTextSize, 6, 24, (v) =>
-                notifier.save(value.copyWith(cityTextSize: v))),
+              _slider(
+                '地域',
+                value.regionTextSize,
+                6,
+                24,
+                (v) => notifier.save(value.copyWith(regionTextSize: v)),
+              ),
+              _slider(
+                '市区町村',
+                value.cityTextSize,
+                6,
+                24,
+                (v) => notifier.save(value.copyWith(cityTextSize: v)),
+              ),
 
               _header(context, theme, 'テキストスタイル'),
-              _slider('Halo幅', value.textHaloWidth, 0, 3, (v) =>
-                notifier.save(value.copyWith(textHaloWidth: v))),
+              _slider(
+                'Halo幅',
+                value.textHaloWidth,
+                0,
+                3,
+                (v) => notifier.save(value.copyWith(textHaloWidth: v)),
+              ),
 
               SizedBox(height: MediaQuery.paddingOf(context).bottom),
             ],

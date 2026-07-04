@@ -11,8 +11,7 @@ part 'home_map_label_parameter_notifier.g.dart';
 const _default = HomeMapLabelParameter();
 
 @Riverpod(keepAlive: true)
-class HomeMapLabelParameterNotifier
-    extends _$HomeMapLabelParameterNotifier {
+class HomeMapLabelParameterNotifier extends _$HomeMapLabelParameterNotifier {
   @override
   Future<HomeMapLabelParameter> build() async {
     final sharedPreferences = await ref.read(

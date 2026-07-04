@@ -55,96 +55,89 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
     final enqueue = useMapOperationQueue();
 
     // レイヤー初期化
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
+      unawaited(
+        enqueue(() async {
+          try {
+            await styleController.addSource(
+              const GeoJsonSource(
+                id: ShakeDetectionLayer.sourceId,
+                data: _emptyGeoJson,
+              ),
+            );
+
+            await (
+              styleController.addLayer(
+                const FillStyleLayer(
+                  id: ShakeDetectionLayer._fillLayerId,
+                  sourceId: ShakeDetectionLayer.sourceId,
+                  paint: {
+                    'fill-color': ['get', 'fillColor'],
+                    'fill-opacity': 1,
+                  },
+                ),
+              ),
+              styleController.addLayer(
+                const LineStyleLayer(
+                  id: ShakeDetectionLayer._lineLayerId,
+                  sourceId: ShakeDetectionLayer.sourceId,
+                  paint: {
+                    'line-color': ['get', 'lineColor'],
+                    'line-width': 2,
+                    'line-opacity': 1,
+                  },
+                ),
+              ),
+              styleController.addLayer(
+                const CircleStyleLayer(
+                  id: ShakeDetectionLayer._centerLayerId,
+                  sourceId: ShakeDetectionLayer.sourceId,
+                  paint: {
+                    'circle-radius': [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      3,
+                      5,
+                      7,
+                      10,
+                      10,
+                      14,
+                    ],
+                    'circle-color': ['get', 'centerColor'],
+                    'circle-opacity': 1,
+                    'circle-stroke-color': ['get', 'strokeColor'],
+                    'circle-stroke-width': 2,
+                    'circle-stroke-opacity': 1,
+                  },
+                ),
+              ),
+            ).wait;
+
+            isInitialized.value = true;
+          } on Exception catch (e) {
+            debugPrint('ShakeDetectionLayer: failed to init layers: $e');
+          }
+        }),
+      );
+
+      return () {
         unawaited(
           enqueue(() async {
-            try {
-              await styleController.addSource(
-                const GeoJsonSource(
-                  id: ShakeDetectionLayer.sourceId,
-                  data: _emptyGeoJson,
-                ),
-              );
-
-              await (
-                styleController.addLayer(
-                  const FillStyleLayer(
-                    id: ShakeDetectionLayer._fillLayerId,
-                    sourceId: ShakeDetectionLayer.sourceId,
-                    paint: {
-                      'fill-color': ['get', 'fillColor'],
-                      'fill-opacity': 1,
-                    },
-                  ),
-                ),
-                styleController.addLayer(
-                  const LineStyleLayer(
-                    id: ShakeDetectionLayer._lineLayerId,
-                    sourceId: ShakeDetectionLayer.sourceId,
-                    paint: {
-                      'line-color': ['get', 'lineColor'],
-                      'line-width': 2,
-                      'line-opacity': 1,
-                    },
-                  ),
-                ),
-                styleController.addLayer(
-                  const CircleStyleLayer(
-                    id: ShakeDetectionLayer._centerLayerId,
-                    sourceId: ShakeDetectionLayer.sourceId,
-                    paint: {
-                      'circle-radius': [
-                        'interpolate',
-                        ['linear'],
-                        ['zoom'],
-                        3,
-                        5,
-                        7,
-                        10,
-                        10,
-                        14,
-                      ],
-                      'circle-color': ['get', 'centerColor'],
-                      'circle-opacity': 1,
-                      'circle-stroke-color': ['get', 'strokeColor'],
-                      'circle-stroke-width': 2,
-                      'circle-stroke-opacity': 1,
-                    },
-                  ),
-                ),
-              ).wait;
-
-              isInitialized.value = true;
-            } on Exception catch (e) {
-              debugPrint('ShakeDetectionLayer: failed to init layers: $e');
-            }
+            await styleController.removeLayer(
+              ShakeDetectionLayer._centerLayerId,
+            );
+            await styleController.removeLayer(ShakeDetectionLayer._fillLayerId);
+            await styleController.removeLayer(ShakeDetectionLayer._lineLayerId);
+            await styleController.removeSource(ShakeDetectionLayer.sourceId);
           }),
         );
-
-        return () {
-          unawaited(
-            enqueue(() async {
-              await styleController.removeLayer(
-                ShakeDetectionLayer._centerLayerId,
-              );
-              await styleController.removeLayer(
-                ShakeDetectionLayer._fillLayerId,
-              );
-              await styleController.removeLayer(
-                ShakeDetectionLayer._lineLayerId,
-              );
-              await styleController.removeSource(ShakeDetectionLayer.sourceId);
-            }),
-          );
-        };
-      },
-      [styleController],
-    );
+      };
+    }, [styleController]);
 
     final animationController = useAnimationController(
       duration: const Duration(seconds: 2),
@@ -153,14 +146,11 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
     // eventsRef / settingsRef: listener内で常に最新値を参照するためのRef
     final eventsRef = useRef(events);
     final settingsRef = useRef(settings);
-    useEffect(
-      () {
-        eventsRef.value = events;
-        settingsRef.value = settings;
-        return null;
-      },
-      [events, settings],
-    );
+    useEffect(() {
+      eventsRef.value = events;
+      settingsRef.value = settings;
+      return null;
+    }, [events, settings]);
 
     // アニメーション制御
     // events.isNotEmpty (bool) を deps にすることで、リスト参照が毎秒変わっても
@@ -289,10 +279,7 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
             'type': 'Polygon',
             'coordinates': [coords],
           },
-          'properties': {
-            'fillColor': fillColor,
-            'lineColor': lineColor,
-          },
+          'properties': {'fillColor': fillColor, 'lineColor': lineColor},
         });
       }
       final centerLat = (event.minLat + event.maxLat) / 2;

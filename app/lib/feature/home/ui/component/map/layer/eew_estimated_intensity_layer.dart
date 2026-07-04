@@ -28,104 +28,92 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
     final enqueue = useMapOperationQueue();
 
     // regionごとの最大震度を取ったもの
-    final regionMaxIntensities = useMemoized(
-      () {
-        return eewRegions
-            .groupListsBy((element) => element.code)
-            .map(
-              (key, values) => MapEntry(
-                key,
-                values.sortedBy((e) => e.intensity.orderIndex).last,
-              ),
-            )
-            .values
-            .toList();
-      },
-      [eewRegions],
-    );
+    final regionMaxIntensities = useMemoized(() {
+      return eewRegions
+          .groupListsBy((element) => element.code)
+          .map(
+            (key, values) => MapEntry(
+              key,
+              values.sortedBy((e) => e.intensity.orderIndex).last,
+            ),
+          )
+          .values
+          .toList();
+    }, [eewRegions]);
     latestRegionMaxIntensities.value = regionMaxIntensities;
 
     // レイヤーの初期化
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
+      unawaited(
+        enqueue(() async {
+          await JmaIntensity.values
+              .where((intensity) => intensity != JmaIntensity.unknown)
+              .map((intensity) {
+                final layerId = intensity.layerId;
+                final color = colorModel.fromJmaIntensity(intensity).background;
+
+                final codes = regionMaxIntensities
+                    .where((r) => r.intensity == intensity)
+                    .map((r) => r.code)
+                    .toList();
+
+                return styleController.addLayer(
+                  FillStyleLayer(
+                    id: layerId,
+                    sourceId: 'eqmonitor_map',
+                    sourceLayerId: 'areaForecastLocalE',
+                    filter: buildEewAreaCodeFilter(codes),
+                    paint: {
+                      'fill-color': color.toHexString(),
+                      'fill-opacity': 1,
+                    },
+                  ),
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                );
+              })
+              .wait;
+
+          isInitialized.value = true;
+          await _updateEewEstimatedIntensityFilters(
+            styleController: styleController,
+            regionMaxIntensities: latestRegionMaxIntensities.value,
+          );
+        }),
+      );
+
+      return () {
         unawaited(
           enqueue(() async {
-            await JmaIntensity.values
+            final futures = JmaIntensity.values
                 .where((intensity) => intensity != JmaIntensity.unknown)
-                .map((intensity) {
-                  final layerId = intensity.layerId;
-                  final color = colorModel
-                      .fromJmaIntensity(intensity)
-                      .background;
-
-                  final codes = regionMaxIntensities
-                      .where((r) => r.intensity == intensity)
-                      .map((r) => r.code)
-                      .toList();
-
-                  return styleController.addLayer(
-                    FillStyleLayer(
-                      id: layerId,
-                      sourceId: 'eqmonitor_map',
-                      sourceLayerId: 'areaForecastLocalE',
-                      filter: buildEewAreaCodeFilter(codes),
-                      paint: {
-                        'fill-color': color.toHexString(),
-                        'fill-opacity': 1,
-                      },
-                    ),
-                    belowLayerId: BaseLayer.areaForecastLocalELine.name,
-                  );
-                })
-                .wait;
-
-            isInitialized.value = true;
-            await _updateEewEstimatedIntensityFilters(
-              styleController: styleController,
-              regionMaxIntensities: latestRegionMaxIntensities.value,
-            );
+                .map(
+                  (intensity) => styleController.removeLayer(intensity.layerId),
+                );
+            await Future.wait(futures);
           }),
         );
-
-        return () {
-          unawaited(
-            enqueue(() async {
-              final futures = JmaIntensity.values
-                  .where((intensity) => intensity != JmaIntensity.unknown)
-                  .map(
-                    (intensity) =>
-                        styleController.removeLayer(intensity.layerId),
-                  );
-              await Future.wait(futures);
-            }),
-          );
-        };
-      },
-      [styleController, colorModel],
-    );
+      };
+    }, [styleController, colorModel]);
 
     // データ更新
-    useEffect(
-      () {
-        if (styleController == null || !isInitialized.value) {
-          return null;
-        }
-
-        unawaited(
-          _updateEewEstimatedIntensityFilters(
-            styleController: styleController,
-            regionMaxIntensities: regionMaxIntensities,
-          ),
-        );
-
+    useEffect(() {
+      if (styleController == null || !isInitialized.value) {
         return null;
-      },
-      [styleController, regionMaxIntensities],
-    );
+      }
+
+      unawaited(
+        _updateEewEstimatedIntensityFilters(
+          styleController: styleController,
+          regionMaxIntensities: regionMaxIntensities,
+        ),
+      );
+
+      return null;
+    }, [styleController, regionMaxIntensities]);
 
     return const SizedBox.shrink();
   }
