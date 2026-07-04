@@ -64,6 +64,13 @@ class AppThemeNotifier extends _$AppThemeNotifier {
     await _save(_darkKey, theme);
   }
 
+  Future<void> setThemeForMode(ThemeBrightnessMode mode, AppTheme theme) {
+    return switch (mode) {
+      ThemeBrightnessMode.light => setLightTheme(theme),
+      ThemeBrightnessMode.dark => setDarkTheme(theme),
+    };
+  }
+
   Result<AppTheme, AppThemeImportException> importFromJson(String rawJson) {
     try {
       final decoded = jsonDecode(rawJson);

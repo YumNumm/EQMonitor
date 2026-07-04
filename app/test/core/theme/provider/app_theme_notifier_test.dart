@@ -264,4 +264,34 @@ void main() {
       expect(await prefs.getString('app_theme_dark'), isNotNull);
     });
   });
+
+  group('AppThemeNotifier.setThemeForMode', () {
+    test('mode=light で呼ぶと setLightTheme と同じ結果になる', () async {
+      final container = await _container();
+      addTearDown(container.dispose);
+
+      final theme = AppTheme.eqmonitorDefault().copyWith(name: 'Custom Light');
+      await _notifier(
+        container,
+      ).setThemeForMode(ThemeBrightnessMode.light, theme);
+
+      final state = container.read(appThemeProvider);
+      expect(state.lightTheme.name, 'Custom Light');
+      expect(state.darkTheme.name, 'EQMonitor Default');
+    });
+
+    test('mode=dark で呼ぶと setDarkTheme と同じ結果になる', () async {
+      final container = await _container();
+      addTearDown(container.dispose);
+
+      final theme = AppTheme.eqmonitorDefault().copyWith(name: 'Custom Dark');
+      await _notifier(
+        container,
+      ).setThemeForMode(ThemeBrightnessMode.dark, theme);
+
+      final state = container.read(appThemeProvider);
+      expect(state.darkTheme.name, 'Custom Dark');
+      expect(state.lightTheme.name, 'EQMonitor Default');
+    });
+  });
 }
