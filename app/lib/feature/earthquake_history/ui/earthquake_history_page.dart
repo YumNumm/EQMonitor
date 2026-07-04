@@ -37,7 +37,7 @@ class _SliverListBody extends HookConsumerWidget {
       initialParameter ??
           const EarthquakeHistoryParameter.all(
             sortBy: .eventId,
-            sortOrder: .asc,
+            sortOrder: .desc,
           ),
     );
     final dataSourceAsync = ref.watch(

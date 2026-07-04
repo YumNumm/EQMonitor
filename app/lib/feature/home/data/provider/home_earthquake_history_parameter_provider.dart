@@ -19,7 +19,7 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
     case HomeEarthquakeHistoryScope.nationwide:
       return const EarthquakeHistoryParameter.all(
         sortBy: .eventId,
-        sortOrder: .asc,
+        sortOrder: .desc,
       );
     case HomeEarthquakeHistoryScope.currentLocation:
       // Use the current stream state synchronously so that the provider
@@ -45,7 +45,7 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
       }
       return EarthquakeHistoryParameter.city(
         sortBy: .eventId,
-        sortOrder: .asc,
+        sortOrder: .desc,
         cityCode:
             city.property?.code ??
             () {

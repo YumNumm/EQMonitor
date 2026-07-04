@@ -244,21 +244,27 @@ class EarthquakeHistoryDataSource
   }
 
   void upsertItems(List<EarthquakePartial> newItems) {
-    if (_parameter.sortBy != .eventId || _parameter.sortOrder != .desc) {
+    if (_parameter.sortBy != .eventId) {
+      // eventId 以外のソートでは挿入位置が確定できないため反映しない
       return;
     }
-    final currentItems = [...notifier.values];
+    final isDesc = _parameter.sortOrder == .desc;
     for (final item in newItems) {
+      final currentItems = [...notifier.values];
       final index = currentItems.indexWhere(
         (e) => e.earthquake.eventId == item.earthquake.eventId,
       );
-      if (index == -1) {
-        insertItem(0, item);
-        currentItems.insert(0, item);
-      } else {
+      if (index != -1) {
         updateItem(index, (_) => item);
-        currentItems[index] = item;
+        continue;
       }
+      // eventId 比較で挿入位置を決める(desc: 大きい順 / asc: 小さい順)
+      final insertAt = currentItems.indexWhere(
+        (e) => isDesc
+            ? e.earthquake.eventId.compareTo(item.earthquake.eventId) < 0
+            : e.earthquake.eventId.compareTo(item.earthquake.eventId) > 0,
+      );
+      insertItem(insertAt == -1 ? currentItems.length : insertAt, item);
     }
   }
 }
