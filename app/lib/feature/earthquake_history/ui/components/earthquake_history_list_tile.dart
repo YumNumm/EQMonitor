@@ -5,11 +5,14 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class EarthquakeHistoryListTile extends StatelessWidget {
@@ -129,38 +132,38 @@ class EarthquakeHistoryListTile extends StatelessWidget {
           if (item is! EarthquakePartialNormal)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: _AreaIntensityChip(
-                // TOOD(YumNumm): EarthquakeParameterから当該オブジェクトを取得して名前を表示する
-                areaName: switch (searchParameter) {
-                  EarthquakeHistoryParameterRegion(:final String regionCode) =>
-                    regionCode,
-                  EarthquakeHistoryParameterPrefecture(
-                    :final String prefectureCode,
-                  ) =>
-                    prefectureCode,
-                  EarthquakeHistoryParameterCity(:final String cityCode) =>
-                    cityCode,
-                  EarthquakeHistoryParameterStation(
-                    :final String stationCode,
-                  ) =>
-                    stationCode,
-                  EarthquakeHistoryParameterAll() => throw StateError(
-                    'EarthquakeHistoryParameterAll is not supported',
-                  ),
+              child: Consumer(
+                builder: (context, ref, _) {
+                  final regionSel = searchParameter.regionSelection;
+                  final areaName = regionSel != null
+                      ? ref
+                                .watch(
+                                  regionNameProvider(
+                                    regionSel.$1,
+                                    regionSel.$2,
+                                  ),
+                                )
+                                .whenOrNull(data: (name) => name) ??
+                            regionSel.$2
+                      : '';
+                  return _AreaIntensityChip(
+                    areaName: areaName,
+                    intensity: switch (item) {
+                      EarthquakePartialPrefecture(:final prefectureIntensity) =>
+                        prefectureIntensity,
+                      EarthquakePartialRegion(:final regionIntensity) =>
+                        regionIntensity,
+                      EarthquakePartialCity(:final cityIntensity) =>
+                        cityIntensity,
+                      EarthquakePartialStation(:final stationIntensity) =>
+                        stationIntensity,
+                      EarthquakePartialNormal() => throw StateError(
+                        'EarthquakePartialNormal is not supported',
+                      ),
+                    },
+                    intensityColors: intensityColors,
+                  );
                 },
-                intensity: switch (item) {
-                  EarthquakePartialPrefecture(:final prefectureIntensity) =>
-                    prefectureIntensity,
-                  EarthquakePartialRegion(:final regionIntensity) =>
-                    regionIntensity,
-                  EarthquakePartialCity(:final cityIntensity) => cityIntensity,
-                  EarthquakePartialStation(:final stationIntensity) =>
-                    stationIntensity,
-                  EarthquakePartialNormal() => throw StateError(
-                    'EarthquakePartialNormal is not supported',
-                  ),
-                },
-                intensityColors: intensityColors,
               ),
             ),
         ],
