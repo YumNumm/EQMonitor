@@ -62,6 +62,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/tsunami
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
+import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_editor_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/ui/page/home_widget_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
@@ -458,10 +459,7 @@ class ThemeEditorRoute extends GoRouteData with $ThemeEditorRoute {
       (e) => e.name == mode,
       orElse: () => ThemeBrightnessMode.light,
     );
-    return Scaffold(
-      appBar: AppBar(title: Text('テーマ編集 (${brightnessMode.name})')),
-      body: const SizedBox.shrink(),
-    );
+    return ThemeEditorPage(mode: brightnessMode);
   }
 }
 
@@ -539,7 +537,6 @@ class TermOfServiceRoute extends GoRouteData with $TermOfServiceRoute {
   Widget build(BuildContext context, GoRouterState state) =>
       TermOfServicePage(onResult: $extra, showAcceptButton: showAcceptButton);
 }
-
 
 class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
   const PrivacyPolicyRoute({
