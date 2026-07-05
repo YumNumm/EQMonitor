@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
+import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -65,39 +66,49 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('電文一覧')),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(
-            telegramListByEventIdProvider(eventId),
-            asReload: true,
-          );
-          ref.invalidate(telegramDetailsProvider(eventId), asReload: true);
-        },
-        child: switch (asyncState) {
-          AsyncData(:final value) => _SectionedList(
-            items: value.items,
-            hasNext: value.hasNext,
-            isLoading: asyncState.isLoading,
-            scrollController: scrollController,
-            details: asyncDetails.value ?? const {},
+      body: Column(
+        children: [
+          CachedDataBanner(values: [asyncDetails]),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(
+                  telegramListByEventIdProvider(eventId),
+                  asReload: true,
+                );
+                ref.invalidate(
+                  telegramDetailsProvider(eventId),
+                  asReload: true,
+                );
+              },
+              child: switch (asyncState) {
+                AsyncData(:final value) => _SectionedList(
+                  items: value.items,
+                  hasNext: value.hasNext,
+                  isLoading: asyncState.isLoading,
+                  scrollController: scrollController,
+                  details: asyncDetails.value ?? const {},
+                ),
+                AsyncError(:final error, :final value?) => _SectionedList(
+                  items: value.items,
+                  hasNext: value.hasNext,
+                  isLoading: false,
+                  scrollController: scrollController,
+                  details: asyncDetails.value ?? const {},
+                  error: error,
+                  onReload: () async =>
+                      ref.refresh(telegramListByEventIdProvider(eventId)),
+                ),
+                AsyncError(:final error) => ErrorCard(
+                  error: error,
+                  onReload: () async =>
+                      ref.refresh(telegramListByEventIdProvider(eventId)),
+                ),
+                _ => const _TelegramListSkeleton(),
+              },
+            ),
           ),
-          AsyncError(:final error, :final value?) => _SectionedList(
-            items: value.items,
-            hasNext: value.hasNext,
-            isLoading: false,
-            scrollController: scrollController,
-            details: asyncDetails.value ?? const {},
-            error: error,
-            onReload: () async =>
-                ref.refresh(telegramListByEventIdProvider(eventId)),
-          ),
-          AsyncError(:final error) => ErrorCard(
-            error: error,
-            onReload: () async =>
-                ref.refresh(telegramListByEventIdProvider(eventId)),
-          ),
-          _ => const _TelegramListSkeleton(),
-        },
+        ],
       ),
     );
   }

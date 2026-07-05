@@ -67,8 +67,9 @@ class EarthquakeHistoryRepository {
     double? longitudeLte,
     EarthquakeSortBy? sortBy,
     SortOrder? sortOrder,
+    api.ApiClient? client,
   }) async {
-    final response = await _earthquake.getV2Earthquake(
+    final response = await (client?.earthquake ?? _earthquake).getV2Earthquake(
       limit: limit?.toString(),
       cursor: cursor,
       statuses:
@@ -107,8 +108,12 @@ class EarthquakeHistoryRepository {
     );
   }
 
-  Future<Earthquake> fetchEarthquakeDetail({required String eventId}) async {
-    final response = await _earthquake.getV2EarthquakeEventId(eventId: eventId);
+  Future<Earthquake> fetchEarthquakeDetail({
+    required String eventId,
+    api.ApiClient? client,
+  }) async {
+    final response = await (client?.earthquake ?? _earthquake)
+        .getV2EarthquakeEventId(eventId: eventId);
     return response.data.earthquake.toEarthquake(
       parameter: earthquakeParameter,
       shindoDbStations: shindoDbStations,

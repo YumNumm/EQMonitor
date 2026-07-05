@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -27,8 +28,19 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final detailsState = ref.watch(earthquakeHistoryDetailsProvider(eventId));
 
+    // SWR 再検証中は「値を保持した AsyncLoading」が流れるため、値ありを最優先で
+    // マッチさせて stale 表示を維持する (Loading 優先だと全画面スピナーに戻る)。
     return switch (detailsState) {
-      AsyncLoading() => Scaffold(
+      AsyncValue(:final value?) => _LoadedContent(earthquake: value),
+      AsyncError(:final error) => Scaffold(
+        appBar: AppBar(),
+        body: ErrorCard(
+          error: error,
+          onReload: () async =>
+              ref.refresh(earthquakeHistoryDetailsProvider(eventId)),
+        ),
+      ),
+      _ => Scaffold(
         appBar: AppBar(),
         body: Center(
           child: Column(
@@ -45,17 +57,6 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
             ],
           ),
         ),
-      ),
-      AsyncError(:final error) => Scaffold(
-        appBar: AppBar(),
-        body: ErrorCard(
-          error: error,
-          onReload: () async =>
-              ref.refresh(earthquakeHistoryDetailsProvider(eventId)),
-        ),
-      ),
-      AsyncData(value: final earthquake) => _LoadedContent(
-        earthquake: earthquake,
       ),
     };
   }
@@ -115,6 +116,15 @@ class _LoadedContent extends HookConsumerWidget {
                 child: SafeArea(
                   child: Column(
                     children: [
+                      CachedDataBanner(
+                        values: [
+                          ref.watch(
+                            earthquakeHistoryDetailsProvider(
+                              earthquake.eventId,
+                            ),
+                          ),
+                        ],
+                      ),
                       EarthquakeHypocenterInformationCard(item: earthquake),
                       CurrentLocationIntensityCard(item: earthquake),
                       EarthquakeIntensityCard(

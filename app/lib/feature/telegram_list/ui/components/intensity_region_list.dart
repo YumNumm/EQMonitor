@@ -34,9 +34,7 @@ class IntensityRegionList extends StatelessWidget {
 
     // 震度降順でソート
     final sortedKeys = grouped.keys.toList()
-      ..sort(
-        (a, b) => b.orderIndex.compareTo(a.orderIndex),
-      );
+      ..sort((a, b) => b.orderIndex.compareTo(a.orderIndex));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,10 +155,7 @@ class _RegionChip extends StatelessWidget {
     final boldStyle = baseStyle.copyWith(fontWeight: FontWeight.bold);
 
     return switch (entry.diffType) {
-      IntensityDiffType.same => Text(
-        entry.name,
-        style: baseStyle,
-      ),
+      IntensityDiffType.same => Text(entry.name, style: baseStyle),
       IntensityDiffType.added => Text.rich(
         TextSpan(
           children: [
