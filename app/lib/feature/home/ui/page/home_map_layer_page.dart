@@ -22,19 +22,19 @@ class HomeMapLayerPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
     final expandedSection = useState<_MapLayerSection?>(null);
 
     return Scaffold(
-      backgroundColor: color.backgroundDefault,
+      backgroundColor: colorTheme.surfaceContainerLow,
       body: CustomScrollView(
         primary: true,
         slivers: [
           SliverAppBar(
             pinned: true,
-            backgroundColor: color.backgroundDefault,
+            backgroundColor: colorTheme.surfaceContainerLow,
             surfaceTintColor: Colors.transparent,
             titleSpacing: 0,
             leading: IconButton(
@@ -189,7 +189,7 @@ class _SettingsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
     final typography = designSystem.typography;
@@ -202,7 +202,7 @@ class _SettingsSection extends StatelessWidget {
             height: 1,
             indent: spacing.xl,
             endIndent: spacing.xl,
-            color: color.outlineSoft,
+            color: colorTheme.outlineVariant,
           ),
         );
       }
@@ -212,11 +212,11 @@ class _SettingsSection extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       elevation: 0,
-      color: color.surfaceRaised,
+      color: colorTheme.surfaceContainerLow,
       clipBehavior: Clip.antiAlias,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.sheet),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         children: [
@@ -236,12 +236,12 @@ class _SettingsSection extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: color.surfaceEmphasis,
+                      color: colorTheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(shape.md),
                     ),
                     child: Icon(
                       icon,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: context.designSystem.colorTheme.primary,
                     ),
                   ),
                   SizedBox(width: spacing.md),
@@ -266,7 +266,7 @@ class _SettingsSection extends StatelessWidget {
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      color: context.designSystem.colorTheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -279,7 +279,7 @@ class _SettingsSection extends StatelessWidget {
             child: isExpanded
                 ? Column(
                     children: [
-                      Divider(height: 1, color: color.outlineSoft),
+                      Divider(height: 1, color: colorTheme.outlineVariant),
                       Column(children: sectionChildren),
                     ],
                   )
@@ -388,10 +388,7 @@ class _SettingDropdownField<T> extends StatelessWidget {
                   ],
                 ),
               ),
-              if (trailing != null) ...[
-                SizedBox(width: spacing.sm),
-                trailing!,
-              ],
+              if (trailing != null) ...[SizedBox(width: spacing.sm), trailing!],
             ],
           ),
           SizedBox(height: spacing.md),
@@ -479,7 +476,7 @@ class _SettingActionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
 
@@ -501,7 +498,7 @@ class _SettingActionTile extends StatelessWidget {
           Text(
             subtitle,
             style: typography.bodySmall.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: context.designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
           SizedBox(height: spacing.md),
@@ -510,8 +507,9 @@ class _SettingActionTile extends StatelessWidget {
               await onPressed();
             },
             style: FilledButton.styleFrom(
-              backgroundColor: color.surfaceEmphasis,
-              foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              backgroundColor: colorTheme.surfaceContainerHighest,
+              foregroundColor:
+                  context.designSystem.colorTheme.onPrimaryContainer,
             ),
             child: Text(actionLabel),
           ),
@@ -536,18 +534,9 @@ class _EewFillModeTile extends ConsumerWidget {
       title: '予想震度の塗りつぶし',
       subtitle: '塗りつぶし方法を予想震度、警報地域、非表示から選びます。',
       segments: const [
-        ButtonSegment(
-          value: HomeEewFillMode.intensity,
-          label: Text('予想震度'),
-        ),
-        ButtonSegment(
-          value: HomeEewFillMode.warning,
-          label: Text('警報地域'),
-        ),
-        ButtonSegment(
-          value: HomeEewFillMode.none,
-          label: Text('なし'),
-        ),
+        ButtonSegment(value: HomeEewFillMode.intensity, label: Text('予想震度')),
+        ButtonSegment(value: HomeEewFillMode.warning, label: Text('警報地域')),
+        ButtonSegment(value: HomeEewFillMode.none, label: Text('なし')),
       ],
       selected: {mode},
       onSelectionChanged: (next) async {
@@ -606,10 +595,7 @@ class _EewAnimationTile extends ConsumerWidget {
           value: HomeEewAnimationRate.unlimited,
           label: Text('制限なし'),
         ),
-        ButtonSegment(
-          value: HomeEewAnimationRate.oneHz,
-          label: Text('1Hz'),
-        ),
+        ButtonSegment(value: HomeEewAnimationRate.oneHz, label: Text('1Hz')),
       ],
       selected: {rate},
       onSelectionChanged: (next) async {
@@ -758,14 +744,8 @@ class _KyoshinMonitorSourceTile extends ConsumerWidget {
           '強震モニタか長周期地震動モニタを選択します。\n'
           '長周期地震動モニタでは長周期地震動階級などの追加データ種別が利用できます。',
       segments: const [
-        ButtonSegment(
-          value: .kmoni,
-          label: Text('強震モニタ'),
-        ),
-        ButtonSegment(
-          value: .lmoni,
-          label: Text('長周期地震動'),
-        ),
+        ButtonSegment(value: .kmoni, label: Text('強震モニタ')),
+        ButtonSegment(value: .lmoni, label: Text('長周期地震動')),
       ],
       selected: {setting.monitorSource},
       onSelectionChanged: (next) async {
@@ -1037,18 +1017,9 @@ class _KyoshinMarkerSizeTile extends ConsumerWidget {
       title: '観測点サイズ',
       subtitle: '強震モニタの観測点アイコンの大きさを変更します。',
       segments: const [
-        ButtonSegment(
-          value: HomeKmoniMarkerSize.small,
-          label: Text('小'),
-        ),
-        ButtonSegment(
-          value: HomeKmoniMarkerSize.medium,
-          label: Text('中'),
-        ),
-        ButtonSegment(
-          value: HomeKmoniMarkerSize.large,
-          label: Text('大'),
-        ),
+        ButtonSegment(value: HomeKmoniMarkerSize.small, label: Text('小')),
+        ButtonSegment(value: HomeKmoniMarkerSize.medium, label: Text('中')),
+        ButtonSegment(value: HomeKmoniMarkerSize.large, label: Text('大')),
       ],
       selected: {size},
       onSelectionChanged: (next) async {
@@ -1197,14 +1168,8 @@ class _MapDefaultBoundsTile extends ConsumerWidget {
           value: HomeMapDefaultBounds.mainIsland,
           label: Text('本州〜'),
         ),
-        ButtonSegment(
-          value: HomeMapDefaultBounds.all,
-          label: Text('全体'),
-        ),
-        ButtonSegment(
-          value: HomeMapDefaultBounds.custom,
-          label: Text('カスタム'),
-        ),
+        ButtonSegment(value: HomeMapDefaultBounds.all, label: Text('全体')),
+        ButtonSegment(value: HomeMapDefaultBounds.custom, label: Text('カスタム')),
       ],
       selected: {bounds},
       onSelectionChanged: (next) async {

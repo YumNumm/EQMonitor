@@ -1,13 +1,10 @@
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class StatusFilterChip extends StatelessWidget {
-  const StatusFilterChip({
-    this.statuses,
-    this.onChanged,
-    super.key,
-  });
+  const StatusFilterChip({required this.statuses, this.onChanged, super.key});
 
   final void Function(List<TelegramStatus>?)? onChanged;
   final List<TelegramStatus>? statuses;
@@ -44,7 +41,7 @@ class StatusFilterChip extends StatelessWidget {
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(initialStatuses),
       selected: !isDefault,
-      selectedColor: Theme.of(context).colorScheme.secondaryContainer,
+      selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
   }
 }
@@ -61,6 +58,7 @@ class _StatusFilterModal extends HookWidget {
     );
 
     final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     final sheetBar = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       width: 36,
@@ -68,7 +66,7 @@ class _StatusFilterModal extends HookWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.onSurface,
+        color: designSystem.colorTheme.onSurface,
         boxShadow: const <BoxShadow>[
           BoxShadow(color: Colors.black12, blurRadius: 12),
         ],
@@ -119,9 +117,8 @@ class _StatusFilterModal extends HookWidget {
                 child: const Text('キャンセル'),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(
-                  selectedStatuses.value.toList(),
-                ),
+                onPressed: () =>
+                    Navigator.of(context).pop(selectedStatuses.value.toList()),
                 child: const Text('完了'),
               ),
             ],

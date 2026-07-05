@@ -42,15 +42,15 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: designSystem.color.surfaceCard.withValues(alpha: 0.95),
+            color: designSystem.colorTheme.surfaceContainerHigh.withValues(alpha: 0.95),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: designSystem.color.outlineSoft),
+            border: Border.all(color: designSystem.colorTheme.outlineVariant),
           ),
           child: Text(
             'Timeline: $error',
             style: TextStyle(
               fontSize: 10,
-              color: designSystem.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -117,7 +117,7 @@ class _ExpandedOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
 
     final currentTelegram = telegrams[_effectiveIndex].telegram;
     final maxIndex = telegrams.length - 1;
@@ -127,9 +127,9 @@ class _ExpandedOverlay extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
       decoration: BoxDecoration(
-        color: color.surfaceCard.withValues(alpha: 0.95),
+        color: colorTheme.surfaceContainerHigh.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.outlineSoft),
+        border: Border.all(color: colorTheme.outlineVariant),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -147,7 +147,7 @@ class _ExpandedOverlay extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: designSystem.textColor.primary,
+                        color: designSystem.colorTheme.onSurface,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -158,7 +158,7 @@ class _ExpandedOverlay extends StatelessWidget {
                       ),
                       style: TextStyle(
                         fontSize: 11,
-                        color: designSystem.textColor.secondary,
+                        color: designSystem.colorTheme.onSurfaceVariant,
                       ),
                     ),
                     if (selection.selectedIndex != null)
@@ -166,7 +166,7 @@ class _ExpandedOverlay extends StatelessWidget {
                         '${_effectiveIndex + 1} / ${telegrams.length}',
                         style: TextStyle(
                           fontSize: 10,
-                          color: designSystem.textColor.secondary,
+                          color: designSystem.colorTheme.onSurfaceVariant,
                         ),
                       )
                     else
@@ -174,7 +174,7 @@ class _ExpandedOverlay extends StatelessWidget {
                         '最新 (${telegrams.length}件)',
                         style: TextStyle(
                           fontSize: 10,
-                          color: designSystem.textColor.secondary,
+                          color: designSystem.colorTheme.onSurfaceVariant,
                         ),
                       ),
                   ],
@@ -270,7 +270,7 @@ class _CollapsedOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
 
     final label = selection.selectedIndex != null
         ? '${selection.selectedIndex! + 1} / ${telegrams.length}'
@@ -279,9 +279,9 @@ class _CollapsedOverlay extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.surfaceCard.withValues(alpha: 0.95),
+        color: colorTheme.surfaceContainerHigh.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.outlineSoft),
+        border: Border.all(color: colorTheme.outlineVariant),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -289,14 +289,14 @@ class _CollapsedOverlay extends StatelessWidget {
           Icon(
             Icons.timeline,
             size: 16,
-            color: designSystem.textColor.secondary,
+            color: designSystem.colorTheme.onSurfaceVariant,
           ),
           const SizedBox(width: 6),
           Text(
             label,
             style: TextStyle(
               fontSize: 11,
-              color: designSystem.textColor.primary,
+              color: designSystem.colorTheme.onSurface,
             ),
           ),
           const SizedBox(width: 4),
@@ -427,14 +427,14 @@ class _TimeMarkers extends StatelessWidget {
             firstTime,
             style: TextStyle(
               fontSize: 9,
-              color: designSystem.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
           Text(
             '$lastTime (最新)',
             style: TextStyle(
               fontSize: 9,
-              color: designSystem.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 
 class ThankYouDialog extends StatelessWidget {
@@ -5,11 +6,10 @@ class ThankYouDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return AlertDialog(
       icon: Icon(
         Icons.favorite_rounded,
-        color: theme.colorScheme.primary,
+        color: context.designSystem.colorTheme.primary,
         size: 36,
       ),
       title: const Text('ありがとうございます'),

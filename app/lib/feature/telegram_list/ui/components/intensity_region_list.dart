@@ -1,13 +1,12 @@
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 震度地域リスト（震度階級ごとにグループ化、差分注釈付き）
-class IntensityRegionList extends ConsumerWidget {
+class IntensityRegionList extends StatelessWidget {
   const IntensityRegionList({
     required this.entries,
     this.prefectureMap,
@@ -20,12 +19,12 @@ class IntensityRegionList extends ConsumerWidget {
   final Map<String, String>? prefectureMap;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     if (entries.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final intensityColor = ref.watch(intensityColorProvider);
+    final intensityColors = context.designSystem.colorTheme.intensity;
 
     // 震度階級ごとにグループ化
     final grouped = groupBy<IntensityRegionDiffEntry, JmaIntensity>(
@@ -45,7 +44,7 @@ class IntensityRegionList extends ConsumerWidget {
             _IntensityRow(
               intensity: intensity,
               entries: entries,
-              intensityColor: intensityColor,
+              intensityColors: intensityColors,
               prefectureMap: prefectureMap,
             ),
       ],
@@ -57,18 +56,18 @@ class _IntensityRow extends StatelessWidget {
   const _IntensityRow({
     required this.intensity,
     required this.entries,
-    required this.intensityColor,
+    required this.intensityColors,
     this.prefectureMap,
   });
 
   final JmaIntensity intensity;
   final List<IntensityRegionDiffEntry> entries;
-  final IntensityColorModel intensityColor;
+  final IntensityColors intensityColors;
   final Map<String, String>? prefectureMap;
 
   @override
   Widget build(BuildContext context) {
-    final color = intensityColor.fromJmaIntensity(intensity);
+    final colorEntry = intensityColors.fromJmaIntensity(intensity);
     final theme = Theme.of(context);
 
     return Padding(
@@ -81,14 +80,14 @@ class _IntensityRow extends StatelessWidget {
             width: 36,
             height: 22,
             decoration: BoxDecoration(
-              color: color.background,
+              color: colorEntry.background,
               borderRadius: BorderRadius.circular(4),
             ),
             alignment: Alignment.center,
             child: Text(
               '${intensity.mainText}${intensity.suffix}',
               style: TextStyle(
-                color: color.foreground,
+                color: colorEntry.resolvedForeground,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
                 height: 1,

@@ -36,7 +36,7 @@ class HomeMapView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
 
@@ -44,9 +44,7 @@ class HomeMapView extends ConsumerWidget {
       AsyncData(:final value) when value.styleString != null => _MapContent(
         styleString: value.styleString!,
       ),
-      AsyncError(:final error) => Center(
-        child: ErrorCard(error: error),
-      ),
+      AsyncError(:final error) => Center(child: ErrorCard(error: error)),
       _ => Center(
         child: Container(
           padding: EdgeInsets.symmetric(
@@ -54,9 +52,9 @@ class HomeMapView extends ConsumerWidget {
             vertical: spacing.lg,
           ),
           decoration: BoxDecoration(
-            color: color.surfaceCard.withValues(alpha: 0.92),
+            color: colorTheme.surfaceContainerHigh.withValues(alpha: 0.92),
             borderRadius: BorderRadius.circular(designSystem.shape.card),
-            border: Border.all(color: color.outlineSoft),
+            border: Border.all(color: colorTheme.outlineVariant),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -131,9 +129,7 @@ class _MapContent extends ConsumerWidget {
                     .intensity => EewEstimatedIntensityLayer(
                       eewRegions: regions,
                     ),
-                    .warning => EewWarningRegionsLayer(
-                      eews: eews,
-                    ),
+                    .warning => EewWarningRegionsLayer(eews: eews),
                     .none => const SizedBox.shrink(),
                   };
                 },
@@ -156,9 +152,7 @@ class _MapContent extends ConsumerWidget {
                 ),
               ),
               const HomeMapLabelLayer(),
-              const SafeArea(
-                child: _MapHeader(),
-              ),
+              const SafeArea(child: _MapHeader()),
             ],
           );
 

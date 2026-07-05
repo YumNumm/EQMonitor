@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
@@ -130,8 +131,7 @@ class _Body extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBusy = useState(false);
-    final notificationEnabled =
-        useState(settings?.notificationEnabled ?? true);
+    final notificationEnabled = useState(settings?.notificationEnabled ?? true);
     final tsunami = useState(settings?.tsunamiEnabled ?? false);
     final training = useState(settings?.trainingEnabled ?? false);
     final nankaiExtraordinary = useState(
@@ -146,8 +146,7 @@ class _Body extends HookConsumerWidget {
       notificationEnabled.value = settings?.notificationEnabled ?? true;
       tsunami.value = settings?.tsunamiEnabled ?? false;
       training.value = settings?.trainingEnabled ?? false;
-      nankaiExtraordinary.value =
-          settings?.nankaiExtraordinaryEnabled ?? false;
+      nankaiExtraordinary.value = settings?.nankaiExtraordinaryEnabled ?? false;
       nankaiRegular.value = settings?.nankaiRegularEnabled ?? false;
       hokkaido3ren.value = settings?.hokkaido3renOffshoreEnabled ?? false;
       return null;
@@ -191,7 +190,7 @@ class _Body extends HookConsumerWidget {
             messenger.showSnackBar(
               SnackBar(
                 content: Text('登録に失敗しました: $exception'),
-                backgroundColor: Theme.of(context).colorScheme.error,
+                backgroundColor: context.designSystem.colorTheme.error,
               ),
             );
         }
@@ -204,9 +203,7 @@ class _Body extends HookConsumerWidget {
         context: context,
         builder: (context) => AlertDialog.adaptive(
           title: const Text('デバイスを削除'),
-          content: const Text(
-            'この端末 ID に紐づくサーバー上のデバイスと関連データを削除します。よろしいですか？',
-          ),
+          content: const Text('この端末 ID に紐づくサーバー上のデバイスと関連データを削除します。よろしいですか？'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -218,7 +215,7 @@ class _Body extends HookConsumerWidget {
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
+                foregroundColor: context.designSystem.colorTheme.error,
               ),
               child: const Text('削除'),
             ),
@@ -245,7 +242,7 @@ class _Body extends HookConsumerWidget {
             messenger.showSnackBar(
               SnackBar(
                 content: Text('削除に失敗しました: $exception'),
-                backgroundColor: Theme.of(context).colorScheme.error,
+                backgroundColor: context.designSystem.colorTheme.error,
               ),
             );
         }
@@ -254,9 +251,9 @@ class _Body extends HookConsumerWidget {
 
     Future<void> saveNotificationSettings() async {
       if (device == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('先にデバイスを登録してください')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('先にデバイスを登録してください')));
         return;
       }
       await runWithBusy(() async {
@@ -286,7 +283,7 @@ class _Body extends HookConsumerWidget {
             messenger.showSnackBar(
               SnackBar(
                 content: Text('更新に失敗しました: $exception'),
-                backgroundColor: Theme.of(context).colorScheme.error,
+                backgroundColor: context.designSystem.colorTheme.error,
               ),
             );
         }
@@ -298,10 +295,7 @@ class _Body extends HookConsumerWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
       children: [
-        Text(
-          '端末 ID',
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
+        Text('端末 ID', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 8),
         SelectableText(deviceId, style: mono),
         const SizedBox(height: 8),
@@ -315,16 +309,13 @@ class _Body extends HookConsumerWidget {
           ),
         ),
         const SizedBox(height: 24),
-        Text(
-          'サーバー上の状態',
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
+        Text('サーバー上の状態', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 8),
         if (device == null)
           Text(
             '未登録（またはこの端末 ID のレコードがありません）',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: context.designSystem.colorTheme.onSurfaceVariant,
             ),
           )
         else ...[
@@ -333,15 +324,12 @@ class _Body extends HookConsumerWidget {
           _InfoRow(label: 'ロケール', value: device!.locale.name),
         ],
         const SizedBox(height: 16),
-        Text(
-          'デバイスの登録・編集・削除',
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
+        Text('デバイスの登録・編集・削除', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 4),
         Text(
           'デバイスレコードの更新は API 上 PUT（登録と同じエンドポイント）です。',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            color: context.designSystem.colorTheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 12),
@@ -370,10 +358,7 @@ class _Body extends HookConsumerWidget {
           ],
         ),
         const SizedBox(height: 24),
-        Text(
-          '通知条件（全般）',
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
+        Text('通知条件（全般）', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 8),
         ListTile(
           contentPadding: EdgeInsets.zero,
@@ -448,7 +433,7 @@ class _InfoRow extends StatelessWidget {
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -474,10 +459,7 @@ class _ErrorBody extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-        ),
+        child: Text(message, textAlign: TextAlign.center),
       ),
     );
   }

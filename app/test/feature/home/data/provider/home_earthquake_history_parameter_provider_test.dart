@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/home_earthquake_history_parameter_provider.dart';
@@ -61,7 +63,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('homeEarthquakeHistoryParameterProvider', () {
-    test('nationwide スコープでは空の EarthquakeHistoryParameter を返す', () async {
+    test('nationwide スコープでは all パラメータを返す', () async {
       final container = _container(
         home: const HomeConfigurationModel(),
       );
@@ -70,7 +72,15 @@ void main() {
         homeEarthquakeHistoryParameterProvider.future,
       );
 
-      expect(result, equals(const EarthquakeHistoryParameter()));
+      expect(
+        result,
+        equals(
+          const EarthquakeHistoryParameter.all(
+            sortBy: EarthquakeSortBy.eventId,
+            sortOrder: SortOrder.asc,
+          ),
+        ),
+      );
     });
 
     test('currentLocation スコープで現在地と市区町村が解決できれば city パラメータを返す', () async {
@@ -90,9 +100,6 @@ void main() {
         ),
       );
 
-      // With the synchronous locationStream approach the provider re-runs once
-      // the stream emits its first position.  We wait for the latest resolved
-      // value to become non-null instead of just taking the first resolution.
       EarthquakeHistoryParameter? result;
       final completer = Completer<EarthquakeHistoryParameter?>();
       final subscription = container.listen(
@@ -110,9 +117,14 @@ void main() {
       subscription.close();
 
       expect(result, isNotNull);
-      expect(result!.regionSearchType, RegionSearchType.city);
-      expect(result.regionCode, '13101');
-      expect(result.regionName, '東京都千代田区');
+      expect(
+        result,
+        const EarthquakeHistoryParameter.city(
+          sortBy: EarthquakeSortBy.eventId,
+          sortOrder: SortOrder.asc,
+          cityCode: '13101',
+        ),
+      );
     });
 
     test('currentLocation スコープで位置情報が取れないと null を返す', () async {
@@ -139,7 +151,6 @@ void main() {
           ),
         ),
         position: _position(),
-        // city = null
       );
 
       final result = await container.read(
@@ -166,10 +177,10 @@ void main() {
     });
 
     test('custom スコープで parameter が設定済みならそれをそのまま返す', () async {
-      const saved = EarthquakeHistoryParameter(
-        regionSearchType: RegionSearchType.prefecture,
-        regionCode: '13',
-        regionName: '東京都',
+      const saved = EarthquakeHistoryParameter.prefecture(
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.asc,
+        prefectureCode: '13',
       );
       final container = _container(
         home: const HomeConfigurationModel(

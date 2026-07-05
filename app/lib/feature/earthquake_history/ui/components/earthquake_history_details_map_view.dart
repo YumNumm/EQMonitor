@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -419,14 +420,14 @@ class _MapControllerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     const divider = Padding(
       padding: EdgeInsets.symmetric(horizontal: 4),
       child: Divider(height: 0),
     );
 
     return Card(
-      color: colorScheme.surfaceContainerHighest,
+      color: colorTheme.surfaceContainerHighest,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
       shape: RoundedSuperellipseBorder(

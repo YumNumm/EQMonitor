@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
+import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
@@ -56,7 +56,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     }
 
     final styleController = MapController.maybeOf(context)?.style;
-    final colorModel = ref.watch(intensityColorProvider);
+    final colorModel = ref.watch(activeColorSetProvider).intensity;
     final iconData = ref.watch(intensityIconProvider).value;
     final enqueue = useMapOperationQueue();
 
@@ -275,7 +275,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
   String _buildGeoJson(
     EarthquakeIntensity? intensity,
-    IntensityColorModel colorModel,
+    IntensityColors colorModel,
   ) {
     if (intensity == null) {
       return jsonEncode({'type': 'FeatureCollection', 'features': <dynamic>[]});
@@ -322,7 +322,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
   String _buildLpgmGeoJson(
     EarthquakeIntensity? intensity,
-    IntensityColorModel colorModel,
+    IntensityColors colorModel,
   ) {
     if (intensity == null) {
       return jsonEncode({'type': 'FeatureCollection', 'features': <dynamic>[]});

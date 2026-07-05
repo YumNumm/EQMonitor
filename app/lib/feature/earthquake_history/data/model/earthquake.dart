@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
@@ -19,13 +20,15 @@ abstract class Earthquake with _$Earthquake {
     required DateTime? originTime,
     required OriginTimePrecision originTimePrecision,
     required DateTime? arrivalTime,
-    required EarthquakeDataSource dataSource,
+    required List<EarthquakeDataSource> dataSources,
     required List<EarthquakeTelegramType> telegramTypes,
     required EarthquakeHypocenter? hypocenter,
     required EarthquakeIntensity? intensity,
 
     /// 推計震度PMTilesのフルURL
     required String? estimatedIntensityTileUrl,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    EarthquakeCatalog? catalog,
   }) = _Earthquake;
 
   factory Earthquake.fromJson(Map<String, dynamic> json) =>
@@ -42,13 +45,14 @@ extension EarthquakeApiExtension on api.Earthquake {
     originTime: originTime,
     originTimePrecision: originTimePrecision.toOriginTimePrecision,
     arrivalTime: arrivalTime,
-    dataSource: datasource.toEarthquakeDataSource,
+    dataSources: datasources.map((e) => e.toEarthquakeDataSource).toList(),
     telegramTypes: telegrams
         .map((e) => e.telegram.type.toEarthquakeTelegramTypeOrNull)
         .whereType<EarthquakeTelegramType>()
         .toList(),
     hypocenter: hypocenter?.toEarthquakeHypocenter,
     estimatedIntensityTileUrl: estimatedIntensityTile,
+    catalog: catalog?.toEarthquakeCatalog,
     intensity: intensity?.toEarthquakeIntensity(
       parameter: parameter,
       shindoDbStations: shindoDbStations,

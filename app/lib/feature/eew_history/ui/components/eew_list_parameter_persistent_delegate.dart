@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart';
 import 'package:eqmonitor/feature/eew_history/ui/components/eew_warning_filter_chip.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class EewListParameterPersistentDelegate
     bool overlapsContent,
   ) {
     return ColoredBox(
-      color: Theme.of(context).colorScheme.surface,
+      color: context.designSystem.colorTheme.surface,
       child: _FilterChipBar(parameter: parameter, onChanged: onChanged),
     );
   }
@@ -51,7 +51,7 @@ class _FilterChipBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spacing = Theme.of(context).designSystemThemeExtension.spacing;
+    final spacing = context.designSystem.spacing;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(

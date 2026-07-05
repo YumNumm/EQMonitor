@@ -122,11 +122,11 @@ return none(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( JmaIntensity intensity)?  quick,TResult Function( JmaIntensity intensity,  JmaLpgmIntensity? lpgmIntensity)?  result,TResult Function()?  none,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( JmaIntensity intensity)?  quick,TResult Function( JmaIntensity intensity,  JmaLpgmIntensity? lpgmIntensity,  List<StationIntensityNode> stations,  List<StationLpgmIntensityNode> lpgmStations)?  result,TResult Function()?  none,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case CurrentLocationIntensityDisplayQuick() when quick != null:
 return quick(_that.intensity);case CurrentLocationIntensityDisplayResult() when result != null:
-return result(_that.intensity,_that.lpgmIntensity);case CurrentLocationIntensityDisplayNone() when none != null:
+return result(_that.intensity,_that.lpgmIntensity,_that.stations,_that.lpgmStations);case CurrentLocationIntensityDisplayNone() when none != null:
 return none();case _:
   return orElse();
 
@@ -145,11 +145,11 @@ return none();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( JmaIntensity intensity)  quick,required TResult Function( JmaIntensity intensity,  JmaLpgmIntensity? lpgmIntensity)  result,required TResult Function()  none,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( JmaIntensity intensity)  quick,required TResult Function( JmaIntensity intensity,  JmaLpgmIntensity? lpgmIntensity,  List<StationIntensityNode> stations,  List<StationLpgmIntensityNode> lpgmStations)  result,required TResult Function()  none,}) {final _that = this;
 switch (_that) {
 case CurrentLocationIntensityDisplayQuick():
 return quick(_that.intensity);case CurrentLocationIntensityDisplayResult():
-return result(_that.intensity,_that.lpgmIntensity);case CurrentLocationIntensityDisplayNone():
+return result(_that.intensity,_that.lpgmIntensity,_that.stations,_that.lpgmStations);case CurrentLocationIntensityDisplayNone():
 return none();}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -164,11 +164,11 @@ return none();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( JmaIntensity intensity)?  quick,TResult? Function( JmaIntensity intensity,  JmaLpgmIntensity? lpgmIntensity)?  result,TResult? Function()?  none,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( JmaIntensity intensity)?  quick,TResult? Function( JmaIntensity intensity,  JmaLpgmIntensity? lpgmIntensity,  List<StationIntensityNode> stations,  List<StationLpgmIntensityNode> lpgmStations)?  result,TResult? Function()?  none,}) {final _that = this;
 switch (_that) {
 case CurrentLocationIntensityDisplayQuick() when quick != null:
 return quick(_that.intensity);case CurrentLocationIntensityDisplayResult() when result != null:
-return result(_that.intensity,_that.lpgmIntensity);case CurrentLocationIntensityDisplayNone() when none != null:
+return result(_that.intensity,_that.lpgmIntensity,_that.stations,_that.lpgmStations);case CurrentLocationIntensityDisplayNone() when none != null:
 return none();case _:
   return null;
 
@@ -247,11 +247,29 @@ as JmaIntensity,
 
 
 class CurrentLocationIntensityDisplayResult implements CurrentLocationIntensityDisplay {
-  const CurrentLocationIntensityDisplayResult({required this.intensity, required this.lpgmIntensity});
+  const CurrentLocationIntensityDisplayResult({required this.intensity, required this.lpgmIntensity, required final  List<StationIntensityNode> stations, required final  List<StationLpgmIntensityNode> lpgmStations}): _stations = stations,_lpgmStations = lpgmStations;
   
 
  final  JmaIntensity intensity;
  final  JmaLpgmIntensity? lpgmIntensity;
+/// 市区町村のすべての観測点を含むことに注意
+ final  List<StationIntensityNode> _stations;
+/// 市区町村のすべての観測点を含むことに注意
+ List<StationIntensityNode> get stations {
+  if (_stations is EqualUnmodifiableListView) return _stations;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_stations);
+}
+
+/// 市区町村のすべての観測点を含むことに注意
+ final  List<StationLpgmIntensityNode> _lpgmStations;
+/// 市区町村のすべての観測点を含むことに注意
+ List<StationLpgmIntensityNode> get lpgmStations {
+  if (_lpgmStations is EqualUnmodifiableListView) return _lpgmStations;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_lpgmStations);
+}
+
 
 /// Create a copy of CurrentLocationIntensityDisplay
 /// with the given fields replaced by the non-null parameter values.
@@ -263,16 +281,16 @@ $CurrentLocationIntensityDisplayResultCopyWith<CurrentLocationIntensityDisplayRe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentLocationIntensityDisplayResult&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentLocationIntensityDisplayResult&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&const DeepCollectionEquality().equals(other._stations, _stations)&&const DeepCollectionEquality().equals(other._lpgmStations, _lpgmStations));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,intensity,lpgmIntensity);
+int get hashCode => Object.hash(runtimeType,intensity,lpgmIntensity,const DeepCollectionEquality().hash(_stations),const DeepCollectionEquality().hash(_lpgmStations));
 
 @override
 String toString() {
-  return 'CurrentLocationIntensityDisplay.result(intensity: $intensity, lpgmIntensity: $lpgmIntensity)';
+  return 'CurrentLocationIntensityDisplay.result(intensity: $intensity, lpgmIntensity: $lpgmIntensity, stations: $stations, lpgmStations: $lpgmStations)';
 }
 
 
@@ -283,7 +301,7 @@ abstract mixin class $CurrentLocationIntensityDisplayResultCopyWith<$Res> implem
   factory $CurrentLocationIntensityDisplayResultCopyWith(CurrentLocationIntensityDisplayResult value, $Res Function(CurrentLocationIntensityDisplayResult) _then) = _$CurrentLocationIntensityDisplayResultCopyWithImpl;
 @useResult
 $Res call({
- JmaIntensity intensity, JmaLpgmIntensity? lpgmIntensity
+ JmaIntensity intensity, JmaLpgmIntensity? lpgmIntensity, List<StationIntensityNode> stations, List<StationLpgmIntensityNode> lpgmStations
 });
 
 
@@ -300,11 +318,13 @@ class _$CurrentLocationIntensityDisplayResultCopyWithImpl<$Res>
 
 /// Create a copy of CurrentLocationIntensityDisplay
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? intensity = null,Object? lpgmIntensity = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? intensity = null,Object? lpgmIntensity = freezed,Object? stations = null,Object? lpgmStations = null,}) {
   return _then(CurrentLocationIntensityDisplayResult(
 intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,
+as JmaLpgmIntensity?,stations: null == stations ? _self._stations : stations // ignore: cast_nullable_to_non_nullable
+as List<StationIntensityNode>,lpgmStations: null == lpgmStations ? _self._lpgmStations : lpgmStations // ignore: cast_nullable_to_non_nullable
+as List<StationLpgmIntensityNode>,
   ));
 }
 

@@ -26,8 +26,15 @@ class ColorJsonConverter implements JsonConverter<Color, String> {
 
   @override
   String toJson(Color color) {
-    // #AARRGGBB 形式で出力
-    return '#${color.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase()}';
+    final argb = color.toARGB32();
+    final alpha = (argb >> 24) & 0xFF;
+    if (alpha == 0xFF) {
+      // 不透明な場合は #RRGGBB 形式で出力
+      final rgb = argb & 0xFFFFFF;
+      return '#${rgb.toRadixString(16).padLeft(6, '0').toUpperCase()}';
+    }
+    // 半透明な場合は #AARRGGBB 形式で出力
+    return '#${argb.toRadixString(16).padLeft(8, '0').toUpperCase()}';
   }
 }
 

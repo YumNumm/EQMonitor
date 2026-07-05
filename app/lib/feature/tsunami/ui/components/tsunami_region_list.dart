@@ -91,7 +91,7 @@ class _ForecastRegionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final observedStations = region.stations
         .where(
           (s) =>
@@ -104,7 +104,7 @@ class _ForecastRegionCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 2),
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: color.outlineSoft),
+        side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -116,7 +116,7 @@ class _ForecastRegionCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: designSystem.textColor.primary,
+                color: designSystem.colorTheme.onSurface,
               ),
             ),
           ),
@@ -188,7 +188,10 @@ class _ForecastDetails extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 4),
       child: Text(
         parts.join('\n'),
-        style: TextStyle(fontSize: 13, color: designSystem.textColor.secondary),
+        style: TextStyle(
+          fontSize: 13,
+          color: designSystem.colorTheme.onSurfaceVariant,
+        ),
       ),
     );
   }
@@ -226,14 +229,14 @@ class _ObservationExpansionState extends State<_ObservationExpansion> {
                 Icon(
                   _expanded ? Icons.expand_less : Icons.expand_more,
                   size: 18,
-                  color: designSystem.textColor.secondary,
+                  color: designSystem.colorTheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   '観測点を表示 (${widget.stations.length})',
                   style: TextStyle(
                     fontSize: 13,
-                    color: designSystem.textColor.secondary,
+                    color: designSystem.colorTheme.onSurfaceVariant,
                   ),
                 ),
               ],

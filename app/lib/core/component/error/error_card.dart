@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/component/error/error_message_builder.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class ErrorCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
     final message = ref
         .read(errorMessageBuilderProvider)
         .build(
@@ -42,7 +43,7 @@ class ErrorCard extends ConsumerWidget {
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: colorScheme.surfaceContainerHighest,
+      color: designSystem.colorTheme.surfaceContainerHighest,
       elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -50,7 +51,10 @@ class ErrorCard extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.error_outline_rounded, color: colorScheme.error),
+            Icon(
+              Icons.error_outline_rounded,
+              color: designSystem.colorTheme.error,
+            ),
             const SizedBox(height: 8),
             Text(
               title ?? 'エラーが発生しました',

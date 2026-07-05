@@ -1,15 +1,16 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/app_theme.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_expression.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('buildIntensityMatchExpression', () {
-    late IntensityColorModel colorModel;
+    late IntensityColors colorModel;
 
     setUp(() {
-      colorModel = IntensityColorModel.jma();
+      colorModel = AppTheme.eqmonitorDefault().light!.intensity;
     });
 
     test('空の pairs は透明色のみのフォールバックを返す', () {

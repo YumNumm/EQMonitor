@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -41,7 +42,7 @@ class MagnitudeFilterChip extends StatelessWidget {
           ? null
           : () => onChanged?.call(initialMin, initialMax),
       selected: !range.isAllSelected,
-      selectedColor: Theme.of(context).colorScheme.secondaryContainer,
+      selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
   }
 }
@@ -61,6 +62,7 @@ class _MagnitudeFilterModal extends HookWidget {
     final max = useState<double>(currentMax ?? MagnitudeFilterChip.initialMax);
 
     final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     final sheetBar = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       width: 36,
@@ -68,7 +70,7 @@ class _MagnitudeFilterModal extends HookWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.onSurface,
+        color: designSystem.colorTheme.onSurface,
         boxShadow: const <BoxShadow>[
           BoxShadow(color: Colors.black12, blurRadius: 12),
         ],

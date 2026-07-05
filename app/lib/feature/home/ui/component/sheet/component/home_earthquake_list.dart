@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -8,19 +8,17 @@ import 'package:flutter/material.dart';
 class HomeEarthquakeList extends StatelessWidget {
   const HomeEarthquakeList({
     required this.earthquakes,
-    required this.intensityColor,
     this.showCurrentLocationIntensity = false,
     super.key,
   });
 
   final List<EarthquakePartial> earthquakes;
   final bool showCurrentLocationIntensity;
-  final IntensityColorModel intensityColor;
 
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final textColor = designSystem.textColor;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -31,19 +29,22 @@ class HomeEarthquakeList extends StatelessWidget {
             (item) => InkWell(
               borderRadius: BorderRadius.circular(shape.md),
               onTap: () async => EarthquakeHistoryDetailsRoute(
-                eventId: item.eventId,
+                eventId: item.earthquake.eventId,
               ).push<void>(context),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: spacing.lg),
                 child: EarthquakeHistoryListTile(
-                  intensityColor: intensityColor,
                   visualDensity: .compact,
                   item: item,
+                  searchParameter: EarthquakeHistoryParameter.all(
+                    sortBy: .eventId,
+                    sortOrder: .desc,
+                  ),
                   showBackgroundColor: false,
                   intensityIconSize: 32,
-                  titleTextColor: textColor.primary,
-                  descriptionTextColor: textColor.secondary,
-                  magnitudeTextColor: textColor.primary,
+                  titleTextColor: colorTheme.onSurface,
+                  descriptionTextColor: colorTheme.onSurfaceVariant,
+                  magnitudeTextColor: colorTheme.onSurface,
                   dense: true,
                   contentPadding: .zero,
                   showCurrentLocationIntensity: showCurrentLocationIntensity,

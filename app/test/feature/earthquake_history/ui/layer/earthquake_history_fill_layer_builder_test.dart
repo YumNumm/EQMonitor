@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
@@ -14,7 +14,7 @@ import 'package:test/test.dart';
 void main() {
   const resolver = EarthquakeHistoryMapLayerModeResolver();
   const builder = EarthquakeHistoryFillLayerBuilder(modeResolver: resolver);
-  final colorModel = IntensityColorModel.jma();
+  final colorModel = AppTheme.eqmonitorDefault().light!.intensity;
   const parameter = EarthquakeHistoryMapLayerParameter();
 
   // ──────────────────────────────────────────────

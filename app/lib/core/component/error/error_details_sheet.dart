@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eqmonitor/core/component/error/error_diagnostics.dart';
 import 'package:eqmonitor/core/component/error/error_message_builder.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -43,6 +44,7 @@ class _ErrorDetailsSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     final summary = ref.read(errorMessageBuilderProvider).build(error: error);
     final deviceId = switch (ref.watch(deviceIdProvider)) {
       AsyncData(:final value) => value,
@@ -79,7 +81,7 @@ class _ErrorDetailsSheet extends ConsumerWidget {
                 child: SelectableText(
                   diagnostics,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: designSystem.colorTheme.onSurfaceVariant,
                   ),
                 ),
               ),

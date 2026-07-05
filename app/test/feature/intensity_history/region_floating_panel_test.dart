@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
@@ -39,8 +40,13 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(
-          home: Scaffold(
+        child: MaterialApp(
+          theme: ThemeData.light().copyWith(
+            extensions: <ThemeExtension<dynamic>>[
+              DesignSystemThemeExtension.light(),
+            ],
+          ),
+          home: const Scaffold(
             body: RegionFloatingPanel(),
           ),
         ),
@@ -76,8 +82,13 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(
-          home: Scaffold(
+        child: MaterialApp(
+          theme: ThemeData.light().copyWith(
+            extensions: <ThemeExtension<dynamic>>[
+              DesignSystemThemeExtension.light(),
+            ],
+          ),
+          home: const Scaffold(
             body: RegionFloatingPanel(),
           ),
         ),
@@ -115,8 +126,13 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(
-          home: Scaffold(
+        child: MaterialApp(
+          theme: ThemeData.light().copyWith(
+            extensions: <ThemeExtension<dynamic>>[
+              DesignSystemThemeExtension.light(),
+            ],
+          ),
+          home: const Scaffold(
             body: RegionFloatingPanel(),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 
 class IntensityHistoryNavigationBackButton extends StatelessWidget {
@@ -9,7 +10,7 @@ class IntensityHistoryNavigationBackButton extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return SafeArea(
       child: Padding(
@@ -19,7 +20,7 @@ class IntensityHistoryNavigationBackButton extends StatelessWidget {
             shape: WidgetStatePropertyAll(
               RoundedSuperellipseBorder(
                 side: BorderSide(
-                  color: colorScheme.primary.withValues(alpha: 0.2),
+                  color: colorTheme.primary.withValues(alpha: 0.2),
                 ),
                 borderRadius: BorderRadius.circular(128),
               ),
@@ -28,7 +29,7 @@ class IntensityHistoryNavigationBackButton extends StatelessWidget {
           tooltip: '戻る',
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
-          color: colorScheme.primary,
+          color: colorTheme.primary,
           padding: const EdgeInsets.all(12),
         ),
       ),

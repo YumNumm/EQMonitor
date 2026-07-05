@@ -236,7 +236,7 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
             'fill-opacity': 0.1,
           },
         ),
-        belowLayerId: BaseLayer.areaForecastLocalELine.name,
+        belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
       ),
     ).wait;
   }

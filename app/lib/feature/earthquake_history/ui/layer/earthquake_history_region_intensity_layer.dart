@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
+import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class EarthquakeHistoryRegionIntensityLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-    final colorModel = ref.watch(intensityColorProvider);
+    final colorModel = ref.watch(activeColorSetProvider).intensity;
     final enqueue = useMapOperationQueue();
 
     useEffect(
@@ -97,7 +97,7 @@ class EarthquakeHistoryRegionIntensityLayer extends HookConsumerWidget {
 
   List<Object> _buildFillColorExpression(
     EarthquakeIntensity? intensity,
-    IntensityColorModel colorModel,
+    IntensityColors colorModel,
   ) {
     final pairs = intensity?.forecastLocalEIntensityPairs ?? [];
     final args = <Object>[

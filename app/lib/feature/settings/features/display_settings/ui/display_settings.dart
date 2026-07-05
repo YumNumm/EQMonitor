@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
@@ -32,20 +33,11 @@ class _Body extends StatelessWidget {
           children: [
             const SettingsSectionHeader(text: '配色設定'),
             const _ThemeSelector(),
-            const Divider(),
             ListTile(
-              title: const Text('震度アイコン配色設定'),
-              leading: const Icon(Icons.color_lens),
-              onTap: () async =>
-                  const ColorSchemeConfigRoute().push<void>(context),
-            ),
-            ListTile(
-              title: const Text('推計震度配色設定'),
-              subtitle: const Text('地図上の推計震度レイヤーの色'),
-              leading: const Icon(Icons.map),
-              onTap: () async =>
-                  const EstimatedIntensityColorConfigRoute()
-                      .push<void>(context),
+              title: const Text('テーマ設定'),
+              subtitle: const Text('配色プリセットの選択・カスタム編集・JSON入出力'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => const ThemeSettingsRoute().go(context),
             ),
           ],
         ),
@@ -128,7 +120,7 @@ class _ThemeSelector extends ConsumerWidget {
     );
 
     return BorderedContainer(
-      accentColor: Theme.of(context).colorScheme.secondaryContainer,
+      accentColor: context.designSystem.colorTheme.secondaryContainer,
       margin: const EdgeInsets.all(16),
       child: Column(
         children: [

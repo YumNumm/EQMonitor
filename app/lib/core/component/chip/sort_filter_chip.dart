@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +9,17 @@ class SortFilterChip extends StatelessWidget {
     this.sortBy,
     this.sortOrder,
     this.onChanged,
+    this.sortByLocked = false,
     super.key,
   });
 
   final EarthquakeSortBy? sortBy;
   final SortOrder? sortOrder;
   final void Function(EarthquakeSortBy?, SortOrder?)? onChanged;
+
+  /// true のとき、モーダル内の並び替え項目選択を非表示にする。
+  /// 地域絞り込み中など sortBy が固定される場合に使用する。
+  final bool sortByLocked;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +36,7 @@ class SortFilterChip extends StatelessWidget {
               builder: (context) => _SortFilterModal(
                 currentSortBy: sortBy,
                 currentSortOrder: sortOrder,
+                sortByLocked: sortByLocked,
               ),
             );
         if (result != null) {
@@ -44,16 +51,21 @@ class SortFilterChip extends StatelessWidget {
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(null, null),
       selected: !isDefault,
-      selectedColor: Theme.of(context).colorScheme.secondaryContainer,
+      selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
   }
 }
 
 class _SortFilterModal extends HookWidget {
-  const _SortFilterModal({this.currentSortBy, this.currentSortOrder});
+  const _SortFilterModal({
+    this.currentSortBy,
+    this.currentSortOrder,
+    this.sortByLocked = false,
+  });
 
   final EarthquakeSortBy? currentSortBy;
   final SortOrder? currentSortOrder;
+  final bool sortByLocked;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +73,7 @@ class _SortFilterModal extends HookWidget {
     final sortOrder = useState<SortOrder>(currentSortOrder ?? .desc);
 
     final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     final sheetBar = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       width: 36,
@@ -68,7 +81,7 @@ class _SortFilterModal extends HookWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.onSurface,
+        color: designSystem.colorTheme.onSurface,
         boxShadow: const <BoxShadow>[
           BoxShadow(color: Colors.black12, blurRadius: 12),
         ],
@@ -92,24 +105,25 @@ class _SortFilterModal extends HookWidget {
               ),
             ),
             const SizedBox(height: 8),
-            RadioGroup<EarthquakeSortBy>(
-              groupValue: sortBy.value,
-              onChanged: (value) {
-                if (value != null) {
-                  sortBy.value = value;
-                }
-              },
-              child: Column(
-                mainAxisSize: .min,
-                children: [
-                  for (final item in EarthquakeSortBy.values)
-                    RadioListTile<EarthquakeSortBy>(
-                      title: Text(item.label),
-                      value: item,
-                    ),
-                ],
+            if (!sortByLocked)
+              RadioGroup<EarthquakeSortBy>(
+                groupValue: sortBy.value,
+                onChanged: (value) {
+                  if (value != null) {
+                    sortBy.value = value;
+                  }
+                },
+                child: Column(
+                  mainAxisSize: .min,
+                  children: [
+                    for (final item in EarthquakeSortBy.values)
+                      RadioListTile<EarthquakeSortBy>(
+                        title: Text(item.label),
+                        value: item,
+                      ),
+                  ],
+                ),
               ),
-            ),
             const Divider(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),

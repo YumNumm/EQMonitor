@@ -1,5 +1,7 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'current_location_intensity_display.freezed.dart';
@@ -17,6 +19,12 @@ sealed class CurrentLocationIntensityDisplay
   const factory CurrentLocationIntensityDisplay.result({
     required JmaIntensity intensity,
     required JmaLpgmIntensity? lpgmIntensity,
+
+    /// 市区町村のすべての観測点を含むことに注意
+    required List<StationIntensityNode> stations,
+
+    /// 市区町村のすべての観測点を含むことに注意
+    required List<StationLpgmIntensityNode> lpgmStations,
   }) = CurrentLocationIntensityDisplayResult;
 
   /// 現在地に対応する震度がない。

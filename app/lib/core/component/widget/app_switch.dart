@@ -18,12 +18,11 @@ class AppSwitch extends HookWidget {
   Widget build(BuildContext context) {
     final pressed = useState(false);
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final shape = designSystem.shape;
-    final theme = Theme.of(context);
     final isEnabled = onChanged != null;
 
-    final offThumbColor = color.backgroundSubtle;
+    final offThumbColor = colorTheme.surfaceContainer;
     const onThumbColor = Color(0xFFC9D8F8);
     const offIconColor = Color(0xFFC9D8F8);
     const onIconColor = Color(0xFF48678F);
@@ -74,19 +73,19 @@ class AppSwitch extends HookWidget {
                     acts: [
                       .decorate(
                         color: .tween(
-                          color.surfaceCard,
-                          color.surfaceEmphasis,
+                          colorTheme.surfaceContainerHigh,
+                          colorTheme.surfaceContainerHighest,
                         ),
                         borderRadius: .fixed(
                           BorderRadius.circular(shape.pill),
                         ),
                         border: .tween(
                           Border.all(
-                            color: color.outlineSoft,
+                            color: colorTheme.outlineVariant,
                             width: 2,
                           ),
                           Border.all(
-                            color: theme.colorScheme.primary.withValues(
+                            color: colorTheme.primary.withValues(
                               alpha: 0.5,
                             ),
                             width: 0,

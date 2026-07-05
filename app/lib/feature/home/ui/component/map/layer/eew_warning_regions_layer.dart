@@ -41,60 +41,51 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
     latestCodes.value = codes;
     final enqueue = useMapOperationQueue();
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
+      unawaited(
+        enqueue(() async {
+          await styleController.addLayer(
+            FillStyleLayer(
+              id: _layerId,
+              sourceId: 'eqmonitor_map',
+              sourceLayerId: 'areaForecastLocalEew',
+              filter: buildEewAreaCodeFilter(codes),
+              paint: const {'fill-color': '#FF0000', 'fill-opacity': 0.25},
+            ),
+          );
+          isInitialized.value = true;
+          await styleController.updateFilter(
+            id: _layerId,
+            filter: buildEewAreaCodeFilter(latestCodes.value),
+          );
+        }),
+      );
+
+      return () {
         unawaited(
           enqueue(() async {
-            await styleController.addLayer(
-              FillStyleLayer(
-                id: _layerId,
-                sourceId: 'eqmonitor_map',
-                sourceLayerId: 'areaForecastLocalEew',
-                filter: buildEewAreaCodeFilter(codes),
-                paint: const {
-                  'fill-color': '#FF0000',
-                  'fill-opacity': 0.25,
-                },
-              ),
-            );
-            isInitialized.value = true;
-            await styleController.updateFilter(
-              id: _layerId,
-              filter: buildEewAreaCodeFilter(latestCodes.value),
-            );
+            await styleController.removeLayer(_layerId);
           }),
         );
+      };
+    }, [styleController]);
 
-        return () {
-          unawaited(
-            enqueue(() async {
-              await styleController.removeLayer(_layerId);
-            }),
-          );
-        };
-      },
-      [styleController],
-    );
-
-    useEffect(
-      () {
-        if (styleController == null || !isInitialized.value) {
-          return null;
-        }
-        unawaited(
-          styleController.updateFilter(
-            id: _layerId,
-            filter: buildEewAreaCodeFilter(codes),
-          ),
-        );
+    useEffect(() {
+      if (styleController == null || !isInitialized.value) {
         return null;
-      },
-      [styleController, codes],
-    );
+      }
+      unawaited(
+        styleController.updateFilter(
+          id: _layerId,
+          filter: buildEewAreaCodeFilter(codes),
+        ),
+      );
+      return null;
+    }, [styleController, codes]);
 
     return const SizedBox.shrink();
   }

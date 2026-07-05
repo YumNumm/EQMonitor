@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -698,10 +699,10 @@ class _MapControllerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Card(
-      color: colorScheme.surfaceContainerHighest,
+      color: colorTheme.surfaceContainerHighest,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
       shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.circular(12)),

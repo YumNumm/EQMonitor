@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/collapsible_segmented_control.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/estimated_intensity_notice_content.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:flutter/material.dart';
@@ -70,12 +71,9 @@ class EarthquakeIntensityCard extends StatelessWidget {
           switch (displayMode) {
             .jma => JmaIntensityContent(item: item),
             .lpgm => LpgmIntensityContent(item: item),
-            .estimated => const SizedBox(
-              height: 32,
-              width: .infinity,
-              child: Placeholder(
-                strokeWidth: 1,
-              ),
+            .estimated => const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: EstimatedIntensityNoticeContent(),
             ),
           },
         ],

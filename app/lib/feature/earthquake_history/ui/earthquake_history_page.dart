@@ -1,11 +1,9 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
@@ -24,11 +22,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: _SliverListBody(
-        initialParameter: initialParameter,
-      ),
-    );
+    return Scaffold(body: _SliverListBody(initialParameter: initialParameter));
   }
 }
 
@@ -40,7 +34,11 @@ class _SliverListBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(
-      initialParameter ?? const EarthquakeHistoryParameter(),
+      initialParameter ??
+          const EarthquakeHistoryParameter.all(
+            sortBy: .eventId,
+            sortOrder: .desc,
+          ),
     );
     final dataSourceAsync = ref.watch(
       earthquakeHistoryDataSourceProvider(parameter.value),
@@ -50,12 +48,10 @@ class _SliverListBody extends HookConsumerWidget {
       loading: () => const _EarthquakeHistorySkeleton(),
       error: (error, _) => ErrorCard(
         error: error,
-        onReload: () async => ref.refresh(
-          earthquakeHistoryDataSourceProvider(parameter.value),
-        ),
+        onReload: () async =>
+            ref.refresh(earthquakeHistoryDataSourceProvider(parameter.value)),
       ),
       data: (dataSource) => _PagingBody(
-        intensityColor: ref.watch(intensityColorProvider),
         dataSource: dataSource,
         parameter: parameter,
         onParameterChanged: (result) => parameter.value = result,
@@ -71,19 +67,15 @@ class _PagingBody extends StatelessWidget {
     required this.parameter,
     required this.onParameterChanged,
     required this.onRefresh,
-    required this.intensityColor,
   });
 
-  final EarthquakeHistoryDataSource dataSource;
+  final GroupedDataSource<String?, String, EarthquakePartial> dataSource;
   final ValueNotifier<EarthquakeHistoryParameter> parameter;
   final ValueChanged<EarthquakeHistoryParameter> onParameterChanged;
   final Future<void> Function() onRefresh;
-  final IntensityColorModel intensityColor;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return RefreshIndicator(
       onRefresh: onRefresh,
       edgeOffset:
@@ -109,20 +101,16 @@ class _PagingBody extends StatelessWidget {
               onChanged: onParameterChanged,
             ),
           ),
-          SliverGroupedPagingList<String?, String, EarthquakeHistoryItem>(
+          SliverGroupedPagingList<String?, String, EarthquakePartial>(
             dataSource: dataSource,
             stickyHeader: true,
-            headerBuilder: (_, date, _) => _DateHeader(
-              date: date,
-            ),
+            headerBuilder: (_, date, _) => _DateHeader(date: date),
             itemBuilder: (context, item, globalIndex, localIndex) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 EarthquakeHistoryListTile(
-                  item: item.earthquake,
-                  areaInfo: item.areaInfo,
-                  areaName: item.areaInfo?.name,
-                  intensityColor: intensityColor,
+                  item: item,
+                  searchParameter: parameter.value,
                   onTap: () async => EarthquakeHistoryDetailsRoute(
                     eventId: item.earthquake.eventId,
                   ).push<void>(context),
@@ -131,7 +119,7 @@ class _PagingBody extends StatelessWidget {
                 Divider(
                   height: 0,
                   thickness: 0,
-                  color: theme.colorScheme.onInverseSurface,
+                  color: context.designSystem.colorTheme.onInverseSurface,
                 ),
               ],
             ),
@@ -186,35 +174,30 @@ class _EarthquakeHistorySkeleton extends StatelessWidget {
     return Skeletonizer(
       child: scrollable
           ? ListView(children: tiles)
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: tiles,
-            ),
+          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
     );
   }
 }
 
 class _DateHeader extends StatelessWidget {
-  const _DateHeader({
-    required this.date,
-  });
+  const _DateHeader({required this.date});
 
   final String date;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final spacing = theme.designSystemThemeExtension.spacing;
+    final designSystem = context.designSystem;
     return Container(
-      color: theme.colorScheme.surfaceContainer,
+      color: designSystem.colorTheme.surfaceContainer,
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.lg,
-        vertical: spacing.xs,
+        horizontal: designSystem.spacing.lg,
+        vertical: designSystem.spacing.xs,
       ),
       child: Text(
         date,
         style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.onSurface,
+          color: designSystem.colorTheme.onSurface,
         ),
       ),
     );

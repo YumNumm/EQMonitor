@@ -1,13 +1,12 @@
 import 'dart:ui';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
-import 'package:eqmonitor/feature/intensity_history/ui/components/prefecture_detail_modal.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -51,7 +50,7 @@ class _PrefecturePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: theme.colorScheme.surface.withValues(alpha: 0.9),
+      color: context.designSystem.colorTheme.surface.withValues(alpha: 0.9),
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -108,7 +107,7 @@ class _CityPanel extends ConsumerWidget {
     final displayName = selectedCity?.name ?? prefectureName;
 
     return Card(
-      color: theme.colorScheme.surface.withValues(alpha: 0.9),
+      color: context.designSystem.colorTheme.surface.withValues(alpha: 0.9),
       elevation: 0,
       clipBehavior: .hardEdge,
       child: BackdropFilter(
@@ -119,7 +118,9 @@ class _CityPanel extends ConsumerWidget {
             tileMode: TileMode.mirror,
           ),
           inner: ColorFilter.mode(
-            theme.colorScheme.surfaceContainerLow.withValues(alpha: 0.7),
+            context.designSystem.colorTheme.surfaceContainerLow.withValues(
+              alpha: 0.7,
+            ),
             BlendMode.srcATop,
           ),
         ),
@@ -135,12 +136,7 @@ class _CityPanel extends ConsumerWidget {
               );
               return;
             }
-            await showPrefectureDetailModal(
-              context,
-              prefectureCode: prefectureCode,
-              prefectureName: prefectureName,
-              summary: prefectureEntry,
-            );
+            throw UnimplementedError('TODO: 都道府県詳細モーダルを表示する');
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -149,7 +145,7 @@ class _CityPanel extends ConsumerWidget {
               children: [
                 if (entry != null) ...[
                   JmaIntensityIcon(
-                    intensity: entry.intensity.toJmaIntensity,
+                    intensity: entry.intensity,
                     type: IntensityIconType.filled,
                     size: 36,
                   ),
@@ -163,7 +159,8 @@ class _CityPanel extends ConsumerWidget {
                       Text(
                         prefectureName,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                          color:
+                              context.designSystem.colorTheme.onSurfaceVariant,
                         ),
                       ),
                     Text(
@@ -176,9 +173,8 @@ class _CityPanel extends ConsumerWidget {
                       Text(
                         '${entry.count}件',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.7,
-                          ),
+                          color: context.designSystem.colorTheme.onSurface
+                              .withValues(alpha: 0.7),
                         ),
                       ),
                   ],

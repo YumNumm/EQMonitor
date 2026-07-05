@@ -1,9 +1,7 @@
 import 'package:eqmonitor/core/api/api_client_provider.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/city_intensity_page.dart';
+import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/prefecture_intensity_page.dart';
-import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_response.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,15 +10,22 @@ part 'intensity_highest_repository.g.dart';
 @Riverpod(keepAlive: true)
 Future<IntensityHighestRepository> intensityHighestRepository(Ref ref) async {
   final apiClient = await ref.watch(apiClientProvider.future);
-  return IntensityHighestRepository(earthquake: apiClient.earthquake);
+  final parameter = await ref.watch(jmaParameterProvider.future);
+  return IntensityHighestRepository(
+    earthquake: apiClient.earthquake,
+    parameter: parameter.earthquake,
+  );
 }
 
-/// 最高震度 API をまとめる薄いラッパ。
 class IntensityHighestRepository {
-  IntensityHighestRepository({required EarthquakeApiClient earthquake})
-    : _earthquake = earthquake;
+  const IntensityHighestRepository({
+    required EarthquakeApiClient earthquake,
+    required EarthquakeParameter parameter,
+  }) : _earthquake = earthquake,
+       _parameter = parameter;
 
   final EarthquakeApiClient _earthquake;
+  final EarthquakeParameter _parameter;
 
   /// 全都道府県の過去最高震度一覧を取得する。
   Future<List<HighestIntensityEntry>> fetchPrefectureHighest({
@@ -28,7 +33,7 @@ class IntensityHighestRepository {
   }) async {
     final response = await (client?.earthquake ?? _earthquake)
         .getV2EarthquakeIntensityPrefectureHighest();
-    return response.data.items.map(HighestIntensityEntry.fromApi).toList();
+    return response.data.toAppResponse(parameter: _parameter).items;
   }
 
   /// 指定都道府県内の市区町村ごとの過去最高震度一覧を取得する。
@@ -40,56 +45,6 @@ class IntensityHighestRepository {
         .getV2EarthquakeIntensityPrefectureCodeCityHighest(
           code: prefectureCode,
         );
-    return response.data.items.map(HighestIntensityEntry.fromApi).toList();
-  }
-
-  /// 指定市区町村の過去地震一覧を取得する（ページネーション）。
-  Future<CityIntensityPage> fetchCityIntensityList({
-    required String cityCode,
-    required String cityName,
-    required EarthquakeParameter parameter,
-    required int limit,
-    String? cursor,
-  }) async {
-    final response = await _earthquake.getV2EarthquakeIntensityCityCode(
-      code: cityCode,
-      sortBy: EarthquakeSortBy.maxIntensity,
-      limit: limit.toString(),
-      cursor: cursor,
-    );
-    final appResponse = response.data.toAppResponse(
-      parameter: parameter,
-      areaCode: cityCode,
-      areaName: cityName,
-    );
-    return CityIntensityPage(
-      items: appResponse.items,
-      nextToken: appResponse.nextToken,
-    );
-  }
-
-  /// 指定都道府県の過去地震一覧を取得する（ページネーション）。
-  Future<PrefectureIntensityPage> fetchPrefectureIntensityList({
-    required String prefectureCode,
-    required String prefectureName,
-    required EarthquakeParameter parameter,
-    required int limit,
-    String? cursor,
-  }) async {
-    final response = await _earthquake.getV2EarthquakeIntensityPrefectureCode(
-      code: prefectureCode,
-      sortBy: EarthquakeSortBy.maxIntensity,
-      limit: limit.toString(),
-      cursor: cursor,
-    );
-    final appResponse = response.data.toAppResponse(
-      parameter: parameter,
-      areaCode: prefectureCode,
-      areaName: prefectureName,
-    );
-    return PrefectureIntensityPage(
-      items: appResponse.items,
-      nextToken: appResponse.nextToken,
-    );
+    return response.data.toAppResponse(parameter: _parameter).items;
   }
 }

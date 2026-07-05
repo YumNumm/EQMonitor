@@ -10,11 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'map_camera_state_provider.g.dart';
 
-enum HomeMapCameraUpdateAction {
-  fitToEews,
-  returnToHome,
-  none,
-}
+enum HomeMapCameraUpdateAction { fitToEews, returnToHome, none }
 
 HomeMapCameraUpdateAction resolveHomeMapCameraUpdateAction({
   required List<EewTelegramItem>? previous,
@@ -95,9 +91,7 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     state = state.copyWith(isAtHome: false);
   }
 
-  Future<void> _returnToHome({
-    required int transitionId,
-  }) async {
+  Future<void> _returnToHome({required int transitionId}) async {
     if (_controller == null) {
       return;
     }
@@ -110,9 +104,7 @@ class HomeMapCameraState extends _$HomeMapCameraState {
 
     await _controller?.fitBounds(
       bounds: bounds,
-      nativeDuration: const Duration(
-        milliseconds: 200,
-      ),
+      nativeDuration: const Duration(milliseconds: 200),
       bearing: 0,
       pitch: 0,
       padding: const EdgeInsets.all(4),

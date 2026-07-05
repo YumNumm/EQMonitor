@@ -106,6 +106,11 @@ void main(List<String> args) async {
     }
   });
 
+  await _step('catalog enum メンバー名をパッチ', () async {
+    final modelsDir = Directory('${packageDir.path}/lib/src/models');
+    _patchCatalogEnumMemberNames(modelsDir);
+  });
+
   await _step('値のみ union を enum に変換', () async {
     _patchValueOnlyUnionsToEnum(libDir, openapiFile);
   });
@@ -178,6 +183,10 @@ void main(List<String> args) async {
     ], packageDir.path);
   });
 
+  await _step('生成ファイルの末尾空白を除去', () async {
+    _stripTrailingWhitespace(libDir);
+  });
+
   await _step('残存 dynamic の検出', () async {
     _validateNoDynamic(libDir);
   });
@@ -244,6 +253,73 @@ Future<void> _patchGeneratedFiles(Directory libDir) async {
     if (patched != original) {
       file.writeAsStringSync(patched);
       stdout.writeln('  Patched: ${file.path}');
+    }
+  }
+}
+
+void _stripTrailingWhitespace(Directory libDir) {
+  final dartFiles = libDir.listSync(recursive: true).whereType<File>().where((
+    f,
+  ) {
+    if (!f.path.endsWith('.dart')) {
+      return false;
+    }
+    final name = f.uri.pathSegments.last;
+    return name == 'catalog.dart' || name.startsWith('catalog_');
+  });
+
+  for (final file in dartFiles) {
+    final original = file.readAsStringSync();
+    final patched = original.replaceAll(
+      RegExp(r'[ \t]+$', multiLine: true),
+      '',
+    );
+    if (patched != original) {
+      file.writeAsStringSync(patched);
+      stdout.writeln('  stripped: ${file.path}');
+    }
+  }
+}
+
+/// swagger_parser は大小文字だけが異なる enum 値を同じ Dart メンバー名にする。
+/// 震度データベースの catalog には `K`/`k`, `D`/`d` のような値があるため、
+/// 生成直後に明示的なメンバー名へ置換する。
+void _patchCatalogEnumMemberNames(Directory modelsDir) {
+  if (!modelsDir.existsSync()) {
+    return;
+  }
+
+  final replacementsByFile = {
+    'catalog_determination_flag.dart': {
+      "k('K')": "upperK('K')",
+      "s('S')": "upperS('S')",
+      "k('k')": "lowerK('k')",
+      "s('s')": "lowerS('s')",
+      "a('A')": "upperA('A')",
+      "a('a')": "lowerA('a')",
+    },
+    'catalog_magnitude_type.dart': {
+      "d('D')": "upperD('D')",
+      "d('d')": "lowerD('d')",
+      "v('V')": "upperV('V')",
+      "v('v')": "lowerV('v')",
+    },
+  };
+
+  for (final entry in replacementsByFile.entries) {
+    final file = File('${modelsDir.path}/${entry.key}');
+    if (!file.existsSync()) {
+      continue;
+    }
+
+    var content = file.readAsStringSync();
+    final original = content;
+    for (final replacement in entry.value.entries) {
+      content = content.replaceAll(replacement.key, replacement.value);
+    }
+    if (content != original) {
+      file.writeAsStringSync(content);
+      stdout.writeln('  patched: ${file.path}');
     }
   }
 }

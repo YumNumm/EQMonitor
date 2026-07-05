@@ -1,12 +1,11 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class JmaLpgmIntensityIcon extends ConsumerWidget {
+class JmaLpgmIntensityIcon extends StatelessWidget {
   const JmaLpgmIntensityIcon({
     required this.intensity,
     required this.type,
@@ -21,10 +20,10 @@ class JmaLpgmIntensityIcon extends ConsumerWidget {
   final String? customText;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel = ref.watch(intensityColorProvider);
-    final colorScheme = intensityColorModel.fromJmaLpgmIntensity(intensity);
-    final (fg, bg) = (colorScheme.foreground, colorScheme.background);
+  Widget build(BuildContext context) {
+    final colorEntry = context.designSystem.colorTheme.intensity
+        .fromJmaLpgmIntensity(intensity);
+    final (fg, bg) = (colorEntry.resolvedForeground, colorEntry.background);
 
     final borderColor = Color.lerp(bg, fg, 0.3) ?? bg;
     return switch (type) {

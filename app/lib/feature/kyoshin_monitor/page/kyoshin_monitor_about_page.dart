@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -129,11 +130,10 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return Card(
-      color: isWarning ? colorScheme.errorContainer : null,
+      color: isWarning ? designSystem.colorTheme.errorContainer : null,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -143,7 +143,7 @@ class _InfoCard extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 child: Icon(
                   Icons.warning_rounded,
-                  color: colorScheme.onErrorContainer.withValues(alpha: 0.2),
+                  color: designSystem.colorTheme.onErrorContainer.withValues(alpha: 0.2),
                   size: 176,
                 ),
               ),
@@ -157,7 +157,7 @@ class _InfoCard extends StatelessWidget {
                   if (i > 0) const SizedBox(height: 8),
                   _InfoItemWidget(
                     item: items[i],
-                    textColor: isWarning ? colorScheme.onErrorContainer : null,
+                    textColor: isWarning ? designSystem.colorTheme.onErrorContainer : null,
                   ),
                 ],
                 if (onTapMore != null) ...[
@@ -195,7 +195,7 @@ class _InfoItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
     final textTheme = theme.textTheme;
 
     return Column(
@@ -208,7 +208,7 @@ class _InfoItemWidget extends StatelessWidget {
         Text(
           item.description,
           style: textTheme.bodyMedium?.copyWith(
-            color: (textColor ?? colorScheme.onSurfaceVariant).withValues(
+            color: (textColor ?? designSystem.colorTheme.onSurfaceVariant).withValues(
               alpha: 0.8,
             ),
           ),

@@ -9,9 +9,11 @@
       "status": "NORMAL",
       "info_type": "PUBLICATION",
       "editorial_office": "気象庁",
-      "publishing_office": ["気象庁"],
-      "press_at": "2025-12-15T12:03:00.000Z",
-      "report_at": "2025-12-15T12:03:02.000Z",
+      "publishing_office": [
+        "気象庁"
+      ],
+      "pressed_at": "2025-12-15T12:03:00.000Z",
+      "reported_at": "2025-12-15T12:03:02.000Z",
       "info_kind": "震源・震度に関する情報",
       "info_kind_version": "1.0_0",
       "hash": "stub-hash-vxse53",

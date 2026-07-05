@@ -23,32 +23,26 @@ class HomeScopeSelector extends StatelessWidget {
     };
 
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final shape = designSystem.shape;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: spacing.lg,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: spacing.lg),
       child: Row(
         spacing: spacing.sm,
         children: [
           MenuAnchor(
             style: MenuStyle(
-              padding: WidgetStateProperty.all(
-                .zero,
-              ),
+              padding: WidgetStateProperty.all(.zero),
               backgroundColor: WidgetStatePropertyAll(
-                color.surfaceRaised,
+                colorTheme.surfaceContainerLow,
               ),
               shape: WidgetStateProperty.all(
                 RoundedSuperellipseBorder(
                   borderRadius: BorderRadius.circular(shape.md),
-                  side: BorderSide(
-                    color: color.outlineSoft,
-                  ),
+                  side: BorderSide(color: colorTheme.outlineVariant),
                 ),
               ),
             ),
@@ -56,20 +50,14 @@ class HomeScopeSelector extends StatelessWidget {
               for (final s in HomeEarthquakeHistoryScope.values)
                 MenuItemButton(
                   onPressed: () => onScopeChanged(s),
-                  child: Text(
-                    scopeLabel(s),
-                    style: typography.bodyLarge,
-                  ),
+                  child: Text(scopeLabel(s), style: typography.bodyLarge),
                 ),
             ],
             builder: (context, controller, child) => Row(
               spacing: spacing.sm,
               children: [
                 GestureDetector(
-                  child: Text(
-                    scopeLabel(scope),
-                    style: typography.bodyLarge,
-                  ),
+                  child: Text(scopeLabel(scope), style: typography.bodyLarge),
                   onTap: () {
                     if (controller.isOpen) {
                       controller.close();
@@ -97,7 +85,7 @@ class HomeScopeSelector extends StatelessWidget {
               child: Text(
                 locationName!,
                 style: typography.bodyMedium.copyWith(
-                  color: designSystem.textColor.secondary,
+                  color: designSystem.colorTheme.onSurfaceVariant,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),

@@ -27,11 +27,15 @@
       "intensity_tree": [
         {
           "intensity": "1",
-          "regions": ["9910"]
+          "regions": [
+            "9910"
+          ]
         }
       ]
     },
-    "datasource": "JMA_INTENSITY_DATABASE",
+    "datasources": [
+      "JMA_INTENSITY_DATABASE"
+    ],
     "telegrams": []
   }
 }

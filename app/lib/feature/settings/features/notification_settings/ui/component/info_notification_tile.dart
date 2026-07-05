@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,39 +11,41 @@ void showInfoBottomSheet(
   required String title,
   required List<InfoLink> links,
 }) {
-  unawaited(showModalBottomSheet<void>(
-    context: context,
-    builder: (context) => SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            for (final link in links)
-              ListTile(
-                title: Text(
-                  link.title,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                trailing: const Icon(Icons.open_in_new, size: 18),
-                onTap: () => launchUrl(
-                  Uri.parse(link.url),
-                  mode: LaunchMode.externalApplication,
+  unawaited(
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
-          ],
+              for (final link in links)
+                ListTile(
+                  title: Text(
+                    link.title,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  trailing: const Icon(Icons.open_in_new, size: 18),
+                  onTap: () => launchUrl(
+                    Uri.parse(link.url),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     ),
-  ));
+  );
 }
 
 class InfoNotificationTile extends StatelessWidget {
@@ -65,7 +68,7 @@ class InfoNotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final primaryColor = context.designSystem.colorTheme.primary;
 
     return ListTile(
       title: Text(title),
@@ -107,18 +110,18 @@ class ComingSoonBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer,
+        color: colorTheme.primaryContainer,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         child: Text(
           '準備中',
-          style: TextStyle(color: colorScheme.onPrimaryContainer),
+          style: TextStyle(color: colorTheme.onPrimaryContainer),
         ),
       ),
     );

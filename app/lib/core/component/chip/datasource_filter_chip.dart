@@ -1,15 +1,12 @@
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:flutter/material.dart';
 
 class DatasourceFilterChip extends StatelessWidget {
-  const DatasourceFilterChip({
-    this.datasource,
-    this.onChanged,
-    super.key,
-  });
+  const DatasourceFilterChip({this.datasource, this.onChanged, super.key});
 
-  final EarthquakeDatasource? datasource;
-  final ValueChanged<EarthquakeDatasource?>? onChanged;
+  final EarthquakeDataSource? datasource;
+  final ValueChanged<EarthquakeDataSource?>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +14,7 @@ class DatasourceFilterChip extends StatelessWidget {
 
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<EarthquakeDatasource?>(
+        final result = await showModalBottomSheet<EarthquakeDataSource?>(
           clipBehavior: Clip.antiAlias,
           context: context,
           builder: (context) => _DatasourceFilterModal(current: datasource),
@@ -34,7 +31,7 @@ class DatasourceFilterChip extends StatelessWidget {
           : const Text('データソース'),
       onDeleted: isActive ? () => onChanged?.call(null) : null,
       selected: isActive,
-      selectedColor: Theme.of(context).colorScheme.secondaryContainer,
+      selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
   }
 }
@@ -42,11 +39,12 @@ class DatasourceFilterChip extends StatelessWidget {
 class _DatasourceFilterModal extends StatelessWidget {
   const _DatasourceFilterModal({this.current});
 
-  final EarthquakeDatasource? current;
+  final EarthquakeDataSource? current;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     final sheetBar = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       width: 36,
@@ -54,7 +52,7 @@ class _DatasourceFilterModal extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.onSurface,
+        color: designSystem.colorTheme.onSurface,
         boxShadow: const <BoxShadow>[
           BoxShadow(color: Colors.black12, blurRadius: 12),
         ],
@@ -77,12 +75,12 @@ class _DatasourceFilterModal extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          for (final ds in EarthquakeDatasource.values)
+          for (final ds in EarthquakeDataSource.values)
             ListTile(
               title: Text(ds.label),
               subtitle: Text(ds.description),
               trailing: current == ds
-                  ? Icon(Icons.check, color: theme.colorScheme.primary)
+                  ? Icon(Icons.check, color: designSystem.colorTheme.primary)
                   : null,
               onTap: () => Navigator.of(context).pop(ds),
             ),
@@ -90,7 +88,7 @@ class _DatasourceFilterModal extends StatelessWidget {
             title: const Text('すべて'),
             subtitle: const Text('データソースで絞り込まない'),
             trailing: current == null
-                ? Icon(Icons.check, color: theme.colorScheme.primary)
+                ? Icon(Icons.check, color: designSystem.colorTheme.primary)
                 : null,
             onTap: () => Navigator.of(context).pop(),
           ),
@@ -101,14 +99,14 @@ class _DatasourceFilterModal extends StatelessWidget {
   }
 }
 
-extension on EarthquakeDatasource {
+extension on EarthquakeDataSource {
   String get label => switch (this) {
-    EarthquakeDatasource.jmaIntensityDatabase => '震度データベース',
-    EarthquakeDatasource.jmaDisasterInformationXml => '防災情報XML',
+    EarthquakeDataSource.jmaIntensityDatabase => '震度データベース',
+    EarthquakeDataSource.jmaDisasterInformationXml => '防災情報XML',
   };
 
   String get description => switch (this) {
-    EarthquakeDatasource.jmaIntensityDatabase => 'JMA 震度データベースの地震情報',
-    EarthquakeDatasource.jmaDisasterInformationXml => 'JMA 防災情報XMLの地震情報',
+    EarthquakeDataSource.jmaIntensityDatabase => 'JMA 震度データベースの地震情報',
+    EarthquakeDataSource.jmaDisasterInformationXml => 'JMA 防災情報XMLの地震情報',
   };
 }

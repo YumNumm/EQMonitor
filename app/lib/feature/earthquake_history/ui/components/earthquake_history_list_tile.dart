@@ -1,22 +1,24 @@
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class EarthquakeHistoryListTile extends StatelessWidget {
   const EarthquakeHistoryListTile({
     required this.item,
-    required this.intensityColor,
-    this.areaInfo,
-    this.areaName,
+    required this.searchParameter,
     this.onTap,
     this.showBackgroundColor = true,
     this.intensityIconSize = 40.0,
@@ -31,11 +33,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
   });
 
   final EarthquakePartial item;
-
-  /// 地域検索時にレスポンスに含まれる、検索対象地域の震度情報。
-  /// `areaInfo`と`areaName`はどちらもnot-null もしくは null である必要がある
-  final IntensityAreaInfo? areaInfo;
-  final String? areaName;
+  final EarthquakeHistoryParameter searchParameter;
 
   final void Function()? onTap;
   final bool showBackgroundColor;
@@ -47,23 +45,16 @@ class EarthquakeHistoryListTile extends StatelessWidget {
   final bool dense;
   final EdgeInsets? contentPadding;
   final bool showCurrentLocationIntensity;
-  final IntensityColorModel intensityColor;
 
   @override
   Widget build(BuildContext context) {
-    assert(
-      areaInfo != null && areaName != null ||
-          areaInfo == null && areaName == null,
-      'areaInfoとareaNameはどちらもnot-null もしくは null である必要がある',
-    );
     final theme = Theme.of(context);
+    final intensityColors = context.designSystem.colorTheme.intensity;
 
-    final hypocenter = item.hypocenter;
-    final intensity = item.intensity;
+    final earthquake = item.earthquake;
+    final hypocenter = earthquake.hypocenter;
+    final intensity = earthquake.intensity;
     final maxIntensity = intensity?.maxIntensity;
-
-    // 地震種別はサーバ(earthquake_type)から取得する。
-    final earthquakeType = item.earthquakeType;
 
     final hypoName = hypocenter?.name;
     final hypoDetailName = hypocenter?.detailedName;
@@ -79,7 +70,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
     final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
     final depth = hypocenter?.depth;
     final subTitle =
-        switch ((item.originTime, item.arrivalTime)) {
+        switch ((earthquake.originTime, earthquake.arrivalTime)) {
           (final DateTime originTime, _) =>
             '${dateFormatter.format(originTime.toLocal())}頃発生 ',
           (_, final DateTime arrivalTime) =>
@@ -95,17 +86,14 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         };
 
     final maxIntensityColor = maxIntensity != null
-        ? intensityColor.fromJmaIntensity(maxIntensity).background
+        ? intensityColors.fromJmaIntensity(maxIntensity).background
         : null;
 
-    final tileBaseColor = switch (earthquakeType) {
+    final tileBaseColor = switch (earthquake.earthquakeType) {
       EarthquakeType.distant => _distantColor,
       EarthquakeType.volcano => _volcanoColor,
       EarthquakeType.normal => maxIntensityColor,
     };
-
-    // 地域検索時に、検索対象地域の震度情報をレスポンスからそのまま表示する。
-    final areaIntensity = areaInfo?.intensity;
 
     final magnitude = hypocenter?.magnitude;
 
@@ -141,18 +129,46 @@ class EarthquakeHistoryListTile extends StatelessWidget {
               ],
             ),
           ),
-          if (areaName != null && areaIntensity != null)
+          if (item is! EarthquakePartialNormal)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: _AreaIntensityChip(
-                areaName: areaName!,
-                intensity: areaIntensity,
-                intensityColor: intensityColor,
+              child: Consumer(
+                builder: (context, ref, _) {
+                  final regionSel = searchParameter.regionSelection;
+                  final areaName = regionSel != null
+                      ? ref
+                                .watch(
+                                  regionNameProvider(
+                                    regionSel.$1,
+                                    regionSel.$2,
+                                  ),
+                                )
+                                .whenOrNull(data: (name) => name) ??
+                            regionSel.$2
+                      : '';
+                  return _AreaIntensityChip(
+                    areaName: areaName,
+                    intensity: switch (item) {
+                      EarthquakePartialPrefecture(:final prefectureIntensity) =>
+                        prefectureIntensity,
+                      EarthquakePartialRegion(:final regionIntensity) =>
+                        regionIntensity,
+                      EarthquakePartialCity(:final cityIntensity) =>
+                        cityIntensity,
+                      EarthquakePartialStation(:final stationIntensity) =>
+                        stationIntensity,
+                      EarthquakePartialNormal() => throw StateError(
+                        'EarthquakePartialNormal is not supported',
+                      ),
+                    },
+                    intensityColors: intensityColors,
+                  );
+                },
               ),
             ),
         ],
       ),
-      leading: switch (earthquakeType) {
+      leading: switch (earthquake.earthquakeType) {
         EarthquakeType.distant => _ForeignEarthquakeIcon(
           size: intensityIconSize,
           color: _distantColor,
@@ -183,26 +199,26 @@ class _AreaIntensityChip extends StatelessWidget {
   const _AreaIntensityChip({
     required this.areaName,
     required this.intensity,
-    required this.intensityColor,
+    required this.intensityColors,
   });
 
   final String areaName;
   final JmaIntensity intensity;
-  final IntensityColorModel intensityColor;
+  final IntensityColors intensityColors;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = intensityColor.fromJmaIntensity(intensity);
+    final entry = intensityColors.fromJmaIntensity(intensity);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: scheme.background,
+        color: entry.background,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         '$areaName 震度${intensity.label}',
         style: TextStyle(
-          color: scheme.foreground,
+          color: entry.resolvedForeground,
           fontWeight: FontWeight.bold,
           fontSize: 12,
         ),
@@ -242,11 +258,7 @@ class _ForeignEarthquakeIcon extends StatelessWidget {
           borderRadius: BorderRadius.circular(size / 5),
         ),
         child: Center(
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: size * 0.7,
-          ),
+          child: Icon(icon, color: Colors.white, size: size * 0.7),
         ),
       ),
     );

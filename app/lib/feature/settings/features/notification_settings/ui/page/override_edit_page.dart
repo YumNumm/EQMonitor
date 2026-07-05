@@ -70,7 +70,7 @@ class OverrideEditPage extends HookConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('$message: ${next.error}'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.designSystem.colorTheme.error,
             ),
           );
         }
@@ -311,7 +311,7 @@ class _OverrideTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
@@ -325,7 +325,7 @@ class _OverrideTile extends StatelessWidget {
         direction: DismissDirection.endToStart,
         onDismissed: (_) => onDismissed(),
         background: Card(
-          color: Theme.of(context).colorScheme.error,
+          color: context.designSystem.colorTheme.error,
           shape: RoundedSuperellipseBorder(
             borderRadius: BorderRadius.circular(shape.card),
           ),
@@ -339,12 +339,12 @@ class _OverrideTile extends StatelessWidget {
         ),
         child: Card.outlined(
           margin: EdgeInsets.zero,
-          color: color.surfaceCard,
+          color: colorTheme.surfaceContainerHigh,
           clipBehavior: Clip.antiAlias,
           elevation: 0,
           shape: RoundedSuperellipseBorder(
             borderRadius: BorderRadius.circular(shape.card),
-            side: BorderSide(color: color.outlineSoft),
+            side: BorderSide(color: colorTheme.outlineVariant),
           ),
           child: ListTile(
             onTap: onTap,
@@ -368,13 +368,13 @@ class _IntensityBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
 
     return Container(
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer,
+        color: colorTheme.primaryContainer,
         borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.center,
@@ -382,7 +382,7 @@ class _IntensityBadge extends StatelessWidget {
         intensity.label,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: colorScheme.onPrimaryContainer,
+          color: colorTheme.onPrimaryContainer,
         ),
       ),
     );

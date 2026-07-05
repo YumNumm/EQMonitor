@@ -70,5 +70,7 @@ Map<String, dynamic> _$EarthquakeHistoryListConfigToJson(
 
 const _$RegionSearchTypeEnumMap = {
   RegionSearchType.prefecture: 'prefecture',
+  RegionSearchType.region: 'region',
   RegionSearchType.city: 'city',
+  RegionSearchType.station: 'station',
 };

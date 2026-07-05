@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,7 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(null),
       selected: !isDefault,
-      selectedColor: Theme.of(context).colorScheme.secondaryContainer,
+      selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
   }
 }
@@ -49,6 +50,7 @@ class _EarthquakeTypeFilterModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     final sheetBar = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       width: 36,
@@ -56,7 +58,7 @@ class _EarthquakeTypeFilterModal extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.onSurface,
+        color: designSystem.colorTheme.onSurface,
         boxShadow: const <BoxShadow>[
           BoxShadow(color: Colors.black12, blurRadius: 12),
         ],
@@ -83,7 +85,7 @@ class _EarthquakeTypeFilterModal extends StatelessWidget {
             (type) => ListTile(
               title: Text(type.displayLabel),
               trailing: currentType == type
-                  ? Icon(Icons.check, color: theme.colorScheme.primary)
+                  ? Icon(Icons.check, color: designSystem.colorTheme.primary)
                   : null,
               onTap: () => Navigator.of(context).pop(type),
             ),

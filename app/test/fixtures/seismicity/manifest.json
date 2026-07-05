@@ -1,0 +1,25 @@
+{
+  "layers": [
+    {
+      "type": "geojson",
+      "span": "P1M",
+      "url": "https://static.eqmonitor.app/seismicity/p1m.json",
+      "generated_at": "2026-07-03T00:00:00Z",
+      "count": 2
+    },
+    {
+      "type": "geojson",
+      "span": "P3M",
+      "url": "https://static.eqmonitor.app/seismicity/p3m.json",
+      "generated_at": "2026-07-03T00:00:00Z",
+      "count": 2
+    },
+    {
+      "type": "geojson",
+      "span": "P12M",
+      "url": "https://static.eqmonitor.app/seismicity/p12m.json",
+      "generated_at": "2026-07-03T00:00:00Z",
+      "count": 2
+    }
+  ]
+}

@@ -1,11 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/current_location_intensity_provider.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -40,16 +41,12 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
     }
 
     final cityCode = ref
-        .watch(
-          jmaMapAreaInformationCityInsideProvider(latLng),
-        )
+        .watch(jmaMapAreaInformationCityInsideProvider(latLng))
         .value
         ?.property
         ?.code;
     final regionCode = ref
-        .watch(
-          jmaMapAreaForecastLocalEInsideProvider(latLng),
-        )
+        .watch(jmaMapAreaForecastLocalEInsideProvider(latLng))
         .value
         ?.property
         ?.code;
@@ -107,17 +104,18 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
             intensity: intensity,
             lpgmIntensity: null,
             title: "${regionParameter?.name.ja ?? ''} で最大震度${intensity.label}",
-            description: regionParameter?.name.ja ?? '',
+            stations: [],
           ),
         CurrentLocationIntensityDisplayResult(
           :final intensity,
           :final lpgmIntensity,
+          :final stations,
         ) =>
           _CurrentLocationIntensityContent(
             intensity: intensity,
             lpgmIntensity: lpgmIntensity,
             title: "${cityParameterName ?? ''} で最大震度${intensity.label}",
-            description: '',
+            stations: stations,
           ),
       },
       skipLoadingOnRefresh: true,
@@ -131,20 +129,20 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
     required this.intensity,
     required this.lpgmIntensity,
     required this.title,
-    required this.description,
+    required this.stations,
   });
 
   final JmaIntensity intensity;
   final JmaLpgmIntensity? lpgmIntensity;
   final String title;
-  final String description;
+  final List<StationIntensityNode> stations;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
-    final designSystem = theme.designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
 
     return BorderedContainer(
@@ -152,11 +150,7 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
       child: Row(
         spacing: spacing.md,
         children: [
-          JmaIntensityIcon(
-            intensity: intensity,
-            type: .filled,
-            size: 40,
-          ),
+          JmaIntensityIcon(intensity: intensity, type: .filled, size: 40),
           Expanded(
             child: Column(
               crossAxisAlignment: .start,
@@ -168,11 +162,11 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  description,
-                  style: textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
+                Wrap(
+                  spacing: spacing.xs,
+                  children: stations
+                      .map((e) => Text(e.station.name.ja))
+                      .toList(),
                 ),
               ],
             ),

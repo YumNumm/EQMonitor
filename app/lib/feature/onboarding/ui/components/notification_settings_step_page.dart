@@ -19,7 +19,7 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
 
     useEffect(() {
       scope.setStepNavigation(
@@ -50,24 +50,24 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
           Text(
             '前バージョンの通知設定を引き継ぎました',
             style: designSystem.typography.bodyLarge.copyWith(
-              color: designSystem.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
           SizedBox(height: designSystem.spacing.xl),
           Container(
             padding: EdgeInsets.all(designSystem.spacing.md),
             decoration: BoxDecoration(
-              color: designSystem.color.surfaceCard,
+              color: designSystem.colorTheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(designSystem.shape.card),
               border: Border.all(
-                color: designSystem.palette.statusSuccess.withValues(alpha: 0.3),
+                color: designSystem.colorTheme.status.success.withValues(alpha: 0.3),
               ),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.check_circle_outline,
-                  color: designSystem.palette.statusSuccess,
+                  color: designSystem.colorTheme.status.success,
                 ),
                 SizedBox(width: designSystem.spacing.sm),
                 Expanded(
@@ -75,7 +75,7 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
                     '通知の地域や震度の設定がそのまま引き継がれています。'
                     '設定はいつでも変更できます。',
                     style: designSystem.typography.bodySmall.copyWith(
-                      color: designSystem.textColor.secondary,
+                      color: designSystem.colorTheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -95,7 +95,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
     final selectedPreset = useState<_NotificationPreset?>(null);
     final saveError = useState<String?>(null);
     final isProcessing = useState(false);
@@ -196,7 +196,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
             Text(
               '細かい設定は後からでも変更できます',
               style: designSystem.typography.bodySmall.copyWith(
-                color: designSystem.textColor.tertiary,
+                color: designSystem.colorTheme.outline,
               ),
             ),
             SizedBox(height: designSystem.spacing.xl),
@@ -246,7 +246,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
               Text(
                 '設定の保存に失敗しました。もう一度お試しください。',
                 style: designSystem.typography.bodySmall.copyWith(
-                  color: designSystem.palette.statusDanger,
+                  color: designSystem.colorTheme.error,
                 ),
               ),
             ],
@@ -282,7 +282,7 @@ class _PresetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final designSystem = context.designSystem;
 
     return GestureDetector(
       onTap: onTap,
@@ -291,12 +291,12 @@ class _PresetCard extends StatelessWidget {
         curve: Curves.easeOutCubic,
         padding: EdgeInsets.all(designSystem.spacing.md),
         decoration: BoxDecoration(
-          color: designSystem.color.surfaceCard,
+          color: designSystem.colorTheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(designSystem.shape.card),
           border: Border.all(
             color: isSelected
-                ? designSystem.palette.brandPrimary
-                : designSystem.color.outlineSoft,
+                ? designSystem.colorTheme.primary
+                : designSystem.colorTheme.outlineVariant,
             width: isSelected ? 2 : 0,
             strokeAlign: BorderSide.strokeAlignOutside,
           ),
@@ -311,8 +311,8 @@ class _PresetCard extends StatelessWidget {
                       ? Icons.radio_button_checked
                       : Icons.radio_button_unchecked,
                   color: isSelected
-                      ? designSystem.palette.brandPrimary
-                      : designSystem.textColor.tertiary,
+                      ? designSystem.colorTheme.primary
+                      : designSystem.colorTheme.outline,
                   size: 20,
                 ),
                 SizedBox(width: designSystem.spacing.sm),
@@ -357,14 +357,14 @@ class _BulletItem extends StatelessWidget {
           Text(
             '・',
             style: designSystem.typography.bodySmall.copyWith(
-              color: designSystem.textColor.secondary,
+              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
           Expanded(
             child: Text(
               text,
               style: designSystem.typography.bodySmall.copyWith(
-                color: designSystem.textColor.secondary,
+                color: designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
           ),

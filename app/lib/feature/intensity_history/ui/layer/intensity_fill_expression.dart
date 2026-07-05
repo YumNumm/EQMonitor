@@ -1,11 +1,11 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 
 /// `['match', ['get', propertyKey], code1, color1, ..., 'rgba(0,0,0,0)']` 形式の
 /// MapLibre match 式を構築する純粋関数。
 ///
-/// [pairs] に指定した各 code に [IntensityColorModel] から算出した震度背景色を
+/// [pairs] に指定した各 code に [IntensityColors] から算出した震度背景色を
 /// 割り当てる。該当なし区域は透明(`rgba(0,0,0,0)`)。
 ///
 /// [propertyKey] はフィーチャの照合に使うプロパティ名。
@@ -17,7 +17,7 @@ import 'package:eqmonitor/core/util/converter/color_converter.dart';
 /// を純粋関数として切り出したもの。
 List<Object> buildIntensityMatchExpression(
   List<({String code, JmaIntensity intensity})> pairs,
-  IntensityColorModel colorModel, {
+  IntensityColors colorModel, {
   String propertyKey = 'code',
 }) {
   final args = <Object>[

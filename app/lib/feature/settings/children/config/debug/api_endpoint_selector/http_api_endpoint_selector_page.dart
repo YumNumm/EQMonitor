@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
 
     final prodRest = buildCfg.restApiUrl;
     final prodWs = buildCfg.wsApiUrl;
-    final devRest = prodRest.replaceAll('api.', 'dev.api.');
+    final devRest = prodRest.replaceAll('v2.api.', 'dev.v2.api.');
     final devWs = prodWs.replaceAll('websocket.', 'dev.websocket.');
     const stubRest = 'https://stub.api.eqmonitor.app';
     final stubWs = devWs;
@@ -36,10 +37,10 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
 
     Future<void> selectPreset(_ServerPreset preset) async {
       final (String rest, String ws) = switch (preset) {
-        _ServerPreset.prod => (prodRest, prodWs),
-        _ServerPreset.dev => (devRest, devWs),
-        _ServerPreset.stub => (stubRest, stubWs),
-        _ServerPreset.custom => (current.restApiUrl, current.wsApiUrl),
+        .prod => (prodRest, prodWs),
+        .dev => (devRest, devWs),
+        .stub => (stubRest, stubWs),
+        .custom => (current.restApiUrl, current.wsApiUrl),
       };
       await ref
           .read(telegramUrlProvider.notifier)
@@ -114,9 +115,10 @@ class _ServerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorTheme = context.designSystem.colorTheme;
     return BorderedContainer(
-      accentColor: selected ? accentColor : null,
+      accentColor: null,
+      elevation: 0,
       onPressed: onTap,
       child: Row(
         children: [
@@ -154,7 +156,7 @@ class _ServerTile extends StatelessWidget {
                     Text(
                       description,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                        color: colorTheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -173,11 +175,7 @@ class _ServerTile extends StatelessWidget {
 }
 
 class _UrlRow extends StatelessWidget {
-  const _UrlRow({
-    required this.icon,
-    required this.label,
-    required this.url,
-  });
+  const _UrlRow({required this.icon, required this.label, required this.url});
 
   final IconData icon;
   final String label;
@@ -187,12 +185,12 @@ class _UrlRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 12, color: Theme.of(context).colorScheme.outline),
+        Icon(icon, size: 12, color: context.designSystem.colorTheme.outline),
         const SizedBox(width: 4),
         Text(
           '$label: ',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.outline,
+            color: context.designSystem.colorTheme.outline,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -200,7 +198,7 @@ class _UrlRow extends StatelessWidget {
           child: Text(
             url,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: context.designSystem.colorTheme.onSurfaceVariant,
               fontFamily: 'monospace',
             ),
             overflow: TextOverflow.ellipsis,

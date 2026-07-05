@@ -9,9 +9,7 @@ part 'kyoshin_monitor_points_provider.g.dart';
 
 @riverpod
 String kyoshinMonitorObservationGeoJson(Ref ref) {
-  return ref.watch(
-        kyoshinMonitorProvider.select((v) => v.value?.geoJson),
-      ) ??
+  return ref.watch(kyoshinMonitorProvider.select((v) => v.value?.geoJson)) ??
       jsonEncode({
         'type': 'FeatureCollection',
         'features': <Map<String, dynamic>>[],

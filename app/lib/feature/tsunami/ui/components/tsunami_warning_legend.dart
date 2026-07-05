@@ -16,14 +16,14 @@ class TsunamiWarningLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: BoxDecoration(
-        color: color.surfaceCard.withValues(alpha: 0.9),
+        color: colorTheme.surfaceContainerHigh.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.outlineSoft),
+        border: Border.all(color: colorTheme.outlineVariant),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -34,7 +34,7 @@ class TsunamiWarningLegend extends StatelessWidget {
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.bold,
-              color: designSystem.textColor.primary,
+              color: designSystem.colorTheme.onSurface,
             ),
           ),
           const SizedBox(height: 4),
@@ -54,7 +54,7 @@ class TsunamiWarningLegend extends StatelessWidget {
                     TsunamiWarningColor.displayName(kind),
                     style: TextStyle(
                       fontSize: 10,
-                      color: designSystem.textColor.primary,
+                      color: designSystem.colorTheme.onSurface,
                     ),
                   ),
                 ],

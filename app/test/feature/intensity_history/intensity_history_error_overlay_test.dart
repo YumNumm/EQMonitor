@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
@@ -32,8 +33,13 @@ void main() {
             ),
           ),
         ],
-        child: const MaterialApp(
-          home: Scaffold(
+        child: MaterialApp(
+          theme: ThemeData.light().copyWith(
+            extensions: <ThemeExtension<dynamic>>[
+              DesignSystemThemeExtension.light(),
+            ],
+          ),
+          home: const Scaffold(
             body: Stack(
               children: [
                 SizedBox.expand(),
@@ -81,8 +87,13 @@ void main() {
             ),
           ),
         ],
-        child: const MaterialApp(
-          home: Scaffold(
+        child: MaterialApp(
+          theme: ThemeData.light().copyWith(
+            extensions: <ThemeExtension<dynamic>>[
+              DesignSystemThemeExtension.light(),
+            ],
+          ),
+          home: const Scaffold(
             body: Stack(
               children: [SizedBox.expand(), IntensityHistoryErrorOverlay()],
             ),
@@ -106,8 +117,13 @@ void main() {
             () => _FakePrefectureHighest(() async => []),
           ),
         ],
-        child: const MaterialApp(
-          home: Scaffold(
+        child: MaterialApp(
+          theme: ThemeData.light().copyWith(
+            extensions: <ThemeExtension<dynamic>>[
+              DesignSystemThemeExtension.light(),
+            ],
+          ),
+          home: const Scaffold(
             body: Stack(
               children: [
                 SizedBox.expand(),

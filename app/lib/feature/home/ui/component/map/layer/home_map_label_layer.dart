@@ -25,51 +25,45 @@ class HomeMapLabelLayer extends HookConsumerWidget {
     latestParam.value = param;
     final enqueue = useMapOperationQueue();
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
+      unawaited(
+        enqueue(() async {
+          await _addLayers(
+            styleController: styleController,
+            param: latestParam.value,
+          );
+          isInitialized.value = true;
+        }),
+      );
+
+      return () {
         unawaited(
           enqueue(() async {
-            await _addLayers(
-              styleController: styleController,
-              param: latestParam.value,
-            );
-            isInitialized.value = true;
+            for (final id in [_regionLabelLayerId, _cityLabelLayerId]) {
+              try {
+                await styleController.removeLayer(id);
+              } on Exception catch (_) {}
+            }
           }),
         );
+      };
+    }, [styleController]);
 
-        return () {
-          unawaited(
-            enqueue(() async {
-              for (final id in [_regionLabelLayerId, _cityLabelLayerId]) {
-                try {
-                  await styleController.removeLayer(id);
-                } on Exception catch (_) {}
-              }
-            }),
-          );
-        };
-      },
-      [styleController],
-    );
-
-    useEffect(
-      () {
-        if (styleController == null || !isInitialized.value) {
-          return null;
-        }
-        unawaited(
-          enqueue(
-            () => _updateLayers(styleController: styleController, param: param),
-          ),
-        );
+    useEffect(() {
+      if (styleController == null || !isInitialized.value) {
         return null;
-      },
-      [styleController, param],
-    );
+      }
+      unawaited(
+        enqueue(
+          () => _updateLayers(styleController: styleController, param: param),
+        ),
+      );
+      return null;
+    }, [styleController, param]);
 
     return const SizedBox.shrink();
   }

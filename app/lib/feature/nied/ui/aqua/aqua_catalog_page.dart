@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:core/core.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/nied/data/provider/nied_api_client_provider.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _AquaCatalogList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
     final niedApiClient = ref.watch(niedApiClientProvider);
 
     final future = useMemoized(
@@ -121,7 +122,7 @@ class _AquaCatalogList extends HookConsumerWidget {
               for (final date in groupedByDate.keys) ...[
                 SliverStickyHeader(
                   header: ColoredBox(
-                    color: colorScheme.surfaceContainerHighest,
+                    color: designSystem.colorTheme.surfaceContainerHighest,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -131,7 +132,7 @@ class _AquaCatalogList extends HookConsumerWidget {
                         '${date.year}/${date.month}/${date.day}',
                         style: theme.textTheme.titleSmall!.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
+                          color: designSystem.colorTheme.onSurface,
                           fontFamily: FontFamily.googleSansCode,
                         ),
                       ),
@@ -188,15 +189,15 @@ class _MonthSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest,
+        color: designSystem.colorTheme.surfaceContainerHighest,
         border: Border(
           bottom: BorderSide(
-            color: colorScheme.outlineVariant,
+            color: designSystem.colorTheme.outlineVariant,
           ),
         ),
       ),

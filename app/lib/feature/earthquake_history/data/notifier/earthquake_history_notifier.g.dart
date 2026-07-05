@@ -18,7 +18,7 @@ final class EarthquakeHistoryNotifierProvider
     extends
         $AsyncNotifierProvider<
           EarthquakeHistoryNotifier,
-          EarthquakeHistoryNotifierState
+          PaginatedResponse<EarthquakePartial>
         > {
   EarthquakeHistoryNotifierProvider._({
     required EarthquakeHistoryNotifierFamily super.from,
@@ -58,15 +58,15 @@ final class EarthquakeHistoryNotifierProvider
 }
 
 String _$earthquakeHistoryNotifierHash() =>
-    r'c63252a8fdd1a792a9c6835e34d998a86d4105f0';
+    r'f9426157417ff59129e52d7b8119351657282d7f';
 
 final class EarthquakeHistoryNotifierFamily extends $Family
     with
         $ClassFamilyOverride<
           EarthquakeHistoryNotifier,
-          AsyncValue<EarthquakeHistoryNotifierState>,
-          EarthquakeHistoryNotifierState,
-          FutureOr<EarthquakeHistoryNotifierState>,
+          AsyncValue<PaginatedResponse<EarthquakePartial>>,
+          PaginatedResponse<EarthquakePartial>,
+          FutureOr<PaginatedResponse<EarthquakePartial>>,
           EarthquakeHistoryParameter
         > {
   EarthquakeHistoryNotifierFamily._()
@@ -87,11 +87,11 @@ final class EarthquakeHistoryNotifierFamily extends $Family
 }
 
 abstract class _$EarthquakeHistoryNotifier
-    extends $AsyncNotifier<EarthquakeHistoryNotifierState> {
+    extends $AsyncNotifier<PaginatedResponse<EarthquakePartial>> {
   late final _$args = ref.$arg as EarthquakeHistoryParameter;
   EarthquakeHistoryParameter get parameter => _$args;
 
-  FutureOr<EarthquakeHistoryNotifierState> build(
+  FutureOr<PaginatedResponse<EarthquakePartial>> build(
     EarthquakeHistoryParameter parameter,
   );
   @$mustCallSuper
@@ -100,17 +100,17 @@ abstract class _$EarthquakeHistoryNotifier
     final ref =
         this.ref
             as $Ref<
-              AsyncValue<EarthquakeHistoryNotifierState>,
-              EarthquakeHistoryNotifierState
+              AsyncValue<PaginatedResponse<EarthquakePartial>>,
+              PaginatedResponse<EarthquakePartial>
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<EarthquakeHistoryNotifierState>,
-                EarthquakeHistoryNotifierState
+                AsyncValue<PaginatedResponse<EarthquakePartial>>,
+                PaginatedResponse<EarthquakePartial>
               >,
-              AsyncValue<EarthquakeHistoryNotifierState>,
+              AsyncValue<PaginatedResponse<EarthquakePartial>>,
               Object?,
               Object?
             >;

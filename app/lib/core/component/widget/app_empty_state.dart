@@ -26,7 +26,7 @@ class AppEmptyState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 48, color: designSystem.textColor.secondary),
+            Icon(icon, size: 48, color: designSystem.colorTheme.onSurfaceVariant),
             SizedBox(height: designSystem.spacing.sm),
             Text(
               message,
@@ -38,7 +38,7 @@ class AppEmptyState extends StatelessWidget {
               Text(
                 description,
                 style: designSystem.typography.bodySmall.copyWith(
-                  color: designSystem.textColor.secondary,
+                  color: designSystem.colorTheme.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,
               ),

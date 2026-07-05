@@ -30,9 +30,11 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
         'arrival_time',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
-      dataSource: $checkedConvert(
-        'data_source',
-        (v) => $enumDecode(_$EarthquakeDataSourceEnumMap, v),
+      dataSources: $checkedConvert(
+        'data_sources',
+        (v) => (v as List<dynamic>)
+            .map((e) => $enumDecode(_$EarthquakeDataSourceEnumMap, e))
+            .toList(),
       ),
       telegramTypes: $checkedConvert(
         'telegram_types',
@@ -64,7 +66,7 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
     'originTime': 'origin_time',
     'originTimePrecision': 'origin_time_precision',
     'arrivalTime': 'arrival_time',
-    'dataSource': 'data_source',
+    'dataSources': 'data_sources',
     'telegramTypes': 'telegram_types',
     'estimatedIntensityTileUrl': 'estimated_intensity_tile_url',
   },
@@ -78,7 +80,9 @@ Map<String, dynamic> _$EarthquakeToJson(_Earthquake instance) =>
       'origin_time_precision':
           _$OriginTimePrecisionEnumMap[instance.originTimePrecision]!,
       'arrival_time': instance.arrivalTime?.toIso8601String(),
-      'data_source': _$EarthquakeDataSourceEnumMap[instance.dataSource]!,
+      'data_sources': instance.dataSources
+          .map((e) => _$EarthquakeDataSourceEnumMap[e]!)
+          .toList(),
       'telegram_types': instance.telegramTypes
           .map((e) => _$EarthquakeTelegramTypeEnumMap[e]!)
           .toList(),

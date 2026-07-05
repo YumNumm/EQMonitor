@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -21,7 +21,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
     final homeAsync = ref.watch(homeConfigurationProvider);
@@ -30,12 +30,14 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
     return homeAsync.when(
       data: (home) {
         final scope = home.common.earthquakeHistoryScope;
-        final locationName = switch (scope) {
-          HomeEarthquakeHistoryScope.currentLocation =>
-            paramAsync.value?.regionName,
-          HomeEarthquakeHistoryScope.custom =>
-            home.common.parameter?.regionName,
-          HomeEarthquakeHistoryScope.nationwide => null,
+        // TODO: 地域名を取得する
+        final locationName = switch (paramAsync.value) {
+          EarthquakeHistoryParameterAll() || null => null,
+          EarthquakeHistoryParameterRegion(:final regionCode) => regionCode,
+          EarthquakeHistoryParameterPrefecture(:final prefectureCode) =>
+            prefectureCode,
+          EarthquakeHistoryParameterCity(:final cityCode) => cityCode,
+          EarthquakeHistoryParameterStation(:final stationCode) => stationCode,
         };
 
         Future<void> openRegionPicker() async {
@@ -46,28 +48,25 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
           if (result == null) {
             return;
           }
-          await HomeConfigurationNotifier.saveMutation.run(
-            ref,
-            (tsx) async {
-              final notifier = tsx.get(homeConfigurationProvider.notifier);
-              if (result.regionCode == null) {
-                // クリアされた場合は parameter のみ消し、スコープは保持する
-                await notifier.clearCustomEarthquakeHistoryParameter();
-              } else {
-                await notifier.setCustomEarthquakeHistoryParameter(result);
-              }
-            },
-          );
+          await HomeConfigurationNotifier.saveMutation.run(ref, (tsx) async {
+            final notifier = tsx.get(homeConfigurationProvider.notifier);
+            if (result is EarthquakeHistoryParameterAll) {
+              // クリアされた場合は parameter のみ消し、スコープは保持する
+              await notifier.clearCustomEarthquakeHistoryParameter();
+            } else {
+              await notifier.setCustomEarthquakeHistoryParameter(result);
+            }
+          });
         }
 
         return Card.outlined(
           margin: EdgeInsets.zero,
-          color: color.surfaceCard,
+          color: colorTheme.surfaceContainerHigh,
           clipBehavior: Clip.antiAlias,
           elevation: 0,
           shape: RoundedSuperellipseBorder(
             borderRadius: BorderRadius.circular(shape.card),
-            side: BorderSide(color: color.outlineSoft),
+            side: BorderSide(color: colorTheme.outlineVariant),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -114,7 +113,6 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                               earthquakes: value.items,
                               showCurrentLocationIntensity:
                                   scope == .currentLocation,
-                              intensityColor: ref.watch(intensityColorProvider),
                             ),
                     AsyncError(:final error) => ErrorCard(
                       error: error,
@@ -171,11 +169,11 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
       },
       loading: () => Card.outlined(
         margin: EdgeInsets.zero,
-        color: color.surfaceCard,
+        color: colorTheme.surfaceContainerHigh,
         elevation: 0,
         shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(shape.card),
-          side: BorderSide(color: color.outlineSoft),
+          side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: const _HomeEarthquakeHistorySheetSkeleton(),
       ),
@@ -192,7 +190,7 @@ class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
 
     return Padding(
       padding: EdgeInsets.all(spacing.lg),
@@ -204,7 +202,7 @@ class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
               height: 18,
               width: 120,
               decoration: BoxDecoration(
-                color: color.surfaceRaised,
+                color: colorTheme.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(shape.sm),
               ),
             ),
@@ -212,7 +210,7 @@ class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
             Container(
               height: 44,
               decoration: BoxDecoration(
-                color: color.surfaceRaised,
+                color: colorTheme.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(shape.md),
               ),
             ),

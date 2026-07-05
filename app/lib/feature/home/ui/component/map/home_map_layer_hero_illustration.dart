@@ -11,10 +11,14 @@ class HomeMapLayerHeroIllustration extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final color = designSystem.color;
+    final colorTheme = designSystem.colorTheme;
     final shape = designSystem.shape;
-    final primary = Theme.of(context).colorScheme.primary;
-    final primarySoft = Color.lerp(color.surfaceEmphasis, primary, 0.35)!;
+    final primary = context.designSystem.colorTheme.primary;
+    final primarySoft = Color.lerp(
+      colorTheme.surfaceContainerHighest,
+      primary,
+      0.35,
+    )!;
     final controller = useAnimationController(
       duration: const Duration(seconds: 12),
     );
@@ -27,19 +31,19 @@ class HomeMapLayerHeroIllustration extends HookWidget {
     return Container(
       height: 208,
       decoration: BoxDecoration(
-        color: color.backgroundSubtle,
+        color: colorTheme.surfaceContainer,
         borderRadius: BorderRadius.circular(shape.xl),
-        border: Border.all(color: color.outlineSoft),
+        border: Border.all(color: colorTheme.outlineVariant),
       ),
       clipBehavior: Clip.antiAlias,
       child: RepaintBoundary(
         child: CustomPaint(
           painter: _HomeMapLayerHeroPainter(
             progress: progress,
-            baseColor: color.surfaceCard,
-            layerColor: color.surfaceEmphasis,
+            baseColor: colorTheme.surfaceContainerHigh,
+            layerColor: colorTheme.surfaceContainerHighest,
             accentColor: primarySoft,
-            outlineColor: color.outlineStrong,
+            outlineColor: colorTheme.outline,
             glowColor: primary.withValues(alpha: 0.25),
           ),
           child: Stack(
@@ -49,9 +53,8 @@ class HomeMapLayerHeroIllustration extends HookWidget {
                 left: 18,
                 child: _LayerLabelChip(
                   label: 'Layered',
-                  backgroundColor: color.surfaceEmphasis.withValues(
-                    alpha: 0.92,
-                  ),
+                  backgroundColor: colorTheme.surfaceContainerHighest
+                      .withValues(alpha: 0.92),
                 ),
               ),
               Positioned(
@@ -59,7 +62,9 @@ class HomeMapLayerHeroIllustration extends HookWidget {
                 bottom: 18,
                 child: _LayerLabelChip(
                   label: 'Realtime',
-                  backgroundColor: color.surfaceCard.withValues(alpha: 0.92),
+                  backgroundColor: colorTheme.surfaceContainerHigh.withValues(
+                    alpha: 0.92,
+                  ),
                 ),
               ),
             ],
@@ -71,10 +76,7 @@ class HomeMapLayerHeroIllustration extends HookWidget {
 }
 
 class _LayerLabelChip extends StatelessWidget {
-  const _LayerLabelChip({
-    required this.label,
-    required this.backgroundColor,
-  });
+  const _LayerLabelChip({required this.label, required this.backgroundColor});
 
   final String label;
   final Color backgroundColor;
@@ -94,7 +96,7 @@ class _LayerLabelChip extends StatelessWidget {
         child: Text(
           label,
           style: typography.labelMedium.copyWith(
-            color: Theme.of(context).colorScheme.onSurface,
+            color: context.designSystem.colorTheme.onSurface,
             fontWeight: FontWeight.w700,
           ),
         ),
