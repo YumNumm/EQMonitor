@@ -69,9 +69,7 @@ class _PagingBody extends StatelessWidget {
               builder: (context, hasMore, isLoading) => !hasMore && !isLoading
                   ? const Padding(
                       padding: EdgeInsets.all(16),
-                      child: Center(
-                        child: Text('すべてのお知らせを表示しました'),
-                      ),
+                      child: Center(child: Text('すべてのお知らせを表示しました')),
                     )
                   : const SizedBox.shrink(),
             ),
@@ -83,10 +81,7 @@ class _PagingBody extends StatelessWidget {
 }
 
 class _FeedSkeleton extends StatelessWidget {
-  const _FeedSkeleton({
-    this.itemCount = 5,
-    this.scrollable = true,
-  });
+  const _FeedSkeleton({this.itemCount = 5, this.scrollable = true});
 
   final int itemCount;
   final bool scrollable;

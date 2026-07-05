@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_by_source_provider.dart';
@@ -19,15 +20,24 @@ class FeedDetailsPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('お知らせ')),
-      body: feed.when(
-        loading: () =>
-            const Center(child: CircularProgressIndicator.adaptive()),
-        error: (error, _) => ErrorCard(
-          error: error,
-          onReload: () async =>
-              ref.invalidate(feedBySourceProvider(telegramHash)),
-        ),
-        data: (item) => _FeedDetailsBody(item: item),
+      body: Column(
+        children: [
+          CachedDataBanner(values: [feed]),
+          Expanded(
+            // 再検証失敗時は stale を表示し続け、失敗はバナーが伝える。
+            child: feed.when(
+              skipError: true,
+              loading: () =>
+                  const Center(child: CircularProgressIndicator.adaptive()),
+              error: (error, _) => ErrorCard(
+                error: error,
+                onReload: () async =>
+                    ref.invalidate(feedBySourceProvider(telegramHash)),
+              ),
+              data: (item) => _FeedDetailsBody(item: item),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -5,10 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_notifier.g.dart';
 
-typedef FeedNotifierState = ({
-  List<FeedItem> items,
-  String? nextCursor,
-});
+typedef FeedNotifierState = ({List<FeedItem> items, String? nextCursor});
 
 @riverpod
 class FeedNotifier extends _$FeedNotifier {
@@ -16,10 +13,7 @@ class FeedNotifier extends _$FeedNotifier {
   Future<FeedNotifierState> build() async {
     final repository = await ref.read(feedRepositoryProvider.future);
     final response = await repository.fetch();
-    return (
-      items: response.feeds,
-      nextCursor: response.nextCursor,
-    );
+    return (items: response.feeds, nextCursor: response.nextCursor);
   }
 
   Future<void> fetchNextData() async {
@@ -33,9 +27,7 @@ class FeedNotifier extends _$FeedNotifier {
 
     state = await state.guardPlus(() async {
       final repository = await ref.read(feedRepositoryProvider.future);
-      final response = await repository.fetch(
-        after: currentState.nextCursor,
-      );
+      final response = await repository.fetch(after: currentState.nextCursor);
       return (
         items: [...currentState.items, ...response.feeds],
         nextCursor: response.nextCursor,

@@ -54,10 +54,8 @@ class FeedItemCard extends StatelessWidget {
         minChildSize: 0.3,
         maxChildSize: 0.9,
         expand: false,
-        builder: (context, scrollController) => _FeedDetailSheet(
-          item: item,
-          scrollController: scrollController,
-        ),
+        builder: (context, scrollController) =>
+            _FeedDetailSheet(item: item, scrollController: scrollController),
       ),
     );
   }
@@ -217,10 +215,7 @@ class FeedTypeBadge extends StatelessWidget {
 }
 
 class _FeedDetailSheet extends StatelessWidget {
-  const _FeedDetailSheet({
-    required this.item,
-    required this.scrollController,
-  });
+  const _FeedDetailSheet({required this.item, required this.scrollController});
 
   final FeedItem item;
   final ScrollController scrollController;

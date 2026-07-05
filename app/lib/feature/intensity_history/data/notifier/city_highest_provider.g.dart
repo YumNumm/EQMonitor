@@ -12,21 +12,12 @@ part of 'city_highest_provider.dart';
 // ignore_for_file: type=lint, type=warning
 /// 指定都道府県の市区町村ごとの過去最高震度一覧を取得する family provider。
 
-@ProviderFor(cityHighest)
+@ProviderFor(CityHighest)
 final cityHighestProvider = CityHighestFamily._();
 
 /// 指定都道府県の市区町村ごとの過去最高震度一覧を取得する family provider。
-
 final class CityHighestProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<HighestIntensityEntry>>,
-          List<HighestIntensityEntry>,
-          FutureOr<List<HighestIntensityEntry>>
-        >
-    with
-        $FutureModifier<List<HighestIntensityEntry>>,
-        $FutureProvider<List<HighestIntensityEntry>> {
+    extends $AsyncNotifierProvider<CityHighest, List<HighestIntensityEntry>> {
   /// 指定都道府県の市区町村ごとの過去最高震度一覧を取得する family provider。
   CityHighestProvider._({
     required CityHighestFamily super.from,
@@ -51,15 +42,7 @@ final class CityHighestProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<HighestIntensityEntry>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<HighestIntensityEntry>> create(Ref ref) {
-    final argument = this.argument as String;
-    return cityHighest(ref, argument);
-  }
+  CityHighest create() => CityHighest();
 
   @override
   bool operator ==(Object other) {
@@ -72,13 +55,16 @@ final class CityHighestProvider
   }
 }
 
-String _$cityHighestHash() => r'69023c9912d6ad0a9f4e7f36cc81b21062293da9';
+String _$cityHighestHash() => r'084af087d4caa6514ab6dba0bd5a95c77c58c5f2';
 
 /// 指定都道府県の市区町村ごとの過去最高震度一覧を取得する family provider。
 
 final class CityHighestFamily extends $Family
     with
-        $FunctionalFamilyOverride<
+        $ClassFamilyOverride<
+          CityHighest,
+          AsyncValue<List<HighestIntensityEntry>>,
+          List<HighestIntensityEntry>,
           FutureOr<List<HighestIntensityEntry>>,
           String
         > {
@@ -98,4 +84,36 @@ final class CityHighestFamily extends $Family
 
   @override
   String toString() => r'cityHighestProvider';
+}
+
+/// 指定都道府県の市区町村ごとの過去最高震度一覧を取得する family provider。
+
+abstract class _$CityHighest
+    extends $AsyncNotifier<List<HighestIntensityEntry>> {
+  late final _$args = ref.$arg as String;
+  String get prefectureCode => _$args;
+
+  FutureOr<List<HighestIntensityEntry>> build(String prefectureCode);
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<HighestIntensityEntry>>,
+              List<HighestIntensityEntry>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<HighestIntensityEntry>>,
+                List<HighestIntensityEntry>
+              >,
+              AsyncValue<List<HighestIntensityEntry>>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, () => build(_$args));
+  }
 }

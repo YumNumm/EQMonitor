@@ -11,17 +11,11 @@ part of 'feed_by_source_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(feedBySource)
+@ProviderFor(FeedBySource)
 final feedBySourceProvider = FeedBySourceFamily._();
 
 final class FeedBySourceProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<FeedDetail>,
-          FeedDetail,
-          FutureOr<FeedDetail>
-        >
-    with $FutureModifier<FeedDetail>, $FutureProvider<FeedDetail> {
+    extends $AsyncNotifierProvider<FeedBySource, FeedDetail> {
   FeedBySourceProvider._({
     required FeedBySourceFamily super.from,
     required String super.argument,
@@ -45,14 +39,7 @@ final class FeedBySourceProvider
 
   @$internal
   @override
-  $FutureProviderElement<FeedDetail> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<FeedDetail> create(Ref ref) {
-    final argument = this.argument as String;
-    return feedBySource(ref, argument);
-  }
+  FeedBySource create() => FeedBySource();
 
   @override
   bool operator ==(Object other) {
@@ -65,10 +52,17 @@ final class FeedBySourceProvider
   }
 }
 
-String _$feedBySourceHash() => r'69a23f2a19bc582cafba40569716fbb954a4ce2a';
+String _$feedBySourceHash() => r'20cf048e400bea1060012d4fb27b17ad7ddf34bd';
 
 final class FeedBySourceFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<FeedDetail>, String> {
+    with
+        $ClassFamilyOverride<
+          FeedBySource,
+          AsyncValue<FeedDetail>,
+          FeedDetail,
+          FutureOr<FeedDetail>,
+          String
+        > {
   FeedBySourceFamily._()
     : super(
         retry: null,
@@ -83,4 +77,25 @@ final class FeedBySourceFamily extends $Family
 
   @override
   String toString() => r'feedBySourceProvider';
+}
+
+abstract class _$FeedBySource extends $AsyncNotifier<FeedDetail> {
+  late final _$args = ref.$arg as String;
+  String get telegramHash => _$args;
+
+  FutureOr<FeedDetail> build(String telegramHash);
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<FeedDetail>, FeedDetail>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<FeedDetail>, FeedDetail>,
+              AsyncValue<FeedDetail>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, () => build(_$args));
+  }
 }

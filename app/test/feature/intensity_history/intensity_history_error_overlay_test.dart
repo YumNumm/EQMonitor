@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_error_overlay.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
+class _FakePrefectureHighest extends PrefectureHighest {
+  _FakePrefectureHighest(this._build);
+
+  final Future<List<HighestIntensityEntry>> Function() _build;
+
+  @override
+  Future<List<HighestIntensityEntry>> build() => _build();
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +28,9 @@ void main() {
       ProviderScope(
         overrides: [
           prefectureHighestProvider.overrideWith(
-            (_) async => throw Exception('prefecture failed'),
+            () => _FakePrefectureHighest(
+              () async => throw Exception('prefecture failed'),
+            ),
           ),
         ],
         child: MaterialApp(
@@ -62,7 +74,9 @@ void main() {
       ProviderScope(
         overrides: [
           prefectureHighestProvider.overrideWith(
-            (_) async => throw Exception('prefecture failed'),
+            () => _FakePrefectureHighest(
+              () async => throw Exception('prefecture failed'),
+            ),
           ),
           packageInfoProvider.overrideWithValue(
             PackageInfo(
@@ -99,7 +113,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          prefectureHighestProvider.overrideWith((_) async => []),
+          prefectureHighestProvider.overrideWith(
+            () => _FakePrefectureHighest(() async => []),
+          ),
         ],
         child: MaterialApp(
           theme: ThemeData.light().copyWith(

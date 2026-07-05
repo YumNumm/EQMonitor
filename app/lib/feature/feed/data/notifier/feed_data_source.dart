@@ -32,10 +32,7 @@ class FeedDataSource extends DataSource<String?, FeedItem> {
     try {
       final response = await _repository.fetch(after: cursor);
       return Success(
-        page: PageData(
-          data: response.feeds,
-          appendKey: response.nextCursor,
-        ),
+        page: PageData(data: response.feeds, appendKey: response.nextCursor),
       );
     } on Exception catch (e, st) {
       return Failure(error: e, stackTrace: st);

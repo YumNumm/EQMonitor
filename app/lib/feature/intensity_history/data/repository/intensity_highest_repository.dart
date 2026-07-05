@@ -28,17 +28,20 @@ class IntensityHighestRepository {
   final EarthquakeParameter _parameter;
 
   /// 全都道府県の過去最高震度一覧を取得する。
-  Future<List<HighestIntensityEntry>> fetchPrefectureHighest() async {
-    final response = await _earthquake
+  Future<List<HighestIntensityEntry>> fetchPrefectureHighest({
+    ApiClient? client,
+  }) async {
+    final response = await (client?.earthquake ?? _earthquake)
         .getV2EarthquakeIntensityPrefectureHighest();
     return response.data.toAppResponse(parameter: _parameter).items;
   }
 
   /// 指定都道府県内の市区町村ごとの過去最高震度一覧を取得する。
   Future<List<HighestIntensityEntry>> fetchCityHighest(
-    String prefectureCode,
-  ) async {
-    final response = await _earthquake
+    String prefectureCode, {
+    ApiClient? client,
+  }) async {
+    final response = await (client?.earthquake ?? _earthquake)
         .getV2EarthquakeIntensityPrefectureCodeCityHighest(
           code: prefectureCode,
         );
