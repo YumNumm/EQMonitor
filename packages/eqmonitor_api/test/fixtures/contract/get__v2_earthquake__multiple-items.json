@@ -26,8 +26,13 @@
       "intensity": {
         "max_intensity": "4"
       },
-      "datasource": "JMA_DISASTER_INFORMATION_XML",
-      "telegram_types": ["VXSE51", "VXSE53"],
+      "datasources": [
+        "JMA_DISASTER_INFORMATION_XML"
+      ],
+      "telegram_types": [
+        "VXSE51",
+        "VXSE53"
+      ],
       "earthquake_type": "NORMAL"
     },
     {
@@ -56,8 +61,13 @@
       "intensity": {
         "max_intensity": "3"
       },
-      "datasource": "JMA_DISASTER_INFORMATION_XML",
-      "telegram_types": ["VXSE51", "VXSE53"],
+      "datasources": [
+        "JMA_DISASTER_INFORMATION_XML"
+      ],
+      "telegram_types": [
+        "VXSE51",
+        "VXSE53"
+      ],
       "earthquake_type": "NORMAL"
     },
     {
@@ -90,8 +100,13 @@
       "intensity": {
         "max_intensity": "5+"
       },
-      "datasource": "JMA_DISASTER_INFORMATION_XML",
-      "telegram_types": ["VXSE51", "VXSE53"],
+      "datasources": [
+        "JMA_DISASTER_INFORMATION_XML"
+      ],
+      "telegram_types": [
+        "VXSE51",
+        "VXSE53"
+      ],
       "earthquake_type": "NORMAL"
     }
   ],

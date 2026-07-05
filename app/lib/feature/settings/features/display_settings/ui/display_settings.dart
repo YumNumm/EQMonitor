@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:flutter/foundation.dart';
@@ -32,6 +33,12 @@ class _Body extends StatelessWidget {
           children: [
             const SettingsSectionHeader(text: '配色設定'),
             const _ThemeSelector(),
+            ListTile(
+              title: const Text('テーマ設定'),
+              subtitle: const Text('配色プリセットの選択・カスタム編集・JSON入出力'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => const ThemeSettingsRoute().go(context),
+            ),
           ],
         ),
       ),

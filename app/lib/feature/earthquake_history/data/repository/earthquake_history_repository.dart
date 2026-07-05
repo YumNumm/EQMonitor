@@ -1,14 +1,21 @@
+import 'package:collection/collection.dart';
 import 'package:core/core.dart' show Date;
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_list_response.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,8 +24,9 @@ part 'earthquake_history_repository.g.dart';
 @Riverpod(keepAlive: true)
 Future<EarthquakeHistoryRepository> earthquakeHistoryRepository(Ref ref) async {
   final jmaParam = await ref.watch(jmaParameterProvider.future);
+  final apiClient = await ref.watch(apiClientProvider.future);
   return EarthquakeHistoryRepository(
-    api: await ref.watch(apiClientProvider.future),
+    earthquake: apiClient.earthquake,
     earthquakeParameter: jmaParam.earthquake,
     shindoDbStations: jmaParam.shindoDbStations,
   );
@@ -26,57 +34,16 @@ Future<EarthquakeHistoryRepository> earthquakeHistoryRepository(Ref ref) async {
 
 class EarthquakeHistoryRepository {
   EarthquakeHistoryRepository({
-    required api.ApiClient api,
+    required api.EarthquakeApiClient earthquake,
     required this.earthquakeParameter,
     required this.shindoDbStations,
-  }) : _api = api;
+  }) : _earthquake = earthquake;
 
-  final api.ApiClient _api;
+  final api.EarthquakeApiClient _earthquake;
   final EarthquakeParameter earthquakeParameter;
   final ShindoDbStationsParameter shindoDbStations;
 
-  Iterable<EarthquakeParameterRegionItem> get _allRegions =>
-      earthquakeParameter.prefectures.expand((p) => p.regions);
-
-  String? _resolveAreaDisplayName(String areaCode) {
-    for (final region in _allRegions) {
-      if (region.code == areaCode) {
-        return region.name.ja;
-      }
-      for (final city in region.cities) {
-        if (city.code == areaCode) {
-          return city.name.ja;
-        }
-      }
-    }
-    return null;
-  }
-
-  String? _regionCodeForCity(String cityCode) {
-    for (final region in _allRegions) {
-      for (final city in region.cities) {
-        if (city.code == cityCode) {
-          return region.code;
-        }
-      }
-    }
-    return null;
-  }
-
-  String? _resolveStationDisplayName(String stationCode) {
-    for (final region in _allRegions) {
-      for (final city in region.cities) {
-        for (final station in city.stations) {
-          if (station.code == stationCode) {
-            return station.name.ja;
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  Future<EarthquakeListResponse> fetchEarthquakeList({
+  Future<PaginatedResponse<EarthquakePartial>> fetchEarthquakeList({
     int? limit,
     String? cursor,
     double? magnitudeGte,
@@ -85,27 +52,29 @@ class EarthquakeHistoryRepository {
     int? depthLte,
     JmaIntensity? intensityGte,
     JmaIntensity? intensityLte,
-    List<api.TelegramStatus>? statuses,
+    List<TelegramStatus>? statuses,
     List<int>? epicenterCodes,
-    api.EarthquakeType? earthquakeType,
-    api.EarthquakeDatasource? datasource,
-    List<api.EarthquakeTelegramType>? telegramTypes,
+    EarthquakeType? earthquakeType,
+    EarthquakeDataSource? datasource,
+    List<EarthquakeTelegramType>? telegramTypes,
     Date? originTimeGte,
     Date? originTimeLte,
-    api.JmaLpgmIntensity? maxLpgmIntensityGte,
-    api.JmaLpgmIntensity? maxLpgmIntensityLte,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
     double? latitudeGte,
     double? latitudeLte,
     double? longitudeGte,
     double? longitudeLte,
-    api.EarthquakeSortBy? sortBy,
-    api.SortOrder? sortOrder,
+    EarthquakeSortBy? sortBy,
+    SortOrder? sortOrder,
     api.ApiClient? client,
   }) async {
-    final response = await (client ?? _api).earthquake.getV2Earthquake(
+    final response = await (client?.earthquake ?? _earthquake).getV2Earthquake(
       limit: limit?.toString(),
       cursor: cursor,
-      statuses: statuses ?? const [api.TelegramStatus.normal],
+      statuses:
+          statuses?.map((status) => status.toApiTelegramStatus).toList() ??
+          const [.normal],
       magnitudeGte: magnitudeGte?.toString(),
       magnitudeLte: magnitudeLte?.toString(),
       depthGte: depthGte?.toString(),
@@ -113,22 +82,29 @@ class EarthquakeHistoryRepository {
       intensityGte: intensityGte?.toApiJmaIntensity,
       intensityLte: intensityLte?.toApiJmaIntensity,
       epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
-      earthquakeType: earthquakeType,
-      datasource: datasource,
-      telegramTypes: telegramTypes,
+      earthquakeType: earthquakeType?.toApiEarthquakeType,
+      datasource: datasource?.toApiEarthquakeDataSource,
+      telegramTypes: telegramTypes
+          ?.map((type) => type.toApiEarthquakeTelegramType)
+          .toList(),
       originTimeGte: originTimeGte?.toString(),
       originTimeLte: originTimeLte?.toString(),
-      maxLpgmIntensityGte: maxLpgmIntensityGte,
-      maxLpgmIntensityLte: maxLpgmIntensityLte,
+      maxLpgmIntensityGte: maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
+      maxLpgmIntensityLte: maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
       latitudeGte: latitudeGte?.toString(),
       latitudeLte: latitudeLte?.toString(),
       longitudeGte: longitudeGte?.toString(),
       longitudeLte: longitudeLte?.toString(),
-      sortBy: sortBy,
-      sortOrder: sortOrder,
+      sortBy: sortBy?.toApiEarthquakeSortBy,
+      sortOrder: sortOrder?.toApiSortOrder,
     );
-    return response.data.toEarthquakeListResponse(
-      parameter: earthquakeParameter,
+    return PaginatedResponse(
+      items: response.data.items
+          .map(
+            (item) => item.toEarthquakePartial(parameter: earthquakeParameter),
+          )
+          .toList(),
+      nextToken: response.data.nextToken,
     );
   }
 
@@ -136,16 +112,15 @@ class EarthquakeHistoryRepository {
     required String eventId,
     api.ApiClient? client,
   }) async {
-    final response = await (client ?? _api).earthquake.getV2EarthquakeEventId(
-      eventId: eventId,
-    );
+    final response = await (client?.earthquake ?? _earthquake)
+        .getV2EarthquakeEventId(eventId: eventId);
     return response.data.earthquake.toEarthquake(
       parameter: earthquakeParameter,
       shindoDbStations: shindoDbStations,
     );
   }
 
-  Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByRegion({
+  Future<PaginatedResponse<EarthquakePartialRegion>> searchByRegion({
     required String code,
     int? limit,
     String? cursor,
@@ -155,21 +130,30 @@ class EarthquakeHistoryRepository {
     int? depthLte,
     JmaIntensity? intensityGte,
     JmaIntensity? intensityLte,
-    List<api.TelegramStatus>? statuses,
+    List<TelegramStatus>? statuses,
     List<int>? epicenterCodes,
-    api.EarthquakeType? earthquakeType,
+    EarthquakeType? earthquakeType,
     Date? originTimeGte,
     Date? originTimeLte,
-    api.JmaLpgmIntensity? maxLpgmIntensityGte,
-    api.JmaLpgmIntensity? maxLpgmIntensityLte,
-    api.EarthquakeSortBy? sortBy,
-    api.SortOrder? sortOrder,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+    EarthquakeSortBy? sortBy,
+    SortOrder? sortOrder,
   }) async {
-    final response = await _api.earthquake.getV2EarthquakeIntensityRegionCode(
+    final region = earthquakeParameter.prefectures
+        .expand((prefecture) => prefecture.regions)
+        .firstWhereOrNull((region) => region.code == code);
+    if (region == null) {
+      throw Exception('Region not found: $code');
+    }
+
+    final response = await _earthquake.getV2EarthquakeIntensityRegionCode(
       code: code,
       limit: limit?.toString(),
       cursor: cursor,
-      statuses: statuses ?? const [api.TelegramStatus.normal],
+      statuses:
+          statuses?.map((status) => status.toApiTelegramStatus).toList() ??
+          const [.normal],
       magnitudeGte: magnitudeGte?.toString(),
       magnitudeLte: magnitudeLte?.toString(),
       depthGte: depthGte?.toString(),
@@ -177,22 +161,22 @@ class EarthquakeHistoryRepository {
       intensityGte: intensityGte?.toApiJmaIntensity,
       intensityLte: intensityLte?.toApiJmaIntensity,
       epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
-      earthquakeType: earthquakeType,
+      earthquakeType: earthquakeType?.toApiEarthquakeType,
       originTimeGte: originTimeGte?.toString(),
       originTimeLte: originTimeLte?.toString(),
-      maxLpgmIntensityGte: maxLpgmIntensityGte,
-      maxLpgmIntensityLte: maxLpgmIntensityLte,
-      sortBy: sortBy,
-      sortOrder: sortOrder,
+      maxLpgmIntensityGte: maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
+      maxLpgmIntensityLte: maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
+      sortBy: sortBy?.toApiEarthquakeSortBy,
+      sortOrder: sortOrder?.toApiSortOrder,
     );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
       areaCode: code,
-      areaName: _resolveAreaDisplayName(code) ?? code,
+      areaName: region.name,
     );
   }
 
-  Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByPrefecture({
+  Future<PaginatedResponse<EarthquakePartialPrefecture>> searchByPrefecture({
     required String code,
     int? limit,
     String? cursor,
@@ -202,69 +186,29 @@ class EarthquakeHistoryRepository {
     int? depthLte,
     JmaIntensity? intensityGte,
     JmaIntensity? intensityLte,
-    List<api.TelegramStatus>? statuses,
+    List<TelegramStatus>? statuses,
     List<int>? epicenterCodes,
-    api.EarthquakeType? earthquakeType,
+    EarthquakeType? earthquakeType,
     Date? originTimeGte,
     Date? originTimeLte,
-    api.JmaLpgmIntensity? maxLpgmIntensityGte,
-    api.JmaLpgmIntensity? maxLpgmIntensityLte,
-    api.EarthquakeSortBy? sortBy,
-    api.SortOrder? sortOrder,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+    EarthquakeSortBy? sortBy,
+    SortOrder? sortOrder,
   }) async {
-    final response = await _api.earthquake
-        .getV2EarthquakeIntensityPrefectureCode(
-          code: code,
-          limit: limit?.toString(),
-          cursor: cursor,
-          statuses: statuses ?? const [api.TelegramStatus.normal],
-          magnitudeGte: magnitudeGte?.toString(),
-          magnitudeLte: magnitudeLte?.toString(),
-          depthGte: depthGte?.toString(),
-          depthLte: depthLte?.toString(),
-          intensityGte: intensityGte?.toApiJmaIntensity,
-          intensityLte: intensityLte?.toApiJmaIntensity,
-          epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
-          earthquakeType: earthquakeType,
-          originTimeGte: originTimeGte?.toString(),
-          originTimeLte: originTimeLte?.toString(),
-          maxLpgmIntensityGte: maxLpgmIntensityGte,
-          maxLpgmIntensityLte: maxLpgmIntensityLte,
-          sortBy: sortBy,
-          sortOrder: sortOrder,
-        );
-    return response.data.toAppResponse(
-      parameter: earthquakeParameter,
-      areaCode: code,
-      areaName: _resolveAreaDisplayName(code) ?? code,
+    final prefecture = earthquakeParameter.prefectures.firstWhereOrNull(
+      (prefecture) => prefecture.code == code,
     );
-  }
-
-  Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByCity({
-    required String code,
-    int? limit,
-    String? cursor,
-    double? magnitudeGte,
-    double? magnitudeLte,
-    int? depthGte,
-    int? depthLte,
-    JmaIntensity? intensityGte,
-    JmaIntensity? intensityLte,
-    List<api.TelegramStatus>? statuses,
-    List<int>? epicenterCodes,
-    api.EarthquakeType? earthquakeType,
-    Date? originTimeGte,
-    Date? originTimeLte,
-    api.JmaLpgmIntensity? maxLpgmIntensityGte,
-    api.JmaLpgmIntensity? maxLpgmIntensityLte,
-    api.EarthquakeSortBy? sortBy,
-    api.SortOrder? sortOrder,
-  }) async {
-    final response = await _api.earthquake.getV2EarthquakeIntensityCityCode(
+    if (prefecture == null) {
+      throw Exception('Prefecture not found: $code');
+    }
+    final response = await _earthquake.getV2EarthquakeIntensityPrefectureCode(
       code: code,
       limit: limit?.toString(),
       cursor: cursor,
-      statuses: statuses ?? const [api.TelegramStatus.normal],
+      statuses:
+          statuses?.map((status) => status.toApiTelegramStatus).toList() ??
+          const [.normal],
       magnitudeGte: magnitudeGte?.toString(),
       magnitudeLte: magnitudeLte?.toString(),
       depthGte: depthGte?.toString(),
@@ -272,22 +216,22 @@ class EarthquakeHistoryRepository {
       intensityGte: intensityGte?.toApiJmaIntensity,
       intensityLte: intensityLte?.toApiJmaIntensity,
       epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
-      earthquakeType: earthquakeType,
+      earthquakeType: earthquakeType?.toApiEarthquakeType,
       originTimeGte: originTimeGte?.toString(),
       originTimeLte: originTimeLte?.toString(),
-      maxLpgmIntensityGte: maxLpgmIntensityGte,
-      maxLpgmIntensityLte: maxLpgmIntensityLte,
-      sortBy: sortBy,
-      sortOrder: sortOrder,
+      maxLpgmIntensityGte: maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
+      maxLpgmIntensityLte: maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
+      sortBy: sortBy?.toApiEarthquakeSortBy,
+      sortOrder: sortOrder?.toApiSortOrder,
     );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
       areaCode: code,
-      areaName: _resolveAreaDisplayName(code) ?? code,
+      areaName: prefecture.name,
     );
   }
 
-  Future<PaginatedSearchResponse<StationSearchItem>> searchByStation({
+  Future<PaginatedResponse<EarthquakePartialRegion>> searchByCity({
     required String code,
     int? limit,
     String? cursor,
@@ -297,21 +241,30 @@ class EarthquakeHistoryRepository {
     int? depthLte,
     JmaIntensity? intensityGte,
     JmaIntensity? intensityLte,
-    List<api.TelegramStatus>? statuses,
+    List<TelegramStatus>? statuses,
     List<int>? epicenterCodes,
-    api.EarthquakeType? earthquakeType,
+    EarthquakeType? earthquakeType,
     Date? originTimeGte,
     Date? originTimeLte,
-    api.JmaLpgmIntensity? maxLpgmIntensityGte,
-    api.JmaLpgmIntensity? maxLpgmIntensityLte,
-    api.EarthquakeSortBy? sortBy,
-    api.SortOrder? sortOrder,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+    EarthquakeSortBy? sortBy,
+    SortOrder? sortOrder,
   }) async {
-    final response = await _api.earthquake.getV2EarthquakeIntensityStationCode(
+    final city = earthquakeParameter.prefectures
+        .expand((prefecture) => prefecture.regions)
+        .expand((region) => region.cities)
+        .firstWhereOrNull((city) => city.code == code);
+    if (city == null) {
+      throw Exception('City not found: $code');
+    }
+    final response = await _earthquake.getV2EarthquakeIntensityCityCode(
       code: code,
       limit: limit?.toString(),
       cursor: cursor,
-      statuses: statuses ?? const [api.TelegramStatus.normal],
+      statuses:
+          statuses?.map((status) => status.toApiTelegramStatus).toList() ??
+          const [.normal],
       magnitudeGte: magnitudeGte?.toString(),
       magnitudeLte: magnitudeLte?.toString(),
       depthGte: depthGte?.toString(),
@@ -319,20 +272,80 @@ class EarthquakeHistoryRepository {
       intensityGte: intensityGte?.toApiJmaIntensity,
       intensityLte: intensityLte?.toApiJmaIntensity,
       epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
-      earthquakeType: earthquakeType,
+      earthquakeType: earthquakeType?.toApiEarthquakeType,
       originTimeGte: originTimeGte?.toString(),
       originTimeLte: originTimeLte?.toString(),
-      maxLpgmIntensityGte: maxLpgmIntensityGte,
-      maxLpgmIntensityLte: maxLpgmIntensityLte,
-      sortBy: sortBy,
-      sortOrder: sortOrder,
+      maxLpgmIntensityGte: maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
+      maxLpgmIntensityLte: maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
+      sortBy: sortBy?.toApiEarthquakeSortBy,
+      sortOrder: sortOrder?.toApiSortOrder,
+    );
+    return response.data.toAppResponse(
+      cityItem: city,
+      parameter: earthquakeParameter,
+    );
+  }
+
+  Future<PaginatedResponse<EarthquakePartialStation>> searchByStation({
+    required String code,
+    int? limit,
+    String? cursor,
+    double? magnitudeGte,
+    double? magnitudeLte,
+    int? depthGte,
+    int? depthLte,
+    JmaIntensity? intensityGte,
+    JmaIntensity? intensityLte,
+    List<TelegramStatus>? statuses,
+    List<int>? epicenterCodes,
+    EarthquakeType? earthquakeType,
+    Date? originTimeGte,
+    Date? originTimeLte,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+    EarthquakeSortBy? sortBy,
+    SortOrder? sortOrder,
+  }) async {
+    final station = earthquakeParameter.prefectures
+        .expand((prefecture) => prefecture.regions)
+        .expand((region) => region.cities)
+        .expand((city) => city.stations)
+        .firstWhereOrNull((station) => station.code == code);
+    if (station == null) {
+      throw Exception('Station not found: $code');
+    }
+    final response = await _earthquake.getV2EarthquakeIntensityStationCode(
+      code: code,
+      limit: limit?.toString(),
+      cursor: cursor,
+      statuses:
+          statuses?.map((status) => status.toApiTelegramStatus).toList() ??
+          [.normal],
+      magnitudeGte: magnitudeGte?.toString(),
+      magnitudeLte: magnitudeLte?.toString(),
+      depthGte: depthGte?.toString(),
+      depthLte: depthLte?.toString(),
+      intensityGte: intensityGte?.toApiJmaIntensity,
+      intensityLte: intensityLte?.toApiJmaIntensity,
+      epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
+      earthquakeType: earthquakeType?.toApiEarthquakeType,
+      originTimeGte: originTimeGte?.toString(),
+      originTimeLte: originTimeLte?.toString(),
+      maxLpgmIntensityGte: maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
+      maxLpgmIntensityLte: maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
+      sortBy: sortBy?.toApiEarthquakeSortBy,
+      sortOrder: sortOrder?.toApiSortOrder,
     );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
       stationCode: code,
-      stationName: _resolveStationDisplayName(code) ?? code,
+      stationName: station.name,
     );
   }
+
+  EarthquakePartial toEarthquakePartial({
+    required api.EarthquakePartial item,
+  }) => item.toEarthquakePartial(parameter: earthquakeParameter);
 
   CurrentLocationIntensityDisplay resolveCurrentLocationIntensity({
     required Map<JmaIntensity, List<IntensityRegion>> regions,
@@ -342,80 +355,58 @@ class EarthquakeHistoryRepository {
     required String? cityAreaCode,
     required String? regionAreaCode,
   }) {
-    if (cityAreaCode != null) {
-      final cityNode = _findCityNodeByCode(intensityTree, cityAreaCode);
-      final j = cityNode?.maxIntensity;
-      if (j != null) {
-        return CurrentLocationIntensityDisplay.result(
-          intensity: j,
-          lpgmIntensity: _cityLpgmIntensity(lpgmIntensityTree, cityAreaCode),
-        );
+    final hasCityIntensityTree = intensityTree.values.any(
+      (prefectures) =>
+          prefectures.any((prefecture) => prefecture.cities.isNotEmpty),
+    );
+    if (cityAreaCode != null && hasCityIntensityTree) {
+      final targetCities = intensityTree.values
+          .expand(
+            (prefectures) =>
+                prefectures.expand((prefecture) => prefecture.cities),
+          )
+          .where((city) => city.city.code == cityAreaCode);
+      final maxIntensity = targetCities
+          .map((city) => city.maxIntensity)
+          .nonNulls
+          .sortedBy((e) => e.orderIndex)
+          .lastOrNull;
+      if (maxIntensity == null) {
+        return const CurrentLocationIntensityDisplay.none();
       }
-      final regionCode = _regionCodeForCity(cityAreaCode);
-      final prefJ = regionCode != null
-          ? _regionIntensity(regions, regionCode)
-          : _regionIntensity(regions, cityAreaCode);
-      if (prefJ != null) {
-        return CurrentLocationIntensityDisplay.quick(intensity: prefJ);
-      }
+
+      final targetLpgmCities = lpgmIntensityTree.values
+          .expand(
+            (prefectures) =>
+                prefectures.expand((prefecture) => prefecture.cities),
+          )
+          .where((city) => city.city.code == cityAreaCode);
+      final maxLpgmIntensity = targetLpgmCities
+          .map((city) => city.maxLpgmIntensity)
+          .nonNulls
+          .sortedBy((e) => e.orderIndex)
+          .lastOrNull;
+
+      return CurrentLocationIntensityDisplay.result(
+        intensity: maxIntensity,
+        lpgmIntensity: maxLpgmIntensity,
+        stations: targetCities.expand((city) => city.stations).toList(),
+        lpgmStations: targetLpgmCities.expand((city) => city.stations).toList(),
+      );
     }
     if (regionAreaCode != null) {
-      final cityNode = _findCityNodeByCode(intensityTree, regionAreaCode);
-      final j = cityNode?.maxIntensity;
-      if (j != null) {
-        return CurrentLocationIntensityDisplay.quick(intensity: j);
-      }
-      final prefJ = _regionIntensity(regions, regionAreaCode);
-      if (prefJ != null) {
-        return CurrentLocationIntensityDisplay.quick(intensity: prefJ);
+      final targetRegions = regions.values
+          .expand((regionGroups) => regionGroups)
+          .where((region) => region.region.code == regionAreaCode);
+      final maxIntensity = targetRegions
+          .map((region) => region.maxIntensity)
+          .nonNulls
+          .sortedBy((e) => e.orderIndex)
+          .lastOrNull;
+      if (maxIntensity != null) {
+        return CurrentLocationIntensityDisplay.quick(intensity: maxIntensity);
       }
     }
     return const CurrentLocationIntensityDisplay.none();
-  }
-
-  CityIntensityNode? _findCityNodeByCode(
-    Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
-    String areaCode,
-  ) {
-    for (final regions in intensityTree.values) {
-      for (final regionNode in regions) {
-        for (final city in regionNode.cities) {
-          if (city.city.code == areaCode) {
-            return city;
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  JmaLpgmIntensity? _cityLpgmIntensity(
-    Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree,
-    String cityAreaCode,
-  ) {
-    for (final regions in lpgmIntensityTree.values) {
-      for (final regionNode in regions) {
-        for (final city in regionNode.cities) {
-          if (city.city.code == cityAreaCode) {
-            return city.maxLpgmIntensity;
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  JmaIntensity? _regionIntensity(
-    Map<JmaIntensity, List<IntensityRegion>> regions,
-    String areaCode,
-  ) {
-    for (final entry in regions.entries) {
-      for (final region in entry.value) {
-        if (region.region.code == areaCode) {
-          return region.maxIntensity ?? entry.key;
-        }
-      }
-    }
-    return null;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_cumulative_binning.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -19,7 +20,7 @@ class SeismicityCumulativeHistogramChart extends StatelessWidget {
       return const Center(child: Text('選択範囲にイベントがありません'));
     }
 
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = context.designSystem.colorTheme;
 
     return Column(
       children: [

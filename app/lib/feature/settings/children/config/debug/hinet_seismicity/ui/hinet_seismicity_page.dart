@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_bounds_filter.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_bounds.dart';
@@ -234,8 +235,8 @@ class _FetchBody extends HookConsumerWidget {
                         : '取得エラー: $error',
                     style: TextStyle(
                       color: error is HinetSeismicityPartialFetchException
-                          ? Theme.of(context).colorScheme.tertiary
-                          : Theme.of(context).colorScheme.error,
+                          ? context.designSystem.colorTheme.tertiary
+                          : context.designSystem.colorTheme.error,
                     ),
                   ),
                 ),

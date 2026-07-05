@@ -1,9 +1,12 @@
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -13,43 +16,103 @@ part 'earthquake_partial.freezed.dart';
 part 'earthquake_partial.g.dart';
 
 @freezed
-abstract class EarthquakePartial with _$EarthquakePartial {
-  const factory EarthquakePartial({
+sealed class EarthquakePartial with _$EarthquakePartial {
+  const factory EarthquakePartial.normal({
     required String eventId,
     required TelegramStatus status,
     required DateTime? originTime,
     required OriginTimePrecision originTimePrecision,
     required DateTime? arrivalTime,
-    required EarthquakeDataSource dataSource,
+    required List<EarthquakeDataSource> dataSources,
     required EarthquakeHypocenter? hypocenter,
     required EarthquakeIntensityPartial? intensity,
     required EarthquakeType earthquakeType,
     required List<EarthquakeTelegramType> telegramTypes,
     required String? estimatedIntensityTileUrl,
-  }) = _EarthquakePartial;
+  }) = EarthquakePartialNormal;
+
+  const factory EarthquakePartial.prefecture({
+    required JmaIntensity prefectureIntensity,
+    required EarthquakePartialNormal earthquake,
+  }) = EarthquakePartialPrefecture;
+
+  const factory EarthquakePartial.region({
+    required JmaIntensity regionIntensity,
+    required EarthquakePartialNormal earthquake,
+  }) = EarthquakePartialRegion;
+
+  const factory EarthquakePartial.city({
+    required JmaIntensity cityIntensity,
+    required EarthquakePartialNormal earthquake,
+  }) = EarthquakePartialCity;
+
+  const factory EarthquakePartial.station({
+    required JmaIntensity stationIntensity,
+    required EarthquakePartialNormal earthquake,
+  }) = EarthquakePartialStation;
 
   factory EarthquakePartial.fromJson(Map<String, dynamic> json) =>
       _$EarthquakePartialFromJson(json);
+
+  const EarthquakePartial._();
+
+  EarthquakePartialNormal get earthquake => switch (this) {
+    final EarthquakePartialNormal value => value,
+    EarthquakePartialPrefecture(:final EarthquakePartialNormal earthquake) =>
+      earthquake,
+    EarthquakePartialRegion(:final EarthquakePartialNormal earthquake) =>
+      earthquake,
+    EarthquakePartialCity(:final EarthquakePartialNormal earthquake) =>
+      earthquake,
+    EarthquakePartialStation(:final EarthquakePartialNormal earthquake) =>
+      earthquake,
+  };
+}
+
+@freezed
+abstract class IntensityAreaInfo with _$IntensityAreaInfo {
+  const factory IntensityAreaInfo({
+    required String code,
+    required LocalizedName name,
+    required JmaIntensity intensity,
+    required JmaLpgmIntensity? lpgmIntensity,
+  }) = _IntensityAreaInfo;
+
+  factory IntensityAreaInfo.fromJson(Map<String, dynamic> json) =>
+      _$IntensityAreaInfoFromJson(json);
+}
+
+@freezed
+abstract class StationSearchInfo with _$StationSearchInfo {
+  const factory StationSearchInfo({
+    required String code,
+    required LocalizedName name,
+    required JmaIntensity? intensity,
+    required JmaLpgmIntensity? lpgmIntensity,
+    required double? sva,
+    required List<PrePeriod>? prePeriods,
+  }) = _StationSearchInfo;
+
+  factory StationSearchInfo.fromJson(Map<String, dynamic> json) =>
+      _$StationSearchInfoFromJson(json);
 }
 
 extension EarthquakePartialApiExtension on api.EarthquakePartial {
-  EarthquakePartial toEarthquakePartial({
+  EarthquakePartialNormal toEarthquakePartial({
     required EarthquakeParameter parameter,
-  }) => EarthquakePartial(
+  }) => EarthquakePartialNormal(
     eventId: eventId,
     status: status.toTelegramStatus,
     originTime: originTime,
     originTimePrecision: originTimePrecision.toOriginTimePrecision,
     arrivalTime: arrivalTime,
-    dataSource: datasource.toEarthquakeDataSource,
+    dataSources: datasources.map((e) => e.toEarthquakeDataSource).toList(),
     hypocenter: hypocenter?.toEarthquakeHypocenter,
     earthquakeType: earthquakeType.toEarthquakeType,
     telegramTypes: telegramTypes
         .map((e) => e.toEarthquakeTelegramType)
         .toList(),
     estimatedIntensityTileUrl: estimatedIntensityTile,
-    intensity: intensity?.toEarthquakeIntensityPartial(
-      parameter: parameter,
-    ),
+    intensity: intensity?.toEarthquakeIntensityPartial(parameter: parameter),
   );
 }

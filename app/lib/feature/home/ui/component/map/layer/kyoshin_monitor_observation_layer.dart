@@ -41,95 +41,77 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
     };
     final lock = useMemoized(Lock.new, []);
 
-    useEffect(
-      () {
-        unawaited(
-          lock.synchronized(
-            () async {
-              await styleController.addSource(
-                GeoJsonSource(
-                  id: _sourceId,
-                  data: jsonEncode({
-                    'type': 'FeatureCollection',
-                    'features': <Map<String, dynamic>>[],
-                  }),
-                ),
-              );
+    useEffect(() {
+      unawaited(
+        lock.synchronized(() async {
+          await styleController.addSource(
+            GeoJsonSource(
+              id: _sourceId,
+              data: jsonEncode({
+                'type': 'FeatureCollection',
+                'features': <Map<String, dynamic>>[],
+              }),
+            ),
+          );
 
-              await styleController.addLayer(
-                CircleStyleLayer(
-                  id: _layerId,
-                  sourceId: _sourceId,
-                  paint: {
-                    'circle-radius': [
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      3,
-                      1,
-                      10,
-                      10,
-                    ],
-                    'circle-color': ['get', 'color'],
-                    'circle-stroke-color': '#808080',
-                    'circle-stroke-width': [
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      3,
-                      0.2 * radiusScaleFactor,
-                      10,
-                      radiusScaleFactor,
-                    ],
-                  },
-                ),
-              );
-            },
-          ),
-        );
-        return () async => unawaited(
-          lock.synchronized(
-            () async {
-              await styleController.removeLayer(_layerId);
-              await styleController.removeSource(_sourceId);
-            },
-          ),
-        );
-      },
-      [styleController, useKmoni, radiusScaleFactor],
-    );
-
-    useEffect(
-      () {
-        if (!useKmoni) {
-          return null;
-        }
-
-        final subscription = ref.listenManual(
-          homeKyoshinMonitorObservationGeoJsonProvider,
-          (_, next) async {
-            final sw = Stopwatch()..start();
-            await Timeline.timeSync(
-              'kmoni.updateGeoJsonSource',
-              () async => styleController.updateGeoJsonSource(
-                id: _sourceId,
-                data: next,
-              ),
-              arguments: {
-                'sourceId': _sourceId,
-                'nextDataLength': next.length,
+          await styleController.addLayer(
+            CircleStyleLayer(
+              id: _layerId,
+              sourceId: _sourceId,
+              paint: {
+                'circle-radius': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  1,
+                  10,
+                  10,
+                ],
+                'circle-color': ['get', 'color'],
+                'circle-stroke-color': '#808080',
+                'circle-stroke-width': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  0.2 * radiusScaleFactor,
+                  10,
+                  radiusScaleFactor,
+                ],
               },
-            );
-            sw.stop();
-          },
-        );
-        return subscription.close;
-      },
-      [
-        styleController,
-        useKmoni,
-      ],
-    );
+            ),
+          );
+        }),
+      );
+      return () async => unawaited(
+        lock.synchronized(() async {
+          await styleController.removeLayer(_layerId);
+          await styleController.removeSource(_sourceId);
+        }),
+      );
+    }, [styleController, useKmoni, radiusScaleFactor]);
+
+    useEffect(() {
+      if (!useKmoni) {
+        return null;
+      }
+
+      final subscription = ref.listenManual(
+        homeKyoshinMonitorObservationGeoJsonProvider,
+        (_, next) async {
+          final sw = Stopwatch()..start();
+          await Timeline.timeSync(
+            'kmoni.updateGeoJsonSource',
+            () async =>
+                styleController.updateGeoJsonSource(id: _sourceId, data: next),
+            arguments: {'sourceId': _sourceId, 'nextDataLength': next.length},
+          );
+          sw.stop();
+        },
+      );
+      return subscription.close;
+    }, [styleController, useKmoni]);
 
     return const SizedBox.shrink();
   }

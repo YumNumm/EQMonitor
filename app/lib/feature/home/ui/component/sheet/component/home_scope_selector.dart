@@ -29,26 +29,20 @@ class HomeScopeSelector extends StatelessWidget {
     final typography = designSystem.typography;
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: spacing.lg,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: spacing.lg),
       child: Row(
         spacing: spacing.sm,
         children: [
           MenuAnchor(
             style: MenuStyle(
-              padding: WidgetStateProperty.all(
-                .zero,
-              ),
+              padding: WidgetStateProperty.all(.zero),
               backgroundColor: WidgetStatePropertyAll(
                 colorTheme.surfaceContainerLow,
               ),
               shape: WidgetStateProperty.all(
                 RoundedSuperellipseBorder(
                   borderRadius: BorderRadius.circular(shape.md),
-                  side: BorderSide(
-                    color: colorTheme.outlineVariant,
-                  ),
+                  side: BorderSide(color: colorTheme.outlineVariant),
                 ),
               ),
             ),
@@ -56,20 +50,14 @@ class HomeScopeSelector extends StatelessWidget {
               for (final s in HomeEarthquakeHistoryScope.values)
                 MenuItemButton(
                   onPressed: () => onScopeChanged(s),
-                  child: Text(
-                    scopeLabel(s),
-                    style: typography.bodyLarge,
-                  ),
+                  child: Text(scopeLabel(s), style: typography.bodyLarge),
                 ),
             ],
             builder: (context, controller, child) => Row(
               spacing: spacing.sm,
               children: [
                 GestureDetector(
-                  child: Text(
-                    scopeLabel(scope),
-                    style: typography.bodyLarge,
-                  ),
+                  child: Text(scopeLabel(scope), style: typography.bodyLarge),
                   onTap: () {
                     if (controller.isOpen) {
                       controller.close();

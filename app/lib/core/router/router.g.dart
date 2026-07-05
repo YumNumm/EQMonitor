@@ -16,7 +16,6 @@ List<RouteBase> get $appRoutes => [
   $eewHistoryRoute,
   $seismicityRoute,
   $intensityHistoryRoute,
-  $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
   $shakeDetectionHistoryRoute,
   $shakeDetectionHistoryDetailsRoute,
@@ -211,41 +210,6 @@ mixin $IntensityHistoryRoute on GoRouteData {
       if (_self.prefectureCode != null) 'prefecture-code': _self.prefectureCode,
       if (_self.cityCode != null) 'city-code': _self.cityCode,
     },
-  );
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $earthquakeSearchResultRoute => GoRouteData.$route(
-  path: '/earthquake-search/:type/:code',
-  factory: $EarthquakeSearchResultRoute._fromState,
-);
-
-mixin $EarthquakeSearchResultRoute on GoRouteData {
-  static EarthquakeSearchResultRoute _fromState(GoRouterState state) =>
-      EarthquakeSearchResultRoute(
-        type: state.pathParameters['type']!,
-        code: state.pathParameters['code']!,
-        name: state.uri.queryParameters['name'],
-      );
-
-  EarthquakeSearchResultRoute get _self => this as EarthquakeSearchResultRoute;
-
-  @override
-  String get location => GoRouteData.$location(
-    '/earthquake-search/${Uri.encodeComponent(_self.type)}/${Uri.encodeComponent(_self.code)}',
-    queryParams: {if (_self.name != null) 'name': _self.name},
   );
 
   @override
@@ -493,7 +457,22 @@ RouteBase get $settingsRoute => GoRouteData.$route(
   path: '/settings',
   factory: $SettingsRoute._fromState,
   routes: [
-    GoRouteData.$route(path: 'display', factory: $DisplayRoute._fromState),
+    GoRouteData.$route(
+      path: 'display',
+      factory: $DisplayRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'theme',
+          factory: $ThemeSettingsRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'editor/:mode',
+              factory: $ThemeEditorRoute._fromState,
+            ),
+          ],
+        ),
+      ],
+    ),
     GoRouteData.$route(
       path: 'kyoshin-monitor-about',
       factory: $KyoshinMonitorAboutRoute._fromState,
@@ -704,6 +683,52 @@ mixin $DisplayRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/display');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ThemeSettingsRoute on GoRouteData {
+  static ThemeSettingsRoute _fromState(GoRouterState state) =>
+      const ThemeSettingsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/display/theme');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ThemeEditorRoute on GoRouteData {
+  static ThemeEditorRoute _fromState(GoRouterState state) =>
+      ThemeEditorRoute(mode: state.pathParameters['mode']!);
+
+  ThemeEditorRoute get _self => this as ThemeEditorRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/display/theme/editor/${Uri.encodeComponent(_self.mode)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

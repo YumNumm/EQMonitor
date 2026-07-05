@@ -27,9 +27,9 @@ class TsunamiEarthquakeCard extends StatelessWidget {
     final depthStr = hypo.depth.type == DepthType.normal
         ? '深さ${hypo.depth.value}km'
         : '深さ不明';
-    final timeStr = DateFormat('yyyy/MM/dd HH:mm').format(
-      earthquake.originTime.toLocal(),
-    );
+    final timeStr = DateFormat(
+      'yyyy/MM/dd HH:mm',
+    ).format(earthquake.originTime.toLocal());
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -51,7 +51,7 @@ class TsunamiEarthquakeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hypo.name,
+                  hypo.name ?? '', // TODO: 名前がない場合のUIを決める
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,

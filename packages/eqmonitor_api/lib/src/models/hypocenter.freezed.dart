@@ -15,8 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Hypocenter {
 
-/// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
- String get code; String get name; Magnitude get magnitude; Depth get depth;@JsonKey(includeIfNull: false) CodeName? get detailed;@JsonKey(includeIfNull: false) Coordinate? get coordinates;@JsonKey(includeIfNull: false) HypocenterAuxiliary? get auxiliary;
+ Magnitude get magnitude; Depth get depth;/// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
+@JsonKey(includeIfNull: false) String? get code;@JsonKey(includeIfNull: false) String? get name;@JsonKey(includeIfNull: false) CodeName? get detailed;@JsonKey(includeIfNull: false) Coordinate? get coordinates;@JsonKey(includeIfNull: false) HypocenterAuxiliary? get auxiliary;
 /// Create a copy of Hypocenter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $HypocenterCopyWith<Hypocenter> get copyWith => _$HypocenterCopyWithImpl<Hypocen
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Hypocenter&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.detailed, detailed) || other.detailed == detailed)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.auxiliary, auxiliary) || other.auxiliary == auxiliary));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Hypocenter&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.detailed, detailed) || other.detailed == detailed)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.auxiliary, auxiliary) || other.auxiliary == auxiliary));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,name,magnitude,depth,detailed,coordinates,auxiliary);
+int get hashCode => Object.hash(runtimeType,magnitude,depth,code,name,detailed,coordinates,auxiliary);
 
 @override
 String toString() {
-  return 'Hypocenter(code: $code, name: $name, magnitude: $magnitude, depth: $depth, detailed: $detailed, coordinates: $coordinates, auxiliary: $auxiliary)';
+  return 'Hypocenter(magnitude: $magnitude, depth: $depth, code: $code, name: $name, detailed: $detailed, coordinates: $coordinates, auxiliary: $auxiliary)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $HypocenterCopyWith<$Res>  {
   factory $HypocenterCopyWith(Hypocenter value, $Res Function(Hypocenter) _then) = _$HypocenterCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, Magnitude magnitude, Depth depth,@JsonKey(includeIfNull: false) CodeName? detailed,@JsonKey(includeIfNull: false) Coordinate? coordinates,@JsonKey(includeIfNull: false) HypocenterAuxiliary? auxiliary
+ Magnitude magnitude, Depth depth,@JsonKey(includeIfNull: false) String? code,@JsonKey(includeIfNull: false) String? name,@JsonKey(includeIfNull: false) CodeName? detailed,@JsonKey(includeIfNull: false) Coordinate? coordinates,@JsonKey(includeIfNull: false) HypocenterAuxiliary? auxiliary
 });
 
 
@@ -66,13 +66,13 @@ class _$HypocenterCopyWithImpl<$Res>
 
 /// Create a copy of Hypocenter
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? magnitude = null,Object? depth = null,Object? detailed = freezed,Object? coordinates = freezed,Object? auxiliary = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? magnitude = null,Object? depth = null,Object? code = freezed,Object? name = freezed,Object? detailed = freezed,Object? coordinates = freezed,Object? auxiliary = freezed,}) {
   return _then(_self.copyWith(
-code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,magnitude: null == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
+magnitude: null == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
 as Magnitude,depth: null == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
-as Depth,detailed: freezed == detailed ? _self.detailed : detailed // ignore: cast_nullable_to_non_nullable
+as Depth,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,detailed: freezed == detailed ? _self.detailed : detailed // ignore: cast_nullable_to_non_nullable
 as CodeName?,coordinates: freezed == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
 as Coordinate?,auxiliary: freezed == auxiliary ? _self.auxiliary : auxiliary // ignore: cast_nullable_to_non_nullable
 as HypocenterAuxiliary?,
@@ -214,10 +214,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  CodeName? detailed, @JsonKey(includeIfNull: false)  Coordinate? coordinates, @JsonKey(includeIfNull: false)  HypocenterAuxiliary? auxiliary)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  String? code, @JsonKey(includeIfNull: false)  String? name, @JsonKey(includeIfNull: false)  CodeName? detailed, @JsonKey(includeIfNull: false)  Coordinate? coordinates, @JsonKey(includeIfNull: false)  HypocenterAuxiliary? auxiliary)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Hypocenter() when $default != null:
-return $default(_that.code,_that.name,_that.magnitude,_that.depth,_that.detailed,_that.coordinates,_that.auxiliary);case _:
+return $default(_that.magnitude,_that.depth,_that.code,_that.name,_that.detailed,_that.coordinates,_that.auxiliary);case _:
   return orElse();
 
 }
@@ -235,10 +235,10 @@ return $default(_that.code,_that.name,_that.magnitude,_that.depth,_that.detailed
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  CodeName? detailed, @JsonKey(includeIfNull: false)  Coordinate? coordinates, @JsonKey(includeIfNull: false)  HypocenterAuxiliary? auxiliary)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  String? code, @JsonKey(includeIfNull: false)  String? name, @JsonKey(includeIfNull: false)  CodeName? detailed, @JsonKey(includeIfNull: false)  Coordinate? coordinates, @JsonKey(includeIfNull: false)  HypocenterAuxiliary? auxiliary)  $default,) {final _that = this;
 switch (_that) {
 case _Hypocenter():
-return $default(_that.code,_that.name,_that.magnitude,_that.depth,_that.detailed,_that.coordinates,_that.auxiliary);case _:
+return $default(_that.magnitude,_that.depth,_that.code,_that.name,_that.detailed,_that.coordinates,_that.auxiliary);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -255,10 +255,10 @@ return $default(_that.code,_that.name,_that.magnitude,_that.depth,_that.detailed
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  CodeName? detailed, @JsonKey(includeIfNull: false)  Coordinate? coordinates, @JsonKey(includeIfNull: false)  HypocenterAuxiliary? auxiliary)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  String? code, @JsonKey(includeIfNull: false)  String? name, @JsonKey(includeIfNull: false)  CodeName? detailed, @JsonKey(includeIfNull: false)  Coordinate? coordinates, @JsonKey(includeIfNull: false)  HypocenterAuxiliary? auxiliary)?  $default,) {final _that = this;
 switch (_that) {
 case _Hypocenter() when $default != null:
-return $default(_that.code,_that.name,_that.magnitude,_that.depth,_that.detailed,_that.coordinates,_that.auxiliary);case _:
+return $default(_that.magnitude,_that.depth,_that.code,_that.name,_that.detailed,_that.coordinates,_that.auxiliary);case _:
   return null;
 
 }
@@ -270,14 +270,14 @@ return $default(_that.code,_that.name,_that.magnitude,_that.depth,_that.detailed
 @JsonSerializable()
 
 class _Hypocenter implements Hypocenter {
-  const _Hypocenter({required this.code, required this.name, required this.magnitude, required this.depth, @JsonKey(includeIfNull: false) this.detailed, @JsonKey(includeIfNull: false) this.coordinates, @JsonKey(includeIfNull: false) this.auxiliary});
+  const _Hypocenter({required this.magnitude, required this.depth, @JsonKey(includeIfNull: false) this.code, @JsonKey(includeIfNull: false) this.name, @JsonKey(includeIfNull: false) this.detailed, @JsonKey(includeIfNull: false) this.coordinates, @JsonKey(includeIfNull: false) this.auxiliary});
   factory _Hypocenter.fromJson(Map<String, dynamic> json) => _$HypocenterFromJson(json);
 
-/// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
-@override final  String code;
-@override final  String name;
 @override final  Magnitude magnitude;
 @override final  Depth depth;
+/// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
+@override@JsonKey(includeIfNull: false) final  String? code;
+@override@JsonKey(includeIfNull: false) final  String? name;
 @override@JsonKey(includeIfNull: false) final  CodeName? detailed;
 @override@JsonKey(includeIfNull: false) final  Coordinate? coordinates;
 @override@JsonKey(includeIfNull: false) final  HypocenterAuxiliary? auxiliary;
@@ -295,16 +295,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Hypocenter&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.detailed, detailed) || other.detailed == detailed)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.auxiliary, auxiliary) || other.auxiliary == auxiliary));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Hypocenter&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.detailed, detailed) || other.detailed == detailed)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.auxiliary, auxiliary) || other.auxiliary == auxiliary));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,name,magnitude,depth,detailed,coordinates,auxiliary);
+int get hashCode => Object.hash(runtimeType,magnitude,depth,code,name,detailed,coordinates,auxiliary);
 
 @override
 String toString() {
-  return 'Hypocenter(code: $code, name: $name, magnitude: $magnitude, depth: $depth, detailed: $detailed, coordinates: $coordinates, auxiliary: $auxiliary)';
+  return 'Hypocenter(magnitude: $magnitude, depth: $depth, code: $code, name: $name, detailed: $detailed, coordinates: $coordinates, auxiliary: $auxiliary)';
 }
 
 
@@ -315,7 +315,7 @@ abstract mixin class _$HypocenterCopyWith<$Res> implements $HypocenterCopyWith<$
   factory _$HypocenterCopyWith(_Hypocenter value, $Res Function(_Hypocenter) _then) = __$HypocenterCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, Magnitude magnitude, Depth depth,@JsonKey(includeIfNull: false) CodeName? detailed,@JsonKey(includeIfNull: false) Coordinate? coordinates,@JsonKey(includeIfNull: false) HypocenterAuxiliary? auxiliary
+ Magnitude magnitude, Depth depth,@JsonKey(includeIfNull: false) String? code,@JsonKey(includeIfNull: false) String? name,@JsonKey(includeIfNull: false) CodeName? detailed,@JsonKey(includeIfNull: false) Coordinate? coordinates,@JsonKey(includeIfNull: false) HypocenterAuxiliary? auxiliary
 });
 
 
@@ -332,13 +332,13 @@ class __$HypocenterCopyWithImpl<$Res>
 
 /// Create a copy of Hypocenter
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? magnitude = null,Object? depth = null,Object? detailed = freezed,Object? coordinates = freezed,Object? auxiliary = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? magnitude = null,Object? depth = null,Object? code = freezed,Object? name = freezed,Object? detailed = freezed,Object? coordinates = freezed,Object? auxiliary = freezed,}) {
   return _then(_Hypocenter(
-code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,magnitude: null == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
+magnitude: null == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
 as Magnitude,depth: null == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
-as Depth,detailed: freezed == detailed ? _self.detailed : detailed // ignore: cast_nullable_to_non_nullable
+as Depth,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,detailed: freezed == detailed ? _self.detailed : detailed // ignore: cast_nullable_to_non_nullable
 as CodeName?,coordinates: freezed == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
 as Coordinate?,auxiliary: freezed == auxiliary ? _self.auxiliary : auxiliary // ignore: cast_nullable_to_non_nullable
 as HypocenterAuxiliary?,

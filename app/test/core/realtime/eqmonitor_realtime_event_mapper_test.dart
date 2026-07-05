@@ -63,7 +63,7 @@ void main() {
         eventId: '20260501090000',
         status: .normal,
         originTimePrecision: .second,
-        datasource: .jmaDisasterInformationXml,
+        datasources: [.jmaDisasterInformationXml],
         telegramTypes: [],
         earthquakeType: .normal,
       );

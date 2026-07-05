@@ -26,9 +26,8 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
     return Navigator.of(context).push<EarthquakeHistoryParameter>(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (_) => HomeDesignatedRegionPickerPage(
-          initialParameter: initialParameter,
-        ),
+        builder: (_) =>
+            HomeDesignatedRegionPickerPage(initialParameter: initialParameter),
       ),
     );
   }
@@ -37,10 +36,25 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final selectedType = useState<RegionSearchType>(
-      initialParameter?.regionSearchType ?? RegionSearchType.prefecture,
+      initialParameter is EarthquakeHistoryParameterCity
+          ? RegionSearchType.city
+          : RegionSearchType.prefecture,
     );
-    final selectedCode = useState<String?>(initialParameter?.regionCode);
-    final selectedName = useState<String?>(initialParameter?.regionName);
+    final selectedCode = useState<String?>(switch (initialParameter) {
+      EarthquakeHistoryParameterCity(:final cityCode) => cityCode,
+      EarthquakeHistoryParameterRegion(:final regionCode) => regionCode,
+      EarthquakeHistoryParameterPrefecture(:final prefectureCode) =>
+        prefectureCode,
+      _ => null,
+    });
+    // TODO: 地域名を取得する
+    final selectedName = useState<String?>(switch (initialParameter) {
+      EarthquakeHistoryParameterCity(:final cityCode) => cityCode,
+      EarthquakeHistoryParameterRegion(:final regionCode) => regionCode,
+      EarthquakeHistoryParameterPrefecture(:final prefectureCode) =>
+        prefectureCode,
+      _ => null,
+    });
 
     Future<void> openMap() async {
       final result = await RegionPickerMapPage.show(
@@ -65,10 +79,14 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
           if (canApply)
             TextButton(
               onPressed: () => Navigator.of(context).pop(
-                EarthquakeHistoryParameter(
-                  regionSearchType: selectedType.value,
-                  regionCode: selectedCode.value,
-                  regionName: selectedName.value,
+                EarthquakeHistoryParameter.city(
+                  sortBy: .eventId,
+                  sortOrder: .desc,
+                  cityCode:
+                      selectedCode.value ??
+                      () {
+                        throw Exception('city code is null');
+                      }(),
                 ),
               ),
               child: const Text('決定'),
@@ -170,20 +188,27 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
             FilledButton(
               onPressed: canApply
                   ? () => Navigator.of(context).pop(
-                      EarthquakeHistoryParameter(
-                        regionSearchType: selectedType.value,
-                        regionCode: selectedCode.value,
-                        regionName: selectedName.value,
+                      EarthquakeHistoryParameter.city(
+                        sortBy: .eventId,
+                        sortOrder: .desc,
+                        cityCode:
+                            selectedCode.value ??
+                            () {
+                              throw Exception('city code is null');
+                            }(),
                       ),
                     )
                   : null,
               child: const Text('この地域を設定する'),
             ),
-            if (initialParameter?.regionCode != null) ...[
+            if (initialParameter is EarthquakeHistoryParameterCity) ...[
               const SizedBox(height: 8),
               OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(
-                  const EarthquakeHistoryParameter(),
+                  const EarthquakeHistoryParameter.all(
+                    sortBy: .eventId,
+                    sortOrder: .desc,
+                  ),
                 ),
                 child: const Text('設定を解除する'),
               ),

@@ -11,24 +11,31 @@ part of 'earthquake_search_response.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+PaginatedResponse<T> _$PaginatedResponseFromJson<T extends EarthquakePartial>(
+  Map<String, dynamic> json,T Function(Object?) fromJsonT
+) {
+    return _PaginatedSearchResponse<T>.fromJson(
+      json,fromJsonT
+    );
+}
 
 /// @nodoc
-mixin _$PaginatedSearchResponse<T> {
+mixin _$PaginatedResponse<T extends EarthquakePartial> {
 
  List<T> get items; String? get nextToken;
-/// Create a copy of PaginatedSearchResponse
+/// Create a copy of PaginatedResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$PaginatedSearchResponseCopyWith<T, PaginatedSearchResponse<T>> get copyWith => _$PaginatedSearchResponseCopyWithImpl<T, PaginatedSearchResponse<T>>(this as PaginatedSearchResponse<T>, _$identity);
+$PaginatedResponseCopyWith<T, PaginatedResponse<T>> get copyWith => _$PaginatedResponseCopyWithImpl<T, PaginatedResponse<T>>(this as PaginatedResponse<T>, _$identity);
 
-  /// Serializes this PaginatedSearchResponse to a JSON map.
+  /// Serializes this PaginatedResponse to a JSON map.
   Map<String, dynamic> toJson(Object? Function(T) toJsonT);
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaginatedSearchResponse<T>&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.nextToken, nextToken) || other.nextToken == nextToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaginatedResponse<T>&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.nextToken, nextToken) || other.nextToken == nextToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -37,15 +44,15 @@ int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(
 
 @override
 String toString() {
-  return 'PaginatedSearchResponse<$T>(items: $items, nextToken: $nextToken)';
+  return 'PaginatedResponse<$T>(items: $items, nextToken: $nextToken)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $PaginatedSearchResponseCopyWith<T,$Res>  {
-  factory $PaginatedSearchResponseCopyWith(PaginatedSearchResponse<T> value, $Res Function(PaginatedSearchResponse<T>) _then) = _$PaginatedSearchResponseCopyWithImpl;
+abstract mixin class $PaginatedResponseCopyWith<T extends EarthquakePartial,$Res>  {
+  factory $PaginatedResponseCopyWith(PaginatedResponse<T> value, $Res Function(PaginatedResponse<T>) _then) = _$PaginatedResponseCopyWithImpl;
 @useResult
 $Res call({
  List<T> items, String? nextToken
@@ -56,14 +63,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$PaginatedSearchResponseCopyWithImpl<T,$Res>
-    implements $PaginatedSearchResponseCopyWith<T, $Res> {
-  _$PaginatedSearchResponseCopyWithImpl(this._self, this._then);
+class _$PaginatedResponseCopyWithImpl<T extends EarthquakePartial,$Res>
+    implements $PaginatedResponseCopyWith<T, $Res> {
+  _$PaginatedResponseCopyWithImpl(this._self, this._then);
 
-  final PaginatedSearchResponse<T> _self;
-  final $Res Function(PaginatedSearchResponse<T>) _then;
+  final PaginatedResponse<T> _self;
+  final $Res Function(PaginatedResponse<T>) _then;
 
-/// Create a copy of PaginatedSearchResponse
+/// Create a copy of PaginatedResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? nextToken = freezed,}) {
   return _then(_self.copyWith(
@@ -76,8 +83,8 @@ as String?,
 }
 
 
-/// Adds pattern-matching-related methods to [PaginatedSearchResponse].
-extension PaginatedSearchResponsePatterns<T> on PaginatedSearchResponse<T> {
+/// Adds pattern-matching-related methods to [PaginatedResponse].
+extension PaginatedResponsePatterns<T extends EarthquakePartial> on PaginatedResponse<T> {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -209,7 +216,7 @@ return $default(_that.items,_that.nextToken);case _:
 /// @nodoc
 @JsonSerializable(genericArgumentFactories: true)
 
-class _PaginatedSearchResponse<T> implements PaginatedSearchResponse<T> {
+class _PaginatedSearchResponse<T extends EarthquakePartial> implements PaginatedResponse<T> {
   const _PaginatedSearchResponse({required final  List<T> items, required this.nextToken}): _items = items;
   factory _PaginatedSearchResponse.fromJson(Map<String, dynamic> json,T Function(Object?) fromJsonT) => _$PaginatedSearchResponseFromJson(json,fromJsonT);
 
@@ -222,7 +229,7 @@ class _PaginatedSearchResponse<T> implements PaginatedSearchResponse<T> {
 
 @override final  String? nextToken;
 
-/// Create a copy of PaginatedSearchResponse
+/// Create a copy of PaginatedResponse
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
@@ -244,14 +251,14 @@ int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(
 
 @override
 String toString() {
-  return 'PaginatedSearchResponse<$T>(items: $items, nextToken: $nextToken)';
+  return 'PaginatedResponse<$T>(items: $items, nextToken: $nextToken)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$PaginatedSearchResponseCopyWith<T,$Res> implements $PaginatedSearchResponseCopyWith<T, $Res> {
+abstract mixin class _$PaginatedSearchResponseCopyWith<T extends EarthquakePartial,$Res> implements $PaginatedResponseCopyWith<T, $Res> {
   factory _$PaginatedSearchResponseCopyWith(_PaginatedSearchResponse<T> value, $Res Function(_PaginatedSearchResponse<T>) _then) = __$PaginatedSearchResponseCopyWithImpl;
 @override @useResult
 $Res call({
@@ -263,14 +270,14 @@ $Res call({
 
 }
 /// @nodoc
-class __$PaginatedSearchResponseCopyWithImpl<T,$Res>
+class __$PaginatedSearchResponseCopyWithImpl<T extends EarthquakePartial,$Res>
     implements _$PaginatedSearchResponseCopyWith<T, $Res> {
   __$PaginatedSearchResponseCopyWithImpl(this._self, this._then);
 
   final _PaginatedSearchResponse<T> _self;
   final $Res Function(_PaginatedSearchResponse<T>) _then;
 
-/// Create a copy of PaginatedSearchResponse
+/// Create a copy of PaginatedResponse
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? nextToken = freezed,}) {
   return _then(_PaginatedSearchResponse<T>(

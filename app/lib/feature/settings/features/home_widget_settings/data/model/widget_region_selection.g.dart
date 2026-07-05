@@ -32,5 +32,7 @@ Map<String, dynamic> _$WidgetRegionSelectionToJson(
 
 const _$RegionSearchTypeEnumMap = {
   RegionSearchType.prefecture: 'prefecture',
+  RegionSearchType.region: 'region',
   RegionSearchType.city: 'city',
+  RegionSearchType.station: 'station',
 };

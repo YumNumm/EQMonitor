@@ -79,178 +79,160 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
     final wasEewActive = useRef(false);
     final enqueue = useMapOperationQueue();
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
+      unawaited(
+        enqueue(() async {
+          await (
+            styleController.addSource(
+              GeoJsonSource(
+                id: EewPsWaveLayer.sourceId.pWave,
+                data: jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': <Map<String, dynamic>>[],
+                }),
+              ),
+            ),
+            styleController.addSource(
+              GeoJsonSource(
+                id: EewPsWaveLayer.sourceId.sWave,
+                data: jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': <Map<String, dynamic>>[],
+                }),
+              ),
+            ),
+          ).wait;
+
+          await (
+            styleController.addLayer(
+              LineStyleLayer(
+                id: EewPsWaveLayer.layerId.pWaveLine,
+                sourceId: EewPsWaveLayer.sourceId.pWave,
+                paint: const {'line-color': '#0000FF', 'line-width': 1},
+              ),
+            ),
+            styleController.addLayer(
+              LineStyleLayer(
+                id: EewPsWaveLayer.layerId.sWaveLine,
+                sourceId: EewPsWaveLayer.sourceId.sWave,
+                paint: const {
+                  'line-color': ['get', 'lineColor'],
+                  'line-width': 2,
+                },
+              ),
+            ),
+            styleController.addLayer(
+              FillStyleLayer(
+                id: EewPsWaveLayer.layerId.sWaveFill,
+                sourceId: EewPsWaveLayer.sourceId.sWave,
+                paint: const {
+                  'fill-color': ['get', 'fillColor'],
+                  'fill-opacity': 0.2,
+                },
+              ),
+              belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
+            ),
+          ).wait;
+
+          isInitialized.value = true;
+        }),
+      );
+
+      return () {
         unawaited(
           enqueue(() async {
-            await (
-              styleController.addSource(
-                GeoJsonSource(
-                  id: EewPsWaveLayer.sourceId.pWave,
-                  data: jsonEncode({
-                    'type': 'FeatureCollection',
-                    'features': <Map<String, dynamic>>[],
-                  }),
-                ),
-              ),
-              styleController.addSource(
-                GeoJsonSource(
-                  id: EewPsWaveLayer.sourceId.sWave,
-                  data: jsonEncode({
-                    'type': 'FeatureCollection',
-                    'features': <Map<String, dynamic>>[],
-                  }),
-                ),
-              ),
-            ).wait;
-
-            await (
-              styleController.addLayer(
-                LineStyleLayer(
-                  id: EewPsWaveLayer.layerId.pWaveLine,
-                  sourceId: EewPsWaveLayer.sourceId.pWave,
-                  paint: const {
-                    'line-color': '#0000FF',
-                    'line-width': 1,
-                  },
-                ),
-              ),
-              styleController.addLayer(
-                LineStyleLayer(
-                  id: EewPsWaveLayer.layerId.sWaveLine,
-                  sourceId: EewPsWaveLayer.sourceId.sWave,
-                  paint: const {
-                    'line-color': ['get', 'lineColor'],
-                    'line-width': 2,
-                  },
-                ),
-              ),
-              styleController.addLayer(
-                FillStyleLayer(
-                  id: EewPsWaveLayer.layerId.sWaveFill,
-                  sourceId: EewPsWaveLayer.sourceId.sWave,
-                  paint: const {
-                    'fill-color': ['get', 'fillColor'],
-                    'fill-opacity': 0.2,
-                  },
-                ),
-                belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
-              ),
-            ).wait;
-
-            isInitialized.value = true;
+            await styleController.removeLayer(EewPsWaveLayer.layerId.pWaveLine);
+            await styleController.removeLayer(EewPsWaveLayer.layerId.sWaveLine);
+            await styleController.removeLayer(EewPsWaveLayer.layerId.sWaveFill);
+            await styleController.removeSource(EewPsWaveLayer.sourceId.pWave);
+            await styleController.removeSource(EewPsWaveLayer.sourceId.sWave);
           }),
         );
-
-        return () {
-          unawaited(
-            enqueue(() async {
-              await styleController.removeLayer(
-                EewPsWaveLayer.layerId.pWaveLine,
-              );
-              await styleController.removeLayer(
-                EewPsWaveLayer.layerId.sWaveLine,
-              );
-              await styleController.removeLayer(
-                EewPsWaveLayer.layerId.sWaveFill,
-              );
-              await styleController.removeSource(EewPsWaveLayer.sourceId.pWave);
-              await styleController.removeSource(EewPsWaveLayer.sourceId.sWave);
-            }),
-          );
-        };
-      },
-      [styleController],
-    );
+      };
+    }, [styleController]);
 
     final animationController = useAnimationController(
       duration: const Duration(days: 365),
     );
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
-        if (showEews.isNotEmpty) {
-          if (animationRate == HomeEewAnimationRate.unlimited) {
-            unawaited(animationController.repeat());
-          } else {
-            animationController.stop();
-          }
-          wasEewActive.value = true;
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
+      if (showEews.isNotEmpty) {
+        if (animationRate == HomeEewAnimationRate.unlimited) {
+          unawaited(animationController.repeat());
         } else {
           animationController.stop();
-          if (wasEewActive.value && isInitialized.value) {
-            unawaited(
-              _updateGeoJsonIfChanged(
-                styleController,
-                pWaveGeojson: _emptyGeoJson,
-                sWaveGeojson: _emptyGeoJson,
-                latestPWaveGeoJson: latestPWaveGeoJson,
-                latestSWaveGeoJson: latestSWaveGeoJson,
-              ),
-            );
-          }
-          wasEewActive.value = false;
         }
-        return null;
-      },
-      [styleController, showEews, animationRate, animationController],
-    );
-
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
-
-        var disposed = false;
-
-        void listener() {
-          if (disposed || !isInitialized.value) {
-            return;
-          }
-          final travelTimeMap = ref.read(travelTimeDepthMapProvider);
-          final now = ref.read(appClockProvider.notifier).now();
-
-          final (pWaveGeojson, sWaveGeojson) = _calculateGeoJson(
-            showEews,
-            now,
-            travelTimeMap,
-          );
-
+        wasEewActive.value = true;
+      } else {
+        animationController.stop();
+        if (wasEewActive.value && isInitialized.value) {
           unawaited(
             _updateGeoJsonIfChanged(
               styleController,
-              pWaveGeojson: pWaveGeojson,
-              sWaveGeojson: sWaveGeojson,
+              pWaveGeojson: _emptyGeoJson,
+              sWaveGeojson: _emptyGeoJson,
               latestPWaveGeoJson: latestPWaveGeoJson,
               latestSWaveGeoJson: latestSWaveGeoJson,
             ),
           );
         }
+        wasEewActive.value = false;
+      }
+      return null;
+    }, [styleController, showEews, animationRate, animationController]);
 
-        Timer? timer;
-        if (animationRate == HomeEewAnimationRate.oneHz) {
-          listener();
-          timer = Timer.periodic(const Duration(seconds: 1), (_) => listener());
-        } else {
-          animationController.addListener(listener);
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
+
+      var disposed = false;
+
+      void listener() {
+        if (disposed || !isInitialized.value) {
+          return;
         }
+        final travelTimeMap = ref.read(travelTimeDepthMapProvider);
+        final now = ref.read(appClockProvider.notifier).now();
 
-        return () {
-          disposed = true;
-          timer?.cancel();
-          animationController.removeListener(listener);
-        };
-      },
-      [styleController, showEews, animationRate, animationController],
-    );
+        final (pWaveGeojson, sWaveGeojson) = _calculateGeoJson(
+          showEews,
+          now,
+          travelTimeMap,
+        );
+
+        unawaited(
+          _updateGeoJsonIfChanged(
+            styleController,
+            pWaveGeojson: pWaveGeojson,
+            sWaveGeojson: sWaveGeojson,
+            latestPWaveGeoJson: latestPWaveGeoJson,
+            latestSWaveGeoJson: latestSWaveGeoJson,
+          ),
+        );
+      }
+
+      Timer? timer;
+      if (animationRate == HomeEewAnimationRate.oneHz) {
+        listener();
+        timer = Timer.periodic(const Duration(seconds: 1), (_) => listener());
+      } else {
+        animationController.addListener(listener);
+      }
+
+      return () {
+        disposed = true;
+        timer?.cancel();
+        animationController.removeListener(listener);
+      };
+    }, [styleController, showEews, animationRate, animationController]);
 
     return const SizedBox.shrink();
   }
@@ -293,11 +275,7 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
           'geometry': <String, dynamic>{
             'type': 'Polygon',
             'coordinates': [
-              _generateCircleCoordinates(
-                lat,
-                lng,
-                travelTime.pDistance!,
-              ),
+              _generateCircleCoordinates(lat, lng, travelTime.pDistance!),
             ],
           },
           'properties': <String, dynamic>{},
@@ -310,17 +288,10 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
           'geometry': {
             'type': 'Polygon',
             'coordinates': [
-              _generateCircleCoordinates(
-                lat,
-                lng,
-                travelTime.sDistance!,
-              ),
+              _generateCircleCoordinates(lat, lng, travelTime.sDistance!),
             ],
           },
-          'properties': {
-            'lineColor': lineColor,
-            'fillColor': fillColor,
-          },
+          'properties': {'lineColor': lineColor, 'fillColor': fillColor},
         });
       }
     }

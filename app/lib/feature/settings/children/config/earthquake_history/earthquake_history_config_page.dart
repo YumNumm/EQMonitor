@@ -34,10 +34,21 @@ class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final homeAsync = ref.watch(homeConfigurationProvider);
     final parameter = homeAsync.value?.common.parameter;
-    final regionName = parameter?.regionName;
-    final searchTypeLabel = switch (parameter?.regionSearchType) {
-      RegionSearchType.prefecture => '都道府県',
-      RegionSearchType.city => '市区町村',
+    final regionName = switch (parameter) {
+      EarthquakeHistoryParameterAll() => null,
+      EarthquakeHistoryParameterRegion(:final regionCode) => regionCode,
+      EarthquakeHistoryParameterPrefecture(:final prefectureCode) =>
+        prefectureCode,
+      EarthquakeHistoryParameterCity(:final cityCode) => cityCode,
+      EarthquakeHistoryParameterStation(:final stationCode) => stationCode,
+      null => null,
+    };
+    final searchTypeLabel = switch (parameter) {
+      EarthquakeHistoryParameterAll() => '全国',
+      EarthquakeHistoryParameterPrefecture() => '都道府県',
+      EarthquakeHistoryParameterRegion() => '細分化地域',
+      EarthquakeHistoryParameterCity() => '市区町村',
+      EarthquakeHistoryParameterStation() => '観測点',
       null => null,
     };
 
@@ -55,17 +66,14 @@ class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
         if (result == null) {
           return;
         }
-        await HomeConfigurationNotifier.saveMutation.run(
-          ref,
-          (tsx) async {
-            final notifier = tsx.get(homeConfigurationProvider.notifier);
-            if (result.regionCode == null) {
-              await notifier.clearCustomEarthquakeHistoryParameter();
-            } else {
-              await notifier.setCustomEarthquakeHistoryParameter(result);
-            }
-          },
-        );
+        await HomeConfigurationNotifier.saveMutation.run(ref, (tsx) async {
+          final notifier = tsx.get(homeConfigurationProvider.notifier);
+          if (result is EarthquakeHistoryParameterAll) {
+            await notifier.clearCustomEarthquakeHistoryParameter();
+          } else {
+            await notifier.setCustomEarthquakeHistoryParameter(result);
+          }
+        });
       },
     );
   }
@@ -93,9 +101,7 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
                   .requireValue;
               await ref
                   .read(earthquakeHistoryConfigProvider.notifier)
-                  .save(
-                    full.copyWith.list(isFillBackground: value),
-                  );
+                  .save(full.copyWith.list(isFillBackground: value));
             },
           ),
           onTap: () async {
@@ -103,9 +109,7 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
             await ref
                 .read(earthquakeHistoryConfigProvider.notifier)
                 .save(
-                  full.copyWith.list(
-                    isFillBackground: !state.isFillBackground,
-                  ),
+                  full.copyWith.list(isFillBackground: !state.isFillBackground),
                 );
           },
         ),

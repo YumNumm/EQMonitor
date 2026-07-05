@@ -15,10 +15,7 @@ abstract class MapCameraState with _$MapCameraState {
   }) = _MapCameraState;
 
   factory MapCameraState.home() => const MapCameraState(
-    center: Geographic(
-      lon: JapanBounds.centerLng,
-      lat: JapanBounds.centerLat,
-    ),
+    center: Geographic(lon: JapanBounds.centerLng, lat: JapanBounds.centerLat),
     zoom: 5.5,
   );
 }

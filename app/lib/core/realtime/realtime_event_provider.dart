@@ -20,12 +20,6 @@ class RealtimeEvents extends _$RealtimeEvents {
     ref.listen(eqMonitorWsDataSourceProvider, (_, next) {
       next.whenData(controller.add);
     });
-
-    // 将来: DMDATA ソースを追加する場合はここに ref.listen を追加
-    // ref.listen(dmdataWsDataSourceProvider, (_, next) {
-    //   next.whenData(controller.add);
-    // });
-
     yield* controller.stream;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -28,13 +29,17 @@ class HomeEarthquakeList extends StatelessWidget {
             (item) => InkWell(
               borderRadius: BorderRadius.circular(shape.md),
               onTap: () async => EarthquakeHistoryDetailsRoute(
-                eventId: item.eventId,
+                eventId: item.earthquake.eventId,
               ).push<void>(context),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: spacing.lg),
                 child: EarthquakeHistoryListTile(
                   visualDensity: .compact,
                   item: item,
+                  searchParameter: EarthquakeHistoryParameter.all(
+                    sortBy: .eventId,
+                    sortOrder: .desc,
+                  ),
                   showBackgroundColor: false,
                   intensityIconSize: 32,
                   titleTextColor: colorTheme.onSurface,

@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'catalog.dart';
 import 'earthquake_datasource.dart';
 import 'earthquake_telegram.dart';
 import 'hypocenter.dart';
@@ -23,7 +24,9 @@ abstract class Earthquake with _$Earthquake {
     required TelegramStatus status,
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
-    required EarthquakeDatasource datasource,
+
+    /// 地震データのソースの配列
+    required List<EarthquakeDatasource> datasources,
     required List<EarthquakeTelegram> telegrams,
     @JsonKey(includeIfNull: false,name: 'origin_time')
     DateTime? originTime,
@@ -37,6 +40,8 @@ abstract class Earthquake with _$Earthquake {
     /// 推計震度PMTilesのフルURL
     @JsonKey(includeIfNull: false,name: 'estimated_intensity_tile')
     String? estimatedIntensityTile,
+    @JsonKey(includeIfNull: false)
+    Catalog? catalog,
   }) = _Earthquake;
   
   factory Earthquake.fromJson(Map<String, Object?> json) => _$EarthquakeFromJson(json);

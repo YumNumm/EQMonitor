@@ -8,29 +8,37 @@ part of 'earthquake_history_parameter.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_EarthquakeHistoryParameter _$EarthquakeHistoryParameterFromJson(
+EarthquakeHistoryParameterAll _$EarthquakeHistoryParameterAllFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  '_EarthquakeHistoryParameter',
+  'EarthquakeHistoryParameterAll',
   json,
   ($checkedConvert) {
-    final val = _EarthquakeHistoryParameter(
-      magnitudeLte: $checkedConvert(
-        'magnitude_lte',
-        (v) => (v as num?)?.toDouble(),
+    final val = EarthquakeHistoryParameterAll(
+      sortBy: $checkedConvert(
+        'sort_by',
+        (v) => $enumDecode(_$EarthquakeSortByEnumMap, v),
+      ),
+      sortOrder: $checkedConvert(
+        'sort_order',
+        (v) => $enumDecode(_$SortOrderEnumMap, v),
       ),
       magnitudeGte: $checkedConvert(
         'magnitude_gte',
         (v) => (v as num?)?.toDouble(),
       ),
-      depthLte: $checkedConvert('depth_lte', (v) => (v as num?)?.toInt()),
-      depthGte: $checkedConvert('depth_gte', (v) => (v as num?)?.toInt()),
-      intensityLte: $checkedConvert(
-        'intensity_lte',
-        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+      magnitudeLte: $checkedConvert(
+        'magnitude_lte',
+        (v) => (v as num?)?.toDouble(),
       ),
+      depthGte: $checkedConvert('depth_gte', (v) => (v as num?)?.toInt()),
+      depthLte: $checkedConvert('depth_lte', (v) => (v as num?)?.toInt()),
       intensityGte: $checkedConvert(
         'intensity_gte',
+        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+      ),
+      intensityLte: $checkedConvert(
+        'intensity_lte',
         (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
       ),
       statuses: $checkedConvert(
@@ -39,28 +47,23 @@ _EarthquakeHistoryParameter _$EarthquakeHistoryParameterFromJson(
             ?.map((e) => $enumDecode(_$TelegramStatusEnumMap, e))
             .toList(),
       ),
-      epicenterCode: $checkedConvert(
-        'epicenter_code',
-        (v) => (v as num?)?.toInt(),
-      ),
-      epicenterName: $checkedConvert('epicenter_name', (v) => v as String?),
-      regionSearchType: $checkedConvert(
-        'region_search_type',
-        (v) => $enumDecodeNullable(_$RegionSearchTypeEnumMap, v),
-      ),
-      regionCode: $checkedConvert('region_code', (v) => v as String?),
-      regionName: $checkedConvert('region_name', (v) => v as String?),
-      regionIntensityLte: $checkedConvert(
-        'region_intensity_lte',
-        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
-      ),
-      regionIntensityGte: $checkedConvert(
-        'region_intensity_gte',
-        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+      epicenterCodes: $checkedConvert(
+        'epicenter_codes',
+        (v) => (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
       ),
       earthquakeType: $checkedConvert(
         'earthquake_type',
         (v) => $enumDecodeNullable(_$EarthquakeTypeEnumMap, v),
+      ),
+      datasource: $checkedConvert(
+        'datasource',
+        (v) => $enumDecodeNullable(_$EarthquakeDataSourceEnumMap, v),
+      ),
+      telegramTypes: $checkedConvert(
+        'telegram_types',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
+            .toList(),
       ),
       originTimeGte: $checkedConvert(
         'origin_time_gte',
@@ -78,16 +81,6 @@ _EarthquakeHistoryParameter _$EarthquakeHistoryParameterFromJson(
         'max_lpgm_intensity_lte',
         (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
       ),
-      datasource: $checkedConvert(
-        'datasource',
-        (v) => $enumDecodeNullable(_$EarthquakeDatasourceEnumMap, v),
-      ),
-      telegramTypes: $checkedConvert(
-        'telegram_types',
-        (v) => (v as List<dynamic>?)
-            ?.map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
-            .toList(),
-      ),
       latitudeGte: $checkedConvert(
         'latitude_gte',
         (v) => (v as num?)?.toDouble(),
@@ -104,79 +97,77 @@ _EarthquakeHistoryParameter _$EarthquakeHistoryParameterFromJson(
         'longitude_lte',
         (v) => (v as num?)?.toDouble(),
       ),
-      sortBy: $checkedConvert(
-        'sort_by',
-        (v) => $enumDecodeNullable(_$EarthquakeSortByEnumMap, v),
-      ),
-      sortOrder: $checkedConvert(
-        'sort_order',
-        (v) => $enumDecodeNullable(_$SortOrderEnumMap, v),
-      ),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
     );
     return val;
   },
   fieldKeyMap: const {
-    'magnitudeLte': 'magnitude_lte',
+    'sortBy': 'sort_by',
+    'sortOrder': 'sort_order',
     'magnitudeGte': 'magnitude_gte',
-    'depthLte': 'depth_lte',
+    'magnitudeLte': 'magnitude_lte',
     'depthGte': 'depth_gte',
-    'intensityLte': 'intensity_lte',
+    'depthLte': 'depth_lte',
     'intensityGte': 'intensity_gte',
-    'epicenterCode': 'epicenter_code',
-    'epicenterName': 'epicenter_name',
-    'regionSearchType': 'region_search_type',
-    'regionCode': 'region_code',
-    'regionName': 'region_name',
-    'regionIntensityLte': 'region_intensity_lte',
-    'regionIntensityGte': 'region_intensity_gte',
+    'intensityLte': 'intensity_lte',
+    'epicenterCodes': 'epicenter_codes',
     'earthquakeType': 'earthquake_type',
+    'telegramTypes': 'telegram_types',
     'originTimeGte': 'origin_time_gte',
     'originTimeLte': 'origin_time_lte',
     'maxLpgmIntensityGte': 'max_lpgm_intensity_gte',
     'maxLpgmIntensityLte': 'max_lpgm_intensity_lte',
-    'telegramTypes': 'telegram_types',
     'latitudeGte': 'latitude_gte',
     'latitudeLte': 'latitude_lte',
     'longitudeGte': 'longitude_gte',
     'longitudeLte': 'longitude_lte',
-    'sortBy': 'sort_by',
-    'sortOrder': 'sort_order',
+    r'$type': 'runtimeType',
   },
 );
 
-Map<String, dynamic> _$EarthquakeHistoryParameterToJson(
-  _EarthquakeHistoryParameter instance,
+Map<String, dynamic> _$EarthquakeHistoryParameterAllToJson(
+  EarthquakeHistoryParameterAll instance,
 ) => <String, dynamic>{
-  'magnitude_lte': instance.magnitudeLte,
+  'sort_by': _$EarthquakeSortByEnumMap[instance.sortBy]!,
+  'sort_order': _$SortOrderEnumMap[instance.sortOrder]!,
   'magnitude_gte': instance.magnitudeGte,
-  'depth_lte': instance.depthLte,
+  'magnitude_lte': instance.magnitudeLte,
   'depth_gte': instance.depthGte,
-  'intensity_lte': _$JmaIntensityEnumMap[instance.intensityLte],
+  'depth_lte': instance.depthLte,
   'intensity_gte': _$JmaIntensityEnumMap[instance.intensityGte],
-  'statuses': instance.statuses,
-  'epicenter_code': instance.epicenterCode,
-  'epicenter_name': instance.epicenterName,
-  'region_search_type': _$RegionSearchTypeEnumMap[instance.regionSearchType],
-  'region_code': instance.regionCode,
-  'region_name': instance.regionName,
-  'region_intensity_lte': _$JmaIntensityEnumMap[instance.regionIntensityLte],
-  'region_intensity_gte': _$JmaIntensityEnumMap[instance.regionIntensityGte],
+  'intensity_lte': _$JmaIntensityEnumMap[instance.intensityLte],
+  'statuses': instance.statuses
+      ?.map((e) => _$TelegramStatusEnumMap[e]!)
+      .toList(),
+  'epicenter_codes': instance.epicenterCodes,
   'earthquake_type': _$EarthquakeTypeEnumMap[instance.earthquakeType],
+  'datasource': _$EarthquakeDataSourceEnumMap[instance.datasource],
+  'telegram_types': instance.telegramTypes
+      ?.map((e) => _$EarthquakeTelegramTypeEnumMap[e]!)
+      .toList(),
   'origin_time_gte': instance.originTimeGte,
   'origin_time_lte': instance.originTimeLte,
   'max_lpgm_intensity_gte':
       _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityGte],
   'max_lpgm_intensity_lte':
       _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityLte],
-  'datasource': instance.datasource,
-  'telegram_types': instance.telegramTypes,
   'latitude_gte': instance.latitudeGte,
   'latitude_lte': instance.latitudeLte,
   'longitude_gte': instance.longitudeGte,
   'longitude_lte': instance.longitudeLte,
-  'sort_by': _$EarthquakeSortByEnumMap[instance.sortBy],
-  'sort_order': _$SortOrderEnumMap[instance.sortOrder],
+  'runtimeType': instance.$type,
 };
+
+const _$EarthquakeSortByEnumMap = {
+  EarthquakeSortBy.eventId: 'eventId',
+  EarthquakeSortBy.magnitude: 'magnitude',
+  EarthquakeSortBy.maxIntensity: 'maxIntensity',
+  EarthquakeSortBy.maxLpgmIntensity: 'maxLpgmIntensity',
+  EarthquakeSortBy.depth: 'depth',
+  EarthquakeSortBy.originTime: 'originTime',
+};
+
+const _$SortOrderEnumMap = {SortOrder.asc: 'asc', SortOrder.desc: 'desc'};
 
 const _$JmaIntensityEnumMap = {
   JmaIntensity.unknown: 'unknown',
@@ -199,15 +190,26 @@ const _$TelegramStatusEnumMap = {
   TelegramStatus.test: 'TEST',
 };
 
-const _$RegionSearchTypeEnumMap = {
-  RegionSearchType.prefecture: 'prefecture',
-  RegionSearchType.city: 'city',
-};
-
 const _$EarthquakeTypeEnumMap = {
   EarthquakeType.normal: 'NORMAL',
   EarthquakeType.distant: 'DISTANT',
   EarthquakeType.volcano: 'VOLCANO',
+};
+
+const _$EarthquakeDataSourceEnumMap = {
+  EarthquakeDataSource.jmaIntensityDatabase: 'JMA_INTENSITY_DATABASE',
+  EarthquakeDataSource.jmaDisasterInformationXml:
+      'JMA_DISASTER_INFORMATION_XML',
+};
+
+const _$EarthquakeTelegramTypeEnumMap = {
+  EarthquakeTelegramType.vxse51: 'vxse51',
+  EarthquakeTelegramType.vxse52: 'vxse52',
+  EarthquakeTelegramType.vxse53: 'vxse53',
+  EarthquakeTelegramType.vxse61: 'vxse61',
+  EarthquakeTelegramType.vxse62: 'vxse62',
+  EarthquakeTelegramType.vxse45Forecast: 'vxse45Forecast',
+  EarthquakeTelegramType.vxse45Warning: 'vxse45Warning',
 };
 
 const _$JmaLpgmIntensityEnumMap = {
@@ -219,29 +221,634 @@ const _$JmaLpgmIntensityEnumMap = {
   JmaLpgmIntensity.four: 'four',
 };
 
-const _$EarthquakeDatasourceEnumMap = {
-  EarthquakeDatasource.jmaIntensityDatabase: 'JMA_INTENSITY_DATABASE',
-  EarthquakeDatasource.jmaDisasterInformationXml:
-      'JMA_DISASTER_INFORMATION_XML',
+EarthquakeHistoryParameterPrefecture
+_$EarthquakeHistoryParameterPrefectureFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'EarthquakeHistoryParameterPrefecture',
+      json,
+      ($checkedConvert) {
+        final val = EarthquakeHistoryParameterPrefecture(
+          sortBy: $checkedConvert(
+            'sort_by',
+            (v) => $enumDecode(_$EarthquakeSortByEnumMap, v),
+          ),
+          sortOrder: $checkedConvert(
+            'sort_order',
+            (v) => $enumDecode(_$SortOrderEnumMap, v),
+          ),
+          prefectureCode: $checkedConvert(
+            'prefecture_code',
+            (v) => v as String,
+          ),
+          limit: $checkedConvert('limit', (v) => (v as num?)?.toInt()),
+          cursor: $checkedConvert('cursor', (v) => v as String?),
+          magnitudeGte: $checkedConvert(
+            'magnitude_gte',
+            (v) => (v as num?)?.toDouble(),
+          ),
+          magnitudeLte: $checkedConvert(
+            'magnitude_lte',
+            (v) => (v as num?)?.toDouble(),
+          ),
+          depthGte: $checkedConvert('depth_gte', (v) => (v as num?)?.toInt()),
+          depthLte: $checkedConvert('depth_lte', (v) => (v as num?)?.toInt()),
+          intensityGte: $checkedConvert(
+            'intensity_gte',
+            (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+          ),
+          intensityLte: $checkedConvert(
+            'intensity_lte',
+            (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+          ),
+          statuses: $checkedConvert(
+            'statuses',
+            (v) => (v as List<dynamic>?)
+                ?.map((e) => $enumDecode(_$TelegramStatusEnumMap, e))
+                .toList(),
+          ),
+          epicenterCodes: $checkedConvert(
+            'epicenter_codes',
+            (v) =>
+                (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
+          ),
+          earthquakeType: $checkedConvert(
+            'earthquake_type',
+            (v) => $enumDecodeNullable(_$EarthquakeTypeEnumMap, v),
+          ),
+          datasource: $checkedConvert(
+            'datasource',
+            (v) => $enumDecodeNullable(_$EarthquakeDataSourceEnumMap, v),
+          ),
+          telegramTypes: $checkedConvert(
+            'telegram_types',
+            (v) => (v as List<dynamic>?)
+                ?.map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
+                .toList(),
+          ),
+          originTimeGte: $checkedConvert(
+            'origin_time_gte',
+            (v) => v == null ? null : Date.fromJson(v),
+          ),
+          originTimeLte: $checkedConvert(
+            'origin_time_lte',
+            (v) => v == null ? null : Date.fromJson(v),
+          ),
+          maxLpgmIntensityGte: $checkedConvert(
+            'max_lpgm_intensity_gte',
+            (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+          ),
+          maxLpgmIntensityLte: $checkedConvert(
+            'max_lpgm_intensity_lte',
+            (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+          ),
+          latitudeGte: $checkedConvert(
+            'latitude_gte',
+            (v) => (v as num?)?.toDouble(),
+          ),
+          latitudeLte: $checkedConvert(
+            'latitude_lte',
+            (v) => (v as num?)?.toDouble(),
+          ),
+          longitudeGte: $checkedConvert(
+            'longitude_gte',
+            (v) => (v as num?)?.toDouble(),
+          ),
+          longitudeLte: $checkedConvert(
+            'longitude_lte',
+            (v) => (v as num?)?.toDouble(),
+          ),
+          $type: $checkedConvert('runtimeType', (v) => v as String?),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'sortBy': 'sort_by',
+        'sortOrder': 'sort_order',
+        'prefectureCode': 'prefecture_code',
+        'magnitudeGte': 'magnitude_gte',
+        'magnitudeLte': 'magnitude_lte',
+        'depthGte': 'depth_gte',
+        'depthLte': 'depth_lte',
+        'intensityGte': 'intensity_gte',
+        'intensityLte': 'intensity_lte',
+        'epicenterCodes': 'epicenter_codes',
+        'earthquakeType': 'earthquake_type',
+        'telegramTypes': 'telegram_types',
+        'originTimeGte': 'origin_time_gte',
+        'originTimeLte': 'origin_time_lte',
+        'maxLpgmIntensityGte': 'max_lpgm_intensity_gte',
+        'maxLpgmIntensityLte': 'max_lpgm_intensity_lte',
+        'latitudeGte': 'latitude_gte',
+        'latitudeLte': 'latitude_lte',
+        'longitudeGte': 'longitude_gte',
+        'longitudeLte': 'longitude_lte',
+        r'$type': 'runtimeType',
+      },
+    );
+
+Map<String, dynamic> _$EarthquakeHistoryParameterPrefectureToJson(
+  EarthquakeHistoryParameterPrefecture instance,
+) => <String, dynamic>{
+  'sort_by': _$EarthquakeSortByEnumMap[instance.sortBy]!,
+  'sort_order': _$SortOrderEnumMap[instance.sortOrder]!,
+  'prefecture_code': instance.prefectureCode,
+  'limit': instance.limit,
+  'cursor': instance.cursor,
+  'magnitude_gte': instance.magnitudeGte,
+  'magnitude_lte': instance.magnitudeLte,
+  'depth_gte': instance.depthGte,
+  'depth_lte': instance.depthLte,
+  'intensity_gte': _$JmaIntensityEnumMap[instance.intensityGte],
+  'intensity_lte': _$JmaIntensityEnumMap[instance.intensityLte],
+  'statuses': instance.statuses
+      ?.map((e) => _$TelegramStatusEnumMap[e]!)
+      .toList(),
+  'epicenter_codes': instance.epicenterCodes,
+  'earthquake_type': _$EarthquakeTypeEnumMap[instance.earthquakeType],
+  'datasource': _$EarthquakeDataSourceEnumMap[instance.datasource],
+  'telegram_types': instance.telegramTypes
+      ?.map((e) => _$EarthquakeTelegramTypeEnumMap[e]!)
+      .toList(),
+  'origin_time_gte': instance.originTimeGte,
+  'origin_time_lte': instance.originTimeLte,
+  'max_lpgm_intensity_gte':
+      _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityGte],
+  'max_lpgm_intensity_lte':
+      _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityLte],
+  'latitude_gte': instance.latitudeGte,
+  'latitude_lte': instance.latitudeLte,
+  'longitude_gte': instance.longitudeGte,
+  'longitude_lte': instance.longitudeLte,
+  'runtimeType': instance.$type,
 };
 
-const _$EarthquakeTelegramTypeEnumMap = {
-  EarthquakeTelegramType.vxse51: 'VXSE51',
-  EarthquakeTelegramType.vxse52: 'VXSE52',
-  EarthquakeTelegramType.vxse53: 'VXSE53',
-  EarthquakeTelegramType.vxse61: 'VXSE61',
-  EarthquakeTelegramType.vxse62: 'VXSE62',
-  EarthquakeTelegramType.vxse45Forecast: 'VXSE45_FORECAST',
-  EarthquakeTelegramType.vxse45Warning: 'VXSE45_WARNING',
+EarthquakeHistoryParameterRegion _$EarthquakeHistoryParameterRegionFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  'EarthquakeHistoryParameterRegion',
+  json,
+  ($checkedConvert) {
+    final val = EarthquakeHistoryParameterRegion(
+      sortBy: $checkedConvert(
+        'sort_by',
+        (v) => $enumDecode(_$EarthquakeSortByEnumMap, v),
+      ),
+      sortOrder: $checkedConvert(
+        'sort_order',
+        (v) => $enumDecode(_$SortOrderEnumMap, v),
+      ),
+      regionCode: $checkedConvert('region_code', (v) => v as String),
+      limit: $checkedConvert('limit', (v) => (v as num?)?.toInt()),
+      cursor: $checkedConvert('cursor', (v) => v as String?),
+      magnitudeGte: $checkedConvert(
+        'magnitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      magnitudeLte: $checkedConvert(
+        'magnitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      depthGte: $checkedConvert('depth_gte', (v) => (v as num?)?.toInt()),
+      depthLte: $checkedConvert('depth_lte', (v) => (v as num?)?.toInt()),
+      intensityGte: $checkedConvert(
+        'intensity_gte',
+        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+      ),
+      intensityLte: $checkedConvert(
+        'intensity_lte',
+        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+      ),
+      statuses: $checkedConvert(
+        'statuses',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$TelegramStatusEnumMap, e))
+            .toList(),
+      ),
+      epicenterCodes: $checkedConvert(
+        'epicenter_codes',
+        (v) => (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
+      ),
+      earthquakeType: $checkedConvert(
+        'earthquake_type',
+        (v) => $enumDecodeNullable(_$EarthquakeTypeEnumMap, v),
+      ),
+      datasource: $checkedConvert(
+        'datasource',
+        (v) => $enumDecodeNullable(_$EarthquakeDataSourceEnumMap, v),
+      ),
+      telegramTypes: $checkedConvert(
+        'telegram_types',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
+            .toList(),
+      ),
+      originTimeGte: $checkedConvert(
+        'origin_time_gte',
+        (v) => v == null ? null : Date.fromJson(v),
+      ),
+      originTimeLte: $checkedConvert(
+        'origin_time_lte',
+        (v) => v == null ? null : Date.fromJson(v),
+      ),
+      maxLpgmIntensityGte: $checkedConvert(
+        'max_lpgm_intensity_gte',
+        (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+      ),
+      maxLpgmIntensityLte: $checkedConvert(
+        'max_lpgm_intensity_lte',
+        (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+      ),
+      latitudeGte: $checkedConvert(
+        'latitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      latitudeLte: $checkedConvert(
+        'latitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      longitudeGte: $checkedConvert(
+        'longitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      longitudeLte: $checkedConvert(
+        'longitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'sortBy': 'sort_by',
+    'sortOrder': 'sort_order',
+    'regionCode': 'region_code',
+    'magnitudeGte': 'magnitude_gte',
+    'magnitudeLte': 'magnitude_lte',
+    'depthGte': 'depth_gte',
+    'depthLte': 'depth_lte',
+    'intensityGte': 'intensity_gte',
+    'intensityLte': 'intensity_lte',
+    'epicenterCodes': 'epicenter_codes',
+    'earthquakeType': 'earthquake_type',
+    'telegramTypes': 'telegram_types',
+    'originTimeGte': 'origin_time_gte',
+    'originTimeLte': 'origin_time_lte',
+    'maxLpgmIntensityGte': 'max_lpgm_intensity_gte',
+    'maxLpgmIntensityLte': 'max_lpgm_intensity_lte',
+    'latitudeGte': 'latitude_gte',
+    'latitudeLte': 'latitude_lte',
+    'longitudeGte': 'longitude_gte',
+    'longitudeLte': 'longitude_lte',
+    r'$type': 'runtimeType',
+  },
+);
+
+Map<String, dynamic> _$EarthquakeHistoryParameterRegionToJson(
+  EarthquakeHistoryParameterRegion instance,
+) => <String, dynamic>{
+  'sort_by': _$EarthquakeSortByEnumMap[instance.sortBy]!,
+  'sort_order': _$SortOrderEnumMap[instance.sortOrder]!,
+  'region_code': instance.regionCode,
+  'limit': instance.limit,
+  'cursor': instance.cursor,
+  'magnitude_gte': instance.magnitudeGte,
+  'magnitude_lte': instance.magnitudeLte,
+  'depth_gte': instance.depthGte,
+  'depth_lte': instance.depthLte,
+  'intensity_gte': _$JmaIntensityEnumMap[instance.intensityGte],
+  'intensity_lte': _$JmaIntensityEnumMap[instance.intensityLte],
+  'statuses': instance.statuses
+      ?.map((e) => _$TelegramStatusEnumMap[e]!)
+      .toList(),
+  'epicenter_codes': instance.epicenterCodes,
+  'earthquake_type': _$EarthquakeTypeEnumMap[instance.earthquakeType],
+  'datasource': _$EarthquakeDataSourceEnumMap[instance.datasource],
+  'telegram_types': instance.telegramTypes
+      ?.map((e) => _$EarthquakeTelegramTypeEnumMap[e]!)
+      .toList(),
+  'origin_time_gte': instance.originTimeGte,
+  'origin_time_lte': instance.originTimeLte,
+  'max_lpgm_intensity_gte':
+      _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityGte],
+  'max_lpgm_intensity_lte':
+      _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityLte],
+  'latitude_gte': instance.latitudeGte,
+  'latitude_lte': instance.latitudeLte,
+  'longitude_gte': instance.longitudeGte,
+  'longitude_lte': instance.longitudeLte,
+  'runtimeType': instance.$type,
 };
 
-const _$EarthquakeSortByEnumMap = {
-  EarthquakeSortBy.eventId: 'eventId',
-  EarthquakeSortBy.magnitude: 'magnitude',
-  EarthquakeSortBy.maxIntensity: 'maxIntensity',
-  EarthquakeSortBy.maxLpgmIntensity: 'maxLpgmIntensity',
-  EarthquakeSortBy.depth: 'depth',
-  EarthquakeSortBy.originTime: 'originTime',
+EarthquakeHistoryParameterCity _$EarthquakeHistoryParameterCityFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  'EarthquakeHistoryParameterCity',
+  json,
+  ($checkedConvert) {
+    final val = EarthquakeHistoryParameterCity(
+      sortBy: $checkedConvert(
+        'sort_by',
+        (v) => $enumDecode(_$EarthquakeSortByEnumMap, v),
+      ),
+      sortOrder: $checkedConvert(
+        'sort_order',
+        (v) => $enumDecode(_$SortOrderEnumMap, v),
+      ),
+      cityCode: $checkedConvert('city_code', (v) => v as String),
+      limit: $checkedConvert('limit', (v) => (v as num?)?.toInt()),
+      cursor: $checkedConvert('cursor', (v) => v as String?),
+      magnitudeGte: $checkedConvert(
+        'magnitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      magnitudeLte: $checkedConvert(
+        'magnitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      depthGte: $checkedConvert('depth_gte', (v) => (v as num?)?.toInt()),
+      depthLte: $checkedConvert('depth_lte', (v) => (v as num?)?.toInt()),
+      intensityGte: $checkedConvert(
+        'intensity_gte',
+        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+      ),
+      intensityLte: $checkedConvert(
+        'intensity_lte',
+        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+      ),
+      statuses: $checkedConvert(
+        'statuses',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$TelegramStatusEnumMap, e))
+            .toList(),
+      ),
+      epicenterCodes: $checkedConvert(
+        'epicenter_codes',
+        (v) => (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
+      ),
+      earthquakeType: $checkedConvert(
+        'earthquake_type',
+        (v) => $enumDecodeNullable(_$EarthquakeTypeEnumMap, v),
+      ),
+      datasource: $checkedConvert(
+        'datasource',
+        (v) => $enumDecodeNullable(_$EarthquakeDataSourceEnumMap, v),
+      ),
+      telegramTypes: $checkedConvert(
+        'telegram_types',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
+            .toList(),
+      ),
+      originTimeGte: $checkedConvert(
+        'origin_time_gte',
+        (v) => v == null ? null : Date.fromJson(v),
+      ),
+      originTimeLte: $checkedConvert(
+        'origin_time_lte',
+        (v) => v == null ? null : Date.fromJson(v),
+      ),
+      maxLpgmIntensityGte: $checkedConvert(
+        'max_lpgm_intensity_gte',
+        (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+      ),
+      maxLpgmIntensityLte: $checkedConvert(
+        'max_lpgm_intensity_lte',
+        (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+      ),
+      latitudeGte: $checkedConvert(
+        'latitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      latitudeLte: $checkedConvert(
+        'latitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      longitudeGte: $checkedConvert(
+        'longitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      longitudeLte: $checkedConvert(
+        'longitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'sortBy': 'sort_by',
+    'sortOrder': 'sort_order',
+    'cityCode': 'city_code',
+    'magnitudeGte': 'magnitude_gte',
+    'magnitudeLte': 'magnitude_lte',
+    'depthGte': 'depth_gte',
+    'depthLte': 'depth_lte',
+    'intensityGte': 'intensity_gte',
+    'intensityLte': 'intensity_lte',
+    'epicenterCodes': 'epicenter_codes',
+    'earthquakeType': 'earthquake_type',
+    'telegramTypes': 'telegram_types',
+    'originTimeGte': 'origin_time_gte',
+    'originTimeLte': 'origin_time_lte',
+    'maxLpgmIntensityGte': 'max_lpgm_intensity_gte',
+    'maxLpgmIntensityLte': 'max_lpgm_intensity_lte',
+    'latitudeGte': 'latitude_gte',
+    'latitudeLte': 'latitude_lte',
+    'longitudeGte': 'longitude_gte',
+    'longitudeLte': 'longitude_lte',
+    r'$type': 'runtimeType',
+  },
+);
+
+Map<String, dynamic> _$EarthquakeHistoryParameterCityToJson(
+  EarthquakeHistoryParameterCity instance,
+) => <String, dynamic>{
+  'sort_by': _$EarthquakeSortByEnumMap[instance.sortBy]!,
+  'sort_order': _$SortOrderEnumMap[instance.sortOrder]!,
+  'city_code': instance.cityCode,
+  'limit': instance.limit,
+  'cursor': instance.cursor,
+  'magnitude_gte': instance.magnitudeGte,
+  'magnitude_lte': instance.magnitudeLte,
+  'depth_gte': instance.depthGte,
+  'depth_lte': instance.depthLte,
+  'intensity_gte': _$JmaIntensityEnumMap[instance.intensityGte],
+  'intensity_lte': _$JmaIntensityEnumMap[instance.intensityLte],
+  'statuses': instance.statuses
+      ?.map((e) => _$TelegramStatusEnumMap[e]!)
+      .toList(),
+  'epicenter_codes': instance.epicenterCodes,
+  'earthquake_type': _$EarthquakeTypeEnumMap[instance.earthquakeType],
+  'datasource': _$EarthquakeDataSourceEnumMap[instance.datasource],
+  'telegram_types': instance.telegramTypes
+      ?.map((e) => _$EarthquakeTelegramTypeEnumMap[e]!)
+      .toList(),
+  'origin_time_gte': instance.originTimeGte,
+  'origin_time_lte': instance.originTimeLte,
+  'max_lpgm_intensity_gte':
+      _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityGte],
+  'max_lpgm_intensity_lte':
+      _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityLte],
+  'latitude_gte': instance.latitudeGte,
+  'latitude_lte': instance.latitudeLte,
+  'longitude_gte': instance.longitudeGte,
+  'longitude_lte': instance.longitudeLte,
+  'runtimeType': instance.$type,
 };
 
-const _$SortOrderEnumMap = {SortOrder.asc: 'asc', SortOrder.desc: 'desc'};
+EarthquakeHistoryParameterStation _$EarthquakeHistoryParameterStationFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  'EarthquakeHistoryParameterStation',
+  json,
+  ($checkedConvert) {
+    final val = EarthquakeHistoryParameterStation(
+      sortBy: $checkedConvert(
+        'sort_by',
+        (v) => $enumDecode(_$EarthquakeSortByEnumMap, v),
+      ),
+      sortOrder: $checkedConvert(
+        'sort_order',
+        (v) => $enumDecode(_$SortOrderEnumMap, v),
+      ),
+      stationCode: $checkedConvert('station_code', (v) => v as String),
+      limit: $checkedConvert('limit', (v) => (v as num?)?.toInt()),
+      cursor: $checkedConvert('cursor', (v) => v as String?),
+      magnitudeGte: $checkedConvert(
+        'magnitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      magnitudeLte: $checkedConvert(
+        'magnitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      depthGte: $checkedConvert('depth_gte', (v) => (v as num?)?.toInt()),
+      depthLte: $checkedConvert('depth_lte', (v) => (v as num?)?.toInt()),
+      intensityGte: $checkedConvert(
+        'intensity_gte',
+        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+      ),
+      intensityLte: $checkedConvert(
+        'intensity_lte',
+        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+      ),
+      statuses: $checkedConvert(
+        'statuses',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$TelegramStatusEnumMap, e))
+            .toList(),
+      ),
+      epicenterCodes: $checkedConvert(
+        'epicenter_codes',
+        (v) => (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
+      ),
+      earthquakeType: $checkedConvert(
+        'earthquake_type',
+        (v) => $enumDecodeNullable(_$EarthquakeTypeEnumMap, v),
+      ),
+      datasource: $checkedConvert(
+        'datasource',
+        (v) => $enumDecodeNullable(_$EarthquakeDataSourceEnumMap, v),
+      ),
+      telegramTypes: $checkedConvert(
+        'telegram_types',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
+            .toList(),
+      ),
+      originTimeGte: $checkedConvert(
+        'origin_time_gte',
+        (v) => v == null ? null : Date.fromJson(v),
+      ),
+      originTimeLte: $checkedConvert(
+        'origin_time_lte',
+        (v) => v == null ? null : Date.fromJson(v),
+      ),
+      maxLpgmIntensityGte: $checkedConvert(
+        'max_lpgm_intensity_gte',
+        (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+      ),
+      maxLpgmIntensityLte: $checkedConvert(
+        'max_lpgm_intensity_lte',
+        (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+      ),
+      latitudeGte: $checkedConvert(
+        'latitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      latitudeLte: $checkedConvert(
+        'latitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      longitudeGte: $checkedConvert(
+        'longitude_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      longitudeLte: $checkedConvert(
+        'longitude_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      $type: $checkedConvert('runtimeType', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'sortBy': 'sort_by',
+    'sortOrder': 'sort_order',
+    'stationCode': 'station_code',
+    'magnitudeGte': 'magnitude_gte',
+    'magnitudeLte': 'magnitude_lte',
+    'depthGte': 'depth_gte',
+    'depthLte': 'depth_lte',
+    'intensityGte': 'intensity_gte',
+    'intensityLte': 'intensity_lte',
+    'epicenterCodes': 'epicenter_codes',
+    'earthquakeType': 'earthquake_type',
+    'telegramTypes': 'telegram_types',
+    'originTimeGte': 'origin_time_gte',
+    'originTimeLte': 'origin_time_lte',
+    'maxLpgmIntensityGte': 'max_lpgm_intensity_gte',
+    'maxLpgmIntensityLte': 'max_lpgm_intensity_lte',
+    'latitudeGte': 'latitude_gte',
+    'latitudeLte': 'latitude_lte',
+    'longitudeGte': 'longitude_gte',
+    'longitudeLte': 'longitude_lte',
+    r'$type': 'runtimeType',
+  },
+);
+
+Map<String, dynamic> _$EarthquakeHistoryParameterStationToJson(
+  EarthquakeHistoryParameterStation instance,
+) => <String, dynamic>{
+  'sort_by': _$EarthquakeSortByEnumMap[instance.sortBy]!,
+  'sort_order': _$SortOrderEnumMap[instance.sortOrder]!,
+  'station_code': instance.stationCode,
+  'limit': instance.limit,
+  'cursor': instance.cursor,
+  'magnitude_gte': instance.magnitudeGte,
+  'magnitude_lte': instance.magnitudeLte,
+  'depth_gte': instance.depthGte,
+  'depth_lte': instance.depthLte,
+  'intensity_gte': _$JmaIntensityEnumMap[instance.intensityGte],
+  'intensity_lte': _$JmaIntensityEnumMap[instance.intensityLte],
+  'statuses': instance.statuses
+      ?.map((e) => _$TelegramStatusEnumMap[e]!)
+      .toList(),
+  'epicenter_codes': instance.epicenterCodes,
+  'earthquake_type': _$EarthquakeTypeEnumMap[instance.earthquakeType],
+  'datasource': _$EarthquakeDataSourceEnumMap[instance.datasource],
+  'telegram_types': instance.telegramTypes
+      ?.map((e) => _$EarthquakeTelegramTypeEnumMap[e]!)
+      .toList(),
+  'origin_time_gte': instance.originTimeGte,
+  'origin_time_lte': instance.originTimeLte,
+  'max_lpgm_intensity_gte':
+      _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityGte],
+  'max_lpgm_intensity_lte':
+      _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityLte],
+  'latitude_gte': instance.latitudeGte,
+  'latitude_lte': instance.latitudeLte,
+  'longitude_gte': instance.longitudeGte,
+  'longitude_lte': instance.longitudeLte,
+  'runtimeType': instance.$type,
+};

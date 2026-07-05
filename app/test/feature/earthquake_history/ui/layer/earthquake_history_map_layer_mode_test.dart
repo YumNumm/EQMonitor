@@ -180,7 +180,7 @@ class EarthquakeHistoryMapLayerModeTestData {
       originTime: DateTime(2026),
       originTimePrecision: OriginTimePrecision.second,
       arrivalTime: DateTime(2026),
-      dataSource: EarthquakeDataSource.jmaDisasterInformationXml,
+      dataSources: [EarthquakeDataSource.jmaDisasterInformationXml],
       telegramTypes: const [],
       hypocenter: null,
       intensity: intensity,

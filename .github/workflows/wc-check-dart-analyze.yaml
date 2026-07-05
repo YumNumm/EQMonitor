@@ -35,3 +35,13 @@ jobs:
         with:
           fatal-infos: true
           working-directory: app
+
+      # eqmonitor_custom_lints (avoid_direct_color_scheme 等) は
+      # analysis_options.yaml の `plugins:` 経由で上記 dart analyze から
+      # 既に実行されるため、ここではルール実装自体の回帰防止として
+      # パッケージ単体のユニットテストのみ実行する。
+      - name: Test eqmonitor_custom_lints
+        working-directory: tools/eqmonitor_custom_lints
+        run: |
+          dart pub get
+          dart test

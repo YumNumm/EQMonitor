@@ -66,9 +66,7 @@ class EewCard extends ConsumerWidget {
       if (regions == null || regions.isEmpty) {
         return null;
       }
-      return regions.firstWhereOrNull(
-        (r) => r.code == regionCode,
-      );
+      return regions.firstWhereOrNull((r) => r.code == regionCode);
     }
 
     final localRegion = localForecastRegion(eew, regionCode);
@@ -374,10 +372,7 @@ class _EewCardHeader extends StatelessWidget {
             ),
             child: Row(
               spacing: spacing.sm,
-              children: [
-                leftColumn,
-                ?rightColumn,
-              ],
+              children: [leftColumn, ?rightColumn],
             ),
           ),
         ],
@@ -408,7 +403,9 @@ class _EewMaxIntensitySection extends StatelessWidget {
       children: [
         Text(
           '最大震度',
-          style: typography.labelMedium.copyWith(color: colorTheme.onSurfaceVariant),
+          style: typography.labelMedium.copyWith(
+            color: colorTheme.onSurfaceVariant,
+          ),
         ),
         JmaIntensityIcon(intensity: maxIntensity, type: .filled),
       ],
@@ -417,10 +414,7 @@ class _EewMaxIntensitySection extends StatelessWidget {
 }
 
 class _EewHypocenterSection extends StatelessWidget {
-  const _EewHypocenterSection({
-    required this.eew,
-    required this.happenedTime,
-  });
+  const _EewHypocenterSection({required this.eew, required this.happenedTime});
 
   final EewTelegramItem eew;
   final DateTime happenedTime;
@@ -555,10 +549,7 @@ class _EewLpgmSection extends StatelessWidget {
             '予想最大長周期地震動階級 ${intensity.label}',
             style: typography.titleMedium,
           ),
-          Text(
-            '高層階では特に周期の長い揺れに注意してください',
-            style: typography.bodySmall,
-          ),
+          Text('高層階では特に周期の長い揺れに注意してください', style: typography.bodySmall),
         ],
       ),
     );
@@ -626,7 +617,9 @@ class _MagnitudeRow extends StatelessWidget {
       children: [
         Text(
           'M ',
-          style: typography.labelSmall.copyWith(color: colorTheme.onSurfaceVariant),
+          style: typography.labelSmall.copyWith(
+            color: colorTheme.onSurfaceVariant,
+          ),
         ),
         if (magnitude != null)
           Text(
@@ -661,7 +654,9 @@ class _DepthRow extends StatelessWidget {
       children: [
         Text(
           '深さ ',
-          style: typography.labelSmall.copyWith(color: colorTheme.onSurfaceVariant),
+          style: typography.labelSmall.copyWith(
+            color: colorTheme.onSurfaceVariant,
+          ),
         ),
         if (depth == null)
           Text('不明', style: typography.titleLarge)
@@ -677,7 +672,9 @@ class _DepthRow extends StatelessWidget {
           ),
           Text(
             'km以上',
-            style: typography.labelSmall.copyWith(color: colorTheme.onSurfaceVariant),
+            style: typography.labelSmall.copyWith(
+              color: colorTheme.onSurfaceVariant,
+            ),
           ),
         ] else ...[
           Text(

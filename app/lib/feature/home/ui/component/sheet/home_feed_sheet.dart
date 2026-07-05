@@ -57,17 +57,13 @@ class HomeFeedSheet extends ConsumerWidget {
                   : Column(
                       children: value.items
                           .take(3)
-                          .map(
-                            (item) => _HomeFeedListTile(item: item),
-                          )
+                          .map((item) => _HomeFeedListTile(item: item))
                           .toList(),
                     ),
             AsyncError<FeedNotifierState>(:final error) => ErrorCard(
               error: error,
-              onReload: () async => ref.invalidate(
-                feedProvider,
-                asReload: true,
-              ),
+              onReload: () async =>
+                  ref.invalidate(feedProvider, asReload: true),
             ),
             _ => const _HomeFeedSkeleton(),
           },

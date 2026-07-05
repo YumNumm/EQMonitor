@@ -17,11 +17,14 @@ part 'hypocenter.g.dart';
 @Freezed()
 abstract class Hypocenter with _$Hypocenter {
   const factory Hypocenter({
-    /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
-    required String code,
-    required String name,
     required Magnitude magnitude,
     required Depth depth,
+
+    /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
+    @JsonKey(includeIfNull: false)
+    String? code,
+    @JsonKey(includeIfNull: false)
+    String? name,
     @JsonKey(includeIfNull: false)
     CodeName? detailed,
     @JsonKey(includeIfNull: false)

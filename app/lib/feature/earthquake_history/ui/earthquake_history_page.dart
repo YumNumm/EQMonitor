@@ -2,8 +2,8 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
@@ -22,11 +22,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: _SliverListBody(
-        initialParameter: initialParameter,
-      ),
-    );
+    return Scaffold(body: _SliverListBody(initialParameter: initialParameter));
   }
 }
 
@@ -38,7 +34,11 @@ class _SliverListBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(
-      initialParameter ?? const EarthquakeHistoryParameter(),
+      initialParameter ??
+          const EarthquakeHistoryParameter.all(
+            sortBy: .eventId,
+            sortOrder: .desc,
+          ),
     );
     final dataSourceAsync = ref.watch(
       earthquakeHistoryDataSourceProvider(parameter.value),
@@ -48,9 +48,8 @@ class _SliverListBody extends HookConsumerWidget {
       loading: () => const _EarthquakeHistorySkeleton(),
       error: (error, _) => ErrorCard(
         error: error,
-        onReload: () async => ref.refresh(
-          earthquakeHistoryDataSourceProvider(parameter.value),
-        ),
+        onReload: () async =>
+            ref.refresh(earthquakeHistoryDataSourceProvider(parameter.value)),
       ),
       data: (dataSource) => _PagingBody(
         dataSource: dataSource,
@@ -70,7 +69,7 @@ class _PagingBody extends StatelessWidget {
     required this.onRefresh,
   });
 
-  final EarthquakeHistoryDataSource dataSource;
+  final GroupedDataSource<String?, String, EarthquakePartial> dataSource;
   final ValueNotifier<EarthquakeHistoryParameter> parameter;
   final ValueChanged<EarthquakeHistoryParameter> onParameterChanged;
   final Future<void> Function() onRefresh;
@@ -102,19 +101,16 @@ class _PagingBody extends StatelessWidget {
               onChanged: onParameterChanged,
             ),
           ),
-          SliverGroupedPagingList<String?, String, EarthquakeHistoryItem>(
+          SliverGroupedPagingList<String?, String, EarthquakePartial>(
             dataSource: dataSource,
             stickyHeader: true,
-            headerBuilder: (_, date, _) => _DateHeader(
-              date: date,
-            ),
+            headerBuilder: (_, date, _) => _DateHeader(date: date),
             itemBuilder: (context, item, globalIndex, localIndex) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 EarthquakeHistoryListTile(
-                  item: item.earthquake,
-                  areaInfo: item.areaInfo,
-                  areaName: item.areaInfo?.name,
+                  item: item,
+                  searchParameter: parameter.value,
                   onTap: () async => EarthquakeHistoryDetailsRoute(
                     eventId: item.earthquake.eventId,
                   ).push<void>(context),
@@ -178,18 +174,13 @@ class _EarthquakeHistorySkeleton extends StatelessWidget {
     return Skeletonizer(
       child: scrollable
           ? ListView(children: tiles)
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: tiles,
-            ),
+          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
     );
   }
 }
 
 class _DateHeader extends StatelessWidget {
-  const _DateHeader({
-    required this.date,
-  });
+  const _DateHeader({required this.date});
 
   final String date;
 

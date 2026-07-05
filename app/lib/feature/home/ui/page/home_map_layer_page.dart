@@ -388,10 +388,7 @@ class _SettingDropdownField<T> extends StatelessWidget {
                   ],
                 ),
               ),
-              if (trailing != null) ...[
-                SizedBox(width: spacing.sm),
-                trailing!,
-              ],
+              if (trailing != null) ...[SizedBox(width: spacing.sm), trailing!],
             ],
           ),
           SizedBox(height: spacing.md),
@@ -511,7 +508,8 @@ class _SettingActionTile extends StatelessWidget {
             },
             style: FilledButton.styleFrom(
               backgroundColor: colorTheme.surfaceContainerHighest,
-              foregroundColor: context.designSystem.colorTheme.onPrimaryContainer,
+              foregroundColor:
+                  context.designSystem.colorTheme.onPrimaryContainer,
             ),
             child: Text(actionLabel),
           ),
@@ -536,18 +534,9 @@ class _EewFillModeTile extends ConsumerWidget {
       title: '予想震度の塗りつぶし',
       subtitle: '塗りつぶし方法を予想震度、警報地域、非表示から選びます。',
       segments: const [
-        ButtonSegment(
-          value: HomeEewFillMode.intensity,
-          label: Text('予想震度'),
-        ),
-        ButtonSegment(
-          value: HomeEewFillMode.warning,
-          label: Text('警報地域'),
-        ),
-        ButtonSegment(
-          value: HomeEewFillMode.none,
-          label: Text('なし'),
-        ),
+        ButtonSegment(value: HomeEewFillMode.intensity, label: Text('予想震度')),
+        ButtonSegment(value: HomeEewFillMode.warning, label: Text('警報地域')),
+        ButtonSegment(value: HomeEewFillMode.none, label: Text('なし')),
       ],
       selected: {mode},
       onSelectionChanged: (next) async {
@@ -606,10 +595,7 @@ class _EewAnimationTile extends ConsumerWidget {
           value: HomeEewAnimationRate.unlimited,
           label: Text('制限なし'),
         ),
-        ButtonSegment(
-          value: HomeEewAnimationRate.oneHz,
-          label: Text('1Hz'),
-        ),
+        ButtonSegment(value: HomeEewAnimationRate.oneHz, label: Text('1Hz')),
       ],
       selected: {rate},
       onSelectionChanged: (next) async {
@@ -758,14 +744,8 @@ class _KyoshinMonitorSourceTile extends ConsumerWidget {
           '強震モニタか長周期地震動モニタを選択します。\n'
           '長周期地震動モニタでは長周期地震動階級などの追加データ種別が利用できます。',
       segments: const [
-        ButtonSegment(
-          value: .kmoni,
-          label: Text('強震モニタ'),
-        ),
-        ButtonSegment(
-          value: .lmoni,
-          label: Text('長周期地震動'),
-        ),
+        ButtonSegment(value: .kmoni, label: Text('強震モニタ')),
+        ButtonSegment(value: .lmoni, label: Text('長周期地震動')),
       ],
       selected: {setting.monitorSource},
       onSelectionChanged: (next) async {
@@ -1037,18 +1017,9 @@ class _KyoshinMarkerSizeTile extends ConsumerWidget {
       title: '観測点サイズ',
       subtitle: '強震モニタの観測点アイコンの大きさを変更します。',
       segments: const [
-        ButtonSegment(
-          value: HomeKmoniMarkerSize.small,
-          label: Text('小'),
-        ),
-        ButtonSegment(
-          value: HomeKmoniMarkerSize.medium,
-          label: Text('中'),
-        ),
-        ButtonSegment(
-          value: HomeKmoniMarkerSize.large,
-          label: Text('大'),
-        ),
+        ButtonSegment(value: HomeKmoniMarkerSize.small, label: Text('小')),
+        ButtonSegment(value: HomeKmoniMarkerSize.medium, label: Text('中')),
+        ButtonSegment(value: HomeKmoniMarkerSize.large, label: Text('大')),
       ],
       selected: {size},
       onSelectionChanged: (next) async {
@@ -1197,14 +1168,8 @@ class _MapDefaultBoundsTile extends ConsumerWidget {
           value: HomeMapDefaultBounds.mainIsland,
           label: Text('本州〜'),
         ),
-        ButtonSegment(
-          value: HomeMapDefaultBounds.all,
-          label: Text('全体'),
-        ),
-        ButtonSegment(
-          value: HomeMapDefaultBounds.custom,
-          label: Text('カスタム'),
-        ),
+        ButtonSegment(value: HomeMapDefaultBounds.all, label: Text('全体')),
+        ButtonSegment(value: HomeMapDefaultBounds.custom, label: Text('カスタム')),
       ],
       selected: {bounds},
       onSelectionChanged: (next) async {

@@ -11,6 +11,7 @@ part of 'highest_intensity_entry.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$HighestIntensityEntry {
 
@@ -26,6 +27,8 @@ mixin _$HighestIntensityEntry {
 @pragma('vm:prefer-inline')
 $HighestIntensityEntryCopyWith<HighestIntensityEntry> get copyWith => _$HighestIntensityEntryCopyWithImpl<HighestIntensityEntry>(this as HighestIntensityEntry, _$identity);
 
+  /// Serializes this HighestIntensityEntry to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -33,7 +36,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is HighestIntensityEntry&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.count, count) || other.count == count)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,code,name,intensity,count,earthquake);
 
@@ -221,11 +224,11 @@ return $default(_that.code,_that.name,_that.intensity,_that.count,_that.earthqua
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _HighestIntensityEntry extends HighestIntensityEntry {
   const _HighestIntensityEntry({required this.code, required this.name, required this.intensity, required this.count, required this.earthquake}): super._();
-  
+  factory _HighestIntensityEntry.fromJson(Map<String, dynamic> json) => _$HighestIntensityEntryFromJson(json);
 
 /// 気象庁防災情報XMLフォーマットの地域コード。
 @override final  String code;
@@ -244,14 +247,17 @@ class _HighestIntensityEntry extends HighestIntensityEntry {
 @pragma('vm:prefer-inline')
 _$HighestIntensityEntryCopyWith<_HighestIntensityEntry> get copyWith => __$HighestIntensityEntryCopyWithImpl<_HighestIntensityEntry>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$HighestIntensityEntryToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _HighestIntensityEntry&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.count, count) || other.count == count)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,code,name,intensity,count,earthquake);
 

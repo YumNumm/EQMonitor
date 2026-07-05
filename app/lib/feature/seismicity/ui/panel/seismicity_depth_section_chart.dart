@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_depth_projection.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -21,7 +22,7 @@ class SeismicityDepthSectionChart extends HookWidget {
   Widget build(BuildContext context) {
     final axis = useState(SeismicityDepthProjectionAxis.latitude);
     final points = _projection.project(events: events, axis: axis.value);
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = context.designSystem.colorTheme;
 
     return Column(
       children: [

@@ -44,9 +44,7 @@ class HomeMapView extends ConsumerWidget {
       AsyncData(:final value) when value.styleString != null => _MapContent(
         styleString: value.styleString!,
       ),
-      AsyncError(:final error) => Center(
-        child: ErrorCard(error: error),
-      ),
+      AsyncError(:final error) => Center(child: ErrorCard(error: error)),
       _ => Center(
         child: Container(
           padding: EdgeInsets.symmetric(
@@ -131,9 +129,7 @@ class _MapContent extends ConsumerWidget {
                     .intensity => EewEstimatedIntensityLayer(
                       eewRegions: regions,
                     ),
-                    .warning => EewWarningRegionsLayer(
-                      eews: eews,
-                    ),
+                    .warning => EewWarningRegionsLayer(eews: eews),
                     .none => const SizedBox.shrink(),
                   };
                 },
@@ -156,9 +152,7 @@ class _MapContent extends ConsumerWidget {
                 ),
               ),
               const HomeMapLabelLayer(),
-              const SafeArea(
-                child: _MapHeader(),
-              ),
+              const SafeArea(child: _MapHeader()),
             ],
           );
 

@@ -20,10 +20,7 @@ List<Feature<Point>> eewHypocenterPoints(Ref ref) {
         final hypocenter = eew.hypocenter!;
         return Feature(
           geometry: Point(
-            Geographic(
-              lon: hypocenter.longitude!,
-              lat: hypocenter.latitude!,
-            ),
+            Geographic(lon: hypocenter.longitude!, lat: hypocenter.latitude!),
           ),
           properties: {
             'magnitude': hypocenter.magnitude,
