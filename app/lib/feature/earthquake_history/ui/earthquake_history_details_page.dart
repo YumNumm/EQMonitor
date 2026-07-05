@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_displa
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/estimated_intensity_notice_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/current_location_intensity_card.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_catalog_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
@@ -123,6 +124,7 @@ class _LoadedContent extends HookConsumerWidget {
                             displayMode.value = mode,
                         availableModes: availableModes,
                       ),
+                      EarthquakeCatalogCard(catalog: earthquake.catalog),
                       if (earthquake.originTime != null &&
                           DateTime.now().difference(earthquake.originTime!) >
                               const Duration(hours: 24))

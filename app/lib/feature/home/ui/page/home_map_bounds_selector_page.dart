@@ -43,10 +43,7 @@ class HomeMapBoundsSelectorPage extends ConsumerWidget {
 }
 
 class _Body extends HookConsumerWidget {
-  const _Body({
-    required this.styleString,
-    required this.mapSettings,
-  });
+  const _Body({required this.styleString, required this.mapSettings});
 
   final String styleString;
   final HomeMapSettings mapSettings;
@@ -62,9 +59,7 @@ class _Body extends HookConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('表示範囲を選択'),
-      ),
+      appBar: AppBar(title: const Text('表示範囲を選択')),
       body: MapLibreMap(
         options: options,
         onMapCreated: (c) {

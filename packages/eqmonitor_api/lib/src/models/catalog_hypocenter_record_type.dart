@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+/// 震源レコード種別。A:震源レコード、B:群発地震時の震源レコード、D:震源が離れた地震の組の震源レコード
 @JsonEnum()
 enum CatalogHypocenterRecordType {
   @JsonValue('A')

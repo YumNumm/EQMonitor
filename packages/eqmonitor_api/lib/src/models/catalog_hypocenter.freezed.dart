@@ -16,8 +16,9 @@ T _$identity<T>(T value) => value;
 mixin _$CatalogHypocenter {
 
 /// 0が代表震源
- int get seq;@JsonKey(name: 'record_type') CatalogHypocenterRecordType get recordType;@JsonKey(includeIfNull: true, name: 'origin_time') DateTime? get originTime;@JsonKey(includeIfNull: true) num? get latitude;@JsonKey(includeIfNull: true) num? get longitude;@JsonKey(includeIfNull: true, name: 'depth_km') num? get depthKm;@JsonKey(name: 'depth_is_free') bool get depthIsFree;@JsonKey(includeIfNull: true) num? get magnitude1;@JsonKey(includeIfNull: true, name: 'magnitude1_type') String? get magnitude1Type;@JsonKey(includeIfNull: true) num? get magnitude2;@JsonKey(includeIfNull: true, name: 'magnitude2_type') String? get magnitude2Type;/// 歴史的階級(L/S/M/R/F/X)を含む生の震度階級コード
-@JsonKey(includeIfNull: true, name: 'max_intensity_raw') String? get maxIntensityRaw;@JsonKey(includeIfNull: true, name: 'damage_scale') String? get damageScale;@JsonKey(includeIfNull: true, name: 'tsunami_scale') String? get tsunamiScale;@JsonKey(includeIfNull: true, name: 'determination_flag') String? get determinationFlag;
+ int get seq;@JsonKey(name: 'record_type') CatalogHypocenterRecordType get recordType;/// 気象庁または他機関が計算したマグニチュード（0〜2件、magnitude1/magnitude2に対応）
+ List<CatalogHypocenterMagnitude> get magnitudes;@JsonKey(name: 'epicenter_name') String get epicenterName;/// 震度1以上を観測した観測点の数
+@JsonKey(name: 'station_count') int get stationCount;@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? get originTime;@JsonKey(includeIfNull: false, name: 'origin_time_stderr_seconds') num? get originTimeStderrSeconds;@JsonKey(includeIfNull: false) Coordinate? get coordinates;@JsonKey(includeIfNull: false) CatalogHypocenterDepth? get depth;@JsonKey(includeIfNull: false, name: 'max_intensity') CatalogIntensityClass? get maxIntensity;@JsonKey(includeIfNull: false, name: 'large_area_code') int? get largeAreaCode;@JsonKey(includeIfNull: false, name: 'small_area_code') int? get smallAreaCode;@JsonKey(includeIfNull: false, name: 'determination_flag') CatalogDeterminationFlag? get determinationFlag;@JsonKey(includeIfNull: false) CatalogHypocenterEvaluation? get evaluation;@JsonKey(includeIfNull: false, name: 'auxiliary_info') CatalogHypocenterAuxiliaryInfo? get auxiliaryInfo;@JsonKey(includeIfNull: false, name: 'travel_time_table') CatalogTravelTimeTable? get travelTimeTable;
 /// Create a copy of CatalogHypocenter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +31,16 @@ $CatalogHypocenterCopyWith<CatalogHypocenter> get copyWith => _$CatalogHypocente
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatalogHypocenter&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.recordType, recordType) || other.recordType == recordType)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.depthKm, depthKm) || other.depthKm == depthKm)&&(identical(other.depthIsFree, depthIsFree) || other.depthIsFree == depthIsFree)&&(identical(other.magnitude1, magnitude1) || other.magnitude1 == magnitude1)&&(identical(other.magnitude1Type, magnitude1Type) || other.magnitude1Type == magnitude1Type)&&(identical(other.magnitude2, magnitude2) || other.magnitude2 == magnitude2)&&(identical(other.magnitude2Type, magnitude2Type) || other.magnitude2Type == magnitude2Type)&&(identical(other.maxIntensityRaw, maxIntensityRaw) || other.maxIntensityRaw == maxIntensityRaw)&&(identical(other.damageScale, damageScale) || other.damageScale == damageScale)&&(identical(other.tsunamiScale, tsunamiScale) || other.tsunamiScale == tsunamiScale)&&(identical(other.determinationFlag, determinationFlag) || other.determinationFlag == determinationFlag));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatalogHypocenter&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.recordType, recordType) || other.recordType == recordType)&&const DeepCollectionEquality().equals(other.magnitudes, magnitudes)&&(identical(other.epicenterName, epicenterName) || other.epicenterName == epicenterName)&&(identical(other.stationCount, stationCount) || other.stationCount == stationCount)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.originTimeStderrSeconds, originTimeStderrSeconds) || other.originTimeStderrSeconds == originTimeStderrSeconds)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.largeAreaCode, largeAreaCode) || other.largeAreaCode == largeAreaCode)&&(identical(other.smallAreaCode, smallAreaCode) || other.smallAreaCode == smallAreaCode)&&(identical(other.determinationFlag, determinationFlag) || other.determinationFlag == determinationFlag)&&(identical(other.evaluation, evaluation) || other.evaluation == evaluation)&&(identical(other.auxiliaryInfo, auxiliaryInfo) || other.auxiliaryInfo == auxiliaryInfo)&&(identical(other.travelTimeTable, travelTimeTable) || other.travelTimeTable == travelTimeTable));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,seq,recordType,originTime,latitude,longitude,depthKm,depthIsFree,magnitude1,magnitude1Type,magnitude2,magnitude2Type,maxIntensityRaw,damageScale,tsunamiScale,determinationFlag);
+int get hashCode => Object.hash(runtimeType,seq,recordType,const DeepCollectionEquality().hash(magnitudes),epicenterName,stationCount,originTime,originTimeStderrSeconds,coordinates,depth,maxIntensity,largeAreaCode,smallAreaCode,determinationFlag,evaluation,auxiliaryInfo,travelTimeTable);
 
 @override
 String toString() {
-  return 'CatalogHypocenter(seq: $seq, recordType: $recordType, originTime: $originTime, latitude: $latitude, longitude: $longitude, depthKm: $depthKm, depthIsFree: $depthIsFree, magnitude1: $magnitude1, magnitude1Type: $magnitude1Type, magnitude2: $magnitude2, magnitude2Type: $magnitude2Type, maxIntensityRaw: $maxIntensityRaw, damageScale: $damageScale, tsunamiScale: $tsunamiScale, determinationFlag: $determinationFlag)';
+  return 'CatalogHypocenter(seq: $seq, recordType: $recordType, magnitudes: $magnitudes, epicenterName: $epicenterName, stationCount: $stationCount, originTime: $originTime, originTimeStderrSeconds: $originTimeStderrSeconds, coordinates: $coordinates, depth: $depth, maxIntensity: $maxIntensity, largeAreaCode: $largeAreaCode, smallAreaCode: $smallAreaCode, determinationFlag: $determinationFlag, evaluation: $evaluation, auxiliaryInfo: $auxiliaryInfo, travelTimeTable: $travelTimeTable)';
 }
 
 
@@ -50,11 +51,11 @@ abstract mixin class $CatalogHypocenterCopyWith<$Res>  {
   factory $CatalogHypocenterCopyWith(CatalogHypocenter value, $Res Function(CatalogHypocenter) _then) = _$CatalogHypocenterCopyWithImpl;
 @useResult
 $Res call({
- int seq,@JsonKey(name: 'record_type') CatalogHypocenterRecordType recordType,@JsonKey(includeIfNull: true, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: true) num? latitude,@JsonKey(includeIfNull: true) num? longitude,@JsonKey(includeIfNull: true, name: 'depth_km') num? depthKm,@JsonKey(name: 'depth_is_free') bool depthIsFree,@JsonKey(includeIfNull: true) num? magnitude1,@JsonKey(includeIfNull: true, name: 'magnitude1_type') String? magnitude1Type,@JsonKey(includeIfNull: true) num? magnitude2,@JsonKey(includeIfNull: true, name: 'magnitude2_type') String? magnitude2Type,@JsonKey(includeIfNull: true, name: 'max_intensity_raw') String? maxIntensityRaw,@JsonKey(includeIfNull: true, name: 'damage_scale') String? damageScale,@JsonKey(includeIfNull: true, name: 'tsunami_scale') String? tsunamiScale,@JsonKey(includeIfNull: true, name: 'determination_flag') String? determinationFlag
+ int seq,@JsonKey(name: 'record_type') CatalogHypocenterRecordType recordType, List<CatalogHypocenterMagnitude> magnitudes,@JsonKey(name: 'epicenter_name') String epicenterName,@JsonKey(name: 'station_count') int stationCount,@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: false, name: 'origin_time_stderr_seconds') num? originTimeStderrSeconds,@JsonKey(includeIfNull: false) Coordinate? coordinates,@JsonKey(includeIfNull: false) CatalogHypocenterDepth? depth,@JsonKey(includeIfNull: false, name: 'max_intensity') CatalogIntensityClass? maxIntensity,@JsonKey(includeIfNull: false, name: 'large_area_code') int? largeAreaCode,@JsonKey(includeIfNull: false, name: 'small_area_code') int? smallAreaCode,@JsonKey(includeIfNull: false, name: 'determination_flag') CatalogDeterminationFlag? determinationFlag,@JsonKey(includeIfNull: false) CatalogHypocenterEvaluation? evaluation,@JsonKey(includeIfNull: false, name: 'auxiliary_info') CatalogHypocenterAuxiliaryInfo? auxiliaryInfo,@JsonKey(includeIfNull: false, name: 'travel_time_table') CatalogTravelTimeTable? travelTimeTable
 });
 
 
-
+$CoordinateCopyWith<$Res>? get coordinates;$CatalogHypocenterDepthCopyWith<$Res>? get depth;
 
 }
 /// @nodoc
@@ -67,27 +68,52 @@ class _$CatalogHypocenterCopyWithImpl<$Res>
 
 /// Create a copy of CatalogHypocenter
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? seq = null,Object? recordType = null,Object? originTime = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? depthKm = freezed,Object? depthIsFree = null,Object? magnitude1 = freezed,Object? magnitude1Type = freezed,Object? magnitude2 = freezed,Object? magnitude2Type = freezed,Object? maxIntensityRaw = freezed,Object? damageScale = freezed,Object? tsunamiScale = freezed,Object? determinationFlag = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? seq = null,Object? recordType = null,Object? magnitudes = null,Object? epicenterName = null,Object? stationCount = null,Object? originTime = freezed,Object? originTimeStderrSeconds = freezed,Object? coordinates = freezed,Object? depth = freezed,Object? maxIntensity = freezed,Object? largeAreaCode = freezed,Object? smallAreaCode = freezed,Object? determinationFlag = freezed,Object? evaluation = freezed,Object? auxiliaryInfo = freezed,Object? travelTimeTable = freezed,}) {
   return _then(_self.copyWith(
 seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
 as int,recordType: null == recordType ? _self.recordType : recordType // ignore: cast_nullable_to_non_nullable
-as CatalogHypocenterRecordType,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
-as num?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
-as num?,depthKm: freezed == depthKm ? _self.depthKm : depthKm // ignore: cast_nullable_to_non_nullable
-as num?,depthIsFree: null == depthIsFree ? _self.depthIsFree : depthIsFree // ignore: cast_nullable_to_non_nullable
-as bool,magnitude1: freezed == magnitude1 ? _self.magnitude1 : magnitude1 // ignore: cast_nullable_to_non_nullable
-as num?,magnitude1Type: freezed == magnitude1Type ? _self.magnitude1Type : magnitude1Type // ignore: cast_nullable_to_non_nullable
-as String?,magnitude2: freezed == magnitude2 ? _self.magnitude2 : magnitude2 // ignore: cast_nullable_to_non_nullable
-as num?,magnitude2Type: freezed == magnitude2Type ? _self.magnitude2Type : magnitude2Type // ignore: cast_nullable_to_non_nullable
-as String?,maxIntensityRaw: freezed == maxIntensityRaw ? _self.maxIntensityRaw : maxIntensityRaw // ignore: cast_nullable_to_non_nullable
-as String?,damageScale: freezed == damageScale ? _self.damageScale : damageScale // ignore: cast_nullable_to_non_nullable
-as String?,tsunamiScale: freezed == tsunamiScale ? _self.tsunamiScale : tsunamiScale // ignore: cast_nullable_to_non_nullable
-as String?,determinationFlag: freezed == determinationFlag ? _self.determinationFlag : determinationFlag // ignore: cast_nullable_to_non_nullable
-as String?,
+as CatalogHypocenterRecordType,magnitudes: null == magnitudes ? _self.magnitudes : magnitudes // ignore: cast_nullable_to_non_nullable
+as List<CatalogHypocenterMagnitude>,epicenterName: null == epicenterName ? _self.epicenterName : epicenterName // ignore: cast_nullable_to_non_nullable
+as String,stationCount: null == stationCount ? _self.stationCount : stationCount // ignore: cast_nullable_to_non_nullable
+as int,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,originTimeStderrSeconds: freezed == originTimeStderrSeconds ? _self.originTimeStderrSeconds : originTimeStderrSeconds // ignore: cast_nullable_to_non_nullable
+as num?,coordinates: freezed == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
+as Coordinate?,depth: freezed == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
+as CatalogHypocenterDepth?,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
+as CatalogIntensityClass?,largeAreaCode: freezed == largeAreaCode ? _self.largeAreaCode : largeAreaCode // ignore: cast_nullable_to_non_nullable
+as int?,smallAreaCode: freezed == smallAreaCode ? _self.smallAreaCode : smallAreaCode // ignore: cast_nullable_to_non_nullable
+as int?,determinationFlag: freezed == determinationFlag ? _self.determinationFlag : determinationFlag // ignore: cast_nullable_to_non_nullable
+as CatalogDeterminationFlag?,evaluation: freezed == evaluation ? _self.evaluation : evaluation // ignore: cast_nullable_to_non_nullable
+as CatalogHypocenterEvaluation?,auxiliaryInfo: freezed == auxiliaryInfo ? _self.auxiliaryInfo : auxiliaryInfo // ignore: cast_nullable_to_non_nullable
+as CatalogHypocenterAuxiliaryInfo?,travelTimeTable: freezed == travelTimeTable ? _self.travelTimeTable : travelTimeTable // ignore: cast_nullable_to_non_nullable
+as CatalogTravelTimeTable?,
   ));
 }
+/// Create a copy of CatalogHypocenter
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CoordinateCopyWith<$Res>? get coordinates {
+    if (_self.coordinates == null) {
+    return null;
+  }
 
+  return $CoordinateCopyWith<$Res>(_self.coordinates!, (value) {
+    return _then(_self.copyWith(coordinates: value));
+  });
+}/// Create a copy of CatalogHypocenter
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CatalogHypocenterDepthCopyWith<$Res>? get depth {
+    if (_self.depth == null) {
+    return null;
+  }
+
+  return $CatalogHypocenterDepthCopyWith<$Res>(_self.depth!, (value) {
+    return _then(_self.copyWith(depth: value));
+  });
+}
 }
 
 
@@ -169,10 +195,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int seq, @JsonKey(name: 'record_type')  CatalogHypocenterRecordType recordType, @JsonKey(includeIfNull: true, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: true)  num? latitude, @JsonKey(includeIfNull: true)  num? longitude, @JsonKey(includeIfNull: true, name: 'depth_km')  num? depthKm, @JsonKey(name: 'depth_is_free')  bool depthIsFree, @JsonKey(includeIfNull: true)  num? magnitude1, @JsonKey(includeIfNull: true, name: 'magnitude1_type')  String? magnitude1Type, @JsonKey(includeIfNull: true)  num? magnitude2, @JsonKey(includeIfNull: true, name: 'magnitude2_type')  String? magnitude2Type, @JsonKey(includeIfNull: true, name: 'max_intensity_raw')  String? maxIntensityRaw, @JsonKey(includeIfNull: true, name: 'damage_scale')  String? damageScale, @JsonKey(includeIfNull: true, name: 'tsunami_scale')  String? tsunamiScale, @JsonKey(includeIfNull: true, name: 'determination_flag')  String? determinationFlag)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int seq, @JsonKey(name: 'record_type')  CatalogHypocenterRecordType recordType,  List<CatalogHypocenterMagnitude> magnitudes, @JsonKey(name: 'epicenter_name')  String epicenterName, @JsonKey(name: 'station_count')  int stationCount, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'origin_time_stderr_seconds')  num? originTimeStderrSeconds, @JsonKey(includeIfNull: false)  Coordinate? coordinates, @JsonKey(includeIfNull: false)  CatalogHypocenterDepth? depth, @JsonKey(includeIfNull: false, name: 'max_intensity')  CatalogIntensityClass? maxIntensity, @JsonKey(includeIfNull: false, name: 'large_area_code')  int? largeAreaCode, @JsonKey(includeIfNull: false, name: 'small_area_code')  int? smallAreaCode, @JsonKey(includeIfNull: false, name: 'determination_flag')  CatalogDeterminationFlag? determinationFlag, @JsonKey(includeIfNull: false)  CatalogHypocenterEvaluation? evaluation, @JsonKey(includeIfNull: false, name: 'auxiliary_info')  CatalogHypocenterAuxiliaryInfo? auxiliaryInfo, @JsonKey(includeIfNull: false, name: 'travel_time_table')  CatalogTravelTimeTable? travelTimeTable)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CatalogHypocenter() when $default != null:
-return $default(_that.seq,_that.recordType,_that.originTime,_that.latitude,_that.longitude,_that.depthKm,_that.depthIsFree,_that.magnitude1,_that.magnitude1Type,_that.magnitude2,_that.magnitude2Type,_that.maxIntensityRaw,_that.damageScale,_that.tsunamiScale,_that.determinationFlag);case _:
+return $default(_that.seq,_that.recordType,_that.magnitudes,_that.epicenterName,_that.stationCount,_that.originTime,_that.originTimeStderrSeconds,_that.coordinates,_that.depth,_that.maxIntensity,_that.largeAreaCode,_that.smallAreaCode,_that.determinationFlag,_that.evaluation,_that.auxiliaryInfo,_that.travelTimeTable);case _:
   return orElse();
 
 }
@@ -190,10 +216,10 @@ return $default(_that.seq,_that.recordType,_that.originTime,_that.latitude,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int seq, @JsonKey(name: 'record_type')  CatalogHypocenterRecordType recordType, @JsonKey(includeIfNull: true, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: true)  num? latitude, @JsonKey(includeIfNull: true)  num? longitude, @JsonKey(includeIfNull: true, name: 'depth_km')  num? depthKm, @JsonKey(name: 'depth_is_free')  bool depthIsFree, @JsonKey(includeIfNull: true)  num? magnitude1, @JsonKey(includeIfNull: true, name: 'magnitude1_type')  String? magnitude1Type, @JsonKey(includeIfNull: true)  num? magnitude2, @JsonKey(includeIfNull: true, name: 'magnitude2_type')  String? magnitude2Type, @JsonKey(includeIfNull: true, name: 'max_intensity_raw')  String? maxIntensityRaw, @JsonKey(includeIfNull: true, name: 'damage_scale')  String? damageScale, @JsonKey(includeIfNull: true, name: 'tsunami_scale')  String? tsunamiScale, @JsonKey(includeIfNull: true, name: 'determination_flag')  String? determinationFlag)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int seq, @JsonKey(name: 'record_type')  CatalogHypocenterRecordType recordType,  List<CatalogHypocenterMagnitude> magnitudes, @JsonKey(name: 'epicenter_name')  String epicenterName, @JsonKey(name: 'station_count')  int stationCount, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'origin_time_stderr_seconds')  num? originTimeStderrSeconds, @JsonKey(includeIfNull: false)  Coordinate? coordinates, @JsonKey(includeIfNull: false)  CatalogHypocenterDepth? depth, @JsonKey(includeIfNull: false, name: 'max_intensity')  CatalogIntensityClass? maxIntensity, @JsonKey(includeIfNull: false, name: 'large_area_code')  int? largeAreaCode, @JsonKey(includeIfNull: false, name: 'small_area_code')  int? smallAreaCode, @JsonKey(includeIfNull: false, name: 'determination_flag')  CatalogDeterminationFlag? determinationFlag, @JsonKey(includeIfNull: false)  CatalogHypocenterEvaluation? evaluation, @JsonKey(includeIfNull: false, name: 'auxiliary_info')  CatalogHypocenterAuxiliaryInfo? auxiliaryInfo, @JsonKey(includeIfNull: false, name: 'travel_time_table')  CatalogTravelTimeTable? travelTimeTable)  $default,) {final _that = this;
 switch (_that) {
 case _CatalogHypocenter():
-return $default(_that.seq,_that.recordType,_that.originTime,_that.latitude,_that.longitude,_that.depthKm,_that.depthIsFree,_that.magnitude1,_that.magnitude1Type,_that.magnitude2,_that.magnitude2Type,_that.maxIntensityRaw,_that.damageScale,_that.tsunamiScale,_that.determinationFlag);case _:
+return $default(_that.seq,_that.recordType,_that.magnitudes,_that.epicenterName,_that.stationCount,_that.originTime,_that.originTimeStderrSeconds,_that.coordinates,_that.depth,_that.maxIntensity,_that.largeAreaCode,_that.smallAreaCode,_that.determinationFlag,_that.evaluation,_that.auxiliaryInfo,_that.travelTimeTable);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +236,10 @@ return $default(_that.seq,_that.recordType,_that.originTime,_that.latitude,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int seq, @JsonKey(name: 'record_type')  CatalogHypocenterRecordType recordType, @JsonKey(includeIfNull: true, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: true)  num? latitude, @JsonKey(includeIfNull: true)  num? longitude, @JsonKey(includeIfNull: true, name: 'depth_km')  num? depthKm, @JsonKey(name: 'depth_is_free')  bool depthIsFree, @JsonKey(includeIfNull: true)  num? magnitude1, @JsonKey(includeIfNull: true, name: 'magnitude1_type')  String? magnitude1Type, @JsonKey(includeIfNull: true)  num? magnitude2, @JsonKey(includeIfNull: true, name: 'magnitude2_type')  String? magnitude2Type, @JsonKey(includeIfNull: true, name: 'max_intensity_raw')  String? maxIntensityRaw, @JsonKey(includeIfNull: true, name: 'damage_scale')  String? damageScale, @JsonKey(includeIfNull: true, name: 'tsunami_scale')  String? tsunamiScale, @JsonKey(includeIfNull: true, name: 'determination_flag')  String? determinationFlag)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int seq, @JsonKey(name: 'record_type')  CatalogHypocenterRecordType recordType,  List<CatalogHypocenterMagnitude> magnitudes, @JsonKey(name: 'epicenter_name')  String epicenterName, @JsonKey(name: 'station_count')  int stationCount, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'origin_time_stderr_seconds')  num? originTimeStderrSeconds, @JsonKey(includeIfNull: false)  Coordinate? coordinates, @JsonKey(includeIfNull: false)  CatalogHypocenterDepth? depth, @JsonKey(includeIfNull: false, name: 'max_intensity')  CatalogIntensityClass? maxIntensity, @JsonKey(includeIfNull: false, name: 'large_area_code')  int? largeAreaCode, @JsonKey(includeIfNull: false, name: 'small_area_code')  int? smallAreaCode, @JsonKey(includeIfNull: false, name: 'determination_flag')  CatalogDeterminationFlag? determinationFlag, @JsonKey(includeIfNull: false)  CatalogHypocenterEvaluation? evaluation, @JsonKey(includeIfNull: false, name: 'auxiliary_info')  CatalogHypocenterAuxiliaryInfo? auxiliaryInfo, @JsonKey(includeIfNull: false, name: 'travel_time_table')  CatalogTravelTimeTable? travelTimeTable)?  $default,) {final _that = this;
 switch (_that) {
 case _CatalogHypocenter() when $default != null:
-return $default(_that.seq,_that.recordType,_that.originTime,_that.latitude,_that.longitude,_that.depthKm,_that.depthIsFree,_that.magnitude1,_that.magnitude1Type,_that.magnitude2,_that.magnitude2Type,_that.maxIntensityRaw,_that.damageScale,_that.tsunamiScale,_that.determinationFlag);case _:
+return $default(_that.seq,_that.recordType,_that.magnitudes,_that.epicenterName,_that.stationCount,_that.originTime,_that.originTimeStderrSeconds,_that.coordinates,_that.depth,_that.maxIntensity,_that.largeAreaCode,_that.smallAreaCode,_that.determinationFlag,_that.evaluation,_that.auxiliaryInfo,_that.travelTimeTable);case _:
   return null;
 
 }
@@ -225,26 +251,35 @@ return $default(_that.seq,_that.recordType,_that.originTime,_that.latitude,_that
 @JsonSerializable()
 
 class _CatalogHypocenter implements CatalogHypocenter {
-  const _CatalogHypocenter({required this.seq, @JsonKey(name: 'record_type') required this.recordType, @JsonKey(includeIfNull: true, name: 'origin_time') required this.originTime, @JsonKey(includeIfNull: true) required this.latitude, @JsonKey(includeIfNull: true) required this.longitude, @JsonKey(includeIfNull: true, name: 'depth_km') required this.depthKm, @JsonKey(name: 'depth_is_free') required this.depthIsFree, @JsonKey(includeIfNull: true) required this.magnitude1, @JsonKey(includeIfNull: true, name: 'magnitude1_type') required this.magnitude1Type, @JsonKey(includeIfNull: true) required this.magnitude2, @JsonKey(includeIfNull: true, name: 'magnitude2_type') required this.magnitude2Type, @JsonKey(includeIfNull: true, name: 'max_intensity_raw') required this.maxIntensityRaw, @JsonKey(includeIfNull: true, name: 'damage_scale') required this.damageScale, @JsonKey(includeIfNull: true, name: 'tsunami_scale') required this.tsunamiScale, @JsonKey(includeIfNull: true, name: 'determination_flag') required this.determinationFlag});
+  const _CatalogHypocenter({required this.seq, @JsonKey(name: 'record_type') required this.recordType, required final  List<CatalogHypocenterMagnitude> magnitudes, @JsonKey(name: 'epicenter_name') required this.epicenterName, @JsonKey(name: 'station_count') required this.stationCount, @JsonKey(includeIfNull: false, name: 'origin_time') this.originTime, @JsonKey(includeIfNull: false, name: 'origin_time_stderr_seconds') this.originTimeStderrSeconds, @JsonKey(includeIfNull: false) this.coordinates, @JsonKey(includeIfNull: false) this.depth, @JsonKey(includeIfNull: false, name: 'max_intensity') this.maxIntensity, @JsonKey(includeIfNull: false, name: 'large_area_code') this.largeAreaCode, @JsonKey(includeIfNull: false, name: 'small_area_code') this.smallAreaCode, @JsonKey(includeIfNull: false, name: 'determination_flag') this.determinationFlag, @JsonKey(includeIfNull: false) this.evaluation, @JsonKey(includeIfNull: false, name: 'auxiliary_info') this.auxiliaryInfo, @JsonKey(includeIfNull: false, name: 'travel_time_table') this.travelTimeTable}): _magnitudes = magnitudes;
   factory _CatalogHypocenter.fromJson(Map<String, dynamic> json) => _$CatalogHypocenterFromJson(json);
 
 /// 0が代表震源
 @override final  int seq;
 @override@JsonKey(name: 'record_type') final  CatalogHypocenterRecordType recordType;
-@override@JsonKey(includeIfNull: true, name: 'origin_time') final  DateTime? originTime;
-@override@JsonKey(includeIfNull: true) final  num? latitude;
-@override@JsonKey(includeIfNull: true) final  num? longitude;
-@override@JsonKey(includeIfNull: true, name: 'depth_km') final  num? depthKm;
-@override@JsonKey(name: 'depth_is_free') final  bool depthIsFree;
-@override@JsonKey(includeIfNull: true) final  num? magnitude1;
-@override@JsonKey(includeIfNull: true, name: 'magnitude1_type') final  String? magnitude1Type;
-@override@JsonKey(includeIfNull: true) final  num? magnitude2;
-@override@JsonKey(includeIfNull: true, name: 'magnitude2_type') final  String? magnitude2Type;
-/// 歴史的階級(L/S/M/R/F/X)を含む生の震度階級コード
-@override@JsonKey(includeIfNull: true, name: 'max_intensity_raw') final  String? maxIntensityRaw;
-@override@JsonKey(includeIfNull: true, name: 'damage_scale') final  String? damageScale;
-@override@JsonKey(includeIfNull: true, name: 'tsunami_scale') final  String? tsunamiScale;
-@override@JsonKey(includeIfNull: true, name: 'determination_flag') final  String? determinationFlag;
+/// 気象庁または他機関が計算したマグニチュード（0〜2件、magnitude1/magnitude2に対応）
+ final  List<CatalogHypocenterMagnitude> _magnitudes;
+/// 気象庁または他機関が計算したマグニチュード（0〜2件、magnitude1/magnitude2に対応）
+@override List<CatalogHypocenterMagnitude> get magnitudes {
+  if (_magnitudes is EqualUnmodifiableListView) return _magnitudes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_magnitudes);
+}
+
+@override@JsonKey(name: 'epicenter_name') final  String epicenterName;
+/// 震度1以上を観測した観測点の数
+@override@JsonKey(name: 'station_count') final  int stationCount;
+@override@JsonKey(includeIfNull: false, name: 'origin_time') final  DateTime? originTime;
+@override@JsonKey(includeIfNull: false, name: 'origin_time_stderr_seconds') final  num? originTimeStderrSeconds;
+@override@JsonKey(includeIfNull: false) final  Coordinate? coordinates;
+@override@JsonKey(includeIfNull: false) final  CatalogHypocenterDepth? depth;
+@override@JsonKey(includeIfNull: false, name: 'max_intensity') final  CatalogIntensityClass? maxIntensity;
+@override@JsonKey(includeIfNull: false, name: 'large_area_code') final  int? largeAreaCode;
+@override@JsonKey(includeIfNull: false, name: 'small_area_code') final  int? smallAreaCode;
+@override@JsonKey(includeIfNull: false, name: 'determination_flag') final  CatalogDeterminationFlag? determinationFlag;
+@override@JsonKey(includeIfNull: false) final  CatalogHypocenterEvaluation? evaluation;
+@override@JsonKey(includeIfNull: false, name: 'auxiliary_info') final  CatalogHypocenterAuxiliaryInfo? auxiliaryInfo;
+@override@JsonKey(includeIfNull: false, name: 'travel_time_table') final  CatalogTravelTimeTable? travelTimeTable;
 
 /// Create a copy of CatalogHypocenter
 /// with the given fields replaced by the non-null parameter values.
@@ -259,16 +294,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CatalogHypocenter&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.recordType, recordType) || other.recordType == recordType)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.depthKm, depthKm) || other.depthKm == depthKm)&&(identical(other.depthIsFree, depthIsFree) || other.depthIsFree == depthIsFree)&&(identical(other.magnitude1, magnitude1) || other.magnitude1 == magnitude1)&&(identical(other.magnitude1Type, magnitude1Type) || other.magnitude1Type == magnitude1Type)&&(identical(other.magnitude2, magnitude2) || other.magnitude2 == magnitude2)&&(identical(other.magnitude2Type, magnitude2Type) || other.magnitude2Type == magnitude2Type)&&(identical(other.maxIntensityRaw, maxIntensityRaw) || other.maxIntensityRaw == maxIntensityRaw)&&(identical(other.damageScale, damageScale) || other.damageScale == damageScale)&&(identical(other.tsunamiScale, tsunamiScale) || other.tsunamiScale == tsunamiScale)&&(identical(other.determinationFlag, determinationFlag) || other.determinationFlag == determinationFlag));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CatalogHypocenter&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.recordType, recordType) || other.recordType == recordType)&&const DeepCollectionEquality().equals(other._magnitudes, _magnitudes)&&(identical(other.epicenterName, epicenterName) || other.epicenterName == epicenterName)&&(identical(other.stationCount, stationCount) || other.stationCount == stationCount)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.originTimeStderrSeconds, originTimeStderrSeconds) || other.originTimeStderrSeconds == originTimeStderrSeconds)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.largeAreaCode, largeAreaCode) || other.largeAreaCode == largeAreaCode)&&(identical(other.smallAreaCode, smallAreaCode) || other.smallAreaCode == smallAreaCode)&&(identical(other.determinationFlag, determinationFlag) || other.determinationFlag == determinationFlag)&&(identical(other.evaluation, evaluation) || other.evaluation == evaluation)&&(identical(other.auxiliaryInfo, auxiliaryInfo) || other.auxiliaryInfo == auxiliaryInfo)&&(identical(other.travelTimeTable, travelTimeTable) || other.travelTimeTable == travelTimeTable));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,seq,recordType,originTime,latitude,longitude,depthKm,depthIsFree,magnitude1,magnitude1Type,magnitude2,magnitude2Type,maxIntensityRaw,damageScale,tsunamiScale,determinationFlag);
+int get hashCode => Object.hash(runtimeType,seq,recordType,const DeepCollectionEquality().hash(_magnitudes),epicenterName,stationCount,originTime,originTimeStderrSeconds,coordinates,depth,maxIntensity,largeAreaCode,smallAreaCode,determinationFlag,evaluation,auxiliaryInfo,travelTimeTable);
 
 @override
 String toString() {
-  return 'CatalogHypocenter(seq: $seq, recordType: $recordType, originTime: $originTime, latitude: $latitude, longitude: $longitude, depthKm: $depthKm, depthIsFree: $depthIsFree, magnitude1: $magnitude1, magnitude1Type: $magnitude1Type, magnitude2: $magnitude2, magnitude2Type: $magnitude2Type, maxIntensityRaw: $maxIntensityRaw, damageScale: $damageScale, tsunamiScale: $tsunamiScale, determinationFlag: $determinationFlag)';
+  return 'CatalogHypocenter(seq: $seq, recordType: $recordType, magnitudes: $magnitudes, epicenterName: $epicenterName, stationCount: $stationCount, originTime: $originTime, originTimeStderrSeconds: $originTimeStderrSeconds, coordinates: $coordinates, depth: $depth, maxIntensity: $maxIntensity, largeAreaCode: $largeAreaCode, smallAreaCode: $smallAreaCode, determinationFlag: $determinationFlag, evaluation: $evaluation, auxiliaryInfo: $auxiliaryInfo, travelTimeTable: $travelTimeTable)';
 }
 
 
@@ -279,11 +314,11 @@ abstract mixin class _$CatalogHypocenterCopyWith<$Res> implements $CatalogHypoce
   factory _$CatalogHypocenterCopyWith(_CatalogHypocenter value, $Res Function(_CatalogHypocenter) _then) = __$CatalogHypocenterCopyWithImpl;
 @override @useResult
 $Res call({
- int seq,@JsonKey(name: 'record_type') CatalogHypocenterRecordType recordType,@JsonKey(includeIfNull: true, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: true) num? latitude,@JsonKey(includeIfNull: true) num? longitude,@JsonKey(includeIfNull: true, name: 'depth_km') num? depthKm,@JsonKey(name: 'depth_is_free') bool depthIsFree,@JsonKey(includeIfNull: true) num? magnitude1,@JsonKey(includeIfNull: true, name: 'magnitude1_type') String? magnitude1Type,@JsonKey(includeIfNull: true) num? magnitude2,@JsonKey(includeIfNull: true, name: 'magnitude2_type') String? magnitude2Type,@JsonKey(includeIfNull: true, name: 'max_intensity_raw') String? maxIntensityRaw,@JsonKey(includeIfNull: true, name: 'damage_scale') String? damageScale,@JsonKey(includeIfNull: true, name: 'tsunami_scale') String? tsunamiScale,@JsonKey(includeIfNull: true, name: 'determination_flag') String? determinationFlag
+ int seq,@JsonKey(name: 'record_type') CatalogHypocenterRecordType recordType, List<CatalogHypocenterMagnitude> magnitudes,@JsonKey(name: 'epicenter_name') String epicenterName,@JsonKey(name: 'station_count') int stationCount,@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: false, name: 'origin_time_stderr_seconds') num? originTimeStderrSeconds,@JsonKey(includeIfNull: false) Coordinate? coordinates,@JsonKey(includeIfNull: false) CatalogHypocenterDepth? depth,@JsonKey(includeIfNull: false, name: 'max_intensity') CatalogIntensityClass? maxIntensity,@JsonKey(includeIfNull: false, name: 'large_area_code') int? largeAreaCode,@JsonKey(includeIfNull: false, name: 'small_area_code') int? smallAreaCode,@JsonKey(includeIfNull: false, name: 'determination_flag') CatalogDeterminationFlag? determinationFlag,@JsonKey(includeIfNull: false) CatalogHypocenterEvaluation? evaluation,@JsonKey(includeIfNull: false, name: 'auxiliary_info') CatalogHypocenterAuxiliaryInfo? auxiliaryInfo,@JsonKey(includeIfNull: false, name: 'travel_time_table') CatalogTravelTimeTable? travelTimeTable
 });
 
 
-
+@override $CoordinateCopyWith<$Res>? get coordinates;@override $CatalogHypocenterDepthCopyWith<$Res>? get depth;
 
 }
 /// @nodoc
@@ -296,28 +331,53 @@ class __$CatalogHypocenterCopyWithImpl<$Res>
 
 /// Create a copy of CatalogHypocenter
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? seq = null,Object? recordType = null,Object? originTime = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? depthKm = freezed,Object? depthIsFree = null,Object? magnitude1 = freezed,Object? magnitude1Type = freezed,Object? magnitude2 = freezed,Object? magnitude2Type = freezed,Object? maxIntensityRaw = freezed,Object? damageScale = freezed,Object? tsunamiScale = freezed,Object? determinationFlag = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? seq = null,Object? recordType = null,Object? magnitudes = null,Object? epicenterName = null,Object? stationCount = null,Object? originTime = freezed,Object? originTimeStderrSeconds = freezed,Object? coordinates = freezed,Object? depth = freezed,Object? maxIntensity = freezed,Object? largeAreaCode = freezed,Object? smallAreaCode = freezed,Object? determinationFlag = freezed,Object? evaluation = freezed,Object? auxiliaryInfo = freezed,Object? travelTimeTable = freezed,}) {
   return _then(_CatalogHypocenter(
 seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
 as int,recordType: null == recordType ? _self.recordType : recordType // ignore: cast_nullable_to_non_nullable
-as CatalogHypocenterRecordType,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
-as num?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
-as num?,depthKm: freezed == depthKm ? _self.depthKm : depthKm // ignore: cast_nullable_to_non_nullable
-as num?,depthIsFree: null == depthIsFree ? _self.depthIsFree : depthIsFree // ignore: cast_nullable_to_non_nullable
-as bool,magnitude1: freezed == magnitude1 ? _self.magnitude1 : magnitude1 // ignore: cast_nullable_to_non_nullable
-as num?,magnitude1Type: freezed == magnitude1Type ? _self.magnitude1Type : magnitude1Type // ignore: cast_nullable_to_non_nullable
-as String?,magnitude2: freezed == magnitude2 ? _self.magnitude2 : magnitude2 // ignore: cast_nullable_to_non_nullable
-as num?,magnitude2Type: freezed == magnitude2Type ? _self.magnitude2Type : magnitude2Type // ignore: cast_nullable_to_non_nullable
-as String?,maxIntensityRaw: freezed == maxIntensityRaw ? _self.maxIntensityRaw : maxIntensityRaw // ignore: cast_nullable_to_non_nullable
-as String?,damageScale: freezed == damageScale ? _self.damageScale : damageScale // ignore: cast_nullable_to_non_nullable
-as String?,tsunamiScale: freezed == tsunamiScale ? _self.tsunamiScale : tsunamiScale // ignore: cast_nullable_to_non_nullable
-as String?,determinationFlag: freezed == determinationFlag ? _self.determinationFlag : determinationFlag // ignore: cast_nullable_to_non_nullable
-as String?,
+as CatalogHypocenterRecordType,magnitudes: null == magnitudes ? _self._magnitudes : magnitudes // ignore: cast_nullable_to_non_nullable
+as List<CatalogHypocenterMagnitude>,epicenterName: null == epicenterName ? _self.epicenterName : epicenterName // ignore: cast_nullable_to_non_nullable
+as String,stationCount: null == stationCount ? _self.stationCount : stationCount // ignore: cast_nullable_to_non_nullable
+as int,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,originTimeStderrSeconds: freezed == originTimeStderrSeconds ? _self.originTimeStderrSeconds : originTimeStderrSeconds // ignore: cast_nullable_to_non_nullable
+as num?,coordinates: freezed == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
+as Coordinate?,depth: freezed == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
+as CatalogHypocenterDepth?,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
+as CatalogIntensityClass?,largeAreaCode: freezed == largeAreaCode ? _self.largeAreaCode : largeAreaCode // ignore: cast_nullable_to_non_nullable
+as int?,smallAreaCode: freezed == smallAreaCode ? _self.smallAreaCode : smallAreaCode // ignore: cast_nullable_to_non_nullable
+as int?,determinationFlag: freezed == determinationFlag ? _self.determinationFlag : determinationFlag // ignore: cast_nullable_to_non_nullable
+as CatalogDeterminationFlag?,evaluation: freezed == evaluation ? _self.evaluation : evaluation // ignore: cast_nullable_to_non_nullable
+as CatalogHypocenterEvaluation?,auxiliaryInfo: freezed == auxiliaryInfo ? _self.auxiliaryInfo : auxiliaryInfo // ignore: cast_nullable_to_non_nullable
+as CatalogHypocenterAuxiliaryInfo?,travelTimeTable: freezed == travelTimeTable ? _self.travelTimeTable : travelTimeTable // ignore: cast_nullable_to_non_nullable
+as CatalogTravelTimeTable?,
   ));
 }
 
+/// Create a copy of CatalogHypocenter
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CoordinateCopyWith<$Res>? get coordinates {
+    if (_self.coordinates == null) {
+    return null;
+  }
 
+  return $CoordinateCopyWith<$Res>(_self.coordinates!, (value) {
+    return _then(_self.copyWith(coordinates: value));
+  });
+}/// Create a copy of CatalogHypocenter
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CatalogHypocenterDepthCopyWith<$Res>? get depth {
+    if (_self.depth == null) {
+    return null;
+  }
+
+  return $CatalogHypocenterDepthCopyWith<$Res>(_self.depth!, (value) {
+    return _then(_self.copyWith(depth: value));
+  });
+}
 }
 
 // dart format on

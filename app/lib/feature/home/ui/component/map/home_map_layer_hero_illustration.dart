@@ -14,7 +14,11 @@ class HomeMapLayerHeroIllustration extends HookWidget {
     final colorTheme = designSystem.colorTheme;
     final shape = designSystem.shape;
     final primary = context.designSystem.colorTheme.primary;
-    final primarySoft = Color.lerp(colorTheme.surfaceContainerHighest, primary, 0.35)!;
+    final primarySoft = Color.lerp(
+      colorTheme.surfaceContainerHighest,
+      primary,
+      0.35,
+    )!;
     final controller = useAnimationController(
       duration: const Duration(seconds: 12),
     );
@@ -49,9 +53,8 @@ class HomeMapLayerHeroIllustration extends HookWidget {
                 left: 18,
                 child: _LayerLabelChip(
                   label: 'Layered',
-                  backgroundColor: colorTheme.surfaceContainerHighest.withValues(
-                    alpha: 0.92,
-                  ),
+                  backgroundColor: colorTheme.surfaceContainerHighest
+                      .withValues(alpha: 0.92),
                 ),
               ),
               Positioned(
@@ -59,7 +62,9 @@ class HomeMapLayerHeroIllustration extends HookWidget {
                 bottom: 18,
                 child: _LayerLabelChip(
                   label: 'Realtime',
-                  backgroundColor: colorTheme.surfaceContainerHigh.withValues(alpha: 0.92),
+                  backgroundColor: colorTheme.surfaceContainerHigh.withValues(
+                    alpha: 0.92,
+                  ),
                 ),
               ),
             ],
@@ -71,10 +76,7 @@ class HomeMapLayerHeroIllustration extends HookWidget {
 }
 
 class _LayerLabelChip extends StatelessWidget {
-  const _LayerLabelChip({
-    required this.label,
-    required this.backgroundColor,
-  });
+  const _LayerLabelChip({required this.label, required this.backgroundColor});
 
   final String label;
   final Color backgroundColor;

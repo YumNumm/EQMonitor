@@ -14,9 +14,7 @@ class ShakeDetectionCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final regionsAsync = ref.watch(
-      shakeDetectionRegionsProvider(event),
-    );
+    final regionsAsync = ref.watch(shakeDetectionRegionsProvider(event));
 
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
@@ -38,10 +36,7 @@ class ShakeDetectionCard extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _ShakeDetectionCardHeader(event: event),
-            _ShakeDetectionCardBody(
-              event: event,
-              regionsAsync: regionsAsync,
-            ),
+            _ShakeDetectionCardBody(event: event, regionsAsync: regionsAsync),
           ],
         ),
       ),
@@ -152,10 +147,7 @@ class _ShakeDetectionCardBody extends StatelessWidget {
           if (regions.isNotEmpty) ...[
             SizedBox(height: spacing.xs),
             for (final entry in regions.entries) ...[
-              Text(
-                entry.key,
-                style: typography.titleSmall,
-              ),
+              Text(entry.key, style: typography.titleSmall),
               Padding(
                 padding: EdgeInsets.only(left: spacing.sm),
                 child: Text(
