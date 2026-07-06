@@ -74,57 +74,65 @@ class _StatusFilterModal extends HookWidget {
     );
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: sheetBar),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              'ステータス',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: sheetBar),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                'ステータス',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          ...TelegramStatus.values.map(
-            (status) => CheckboxListTile(
-              title: Text(status.label),
-              subtitle: Text(status.description),
-              value: selectedStatuses.value.contains(status),
-              onChanged: (checked) {
-                final newSet = Set<TelegramStatus>.from(selectedStatuses.value);
-                if (checked ?? false) {
-                  newSet.add(status);
-                } else {
-                  // 最低1つは選択されている必要がある
-                  if (newSet.length > 1) {
-                    newSet.remove(status);
+            const SizedBox(height: 8),
+            ...TelegramStatus.values.map(
+              (status) => CheckboxListTile(
+                title: Text(status.label),
+                subtitle: Text(status.description),
+                value: selectedStatuses.value.contains(status),
+                enabled:
+                    !(selectedStatuses.value.contains(status) &&
+                        selectedStatuses.value.length == 1),
+                onChanged: (checked) {
+                  final newSet = Set<TelegramStatus>.from(
+                    selectedStatuses.value,
+                  );
+                  if (checked ?? false) {
+                    newSet.add(status);
+                  } else {
+                    // 最低1つは選択されている必要がある
+                    if (newSet.length > 1) {
+                      newSet.remove(status);
+                    }
                   }
-                }
-                selectedStatuses.value = newSet;
-              },
+                  selectedStatuses.value = newSet;
+                },
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('キャンセル'),
-              ),
-              TextButton(
-                onPressed: () =>
-                    Navigator.of(context).pop(selectedStatuses.value.toList()),
-                child: const Text('完了'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-        ],
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('キャンセル'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(
+                    context,
+                  ).pop(selectedStatuses.value.toList()),
+                  child: const Text('完了'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

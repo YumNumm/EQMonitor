@@ -82,58 +82,65 @@ class _TelegramTypeFilterModal extends HookWidget {
     );
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: sheetBar),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              '電文種別',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          ...EarthquakeTelegramType.values.map(
-            (type) => CheckboxListTile(
-              title: Text(type.label),
-              subtitle: Text(type.description),
-              value: selected.value.contains(type),
-              onChanged: (checked) {
-                final newSet = Set<EarthquakeTelegramType>.from(selected.value);
-                if (checked ?? false) {
-                  newSet.add(type);
-                } else {
-                  if (newSet.length > 1) {
-                    newSet.remove(type);
-                  }
-                }
-                selected.value = newSet;
-              },
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('キャンセル'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(
-                  selected.value.toList()
-                    ..sort((a, b) => a.index.compareTo(b.index)),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: sheetBar),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                '電文種別',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-                child: const Text('完了'),
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-        ],
+            ),
+            const SizedBox(height: 8),
+            ...EarthquakeTelegramType.values.map(
+              (type) => CheckboxListTile(
+                title: Text(type.label),
+                subtitle: Text(type.description),
+                value: selected.value.contains(type),
+                enabled:
+                    !(selected.value.contains(type) &&
+                        selected.value.length == 1),
+                onChanged: (checked) {
+                  final newSet = Set<EarthquakeTelegramType>.from(
+                    selected.value,
+                  );
+                  if (checked ?? false) {
+                    newSet.add(type);
+                  } else {
+                    if (newSet.length > 1) {
+                      newSet.remove(type);
+                    }
+                  }
+                  selected.value = newSet;
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('キャンセル'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(
+                    selected.value.toList()
+                      ..sort((a, b) => a.index.compareTo(b.index)),
+                  ),
+                  child: const Text('完了'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }
