@@ -37,9 +37,6 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensity = earthquake.intensity;
-    if (intensity == null) {
-      return const SizedBox.shrink();
-    }
 
     final modeResolver = useMemoized(
       () => const EarthquakeHistoryMapLayerModeResolver(),
@@ -49,10 +46,6 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
       fillMode: fillMode,
       showingLpgmIntensity: showingLpgmIntensity,
     );
-    if (mode == EarthquakeHistoryMapLayerMode.none ||
-        mode == EarthquakeHistoryMapLayerMode.station) {
-      return const SizedBox.shrink();
-    }
 
     final styleController = MapController.maybeOf(context)?.style;
     final colorSet = ref.watch(activeColorSetProvider);
@@ -61,45 +54,48 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
       () => EarthquakeHistoryFillLayerBuilder(modeResolver: modeResolver),
       [modeResolver],
     );
-    if (styleController == null) {
-      return const SizedBox.shrink();
-    }
+
+    final isInitialized = useRef(false);
+    final addedLayerIds = useRef(<String>[]);
+    final latestParameter = useRef(parameter);
+    latestParameter.value = parameter;
+
+    final shouldShowLayers =
+        intensity != null &&
+        mode != EarthquakeHistoryMapLayerMode.none &&
+        mode != EarthquakeHistoryMapLayerMode.station;
 
     useEffect(
       () {
-        final addedLayerIds = <String>[];
-        var disposed = false;
+        if (styleController == null || !shouldShowLayers) {
+          return null;
+        }
 
-        Future<void> removeAdded() async {
-          for (final id in addedLayerIds.reversed) {
-            try {
-              await styleController.removeLayer(id);
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }
+        final currentIntensity = intensity;
+        if (currentIntensity == null) {
+          return null;
         }
 
         unawaited(
           enqueue(() async {
             try {
               final layers = fillLayerBuilder.build(
-                intensity: intensity,
+                intensity: currentIntensity,
                 colorModel: colorModel,
                 mode: mode,
                 showingLpgmIntensity: showingLpgmIntensity,
-                parameter: parameter,
+                parameter: latestParameter.value,
               );
+              final newIds = <String>[];
               for (final layer in layers) {
-                if (disposed) {
-                  return;
-                }
                 await styleController.addLayer(
                   layer,
                   belowLayerId: BaseLayer.areaForecastLocalELine.name,
                 );
-                addedLayerIds.add(layer.id);
+                newIds.add(layer.id);
               }
+              addedLayerIds.value = newIds;
+              isInitialized.value = true;
             } on Exception catch (e) {
               talker.log(e);
             }
@@ -107,8 +103,19 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
         );
 
         return () {
-          disposed = true;
-          unawaited(enqueue(removeAdded));
+          unawaited(
+            enqueue(() async {
+              for (final id in addedLayerIds.value.reversed) {
+                try {
+                  await styleController.removeLayer(id);
+                } on Exception catch (e) {
+                  talker.log(e);
+                }
+              }
+              addedLayerIds.value = [];
+              isInitialized.value = false;
+            }),
+          );
         };
       },
       [
@@ -117,11 +124,72 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
         colorModel,
         mode,
         showingLpgmIntensity,
-        parameter,
         fillLayerBuilder,
         enqueue,
       ],
     );
+
+    useEffect(
+      () {
+        if (styleController == null || !isInitialized.value || !shouldShowLayers) {
+          return null;
+        }
+
+        final currentIntensity = intensity;
+        if (currentIntensity == null) {
+          return null;
+        }
+
+        unawaited(
+          enqueue(() async {
+            for (final id in addedLayerIds.value.reversed) {
+              try {
+                await styleController.removeLayer(id);
+              } on Exception catch (e) {
+                talker.log(e);
+              }
+            }
+
+            final newIds = <String>[];
+            try {
+              final layers = fillLayerBuilder.build(
+                intensity: currentIntensity,
+                colorModel: colorModel,
+                mode: mode,
+                showingLpgmIntensity: showingLpgmIntensity,
+                parameter: parameter,
+              );
+              for (final layer in layers) {
+                await styleController.addLayer(
+                  layer,
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                );
+                newIds.add(layer.id);
+              }
+            } on Exception catch (e) {
+              talker.log(e);
+            }
+            addedLayerIds.value = newIds;
+          }),
+        );
+
+        return null;
+      },
+      [
+        styleController,
+        parameter,
+        intensity,
+        colorModel,
+        mode,
+        showingLpgmIntensity,
+        fillLayerBuilder,
+        enqueue,
+      ],
+    );
+
+    if (!shouldShowLayers || styleController == null) {
+      return const SizedBox.shrink();
+    }
 
     return const SizedBox.shrink();
   }
