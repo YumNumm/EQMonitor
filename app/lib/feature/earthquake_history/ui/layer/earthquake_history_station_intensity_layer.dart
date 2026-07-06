@@ -39,11 +39,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   final bool showStationLabel;
   final bool showingLpgmIntensity;
 
-  static const _sourceId = 'eq-history-station-intensity';
-  static const _circleLayerId = 'eq-history-station-intensity-circle';
-  static const _iconLayerId = 'eq-history-station-intensity-icon';
-  static const _labelLayerId = 'eq-history-station-intensity-label';
-
   static const _iconSmallPrefix = 'JmaIntensity.small.';
   static const _iconSmallNoTextPrefix = 'JmaIntensity.smallWithoutText.';
   static const _lpgmIconSmallPrefix = 'JmaLpgmIntensity.small.';
@@ -57,6 +52,9 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(activeColorSetProvider).intensity;
     final iconData = ref.watch(intensityIconProvider).value;
+    final layerBuilder = useMemoized(
+      EarthquakeHistoryStationIntensityLayerBuilder.new,
+    );
 
     final isInitialized = useRef(false);
     final iconLayerAdded = useRef(false);
@@ -99,7 +97,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                     );
 
               await styleController.addSource(
-                GeoJsonSource(id: _sourceId, data: geoJson),
+                GeoJsonSource(
+                  id: EarthquakeHistoryStationIntensityLayerBuilder.sourceId,
+                  data: geoJson,
+                ),
               );
 
               final cachedBytes = latestIconData.value?.toMapStyleImages;
@@ -108,7 +109,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               }
 
               await styleController.addLayer(
-                _buildCircleLayer(
+                layerBuilder.buildCircleLayer(
                   parameter: latestParameter.value,
                   stationDisplayMode: latestStationDisplayMode.value,
                 ),
@@ -116,14 +117,14 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
               if (latestIconData.value != null) {
                 await styleController.addLayer(
-                  _buildIconLayer(parameter: latestParameter.value),
+                  layerBuilder.buildIconLayer(parameter: latestParameter.value),
                 );
                 iconLayerAdded.value = true;
               }
 
               if (latestShowStationLabel.value) {
                 await styleController.addLayer(
-                  _buildLabelLayer(parameter: latestParameter.value),
+                  layerBuilder.buildLabelLayer(parameter: latestParameter.value),
                 );
               }
 
@@ -140,14 +141,22 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             enqueue(() async {
               try {
                 if (latestShowStationLabel.value) {
-                  await styleController.removeLayer(_labelLayerId);
+                  await styleController.removeLayer(
+                    EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
+                  );
                 }
                 if (iconLayerAdded.value) {
-                  await styleController.removeLayer(_iconLayerId);
+                  await styleController.removeLayer(
+                    EarthquakeHistoryStationIntensityLayerBuilder.iconLayerId,
+                  );
                   iconLayerAdded.value = false;
                 }
-                await styleController.removeLayer(_circleLayerId);
-                await styleController.removeSource(_sourceId);
+                await styleController.removeLayer(
+                  EarthquakeHistoryStationIntensityLayerBuilder.circleLayerId,
+                );
+                await styleController.removeSource(
+                  EarthquakeHistoryStationIntensityLayerBuilder.sourceId,
+                );
               } on Exception catch (e) {
                 talker.log(e);
               }
@@ -164,6 +173,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         showingLpgmIntensity,
         iconData,
         enqueue,
+        layerBuilder,
       ],
     );
 
@@ -178,15 +188,21 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         enqueue(() async {
           try {
             if (latestShowStationLabel.value) {
-              await styleController.removeLayer(_labelLayerId);
+              await styleController.removeLayer(
+                EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
+              );
             }
             if (iconLayerAdded.value) {
-              await styleController.removeLayer(_iconLayerId);
+              await styleController.removeLayer(
+                EarthquakeHistoryStationIntensityLayerBuilder.iconLayerId,
+              );
             }
-            await styleController.removeLayer(_circleLayerId);
+            await styleController.removeLayer(
+              EarthquakeHistoryStationIntensityLayerBuilder.circleLayerId,
+            );
 
             await styleController.addLayer(
-              _buildCircleLayer(
+              layerBuilder.buildCircleLayer(
                 parameter: parameter,
                 stationDisplayMode: latestStationDisplayMode.value,
               ),
@@ -194,7 +210,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
             if (latestIconData.value != null) {
               await styleController.addLayer(
-                _buildIconLayer(parameter: parameter),
+                layerBuilder.buildIconLayer(parameter: parameter),
               );
               iconLayerAdded.value = true;
             } else {
@@ -203,7 +219,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
             if (latestShowStationLabel.value) {
               await styleController.addLayer(
-                _buildLabelLayer(parameter: parameter),
+                layerBuilder.buildLabelLayer(parameter: parameter),
               );
             }
           } on Exception catch (e) {
@@ -213,129 +229,9 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
       );
 
       return null;
-    }, [styleController, parameter, enqueue]);
-
-    if (intensity == null) {
-      return const SizedBox.shrink();
-    }
+    }, [styleController, parameter, enqueue, layerBuilder]);
 
     return const SizedBox.shrink();
-  }
-
-  CircleStyleLayer _buildCircleLayer({
-    required EarthquakeHistoryMapLayerParameter parameter,
-    required StationDisplayMode stationDisplayMode,
-  }) {
-    return CircleStyleLayer(
-      id: _circleLayerId,
-      sourceId: _sourceId,
-      minZoom: parameter.stationMinZoom,
-      layout: const {
-        'circle-sort-key': ['get', 'sortKey'],
-      },
-      paint: {
-        'circle-radius': switch (stationDisplayMode) {
-          StationDisplayMode.allMinimized => [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            4,
-            parameter.stationCircleRadiusMin * 2,
-            10,
-            parameter.stationCircleRadiusMax * 1.25,
-          ],
-          StationDisplayMode.normal => [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            4,
-            parameter.stationCircleRadiusMin,
-            10,
-            parameter.stationCircleRadiusMax,
-          ],
-          StationDisplayMode.maxFocused => [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            4,
-            [
-              'case',
-              ['get', 'isFocused'],
-              parameter.stationCircleRadiusMin * 1.5,
-              parameter.stationCircleRadiusMin * 0.5,
-            ],
-            10,
-            [
-              'case',
-              ['get', 'isFocused'],
-              parameter.stationCircleRadiusMax * 1.25,
-              parameter.stationCircleRadiusMax * 0.875,
-            ],
-          ],
-        },
-        'circle-color': ['get', 'color'],
-        'circle-stroke-color': '#ffffff',
-        'circle-stroke-width': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          4,
-          0.3,
-          10,
-          1.5,
-        ],
-      },
-    );
-  }
-
-  SymbolStyleLayer _buildIconLayer({
-    required EarthquakeHistoryMapLayerParameter parameter,
-  }) {
-    return SymbolStyleLayer(
-      id: _iconLayerId,
-      sourceId: _sourceId,
-      minZoom: parameter.stationMinZoom,
-      layout: {
-        'icon-image': ['get', 'iconId'],
-        'icon-allow-overlap': true,
-        'icon-ignore-placement': true,
-        'symbol-sort-key': ['get', 'sortKey'],
-        'icon-size': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          3,
-          parameter.stationIconSizeMin,
-          7,
-          parameter.stationIconSizeMid,
-          20,
-          parameter.stationIconSizeMax,
-        ],
-      },
-    );
-  }
-
-  SymbolStyleLayer _buildLabelLayer({
-    required EarthquakeHistoryMapLayerParameter parameter,
-  }) {
-    return SymbolStyleLayer(
-      id: _labelLayerId,
-      sourceId: _sourceId,
-      minZoom: parameter.stationLabelMinZoom,
-      layout: {
-        'text-field': ['get', 'name'],
-        'text-size': 10,
-        'text-offset': [0, 1.2],
-        'text-anchor': 'top',
-        'text-allow-overlap': false,
-        'text-ignore-placement': true,
-      },
-      paint: {
-        'text-color': '#ffffff',
-        'text-halo-color': '#000000',
-        'text-halo-width': 1,
-      },
-    );
   }
 
   String _iconIdForStation(
@@ -459,5 +355,130 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     }
 
     return jsonEncode({'type': 'FeatureCollection', 'features': features});
+  }
+}
+
+class EarthquakeHistoryStationIntensityLayerBuilder {
+  const EarthquakeHistoryStationIntensityLayerBuilder();
+
+  static const sourceId = 'eq-history-station-intensity';
+  static const circleLayerId = 'eq-history-station-intensity-circle';
+  static const iconLayerId = 'eq-history-station-intensity-icon';
+  static const labelLayerId = 'eq-history-station-intensity-label';
+
+  CircleStyleLayer buildCircleLayer({
+    required EarthquakeHistoryMapLayerParameter parameter,
+    required StationDisplayMode stationDisplayMode,
+  }) {
+    return CircleStyleLayer(
+      id: circleLayerId,
+      sourceId: sourceId,
+      minZoom: parameter.stationMinZoom,
+      layout: const {
+        'circle-sort-key': ['get', 'sortKey'],
+      },
+      paint: {
+        'circle-radius': switch (stationDisplayMode) {
+          StationDisplayMode.allMinimized => [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            4,
+            parameter.stationCircleRadiusMin * 2,
+            10,
+            parameter.stationCircleRadiusMax * 1.25,
+          ],
+          StationDisplayMode.normal => [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            4,
+            parameter.stationCircleRadiusMin,
+            10,
+            parameter.stationCircleRadiusMax,
+          ],
+          StationDisplayMode.maxFocused => [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            4,
+            [
+              'case',
+              ['get', 'isFocused'],
+              parameter.stationCircleRadiusMin * 1.5,
+              parameter.stationCircleRadiusMin * 0.5,
+            ],
+            10,
+            [
+              'case',
+              ['get', 'isFocused'],
+              parameter.stationCircleRadiusMax * 1.25,
+              parameter.stationCircleRadiusMax * 0.875,
+            ],
+          ],
+        },
+        'circle-color': ['get', 'color'],
+        'circle-stroke-color': '#ffffff',
+        'circle-stroke-width': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          4,
+          0.3,
+          10,
+          1.5,
+        ],
+      },
+    );
+  }
+
+  SymbolStyleLayer buildIconLayer({
+    required EarthquakeHistoryMapLayerParameter parameter,
+  }) {
+    return SymbolStyleLayer(
+      id: iconLayerId,
+      sourceId: sourceId,
+      minZoom: parameter.stationMinZoom,
+      layout: {
+        'icon-image': ['get', 'iconId'],
+        'icon-allow-overlap': true,
+        'icon-ignore-placement': true,
+        'symbol-sort-key': ['get', 'sortKey'],
+        'icon-size': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          parameter.stationIconSizeMin,
+          7,
+          parameter.stationIconSizeMid,
+          20,
+          parameter.stationIconSizeMax,
+        ],
+      },
+    );
+  }
+
+  SymbolStyleLayer buildLabelLayer({
+    required EarthquakeHistoryMapLayerParameter parameter,
+  }) {
+    return SymbolStyleLayer(
+      id: labelLayerId,
+      sourceId: sourceId,
+      minZoom: parameter.stationLabelMinZoom,
+      layout: {
+        'text-field': ['get', 'name'],
+        'text-size': 10,
+        'text-offset': [0, 1.2],
+        'text-anchor': 'top',
+        'text-allow-overlap': false,
+        'text-ignore-placement': true,
+      },
+      paint: {
+        'text-color': '#ffffff',
+        'text-halo-color': '#000000',
+        'text-halo-width': 1,
+      },
+    );
   }
 }

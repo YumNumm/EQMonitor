@@ -31,13 +31,12 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
   final HypocenterDisplayMode displayMode;
   final EarthquakeHistoryMapLayerParameter parameter;
 
-  static const _sourceId = 'earthquake-history-hypocenter';
-  static const _layerId = 'earthquake-history-hypocenter-symbol';
-  static const _iconId = 'earthquake-history-hypocenter-icon';
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
+    final layerBuilder = useMemoized(
+      EarthquakeHistoryHypocenterLayerBuilder.new,
+    );
 
     final isInitialized = useRef(false);
     final latestParameter = useRef(parameter);
@@ -56,7 +55,7 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
         enqueue(() async {
           try {
             await styleController.addImageFromAssets(
-              id: _iconId,
+              id: EarthquakeHistoryHypocenterLayerBuilder.iconId,
               asset: Assets.images.map.normalHypocenter.path,
             );
 
@@ -76,7 +75,7 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
 
             await styleController.addSource(
               GeoJsonSource(
-                id: _sourceId,
+                id: EarthquakeHistoryHypocenterLayerBuilder.sourceId,
                 data: jsonEncode({
                   'type': 'FeatureCollection',
                   'features': features,
@@ -85,7 +84,7 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
             );
 
             await styleController.addLayer(
-              _buildSymbolLayer(
+              layerBuilder.buildSymbolLayer(
                 parameter: latestParameter.value,
                 displayMode: latestDisplayMode.value,
               ),
@@ -103,15 +102,19 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
         unawaited(
           enqueue(() async {
             try {
-              await styleController.removeLayer(_layerId);
-              await styleController.removeSource(_sourceId);
+              await styleController.removeLayer(
+                EarthquakeHistoryHypocenterLayerBuilder.layerId,
+              );
+              await styleController.removeSource(
+                EarthquakeHistoryHypocenterLayerBuilder.sourceId,
+              );
             } on Exception catch (e) {
               talker.log(e);
             }
           }),
         );
       };
-    }, [styleController, earthquake, displayMode, enqueue]);
+    }, [styleController, earthquake, displayMode, enqueue, layerBuilder]);
 
     useEffect(() {
       if (styleController == null || !isInitialized.value) {
@@ -121,9 +124,11 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
       unawaited(
         enqueue(() async {
           try {
-            await styleController.removeLayer(_layerId);
+            await styleController.removeLayer(
+              EarthquakeHistoryHypocenterLayerBuilder.layerId,
+            );
             await styleController.addLayer(
-              _buildSymbolLayer(
+              layerBuilder.buildSymbolLayer(
                 parameter: parameter,
                 displayMode: latestDisplayMode.value,
               ),
@@ -135,22 +140,30 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
       );
 
       return null;
-    }, [styleController, parameter, enqueue]);
+    }, [styleController, parameter, enqueue, layerBuilder]);
 
     return const SizedBox.shrink();
   }
+}
 
-  SymbolStyleLayer _buildSymbolLayer({
+class EarthquakeHistoryHypocenterLayerBuilder {
+  const EarthquakeHistoryHypocenterLayerBuilder();
+
+  static const sourceId = 'earthquake-history-hypocenter';
+  static const layerId = 'earthquake-history-hypocenter-symbol';
+  static const iconId = 'earthquake-history-hypocenter-icon';
+
+  SymbolStyleLayer buildSymbolLayer({
     required EarthquakeHistoryMapLayerParameter parameter,
     required HypocenterDisplayMode displayMode,
   }) {
     return SymbolStyleLayer(
-      id: _layerId,
-      sourceId: _sourceId,
+      id: layerId,
+      sourceId: sourceId,
       layout: {
         'icon-allow-overlap': true,
         'icon-ignore-placement': true,
-        'icon-image': _iconId,
+        'icon-image': iconId,
         'icon-size': [
           'interpolate',
           ['linear'],

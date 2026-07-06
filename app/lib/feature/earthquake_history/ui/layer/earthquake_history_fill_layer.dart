@@ -68,11 +68,6 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
     final latestShowingLpgmIntensity = useRef(showingLpgmIntensity);
     latestShowingLpgmIntensity.value = showingLpgmIntensity;
 
-    final shouldShowLayers =
-        intensity != null &&
-        mode != EarthquakeHistoryMapLayerMode.none &&
-        mode != EarthquakeHistoryMapLayerMode.station;
-
     useEffect(
       () {
         if (styleController == null ||
@@ -147,9 +142,6 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
         }
 
         final currentIntensity = latestIntensity.value;
-        if (currentIntensity == null) {
-          return null;
-        }
 
         unawaited(
           enqueue(() async {
@@ -164,7 +156,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
             final newIds = <String>[];
             try {
               final layers = fillLayerBuilder.build(
-                intensity: currentIntensity,
+                intensity: currentIntensity!,
                 colorModel: latestColorModel.value,
                 mode: currentMode,
                 showingLpgmIntensity: latestShowingLpgmIntensity.value,
@@ -188,10 +180,6 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
       },
       [styleController, parameter, enqueue],
     );
-
-    if (!shouldShowLayers || styleController == null) {
-      return const SizedBox.shrink();
-    }
 
     return const SizedBox.shrink();
   }
