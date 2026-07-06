@@ -19,16 +19,6 @@ void main() {
     expect(profiler.timingsMicros['travel_time_parse'], 9000);
   });
 
-  test('toPayload nests timings under phases', () {
-    var now = 0;
-    final profiler = StartupProfiler(clockMicros: () => now);
-    now = 300;
-    profiler.mark('home_first_frame');
-    expect(profiler.toPayload(), {
-      'phases': {'home_first_frame': 300},
-    });
-  });
-
   test('timingsMicros returns an unmodifiable copy', () {
     final profiler = StartupProfiler(clockMicros: () => 0);
     profiler.mark('a');

@@ -34,6 +34,8 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_ma
 import 'package:eqmonitor/feature/live_activity/data/repository/live_activity_token_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
+import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_watcher_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
@@ -280,7 +282,18 @@ Future<void> _main() async {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     profiler.mark('home_first_frame');
     if (!kIsWeb) {
+      // バックグラウンドで完了する travel_time_load / parameter_load が
+      // timingsMicros に記録されてからテレメトリを送信する。
+      // 各ロードの失敗は計測の欠落として許容し、record() の失敗は talker に委ねる。
+      Future<void> awaitQuietly(Future<Object?> f) async {
+        try {
+          await f;
+        } catch (_) {}
+      }
+
       guardedUnawaited(() async {
+        await awaitQuietly(container.read(travelTimeInternalProvider.future));
+        await awaitQuietly(container.read(parameterSetProvider.future));
         final recorder = container.read(telemetryRecorderProvider);
         await recorder.record(
           TelemetryEvent.startupTiming(phasesMicros: profiler.timingsMicros),
