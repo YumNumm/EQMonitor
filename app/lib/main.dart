@@ -172,10 +172,6 @@ Future<void> _main() async {
     return true;
   };
 
-  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-    await MobileAds.instance.initialize();
-  }
-
   await FirebaseAppCheck.instance.activate(
     providerAndroid: kDebugMode
         ? const AndroidDebugProvider()
@@ -195,33 +191,7 @@ Future<void> _main() async {
           ? deviceInfo.androidInfo
           : Future<Null>.value()),
       (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
-      kIsWeb ? Future<Null>.value() : _registerNotificationChannelIfNeeded(),
       kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
-      kIsWeb
-          ? Future<Null>.value()
-          : FlutterLocalNotificationsPlugin().initialize(
-              settings: const InitializationSettings(
-                iOS: DarwinInitializationSettings(
-                  requestAlertPermission: false,
-                  requestSoundPermission: false,
-                  requestBadgePermission: false,
-                ),
-                android: AndroidInitializationSettings('mipmap/ic_launcher'),
-                macOS: DarwinInitializationSettings(
-                  requestAlertPermission: false,
-                  requestSoundPermission: false,
-                  requestBadgePermission: false,
-                ),
-              ),
-            ),
-      kIsWeb
-          ? Future<Null>.value()
-          : FirebaseMessaging.instance
-                .setForegroundNotificationPresentationOptions(
-                  alert: true,
-                  sound: true,
-                  badge: true,
-                ),
     ).wait,
     (
       kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
@@ -252,7 +222,7 @@ Future<void> _main() async {
         androidDeviceInfoProvider.overrideWithValue(androidInfo),
       if (results.$1.$4 case final iosInfo?)
         iosDeviceInfoProvider.overrideWithValue(iosInfo),
-      if (results.$1.$6 case final appDir?)
+      if (results.$1.$5 case final appDir?)
         applicationDocumentsDirectoryProvider.overrideWithValue(appDir),
       if (results.$2.$1 case final colorMap?)
         kyoshinColorMapProvider.overrideWithValue(colorMap),
@@ -292,6 +262,44 @@ Future<void> _main() async {
       child: const App(),
     ),
   );
+
+  // 広告SDK・通知プラグインは override 値を生まないため runApp 後に遅延初期化する。
+  // 例外が発生しても起動フローを止めず talker に記録する。
+  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    guardedUnawaited(
+      () => MobileAds.instance.initialize(),
+      onError: (error, stack) => talker.error(error, stack),
+    );
+  }
+  if (!kIsWeb) {
+    guardedUnawaited(
+      () async {
+        await _registerNotificationChannelIfNeeded();
+        await FlutterLocalNotificationsPlugin().initialize(
+          settings: const InitializationSettings(
+            iOS: DarwinInitializationSettings(
+              requestAlertPermission: false,
+              requestSoundPermission: false,
+              requestBadgePermission: false,
+            ),
+            android: AndroidInitializationSettings('mipmap/ic_launcher'),
+            macOS: DarwinInitializationSettings(
+              requestAlertPermission: false,
+              requestSoundPermission: false,
+              requestBadgePermission: false,
+            ),
+          ),
+        );
+        await FirebaseMessaging.instance
+            .setForegroundNotificationPresentationOptions(
+          alert: true,
+          sound: true,
+          badge: true,
+        );
+      },
+      onError: (error, stack) => talker.error(error, stack),
+    );
+  }
 
   WidgetsBinding.instance.addPostFrameCallback((_) {
     profiler.mark('home_first_frame');
