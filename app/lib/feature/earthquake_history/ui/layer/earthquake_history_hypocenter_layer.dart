@@ -39,98 +39,140 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    final isInitialized = useRef(false);
+    final latestParameter = useRef(parameter);
+    latestParameter.value = parameter;
+    final latestEarthquake = useRef(earthquake);
+    latestEarthquake.value = earthquake;
+    final latestDisplayMode = useRef(displayMode);
+    latestDisplayMode.value = displayMode;
 
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
+
+      unawaited(
+        enqueue(() async {
+          try {
+            await styleController.addImageFromAssets(
+              id: _iconId,
+              asset: Assets.images.map.normalHypocenter.path,
+            );
+
+            final hyp = latestEarthquake.value.hypocenter;
+            final coords = hyp?.coordinates;
+            final features = <Map<String, dynamic>>[
+              if (coords is CoordinateLatLng)
+                {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': [coords.longitude, coords.latitude],
+                  },
+                  'properties': <String, dynamic>{},
+                },
+            ];
+
+            await styleController.addSource(
+              GeoJsonSource(
+                id: _sourceId,
+                data: jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': features,
+                }),
+              ),
+            );
+
+            await styleController.addLayer(
+              _buildSymbolLayer(
+                parameter: latestParameter.value,
+                displayMode: latestDisplayMode.value,
+              ),
+            );
+
+            isInitialized.value = true;
+          } on Exception catch (e) {
+            talker.log(e);
+          }
+        }),
+      );
+
+      return () {
+        isInitialized.value = false;
         unawaited(
           enqueue(() async {
             try {
-              await styleController.addImageFromAssets(
-                id: _iconId,
-                asset: Assets.images.map.normalHypocenter.path,
-              );
-
-              final hyp = earthquake.hypocenter;
-              final coords = hyp?.coordinates;
-              final features = <Map<String, dynamic>>[
-                if (coords is CoordinateLatLng)
-                  {
-                    'type': 'Feature',
-                    'geometry': {
-                      'type': 'Point',
-                      'coordinates': [coords.longitude, coords.latitude],
-                    },
-                    'properties': <String, dynamic>{},
-                  },
-              ];
-
-              await styleController.addSource(
-                GeoJsonSource(
-                  id: _sourceId,
-                  data: jsonEncode({
-                    'type': 'FeatureCollection',
-                    'features': features,
-                  }),
-                ),
-              );
-
-              await styleController.addLayer(
-                SymbolStyleLayer(
-                  id: _layerId,
-                  sourceId: _sourceId,
-                  layout: {
-                    'icon-allow-overlap': true,
-                    'icon-ignore-placement': true,
-                    'icon-image': _iconId,
-                    'icon-size': [
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      3,
-                      parameter.hypocenterIconSizeMin,
-                      20,
-                      parameter.hypocenterIconSizeMax,
-                    ],
-                  },
-                  paint: {
-                    'icon-opacity': switch (displayMode) {
-                      .zoomFade => [
-                        'step',
-                        ['zoom'],
-                        1.0,
-                        parameter.hypocenterFadeZoom,
-                        parameter.hypocenterFadeOpacity,
-                      ],
-                      .alwaysOpaque || .belowStations => 1.0,
-                    },
-                  },
-                ),
-              );
+              await styleController.removeLayer(_layerId);
+              await styleController.removeSource(_sourceId);
             } on Exception catch (e) {
               talker.log(e);
             }
           }),
         );
+      };
+    }, [styleController, earthquake, displayMode, enqueue]);
 
-        return () {
-          unawaited(
-            enqueue(() async {
-              try {
-                await styleController.removeLayer(_layerId);
-                await styleController.removeSource(_sourceId);
-              } on Exception catch (e) {
-                talker.log(e);
-              }
-            }),
-          );
-        };
-      },
-      [styleController, earthquake, displayMode, parameter, enqueue],
-    );
+    useEffect(() {
+      if (styleController == null || !isInitialized.value) {
+        return null;
+      }
+
+      unawaited(
+        enqueue(() async {
+          try {
+            await styleController.removeLayer(_layerId);
+            await styleController.addLayer(
+              _buildSymbolLayer(
+                parameter: parameter,
+                displayMode: latestDisplayMode.value,
+              ),
+            );
+          } on Exception catch (e) {
+            talker.log(e);
+          }
+        }),
+      );
+
+      return null;
+    }, [styleController, parameter, enqueue]);
 
     return const SizedBox.shrink();
+  }
+
+  SymbolStyleLayer _buildSymbolLayer({
+    required EarthquakeHistoryMapLayerParameter parameter,
+    required HypocenterDisplayMode displayMode,
+  }) {
+    return SymbolStyleLayer(
+      id: _layerId,
+      sourceId: _sourceId,
+      layout: {
+        'icon-allow-overlap': true,
+        'icon-ignore-placement': true,
+        'icon-image': _iconId,
+        'icon-size': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          parameter.hypocenterIconSizeMin,
+          20,
+          parameter.hypocenterIconSizeMax,
+        ],
+      },
+      paint: {
+        'icon-opacity': switch (displayMode) {
+          .zoomFade => [
+            'step',
+            ['zoom'],
+            1.0,
+            parameter.hypocenterFadeZoom,
+            parameter.hypocenterFadeOpacity,
+          ],
+          .alwaysOpaque || .belowStations => 1.0,
+        },
+      },
+    );
   }
 }
