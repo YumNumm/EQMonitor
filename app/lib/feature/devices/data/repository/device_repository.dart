@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/dio_provider.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
@@ -148,17 +149,27 @@ class DeviceRepository {
     // Step 3 — call migration endpoint to transfer Supabase settings
     return Result.capture(() async {
       try {
-        await _dio.post<void>(
-          '/v2/device/me/migrate',
-          data: {'old_device_id': oldDeviceId},
+        final response = await _api.device.postV2DeviceMeMigrate(
+          body: api.MigrateRequest(oldDeviceId: oldDeviceId),
+        );
+        final migrated = response.data.migrated;
+        talker.info(
+          '[V2Migration] migrate succeeded: '
+          'earthquakeRegions=${migrated.earthquakeRegions}, '
+          'eewRegions=${migrated.eewRegions}, '
+          'notificationSettings=${migrated.notificationSettings}',
         );
       } on DioException catch (e) {
         // 409 = already migrated; treat as idempotent success
         if (e.response?.statusCode == 409) {
+          talker.info('[V2Migration] already migrated (409); skipping');
           return;
         }
         // 404 = old device not found in Supabase; non-fatal
         if (e.response?.statusCode == 404) {
+          talker.warning(
+            '[V2Migration] old device not found (404); nothing migrated',
+          );
           return;
         }
         rethrow;
