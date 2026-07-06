@@ -180,3 +180,8 @@ secret/
 **/node_modules
 /mise.local*
 /asdf-dart.*
+
+# Git worktrees (local isolation)
+.worktrees/
+.codex/worktree/
+.codex/worktrees/
