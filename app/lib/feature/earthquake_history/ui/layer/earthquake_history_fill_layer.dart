@@ -75,12 +75,10 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (styleController == null || !shouldShowLayers) {
-          return null;
-        }
-
-        final currentIntensity = intensity;
-        if (currentIntensity == null) {
+        if (styleController == null ||
+            intensity == null ||
+            mode == EarthquakeHistoryMapLayerMode.none ||
+            mode == EarthquakeHistoryMapLayerMode.station) {
           return null;
         }
 
@@ -88,7 +86,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
           enqueue(() async {
             try {
               final layers = fillLayerBuilder.build(
-                intensity: currentIntensity,
+                intensity: intensity,
                 colorModel: colorModel,
                 mode: mode,
                 showingLpgmIntensity: showingLpgmIntensity,
