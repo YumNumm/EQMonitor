@@ -39,7 +39,7 @@ AppTheme? migrateFromLegacyIntensityColors(SharedPreferencesAsync prefs) {
     try {
       final decoded = jsonDecode(intensityJson) as Map<String, dynamic>;
       migratedIntensity = _convertLegacyIntensity(decoded);
-    } on Exception catch (_) {
+    } on Object catch (_) {
       // マイグレーション失敗→デフォルト使用
     }
   }
@@ -49,7 +49,7 @@ AppTheme? migrateFromLegacyIntensityColors(SharedPreferencesAsync prefs) {
     try {
       final decoded = jsonDecode(estimatedJson) as Map<String, dynamic>;
       migratedEstimatedIntensity = _convertLegacyEstimatedIntensity(decoded);
-    } on Exception catch (_) {
+    } on Object catch (_) {
       // マイグレーション失敗→デフォルト使用
     }
   }

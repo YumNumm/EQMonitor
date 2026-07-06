@@ -178,6 +178,16 @@ void main() {
       expect(state.darkTheme.name, 'EQMonitor Default');
     });
 
+    test('保存済みテーマが構造不正なJSONの場合はデフォルトテーマを返す', () async {
+      final container = await _container(initial: {'app_theme_light': '[]'});
+      addTearDown(container.dispose);
+
+      final state = container.read(appThemeProvider);
+
+      expect(state.lightTheme.name, 'EQMonitor Default');
+      expect(state.darkTheme.name, 'EQMonitor Default');
+    });
+
     test('旧intensity_colorキーがある場合はマイグレーションされた状態を返す', () async {
       const legacyJson = '''
       {
