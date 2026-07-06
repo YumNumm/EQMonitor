@@ -10,10 +10,7 @@ void main() {
     now = 4200;
     profiler.mark('run_app');
 
-    expect(profiler.timingsMicros, {
-      'firebase_init': 1500,
-      'run_app': 4200,
-    });
+    expect(profiler.timingsMicros, {'firebase_init': 1500, 'run_app': 4200});
   });
 
   test('measure records an explicit interval', () {

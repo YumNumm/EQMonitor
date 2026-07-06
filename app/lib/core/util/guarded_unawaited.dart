@@ -7,7 +7,5 @@ void guardedUnawaited(
   Future<void> Function() action, {
   required void Function(Object error, StackTrace stack) onError,
 }) {
-  unawaited(
-    Future<void>.sync(action).catchError(onError),
-  );
+  unawaited(Future<void>.sync(action).catchError(onError));
 }

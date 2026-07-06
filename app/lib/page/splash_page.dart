@@ -17,34 +17,32 @@ class SplashPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(
-      () {
-        // 重い初期化はトリガーのみ行い、完了を待たずに Home へ遷移する。
-        // keepAlive のためバックグラウンドでロードは継続し、各消費画面が
-        // 個別にローディング/エラーを表示する。
-        ref
-          ..read(travelTimeInternalProvider.future).ignore()
-          ..read(kyoshinMonitorInternalObservationPointsConvertedProvider.future)
-              .ignore()
-          ..read(earthquakeHistoryConfigProvider)
-          ..read(startProvider);
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          context.go(const HomeRoute().location);
-          final pending =
-              consumePendingNotificationDeepLink() ?? consumePendingAppLink();
-          switch (pending) {
-            case NotificationRouteLink(:final location):
-              await GoRouter.of(context).push<void>(location);
-            case NotificationUrlLink(:final uri):
-              await launchUrl(uri, mode: LaunchMode.externalApplication);
-            case null:
-              break;
-          }
-        });
-        return null;
-      },
-      const [],
-    );
+    useEffect(() {
+      // 重い初期化はトリガーのみ行い、完了を待たずに Home へ遷移する。
+      // keepAlive のためバックグラウンドでロードは継続し、各消費画面が
+      // 個別にローディング/エラーを表示する。
+      ref
+        ..read(travelTimeInternalProvider.future).ignore()
+        ..read(
+          kyoshinMonitorInternalObservationPointsConvertedProvider.future,
+        ).ignore()
+        ..read(earthquakeHistoryConfigProvider)
+        ..read(startProvider);
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        context.go(const HomeRoute().location);
+        final pending =
+            consumePendingNotificationDeepLink() ?? consumePendingAppLink();
+        switch (pending) {
+          case NotificationRouteLink(:final location):
+            await GoRouter.of(context).push<void>(location);
+          case NotificationUrlLink(:final uri):
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          case null:
+            break;
+        }
+      });
+      return null;
+    }, const []);
 
     return const Scaffold(
       body: SafeArea(

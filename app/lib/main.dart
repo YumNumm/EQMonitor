@@ -114,9 +114,7 @@ Future<void> _main() async {
     ),
   );
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   profiler.mark('firebase_init');
 
   talker = TalkerFlutter.init(
@@ -124,14 +122,10 @@ Future<void> _main() async {
       // ignore: avoid_redundant_argument_values
       useConsoleLogs: kDebugMode,
     ),
-    logger: TalkerLogger(
-      formatter: const ColoredLoggerFormatter(),
-    ),
+    logger: TalkerLogger(formatter: const ColoredLoggerFormatter()),
   );
   if (!kIsWeb && !kDebugMode) {
-    talker.configure(
-      observer: CrashlyticsTalkerObserver(),
-    );
+    talker.configure(observer: CrashlyticsTalkerObserver());
   }
 
   FlutterError.onError = (error) {
@@ -145,21 +139,13 @@ Future<void> _main() async {
         talker.log(stackTrace.toString());
       }
     }
-    talker.handle(
-      error.exception,
-      error.stack,
-      'Uncaught fatal exception',
-    );
+    talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
   };
   if (!kDebugMode) {
     ErrorWidget.builder = buildFatalErrorWidget;
   }
   PlatformDispatcher.instance.onError = (exception, stackTrace) {
-    talker.handle(
-      exception,
-      stackTrace,
-      'Uncaught async exception',
-    );
+    talker.handle(exception, stackTrace, 'Uncaught async exception');
     log(
       'Uncaught async exception: ${exception.runtimeType} $exception',
       name: 'main',
@@ -230,9 +216,7 @@ Future<void> _main() async {
         telemetryDbPathProvider.overrideWithValue(dbPath),
       startupProfilerProvider.overrideWithValue(profiler),
     ],
-    observers: [
-      if (kDebugMode) CustomProviderObserver(talker),
-    ],
+    observers: [if (kDebugMode) CustomProviderObserver(talker)],
     retry: (_, _) => null,
   );
 
@@ -256,12 +240,7 @@ Future<void> _main() async {
   }
 
   profiler.mark('before_run_app');
-  runApp(
-    UncontrolledProviderScope(
-      container: container,
-      child: const App(),
-    ),
-  );
+  runApp(UncontrolledProviderScope(container: container, child: const App()));
 
   // 広告SDK・通知プラグインは override 値を生まないため runApp 後に遅延初期化する。
   // 例外が発生しても起動フローを止めず talker に記録する。
@@ -272,57 +251,47 @@ Future<void> _main() async {
     );
   }
   if (!kIsWeb) {
-    guardedUnawaited(
-      () async {
-        await _registerNotificationChannelIfNeeded();
-        await FlutterLocalNotificationsPlugin().initialize(
-          settings: const InitializationSettings(
-            iOS: DarwinInitializationSettings(
-              requestAlertPermission: false,
-              requestSoundPermission: false,
-              requestBadgePermission: false,
-            ),
-            android: AndroidInitializationSettings('mipmap/ic_launcher'),
-            macOS: DarwinInitializationSettings(
-              requestAlertPermission: false,
-              requestSoundPermission: false,
-              requestBadgePermission: false,
-            ),
+    guardedUnawaited(() async {
+      await _registerNotificationChannelIfNeeded();
+      await FlutterLocalNotificationsPlugin().initialize(
+        settings: const InitializationSettings(
+          iOS: DarwinInitializationSettings(
+            requestAlertPermission: false,
+            requestSoundPermission: false,
+            requestBadgePermission: false,
           ),
-        );
-        await FirebaseMessaging.instance
-            .setForegroundNotificationPresentationOptions(
-          alert: true,
-          sound: true,
-          badge: true,
-        );
-      },
-      onError: (error, stack) => talker.error(error, stack),
-    );
+          android: AndroidInitializationSettings('mipmap/ic_launcher'),
+          macOS: DarwinInitializationSettings(
+            requestAlertPermission: false,
+            requestSoundPermission: false,
+            requestBadgePermission: false,
+          ),
+        ),
+      );
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+            alert: true,
+            sound: true,
+            badge: true,
+          );
+    }, onError: (error, stack) => talker.error(error, stack));
   }
 
   WidgetsBinding.instance.addPostFrameCallback((_) {
     profiler.mark('home_first_frame');
     if (!kIsWeb) {
-      guardedUnawaited(
-        () async {
-          final recorder = container.read(telemetryRecorderProvider);
-          await recorder.record(
-            TelemetryEvent.startupTiming(phasesMicros: profiler.timingsMicros),
-          );
-        },
-        onError: (error, stack) => talker.error(error, stack),
-      );
+      guardedUnawaited(() async {
+        final recorder = container.read(telemetryRecorderProvider);
+        await recorder.record(
+          TelemetryEvent.startupTiming(phasesMicros: profiler.timingsMicros),
+        );
+      }, onError: (error, stack) => talker.error(error, stack));
     }
   });
 
   if (!kIsWeb && Platform.isIOS) {
-    unawaited(
-      container.read(appGroupSettingsWriterProvider.future),
-    );
-    unawaited(
-      container.read(liveActivityTokenSyncWiringProvider.future),
-    );
+    unawaited(container.read(appGroupSettingsWriterProvider.future));
+    unawaited(container.read(liveActivityTokenSyncWiringProvider.future));
   }
 }
 

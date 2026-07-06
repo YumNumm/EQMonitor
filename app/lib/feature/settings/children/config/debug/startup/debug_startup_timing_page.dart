@@ -20,8 +20,7 @@ class DebugStartupTimingPage extends ConsumerWidget {
               title: Text(entry.key),
               trailing: Text('${(entry.value / 1000).toStringAsFixed(2)} ms'),
             ),
-          if (entries.isEmpty)
-            const ListTile(title: Text('計測データがありません')),
+          if (entries.isEmpty) const ListTile(title: Text('計測データがありません')),
         ],
       ),
     );

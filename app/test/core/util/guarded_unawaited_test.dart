@@ -24,10 +24,7 @@ void main() {
 
   test('does not call onError on success', () async {
     var called = false;
-    guardedUnawaited(
-      () async {},
-      onError: (_, _) => called = true,
-    );
+    guardedUnawaited(() async {}, onError: (_, _) => called = true);
     await Future<void>.delayed(Duration.zero);
     expect(called, isFalse);
   });

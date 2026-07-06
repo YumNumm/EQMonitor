@@ -20,5 +20,7 @@ class StartupProfiler {
 
   Map<String, int> get timingsMicros => Map.unmodifiable(_timings);
 
-  Map<String, dynamic> toPayload() => {'phases': Map<String, int>.from(_timings)};
+  Map<String, dynamic> toPayload() => {
+    'phases': Map<String, int>.from(_timings),
+  };
 }

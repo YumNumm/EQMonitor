@@ -124,19 +124,9 @@ sealed class TelemetryEvent with _$TelemetryEvent {
         'end_reason': endReason.name,
         'duration_ms': ?durationMs,
       },
-    ErrorTelemetryEvent(
-      :final errorType,
-      :final message,
-      :final stackTrace,
-    ) =>
-      {
-        'error_type': errorType,
-        'message': message,
-        'stack_trace': ?stackTrace,
-      },
-    StartupTimingEvent(:final phasesMicros) => {
-      'phases_micros': phasesMicros,
-    },
+    ErrorTelemetryEvent(:final errorType, :final message, :final stackTrace) =>
+      {'error_type': errorType, 'message': message, 'stack_trace': ?stackTrace},
+    StartupTimingEvent(:final phasesMicros) => {'phases_micros': phasesMicros},
     AppLaunchEvent(
       :final launchType,
       :final appVersion,

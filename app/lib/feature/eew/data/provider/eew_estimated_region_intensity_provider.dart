@@ -131,12 +131,8 @@ double? _lookupSWaveTravelTime(
     return null;
   }
 
-  final d1 = depthTables.lastWhereOrNull(
-    (t) => t.distance <= distanceKm,
-  );
-  final d2 = depthTables.firstWhereOrNull(
-    (t) => t.distance >= distanceKm,
-  );
+  final d1 = depthTables.lastWhereOrNull((t) => t.distance <= distanceKm);
+  final d2 = depthTables.firstWhereOrNull((t) => t.distance >= distanceKm);
 
   if (d1 == null || d2 == null) {
     return null;
