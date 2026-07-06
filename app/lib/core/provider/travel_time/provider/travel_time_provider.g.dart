@@ -103,11 +103,11 @@ final travelTimeDepthMapProvider = TravelTimeDepthMapProvider._();
 final class TravelTimeDepthMapProvider
     extends
         $FunctionalProvider<
-          TravelTimeDepthMap,
-          TravelTimeDepthMap,
-          TravelTimeDepthMap
+          TravelTimeDepthMap?,
+          TravelTimeDepthMap?,
+          TravelTimeDepthMap?
         >
-    with $Provider<TravelTimeDepthMap> {
+    with $Provider<TravelTimeDepthMap?> {
   TravelTimeDepthMapProvider._()
     : super(
         from: null,
@@ -124,20 +124,20 @@ final class TravelTimeDepthMapProvider
 
   @$internal
   @override
-  $ProviderElement<TravelTimeDepthMap> $createElement(
+  $ProviderElement<TravelTimeDepthMap?> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  TravelTimeDepthMap create(Ref ref) {
+  TravelTimeDepthMap? create(Ref ref) {
     return travelTimeDepthMap(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TravelTimeDepthMap value) {
+  Override overrideWithValue(TravelTimeDepthMap? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<TravelTimeDepthMap>(value),
+      providerOverride: $SyncValueProvider<TravelTimeDepthMap?>(value),
     );
   }
 }

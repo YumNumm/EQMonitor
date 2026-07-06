@@ -64,6 +64,11 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
 
         unawaited(() async {
           await initFuture.value;
+          // 走時表未ロード時は波を描かない
+          if (travelTimeMap == null) {
+            await _clearLayers(styleController);
+            return;
+          }
           await _updateLayers(
             styleController,
             eew,

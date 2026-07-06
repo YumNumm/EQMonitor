@@ -200,6 +200,10 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
           return;
         }
         final travelTimeMap = ref.read(travelTimeDepthMapProvider);
+        // 走時表未ロード時は波を描かない
+        if (travelTimeMap == null) {
+          return;
+        }
         final now = ref.read(appClockProvider.notifier).now();
 
         final (pWaveGeojson, sWaveGeojson) = _calculateGeoJson(

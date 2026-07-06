@@ -123,9 +123,25 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
               now.difference(sim.startedAt).inMilliseconds / 1000;
           final elapsed = offset + simulationElapsed;
 
-          final travelTime = ref
-              .read(travelTimeDepthMapProvider)
-              .getTravelTime(hypocenter.depth!, elapsed);
+          final travelTimeMap = ref.read(travelTimeDepthMapProvider);
+          // 走時表未ロード時は波を描かない
+          if (travelTimeMap == null) {
+            unawaited(
+              _updateGeoJson(
+                styleController,
+                pWaveGeoJson: _emptyGeoJson,
+                sWaveGeoJson: _emptyGeoJson,
+                latestP: latestPWaveGeoJson,
+                latestS: latestSWaveGeoJson,
+                initFuture: initFuture,
+              ),
+            );
+            return;
+          }
+          final travelTime = travelTimeMap.getTravelTime(
+            hypocenter.depth!,
+            elapsed,
+          );
 
           final lat = hypocenter.latitude!;
           final lng = hypocenter.longitude!;

@@ -42,7 +42,7 @@ Future<List<EewEstimatedRegion>> eewEstimatedRegionIntensity(
   }
 
   final isolate = await ref.watch(estimatedIntensityIsolateProvider.future);
-  final travelTimeTables = ref.read(travelTimeProvider);
+  final travelTimeTables = await ref.watch(travelTimeInternalProvider.future);
 
   final intensities = await isolate.computeSingle(
     jmaMagnitude: hypocenter.magnitude!,
