@@ -156,13 +156,21 @@ class _LatLngFilterModal extends HookWidget {
     var lngLteErr = (nlv != null && (nlv < -180 || nlv > 180))
         ? '-180〜180の範囲'
         : null;
-    if (lgv != null && llv != null && lgv > llv) {
-      latGteErr ??= '南≦北の順で入力';
-      latLteErr ??= '南≦北の順で入力';
+    if (lgv != null &&
+        llv != null &&
+        latGteErr == null &&
+        latLteErr == null &&
+        lgv > llv) {
+      latGteErr = '南≦北の順で入力';
+      latLteErr = '南≦北の順で入力';
     }
-    if (ngv != null && nlv != null && ngv > nlv) {
-      lngGteErr ??= '西≦東の順で入力';
-      lngLteErr ??= '西≦東の順で入力';
+    if (ngv != null &&
+        nlv != null &&
+        lngGteErr == null &&
+        lngLteErr == null &&
+        ngv > nlv) {
+      lngGteErr = '西≦東の順で入力';
+      lngLteErr = '西≦東の順で入力';
     }
     final isValid =
         latGteErr == null &&
@@ -341,6 +349,14 @@ class _CoordField extends HookWidget {
     final controller = useTextEditingController(
       text: value == null ? '' : value.toString(),
     );
+
+    useEffect(() {
+      final current = double.tryParse(controller.text);
+      if (value != current) {
+        controller.text = value == null ? '' : value.toString();
+      }
+      return null;
+    }, [value]);
 
     return TextField(
       controller: controller,

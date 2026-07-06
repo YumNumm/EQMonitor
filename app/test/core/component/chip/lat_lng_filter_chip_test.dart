@@ -5,8 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   Widget wrap({LatLngRange? value, void Function(LatLngRange?)? onChanged}) =>
       ProviderScope(
         child: MaterialApp(
@@ -100,5 +98,62 @@ void main() {
     expect(received?.latitudeLte, 40.0);
     expect(received?.longitudeGte, 135.0);
     expect(received?.longitudeLte, 140.0);
+  });
+
+  testWidgets('(d) プリセットチップ押下でTextFieldにプリセット値が反映される', (tester) async {
+    await tester.pumpWidget(wrap());
+    await tester.pump();
+
+    await openModal(tester);
+
+    await tester.tap(find.text('日本周辺'));
+    await tester.pump();
+
+    expect(
+      tester.widget<TextField>(fieldByLabel('緯度(南)')).controller?.text,
+      '20.0',
+    );
+    expect(
+      tester.widget<TextField>(fieldByLabel('緯度(北)')).controller?.text,
+      '50.0',
+    );
+    expect(
+      tester.widget<TextField>(fieldByLabel('経度(西)')).controller?.text,
+      '122.0',
+    );
+    expect(
+      tester.widget<TextField>(fieldByLabel('経度(東)')).controller?.text,
+      '154.0',
+    );
+  });
+
+  testWidgets('(e) クリア押下でTextFieldが空になる', (tester) async {
+    await tester.pumpWidget(wrap());
+    await tester.pump();
+
+    await openModal(tester);
+
+    await tester.tap(find.text('日本周辺'));
+    await tester.pump();
+
+    await tester.tap(find.text('クリア'));
+    await tester.pump();
+
+    expect(
+      tester.widget<TextField>(fieldByLabel('緯度(南)')).controller?.text,
+      isEmpty,
+    );
+    expect(
+      tester.widget<TextField>(fieldByLabel('緯度(北)')).controller?.text,
+      isEmpty,
+    );
+    expect(
+      tester.widget<TextField>(fieldByLabel('経度(西)')).controller?.text,
+      isEmpty,
+    );
+    expect(
+      tester.widget<TextField>(fieldByLabel('経度(東)')).controller?.text,
+      isEmpty,
+    );
   });
 }

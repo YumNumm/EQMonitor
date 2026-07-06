@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -54,8 +53,8 @@ void main() {
     });
 
     test('inverted range after clamp → null (start > end prevention)', () {
-      // min is valid but max is before firstDate → end clamps to firstDate,
-      // start remains after end
+      // end(=DateTime(1800)) is not clamped to firstDate — only values after
+      // lastDate are clamped; start(=laterDate=2022) > end(1800) → null
       final result = DateRangeFilterChip.clampInitialDateRange(
         laterDate,
         DateTime(1800),

@@ -6,8 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   Widget wrap({
     EarthquakeDataSource? datasource,
     ValueChanged<EarthquakeDataSource?>? onChanged,
@@ -32,11 +30,9 @@ void main() {
     await tester.pumpWidget(wrap(onChanged: (_) => callCount++));
     await tester.pump();
 
-    // Open the sheet
     await tester.tap(find.byType(RawChip));
     await tester.pumpAndSettle();
 
-    // Tap the barrier (top-left corner, outside the bottom sheet)
     await tester.tapAt(const Offset(10, 10));
     await tester.pumpAndSettle();
 

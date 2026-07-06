@@ -81,15 +81,6 @@ class _EarthquakeTypeFilterModal extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            ListTile(
-              title: const Text('すべて'),
-              subtitle: const Text('種別で絞り込まない'),
-              trailing: currentType == null
-                  ? Icon(Icons.check, color: designSystem.colorTheme.primary)
-                  : null,
-              onTap: () =>
-                  Navigator.of(context).pop((value: null as EarthquakeType?)),
-            ),
             ...EarthquakeType.values.map(
               (type) => ListTile(
                 title: Text(type.displayLabel),
@@ -98,6 +89,15 @@ class _EarthquakeTypeFilterModal extends StatelessWidget {
                     : null,
                 onTap: () => Navigator.of(context).pop((value: type)),
               ),
+            ),
+            ListTile(
+              title: const Text('すべて'),
+              subtitle: const Text('種別で絞り込まない'),
+              trailing: currentType == null
+                  ? Icon(Icons.check, color: designSystem.colorTheme.primary)
+                  : null,
+              onTap: () =>
+                  Navigator.of(context).pop((value: null as EarthquakeType?)),
             ),
             const SizedBox(height: 8),
           ],
