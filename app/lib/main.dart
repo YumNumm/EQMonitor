@@ -24,6 +24,9 @@ import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/core/startup/startup_profiler.dart';
+import 'package:eqmonitor/core/startup/startup_profiler_provider.dart';
+import 'package:eqmonitor/core/util/guarded_unawaited.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
@@ -33,10 +36,12 @@ import 'package:eqmonitor/feature/location/data/background_location_service.dart
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_watcher_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:telemetry_store/telemetry_store.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -91,6 +96,8 @@ Future<void> main() async {
 }
 
 Future<void> _main() async {
+  final profiler = StartupProfiler();
+
   if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
     await BackgroundLocationTracker.initialize();
   }
@@ -110,6 +117,7 @@ Future<void> _main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  profiler.mark('firebase_init');
 
   talker = TalkerFlutter.init(
     settings: TalkerSettings(
@@ -220,6 +228,7 @@ Future<void> _main() async {
       core.initializeTimeZones(),
     ).wait,
   ).wait;
+  profiler.mark('parallel_init');
   initLicenses();
 
   final telemetryDbPath = kIsWeb ? null : await resolveTelemetryDbPath();
@@ -249,6 +258,7 @@ Future<void> _main() async {
         kyoshinColorMapProvider.overrideWithValue(colorMap),
       if (telemetryDbPath case final dbPath?)
         telemetryDbPathProvider.overrideWithValue(dbPath),
+      startupProfilerProvider.overrideWithValue(profiler),
     ],
     observers: [
       if (kDebugMode) CustomProviderObserver(talker),
@@ -275,12 +285,28 @@ Future<void> _main() async {
     container.read(appLaunchWatcherProvider);
   }
 
+  profiler.mark('before_run_app');
   runApp(
     UncontrolledProviderScope(
       container: container,
       child: const App(),
     ),
   );
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    profiler.mark('home_first_frame');
+    if (!kIsWeb) {
+      guardedUnawaited(
+        () async {
+          final recorder = container.read(telemetryRecorderProvider);
+          await recorder.record(
+            TelemetryEvent.startupTiming(phasesMicros: profiler.timingsMicros),
+          );
+        },
+        onError: (error, stack) => talker.error(error, stack),
+      );
+    }
+  });
 
   if (!kIsWeb && Platform.isIOS) {
     unawaited(
