@@ -8,7 +8,7 @@ abstract class EarthquakeHistoryMapLayerParameter
     with _$EarthquakeHistoryMapLayerParameter {
   const factory EarthquakeHistoryMapLayerParameter({
     // ズーム閾値
-    @Default(8) double regionToCity,
+    @Default(0) double regionToCity,
     @Default(8) double stationMinZoom,
     @Default(9) double stationLabelMinZoom,
     @Default(8) double hypocenterFadeZoom,

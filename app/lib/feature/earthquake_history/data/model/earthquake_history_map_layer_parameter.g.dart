@@ -17,7 +17,7 @@ _$EarthquakeHistoryMapLayerParameterFromJson(Map<String, dynamic> json) =>
         final val = _EarthquakeHistoryMapLayerParameter(
           regionToCity: $checkedConvert(
             'region_to_city',
-            (v) => (v as num?)?.toDouble() ?? 8,
+            (v) => (v as num?)?.toDouble() ?? 0,
           ),
           stationMinZoom: $checkedConvert(
             'station_min_zoom',
