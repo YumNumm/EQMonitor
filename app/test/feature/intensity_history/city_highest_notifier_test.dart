@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
@@ -8,18 +6,34 @@ import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/repository/intensity_highest_repository.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
+import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart'
+    hide ParameterMetadata, ParameterType;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:riverpod/riverpod.dart';
 
 late ApiClient _cacheOnlyClient;
 late ApiClient _networkClient;
 
+const _parameter = EarthquakeParameter(
+  metadata: ParameterMetadata(
+    type: ParameterType.jmaCodeTable,
+    schemaVersion: 1,
+    sourceVersion: 'test',
+    sourceUpdatedAt: null,
+    sourceUrls: [],
+    sha256: 'test',
+  ),
+  prefectures: [],
+);
+
 EarthquakePartial _partial(String eventId) => EarthquakePartial(
   eventId: eventId,
   status: TelegramStatus.normal,
   originTimePrecision: OriginTimePrecision.second,
-  datasource: EarthquakeDatasource.jmaDisasterInformationXml,
+  datasources: [EarthquakeDatasource.jmaDisasterInformationXml],
   telegramTypes: const [],
   earthquakeType: EarthquakeType.normal,
 );
@@ -34,7 +48,8 @@ HighestIntensityItem _item(String code, JmaIntensity intensity) =>
     );
 
 class _SwrFakeRepository extends IntensityHighestRepository {
-  _SwrFakeRepository() : super(earthquake: ApiClient(Dio()).earthquake);
+  _SwrFakeRepository()
+    : super(earthquake: ApiClient(Dio()).earthquake, parameter: _parameter);
 
   bool cacheHit = false;
   List<HighestIntensityItem> cachedItems = const [];
@@ -48,7 +63,9 @@ class _SwrFakeRepository extends IntensityHighestRepository {
   }) async {
     if (identical(client, _cacheOnlyClient)) {
       if (cacheHit) {
-        return cachedItems.map(HighestIntensityEntry.fromApi).toList();
+        return cachedItems
+            .map((item) => item.toAppEntry(parameter: _parameter))
+            .toList();
       }
       throw DioException(
         requestOptions: RequestOptions(),
@@ -58,7 +75,9 @@ class _SwrFakeRepository extends IntensityHighestRepository {
     if (networkError != null) {
       throw networkError!;
     }
-    return freshItems.map(HighestIntensityEntry.fromApi).toList();
+    return freshItems
+        .map((item) => item.toAppEntry(parameter: _parameter))
+        .toList();
   }
 }
 

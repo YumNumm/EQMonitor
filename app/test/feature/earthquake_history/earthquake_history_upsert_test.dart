@@ -20,7 +20,6 @@ import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_par
 import 'package:eqmonitor/feature/parameter/data/model/shindo_db/shindo_db_stations_parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:paging_view/paging_view.dart';
 
 void main() {
   // 1. eventId 降順 (desc) のデータソースに既存より新しい eventId を upsert
@@ -220,5 +219,6 @@ final class _FakeEarthquakeHistoryRepository
     double? longitudeLte,
     EarthquakeSortBy? sortBy,
     SortOrder? sortOrder,
+    api.ApiClient? client,
   }) async => PaginatedResponse(items: items, nextToken: null);
 }

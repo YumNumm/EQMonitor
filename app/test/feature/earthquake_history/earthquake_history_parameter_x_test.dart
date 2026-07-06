@@ -1,4 +1,3 @@
-import 'package:eqmonitor/core/component/chip/region_intensity_filter_chip.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
