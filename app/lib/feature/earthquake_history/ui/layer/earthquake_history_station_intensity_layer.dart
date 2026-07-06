@@ -25,6 +25,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   const EarthquakeHistoryStationIntensityLayer({
     required this.earthquake,
     required this.parameter,
+    required this.enqueue,
     this.stationDisplayMode = StationDisplayMode.maxFocused,
     this.showStationLabel = false,
     this.showingLpgmIntensity = false,
@@ -33,6 +34,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
   final Earthquake earthquake;
   final EarthquakeHistoryMapLayerParameter parameter;
+  final MapOperationScheduler enqueue;
   final StationDisplayMode stationDisplayMode;
   final bool showStationLabel;
   final bool showingLpgmIntensity;
@@ -58,7 +60,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(activeColorSetProvider).intensity;
     final iconData = ref.watch(intensityIconProvider).value;
-    final enqueue = useMapOperationQueue();
 
     useEffect(
       () {
@@ -250,6 +251,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         showingLpgmIntensity,
         parameter,
         iconData,
+        enqueue,
       ],
     );
 

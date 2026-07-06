@@ -22,6 +22,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
   const EarthquakeHistoryFillLayer({
     required this.earthquake,
     required this.parameter,
+    required this.enqueue,
     this.fillMode = EarthquakeHistoryFillMode.auto,
     this.showingLpgmIntensity = false,
     super.key,
@@ -29,6 +30,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
 
   final Earthquake earthquake;
   final EarthquakeHistoryMapLayerParameter parameter;
+  final MapOperationScheduler enqueue;
   final EarthquakeHistoryFillMode fillMode;
   final bool showingLpgmIntensity;
 
@@ -62,8 +64,6 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
     if (styleController == null) {
       return const SizedBox.shrink();
     }
-
-    final enqueue = useMapOperationQueue();
 
     useEffect(
       () {
@@ -119,6 +119,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
         showingLpgmIntensity,
         parameter,
         fillLayerBuilder,
+        enqueue,
       ],
     );
 

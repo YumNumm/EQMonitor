@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -32,6 +33,7 @@ import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
@@ -84,6 +86,7 @@ class _MapContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final enqueue = useMapOperationQueue();
     final parameter = ref.watch(
       earthquakeHistoryMapLayerParameterProvider.select(
         (v) => v.value ?? const EarthquakeHistoryMapLayerParameter(),
@@ -140,6 +143,7 @@ class _MapContent extends HookConsumerWidget {
     final hypocenterLayer = EarthquakeHistoryHypocenterLayer(
       earthquake: earthquake,
       parameter: parameter,
+      enqueue: enqueue,
     );
 
     return Stack(
@@ -173,17 +177,20 @@ class _MapContent extends HookConsumerWidget {
                 earthquake: earthquake,
                 parameter: parameter,
                 showingLpgmIntensity: showingLpgmIntensity,
+                enqueue: enqueue,
               ),
               EarthquakeHistoryHypocenterErrorLayer(
                 key: const ValueKey('hypocenter-error'),
                 earthquake: earthquake,
                 parameter: parameter,
+                enqueue: enqueue,
               ),
               EarthquakeHistoryStationIntensityLayer(
                 key: const ValueKey('station'),
                 earthquake: earthquake,
                 parameter: parameter,
                 showingLpgmIntensity: showingLpgmIntensity,
+                enqueue: enqueue,
               ),
             ],
             hypocenterLayer,

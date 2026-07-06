@@ -19,11 +19,13 @@ import 'package:maplibre/maplibre.dart';
 class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
   const EarthquakeHistoryHypocenterErrorLayer({
     required this.earthquake,
+    required this.enqueue,
     this.parameter = const EarthquakeHistoryMapLayerParameter(),
     super.key,
   });
 
   final Earthquake earthquake;
+  final MapOperationScheduler enqueue;
   final EarthquakeHistoryMapLayerParameter parameter;
 
   static const _sourceId = 'eq-history-hypocenter-error';
@@ -33,7 +35,6 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final enqueue = useMapOperationQueue();
 
     useEffect(
       () {
@@ -120,7 +121,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
           );
         };
       },
-      [styleController, earthquake, isDark, parameter],
+      [styleController, earthquake, isDark, parameter, enqueue],
     );
 
     return const SizedBox.shrink();
