@@ -112,6 +112,7 @@ class _PageContent extends HookConsumerWidget {
     );
 
     final isInitialized = useRef(false);
+    final mapController = useState<MapController?>(null);
     final geoJson = _buildGeoJson();
 
     return Scaffold(
@@ -119,13 +120,15 @@ class _PageContent extends HookConsumerWidget {
         children: [
           MapLibreMap(
             options: mapOptions,
+            onMapCreated: (controller) {
+              mapController.value = controller;
+            },
             onEvent: (mapEvent) async {
               if (mapEvent is! MapEventStyleLoaded) {
                 return;
               }
-              // Capture context-dependent values before any await
-              final style = MapController.maybeOf(context)?.style;
-              final controller = MapController.maybeOf(context);
+              final controller = mapController.value;
+              final style = controller?.style;
               if (style == null || controller == null || isInitialized.value) {
                 return;
               }
