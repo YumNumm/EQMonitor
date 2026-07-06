@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/core/theme/migration/theme_migration.dart';
+import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -125,6 +126,28 @@ void main() {
       );
       // この関数自体は旧キーを削除しない（呼び出し側の保存完了後に削除する）
       expect(prefs.getString('intensity_color'), isNotNull);
+    });
+
+    test('旧キーが構造不正なJSONの場合はデフォルトにフォールバックする', () async {
+      final prefs = await _prefs({
+        'intensity_color': '{}',
+        'estimated_intensity_color': '[]',
+      });
+
+      final result = migrateFromLegacyIntensityColors(prefs);
+      final defaultTheme = AppTheme.eqmonitorDefault();
+
+      expect(result, isNotNull);
+      final migratedLight = result?.light ?? fail('light theme is null');
+      final defaultLight = defaultTheme.light ?? fail('default light is null');
+      expect(
+        migratedLight.intensity.seven.background.toARGB32(),
+        defaultLight.intensity.seven.background.toARGB32(),
+      );
+      expect(
+        migratedLight.estimatedIntensity.seven.background.toARGB32(),
+        defaultLight.estimatedIntensity.seven.background.toARGB32(),
+      );
     });
   });
 }

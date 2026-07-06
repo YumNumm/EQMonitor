@@ -108,7 +108,7 @@ class AppThemeNotifier extends _$AppThemeNotifier {
     }
     try {
       return AppTheme.fromJson(jsonDecode(value) as Map<String, dynamic>);
-    } on Exception catch (_) {
+    } on Object catch (_) {
       return null;
     }
   }
