@@ -81,59 +81,62 @@ class _DepthFilterModal extends HookWidget {
     );
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: sheetBar),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              '震源の深さ',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: sheetBar),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                '震源の深さ',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-          RangeSlider(
-            values: RangeValues(min.value.toDouble(), max.value.toDouble()),
-            min: initialMin.toDouble(),
-            max: initialMax.toDouble(),
-            onChanged: (state) {
-              min.value =
-                  (state.start.toInt() / 10).roundToDouble().toInt() * 10;
-              max.value = (state.end.toInt() / 10).roundToDouble().toInt() * 10;
-            },
-            labels: RangeLabels('${min.value}km', '${max.value}km'),
-            divisions: (initialMax - initialMin) ~/ 10,
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: Text(
-              (min.value, max.value).toRangeString,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+            const SizedBox(height: 24),
+            RangeSlider(
+              values: RangeValues(min.value.toDouble(), max.value.toDouble()),
+              min: initialMin.toDouble(),
+              max: initialMax.toDouble(),
+              onChanged: (state) {
+                min.value =
+                    (state.start.toInt() / 10).roundToDouble().toInt() * 10;
+                max.value =
+                    (state.end.toInt() / 10).roundToDouble().toInt() * 10;
+              },
+              labels: RangeLabels('${min.value}km', '${max.value}km'),
+              divisions: (initialMax - initialMin) ~/ 10,
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                (min.value, max.value).toRangeString,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('キャンセル'),
-              ),
-              TextButton(
-                onPressed: () =>
-                    Navigator.of(context).pop((min.value, max.value)),
-                child: const Text('完了'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-        ],
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('キャンセル'),
+                ),
+                TextButton(
+                  onPressed: () =>
+                      Navigator.of(context).pop((min.value, max.value)),
+                  child: const Text('完了'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }
@@ -143,8 +146,8 @@ extension _MinMaxint on (int?, int?) {
   int? get min => this.$1;
   int? get max => this.$2;
 
-  bool get isMinSelected => min == 0 || min == null;
-  bool get isMaxSelected => max == 700 || max == null;
+  bool get isMinSelected => min == DepthFilterChip.initialMin || min == null;
+  bool get isMaxSelected => max == DepthFilterChip.initialMax || max == null;
 
   bool get isAllSelected => isMinSelected && isMaxSelected;
 
