@@ -139,6 +139,37 @@ class _LatLngFilterModal extends HookWidget {
     final lngGte = useState<double?>(longitudeGte);
     final lngLte = useState<double?>(longitudeLte);
 
+    final lgv = latGte.value;
+    final llv = latLte.value;
+    final ngv = lngGte.value;
+    final nlv = lngLte.value;
+
+    var latGteErr = (lgv != null && (lgv < -90 || lgv > 90))
+        ? '-90〜90の範囲'
+        : null;
+    var latLteErr = (llv != null && (llv < -90 || llv > 90))
+        ? '-90〜90の範囲'
+        : null;
+    var lngGteErr = (ngv != null && (ngv < -180 || ngv > 180))
+        ? '-180〜180の範囲'
+        : null;
+    var lngLteErr = (nlv != null && (nlv < -180 || nlv > 180))
+        ? '-180〜180の範囲'
+        : null;
+    if (lgv != null && llv != null && lgv > llv) {
+      latGteErr ??= '南≦北の順で入力';
+      latLteErr ??= '南≦北の順で入力';
+    }
+    if (ngv != null && nlv != null && ngv > nlv) {
+      lngGteErr ??= '西≦東の順で入力';
+      lngLteErr ??= '西≦東の順で入力';
+    }
+    final isValid =
+        latGteErr == null &&
+        latLteErr == null &&
+        lngGteErr == null &&
+        lngLteErr == null;
+
     final theme = Theme.of(context);
     final designSystem = context.designSystem;
     final sheetBar = Container(
@@ -167,116 +198,125 @@ class _LatLngFilterModal extends HookWidget {
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(child: sheetBar),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Text(
-                '緯度経度範囲',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(child: sheetBar),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 16,
+                ),
+                child: Text(
+                  '緯度経度範囲',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Wrap(
-                spacing: 8,
-                children: [
-                  for (final preset in LatLngFilterChip._presets)
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Wrap(
+                  spacing: 8,
+                  children: [
+                    for (final preset in LatLngFilterChip._presets)
+                      ActionChip(
+                        label: Text(preset.label),
+                        onPressed: () => applyPreset(preset.range),
+                      ),
                     ActionChip(
-                      label: Text(preset.label),
-                      onPressed: () => applyPreset(preset.range),
+                      label: const Text('クリア'),
+                      onPressed: () {
+                        latGte.value = null;
+                        latLte.value = null;
+                        lngGte.value = null;
+                        lngLte.value = null;
+                      },
                     ),
-                  ActionChip(
-                    label: const Text('クリア'),
-                    onPressed: () {
-                      latGte.value = null;
-                      latLte.value = null;
-                      lngGte.value = null;
-                      lngLte.value = null;
-                    },
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _CoordField(
-                      label: '緯度(南)',
-                      value: latGte.value,
-                      onChanged: (v) => latGte.value = v,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text('~'),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _CoordField(
-                      label: '緯度(北)',
-                      value: latLte.value,
-                      onChanged: (v) => latLte.value = v,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _CoordField(
-                      label: '経度(西)',
-                      value: lngGte.value,
-                      onChanged: (v) => lngGte.value = v,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text('~'),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _CoordField(
-                      label: '経度(東)',
-                      value: lngLte.value,
-                      onChanged: (v) => lngLte.value = v,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('キャンセル'),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(
-                    (
-                      latitudeGte: latGte.value,
-                      latitudeLte: latLte.value,
-                      longitudeGte: lngGte.value,
-                      longitudeLte: lngLte.value,
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _CoordField(
+                        label: '緯度(南)',
+                        value: latGte.value,
+                        errorText: latGteErr,
+                        onChanged: (v) => latGte.value = v,
+                      ),
                     ),
-                  ),
-                  child: const Text('完了'),
+                    const SizedBox(width: 8),
+                    const Text('~'),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _CoordField(
+                        label: '緯度(北)',
+                        value: latLte.value,
+                        errorText: latLteErr,
+                        onChanged: (v) => latLte.value = v,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-          ],
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _CoordField(
+                        label: '経度(西)',
+                        value: lngGte.value,
+                        errorText: lngGteErr,
+                        onChanged: (v) => lngGte.value = v,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Text('~'),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _CoordField(
+                        label: '経度(東)',
+                        value: lngLte.value,
+                        errorText: lngLteErr,
+                        onChanged: (v) => lngLte.value = v,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('キャンセル'),
+                  ),
+                  TextButton(
+                    onPressed: isValid
+                        ? () => Navigator.of(context).pop((
+                            latitudeGte: latGte.value,
+                            latitudeLte: latLte.value,
+                            longitudeGte: lngGte.value,
+                            longitudeLte: lngLte.value,
+                          ))
+                        : null,
+                    child: const Text('完了'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
     );
@@ -288,16 +328,18 @@ class _CoordField extends HookWidget {
     required this.label,
     required this.value,
     required this.onChanged,
+    this.errorText,
   });
 
   final String label;
   final double? value;
   final ValueChanged<double?> onChanged;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController(
-      text: value?.toStringAsFixed(1) ?? '',
+      text: value == null ? '' : value.toString(),
     );
 
     return TextField(
@@ -311,6 +353,7 @@ class _CoordField extends HookWidget {
         border: const OutlineInputBorder(),
         isDense: true,
         suffixText: '°',
+        errorText: errorText,
       ),
       onChanged: (text) {
         final parsed = double.tryParse(text);
