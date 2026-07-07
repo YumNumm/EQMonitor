@@ -26,6 +26,7 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
         step: _OnboardingStep.notificationSettings,
         state: _StepNavigationState(
           buttonLabel: '次へ',
+          processingLabel: '処理しています...',
           isNextEnabled: true,
           isProcessing: false,
           onNext: scope.nextPage,
@@ -35,17 +36,12 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
     }, [scope]);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: designSystem.spacing.lg,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
-          Text(
-            '通知設定',
-            style: designSystem.typography.displayMedium,
-          ),
+          Text('通知設定', style: designSystem.typography.displayMedium),
           SizedBox(height: designSystem.spacing.sm),
           Text(
             '前バージョンの通知設定を引き継ぎました',
@@ -60,7 +56,9 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
               color: designSystem.colorTheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(designSystem.shape.card),
               border: Border.all(
-                color: designSystem.colorTheme.status.success.withValues(alpha: 0.3),
+                color: designSystem.colorTheme.status.success.withValues(
+                  alpha: 0.3,
+                ),
               ),
             ),
             child: Row(
@@ -171,6 +169,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
         step: _OnboardingStep.notificationSettings,
         state: _StepNavigationState(
           buttonLabel: '次へ',
+          processingLabel: '通知設定を保存しています...',
           isNextEnabled: selectedPreset.value != null,
           isProcessing: isProcessing.value,
           onNext: onNext,
@@ -180,18 +179,13 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
     }, [scope, selectedPreset.value, isProcessing.value]);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: designSystem.spacing.lg,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: designSystem.spacing.xxxxl),
-            Text(
-              '通知設定',
-              style: designSystem.typography.displayMedium,
-            ),
+            Text('通知設定', style: designSystem.typography.displayMedium),
             SizedBox(height: designSystem.spacing.sm),
             Text(
               '細かい設定は後からでも変更できます',
@@ -339,10 +333,7 @@ class _PresetCard extends StatelessWidget {
 }
 
 class _BulletItem extends StatelessWidget {
-  const _BulletItem({
-    required this.text,
-    required this.designSystem,
-  });
+  const _BulletItem({required this.text, required this.designSystem});
 
   final String text;
   final DesignSystemThemeExtension designSystem;

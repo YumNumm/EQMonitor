@@ -15,9 +15,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
       isProcessing.value = true;
 
       final messaging = ref.read(firebaseMessagingProvider);
-      final settings = await messaging.requestPermission(
-        criticalAlert: true,
-      );
+      final settings = await messaging.requestPermission(criticalAlert: true);
       final authStatus = settings.authorizationStatus;
       if (authStatus == AuthorizationStatus.authorized ||
           authStatus == AuthorizationStatus.provisional) {
@@ -67,6 +65,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
           step: _OnboardingStep.permissions,
           state: _StepNavigationState(
             buttonLabel: buttonLabel,
+            processingLabel: '権限を確認しています...',
             isNextEnabled: true,
             isProcessing: isProcessing.value,
             onNext: onNext,
@@ -97,10 +96,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
-          Text(
-            '通知と\n位置情報',
-            style: designSystem.typography.displayMedium,
-          ),
+          Text('通知と\n位置情報', style: designSystem.typography.displayMedium),
           SizedBox(height: designSystem.spacing.sm),
           Text(
             '緊急地震速報や地震情報をリアルタイムに受け取るために、'

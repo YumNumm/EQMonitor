@@ -5,6 +5,7 @@ class _OnboardingBottomBar extends StatelessWidget {
     required this.currentPage,
     required this.totalPages,
     required this.buttonLabel,
+    required this.processingLabel,
     required this.isNextEnabled,
     required this.isBackEnabled,
     required this.isProcessing,
@@ -15,6 +16,7 @@ class _OnboardingBottomBar extends StatelessWidget {
   final int currentPage;
   final int totalPages;
   final String buttonLabel;
+  final String processingLabel;
   final bool isNextEnabled;
   final bool isBackEnabled;
   final bool isProcessing;
@@ -56,14 +58,17 @@ class _OnboardingBottomBar extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: (onPrevious != null)
                     ? IconButton.filledTonal(
-                        icon: const Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                        ),
+                        icon: const Icon(Icons.arrow_back_ios_new_rounded),
                         onPressed: isBackEnabled ? onPrevious : null,
                         style: FilledButton.styleFrom(
-                          backgroundColor: context.designSystem.colorTheme.secondaryContainer,
-                          foregroundColor:
-                              context.designSystem.colorTheme.onSecondaryContainer,
+                          backgroundColor: context
+                              .designSystem
+                              .colorTheme
+                              .secondaryContainer,
+                          foregroundColor: context
+                              .designSystem
+                              .colorTheme
+                              .onSecondaryContainer,
                           shape: RoundedSuperellipseBorder(
                             borderRadius: BorderRadius.circular(
                               designSystem.shape.button,
@@ -90,36 +95,38 @@ class _OnboardingBottomBar extends StatelessWidget {
                     ),
                   ),
                   child: isProcessing
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: designSystem.spacing.sm,
-                        children: [
-                          SizedBox.square(
-                            dimension: 16,
-                            child: CircularProgressIndicator.adaptive(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation(
-                                designSystem.colorTheme.onSurfaceVariant,
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: designSystem.spacing.sm,
+                          children: [
+                            SizedBox.square(
+                              dimension: 16,
+                              child: CircularProgressIndicator.adaptive(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation(
+                                  designSystem.colorTheme.onSurfaceVariant,
+                                ),
                               ),
                             ),
+                            Text(
+                              processingLabel,
+                              style: designSystem.typography.titleSmall
+                                  .copyWith(
+                                    color: designSystem
+                                        .colorTheme
+                                        .onSurfaceVariant,
+                                  ),
+                            ),
+                          ],
+                        )
+                      : Text(
+                          buttonLabel,
+                          style: designSystem.typography.titleSmall.copyWith(
+                            color: isNextEnabled
+                                ? designSystem.colorTheme.onInverseSurface
+                                : designSystem.colorTheme.onSurfaceVariant,
                           ),
-                          Text(
-                            'デバイスを登録しています...',
-                            style:
-                                designSystem.typography.titleSmall.copyWith(
-                                  color: designSystem.colorTheme.onSurfaceVariant,
-                                ),
-                          ),
-                        ],
-                      )
-                    : Text(
-                        buttonLabel,
-                        style: designSystem.typography.titleSmall.copyWith(
-                          color: isNextEnabled
-                              ? designSystem.colorTheme.onInverseSurface
-                              : designSystem.colorTheme.onSurfaceVariant,
                         ),
-                      ),
                 ),
               ),
             ],
@@ -142,9 +149,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                           TextSpan(
                             text: '利用規約',
                             style: designSystem.typography.bodySmall.copyWith(
-                              color: context.designSystem.colorTheme.onSurface.withValues(
-                                alpha: 0.6,
-                              ),
+                              color: context.designSystem.colorTheme.onSurface
+                                  .withValues(alpha: 0.6),
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
@@ -156,9 +162,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                           TextSpan(
                             text: 'プライバシーポリシー',
                             style: designSystem.typography.bodySmall.copyWith(
-                              color: context.designSystem.colorTheme.onSurface.withValues(
-                                alpha: 0.6,
-                              ),
+                              color: context.designSystem.colorTheme.onSurface
+                                  .withValues(alpha: 0.6),
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
@@ -169,16 +174,13 @@ class _OnboardingBottomBar extends StatelessWidget {
                           const TextSpan(text: ' に同意したとみなされます'),
                         ],
                         style: designSystem.typography.bodySmall.copyWith(
-                          color: context.designSystem.colorTheme.onSurface.withValues(
-                            alpha: 0.6,
-                          ),
+                          color: context.designSystem.colorTheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                     ),
                   )
-                : const SizedBox(
-                    width: double.infinity,
-                  ),
+                : const SizedBox(width: double.infinity),
           ),
         ],
       ),

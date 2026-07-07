@@ -25,6 +25,7 @@ class _CompleteStepPage extends HookConsumerWidget {
         step: _OnboardingStep.complete,
         state: _StepNavigationState(
           buttonLabel: 'はじめる',
+          processingLabel: '準備を完了しています...',
           isNextEnabled: !isProcessing,
           isProcessing: isProcessing,
           onNext: completeOnboarding,
@@ -39,10 +40,7 @@ class _CompleteStepPage extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
-          Text(
-            '準備完了',
-            style: designSystem.typography.displayMedium,
-          ),
+          Text('準備完了', style: designSystem.typography.displayMedium),
           SizedBox(height: designSystem.spacing.sm),
           Text(
             'EQMonitor で日本の地震情報をリアルタイムに確認できます',

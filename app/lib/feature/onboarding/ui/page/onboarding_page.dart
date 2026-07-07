@@ -49,9 +49,7 @@ class OnboardingPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageController = usePageController();
     final currentPage = useState(0);
-    final stepNavigation = useState(
-      _StepNavigationState.initial(_steps.first),
-    );
+    final stepNavigation = useState(_StepNavigationState.initial(_steps.first));
     final designSystem = context.designSystem;
 
     final animateToNext = useCallback<Future<void> Function()>(() async {
@@ -121,6 +119,7 @@ class OnboardingPage extends HookConsumerWidget {
                 currentPage: currentPage.value,
                 totalPages: _steps.length,
                 buttonLabel: navigation.buttonLabel,
+                processingLabel: navigation.processingLabel,
                 isNextEnabled: navigation.isNextEnabled,
                 isBackEnabled: isBackEnabled,
                 isProcessing: navigation.isProcessing,
@@ -166,6 +165,7 @@ class _OnboardingScope extends InheritedWidget {
 class _StepNavigationState {
   const _StepNavigationState({
     required this.buttonLabel,
+    required this.processingLabel,
     required this.isNextEnabled,
     required this.isProcessing,
     required this.onNext,
@@ -177,6 +177,7 @@ class _StepNavigationState {
           _OnboardingStep.complete => 'はじめる',
           _ => '次へ',
         },
+        processingLabel: '処理しています...',
         isNextEnabled: switch (step) {
           _OnboardingStep.welcome => false,
           _OnboardingStep.notificationSettings => false,
@@ -187,6 +188,7 @@ class _StepNavigationState {
       );
 
   final String buttonLabel;
+  final String processingLabel;
   final bool isNextEnabled;
   final bool isProcessing;
   final Future<void> Function()? onNext;

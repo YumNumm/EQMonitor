@@ -18,11 +18,13 @@ void main() {
     await tester.pumpWidget(_wrap(notifier: notifier));
     await tester.pump();
 
+    expect(find.text('デバイスの状態を確認しています...'), findsOneWidget);
     expect(_nextButton(tester).onPressed, isNull);
 
     notifier.completeProvisioning();
     await tester.pumpAndSettle();
 
+    expect(find.text('デバイスの状態を確認しています...'), findsNothing);
     expect(_nextButton(tester).onPressed, isNotNull);
 
     await tester.tap(find.widgetWithText(FilledButton, '次へ'));
@@ -48,7 +50,7 @@ void main() {
 }
 
 FilledButton _nextButton(WidgetTester tester) =>
-    tester.widget<FilledButton>(find.widgetWithText(FilledButton, '次へ'));
+    tester.widget<FilledButton>(find.byType(FilledButton).last);
 
 Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
   final theme = buildTheme(
@@ -57,9 +59,7 @@ Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
   );
 
   return ProviderScope(
-    overrides: [
-      deviceProvisioningProvider.overrideWith(() => notifier),
-    ],
+    overrides: [deviceProvisioningProvider.overrideWith(() => notifier)],
     child: MaterialApp(
       theme: theme,
       builder: (context, child) => DefaultAssetBundle(
