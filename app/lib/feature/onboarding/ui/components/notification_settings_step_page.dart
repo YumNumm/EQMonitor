@@ -1,52 +1,49 @@
 part of '../page/onboarding_page.dart';
 
 class _NotificationSettingsStepPage extends HookConsumerWidget {
-  const _NotificationSettingsStepPage();
+  const _NotificationSettingsStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMigrated =
         ref.watch(deviceMigratedFromLegacyProvider).value ?? false;
     if (isMigrated) {
-      return const _MigratedNotificationSettingsStepPage();
+      return _MigratedNotificationSettingsStepPage(navigation: navigation);
     }
-    return const _NewUserNotificationSettingsStepPage();
+    return _NewUserNotificationSettingsStepPage(navigation: navigation);
   }
 }
 
 class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
-  const _MigratedNotificationSettingsStepPage();
+  const _MigratedNotificationSettingsStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
 
     useEffect(() {
-      scope.setStepNavigation(
-        step: _OnboardingStep.notificationSettings,
-        state: _StepNavigationState(
+      navigation.register(
+        _StepNavigationState(
           buttonLabel: '次へ',
           isNextEnabled: true,
           isProcessing: false,
-          onNext: scope.nextPage,
+          onNext: navigation.nextPage,
         ),
       );
       return null;
-    }, [scope]);
+    }, [navigation]);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: designSystem.spacing.lg,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
-          Text(
-            '通知設定',
-            style: designSystem.typography.displayMedium,
-          ),
+          Text('通知設定', style: designSystem.typography.displayMedium),
           SizedBox(height: designSystem.spacing.sm),
           Text(
             '前バージョンの通知設定を引き継ぎました',
@@ -61,7 +58,9 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
               color: designSystem.colorTheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(designSystem.shape.card),
               border: Border.all(
-                color: designSystem.colorTheme.status.success.withValues(alpha: 0.3),
+                color: designSystem.colorTheme.status.success.withValues(
+                  alpha: 0.3,
+                ),
               ),
             ),
             child: Row(
@@ -91,11 +90,12 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
 }
 
 class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
-  const _NewUserNotificationSettingsStepPage();
+  const _NewUserNotificationSettingsStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
     final selectedPreset = useState<NotificationPreset?>(null);
     final hasSaveError = useState(false);
@@ -126,11 +126,11 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
             ),
           );
           if (context.mounted) {
-            await scope.nextPage();
+            await navigation.nextPage();
           }
         } else {
           isProcessing.value = false;
-          await scope.nextPage();
+          await navigation.nextPage();
         }
       } on Exception catch (_) {
         if (context.mounted) {
@@ -141,9 +141,8 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
     }
 
     useEffect(() {
-      scope.setStepNavigation(
-        step: _OnboardingStep.notificationSettings,
-        state: _StepNavigationState(
+      navigation.register(
+        _StepNavigationState(
           buttonLabel: '次へ',
           isNextEnabled: selectedPreset.value != null,
           isProcessing: isProcessing.value,
@@ -151,21 +150,16 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
         ),
       );
       return null;
-    }, [scope, selectedPreset.value, isProcessing.value]);
+    }, [navigation, selectedPreset.value, isProcessing.value]);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: designSystem.spacing.lg,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: designSystem.spacing.xxxxl),
-            Text(
-              '通知設定',
-              style: designSystem.typography.displayMedium,
-            ),
+            Text('通知設定', style: designSystem.typography.displayMedium),
             SizedBox(height: designSystem.spacing.sm),
             Text(
               '細かい設定は後からでも変更できます',

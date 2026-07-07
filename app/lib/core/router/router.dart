@@ -32,7 +32,8 @@ import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
 import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
-import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
+import 'package:eqmonitor/feature/onboarding/ui/page/onboarding_page.dart';
+import 'package:eqmonitor/feature/onboarding/ui/page/onboarding_web_view_page.dart';
 import 'package:eqmonitor/feature/seismicity/ui/seismicity_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
@@ -99,13 +100,15 @@ GoRouter goRouter(Ref ref) => GoRouter(
     final isOnboardingCompleted =
         ref.read(onboardingCompletedProvider).value ?? false;
     if (!isOnboardingCompleted) {
-      if ([
+      final allowedDuringOnboarding = [
             const OnboardingRoute().location,
             const TermOfServiceRoute($extra: null).location,
             const PrivacyPolicyRoute($extra: null).location,
             const LicenseRoute().location,
           ].contains(state.matchedLocation) ||
-          state.matchedLocation.startsWith(const DebugRoute().location)) {
+          state.matchedLocation == '/onboarding/web-view' ||
+          state.matchedLocation.startsWith(const DebugRoute().location);
+      if (allowedDuringOnboarding) {
         return null;
       } else {
         return const OnboardingRoute().location;
@@ -150,6 +153,21 @@ class OnboardingRoute extends GoRouteData with $OnboardingRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const OnboardingPage();
+}
+
+@TypedGoRoute<OnboardingWebViewRoute>(path: '/onboarding/web-view')
+class OnboardingWebViewRoute extends GoRouteData with $OnboardingWebViewRoute {
+  const OnboardingWebViewRoute({
+    required this.title,
+    required this.url,
+  });
+
+  final String title;
+  final String url;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      OnboardingWebViewPage(title: title, url: url);
 }
 
 @TypedGoRoute<BetaTestingWarningRoute>(path: '/beta-warning')

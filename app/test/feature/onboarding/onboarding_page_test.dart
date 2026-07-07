@@ -57,9 +57,7 @@ Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
   );
 
   return ProviderScope(
-    overrides: [
-      deviceProvisioningProvider.overrideWith(() => notifier),
-    ],
+    overrides: [deviceProvisioningProvider.overrideWith(() => notifier)],
     child: MaterialApp(
       theme: theme,
       builder: (context, child) => DefaultAssetBundle(
