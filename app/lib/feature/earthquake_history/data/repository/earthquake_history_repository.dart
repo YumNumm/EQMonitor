@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
@@ -15,6 +16,8 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_teleg
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -346,6 +349,131 @@ class EarthquakeHistoryRepository {
   EarthquakePartial toEarthquakePartial({
     required api.EarthquakePartial item,
   }) => item.toEarthquakePartial(parameter: earthquakeParameter);
+
+  ShindoDbIntensityTree buildShindoDbIntensityTree({
+    required EarthquakeCatalog catalog,
+  }) {
+    final stationByCode = <String, ShindoDbStationItem>{
+      for (final s in shindoDbStations.stations) s.code: s,
+    };
+    final cityIndex =
+        <
+          String,
+          ({
+            EarthquakeParameterCityItem city,
+            EarthquakeParameterRegionItem region,
+            EarthquakeParameterPrefectureItem prefecture,
+          })
+        >{};
+    for (final prefecture in earthquakeParameter.prefectures) {
+      for (final region in prefecture.regions) {
+        for (final city in region.cities) {
+          cityIndex[city.code] = (
+            city: city,
+            region: region,
+            prefecture: prefecture,
+          );
+        }
+      }
+    }
+
+    // class → prefCode → cityCode → stations accumulator
+    final treeAccum =
+        <
+          ShindoDbIntensityClass,
+          Map<String, Map<String, List<ShindoDbStationNode>>>
+        >{};
+    final prefByCode = <String, EarthquakeParameterPrefectureItem>{};
+    final cityDataByCode =
+        <
+          String,
+          ({
+            EarthquakeParameterCityItem city,
+            EarthquakeParameterRegionItem region,
+          })
+        >{};
+    final unresolvedAccum =
+        <ShindoDbIntensityClass, List<ShindoDbStationNode>>{};
+
+    for (final record in catalog.stationRecords) {
+      final item = stationByCode[record.stationCode];
+      final cityCode = item?.cityCode;
+      final cityEntry = cityCode != null ? cityIndex[cityCode] : null;
+
+      if (item == null || cityCode == null || cityEntry == null) {
+        final node = ShindoDbStationNode(
+          record: record,
+          name: item?.name ?? record.stationCode,
+          location: item?.location,
+        );
+        (unresolvedAccum[record.intensityClass] ??= []).add(node);
+      } else {
+        final node = ShindoDbStationNode(
+          record: record,
+          name: item.name,
+          location: item.location,
+        );
+        prefByCode[cityEntry.prefecture.code] = cityEntry.prefecture;
+        cityDataByCode[cityCode] = (
+          city: cityEntry.city,
+          region: cityEntry.region,
+        );
+        final classMap = treeAccum[record.intensityClass] ??= {};
+        final prefMap = classMap[cityEntry.prefecture.code] ??= {};
+        (prefMap[cityCode] ??= []).add(node);
+      }
+    }
+
+    final sortedTreeClasses = treeAccum.keys.toList()
+      ..sort((a, b) => b.orderIndex.compareTo(a.orderIndex));
+    final tree = <ShindoDbIntensityClass, List<ShindoDbPrefectureNode>>{};
+    for (final cls in sortedTreeClasses) {
+      final prefMap = treeAccum[cls]!;
+      final sortedPrefCodes = prefMap.keys.toList()..sort();
+      final prefNodes = <ShindoDbPrefectureNode>[];
+      for (final prefCode in sortedPrefCodes) {
+        final cityMap = prefMap[prefCode]!;
+        final sortedCityCodes = cityMap.keys.toList()..sort();
+        final cityNodes = <ShindoDbCityNode>[];
+        for (final code in sortedCityCodes) {
+          final data = cityDataByCode[code]!;
+          final stations = cityMap[code]!
+            ..sort(
+              (a, b) => a.record.stationCode.compareTo(b.record.stationCode),
+            );
+          cityNodes.add(
+            ShindoDbCityNode(
+              city: data.city,
+              region: data.region,
+              stations: stations,
+            ),
+          );
+        }
+        prefNodes.add(
+          ShindoDbPrefectureNode(
+            prefecture: prefByCode[prefCode]!,
+            cities: cityNodes,
+          ),
+        );
+      }
+      tree[cls] = prefNodes;
+    }
+
+    final sortedUnresolvedClasses = unresolvedAccum.keys.toList()
+      ..sort((a, b) => b.orderIndex.compareTo(a.orderIndex));
+    final unresolvedStations =
+        <ShindoDbIntensityClass, List<ShindoDbStationNode>>{};
+    for (final cls in sortedUnresolvedClasses) {
+      unresolvedStations[cls] = unresolvedAccum[cls]!
+        ..sort((a, b) => a.record.stationCode.compareTo(b.record.stationCode));
+    }
+
+    return ShindoDbIntensityTree(
+      tree: tree,
+      unresolvedStations: unresolvedStations,
+      totalStationCount: catalog.stationRecords.length,
+    );
+  }
 
   CurrentLocationIntensityDisplay resolveCurrentLocationIntensity({
     required Map<JmaIntensity, List<IntensityRegion>> regions,
