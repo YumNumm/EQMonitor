@@ -34,9 +34,11 @@ family notifier への適用実績あり (`earthquake_history_details_notifier` 
 
 リポジトリ側は client 上書きを受ける形が既存 (`FeedRepository.fetchByTelegramHash(hash, {ApiClient? client})` → `(client ?? _api)`)。
 
-### 対象 Notifier (未 SWR 化)
-- `app/lib/feature/feed/data/notifier/feed_notifier.dart`: `@riverpod class FeedNotifier`。`build()` で `repository.fetch()`。ページネーション (`fetchNextData`, nextCursor) あり。
-- `app/lib/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart`: `@riverpod class EarthquakeHistoryNotifier`。`build(EarthquakeHistoryParameter parameter)` (family)。`EarthquakeHistoryParameterAll` 時に 5 分タイマー (`invalidateSelf`)・リアルタイム upsert・app 復帰時 `_revalidateLatest` を設定。`_fetch(parameter, limit, cursor)` で取得。ページネーション (`fetchNextData`)・`_upsertItems` あり。parameter は All / Region / Prefecture / City / Station と各種フィルタ (magnitude/depth/intensity/… ・sort) を持つ。
+### 対象 (未 SWR 化)
+- **お知らせ**: `app/lib/feature/feed/data/notifier/feed_notifier.dart`: `@riverpod class FeedNotifier`。`build()` で `repository.fetch()`。ページネーション (`fetchNextData`, nextCursor) あり。`feedProvider` として Home フィードシート・お知らせ一覧ページで使用中 (実利用あり)。
+- **地震履歴**: 実際の一覧は `app/lib/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart` の **`earthquakeHistoryDataSourceProvider(parameter)`** (family) が返す `EarthquakeHistoryDataSource extends GroupedDataSource<String?, String, EarthquakePartial>` (paging_view)。`earthquake_history_page.dart` が唯一の消費者。`load(Refresh/Append)` → `_load` → `_fetch` → repository。`EarthquakeHistoryParameterAll` 時に 5 分タイマー (`invalidateSelf`)・リアルタイム `upsertItems`・app 復帰時 `revalidateLatest` を provider 側で設定。既定一覧の parameter は `const EarthquakeHistoryParameter.all(sortBy: .eventId, sortOrder: .desc)`。
+  - 注: `earthquake_history_notifier.dart` (`EarthquakeHistoryNotifier`) は**消費者ゼロの死んだコード**。SWR 対象ではない (別途削除可)。
+- `CachedNotifier` は `$AsyncNotifier<T>` 用の mixin。Feed には適用できるが、地震履歴の `GroupedDataSource` には適用できないため、地震履歴は DataSource 内に cache-first を作り込む。
 
 ### UI 表示基盤
 `app/lib/core/component/cached_data_banner.dart`: `CachedDataBanner(values: [asyncValue...])`。いずれかが `isFromCache` (DataKind.cache) の時「更新中」バナーを表示。既に地震詳細・お知らせ詳細・強度履歴・電文一覧ページで使用。
@@ -77,48 +79,40 @@ class FeedNotifier extends _$FeedNotifier with CachedNotifier<FeedNotifierState>
 ```
 ページネーションはオフライン非対応のまま (仕様)。
 
-### 2. 地震履歴 (デフォルト一覧のみ)
+### 2. 地震履歴 (デフォルト一覧のみ / paging_view DataSource に cache-first を作り込み)
 
-**`EarthquakeHistoryRepository.fetchEarthquakeList`** と Notifier の **`_fetch`** に オプション `api.ApiClient? client` を追加し、`(client ?? 既定)` で使う。SWR はデフォルト All のみに適用するため、client 上書きが実際に渡るのは `fetchEarthquakeList` 経由のデフォルト All パスのみ。他パスは `client` を渡さず従来通り。
+`CachedNotifier` は使えないため、`EarthquakeHistoryDataSource` の初回ページ (Refresh) を cache-first にする。対象は **既定 All** (`_isDefaultAll`) のみ。フィルタ/検索は従来通り。
 
-**`EarthquakeHistoryNotifier`** に `with CachedNotifier<PaginatedResponse<EarthquakePartial>>` を付与:
-```dart
-@override
-Future<PaginatedResponse<EarthquakePartial>> fetch(ApiClient client) =>
-    _fetch(parameter: parameter, limit: 10, cursor: null, client: client);
+**`EarthquakeHistoryRepository.fetchEarthquakeList`** に オプション `api.ApiClient? client` を追加し `(client ?? _api)` で使う。cache-only クライアントを渡せるようにする。
 
-@override
-Future<PaginatedResponse<EarthquakePartial>> build(
-  EarthquakeHistoryParameter parameter,
-) async {
-  if (parameter is EarthquakeHistoryParameterAll) {
-    // 既存の 5 分タイマー・リアルタイム upsert・app 復帰 revalidate をそのまま設定
-    ...
-  }
-  if (_isDefaultAll(parameter)) {
-    return cachedBuild();
-  }
-  return _fetch(parameter: parameter, limit: ..., cursor: null);
-}
-```
+**`earthquakeHistoryDataSource` provider** (`earthquake_history_data_source.dart`): 通常クライアントに加え cache-only クライアントも取得し、DataSource に両方 (または 2 つの client) を渡す。既存のタイマー・リアルタイム・app 復帰 setup は不変。
 
-- `_isDefaultAll(parameter)`: フィルタ未適用・既定ソートの `EarthquakeHistoryParameterAll` を判定する述語。既定インスタンスとの等価判定、または全フィルタ null + 既定 sort の確認で実装する (正確な定義は実装計画で確定)。
-- `limit`: 既存に合わせ、All は 10、検索系は 50。
-- `_revalidateLatest`・`fetchNextData`・`_upsertItems` は不変。`revalidateOnAppResume` は有効化しない (既存の軽量 `_revalidateLatest` を app 復帰時に使い続ける)。
+**`EarthquakeHistoryDataSource`**:
+- `_isDefaultAll(parameter)` = `parameter == const EarthquakeHistoryParameter.all(sortBy: EarthquakeSortBy.eventId, sortOrder: SortOrder.desc)` (freezed の値等価。既定一覧の構築値と一致)。
+- `load(Refresh)` が既定 All の場合:
+  1. まず cache-only クライアントで first page を取得。
+     - **cache ヒット** → `Success(cachedPage)` を即返す。加えて背景で通常クライアントの revalidate を予約し、成功したら fresh を `upsertItems` で反映 (失敗時はキャッシュ維持)。
+     - **cache miss (`CacheMissException`)** → 通常クライアントで取得 (従来通り。オフラインなら `Failure`)。
+  2. 既定 All 以外 (フィルタ付き All・検索系)・`Append` は従来通り通常クライアント。
+- 背景 revalidate: `_fetch(limit: 10, cursor: null, client: normalClient)` → `upsertItems(fresh.items)` (既存の upsert ロジックを再利用。sortBy=eventId のみ有効)。disposal ガードを入れる。
+- 既存の `revalidateLatest`・`upsertItems`・`Append` は不変。
 
 ### 3. UI
 
-地震履歴一覧ページとお知らせ一覧ページに `CachedDataBanner(values: [asyncValue])` を追加 (詳細ページ等と一貫)。デフォルト All のキャッシュ表示時のみバナーが出る (フィルタ時は `isFromCache=false` で非表示)。
+- **お知らせ一覧ページ**: `CachedDataBanner(values: [feedAsyncValue])` を追加 (詳細ページ等と一貫)。`CachedNotifier` が revalidate 中に `DataKind.cache` を持つため `isFromCache` で自然に表示される。
+- **地震履歴一覧ページ**: paging_view の DataSource は `AsyncValue` の `DataKind.cache` を持たないため、`CachedDataBanner(values:)` を直接は使えない。DataSource に「キャッシュ表示中/背景 revalidate 中」を表す `ValueListenable<bool>` (例 `isRevalidating`) を公開し、ページはそれを購読してキャッシュ由来の詳細ページ等と同じ見た目の「更新中」バナーを出す。バナー UI は `CachedDataBanner` と揃える (共通見た目を再利用 or 同等の軽量表示)。
 
 ### 4. 相互作用の扱い
 
-背景 revalidate・5 分タイマー `invalidateSelf`・リアルタイム `_upsertItems` はいずれも最終的に `AsyncData` を生成する。`CachedNotifier` の `_generation` ガードが古い revalidate による上書きを防ぐ。既存コードに既にあるレース (timer invalidate vs upsert) と同程度で、新たな根本問題は増やさない。背景 revalidate 完了時に `AsyncData(fresh)` がリアルタイム upsert 直後の値を一時的に上書きしうるが、fresh は最新のサーバ値のため実害は軽微 (許容)。
+- **Feed**: 背景 revalidate は `CachedNotifier` の `_generation` ガードで古い上書きを防止。
+- **地震履歴**: 背景 revalidate (`upsertItems`)・5 分タイマー `invalidateSelf`・リアルタイム `upsertItems` はいずれも DataSource の items を操作する。既存コードに既にあるレース (timer invalidate vs upsert) と同程度で、新たな根本問題は増やさない。cache ヒット時に予約する背景 revalidate は disposal / 世代ガードを入れ、DataSource 破棄後や再 Refresh 後に古い結果を反映しない。
 
 ## テスト方針
 
 - `FeedNotifier`: cache-only ヒットで即データを返す / cache miss で通常取得へフォールバック / 背景 revalidate で fresh に更新。
-- `EarthquakeHistoryNotifier`: デフォルト All は cache-first になる / フィルタ付き All・検索系は従来のネットワーク経路のまま (cache-only を使わない)。
-- オフライン (cache-only ヒット) 時に `AsyncError` にならずデータが表示される。
+- `EarthquakeHistoryDataSource`: 既定 All の Refresh で cache-only ヒット → `Success` を即返す / cache miss → 通常取得 / フィルタ付き All・検索系は cache-only を使わず従来経路。cache ヒット後の背景 revalidate で `upsertItems` が呼ばれ fresh が反映される。
+- `_isDefaultAll` の判定 (既定 All のみ true、フィルタ/検索は false)。
+- オフライン (cache-only ヒット) 時に `Failure`/`AsyncError` にならずデータが表示される。
 - 既存の CachedNotifier 系テストのパターンに倣う。
 
 ## 非対象 (Out of Scope)
