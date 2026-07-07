@@ -97,60 +97,65 @@ class _IntensityFilterModal extends HookWidget {
         _sliderValues[i.clamp(0, _sliderValues.length - 1)];
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: sheetBar),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              '最大観測震度',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: sheetBar),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                '最大観測震度',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-          RangeSlider(
-            values: RangeValues(
-              valueToIndex(min.value).toDouble(),
-              valueToIndex(max.value).toDouble(),
+            const SizedBox(height: 24),
+            RangeSlider(
+              values: RangeValues(
+                valueToIndex(min.value).toDouble(),
+                valueToIndex(max.value).toDouble(),
+              ),
+              max: (_sliderValues.length - 1).toDouble(),
+              onChanged: (state) {
+                min.value = indexToValue(state.start.toInt());
+                max.value = indexToValue(state.end.toInt());
+              },
+              labels: RangeLabels(
+                '震度${min.value.label}',
+                '震度${max.value.label}',
+              ),
+              divisions: _sliderValues.length - 1,
             ),
-            max: (_sliderValues.length - 1).toDouble(),
-            onChanged: (state) {
-              min.value = indexToValue(state.start.toInt());
-              max.value = indexToValue(state.end.toInt());
-            },
-            labels: RangeLabels('震度${min.value.label}', '震度${max.value.label}'),
-            divisions: _sliderValues.length - 1,
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: Text(
-              (min.value, max.value).toRangeString,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                (min.value, max.value).toRangeString,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('キャンセル'),
-              ),
-              TextButton(
-                onPressed: () =>
-                    Navigator.of(context).pop((min.value, max.value)),
-                child: const Text('完了'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-        ],
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('キャンセル'),
+                ),
+                TextButton(
+                  onPressed: () =>
+                      Navigator.of(context).pop((min.value, max.value)),
+                  child: const Text('完了'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }
