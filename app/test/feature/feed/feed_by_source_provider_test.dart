@@ -35,7 +35,7 @@ class _FakeFeedRepository implements FeedRepository {
   String? lastTelegramHash;
 
   @override
-  Future<FeedListResponse> fetch({String? after}) => throw UnimplementedError();
+  Future<FeedListResponse> fetch({String? after, api.ApiClient? client}) => throw UnimplementedError();
 
   @override
   Future<FeedDetail> fetchByTelegramHash(

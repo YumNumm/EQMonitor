@@ -263,6 +263,7 @@ final class _SpyEarthquakeHistoryRepository
     double? longitudeLte,
     EarthquakeSortBy? sortBy,
     SortOrder? sortOrder,
+    api.ApiClient? client,
   }) async {
     fetchEarthquakeListCalls.add({
       'limit': limit,
