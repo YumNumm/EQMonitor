@@ -117,7 +117,7 @@ class SettingsPage extends ConsumerWidget {
                 ),
                 AppSwitchListTile(
                   title: '広告を非表示',
-                  value: ref.watch(adsOptOutProvider),
+                  value: ref.watch(adsOptOutProvider).value ?? false,
                   onChanged: (_) => AdsOptOutNotifier.saveMutation.run(
                     ref,
                     (tsx) async => tsx.get(adsOptOutProvider.notifier).toggle(),

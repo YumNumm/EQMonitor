@@ -18,15 +18,14 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
 
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<EarthquakeType?>(
+        final result = await showModalBottomSheet<({EarthquakeType? value})?>(
           clipBehavior: Clip.antiAlias,
           context: context,
-          builder: (context) => _EarthquakeTypeFilterModal(
-            currentType: earthquakeType,
-          ),
+          builder: (context) =>
+              _EarthquakeTypeFilterModal(currentType: earthquakeType),
         );
-        if (result != null || !context.mounted) {
-          onChanged?.call(result);
+        if (result != null && context.mounted) {
+          onChanged?.call(result.value);
         }
       },
       label: isDefault
@@ -66,32 +65,43 @@ class _EarthquakeTypeFilterModal extends StatelessWidget {
     );
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: sheetBar),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              '地震種別',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: sheetBar),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                '地震種別',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          ...EarthquakeType.values.map(
-            (type) => ListTile(
-              title: Text(type.displayLabel),
-              trailing: currentType == type
+            const SizedBox(height: 8),
+            ...EarthquakeType.values.map(
+              (type) => ListTile(
+                title: Text(type.displayLabel),
+                trailing: currentType == type
+                    ? Icon(Icons.check, color: designSystem.colorTheme.primary)
+                    : null,
+                onTap: () => Navigator.of(context).pop((value: type)),
+              ),
+            ),
+            ListTile(
+              title: const Text('すべて'),
+              subtitle: const Text('種別で絞り込まない'),
+              trailing: currentType == null
                   ? Icon(Icons.check, color: designSystem.colorTheme.primary)
                   : null,
-              onTap: () => Navigator.of(context).pop(type),
+              onTap: () =>
+                  Navigator.of(context).pop((value: null as EarthquakeType?)),
             ),
-          ),
-          const SizedBox(height: 8),
-        ],
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

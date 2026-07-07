@@ -18,11 +18,13 @@ final deviceProvisioningRepositoryProvider =
 final class DeviceProvisioningRepositoryProvider
     extends
         $FunctionalProvider<
+          AsyncValue<DeviceProvisioningRepository>,
           DeviceProvisioningRepository,
-          DeviceProvisioningRepository,
-          DeviceProvisioningRepository
+          FutureOr<DeviceProvisioningRepository>
         >
-    with $Provider<DeviceProvisioningRepository> {
+    with
+        $FutureModifier<DeviceProvisioningRepository>,
+        $FutureProvider<DeviceProvisioningRepository> {
   DeviceProvisioningRepositoryProvider._()
     : super(
         from: null,
@@ -39,23 +41,15 @@ final class DeviceProvisioningRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<DeviceProvisioningRepository> $createElement(
+  $FutureProviderElement<DeviceProvisioningRepository> $createElement(
     $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  DeviceProvisioningRepository create(Ref ref) {
+  FutureOr<DeviceProvisioningRepository> create(Ref ref) {
     return deviceProvisioningRepository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(DeviceProvisioningRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<DeviceProvisioningRepository>(value),
-    );
   }
 }
 
 String _$deviceProvisioningRepositoryHash() =>
-    r'0939c4a05704d4647d351cfee14fb98dd7996f3e';
+    r'549bc0a97ac558a3ca65f301d5e3fe11847946d9';

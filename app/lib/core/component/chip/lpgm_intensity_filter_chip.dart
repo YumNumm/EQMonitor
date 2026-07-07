@@ -25,10 +25,8 @@ class LpgmIntensityFilterChip extends StatelessWidget {
             await showModalBottomSheet<(JmaLpgmIntensity?, JmaLpgmIntensity?)?>(
               clipBehavior: Clip.antiAlias,
               context: context,
-              builder: (context) => _LpgmIntensityFilterModal(
-                currentMin: min,
-                currentMax: max,
-              ),
+              builder: (context) =>
+                  _LpgmIntensityFilterModal(currentMin: min, currentMax: max),
             );
         if (result != null) {
           onChanged?.call(result.$1, result.$2);
@@ -104,68 +102,70 @@ class _LpgmIntensityFilterModal extends HookWidget {
         _values[i.clamp(0, _values.length - 1)];
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: sheetBar),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              '長周期地震動階級',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: sheetBar),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                '長周期地震動階級',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-          RangeSlider(
-            values: RangeValues(
-              valueToIndex(min.value).toDouble(),
-              valueToIndex(max.value).toDouble(),
+            const SizedBox(height: 24),
+            RangeSlider(
+              values: RangeValues(
+                valueToIndex(min.value).toDouble(),
+                valueToIndex(max.value).toDouble(),
+              ),
+              max: (_values.length - 1).toDouble(),
+              onChanged: (state) {
+                min.value = indexToValue(state.start.toInt());
+                max.value = indexToValue(state.end.toInt());
+              },
+              labels: RangeLabels(
+                '階級${min.value.label}',
+                '階級${max.value.label}',
+              ),
+              divisions: _values.length - 1,
             ),
-            max: (_values.length - 1).toDouble(),
-            onChanged: (state) {
-              min.value = indexToValue(state.start.toInt());
-              max.value = indexToValue(state.end.toInt());
-            },
-            labels: RangeLabels(
-              '階級${min.value.label}',
-              '階級${max.value.label}',
-            ),
-            divisions: _values.length - 1,
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: Text(
-              LpgmIntensityFilterChip._rangeString(min.value, max.value),
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                LpgmIntensityFilterChip._rangeString(min.value, max.value),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('キャンセル'),
-              ),
-              TextButton(
-                onPressed: () {
-                  final isDefault =
-                      min.value == _values.first && max.value == _values.last;
-                  Navigator.of(context).pop(
-                    isDefault ? (null, null) : (min.value, max.value),
-                  );
-                },
-                child: const Text('完了'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-        ],
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('キャンセル'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final isDefault =
+                        min.value == _values.first && max.value == _values.last;
+                    Navigator.of(
+                      context,
+                    ).pop(isDefault ? (null, null) : (min.value, max.value));
+                  },
+                  child: const Text('完了'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

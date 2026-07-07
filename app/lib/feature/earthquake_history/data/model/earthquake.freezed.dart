@@ -53,7 +53,7 @@ $Res call({
 });
 
 
-$EarthquakeHypocenterCopyWith<$Res>? get hypocenter;$EarthquakeIntensityCopyWith<$Res>? get intensity;
+$EarthquakeHypocenterCopyWith<$Res>? get hypocenter;$EarthquakeIntensityCopyWith<$Res>? get intensity;$EarthquakeCatalogCopyWith<$Res>? get catalog;
 
 }
 /// @nodoc
@@ -105,6 +105,18 @@ $EarthquakeIntensityCopyWith<$Res>? get intensity {
 
   return $EarthquakeIntensityCopyWith<$Res>(_self.intensity!, (value) {
     return _then(_self.copyWith(intensity: value));
+  });
+}/// Create a copy of Earthquake
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeCatalogCopyWith<$Res>? get catalog {
+    if (_self.catalog == null) {
+    return null;
+  }
+
+  return $EarthquakeCatalogCopyWith<$Res>(_self.catalog!, (value) {
+    return _then(_self.copyWith(catalog: value));
   });
 }
 }
@@ -309,7 +321,7 @@ $Res call({
 });
 
 
-@override $EarthquakeHypocenterCopyWith<$Res>? get hypocenter;@override $EarthquakeIntensityCopyWith<$Res>? get intensity;
+@override $EarthquakeHypocenterCopyWith<$Res>? get hypocenter;@override $EarthquakeIntensityCopyWith<$Res>? get intensity;@override $EarthquakeCatalogCopyWith<$Res>? get catalog;
 
 }
 /// @nodoc
@@ -362,6 +374,18 @@ $EarthquakeIntensityCopyWith<$Res>? get intensity {
 
   return $EarthquakeIntensityCopyWith<$Res>(_self.intensity!, (value) {
     return _then(_self.copyWith(intensity: value));
+  });
+}/// Create a copy of Earthquake
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeCatalogCopyWith<$Res>? get catalog {
+    if (_self.catalog == null) {
+    return null;
+  }
+
+  return $EarthquakeCatalogCopyWith<$Res>(_self.catalog!, (value) {
+    return _then(_self.copyWith(catalog: value));
   });
 }
 }

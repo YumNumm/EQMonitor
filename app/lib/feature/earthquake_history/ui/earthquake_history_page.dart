@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -69,7 +70,7 @@ class _PagingBody extends StatelessWidget {
     required this.onRefresh,
   });
 
-  final GroupedDataSource<String?, String, EarthquakePartial> dataSource;
+  final EarthquakeHistoryDataSource dataSource;
   final ValueNotifier<EarthquakeHistoryParameter> parameter;
   final ValueChanged<EarthquakeHistoryParameter> onParameterChanged;
   final Future<void> Function() onRefresh;
@@ -99,6 +100,11 @@ class _PagingBody extends StatelessWidget {
             delegate: EarthquakeHistoryParameterPersistentDelegate(
               parameter: parameter.value,
               onChanged: onParameterChanged,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: RevalidatingBanner(
+              isRevalidating: dataSource.isRevalidating,
             ),
           ),
           SliverGroupedPagingList<String?, String, EarthquakePartial>(

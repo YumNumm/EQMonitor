@@ -18,6 +18,15 @@ class DateRangeFilterChip extends StatelessWidget {
 
   static final format = DateFormat('yyyy/MM/dd');
 
+  @visibleForTesting
+  static DateTimeRange? clampInitialDateRange(DateTime? min, DateTime? max) {
+    if (min == null || max == null) return null;
+    final start = min.isBefore(initialMin) ? initialMin : min;
+    final end = max.isAfter(initialMax) ? initialMax : max;
+    if (start.isAfter(end)) return null;
+    return DateTimeRange(start: start, end: end);
+  }
+
   @override
   Widget build(BuildContext context) {
     final range = (min, max);
@@ -31,6 +40,7 @@ class DateRangeFilterChip extends StatelessWidget {
           currentDate: DateTime.now(),
           locale: const Locale('ja'),
           initialEntryMode: DatePickerEntryMode.input,
+          initialDateRange: clampInitialDateRange(min, max),
         );
         if (result != null) {
           onChanged?.call(result.start, result.end);

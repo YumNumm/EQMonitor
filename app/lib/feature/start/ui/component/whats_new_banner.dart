@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'dart:async';
 
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// ホームシートに表示する「What's New」バナー。
 /// 未閲覧の最新バージョンがある場合のみ表示する。
@@ -34,7 +34,7 @@ class WhatsNewBanner extends ConsumerWidget {
   }
 }
 
-class _WhatsNewBannerContent extends HookWidget {
+class _WhatsNewBannerContent extends HookConsumerWidget {
   const _WhatsNewBannerContent({
     required this.latest,
     required this.bottomSpacing,
@@ -44,15 +44,17 @@ class _WhatsNewBannerContent extends HookWidget {
   final double bottomSpacing;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final dismissed = useState(false);
 
     useEffect(() {
       unawaited(
         Future.microtask(() async {
-          final prefs = await SharedPreferences.getInstance();
-          final seen = prefs.getString(
-            SharedPreferencesKey.whatsNewSeenVersion.key,
+          final dataSource = await ref.read(
+            sharedPreferencesDataSourceProvider.future,
+          );
+          final seen = await dataSource.getString(
+            key: SharedPreferencesKey.whatsNewSeenVersion,
           );
           if (seen == latest.version) {
             dismissed.value = true;
@@ -63,10 +65,12 @@ class _WhatsNewBannerContent extends HookWidget {
     }, const []);
 
     Future<void> markSeen() async {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
-        SharedPreferencesKey.whatsNewSeenVersion.key,
-        latest.version,
+      final dataSource = await ref.read(
+        sharedPreferencesDataSourceProvider.future,
+      );
+      await dataSource.setString(
+        key: SharedPreferencesKey.whatsNewSeenVersion,
+        value: latest.version,
       );
       dismissed.value = true;
     }

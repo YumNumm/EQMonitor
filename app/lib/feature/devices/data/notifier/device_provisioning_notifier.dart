@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/exception/dio_exception_mapper.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
@@ -20,8 +21,8 @@ part 'device_provisioning_notifier.g.dart';
 enum DeviceProvisioningStatus { required, notRequired }
 
 @riverpod
-bool deviceMigratedFromLegacy(Ref ref) {
-  final repo = ref.watch(deviceProvisioningRepositoryProvider);
+Future<bool> deviceMigratedFromLegacy(Ref ref) async {
+  final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
   return repo.wasMigratedFromLegacy();
 }
 
@@ -35,8 +36,8 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
 
   @override
   Future<DeviceProvisioningStatus> build() async {
-    final repo = ref.watch(deviceProvisioningRepositoryProvider);
-    if (!repo.isProvisioned()) {
+    final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
+    if (!await repo.isProvisioned()) {
       return DeviceProvisioningStatus.required;
     }
     final authRepo = await ref.watch(deviceAuthRepositoryProvider.future);
@@ -51,14 +52,18 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
 
   static final provisionMutation = Mutation<void>();
   Future<void> provision() async {
-    final repo = ref.read(deviceProvisioningRepositoryProvider);
+    final repo = await ref.read(deviceProvisioningRepositoryProvider.future);
     final deviceRepo = await ref.read(deviceRepositoryProvider.future);
     final deviceId = await ref.read(deviceIdProvider.future);
 
     await _retryController.run(() async {
       try {
-        final legacy = repo.readLegacyDeviceId();
+        final legacy = await repo.readLegacyDeviceId();
         if (legacy != null && legacy.isNotEmpty) {
+          talker.info(
+            '[Provisioning] legacy device detected; '
+            'running v2→v3 migration workflow',
+          );
           await runV3MigrationWorkflow(
             runner: repo.buildRunner(),
             repository: deviceRepo,
@@ -66,6 +71,7 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
             oldDeviceId: legacy,
           );
           await repo.markMigratedFromLegacy();
+          talker.info('[Provisioning] v2→v3 migration workflow completed');
         } else {
           final result = await deviceRepo.registerDevice(
             deviceId: deviceId,
@@ -87,11 +93,15 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
           }
         }
         await repo.markProvisioned();
-      } on DeviceProvisioningException {
+      } on DeviceProvisioningException catch (e, st) {
+        talker.error('[Provisioning] failed', e, st);
         rethrow;
       } on DioException catch (e, st) {
-        throw mapDioToProvisioningException(e, st);
+        final mapped = mapDioToProvisioningException(e, st);
+        talker.error('[Provisioning] failed', mapped, st);
+        throw mapped;
       } catch (e, st) {
+        talker.error('[Provisioning] unexpected failure', e, st);
         throw UnexpectedProvisioningException(cause: e, stackTrace: st);
       }
     });

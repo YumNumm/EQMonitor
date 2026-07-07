@@ -30,7 +30,7 @@ class AutoReturnWatcher extends _$AutoReturnWatcher {
       return;
     }
     // 設定で無効化されている場合は何もしない
-    if (!ref.read(autoReturnToRealtimeProvider)) {
+    if (!(ref.read(autoReturnToRealtimeProvider).value ?? true)) {
       return;
     }
     if (!ref.read(autoReturnPolicyProvider).shouldReturnToRealtime(event)) {

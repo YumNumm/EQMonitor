@@ -12,10 +12,7 @@ import 'package:maplibre/maplibre.dart';
 
 /// 電文発表時刻基準での静的PS波到達円レイヤー
 class EewStaticPsWaveLayer extends HookConsumerWidget {
-  const EewStaticPsWaveLayer({
-    required this.eew,
-    super.key,
-  });
+  const EewStaticPsWaveLayer({required this.eew, super.key});
 
   final EewTelegramItem? eew;
 
@@ -35,46 +32,41 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     // source / layer の追加は styleController が変化したときに一度だけ行う。
     // eew / travelTimeMap の変化で再初期化すると、非同期なクリーンアップ完了前に
     // addSource が走り「already exists」例外となるため、初期化と更新を分離する。
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
-        final future = _initializeLayers(styleController);
-        initFuture.value = future;
+      final future = _initializeLayers(styleController);
+      initFuture.value = future;
 
-        return () {
-          initFuture.value = null;
-          unawaited(() async {
-            await future;
-            await _removeLayers(styleController);
-          }());
-        };
-      },
-      [styleController],
-    );
+      return () {
+        initFuture.value = null;
+        unawaited(() async {
+          await future;
+          await _removeLayers(styleController);
+        }());
+      };
+    }, [styleController]);
 
     // eew / travelTimeMap の変化に追従してデータのみ更新する
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
-
-        unawaited(() async {
-          await initFuture.value;
-          await _updateLayers(
-            styleController,
-            eew,
-            travelTimeMap,
-          );
-        }());
-
+    useEffect(() {
+      if (styleController == null) {
         return null;
-      },
-      [styleController, eew, travelTimeMap],
-    );
+      }
+
+      unawaited(() async {
+        await initFuture.value;
+        // 走時表未ロード時は波を描かない
+        if (travelTimeMap == null) {
+          await _clearLayers(styleController);
+          return;
+        }
+        await _updateLayers(styleController, eew, travelTimeMap);
+      }());
+
+      return null;
+    }, [styleController, eew, travelTimeMap]);
 
     return const SizedBox.shrink();
   }
@@ -109,10 +101,7 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
         const LineStyleLayer(
           id: _pWaveLayerId,
           sourceId: _pWaveSourceId,
-          paint: {
-            'line-color': '#0000FF',
-            'line-width': 1,
-          },
+          paint: {'line-color': '#0000FF', 'line-width': 1},
         ),
       ),
       styleController.addLayer(
@@ -219,10 +208,7 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
             _generateCircleCoordinates(lat, lng, travelTime.sDistance!),
           ],
         },
-        'properties': {
-          'lineColor': lineColor,
-          'fillColor': fillColor,
-        },
+        'properties': {'lineColor': lineColor, 'fillColor': fillColor},
       });
     }
 

@@ -3,7 +3,7 @@ import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/core/provider/dio_provider.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
@@ -16,30 +16,27 @@ part 'device_repository.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<DeviceRepository> deviceRepository(Ref ref) async => DeviceRepository(
-  await ref.watch(apiClientProvider.future),
-  await ref.watch(deviceAuthRepositoryProvider.future),
-  await ref.watch(dioProvider.future),
+  api: await ref.watch(apiClientProvider.future),
+  authRepository: await ref.watch(deviceAuthRepositoryProvider.future),
   apnsEnvironment: ref.watch(apnsEnvironmentProvider),
+  isApplePlatform: !kIsWeb && (Platform.isIOS || Platform.isMacOS),
 );
 
 class DeviceRepository {
-  DeviceRepository(
-    this._api,
-    this._authRepository,
-    this._dio, {
+  DeviceRepository({
+    required api.ApiClient api,
+    required DeviceAuthRepository authRepository,
     required api.ApnsEnvironment apnsEnvironment,
-    bool? isApplePlatform,
-  }) : _apnsEnvironment = apnsEnvironment,
-       _isApplePlatform =
-           isApplePlatform ?? (!kIsWeb && (Platform.isIOS || Platform.isMacOS));
+    required bool isApplePlatform,
+  }) : _api = api,
+       _authRepository = authRepository,
+       _apnsEnvironment = apnsEnvironment,
+       _isApplePlatform = isApplePlatform;
 
   final api.ApiClient _api;
   final DeviceAuthRepository _authRepository;
-  final Dio _dio;
   final api.ApnsEnvironment _apnsEnvironment;
 
-  /// APNs トークン同期は iOS/macOS でのみ行う。
-  /// テストでホスト OS に依存しないよう注入可能にしている。
   final bool _isApplePlatform;
 
   Future<Result<RegisteredDevice, Exception>> getDevice(String deviceId) =>
@@ -72,9 +69,7 @@ class DeviceRepository {
         locale: deviceLocale.toDeviceLocale,
       ),
     );
-    await _authRepository.saveToken(
-      token: registerResponse.data.deviceToken,
-    );
+    await _authRepository.saveToken(token: registerResponse.data.deviceToken);
     final getResponse = await _api.device.getV2DeviceMe();
     return getResponse.data.toRegisteredDevice;
   });
@@ -148,17 +143,27 @@ class DeviceRepository {
     // Step 3 — call migration endpoint to transfer Supabase settings
     return Result.capture(() async {
       try {
-        await _dio.post<void>(
-          '/v2/device/me/migrate',
-          data: {'old_device_id': oldDeviceId},
+        final response = await _api.device.postV2DeviceMeMigrate(
+          body: api.MigrateRequest(oldDeviceId: oldDeviceId),
+        );
+        final migrated = response.data.migrated;
+        talker.info(
+          '[V2Migration] migrate succeeded: '
+          'earthquakeRegions=${migrated.earthquakeRegions}, '
+          'eewRegions=${migrated.eewRegions}, '
+          'notificationSettings=${migrated.notificationSettings}',
         );
       } on DioException catch (e) {
         // 409 = already migrated; treat as idempotent success
         if (e.response?.statusCode == 409) {
+          talker.info('[V2Migration] already migrated (409); skipping');
           return;
         }
         // 404 = old device not found in Supabase; non-fatal
         if (e.response?.statusCode == 404) {
+          talker.warning(
+            '[V2Migration] old device not found (404); nothing migrated',
+          );
           return;
         }
         rethrow;

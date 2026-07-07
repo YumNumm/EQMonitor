@@ -23,7 +23,7 @@ class _StubAdsOptOut extends AdsOptOutNotifier {
   final bool _initial;
 
   @override
-  bool build() => _initial;
+  Future<bool> build() async => _initial;
 }
 
 ProviderContainer _container({
@@ -82,7 +82,7 @@ void main() {
       expect(container.read(shouldShowAdsProvider), isFalse);
     });
 
-    test('オプトアウト済みのとき false', () {
+    test('オプトアウト済みのとき false', () async {
       final container = _container(
         isPro: false,
         adsServerFlag: true,
@@ -91,6 +91,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
+      await container.read(adsOptOutProvider.future);
       expect(container.read(shouldShowAdsProvider), isFalse);
     });
 

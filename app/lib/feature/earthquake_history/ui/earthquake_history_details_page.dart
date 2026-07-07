@@ -5,15 +5,18 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/estimated_intensity_notice_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/collapsible_segmented_control.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/current_location_intensity_card.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_catalog_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/estimated_intensity_notice_dialog.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_event_notes.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_hypocenter_information_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -72,14 +75,29 @@ class _LoadedContent extends HookConsumerWidget {
     final hasEstimated = earthquake.estimatedIntensityTileUrl != null;
     final hasLpgm = earthquake.intensity?.maxLpgmIntensity != null;
 
+    final hasCatalog = earthquake.catalog != null;
+    final hasXml = earthquake.dataSources.contains(
+      EarthquakeDataSource.jmaDisasterInformationXml,
+    );
+    final isDbOnly = hasCatalog && !hasXml;
+    final showSourceToggle = hasCatalog && hasXml;
+
+    final source = useState(
+      isDbOnly
+          ? EarthquakeDataSource.jmaIntensityDatabase
+          : EarthquakeDataSource.jmaDisasterInformationXml,
+    );
+    final showingDb = source.value == EarthquakeDataSource.jmaIntensityDatabase;
+
     final displayMode = useState(
       hasEstimated ? IntensityDisplayMode.estimated : IntensityDisplayMode.jma,
     );
 
-    final noticeShown = ref.watch(estimatedIntensityNoticeShownProvider);
+    final noticeShown =
+        ref.watch(estimatedIntensityNoticeShownProvider).value ?? false;
 
     useEffect(() {
-      if (hasEstimated && !noticeShown) {
+      if (hasEstimated && !noticeShown && !showingDb) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!context.mounted) {
             return;
@@ -91,7 +109,7 @@ class _LoadedContent extends HookConsumerWidget {
         });
       }
       return null;
-    }, [hasEstimated, noticeShown]);
+    }, [hasEstimated, noticeShown, showingDb]);
 
     final availableModes = [
       IntensityDisplayMode.jma,
@@ -107,6 +125,7 @@ class _LoadedContent extends HookConsumerWidget {
           EarthquakeHistoryDetailsMapView(
             earthquake: earthquake,
             displayMode: displayMode.value,
+            showingDb: showingDb,
           ),
           SafeArea(
             bottom: false,
@@ -116,6 +135,30 @@ class _LoadedContent extends HookConsumerWidget {
                 child: SafeArea(
                   child: Column(
                     children: [
+                      if (showSourceToggle)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          child:
+                              CollapsibleSegmentedControl<EarthquakeDataSource>(
+                                segments: const [
+                                  SegmentItem(
+                                    value: EarthquakeDataSource
+                                        .jmaDisasterInformationXml,
+                                    label: '防災情報XML',
+                                  ),
+                                  SegmentItem(
+                                    value: EarthquakeDataSource
+                                        .jmaIntensityDatabase,
+                                    label: '震度データベース',
+                                  ),
+                                ],
+                                selected: source.value,
+                                onSelected: (v) => source.value = v,
+                              ),
+                        ),
                       CachedDataBanner(
                         values: [
                           ref.watch(
@@ -125,7 +168,14 @@ class _LoadedContent extends HookConsumerWidget {
                           ),
                         ],
                       ),
-                      EarthquakeHypocenterInformationCard(item: earthquake),
+                      if (showingDb) ...[
+                        ShindoDbHypocenterInformationCard(
+                          catalog: earthquake.catalog!,
+                          originTime: earthquake.originTime,
+                        ),
+                        ShindoDbEventNotes(catalog: earthquake.catalog!),
+                      ] else
+                        EarthquakeHypocenterInformationCard(item: earthquake),
                       CurrentLocationIntensityCard(item: earthquake),
                       EarthquakeIntensityCard(
                         item: earthquake,
@@ -133,8 +183,9 @@ class _LoadedContent extends HookConsumerWidget {
                         onDisplayModeChanged: (mode) =>
                             displayMode.value = mode,
                         availableModes: availableModes,
+                        source: source.value,
+                        showDatabaseBadge: isDbOnly,
                       ),
-                      EarthquakeCatalogCard(catalog: earthquake.catalog),
                       if (earthquake.originTime != null &&
                           DateTime.now().difference(earthquake.originTime!) >
                               const Duration(hours: 24))
@@ -170,6 +221,22 @@ class _LoadedContent extends HookConsumerWidget {
                 ),
               ),
             ),
+          // データソースラベル
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Align(
+                alignment: .bottomRight,
+                child: Text(
+                  'データソース: ${earthquake.dataSources.map((e) => switch (e) {
+                    .jmaDisasterInformationXml => "気象庁災害情報XML",
+                    .jmaIntensityDatabase => "気象庁震度データベース",
+                  }).join(', ')}',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

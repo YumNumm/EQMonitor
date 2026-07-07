@@ -129,7 +129,7 @@ class _AutoReturnToggle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final enabled = ref.watch(autoReturnToRealtimeProvider);
+    final enabled = ref.watch(autoReturnToRealtimeProvider).value ?? true;
     return SwitchListTile(
       contentPadding: EdgeInsets.zero,
       title: const Text('リアルタイムイベントで通常再生に戻る'),

@@ -253,8 +253,9 @@ final class _NotificationHistoryFamily extends $Family
 @ProviderFor(_isProvisioned)
 final _isProvisionedProvider = _IsProvisionedProvider._();
 
-final class _IsProvisionedProvider extends $FunctionalProvider<bool, bool, bool>
-    with $Provider<bool> {
+final class _IsProvisionedProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
   _IsProvisionedProvider._()
     : super(
         from: null,
@@ -271,24 +272,16 @@ final class _IsProvisionedProvider extends $FunctionalProvider<bool, bool, bool>
 
   @$internal
   @override
-  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  bool create(Ref ref) {
+  FutureOr<bool> create(Ref ref) {
     return _isProvisioned(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
   }
 }
 
-String _$_isProvisionedHash() => r'2f8d126c3bc56972a9eda138053d417c165ef26c';
+String _$_isProvisionedHash() => r'ac9462f53546bdd10f451d8448d50acbbf3a45c7';
 
 @ProviderFor(_deviceTokenPresent)
 final _deviceTokenPresentProvider = _DeviceTokenPresentProvider._();
@@ -328,8 +321,8 @@ String _$_deviceTokenPresentHash() =>
 final _legacyDeviceIdProvider = _LegacyDeviceIdProvider._();
 
 final class _LegacyDeviceIdProvider
-    extends $FunctionalProvider<String?, String?, String?>
-    with $Provider<String?> {
+    extends $FunctionalProvider<AsyncValue<String?>, String?, FutureOr<String?>>
+    with $FutureModifier<String?>, $FutureProvider<String?> {
   _LegacyDeviceIdProvider._()
     : super(
         from: null,
@@ -346,24 +339,16 @@ final class _LegacyDeviceIdProvider
 
   @$internal
   @override
-  $ProviderElement<String?> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<String?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  String? create(Ref ref) {
+  FutureOr<String?> create(Ref ref) {
     return _legacyDeviceId(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(String? value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<String?>(value),
-    );
   }
 }
 
-String _$_legacyDeviceIdHash() => r'e44ebb20404a38ef6e434b9767ddd6549de18eab';
+String _$_legacyDeviceIdHash() => r'ca5050843e0070edec91d301aece8b6a4d927e03';
 
 @ProviderFor(_osNotificationPermission)
 final _osNotificationPermissionProvider = _OsNotificationPermissionProvider._();
