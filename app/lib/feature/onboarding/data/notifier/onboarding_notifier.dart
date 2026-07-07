@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class OnboardingCompleted extends _$OnboardingCompleted {
   static final completeMutation = Mutation<void>();
   static final resetMutation = Mutation<void>();
