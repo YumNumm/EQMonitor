@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
+import 'package:eqmonitor/core/paging/cache_first_refresh.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
@@ -7,14 +9,27 @@ import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_data_source.g.dart';
+
+/// デフォルトの「全て」パラメータかどうかを判定する。
+/// フィルタや並び替えが変更されていない初期状態と一致する場合のみ true。
+bool isDefaultAllParameter(EarthquakeHistoryParameter p) =>
+    p ==
+    const EarthquakeHistoryParameter.all(
+      sortBy: EarthquakeSortBy.eventId,
+      sortOrder: SortOrder.desc,
+    );
 
 @riverpod
 Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
@@ -24,10 +39,12 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
   final repository = await ref.watch(
     earthquakeHistoryRepositoryProvider.future,
   );
+  final cacheOnly = await ref.watch(cacheOnlyApiClientProvider.future);
 
   final dataSource = EarthquakeHistoryDataSource(
     repository: repository,
     parameter: parameter,
+    cacheOnlyClient: cacheOnly,
     onRefreshStarted: () =>
         ref.invalidate(earthquakeHistoryDetailsProvider, asReload: true),
   );
@@ -68,9 +85,11 @@ class EarthquakeHistoryDataSource
   EarthquakeHistoryDataSource({
     required EarthquakeHistoryRepository repository,
     required EarthquakeHistoryParameter parameter,
+    required api.ApiClient cacheOnlyClient,
     VoidCallback? onRefreshStarted,
   }) : _repository = repository,
-       _parameter = parameter {
+       _parameter = parameter,
+       _cacheOnlyClient = cacheOnlyClient {
     onLoadStarted = (action) {
       if (action is Refresh) {
         onRefreshStarted?.call();
@@ -80,6 +99,17 @@ class EarthquakeHistoryDataSource
 
   final EarthquakeHistoryRepository _repository;
   final EarthquakeHistoryParameter _parameter;
+  final api.ApiClient _cacheOnlyClient;
+
+  final ValueNotifier<bool> isRevalidating = ValueNotifier(false);
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    isRevalidating.dispose();
+    super.dispose();
+  }
 
   static final _dateFormatter = DateFormat('yyyy/MM/dd');
 
@@ -94,6 +124,21 @@ class EarthquakeHistoryDataSource
   Future<LoadResult<String?, EarthquakePartial>> load(
     LoadAction<String?> action,
   ) async => switch (action) {
+    Refresh() when isDefaultAllParameter(_parameter) =>
+      await cacheFirstRefresh<EarthquakePartial>(
+        fetchPage: ({required cacheOnly}) async {
+          final page = await _fetch(
+            limit: 10,
+            cursor: null,
+            client: cacheOnly ? _cacheOnlyClient : null,
+          );
+          return PageData(data: page.items, appendKey: page.nextToken);
+        },
+        upsert: upsertItems,
+        isActive: () => !_disposed,
+        isRevalidating: isRevalidating,
+        onRevalidateError: (e, st) => talker.error(e, st),
+      ),
     Refresh() => await _load(
       limit: _parameter is EarthquakeHistoryParameterAll ? 10 : 50,
       cursor: null,
@@ -127,6 +172,7 @@ class EarthquakeHistoryDataSource
   Future<PaginatedResponse<EarthquakePartial>> _fetch({
     required int limit,
     required String? cursor,
+    api.ApiClient? client,
   }) async {
     final parameter = _parameter;
 
@@ -155,6 +201,7 @@ class EarthquakeHistoryDataSource
         longitudeLte: parameter.longitudeLte,
         sortBy: parameter.sortBy,
         sortOrder: parameter.sortOrder,
+        client: client,
       ),
       EarthquakeHistoryParameterRegion(:final String regionCode) =>
         _repository.searchByRegion(
