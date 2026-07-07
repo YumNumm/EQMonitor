@@ -323,6 +323,7 @@ final class _DeviceRegisterAdapter implements HttpClientAdapter {
           'locale': 'ja',
           'registrationType': 'APP_CHECK',
           'userId': null,
+          'is_pro': false,
           'createdAt': '2026-06-05T00:00:00.000Z',
           'updatedAt': '2026-06-05T00:00:00.000Z',
         }),

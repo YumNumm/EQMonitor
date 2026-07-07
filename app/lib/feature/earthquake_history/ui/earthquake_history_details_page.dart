@@ -170,6 +170,22 @@ class _LoadedContent extends HookConsumerWidget {
                 ),
               ),
             ),
+          // データソースラベル
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Align(
+                alignment: .bottomRight,
+                child: Text(
+                  'データソース: ${earthquake.dataSources.map((e) => switch (e) {
+                    .jmaDisasterInformationXml => "気象庁災害情報XML",
+                    .jmaIntensityDatabase => "気象庁震度データベース",
+                  }).join(', ')}',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

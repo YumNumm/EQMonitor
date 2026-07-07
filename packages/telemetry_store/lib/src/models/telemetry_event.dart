@@ -47,6 +47,10 @@ sealed class TelemetryEvent with _$TelemetryEvent {
     String? stackTrace,
   }) = ErrorTelemetryEvent;
 
+  const factory TelemetryEvent.startupTiming({
+    required Map<String, int> phasesMicros,
+  }) = StartupTimingEvent;
+
   const factory TelemetryEvent.appLaunch({
     required String launchType,
     required String appVersion,
@@ -72,6 +76,7 @@ sealed class TelemetryEvent with _$TelemetryEvent {
     LiveActivityUpdatedEvent() => 'live_activity_updated',
     LiveActivityEndedEvent() => 'live_activity_ended',
     ErrorTelemetryEvent() => 'error',
+    StartupTimingEvent() => 'startup_timing',
     AppLaunchEvent() => 'app_launch',
   };
 
@@ -119,16 +124,9 @@ sealed class TelemetryEvent with _$TelemetryEvent {
         'end_reason': endReason.name,
         'duration_ms': ?durationMs,
       },
-    ErrorTelemetryEvent(
-      :final errorType,
-      :final message,
-      :final stackTrace,
-    ) =>
-      {
-        'error_type': errorType,
-        'message': message,
-        'stack_trace': ?stackTrace,
-      },
+    ErrorTelemetryEvent(:final errorType, :final message, :final stackTrace) =>
+      {'error_type': errorType, 'message': message, 'stack_trace': ?stackTrace},
+    StartupTimingEvent(:final phasesMicros) => {'phases_micros': phasesMicros},
     AppLaunchEvent(
       :final launchType,
       :final appVersion,

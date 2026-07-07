@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dar
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/startup/debug_startup_timing_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -162,6 +163,16 @@ class _DebugWidget extends ConsumerWidget {
               subtitle: const Text('ローカルテレメトリーイベントの閲覧'),
               onTap: () async =>
                   const DebugTelemetryRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('Startup Timing'),
+              leading: const Icon(Icons.timer_outlined),
+              subtitle: const Text('起動フェーズごとの所要時間'),
+              onTap: () => Navigator.of(context).push<void>(
+                MaterialPageRoute(
+                  builder: (_) => const DebugStartupTimingPage(),
+                ),
+              ),
             ),
             ListTile(
               title: const Text('WebSocket'),

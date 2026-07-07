@@ -30,170 +30,174 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
     final latestPWaveGeoJson = useRef<String?>(null);
     final latestSWaveGeoJson = useRef<String?>(null);
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
-        final future = _initializeLayers(styleController);
-        initFuture.value = future;
+      final future = _initializeLayers(styleController);
+      initFuture.value = future;
 
-        return () {
-          initFuture.value = null;
-          unawaited(() async {
-            await future;
-            await _removeLayers(styleController);
-          }());
-        };
-      },
-      [styleController],
-    );
+      return () {
+        initFuture.value = null;
+        unawaited(() async {
+          await future;
+          await _removeLayers(styleController);
+        }());
+      };
+    }, [styleController]);
 
     final animationController = useAnimationController(
       duration: const Duration(days: 365),
     );
 
-    useEffect(
-      () {
-        if (simulation != null) {
-          unawaited(animationController.repeat());
-        } else {
-          animationController.stop();
-        }
+    useEffect(() {
+      if (simulation != null) {
+        unawaited(animationController.repeat());
+      } else {
+        animationController.stop();
+      }
+      return null;
+    }, [simulation != null]);
+
+    useEffect(() {
+      if (styleController == null) {
         return null;
-      },
-      [simulation != null],
-    );
+      }
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
+      var disposed = false;
+
+      void listener() {
+        if (disposed) {
+          return;
         }
-
-        var disposed = false;
-
-        void listener() {
-          if (disposed) {
-            return;
-          }
-          final sim = ref.read(eewSimulationProvider);
-          if (sim == null) {
-            unawaited(
-              _updateGeoJson(
-                styleController,
-                pWaveGeoJson: _emptyGeoJson,
-                sWaveGeoJson: _emptyGeoJson,
-                latestP: latestPWaveGeoJson,
-                latestS: latestSWaveGeoJson,
-                initFuture: initFuture,
-              ),
-            );
-            return;
-          }
-
-          final currentReport = sim.currentReport;
-          final originTime = currentReport.originTime;
-          final hypocenter = currentReport.hypocenter;
-          if (originTime == null ||
-              hypocenter == null ||
-              hypocenter.latitude == null ||
-              hypocenter.longitude == null ||
-              hypocenter.depth == null ||
-              currentReport.isPlum) {
-            unawaited(
-              _updateGeoJson(
-                styleController,
-                pWaveGeoJson: _emptyGeoJson,
-                sWaveGeoJson: _emptyGeoJson,
-                latestP: latestPWaveGeoJson,
-                latestS: latestSWaveGeoJson,
-                initFuture: initFuture,
-              ),
-            );
-            return;
-          }
-
-          final now = DateTime.now();
-          final firstReportTime = sim.reports.first.reportTime;
-          final offset =
-              firstReportTime.difference(originTime).inMilliseconds / 1000;
-          final simulationElapsed =
-              now.difference(sim.startedAt).inMilliseconds / 1000;
-          final elapsed = offset + simulationElapsed;
-
-          final travelTime = ref
-              .read(travelTimeDepthMapProvider)
-              .getTravelTime(hypocenter.depth!, elapsed);
-
-          final lat = hypocenter.latitude!;
-          final lng = hypocenter.longitude!;
-          final isWarning = currentReport.isWarning ?? false;
-          final lineColor = isWarning ? '#FF0000' : '#FFA500';
-          final fillColor = isWarning ? '#FF0000' : '#FFA500';
-
-          final pWaveFeatures = <Map<String, dynamic>>[];
-          final sWaveFeatures = <Map<String, dynamic>>[];
-
-          if (travelTime.pDistance != null && travelTime.pDistance! > 0) {
-            pWaveFeatures.add({
-              'type': 'Feature',
-              'geometry': {
-                'type': 'Polygon',
-                'coordinates': [
-                  _generateCircleCoordinates(lat, lng, travelTime.pDistance!),
-                ],
-              },
-              'properties': <String, dynamic>{},
-            });
-          }
-
-          if (travelTime.sDistance != null && travelTime.sDistance! > 0) {
-            sWaveFeatures.add({
-              'type': 'Feature',
-              'geometry': {
-                'type': 'Polygon',
-                'coordinates': [
-                  _generateCircleCoordinates(lat, lng, travelTime.sDistance!),
-                ],
-              },
-              'properties': {
-                'lineColor': lineColor,
-                'fillColor': fillColor,
-              },
-            });
-          }
-
-          final pGeoJson = jsonEncode({
-            'type': 'FeatureCollection',
-            'features': pWaveFeatures,
-          });
-          final sGeoJson = jsonEncode({
-            'type': 'FeatureCollection',
-            'features': sWaveFeatures,
-          });
-
+        final sim = ref.read(eewSimulationProvider);
+        if (sim == null) {
           unawaited(
             _updateGeoJson(
               styleController,
-              pWaveGeoJson: pGeoJson,
-              sWaveGeoJson: sGeoJson,
+              pWaveGeoJson: _emptyGeoJson,
+              sWaveGeoJson: _emptyGeoJson,
               latestP: latestPWaveGeoJson,
               latestS: latestSWaveGeoJson,
               initFuture: initFuture,
             ),
           );
+          return;
         }
 
-        animationController.addListener(listener);
-        return () {
-          disposed = true;
-          animationController.removeListener(listener);
-        };
-      },
-      [styleController, simulation, animationController],
-    );
+        final currentReport = sim.currentReport;
+        final originTime = currentReport.originTime;
+        final hypocenter = currentReport.hypocenter;
+        if (originTime == null ||
+            hypocenter == null ||
+            hypocenter.latitude == null ||
+            hypocenter.longitude == null ||
+            hypocenter.depth == null ||
+            currentReport.isPlum) {
+          unawaited(
+            _updateGeoJson(
+              styleController,
+              pWaveGeoJson: _emptyGeoJson,
+              sWaveGeoJson: _emptyGeoJson,
+              latestP: latestPWaveGeoJson,
+              latestS: latestSWaveGeoJson,
+              initFuture: initFuture,
+            ),
+          );
+          return;
+        }
+
+        final now = DateTime.now();
+        final firstReportTime = sim.reports.first.reportTime;
+        final offset =
+            firstReportTime.difference(originTime).inMilliseconds / 1000;
+        final simulationElapsed =
+            now.difference(sim.startedAt).inMilliseconds / 1000;
+        final elapsed = offset + simulationElapsed;
+
+        final travelTimeMap = ref.read(travelTimeDepthMapProvider);
+        // 走時表未ロード時は波を描かない
+        if (travelTimeMap == null) {
+          unawaited(
+            _updateGeoJson(
+              styleController,
+              pWaveGeoJson: _emptyGeoJson,
+              sWaveGeoJson: _emptyGeoJson,
+              latestP: latestPWaveGeoJson,
+              latestS: latestSWaveGeoJson,
+              initFuture: initFuture,
+            ),
+          );
+          return;
+        }
+        final travelTime = travelTimeMap.getTravelTime(
+          hypocenter.depth!,
+          elapsed,
+        );
+
+        final lat = hypocenter.latitude!;
+        final lng = hypocenter.longitude!;
+        final isWarning = currentReport.isWarning ?? false;
+        final lineColor = isWarning ? '#FF0000' : '#FFA500';
+        final fillColor = isWarning ? '#FF0000' : '#FFA500';
+
+        final pWaveFeatures = <Map<String, dynamic>>[];
+        final sWaveFeatures = <Map<String, dynamic>>[];
+
+        if (travelTime.pDistance != null && travelTime.pDistance! > 0) {
+          pWaveFeatures.add({
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Polygon',
+              'coordinates': [
+                _generateCircleCoordinates(lat, lng, travelTime.pDistance!),
+              ],
+            },
+            'properties': <String, dynamic>{},
+          });
+        }
+
+        if (travelTime.sDistance != null && travelTime.sDistance! > 0) {
+          sWaveFeatures.add({
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Polygon',
+              'coordinates': [
+                _generateCircleCoordinates(lat, lng, travelTime.sDistance!),
+              ],
+            },
+            'properties': {'lineColor': lineColor, 'fillColor': fillColor},
+          });
+        }
+
+        final pGeoJson = jsonEncode({
+          'type': 'FeatureCollection',
+          'features': pWaveFeatures,
+        });
+        final sGeoJson = jsonEncode({
+          'type': 'FeatureCollection',
+          'features': sWaveFeatures,
+        });
+
+        unawaited(
+          _updateGeoJson(
+            styleController,
+            pWaveGeoJson: pGeoJson,
+            sWaveGeoJson: sGeoJson,
+            latestP: latestPWaveGeoJson,
+            latestS: latestSWaveGeoJson,
+            initFuture: initFuture,
+          ),
+        );
+      }
+
+      animationController.addListener(listener);
+      return () {
+        disposed = true;
+        animationController.removeListener(listener);
+      };
+    }, [styleController, simulation, animationController]);
 
     return const SizedBox.shrink();
   }

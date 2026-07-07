@@ -1,4 +1,3 @@
-import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/fcm/notification_deep_link.dart';
 import 'package:eqmonitor/core/provider/app_links_interaction.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
@@ -6,7 +5,6 @@ import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshi
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
-import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -19,63 +17,36 @@ class SplashPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final kyoshinPoints = ref.watch(
-      kyoshinMonitorInternalObservationPointsConvertedProvider,
-    );
-    final travelTime = ref.watch(travelTimeInternalProvider);
-    final historyConfig = ref.watch(earthquakeHistoryConfigProvider);
-
-    final allLoaded =
-        kyoshinPoints.hasValue && travelTime.hasValue && historyConfig.hasValue;
-    final hasError =
-        !allLoaded &&
-        (kyoshinPoints.hasError ||
-            travelTime.hasError ||
-            historyConfig.hasError);
-    final error =
-        kyoshinPoints.error ?? travelTime.error ?? historyConfig.error;
-
-    useEffect(
-      () {
-        if (allLoaded) {
-          // SWR: build() が自動でキャッシュ即表示→裏で再検証
-          ref.read(startProvider);
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            context.go(const HomeRoute().location);
-            final pending =
-                consumePendingNotificationDeepLink() ?? consumePendingAppLink();
-            switch (pending) {
-              case NotificationRouteLink(:final location):
-                await GoRouter.of(context).push<void>(location);
-              case NotificationUrlLink(:final uri):
-                await launchUrl(uri, mode: LaunchMode.externalApplication);
-              case null:
-                break;
-            }
-          });
+    useEffect(() {
+      // 重い初期化はトリガーのみ行い、完了を待たずに Home へ遷移する。
+      // keepAlive のためバックグラウンドでロードは継続し、各消費画面が
+      // 個別にローディング/エラーを表示する。
+      ref
+        ..read(travelTimeInternalProvider.future).ignore()
+        ..read(
+          kyoshinMonitorInternalObservationPointsConvertedProvider.future,
+        ).ignore()
+        ..read(earthquakeHistoryConfigProvider)
+        ..read(startProvider);
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        context.go(const HomeRoute().location);
+        final pending =
+            consumePendingNotificationDeepLink() ?? consumePendingAppLink();
+        switch (pending) {
+          case NotificationRouteLink(:final location):
+            await GoRouter.of(context).push<void>(location);
+          case NotificationUrlLink(:final uri):
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          case null:
+            break;
         }
-        return null;
-      },
-      [allLoaded],
-    );
+      });
+      return null;
+    }, const []);
 
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
-        child: hasError
-            ? ErrorCard(
-                error: error ?? Exception('Unknown error'),
-                onReload: () async {
-                  ref.invalidate(parameterSetProvider, asReload: true);
-                  ref.invalidate(travelTimeInternalProvider, asReload: true);
-                  ref.invalidate(
-                    earthquakeHistoryConfigProvider,
-                    asReload: true,
-                  );
-                },
-              )
-            : const Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
+        child: Center(child: CircularProgressIndicator.adaptive()),
       ),
     );
   }

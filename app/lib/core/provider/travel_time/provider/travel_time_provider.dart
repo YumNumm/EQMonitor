@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/travel_time/data/travel_time_data_source.dart';
 import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
+import 'package:eqmonitor/core/startup/startup_profiler_provider.dart';
 import 'package:extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,13 +14,21 @@ TravelTimeTables travelTime(Ref ref) =>
 @Riverpod(keepAlive: true)
 Future<TravelTimeTables> travelTimeInternal(Ref ref) async {
   final dataSource = ref.watch(travelTimeDataSourceProvider);
-  return TravelTimeTables(table: await dataSource.loadTables());
+  final stopwatch = Stopwatch()..start();
+  final tables = await dataSource.loadTables();
+  ref
+      .read(startupProfilerProvider)
+      .measure('travel_time_load', stopwatch.elapsedMicroseconds);
+  return tables;
 }
 
 @Riverpod(keepAlive: true)
-TravelTimeDepthMap travelTimeDepthMap(Ref ref) {
-  final state = ref.watch(travelTimeProvider);
-  return state.table.groupListsBy((e) => e.depth);
+TravelTimeDepthMap? travelTimeDepthMap(Ref ref) {
+  final tables = ref.watch(travelTimeInternalProvider).value;
+  if (tables == null) {
+    return null;
+  }
+  return tables.table.groupListsBy((e) => e.depth);
 }
 
 typedef TravelTimeDepthMap = Map<int, List<TravelTimeTable>>;
