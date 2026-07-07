@@ -10,9 +10,7 @@ void main() {
   // cacheFirstRefresh がキャッシュミスの場合はネットワーク fetch にフォールバックする。
 
   test('upsertItems: 同一 id のアイテムは in-place で更新される', () async {
-    final dataSource = _buildDataSource(
-      initial: [_item('id-1', 'original')],
-    );
+    final dataSource = _buildDataSource(initial: [_item('id-1', 'original')]);
     addTearDown(dataSource.dispose);
 
     await dataSource.refresh();
@@ -26,9 +24,7 @@ void main() {
   });
 
   test('upsertItems: 新規 id のアイテムは末尾に追加される', () async {
-    final dataSource = _buildDataSource(
-      initial: [_item('id-1', 'item 1')],
-    );
+    final dataSource = _buildDataSource(initial: [_item('id-1', 'item 1')]);
     addTearDown(dataSource.dispose);
 
     await dataSource.refresh();
@@ -97,10 +93,7 @@ final class _FakeFeedRepository extends FeedRepository {
   final List<FeedItem> initialItems;
 
   @override
-  Future<FeedListResponse> fetch({
-    String? after,
-    api.ApiClient? client,
-  }) async {
+  Future<FeedListResponse> fetch({String? after, api.ApiClient? client}) async {
     if (client != null) {
       throw Exception('cache miss');
     }

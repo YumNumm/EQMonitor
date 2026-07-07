@@ -41,10 +41,7 @@ class _FakeFeedRepository implements FeedRepository {
   _FakeFeedRepository();
 
   @override
-  Future<FeedListResponse> fetch({
-    String? after,
-    api.ApiClient? client,
-  }) async {
+  Future<FeedListResponse> fetch({String? after, api.ApiClient? client}) async {
     if (identical(client, _cacheOnlyClient)) {
       // キャッシュヒット: キャッシュ用クライアントのときはキャッシュデータを返す
       return FeedListResponse(feeds: [_cachedFeed], nextCursor: null);
@@ -62,10 +59,7 @@ class _FakeFeedRepository implements FeedRepository {
 
 class _CacheMissFeedRepository implements FeedRepository {
   @override
-  Future<FeedListResponse> fetch({
-    String? after,
-    api.ApiClient? client,
-  }) async {
+  Future<FeedListResponse> fetch({String? after, api.ApiClient? client}) async {
     if (identical(client, _cacheOnlyClient)) {
       throw DioException(
         requestOptions: RequestOptions(),
@@ -89,9 +83,7 @@ ProviderContainer _container(FeedRepository repository) {
     retry: (retryCount, error) => null,
     overrides: [
       feedRepositoryProvider.overrideWith((ref) async => repository),
-      cacheOnlyApiClientProvider.overrideWith(
-        (ref) async => _cacheOnlyClient,
-      ),
+      cacheOnlyApiClientProvider.overrideWith((ref) async => _cacheOnlyClient),
       apiClientProvider.overrideWith((ref) async => _networkClient),
       dioProvider.overrideWith((ref) async => Dio()),
     ],

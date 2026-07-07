@@ -10,7 +10,8 @@ part 'feed_notifier.g.dart';
 typedef FeedNotifierState = ({List<FeedItem> items, String? nextCursor});
 
 @riverpod
-class FeedNotifier extends _$FeedNotifier with CachedNotifier<FeedNotifierState> {
+class FeedNotifier extends _$FeedNotifier
+    with CachedNotifier<FeedNotifierState> {
   @override
   Future<FeedNotifierState> fetch(api.ApiClient client) async {
     final repository = await ref.read(feedRepositoryProvider.future);
