@@ -97,61 +97,27 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
-    final selectedPreset = useState<_NotificationPreset?>(null);
-    final saveError = useState<String?>(null);
+    final selectedPreset = useState<NotificationPreset?>(null);
+    final hasSaveError = useState(false);
     final isProcessing = useState(false);
 
-    Future<void> createCurrentLocationSlot() async {
-      final notifier = ref.read(notificationSlotsProvider.notifier);
-      await notifier.putCurrentLocation(
-        eewEnabled: true,
-        eewMinIntensity: JmaIntensity.four,
-        earthquakeEnabled: true,
-        earthquakeMinIntensity: JmaIntensity.one,
-      );
-    }
-
-    Future<void> saveRecommendedSettings() async {
-      isProcessing.value = true;
-      saveError.value = null;
-      try {
-        await createCurrentLocationSlot();
-        if (context.mounted) {
-          isProcessing.value = false;
-          ref
-              .read(notificationPresetProvider.notifier)
-              .select(NotificationPreset.recommended);
-          await scope.nextPage();
-        }
-      } on Exception catch (e) {
-        if (context.mounted) {
-          isProcessing.value = false;
-          saveError.value = e.toString();
-        }
-      }
-    }
-
     Future<void> onNext() async {
-      switch (selectedPreset.value) {
-        case .recommended:
-          await saveRecommendedSettings();
-        case .custom:
-          isProcessing.value = true;
-          saveError.value = null;
-          try {
-            await createCurrentLocationSlot();
-          } on Exception catch (e) {
-            if (context.mounted) {
-              isProcessing.value = false;
-              saveError.value = e.toString();
-            }
-            return;
-          }
-          if (!context.mounted) {
-            return;
-          }
+      final preset = selectedPreset.value;
+      if (preset == null) {
+        return;
+      }
+
+      isProcessing.value = true;
+      hasSaveError.value = false;
+      try {
+        await ref.read(notificationPresetApplierProvider).apply(preset);
+        if (!context.mounted) {
+          return;
+        }
+
+        if (preset == NotificationPreset.custom) {
           isProcessing.value = false;
-          ref
+          await ref
               .read(notificationPresetProvider.notifier)
               .select(NotificationPreset.custom);
           await Navigator.of(context).push<void>(
@@ -162,8 +128,15 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
           if (context.mounted) {
             await scope.nextPage();
           }
-        case null:
-          break;
+        } else {
+          isProcessing.value = false;
+          await scope.nextPage();
+        }
+      } on Exception catch (_) {
+        if (context.mounted) {
+          isProcessing.value = false;
+          hasSaveError.value = true;
+        }
       }
     }
 
@@ -201,48 +174,15 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
               ),
             ),
             SizedBox(height: designSystem.spacing.xl),
-            _PresetCard(
-              title: '推奨設定',
-              isSelected: selectedPreset.value == .recommended,
-              onTap: () => selectedPreset.value = .recommended,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _BulletItem(
-                    text: '現在地の緊急地震速報(警報)',
-                    designSystem: designSystem,
-                  ),
-                  _BulletItem(
-                    text: '現在地で予想震度4以上の緊急地震速報(予報)',
-                    designSystem: designSystem,
-                  ),
-                  _BulletItem(
-                    text: '現在地で震度1以上の地震情報',
-                    designSystem: designSystem,
-                  ),
-                ],
-              ),
+            NotificationPresetSelector(
+              selectedPreset: selectedPreset.value,
+              onChanged: (preset) {
+                selectedPreset.value = preset;
+                hasSaveError.value = false;
+              },
+              style: NotificationPresetSelectorStyle.onboarding,
             ),
-            SizedBox(height: designSystem.spacing.md),
-            _PresetCard(
-              title: 'カスタム',
-              isSelected: selectedPreset.value == .custom,
-              onTap: () => selectedPreset.value = .custom,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _BulletItem(
-                    text: '通知する地域や震度を細かく設定できます',
-                    designSystem: designSystem,
-                  ),
-                  _BulletItem(
-                    text: 'Proではさらに通知音や割り込みレベルを設定できます',
-                    designSystem: designSystem,
-                  ),
-                ],
-              ),
-            ),
-            if (saveError.value != null) ...[
+            if (hasSaveError.value) ...[
               SizedBox(height: designSystem.spacing.md),
               Text(
                 '設定の保存に失敗しました。もう一度お試しください。',
@@ -265,112 +205,5 @@ class _OnboardingCustomSettingsWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const NotificationSettingsPage();
-  }
-}
-
-class _PresetCard extends StatelessWidget {
-  const _PresetCard({
-    required this.title,
-    required this.isSelected,
-    required this.onTap,
-    required this.child,
-  });
-
-  final String title;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOutCubic,
-        padding: EdgeInsets.all(designSystem.spacing.md),
-        decoration: BoxDecoration(
-          color: designSystem.colorTheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(designSystem.shape.card),
-          border: Border.all(
-            color: isSelected
-                ? designSystem.colorTheme.primary
-                : designSystem.colorTheme.outlineVariant,
-            width: isSelected ? 2 : 0,
-            strokeAlign: BorderSide.strokeAlignOutside,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  isSelected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                  color: isSelected
-                      ? designSystem.colorTheme.primary
-                      : designSystem.colorTheme.outline,
-                  size: 20,
-                ),
-                SizedBox(width: designSystem.spacing.sm),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: designSystem.typography.titleMedium,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: designSystem.spacing.sm),
-            Padding(
-              padding: EdgeInsets.only(
-                left: designSystem.spacing.lg + designSystem.spacing.xs,
-              ),
-              child: child,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BulletItem extends StatelessWidget {
-  const _BulletItem({
-    required this.text,
-    required this.designSystem,
-  });
-
-  final String text;
-  final DesignSystemThemeExtension designSystem;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: designSystem.spacing.xs),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '・',
-            style: designSystem.typography.bodySmall.copyWith(
-              color: designSystem.colorTheme.onSurfaceVariant,
-            ),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: designSystem.typography.bodySmall.copyWith(
-                color: designSystem.colorTheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
