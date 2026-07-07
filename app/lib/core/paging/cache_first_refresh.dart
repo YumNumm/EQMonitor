@@ -9,8 +9,10 @@ import 'package:paging_view/paging_view.dart';
 /// [upsert] で in-place 更新する。cache-only が失敗 (miss/corrupt) したら
 /// 通常取得にフォールバックし、それも失敗すれば [Failure]。
 ///
-/// 背景更新は [isActive] が false (DataSource 破棄後・再 Refresh 後) ならスキップし、
+/// 背景更新は [isActive] が false (DataSource 破棄後) ならスキップし、
 /// 失敗は [onRevalidateError] に渡して握りつぶさない。
+/// 世代ガードは持たないため、直前の Refresh の背景更新が新しい Refresh 後に
+/// 走り得るが、[upsert] は id 一致の冪等マージのため実害はない。
 Future<LoadResult<String?, V>> cacheFirstRefresh<V>({
   required Future<PageData<String?, V>> Function({required bool cacheOnly})
   fetchPage,
@@ -21,7 +23,10 @@ Future<LoadResult<String?, V>> cacheFirstRefresh<V>({
 }) async {
   try {
     final cached = await fetchPage(cacheOnly: true);
-    isRevalidating?.value = true;
+    // cache 読込中に破棄された場合、破棄済み ValueNotifier への書き込みを避ける。
+    if (isActive()) {
+      isRevalidating?.value = true;
+    }
     unawaited(
       Future.microtask(() async {
         try {

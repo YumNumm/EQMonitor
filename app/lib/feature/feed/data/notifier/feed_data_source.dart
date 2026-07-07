@@ -74,8 +74,10 @@ class FeedDataSource extends DataSource<String?, FeedItem> {
     }
   }
 
-  /// id 一致で in-place 更新、未登録は末尾に追加する。
-  /// Append が古い順に追加するページング構造なので、新規は末尾で視覚的に矛盾しない。
+  /// id 一致で in-place 更新する (背景 revalidate の主目的)。
+  /// 未登録の新規は暫定的に末尾へ追加する。お知らせは新しい順のため本来は先頭寄り
+  /// が正しいが、revalidate 窓 (数秒) に新規公開された場合のみで、次の定期/手動
+  /// リフレッシュで正順に是正される。厳密な先頭挿入は follow-up (Issue #1452)。
   void upsertItems(List<FeedItem> fresh) {
     for (final item in fresh) {
       final currentItems = [...notifier.values];
