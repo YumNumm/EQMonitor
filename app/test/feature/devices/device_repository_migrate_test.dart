@@ -110,6 +110,19 @@ void main() {
       '/v2/device/me/migrate',
     ]);
   });
+
+  test('migrate が 200 でも不正なボディなら Failure を返す (パース失敗は成功扱いしない)',
+      () async {
+    final adapter = _MigrateAdapter(malformedMigrateBody: true);
+    final repository = buildRepository(adapter);
+
+    final result = await repository.migrateFromLegacy(
+      deviceId: 'device-id',
+      oldDeviceId: _oldDeviceId,
+    );
+
+    expect(result, isA<Failure<void, Exception>>());
+  });
 }
 
 final class _MigrateAdapter implements HttpClientAdapter {
@@ -117,6 +130,7 @@ final class _MigrateAdapter implements HttpClientAdapter {
     this.migrateStatus = 200,
     this.getMeStatus = 200,
     this.firstGetMeStatus,
+    this.malformedMigrateBody = false,
   });
 
   /// POST /v2/device/me/migrate が返すステータス。
@@ -127,6 +141,9 @@ final class _MigrateAdapter implements HttpClientAdapter {
 
   /// 最初の GET /v2/device/me のみ返すステータス（未登録→登録フロー用）。
   final int? firstGetMeStatus;
+
+  /// true のとき migrate が 200 で `migrated` キー欠落の不正ボディを返す。
+  final bool malformedMigrateBody;
 
   final paths = <String>[];
   Map<String, Object?>? migrateRequestBody;
@@ -152,17 +169,16 @@ final class _MigrateAdapter implements HttpClientAdapter {
           response: Response(requestOptions: options, statusCode: migrateStatus),
         );
       }
-      return ResponseBody.fromString(
-        jsonEncode({
-          'migrated': {
-            'earthquake_regions': 2,
-            'eew_regions': 1,
-            'notification_settings': true,
-          },
-        }),
-        200,
-        headers: _jsonHeaders,
-      );
+      final body = malformedMigrateBody
+          ? jsonEncode(<String, Object?>{}) // `migrated` キー欠落: パース失敗を誘発
+          : jsonEncode({
+              'migrated': {
+                'earthquake_regions': 2,
+                'eew_regions': 1,
+                'notification_settings': true,
+              },
+            });
+      return ResponseBody.fromString(body, 200, headers: _jsonHeaders);
     }
     if (options.path == '/v2/device/me') {
       _getMeCalls++;
