@@ -51,16 +51,21 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     }
 
     final tokenAsync = ref.watch(notificationTokenStreamProvider);
-    return repo.computeSnapshot(tokenAsync.value);
+    final apnsSupported = ref.watch(notificationTokenApnsSupportedProvider);
+    return repo.computeSnapshot(tokenAsync.value, apnsSupported: apnsSupported);
   }
 
   Future<void> sync() async {
     final repo = ref.read(deviceProvisioningRepositoryProvider);
     final deviceRepo = await ref.read(deviceRepositoryProvider.future);
     final deviceId = await ref.read(deviceIdProvider.future);
+    final apnsSupported = ref.read(notificationTokenApnsSupportedProvider);
     final currentState =
         state.value ??
-        repo.computeSnapshot(ref.read(notificationTokenStreamProvider).value);
+        repo.computeSnapshot(
+          ref.read(notificationTokenStreamProvider).value,
+          apnsSupported: apnsSupported,
+        );
 
     await _retryController.run(() async {
       final results = <PushTokenKind, PushTokenKindState>{};

@@ -37,7 +37,8 @@ class DeviceProvisioningRepository {
       _prefs.getString(SharedPreferencesKey.legacyDeviceId.key);
 
   bool wasMigratedFromLegacy() =>
-      _prefs.getBool(SharedPreferencesKey.deviceMigratedFromLegacy.key) ?? false;
+      _prefs.getBool(SharedPreferencesKey.deviceMigratedFromLegacy.key) ??
+      false;
 
   Future<void> markMigratedFromLegacy() =>
       _prefs.setBool(SharedPreferencesKey.deviceMigratedFromLegacy.key, true);
@@ -45,20 +46,21 @@ class DeviceProvisioningRepository {
   WorkflowRunner buildRunner() => WorkflowRunner(persistence: _persistence);
 
   /// 現在のトークンと保存済みハッシュを比較して同期スナップショットを返す。
-  PushTokenSyncSnapshot computeSnapshot(NotificationToken? token) {
+  PushTokenSyncSnapshot computeSnapshot(
+    NotificationToken? token, {
+    required bool apnsSupported,
+  }) {
     return PushTokenSyncSnapshot(
-      fcm: _computeKindState(
-        PushTokenKind.fcm,
-        token?.fcmToken,
-      ),
-      apnsNotification: _computeKindState(
-        PushTokenKind.apnsNotification,
-        token?.apnsToken,
-      ),
-      apnsPushToStart: _computeKindState(
-        PushTokenKind.apnsPushToStart,
-        token?.apnsPushToStartToken,
-      ),
+      fcm: _computeKindState(PushTokenKind.fcm, token?.fcmToken),
+      apnsNotification: apnsSupported
+          ? _computeKindState(PushTokenKind.apnsNotification, token?.apnsToken)
+          : const NotApplicableTokenState(),
+      apnsPushToStart: apnsSupported
+          ? _computeKindState(
+              PushTokenKind.apnsPushToStart,
+              token?.apnsPushToStartToken,
+            )
+          : const NotApplicableTokenState(),
     );
   }
 
