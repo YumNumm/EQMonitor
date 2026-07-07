@@ -24,10 +24,10 @@ void main() {
         )
         ..httpClientAdapter = adapter;
       final repository = DeviceRepository(
-        api.ApiClient(dio),
-        authRepository,
-        dio,
+        api: api.ApiClient(dio),
+        authRepository: authRepository,
         apnsEnvironment: api.ApnsEnvironment.development,
+        isApplePlatform: true,
       );
 
       final result = await repository.registerDevice(
@@ -54,10 +54,10 @@ void main() {
         )
         ..httpClientAdapter = adapter;
       final repository = DeviceRepository(
-        api.ApiClient(dio),
-        authRepository,
-        dio,
+        api: api.ApiClient(dio),
+        authRepository: authRepository,
         apnsEnvironment: api.ApnsEnvironment.development,
+        isApplePlatform: true,
       );
 
       final first = await repository.registerDevice(
@@ -95,10 +95,10 @@ void main() {
         )
         ..httpClientAdapter = adapter;
       final repository = DeviceRepository(
-        api.ApiClient(dio),
-        authRepository,
-        dio,
+        api: api.ApiClient(dio),
+        authRepository: authRepository,
         apnsEnvironment: api.ApnsEnvironment.development,
+        isApplePlatform: true,
       );
 
       final result = await repository.registerDevice(
@@ -130,10 +130,10 @@ void main() {
         )
         ..httpClientAdapter = adapter;
       final repository = DeviceRepository(
-        api.ApiClient(dio),
-        authRepository,
-        dio,
+        api: api.ApiClient(dio),
+        authRepository: authRepository,
         apnsEnvironment: api.ApnsEnvironment.development,
+        isApplePlatform: true,
       );
 
       final result = await repository.fetchOrRegister(
@@ -162,10 +162,10 @@ void main() {
       final authRepository = _MemoryDeviceAuthRepository()
         ..savedToken = 'jwt-1';
       final repository = DeviceRepository(
-        api.ApiClient(dio),
-        authRepository,
-        dio,
+        api: api.ApiClient(dio),
+        authRepository: authRepository,
         apnsEnvironment: api.ApnsEnvironment.development,
+        isApplePlatform: true,
       );
 
       final result = await repository.deleteDevice('local-device-id');

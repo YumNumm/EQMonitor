@@ -82,6 +82,9 @@ class _WelcomeStepPage extends HookConsumerWidget {
     }, [deviceProvisioningStatus, deviceProvisioningMutation]);
 
     useEffect(() {
+      if (!navigation.isActive) {
+        return null;
+      }
       if (deviceProvisioningStatus.isLoading &&
           deviceProvisioningMutation is MutationIdle) {
         return null;
@@ -95,7 +98,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
         ),
       );
       return null;
-    }, [navigation, isProvisioned, isProcessing]);
+    }, [navigation, navigation.isActive, isProvisioned, isProcessing]);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),

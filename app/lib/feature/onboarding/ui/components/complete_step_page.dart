@@ -22,6 +22,9 @@ class _CompleteStepPage extends HookConsumerWidget {
     }
 
     useEffect(() {
+      if (!navigation.isActive) {
+        return null;
+      }
       navigation.register(
         _StepNavigationState(
           buttonLabel: 'はじめる',
@@ -31,7 +34,7 @@ class _CompleteStepPage extends HookConsumerWidget {
         ),
       );
       return null;
-    }, [navigation, isProcessing]);
+    }, [navigation, navigation.isActive, isProcessing]);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
