@@ -1,6 +1,8 @@
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/provider/cached_notifier.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/repository/feed_repository.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_notifier.g.dart';
@@ -8,13 +10,16 @@ part 'feed_notifier.g.dart';
 typedef FeedNotifierState = ({List<FeedItem> items, String? nextCursor});
 
 @riverpod
-class FeedNotifier extends _$FeedNotifier {
+class FeedNotifier extends _$FeedNotifier with CachedNotifier<FeedNotifierState> {
   @override
-  Future<FeedNotifierState> build() async {
+  Future<FeedNotifierState> fetch(api.ApiClient client) async {
     final repository = await ref.read(feedRepositoryProvider.future);
-    final response = await repository.fetch();
+    final response = await repository.fetch(client: client);
     return (items: response.feeds, nextCursor: response.nextCursor);
   }
+
+  @override
+  Future<FeedNotifierState> build() => cachedBuild();
 
   Future<void> fetchNextData() async {
     if (state.isRefreshing || state.isReloading) {
