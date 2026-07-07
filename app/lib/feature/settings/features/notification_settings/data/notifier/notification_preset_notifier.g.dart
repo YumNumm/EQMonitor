@@ -37,7 +37,7 @@ final class NotificationPresetNotifierProvider
 }
 
 String _$notificationPresetNotifierHash() =>
-    r'68aca95c0ad12e29e0dd47eed0e8cd18777481b3';
+    r'0a975d92f5c8bf5629e1140cf813081ad4bed805';
 
 abstract class _$NotificationPresetNotifier
     extends $AsyncNotifier<NotificationPreset> {

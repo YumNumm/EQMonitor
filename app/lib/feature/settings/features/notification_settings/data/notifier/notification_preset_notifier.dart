@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_preset_notifier.g.dart';
 
-enum NotificationPreset { recommended, custom }
+enum NotificationPreset { recommended, all, custom, none }
 
 @Riverpod(keepAlive: true)
 class NotificationPresetNotifier extends _$NotificationPresetNotifier {
@@ -16,9 +16,12 @@ class NotificationPresetNotifier extends _$NotificationPresetNotifier {
     final stored = await dataSource.getString(
       key: SharedPreferencesKey.notificationPreset,
     );
-    return stored == NotificationPreset.custom.name
-        ? NotificationPreset.custom
-        : NotificationPreset.recommended;
+    return switch (stored) {
+      'custom' => NotificationPreset.custom,
+      'all' => NotificationPreset.all,
+      'none' => NotificationPreset.none,
+      _ => NotificationPreset.recommended,
+    };
   }
 
   Future<void> select(NotificationPreset preset) async {

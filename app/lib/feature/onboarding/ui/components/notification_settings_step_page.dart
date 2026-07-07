@@ -97,7 +97,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
-    final selectedPreset = useState<_NotificationPreset?>(null);
+    final selectedPreset = useState<NotificationPreset?>(null);
     final saveError = useState<String?>(null);
     final isProcessing = useState(false);
 
@@ -162,6 +162,9 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
           if (context.mounted) {
             await scope.nextPage();
           }
+        case .all:
+        case .none:
+          break;
         case null:
           break;
       }
