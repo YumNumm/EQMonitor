@@ -50,6 +50,8 @@ void main() {
                 displayMode: IntensityDisplayMode.jma,
                 onDisplayModeChanged: (_) {},
                 availableModes: const [IntensityDisplayMode.jma],
+                source: EarthquakeDataSource.jmaDisasterInformationXml,
+                showDatabaseBadge: false,
               ),
             ),
           ),

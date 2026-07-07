@@ -40,11 +40,14 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   const EarthquakeHistoryDetailsMapView({
     required this.earthquake,
     required this.displayMode,
+    required this.showingDb,
     super.key,
   });
 
   final Earthquake earthquake;
   final IntensityDisplayMode displayMode;
+  // ignore: unused_field
+  final bool showingDb;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,9 +63,7 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
           ),
         ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
-      _ => const Center(
-        child: CircularProgressIndicator.adaptive(),
-      ),
+      _ => const Center(child: CircularProgressIndicator.adaptive()),
     };
   }
 }
@@ -201,9 +202,7 @@ class _MapContent extends HookConsumerWidget {
               },
               onDebugTap: isDebugger
                   ? () async {
-                      await EarthquakeHistoryDebugModal.show(
-                        context: context,
-                      );
+                      await EarthquakeHistoryDebugModal.show(context: context);
                     }
                   : null,
             ),
@@ -430,9 +429,7 @@ class _MapControllerCard extends StatelessWidget {
       color: colorTheme.surfaceContainerHighest,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.circular(12)),
       child: IntrinsicWidth(
         child: Column(
           mainAxisSize: MainAxisSize.min,
