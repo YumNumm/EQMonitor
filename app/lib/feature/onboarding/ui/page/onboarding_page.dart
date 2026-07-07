@@ -170,7 +170,7 @@ class _StepNavigationState {
           _OnboardingStep.welcome => false,
           _OnboardingStep.permissions => false,
           _OnboardingStep.notificationSettings => false,
-          _ => true,
+          _OnboardingStep.complete => false,
         },
         isProcessing: false,
         onNext: null,
