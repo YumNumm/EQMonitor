@@ -132,12 +132,12 @@ class _MapContent extends HookConsumerWidget {
           .select(null);
     });
 
-    final dbTreeAsync = showingDb
+    final ShindoDbIntensityTree? dbTree = switch (showingDb
         ? ref.watch(shindoDbIntensityTreeProvider(earthquake.eventId))
-        : null;
-    final dbTree = dbTreeAsync is AsyncData<ShindoDbIntensityTree?>
-        ? (dbTreeAsync as AsyncData<ShindoDbIntensityTree?>).value
-        : null;
+        : null) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
 
     final tileUrl = earthquake.estimatedIntensityTileUrl;
     final showingLpgmIntensity = displayMode == IntensityDisplayMode.lpgm;
