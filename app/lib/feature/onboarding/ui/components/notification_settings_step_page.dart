@@ -1,52 +1,49 @@
 part of '../page/onboarding_page.dart';
 
 class _NotificationSettingsStepPage extends HookConsumerWidget {
-  const _NotificationSettingsStepPage();
+  const _NotificationSettingsStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMigrated =
         ref.watch(deviceMigratedFromLegacyProvider).value ?? false;
     if (isMigrated) {
-      return const _MigratedNotificationSettingsStepPage();
+      return _MigratedNotificationSettingsStepPage(navigation: navigation);
     }
-    return const _NewUserNotificationSettingsStepPage();
+    return _NewUserNotificationSettingsStepPage(navigation: navigation);
   }
 }
 
 class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
-  const _MigratedNotificationSettingsStepPage();
+  const _MigratedNotificationSettingsStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
 
     useEffect(() {
-      scope.setStepNavigation(
-        step: _OnboardingStep.notificationSettings,
-        state: _StepNavigationState(
+      navigation.register(
+        _StepNavigationState(
           buttonLabel: '次へ',
           isNextEnabled: true,
           isProcessing: false,
-          onNext: scope.nextPage,
+          onNext: navigation.nextPage,
         ),
       );
       return null;
-    }, [scope]);
+    }, [navigation]);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: designSystem.spacing.lg,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
-          Text(
-            '通知設定',
-            style: designSystem.typography.displayMedium,
-          ),
+          Text('通知設定', style: designSystem.typography.displayMedium),
           SizedBox(height: designSystem.spacing.sm),
           Text(
             '前バージョンの通知設定を引き継ぎました',
@@ -61,7 +58,9 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
               color: designSystem.colorTheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(designSystem.shape.card),
               border: Border.all(
-                color: designSystem.colorTheme.status.success.withValues(alpha: 0.3),
+                color: designSystem.colorTheme.status.success.withValues(
+                  alpha: 0.3,
+                ),
               ),
             ),
             child: Row(
@@ -91,11 +90,12 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
 }
 
 class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
-  const _NewUserNotificationSettingsStepPage();
+  const _NewUserNotificationSettingsStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
     final selectedPreset = useState<_NotificationPreset?>(null);
     final saveError = useState<String?>(null);
@@ -121,7 +121,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
           ref
               .read(notificationPresetProvider.notifier)
               .select(NotificationPreset.recommended);
-          await scope.nextPage();
+          await navigation.nextPage();
         }
       } on Exception catch (e) {
         if (context.mounted) {
@@ -160,7 +160,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
             ),
           );
           if (context.mounted) {
-            await scope.nextPage();
+            await navigation.nextPage();
           }
         case null:
           break;
@@ -168,9 +168,8 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
     }
 
     useEffect(() {
-      scope.setStepNavigation(
-        step: _OnboardingStep.notificationSettings,
-        state: _StepNavigationState(
+      navigation.register(
+        _StepNavigationState(
           buttonLabel: '次へ',
           isNextEnabled: selectedPreset.value != null,
           isProcessing: isProcessing.value,
@@ -178,21 +177,16 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
         ),
       );
       return null;
-    }, [scope, selectedPreset.value, isProcessing.value]);
+    }, [navigation, selectedPreset.value, isProcessing.value]);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: designSystem.spacing.lg,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: designSystem.spacing.xxxxl),
-            Text(
-              '通知設定',
-              style: designSystem.typography.displayMedium,
-            ),
+            Text('通知設定', style: designSystem.typography.displayMedium),
             SizedBox(height: designSystem.spacing.sm),
             Text(
               '細かい設定は後からでも変更できます',
@@ -208,18 +202,9 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _BulletItem(
-                    text: '現在地の緊急地震速報(警報)',
-                    designSystem: designSystem,
-                  ),
-                  _BulletItem(
-                    text: '現在地で予想震度4以上の緊急地震速報(予報)',
-                    designSystem: designSystem,
-                  ),
-                  _BulletItem(
-                    text: '現在地で震度1以上の地震情報',
-                    designSystem: designSystem,
-                  ),
+                  _BulletItem(text: '現在地の緊急地震速報(警報)'),
+                  _BulletItem(text: '現在地で予想震度4以上の緊急地震速報(予報)'),
+                  _BulletItem(text: '現在地で震度1以上の地震情報'),
                 ],
               ),
             ),
@@ -231,14 +216,8 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _BulletItem(
-                    text: '通知する地域や震度を細かく設定できます',
-                    designSystem: designSystem,
-                  ),
-                  _BulletItem(
-                    text: 'Proではさらに通知音や割り込みレベルを設定できます',
-                    designSystem: designSystem,
-                  ),
+                  _BulletItem(text: '通知する地域や震度を細かく設定できます'),
+                  _BulletItem(text: 'Proではさらに通知音や割り込みレベルを設定できます'),
                 ],
               ),
             ),
@@ -340,16 +319,14 @@ class _PresetCard extends StatelessWidget {
 }
 
 class _BulletItem extends StatelessWidget {
-  const _BulletItem({
-    required this.text,
-    required this.designSystem,
-  });
+  const _BulletItem({required this.text});
 
   final String text;
-  final DesignSystemThemeExtension designSystem;
 
   @override
   Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+
     return Padding(
       padding: EdgeInsets.only(bottom: designSystem.spacing.xs),
       child: Row(

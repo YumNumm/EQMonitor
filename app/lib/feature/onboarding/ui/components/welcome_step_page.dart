@@ -1,11 +1,12 @@
 part of '../page/onboarding_page.dart';
 
 class _WelcomeStepPage extends HookConsumerWidget {
-  const _WelcomeStepPage();
+  const _WelcomeStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
     final deviceProvisioningStatus = ref.watch(deviceProvisioningProvider);
     final deviceProvisioningMutation = ref.watch(
@@ -67,37 +68,34 @@ class _WelcomeStepPage extends HookConsumerWidget {
       }
     });
 
-    useEffect(
-      () {
-        if (deviceProvisioningStatus.value == .required &&
-            deviceProvisioningMutation is MutationIdle) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!context.mounted) {
-              return;
-            }
-            unawaited(startProvisioning());
-          });
-        }
-        return null;
-      },
-      [
-        deviceProvisioningStatus,
-        deviceProvisioningMutation,
-      ],
-    );
+    useEffect(() {
+      if (deviceProvisioningStatus.value == .required &&
+          deviceProvisioningMutation is MutationIdle) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!context.mounted) {
+            return;
+          }
+          unawaited(startProvisioning());
+        });
+      }
+      return null;
+    }, [deviceProvisioningStatus, deviceProvisioningMutation]);
 
     useEffect(() {
-      scope.setStepNavigation(
-        step: _OnboardingStep.welcome,
-        state: _StepNavigationState(
+      if (deviceProvisioningStatus.isLoading &&
+          deviceProvisioningMutation is MutationIdle) {
+        return null;
+      }
+      navigation.register(
+        _StepNavigationState(
           buttonLabel: '次へ',
           isNextEnabled: isProvisioned,
           isProcessing: isProcessing,
-          onNext: scope.nextPage,
+          onNext: navigation.nextPage,
         ),
       );
       return null;
-    }, [scope, isProvisioned, isProcessing]);
+    }, [navigation, isProvisioned, isProcessing]);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),

@@ -11,6 +11,7 @@ part of 'router.dart';
 List<RouteBase> get $appRoutes => [
   $splashRoute,
   $onboardingRoute,
+  $onboardingWebViewRoute,
   $betaTestingWarningRoute,
   $earthquakeHistoryRoute,
   $eewHistoryRoute,
@@ -64,6 +65,40 @@ mixin $OnboardingRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/onboarding');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $onboardingWebViewRoute => GoRouteData.$route(
+  path: '/onboarding/web-view',
+  factory: $OnboardingWebViewRoute._fromState,
+);
+
+mixin $OnboardingWebViewRoute on GoRouteData {
+  static OnboardingWebViewRoute _fromState(GoRouterState state) =>
+      OnboardingWebViewRoute(
+        title: state.uri.queryParameters['title']!,
+        url: state.uri.queryParameters['url']!,
+      );
+
+  OnboardingWebViewRoute get _self => this as OnboardingWebViewRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/onboarding/web-view',
+    queryParams: {'title': _self.title, 'url': _self.url},
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1917,4 +1952,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'3298d365498415da310d82dbf835f6bbe8618840';
+String _$goRouterHash() => r'7cc48d7ff9ab9df8722f4156f0d2c1c42260e640';
