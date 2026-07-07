@@ -36,9 +36,7 @@ class HomePage extends HookConsumerWidget {
       body: const Stack(
         children: [
           HomeMapView(),
-          BasicModalSheet(
-            child: _SheetBody(),
-          ),
+          BasicModalSheet(child: _SheetBody()),
         ],
       ),
     );
@@ -99,9 +97,7 @@ class _SheetBody extends ConsumerWidget {
     );
     final permission = ref.watch(backgroundLocationPermissionProvider).value;
     final showPermissionBanner =
-        hasCurrentLocationRegion &&
-        permission != null &&
-        permission != LocationPermission.always;
+        hasCurrentLocationRegion && permission != null && permission != .always;
 
     final eewCards = Column(
       children: state.reversed
@@ -121,15 +117,13 @@ class _SheetBody extends ConsumerWidget {
       margin: EdgeInsets.zero,
       elevation: 0,
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Theme(
-        data: Theme.of(context).copyWith(
-          visualDensity: .compact,
-        ),
+        data: Theme.of(context).copyWith(visualDensity: .compact),
         child: Column(
           children: [
             ListTile(
@@ -139,14 +133,9 @@ class _SheetBody extends ConsumerWidget {
                   children: [
                     TextSpan(
                       text: '都道府県別 ',
-                      style: typography.bodySmall.copyWith(
-                        fontWeight: .bold,
-                      ),
+                      style: typography.bodySmall.copyWith(fontWeight: .bold),
                     ),
-                    TextSpan(
-                      text: '最大震度',
-                      style: typography.titleSmall,
-                    ),
+                    TextSpan(text: '最大震度', style: typography.titleSmall),
                   ],
                 ),
               ),
@@ -219,10 +208,7 @@ class _SheetBody extends ConsumerWidget {
                 ],
               ),
             ),
-            if (state.isEmpty)
-              SizedBox(
-                height: spacing.sm,
-              ),
+            if (state.isEmpty) SizedBox(height: spacing.sm),
           ],
         ),
       ),
@@ -230,30 +216,39 @@ class _SheetBody extends ConsumerWidget {
   }
 }
 
-class _BackgroundLocationPermissionBanner extends StatelessWidget {
+class _BackgroundLocationPermissionBanner extends ConsumerWidget {
   const _BackgroundLocationPermissionBanner({required this.bottomSpacing});
 
   final double bottomSpacing;
 
   @override
-  Widget build(BuildContext context) {
-    final colorTheme = context.designSystem.colorTheme;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final designSystem = context.designSystem;
+    final colorTheme = designSystem.colorTheme;
+
     return Padding(
       padding: EdgeInsets.only(bottom: bottomSpacing),
       child: Material(
-        color: colorTheme.errorContainer,
-        borderRadius: BorderRadius.circular(12),
+        color: colorTheme.primaryContainer,
+        borderRadius: RoundedSuperellipseBorder(
+          borderRadius: BorderRadius.circular(designSystem.shape.card),
+        ).borderRadius,
+        clipBehavior: .antiAlias,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () async => Geolocator.openAppSettings(),
+          onTap: () async {
+            final result = await Geolocator.requestPermission();
+            if (result == .deniedForever) {
+              Geolocator.openLocationSettings();
+            }
+          },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
                 Icon(
-                  Icons.location_off_outlined,
-                  color: colorTheme.onErrorContainer,
-                  size: 20,
+                  Icons.info_rounded,
+                  color: colorTheme.onPrimaryContainer,
+                  size: 24,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -263,22 +258,17 @@ class _BackgroundLocationPermissionBanner extends StatelessWidget {
                       Text(
                         '位置情報の「常に許可」が必要です',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: colorTheme.onErrorContainer,
+                          color: colorTheme.onPrimaryContainer,
                         ),
                       ),
                       Text(
                         'バックグラウンド位置更新が無効のため、通知は過去の位置情報を使用しています',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorTheme.onErrorContainer,
+                          color: colorTheme.onPrimaryContainer,
                         ),
                       ),
                     ],
                   ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: colorTheme.onErrorContainer,
-                  size: 14,
                 ),
               ],
             ),
