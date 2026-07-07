@@ -175,8 +175,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
             ),
             SizedBox(height: designSystem.spacing.xl),
             NotificationPresetSelector(
-              selectedPreset:
-                  selectedPreset.value ?? NotificationPreset.recommended,
+              selectedPreset: selectedPreset.value,
               onChanged: (preset) {
                 selectedPreset.value = preset;
                 hasSaveError.value = false;

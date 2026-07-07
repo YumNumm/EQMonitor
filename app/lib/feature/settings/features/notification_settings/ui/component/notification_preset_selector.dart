@@ -19,7 +19,7 @@ class NotificationPresetSelector extends HookConsumerWidget {
     super.key,
   });
 
-  final NotificationPreset selectedPreset;
+  final NotificationPreset? selectedPreset;
   final ValueChanged<NotificationPreset> onChanged;
   final NotificationPresetSelectorStyle style;
   final VoidCallback? onCustomSettingsTap;
@@ -118,7 +118,7 @@ class _OnboardingPresetList extends StatelessWidget {
   });
 
   final List<NotificationPreset> presets;
-  final NotificationPreset selectedPreset;
+  final NotificationPreset? selectedPreset;
   final bool Function(NotificationPreset preset) isPresetEnabled;
   final bool Function(NotificationPreset preset) shouldShowCriticalWarning;
   final ValueChanged<NotificationPreset> onPresetTap;
@@ -337,7 +337,7 @@ class _SettingsPresetGroup extends StatelessWidget {
   });
 
   final List<NotificationPreset> presets;
-  final NotificationPreset selectedPreset;
+  final NotificationPreset? selectedPreset;
   final bool Function(NotificationPreset preset) isPresetEnabled;
   final bool Function(NotificationPreset preset) shouldShowCriticalWarning;
   final ValueChanged<NotificationPreset> onPresetTap;
