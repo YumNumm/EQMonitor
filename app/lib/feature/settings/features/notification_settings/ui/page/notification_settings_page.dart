@@ -16,10 +16,12 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_applier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_forecast_settings_page.dart';
@@ -100,10 +102,17 @@ class _Body extends HookConsumerWidget {
         ),
         if (notificationsEnabled) ...[
           const SettingsSectionHeader(text: '通知プリセット'),
-          _PresetOptionGroup(
+          NotificationPresetSelector(
             selectedPreset: selectedPreset,
-            onChanged: (preset) =>
-                ref.read(notificationPresetProvider.notifier).select(preset),
+            onChanged: (preset) async {
+              await ref.read(notificationPresetApplierProvider).apply(preset);
+              if (preset == NotificationPreset.custom) {
+                await ref
+                    .read(notificationPresetProvider.notifier)
+                    .select(NotificationPreset.custom);
+              }
+            },
+            style: NotificationPresetSelectorStyle.settings,
             onCustomSettingsTap: () async {
               if (selectedPreset != NotificationPreset.custom) {
                 return;
@@ -183,134 +192,6 @@ class _MasterNotificationControl extends StatelessWidget {
   }
 }
 
-class _PresetOptionGroup extends StatelessWidget {
-  const _PresetOptionGroup({
-    required this.selectedPreset,
-    required this.onChanged,
-    required this.onCustomSettingsTap,
-  });
-
-  final NotificationPreset selectedPreset;
-  final ValueChanged<NotificationPreset> onChanged;
-  final VoidCallback onCustomSettingsTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-    final shape = designSystem.shape;
-
-    return Card.outlined(
-      margin: EdgeInsets.fromLTRB(
-        spacing.lg,
-        spacing.sm,
-        spacing.lg,
-        spacing.md,
-      ),
-      color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
-      elevation: 0,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: colorTheme.outlineVariant),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _PresetOptionTile(
-            title: '推奨設定',
-            subtitle: '現在地の震度に応じて、EEWと地震情報を自動で通知します',
-            isSelected: selectedPreset == NotificationPreset.recommended,
-            onTap: () => onChanged(NotificationPreset.recommended),
-          ),
-          const Divider(height: 1),
-          _PresetOptionTile(
-            title: 'カスタム',
-            subtitle: '通知の種類ごとに条件を細かく設定します',
-            isSelected: selectedPreset == NotificationPreset.custom,
-            onTap: () {
-              if (selectedPreset == NotificationPreset.custom) {
-                onCustomSettingsTap();
-              } else {
-                onChanged(NotificationPreset.custom);
-              }
-            },
-            trailing: _CustomPresetTrailing(
-              enabled: selectedPreset == NotificationPreset.custom,
-              onTap: onCustomSettingsTap,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PresetOptionTile extends StatelessWidget {
-  const _PresetOptionTile({
-    required this.title,
-    required this.subtitle,
-    required this.isSelected,
-    required this.onTap,
-    this.trailing,
-  });
-
-  final String title;
-  final String subtitle;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final spacing = designSystem.spacing;
-    final colorTheme = designSystem.colorTheme;
-
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: spacing.lg,
-          vertical: spacing.md,
-        ),
-        child: Row(
-          children: [
-            _PresetSelectionMark(isSelected: isSelected),
-            SizedBox(width: spacing.sm),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: designSystem.typography.titleMedium.copyWith(
-                      color: colorTheme.onSurface,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: spacing.xs),
-                  Text(
-                    subtitle,
-                    style: designSystem.typography.bodySmall.copyWith(
-                      color: colorTheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (trailing != null) ...[
-              SizedBox(width: spacing.sm),
-              trailing!,
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _PresetSelectionMark extends StatelessWidget {
   const _PresetSelectionMark({required this.isSelected});
 
@@ -331,43 +212,6 @@ class _PresetSelectionMark extends StatelessWidget {
           width: isSelected ? 6 : 3,
         ),
       ),
-    );
-  }
-}
-
-class _CustomPresetTrailing extends StatelessWidget {
-  const _CustomPresetTrailing({
-    required this.enabled,
-    required this.onTap,
-  });
-
-  final bool enabled;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          Icons.chevron_right,
-          color: enabled ? null : Theme.of(context).disabledColor,
-        ),
-        SizedBox(
-          height: 40,
-          child: VerticalDivider(
-            color: designSystem.colorTheme.outlineVariant,
-            thickness: 1,
-          ),
-        ),
-        IconButton(
-          tooltip: 'カスタム設定',
-          onPressed: enabled ? onTap : null,
-          icon: const Icon(Icons.settings_outlined),
-        ),
-      ],
     );
   }
 }
