@@ -1,12 +1,11 @@
-import 'package:eqmonitor/feature/onboarding/ui/model/onboarding_permission_flow_state.dart';
+import 'package:eqmonitor/feature/permission/data/model/permission_item_decision.dart';
+import 'package:eqmonitor/feature/permission/data/model/permission_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('OnboardingPermissionFlowState', () {
+  group('PermissionState', () {
     test('initial state cannot continue', () {
-      const state = OnboardingPermissionFlowState(
-        isCriticalAlertSupported: true,
-      );
+      const state = PermissionState(isCriticalAlertSupported: true);
 
       expect(state.canContinue, isFalse);
       expect(state.canRequestCriticalAlert, isFalse);
@@ -14,27 +13,26 @@ void main() {
     });
 
     test('skipping notification also skips critical alert', () {
-      final state = const OnboardingPermissionFlowState(
+      final state = const PermissionState(
         isCriticalAlertSupported: true,
       ).skipNotification();
 
-      expect(state.notification, OnboardingPermissionDecision.skipped);
-      expect(state.criticalAlert, OnboardingPermissionDecision.skipped);
+      expect(state.notification, PermissionItemDecision.skipped);
+      expect(state.criticalAlert, PermissionItemDecision.skipped);
     });
 
     test('unsupported critical alert is not required to continue', () {
-      final state = const OnboardingPermissionFlowState(
-        isCriticalAlertSupported: false,
-      ).grantNotification().grantForegroundLocation().grantBackgroundLocation();
+      final state = const PermissionState(isCriticalAlertSupported: false)
+          .grantNotification()
+          .grantForegroundLocation()
+          .grantBackgroundLocation();
 
       expect(state.isCriticalAlertVisible, isFalse);
       expect(state.canContinue, isTrue);
     });
 
     test('foreground location grants access to background request', () {
-      final initial = const OnboardingPermissionFlowState(
-        isCriticalAlertSupported: false,
-      );
+      final initial = const PermissionState(isCriticalAlertSupported: false);
       final granted = initial.grantForegroundLocation();
 
       expect(initial.canRequestBackgroundLocation, isFalse);
@@ -42,18 +40,19 @@ void main() {
     });
 
     test('skipping foreground location also skips background location', () {
-      final state = const OnboardingPermissionFlowState(
+      final state = const PermissionState(
         isCriticalAlertSupported: false,
       ).skipForegroundLocation();
 
-      expect(state.foregroundLocation, OnboardingPermissionDecision.skipped);
-      expect(state.backgroundLocation, OnboardingPermissionDecision.skipped);
+      expect(state.foregroundLocation, PermissionItemDecision.skipped);
+      expect(state.backgroundLocation, PermissionItemDecision.skipped);
     });
 
     test('all visible items must be complete to continue', () {
-      final incomplete = const OnboardingPermissionFlowState(
-        isCriticalAlertSupported: true,
-      ).grantNotification().grantCriticalAlert().grantForegroundLocation();
+      final incomplete = const PermissionState(isCriticalAlertSupported: true)
+          .grantNotification()
+          .grantCriticalAlert()
+          .grantForegroundLocation();
       final complete = incomplete.skipBackgroundLocation();
 
       expect(incomplete.canContinue, isFalse);

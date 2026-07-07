@@ -178,10 +178,10 @@ class FakeDeviceRepository extends DeviceRepository {
        _putResult = putResult,
        _migrateResult = migrateResult,
        super(
-         api.ApiClient(Dio()),
-         _MemoryDeviceAuthRepository(),
-         Dio(),
+         api: api.ApiClient(Dio()),
+         authRepository: _MemoryDeviceAuthRepository(),
          apnsEnvironment: api.ApnsEnvironment.development,
+         isApplePlatform: true,
        );
 
   final Result<RegisteredDevice, Exception> Function() _getResult;

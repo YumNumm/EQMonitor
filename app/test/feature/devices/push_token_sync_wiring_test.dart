@@ -60,10 +60,10 @@ void main() {
 final class _RecordingDeviceRepository extends DeviceRepository {
   _RecordingDeviceRepository()
     : super(
-        api.ApiClient(Dio()),
-        _MemoryDeviceAuthRepository(),
-        Dio(),
+        api: api.ApiClient(Dio()),
+        authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.development,
+        isApplePlatform: true,
       );
 
   final synced = Completer<void>();

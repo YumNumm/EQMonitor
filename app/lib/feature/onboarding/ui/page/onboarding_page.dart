@@ -10,12 +10,12 @@ import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exc
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_applier.dart';
-import 'package:eqmonitor/feature/onboarding/data/repository/onboarding_permission_repository.dart';
-import 'package:eqmonitor/feature/onboarding/ui/model/onboarding_permission_flow_state.dart';
+import 'package:eqmonitor/feature/permission/data/flow/onboarding_permission_flow.dart';
+import 'package:eqmonitor/feature/permission/data/model/permission_item_decision.dart';
+import 'package:eqmonitor/feature/permission/data/notifier/permission_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -29,7 +29,6 @@ part '../components/onboarding_hero.dart';
 part '../components/onboarding_step_page.dart';
 part '../components/permissions_step_page.dart';
 part '../components/welcome_step_page.dart';
-part '../model/onboarding_permission_status.dart';
 part '../model/onboarding_step.dart';
 
 typedef _OnboardingNavigationRegistrar =
@@ -37,11 +36,13 @@ typedef _OnboardingNavigationRegistrar =
 
 class _OnboardingStepNavigation {
   const _OnboardingStepNavigation({
+    required this.isActive,
     required this.nextPage,
     required this.previousPage,
     required this.register,
   });
 
+  final bool isActive;
   final Future<void> Function() nextPage;
   final Future<void> Function() previousPage;
   final _OnboardingNavigationRegistrar register;
@@ -72,27 +73,27 @@ class OnboardingPage extends HookConsumerWidget {
       );
     }, [pageController]);
 
-    final stepControls = useMemoized(
-      () => Map.fromEntries(
-        _steps.map(
-          (step) => MapEntry(
-            step,
-            _OnboardingStepNavigation(
-              nextPage: animateToNext,
-              previousPage: goToPrevious,
-              register: (state) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (!context.mounted || step != _steps[currentPage.value]) {
-                    return;
-                  }
-                  stepNavigation.value = state;
-                });
-              },
-            ),
+    final currentStep = _steps[currentPage.value];
+
+    final stepControls = Map.fromEntries(
+      _steps.map(
+        (step) => MapEntry(
+          step,
+          _OnboardingStepNavigation(
+            isActive: currentStep == step,
+            nextPage: animateToNext,
+            previousPage: goToPrevious,
+            register: (state) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (!context.mounted || step != _steps[currentPage.value]) {
+                  return;
+                }
+                stepNavigation.value = state;
+              });
+            },
           ),
         ),
       ),
-      [animateToNext, goToPrevious, currentPage, stepNavigation],
     );
 
     void onPageChanged(int index) {
@@ -100,7 +101,6 @@ class OnboardingPage extends HookConsumerWidget {
       stepNavigation.value = _StepNavigationState.initial(_steps[index]);
     }
 
-    final currentStep = _steps[currentPage.value];
     final navigation = stepNavigation.value;
 
     final showBack =
