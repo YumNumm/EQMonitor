@@ -263,7 +263,9 @@ class _DetailsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final others = catalog.hypocenters.where((h) => h != primary).toList();
+    final others = catalog.hypocenters
+        .where((h) => h.seq != primary.seq)
+        .toList();
 
     return ExpansionTile(
       title: Text(
