@@ -14,6 +14,7 @@ import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detect
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_feed_sheet.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
+import 'package:eqmonitor/feature/location/data/notifier/location_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
@@ -96,8 +97,13 @@ class _SheetBody extends ConsumerWidget {
       ),
     );
     final permission = ref.watch(backgroundLocationPermissionProvider).value;
+    final isPermissionBannerDismissed =
+        ref.watch(locationPermissionBannerDismissedProvider).value ?? false;
     final showPermissionBanner =
-        hasCurrentLocationRegion && permission != null && permission != .always;
+        hasCurrentLocationRegion &&
+        permission != null &&
+        permission != .always &&
+        !isPermissionBannerDismissed;
 
     final eewCards = Column(
       children: state.reversed
@@ -185,7 +191,7 @@ class _SheetBody extends ConsumerWidget {
                   WhatsNewBanner(bottomSpacing: spacing.md),
                   DeviceProvisioningBanner(bottomSpacing: spacing.md),
                   if (showPermissionBanner) ...[
-                    _BackgroundLocationPermissionBanner(
+                    _LocationPermissionBanner(
                       bottomSpacing: spacing.md,
                     ),
                   ],
@@ -216,8 +222,8 @@ class _SheetBody extends ConsumerWidget {
   }
 }
 
-class _BackgroundLocationPermissionBanner extends ConsumerWidget {
-  const _BackgroundLocationPermissionBanner({required this.bottomSpacing});
+class _LocationPermissionBanner extends ConsumerWidget {
+  const _LocationPermissionBanner({required this.bottomSpacing});
 
   final double bottomSpacing;
 
@@ -225,6 +231,21 @@ class _BackgroundLocationPermissionBanner extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
+    final spacing = designSystem.spacing;
+
+    final permission = ref.watch(backgroundLocationPermissionProvider).value;
+
+    final message = switch (permission) {
+      .denied || .deniedForever => (
+        '位置情報権限が許可されていません',
+        '位置情報の権限が許可されていません。\n'
+            '現在地の緊急地震速報の表示や、現在地に基づく通知が行われません',
+      ),
+      .whileInUse => ('現在地のバックグラウンド取得が許可されていません', ''),
+      .unableToDetermine => throw UnimplementedError('Web platform?'),
+      .always => throw UnimplementedError('Already granted'),
+      null => throw UnimplementedError('Not determined'),
+    };
 
     return Padding(
       padding: EdgeInsets.only(bottom: bottomSpacing),
@@ -234,44 +255,64 @@ class _BackgroundLocationPermissionBanner extends ConsumerWidget {
           borderRadius: BorderRadius.circular(designSystem.shape.card),
         ).borderRadius,
         clipBehavior: .antiAlias,
-        child: InkWell(
-          onTap: () async {
-            final result = await Geolocator.requestPermission();
-            if (result == .deniedForever) {
-              Geolocator.openLocationSettings();
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.info_rounded,
-                  color: colorTheme.onPrimaryContainer,
-                  size: 24,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.md,
+            vertical: spacing.sm,
+          ),
+          child: Row(
+            spacing: spacing.md,
+            children: [
+              Icon(
+                Icons.info_rounded,
+                color: colorTheme.onPrimaryContainer,
+                size: 24,
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: () async {
+                    final result = await Geolocator.requestPermission();
+                    if (result == .deniedForever ||
+                        result == .denied ||
+                        result == .whileInUse) {
+                      await Geolocator.openLocationSettings();
+                    }
+                  },
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       Text(
-                        '位置情報の「常に許可」が必要です',
+                        message.$1,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: colorTheme.onPrimaryContainer,
                         ),
                       ),
-                      Text(
-                        'バックグラウンド位置更新が無効のため、通知は過去の位置情報を使用しています',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorTheme.onPrimaryContainer,
+                      if (message.$2.isNotEmpty)
+                        Text(
+                          message.$2,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: colorTheme.onPrimaryContainer,
+                              ),
                         ),
-                      ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: colorTheme.onPrimaryContainer,
+                  size: 20,
+                ),
+                tooltip: '閉じる',
+                onPressed: () => unawaited(
+                  ref
+                      .read(locationPermissionBannerDismissedProvider.notifier)
+                      .dismiss(),
+                ),
+              ),
+            ],
           ),
         ),
       ),

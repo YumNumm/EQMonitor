@@ -161,7 +161,7 @@ void main() {
       final container = await _container();
       addTearDown(container.dispose);
 
-      final state = container.read(appThemeProvider);
+      final state = await container.read(appThemeProvider.future);
       expect(state.lightTheme.name, 'EQMonitor Default');
       expect(state.darkTheme.name, 'EQMonitor Default');
     });
@@ -172,7 +172,7 @@ void main() {
       final container = await _container(initial: {'app_theme_light': json});
       addTearDown(container.dispose);
 
-      final state = container.read(appThemeProvider);
+      final state = await container.read(appThemeProvider.future);
       expect(state.lightTheme.name, 'Custom');
       // dark は未設定なのでデフォルト
       expect(state.darkTheme.name, 'EQMonitor Default');
@@ -182,7 +182,7 @@ void main() {
       final container = await _container(initial: {'app_theme_light': '[]'});
       addTearDown(container.dispose);
 
-      final state = container.read(appThemeProvider);
+      final state = await container.read(appThemeProvider.future);
 
       expect(state.lightTheme.name, 'EQMonitor Default');
       expect(state.darkTheme.name, 'EQMonitor Default');
@@ -209,7 +209,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final state = container.read(appThemeProvider);
+      final state = await container.read(appThemeProvider.future);
       expect(
         state.lightTheme.light!.intensity.seven.background.toARGB32(),
         0xFF123456,
@@ -231,7 +231,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final state = container.read(appThemeProvider);
+      final state = await container.read(appThemeProvider.future);
       expect(state.lightTheme.name, 'Custom');
     });
 
@@ -257,7 +257,7 @@ void main() {
       addTearDown(container.dispose);
 
       // build() 時点ではまだ非同期の保存/削除処理が完了していない
-      final state = container.read(appThemeProvider);
+      final state = await container.read(appThemeProvider.future);
       expect(
         state.lightTheme.light!.intensity.seven.background.toARGB32(),
         0xFF123456,
@@ -279,13 +279,14 @@ void main() {
     test('mode=light で呼ぶと setLightTheme と同じ結果になる', () async {
       final container = await _container();
       addTearDown(container.dispose);
+      await container.read(appThemeProvider.future);
 
       final theme = AppTheme.eqmonitorDefault().copyWith(name: 'Custom Light');
       await _notifier(
         container,
       ).setThemeForMode(ThemeBrightnessMode.light, theme);
 
-      final state = container.read(appThemeProvider);
+      final state = await container.read(appThemeProvider.future);
       expect(state.lightTheme.name, 'Custom Light');
       expect(state.darkTheme.name, 'EQMonitor Default');
     });
@@ -293,13 +294,14 @@ void main() {
     test('mode=dark で呼ぶと setDarkTheme と同じ結果になる', () async {
       final container = await _container();
       addTearDown(container.dispose);
+      await container.read(appThemeProvider.future);
 
       final theme = AppTheme.eqmonitorDefault().copyWith(name: 'Custom Dark');
       await _notifier(
         container,
       ).setThemeForMode(ThemeBrightnessMode.dark, theme);
 
-      final state = container.read(appThemeProvider);
+      final state = await container.read(appThemeProvider.future);
       expect(state.darkTheme.name, 'Custom Dark');
       expect(state.lightTheme.name, 'EQMonitor Default');
     });

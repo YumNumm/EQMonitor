@@ -49,10 +49,7 @@ class OnboardingPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageController = usePageController();
     final currentPage = useState(0);
-    final stepNavigation = useState(
-      _StepNavigationState.initial(_steps.first),
-    );
-    final designSystem = context.designSystem;
+    final stepNavigation = useState(_StepNavigationState.initial(_steps.first));
 
     final animateToNext = useCallback<Future<void> Function()>(() async {
       await pageController.nextPage(
@@ -97,37 +94,43 @@ class OnboardingPage extends HookConsumerWidget {
       await stepNavigation.value.onNext?.call();
     }
 
-    return Scaffold(
-      backgroundColor: designSystem.colorTheme.surfaceContainerLow,
-      body: _OnboardingScope(
-        currentStep: currentStep,
-        nextPage: animateToNext,
-        previousPage: goToPrevious,
-        setStepNavigation: setStepNavigation,
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: PageView.builder(
-                  controller: pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  onPageChanged: onPageChanged,
-                  itemCount: _steps.length,
-                  itemBuilder: (context, index) =>
-                      _OnboardingStepPage(step: _steps[index]),
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) {
+          unawaited(goToPrevious());
+        }
+      },
+      child: Scaffold(
+        body: _OnboardingScope(
+          currentStep: currentStep,
+          nextPage: animateToNext,
+          previousPage: goToPrevious,
+          setStepNavigation: setStepNavigation,
+          child: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: PageView.builder(
+                    controller: pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    onPageChanged: onPageChanged,
+                    itemCount: _steps.length,
+                    itemBuilder: (context, index) =>
+                        _OnboardingStepPage(step: _steps[index]),
+                  ),
                 ),
-              ),
-              _OnboardingBottomBar(
-                currentPage: currentPage.value,
-                totalPages: _steps.length,
-                buttonLabel: navigation.buttonLabel,
-                isNextEnabled: navigation.isNextEnabled,
-                isBackEnabled: isBackEnabled,
-                isProcessing: navigation.isProcessing,
-                onNext: goToNext,
-                onPrevious: showBack ? goToPrevious : null,
-              ),
-            ],
+                _OnboardingBottomBar(
+                  currentPage: currentPage.value,
+                  totalPages: _steps.length,
+                  buttonLabel: navigation.buttonLabel,
+                  isNextEnabled: navigation.isNextEnabled,
+                  isBackEnabled: isBackEnabled,
+                  isProcessing: navigation.isProcessing,
+                  onNext: goToNext,
+                  onPrevious: showBack ? goToPrevious : null,
+                ),
+              ],
+            ),
           ),
         ),
       ),

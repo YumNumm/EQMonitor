@@ -2,28 +2,29 @@ import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_s
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'estimated_intensity_notice_notifier.g.dart';
+part 'location_permission_banner_dismissed_notifier.g.dart';
 
 @riverpod
-class EstimatedIntensityNoticeShown extends _$EstimatedIntensityNoticeShown {
+class LocationPermissionBannerDismissed
+    extends _$LocationPermissionBannerDismissed {
   @override
   Future<bool> build() async {
     final dataSource = await ref.watch(
       sharedPreferencesDataSourceProvider.future,
     );
     return await dataSource.getBool(
-          key: SharedPreferencesKey.estimatedIntensityNoticeShown,
+          key: SharedPreferencesKey.locationPermissionBannerDismissed,
         ) ??
         false;
   }
 
-  Future<void> markShown() async {
+  Future<void> dismiss() async {
     state = const AsyncData(true);
     final dataSource = await ref.read(
       sharedPreferencesDataSourceProvider.future,
     );
     await dataSource.setBool(
-      key: SharedPreferencesKey.estimatedIntensityNoticeShown,
+      key: SharedPreferencesKey.locationPermissionBannerDismissed,
       value: true,
     );
   }

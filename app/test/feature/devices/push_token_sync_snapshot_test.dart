@@ -1,9 +1,19 @@
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
+import 'package:eqmonitor/feature/devices/data/persistence/shared_preferences_workflow_persistence.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+DeviceProvisioningRepository _repository(SharedPreferences prefs) =>
+    DeviceProvisioningRepository(
+      dataSource: SharedPreferencesDataSource(sharedPreferences: prefs),
+      persistence: SharedPreferencesWorkflowPersistence(
+        app_prefs.SharedPreferencesAsync(prefs),
+      ),
+    );
 
 void main() {
   test(
@@ -34,11 +44,9 @@ void main() {
     () async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      final repo = DeviceProvisioningRepository(
-        app_prefs.SharedPreferencesAsync(prefs),
-      );
+      final repo = _repository(prefs);
 
-      final snapshot = repo.computeSnapshot(
+      final snapshot = await repo.computeSnapshot(
         const NotificationToken(
           fcmToken: 'fcm-token',
           apnsToken: 'apns-token',

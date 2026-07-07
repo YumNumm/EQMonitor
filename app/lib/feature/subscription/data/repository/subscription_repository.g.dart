@@ -51,4 +51,4 @@ final class SubscriptionRepositoryProvider
 }
 
 String _$subscriptionRepositoryHash() =>
-    r'cf8a07358fc713b1defb91af184fd68e2fe70e7f';
+    r'2101a66d395f307dca2d6ce561edf268a6877dce';

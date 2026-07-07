@@ -61,7 +61,7 @@ final class ShakeDetectionMergedProvider
 }
 
 String _$shakeDetectionMergedHash() =>
-    r'3ce6403a2fd5f77a2a67a6a3c05334b0248e8c11';
+    r'ff4f7b9bc615978862c1512c4d97496f06ffb99b';
 
 /// 未結合かつ表示期間内の揺れ検知イベントのみを返す
 

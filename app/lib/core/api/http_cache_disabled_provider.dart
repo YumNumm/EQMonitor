@@ -1,5 +1,5 @@
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'http_cache_disabled_provider.g.dart';
@@ -12,12 +12,18 @@ class HttpCacheDisabled extends _$HttpCacheDisabled {
       SharedPreferencesKey.httpCacheDisabled;
 
   @override
-  bool build() {
-    return ref.read(sharedPreferencesProvider).getBool(_key.key) ?? false;
+  Future<bool> build() async {
+    final dataSource = await ref.watch(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    return await dataSource.getBool(key: _key) ?? false;
   }
 
   Future<void> save({required bool isDisabled}) async {
-    await ref.read(sharedPreferencesProvider).setBool(_key.key, isDisabled);
-    state = isDisabled;
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await dataSource.setBool(key: _key, value: isDisabled);
+    state = AsyncData(isDisabled);
   }
 }

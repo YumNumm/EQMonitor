@@ -96,7 +96,8 @@ GoRouter goRouter(Ref ref) => GoRouter(
       return null;
     }
 
-    final isOnboardingCompleted = ref.read(onboardingCompletedProvider);
+    final isOnboardingCompleted =
+        ref.read(onboardingCompletedProvider).value ?? false;
     if (!isOnboardingCompleted) {
       if ([
             const OnboardingRoute().location,
@@ -112,7 +113,7 @@ GoRouter goRouter(Ref ref) => GoRouter(
     }
 
     if (isOnboardingCompleted && ref.read(buildConfigProvider).isBetaTesting) {
-      final betaAgreed = ref.read(betaTestingAgreedProvider);
+      final betaAgreed = ref.read(betaTestingAgreedProvider).value ?? false;
       if (!betaAgreed && state.matchedLocation != '/beta-warning') {
         return '/beta-warning';
       }

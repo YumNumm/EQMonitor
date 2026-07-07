@@ -15,7 +15,8 @@ part of 'notification_preset_notifier.dart';
 final notificationPresetProvider = NotificationPresetNotifierProvider._();
 
 final class NotificationPresetNotifierProvider
-    extends $NotifierProvider<NotificationPresetNotifier, NotificationPreset> {
+    extends
+        $AsyncNotifierProvider<NotificationPresetNotifier, NotificationPreset> {
   NotificationPresetNotifierProvider._()
     : super(
         from: null,
@@ -33,31 +34,24 @@ final class NotificationPresetNotifierProvider
   @$internal
   @override
   NotificationPresetNotifier create() => NotificationPresetNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(NotificationPreset value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<NotificationPreset>(value),
-    );
-  }
 }
 
 String _$notificationPresetNotifierHash() =>
-    r'4816373a945f603adeab097a03d4ddbce7cab7b5';
+    r'68aca95c0ad12e29e0dd47eed0e8cd18777481b3';
 
 abstract class _$NotificationPresetNotifier
-    extends $Notifier<NotificationPreset> {
-  NotificationPreset build();
+    extends $AsyncNotifier<NotificationPreset> {
+  FutureOr<NotificationPreset> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<NotificationPreset, NotificationPreset>;
+    final ref =
+        this.ref as $Ref<AsyncValue<NotificationPreset>, NotificationPreset>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<NotificationPreset, NotificationPreset>,
-              NotificationPreset,
+              AnyNotifier<AsyncValue<NotificationPreset>, NotificationPreset>,
+              AsyncValue<NotificationPreset>,
               Object?,
               Object?
             >;

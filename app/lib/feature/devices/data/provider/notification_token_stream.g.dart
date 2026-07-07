@@ -51,7 +51,7 @@ final class NotificationTokenStreamProvider
 }
 
 String _$notificationTokenStreamHash() =>
-    r'5ff8cdddccb800be5bb24dbffe925c7520164059';
+    r'8863d1a6f1bb71626a10318c706f34a73ec50858';
 
 @ProviderFor(_firebaseMessagingTokenStream)
 final _firebaseMessagingTokenStreamProvider =
@@ -86,7 +86,7 @@ final class _FirebaseMessagingTokenStreamProvider
 }
 
 String _$_firebaseMessagingTokenStreamHash() =>
-    r'bc3ada82b83f80b7c578abf321eed31675c32fb9';
+    r'3537be0aa279d0f27af3fd0c965a0dd52c7c7a4f';
 
 @ProviderFor(_apnsTokenStream)
 final _apnsTokenStreamProvider = _ApnsTokenStreamProvider._();

@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
+    as data_prefs;
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
@@ -14,49 +17,74 @@ import 'package:workflows/workflows.dart';
 part 'device_provisioning_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-DeviceProvisioningRepository deviceProvisioningRepository(Ref ref) =>
-    DeviceProvisioningRepository(ref.watch(sharedPreferencesProvider));
+Future<DeviceProvisioningRepository> deviceProvisioningRepository(
+  Ref ref,
+) async {
+  final dataSource = await ref.watch(sharedPreferencesDataSourceProvider.future);
+  final prefs = await ref.watch(data_prefs.sharedPreferencesProvider.future);
+  return DeviceProvisioningRepository(
+    dataSource: dataSource,
+    persistence: SharedPreferencesWorkflowPersistence(
+      SharedPreferencesAsync(prefs),
+    ),
+  );
+}
 
 class DeviceProvisioningRepository {
-  DeviceProvisioningRepository(this._prefs)
-    : _persistence = SharedPreferencesWorkflowPersistence(_prefs);
+  DeviceProvisioningRepository({
+    required SharedPreferencesDataSource dataSource,
+    required SharedPreferencesWorkflowPersistence persistence,
+  }) : _dataSource = dataSource,
+       _persistence = persistence;
 
-  final SharedPreferencesAsync _prefs;
+  final SharedPreferencesDataSource _dataSource;
   final SharedPreferencesWorkflowPersistence _persistence;
 
-  bool isProvisioned() =>
-      _prefs.getBool(SharedPreferencesKey.deviceProvisioned.key) ?? false;
-
-  Future<void> markProvisioned() =>
-      _prefs.setBool(SharedPreferencesKey.deviceProvisioned.key, true);
-
-  Future<void> clearProvisioned() =>
-      _prefs.setBool(SharedPreferencesKey.deviceProvisioned.key, false);
-
-  String? readLegacyDeviceId() =>
-      _prefs.getString(SharedPreferencesKey.legacyDeviceId.key);
-
-  bool wasMigratedFromLegacy() =>
-      _prefs.getBool(SharedPreferencesKey.deviceMigratedFromLegacy.key) ??
+  Future<bool> isProvisioned() async =>
+      await _dataSource.getBool(key: SharedPreferencesKey.deviceProvisioned) ??
       false;
 
-  Future<void> markMigratedFromLegacy() =>
-      _prefs.setBool(SharedPreferencesKey.deviceMigratedFromLegacy.key, true);
+  Future<void> markProvisioned() => _dataSource.setBool(
+    key: SharedPreferencesKey.deviceProvisioned,
+    value: true,
+  );
+
+  Future<void> clearProvisioned() => _dataSource.setBool(
+    key: SharedPreferencesKey.deviceProvisioned,
+    value: false,
+  );
+
+  Future<String?> readLegacyDeviceId() =>
+      _dataSource.getString(key: SharedPreferencesKey.legacyDeviceId);
+
+  Future<bool> wasMigratedFromLegacy() async =>
+      await _dataSource.getBool(
+        key: SharedPreferencesKey.deviceMigratedFromLegacy,
+      ) ??
+      false;
+
+  Future<void> markMigratedFromLegacy() => _dataSource.setBool(
+    key: SharedPreferencesKey.deviceMigratedFromLegacy,
+    value: true,
+  );
 
   WorkflowRunner buildRunner() => WorkflowRunner(persistence: _persistence);
 
   /// 現在のトークンと保存済みハッシュを比較して同期スナップショットを返す。
-  PushTokenSyncSnapshot computeSnapshot(
+  Future<PushTokenSyncSnapshot> computeSnapshot(
     NotificationToken? token, {
     required bool apnsSupported,
-  }) {
+  }) async {
     return PushTokenSyncSnapshot(
-      fcm: _computeKindState(PushTokenKind.fcm, token?.fcmToken),
+      fcm: await _computeKindState(PushTokenKind.fcm, token?.fcmToken),
       apnsNotification: apnsSupported
-          ? _computeKindState(PushTokenKind.apnsNotification, token?.apnsToken)
+          ? await _computeKindState(
+              PushTokenKind.apnsNotification,
+              token?.apnsToken,
+            )
           : const NotApplicableTokenState(),
       apnsPushToStart: apnsSupported
-          ? _computeKindState(
+          ? await _computeKindState(
               PushTokenKind.apnsPushToStart,
               token?.apnsPushToStartToken,
             )
@@ -64,11 +92,14 @@ class DeviceProvisioningRepository {
     );
   }
 
-  PushTokenKindState _computeKindState(PushTokenKind kind, String? token) {
+  Future<PushTokenKindState> _computeKindState(
+    PushTokenKind kind,
+    String? token,
+  ) async {
     if (token == null || token.isEmpty) {
       return const AbsentTokenState();
     }
-    final stored = _loadHash(kind);
+    final stored = await _loadHash(kind);
     final current = _computeHash(kind, token);
     if (stored == current) {
       return const SyncedTokenState();
@@ -76,14 +107,12 @@ class DeviceProvisioningRepository {
     return const PendingTokenState();
   }
 
-  String? _loadHash(PushTokenKind kind) {
-    final key = _hashKey(kind);
-    return _prefs.getString(key);
-  }
+  Future<String?> _loadHash(PushTokenKind kind) =>
+      _dataSource.getString(key: _hashKey(kind));
 
   Future<void> saveTokenHash(PushTokenKind kind, String token) {
     final hash = _computeHash(kind, token);
-    return _prefs.setString(_hashKey(kind), hash);
+    return _dataSource.setString(key: _hashKey(kind), value: hash);
   }
 
   String _computeHash(PushTokenKind kind, String token) {
@@ -92,11 +121,10 @@ class DeviceProvisioningRepository {
     return sha256.convert(utf8.encode(input)).toString();
   }
 
-  String _hashKey(PushTokenKind kind) => switch (kind) {
-    PushTokenKind.fcm => SharedPreferencesKey.lastFcmTokenHash.key,
-    PushTokenKind.apnsNotification =>
-      SharedPreferencesKey.lastApnsTokenHash.key,
+  SharedPreferencesKey _hashKey(PushTokenKind kind) => switch (kind) {
+    PushTokenKind.fcm => SharedPreferencesKey.lastFcmTokenHash,
+    PushTokenKind.apnsNotification => SharedPreferencesKey.lastApnsTokenHash,
     PushTokenKind.apnsPushToStart =>
-      SharedPreferencesKey.lastApnsPushToStartTokenHash.key,
+      SharedPreferencesKey.lastApnsPushToStartTokenHash,
   };
 }

@@ -23,7 +23,7 @@ final autoReturnToRealtimeProvider = AutoReturnToRealtimeNotifierProvider._();
 ///
 /// 防災アプリの性質上、デフォルトは有効（戻す）。
 final class AutoReturnToRealtimeNotifierProvider
-    extends $NotifierProvider<AutoReturnToRealtimeNotifier, bool> {
+    extends $AsyncNotifierProvider<AutoReturnToRealtimeNotifier, bool> {
   /// タイムシフト/リプレイ再生中にリアルタイムの EEW・揺れ検知イベントが発生した際、
   /// 通常再生（ライブ）へ自動的に戻すかどうかの設定。
   ///
@@ -45,35 +45,27 @@ final class AutoReturnToRealtimeNotifierProvider
   @$internal
   @override
   AutoReturnToRealtimeNotifier create() => AutoReturnToRealtimeNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
 }
 
 String _$autoReturnToRealtimeNotifierHash() =>
-    r'19659d7582526b76108bfb8df2d427eb9c241b47';
+    r'ca39edd9704af8f7d2773bde8a63f2dd238a5583';
 
 /// タイムシフト/リプレイ再生中にリアルタイムの EEW・揺れ検知イベントが発生した際、
 /// 通常再生（ライブ）へ自動的に戻すかどうかの設定。
 ///
 /// 防災アプリの性質上、デフォルトは有効（戻す）。
 
-abstract class _$AutoReturnToRealtimeNotifier extends $Notifier<bool> {
-  bool build();
+abstract class _$AutoReturnToRealtimeNotifier extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<bool, bool>,
-              bool,
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
               Object?,
               Object?
             >;

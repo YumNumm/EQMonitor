@@ -30,7 +30,7 @@ Future<Dio> dio(Ref ref) async {
   final deviceAuthTokenInterceptor = await ref.watch(
     deviceAuthTokenInterceptorProvider.future,
   );
-  final httpCacheDisabled = ref.watch(httpCacheDisabledProvider);
+  final httpCacheDisabled = ref.watch(httpCacheDisabledProvider).value ?? false;
 
   final dio = Dio(buildApiBaseOptions(baseUrl: telegramUrl.restApiUrl));
   dio.options.headers.addAll({

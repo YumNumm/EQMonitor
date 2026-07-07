@@ -36,8 +36,10 @@ void main() {
       final status = await container.read(deviceProvisioningProvider.future);
       expect(status, DeviceProvisioningStatus.required);
 
-      final repo = container.read(deviceProvisioningRepositoryProvider);
-      expect(repo.isProvisioned(), isFalse);
+      final repo = await container.read(
+        deviceProvisioningRepositoryProvider.future,
+      );
+      expect(await repo.isProvisioned(), isFalse);
     },
   );
 

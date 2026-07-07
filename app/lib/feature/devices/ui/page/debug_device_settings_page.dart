@@ -176,7 +176,9 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
           ),
           _KeyValueRow(
             label: '保存済みフラグ',
-            value: isProvisioned ? '登録済み (true)' : '未登録 (false)',
+            value: (isProvisioned.value ?? false)
+                ? '登録済み (true)'
+                : '未登録 (false)',
           ),
           _KeyValueRow(
             label: 'Bearerトークン',
@@ -189,7 +191,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
           _KeyValueRow(label: 'サーバー状態', value: statusText),
           _KeyValueRow(
             label: 'レガシーID',
-            value: legacyId != null ? '存在 → 移行対象' : 'なし',
+            value: legacyId.value != null ? '存在 → 移行対象' : 'なし',
           ),
           const SizedBox(height: 6),
           Row(
@@ -1105,8 +1107,8 @@ class _NotificationHistoryTile extends StatelessWidget {
 // ── Riverpod プロバイダー ──────────────────────────────────────────────────
 
 @riverpod
-bool _isProvisioned(Ref ref) {
-  final repo = ref.watch(deviceProvisioningRepositoryProvider);
+Future<bool> _isProvisioned(Ref ref) async {
+  final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
   return repo.isProvisioned();
 }
 
@@ -1118,8 +1120,8 @@ Future<bool> _deviceTokenPresent(Ref ref) async {
 }
 
 @riverpod
-String? _legacyDeviceId(Ref ref) {
-  final repo = ref.watch(deviceProvisioningRepositoryProvider);
+Future<String?> _legacyDeviceId(Ref ref) async {
+  final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
   return repo.readLegacyDeviceId();
 }
 

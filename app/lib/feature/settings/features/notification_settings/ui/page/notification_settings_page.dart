@@ -55,7 +55,9 @@ class _Body extends HookConsumerWidget {
         (s) => s.value?.notificationEnabled ?? true,
       ),
     );
-    final selectedPreset = ref.watch(notificationPresetProvider);
+    final selectedPreset =
+        ref.watch(notificationPresetProvider).value ??
+        NotificationPreset.recommended;
 
     final constraints = ref.watch(startProvider).value?.planConstraints.free;
     final isPro = constraints?.isPro ?? false;

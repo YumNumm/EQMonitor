@@ -5,7 +5,8 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMigrated = ref.watch(deviceMigratedFromLegacyProvider);
+    final isMigrated =
+        ref.watch(deviceMigratedFromLegacyProvider).value ?? false;
     if (isMigrated) {
       return const _MigratedNotificationSettingsStepPage();
     }

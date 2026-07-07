@@ -73,6 +73,23 @@ extension EarthquakeModelConverter on api.EarthquakeResponse {
 - API 通信を行うものは `Future<Result<T, ApiException>>` を返す（例外あり）
 - Riverpod で DI する
 - 基本的にすべての外部データアクセスは repository を経由する
+- **SharedPreferences へのアクセスは `SharedPreferencesDataSource` 経由に限定する**（`SharedPreferences` / `sharedPreferencesProvider` を Repository・Notifier・Provider・UI から直接呼ばない）
+
+#### SharedPreferences アクセス規約
+
+- キーは `SharedPreferencesKey` enum で一元管理する（`preferences-key-management.mdc` 参照）
+- 読み書きは `app/lib/core/data/preferences/shared/shared_preferences_data_source.dart` の `SharedPreferencesDataSource` を利用する
+- 例外: `SharedPreferencesDataSource` 本体、デバッグ用の SharedPreferences 閲覧画面、`main.dart` での初期化、App Group 用の別ストレージ
+
+```dart
+// ❌ 悪い例: Repository が SharedPreferences に直接アクセス
+final prefs = ref.watch(sharedPreferencesProvider);
+prefs.getBool(SharedPreferencesKey.deviceProvisioned.key);
+
+// ✅ 良い例: SharedPreferencesDataSource 経由
+final dataSource = await ref.watch(sharedPreferencesDataSourceProvider.future);
+await dataSource.getBool(key: SharedPreferencesKey.deviceProvisioned);
+```
 
 #### `data/data_source/`
 

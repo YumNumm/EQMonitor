@@ -2,8 +2,8 @@ import 'package:eqmonitor/feature/subscription/data/model/purchase_failure_reaso
 import 'package:eqmonitor/feature/subscription/data/model/purchase_outcome.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
-import 'package:eqmonitor/feature/subscription/data/provider/revenue_cat_initialization_provider.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/subscription_product_id_provider.dart';
+import 'package:eqmonitor/feature/subscription/data/repository/revenue_cat_configurator.dart';
 import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,7 +14,7 @@ const _entitlementId = 'pro';
 
 @Riverpod(keepAlive: true)
 Future<SubscriptionRepository> subscriptionRepository(Ref ref) async {
-  await ref.watch(revenueCatInitializationProvider.future);
+  await const RevenueCatConfigurator().ensureConfigured();
   final monthlyProductId = ref.watch(monthlySubscriptionProductIdProvider);
   return SubscriptionRepository(monthlyProductId: monthlyProductId);
 }

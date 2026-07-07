@@ -95,7 +95,7 @@ final class TravelTimeInternalProvider
 }
 
 String _$travelTimeInternalHash() =>
-    r'e3fd821da9e8d04c0ff59076ebb98b85ac978e3f';
+    r'afba3441dccb7558d89f86ab4eab300b7170c3b0';
 
 @ProviderFor(travelTimeDepthMap)
 final travelTimeDepthMapProvider = TravelTimeDepthMapProvider._();
@@ -143,4 +143,4 @@ final class TravelTimeDepthMapProvider
 }
 
 String _$travelTimeDepthMapHash() =>
-    r'dae2dec61f482a44877c74c71d28b94d4065c643';
+    r'9a36ac92ca94706ab65310ba1ed2219b505ff43e';

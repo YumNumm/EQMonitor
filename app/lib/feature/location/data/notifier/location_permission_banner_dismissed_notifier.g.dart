@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'beta_testing_notifier.dart';
+part of 'location_permission_banner_dismissed_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -11,33 +11,38 @@ part of 'beta_testing_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(BetaTestingAgreed)
-final betaTestingAgreedProvider = BetaTestingAgreedProvider._();
+@ProviderFor(LocationPermissionBannerDismissed)
+final locationPermissionBannerDismissedProvider =
+    LocationPermissionBannerDismissedProvider._();
 
-final class BetaTestingAgreedProvider
-    extends $AsyncNotifierProvider<BetaTestingAgreed, bool> {
-  BetaTestingAgreedProvider._()
+final class LocationPermissionBannerDismissedProvider
+    extends $AsyncNotifierProvider<LocationPermissionBannerDismissed, bool> {
+  LocationPermissionBannerDismissedProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'betaTestingAgreedProvider',
+        name: r'locationPermissionBannerDismissedProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$betaTestingAgreedHash();
+  String debugGetCreateSourceHash() =>
+      _$locationPermissionBannerDismissedHash();
 
   @$internal
   @override
-  BetaTestingAgreed create() => BetaTestingAgreed();
+  LocationPermissionBannerDismissed create() =>
+      LocationPermissionBannerDismissed();
 }
 
-String _$betaTestingAgreedHash() => r'0ea6ff0fc00841204f03ed5c75807bef57030b0d';
+String _$locationPermissionBannerDismissedHash() =>
+    r'2525fe13700256a84fde3e83962f1df2f6f01c8f';
 
-abstract class _$BetaTestingAgreed extends $AsyncNotifier<bool> {
+abstract class _$LocationPermissionBannerDismissed
+    extends $AsyncNotifier<bool> {
   FutureOr<bool> build();
   @$mustCallSuper
   @override

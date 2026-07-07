@@ -229,11 +229,13 @@ Future<void> _fireDebugNotifications(
   required String? shakeError,
 }) async {
   try {
-    final debugSettings = ref.read(backgroundLocationDebugSettingsProvider);
-    if (!debugSettings.notifyLatLng &&
+    final debugSettings =
+        ref.read(backgroundLocationDebugSettingsProvider).value;
+    if (debugSettings == null ||
+        (!debugSettings.notifyLatLng &&
         !debugSettings.notifyRegion &&
         !debugSettings.notifyPrefecture &&
-        !debugSettings.notifyApiUpdate) {
+        !debugSettings.notifyApiUpdate)) {
       return;
     }
 

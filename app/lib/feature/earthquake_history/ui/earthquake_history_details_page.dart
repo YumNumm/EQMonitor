@@ -93,7 +93,8 @@ class _LoadedContent extends HookConsumerWidget {
       hasEstimated ? IntensityDisplayMode.estimated : IntensityDisplayMode.jma,
     );
 
-    final noticeShown = ref.watch(estimatedIntensityNoticeShownProvider);
+    final noticeShown =
+        ref.watch(estimatedIntensityNoticeShownProvider).value ?? false;
 
     useEffect(() {
       if (hasEstimated && !noticeShown && !showingDb) {

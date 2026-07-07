@@ -21,8 +21,8 @@ part 'device_provisioning_notifier.g.dart';
 enum DeviceProvisioningStatus { required, notRequired }
 
 @riverpod
-bool deviceMigratedFromLegacy(Ref ref) {
-  final repo = ref.watch(deviceProvisioningRepositoryProvider);
+Future<bool> deviceMigratedFromLegacy(Ref ref) async {
+  final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
   return repo.wasMigratedFromLegacy();
 }
 
@@ -36,8 +36,8 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
 
   @override
   Future<DeviceProvisioningStatus> build() async {
-    final repo = ref.watch(deviceProvisioningRepositoryProvider);
-    if (!repo.isProvisioned()) {
+    final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
+    if (!await repo.isProvisioned()) {
       return DeviceProvisioningStatus.required;
     }
     final authRepo = await ref.watch(deviceAuthRepositoryProvider.future);
@@ -52,13 +52,13 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
 
   static final provisionMutation = Mutation<void>();
   Future<void> provision() async {
-    final repo = ref.read(deviceProvisioningRepositoryProvider);
+    final repo = await ref.read(deviceProvisioningRepositoryProvider.future);
     final deviceRepo = await ref.read(deviceRepositoryProvider.future);
     final deviceId = await ref.read(deviceIdProvider.future);
 
     await _retryController.run(() async {
       try {
-        final legacy = repo.readLegacyDeviceId();
+        final legacy = await repo.readLegacyDeviceId();
         if (legacy != null && legacy.isNotEmpty) {
           talker.info(
             '[Provisioning] legacy device detected; '

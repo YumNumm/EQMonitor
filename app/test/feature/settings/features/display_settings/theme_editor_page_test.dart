@@ -57,7 +57,7 @@ void main() {
     );
     expect(colorSet.primary, probe);
 
-    final themes = container.read(appThemeProvider);
+    final themes = await container.read(appThemeProvider.future);
     expect(themes.lightTheme.name, 'カスタム');
     expect(themes.lightTheme.light!.primary, probe);
   });
@@ -92,7 +92,7 @@ void main() {
     await tester.tap(find.text('適用'));
     await tester.pumpAndSettle();
 
-    final themes = container.read(appThemeProvider);
+    final themes = await container.read(appThemeProvider.future);
     expect(themes.lightTheme.name, 'カスタム');
     expect(themes.lightTheme.light!.primary, const Color(0xFF445566));
   });
@@ -124,7 +124,7 @@ void main() {
     await tester.tap(find.text('適用'));
     await tester.pumpAndSettle();
 
-    final themes = container.read(appThemeProvider);
+    final themes = await container.read(appThemeProvider.future);
     expect(
       themes.lightTheme.light!.intensity.seven.background,
       const Color(0xFF998877),
@@ -169,7 +169,7 @@ void main() {
     await tester.tap(find.text('適用'));
     await tester.pumpAndSettle();
 
-    final themes = container.read(appThemeProvider);
+    final themes = await container.read(appThemeProvider.future);
     final foreground = themes.lightTheme.light!.intensity.seven.foreground;
     expect(foreground, isA<IntensityTextColorManual>());
     expect(

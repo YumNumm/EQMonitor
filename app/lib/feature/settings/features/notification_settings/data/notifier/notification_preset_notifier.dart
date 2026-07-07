@@ -1,6 +1,5 @@
-import 'dart:async';
-
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_preset_notifier.g.dart';
@@ -9,20 +8,27 @@ enum NotificationPreset { recommended, custom }
 
 @Riverpod(keepAlive: true)
 class NotificationPresetNotifier extends _$NotificationPresetNotifier {
-  static const _key = 'notification_preset';
-
   @override
-  NotificationPreset build() {
-    final prefs = ref.watch(sharedPreferencesProvider);
-    final stored = prefs.getString(_key);
-    return stored == 'custom'
+  Future<NotificationPreset> build() async {
+    final dataSource = await ref.watch(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    final stored = await dataSource.getString(
+      key: SharedPreferencesKey.notificationPreset,
+    );
+    return stored == NotificationPreset.custom.name
         ? NotificationPreset.custom
         : NotificationPreset.recommended;
   }
 
-  void select(NotificationPreset preset) {
-    final prefs = ref.read(sharedPreferencesProvider);
-    unawaited(prefs.setString(_key, preset.name));
-    state = preset;
+  Future<void> select(NotificationPreset preset) async {
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await dataSource.setString(
+      key: SharedPreferencesKey.notificationPreset,
+      value: preset.name,
+    );
+    state = AsyncData(preset);
   }
 }
