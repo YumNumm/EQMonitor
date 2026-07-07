@@ -39,4 +39,5 @@ Map<String, dynamic> _$ShindoDbStationItemToJson(
   'code': instance.code,
   'name': instance.name,
   'location': instance.location,
+  'city_code': instance.cityCode,
 };

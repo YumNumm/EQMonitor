@@ -24,6 +24,7 @@ abstract class ShindoDbStationItem with _$ShindoDbStationItem {
     required String code,
     required String name,
     required LatLng location,
+    String? cityCode,
   }) = _ShindoDbStationItem;
 
   factory ShindoDbStationItem.fromJson(Map<String, dynamic> json) =>
@@ -34,6 +35,7 @@ abstract class ShindoDbStationItem with _$ShindoDbStationItem {
           (json['latitude']! as num).toDouble(),
           (json['longitude']! as num).toDouble(),
         ),
+        cityCode: json['city_code'] as String?,
       );
 }
 
