@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_common.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';

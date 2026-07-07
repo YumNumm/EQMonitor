@@ -4,7 +4,6 @@ import 'package:eqmonitor/core/provider/notification/os_notification_permission_
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:mockito/mockito.dart';
 
 class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {
   _FakeFirebaseMessaging(this._settings);
