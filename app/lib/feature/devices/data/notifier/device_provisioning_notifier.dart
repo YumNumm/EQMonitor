@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/exception/dio_exception_mapper.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
@@ -59,6 +60,10 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
       try {
         final legacy = repo.readLegacyDeviceId();
         if (legacy != null && legacy.isNotEmpty) {
+          talker.info(
+            '[Provisioning] legacy device detected; '
+            'running v2→v3 migration workflow',
+          );
           await runV3MigrationWorkflow(
             runner: repo.buildRunner(),
             repository: deviceRepo,
@@ -66,6 +71,7 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
             oldDeviceId: legacy,
           );
           await repo.markMigratedFromLegacy();
+          talker.info('[Provisioning] v2→v3 migration workflow completed');
         } else {
           final result = await deviceRepo.registerDevice(
             deviceId: deviceId,
@@ -87,11 +93,15 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
           }
         }
         await repo.markProvisioned();
-      } on DeviceProvisioningException {
+      } on DeviceProvisioningException catch (e, st) {
+        talker.error('[Provisioning] failed', e, st);
         rethrow;
       } on DioException catch (e, st) {
-        throw mapDioToProvisioningException(e, st);
+        final mapped = mapDioToProvisioningException(e, st);
+        talker.error('[Provisioning] failed', mapped, st);
+        throw mapped;
       } catch (e, st) {
+        talker.error('[Provisioning] unexpected failure', e, st);
         throw UnexpectedProvisioningException(cause: e, stackTrace: st);
       }
     });

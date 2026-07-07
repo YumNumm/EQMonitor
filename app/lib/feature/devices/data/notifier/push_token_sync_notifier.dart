@@ -97,14 +97,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
             await handleAuthenticationFailure();
           }
           results[kind] = FailedTokenState(error: e);
-          unawaited(
-            ref.read(telemetryRecorderProvider).record(
-              TelemetryEvent.error(
-                errorType: 'push_token_sync_failed',
-                message: '${kind.name}: $e',
-              ),
-            ).then((_) => ref.read(telemetryUploaderProvider).flush()),
-          );
+          _recordSyncFailureTelemetry(kind, e);
           lastError = e;
         } on DioException catch (e, st) {
           final mapped = mapDioToProvisioningException(e, st);
@@ -113,14 +106,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
             await handleAuthenticationFailure();
           }
           results[kind] = FailedTokenState(error: mapped);
-          unawaited(
-            ref.read(telemetryRecorderProvider).record(
-              TelemetryEvent.error(
-                errorType: 'push_token_sync_failed',
-                message: '${kind.name}: $e',
-              ),
-            ).then((_) => ref.read(telemetryUploaderProvider).flush()),
-          );
+          _recordSyncFailureTelemetry(kind, e);
           lastError = mapped;
         } on Object catch (e, st) {
           final mapped = UnexpectedProvisioningException(
@@ -128,14 +114,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
             stackTrace: st,
           );
           results[kind] = FailedTokenState(error: mapped);
-          unawaited(
-            ref.read(telemetryRecorderProvider).record(
-              TelemetryEvent.error(
-                errorType: 'push_token_sync_failed',
-                message: '${kind.name}: $e',
-              ),
-            ).then((_) => ref.read(telemetryUploaderProvider).flush()),
-          );
+          _recordSyncFailureTelemetry(kind, e);
           lastError = mapped;
         }
       }
@@ -156,6 +135,27 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
         throw lastError;
       }
     });
+  }
+
+  /// テレメトリは観測用の副作用であり、記録失敗（provider 初期化失敗を含む）が
+  /// トークン同期やエラー伝播を壊してはならない。
+  void _recordSyncFailureTelemetry(PushTokenKind kind, Object error) {
+    try {
+      unawaited(
+        ref
+            .read(telemetryRecorderProvider)
+            .record(
+              TelemetryEvent.error(
+                errorType: 'push_token_sync_failed',
+                message: '${kind.name}: $error',
+              ),
+            )
+            .then((_) => ref.read(telemetryUploaderProvider).flush())
+            .catchError((Object _) {}),
+      );
+    } on Object {
+      // 非致命: 記録できない場合は黙って継続する
+    }
   }
 
   Future<void> _syncKind({
