@@ -89,8 +89,6 @@ abstract class EarthquakeCatalogPeriodComponent
   }) = _EarthquakeCatalogPeriodComponent;
 }
 
-/// `CatalogPeriodValue` を表示文字列に変換する。
-/// value が null の場合は '欠測'、FREQUENCY なら '${value}Hz'、PERIOD なら '${value}秒'。
 String formatCatalogPeriodValue(api.CatalogPeriodValue value) {
   final rawValue = value.value;
   if (rawValue == null) {

@@ -242,7 +242,7 @@ class _OriginTimeRow extends StatelessWidget {
         ),
         if (stderrSeconds != null)
           Text(
-            '±${stderrSeconds!.toStringAsFixed(0)}秒',
+            '±${stderrSeconds!.toStringAsFixed(1)}秒',
             style: theme.textTheme.bodySmall?.copyWith(
               color: context.designSystem.colorTheme.onSurfaceVariant,
               fontFamily: FontFamily.googleSansCode,

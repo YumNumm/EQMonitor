@@ -210,6 +210,42 @@ void main() {
       expect(nodes.first.location, isNull);
     });
 
+    test(
+      'cityCode が非 null でも earthquakeParameter に存在しない場合は unresolvedStations に入ること',
+      () {
+        // cityCode は非 null ('01100') だが earthquakeParameter に該当市区町村なし
+        // → cityEntry == null 分岐 → unresolvedStations に落ちる
+        final repo = _makeRepository(
+          earthquakeParameter: _makeEarthquakeParameter([]),
+          shindoDbStations: _makeShindoDbStations([
+            ShindoDbStationItem(
+              code: 'ST_ORPHAN',
+              name: '孤立観測点',
+              location: const LatLng(43.0, 141.0),
+              cityCode:
+                  '01100', // non-null, but absent from earthquakeParameter
+            ),
+          ]),
+        );
+
+        final result = repo.buildShindoDbIntensityTree(
+          catalog: _makeCatalog([
+            _makeRecord('ST_ORPHAN', ShindoDbIntensityClass.five),
+          ]),
+        );
+
+        expect(result.tree, isEmpty);
+        expect(
+          result.unresolvedStations.keys,
+          contains(ShindoDbIntensityClass.five),
+        );
+        final nodes = result.unresolvedStations[ShindoDbIntensityClass.five]!;
+        expect(nodes, hasLength(1));
+        expect(nodes.first.name, '孤立観測点');
+        expect(nodes.first.record.stationCode, 'ST_ORPHAN');
+      },
+    );
+
     test('tree のキーが orderIndex 降順で並ぶこと', () {
       final prefecture = EarthquakeParameterPrefectureItem(
         code: '01',

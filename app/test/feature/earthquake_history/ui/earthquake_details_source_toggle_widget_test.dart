@@ -115,7 +115,10 @@ void main() {
     originTime: null,
     originTimePrecision: OriginTimePrecision.second,
     arrivalTime: null,
-    dataSources: const [EarthquakeDataSource.jmaDisasterInformationXml],
+    dataSources: const [
+      EarthquakeDataSource.jmaDisasterInformationXml,
+      EarthquakeDataSource.jmaIntensityDatabase,
+    ],
     telegramTypes: const [],
     hypocenter: null,
     intensity: null,

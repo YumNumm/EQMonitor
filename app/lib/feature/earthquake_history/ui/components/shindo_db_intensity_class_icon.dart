@@ -59,7 +59,6 @@ class ShindoDbIntensityClassIcon extends StatelessWidget {
       );
     }
 
-    // Historical grades — gray
     return SizedBox(
       width: size,
       height: size,
