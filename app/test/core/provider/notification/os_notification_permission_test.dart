@@ -38,9 +38,7 @@ NotificationSettings _notificationSettings({
 
 ProviderContainer _container(FirebaseMessaging messaging) {
   final container = ProviderContainer(
-    overrides: [
-      firebaseMessagingProvider.overrideWithValue(messaging),
-    ],
+    overrides: [firebaseMessagingProvider.overrideWithValue(messaging)],
   );
   addTearDown(container.dispose);
   return container;
@@ -72,9 +70,7 @@ void main() {
 
     test('denied のとき isOsNotificationGranted が false', () {
       final permission = OsNotificationPermission.fromNotificationSettings(
-        _notificationSettings(
-          authorizationStatus: AuthorizationStatus.denied,
-        ),
+        _notificationSettings(authorizationStatus: AuthorizationStatus.denied),
       );
 
       expect(permission.isOsNotificationGranted, isFalse);
@@ -90,38 +86,42 @@ void main() {
       expect(permission.isOsNotificationGranted, isFalse);
     });
 
-    test('criticalAlert が notSupported 以外のとき isCriticalAlertSupported が true', () {
-      final permission = OsNotificationPermission.fromNotificationSettings(
-        _notificationSettings(
-          criticalAlert: AppleNotificationSetting.disabled,
-        ),
-      );
+    test(
+      'criticalAlert が notSupported 以外のとき isCriticalAlertSupported が true',
+      () {
+        final permission = OsNotificationPermission.fromNotificationSettings(
+          _notificationSettings(
+            criticalAlert: AppleNotificationSetting.disabled,
+          ),
+        );
 
-      expect(permission.isCriticalAlertSupported, isTrue);
-      expect(permission.isCriticalAlertGranted, isFalse);
-    });
+        expect(permission.isCriticalAlertSupported, isTrue);
+        expect(permission.isCriticalAlertGranted, isFalse);
+      },
+    );
 
     test('criticalAlert が enabled のとき isCriticalAlertGranted が true', () {
       final permission = OsNotificationPermission.fromNotificationSettings(
-        _notificationSettings(
-          criticalAlert: AppleNotificationSetting.enabled,
-        ),
+        _notificationSettings(criticalAlert: AppleNotificationSetting.enabled),
       );
 
       expect(permission.isCriticalAlertSupported, isTrue);
       expect(permission.isCriticalAlertGranted, isTrue);
     });
 
-    test('criticalAlert が notSupported のとき isCriticalAlertSupported が false', () {
-      final permission = OsNotificationPermission.fromNotificationSettings(
-        _notificationSettings(
-          criticalAlert: AppleNotificationSetting.notSupported,
-        ),
-      );
+    test(
+      'criticalAlert が notSupported のとき isCriticalAlertSupported が false',
+      () {
+        final permission = OsNotificationPermission.fromNotificationSettings(
+          _notificationSettings(
+            criticalAlert: AppleNotificationSetting.notSupported,
+          ),
+        );
 
-      expect(permission.isCriticalAlertSupported, isFalse);
-      expect(permission.isCriticalAlertGranted, isFalse);
-    });
+        expect(permission.isCriticalAlertSupported, isFalse);
+        expect(permission.isCriticalAlertGranted, isFalse);
+      },
+    );
   });
 
   group('NotificationSettingsOsPermissionExtension', () {

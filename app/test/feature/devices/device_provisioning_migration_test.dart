@@ -82,10 +82,7 @@ void main() {
       prefs.getBool(SharedPreferencesKey.deviceMigratedFromLegacy.key),
       isTrue,
     );
-    expect(
-      prefs.getBool(SharedPreferencesKey.deviceProvisioned.key),
-      isTrue,
-    );
+    expect(prefs.getBool(SharedPreferencesKey.deviceProvisioned.key), isTrue);
   });
 
   test('legacy ID が無ければ registerDevice のみで migrate は呼ばれない', () async {
@@ -106,10 +103,7 @@ void main() {
       prefs.getBool(SharedPreferencesKey.deviceMigratedFromLegacy.key),
       isNot(isTrue),
     );
-    expect(
-      prefs.getBool(SharedPreferencesKey.deviceProvisioned.key),
-      isTrue,
-    );
+    expect(prefs.getBool(SharedPreferencesKey.deviceProvisioned.key), isTrue);
   });
 
   test('migrate が非再試行エラー(400)なら例外が伝播しフラグは立たない', () async {
