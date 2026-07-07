@@ -37,6 +37,7 @@ import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
@@ -104,6 +105,7 @@ class _MapContent extends HookConsumerWidget {
       ),
     );
     final isDebugger = kDebugMode || (ref.watch(debugProvider).value ?? false);
+    final mapController = useState<MapController?>(null);
 
     ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (
       _,
@@ -115,7 +117,7 @@ class _MapContent extends HookConsumerWidget {
       if (!context.mounted) {
         return;
       }
-      final controller = MapController.maybeOf(context);
+      final controller = mapController.value;
       if (controller == null) {
         return;
       }
@@ -162,13 +164,21 @@ class _MapContent extends HookConsumerWidget {
       children: [
         MapLibreMap(
           options: mapOptions,
+          onMapCreated: (controller) {
+            mapController.value = controller;
+          },
           onEvent: (event) async {
             MapLibreEventProvider.of(context).emit(event);
             if (event is MapEventClick) {
+              final controller = mapController.value;
+              if (controller == null) {
+                return;
+              }
               final jmaMap = await ref.read(jmaMapProvider.future);
 
               if (context.mounted) {
                 await _handleTap(
+                  mapController: controller,
                   context: context,
                   ref: ref,
                   event: event,
@@ -229,7 +239,11 @@ class _MapContent extends HookConsumerWidget {
           child: SafeArea(
             child: _MapControllerCard(
               onFitBoundsTap: () async {
-                await _fitBounds(context, dbTree: dbTree);
+                final controller = mapController.value;
+                if (controller == null) {
+                  return;
+                }
+                await _fitBounds(controller, dbTree: dbTree);
               },
               onDebugTap: isDebugger
                   ? () async {
@@ -258,18 +272,14 @@ class _MapContent extends HookConsumerWidget {
   }
 
   Future<void> _handleTap({
+    required MapController mapController,
     required BuildContext context,
     required WidgetRef ref,
     required MapEventClick event,
     required Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
     ShindoDbIntensityTree? dbTree,
   }) async {
-    final controller = MapController.maybeOf(context);
-    if (controller == null) {
-      return;
-    }
-
-    final hits = controller.queryLayers(event.screenPoint);
+    final hits = mapController.queryLayers(event.screenPoint);
     if (hits.isEmpty) {
       return;
     }
@@ -464,14 +474,9 @@ class _MapContent extends HookConsumerWidget {
   }
 
   Future<void> _fitBounds(
-    BuildContext context, {
+    MapController controller, {
     ShindoDbIntensityTree? dbTree,
   }) async {
-    final controller = MapController.maybeOf(context);
-    if (controller == null) {
-      return;
-    }
-
     final points = <Geographic>[];
 
     if (dbTree != null) {

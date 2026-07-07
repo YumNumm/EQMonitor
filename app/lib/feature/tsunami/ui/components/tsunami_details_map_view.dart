@@ -81,11 +81,15 @@ class _MapContent extends HookConsumerWidget {
       maxZoom: maxZoom,
       gestures: gestures,
     );
+    final mapController = useState<MapController?>(null);
 
     return Stack(
       children: [
         MapLibreMap(
           options: mapOptions,
+          onMapCreated: (controller) {
+            mapController.value = controller;
+          },
           onEvent: (event) {
             MapLibreEventProvider.of(context).emit(event);
           },
@@ -103,7 +107,11 @@ class _MapContent extends HookConsumerWidget {
           child: SafeArea(
             child: _MapControllerCard(
               onFitBoundsTap: () async {
-                await _fitBounds(context);
+                final controller = mapController.value;
+                if (controller == null) {
+                  return;
+                }
+                await _fitBounds(controller);
               },
             ),
           ),
@@ -123,12 +131,7 @@ class _MapContent extends HookConsumerWidget {
     return _kDefaultCenter;
   }
 
-  Future<void> _fitBounds(BuildContext context) async {
-    final controller = MapController.maybeOf(context);
-    if (controller == null) {
-      return;
-    }
-
+  Future<void> _fitBounds(MapController controller) async {
     final points = <Geographic>[];
 
     // 震源

@@ -85,7 +85,7 @@ jobs:
       - name: Install Gems
         working-directory: app/android
         run: |
-          gem install bundler
+          gem install bundler # zizmor: ignore[adhoc-packages]
           bundle install
 
       - name: Set Google Play Service Account
@@ -225,7 +225,7 @@ jobs:
       - name: Install Gems
         working-directory: app/ios
         run: |
-          gem install bundler
+          gem install bundler # zizmor: ignore[adhoc-packages]
           bundle install
 
       - name: Install Brewfile dependencies
