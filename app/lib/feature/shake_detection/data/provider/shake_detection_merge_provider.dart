@@ -21,6 +21,11 @@ List<ShakeDetectionEvent> shakeDetectionMerged(Ref ref) {
   final travelTimeMap = ref.watch(travelTimeDepthMapProvider);
   final now = ref.read(appClockProvider.notifier).now().toUtc();
 
+  // 走時表未ロード時は enrichment なしで返す
+  if (travelTimeMap == null) {
+    return shakes.toList();
+  }
+
   return shakes.map((shake) {
     final mergedId = _findMergedEew(shake, eews, travelTimeMap, now);
     return shake.copyWith(mergedEewEventId: mergedId);

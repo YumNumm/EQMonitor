@@ -83,7 +83,7 @@ return appLaunch(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( NotificationReceivedEvent value)  notificationReceived,required TResult Function( NotificationOpenedEvent value)  notificationOpened,required TResult Function( LiveActivityStartedEvent value)  liveActivityStarted,required TResult Function( LiveActivityUpdatedEvent value)  liveActivityUpdated,required TResult Function( LiveActivityEndedEvent value)  liveActivityEnded,required TResult Function( ErrorTelemetryEvent value)  error,required TResult Function( AppLaunchEvent value)  appLaunch,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( NotificationReceivedEvent value)  notificationReceived,required TResult Function( NotificationOpenedEvent value)  notificationOpened,required TResult Function( LiveActivityStartedEvent value)  liveActivityStarted,required TResult Function( LiveActivityUpdatedEvent value)  liveActivityUpdated,required TResult Function( LiveActivityEndedEvent value)  liveActivityEnded,required TResult Function( ErrorTelemetryEvent value)  error,required TResult Function( StartupTimingEvent value)  startupTiming,required TResult Function( AppLaunchEvent value)  appLaunch,}){
 final _that = this;
 switch (_that) {
 case NotificationReceivedEvent():
@@ -92,7 +92,8 @@ return notificationOpened(_that);case LiveActivityStartedEvent():
 return liveActivityStarted(_that);case LiveActivityUpdatedEvent():
 return liveActivityUpdated(_that);case LiveActivityEndedEvent():
 return liveActivityEnded(_that);case ErrorTelemetryEvent():
-return error(_that);case AppLaunchEvent():
+return error(_that);case StartupTimingEvent():
+return startupTiming(_that);case AppLaunchEvent():
 return appLaunch(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -161,7 +162,7 @@ return appLaunch(_that.launchType,_that.appVersion,_that.buildNumber,_that.platf
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( NotificationFramework framework,  String channelId,  String? title,  String? eventId,  String? priority)  notificationReceived,required TResult Function( bool coldStart,  String? eventId,  int? elapsedMs)  notificationOpened,required TResult Function( LiveActivityType activityType,  String activityId)  liveActivityStarted,required TResult Function( LiveActivityType activityType,  String activityId,  String? eventId)  liveActivityUpdated,required TResult Function( LiveActivityType activityType,  String activityId,  LiveActivityEndReason endReason,  int? durationMs)  liveActivityEnded,required TResult Function( String errorType,  String message,  String? stackTrace)  error,required TResult Function( String launchType,  String appVersion,  int buildNumber,  String platform,  String osVersion,  String deviceModel,  String locale,  bool isPhysicalDevice,  int physicalRamMb,  int cpuCores,  String manufacturer,  int? androidSdkInt,  String? securityPatch,  bool? isLowRamDevice,  String? installerStore)  appLaunch,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( NotificationFramework framework,  String channelId,  String? title,  String? eventId,  String? priority)  notificationReceived,required TResult Function( bool coldStart,  String? eventId,  int? elapsedMs)  notificationOpened,required TResult Function( LiveActivityType activityType,  String activityId)  liveActivityStarted,required TResult Function( LiveActivityType activityType,  String activityId,  String? eventId)  liveActivityUpdated,required TResult Function( LiveActivityType activityType,  String activityId,  LiveActivityEndReason endReason,  int? durationMs)  liveActivityEnded,required TResult Function( String errorType,  String message,  String? stackTrace)  error,required TResult Function( Map<String, int> phasesMicros)  startupTiming,required TResult Function( String launchType,  String appVersion,  int buildNumber,  String platform,  String osVersion,  String deviceModel,  String locale,  bool isPhysicalDevice,  int physicalRamMb,  int cpuCores,  String manufacturer,  int? androidSdkInt,  String? securityPatch,  bool? isLowRamDevice,  String? installerStore)  appLaunch,}) {final _that = this;
 switch (_that) {
 case NotificationReceivedEvent():
 return notificationReceived(_that.framework,_that.channelId,_that.title,_that.eventId,_that.priority);case NotificationOpenedEvent():
@@ -169,7 +170,8 @@ return notificationOpened(_that.coldStart,_that.eventId,_that.elapsedMs);case Li
 return liveActivityStarted(_that.activityType,_that.activityId);case LiveActivityUpdatedEvent():
 return liveActivityUpdated(_that.activityType,_that.activityId,_that.eventId);case LiveActivityEndedEvent():
 return liveActivityEnded(_that.activityType,_that.activityId,_that.endReason,_that.durationMs);case ErrorTelemetryEvent():
-return error(_that.errorType,_that.message,_that.stackTrace);case AppLaunchEvent():
+return error(_that.errorType,_that.message,_that.stackTrace);case StartupTimingEvent():
+return startupTiming(_that.phasesMicros);case AppLaunchEvent():
 return appLaunch(_that.launchType,_that.appVersion,_that.buildNumber,_that.platform,_that.osVersion,_that.deviceModel,_that.locale,_that.isPhysicalDevice,_that.physicalRamMb,_that.cpuCores,_that.manufacturer,_that.androidSdkInt,_that.securityPatch,_that.isLowRamDevice,_that.installerStore);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -619,6 +621,72 @@ errorType: null == errorType ? _self.errorType : errorType // ignore: cast_nulla
 as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
 as String?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class StartupTimingEvent extends TelemetryEvent {
+  const StartupTimingEvent({required this.phasesMicros}): super._();
+
+
+ final  Map<String, int> phasesMicros;
+
+/// Create a copy of TelemetryEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$StartupTimingEventCopyWith<StartupTimingEvent> get copyWith => _$StartupTimingEventCopyWithImpl<StartupTimingEvent>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StartupTimingEvent&&(identical(other.phasesMicros, phasesMicros) || other.phasesMicros == phasesMicros));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,phasesMicros);
+
+@override
+String toString() {
+  return 'TelemetryEvent.startupTiming(phasesMicros: $phasesMicros)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $StartupTimingEventCopyWith<$Res> implements $TelemetryEventCopyWith<$Res> {
+  factory $StartupTimingEventCopyWith(StartupTimingEvent value, $Res Function(StartupTimingEvent) _then) = _$StartupTimingEventCopyWithImpl;
+@useResult
+$Res call({
+ Map<String, int> phasesMicros
+});
+
+
+
+
+}
+/// @nodoc
+class _$StartupTimingEventCopyWithImpl<$Res>
+    implements $StartupTimingEventCopyWith<$Res> {
+  _$StartupTimingEventCopyWithImpl(this._self, this._then);
+
+  final StartupTimingEvent _self;
+  final $Res Function(StartupTimingEvent) _then;
+
+/// Create a copy of TelemetryEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? phasesMicros = null,}) {
+  return _then(StartupTimingEvent(
+phasesMicros: null == phasesMicros ? _self.phasesMicros : phasesMicros // ignore: cast_nullable_to_non_nullable
+as Map<String, int>,
   ));
 }
 
