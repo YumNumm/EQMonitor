@@ -40,9 +40,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
 
     return permissionState.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stackTrace) => Center(
-        child: Text('権限の確認に失敗しました: $error'),
-      ),
+      error: (error, stackTrace) => Center(child: Text('権限の確認に失敗しました: $error')),
       data: (state) => Padding(
         padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
         child: ListView(
@@ -55,8 +53,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
               children: [
                 _PermissionActionCard(
                   title: '通知を許可',
-                  description:
-                      '地震情報や緊急地震速報を通知でお知らせします。通知を送る条件や地域はこの後設定できます',
+                  description: '地震情報や緊急地震速報を通知でお知らせします。通知を送る条件や地域はこの後設定できます',
                   decision: state.notification,
                   isEnabled: !isProcessing,
                   onSkip: () => permissionFlow.skipNotification(ref),
@@ -215,7 +212,7 @@ class _PermissionActionCard extends StatelessWidget {
     final isGranted = decision == PermissionItemDecision.granted;
     final isSkipped = decision == PermissionItemDecision.skipped;
     final actionButtons = isGranted
-        ? const [_GrantedPermissionChip()]
+        ? const [Icon(Icons.check), Text('許可しました')]
         : [
             TextButton(
               onPressed: isSkipped || !isEnabled ? null : onSkip,
@@ -330,23 +327,6 @@ class _InlineTextLink extends StatelessWidget {
           decoration: TextDecoration.underline,
         ),
       ),
-    );
-  }
-}
-
-class _GrantedPermissionChip extends StatelessWidget {
-  const _GrantedPermissionChip();
-
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-
-    return Chip(
-      avatar: Icon(
-        Icons.check_circle_outline,
-        color: designSystem.colorTheme.status.success,
-      ),
-      label: const Text('許可しました'),
     );
   }
 }
