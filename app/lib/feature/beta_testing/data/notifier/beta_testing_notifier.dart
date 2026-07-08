@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'beta_testing_notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class BetaTestingAgreed extends _$BetaTestingAgreed {
   @override
   Future<bool> build() async {
@@ -16,10 +16,10 @@ class BetaTestingAgreed extends _$BetaTestingAgreed {
 
   static final agreeMutation = Mutation<void>();
   Future<void> agree() async {
-    state = const AsyncData(true);
     final dataSource = await ref.read(
       sharedPreferencesDataSourceProvider.future,
     );
     await dataSource.setBool(key: .betaTestingAgreed, value: true);
+    state = const AsyncData(true);
   }
 }

@@ -22,7 +22,7 @@ final class BetaTestingAgreedProvider
         argument: null,
         retry: null,
         name: r'betaTestingAgreedProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -35,7 +35,7 @@ final class BetaTestingAgreedProvider
   BetaTestingAgreed create() => BetaTestingAgreed();
 }
 
-String _$betaTestingAgreedHash() => r'0ea6ff0fc00841204f03ed5c75807bef57030b0d';
+String _$betaTestingAgreedHash() => r'239eac780d912fc4a20b8fec8a002a9ab84dd7f0';
 
 abstract class _$BetaTestingAgreed extends $AsyncNotifier<bool> {
   FutureOr<bool> build();
