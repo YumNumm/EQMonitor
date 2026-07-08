@@ -1,2 +1,7 @@
 # zizmor discovers this from .github/workflows/ (see https://docs.zizmor.sh/configuration/)
-rules: {}
+rules:
+  adhoc-packages:
+    ignore:
+      # Fastlane 用 Gemfile があるが bundler 自体は gem install で導入する
+      - tag-release.yaml:88
+      - tag-release.yaml:228

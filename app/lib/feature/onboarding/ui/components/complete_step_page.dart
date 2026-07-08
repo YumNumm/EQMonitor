@@ -1,11 +1,12 @@
 part of '../page/onboarding_page.dart';
 
 class _CompleteStepPage extends HookConsumerWidget {
-  const _CompleteStepPage();
+  const _CompleteStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
     final completeMutation = ref.watch(OnboardingCompleted.completeMutation);
     final isProcessing = completeMutation is MutationPending;
@@ -21,9 +22,8 @@ class _CompleteStepPage extends HookConsumerWidget {
     }
 
     useEffect(() {
-      scope.setStepNavigation(
-        step: _OnboardingStep.complete,
-        state: _StepNavigationState(
+      navigation.register(
+        _StepNavigationState(
           buttonLabel: 'はじめる',
           processingLabel: '準備を完了しています...',
           isNextEnabled: !isProcessing,
@@ -32,7 +32,7 @@ class _CompleteStepPage extends HookConsumerWidget {
         ),
       );
       return null;
-    }, [scope, isProcessing]);
+    }, [navigation, isProcessing]);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),

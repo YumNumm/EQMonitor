@@ -58,11 +58,13 @@
     {
       "type": "SHINDO_DB_STATIONS",
       "schema_version": 1,
-      "source_version": "20260626",
+      "source_version": "20260706",
       "source_updated_at": null,
-      "source_urls": [],
-      "sha256": "0bd5e67bb9ffead6586a3e118d8710425fe080dca4a32829155ef77f8974f6ca",
-      "size_bytes": 877597,
+      "source_urls": [
+        "https://www.data.jma.go.jp/eqev/data/bulletin/data/shindo/code_p.zip"
+      ],
+      "sha256": "45b3a83bc1fb9b7a57cc2e155c1ffd295df925407c826fc022c3a83a7a6b5166",
+      "size_bytes": 1283708,
       "url": "/v2/parameters/SHINDO_DB_STATIONS"
     }
   ]

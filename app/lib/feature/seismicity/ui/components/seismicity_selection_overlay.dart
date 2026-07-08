@@ -13,11 +13,13 @@ import 'package:maplibre/maplibre.dart';
 class SeismicitySelectionOverlay extends HookWidget {
   const SeismicitySelectionOverlay({
     required this.enabled,
+    required this.mapController,
     required this.onSelectionEnd,
     super.key,
   });
 
   final bool enabled;
+  final MapController? mapController;
   final void Function(SeismicityBounds bounds) onSelectionEnd;
 
   @override
@@ -30,7 +32,7 @@ class SeismicitySelectionOverlay extends HookWidget {
         behavior: HitTestBehavior.opaque,
         onPanStart: (details) => selection.startDrag(details.localPosition),
         onPanUpdate: (details) => selection.updateDrag(details.localPosition),
-        onPanEnd: (_) => _handleDragEnd(context, selection),
+        onPanEnd: (_) => _handleDragEnd(selection),
         child: CustomPaint(
           painter: _SelectionPainter(
             start: selection.dragStart,
@@ -42,14 +44,14 @@ class SeismicitySelectionOverlay extends HookWidget {
     );
   }
 
-  void _handleDragEnd(BuildContext context, RectangleSelectionState selection) {
+  void _handleDragEnd(RectangleSelectionState selection) {
     // 退化した(ほぼ動いていない)矩形は useRectangleSelection.endDrag が
     // null を返すため、ここでは選択なしとして扱う。
     final rect = selection.endDrag();
     if (rect == null) {
       return;
     }
-    final controller = MapController.maybeOf(context);
+    final controller = mapController;
     if (controller == null) {
       return;
     }

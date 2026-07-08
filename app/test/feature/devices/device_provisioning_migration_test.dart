@@ -12,7 +12,6 @@ import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
-import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
@@ -82,10 +81,7 @@ void main() {
       prefs.getBool(SharedPreferencesKey.deviceMigratedFromLegacy.key),
       isTrue,
     );
-    expect(
-      prefs.getBool(SharedPreferencesKey.deviceProvisioned.key),
-      isTrue,
-    );
+    expect(prefs.getBool(SharedPreferencesKey.deviceProvisioned.key), isTrue);
   });
 
   test('legacy ID が無ければ registerDevice のみで migrate は呼ばれない', () async {
@@ -106,10 +102,7 @@ void main() {
       prefs.getBool(SharedPreferencesKey.deviceMigratedFromLegacy.key),
       isNot(isTrue),
     );
-    expect(
-      prefs.getBool(SharedPreferencesKey.deviceProvisioned.key),
-      isTrue,
-    );
+    expect(prefs.getBool(SharedPreferencesKey.deviceProvisioned.key), isTrue);
   });
 
   test('migrate が非再試行エラー(400)なら例外が伝播しフラグは立たない', () async {
@@ -178,10 +171,10 @@ class FakeDeviceRepository extends DeviceRepository {
        _putResult = putResult,
        _migrateResult = migrateResult,
        super(
-         api.ApiClient(Dio()),
-         _MemoryDeviceAuthRepository(),
-         Dio(),
+         api: api.ApiClient(Dio()),
+         authRepository: _MemoryDeviceAuthRepository(),
          apnsEnvironment: api.ApnsEnvironment.development,
+         isApplePlatform: true,
        );
 
   final Result<RegisteredDevice, Exception> Function() _getResult;

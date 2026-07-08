@@ -35,6 +35,17 @@ enum SharedPreferencesKey {
   ),
   widgetRegionSelection('widget_region_selection'),
   httpCacheDisabled('http_cache_disabled'),
+  locationPermissionBannerDismissed('location_permission_banner_dismissed'),
+  notificationPreset('notification_preset'),
+  appThemeLight('app_theme_light'),
+  appThemeDark('app_theme_dark'),
+
+  /// 旧震度カラー設定（移行用）
+  estimatedIntensityColor('estimated_intensity_color'),
+  bglDebugNotifyLatLng('bgl_debug_latlng'),
+  bglDebugNotifyRegion('bgl_debug_region'),
+  bglDebugNotifyPrefecture('bgl_debug_prefecture'),
+  bglDebugNotifyApiUpdate('bgl_debug_api_update'),
   ;
 
   const SharedPreferencesKey(this.key);

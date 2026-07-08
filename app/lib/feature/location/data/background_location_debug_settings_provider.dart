@@ -1,12 +1,8 @@
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'background_location_debug_settings_provider.g.dart';
-
-const _keyNotifyLatLng = 'bgl_debug_latlng';
-const _keyNotifyRegion = 'bgl_debug_region';
-const _keyNotifyPrefecture = 'bgl_debug_prefecture';
-const _keyNotifyApiUpdate = 'bgl_debug_api_update';
 
 typedef BackgroundLocationDebugSettingsState = ({
   bool notifyLatLng,
@@ -21,57 +17,99 @@ typedef BackgroundLocationDebugSettingsState = ({
 class BackgroundLocationDebugSettings
     extends _$BackgroundLocationDebugSettings {
   @override
-  BackgroundLocationDebugSettingsState build() {
-    final prefs = ref.watch(sharedPreferencesProvider);
+  Future<BackgroundLocationDebugSettingsState> build() async {
+    final dataSource = await ref.watch(
+      sharedPreferencesDataSourceProvider.future,
+    );
     return (
-      notifyLatLng: prefs.getBool(_keyNotifyLatLng) ?? false,
-      notifyRegion: prefs.getBool(_keyNotifyRegion) ?? false,
-      notifyPrefecture: prefs.getBool(_keyNotifyPrefecture) ?? false,
-      notifyApiUpdate: prefs.getBool(_keyNotifyApiUpdate) ?? false,
+      notifyLatLng:
+          await dataSource.getBool(
+            key: SharedPreferencesKey.bglDebugNotifyLatLng,
+          ) ??
+          false,
+      notifyRegion:
+          await dataSource.getBool(
+            key: SharedPreferencesKey.bglDebugNotifyRegion,
+          ) ??
+          false,
+      notifyPrefecture:
+          await dataSource.getBool(
+            key: SharedPreferencesKey.bglDebugNotifyPrefecture,
+          ) ??
+          false,
+      notifyApiUpdate:
+          await dataSource.getBool(
+            key: SharedPreferencesKey.bglDebugNotifyApiUpdate,
+          ) ??
+          false,
     );
   }
 
   Future<void> setNotifyLatLng({required bool value}) async {
-    await ref.read(sharedPreferencesProvider).setBool(_keyNotifyLatLng, value);
-    state = (
-      notifyLatLng: value,
-      notifyRegion: state.notifyRegion,
-      notifyPrefecture: state.notifyPrefecture,
-      notifyApiUpdate: state.notifyApiUpdate,
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
     );
+    await dataSource.setBool(
+      key: SharedPreferencesKey.bglDebugNotifyLatLng,
+      value: value,
+    );
+    final current = state.requireValue;
+    state = AsyncData((
+      notifyLatLng: value,
+      notifyRegion: current.notifyRegion,
+      notifyPrefecture: current.notifyPrefecture,
+      notifyApiUpdate: current.notifyApiUpdate,
+    ));
   }
 
   Future<void> setNotifyRegion({required bool value}) async {
-    await ref.read(sharedPreferencesProvider).setBool(_keyNotifyRegion, value);
-    state = (
-      notifyLatLng: state.notifyLatLng,
-      notifyRegion: value,
-      notifyPrefecture: state.notifyPrefecture,
-      notifyApiUpdate: state.notifyApiUpdate,
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
     );
+    await dataSource.setBool(
+      key: SharedPreferencesKey.bglDebugNotifyRegion,
+      value: value,
+    );
+    final current = state.requireValue;
+    state = AsyncData((
+      notifyLatLng: current.notifyLatLng,
+      notifyRegion: value,
+      notifyPrefecture: current.notifyPrefecture,
+      notifyApiUpdate: current.notifyApiUpdate,
+    ));
   }
 
   Future<void> setNotifyPrefecture({required bool value}) async {
-    await ref
-        .read(sharedPreferencesProvider)
-        .setBool(_keyNotifyPrefecture, value);
-    state = (
-      notifyLatLng: state.notifyLatLng,
-      notifyRegion: state.notifyRegion,
-      notifyPrefecture: value,
-      notifyApiUpdate: state.notifyApiUpdate,
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
     );
+    await dataSource.setBool(
+      key: SharedPreferencesKey.bglDebugNotifyPrefecture,
+      value: value,
+    );
+    final current = state.requireValue;
+    state = AsyncData((
+      notifyLatLng: current.notifyLatLng,
+      notifyRegion: current.notifyRegion,
+      notifyPrefecture: value,
+      notifyApiUpdate: current.notifyApiUpdate,
+    ));
   }
 
   Future<void> setNotifyApiUpdate({required bool value}) async {
-    await ref
-        .read(sharedPreferencesProvider)
-        .setBool(_keyNotifyApiUpdate, value);
-    state = (
-      notifyLatLng: state.notifyLatLng,
-      notifyRegion: state.notifyRegion,
-      notifyPrefecture: state.notifyPrefecture,
-      notifyApiUpdate: value,
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
     );
+    await dataSource.setBool(
+      key: SharedPreferencesKey.bglDebugNotifyApiUpdate,
+      value: value,
+    );
+    final current = state.requireValue;
+    state = AsyncData((
+      notifyLatLng: current.notifyLatLng,
+      notifyRegion: current.notifyRegion,
+      notifyPrefecture: current.notifyPrefecture,
+      notifyApiUpdate: value,
+    ));
   }
 }

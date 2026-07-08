@@ -26,7 +26,7 @@ class Ntp extends _$Ntp {
   }
 
   Future<void> sync() async {
-    final config = ref.read(ntpConfigProvider).requireValue;
+    final config = await ref.read(ntpConfigProvider.future);
     final int offset;
     if (kIsWeb) {
       offset = await NTP.getNtpOffset(

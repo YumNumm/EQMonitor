@@ -143,7 +143,8 @@ class _DebugWidget extends ConsumerWidget {
             ),
             Builder(
               builder: (context) {
-                final isDisabled = ref.watch(httpCacheDisabledProvider);
+                final isDisabled =
+                    ref.watch(httpCacheDisabledProvider).value ?? false;
                 return ListTile(
                   title: const Text('HTTPキャッシュを無効化'),
                   subtitle: const Text('キャッシュの読み書きをスキップします'),
@@ -188,9 +189,9 @@ class _DebugWidget extends ConsumerWidget {
             ),
             Builder(
               builder: (context) {
-                final isAllowed = ref.watch(
-                  estimatedIntensityOnEewReplayAllowedProvider,
-                );
+                final isAllowed =
+                    ref.watch(estimatedIntensityOnEewReplayAllowedProvider).value ??
+                    false;
                 return ListTile(
                   title: const Text('EEW 推定震度表示'),
                   subtitle: Text(
@@ -575,7 +576,10 @@ class _BackgroundLocationDebugSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(backgroundLocationDebugSettingsProvider);
+    final settings = ref.watch(backgroundLocationDebugSettingsProvider).value;
+    if (settings == null) {
+      return const SizedBox.shrink();
+    }
     final notifier = ref.read(backgroundLocationDebugSettingsProvider.notifier);
 
     return Column(

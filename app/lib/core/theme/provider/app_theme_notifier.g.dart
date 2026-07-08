@@ -16,7 +16,7 @@ final appThemeProvider = AppThemeNotifierProvider._();
 
 final class AppThemeNotifierProvider
     extends
-        $NotifierProvider<
+        $AsyncNotifierProvider<
           AppThemeNotifier,
           ({AppTheme darkTheme, AppTheme lightTheme})
         > {
@@ -37,43 +37,30 @@ final class AppThemeNotifierProvider
   @$internal
   @override
   AppThemeNotifier create() => AppThemeNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(
-    ({AppTheme darkTheme, AppTheme lightTheme}) value,
-  ) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride:
-          $SyncValueProvider<({AppTheme darkTheme, AppTheme lightTheme})>(
-            value,
-          ),
-    );
-  }
 }
 
-String _$appThemeNotifierHash() => r'9d54e7f0af2142999693962a584dc0124ac5ebf1';
+String _$appThemeNotifierHash() => r'5dd2877a8da807cf32542f91f21bf91bbe6d2f9b';
 
 abstract class _$AppThemeNotifier
-    extends $Notifier<({AppTheme darkTheme, AppTheme lightTheme})> {
-  ({AppTheme darkTheme, AppTheme lightTheme}) build();
+    extends $AsyncNotifier<({AppTheme darkTheme, AppTheme lightTheme})> {
+  FutureOr<({AppTheme darkTheme, AppTheme lightTheme})> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
-              ({AppTheme darkTheme, AppTheme lightTheme}),
+              AsyncValue<({AppTheme darkTheme, AppTheme lightTheme})>,
               ({AppTheme darkTheme, AppTheme lightTheme})
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                ({AppTheme darkTheme, AppTheme lightTheme}),
+                AsyncValue<({AppTheme darkTheme, AppTheme lightTheme})>,
                 ({AppTheme darkTheme, AppTheme lightTheme})
               >,
-              ({AppTheme darkTheme, AppTheme lightTheme}),
+              AsyncValue<({AppTheme darkTheme, AppTheme lightTheme})>,
               Object?,
               Object?
             >;
@@ -120,7 +107,7 @@ final class ActiveColorSetProvider
   }
 }
 
-String _$activeColorSetHash() => r'8a16219fcadf26e9ab422e6a36210c5577e07286';
+String _$activeColorSetHash() => r'44a0aa274d5f11ae1892e319205361ddda1407e9';
 
 @ProviderFor(colorSetForBrightness)
 final colorSetForBrightnessProvider = ColorSetForBrightnessFamily._();
@@ -180,7 +167,7 @@ final class ColorSetForBrightnessProvider
 }
 
 String _$colorSetForBrightnessHash() =>
-    r'a5e456add7e92597b9d23beb29600d8ec3e68d94';
+    r'4ad5aa3f021fd1a17a6a15ca8fb5bd11ddcbad6c';
 
 final class ColorSetForBrightnessFamily extends $Family
     with $FunctionalFamilyOverride<ThemeColorSet, Brightness> {

@@ -19,7 +19,7 @@ final httpCacheDisabledProvider = HttpCacheDisabledProvider._();
 /// HTTPキャッシュ(ETag/304透過キャッシュ)の読み書きを完全に無効化するフラグ。
 /// デバッグ用途。変更は dio プロバイダが watch しているため即座に反映される。
 final class HttpCacheDisabledProvider
-    extends $NotifierProvider<HttpCacheDisabled, bool> {
+    extends $AsyncNotifierProvider<HttpCacheDisabled, bool> {
   /// HTTPキャッシュ(ETag/304透過キャッシュ)の読み書きを完全に無効化するフラグ。
   /// デバッグ用途。変更は dio プロバイダが watch しているため即座に反映される。
   HttpCacheDisabledProvider._()
@@ -39,32 +39,24 @@ final class HttpCacheDisabledProvider
   @$internal
   @override
   HttpCacheDisabled create() => HttpCacheDisabled();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
 }
 
-String _$httpCacheDisabledHash() => r'080ae9e009188f1951fc33eab7d37153d807f09c';
+String _$httpCacheDisabledHash() => r'ae9551c321718ad1e481a76fad8351f840103a5c';
 
 /// HTTPキャッシュ(ETag/304透過キャッシュ)の読み書きを完全に無効化するフラグ。
 /// デバッグ用途。変更は dio プロバイダが watch しているため即座に反映される。
 
-abstract class _$HttpCacheDisabled extends $Notifier<bool> {
-  bool build();
+abstract class _$HttpCacheDisabled extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<bool, bool>,
-              bool,
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
               Object?,
               Object?
             >;

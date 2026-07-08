@@ -4,23 +4,21 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_applier.dart';
+import 'package:eqmonitor/feature/permission/data/flow/onboarding_permission_flow.dart';
+import 'package:eqmonitor/feature/permission/data/model/permission_item_decision.dart';
+import 'package:eqmonitor/feature/permission/data/notifier/permission_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
@@ -31,14 +29,24 @@ part '../components/onboarding_hero.dart';
 part '../components/onboarding_step_page.dart';
 part '../components/permissions_step_page.dart';
 part '../components/welcome_step_page.dart';
-part '../model/onboarding_permission_status.dart';
 part '../model/onboarding_step.dart';
 
-typedef _SetStepNavigation =
-    void Function({
-      required _OnboardingStep step,
-      required _StepNavigationState state,
-    });
+typedef _OnboardingNavigationRegistrar =
+    void Function(_StepNavigationState state);
+
+class _OnboardingStepNavigation {
+  const _OnboardingStepNavigation({
+    required this.isActive,
+    required this.nextPage,
+    required this.previousPage,
+    required this.register,
+  });
+
+  final bool isActive;
+  final Future<void> Function() nextPage;
+  final Future<void> Function() previousPage;
+  final _OnboardingNavigationRegistrar register;
+}
 
 class OnboardingPage extends HookConsumerWidget {
   const OnboardingPage({super.key});
@@ -50,7 +58,6 @@ class OnboardingPage extends HookConsumerWidget {
     final pageController = usePageController();
     final currentPage = useState(0);
     final stepNavigation = useState(_StepNavigationState.initial(_steps.first));
-    final designSystem = context.designSystem;
 
     final animateToNext = useCallback<Future<void> Function()>(() async {
       await pageController.nextPage(
@@ -66,24 +73,34 @@ class OnboardingPage extends HookConsumerWidget {
       );
     }, [pageController]);
 
-    final setStepNavigation = useCallback<_SetStepNavigation>(({
-      required step,
-      required state,
-    }) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!context.mounted || step != _steps[currentPage.value]) {
-          return;
-        }
-        stepNavigation.value = state;
-      });
-    }, [currentPage, stepNavigation]);
+    final currentStep = _steps[currentPage.value];
+
+    final stepControls = Map.fromEntries(
+      _steps.map(
+        (step) => MapEntry(
+          step,
+          _OnboardingStepNavigation(
+            isActive: currentStep == step,
+            nextPage: animateToNext,
+            previousPage: goToPrevious,
+            register: (state) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (!context.mounted || step != _steps[currentPage.value]) {
+                  return;
+                }
+                stepNavigation.value = state;
+              });
+            },
+          ),
+        ),
+      ),
+    );
 
     void onPageChanged(int index) {
       currentPage.value = index;
       stepNavigation.value = _StepNavigationState.initial(_steps[index]);
     }
 
-    final currentStep = _steps[currentPage.value];
     final navigation = stepNavigation.value;
 
     final showBack =
@@ -95,14 +112,14 @@ class OnboardingPage extends HookConsumerWidget {
       await stepNavigation.value.onNext?.call();
     }
 
-    return Scaffold(
-      backgroundColor: designSystem.colorTheme.surfaceContainerLow,
-      body: _OnboardingScope(
-        currentStep: currentStep,
-        nextPage: animateToNext,
-        previousPage: goToPrevious,
-        setStepNavigation: setStepNavigation,
-        child: SafeArea(
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) {
+          unawaited(goToPrevious());
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
           child: Column(
             children: [
               Expanded(
@@ -111,8 +128,10 @@ class OnboardingPage extends HookConsumerWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: onPageChanged,
                   itemCount: _steps.length,
-                  itemBuilder: (context, index) =>
-                      _OnboardingStepPage(step: _steps[index]),
+                  itemBuilder: (context, index) => _OnboardingStepPage(
+                    step: _steps[index],
+                    navigation: stepControls[_steps[index]]!,
+                  ),
                 ),
               ),
               _OnboardingBottomBar(
@@ -134,34 +153,6 @@ class OnboardingPage extends HookConsumerWidget {
   }
 }
 
-class _OnboardingScope extends InheritedWidget {
-  const _OnboardingScope({
-    required this.currentStep,
-    required this.nextPage,
-    required this.previousPage,
-    required this.setStepNavigation,
-    required super.child,
-  });
-
-  final _OnboardingStep currentStep;
-  final Future<void> Function() nextPage;
-  final Future<void> Function() previousPage;
-  final _SetStepNavigation setStepNavigation;
-
-  static _OnboardingScope of(BuildContext context) {
-    final scope = context
-        .dependOnInheritedWidgetOfExactType<_OnboardingScope>();
-    if (scope == null) {
-      throw StateError('_OnboardingScope is not found');
-    }
-    return scope;
-  }
-
-  @override
-  bool updateShouldNotify(_OnboardingScope oldWidget) =>
-      currentStep != oldWidget.currentStep;
-}
-
 class _StepNavigationState {
   const _StepNavigationState({
     required this.buttonLabel,
@@ -180,8 +171,9 @@ class _StepNavigationState {
         processingLabel: '処理しています...',
         isNextEnabled: switch (step) {
           _OnboardingStep.welcome => false,
+          _OnboardingStep.permissions => false,
           _OnboardingStep.notificationSettings => false,
-          _ => true,
+          _OnboardingStep.complete => false,
         },
         isProcessing: false,
         onNext: null,

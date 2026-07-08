@@ -15,14 +15,14 @@ part of 'beta_testing_notifier.dart';
 final betaTestingAgreedProvider = BetaTestingAgreedProvider._();
 
 final class BetaTestingAgreedProvider
-    extends $NotifierProvider<BetaTestingAgreed, bool> {
+    extends $AsyncNotifierProvider<BetaTestingAgreed, bool> {
   BetaTestingAgreedProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'betaTestingAgreedProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -33,29 +33,21 @@ final class BetaTestingAgreedProvider
   @$internal
   @override
   BetaTestingAgreed create() => BetaTestingAgreed();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
 }
 
-String _$betaTestingAgreedHash() => r'4b19f15edbf808bead1fb43e236490580c0db3d8';
+String _$betaTestingAgreedHash() => r'239eac780d912fc4a20b8fec8a002a9ab84dd7f0';
 
-abstract class _$BetaTestingAgreed extends $Notifier<bool> {
-  bool build();
+abstract class _$BetaTestingAgreed extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<bool, bool>,
-              bool,
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
               Object?,
               Object?
             >;

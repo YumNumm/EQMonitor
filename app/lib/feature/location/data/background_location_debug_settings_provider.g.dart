@@ -21,7 +21,7 @@ final backgroundLocationDebugSettingsProvider =
 /// デバッグ画面から ON/OFF できる。
 final class BackgroundLocationDebugSettingsProvider
     extends
-        $NotifierProvider<
+        $AsyncNotifierProvider<
           BackgroundLocationDebugSettings,
           BackgroundLocationDebugSettingsState
         > {
@@ -44,43 +44,34 @@ final class BackgroundLocationDebugSettingsProvider
   @$internal
   @override
   BackgroundLocationDebugSettings create() => BackgroundLocationDebugSettings();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(BackgroundLocationDebugSettingsState value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride:
-          $SyncValueProvider<BackgroundLocationDebugSettingsState>(value),
-    );
-  }
 }
 
 String _$backgroundLocationDebugSettingsHash() =>
-    r'793e5d0fe78bfab48d0e6fc393fd8b68a7bd9013';
+    r'6c4a3f2f46147f2a001ee9bb10b7690caef2631a';
 
 /// バックグラウンド位置更新のデバッグ通知設定。
 /// デバッグ画面から ON/OFF できる。
 
 abstract class _$BackgroundLocationDebugSettings
-    extends $Notifier<BackgroundLocationDebugSettingsState> {
-  BackgroundLocationDebugSettingsState build();
+    extends $AsyncNotifier<BackgroundLocationDebugSettingsState> {
+  FutureOr<BackgroundLocationDebugSettingsState> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
-              BackgroundLocationDebugSettingsState,
+              AsyncValue<BackgroundLocationDebugSettingsState>,
               BackgroundLocationDebugSettingsState
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                BackgroundLocationDebugSettingsState,
+                AsyncValue<BackgroundLocationDebugSettingsState>,
                 BackgroundLocationDebugSettingsState
               >,
-              BackgroundLocationDebugSettingsState,
+              AsyncValue<BackgroundLocationDebugSettingsState>,
               Object?,
               Object?
             >;

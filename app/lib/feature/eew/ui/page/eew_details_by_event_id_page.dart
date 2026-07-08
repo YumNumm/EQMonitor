@@ -157,9 +157,8 @@ class _SimulationView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final simulation = ref.watch(eewSimulationProvider);
     final currentEew = simulation?.currentReport ?? selectedEew;
-    final isEstimatedAllowed = ref.watch(
-      estimatedIntensityOnEewReplayAllowedProvider,
-    );
+    final isEstimatedAllowed =
+        ref.watch(estimatedIntensityOnEewReplayAllowedProvider).value ?? false;
 
     // timeTickerProvider を watch して毎秒リビルドさせる
     ref.watch(timeTickerProvider());
@@ -310,9 +309,8 @@ class _ResponsiveLayout extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isEstimatedAllowed = ref.watch(
-      estimatedIntensityOnEewReplayAllowedProvider,
-    );
+    final isEstimatedAllowed =
+        ref.watch(estimatedIntensityOnEewReplayAllowedProvider).value ?? false;
 
     final estimatedRegions = useEewEstimatedRegionsWithStaleCache(
       ref: ref,

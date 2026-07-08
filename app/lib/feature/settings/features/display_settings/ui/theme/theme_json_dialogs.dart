@@ -12,7 +12,7 @@ class ThemeImportExportSection extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messenger = ScaffoldMessenger.of(context);
-    final themes = ref.watch(appThemeProvider);
+    final themes = ref.watch(appThemeProvider).requireValue;
 
     Future<void> exportMode(ThemeBrightnessMode mode) async {
       final theme = switch (mode) {

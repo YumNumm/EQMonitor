@@ -114,6 +114,7 @@ class _FetchBody extends HookConsumerWidget {
     final colorMode = useState(SeismicityColorMode.magnitude);
     final isSelecting = useState(false);
     final selectedBounds = useState<SeismicityBounds?>(null);
+    final mapController = useState<MapController?>(null);
 
     final isFetching = useState(false);
     final progress = useState<HinetJmalistFetchProgress?>(null);
@@ -270,6 +271,9 @@ class _FetchBody extends HookConsumerWidget {
                     initCenter: const Geographic(lon: 137.0, lat: 36.5),
                     initZoom: 4.5,
                   ),
+                  onMapCreated: (controller) {
+                    mapController.value = controller;
+                  },
                   children: [
                     SeismicityEpicenterLayer(
                       events: filteredEvents,
@@ -279,6 +283,7 @@ class _FetchBody extends HookConsumerWidget {
                 ),
                 SeismicitySelectionOverlay(
                   enabled: isSelecting.value,
+                  mapController: mapController.value,
                   onSelectionEnd: (bounds) => selectedBounds.value = bounds,
                 ),
               ],

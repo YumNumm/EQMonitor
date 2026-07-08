@@ -13,7 +13,7 @@ part 'theme_editor_controller.g.dart';
 class ThemeEditorController extends _$ThemeEditorController {
   @override
   ThemeColorSet build(ThemeBrightnessMode mode) {
-    final themes = ref.watch(appThemeProvider);
+    final themes = ref.watch(appThemeProvider).requireValue;
     final theme = switch (mode) {
       ThemeBrightnessMode.light => themes.lightTheme,
       ThemeBrightnessMode.dark => themes.darkTheme,

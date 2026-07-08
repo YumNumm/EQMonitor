@@ -109,7 +109,7 @@ class SeismicityPage extends HookConsumerWidget {
   }
 }
 
-class _MapBody extends StatelessWidget {
+class _MapBody extends HookWidget {
   const _MapBody({
     required this.styleString,
     required this.datasetAsync,
@@ -130,6 +130,7 @@ class _MapBody extends StatelessWidget {
       AsyncData(:final value) => value.events,
       _ => const <SeismicityEvent>[],
     };
+    final mapController = useState<MapController?>(null);
 
     return Stack(
       children: [
@@ -139,12 +140,16 @@ class _MapBody extends StatelessWidget {
             initCenter: const Geographic(lon: 137.0, lat: 36.5),
             initZoom: 4.5,
           ),
+          onMapCreated: (controller) {
+            mapController.value = controller;
+          },
           children: [
             SeismicityEpicenterLayer(events: events, colorMode: colorMode),
           ],
         ),
         SeismicitySelectionOverlay(
           enabled: isSelecting,
+          mapController: mapController.value,
           onSelectionEnd: onSelectionEnd,
         ),
         if (datasetAsync case AsyncLoading())
@@ -183,8 +188,9 @@ class _MapBody extends StatelessWidget {
                     ),
                   )
                 : Card(
-                    color: context.designSystem.colorTheme.surface
-                        .withValues(alpha: 0.8),
+                    color: context.designSystem.colorTheme.surface.withValues(
+                      alpha: 0.8,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,

@@ -26,27 +26,27 @@ void main() {
       final container = await _container();
       addTearDown(container.dispose);
 
-      expect(container.read(adsOptOutProvider), isFalse);
+      expect(await container.read(adsOptOutProvider.future), isFalse);
     });
 
     test('SharedPreferences に true が入っていれば true を返す', () async {
       final container = await _container(initial: {'ads_opt_out': true});
       addTearDown(container.dispose);
 
-      expect(container.read(adsOptOutProvider), isTrue);
+      expect(await container.read(adsOptOutProvider.future), isTrue);
     });
 
     test('toggle で値が反転する', () async {
       final container = await _container();
       addTearDown(container.dispose);
 
-      expect(container.read(adsOptOutProvider), isFalse);
+      expect(await container.read(adsOptOutProvider.future), isFalse);
 
       await container.read(adsOptOutProvider.notifier).toggle();
-      expect(container.read(adsOptOutProvider), isTrue);
+      expect(await container.read(adsOptOutProvider.future), isTrue);
 
       await container.read(adsOptOutProvider.notifier).toggle();
-      expect(container.read(adsOptOutProvider), isFalse);
+      expect(await container.read(adsOptOutProvider.future), isFalse);
     });
 
     test('setOptOut(value: true) で true 固定にできる', () async {
@@ -54,11 +54,11 @@ void main() {
       addTearDown(container.dispose);
 
       await container.read(adsOptOutProvider.notifier).setOptOut(value: true);
-      expect(container.read(adsOptOutProvider), isTrue);
+      expect(await container.read(adsOptOutProvider.future), isTrue);
 
       // 冪等性: 再度 true でもクラッシュしない
       await container.read(adsOptOutProvider.notifier).setOptOut(value: true);
-      expect(container.read(adsOptOutProvider), isTrue);
+      expect(await container.read(adsOptOutProvider.future), isTrue);
     });
 
     test('setOptOut(value: false) で false に戻せる', () async {
@@ -66,7 +66,7 @@ void main() {
       addTearDown(container.dispose);
 
       await container.read(adsOptOutProvider.notifier).setOptOut(value: false);
-      expect(container.read(adsOptOutProvider), isFalse);
+      expect(await container.read(adsOptOutProvider.future), isFalse);
     });
 
     test('変更後の値が SharedPreferences に永続化される', () async {

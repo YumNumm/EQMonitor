@@ -3,7 +3,6 @@ import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
@@ -17,30 +16,27 @@ part 'device_repository.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<DeviceRepository> deviceRepository(Ref ref) async => DeviceRepository(
-  await ref.watch(apiClientProvider.future),
-  await ref.watch(deviceAuthRepositoryProvider.future),
-  await ref.watch(dioProvider.future),
+  api: await ref.watch(apiClientProvider.future),
+  authRepository: await ref.watch(deviceAuthRepositoryProvider.future),
   apnsEnvironment: ref.watch(apnsEnvironmentProvider),
+  isApplePlatform: !kIsWeb && (Platform.isIOS || Platform.isMacOS),
 );
 
 class DeviceRepository {
-  DeviceRepository(
-    this._api,
-    this._authRepository,
-    this._dio, {
+  DeviceRepository({
+    required api.ApiClient api,
+    required DeviceAuthRepository authRepository,
     required api.ApnsEnvironment apnsEnvironment,
-    bool? isApplePlatform,
-  }) : _apnsEnvironment = apnsEnvironment,
-       _isApplePlatform =
-           isApplePlatform ?? (!kIsWeb && (Platform.isIOS || Platform.isMacOS));
+    required bool isApplePlatform,
+  }) : _api = api,
+       _authRepository = authRepository,
+       _apnsEnvironment = apnsEnvironment,
+       _isApplePlatform = isApplePlatform;
 
   final api.ApiClient _api;
   final DeviceAuthRepository _authRepository;
-  final Dio _dio;
   final api.ApnsEnvironment _apnsEnvironment;
 
-  /// APNs トークン同期は iOS/macOS でのみ行う。
-  /// テストでホスト OS に依存しないよう注入可能にしている。
   final bool _isApplePlatform;
 
   Future<Result<RegisteredDevice, Exception>> getDevice(String deviceId) =>
@@ -73,9 +69,7 @@ class DeviceRepository {
         locale: deviceLocale.toDeviceLocale,
       ),
     );
-    await _authRepository.saveToken(
-      token: registerResponse.data.deviceToken,
-    );
+    await _authRepository.saveToken(token: registerResponse.data.deviceToken);
     final getResponse = await _api.device.getV2DeviceMe();
     return getResponse.data.toRegisteredDevice;
   });

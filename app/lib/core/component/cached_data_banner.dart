@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -54,6 +55,45 @@ class CachedDataBanner extends StatelessWidget {
       duration: const Duration(milliseconds: 200),
       alignment: Alignment.topCenter,
       child: content,
+    );
+  }
+}
+
+/// DataSource の `isRevalidating` (`ValueListenable<bool>`) を購読し、
+/// true の間だけ `CachedDataBanner` の更新中表示と同等のバナーを出す。
+/// 一覧ページのリスト上部に `SliverToBoxAdapter` で挿入する用途を想定。
+class RevalidatingBanner extends StatelessWidget {
+  const RevalidatingBanner({required this.isRevalidating, super.key});
+
+  final ValueListenable<bool> isRevalidating;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: isRevalidating,
+      builder: (context, revalidating, _) {
+        final colorScheme = Theme.of(context).colorScheme;
+        return AnimatedSize(
+          duration: const Duration(milliseconds: 200),
+          alignment: Alignment.topCenter,
+          child: revalidating
+              ? _BannerContent(
+                  key: const ValueKey('revalidating-banner'),
+                  leading: SizedBox(
+                    width: 12,
+                    height: 12,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1.5,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  message: 'キャッシュ表示中・更新を確認しています…',
+                  backgroundColor: colorScheme.surfaceContainerHighest,
+                  foregroundColor: colorScheme.onSurfaceVariant,
+                )
+              : const SizedBox.shrink(),
+        );
+      },
     );
   }
 }

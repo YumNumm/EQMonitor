@@ -146,30 +146,26 @@ class _OnboardingBottomBar extends StatelessWidget {
                       TextSpan(
                         children: [
                           const TextSpan(text: '次へ をタップすることで '),
-                          TextSpan(
-                            text: '利用規約',
-                            style: designSystem.typography.bodySmall.copyWith(
-                              color: context.designSystem.colorTheme.onSurface
-                                  .withValues(alpha: 0.6),
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => const TermOfServiceRoute(
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.baseline,
+                            baseline: TextBaseline.alphabetic,
+                            child: _OnboardingBottomBarInlineLink(
+                              label: '利用規約',
+                              onTap: () => const TermOfServiceRoute(
                                 $extra: null,
                               ).push<void>(context),
+                            ),
                           ),
                           const TextSpan(text: ' と '),
-                          TextSpan(
-                            text: 'プライバシーポリシー',
-                            style: designSystem.typography.bodySmall.copyWith(
-                              color: context.designSystem.colorTheme.onSurface
-                                  .withValues(alpha: 0.6),
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => const PrivacyPolicyRoute(
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.baseline,
+                            baseline: TextBaseline.alphabetic,
+                            child: _OnboardingBottomBarInlineLink(
+                              label: 'プライバシーポリシー',
+                              onTap: () => const PrivacyPolicyRoute(
                                 $extra: null,
                               ).push<void>(context),
+                            ),
                           ),
                           const TextSpan(text: ' に同意したとみなされます'),
                         ],
@@ -183,6 +179,32 @@ class _OnboardingBottomBar extends StatelessWidget {
                 : const SizedBox(width: double.infinity),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _OnboardingBottomBarInlineLink extends StatelessWidget {
+  const _OnboardingBottomBarInlineLink({
+    required this.label,
+    required this.onTap,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Text(
+        label,
+        style: designSystem.typography.bodySmall.copyWith(
+          color: designSystem.colorTheme.onSurface.withValues(alpha: 0.6),
+          decoration: TextDecoration.underline,
+        ),
       ),
     );
   }

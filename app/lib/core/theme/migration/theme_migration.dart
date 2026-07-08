@@ -1,15 +1,13 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
 import 'package:eqmonitor/core/theme/model/intensity_color_entry.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/theme/model/intensity_text_color.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
-
-const _legacyIntensityColorKey = 'intensity_color';
-const _legacyEstimatedIntensityColorKey = 'estimated_intensity_color';
 
 /// 旧震度カラー設定 (`intensity_color` / `estimated_intensity_color`) を
 /// 新しい [AppTheme] 形式にマイグレーションする。
@@ -24,9 +22,15 @@ const _legacyEstimatedIntensityColorKey = 'estimated_intensity_color';
 /// 再試行できるようにするため）。
 ///
 /// 個々のJSONが不正な形式の場合は、その項目のみデフォルト値にフォールバックする。
-AppTheme? migrateFromLegacyIntensityColors(SharedPreferencesAsync prefs) {
-  final intensityJson = prefs.getString(_legacyIntensityColorKey);
-  final estimatedJson = prefs.getString(_legacyEstimatedIntensityColorKey);
+Future<AppTheme?> migrateFromLegacyIntensityColors(
+  SharedPreferencesDataSource dataSource,
+) async {
+  final intensityJson = await dataSource.getString(
+    key: SharedPreferencesKey.intensityColor,
+  );
+  final estimatedJson = await dataSource.getString(
+    key: SharedPreferencesKey.estimatedIntensityColor,
+  );
 
   if (intensityJson == null && estimatedJson == null) {
     return null;
