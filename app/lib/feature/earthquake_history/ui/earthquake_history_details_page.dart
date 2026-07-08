@@ -33,8 +33,6 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final detailsState = ref.watch(earthquakeHistoryDetailsProvider(eventId));
 
-    // SWR 再検証中は「値を保持した AsyncLoading」が流れるため、値ありを最優先で
-    // マッチさせて stale 表示を維持する (Loading 優先だと全画面スピナーに戻る)。
     return switch (detailsState) {
       AsyncValue(:final value?) => _LoadedContent(earthquake: value),
       AsyncError(:final error) => Scaffold(
