@@ -36,6 +36,9 @@ enum SharedPreferencesKey {
   widgetRegionSelection('widget_region_selection'),
   httpCacheDisabled('http_cache_disabled'),
   locationPermissionBannerDismissed('location_permission_banner_dismissed'),
+  notificationPermissionBannerDismissed(
+    'notification_permission_banner_dismissed',
+  ),
   notificationPreset('notification_preset'),
   appThemeLight('app_theme_light'),
   appThemeDark('app_theme_dark'),
