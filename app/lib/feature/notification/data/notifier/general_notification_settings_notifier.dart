@@ -36,7 +36,7 @@ class GeneralNotificationSettingsNotifier
     bool? nankaiRegularEnabled,
     bool? hokkaido3renOffshoreEnabled,
   }) async {
-    final current = state.requireValue;
+    final current = await future;
     final repo = await ref.read(pushNotificationRepositoryProvider.future);
     final deviceId = await ref.read(deviceIdProvider.future);
     final result = await repo.patchNotificationSettings(
