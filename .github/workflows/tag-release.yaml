@@ -139,7 +139,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby
-        uses: ruby/setup-ruby@0dafeac902942906541bc140009cdbf32665b601 # v1.315.0
+        uses: ruby/setup-ruby@d45b1a4e94b71acab930e56e79c6aa188764e7f9 # v1.316.0
         with:
           # リリース成果物を生成するワークフローではキャッシュ汚染リスクを避けるため無効化（zizmor cache-poisoning）
           bundler-cache: false
