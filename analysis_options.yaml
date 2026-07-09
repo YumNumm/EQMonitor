@@ -4,6 +4,7 @@ analyzer:
     avoid_implementing_value_types: ignore
     avoid_print: ignore
     document_ignores: ignore
+    invalid_annotation_target: ignore
     lines_longer_than_80_chars: ignore
     unnecessary_async: ignore
     unnecessary_cast: ignore
