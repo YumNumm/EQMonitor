@@ -16,6 +16,8 @@ abstract class ChangelogEntry with _$ChangelogEntry {
     required DateTime date,
     required String url,
     required List<ChangelogSection> sections,
+    @JsonKey(includeIfNull: false)
+    String? content,
   }) = _ChangelogEntry;
   
   factory ChangelogEntry.fromJson(Map<String, Object?> json) => _$ChangelogEntryFromJson(json);

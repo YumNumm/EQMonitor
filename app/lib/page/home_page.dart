@@ -15,6 +15,9 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_histor
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_feed_sheet.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/location/data/notifier/location_permission_banner_dismissed_notifier.dart';
+import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
+import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
+import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
@@ -105,6 +108,13 @@ class _SheetBody extends ConsumerWidget {
         permission != .always &&
         !isPermissionBannerDismissed;
 
+    final isNotificationGranted =
+        ref.watch(isNotificationPermissionGrantedProvider).value ?? true;
+    final isNotificationBannerDismissed =
+        ref.watch(notificationPermissionBannerDismissedProvider).value ?? false;
+    final showNotificationBanner =
+        !isNotificationGranted && !isNotificationBannerDismissed;
+
     final eewCards = Column(
       children: state.reversed
           .mapIndexed(
@@ -189,6 +199,8 @@ class _SheetBody extends ConsumerWidget {
                   if (state.isNotEmpty) eewCards,
                   MaintenanceBanner(bottomSpacing: spacing.md),
                   WhatsNewBanner(bottomSpacing: spacing.md),
+                  if (showNotificationBanner)
+                    NotificationPermissionBanner(bottomSpacing: spacing.md),
                   DeviceProvisioningBanner(bottomSpacing: spacing.md),
                   if (showPermissionBanner) ...[
                     _LocationPermissionBanner(

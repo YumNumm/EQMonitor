@@ -59,15 +59,14 @@ class _ChangelogList extends StatelessWidget {
     return ListView.builder(
       padding: const EdgeInsets.only(bottom: 32),
       itemCount: entries.length,
-      itemBuilder: (context, index) => _ChangelogEntryCard(
-        entry: entries[index],
-      ),
+      itemBuilder: (context, index) =>
+          ChangelogEntryCard(entry: entries[index]),
     );
   }
 }
 
-class _ChangelogEntryCard extends StatelessWidget {
-  const _ChangelogEntryCard({required this.entry});
+class ChangelogEntryCard extends StatelessWidget {
+  const ChangelogEntryCard({required this.entry, super.key});
 
   final api.ChangelogEntry entry;
 
@@ -75,6 +74,7 @@ class _ChangelogEntryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dateStr = DateFormat('yyyy年MM月dd日').format(entry.date.toLocal());
+    final content = entry.content;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -94,8 +94,14 @@ class _ChangelogEntryCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          for (final section in entry.sections)
-            _SectionWidget(section: section),
+          if (content != null && content.isNotEmpty)
+            MarkdownBody(
+              data: content,
+              styleSheet: MarkdownStyleSheet.fromTheme(theme),
+            )
+          else
+            for (final section in entry.sections)
+              _SectionWidget(section: section),
           const Divider(),
         ],
       ),
