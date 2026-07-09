@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_info_text_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -48,10 +49,8 @@ class ShindoDbHypocenterInformationCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (primary.maxIntensity != null) ...[
                   _MaxIntensityWidget(hypocenter: primary),
@@ -105,26 +104,27 @@ class _PrimaryHypocenterBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final effectiveOriginTime = hypocenter.originTime ?? originTime;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _MagnitudeRow(magnitudes: hypocenter.magnitudes),
-        if (hypocenter.depthKm != null) _DepthRow(hypocenter: hypocenter),
-        Text(
-          hypocenter.epicenterName,
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            fontFamily: FontFamily.notoSansJP,
-          ),
-        ),
-        if (effectiveOriginTime != null)
-          _OriginTimeRow(
+    final timeWidget = effectiveOriginTime != null
+        ? _OriginTimeRow(
             originTime: effectiveOriginTime,
             stderrSeconds: hypocenter.originTimeStderrSeconds,
-          ),
+          )
+        : null;
+
+    return Wrap(
+      spacing: 8,
+      crossAxisAlignment: WrapCrossAlignment.end,
+      alignment: WrapAlignment.center,
+      children: [
+        const Row(),
+        _MagnitudeRow(magnitudes: hypocenter.magnitudes),
+        if (hypocenter.depthKm != null) _DepthRow(hypocenter: hypocenter),
+        const SizedBox(width: double.infinity),
+        _EpicenterWidget(epicenterName: hypocenter.epicenterName),
+        const Row(),
+        ?timeWidget,
       ],
     );
   }
@@ -137,35 +137,39 @@ class _MagnitudeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final textTheme = Theme.of(context).textTheme;
 
     if (magnitudes.isEmpty) {
-      return Text(
-        'M不明',
-        style: theme.textTheme.headlineSmall?.copyWith(
-          fontWeight: FontWeight.bold,
-          fontFamily: FontFamily.googleSansCode,
-          fontFamilyFallback: const [FontFamily.notoSansJP],
-        ),
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          Text('M', style: textTheme.labelStyle(textTheme.titleSmall!)),
+          Text('不明', style: textTheme.valueStyle(textTheme.headlineMedium!)),
+        ],
       );
     }
 
     final first = magnitudes.first;
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.end,
-      spacing: 4,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          'M${first.value.toStringAsFixed(1)}',
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            fontFamily: FontFamily.googleSansCode,
-            fontFamilyFallback: const [FontFamily.notoSansJP],
-          ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Text('M', style: textTheme.labelStyle(textTheme.titleSmall!)),
+            Text(
+              first.value.toStringAsFixed(1),
+              style: textTheme.valueStyle(textTheme.headlineLarge!),
+            ),
+          ],
         ),
         Text(
           first.typeLabel,
-          style: theme.textTheme.bodySmall?.copyWith(
+          style: textTheme.bodySmall?.copyWith(
             color: context.designSystem.colorTheme.onSurfaceVariant,
             fontFamily: FontFamily.notoSansJP,
           ),
@@ -182,36 +186,48 @@ class _DepthRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final textTheme = Theme.of(context).textTheme;
     final stderr = hypocenter.depthStderrKm;
+    final subTextStyle = textTheme.labelStyle(textTheme.titleSmall!);
+    final hasSecondaryInfo = stderr != null || hypocenter.depthIsFree;
 
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.end,
-      spacing: 4,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          '深さ ${hypocenter.depthKm!.toStringAsFixed(0)}km',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontFamily: FontFamily.googleSansCode,
-            fontFamilyFallback: const [FontFamily.notoSansJP],
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(text: '深さ', style: subTextStyle),
+              TextSpan(
+                text: hypocenter.depthKm!.toStringAsFixed(0),
+                style: textTheme.valueStyle(textTheme.headlineLarge!),
+              ),
+              TextSpan(text: 'km', style: subTextStyle),
+            ],
           ),
         ),
-        if (stderr != null)
-          Text(
-            '±${stderr.toStringAsFixed(1)}km',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: context.designSystem.colorTheme.onSurfaceVariant,
-              fontFamily: FontFamily.googleSansCode,
-              fontFamilyFallback: const [FontFamily.notoSansJP],
-            ),
-          ),
-        if (hypocenter.depthIsFree)
-          Text(
-            '(深さフリー)',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: context.designSystem.colorTheme.onSurfaceVariant,
-              fontFamily: FontFamily.notoSansJP,
-            ),
+        if (hasSecondaryInfo)
+          Wrap(
+            spacing: 4,
+            children: [
+              if (stderr != null)
+                Text(
+                  '±${stderr.toStringAsFixed(1)}km',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: context.designSystem.colorTheme.onSurfaceVariant,
+                    fontFamily: FontFamily.googleSansCode,
+                    fontFamilyFallback: const [FontFamily.notoSansJP],
+                  ),
+                ),
+              if (hypocenter.depthIsFree)
+                Text(
+                  '(深さフリー)',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: context.designSystem.colorTheme.onSurfaceVariant,
+                    fontFamily: FontFamily.notoSansJP,
+                  ),
+                ),
+            ],
           ),
       ],
     );
@@ -233,13 +249,7 @@ class _OriginTimeRow extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.end,
       spacing: 4,
       children: [
-        Text(
-          dateFormat.format(originTime.toLocal()),
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontFamily: FontFamily.googleSansCode,
-            fontFamilyFallback: const [FontFamily.notoSansJP],
-          ),
-        ),
+        Text('発生時刻: ${dateFormat.format(originTime.toLocal())}'),
         if (stderrSeconds != null)
           Text(
             '±${stderrSeconds!.toStringAsFixed(1)}秒',
@@ -249,6 +259,33 @@ class _OriginTimeRow extends StatelessWidget {
               fontFamilyFallback: const [FontFamily.notoSansJP],
             ),
           ),
+      ],
+    );
+  }
+}
+
+class _EpicenterWidget extends StatelessWidget {
+  const _EpicenterWidget({required this.epicenterName});
+
+  final String epicenterName;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Row(
+      textBaseline: TextBaseline.ideographic,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      children: [
+        Text('震源地', style: textTheme.labelStyle(textTheme.bodySmall!)),
+        const SizedBox(width: 4),
+        Flexible(
+          child: Text(
+            epicenterName,
+            style: textTheme.valueStyle(textTheme.headlineSmall!),
+          ),
+        ),
       ],
     );
   }

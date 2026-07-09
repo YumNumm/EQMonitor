@@ -30,8 +30,14 @@
         "max_intensity": "4",
         "max_lpgm_intensity": "1"
       },
-      "datasource": "JMA_DISASTER_INFORMATION_XML",
-      "telegram_types": ["VXSE51", "VXSE52", "VXSE53"],
+      "datasources": [
+        "JMA_DISASTER_INFORMATION_XML"
+      ],
+      "telegram_types": [
+        "VXSE51",
+        "VXSE52",
+        "VXSE53"
+      ],
       "earthquake_type": "NORMAL"
     }
   ]

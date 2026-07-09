@@ -21,6 +21,8 @@ class _WelcomeStepPage extends HookConsumerWidget {
     final processingLabel = isRegisteringDevice
         ? 'デバイスを登録しています...'
         : 'デバイスの状態を確認しています...';
+    final isMigrated =
+        ref.watch(deviceMigratedFromLegacyProvider).value ?? false;
 
     Future<void> startProvisioning() async {
       try {
@@ -37,6 +39,16 @@ class _WelcomeStepPage extends HookConsumerWidget {
     void retryProvisioning() {
       ref.read(deviceProvisioningProvider.notifier).reset();
       unawaited(startProvisioning());
+    }
+
+    Future<void> completeAndGoHome() async {
+      await OnboardingCompleted.completeMutation.run(
+        ref,
+        (tsx) async => tsx.get(onboardingCompletedProvider.notifier).complete(),
+      );
+      if (context.mounted) {
+        const HomeRoute().go(context);
+      }
     }
 
     ref.listen(deviceProvisioningProvider, (_, next) {
@@ -71,6 +83,12 @@ class _WelcomeStepPage extends HookConsumerWidget {
       }
     });
 
+    ref.listen(DeviceProvisioningNotifier.provisionMutation, (_, next) {
+      if (next is MutationSuccess) {
+        ref.invalidate(deviceMigratedFromLegacyProvider);
+      }
+    });
+
     useEffect(() {
       if (deviceProvisioningStatus.value == .required &&
           deviceProvisioningMutation is MutationIdle) {
@@ -84,31 +102,35 @@ class _WelcomeStepPage extends HookConsumerWidget {
       return null;
     }, [deviceProvisioningStatus, deviceProvisioningMutation]);
 
-    useEffect(() {
-      if (!navigation.isActive) {
+    useEffect(
+      () {
+        if (!navigation.isActive) {
+          return null;
+        }
+        if (deviceProvisioningStatus.isLoading &&
+            deviceProvisioningMutation is MutationIdle) {
+          return null;
+        }
+        navigation.register(
+          _StepNavigationState(
+            buttonLabel: isMigrated ? 'はじめる' : '次へ',
+            processingLabel: processingLabel,
+            isNextEnabled: isProvisioned,
+            isProcessing: isProcessing,
+            onNext: isMigrated ? completeAndGoHome : navigation.nextPage,
+          ),
+        );
         return null;
-      }
-      if (deviceProvisioningStatus.isLoading &&
-          deviceProvisioningMutation is MutationIdle) {
-        return null;
-      }
-      navigation.register(
-        _StepNavigationState(
-          buttonLabel: '次へ',
-          processingLabel: processingLabel,
-          isNextEnabled: isProvisioned,
-          isProcessing: isProcessing,
-          onNext: navigation.nextPage,
-        ),
-      );
-      return null;
-    }, [
-      navigation,
-      navigation.isActive,
-      isProvisioned,
-      isProcessing,
-      processingLabel,
-    ]);
+      },
+      [
+        navigation,
+        navigation.isActive,
+        isProvisioned,
+        isProcessing,
+        processingLabel,
+        isMigrated,
+      ],
+    );
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
@@ -31,8 +33,6 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final detailsState = ref.watch(earthquakeHistoryDetailsProvider(eventId));
 
-    // SWR 再検証中は「値を保持した AsyncLoading」が流れるため、値ありを最優先で
-    // マッチさせて stale 表示を維持する (Loading 優先だと全画面スピナーに戻る)。
     return switch (detailsState) {
       AsyncValue(:final value?) => _LoadedContent(earthquake: value),
       AsyncError(:final error) => Scaffold(
@@ -227,12 +227,30 @@ class _LoadedContent extends HookConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Align(
                 alignment: .bottomRight,
-                child: Text(
-                  'データソース: ${earthquake.dataSources.map((e) => switch (e) {
-                    .jmaDisasterInformationXml => "気象庁災害情報XML",
-                    .jmaIntensityDatabase => "気象庁震度データベース",
-                  }).join(', ')}',
-                  style: Theme.of(context).textTheme.bodySmall,
+                child: Card(
+                  color: Colors.transparent,
+                  elevation: 0,
+                  clipBehavior: .hardEdge,
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 4,
+                      sigmaY: 4,
+                      tileMode: .decal,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 2,
+                      ),
+                      child: Text(
+                        'データソース: ${earthquake.dataSources.map((e) => switch (e) {
+                          .jmaDisasterInformationXml => "気象庁災害情報XML",
+                          .jmaIntensityDatabase => "気象庁震度データベース",
+                        }).join(', ')}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),

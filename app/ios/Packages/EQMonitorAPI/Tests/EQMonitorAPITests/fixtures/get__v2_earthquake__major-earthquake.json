@@ -24,8 +24,16 @@
       "intensity": {
         "max_intensity": "7"
       },
-      "datasource": "JMA_DISASTER_INFORMATION_XML",
-      "telegram_types": ["VXSE51", "VXSE52", "VXSE53", "VXSE61", "VXSE62"],
+      "datasources": [
+        "JMA_DISASTER_INFORMATION_XML"
+      ],
+      "telegram_types": [
+        "VXSE51",
+        "VXSE52",
+        "VXSE53",
+        "VXSE61",
+        "VXSE62"
+      ],
       "earthquake_type": "NORMAL"
     }
   ]

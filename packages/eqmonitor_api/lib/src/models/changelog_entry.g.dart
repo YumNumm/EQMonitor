@@ -20,6 +20,7 @@ _ChangelogEntry _$ChangelogEntryFromJson(Map<String, dynamic> json) =>
               .map((e) => ChangelogSection.fromJson(e as Map<String, dynamic>))
               .toList(),
         ),
+        content: $checkedConvert('content', (v) => v as String?),
       );
       return val;
     });
@@ -30,4 +31,5 @@ Map<String, dynamic> _$ChangelogEntryToJson(_ChangelogEntry instance) =>
       'date': instance.date.toIso8601String(),
       'url': instance.url,
       'sections': instance.sections,
+      'content': ?instance.content,
     };
