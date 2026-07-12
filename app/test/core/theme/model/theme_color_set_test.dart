@@ -72,5 +72,14 @@ void main() {
     test('暗い背景色の場合は白を返す', () {
       expect(onColorForBackground(Colors.black), Colors.white);
     });
+
+    test(
+      '輝度が0.5未満でも黒の方がコントラスト比が高い中間色の場合は黒を返す',
+      () {
+        // 輝度 ≈ 0.469。白とのコントラスト比 ≈ 2.0:1、黒とのコントラスト比 ≈ 10:1。
+        const midtone = Color(0xFF8FB7FF);
+        expect(onColorForBackground(midtone), Colors.black);
+      },
+    );
   });
 }

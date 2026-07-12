@@ -80,8 +80,15 @@ abstract class ThemeColorSet with _$ThemeColorSet {
   );
 }
 
-/// [background]の輝度から読みやすい前景色（黒/白）を導出する。
+/// [background]に対してWCAGコントラスト比がより高い前景色（黒/白）を導出する。
 ///
-/// [IntensityColorEntry.resolvedForeground]と同じ判定基準に従う。
-Color onColorForBackground(Color background) =>
-    background.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+/// 白/黒それぞれと[background]とのコントラスト比を計算し、
+/// より読みやすい（コントラスト比が高い）方を返す。
+/// - 白とのコントラスト比: `1.05 / (Lbg + 0.05)`
+/// - 黒とのコントラスト比: `(Lbg + 0.05) / 0.05`
+Color onColorForBackground(Color background) {
+  final luminance = background.computeLuminance();
+  final contrastWithWhite = 1.05 / (luminance + 0.05);
+  final contrastWithBlack = (luminance + 0.05) / 0.05;
+  return contrastWithBlack >= contrastWithWhite ? Colors.black : Colors.white;
+}
