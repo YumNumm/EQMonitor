@@ -83,6 +83,7 @@ class ThemeEditorPage extends ConsumerWidget {
           ),
           ExpansionTile(
             title: const Text('震度配色'),
+            subtitle: Text(IntensityFieldGroup.intensity.description),
             children: IntensityFieldDefs.all
                 .where((def) => def.group == IntensityFieldGroup.intensity)
                 .map(
@@ -97,6 +98,7 @@ class ThemeEditorPage extends ConsumerWidget {
           ),
           ExpansionTile(
             title: const Text('推計震度配色'),
+            subtitle: Text(IntensityFieldGroup.estimatedIntensity.description),
             children: IntensityFieldDefs.all
                 .where(
                   (def) => def.group == IntensityFieldGroup.estimatedIntensity,
@@ -133,6 +135,7 @@ class _ColorFieldTile extends StatelessWidget {
     return ListTile(
       key: ValueKey('theme_color_field_${def.label}'),
       title: Text(def.label),
+      subtitle: Text(def.description),
       trailing: GestureDetector(
         onTap: () async {
           final picked = await ThemeEditorPage._pickColor(
