@@ -223,7 +223,7 @@ class ThemeColorFieldDefs {
     ThemeColorFieldDef(
       label: 'アウトラインバリアント',
       category: ThemeColorFieldCategory.surface,
-      description: '控えめな枠線・区切り線の色。カードの縁取りやモーダルシートのつまみなどに使用されます。',
+      description: '控えめな枠線・区切り線の色。カードやモーダルシートの縁取りなどに使用されます。',
       getter: (colorSet) => colorSet.outlineVariant,
       setter: (colorSet, color) => colorSet.copyWith(outlineVariant: color),
     ),
