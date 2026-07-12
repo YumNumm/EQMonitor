@@ -52,7 +52,7 @@ class _FakeGeneralNotificationSettingsNotifier
         trainingEnabled: false,
         nankaiExtraordinaryEnabled: false,
         nankaiRegularEnabled: false,
-        hokkaido3renOffshoreEnabled: false,
+        vyse60Enabled: false,
       );
 
   @override
@@ -62,7 +62,7 @@ class _FakeGeneralNotificationSettingsNotifier
     bool? trainingEnabled,
     bool? nankaiExtraordinaryEnabled,
     bool? nankaiRegularEnabled,
-    bool? hokkaido3renOffshoreEnabled,
+    bool? vyse60Enabled,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 50));
   }
@@ -88,29 +88,31 @@ class _FakeDeviceProvisioningNotifier extends DeviceProvisioningNotifier {
 }
 
 void main() {
-  test('apply(recommended) survives autoDispose of the applier provider',
-      () async {
-    final presetNotifier = _FakeNotificationPresetNotifier();
-    final container = ProviderContainer(
-      overrides: [
-        deviceProvisioningProvider.overrideWith(
-          _FakeDeviceProvisioningNotifier.new,
-        ),
-        notificationSlotsProvider.overrideWith(
-          _SlowNotificationSlotsNotifier.new,
-        ),
-        generalNotificationSettingsProvider.overrideWith(
-          _FakeGeneralNotificationSettingsNotifier.new,
-        ),
-        notificationPresetProvider.overrideWith(() => presetNotifier),
-      ],
-    );
-    addTearDown(container.dispose);
+  test(
+    'apply(recommended) survives autoDispose of the applier provider',
+    () async {
+      final presetNotifier = _FakeNotificationPresetNotifier();
+      final container = ProviderContainer(
+        overrides: [
+          deviceProvisioningProvider.overrideWith(
+            _FakeDeviceProvisioningNotifier.new,
+          ),
+          notificationSlotsProvider.overrideWith(
+            _SlowNotificationSlotsNotifier.new,
+          ),
+          generalNotificationSettingsProvider.overrideWith(
+            _FakeGeneralNotificationSettingsNotifier.new,
+          ),
+          notificationPresetProvider.overrideWith(() => presetNotifier),
+        ],
+      );
+      addTearDown(container.dispose);
 
-    // 実アプリと同じく ref.read で applier を取得して即 apply する
-    final applier = container.read(notificationPresetApplierProvider);
-    await applier.apply(NotificationPreset.recommended);
+      // 実アプリと同じく ref.read で applier を取得して即 apply する
+      final applier = container.read(notificationPresetApplierProvider);
+      await applier.apply(NotificationPreset.recommended);
 
-    expect(presetNotifier.selectedPresets, [NotificationPreset.recommended]);
-  });
+      expect(presetNotifier.selectedPresets, [NotificationPreset.recommended]);
+    },
+  );
 }

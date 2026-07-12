@@ -35,7 +35,7 @@ class PushNotificationRepository {
         trainingEnabled: settings.trainingEnabled,
         nankaiExtraordinaryEnabled: settings.nankaiExtraordinaryEnabled,
         nankaiRegularEnabled: settings.nankaiRegularEnabled,
-        hokkaido3renOffshoreEnabled: settings.hokkaido3renOffshoreEnabled,
+        vyse60Enabled: settings.vyse60Enabled,
       ),
     );
     return response.data.toGeneralNotificationSettings;

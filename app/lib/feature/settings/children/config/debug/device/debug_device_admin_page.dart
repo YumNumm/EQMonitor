@@ -138,9 +138,7 @@ class _Body extends HookConsumerWidget {
       settings?.nankaiExtraordinaryEnabled ?? false,
     );
     final nankaiRegular = useState(settings?.nankaiRegularEnabled ?? false);
-    final hokkaido3ren = useState(
-      settings?.hokkaido3renOffshoreEnabled ?? false,
-    );
+    final vyse60 = useState(settings?.vyse60Enabled ?? false);
 
     useEffect(() {
       notificationEnabled.value = settings?.notificationEnabled ?? true;
@@ -148,7 +146,7 @@ class _Body extends HookConsumerWidget {
       training.value = settings?.trainingEnabled ?? false;
       nankaiExtraordinary.value = settings?.nankaiExtraordinaryEnabled ?? false;
       nankaiRegular.value = settings?.nankaiRegularEnabled ?? false;
-      hokkaido3ren.value = settings?.hokkaido3renOffshoreEnabled ?? false;
+      vyse60.value = settings?.vyse60Enabled ?? false;
       return null;
     }, [settings]);
 
@@ -267,7 +265,7 @@ class _Body extends HookConsumerWidget {
             trainingEnabled: training.value,
             nankaiExtraordinaryEnabled: nankaiExtraordinary.value,
             nankaiRegularEnabled: nankaiRegular.value,
-            hokkaido3renOffshoreEnabled: hokkaido3ren.value,
+            vyse60Enabled: vyse60.value,
           ),
         );
         if (!context.mounted) {

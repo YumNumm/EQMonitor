@@ -35,7 +35,7 @@ final class BetaTestingAgreedProvider
   BetaTestingAgreed create() => BetaTestingAgreed();
 }
 
-String _$betaTestingAgreedHash() => r'239eac780d912fc4a20b8fec8a002a9ab84dd7f0';
+String _$betaTestingAgreedHash() => r'1e9582f1783074f448788f4d8f6ef10274133404';
 
 abstract class _$BetaTestingAgreed extends $AsyncNotifier<bool> {
   FutureOr<bool> build();

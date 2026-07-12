@@ -17,7 +17,7 @@ const _initialSettings = GeneralNotificationSettings(
   trainingEnabled: false,
   nankaiExtraordinaryEnabled: false,
   nankaiRegularEnabled: false,
-  hokkaido3renOffshoreEnabled: false,
+  vyse60Enabled: false,
 );
 
 class _FakePushNotificationRepository extends PushNotificationRepository {

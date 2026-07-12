@@ -11,7 +11,7 @@ abstract class GeneralNotificationSettings with _$GeneralNotificationSettings {
     required bool trainingEnabled,
     required bool nankaiExtraordinaryEnabled,
     required bool nankaiRegularEnabled,
-    required bool hokkaido3renOffshoreEnabled,
+    required bool vyse60Enabled,
   }) = _GeneralNotificationSettings;
 }
 
@@ -24,6 +24,6 @@ extension GeneralNotificationSettingsApiExtension
         trainingEnabled: trainingEnabled,
         nankaiExtraordinaryEnabled: nankaiExtraordinaryEnabled,
         nankaiRegularEnabled: nankaiRegularEnabled,
-        hokkaido3renOffshoreEnabled: hokkaido3renOffshoreEnabled,
+        vyse60Enabled: vyse60Enabled,
       );
 }

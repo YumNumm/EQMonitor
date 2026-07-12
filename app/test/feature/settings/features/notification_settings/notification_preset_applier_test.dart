@@ -97,7 +97,7 @@ class _RecordingGeneralNotificationSettingsNotifier
         trainingEnabled: false,
         nankaiExtraordinaryEnabled: false,
         nankaiRegularEnabled: false,
-        hokkaido3renOffshoreEnabled: false,
+        vyse60Enabled: false,
       );
 
   @override
@@ -107,7 +107,7 @@ class _RecordingGeneralNotificationSettingsNotifier
     bool? trainingEnabled,
     bool? nankaiExtraordinaryEnabled,
     bool? nankaiRegularEnabled,
-    bool? hokkaido3renOffshoreEnabled,
+    bool? vyse60Enabled,
   }) async {
     updateSettingsCalls.add(notificationEnabled);
   }
@@ -143,9 +143,7 @@ ProviderContainer _container({
         _FakeDeviceProvisioningNotifier.new,
       ),
       notificationSlotsProvider.overrideWith(() => slotsNotifier),
-      generalNotificationSettingsProvider.overrideWith(
-        () => settingsNotifier,
-      ),
+      generalNotificationSettingsProvider.overrideWith(() => settingsNotifier),
       notificationPresetProvider.overrideWith(() => presetNotifier),
     ],
   );
@@ -153,32 +151,37 @@ ProviderContainer _container({
 
 void main() {
   group('NotificationPresetApplier', () {
-    test('recommended applies current location, enables notifications, selects preset',
-        () async {
-      final slotsNotifier = _RecordingNotificationSlotsNotifier();
-      final settingsNotifier = _RecordingGeneralNotificationSettingsNotifier();
-      final presetNotifier = _RecordingNotificationPresetNotifier();
-      final container = _container(
-        slotsNotifier: slotsNotifier,
-        settingsNotifier: settingsNotifier,
-        presetNotifier: presetNotifier,
-      );
-      addTearDown(container.dispose);
+    test(
+      'recommended applies current location, enables notifications, selects preset',
+      () async {
+        final slotsNotifier = _RecordingNotificationSlotsNotifier();
+        final settingsNotifier =
+            _RecordingGeneralNotificationSettingsNotifier();
+        final presetNotifier = _RecordingNotificationPresetNotifier();
+        final container = _container(
+          slotsNotifier: slotsNotifier,
+          settingsNotifier: settingsNotifier,
+          presetNotifier: presetNotifier,
+        );
+        addTearDown(container.dispose);
 
-      await container
-          .read(notificationPresetApplierProvider)
-          .apply(NotificationPreset.recommended);
+        await container
+            .read(notificationPresetApplierProvider)
+            .apply(NotificationPreset.recommended);
 
-      expect(slotsNotifier.putCurrentLocationCalls, hasLength(1));
-      final recommendedCall = slotsNotifier.putCurrentLocationCalls.first;
-      expect(recommendedCall.eewEnabled, isTrue);
-      expect(recommendedCall.eewMinIntensity, JmaIntensity.four);
-      expect(recommendedCall.earthquakeEnabled, isTrue);
-      expect(recommendedCall.earthquakeMinIntensity, JmaIntensity.one);
-      expect(slotsNotifier.putNationwideCalls, isEmpty);
-      expect(settingsNotifier.updateSettingsCalls, [true]);
-      expect(presetNotifier.selectedPresets, [NotificationPreset.recommended]);
-    });
+        expect(slotsNotifier.putCurrentLocationCalls, hasLength(1));
+        final recommendedCall = slotsNotifier.putCurrentLocationCalls.first;
+        expect(recommendedCall.eewEnabled, isTrue);
+        expect(recommendedCall.eewMinIntensity, JmaIntensity.four);
+        expect(recommendedCall.earthquakeEnabled, isTrue);
+        expect(recommendedCall.earthquakeMinIntensity, JmaIntensity.one);
+        expect(slotsNotifier.putNationwideCalls, isEmpty);
+        expect(settingsNotifier.updateSettingsCalls, [true]);
+        expect(presetNotifier.selectedPresets, [
+          NotificationPreset.recommended,
+        ]);
+      },
+    );
 
     test('all applies recommended settings plus nationwide', () async {
       final slotsNotifier = _RecordingNotificationSlotsNotifier();
@@ -196,7 +199,8 @@ void main() {
           .apply(NotificationPreset.all);
 
       expect(slotsNotifier.putCurrentLocationCalls, hasLength(1));
-      final allCurrentLocationCall = slotsNotifier.putCurrentLocationCalls.first;
+      final allCurrentLocationCall =
+          slotsNotifier.putCurrentLocationCalls.first;
       expect(allCurrentLocationCall.eewEnabled, isTrue);
       expect(allCurrentLocationCall.eewMinIntensity, JmaIntensity.four);
       expect(allCurrentLocationCall.earthquakeEnabled, isTrue);
@@ -204,7 +208,10 @@ void main() {
       expect(slotsNotifier.putNationwideCalls, hasLength(1));
       final nationwideCall = slotsNotifier.putNationwideCalls.first;
       expect(nationwideCall.eewEnabled, isTrue);
-      expect(nationwideCall.eewMinIntensity, defaultNotificationSlotMinIntensity);
+      expect(
+        nationwideCall.eewMinIntensity,
+        defaultNotificationSlotMinIntensity,
+      );
       expect(nationwideCall.earthquakeEnabled, isTrue);
       expect(
         nationwideCall.earthquakeMinIntensity,
@@ -235,31 +242,34 @@ void main() {
       expect(presetNotifier.selectedPresets, [NotificationPreset.none]);
     });
 
-    test('custom applies current location only without selecting preset',
-        () async {
-      final slotsNotifier = _RecordingNotificationSlotsNotifier();
-      final settingsNotifier = _RecordingGeneralNotificationSettingsNotifier();
-      final presetNotifier = _RecordingNotificationPresetNotifier();
-      final container = _container(
-        slotsNotifier: slotsNotifier,
-        settingsNotifier: settingsNotifier,
-        presetNotifier: presetNotifier,
-      );
-      addTearDown(container.dispose);
+    test(
+      'custom applies current location only without selecting preset',
+      () async {
+        final slotsNotifier = _RecordingNotificationSlotsNotifier();
+        final settingsNotifier =
+            _RecordingGeneralNotificationSettingsNotifier();
+        final presetNotifier = _RecordingNotificationPresetNotifier();
+        final container = _container(
+          slotsNotifier: slotsNotifier,
+          settingsNotifier: settingsNotifier,
+          presetNotifier: presetNotifier,
+        );
+        addTearDown(container.dispose);
 
-      await container
-          .read(notificationPresetApplierProvider)
-          .apply(NotificationPreset.custom);
+        await container
+            .read(notificationPresetApplierProvider)
+            .apply(NotificationPreset.custom);
 
-      expect(slotsNotifier.putCurrentLocationCalls, hasLength(1));
-      final customCall = slotsNotifier.putCurrentLocationCalls.first;
-      expect(customCall.eewEnabled, isTrue);
-      expect(customCall.eewMinIntensity, JmaIntensity.four);
-      expect(customCall.earthquakeEnabled, isTrue);
-      expect(customCall.earthquakeMinIntensity, JmaIntensity.one);
-      expect(slotsNotifier.putNationwideCalls, isEmpty);
-      expect(settingsNotifier.updateSettingsCalls, isEmpty);
-      expect(presetNotifier.selectedPresets, isEmpty);
-    });
+        expect(slotsNotifier.putCurrentLocationCalls, hasLength(1));
+        final customCall = slotsNotifier.putCurrentLocationCalls.first;
+        expect(customCall.eewEnabled, isTrue);
+        expect(customCall.eewMinIntensity, JmaIntensity.four);
+        expect(customCall.earthquakeEnabled, isTrue);
+        expect(customCall.earthquakeMinIntensity, JmaIntensity.one);
+        expect(slotsNotifier.putNationwideCalls, isEmpty);
+        expect(settingsNotifier.updateSettingsCalls, isEmpty);
+        expect(presetNotifier.selectedPresets, isEmpty);
+      },
+    );
   });
 }

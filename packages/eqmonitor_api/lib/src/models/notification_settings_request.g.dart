@@ -29,8 +29,9 @@ _NotificationSettingsRequest _$NotificationSettingsRequestFromJson(
         'nankai_regular_enabled',
         (v) => v as bool?,
       ),
-      hokkaido3renOffshoreEnabled: $checkedConvert(
-        'hokkaido3ren_offshore_enabled',
+      vyse60Enabled: $checkedConvert('vyse60_enabled', (v) => v as bool?),
+      earthquakeNoticeEnabled: $checkedConvert(
+        'earthquake_notice_enabled',
         (v) => v as bool?,
       ),
     );
@@ -42,7 +43,8 @@ _NotificationSettingsRequest _$NotificationSettingsRequestFromJson(
     'trainingEnabled': 'training_enabled',
     'nankaiExtraordinaryEnabled': 'nankai_extraordinary_enabled',
     'nankaiRegularEnabled': 'nankai_regular_enabled',
-    'hokkaido3renOffshoreEnabled': 'hokkaido3ren_offshore_enabled',
+    'vyse60Enabled': 'vyse60_enabled',
+    'earthquakeNoticeEnabled': 'earthquake_notice_enabled',
   },
 );
 
@@ -54,5 +56,6 @@ Map<String, dynamic> _$NotificationSettingsRequestToJson(
   'training_enabled': ?instance.trainingEnabled,
   'nankai_extraordinary_enabled': ?instance.nankaiExtraordinaryEnabled,
   'nankai_regular_enabled': ?instance.nankaiRegularEnabled,
-  'hokkaido3ren_offshore_enabled': ?instance.hokkaido3renOffshoreEnabled,
+  'vyse60_enabled': ?instance.vyse60Enabled,
+  'earthquake_notice_enabled': ?instance.earthquakeNoticeEnabled,
 };
