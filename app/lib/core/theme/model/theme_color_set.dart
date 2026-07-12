@@ -54,16 +54,15 @@ abstract class ThemeColorSet with _$ThemeColorSet {
     onPrimaryContainer: onPrimaryContainer,
     secondary: secondary,
     // onSecondary/onErrorはColorSchemeの必須引数だが、削除対象フィールドのため
-    // onPrimaryから導出する。プリセットでは実質同系の色が設定されていたため
-    // 挙動への影響は軽微。
-    onSecondary: onPrimary,
+    // 各背景色（secondary/error）自身の輝度から導出する。
+    onSecondary: _onColorFor(secondary),
     secondaryContainer: secondaryContainer,
     onSecondaryContainer: onSecondaryContainer,
     tertiary: tertiary,
     tertiaryContainer: tertiaryContainer,
     onTertiaryContainer: onTertiaryContainer,
     error: error,
-    onError: onPrimary,
+    onError: _onColorFor(error),
     errorContainer: errorContainer,
     onErrorContainer: onErrorContainer,
     surface: surface,
@@ -77,4 +76,10 @@ abstract class ThemeColorSet with _$ThemeColorSet {
     outlineVariant: outlineVariant,
     onInverseSurface: onInverseSurface,
   );
+
+  /// [background]の輝度から読みやすい前景色を導出する。
+  ///
+  /// [IntensityColorEntry.resolvedForeground]と同じ判定基準に従う。
+  static Color _onColorFor(Color background) =>
+      background.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 }

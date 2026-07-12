@@ -30,5 +30,33 @@ void main() {
       expect(scheme.brightness, Brightness.light);
       expect(scheme.primary, colorSet.primary);
     });
+
+    test(
+      'toColorScheme は secondary/error が暗い背景色の場合、'
+      'onSecondary/onError に白を設定する',
+      () {
+        final colorSet = AppTheme.eqmonitorDefault().light!.copyWith(
+          secondary: Colors.black,
+          error: Colors.black,
+        );
+        final scheme = colorSet.toColorScheme(Brightness.light);
+        expect(scheme.onSecondary, Colors.white);
+        expect(scheme.onError, Colors.white);
+      },
+    );
+
+    test(
+      'toColorScheme は secondary/error が明るい背景色の場合、'
+      'onSecondary/onError に黒を設定する',
+      () {
+        final colorSet = AppTheme.eqmonitorDefault().light!.copyWith(
+          secondary: Colors.white,
+          error: Colors.white,
+        );
+        final scheme = colorSet.toColorScheme(Brightness.light);
+        expect(scheme.onSecondary, Colors.black);
+        expect(scheme.onError, Colors.black);
+      },
+    );
   });
 }
