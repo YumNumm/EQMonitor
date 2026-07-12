@@ -1,7 +1,18 @@
 import 'package:eqmonitor/core/theme/model/intensity_color_entry.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 
-enum IntensityFieldGroup { intensity, estimatedIntensity }
+enum IntensityFieldGroup {
+  intensity(
+    description: '観測された震度の表示色。震度アイコンや地震履歴・地図上の震度塗りつぶしなど、震度表示のすべてに使用されます。',
+  ),
+  estimatedIntensity(
+    description: '緊急地震速報の予想震度の表示色。観測値が確定する前に、地図上の推計震度の塗りつぶしに使用されます。',
+  );
+
+  const IntensityFieldGroup({required this.description});
+
+  final String description;
+}
 
 class IntensityFieldDef {
   const IntensityFieldDef({

@@ -41,4 +41,14 @@ void main() {
       }
     },
   );
+
+  test('IntensityFieldGroup の全値について description が空でない', () {
+    for (final group in IntensityFieldGroup.values) {
+      expect(
+        group.description,
+        isNotEmpty,
+        reason: '$group の description が空です',
+      );
+    }
+  });
 }
