@@ -76,7 +76,10 @@ abstract class ThemeColorSet with _$ThemeColorSet {
     surfaceContainerHighest: surfaceContainerHighest,
     outline: outline,
     outlineVariant: outlineVariant,
-    onInverseSurface: onInverseSurface,
+    // inverseSurfaceは保持していないため、ColorSchemeの既定値により
+    // onSurfaceにフォールバックする。そのため、保持しているフィールドの値
+    // ではなく、実際に反転背景として使われるonSurfaceから前景色を導出する。
+    onInverseSurface: onColorForBackground(onSurface),
   );
 }
 

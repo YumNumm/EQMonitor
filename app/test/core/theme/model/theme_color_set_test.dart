@@ -62,6 +62,36 @@ void main() {
         expect(scheme.onError, Colors.black);
       },
     );
+
+    test(
+      'toColorScheme は onSurface が暗い場合、保持されている onInverseSurface '
+      'を無視し、実効的な反転背景色（onSurface）から導出した白を設定する',
+      () {
+        final colorSet = AppTheme.eqmonitorDefault().light!.copyWith(
+          onSurface: Colors.black,
+          // 実効的な反転背景色（onSurface = 黒）とのコントラストペアリング
+          // に失敗する値をあえて保持させ、schemeがこれを無視することを示す。
+          onInverseSurface: Colors.black,
+        );
+        final scheme = colorSet.toColorScheme(Brightness.light);
+        expect(scheme.onInverseSurface, Colors.white);
+      },
+    );
+
+    test(
+      'toColorScheme は onSurface が明るい場合、保持されている onInverseSurface '
+      'を無視し、実効的な反転背景色（onSurface）から導出した黒を設定する',
+      () {
+        final colorSet = AppTheme.eqmonitorDefault().light!.copyWith(
+          onSurface: Colors.white,
+          // 実効的な反転背景色（onSurface = 白）とのコントラストペアリング
+          // に失敗する値をあえて保持させ、schemeがこれを無視することを示す。
+          onInverseSurface: Colors.white,
+        );
+        final scheme = colorSet.toColorScheme(Brightness.light);
+        expect(scheme.onInverseSurface, Colors.black);
+      },
+    );
   });
 
   group('onColorForBackground', () {
