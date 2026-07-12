@@ -191,6 +191,7 @@ class _PreliminaryIntensityLevelSection extends StatelessWidget {
           Text(
             '震度${switch (intensity) {
               .fiveUnknown => "5弱以上 未入電",
+              .sixUnknown => "6弱以上 未入電",
               _ => intensity.label.fromPlusMinus,
             }}',
             style: theme.textTheme.titleSmall,
@@ -247,6 +248,7 @@ class _IntensityLevelSection extends HookWidget {
           title: Text(
             '震度${switch (intensity) {
               .fiveUnknown => "5弱以上 未入電",
+              .sixUnknown => "6弱以上 未入電",
               _ => intensity.label.fromPlusMinus,
             }}',
             style: theme.textTheme.titleSmall,

@@ -93,11 +93,14 @@ class _LoadedContent extends HookConsumerWidget {
       hasEstimated ? IntensityDisplayMode.estimated : IntensityDisplayMode.jma,
     );
 
-    final noticeShown =
-        ref.watch(estimatedIntensityNoticeShownProvider).value ?? false;
+    final noticeShownAsync = ref.watch(estimatedIntensityNoticeShownProvider);
+    final noticeShown = switch (noticeShownAsync) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
 
     useEffect(() {
-      if (hasEstimated && !noticeShown && !showingDb) {
+      if (hasEstimated && noticeShown == false && !showingDb) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!context.mounted) {
             return;

@@ -141,11 +141,19 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
         disposed = true;
         unawaited(
           enqueue(() async {
-            try {
-              if (iconLayerAdded) {
+            if (iconLayerAdded) {
+              try {
                 await styleController.removeLayer(_iconLayerId);
+              } on Exception catch (e) {
+                talker.log(e);
               }
+            }
+            try {
               await styleController.removeLayer(_circleLayerId);
+            } on Exception catch (e) {
+              talker.log(e);
+            }
+            try {
               await styleController.removeSource(_sourceId);
             } on Exception catch (e) {
               talker.log(e);

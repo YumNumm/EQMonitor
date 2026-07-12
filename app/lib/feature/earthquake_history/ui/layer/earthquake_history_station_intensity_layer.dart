@@ -21,7 +21,7 @@ import 'package:maplibre/maplibre.dart';
 /// stationDisplayMode に応じて観測点サイズを変更する。
 /// showingLpgmIntensity が true の場合は長周期地震動階級で色分けする。
 /// showStationLabel が true の場合は観測点名ラベルを表示する。
-class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
+class EarthquakeHistoryStationIntensityLayer extends ConsumerWidget {
   const EarthquakeHistoryStationIntensityLayer({
     required this.earthquake,
     required this.parameter,
@@ -32,6 +32,38 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   });
 
   final Earthquake earthquake;
+  final EarthquakeHistoryMapLayerParameter parameter;
+  final StationDisplayMode stationDisplayMode;
+  final bool showStationLabel;
+  final bool showingLpgmIntensity;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final intensity = earthquake.intensity;
+    if (intensity == null) {
+      return const SizedBox.shrink();
+    }
+
+    return _EarthquakeHistoryStationIntensityLayerBody(
+      intensity: intensity,
+      parameter: parameter,
+      stationDisplayMode: stationDisplayMode,
+      showStationLabel: showStationLabel,
+      showingLpgmIntensity: showingLpgmIntensity,
+    );
+  }
+}
+
+class _EarthquakeHistoryStationIntensityLayerBody extends HookConsumerWidget {
+  const _EarthquakeHistoryStationIntensityLayerBody({
+    required this.intensity,
+    required this.parameter,
+    required this.stationDisplayMode,
+    required this.showStationLabel,
+    required this.showingLpgmIntensity,
+  });
+
+  final EarthquakeIntensity intensity;
   final EarthquakeHistoryMapLayerParameter parameter;
   final StationDisplayMode stationDisplayMode;
   final bool showStationLabel;
@@ -50,11 +82,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensity = earthquake.intensity;
-    if (intensity == null) {
-      return const SizedBox.shrink();
-    }
-
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(activeColorSetProvider).intensity;
     final iconData = ref.watch(intensityIconProvider).value;
@@ -225,14 +252,26 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
           disposed = true;
           unawaited(
             enqueue(() async {
-              try {
-                if (showStationLabel) {
+              if (showStationLabel) {
+                try {
                   await styleController.removeLayer(_labelLayerId);
+                } on Exception catch (e) {
+                  talker.log(e);
                 }
-                if (iconLayerAdded) {
+              }
+              if (iconLayerAdded) {
+                try {
                   await styleController.removeLayer(_iconLayerId);
+                } on Exception catch (e) {
+                  talker.log(e);
                 }
+              }
+              try {
                 await styleController.removeLayer(_circleLayerId);
+              } on Exception catch (e) {
+                talker.log(e);
+              }
+              try {
                 await styleController.removeSource(_sourceId);
               } on Exception catch (e) {
                 talker.log(e);

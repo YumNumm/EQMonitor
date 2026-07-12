@@ -136,6 +136,9 @@ class _PageContent extends HookConsumerWidget {
               await style.addSource(
                 GeoJsonSource(id: _sourceId, data: geoJson),
               );
+              if (!context.mounted) {
+                return;
+              }
               await (
                 style.addLayer(
                   const FillStyleLayer(
@@ -159,6 +162,9 @@ class _PageContent extends HookConsumerWidget {
                   ),
                 ),
               ).wait;
+              if (!context.mounted) {
+                return;
+              }
 
               final bounds = LngLatBounds.fromPoints([
                 Geographic(lat: event.minLat, lon: event.minLng),

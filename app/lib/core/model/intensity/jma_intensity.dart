@@ -11,6 +11,7 @@ enum JmaIntensity {
   fiveUnknown,
   fiveLower,
   fiveUpper,
+  sixUnknown,
   sixLower,
   sixUpper,
   seven;
@@ -25,6 +26,7 @@ enum JmaIntensity {
     .fiveUnknown => '5',
     .fiveLower => '5-',
     .fiveUpper => '5+',
+    .sixUnknown => '6',
     .sixLower => '6-',
     .sixUpper => '6+',
     .seven => '7',
@@ -34,6 +36,7 @@ enum JmaIntensity {
     .fiveUnknown => '5',
     .fiveLower => '5',
     .fiveUpper => '5',
+    .sixUnknown => '6',
     .sixLower => '6',
     .sixUpper => '6',
     _ => label.replaceAll('-', '').replaceAll('+', ''),
@@ -43,6 +46,7 @@ enum JmaIntensity {
     .fiveUnknown => '弱以上',
     .fiveLower => '弱',
     .fiveUpper => '強',
+    .sixUnknown => '弱以上',
     .sixLower => '弱',
     .sixUpper => '強',
     _ => '',
@@ -59,9 +63,10 @@ enum JmaIntensity {
     .fiveUnknown => 5,
     .fiveLower => 6,
     .fiveUpper => 7,
-    .sixLower => 8,
-    .sixUpper => 9,
-    .seven => 10,
+    .sixUnknown => 8,
+    .sixLower => 9,
+    .sixUpper => 10,
+    .seven => 11,
   };
 
   /// 通知設定 UI で選択可能な震度の一覧（unknown / fiveUnknown を除く）
@@ -89,7 +94,7 @@ extension ApiJmaIntensityConverter on api.JmaIntensity {
     .value5unknown => .fiveUnknown,
     .value5minus => .fiveLower,
     .value5plus => .fiveUpper,
-    .value6unknown => .sixLower,
+    .value6unknown => .sixUnknown,
     .value6minus => .sixLower,
     .value6plus => .sixUpper,
     .value7 => .seven,
@@ -107,6 +112,7 @@ extension JmaIntensityToApi on JmaIntensity {
     .fiveUnknown => .value5unknown,
     .fiveLower => .value5minus,
     .fiveUpper => .value5plus,
+    .sixUnknown => .value6unknown,
     .sixLower => .value6minus,
     .sixUpper => .value6plus,
     .seven => .value7,
@@ -149,7 +155,7 @@ extension JmaIntensityFromRawKnetInt on JmaIntensity {
 
 extension ApiMinJmaIntensityConverter on api.MinJmaIntensity {
   JmaIntensity get toJmaIntensity => switch (this) {
-    .value6unknown => .sixLower,
+    .value6unknown => .sixUnknown,
     .value0 => .zero,
     .value1 => .one,
     .value2 => .two,
@@ -175,6 +181,7 @@ extension JmaIntensityToApiMin on JmaIntensity {
     JmaIntensity.fiveUnknown => .value5unknown,
     JmaIntensity.fiveLower => .value5minus,
     JmaIntensity.fiveUpper => .value5plus,
+    JmaIntensity.sixUnknown => .value6unknown,
     JmaIntensity.sixLower => .value6minus,
     JmaIntensity.sixUpper => .value6plus,
     JmaIntensity.seven => .value7,
@@ -188,10 +195,14 @@ extension ApiEewMinIntensityConverter on api.EewMinIntensity {
     .value2 => .two,
     .value3 => .three,
     .value4 => .four,
-    .value5unknown => throw StateError('!5- is not a valid notification threshold'),
+    .value5unknown => throw StateError(
+      '!5- is not a valid notification threshold',
+    ),
     .value5minus => .fiveLower,
     .value5plus => .fiveUpper,
-    .value6unknown => throw StateError('!6- is not a valid notification threshold'),
+    .value6unknown => throw StateError(
+      '!6- is not a valid notification threshold',
+    ),
     .value6minus => .sixLower,
     .value6plus => .sixUpper,
     .value7 => .seven,
@@ -205,10 +216,14 @@ extension ApiEarthquakeMinIntensityConverter on api.EarthquakeMinIntensity {
     .value2 => .two,
     .value3 => .three,
     .value4 => .four,
-    .value5unknown => throw StateError('!5- is not a valid notification threshold'),
+    .value5unknown => throw StateError(
+      '!5- is not a valid notification threshold',
+    ),
     .value5minus => .fiveLower,
     .value5plus => .fiveUpper,
-    .value6unknown => throw StateError('!6- is not a valid notification threshold'),
+    .value6unknown => throw StateError(
+      '!6- is not a valid notification threshold',
+    ),
     .value6minus => .sixLower,
     .value6plus => .sixUpper,
     .value7 => .seven,

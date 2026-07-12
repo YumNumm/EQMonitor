@@ -68,6 +68,7 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
       return () {
         unawaited(
           enqueue(() async {
+            isInitialized.value = false;
             await styleController.removeLayer(_layerId);
           }),
         );
@@ -79,9 +80,11 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
         return null;
       }
       unawaited(
-        styleController.updateFilter(
-          id: _layerId,
-          filter: buildEewAreaCodeFilter(codes),
+        enqueue(
+          () => styleController.updateFilter(
+            id: _layerId,
+            filter: buildEewAreaCodeFilter(codes),
+          ),
         ),
       );
       return null;

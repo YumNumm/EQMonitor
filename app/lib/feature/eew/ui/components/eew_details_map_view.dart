@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -86,23 +87,25 @@ class _MapContent extends ConsumerWidget {
       gestures: gestures,
     );
 
-    return MapLibreMap(
-      options: mapOptions,
-      children: [
-        EewForecastRegionLayer(
-          eew: selectedEew,
-          displayMode: displayMode,
-          additionalRegions: additionalRegions,
-        ),
-        if (isSimulation)
-          const EewSimulationPsWaveLayer()
-        else
-          EewStaticPsWaveLayer(eew: selectedEew),
-        if (selectedEew case final eew?)
-          EewHypocenterLayer(eews: [eew], enableBlink: isSimulation)
-        else
-          EewHypocenterLayer(eews: const [], enableBlink: isSimulation),
-      ],
+    return MapOperationQueueScope(
+      child: MapLibreMap(
+        options: mapOptions,
+        children: [
+          EewForecastRegionLayer(
+            eew: selectedEew,
+            displayMode: displayMode,
+            additionalRegions: additionalRegions,
+          ),
+          if (isSimulation)
+            const EewSimulationPsWaveLayer()
+          else
+            EewStaticPsWaveLayer(eew: selectedEew),
+          if (selectedEew case final eew?)
+            EewHypocenterLayer(eews: [eew], enableBlink: isSimulation)
+          else
+            EewHypocenterLayer(eews: const [], enableBlink: isSimulation),
+        ],
+      ),
     );
   }
 }

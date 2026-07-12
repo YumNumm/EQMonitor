@@ -47,6 +47,17 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     );
   }
 
+  /// マップ(Widget)の破棄時に呼び出し、保持中の [MapController] をクリアする。
+  ///
+  /// [controller] が現在保持しているものと一致する場合のみクリアする。
+  /// unmount と次のマップの [setController] 呼び出し順序が入れ替わっても、
+  /// 既に新しい controller に置き換わっている場合は何もしないため安全。
+  void clearController(MapController controller) {
+    if (identical(_controller, controller)) {
+      _controller = null;
+    }
+  }
+
   Future<void> _handleEewTransition({
     required List<EewTelegramItem>? previous,
     required List<EewTelegramItem> next,

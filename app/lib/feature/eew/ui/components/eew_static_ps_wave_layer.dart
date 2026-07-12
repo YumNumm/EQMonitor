@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
@@ -26,26 +28,20 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final travelTimeMap = ref.watch(travelTimeDepthMapProvider);
-    // レイヤー初期化処理のFuture。更新・破棄処理が初期化完了を待つために保持する
-    final initFuture = useRef<Future<void>?>(null);
+    final enqueue = useMapOperationQueue();
 
-    // source / layer の追加は styleController が変化したときに一度だけ行う。
-    // eew / travelTimeMap の変化で再初期化すると、非同期なクリーンアップ完了前に
-    // addSource が走り「already exists」例外となるため、初期化と更新を分離する。
+    // source / layer の追加・更新・削除をすべて共有オペレーションキューに
+    // 積み、登録順に直列実行させる。これにより「初期化完了前に更新/削除が
+    // 走る」競合状態を構造的に排除する。
     useEffect(() {
       if (styleController == null) {
         return null;
       }
 
-      final future = _initializeLayers(styleController);
-      initFuture.value = future;
+      unawaited(enqueue(() => _initializeLayers(styleController)));
 
       return () {
-        initFuture.value = null;
-        unawaited(() async {
-          await future;
-          await _removeLayers(styleController);
-        }());
+        unawaited(enqueue(() => _removeLayers(styleController)));
       };
     }, [styleController]);
 
@@ -55,15 +51,16 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
         return null;
       }
 
-      unawaited(() async {
-        await initFuture.value;
-        // 走時表未ロード時は波を描かない
-        if (travelTimeMap == null) {
-          await _clearLayers(styleController);
-          return;
-        }
-        await _updateLayers(styleController, eew, travelTimeMap);
-      }());
+      unawaited(
+        enqueue(() async {
+          // 走時表未ロード時は波を描かない
+          if (travelTimeMap == null) {
+            await _clearLayers(styleController);
+            return;
+          }
+          await _updateLayers(styleController, eew, travelTimeMap);
+        }),
+      );
 
       return null;
     }, [styleController, eew, travelTimeMap]);
@@ -212,41 +209,49 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
       });
     }
 
-    await (
-      styleController.updateGeoJsonSource(
-        id: _pWaveSourceId,
-        data: jsonEncode({
-          'type': 'FeatureCollection',
-          'features': pWaveFeatures,
-        }),
-      ),
-      styleController.updateGeoJsonSource(
-        id: _sWaveSourceId,
-        data: jsonEncode({
-          'type': 'FeatureCollection',
-          'features': sWaveFeatures,
-        }),
-      ),
-    ).wait;
+    try {
+      await (
+        styleController.updateGeoJsonSource(
+          id: _pWaveSourceId,
+          data: jsonEncode({
+            'type': 'FeatureCollection',
+            'features': pWaveFeatures,
+          }),
+        ),
+        styleController.updateGeoJsonSource(
+          id: _sWaveSourceId,
+          data: jsonEncode({
+            'type': 'FeatureCollection',
+            'features': sWaveFeatures,
+          }),
+        ),
+      ).wait;
+    } catch (e, stackTrace) {
+      talker.handle(e, stackTrace);
+    }
   }
 
   Future<void> _clearLayers(StyleController styleController) async {
-    await (
-      styleController.updateGeoJsonSource(
-        id: _pWaveSourceId,
-        data: jsonEncode({
-          'type': 'FeatureCollection',
-          'features': <Map<String, dynamic>>[],
-        }),
-      ),
-      styleController.updateGeoJsonSource(
-        id: _sWaveSourceId,
-        data: jsonEncode({
-          'type': 'FeatureCollection',
-          'features': <Map<String, dynamic>>[],
-        }),
-      ),
-    ).wait;
+    try {
+      await (
+        styleController.updateGeoJsonSource(
+          id: _pWaveSourceId,
+          data: jsonEncode({
+            'type': 'FeatureCollection',
+            'features': <Map<String, dynamic>>[],
+          }),
+        ),
+        styleController.updateGeoJsonSource(
+          id: _sWaveSourceId,
+          data: jsonEncode({
+            'type': 'FeatureCollection',
+            'features': <Map<String, dynamic>>[],
+          }),
+        ),
+      ).wait;
+    } catch (e, stackTrace) {
+      talker.handle(e, stackTrace);
+    }
   }
 
   List<List<double>> _generateCircleCoordinates(

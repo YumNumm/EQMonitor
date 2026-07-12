@@ -31,6 +31,7 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
@@ -60,12 +61,14 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
 
     return switch (mapConfiguration) {
       AsyncData(:final value) when value.styleString != null =>
-        MapLibreEventProvider(
-          child: _MapContent(
-            styleString: value.styleString!,
-            earthquake: earthquake,
-            displayMode: displayMode,
-            showingDb: showingDb,
+        MapOperationQueueScope(
+          child: MapLibreEventProvider(
+            child: _MapContent(
+              styleString: value.styleString!,
+              earthquake: earthquake,
+              displayMode: displayMode,
+              showingDb: showingDb,
+            ),
           ),
         ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
@@ -134,12 +137,12 @@ class _MapContent extends HookConsumerWidget {
           .select(null);
     });
 
-    final ShindoDbIntensityTree? dbTree = switch (showingDb
-        ? ref.watch(shindoDbIntensityTreeProvider(earthquake.eventId))
-        : null) {
-      AsyncData(:final value) => value,
-      _ => null,
-    };
+    // AsyncLoading中も前回値を保持し、provider再読込のたびにレイヤーが
+    // 消えて再構築される（ちらつく）のを防ぐ。
+    // (Riverpod 3系では AsyncValue.value がロード中も前回値を返す)
+    final ShindoDbIntensityTree? dbTree = showingDb
+        ? ref.watch(shindoDbIntensityTreeProvider(earthquake.eventId)).value
+        : null;
 
     final tileUrl = earthquake.estimatedIntensityTileUrl;
     final showingLpgmIntensity = displayMode == IntensityDisplayMode.lpgm;
