@@ -12,6 +12,7 @@ abstract class GeneralNotificationSettings with _$GeneralNotificationSettings {
     required bool nankaiExtraordinaryEnabled,
     required bool nankaiRegularEnabled,
     required bool vyse60Enabled,
+    required bool earthquakeNoticeEnabled,
   }) = _GeneralNotificationSettings;
 }
 
@@ -25,5 +26,6 @@ extension GeneralNotificationSettingsApiExtension
         nankaiExtraordinaryEnabled: nankaiExtraordinaryEnabled,
         nankaiRegularEnabled: nankaiRegularEnabled,
         vyse60Enabled: vyse60Enabled,
+        earthquakeNoticeEnabled: earthquakeNoticeEnabled,
       );
 }

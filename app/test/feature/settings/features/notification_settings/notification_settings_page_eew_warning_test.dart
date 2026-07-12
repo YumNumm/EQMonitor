@@ -119,6 +119,7 @@ class _FakeGeneralNotificationSettingsNotifier
         nankaiExtraordinaryEnabled: true,
         nankaiRegularEnabled: true,
         vyse60Enabled: true,
+        earthquakeNoticeEnabled: true,
       );
 }
 

@@ -36,6 +36,7 @@ class PushNotificationRepository {
         nankaiExtraordinaryEnabled: settings.nankaiExtraordinaryEnabled,
         nankaiRegularEnabled: settings.nankaiRegularEnabled,
         vyse60Enabled: settings.vyse60Enabled,
+        earthquakeNoticeEnabled: settings.earthquakeNoticeEnabled,
       ),
     );
     return response.data.toGeneralNotificationSettings;

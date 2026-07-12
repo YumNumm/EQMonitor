@@ -578,6 +578,9 @@ class _NotificationSettingsSection extends HookConsumerWidget {
     );
     final nankaiRegular = useState(settings?.nankaiRegularEnabled ?? false);
     final vyse60 = useState(settings?.vyse60Enabled ?? false);
+    final earthquakeNotice = useState(
+      settings?.earthquakeNoticeEnabled ?? false,
+    );
 
     ref.listen(_notificationSettingsProvider(deviceId), (_, next) {
       if (next.value != null) {
@@ -588,6 +591,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
             next.requireValue.nankaiExtraordinaryEnabled;
         nankaiRegular.value = next.requireValue.nankaiRegularEnabled;
         vyse60.value = next.requireValue.vyse60Enabled;
+        earthquakeNotice.value = next.requireValue.earthquakeNoticeEnabled;
       }
     });
 
@@ -609,6 +613,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
           nankaiExtraordinaryEnabled: nankaiExtraordinary.value,
           nankaiRegularEnabled: nankaiRegular.value,
           vyse60Enabled: vyse60.value,
+          earthquakeNoticeEnabled: earthquakeNotice.value,
         ),
       );
       isBusy.value = false;

@@ -98,6 +98,7 @@ class _RecordingGeneralNotificationSettingsNotifier
         nankaiExtraordinaryEnabled: false,
         nankaiRegularEnabled: false,
         vyse60Enabled: false,
+        earthquakeNoticeEnabled: false,
       );
 
   @override
@@ -108,6 +109,7 @@ class _RecordingGeneralNotificationSettingsNotifier
     bool? nankaiExtraordinaryEnabled,
     bool? nankaiRegularEnabled,
     bool? vyse60Enabled,
+    bool? earthquakeNoticeEnabled,
   }) async {
     updateSettingsCalls.add(notificationEnabled);
   }

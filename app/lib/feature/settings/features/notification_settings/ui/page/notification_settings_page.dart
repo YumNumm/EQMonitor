@@ -1011,6 +1011,27 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
               ),
             ],
           ),
+          InfoNotificationTile(
+            title: '地震・津波に関するお知らせ',
+            subtitleText:
+                '気象庁が発表する「地震・津波に関するお知らせ」(VZSE40)を通知します。試験・訓練配信のお知らせや、市町村の震度データの入電停止などの情報が含まれます。',
+            value: settings.earthquakeNoticeEnabled,
+            onChanged: ({required value}) async {
+              await GeneralNotificationSettingsNotifier.updateSettingsMutation
+                  .run(ref, (tsx) async {
+                    await tsx
+                        .get(generalNotificationSettingsProvider.notifier)
+                        .updateSettings(earthquakeNoticeEnabled: value);
+                  });
+            },
+            bottomSheetTitle: '地震・津波に関するお知らせ',
+            bottomSheetLinks: const [
+              InfoLink(
+                title: '「地震・津波に関するお知らせ」について',
+                url: 'https://www.data.jma.go.jp/suishin/shiyou/',
+              ),
+            ],
+          ),
           ListTile(
             enabled: false,
             title: const Text('津波通知'),

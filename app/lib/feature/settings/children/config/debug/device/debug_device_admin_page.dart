@@ -139,6 +139,9 @@ class _Body extends HookConsumerWidget {
     );
     final nankaiRegular = useState(settings?.nankaiRegularEnabled ?? false);
     final vyse60 = useState(settings?.vyse60Enabled ?? false);
+    final earthquakeNotice = useState(
+      settings?.earthquakeNoticeEnabled ?? false,
+    );
 
     useEffect(() {
       notificationEnabled.value = settings?.notificationEnabled ?? true;
@@ -147,6 +150,7 @@ class _Body extends HookConsumerWidget {
       nankaiExtraordinary.value = settings?.nankaiExtraordinaryEnabled ?? false;
       nankaiRegular.value = settings?.nankaiRegularEnabled ?? false;
       vyse60.value = settings?.vyse60Enabled ?? false;
+      earthquakeNotice.value = settings?.earthquakeNoticeEnabled ?? false;
       return null;
     }, [settings]);
 
@@ -266,6 +270,7 @@ class _Body extends HookConsumerWidget {
             nankaiExtraordinaryEnabled: nankaiExtraordinary.value,
             nankaiRegularEnabled: nankaiRegular.value,
             vyse60Enabled: vyse60.value,
+            earthquakeNoticeEnabled: earthquakeNotice.value,
           ),
         );
         if (!context.mounted) {

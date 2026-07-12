@@ -35,6 +35,7 @@ class GeneralNotificationSettingsNotifier
     bool? nankaiExtraordinaryEnabled,
     bool? nankaiRegularEnabled,
     bool? vyse60Enabled,
+    bool? earthquakeNoticeEnabled,
   }) async {
     final current = await future;
     final repo = await ref.read(pushNotificationRepositoryProvider.future);
@@ -50,6 +51,8 @@ class GeneralNotificationSettingsNotifier
         nankaiRegularEnabled:
             nankaiRegularEnabled ?? current.nankaiRegularEnabled,
         vyse60Enabled: vyse60Enabled ?? current.vyse60Enabled,
+        earthquakeNoticeEnabled:
+            earthquakeNoticeEnabled ?? current.earthquakeNoticeEnabled,
       ),
     );
     state = AsyncData(switch (result) {

@@ -18,12 +18,14 @@ const _initialSettings = GeneralNotificationSettings(
   nankaiExtraordinaryEnabled: false,
   nankaiRegularEnabled: false,
   vyse60Enabled: false,
+  earthquakeNoticeEnabled: false,
 );
 
 class _FakePushNotificationRepository extends PushNotificationRepository {
   _FakePushNotificationRepository() : super(api.ApiClient(Dio()));
 
   final patchedNotificationEnabled = <bool>[];
+  final patchedEarthquakeNoticeEnabled = <bool>[];
 
   @override
   Future<Result<GeneralNotificationSettings, Exception>>
@@ -40,6 +42,7 @@ class _FakePushNotificationRepository extends PushNotificationRepository {
     required GeneralNotificationSettings settings,
   }) async {
     patchedNotificationEnabled.add(settings.notificationEnabled);
+    patchedEarthquakeNoticeEnabled.add(settings.earthquakeNoticeEnabled);
     return Success(settings);
   }
 }
@@ -75,6 +78,34 @@ void main() {
     expect(
       container.read(generalNotificationSettingsProvider).value,
       _initialSettings.copyWith(notificationEnabled: true),
+    );
+  });
+
+  test('updateSettings(earthquakeNoticeEnabled: true) issues PATCH and '
+      'updates state', () async {
+    final repository = _FakePushNotificationRepository();
+    final container = ProviderContainer(
+      overrides: [
+        deviceProvisioningProvider.overrideWith(
+          _FakeDeviceProvisioningNotifier.new,
+        ),
+        pushNotificationRepositoryProvider.overrideWith(
+          (ref) async => repository,
+        ),
+        deviceIdProvider.overrideWith((ref) async => 'test-device'),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(generalNotificationSettingsProvider.future);
+    await container
+        .read(generalNotificationSettingsProvider.notifier)
+        .updateSettings(earthquakeNoticeEnabled: true);
+
+    expect(repository.patchedEarthquakeNoticeEnabled, [true]);
+    expect(
+      container.read(generalNotificationSettingsProvider).value,
+      _initialSettings.copyWith(earthquakeNoticeEnabled: true),
     );
   });
 }

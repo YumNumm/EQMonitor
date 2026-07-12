@@ -53,6 +53,7 @@ class _FakeGeneralNotificationSettingsNotifier
         nankaiExtraordinaryEnabled: false,
         nankaiRegularEnabled: false,
         vyse60Enabled: false,
+        earthquakeNoticeEnabled: false,
       );
 
   @override
@@ -63,6 +64,7 @@ class _FakeGeneralNotificationSettingsNotifier
     bool? nankaiExtraordinaryEnabled,
     bool? nankaiRegularEnabled,
     bool? vyse60Enabled,
+    bool? earthquakeNoticeEnabled,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 50));
   }
