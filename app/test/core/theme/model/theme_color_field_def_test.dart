@@ -13,6 +13,16 @@ void main() {
     expect(ThemeColorFieldDefs.all.length, 39);
   });
 
+  test('全定義について description が空でない', () {
+    for (final def in ThemeColorFieldDefs.all) {
+      expect(
+        def.description,
+        isNotEmpty,
+        reason: '${def.label} の description が空です',
+      );
+    }
+  });
+
   test('各定義について setter(base, probe) 後に getter が probe を返す', () {
     for (final def in ThemeColorFieldDefs.all) {
       final updated = def.setter(base, probe);
