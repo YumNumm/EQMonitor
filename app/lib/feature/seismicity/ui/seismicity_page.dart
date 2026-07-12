@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_bounds_filter.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_bounds.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_color_mode.dart';
@@ -134,18 +135,20 @@ class _MapBody extends HookWidget {
 
     return Stack(
       children: [
-        MapLibreMap(
-          options: MapOptions(
-            initStyle: styleString,
-            initCenter: const Geographic(lon: 137.0, lat: 36.5),
-            initZoom: 4.5,
+        MapOperationQueueScope(
+          child: MapLibreMap(
+            options: MapOptions(
+              initStyle: styleString,
+              initCenter: const Geographic(lon: 137.0, lat: 36.5),
+              initZoom: 4.5,
+            ),
+            onMapCreated: (controller) {
+              mapController.value = controller;
+            },
+            children: [
+              SeismicityEpicenterLayer(events: events, colorMode: colorMode),
+            ],
           ),
-          onMapCreated: (controller) {
-            mapController.value = controller;
-          },
-          children: [
-            SeismicityEpicenterLayer(events: events, colorMode: colorMode),
-          ],
         ),
         SeismicitySelectionOverlay(
           enabled: isSelecting,

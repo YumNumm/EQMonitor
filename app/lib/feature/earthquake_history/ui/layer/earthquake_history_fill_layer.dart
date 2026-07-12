@@ -18,7 +18,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-class EarthquakeHistoryFillLayer extends HookConsumerWidget {
+class EarthquakeHistoryFillLayer extends ConsumerWidget {
   const EarthquakeHistoryFillLayer({
     required this.earthquake,
     required this.parameter,
@@ -39,19 +39,44 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final modeResolver = useMemoized(
-      () => const EarthquakeHistoryMapLayerModeResolver(),
-    );
+    const modeResolver = EarthquakeHistoryMapLayerModeResolver();
     final mode = modeResolver.resolveFillLayerMode(
       earthquake: earthquake,
       fillMode: fillMode,
       showingLpgmIntensity: showingLpgmIntensity,
     );
-    if (mode == EarthquakeHistoryMapLayerMode.none ||
-        mode == EarthquakeHistoryMapLayerMode.station) {
+    // resolveFillLayerMode は .station を返さないため、.none のみ判定する。
+    if (mode == EarthquakeHistoryMapLayerMode.none) {
       return const SizedBox.shrink();
     }
 
+    return _EarthquakeHistoryFillLayerBody(
+      intensity: intensity,
+      parameter: parameter,
+      mode: mode,
+      showingLpgmIntensity: showingLpgmIntensity,
+      modeResolver: modeResolver,
+    );
+  }
+}
+
+class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
+  const _EarthquakeHistoryFillLayerBody({
+    required this.intensity,
+    required this.parameter,
+    required this.mode,
+    required this.showingLpgmIntensity,
+    required this.modeResolver,
+  });
+
+  final EarthquakeIntensity intensity;
+  final EarthquakeHistoryMapLayerParameter parameter;
+  final EarthquakeHistoryMapLayerMode mode;
+  final bool showingLpgmIntensity;
+  final EarthquakeHistoryMapLayerModeResolver modeResolver;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final colorSet = ref.watch(activeColorSetProvider);
     final colorModel = colorSet.intensity;
@@ -59,14 +84,14 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
       () => EarthquakeHistoryFillLayerBuilder(modeResolver: modeResolver),
       [modeResolver],
     );
-    if (styleController == null) {
-      return const SizedBox.shrink();
-    }
-
     final enqueue = useMapOperationQueue();
 
     useEffect(
       () {
+        if (styleController == null) {
+          return null;
+        }
+
         final addedLayerIds = <String>[];
         var disposed = false;
 

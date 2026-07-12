@@ -35,93 +35,92 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final enqueue = useMapOperationQueue();
 
-    useEffect(
-      () {
-        if (styleController == null) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
+      unawaited(
+        enqueue(() async {
+          try {
+            final coords = earthquake.hypocenter?.coordinates;
+            if (coords is! CoordinateLatLng) {
+              return;
+            }
+
+            final decimalPlaces =
+                earthquake.telegramTypes.contains(EarthquakeTelegramType.vxse61)
+                ? 3
+                : 1;
+            final polygon = hypocenterErrorPolygon(
+              lat: coords.latitude,
+              lon: coords.longitude,
+              decimalPlaces: decimalPlaces,
+            );
+
+            await styleController.addSource(
+              GeoJsonSource(
+                id: _sourceId,
+                data: jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': [
+                    {
+                      'type': 'Feature',
+                      'geometry': {
+                        'type': 'Polygon',
+                        'coordinates': [polygon],
+                      },
+                      'properties': <String, dynamic>{},
+                    },
+                  ],
+                }),
+              ),
+            );
+
+            await styleController.addLayer(
+              LineStyleLayer(
+                id: _layerId,
+                sourceId: _sourceId,
+                paint: {
+                  'line-color': isDark ? '#ffffff' : '#000000',
+                  'line-cap': 'round',
+                  'line-join': 'round',
+                  'line-width': 1.5,
+                  'line-blur': 0.2,
+                  'line-dasharray': [4, 2],
+                  'line-opacity': [
+                    'step',
+                    ['zoom'],
+                    0.0,
+                    parameter.hypocenterErrorMinZoom,
+                    1.0,
+                  ],
+                },
+              ),
+            );
+          } on Exception catch (e) {
+            talker.log(e);
+          }
+        }),
+      );
+
+      return () {
         unawaited(
           enqueue(() async {
             try {
-              final coords = earthquake.hypocenter?.coordinates;
-              if (coords is! CoordinateLatLng) {
-                return;
-              }
-
-              final decimalPlaces =
-                  earthquake.telegramTypes.contains(
-                    EarthquakeTelegramType.vxse61,
-                  )
-                  ? 3
-                  : 1;
-              final polygon = hypocenterErrorPolygon(
-                lat: coords.latitude,
-                lon: coords.longitude,
-                decimalPlaces: decimalPlaces,
-              );
-
-              await styleController.addSource(
-                GeoJsonSource(
-                  id: _sourceId,
-                  data: jsonEncode({
-                    'type': 'FeatureCollection',
-                    'features': [
-                      {
-                        'type': 'Feature',
-                        'geometry': {
-                          'type': 'Polygon',
-                          'coordinates': [polygon],
-                        },
-                        'properties': <String, dynamic>{},
-                      },
-                    ],
-                  }),
-                ),
-              );
-
-              await styleController.addLayer(
-                LineStyleLayer(
-                  id: _layerId,
-                  sourceId: _sourceId,
-                  paint: {
-                    'line-color': isDark ? '#ffffff' : '#000000',
-                    'line-cap': 'round',
-                    'line-join': 'round',
-                    'line-width': 1.5,
-                    'line-blur': 0.2,
-                    'line-dasharray': [4, 2],
-                    'line-opacity': [
-                      'step',
-                      ['zoom'],
-                      0.0,
-                      parameter.hypocenterErrorMinZoom,
-                      1.0,
-                    ],
-                  },
-                ),
-              );
+              await styleController.removeLayer(_layerId);
+            } on Exception catch (e) {
+              talker.log(e);
+            }
+            try {
+              await styleController.removeSource(_sourceId);
             } on Exception catch (e) {
               talker.log(e);
             }
           }),
         );
-
-        return () {
-          unawaited(
-            enqueue(() async {
-              try {
-                await styleController.removeLayer(_layerId);
-                await styleController.removeSource(_sourceId);
-              } on Exception catch (e) {
-                talker.log(e);
-              }
-            }),
-          );
-        };
-      },
-      [styleController, earthquake, isDark, parameter],
-    );
+      };
+    }, [styleController, earthquake, isDark, parameter]);
 
     return const SizedBox.shrink();
   }
