@@ -32,31 +32,45 @@ void main() {
     });
 
     test(
-      'toColorScheme は secondary/error が暗い背景色の場合、'
-      'onSecondary/onError に白を設定する',
+      'toColorScheme は secondary/tertiary/error が暗い背景色の場合、'
+      'onSecondary/onTertiary/onError に白を設定する',
       () {
         final colorSet = AppTheme.eqmonitorDefault().light!.copyWith(
           secondary: Colors.black,
+          tertiary: Colors.black,
           error: Colors.black,
         );
         final scheme = colorSet.toColorScheme(Brightness.light);
         expect(scheme.onSecondary, Colors.white);
+        expect(scheme.onTertiary, Colors.white);
         expect(scheme.onError, Colors.white);
       },
     );
 
     test(
-      'toColorScheme は secondary/error が明るい背景色の場合、'
-      'onSecondary/onError に黒を設定する',
+      'toColorScheme は secondary/tertiary/error が明るい背景色の場合、'
+      'onSecondary/onTertiary/onError に黒を設定する',
       () {
         final colorSet = AppTheme.eqmonitorDefault().light!.copyWith(
           secondary: Colors.white,
+          tertiary: Colors.white,
           error: Colors.white,
         );
         final scheme = colorSet.toColorScheme(Brightness.light);
         expect(scheme.onSecondary, Colors.black);
+        expect(scheme.onTertiary, Colors.black);
         expect(scheme.onError, Colors.black);
       },
     );
+  });
+
+  group('onColorForBackground', () {
+    test('明るい背景色の場合は黒を返す', () {
+      expect(onColorForBackground(Colors.white), Colors.black);
+    });
+
+    test('暗い背景色の場合は白を返す', () {
+      expect(onColorForBackground(Colors.black), Colors.white);
+    });
   });
 }

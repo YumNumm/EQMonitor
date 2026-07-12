@@ -53,16 +53,18 @@ abstract class ThemeColorSet with _$ThemeColorSet {
     primaryContainer: primaryContainer,
     onPrimaryContainer: onPrimaryContainer,
     secondary: secondary,
-    // onSecondary/onErrorはColorSchemeの必須引数だが、削除対象フィールドのため
-    // 各背景色（secondary/error）自身の輝度から導出する。
-    onSecondary: _onColorFor(secondary),
+    // onSecondary/onTertiary/onErrorはColorSchemeの必須引数だが、削除対象
+    // フィールドのため、各背景色（secondary/tertiary/error）自身の輝度から
+    // 導出する。
+    onSecondary: onColorForBackground(secondary),
     secondaryContainer: secondaryContainer,
     onSecondaryContainer: onSecondaryContainer,
     tertiary: tertiary,
+    onTertiary: onColorForBackground(tertiary),
     tertiaryContainer: tertiaryContainer,
     onTertiaryContainer: onTertiaryContainer,
     error: error,
-    onError: _onColorFor(error),
+    onError: onColorForBackground(error),
     errorContainer: errorContainer,
     onErrorContainer: onErrorContainer,
     surface: surface,
@@ -76,10 +78,10 @@ abstract class ThemeColorSet with _$ThemeColorSet {
     outlineVariant: outlineVariant,
     onInverseSurface: onInverseSurface,
   );
-
-  /// [background]の輝度から読みやすい前景色を導出する。
-  ///
-  /// [IntensityColorEntry.resolvedForeground]と同じ判定基準に従う。
-  static Color _onColorFor(Color background) =>
-      background.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 }
+
+/// [background]の輝度から読みやすい前景色（黒/白）を導出する。
+///
+/// [IntensityColorEntry.resolvedForeground]と同じ判定基準に従う。
+Color onColorForBackground(Color background) =>
+    background.computeLuminance() > 0.5 ? Colors.black : Colors.white;
