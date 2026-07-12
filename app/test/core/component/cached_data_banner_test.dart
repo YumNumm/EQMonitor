@@ -1,6 +1,7 @@
 // ignore_for_file: implementation_imports, invalid_use_of_internal_member
 
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -22,6 +23,11 @@ AsyncValue<String> _staleWithError() => AsyncError<String>(
 Future<void> _pump(WidgetTester tester, List<AsyncValue<Object?>> values) {
   return tester.pumpWidget(
     MaterialApp(
+      theme: ThemeData.light().copyWith(
+        extensions: <ThemeExtension<dynamic>>[
+          DesignSystemThemeExtension.light(),
+        ],
+      ),
       home: Scaffold(body: CachedDataBanner(values: values)),
     ),
   );
