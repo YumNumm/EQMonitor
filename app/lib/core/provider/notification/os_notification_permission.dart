@@ -19,8 +19,7 @@ class OsNotificationPermission {
   final AppleNotificationSetting _criticalAlert;
 
   bool get isOsNotificationGranted =>
-      authorizationStatus == AuthorizationStatus.authorized ||
-      authorizationStatus == AuthorizationStatus.provisional;
+      authorizationStatus == AuthorizationStatus.authorized;
 
   bool get isCriticalAlertSupported =>
       _criticalAlert != AppleNotificationSetting.notSupported;
