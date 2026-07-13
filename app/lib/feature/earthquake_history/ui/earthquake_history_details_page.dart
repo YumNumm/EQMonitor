@@ -75,7 +75,8 @@ class _LoadedContent extends HookConsumerWidget {
     final hasEstimated = earthquake.estimatedIntensityTileUrl != null;
     final hasLpgm = earthquake.intensity?.maxLpgmIntensity != null;
 
-    final hasCatalog = earthquake.catalog != null;
+    final catalog = earthquake.catalog;
+    final hasCatalog = catalog != null;
     final hasXml = earthquake.dataSources.contains(
       EarthquakeDataSource.jmaDisasterInformationXml,
     );
@@ -87,7 +88,12 @@ class _LoadedContent extends HookConsumerWidget {
           ? EarthquakeDataSource.jmaIntensityDatabase
           : EarthquakeDataSource.jmaDisasterInformationXml,
     );
-    final showingDb = source.value == EarthquakeDataSource.jmaIntensityDatabase;
+    final effectiveSource =
+        source.value == EarthquakeDataSource.jmaIntensityDatabase && hasCatalog
+        ? EarthquakeDataSource.jmaIntensityDatabase
+        : EarthquakeDataSource.jmaDisasterInformationXml;
+    final showingDb =
+        effectiveSource == EarthquakeDataSource.jmaIntensityDatabase;
 
     final displayMode = useState(
       hasEstimated ? IntensityDisplayMode.estimated : IntensityDisplayMode.jma,
@@ -158,7 +164,7 @@ class _LoadedContent extends HookConsumerWidget {
                                     label: '震度データベース',
                                   ),
                                 ],
-                                selected: source.value,
+                                selected: effectiveSource,
                                 onSelected: (v) => source.value = v,
                               ),
                         ),
@@ -171,12 +177,12 @@ class _LoadedContent extends HookConsumerWidget {
                           ),
                         ],
                       ),
-                      if (showingDb) ...[
+                      if (showingDb && catalog != null) ...[
                         ShindoDbHypocenterInformationCard(
-                          catalog: earthquake.catalog!,
+                          catalog: catalog,
                           originTime: earthquake.originTime,
                         ),
-                        ShindoDbEventNotes(catalog: earthquake.catalog!),
+                        ShindoDbEventNotes(catalog: catalog),
                       ] else
                         EarthquakeHypocenterInformationCard(item: earthquake),
                       CurrentLocationIntensityCard(item: earthquake),
@@ -186,7 +192,7 @@ class _LoadedContent extends HookConsumerWidget {
                         onDisplayModeChanged: (mode) =>
                             displayMode.value = mode,
                         availableModes: availableModes,
-                        source: source.value,
+                        source: effectiveSource,
                         showDatabaseBadge: isDbOnly,
                       ),
                       if (earthquake.originTime != null &&
