@@ -8,6 +8,8 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 class SeismicityCumulativeBinning {
   const SeismicityCumulativeBinning();
 
+  static const maxDailyBinCount = 3660;
+
   List<SeismicityDailyBin> bin(List<SeismicityEvent> events) {
     if (events.isEmpty) {
       return const [];
@@ -26,6 +28,24 @@ class SeismicityCumulativeBinning {
     final sortedDays = countsByDay.keys.toList()..sort();
     final firstDay = sortedDays.first;
     final lastDay = sortedDays.last;
+
+    final inclusiveDayCount = lastDay.difference(firstDay).inDays + 1;
+    if (inclusiveDayCount > maxDailyBinCount) {
+      final bins = <SeismicityDailyBin>[];
+      var cumulative = 0;
+      for (final day in sortedDays) {
+        final count = countsByDay[day] ?? 0;
+        cumulative += count;
+        bins.add(
+          SeismicityDailyBin(
+            date: day,
+            count: count,
+            cumulativeCount: cumulative,
+          ),
+        );
+      }
+      return bins;
+    }
 
     final bins = <SeismicityDailyBin>[];
     var cumulative = 0;

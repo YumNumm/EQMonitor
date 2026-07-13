@@ -35,6 +35,24 @@ void main() {
     expect(bins[2].cumulativeCount, 3);
   });
 
+  test('過大な日付範囲はイベント発生日のみをビンにして過剰な生成を避ける', () {
+    const binning = SeismicityCumulativeBinning();
+    final events = [
+      _event(DateTime.utc(1)),
+      _event(DateTime.utc(9999, 12, 31)),
+    ];
+
+    final bins = binning.bin(events);
+
+    expect(bins.length, 2);
+    expect(bins[0].date, DateTime.utc(1));
+    expect(bins[0].count, 1);
+    expect(bins[0].cumulativeCount, 1);
+    expect(bins[1].date, DateTime.utc(9999, 12, 31));
+    expect(bins[1].count, 1);
+    expect(bins[1].cumulativeCount, 2);
+  });
+
   test('空リストは空を返す', () {
     const binning = SeismicityCumulativeBinning();
     expect(binning.bin(const []), isEmpty);
