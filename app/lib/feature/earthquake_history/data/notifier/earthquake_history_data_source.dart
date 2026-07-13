@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
-import 'package:eqmonitor/core/paging/cache_first_refresh.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
@@ -13,7 +11,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
@@ -38,12 +35,9 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
   final repository = await ref.watch(
     earthquakeHistoryRepositoryProvider.future,
   );
-  final cacheOnly = await ref.watch(cacheOnlyApiClientProvider.future);
-
   final dataSource = EarthquakeHistoryDataSource(
     repository: repository,
     parameter: parameter,
-    cacheOnlyClient: cacheOnly,
     onRefreshStarted: () =>
         ref.invalidate(earthquakeHistoryDetailsProvider, asReload: true),
   );
@@ -84,11 +78,9 @@ class EarthquakeHistoryDataSource
   EarthquakeHistoryDataSource({
     required EarthquakeHistoryRepository repository,
     required EarthquakeHistoryParameter parameter,
-    required api.ApiClient cacheOnlyClient,
     VoidCallback? onRefreshStarted,
   }) : _repository = repository,
-       _parameter = parameter,
-       _cacheOnlyClient = cacheOnlyClient {
+       _parameter = parameter {
     onLoadStarted = (action) {
       if (action is Refresh) {
         onRefreshStarted?.call();
@@ -98,14 +90,10 @@ class EarthquakeHistoryDataSource
 
   final EarthquakeHistoryRepository _repository;
   final EarthquakeHistoryParameter _parameter;
-  final api.ApiClient _cacheOnlyClient;
 
   final ValueNotifier<bool> isRevalidating = ValueNotifier(false);
-  bool _disposed = false;
-
   @override
   void dispose() {
-    _disposed = true;
     isRevalidating.dispose();
     super.dispose();
   }
@@ -123,21 +111,10 @@ class EarthquakeHistoryDataSource
   Future<LoadResult<String?, EarthquakePartial>> load(
     LoadAction<String?> action,
   ) async => switch (action) {
-    Refresh() when isDefaultAllParameter(_parameter) =>
-      await cacheFirstRefresh<EarthquakePartial>(
-        fetchPage: ({required cacheOnly}) async {
-          final page = await _fetch(
-            limit: 10,
-            cursor: null,
-            client: cacheOnly ? _cacheOnlyClient : null,
-          );
-          return PageData(data: page.items, appendKey: page.nextToken);
-        },
-        upsert: upsertItems,
-        isActive: () => !_disposed,
-        isRevalidating: isRevalidating,
-        onRevalidateError: (e, st) => talker.error(e, st),
-      ),
+    Refresh() when isDefaultAllParameter(_parameter) => await _load(
+      limit: 10,
+      cursor: null,
+    ),
     Refresh() => await _load(
       limit: _parameter is EarthquakeHistoryParameterAll ? 10 : 50,
       cursor: null,
@@ -171,7 +148,6 @@ class EarthquakeHistoryDataSource
   Future<PaginatedResponse<EarthquakePartial>> _fetch({
     required int limit,
     required String? cursor,
-    api.ApiClient? client,
   }) async {
     final parameter = _parameter;
 

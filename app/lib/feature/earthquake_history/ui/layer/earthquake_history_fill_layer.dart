@@ -80,29 +80,29 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final colorSet = ref.watch(activeColorSetProvider);
     final colorModel = colorSet.intensity;
+    final enqueue = useMapOperationQueue();
     final fillLayerBuilder = useMemoized(
       () => EarthquakeHistoryFillLayerBuilder(modeResolver: modeResolver),
       [modeResolver],
     );
-    final enqueue = useMapOperationQueue();
+
+    final isInitialized = useRef(false);
+    final addedLayerIds = useRef(<String>[]);
+    final latestParameter = useRef(parameter);
+    latestParameter.value = parameter;
+    final latestIntensity = useRef(intensity);
+    latestIntensity.value = intensity;
+    final latestColorModel = useRef(colorModel);
+    latestColorModel.value = colorModel;
+    final latestMode = useRef(mode);
+    latestMode.value = mode;
+    final latestShowingLpgmIntensity = useRef(showingLpgmIntensity);
+    latestShowingLpgmIntensity.value = showingLpgmIntensity;
 
     useEffect(
       () {
         if (styleController == null) {
           return null;
-        }
-
-        final addedLayerIds = <String>[];
-        var disposed = false;
-
-        Future<void> removeAdded() async {
-          for (final id in addedLayerIds.reversed) {
-            try {
-              await styleController.removeLayer(id);
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }
         }
 
         unawaited(
@@ -113,18 +113,18 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
                 colorModel: colorModel,
                 mode: mode,
                 showingLpgmIntensity: showingLpgmIntensity,
-                parameter: parameter,
+                parameter: latestParameter.value,
               );
+              final newIds = <String>[];
               for (final layer in layers) {
-                if (disposed) {
-                  return;
-                }
                 await styleController.addLayer(
                   layer,
                   belowLayerId: BaseLayer.areaForecastLocalELine.name,
                 );
-                addedLayerIds.add(layer.id);
+                newIds.add(layer.id);
               }
+              addedLayerIds.value = newIds;
+              isInitialized.value = true;
             } on Exception catch (e) {
               talker.log(e);
             }
@@ -132,8 +132,19 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
         );
 
         return () {
-          disposed = true;
-          unawaited(enqueue(removeAdded));
+          isInitialized.value = false;
+          unawaited(
+            enqueue(() async {
+              for (final id in addedLayerIds.value.reversed) {
+                try {
+                  await styleController.removeLayer(id);
+                } on Exception catch (e) {
+                  talker.log(e);
+                }
+              }
+              addedLayerIds.value = [];
+            }),
+          );
         };
       },
       [
@@ -142,9 +153,56 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
         colorModel,
         mode,
         showingLpgmIntensity,
-        parameter,
         fillLayerBuilder,
+        enqueue,
       ],
+    );
+
+    useEffect(
+      () {
+        if (styleController == null || !isInitialized.value) {
+          return null;
+        }
+
+        final currentIntensity = latestIntensity.value;
+        final currentMode = latestMode.value;
+
+        unawaited(
+          enqueue(() async {
+            for (final id in addedLayerIds.value.reversed) {
+              try {
+                await styleController.removeLayer(id);
+              } on Exception catch (e) {
+                talker.log(e);
+              }
+            }
+
+            final newIds = <String>[];
+            try {
+              final layers = fillLayerBuilder.build(
+                intensity: currentIntensity,
+                colorModel: latestColorModel.value,
+                mode: currentMode,
+                showingLpgmIntensity: latestShowingLpgmIntensity.value,
+                parameter: parameter,
+              );
+              for (final layer in layers) {
+                await styleController.addLayer(
+                  layer,
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                );
+                newIds.add(layer.id);
+              }
+            } on Exception catch (e) {
+              talker.log(e);
+            }
+            addedLayerIds.value = newIds;
+          }),
+        );
+
+        return null;
+      },
+      [styleController, parameter, enqueue, fillLayerBuilder],
     );
 
     return const SizedBox.shrink();
