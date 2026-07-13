@@ -25,14 +25,6 @@ class HinetJmalistParser {
 
   static const _jstOffset = Duration(hours: 9);
 
-  static final _lineRegExp = RegExp(
-    r'^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2}\.\d{2})\s+'
-    r'([\d.]+)\s+(-?[\d.]+)\s+([\d.]+)\s+(-?[\d.]+)\s+'
-    r'([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+'
-    r'(?:([\d.]+)([A-Za-z]?)\s+)?'
-    r'(.+?)\s+([A-Za-z])$',
-  );
-
   HinetJmalistParseResult parse(String content) {
     final events = <HinetJmalistEvent>[];
     var skippedLineCount = 0;
@@ -62,54 +54,69 @@ class HinetJmalistParser {
   }
 
   HinetJmalistEvent? _parseLine(String line) {
-    final match = _lineRegExp.firstMatch(line);
-    if (match == null) {
+    final tokens = line.split(RegExp(r'\s+'));
+    if (tokens.length < 11) {
       return null;
     }
 
     try {
-      final datePart = match.group(1)!;
-      final timePart = match.group(2)!;
-      final dateSegments = datePart.split('-').map(int.parse).toList();
-      final timeSegments = timePart.split(':');
-      final secondSegments = timeSegments[2].split('.');
+      final originTimeJst = DateTime.parse('${tokens[0]}T${tokens[1]}Z');
+      final magnitude2Token = tokens[9];
+      final qualityCode = tokens.last;
+      final hasMagnitude2 = _looksLikeMagnitude2Token(magnitude2Token);
+      final regionStartIndex = hasMagnitude2 ? 10 : 9;
+      final regionEndIndex = tokens.length - 1;
+      if (regionStartIndex >= regionEndIndex ||
+          qualityCode.length != 1 ||
+          !_isAsciiLetter(qualityCode.codeUnitAt(0))) {
+        return null;
+      }
 
-      // jmalist.php の日時は JST のため、一旦 JST の壁時計値として
-      // DateTime.utc に詰め、その後 9 時間分を差し引いて UTC に変換する。
-      final originTimeJst = DateTime.utc(
-        dateSegments[0],
-        dateSegments[1],
-        dateSegments[2],
-        int.parse(timeSegments[0]),
-        int.parse(timeSegments[1]),
-        int.parse(secondSegments[0]),
-        secondSegments.length > 1
-            ? (double.parse('0.${secondSegments[1]}') * 1000).round()
-            : 0,
-      );
-      final originTime = originTimeJst.subtract(_jstOffset);
-
-      final magnitude2Str = match.group(10);
-      final magnitudeFlag = match.group(11);
+      final magnitude2 = hasMagnitude2
+          ? double.parse(_magnitude2Value(magnitude2Token))
+          : null;
+      final magnitudeFlag = hasMagnitude2
+          ? _magnitude2Flag(magnitude2Token)
+          : null;
 
       return HinetJmalistEvent(
-        originTime: originTime,
-        timeError: double.parse(match.group(3)!),
-        latitude: double.parse(match.group(4)!),
-        latitudeError: double.parse(match.group(5)!),
-        longitude: double.parse(match.group(6)!),
-        longitudeError: double.parse(match.group(7)!),
-        depthKm: double.parse(match.group(8)!),
-        magnitude1: double.parse(match.group(9)!),
-        magnitude2: magnitude2Str == null ? null : double.parse(magnitude2Str),
-        magnitudeFlag: (magnitudeFlag == null || magnitudeFlag.isEmpty)
-            ? null
-            : magnitudeFlag,
-        regionNameEn: match.group(12)!,
-        qualityCode: match.group(13)!,
+        originTime: originTimeJst.subtract(_jstOffset),
+        timeError: double.parse(tokens[2]),
+        latitude: double.parse(tokens[3]),
+        latitudeError: double.parse(tokens[4]),
+        longitude: double.parse(tokens[5]),
+        longitudeError: double.parse(tokens[6]),
+        depthKm: double.parse(tokens[7]),
+        magnitude1: double.parse(tokens[8]),
+        magnitude2: magnitude2,
+        magnitudeFlag: magnitudeFlag,
+        regionNameEn: tokens.sublist(regionStartIndex, regionEndIndex).join(' '),
+        qualityCode: qualityCode,
       );
     } on FormatException {
       return null;
     }
   }
+
+  bool _looksLikeMagnitude2Token(String token) {
+    if (token.isEmpty) {
+      return false;
+    }
+    return double.tryParse(_magnitude2Value(token)) != null;
+  }
+
+  String _magnitude2Value(String token) {
+    final lastCodeUnit = token.codeUnitAt(token.length - 1);
+    final hasFlag = _isAsciiLetter(lastCodeUnit);
+    return hasFlag ? token.substring(0, token.length - 1) : token;
+  }
+
+  String? _magnitude2Flag(String token) {
+    final lastCodeUnit = token.codeUnitAt(token.length - 1);
+    final hasFlag = _isAsciiLetter(lastCodeUnit);
+    return hasFlag ? token.substring(token.length - 1) : null;
+  }
+
+  bool _isAsciiLetter(int codeUnit) =>
+      (codeUnit >= 65 && codeUnit <= 90) || (codeUnit >= 97 && codeUnit <= 122);
 }
