@@ -175,23 +175,18 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
   Future<bool> updateCurrentLocationRegion({
     required int regionCode,
     String? regionName,
+    String? cityCode,
   }) async {
     final current = await future;
     final existing = current
         .where((s) => s.slotType == .currentLocation)
         .firstOrNull;
-    if (existing == null || existing.regionId == regionCode) {
+    if (existing == null ||
+        (existing.regionId == regionCode && existing.cityCode == cityCode)) {
       return false;
     }
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
-    await repo.putCurrentLocation(
-      eewEnabled: existing.eewEnabled,
-      eewMinIntensity: existing.eewMinIntensity,
-      eewOverrides: existing.eewOverrides,
-      earthquakeEnabled: existing.earthquakeEnabled,
-      earthquakeMinIntensity: existing.earthquakeMinIntensity,
-      earthquakeOverrides: existing.earthquakeOverrides,
-    );
+    await repo.putDeviceLocation(regionId: regionCode, cityCode: cityCode);
     ref.invalidateSelf();
     return true;
   }

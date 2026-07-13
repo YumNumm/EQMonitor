@@ -129,10 +129,13 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
     try {
       didUpdateEew = await retry.run(
         action: () async {
-          await ref
+          return ref
               .read(notificationSlotsProvider.notifier)
-              .updateCurrentLocationRegion(regionCode: code, regionName: name);
-          return true;
+              .updateCurrentLocationRegion(
+                regionCode: code,
+                regionName: name,
+                cityCode: earthquakeResolution?.cityCode,
+              );
         },
       );
     } on Object catch (e, st) {
