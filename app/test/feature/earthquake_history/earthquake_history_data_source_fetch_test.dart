@@ -36,7 +36,6 @@ void main() {
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
         parameter: parameter,
-        cacheOnlyClient: api.ApiClient(Dio()),
       );
       addTearDown(dataSource.dispose);
 
@@ -76,7 +75,6 @@ void main() {
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
         parameter: parameter,
-        cacheOnlyClient: api.ApiClient(Dio()),
       );
       addTearDown(dataSource.dispose);
 
@@ -111,7 +109,6 @@ void main() {
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
         parameter: parameter,
-        cacheOnlyClient: api.ApiClient(Dio()),
       );
       addTearDown(dataSource.dispose);
 
@@ -139,7 +136,6 @@ void main() {
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
         parameter: parameter,
-        cacheOnlyClient: api.ApiClient(Dio()),
       );
       addTearDown(dataSource.dispose);
 
@@ -167,7 +163,6 @@ void main() {
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
         parameter: parameter,
-        cacheOnlyClient: api.ApiClient(Dio()),
       );
       addTearDown(dataSource.dispose);
 
@@ -178,6 +173,27 @@ void main() {
         repository.searchByStationCalls.first['statuses'],
         equals([app.TelegramStatus.training]),
       );
+    },
+  );
+
+  test(
+    'default All refresh returns Failure when network fetch fails',
+    () async {
+      final repository = _SpyEarthquakeHistoryRepository(throwOnFetch: true);
+      const parameter = EarthquakeHistoryParameter.all(
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+      );
+      final dataSource = EarthquakeHistoryDataSource(
+        repository: repository,
+        parameter: parameter,
+      );
+      addTearDown(dataSource.dispose);
+
+      final result = await dataSource.load(const Refresh());
+
+      expect(result, isA<Failure<String?, EarthquakePartial>>());
+      expect(repository.fetchEarthquakeListCalls, hasLength(1));
     },
   );
 }
@@ -230,12 +246,14 @@ EarthquakePartialNormal _makeEarthquake(String eventId) =>
 
 final class _SpyEarthquakeHistoryRepository
     extends EarthquakeHistoryRepository {
-  _SpyEarthquakeHistoryRepository()
+  _SpyEarthquakeHistoryRepository({this.throwOnFetch = false})
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,
         shindoDbStations: _shindoDbStations,
       );
+
+  final bool throwOnFetch;
 
   final fetchEarthquakeListCalls = <Map<String, Object?>>[];
   final searchByRegionCalls = <Map<String, Object?>>[];
@@ -281,6 +299,9 @@ final class _SpyEarthquakeHistoryRepository
       'longitudeGte': longitudeGte,
       'longitudeLte': longitudeLte,
     });
+    if (throwOnFetch) {
+      throw Exception('network failure');
+    }
     return PaginatedResponse(
       items: [_makeEarthquake('event-1')],
       nextToken: null,
