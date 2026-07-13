@@ -1,12 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/current_location_intensity_provider.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -104,18 +106,21 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
             intensity: intensity,
             lpgmIntensity: null,
             title: "${regionParameter?.name.ja ?? ''} で最大震度${intensity.label}",
-            stations: [],
+            stations: const [],
+            lpgmStations: const [],
           ),
         CurrentLocationIntensityDisplayResult(
           :final intensity,
           :final lpgmIntensity,
           :final stations,
+          :final lpgmStations,
         ) =>
           _CurrentLocationIntensityContent(
             intensity: intensity,
             lpgmIntensity: lpgmIntensity,
             title: "${cityParameterName ?? ''} で最大震度${intensity.label}",
             stations: stations,
+            lpgmStations: lpgmStations,
           ),
       },
       skipLoadingOnRefresh: true,
@@ -130,12 +135,14 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
     required this.lpgmIntensity,
     required this.title,
     required this.stations,
+    required this.lpgmStations,
   });
 
   final JmaIntensity intensity;
   final JmaLpgmIntensity? lpgmIntensity;
   final String title;
   final List<StationIntensityNode> stations;
+  final List<StationLpgmIntensityNode> lpgmStations;
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +158,12 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
         spacing: spacing.md,
         children: [
           JmaIntensityIcon(intensity: intensity, type: .filled, size: 40),
+          if (lpgmIntensity != null && lpgmIntensity != JmaLpgmIntensity.zero)
+            JmaLpgmIntensityIcon(
+              intensity: lpgmIntensity,
+              type: .filled,
+              size: 40,
+            ),
           Expanded(
             child: Column(
               crossAxisAlignment: .start,
@@ -164,9 +177,12 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
                 ),
                 Wrap(
                   spacing: spacing.xs,
-                  children: stations
-                      .map((e) => Text(e.station.name.ja))
-                      .toList(),
+                  children: [
+                    ...stations.map((e) => Text(e.station.name.ja)),
+                    ...lpgmStations.map(
+                      (e) => Text('長周期 ${e.station.name.ja}'),
+                    ),
+                  ],
                 ),
               ],
             ),
