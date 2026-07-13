@@ -23,7 +23,7 @@ class ParameterSetNotifier extends _$ParameterSetNotifier
           .read(startupProfilerProvider)
           .measure('parameter_load', sw.elapsedMicroseconds);
       return result;
-    } on Exception catch (e, st) {
+    } on Object catch (e, st) {
       talker.warning(
         '[Parameter] API/キャッシュからの読み込みに失敗したため、同梱パラメータを使用します。',
         e,

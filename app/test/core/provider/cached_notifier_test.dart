@@ -228,6 +228,19 @@ void main() {
       expect(result, 'recovered');
     });
 
+    test('ArgumentError from cache triggers force-fresh path', () async {
+      _cacheError = ArgumentError.value(
+        'UNKNOWN',
+        'metadata.type',
+        'Unknown union discriminator',
+      );
+      _freshValue = 'recovered-from-argument-error';
+
+      final result = await container.read(_testProvider.future);
+
+      expect(result, 'recovered-from-argument-error');
+    });
+
     test('force-fresh network error propagates', () async {
       _cacheError = const FormatException('corrupt');
       _networkError = Exception('network down');
