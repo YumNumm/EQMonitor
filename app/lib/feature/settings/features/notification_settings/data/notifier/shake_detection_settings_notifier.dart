@@ -131,7 +131,7 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
     );
     state = AsyncData(nextState);
     if (removesCurrentLocation && !value.any((e) => e.isCurrentLocation)) {
-      final slots = ref.read(notificationSlotsProvider).value ?? [];
+      final slots = ref.read(notificationSlotsProvider).value;
       const lifecycle = BackgroundLocationMonitoringLifecycle();
       await lifecycle.stopIfUnused(
         slots: slots,
