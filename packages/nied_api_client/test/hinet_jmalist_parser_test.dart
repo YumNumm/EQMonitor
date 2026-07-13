@@ -66,5 +66,18 @@ void main() {
       expect(result.events, hasLength(1));
       expect(result.skippedLineCount, 0);
     });
+
+    test('大量空白を含む不正な近似行を正規表現バックトラックなしでスキップする', () {
+      final longSpaces = List.filled(2000, ' ').join();
+      final sampleLinePrefix = _sampleLine1.substring(
+        0,
+        _sampleLine1.length - 1,
+      );
+      final craftedLine = '$sampleLinePrefix${longSpaces}1';
+      final result = parser.parse(craftedLine);
+
+      expect(result.events, isEmpty);
+      expect(result.skippedLineCount, 1);
+    });
   });
 }
