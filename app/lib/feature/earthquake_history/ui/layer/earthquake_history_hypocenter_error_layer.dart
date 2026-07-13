@@ -26,14 +26,22 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
   final Earthquake earthquake;
   final EarthquakeHistoryMapLayerParameter parameter;
 
-  static const _sourceId = 'eq-history-hypocenter-error';
-  static const _layerId = 'eq-history-hypocenter-error-line';
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final enqueue = useMapOperationQueue();
+    final layerBuilder = useMemoized(
+      EarthquakeHistoryHypocenterErrorLayerBuilder.new,
+    );
+
+    final isInitialized = useRef(false);
+    final latestParameter = useRef(parameter);
+    latestParameter.value = parameter;
+    final latestEarthquake = useRef(earthquake);
+    latestEarthquake.value = earthquake;
+    final latestIsDark = useRef(isDark);
+    latestIsDark.value = isDark;
 
     useEffect(() {
       if (styleController == null) {
@@ -43,13 +51,15 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
       unawaited(
         enqueue(() async {
           try {
-            final coords = earthquake.hypocenter?.coordinates;
+            final coords = latestEarthquake.value.hypocenter?.coordinates;
             if (coords is! CoordinateLatLng) {
               return;
             }
 
             final decimalPlaces =
-                earthquake.telegramTypes.contains(EarthquakeTelegramType.vxse61)
+                latestEarthquake.value.telegramTypes.contains(
+                  EarthquakeTelegramType.vxse61,
+                )
                 ? 3
                 : 1;
             final polygon = hypocenterErrorPolygon(
@@ -60,7 +70,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
 
             await styleController.addSource(
               GeoJsonSource(
-                id: _sourceId,
+                id: EarthquakeHistoryHypocenterErrorLayerBuilder.sourceId,
                 data: jsonEncode({
                   'type': 'FeatureCollection',
                   'features': [
@@ -78,24 +88,53 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
             );
 
             await styleController.addLayer(
-              LineStyleLayer(
-                id: _layerId,
-                sourceId: _sourceId,
-                paint: {
-                  'line-color': isDark ? '#ffffff' : '#000000',
-                  'line-cap': 'round',
-                  'line-join': 'round',
-                  'line-width': 1.5,
-                  'line-blur': 0.2,
-                  'line-dasharray': [4, 2],
-                  'line-opacity': [
-                    'step',
-                    ['zoom'],
-                    0.0,
-                    parameter.hypocenterErrorMinZoom,
-                    1.0,
-                  ],
-                },
+              layerBuilder.buildLineLayer(
+                parameter: latestParameter.value,
+                isDark: latestIsDark.value,
+              ),
+            );
+
+            isInitialized.value = true;
+          } on Exception catch (e) {
+            talker.log(e);
+          }
+        }),
+      );
+
+      return () {
+        isInitialized.value = false;
+        unawaited(
+          enqueue(() async {
+            try {
+              await styleController.removeLayer(
+                EarthquakeHistoryHypocenterErrorLayerBuilder.layerId,
+              );
+              await styleController.removeSource(
+                EarthquakeHistoryHypocenterErrorLayerBuilder.sourceId,
+              );
+            } on Exception catch (e) {
+              talker.log(e);
+            }
+          }),
+        );
+      };
+    }, [styleController, earthquake, isDark, enqueue, layerBuilder]);
+
+    useEffect(() {
+      if (styleController == null || !isInitialized.value) {
+        return null;
+      }
+
+      unawaited(
+        enqueue(() async {
+          try {
+            await styleController.removeLayer(
+              EarthquakeHistoryHypocenterErrorLayerBuilder.layerId,
+            );
+            await styleController.addLayer(
+              layerBuilder.buildLineLayer(
+                parameter: parameter,
+                isDark: latestIsDark.value,
               ),
             );
           } on Exception catch (e) {
@@ -104,24 +143,41 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
         }),
       );
 
-      return () {
-        unawaited(
-          enqueue(() async {
-            try {
-              await styleController.removeLayer(_layerId);
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-            try {
-              await styleController.removeSource(_sourceId);
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }),
-        );
-      };
-    }, [styleController, earthquake, isDark, parameter]);
+      return null;
+    }, [styleController, parameter, enqueue, layerBuilder]);
 
     return const SizedBox.shrink();
+  }
+}
+
+class EarthquakeHistoryHypocenterErrorLayerBuilder {
+  const EarthquakeHistoryHypocenterErrorLayerBuilder();
+
+  static const sourceId = 'eq-history-hypocenter-error';
+  static const layerId = 'eq-history-hypocenter-error-line';
+
+  LineStyleLayer buildLineLayer({
+    required EarthquakeHistoryMapLayerParameter parameter,
+    required bool isDark,
+  }) {
+    return LineStyleLayer(
+      id: layerId,
+      sourceId: sourceId,
+      paint: {
+        'line-color': isDark ? '#ffffff' : '#000000',
+        'line-cap': 'round',
+        'line-join': 'round',
+        'line-width': 1.5,
+        'line-blur': 0.2,
+        'line-dasharray': [4, 2],
+        'line-opacity': [
+          'step',
+          ['zoom'],
+          0.0,
+          parameter.hypocenterErrorMinZoom,
+          1.0,
+        ],
+      },
+    );
   }
 }
