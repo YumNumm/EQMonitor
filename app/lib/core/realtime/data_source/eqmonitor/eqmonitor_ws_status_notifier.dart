@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_payload_stream.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_provider.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
@@ -11,7 +9,7 @@ part 'eqmonitor_ws_status_notifier.g.dart';
 /// WebSocket の接続状態・ping 情報を保持する keepAlive Notifier。
 ///
 /// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
-/// [WsPingMessage] 受信時に pong を返送し、サーバーの ping 送出間隔を [EqMonitorWsStatusState.pingRtt] に記録する。
+/// [WsPingMessage] 受信時に最終 ping 時刻とサーバーの ping 送出間隔を [EqMonitorWsStatusState.pingRtt] に記録する。
 /// なお pingRtt はネットワーク RTT ではなくサーバーからの ping 受信間隔である点に注意。
 @Riverpod(keepAlive: true)
 class EqMonitorWsStatus extends _$EqMonitorWsStatus {
@@ -29,9 +27,7 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
 
     ref.listen(eqmonitorWebSocketTicketProvider, (_, next) {
       next.whenData(
-        (ticket) => state = state.copyWith(
-          currentUrl: _maskTicket(ticket.url),
-        ),
+        (ticket) => state = state.copyWith(currentUrl: _maskTicket(ticket.url)),
       );
     });
 
@@ -68,12 +64,6 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
       lastPingAt: now,
       pingRtt: prev != null ? now.difference(prev) : state.pingRtt,
     );
-
-    final ws = switch (ref.read(eqmonitorWebSocketProvider)) {
-      AsyncData(:final value) => value,
-      _ => null,
-    };
-    ws?.sendText(jsonEncode(const WsPongMessage().toJson()));
   }
 
   static String _maskTicket(String url) {
