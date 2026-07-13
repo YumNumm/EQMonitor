@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/foundation.dart';
@@ -20,6 +21,48 @@ class ForcedUpdateWrapper extends ConsumerStatefulWidget {
   @override
   ConsumerState<ForcedUpdateWrapper> createState() =>
       _ForcedUpdateWrapperState();
+}
+
+class ForcedUpdateRequirementMatcher {
+  const ForcedUpdateRequirementMatcher({required this.packageInfo});
+
+  final PackageInfo packageInfo;
+
+  bool isUpdateRequired(api.RequiredVersion requiredVersion) {
+    final versionUpdateRequired = isVersionUpdateRequired(requiredVersion);
+    final buildUpdateRequired = isBuildNumberUpdateRequired(requiredVersion);
+    return versionUpdateRequired || buildUpdateRequired;
+  }
+
+  bool isVersionUpdateRequired(api.RequiredVersion requiredVersion) {
+    final requiredVersionString = requiredVersion.version;
+    if (requiredVersionString == null) {
+      return false;
+    }
+
+    Version current;
+    Version required;
+    try {
+      current = Version.parse(packageInfo.version);
+      required = Version.parse(requiredVersionString);
+    } on FormatException {
+      return false;
+    }
+    return current < required;
+  }
+
+  bool isBuildNumberUpdateRequired(api.RequiredVersion requiredVersion) {
+    final requiredBuildNumber = requiredVersion.buildNumber;
+    if (requiredBuildNumber == null) {
+      return false;
+    }
+
+    final currentBuildNumber = int.tryParse(packageInfo.buildNumber);
+    if (currentBuildNumber == null) {
+      return false;
+    }
+    return currentBuildNumber < requiredBuildNumber;
+  }
 }
 
 class _ForcedUpdateWrapperState extends ConsumerState<ForcedUpdateWrapper> {
@@ -61,26 +104,11 @@ class _ForcedUpdateWrapperState extends ConsumerState<ForcedUpdateWrapper> {
       return;
     }
 
-    final info = await PackageInfo.fromPlatform();
-    Version current;
-    try {
-      current = Version.parse(info.version);
-    } on FormatException {
-      return;
-    }
+    final info = ref.read(packageInfoProvider);
+    final matcher = ForcedUpdateRequirementMatcher(packageInfo: info);
 
     for (final req in requiredVersions) {
-      final versionStr = req.version;
-      if (versionStr == null) {
-        continue;
-      }
-      Version required;
-      try {
-        required = Version.parse(versionStr);
-      } on FormatException {
-        continue;
-      }
-      if (current < required) {
+      if (matcher.isUpdateRequired(req)) {
         if (!mounted) {
           return;
         }
