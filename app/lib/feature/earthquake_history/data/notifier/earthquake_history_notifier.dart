@@ -132,7 +132,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           sortOrder: parameter.sortOrder,
         ),
       EarthquakeHistoryParameterCity(:final String cityCode) =>
-        repository.searchByRegion(
+        repository.searchByCity(
           code: cityCode,
           limit: limit,
           cursor: cursor,
