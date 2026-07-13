@@ -12,6 +12,7 @@ import 'package:eqmonitor/core/provider/interceptor/device_id_interceptor.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
@@ -43,8 +44,10 @@ Future<Dio> dio(Ref ref) async {
   dio.interceptors.add(deviceIdInterceptor);
   dio.interceptors.add(deviceAuthTokenInterceptor);
 
-  final chuck = ref.watch(chuckProvider);
-  dio.interceptors.add(chuck.dioInterceptor);
+  if (kDebugMode) {
+    final chuck = ref.watch(chuckProvider);
+    dio.interceptors.add(chuck.dioInterceptor);
+  }
 
   // ETag/304 透過キャッシュ。onResponse は登録順に実行されるため
   // TalkerDioLogger より前に置く。304 ヒット時は handler.resolve で
