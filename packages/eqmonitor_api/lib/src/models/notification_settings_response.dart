@@ -8,21 +8,20 @@ part 'notification_settings_response.freezed.dart';
 part 'notification_settings_response.g.dart';
 
 @Freezed()
-abstract class NotificationSettingsResponse with _$NotificationSettingsResponse {
+abstract class NotificationSettingsResponse
+    with _$NotificationSettingsResponse {
   const factory NotificationSettingsResponse({
-    @JsonKey(name: 'notification_enabled')
-    required bool notificationEnabled,
-    @JsonKey(name: 'tsunami_enabled')
-    required bool tsunamiEnabled,
-    @JsonKey(name: 'training_enabled')
-    required bool trainingEnabled,
+    @JsonKey(name: 'notification_enabled') required bool notificationEnabled,
+    @JsonKey(name: 'tsunami_enabled') required bool tsunamiEnabled,
+    @JsonKey(name: 'training_enabled') required bool trainingEnabled,
     @JsonKey(name: 'nankai_extraordinary_enabled')
     required bool nankaiExtraordinaryEnabled,
-    @JsonKey(name: 'nankai_regular_enabled')
-    required bool nankaiRegularEnabled,
-    @JsonKey(name: 'hokkaido3ren_offshore_enabled')
-    required bool hokkaido3renOffshoreEnabled,
+    @JsonKey(name: 'nankai_regular_enabled') required bool nankaiRegularEnabled,
+    @JsonKey(name: 'vyse60_enabled') required bool vyse60Enabled,
+    @JsonKey(name: 'earthquake_notice_enabled')
+    required bool earthquakeNoticeEnabled,
   }) = _NotificationSettingsResponse;
-  
-  factory NotificationSettingsResponse.fromJson(Map<String, Object?> json) => _$NotificationSettingsResponseFromJson(json);
+
+  factory NotificationSettingsResponse.fromJson(Map<String, Object?> json) =>
+      _$NotificationSettingsResponseFromJson(json);
 }

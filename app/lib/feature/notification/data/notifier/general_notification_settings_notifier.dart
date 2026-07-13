@@ -34,7 +34,8 @@ class GeneralNotificationSettingsNotifier
     bool? trainingEnabled,
     bool? nankaiExtraordinaryEnabled,
     bool? nankaiRegularEnabled,
-    bool? hokkaido3renOffshoreEnabled,
+    bool? vyse60Enabled,
+    bool? earthquakeNoticeEnabled,
   }) async {
     final current = await future;
     final repo = await ref.read(pushNotificationRepositoryProvider.future);
@@ -42,23 +43,21 @@ class GeneralNotificationSettingsNotifier
     final result = await repo.patchNotificationSettings(
       deviceId: deviceId,
       settings: current.copyWith(
-        notificationEnabled:
-            notificationEnabled ?? current.notificationEnabled,
+        notificationEnabled: notificationEnabled ?? current.notificationEnabled,
         tsunamiEnabled: tsunamiEnabled ?? current.tsunamiEnabled,
         trainingEnabled: trainingEnabled ?? current.trainingEnabled,
         nankaiExtraordinaryEnabled:
             nankaiExtraordinaryEnabled ?? current.nankaiExtraordinaryEnabled,
         nankaiRegularEnabled:
             nankaiRegularEnabled ?? current.nankaiRegularEnabled,
-        hokkaido3renOffshoreEnabled:
-            hokkaido3renOffshoreEnabled ?? current.hokkaido3renOffshoreEnabled,
+        vyse60Enabled: vyse60Enabled ?? current.vyse60Enabled,
+        earthquakeNoticeEnabled:
+            earthquakeNoticeEnabled ?? current.earthquakeNoticeEnabled,
       ),
     );
-    state = AsyncData(
-      switch (result) {
-        Success(:final value) => value,
-        Failure(:final exception) => throw exception,
-      },
-    );
+    state = AsyncData(switch (result) {
+      Success(:final value) => value,
+      Failure(:final exception) => throw exception,
+    });
   }
 }

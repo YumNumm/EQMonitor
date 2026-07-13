@@ -15,9 +15,10 @@ _ShindoDbStation _$ShindoDbStationFromJson(Map<String, dynamic> json) =>
         name: $checkedConvert('name', (v) => v as String),
         latitude: $checkedConvert('latitude', (v) => v as num),
         longitude: $checkedConvert('longitude', (v) => v as num),
+        cityCode: $checkedConvert('city_code', (v) => v as String?),
       );
       return val;
-    });
+    }, fieldKeyMap: const {'cityCode': 'city_code'});
 
 Map<String, dynamic> _$ShindoDbStationToJson(_ShindoDbStation instance) =>
     <String, dynamic>{
@@ -25,4 +26,5 @@ Map<String, dynamic> _$ShindoDbStationToJson(_ShindoDbStation instance) =>
       'name': instance.name,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
+      'city_code': instance.cityCode,
     };

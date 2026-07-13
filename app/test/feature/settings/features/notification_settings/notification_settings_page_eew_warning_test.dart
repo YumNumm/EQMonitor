@@ -118,7 +118,8 @@ class _FakeGeneralNotificationSettingsNotifier
         trainingEnabled: true,
         nankaiExtraordinaryEnabled: true,
         nankaiRegularEnabled: true,
-        hokkaido3renOffshoreEnabled: true,
+        vyse60Enabled: true,
+        earthquakeNoticeEnabled: true,
       );
 }
 
@@ -204,9 +205,7 @@ class _TestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(
-      extensions: [
-        DesignSystemThemeExtension.light(),
-      ],
+      extensions: [DesignSystemThemeExtension.light()],
     );
     return MaterialApp(theme: theme, home: home);
   }

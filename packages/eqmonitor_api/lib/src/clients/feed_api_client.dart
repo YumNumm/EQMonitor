@@ -18,10 +18,12 @@ part 'feed_api_client.g.dart';
 abstract class FeedApiClient {
   factory FeedApiClient(Dio dio, {String? baseUrl}) = _FeedApiClient;
 
-  /// Feed一覧（お知らせ・地震関連情報など）
+  /// Feed一覧（お知らせ・地震関連情報など）.
+  ///
+  /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
   @GET(FeedApiClientUrls.getV2Feeds)
   Future<HttpResponse<FeedListResponse>> getV2Feeds({
-    @Query('after') String? after,
+    @Query('cursor') String? cursor,
     @Query('important') String? important,
     @Query('locale') String? locale = 'ja',
     @Query('limit') String? limit = '20',
@@ -42,13 +44,13 @@ abstract class FeedApiClient {
   });
 }
 
-
 abstract class FeedApiClientUrls {
-	/// /v2/feeds
-	static const getV2Feeds = "/v2/feeds";
-	/// /v2/feeds/source/{telegramHash}
-	static const getV2FeedsSourceTelegramHash = "/v2/feeds/source/{telegramHash}";
-	/// /v2/feeds/admin
-	static const postV2FeedsAdmin = "/v2/feeds/admin";
-}
+  /// /v2/feeds
+  static const getV2Feeds = "/v2/feeds";
 
+  /// /v2/feeds/source/{telegramHash}
+  static const getV2FeedsSourceTelegramHash = "/v2/feeds/source/{telegramHash}";
+
+  /// /v2/feeds/admin
+  static const postV2FeedsAdmin = "/v2/feeds/admin";
+}
