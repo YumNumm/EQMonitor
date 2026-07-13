@@ -13,7 +13,7 @@
 		<string>CDhash</string>
 	</array>
 	<key>com.apple.developer.devicecheck.appattest-environment</key>
-	<string>development</string>
+	<string>production</string>
 	<key>com.apple.developer.usernotifications.critical-alerts</key>
 	<true/>
 	<key>com.apple.developer.usernotifications.time-sensitive</key>
