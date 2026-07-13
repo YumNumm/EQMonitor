@@ -1099,7 +1099,7 @@ public struct Client: APIProtocol {
             }
         )
     }
-    /// デバイスを登録してJWTを返す。X-Firebase-AppCheck または X-Challenge-Code/X-Challenge-Response ヘッダーが存在する場合はそれぞれ検証を試みるが、検証失敗時も registrationType=null として登録を続行する。
+    /// デバイスを登録してJWTを返す。X-Firebase-AppCheck または X-Challenge-Code/X-Challenge-Response が必要。
     ///
     /// - Remark: HTTP `POST /v2/device`.
     /// - Remark: Generated from `#/paths//v2/device/post(postV2Device)`.
@@ -1156,6 +1156,12 @@ public struct Client: APIProtocol {
                         preconditionFailure("bestContentType chose an invalid content type.")
                     }
                     return .created(.init(body: body))
+                case 400:
+                    return .badRequest(.init())
+                case 401:
+                    return .unauthorized(.init())
+                case 403:
+                    return .forbidden(.init())
                 case 500:
                     let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
                     let body: Operations.postV2Device.Output.InternalServerError.Body

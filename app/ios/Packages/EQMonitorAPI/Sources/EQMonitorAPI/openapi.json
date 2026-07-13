@@ -651,7 +651,7 @@
         "tags": [
           "Device"
         ],
-        "description": "デバイスを登録してJWTを返す。X-Firebase-AppCheck または X-Challenge-Code/X-Challenge-Response ヘッダーが存在する場合はそれぞれ検証を試みるが、検証失敗時も registrationType=null として登録を続行する。",
+        "description": "デバイスを登録してJWTを返す。X-Firebase-AppCheck または X-Challenge-Code/X-Challenge-Response が必要。",
         "responses": {
           "201": {
             "description": "デバイスID と デバイストークン",
@@ -662,6 +662,15 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "リクエスト不正"
+          },
+          "401": {
+            "description": "AppCheck 認証失敗"
+          },
+          "403": {
+            "description": "チャレンジ不一致・期限切れ・使用済み"
           },
           "500": {
             "description": "サーバーエラー",
