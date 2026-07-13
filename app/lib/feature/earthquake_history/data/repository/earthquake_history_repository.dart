@@ -395,7 +395,17 @@ class EarthquakeHistoryRepository {
     final unresolvedAccum =
         <ShindoDbIntensityClass, List<ShindoDbStationNode>>{};
 
+    final uniqueStationRecords = <String, EarthquakeCatalogStationRecord>{};
     for (final record in catalog.stationRecords) {
+      final current = uniqueStationRecords[record.stationCode];
+      if (current == null ||
+          record.intensityClass.orderIndex >
+              current.intensityClass.orderIndex) {
+        uniqueStationRecords[record.stationCode] = record;
+      }
+    }
+
+    for (final record in uniqueStationRecords.values) {
       final item = stationByCode[record.stationCode];
       final cityCode = item?.cityCode;
       final cityEntry = cityCode != null ? cityIndex[cityCode] : null;
@@ -471,7 +481,7 @@ class EarthquakeHistoryRepository {
     return ShindoDbIntensityTree(
       tree: tree,
       unresolvedStations: unresolvedStations,
-      totalStationCount: catalog.stationRecords.length,
+      totalStationCount: uniqueStationRecords.length,
     );
   }
 

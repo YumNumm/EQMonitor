@@ -47,7 +47,10 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
       unawaited(
         enqueue(() async {
           try {
-            final geoJson = _buildGeoJson(tree, colorModel);
+            final geoJson = buildShindoDbStationGeoJson(
+              tree: tree,
+              colorModel: colorModel,
+            );
 
             if (disposed) {
               return;
@@ -165,59 +168,99 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
 
     return const SizedBox.shrink();
   }
+}
 
-  static String _buildGeoJson(
-    ShindoDbIntensityTree tree,
-    IntensityColors colorModel,
-  ) {
+const shindoDbStationGeoJsonFeatureLimit = 5000;
+
+String buildShindoDbStationGeoJson({
+  required ShindoDbIntensityTree tree,
+  required IntensityColors colorModel,
+}) {
+  final builder = ShindoDbStationGeoJsonBuilder(colorModel: colorModel);
+  return builder.build(tree: tree);
+}
+
+class ShindoDbStationGeoJsonBuilder {
+  const ShindoDbStationGeoJsonBuilder({required this.colorModel});
+
+  final IntensityColors colorModel;
+
+  String build({required ShindoDbIntensityTree tree}) {
     final features = <Map<String, dynamic>>[];
-
-    void addStation(ShindoDbStationNode station, ShindoDbIntensityClass cls) {
-      final loc = station.location;
-      if (loc == null) {
-        return;
-      }
-      final colorJma = cls.colorJmaIntensity;
-      final color = colorJma != null
-          ? colorModel.fromJmaIntensity(colorJma).background.toHexStringRGB()
-          : '#9e9e9e';
-      final props = <String, dynamic>{
-        'color': color,
-        'name': station.name,
-        'sortKey': cls.orderIndex,
-      };
-      final exactJma = cls.exactJmaIntensity;
-      if (exactJma != null) {
-        props['iconId'] = 'JmaIntensity.small.${exactJma.name}';
-      }
-      features.add({
-        'type': 'Feature',
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [loc.lon, loc.lat],
-        },
-        'properties': props,
-      });
-    }
+    final addedStationCodes = <String>{};
 
     for (final entry in tree.tree.entries) {
-      final cls = entry.key;
       for (final pref in entry.value) {
         for (final cityNode in pref.cities) {
           for (final station in cityNode.stations) {
-            addStation(station, cls);
+            addStation(
+              features: features,
+              addedStationCodes: addedStationCodes,
+              station: station,
+              cls: entry.key,
+            );
+            if (features.length >= shindoDbStationGeoJsonFeatureLimit) {
+              return encodeFeatures(features);
+            }
           }
         }
       }
     }
 
     for (final entry in tree.unresolvedStations.entries) {
-      final cls = entry.key;
       for (final station in entry.value) {
-        addStation(station, cls);
+        addStation(
+          features: features,
+          addedStationCodes: addedStationCodes,
+          station: station,
+          cls: entry.key,
+        );
+        if (features.length >= shindoDbStationGeoJsonFeatureLimit) {
+          return encodeFeatures(features);
+        }
       }
     }
 
+    return encodeFeatures(features);
+  }
+
+  String encodeFeatures(List<Map<String, dynamic>> features) {
     return jsonEncode({'type': 'FeatureCollection', 'features': features});
+  }
+
+  void addStation({
+    required List<Map<String, dynamic>> features,
+    required Set<String> addedStationCodes,
+    required ShindoDbStationNode station,
+    required ShindoDbIntensityClass cls,
+  }) {
+    final loc = station.location;
+    if (loc == null ||
+        features.length >= shindoDbStationGeoJsonFeatureLimit ||
+        !addedStationCodes.add(station.record.stationCode)) {
+      return;
+    }
+
+    final colorJma = cls.colorJmaIntensity;
+    final color = colorJma != null
+        ? colorModel.fromJmaIntensity(colorJma).background.toHexStringRGB()
+        : '#9e9e9e';
+    final props = <String, dynamic>{
+      'color': color,
+      'name': station.name,
+      'sortKey': cls.orderIndex,
+    };
+    final exactJma = cls.exactJmaIntensity;
+    if (exactJma != null) {
+      props['iconId'] = 'JmaIntensity.small.${exactJma.name}';
+    }
+    features.add({
+      'type': 'Feature',
+      'geometry': {
+        'type': 'Point',
+        'coordinates': [loc.lon, loc.lat],
+      },
+      'properties': props,
+    });
   }
 }

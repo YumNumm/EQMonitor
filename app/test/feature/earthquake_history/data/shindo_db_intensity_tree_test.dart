@@ -155,6 +155,42 @@ void main() {
       expect(result.totalStationCount, 3);
     });
 
+    test('同一観測点コードは最大階級の1件に集約されること', () {
+      final repo = _makeRepository(
+        earthquakeParameter: _makeEarthquakeParameter([
+          _prefecture([
+            _region('010100', [_city('01100')]),
+          ]),
+        ]),
+        shindoDbStations: _makeShindoDbStations([
+          ShindoDbStationItem(
+            code: 'ST001',
+            name: '札幌観測点',
+            location: const LatLng(43.0, 141.0),
+            cityCode: '01100',
+          ),
+        ]),
+      );
+
+      final result = repo.buildShindoDbIntensityTree(
+        catalog: _makeCatalog([
+          _makeRecord('ST001', ShindoDbIntensityClass.three),
+          _makeRecord('ST001', ShindoDbIntensityClass.fiveLower),
+          _makeRecord('ST001', ShindoDbIntensityClass.four),
+        ]),
+      );
+
+      expect(result.totalStationCount, 1);
+      expect(result.tree.keys, contains(ShindoDbIntensityClass.fiveLower));
+      expect(result.tree.keys, isNot(contains(ShindoDbIntensityClass.three)));
+      expect(result.tree.keys, isNot(contains(ShindoDbIntensityClass.four)));
+      final nodes = result.tree[ShindoDbIntensityClass.fiveLower] ?? [];
+      expect(
+        nodes.single.cities.single.stations.single.record.stationCode,
+        'ST001',
+      );
+    });
+
     test('cityCode が null の観測点は unresolvedStations に入ること', () {
       // 53999 相当 (cityCode: null) → unresolvedStations[class] に入り name が解決される
       final repo = _makeRepository(
