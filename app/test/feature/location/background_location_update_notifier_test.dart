@@ -34,6 +34,37 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
   Future<List<NotificationSlot>> build() async => _slots;
 }
 
+final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
+  final putDeviceLocationCalls = <api.DeviceLocationRequest>[];
+
+  @override
+  void close({bool force = false}) {}
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    if (options.path.endsWith('/device/me/location') &&
+        options.method == 'PUT') {
+      final request = api.DeviceLocationRequest.fromJson(
+        Map<String, Object?>.from(options.data as Map<String, dynamic>),
+      );
+      putDeviceLocationCalls.add(request);
+      return _jsonResponse(
+        jsonEncode({
+          'region_id': request.regionId,
+          'city_code': request.cityCode,
+          'tsunami_forecast_region_code': null,
+        }),
+      );
+    }
+
+    throw UnimplementedError('Unhandled: ${options.method} ${options.path}');
+  }
+}
+
 /// `ShakeDetectionSettingsNotifier` が読む `apiClientProvider` を差し替える
 /// HTTP アダプタ。揺れ検知設定の GET / PUT とサブ地域マスター GET を模倣する。
 final class _FakeShakeApiAdapter implements HttpClientAdapter {
@@ -154,14 +185,21 @@ ProviderContainer _createShakeContainer(_FakeShakeApiAdapter adapter) {
   );
 }
 
-ProviderContainer _createSlotsContainer(List<NotificationSlot> slots) =>
-    ProviderContainer(
-      overrides: [
-        notificationSlotsProvider.overrideWith(
-          () => _FakeNotificationSlotsNotifier(slots),
-        ),
-      ],
-    );
+ProviderContainer _createSlotsContainer(
+  List<NotificationSlot> slots, {
+  required _FakeDeviceLocationApiAdapter adapter,
+}) {
+  final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+    ..httpClientAdapter = adapter;
+  return ProviderContainer(
+    overrides: [
+      apiClientProvider.overrideWith((ref) async => api.ApiClient(dio)),
+      notificationSlotsProvider.overrideWith(
+        () => _FakeNotificationSlotsNotifier(slots),
+      ),
+    ],
+  );
+}
 
 NotificationSlot _currentLocationSlot({required int? regionId}) =>
     NotificationSlot(
@@ -448,9 +486,11 @@ void main() {
   // ==========================================================================
   group('NotificationSlotsNotifier.updateCurrentLocationRegion', () {
     test('現在地スロットの regionCode が変化した場合に true を返す', () async {
-      final container = _createSlotsContainer([
-        _currentLocationSlot(regionId: 9011),
-      ]);
+      final adapter = _FakeDeviceLocationApiAdapter();
+      final container = _createSlotsContainer(
+        [_currentLocationSlot(regionId: 9011)],
+        adapter: adapter,
+      );
       addTeardownToContainer(container);
 
       await container.read(notificationSlotsProvider.future);
@@ -460,12 +500,16 @@ void main() {
           .updateCurrentLocationRegion(regionCode: 9012, regionName: '多摩東部');
 
       expect(result, isTrue);
+      expect(adapter.putDeviceLocationCalls, hasLength(1));
+      expect(adapter.putDeviceLocationCalls.single.regionId, '9012');
     });
 
     test('現在地スロットの regionCode が同一なら false を返す', () async {
-      final container = _createSlotsContainer([
-        _currentLocationSlot(regionId: 9011),
-      ]);
+      final adapter = _FakeDeviceLocationApiAdapter();
+      final container = _createSlotsContainer(
+        [_currentLocationSlot(regionId: 9011)],
+        adapter: adapter,
+      );
       addTeardownToContainer(container);
 
       await container.read(notificationSlotsProvider.future);
@@ -475,11 +519,16 @@ void main() {
           .updateCurrentLocationRegion(regionCode: 9011, regionName: '東京地方');
 
       expect(result, isFalse);
+      expect(adapter.putDeviceLocationCalls, isEmpty);
     });
 
     test('現在地スロットがない場合は false を返す', () async {
       // 地域スロットのみ存在し、現在地スロットは無い。
-      final container = _createSlotsContainer([_regionSlot(regionId: 9999)]);
+      final adapter = _FakeDeviceLocationApiAdapter();
+      final container = _createSlotsContainer(
+        [_regionSlot(regionId: 9999)],
+        adapter: adapter,
+      );
       addTeardownToContainer(container);
 
       await container.read(notificationSlotsProvider.future);
@@ -489,6 +538,7 @@ void main() {
           .updateCurrentLocationRegion(regionCode: 9012, regionName: '多摩東部');
 
       expect(result, isFalse);
+      expect(adapter.putDeviceLocationCalls, isEmpty);
     });
   });
 }
