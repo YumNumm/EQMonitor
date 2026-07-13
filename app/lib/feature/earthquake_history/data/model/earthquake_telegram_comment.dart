@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:extensions/extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_telegram_comment.freezed.dart';
@@ -45,3 +46,55 @@ List<EarthquakeTelegramComment> extractTelegramComments(
     })
     .nonNulls
     .toList();
+
+/// 詳細画面に表示するコメント行を選択する
+///
+/// - VXSE53 があれば最新（reportedAt基準）の53をベースに採用、
+///   なければ最新の51と52を結合
+/// - VXSE61 / VXSE62 のコメントは追加で表示（タイプごとに最新）
+/// - 各電文から固定付加文（additional）→自由付加文（free）の順に収集し、
+///   半角化のうえ同一文言は重複除去する
+List<String> selectTelegramCommentLines(
+  List<EarthquakeTelegramComment> comments,
+) {
+  EarthquakeTelegramComment? latestOf(EarthquakeTelegramType type) {
+    EarthquakeTelegramComment? latest;
+    for (final comment in comments) {
+      if (comment.type != type) {
+        continue;
+      }
+      if (latest == null || comment.reportedAt.isAfter(latest.reportedAt)) {
+        latest = comment;
+      }
+    }
+    return latest;
+  }
+
+  final vxse53 = latestOf(EarthquakeTelegramType.vxse53);
+  final base = vxse53 != null
+      ? [vxse53]
+      : [
+          latestOf(EarthquakeTelegramType.vxse51),
+          latestOf(EarthquakeTelegramType.vxse52),
+        ].nonNulls.toList();
+
+  final selected = [
+    ...base,
+    latestOf(EarthquakeTelegramType.vxse61),
+    latestOf(EarthquakeTelegramType.vxse62),
+  ].nonNulls;
+
+  final lines = <String>[];
+  for (final comment in selected) {
+    for (final text in [comment.additional, comment.free]) {
+      if (text == null || text.isEmpty) {
+        continue;
+      }
+      final line = text.toHalfWidth;
+      if (!lines.contains(line)) {
+        lines.add(line);
+      }
+    }
+  }
+  return lines;
+}

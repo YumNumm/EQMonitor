@@ -84,4 +84,114 @@ void main() {
       expect(result, isEmpty);
     });
   });
+
+  group('selectTelegramCommentLines', () {
+    EarthquakeTelegramComment comment({
+      required EarthquakeTelegramType type,
+      required DateTime reportedAt,
+      String? additional,
+      String? free,
+    }) => EarthquakeTelegramComment(
+      type: type,
+      reportedAt: reportedAt,
+      additional: additional,
+      free: free,
+    );
+
+    test('VXSE53があれば53のコメントを採用し51/52は無視する', () {
+      final lines = selectTelegramCommentLines([
+        comment(
+          type: EarthquakeTelegramType.vxse51,
+          reportedAt: DateTime(2026, 7, 13, 12),
+          additional: '速報の付加文',
+        ),
+        comment(
+          type: EarthquakeTelegramType.vxse53,
+          reportedAt: DateTime(2026, 7, 13, 12, 10),
+          additional: 'この地震による津波の心配はありません。',
+        ),
+      ]);
+      expect(lines, ['この地震による津波の心配はありません。']);
+    });
+
+    test('VXSE53が複数あればreportedAtが最新のものを採用する', () {
+      final lines = selectTelegramCommentLines([
+        comment(
+          type: EarthquakeTelegramType.vxse53,
+          reportedAt: DateTime(2026, 7, 13, 12, 20),
+          additional: '最新の付加文',
+        ),
+        comment(
+          type: EarthquakeTelegramType.vxse53,
+          reportedAt: DateTime(2026, 7, 13, 12, 10),
+          additional: '古い付加文',
+        ),
+      ]);
+      expect(lines, ['最新の付加文']);
+    });
+
+    test('VXSE53がなければ51と52のコメントを結合する', () {
+      final lines = selectTelegramCommentLines([
+        comment(
+          type: EarthquakeTelegramType.vxse51,
+          reportedAt: DateTime(2026, 7, 13, 12),
+          additional: '今後の情報に注意してください。',
+        ),
+        comment(
+          type: EarthquakeTelegramType.vxse52,
+          reportedAt: DateTime(2026, 7, 13, 12, 5),
+          additional: 'この地震による津波の心配はありません。',
+        ),
+      ]);
+      expect(lines, ['今後の情報に注意してください。', 'この地震による津波の心配はありません。']);
+    });
+
+    test('VXSE6xのコメントは53に追加して表示する', () {
+      final lines = selectTelegramCommentLines([
+        comment(
+          type: EarthquakeTelegramType.vxse53,
+          reportedAt: DateTime(2026, 7, 13, 12, 10),
+          additional: 'この地震による津波の心配はありません。',
+        ),
+        comment(
+          type: EarthquakeTelegramType.vxse61,
+          reportedAt: DateTime(2026, 7, 13, 13),
+          free: '地震活動に関するお知らせ。',
+        ),
+      ]);
+      expect(lines, ['この地震による津波の心配はありません。', '地震活動に関するお知らせ。']);
+    });
+
+    test('additionalとfreeの両方があればその順で表示し、同一文言は重複除去する', () {
+      final lines = selectTelegramCommentLines([
+        comment(
+          type: EarthquakeTelegramType.vxse51,
+          reportedAt: DateTime(2026, 7, 13, 12),
+          additional: 'この地震による津波の心配はありません。',
+          free: '自由付加文です。',
+        ),
+        comment(
+          type: EarthquakeTelegramType.vxse52,
+          reportedAt: DateTime(2026, 7, 13, 12, 5),
+          additional: 'この地震による津波の心配はありません。',
+        ),
+      ]);
+      expect(lines, ['この地震による津波の心配はありません。', '自由付加文です。']);
+    });
+
+    test('全角英数は半角に変換される', () {
+      final lines = selectTelegramCommentLines([
+        comment(
+          type: EarthquakeTelegramType.vxse53,
+          reportedAt: DateTime(2026, 7, 13, 12, 10),
+          free: '地震の規模はＭ７．０です。',
+        ),
+      ]);
+      expect(lines, ['地震の規模はM7.0です。']);
+    });
+
+    test('空入力なら空リストを返す', () {
+      expect(selectTelegramCommentLines([]), isEmpty);
+    });
+  });
 }
