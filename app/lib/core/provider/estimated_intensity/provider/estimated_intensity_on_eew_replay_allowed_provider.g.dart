@@ -16,7 +16,7 @@ final estimatedIntensityOnEewReplayAllowedProvider =
     EstimatedIntensityOnEewReplayAllowedProvider._();
 
 final class EstimatedIntensityOnEewReplayAllowedProvider
-    extends $NotifierProvider<EstimatedIntensityOnEewReplayAllowed, bool> {
+    extends $AsyncNotifierProvider<EstimatedIntensityOnEewReplayAllowed, bool> {
   EstimatedIntensityOnEewReplayAllowedProvider._()
     : super(
         from: null,
@@ -36,30 +36,23 @@ final class EstimatedIntensityOnEewReplayAllowedProvider
   @override
   EstimatedIntensityOnEewReplayAllowed create() =>
       EstimatedIntensityOnEewReplayAllowed();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
 }
 
 String _$estimatedIntensityOnEewReplayAllowedHash() =>
-    r'56dbff49630888f39e938ea4c42d114a2bd0c634';
+    r'd2058855e1fc28a5960ddfdd8b1ddcca70604945';
 
-abstract class _$EstimatedIntensityOnEewReplayAllowed extends $Notifier<bool> {
-  bool build();
+abstract class _$EstimatedIntensityOnEewReplayAllowed
+    extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<bool, bool>,
-              bool,
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
               Object?,
               Object?
             >;

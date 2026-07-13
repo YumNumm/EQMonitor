@@ -1,11 +1,12 @@
 part of '../page/onboarding_page.dart';
 
 class _CompleteStepPage extends HookConsumerWidget {
-  const _CompleteStepPage();
+  const _CompleteStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
     final completeMutation = ref.watch(OnboardingCompleted.completeMutation);
     final isProcessing = completeMutation is MutationPending;
@@ -15,23 +16,28 @@ class _CompleteStepPage extends HookConsumerWidget {
         ref,
         (tsx) async => tsx.get(onboardingCompletedProvider.notifier).complete(),
       );
+      // 新規ユーザーは既読版数を現在版に初期化し、初回ホームでバナーを出さない。
+      final version = ref.read(packageInfoProvider).version;
+      await ref
+          .read(updateBannerSeenVersionProvider.notifier)
+          .markSeen(version);
       if (context.mounted) {
         const HomeRoute().go(context);
       }
     }
 
     useEffect(() {
-      scope.setStepNavigation(
-        step: _OnboardingStep.complete,
-        state: _StepNavigationState(
+      navigation.register(
+        _StepNavigationState(
           buttonLabel: 'はじめる',
+          processingLabel: '準備を完了しています...',
           isNextEnabled: !isProcessing,
           isProcessing: isProcessing,
           onNext: completeOnboarding,
         ),
       );
       return null;
-    }, [scope, isProcessing]);
+    }, [navigation, isProcessing]);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
@@ -39,10 +45,7 @@ class _CompleteStepPage extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
-          Text(
-            '準備完了',
-            style: designSystem.typography.displayMedium,
-          ),
+          Text('準備完了', style: designSystem.typography.displayMedium),
           SizedBox(height: designSystem.spacing.sm),
           Text(
             'EQMonitor で日本の地震情報をリアルタイムに確認できます',

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/gen/assets.gen.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:flutter/services.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -9,7 +10,18 @@ part 'jma_map_provider.g.dart';
 Future<Map<JmaMapType, JmaMap_JmaMapData>> jmaMap(Ref ref) async {
   final bytes = await rootBundle.load(Assets.jmaMap);
   final jmaMap = JmaMap.fromBuffer(bytes.buffer.asUint8List());
-  return {for (final element in jmaMap.data) element.mapType.mapType: element};
+  final result = <JmaMapType, JmaMap_JmaMapData>{};
+  for (final element in jmaMap.data) {
+    try {
+      result[element.mapType.mapType] = element;
+    } on UnimplementedError {
+      // 未知の JmaMapType はスキップし、既知typeのデータのみで縮退させる。
+      talker.warning(
+        'jmaMapProvider: 未知の JmaMapType (${element.mapType}) をスキップしました',
+      );
+    }
+  }
+  return result;
 }
 
 enum JmaMapType {

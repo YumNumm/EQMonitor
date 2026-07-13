@@ -1,11 +1,12 @@
 part of '../page/onboarding_page.dart';
 
 class _WelcomeStepPage extends HookConsumerWidget {
-  const _WelcomeStepPage();
+  const _WelcomeStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
     final deviceProvisioningStatus = ref.watch(deviceProvisioningProvider);
     final deviceProvisioningMutation = ref.watch(
@@ -14,9 +15,14 @@ class _WelcomeStepPage extends HookConsumerWidget {
     final isProvisioned =
         deviceProvisioningStatus.value == .notRequired ||
         deviceProvisioningMutation is MutationSuccess;
+    final isRegisteringDevice = deviceProvisioningMutation is MutationPending;
     final isProcessing =
-        deviceProvisioningStatus.isLoading ||
-        deviceProvisioningMutation is MutationPending;
+        deviceProvisioningStatus.isLoading || isRegisteringDevice;
+    final processingLabel = isRegisteringDevice
+        ? 'デバイスを登録しています...'
+        : 'デバイスの状態を確認しています...';
+    final isMigrated =
+        ref.watch(deviceMigratedFromLegacyProvider).value ?? false;
 
     Future<void> startProvisioning() async {
       try {
@@ -33,6 +39,16 @@ class _WelcomeStepPage extends HookConsumerWidget {
     void retryProvisioning() {
       ref.read(deviceProvisioningProvider.notifier).reset();
       unawaited(startProvisioning());
+    }
+
+    Future<void> completeAndGoHome() async {
+      await OnboardingCompleted.completeMutation.run(
+        ref,
+        (tsx) async => tsx.get(onboardingCompletedProvider.notifier).complete(),
+      );
+      if (context.mounted) {
+        const HomeRoute().go(context);
+      }
     }
 
     ref.listen(deviceProvisioningProvider, (_, next) {
@@ -67,37 +83,54 @@ class _WelcomeStepPage extends HookConsumerWidget {
       }
     });
 
+    ref.listen(DeviceProvisioningNotifier.provisionMutation, (_, next) {
+      if (next is MutationSuccess) {
+        ref.invalidate(deviceMigratedFromLegacyProvider);
+      }
+    });
+
+    useEffect(() {
+      if (deviceProvisioningStatus.value == .required &&
+          deviceProvisioningMutation is MutationIdle) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!context.mounted) {
+            return;
+          }
+          unawaited(startProvisioning());
+        });
+      }
+      return null;
+    }, [deviceProvisioningStatus, deviceProvisioningMutation]);
+
     useEffect(
       () {
-        if (deviceProvisioningStatus.value == .required &&
-            deviceProvisioningMutation is MutationIdle) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!context.mounted) {
-              return;
-            }
-            unawaited(startProvisioning());
-          });
+        if (!navigation.isActive) {
+          return null;
         }
+        if (deviceProvisioningStatus.isLoading &&
+            deviceProvisioningMutation is MutationIdle) {
+          return null;
+        }
+        navigation.register(
+          _StepNavigationState(
+            buttonLabel: isMigrated ? 'はじめる' : '次へ',
+            processingLabel: processingLabel,
+            isNextEnabled: isProvisioned,
+            isProcessing: isProcessing,
+            onNext: isMigrated ? completeAndGoHome : navigation.nextPage,
+          ),
+        );
         return null;
       },
       [
-        deviceProvisioningStatus,
-        deviceProvisioningMutation,
+        navigation,
+        navigation.isActive,
+        isProvisioned,
+        isProcessing,
+        processingLabel,
+        isMigrated,
       ],
     );
-
-    useEffect(() {
-      scope.setStepNavigation(
-        step: _OnboardingStep.welcome,
-        state: _StepNavigationState(
-          buttonLabel: '次へ',
-          isNextEnabled: isProvisioned,
-          isProcessing: isProcessing,
-          onNext: scope.nextPage,
-        ),
-      );
-      return null;
-    }, [scope, isProvisioned, isProcessing]);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),

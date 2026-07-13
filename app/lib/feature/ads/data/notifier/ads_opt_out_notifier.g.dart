@@ -15,7 +15,7 @@ part of 'ads_opt_out_notifier.dart';
 final adsOptOutProvider = AdsOptOutNotifierProvider._();
 
 final class AdsOptOutNotifierProvider
-    extends $NotifierProvider<AdsOptOutNotifier, bool> {
+    extends $AsyncNotifierProvider<AdsOptOutNotifier, bool> {
   AdsOptOutNotifierProvider._()
     : super(
         from: null,
@@ -33,29 +33,21 @@ final class AdsOptOutNotifierProvider
   @$internal
   @override
   AdsOptOutNotifier create() => AdsOptOutNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
 }
 
-String _$adsOptOutNotifierHash() => r'7979f3d1c6fd262ced418e0abfadfa7c2e0f3858';
+String _$adsOptOutNotifierHash() => r'0a02c7290f73d1cffcfcf625fe5aa0d435d3295c';
 
-abstract class _$AdsOptOutNotifier extends $Notifier<bool> {
-  bool build();
+abstract class _$AdsOptOutNotifier extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<bool, bool>,
-              bool,
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
               Object?,
               Object?
             >;

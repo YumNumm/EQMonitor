@@ -69,9 +69,7 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
                     deviceId: deviceIdAsync.requireValue,
                   ),
                 if (deviceIdAsync.hasValue)
-                  _TestScenarioSection(
-                    deviceId: deviceIdAsync.requireValue,
-                  ),
+                  _TestScenarioSection(deviceId: deviceIdAsync.requireValue),
                 if (deviceIdAsync.hasValue)
                   _TestScenarioTypeSection(
                     deviceId: deviceIdAsync.requireValue,
@@ -170,13 +168,12 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _KeyValueRow(
-            label: 'Device ID',
-            value: deviceIdAsync.value ?? '…',
-          ),
+          _KeyValueRow(label: 'Device ID', value: deviceIdAsync.value ?? '…'),
           _KeyValueRow(
             label: '保存済みフラグ',
-            value: isProvisioned ? '登録済み (true)' : '未登録 (false)',
+            value: (isProvisioned.value ?? false)
+                ? '登録済み (true)'
+                : '未登録 (false)',
           ),
           _KeyValueRow(
             label: 'Bearerトークン',
@@ -189,7 +186,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
           _KeyValueRow(label: 'サーバー状態', value: statusText),
           _KeyValueRow(
             label: 'レガシーID',
-            value: legacyId != null ? '存在 → 移行対象' : 'なし',
+            value: legacyId.value != null ? '存在 → 移行対象' : 'なし',
           ),
           const SizedBox(height: 6),
           Row(
@@ -281,9 +278,9 @@ class _StatusChip extends StatelessWidget {
           Flexible(
             child: Text(
               label,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: textColor,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: textColor),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -319,10 +316,7 @@ class _NotificationPermissionSection extends ConsumerWidget {
               label: '許可状態',
               value: _authLabel(value.authorizationStatus),
             ),
-            _KeyValueRow(
-              label: 'アラート',
-              value: _appleLabel(value.alert),
-            ),
+            _KeyValueRow(label: 'アラート', value: _appleLabel(value.alert)),
             _KeyValueRow(label: 'バッジ', value: _appleLabel(value.badge)),
             _KeyValueRow(label: 'サウンド', value: _appleLabel(value.sound)),
             if (!kIsWeb && (Platform.isIOS || Platform.isMacOS)) ...[
@@ -528,10 +522,7 @@ class _SettingsProviderStatusSection extends ConsumerWidget {
 }
 
 class _ProviderStatusRow extends StatelessWidget {
-  const _ProviderStatusRow({
-    required this.label,
-    required this.state,
-  });
+  const _ProviderStatusRow({required this.label, required this.state});
 
   final String label;
   final AsyncValue<Object?> state;
@@ -576,9 +567,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settingsAsync = ref.watch(
-      _notificationSettingsProvider(deviceId),
-    );
+    final settingsAsync = ref.watch(_notificationSettingsProvider(deviceId));
     final settings = settingsAsync.value;
     final isBusy = useState(false);
     final notificationEnabled = useState(settings?.notificationEnabled ?? true);
@@ -588,8 +577,9 @@ class _NotificationSettingsSection extends HookConsumerWidget {
       settings?.nankaiExtraordinaryEnabled ?? false,
     );
     final nankaiRegular = useState(settings?.nankaiRegularEnabled ?? false);
-    final hokkaido3ren = useState(
-      settings?.hokkaido3renOffshoreEnabled ?? false,
+    final vyse60 = useState(settings?.vyse60Enabled ?? false);
+    final earthquakeNotice = useState(
+      settings?.earthquakeNoticeEnabled ?? false,
     );
 
     ref.listen(_notificationSettingsProvider(deviceId), (_, next) {
@@ -600,7 +590,8 @@ class _NotificationSettingsSection extends HookConsumerWidget {
         nankaiExtraordinary.value =
             next.requireValue.nankaiExtraordinaryEnabled;
         nankaiRegular.value = next.requireValue.nankaiRegularEnabled;
-        hokkaido3ren.value = next.requireValue.hokkaido3renOffshoreEnabled;
+        vyse60.value = next.requireValue.vyse60Enabled;
+        earthquakeNotice.value = next.requireValue.earthquakeNoticeEnabled;
       }
     });
 
@@ -621,7 +612,8 @@ class _NotificationSettingsSection extends HookConsumerWidget {
           trainingEnabled: training.value,
           nankaiExtraordinaryEnabled: nankaiExtraordinary.value,
           nankaiRegularEnabled: nankaiRegular.value,
-          hokkaido3renOffshoreEnabled: hokkaido3ren.value,
+          vyse60Enabled: vyse60.value,
+          earthquakeNoticeEnabled: earthquakeNotice.value,
         ),
       );
       isBusy.value = false;
@@ -634,9 +626,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
             _notificationSettingsProvider(deviceId),
             asReload: true,
           );
-          messenger.showSnackBar(
-            const SnackBar(content: Text('通知設定を更新しました')),
-          );
+          messenger.showSnackBar(const SnackBar(content: Text('通知設定を更新しました')));
         case Failure(:final exception):
           messenger.showSnackBar(
             SnackBar(
@@ -919,9 +909,7 @@ class _TestScenarioTypeSection extends HookConsumerWidget {
               content: SingleChildScrollView(
                 child: SelectableText(
                   value.prettyJson,
-                  style: const TextStyle(
-                    fontFamily: FontFamily.googleSansCode,
-                  ),
+                  style: const TextStyle(fontFamily: FontFamily.googleSansCode),
                 ),
               ),
               actions: [
@@ -1105,8 +1093,8 @@ class _NotificationHistoryTile extends StatelessWidget {
 // ── Riverpod プロバイダー ──────────────────────────────────────────────────
 
 @riverpod
-bool _isProvisioned(Ref ref) {
-  final repo = ref.watch(deviceProvisioningRepositoryProvider);
+Future<bool> _isProvisioned(Ref ref) async {
+  final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
   return repo.isProvisioned();
 }
 
@@ -1118,8 +1106,8 @@ Future<bool> _deviceTokenPresent(Ref ref) async {
 }
 
 @riverpod
-String? _legacyDeviceId(Ref ref) {
-  final repo = ref.watch(deviceProvisioningRepositoryProvider);
+Future<String?> _legacyDeviceId(Ref ref) async {
+  final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
   return repo.readLegacyDeviceId();
 }
 
@@ -1172,12 +1160,8 @@ class _SectionCard extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             subtitle!,
-                            style:
-                                Theme.of(
-                                  context,
-                                ).textTheme.bodySmall?.copyWith(
-                                  color: colorTheme.onSurfaceVariant,
-                                ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: colorTheme.onSurfaceVariant),
                           ),
                         ],
                       ],

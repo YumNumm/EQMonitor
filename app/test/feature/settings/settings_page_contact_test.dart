@@ -28,7 +28,7 @@ void main() {
           app_prefs.sharedPreferencesProvider.overrideWithValue(
             app_prefs.SharedPreferencesAsync(prefs),
           ),
-          adsOptOutProvider.overrideWithValue(false),
+          adsOptOutProvider.overrideWithBuild((_, _) => false),
           buildConfigProvider.overrideWithValue(_buildConfig),
           packageInfoProvider.overrideWithValue(_packageInfo),
         ],
@@ -46,9 +46,7 @@ void main() {
     expect(find.text('問い合わせ'), findsOneWidget);
   });
 
-  testWidgets('contact tile delegates to openContactProvider', (
-    tester,
-  ) async {
+  testWidgets('contact tile delegates to openContactProvider', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     var opened = false;
@@ -62,11 +60,9 @@ void main() {
           app_prefs.sharedPreferencesProvider.overrideWithValue(
             app_prefs.SharedPreferencesAsync(prefs),
           ),
-          adsOptOutProvider.overrideWithValue(false),
+          adsOptOutProvider.overrideWithBuild((ref, notifier) => false),
           buildConfigProvider.overrideWithValue(_buildConfig),
-          openContactProvider.overrideWithValue(
-            (_, _) async => opened = true,
-          ),
+          openContactProvider.overrideWithValue((_, _) async => opened = true),
           packageInfoProvider.overrideWithValue(_packageInfo),
         ],
         child: const _TestApp(home: SettingsPage()),
@@ -115,13 +111,8 @@ class _TestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(
-      extensions: [
-        DesignSystemThemeExtension.light(),
-      ],
+      extensions: [DesignSystemThemeExtension.light()],
     );
-    return MaterialApp(
-      theme: theme,
-      home: home,
-    );
+    return MaterialApp(theme: theme, home: home);
   }
 }

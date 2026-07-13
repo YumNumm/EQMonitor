@@ -50,8 +50,10 @@ void main() {
         .read(pushTokenSyncProvider.notifier)
         .handleAuthenticationFailure();
 
-    final repo = container.read(deviceProvisioningRepositoryProvider);
-    expect(repo.isProvisioned(), isFalse);
+    final repo = await container.read(
+      deviceProvisioningRepositoryProvider.future,
+    );
+    expect(await repo.isProvisioned(), isFalse);
   });
 
   test(
@@ -99,10 +101,12 @@ void main() {
         ),
       );
 
-      final repo = container.read(deviceProvisioningRepositoryProvider);
+      final repo = await container.read(
+        deviceProvisioningRepositoryProvider.future,
+      );
       final state = container.read(pushTokenSyncProvider).value;
       final fcm = state?.fcm;
-      expect(repo.isProvisioned(), isFalse);
+      expect(await repo.isProvisioned(), isFalse);
       expect(fcm, isA<FailedTokenState>());
       if (fcm is! FailedTokenState) {
         fail('fcm token state should be FailedTokenState');
@@ -153,7 +157,9 @@ void main() {
       container.read(pushTokenSyncProvider.notifier).sync(),
       throwsA(isA<AuthorizationException>()),
     );
-    final repo = container.read(deviceProvisioningRepositoryProvider);
+    final repo = await container.read(
+      deviceProvisioningRepositoryProvider.future,
+    );
     await repo.markProvisioned();
 
     await container.read(pushTokenSyncProvider.notifier).sync();
@@ -167,10 +173,10 @@ void main() {
 final class _UnauthenticatedDeviceRepository extends DeviceRepository {
   _UnauthenticatedDeviceRepository()
     : super(
-        api.ApiClient(Dio()),
-        _MemoryDeviceAuthRepository(),
-        Dio(),
+        api: api.ApiClient(Dio()),
+        authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.development,
+        isApplePlatform: true,
       );
 
   var _syncPushTokensCalls = 0;
@@ -192,10 +198,10 @@ final class _UnauthenticatedDeviceRepository extends DeviceRepository {
 final class _RecoveringDeviceRepository extends DeviceRepository {
   _RecoveringDeviceRepository()
     : super(
-        api.ApiClient(Dio()),
-        _MemoryDeviceAuthRepository(),
-        Dio(),
+        api: api.ApiClient(Dio()),
+        authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.development,
+        isApplePlatform: true,
       );
 
   var _syncPushTokensCalls = 0;

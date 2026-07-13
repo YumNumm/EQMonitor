@@ -36,6 +36,7 @@ void main() {
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
         parameter: parameter,
+        cacheOnlyClient: api.ApiClient(Dio()),
       );
       addTearDown(dataSource.dispose);
 
@@ -75,6 +76,7 @@ void main() {
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
         parameter: parameter,
+        cacheOnlyClient: api.ApiClient(Dio()),
       );
       addTearDown(dataSource.dispose);
 
@@ -109,6 +111,7 @@ void main() {
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
         parameter: parameter,
+        cacheOnlyClient: api.ApiClient(Dio()),
       );
       addTearDown(dataSource.dispose);
 
@@ -136,6 +139,7 @@ void main() {
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
         parameter: parameter,
+        cacheOnlyClient: api.ApiClient(Dio()),
       );
       addTearDown(dataSource.dispose);
 
@@ -163,6 +167,7 @@ void main() {
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
         parameter: parameter,
+        cacheOnlyClient: api.ApiClient(Dio()),
       );
       addTearDown(dataSource.dispose);
 

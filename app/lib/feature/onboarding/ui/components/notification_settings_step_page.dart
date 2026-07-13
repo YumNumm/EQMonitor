@@ -1,51 +1,50 @@
 part of '../page/onboarding_page.dart';
 
 class _NotificationSettingsStepPage extends HookConsumerWidget {
-  const _NotificationSettingsStepPage();
+  const _NotificationSettingsStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMigrated = ref.watch(deviceMigratedFromLegacyProvider);
+    final isMigrated =
+        ref.watch(deviceMigratedFromLegacyProvider).value ?? false;
     if (isMigrated) {
-      return const _MigratedNotificationSettingsStepPage();
+      return _MigratedNotificationSettingsStepPage(navigation: navigation);
     }
-    return const _NewUserNotificationSettingsStepPage();
+    return _NewUserNotificationSettingsStepPage(navigation: navigation);
   }
 }
 
 class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
-  const _MigratedNotificationSettingsStepPage();
+  const _MigratedNotificationSettingsStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
 
     useEffect(() {
-      scope.setStepNavigation(
-        step: _OnboardingStep.notificationSettings,
-        state: _StepNavigationState(
+      navigation.register(
+        _StepNavigationState(
           buttonLabel: '次へ',
+          processingLabel: '処理しています...',
           isNextEnabled: true,
           isProcessing: false,
-          onNext: scope.nextPage,
+          onNext: navigation.nextPage,
         ),
       );
       return null;
-    }, [scope]);
+    }, [navigation]);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: designSystem.spacing.lg,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
-          Text(
-            '通知設定',
-            style: designSystem.typography.displayMedium,
-          ),
+          Text('通知設定', style: designSystem.typography.displayMedium),
           SizedBox(height: designSystem.spacing.sm),
           Text(
             '前バージョンの通知設定を引き継ぎました',
@@ -60,7 +59,9 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
               color: designSystem.colorTheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(designSystem.shape.card),
               border: Border.all(
-                color: designSystem.colorTheme.status.success.withValues(alpha: 0.3),
+                color: designSystem.colorTheme.status.success.withValues(
+                  alpha: 0.3,
+                ),
               ),
             ),
             child: Row(
@@ -90,67 +91,34 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
 }
 
 class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
-  const _NewUserNotificationSettingsStepPage();
+  const _NewUserNotificationSettingsStepPage({required this.navigation});
+
+  final _OnboardingStepNavigation navigation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scope = _OnboardingScope.of(context);
     final designSystem = context.designSystem;
-    final selectedPreset = useState<_NotificationPreset?>(null);
-    final saveError = useState<String?>(null);
+    final selectedPreset = useState<NotificationPreset?>(null);
+    final hasSaveError = useState(false);
     final isProcessing = useState(false);
 
-    Future<void> createCurrentLocationSlot() async {
-      final notifier = ref.read(notificationSlotsProvider.notifier);
-      await notifier.putCurrentLocation(
-        eewEnabled: true,
-        eewMinIntensity: JmaIntensity.four,
-        earthquakeEnabled: true,
-        earthquakeMinIntensity: JmaIntensity.one,
-      );
-    }
-
-    Future<void> saveRecommendedSettings() async {
-      isProcessing.value = true;
-      saveError.value = null;
-      try {
-        await createCurrentLocationSlot();
-        if (context.mounted) {
-          isProcessing.value = false;
-          ref
-              .read(notificationPresetProvider.notifier)
-              .select(NotificationPreset.recommended);
-          await scope.nextPage();
-        }
-      } on Exception catch (e) {
-        if (context.mounted) {
-          isProcessing.value = false;
-          saveError.value = e.toString();
-        }
-      }
-    }
-
     Future<void> onNext() async {
-      switch (selectedPreset.value) {
-        case .recommended:
-          await saveRecommendedSettings();
-        case .custom:
-          isProcessing.value = true;
-          saveError.value = null;
-          try {
-            await createCurrentLocationSlot();
-          } on Exception catch (e) {
-            if (context.mounted) {
-              isProcessing.value = false;
-              saveError.value = e.toString();
-            }
-            return;
-          }
-          if (!context.mounted) {
-            return;
-          }
+      final preset = selectedPreset.value;
+      if (preset == null) {
+        return;
+      }
+
+      isProcessing.value = true;
+      hasSaveError.value = false;
+      try {
+        await ref.read(notificationPresetApplierProvider).apply(preset);
+        if (!context.mounted) {
+          return;
+        }
+
+        if (preset == NotificationPreset.custom) {
           isProcessing.value = false;
-          ref
+          await ref
               .read(notificationPresetProvider.notifier)
               .select(NotificationPreset.custom);
           await Navigator.of(context).push<void>(
@@ -159,39 +127,41 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
             ),
           );
           if (context.mounted) {
-            await scope.nextPage();
+            await navigation.nextPage();
           }
-        case null:
-          break;
+        } else {
+          isProcessing.value = false;
+          await navigation.nextPage();
+        }
+      } on Exception catch (_) {
+        if (context.mounted) {
+          isProcessing.value = false;
+          hasSaveError.value = true;
+        }
       }
     }
 
     useEffect(() {
-      scope.setStepNavigation(
-        step: _OnboardingStep.notificationSettings,
-        state: _StepNavigationState(
+      navigation.register(
+        _StepNavigationState(
           buttonLabel: '次へ',
+          processingLabel: '通知設定を保存しています...',
           isNextEnabled: selectedPreset.value != null,
           isProcessing: isProcessing.value,
           onNext: onNext,
         ),
       );
       return null;
-    }, [scope, selectedPreset.value, isProcessing.value]);
+    }, [navigation, selectedPreset.value, isProcessing.value]);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: designSystem.spacing.lg,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: designSystem.spacing.xxxxl),
-            Text(
-              '通知設定',
-              style: designSystem.typography.displayMedium,
-            ),
+            Text('通知設定', style: designSystem.typography.displayMedium),
             SizedBox(height: designSystem.spacing.sm),
             Text(
               '細かい設定は後からでも変更できます',
@@ -200,48 +170,15 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
               ),
             ),
             SizedBox(height: designSystem.spacing.xl),
-            _PresetCard(
-              title: '推奨設定',
-              isSelected: selectedPreset.value == .recommended,
-              onTap: () => selectedPreset.value = .recommended,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _BulletItem(
-                    text: '現在地の緊急地震速報(警報)',
-                    designSystem: designSystem,
-                  ),
-                  _BulletItem(
-                    text: '現在地で予想震度4以上の緊急地震速報(予報)',
-                    designSystem: designSystem,
-                  ),
-                  _BulletItem(
-                    text: '現在地で震度1以上の地震情報',
-                    designSystem: designSystem,
-                  ),
-                ],
-              ),
+            NotificationPresetSelector(
+              selectedPreset: selectedPreset.value,
+              onChanged: (preset) {
+                selectedPreset.value = preset;
+                hasSaveError.value = false;
+              },
+              style: NotificationPresetSelectorStyle.onboarding,
             ),
-            SizedBox(height: designSystem.spacing.md),
-            _PresetCard(
-              title: 'カスタム',
-              isSelected: selectedPreset.value == .custom,
-              onTap: () => selectedPreset.value = .custom,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _BulletItem(
-                    text: '通知する地域や震度を細かく設定できます',
-                    designSystem: designSystem,
-                  ),
-                  _BulletItem(
-                    text: 'Proではさらに通知音や割り込みレベルを設定できます',
-                    designSystem: designSystem,
-                  ),
-                ],
-              ),
-            ),
-            if (saveError.value != null) ...[
+            if (hasSaveError.value) ...[
               SizedBox(height: designSystem.spacing.md),
               Text(
                 '設定の保存に失敗しました。もう一度お試しください。',
@@ -264,112 +201,5 @@ class _OnboardingCustomSettingsWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const NotificationSettingsPage();
-  }
-}
-
-class _PresetCard extends StatelessWidget {
-  const _PresetCard({
-    required this.title,
-    required this.isSelected,
-    required this.onTap,
-    required this.child,
-  });
-
-  final String title;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOutCubic,
-        padding: EdgeInsets.all(designSystem.spacing.md),
-        decoration: BoxDecoration(
-          color: designSystem.colorTheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(designSystem.shape.card),
-          border: Border.all(
-            color: isSelected
-                ? designSystem.colorTheme.primary
-                : designSystem.colorTheme.outlineVariant,
-            width: isSelected ? 2 : 0,
-            strokeAlign: BorderSide.strokeAlignOutside,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  isSelected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                  color: isSelected
-                      ? designSystem.colorTheme.primary
-                      : designSystem.colorTheme.outline,
-                  size: 20,
-                ),
-                SizedBox(width: designSystem.spacing.sm),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: designSystem.typography.titleMedium,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: designSystem.spacing.sm),
-            Padding(
-              padding: EdgeInsets.only(
-                left: designSystem.spacing.lg + designSystem.spacing.xs,
-              ),
-              child: child,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BulletItem extends StatelessWidget {
-  const _BulletItem({
-    required this.text,
-    required this.designSystem,
-  });
-
-  final String text;
-  final DesignSystemThemeExtension designSystem;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: designSystem.spacing.xs),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '・',
-            style: designSystem.typography.bodySmall.copyWith(
-              color: designSystem.colorTheme.onSurfaceVariant,
-            ),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: designSystem.typography.bodySmall.copyWith(
-                color: designSystem.colorTheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

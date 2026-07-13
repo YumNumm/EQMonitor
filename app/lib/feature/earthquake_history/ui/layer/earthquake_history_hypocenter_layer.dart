@@ -20,20 +20,19 @@ import 'package:maplibre/maplibre.dart';
 class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
   const EarthquakeHistoryHypocenterLayer({
     required this.earthquake,
-    required this.enqueue,
     this.displayMode = HypocenterDisplayMode.zoomFade,
     this.parameter = const EarthquakeHistoryMapLayerParameter(),
     super.key,
   });
 
   final Earthquake earthquake;
-  final MapOperationScheduler enqueue;
   final HypocenterDisplayMode displayMode;
   final EarthquakeHistoryMapLayerParameter parameter;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
+    final enqueue = useMapOperationQueue();
     final layerBuilder = useMemoized(
       EarthquakeHistoryHypocenterLayerBuilder.new,
     );

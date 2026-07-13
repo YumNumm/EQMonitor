@@ -14,13 +14,14 @@ class DatasourceFilterChip extends StatelessWidget {
 
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<EarthquakeDataSource?>(
-          clipBehavior: Clip.antiAlias,
-          context: context,
-          builder: (context) => _DatasourceFilterModal(current: datasource),
-        );
-        if (result != null || context.mounted) {
-          onChanged?.call(result);
+        final result =
+            await showModalBottomSheet<({EarthquakeDataSource? value})?>(
+              clipBehavior: Clip.antiAlias,
+              context: context,
+              builder: (context) => _DatasourceFilterModal(current: datasource),
+            );
+        if (result != null && context.mounted) {
+          onChanged?.call(result.value);
         }
       },
       label: isActive
@@ -60,40 +61,44 @@ class _DatasourceFilterModal extends StatelessWidget {
     );
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: sheetBar),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              'データソース',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: sheetBar),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                'データソース',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          for (final ds in EarthquakeDataSource.values)
+            const SizedBox(height: 8),
+            for (final ds in EarthquakeDataSource.values)
+              ListTile(
+                title: Text(ds.label),
+                subtitle: Text(ds.description),
+                trailing: current == ds
+                    ? Icon(Icons.check, color: designSystem.colorTheme.primary)
+                    : null,
+                onTap: () => Navigator.of(context).pop((value: ds)),
+              ),
             ListTile(
-              title: Text(ds.label),
-              subtitle: Text(ds.description),
-              trailing: current == ds
+              title: const Text('すべて'),
+              subtitle: const Text('データソースで絞り込まない'),
+              trailing: current == null
                   ? Icon(Icons.check, color: designSystem.colorTheme.primary)
                   : null,
-              onTap: () => Navigator.of(context).pop(ds),
+              onTap: () => Navigator.of(
+                context,
+              ).pop((value: null as EarthquakeDataSource?)),
             ),
-          ListTile(
-            title: const Text('すべて'),
-            subtitle: const Text('データソースで絞り込まない'),
-            trailing: current == null
-                ? Icon(Icons.check, color: designSystem.colorTheme.primary)
-                : null,
-            onTap: () => Navigator.of(context).pop(),
-          ),
-          const SizedBox(height: 8),
-        ],
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

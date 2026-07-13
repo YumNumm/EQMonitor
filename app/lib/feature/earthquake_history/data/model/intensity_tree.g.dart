@@ -68,6 +68,7 @@ const _$JmaIntensityEnumMap = {
   JmaIntensity.fiveUnknown: 'fiveUnknown',
   JmaIntensity.fiveLower: 'fiveLower',
   JmaIntensity.fiveUpper: 'fiveUpper',
+  JmaIntensity.sixUnknown: 'sixUnknown',
   JmaIntensity.sixLower: 'sixLower',
   JmaIntensity.sixUpper: 'sixUpper',
   JmaIntensity.seven: 'seven',

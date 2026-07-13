@@ -22,7 +22,13 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
 
   Future<T> cachedBuild() async {
     if (revalidateOnAppResume) {
-      _listenAppResume();
+    ref.listen(appLifecycleProvider, (prev, next) {
+      if (prev != null &&
+          prev != AppLifecycleState.resumed &&
+          next == AppLifecycleState.resumed) {
+        ref.invalidateSelf();
+      }
+    });
     }
     final gen = ++_generation;
     try {
@@ -31,7 +37,7 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
       );
       unawaited(Future.microtask(() => _revalidateInBackground(gen, cached)));
       return cached;
-    } on Object catch (e) {
+    } on Exception catch (e) {
       if (isCacheMiss(e)) {
         return fetch(await ref.read(apiClientProvider.future));
       }
@@ -60,25 +66,11 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
     }
   }
 
-  /// 壊れたキャッシュ検出時に一時的な force-fresh Dio を組み立てて取得。
-  /// ForceFreshInterceptor が kForceFreshExtra フラグを設定し、
-  /// HttpCacheInterceptor が if-none-match を抑止 → サーバは 200 を返す
-  /// → 同じ HttpCacheInterceptor が 200 を保存して corrupt エントリを上書き。
   Future<T> _fetchForceFresh() async {
     final normalDio = await ref.read(dioProvider.future);
     final dio = Dio(normalDio.options);
     dio.interceptors.add(ForceFreshInterceptor());
     dio.interceptors.addAll(normalDio.interceptors);
     return fetch(ApiClient(dio));
-  }
-
-  void _listenAppResume() {
-    ref.listen(appLifecycleProvider, (prev, next) {
-      if (prev != null &&
-          prev != AppLifecycleState.resumed &&
-          next == AppLifecycleState.resumed) {
-        ref.invalidateSelf();
-      }
-    });
   }
 }

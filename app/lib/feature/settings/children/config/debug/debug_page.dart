@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dar
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/startup/debug_startup_timing_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -142,7 +143,8 @@ class _DebugWidget extends ConsumerWidget {
             ),
             Builder(
               builder: (context) {
-                final isDisabled = ref.watch(httpCacheDisabledProvider);
+                final isDisabled =
+                    ref.watch(httpCacheDisabledProvider).value ?? false;
                 return ListTile(
                   title: const Text('HTTPキャッシュを無効化'),
                   subtitle: const Text('キャッシュの読み書きをスキップします'),
@@ -164,6 +166,16 @@ class _DebugWidget extends ConsumerWidget {
                   const DebugTelemetryRoute().push<void>(context),
             ),
             ListTile(
+              title: const Text('Startup Timing'),
+              leading: const Icon(Icons.timer_outlined),
+              subtitle: const Text('起動フェーズごとの所要時間'),
+              onTap: () => Navigator.of(context).push<void>(
+                MaterialPageRoute(
+                  builder: (_) => const DebugStartupTimingPage(),
+                ),
+              ),
+            ),
+            ListTile(
               title: const Text('WebSocket'),
               leading: const Icon(Icons.cable),
               subtitle: const Text('WebSocket 接続状況と受信ログ'),
@@ -177,9 +189,9 @@ class _DebugWidget extends ConsumerWidget {
             ),
             Builder(
               builder: (context) {
-                final isAllowed = ref.watch(
-                  estimatedIntensityOnEewReplayAllowedProvider,
-                );
+                final isAllowed =
+                    ref.watch(estimatedIntensityOnEewReplayAllowedProvider).value ??
+                    false;
                 return ListTile(
                   title: const Text('EEW 推定震度表示'),
                   subtitle: Text(
@@ -564,7 +576,10 @@ class _BackgroundLocationDebugSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(backgroundLocationDebugSettingsProvider);
+    final settings = ref.watch(backgroundLocationDebugSettingsProvider).value;
+    if (settings == null) {
+      return const SizedBox.shrink();
+    }
     final notifier = ref.read(backgroundLocationDebugSettingsProvider.notifier);
 
     return Column(

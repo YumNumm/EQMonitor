@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StatusColors {
 
-@ColorJsonConverter() Color get success;@ColorJsonConverter() Color get warning;@ColorJsonConverter() Color get info;
+@ColorJsonConverter() Color get success;@ColorJsonConverter() Color get warning;
 /// Create a copy of StatusColors
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $StatusColorsCopyWith<StatusColors> get copyWith => _$StatusColorsCopyWithImpl<S
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusColors&&(identical(other.success, success) || other.success == success)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.info, info) || other.info == info));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusColors&&(identical(other.success, success) || other.success == success)&&(identical(other.warning, warning) || other.warning == warning));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,success,warning,info);
+int get hashCode => Object.hash(runtimeType,success,warning);
 
 @override
 String toString() {
-  return 'StatusColors(success: $success, warning: $warning, info: $info)';
+  return 'StatusColors(success: $success, warning: $warning)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $StatusColorsCopyWith<$Res>  {
   factory $StatusColorsCopyWith(StatusColors value, $Res Function(StatusColors) _then) = _$StatusColorsCopyWithImpl;
 @useResult
 $Res call({
-@ColorJsonConverter() Color success,@ColorJsonConverter() Color warning,@ColorJsonConverter() Color info
+@ColorJsonConverter() Color success,@ColorJsonConverter() Color warning
 });
 
 
@@ -65,11 +65,10 @@ class _$StatusColorsCopyWithImpl<$Res>
 
 /// Create a copy of StatusColors
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? success = null,Object? warning = null,Object? info = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? success = null,Object? warning = null,}) {
   return _then(_self.copyWith(
 success: null == success ? _self.success : success // ignore: cast_nullable_to_non_nullable
 as Color,warning: null == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
-as Color,info: null == info ? _self.info : info // ignore: cast_nullable_to_non_nullable
 as Color,
   ));
 }
@@ -155,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@ColorJsonConverter()  Color success, @ColorJsonConverter()  Color warning, @ColorJsonConverter()  Color info)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@ColorJsonConverter()  Color success, @ColorJsonConverter()  Color warning)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StatusColors() when $default != null:
-return $default(_that.success,_that.warning,_that.info);case _:
+return $default(_that.success,_that.warning);case _:
   return orElse();
 
 }
@@ -176,10 +175,10 @@ return $default(_that.success,_that.warning,_that.info);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@ColorJsonConverter()  Color success, @ColorJsonConverter()  Color warning, @ColorJsonConverter()  Color info)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@ColorJsonConverter()  Color success, @ColorJsonConverter()  Color warning)  $default,) {final _that = this;
 switch (_that) {
 case _StatusColors():
-return $default(_that.success,_that.warning,_that.info);case _:
+return $default(_that.success,_that.warning);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +195,10 @@ return $default(_that.success,_that.warning,_that.info);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@ColorJsonConverter()  Color success, @ColorJsonConverter()  Color warning, @ColorJsonConverter()  Color info)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@ColorJsonConverter()  Color success, @ColorJsonConverter()  Color warning)?  $default,) {final _that = this;
 switch (_that) {
 case _StatusColors() when $default != null:
-return $default(_that.success,_that.warning,_that.info);case _:
+return $default(_that.success,_that.warning);case _:
   return null;
 
 }
@@ -211,12 +210,11 @@ return $default(_that.success,_that.warning,_that.info);case _:
 @JsonSerializable()
 
 class _StatusColors implements StatusColors {
-  const _StatusColors({@ColorJsonConverter() required this.success, @ColorJsonConverter() required this.warning, @ColorJsonConverter() required this.info});
+  const _StatusColors({@ColorJsonConverter() required this.success, @ColorJsonConverter() required this.warning});
   factory _StatusColors.fromJson(Map<String, dynamic> json) => _$StatusColorsFromJson(json);
 
 @override@ColorJsonConverter() final  Color success;
 @override@ColorJsonConverter() final  Color warning;
-@override@ColorJsonConverter() final  Color info;
 
 /// Create a copy of StatusColors
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusColors&&(identical(other.success, success) || other.success == success)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.info, info) || other.info == info));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusColors&&(identical(other.success, success) || other.success == success)&&(identical(other.warning, warning) || other.warning == warning));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,success,warning,info);
+int get hashCode => Object.hash(runtimeType,success,warning);
 
 @override
 String toString() {
-  return 'StatusColors(success: $success, warning: $warning, info: $info)';
+  return 'StatusColors(success: $success, warning: $warning)';
 }
 
 
@@ -251,7 +249,7 @@ abstract mixin class _$StatusColorsCopyWith<$Res> implements $StatusColorsCopyWi
   factory _$StatusColorsCopyWith(_StatusColors value, $Res Function(_StatusColors) _then) = __$StatusColorsCopyWithImpl;
 @override @useResult
 $Res call({
-@ColorJsonConverter() Color success,@ColorJsonConverter() Color warning,@ColorJsonConverter() Color info
+@ColorJsonConverter() Color success,@ColorJsonConverter() Color warning
 });
 
 
@@ -268,11 +266,10 @@ class __$StatusColorsCopyWithImpl<$Res>
 
 /// Create a copy of StatusColors
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? success = null,Object? warning = null,Object? info = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? success = null,Object? warning = null,}) {
   return _then(_StatusColors(
 success: null == success ? _self.success : success // ignore: cast_nullable_to_non_nullable
 as Color,warning: null == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
-as Color,info: null == info ? _self.info : info // ignore: cast_nullable_to_non_nullable
 as Color,
   ));
 }

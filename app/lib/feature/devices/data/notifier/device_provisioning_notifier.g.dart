@@ -15,8 +15,8 @@ part of 'device_provisioning_notifier.dart';
 final deviceMigratedFromLegacyProvider = DeviceMigratedFromLegacyProvider._();
 
 final class DeviceMigratedFromLegacyProvider
-    extends $FunctionalProvider<bool, bool, bool>
-    with $Provider<bool> {
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
   DeviceMigratedFromLegacyProvider._()
     : super(
         from: null,
@@ -33,25 +33,17 @@ final class DeviceMigratedFromLegacyProvider
 
   @$internal
   @override
-  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  bool create(Ref ref) {
+  FutureOr<bool> create(Ref ref) {
     return deviceMigratedFromLegacy(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
   }
 }
 
 String _$deviceMigratedFromLegacyHash() =>
-    r'6cf2db036d78bb2e59bc0cb7b792358465e6968a';
+    r'9f302518711450e8b0eaeb624d994fcb67966149';
 
 @ProviderFor(DeviceProvisioningNotifier)
 final deviceProvisioningProvider = DeviceProvisioningNotifierProvider._();
@@ -82,7 +74,7 @@ final class DeviceProvisioningNotifierProvider
 }
 
 String _$deviceProvisioningNotifierHash() =>
-    r'abfbe9e22dc1335a1eda91d47f41fbefc8b8472c';
+    r'7f25115bb11b61ff7bb6cbed217cb3f3eae1f8dd';
 
 abstract class _$DeviceProvisioningNotifier
     extends $AsyncNotifier<DeviceProvisioningStatus> {

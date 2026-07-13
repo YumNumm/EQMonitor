@@ -24,7 +24,7 @@ bool shouldShowAds(Ref ref) {
   if (eewAlive != null && eewAlive.isNotEmpty) {
     return false;
   }
-  if (ref.watch(adsOptOutProvider)) {
+  if (ref.watch(adsOptOutProvider).value ?? false) {
     return false;
   }
   return true;

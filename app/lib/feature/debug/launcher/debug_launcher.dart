@@ -9,8 +9,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+
+/// 現在表示中の画面のロケーションを返す。
+///
+/// go_router は `push` (imperative navigation) でルートを積んでも
+/// [RouteMatchList.uri] を更新しないため、`currentConfiguration.uri` だけでは
+/// push で開いた画面（例: デバッグ画面）を検出できない。
+/// スタック最上段が [ImperativeRouteMatch] の場合はそのロケーションを参照する。
+String currentLocation(GoRouter router) {
+  final configuration = router.routerDelegate.currentConfiguration;
+  final lastMatch = configuration.matches.lastOrNull;
+  if (lastMatch is ImperativeRouteMatch) {
+    return lastMatch.matches.uri.toString();
+  }
+  return configuration.uri.toString();
+}
 
 /// 端末シェイクまたは Shift+D でデバッグページを開くラッパー。
 ///
@@ -53,9 +69,7 @@ class DebugLauncher extends HookConsumerWidget {
         }
         lastOpen.value = now;
         final router = ref.read(goRouterProvider);
-        final currentLocation = router.routerDelegate.currentConfiguration.uri
-            .toString();
-        if (currentLocation.startsWith(const DebugRoute().location)) {
+        if (currentLocation(router).startsWith(const DebugRoute().location)) {
           return;
         }
         unawaited(router.push<void>(const DebugRoute().location));

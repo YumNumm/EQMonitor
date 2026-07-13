@@ -78,62 +78,64 @@ class _MagnitudeFilterModal extends HookWidget {
     );
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: sheetBar),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              'マグニチュード',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: sheetBar),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                'マグニチュード',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-          RangeSlider(
-            values: RangeValues(min.value, max.value),
-            max: 9,
-            onChanged: (state) {
-              // 小数第1位以下切り捨て
-              min.value = (state.start * 10).floorToDouble() / 10;
-              max.value = (state.end * 10).floorToDouble() / 10;
-            },
-            labels: RangeLabels('M${min.value}', 'M${max.value}'),
-            divisions:
-                (MagnitudeFilterChip.initialMax -
-                        MagnitudeFilterChip.initialMin)
-                    .toInt() *
-                10,
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: Text(
-              (min.value, max.value).toRangeString,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+            const SizedBox(height: 24),
+            RangeSlider(
+              values: RangeValues(min.value, max.value),
+              max: 9,
+              onChanged: (state) {
+                // 小数第1位以下切り捨て
+                min.value = (state.start * 10).floorToDouble() / 10;
+                max.value = (state.end * 10).floorToDouble() / 10;
+              },
+              labels: RangeLabels('M${min.value}', 'M${max.value}'),
+              divisions:
+                  (MagnitudeFilterChip.initialMax -
+                          MagnitudeFilterChip.initialMin)
+                      .toInt() *
+                  10,
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                (min.value, max.value).toRangeString,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('キャンセル'),
-              ),
-              TextButton(
-                onPressed: () =>
-                    Navigator.of(context).pop((min.value, max.value)),
-                child: const Text('完了'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-        ],
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('キャンセル'),
+                ),
+                TextButton(
+                  onPressed: () =>
+                      Navigator.of(context).pop((min.value, max.value)),
+                  child: const Text('完了'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

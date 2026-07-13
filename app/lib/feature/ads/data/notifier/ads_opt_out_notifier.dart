@@ -1,5 +1,5 @@
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,21 +11,27 @@ class AdsOptOutNotifier extends _$AdsOptOutNotifier {
   static final saveMutation = Mutation<void>();
 
   @override
-  bool build() {
-    final prefs = ref.watch(sharedPreferencesProvider);
-    return prefs.getBool(_key.key) ?? false;
+  Future<bool> build() async {
+    final dataSource = await ref.watch(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    return await dataSource.getBool(key: _key) ?? false;
   }
 
   Future<void> toggle() async {
-    final prefs = ref.read(sharedPreferencesProvider);
-    final next = !state;
-    await prefs.setBool(_key.key, next);
-    state = next;
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    final next = !(state.value ?? false);
+    await dataSource.setBool(key: _key, value: next);
+    state = AsyncData(next);
   }
 
   Future<void> setOptOut({required bool value}) async {
-    final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.setBool(_key.key, value);
-    state = value;
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await dataSource.setBool(key: _key, value: value);
+    state = AsyncData(value);
   }
 }

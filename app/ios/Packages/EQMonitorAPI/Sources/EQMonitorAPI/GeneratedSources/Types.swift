@@ -231,7 +231,7 @@ public protocol APIProtocol: Sendable {
     /// - Remark: HTTP `GET /v2/device/me/live-activity`.
     /// - Remark: Generated from `#/paths//v2/device/me/live-activity/get(getV2DeviceMeLiveActivity)`.
     func getV2DeviceMeLiveActivity(_ input: Operations.getV2DeviceMeLiveActivity.Input) async throws -> Operations.getV2DeviceMeLiveActivity.Output
-    /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。
+    /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。配信には使用されず、Start送信からToken受信までの遅延計測にのみ用いる。
     ///
     /// - Remark: HTTP `PUT /v2/device/me/live-activity/{liveActivityId}/token`.
     /// - Remark: Generated from `#/paths//v2/device/me/live-activity/{liveActivityId}/token/put(putV2DeviceMeLiveActivityByLiveActivityIdToken)`.
@@ -251,16 +251,6 @@ public protocol APIProtocol: Sendable {
     /// - Remark: HTTP `GET /v2/device/me/notification/history`.
     /// - Remark: Generated from `#/paths//v2/device/me/notification/history/get(getV2DeviceMeNotificationHistory)`.
     func getV2DeviceMeNotificationHistory(_ input: Operations.getV2DeviceMeNotificationHistory.Input) async throws -> Operations.getV2DeviceMeNotificationHistory.Output
-    /// 配信サマリー一覧（admin）
-    ///
-    /// - Remark: HTTP `GET /v2/device/me/notification/dispatches`.
-    /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/get(getV2DeviceMeNotificationDispatches)`.
-    func getV2DeviceMeNotificationDispatches(_ input: Operations.getV2DeviceMeNotificationDispatches.Input) async throws -> Operations.getV2DeviceMeNotificationDispatches.Output
-    /// 配信サマリー詳細（admin）
-    ///
-    /// - Remark: HTTP `GET /v2/device/me/notification/dispatches/{correlationKey}`.
-    /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/{correlationKey}/get(getV2DeviceMeNotificationDispatchesByCorrelationKey)`.
-    func getV2DeviceMeNotificationDispatchesByCorrelationKey(_ input: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Input) async throws -> Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output
     /// テスト通知を送信
     ///
     /// - Remark: HTTP `POST /v2/device/me/notification/test`.
@@ -286,7 +276,7 @@ public protocol APIProtocol: Sendable {
     /// - Remark: HTTP `POST /v2/device/me/migrate`.
     /// - Remark: Generated from `#/paths//v2/device/me/migrate/post(postV2DeviceMeMigrate)`.
     func postV2DeviceMeMigrate(_ input: Operations.postV2DeviceMeMigrate.Input) async throws -> Operations.postV2DeviceMeMigrate.Output
-    /// 地震情報一覧。sortByでmagnitude/max_intensity/max_lpgm_intensity/depth/origin_timeを指定した場合、NULL値は常に末尾に配置されます。カーソルベースのページネーション(cursor)はevent_idに基づくため、sortByがevent_id以外の場合はcursorと併用できません（1ページ目の取得のみ対応）。
+    /// 地震情報一覧。sortByでmagnitude/max_intensity/max_lpgm_intensity/depth/origin_timeを指定した場合、NULL値の並び順はPostgreSQLの既定に従います（ASC: 末尾、DESC: 先頭）。カーソルベースのページネーション(cursor)はevent_idに基づくため、sortByがevent_id以外の場合はcursorと併用できません（1ページ目の取得のみ対応）。
     ///
     /// - Remark: HTTP `GET /v2/earthquake`.
     /// - Remark: Generated from `#/paths//v2/earthquake/get(getV2Earthquake)`.
@@ -343,6 +333,11 @@ public protocol APIProtocol: Sendable {
     /// - Remark: HTTP `GET /v2/feeds`.
     /// - Remark: Generated from `#/paths//v2/feeds/get(getV2Feeds)`.
     func getV2Feeds(_ input: Operations.getV2Feeds.Input) async throws -> Operations.getV2Feeds.Output
+    /// 電文ハッシュから Feed を1件取得（通知ディープリンク用）
+    ///
+    /// - Remark: HTTP `GET /v2/feeds/source/{telegramHash}`.
+    /// - Remark: Generated from `#/paths//v2/feeds/source/{telegramHash}/get(getV2FeedsSourceByTelegramHash)`.
+    func getV2FeedsSourceByTelegramHash(_ input: Operations.getV2FeedsSourceByTelegramHash.Input) async throws -> Operations.getV2FeedsSourceByTelegramHash.Output
     /// Feed作成（管理者のみ）
     ///
     /// - Remark: HTTP `POST /v2/feeds/admin`.
@@ -358,6 +353,11 @@ public protocol APIProtocol: Sendable {
     /// - Remark: HTTP `GET /v2/parameters/{type}`.
     /// - Remark: Generated from `#/paths//v2/parameters/{type}/get(getV2ParametersByType)`.
     func getV2ParametersByType(_ input: Operations.getV2ParametersByType.Input) async throws -> Operations.getV2ParametersByType.Output
+    /// 地震活動可視化用GeoJSONレイヤーのmanifest
+    ///
+    /// - Remark: HTTP `GET /v2/seismicity/manifest`.
+    /// - Remark: Generated from `#/paths//v2/seismicity/manifest/get(getV2SeismicityManifest)`.
+    func getV2SeismicityManifest(_ input: Operations.getV2SeismicityManifest.Input) async throws -> Operations.getV2SeismicityManifest.Output
     /// 現在のサブスクリプション状態を取得する。Authorization: Bearer <deviceToken> が必要。
     ///
     /// - Remark: HTTP `GET /v2/subscription/me`.
@@ -892,7 +892,7 @@ extension APIProtocol {
     public func getV2DeviceMeLiveActivity(headers: Operations.getV2DeviceMeLiveActivity.Input.Headers = .init()) async throws -> Operations.getV2DeviceMeLiveActivity.Output {
         try await getV2DeviceMeLiveActivity(Operations.getV2DeviceMeLiveActivity.Input(headers: headers))
     }
-    /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。
+    /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。配信には使用されず、Start送信からToken受信までの遅延計測にのみ用いる。
     ///
     /// - Remark: HTTP `PUT /v2/device/me/live-activity/{liveActivityId}/token`.
     /// - Remark: Generated from `#/paths//v2/device/me/live-activity/{liveActivityId}/token/put(putV2DeviceMeLiveActivityByLiveActivityIdToken)`.
@@ -943,26 +943,6 @@ extension APIProtocol {
     ) async throws -> Operations.getV2DeviceMeNotificationHistory.Output {
         try await getV2DeviceMeNotificationHistory(Operations.getV2DeviceMeNotificationHistory.Input(
             query: query,
-            headers: headers
-        ))
-    }
-    /// 配信サマリー一覧（admin）
-    ///
-    /// - Remark: HTTP `GET /v2/device/me/notification/dispatches`.
-    /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/get(getV2DeviceMeNotificationDispatches)`.
-    public func getV2DeviceMeNotificationDispatches(headers: Operations.getV2DeviceMeNotificationDispatches.Input.Headers = .init()) async throws -> Operations.getV2DeviceMeNotificationDispatches.Output {
-        try await getV2DeviceMeNotificationDispatches(Operations.getV2DeviceMeNotificationDispatches.Input(headers: headers))
-    }
-    /// 配信サマリー詳細（admin）
-    ///
-    /// - Remark: HTTP `GET /v2/device/me/notification/dispatches/{correlationKey}`.
-    /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/{correlationKey}/get(getV2DeviceMeNotificationDispatchesByCorrelationKey)`.
-    public func getV2DeviceMeNotificationDispatchesByCorrelationKey(
-        path: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Input.Path,
-        headers: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Input.Headers = .init()
-    ) async throws -> Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output {
-        try await getV2DeviceMeNotificationDispatchesByCorrelationKey(Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Input(
-            path: path,
             headers: headers
         ))
     }
@@ -1031,7 +1011,7 @@ extension APIProtocol {
             body: body
         ))
     }
-    /// 地震情報一覧。sortByでmagnitude/max_intensity/max_lpgm_intensity/depth/origin_timeを指定した場合、NULL値は常に末尾に配置されます。カーソルベースのページネーション(cursor)はevent_idに基づくため、sortByがevent_id以外の場合はcursorと併用できません（1ページ目の取得のみ対応）。
+    /// 地震情報一覧。sortByでmagnitude/max_intensity/max_lpgm_intensity/depth/origin_timeを指定した場合、NULL値の並び順はPostgreSQLの既定に従います（ASC: 末尾、DESC: 先頭）。カーソルベースのページネーション(cursor)はevent_idに基づくため、sortByがevent_id以外の場合はcursorと併用できません（1ページ目の取得のみ対応）。
     ///
     /// - Remark: HTTP `GET /v2/earthquake`.
     /// - Remark: Generated from `#/paths//v2/earthquake/get(getV2Earthquake)`.
@@ -1196,6 +1176,21 @@ extension APIProtocol {
             headers: headers
         ))
     }
+    /// 電文ハッシュから Feed を1件取得（通知ディープリンク用）
+    ///
+    /// - Remark: HTTP `GET /v2/feeds/source/{telegramHash}`.
+    /// - Remark: Generated from `#/paths//v2/feeds/source/{telegramHash}/get(getV2FeedsSourceByTelegramHash)`.
+    public func getV2FeedsSourceByTelegramHash(
+        path: Operations.getV2FeedsSourceByTelegramHash.Input.Path,
+        query: Operations.getV2FeedsSourceByTelegramHash.Input.Query = .init(),
+        headers: Operations.getV2FeedsSourceByTelegramHash.Input.Headers = .init()
+    ) async throws -> Operations.getV2FeedsSourceByTelegramHash.Output {
+        try await getV2FeedsSourceByTelegramHash(Operations.getV2FeedsSourceByTelegramHash.Input(
+            path: path,
+            query: query,
+            headers: headers
+        ))
+    }
     /// Feed作成（管理者のみ）
     ///
     /// - Remark: HTTP `POST /v2/feeds/admin`.
@@ -1228,6 +1223,13 @@ extension APIProtocol {
             path: path,
             headers: headers
         ))
+    }
+    /// 地震活動可視化用GeoJSONレイヤーのmanifest
+    ///
+    /// - Remark: HTTP `GET /v2/seismicity/manifest`.
+    /// - Remark: Generated from `#/paths//v2/seismicity/manifest/get(getV2SeismicityManifest)`.
+    public func getV2SeismicityManifest(headers: Operations.getV2SeismicityManifest.Input.Headers = .init()) async throws -> Operations.getV2SeismicityManifest.Output {
+        try await getV2SeismicityManifest(Operations.getV2SeismicityManifest.Input(headers: headers))
     }
     /// 現在のサブスクリプション状態を取得する。Authorization: Bearer <deviceToken> が必要。
     ///
@@ -2720,8 +2722,8 @@ public enum Components {
             public var nankai_extraordinary_enabled: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/NotificationSettingsResponse/nankai_regular_enabled`.
             public var nankai_regular_enabled: Swift.Bool
-            /// - Remark: Generated from `#/components/schemas/NotificationSettingsResponse/hokkaido3ren_offshore_enabled`.
-            public var hokkaido3ren_offshore_enabled: Swift.Bool
+            /// - Remark: Generated from `#/components/schemas/NotificationSettingsResponse/vyse60_enabled`.
+            public var vyse60_enabled: Swift.Bool
             /// Creates a new `NotificationSettingsResponse`.
             ///
             /// - Parameters:
@@ -2730,21 +2732,21 @@ public enum Components {
             ///   - training_enabled:
             ///   - nankai_extraordinary_enabled:
             ///   - nankai_regular_enabled:
-            ///   - hokkaido3ren_offshore_enabled:
+            ///   - vyse60_enabled:
             public init(
                 notification_enabled: Swift.Bool,
                 tsunami_enabled: Swift.Bool,
                 training_enabled: Swift.Bool,
                 nankai_extraordinary_enabled: Swift.Bool,
                 nankai_regular_enabled: Swift.Bool,
-                hokkaido3ren_offshore_enabled: Swift.Bool
+                vyse60_enabled: Swift.Bool
             ) {
                 self.notification_enabled = notification_enabled
                 self.tsunami_enabled = tsunami_enabled
                 self.training_enabled = training_enabled
                 self.nankai_extraordinary_enabled = nankai_extraordinary_enabled
                 self.nankai_regular_enabled = nankai_regular_enabled
-                self.hokkaido3ren_offshore_enabled = hokkaido3ren_offshore_enabled
+                self.vyse60_enabled = vyse60_enabled
             }
             public enum CodingKeys: String, CodingKey {
                 case notification_enabled
@@ -2752,7 +2754,7 @@ public enum Components {
                 case training_enabled
                 case nankai_extraordinary_enabled
                 case nankai_regular_enabled
-                case hokkaido3ren_offshore_enabled
+                case vyse60_enabled
             }
         }
         /// - Remark: Generated from `#/components/schemas/NotificationSettingsRequest`.
@@ -2767,8 +2769,8 @@ public enum Components {
             public var nankai_extraordinary_enabled: Swift.Bool?
             /// - Remark: Generated from `#/components/schemas/NotificationSettingsRequest/nankai_regular_enabled`.
             public var nankai_regular_enabled: Swift.Bool?
-            /// - Remark: Generated from `#/components/schemas/NotificationSettingsRequest/hokkaido3ren_offshore_enabled`.
-            public var hokkaido3ren_offshore_enabled: Swift.Bool?
+            /// - Remark: Generated from `#/components/schemas/NotificationSettingsRequest/vyse60_enabled`.
+            public var vyse60_enabled: Swift.Bool?
             /// Creates a new `NotificationSettingsRequest`.
             ///
             /// - Parameters:
@@ -2777,21 +2779,21 @@ public enum Components {
             ///   - training_enabled:
             ///   - nankai_extraordinary_enabled:
             ///   - nankai_regular_enabled:
-            ///   - hokkaido3ren_offshore_enabled:
+            ///   - vyse60_enabled:
             public init(
                 notification_enabled: Swift.Bool? = nil,
                 tsunami_enabled: Swift.Bool? = nil,
                 training_enabled: Swift.Bool? = nil,
                 nankai_extraordinary_enabled: Swift.Bool? = nil,
                 nankai_regular_enabled: Swift.Bool? = nil,
-                hokkaido3ren_offshore_enabled: Swift.Bool? = nil
+                vyse60_enabled: Swift.Bool? = nil
             ) {
                 self.notification_enabled = notification_enabled
                 self.tsunami_enabled = tsunami_enabled
                 self.training_enabled = training_enabled
                 self.nankai_extraordinary_enabled = nankai_extraordinary_enabled
                 self.nankai_regular_enabled = nankai_regular_enabled
-                self.hokkaido3ren_offshore_enabled = hokkaido3ren_offshore_enabled
+                self.vyse60_enabled = vyse60_enabled
             }
             public enum CodingKeys: String, CodingKey {
                 case notification_enabled
@@ -2799,7 +2801,7 @@ public enum Components {
                 case training_enabled
                 case nankai_extraordinary_enabled
                 case nankai_regular_enabled
-                case hokkaido3ren_offshore_enabled
+                case vyse60_enabled
             }
         }
         /// - Remark: Generated from `#/components/schemas/EarthquakeSettingsResponse`.
@@ -4220,36 +4222,6 @@ public enum Components {
                 case message
             }
         }
-        /// - Remark: Generated from `#/components/schemas/DispatchSummaryListResponse`.
-        public struct DispatchSummaryListResponse: Codable, Hashable, Sendable {
-            /// - Remark: Generated from `#/components/schemas/DispatchSummaryListResponse/items`.
-            public var items: [Components.Schemas.DispatchSummaryItem]
-            /// Creates a new `DispatchSummaryListResponse`.
-            ///
-            /// - Parameters:
-            ///   - items:
-            public init(items: [Components.Schemas.DispatchSummaryItem]) {
-                self.items = items
-            }
-            public enum CodingKeys: String, CodingKey {
-                case items
-            }
-        }
-        /// - Remark: Generated from `#/components/schemas/DispatchSummaryDetailResponse`.
-        public struct DispatchSummaryDetailResponse: Codable, Hashable, Sendable {
-            /// - Remark: Generated from `#/components/schemas/DispatchSummaryDetailResponse/item`.
-            public var item: Components.Schemas.DispatchSummaryItem
-            /// Creates a new `DispatchSummaryDetailResponse`.
-            ///
-            /// - Parameters:
-            ///   - item:
-            public init(item: Components.Schemas.DispatchSummaryItem) {
-                self.item = item
-            }
-            public enum CodingKeys: String, CodingKey {
-                case item
-            }
-        }
         /// - Remark: Generated from `#/components/schemas/TestNotificationType`.
         @frozen public enum TestNotificationType: String, Codable, Hashable, Sendable, CaseIterable {
             case SILENT = "SILENT"
@@ -4817,9 +4789,9 @@ public enum Components {
             /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
             ///
             /// - Remark: Generated from `#/components/schemas/Hypocenter/code`.
-            public var code: Swift.String
+            public var code: Swift.String?
             /// - Remark: Generated from `#/components/schemas/Hypocenter/name`.
-            public var name: Swift.String
+            public var name: Swift.String?
             /// - Remark: Generated from `#/components/schemas/Hypocenter/detailed`.
             public struct detailedPayload: Codable, Hashable, Sendable {
                 /// - Remark: Generated from `#/components/schemas/Hypocenter/detailed/value1`.
@@ -4895,8 +4867,8 @@ public enum Components {
             ///   - depth:
             ///   - auxiliary:
             public init(
-                code: Swift.String,
-                name: Swift.String,
+                code: Swift.String? = nil,
+                name: Swift.String? = nil,
                 detailed: Components.Schemas.Hypocenter.detailedPayload? = nil,
                 coordinates: Components.Schemas.Hypocenter.coordinatesPayload? = nil,
                 magnitude: Components.Schemas.Magnitude,
@@ -5000,8 +4972,10 @@ public enum Components {
             ///
             /// - Remark: Generated from `#/components/schemas/EarthquakePartial/estimated_intensity_tile`.
             public var estimated_intensity_tile: Swift.String?
-            /// - Remark: Generated from `#/components/schemas/EarthquakePartial/datasource`.
-            public var datasource: Components.Schemas.EarthquakeDatasource
+            /// 地震データのソースの配列
+            ///
+            /// - Remark: Generated from `#/components/schemas/EarthquakePartial/datasources`.
+            public var datasources: [Components.Schemas.EarthquakeDatasource]
             /// - Remark: Generated from `#/components/schemas/EarthquakePartial/intensity`.
             public struct intensityPayload: Codable, Hashable, Sendable {
                 /// - Remark: Generated from `#/components/schemas/EarthquakePartial/intensity/value1`.
@@ -5038,7 +5012,7 @@ public enum Components {
             ///   - arrival_time:
             ///   - hypocenter:
             ///   - estimated_intensity_tile: 推計震度PMTilesのフルURL
-            ///   - datasource:
+            ///   - datasources: 地震データのソースの配列
             ///   - intensity:
             ///   - telegram_types: この地震イベントに紐づく電文タイプの配列
             ///   - earthquake_type:
@@ -5050,7 +5024,7 @@ public enum Components {
                 arrival_time: Foundation.Date? = nil,
                 hypocenter: Components.Schemas.EarthquakePartial.hypocenterPayload? = nil,
                 estimated_intensity_tile: Swift.String? = nil,
-                datasource: Components.Schemas.EarthquakeDatasource,
+                datasources: [Components.Schemas.EarthquakeDatasource],
                 intensity: Components.Schemas.EarthquakePartial.intensityPayload? = nil,
                 telegram_types: [Components.Schemas.EarthquakeTelegramType],
                 earthquake_type: Components.Schemas.EarthquakeType
@@ -5062,7 +5036,7 @@ public enum Components {
                 self.arrival_time = arrival_time
                 self.hypocenter = hypocenter
                 self.estimated_intensity_tile = estimated_intensity_tile
-                self.datasource = datasource
+                self.datasources = datasources
                 self.intensity = intensity
                 self.telegram_types = telegram_types
                 self.earthquake_type = earthquake_type
@@ -5075,7 +5049,7 @@ public enum Components {
                 case arrival_time
                 case hypocenter
                 case estimated_intensity_tile
-                case datasource
+                case datasources
                 case intensity
                 case telegram_types
                 case earthquake_type
@@ -5301,6 +5275,892 @@ public enum Components {
                 case max_lpgm_intensity
                 case intensity_tree
                 case lpgm_intensity_tree
+            }
+        }
+        /// 震源レコード種別。A:震源レコード、B:群発地震時の震源レコード、D:震源が離れた地震の組の震源レコード
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogHypocenterRecordType`.
+        @frozen public enum CatalogHypocenterRecordType: String, Codable, Hashable, Sendable, CaseIterable {
+            case A = "A"
+            case B = "B"
+            case D = "D"
+        }
+        /// - Remark: Generated from `#/components/schemas/CatalogHypocenterDepth`.
+        public struct CatalogHypocenterDepth: Codable, Hashable, Sendable {
+            /// 震源の深さ(km)
+            ///
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenterDepth/value`.
+            public var value: Swift.Double
+            /// 震源の深さの標準誤差(km)
+            ///
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenterDepth/stderr`.
+            public var stderr: Swift.Double?
+            /// 深さフリー条件（震源評価コード1）で計算された震源かどうか
+            ///
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenterDepth/is_free`.
+            public var is_free: Swift.Bool
+            /// Creates a new `CatalogHypocenterDepth`.
+            ///
+            /// - Parameters:
+            ///   - value: 震源の深さ(km)
+            ///   - stderr: 震源の深さの標準誤差(km)
+            ///   - is_free: 深さフリー条件（震源評価コード1）で計算された震源かどうか
+            public init(
+                value: Swift.Double,
+                stderr: Swift.Double? = nil,
+                is_free: Swift.Bool
+            ) {
+                self.value = value
+                self.stderr = stderr
+                self.is_free = is_free
+            }
+            public enum CodingKeys: String, CodingKey {
+                case value
+                case stderr
+                case is_free
+            }
+        }
+        /// マグニチュード種別。J:旧観測網による坪井変位マグニチュード、D:坪井変位マグニチュードに準拠した変位マグニチュード、d:Dに同じで観測点数が少ないもの、V:Dに準拠した速度マグニチュード、v:Vに同じで観測点数が少ないもの、W:気象庁CMTまたはUSGS等によるモーメントマグニチュード、B:USGS等による実体波マグニチュード、S:USGS等による表面波マグニチュード
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogMagnitudeType`.
+        @frozen public enum CatalogMagnitudeType: String, Codable, Hashable, Sendable, CaseIterable {
+            case J = "J"
+            case D = "D"
+            case d = "d"
+            case V = "V"
+            case v = "v"
+            case W = "W"
+            case B = "B"
+            case S = "S"
+        }
+        /// - Remark: Generated from `#/components/schemas/CatalogHypocenterMagnitude`.
+        public struct CatalogHypocenterMagnitude: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenterMagnitude/type`.
+            public var _type: Components.Schemas.CatalogMagnitudeType
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenterMagnitude/value`.
+            public var value: Swift.Double
+            /// Creates a new `CatalogHypocenterMagnitude`.
+            ///
+            /// - Parameters:
+            ///   - _type:
+            ///   - value:
+            public init(
+                _type: Components.Schemas.CatalogMagnitudeType,
+                value: Swift.Double
+            ) {
+                self._type = _type
+                self.value = value
+            }
+            public enum CodingKeys: String, CodingKey {
+                case _type = "type"
+                case value
+            }
+        }
+        /// 震度階級コード。1〜7:震度1〜7、9:有感であるが震度不明、A:震度5弱、B:震度5強、C:震度6弱、D:震度6強（1996年10月以降の細分化震度）。歴史的階級（それ以前の期間のみ出現）— L:局発地震(最大有感距離100km未満)、S:小局発地震(100km以上200km未満)、M:やや顕著地震(200km以上300km未満)、R:顕著地震(300km以上)、F:有感地震(1984年まで)、X:付近有感(1996年9月まで)
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogIntensityClass`.
+        @frozen public enum CatalogIntensityClass: String, Codable, Hashable, Sendable, CaseIterable {
+            case _1 = "1"
+            case _2 = "2"
+            case _3 = "3"
+            case _4 = "4"
+            case _5 = "5"
+            case _6 = "6"
+            case _7 = "7"
+            case _9 = "9"
+            case A = "A"
+            case B = "B"
+            case C = "C"
+            case D = "D"
+            case L = "L"
+            case S = "S"
+            case M = "M"
+            case R = "R"
+            case F = "F"
+            case X = "X"
+        }
+        /// 震源決定フラグ。K:気象庁震源、S:気象庁参考震源、k:簡易気象庁震源、s:簡易参考震源、A:自動気象庁震源、a:自動参考震源、N:震源固定・震源不定・未計算、U:USGS震源、I:ISC震源、H:震度観測時刻が時間単位までのデータ、D:日単位までのデータ、M:月単位までのデータ
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogDeterminationFlag`.
+        @frozen public enum CatalogDeterminationFlag: String, Codable, Hashable, Sendable, CaseIterable {
+            case K = "K"
+            case S = "S"
+            case k = "k"
+            case s = "s"
+            case A = "A"
+            case a = "a"
+            case N = "N"
+            case U = "U"
+            case I = "I"
+            case H = "H"
+            case D = "D"
+            case M = "M"
+        }
+        /// 震源評価（震源決定時の初期条件）。1:深さフリー、2:深さ刻み条件で最適解を求めた、3:深さ固定等、人の判断による、4:Depth phaseを用いた、5:S-Pを用いた、7:参考、8:決定不能または不採用
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogHypocenterEvaluation`.
+        @frozen public enum CatalogHypocenterEvaluation: String, Codable, Hashable, Sendable, CaseIterable {
+            case _1 = "1"
+            case _2 = "2"
+            case _3 = "3"
+            case _4 = "4"
+            case _5 = "5"
+            case _7 = "7"
+            case _8 = "8"
+        }
+        /// 震源補助情報（気象庁決定震源の情報）。1:通常地震、2:他機関依存、3:人工地震、4:噴火に伴う地震動等、5:低周波イベント
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogHypocenterAuxiliaryInfo`.
+        @frozen public enum CatalogHypocenterAuxiliaryInfo: String, Codable, Hashable, Sendable, CaseIterable {
+            case _1 = "1"
+            case _2 = "2"
+            case _3 = "3"
+            case _4 = "4"
+            case _5 = "5"
+        }
+        /// 震源決定に使用した走時表。1:市川・望月(1971)または浜田(1984)など、2:市川(1978)（三陸沖等）、3:複合走時表（北海道東方沖等）、4:複合走時表（千島列島付近等）、5:上野・他(2002)（JMA2001）、6:JMA2001とLL複合（千島列島付近等）、7:JMA2001A/2020A/2020B/2020Cいずれか
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogTravelTimeTable`.
+        @frozen public enum CatalogTravelTimeTable: String, Codable, Hashable, Sendable, CaseIterable {
+            case _1 = "1"
+            case _2 = "2"
+            case _3 = "3"
+            case _4 = "4"
+            case _5 = "5"
+            case _6 = "6"
+            case _7 = "7"
+        }
+        /// - Remark: Generated from `#/components/schemas/CatalogHypocenter`.
+        public struct CatalogHypocenter: Codable, Hashable, Sendable {
+            /// 0が代表震源
+            ///
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/seq`.
+            public var seq: Swift.Int
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/record_type`.
+            public var record_type: Components.Schemas.CatalogHypocenterRecordType
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/origin_time`.
+            public var origin_time: Foundation.Date?
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/origin_time_stderr_seconds`.
+            public var origin_time_stderr_seconds: Swift.Double?
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/coordinates`.
+            public struct coordinatesPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/coordinates/value1`.
+                public var value1: Components.Schemas.Coordinate
+                /// Creates a new `coordinatesPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.Coordinate) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/coordinates`.
+            public var coordinates: Components.Schemas.CatalogHypocenter.coordinatesPayload?
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/depth`.
+            public struct depthPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/depth/value1`.
+                public var value1: Components.Schemas.CatalogHypocenterDepth
+                /// Creates a new `depthPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogHypocenterDepth) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/depth`.
+            public var depth: Components.Schemas.CatalogHypocenter.depthPayload?
+            /// 気象庁または他機関が計算したマグニチュード（0〜2件、magnitude1/magnitude2に対応）
+            ///
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/magnitudes`.
+            public var magnitudes: [Components.Schemas.CatalogHypocenterMagnitude]
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/max_intensity`.
+            public struct max_intensityPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/max_intensity/value1`.
+                public var value1: Components.Schemas.CatalogIntensityClass
+                /// Creates a new `max_intensityPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogIntensityClass) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try decoder.decodeFromSingleValueContainer()
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try encoder.encodeToSingleValueContainer(self.value1)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/max_intensity`.
+            public var max_intensity: Components.Schemas.CatalogHypocenter.max_intensityPayload?
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/epicenter_name`.
+            public var epicenter_name: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/large_area_code`.
+            public var large_area_code: Swift.Int?
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/small_area_code`.
+            public var small_area_code: Swift.Int?
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/determination_flag`.
+            public struct determination_flagPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/determination_flag/value1`.
+                public var value1: Components.Schemas.CatalogDeterminationFlag
+                /// Creates a new `determination_flagPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogDeterminationFlag) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try decoder.decodeFromSingleValueContainer()
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try encoder.encodeToSingleValueContainer(self.value1)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/determination_flag`.
+            public var determination_flag: Components.Schemas.CatalogHypocenter.determination_flagPayload?
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/evaluation`.
+            public struct evaluationPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/evaluation/value1`.
+                public var value1: Components.Schemas.CatalogHypocenterEvaluation
+                /// Creates a new `evaluationPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogHypocenterEvaluation) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try decoder.decodeFromSingleValueContainer()
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try encoder.encodeToSingleValueContainer(self.value1)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/evaluation`.
+            public var evaluation: Components.Schemas.CatalogHypocenter.evaluationPayload?
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/auxiliary_info`.
+            public struct auxiliary_infoPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/auxiliary_info/value1`.
+                public var value1: Components.Schemas.CatalogHypocenterAuxiliaryInfo
+                /// Creates a new `auxiliary_infoPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogHypocenterAuxiliaryInfo) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try decoder.decodeFromSingleValueContainer()
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try encoder.encodeToSingleValueContainer(self.value1)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/auxiliary_info`.
+            public var auxiliary_info: Components.Schemas.CatalogHypocenter.auxiliary_infoPayload?
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/travel_time_table`.
+            public struct travel_time_tablePayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/travel_time_table/value1`.
+                public var value1: Components.Schemas.CatalogTravelTimeTable
+                /// Creates a new `travel_time_tablePayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogTravelTimeTable) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try decoder.decodeFromSingleValueContainer()
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try encoder.encodeToSingleValueContainer(self.value1)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/travel_time_table`.
+            public var travel_time_table: Components.Schemas.CatalogHypocenter.travel_time_tablePayload?
+            /// 震度1以上を観測した観測点の数
+            ///
+            /// - Remark: Generated from `#/components/schemas/CatalogHypocenter/station_count`.
+            public var station_count: Swift.Int
+            /// Creates a new `CatalogHypocenter`.
+            ///
+            /// - Parameters:
+            ///   - seq: 0が代表震源
+            ///   - record_type:
+            ///   - origin_time:
+            ///   - origin_time_stderr_seconds:
+            ///   - coordinates:
+            ///   - depth:
+            ///   - magnitudes: 気象庁または他機関が計算したマグニチュード（0〜2件、magnitude1/magnitude2に対応）
+            ///   - max_intensity:
+            ///   - epicenter_name:
+            ///   - large_area_code:
+            ///   - small_area_code:
+            ///   - determination_flag:
+            ///   - evaluation:
+            ///   - auxiliary_info:
+            ///   - travel_time_table:
+            ///   - station_count: 震度1以上を観測した観測点の数
+            public init(
+                seq: Swift.Int,
+                record_type: Components.Schemas.CatalogHypocenterRecordType,
+                origin_time: Foundation.Date? = nil,
+                origin_time_stderr_seconds: Swift.Double? = nil,
+                coordinates: Components.Schemas.CatalogHypocenter.coordinatesPayload? = nil,
+                depth: Components.Schemas.CatalogHypocenter.depthPayload? = nil,
+                magnitudes: [Components.Schemas.CatalogHypocenterMagnitude],
+                max_intensity: Components.Schemas.CatalogHypocenter.max_intensityPayload? = nil,
+                epicenter_name: Swift.String,
+                large_area_code: Swift.Int? = nil,
+                small_area_code: Swift.Int? = nil,
+                determination_flag: Components.Schemas.CatalogHypocenter.determination_flagPayload? = nil,
+                evaluation: Components.Schemas.CatalogHypocenter.evaluationPayload? = nil,
+                auxiliary_info: Components.Schemas.CatalogHypocenter.auxiliary_infoPayload? = nil,
+                travel_time_table: Components.Schemas.CatalogHypocenter.travel_time_tablePayload? = nil,
+                station_count: Swift.Int
+            ) {
+                self.seq = seq
+                self.record_type = record_type
+                self.origin_time = origin_time
+                self.origin_time_stderr_seconds = origin_time_stderr_seconds
+                self.coordinates = coordinates
+                self.depth = depth
+                self.magnitudes = magnitudes
+                self.max_intensity = max_intensity
+                self.epicenter_name = epicenter_name
+                self.large_area_code = large_area_code
+                self.small_area_code = small_area_code
+                self.determination_flag = determination_flag
+                self.evaluation = evaluation
+                self.auxiliary_info = auxiliary_info
+                self.travel_time_table = travel_time_table
+                self.station_count = station_count
+            }
+            public enum CodingKeys: String, CodingKey {
+                case seq
+                case record_type
+                case origin_time
+                case origin_time_stderr_seconds
+                case coordinates
+                case depth
+                case magnitudes
+                case max_intensity
+                case epicenter_name
+                case large_area_code
+                case small_area_code
+                case determination_flag
+                case evaluation
+                case auxiliary_info
+                case travel_time_table
+                case station_count
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CatalogStationIntensity`.
+        public struct CatalogStationIntensity: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CatalogStationIntensity/class`.
+            public var _class: Components.Schemas.CatalogIntensityClass
+            /// 計測震度
+            ///
+            /// - Remark: Generated from `#/components/schemas/CatalogStationIntensity/instrumental`.
+            public var instrumental: Swift.Double?
+            /// Creates a new `CatalogStationIntensity`.
+            ///
+            /// - Parameters:
+            ///   - _class:
+            ///   - instrumental: 計測震度
+            public init(
+                _class: Components.Schemas.CatalogIntensityClass,
+                instrumental: Swift.Double? = nil
+            ) {
+                self._class = _class
+                self.instrumental = instrumental
+            }
+            public enum CodingKeys: String, CodingKey {
+                case _class = "class"
+                case instrumental
+            }
+        }
+        /// 最大加速度（gal）。いずれかの成分が存在する場合のみ出現する
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogStationMaxAcceleration`.
+        public struct CatalogStationMaxAcceleration: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CatalogStationMaxAcceleration/synthesized_gal`.
+            public var synthesized_gal: Swift.Double?
+            /// - Remark: Generated from `#/components/schemas/CatalogStationMaxAcceleration/ns_gal`.
+            public var ns_gal: Swift.Double?
+            /// - Remark: Generated from `#/components/schemas/CatalogStationMaxAcceleration/ew_gal`.
+            public var ew_gal: Swift.Double?
+            /// - Remark: Generated from `#/components/schemas/CatalogStationMaxAcceleration/ud_gal`.
+            public var ud_gal: Swift.Double?
+            /// Creates a new `CatalogStationMaxAcceleration`.
+            ///
+            /// - Parameters:
+            ///   - synthesized_gal:
+            ///   - ns_gal:
+            ///   - ew_gal:
+            ///   - ud_gal:
+            public init(
+                synthesized_gal: Swift.Double? = nil,
+                ns_gal: Swift.Double? = nil,
+                ew_gal: Swift.Double? = nil,
+                ud_gal: Swift.Double? = nil
+            ) {
+                self.synthesized_gal = synthesized_gal
+                self.ns_gal = ns_gal
+                self.ew_gal = ew_gal
+                self.ud_gal = ud_gal
+            }
+            public enum CodingKeys: String, CodingKey {
+                case synthesized_gal
+                case ns_gal
+                case ew_gal
+                case ud_gal
+            }
+        }
+        /// 周期・周波数の記録形式。FREQUENCY:周波数(Hz)で記録、PERIOD:周期(秒)で記録
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogPeriodKind`.
+        @frozen public enum CatalogPeriodKind: String, Codable, Hashable, Sendable, CaseIterable {
+            case FREQUENCY = "FREQUENCY"
+            case PERIOD = "PERIOD"
+        }
+        /// - Remark: Generated from `#/components/schemas/CatalogPeriodValue`.
+        public struct CatalogPeriodValue: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CatalogPeriodValue/kind`.
+            public var kind: Components.Schemas.CatalogPeriodKind
+            /// flagのみ記録され数値が欠測の行が実データに存在するため省略される場合がある
+            ///
+            /// - Remark: Generated from `#/components/schemas/CatalogPeriodValue/value`.
+            public var value: Swift.Double?
+            /// Creates a new `CatalogPeriodValue`.
+            ///
+            /// - Parameters:
+            ///   - kind:
+            ///   - value: flagのみ記録され数値が欠測の行が実データに存在するため省略される場合がある
+            public init(
+                kind: Components.Schemas.CatalogPeriodKind,
+                value: Swift.Double? = nil
+            ) {
+                self.kind = kind
+                self.value = value
+            }
+            public enum CodingKeys: String, CodingKey {
+                case kind
+                case value
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CatalogStationPeriodComponent`.
+        public struct CatalogStationPeriodComponent: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CatalogStationPeriodComponent/max_accel_period`.
+            public struct max_accel_periodPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogStationPeriodComponent/max_accel_period/value1`.
+                public var value1: Components.Schemas.CatalogPeriodValue
+                /// Creates a new `max_accel_periodPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogPeriodValue) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogStationPeriodComponent/max_accel_period`.
+            public var max_accel_period: Components.Schemas.CatalogStationPeriodComponent.max_accel_periodPayload?
+            /// - Remark: Generated from `#/components/schemas/CatalogStationPeriodComponent/predominant_period`.
+            public struct predominant_periodPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogStationPeriodComponent/predominant_period/value1`.
+                public var value1: Components.Schemas.CatalogPeriodValue
+                /// Creates a new `predominant_periodPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogPeriodValue) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogStationPeriodComponent/predominant_period`.
+            public var predominant_period: Components.Schemas.CatalogStationPeriodComponent.predominant_periodPayload?
+            /// Creates a new `CatalogStationPeriodComponent`.
+            ///
+            /// - Parameters:
+            ///   - max_accel_period:
+            ///   - predominant_period:
+            public init(
+                max_accel_period: Components.Schemas.CatalogStationPeriodComponent.max_accel_periodPayload? = nil,
+                predominant_period: Components.Schemas.CatalogStationPeriodComponent.predominant_periodPayload? = nil
+            ) {
+                self.max_accel_period = max_accel_period
+                self.predominant_period = predominant_period
+            }
+            public enum CodingKeys: String, CodingKey {
+                case max_accel_period
+                case predominant_period
+            }
+        }
+        /// 最大加速度発現時の周期・卓越周期（南北・東西・上下成分）。flagのみが記録され数値(value)が欠測の組み合わせが実データに存在するため、その場合はvalueを省略してflagのみ保持する
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogStationPeriods`.
+        public struct CatalogStationPeriods: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CatalogStationPeriods/ns`.
+            public struct nsPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogStationPeriods/ns/value1`.
+                public var value1: Components.Schemas.CatalogStationPeriodComponent
+                /// Creates a new `nsPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogStationPeriodComponent) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogStationPeriods/ns`.
+            public var ns: Components.Schemas.CatalogStationPeriods.nsPayload?
+            /// - Remark: Generated from `#/components/schemas/CatalogStationPeriods/ew`.
+            public struct ewPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogStationPeriods/ew/value1`.
+                public var value1: Components.Schemas.CatalogStationPeriodComponent
+                /// Creates a new `ewPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogStationPeriodComponent) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogStationPeriods/ew`.
+            public var ew: Components.Schemas.CatalogStationPeriods.ewPayload?
+            /// - Remark: Generated from `#/components/schemas/CatalogStationPeriods/ud`.
+            public struct udPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogStationPeriods/ud/value1`.
+                public var value1: Components.Schemas.CatalogStationPeriodComponent
+                /// Creates a new `udPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogStationPeriodComponent) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogStationPeriods/ud`.
+            public var ud: Components.Schemas.CatalogStationPeriods.udPayload?
+            /// Creates a new `CatalogStationPeriods`.
+            ///
+            /// - Parameters:
+            ///   - ns:
+            ///   - ew:
+            ///   - ud:
+            public init(
+                ns: Components.Schemas.CatalogStationPeriods.nsPayload? = nil,
+                ew: Components.Schemas.CatalogStationPeriods.ewPayload? = nil,
+                ud: Components.Schemas.CatalogStationPeriods.udPayload? = nil
+            ) {
+                self.ns = ns
+                self.ew = ew
+                self.ud = ud
+            }
+            public enum CodingKeys: String, CodingKey {
+                case ns
+                case ew
+                case ud
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CatalogStationRecord`.
+        public struct CatalogStationRecord: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/station_code`.
+            public var station_code: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/observed_at`.
+            public var observed_at: Foundation.Date?
+            /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/intensity`.
+            public var intensity: Components.Schemas.CatalogStationIntensity
+            /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/max_acceleration`.
+            public struct max_accelerationPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/max_acceleration/value1`.
+                public var value1: Components.Schemas.CatalogStationMaxAcceleration
+                /// Creates a new `max_accelerationPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogStationMaxAcceleration) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/max_acceleration`.
+            public var max_acceleration: Components.Schemas.CatalogStationRecord.max_accelerationPayload?
+            /// 最大加速度（合成値）を観測した時刻
+            ///
+            /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/max_accel_time`.
+            public var max_accel_time: Foundation.Date?
+            /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/periods`.
+            public struct periodsPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/periods/value1`.
+                public var value1: Components.Schemas.CatalogStationPeriods
+                /// Creates a new `periodsPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogStationPeriods) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/periods`.
+            public var periods: Components.Schemas.CatalogStationRecord.periodsPayload?
+            /// 観測回数。震源レコードのレコード種別フラグがM,H,Dの場合のみ記録される
+            ///
+            /// - Remark: Generated from `#/components/schemas/CatalogStationRecord/observation_count`.
+            public var observation_count: Swift.Int?
+            /// Creates a new `CatalogStationRecord`.
+            ///
+            /// - Parameters:
+            ///   - station_code:
+            ///   - observed_at:
+            ///   - intensity:
+            ///   - max_acceleration:
+            ///   - max_accel_time: 最大加速度（合成値）を観測した時刻
+            ///   - periods:
+            ///   - observation_count: 観測回数。震源レコードのレコード種別フラグがM,H,Dの場合のみ記録される
+            public init(
+                station_code: Swift.String,
+                observed_at: Foundation.Date? = nil,
+                intensity: Components.Schemas.CatalogStationIntensity,
+                max_acceleration: Components.Schemas.CatalogStationRecord.max_accelerationPayload? = nil,
+                max_accel_time: Foundation.Date? = nil,
+                periods: Components.Schemas.CatalogStationRecord.periodsPayload? = nil,
+                observation_count: Swift.Int? = nil
+            ) {
+                self.station_code = station_code
+                self.observed_at = observed_at
+                self.intensity = intensity
+                self.max_acceleration = max_acceleration
+                self.max_accel_time = max_accel_time
+                self.periods = periods
+                self.observation_count = observation_count
+            }
+            public enum CodingKeys: String, CodingKey {
+                case station_code
+                case observed_at
+                case intensity
+                case max_acceleration
+                case max_accel_time
+                case periods
+                case observation_count
+            }
+        }
+        /// 宇津(1999)の定義による被害規模。1:壁や地面に亀裂が生じる程度の微小被害、2:家屋の破損・道路の破損など小被害、3:複数の死者または複数の全壊家屋、4:死者20人以上または家屋全壊1千戸以上、5:死者200人以上または家屋全壊1万戸以上、6:死者2000人以上または家屋全壊10万戸以上、7:死者2万人以上または家屋全壊100万戸以上、X:被害があったが程度がわからないもの(1988年まで)、Y:直前・直後の地震の被害と一緒になったもの(1988年まで)
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogDamageScale`.
+        @frozen public enum CatalogDamageScale: String, Codable, Hashable, Sendable, CaseIterable {
+            case _1 = "1"
+            case _2 = "2"
+            case _3 = "3"
+            case _4 = "4"
+            case _5 = "5"
+            case _6 = "6"
+            case _7 = "7"
+            case X = "X"
+            case Y = "Y"
+        }
+        /// 津波規模。年代により定義が異なる。1923〜1988年: 1:検潮器では観測されたが被害なし、T:津波あり。1989年以降（今村・飯田(1958)による波高）: 1:波高50cm以下、2:波高1m前後、3:波高2m前後、4:波高4〜6m程度、5:波高10〜20m程度、6:波高30m以上
+        ///
+        /// - Remark: Generated from `#/components/schemas/CatalogTsunamiScale`.
+        @frozen public enum CatalogTsunamiScale: String, Codable, Hashable, Sendable, CaseIterable {
+            case _1 = "1"
+            case _2 = "2"
+            case _3 = "3"
+            case _4 = "4"
+            case _5 = "5"
+            case _6 = "6"
+            case T = "T"
+        }
+        /// - Remark: Generated from `#/components/schemas/CatalogLinkMatchMethod`.
+        @frozen public enum CatalogLinkMatchMethod: String, Codable, Hashable, Sendable, CaseIterable {
+            case auto = "auto"
+            case manual = "manual"
+        }
+        /// - Remark: Generated from `#/components/schemas/CatalogLink`.
+        public struct CatalogLink: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CatalogLink/match_confidence`.
+            public var match_confidence: Swift.Double
+            /// - Remark: Generated from `#/components/schemas/CatalogLink/match_method`.
+            public var match_method: Components.Schemas.CatalogLinkMatchMethod
+            /// - Remark: Generated from `#/components/schemas/CatalogLink/time_diff_seconds`.
+            public var time_diff_seconds: Swift.Double
+            /// - Remark: Generated from `#/components/schemas/CatalogLink/distance_km`.
+            public var distance_km: Swift.Double?
+            /// Creates a new `CatalogLink`.
+            ///
+            /// - Parameters:
+            ///   - match_confidence:
+            ///   - match_method:
+            ///   - time_diff_seconds:
+            ///   - distance_km:
+            public init(
+                match_confidence: Swift.Double,
+                match_method: Components.Schemas.CatalogLinkMatchMethod,
+                time_diff_seconds: Swift.Double,
+                distance_km: Swift.Double? = nil
+            ) {
+                self.match_confidence = match_confidence
+                self.match_method = match_method
+                self.time_diff_seconds = time_diff_seconds
+                self.distance_km = distance_km
+            }
+            public enum CodingKeys: String, CodingKey {
+                case match_confidence
+                case match_method
+                case time_diff_seconds
+                case distance_km
+            }
+        }
+        /// 震度データベースZIPカタログ由来の詳細情報（datasource=JMA_INTENSITY_DATABASEまたはXMLとの結合時のみ出現）
+        ///
+        /// - Remark: Generated from `#/components/schemas/Catalog`.
+        public struct Catalog: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/Catalog/hypocenters`.
+            public var hypocenters: [Components.Schemas.CatalogHypocenter]
+            /// - Remark: Generated from `#/components/schemas/Catalog/station_records`.
+            public var station_records: [Components.Schemas.CatalogStationRecord]
+            /// - Remark: Generated from `#/components/schemas/Catalog/damage_scale`.
+            public struct damage_scalePayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/Catalog/damage_scale/value1`.
+                public var value1: Components.Schemas.CatalogDamageScale
+                /// Creates a new `damage_scalePayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogDamageScale) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try decoder.decodeFromSingleValueContainer()
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try encoder.encodeToSingleValueContainer(self.value1)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/Catalog/damage_scale`.
+            public var damage_scale: Components.Schemas.Catalog.damage_scalePayload?
+            /// - Remark: Generated from `#/components/schemas/Catalog/tsunami_scale`.
+            public struct tsunami_scalePayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/Catalog/tsunami_scale/value1`.
+                public var value1: Components.Schemas.CatalogTsunamiScale
+                /// Creates a new `tsunami_scalePayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogTsunamiScale) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try decoder.decodeFromSingleValueContainer()
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try encoder.encodeToSingleValueContainer(self.value1)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/Catalog/tsunami_scale`.
+            public var tsunami_scale: Components.Schemas.Catalog.tsunami_scalePayload?
+            /// - Remark: Generated from `#/components/schemas/Catalog/link`.
+            public struct linkPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/Catalog/link/value1`.
+                public var value1: Components.Schemas.CatalogLink
+                /// Creates a new `linkPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogLink) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/Catalog/link`.
+            public var link: Components.Schemas.Catalog.linkPayload?
+            /// Creates a new `Catalog`.
+            ///
+            /// - Parameters:
+            ///   - hypocenters:
+            ///   - station_records:
+            ///   - damage_scale:
+            ///   - tsunami_scale:
+            ///   - link:
+            public init(
+                hypocenters: [Components.Schemas.CatalogHypocenter],
+                station_records: [Components.Schemas.CatalogStationRecord],
+                damage_scale: Components.Schemas.Catalog.damage_scalePayload? = nil,
+                tsunami_scale: Components.Schemas.Catalog.tsunami_scalePayload? = nil,
+                link: Components.Schemas.Catalog.linkPayload? = nil
+            ) {
+                self.hypocenters = hypocenters
+                self.station_records = station_records
+                self.damage_scale = damage_scale
+                self.tsunami_scale = tsunami_scale
+                self.link = link
+            }
+            public enum CodingKeys: String, CodingKey {
+                case hypocenters
+                case station_records
+                case damage_scale
+                case tsunami_scale
+                case link
             }
         }
         /// 情報名称(Control/Title部)
@@ -5589,8 +6449,30 @@ public enum Components {
             ///
             /// - Remark: Generated from `#/components/schemas/Earthquake/estimated_intensity_tile`.
             public var estimated_intensity_tile: Swift.String?
-            /// - Remark: Generated from `#/components/schemas/Earthquake/datasource`.
-            public var datasource: Components.Schemas.EarthquakeDatasource
+            /// 地震データのソースの配列
+            ///
+            /// - Remark: Generated from `#/components/schemas/Earthquake/datasources`.
+            public var datasources: [Components.Schemas.EarthquakeDatasource]
+            /// - Remark: Generated from `#/components/schemas/Earthquake/catalog`.
+            public struct catalogPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/Earthquake/catalog/value1`.
+                public var value1: Components.Schemas.Catalog
+                /// Creates a new `catalogPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.Catalog) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/Earthquake/catalog`.
+            public var catalog: Components.Schemas.Earthquake.catalogPayload?
             /// - Remark: Generated from `#/components/schemas/Earthquake/telegrams`.
             public var telegrams: [Components.Schemas.EarthquakeTelegram]
             /// Creates a new `Earthquake`.
@@ -5604,7 +6486,8 @@ public enum Components {
             ///   - hypocenter:
             ///   - intensity:
             ///   - estimated_intensity_tile: 推計震度PMTilesのフルURL
-            ///   - datasource:
+            ///   - datasources: 地震データのソースの配列
+            ///   - catalog:
             ///   - telegrams:
             public init(
                 event_id: Swift.String,
@@ -5615,7 +6498,8 @@ public enum Components {
                 hypocenter: Components.Schemas.Earthquake.hypocenterPayload? = nil,
                 intensity: Components.Schemas.Earthquake.intensityPayload? = nil,
                 estimated_intensity_tile: Swift.String? = nil,
-                datasource: Components.Schemas.EarthquakeDatasource,
+                datasources: [Components.Schemas.EarthquakeDatasource],
+                catalog: Components.Schemas.Earthquake.catalogPayload? = nil,
                 telegrams: [Components.Schemas.EarthquakeTelegram]
             ) {
                 self.event_id = event_id
@@ -5626,7 +6510,8 @@ public enum Components {
                 self.hypocenter = hypocenter
                 self.intensity = intensity
                 self.estimated_intensity_tile = estimated_intensity_tile
-                self.datasource = datasource
+                self.datasources = datasources
+                self.catalog = catalog
                 self.telegrams = telegrams
             }
             public enum CodingKeys: String, CodingKey {
@@ -5638,7 +6523,8 @@ public enum Components {
                 case hypocenter
                 case intensity
                 case estimated_intensity_tile
-                case datasource
+                case datasources
+                case catalog
                 case telegrams
             }
         }
@@ -7551,6 +8437,134 @@ public enum Components {
                 case next_cursor
             }
         }
+        /// - Remark: Generated from `#/components/schemas/FeedDetailResponse`.
+        public struct FeedDetailResponse: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/FeedDetailResponse/id`.
+            public var id: Swift.String
+            /// - Remark: Generated from `#/components/schemas/FeedDetailResponse/feed_type`.
+            public var feed_type: Components.Schemas.FeedType
+            /// - Remark: Generated from `#/components/schemas/FeedDetailResponse/priority`.
+            public var priority: Components.Schemas.FeedPriority
+            /// - Remark: Generated from `#/components/schemas/FeedDetailResponse/is_important`.
+            public var is_important: Swift.Bool
+            /// - Remark: Generated from `#/components/schemas/FeedDetailResponse/published_at`.
+            public var published_at: Swift.String
+            /// - Remark: Generated from `#/components/schemas/FeedDetailResponse/expires_at`.
+            public var expires_at: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/FeedDetailResponse/title`.
+            public var title: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/FeedDetailResponse/summary`.
+            public var summary: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/FeedDetailResponse/body`.
+            public var body: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/FeedDetailResponse/data`.
+            public var data: Components.Schemas.FeedItemData
+            /// Creates a new `FeedDetailResponse`.
+            ///
+            /// - Parameters:
+            ///   - id:
+            ///   - feed_type:
+            ///   - priority:
+            ///   - is_important:
+            ///   - published_at:
+            ///   - expires_at:
+            ///   - title:
+            ///   - summary:
+            ///   - body:
+            ///   - data:
+            public init(
+                id: Swift.String,
+                feed_type: Components.Schemas.FeedType,
+                priority: Components.Schemas.FeedPriority,
+                is_important: Swift.Bool,
+                published_at: Swift.String,
+                expires_at: Swift.String? = nil,
+                title: Swift.String? = nil,
+                summary: Swift.String? = nil,
+                body: Swift.String? = nil,
+                data: Components.Schemas.FeedItemData
+            ) {
+                self.id = id
+                self.feed_type = feed_type
+                self.priority = priority
+                self.is_important = is_important
+                self.published_at = published_at
+                self.expires_at = expires_at
+                self.title = title
+                self.summary = summary
+                self.body = body
+                self.data = data
+            }
+            public enum CodingKeys: String, CodingKey {
+                case id
+                case feed_type
+                case priority
+                case is_important
+                case published_at
+                case expires_at
+                case title
+                case summary
+                case body
+                case data
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/FeedCreateType`.
+        public struct FeedCreateType: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/FeedCreateType/value1`.
+            public var value1: OpenAPIRuntime.OpenAPIValueContainer?
+            /// - Remark: Generated from `#/components/schemas/FeedCreateType/value2`.
+            public var value2: OpenAPIRuntime.OpenAPIValueContainer?
+            /// - Remark: Generated from `#/components/schemas/FeedCreateType/value3`.
+            public var value3: OpenAPIRuntime.OpenAPIValueContainer?
+            /// Creates a new `FeedCreateType`.
+            ///
+            /// - Parameters:
+            ///   - value1:
+            ///   - value2:
+            ///   - value3:
+            public init(
+                value1: OpenAPIRuntime.OpenAPIValueContainer? = nil,
+                value2: OpenAPIRuntime.OpenAPIValueContainer? = nil,
+                value3: OpenAPIRuntime.OpenAPIValueContainer? = nil
+            ) {
+                self.value1 = value1
+                self.value2 = value2
+                self.value3 = value3
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                var errors: [any Swift.Error] = []
+                do {
+                    self.value1 = try .init(from: decoder)
+                } catch {
+                    errors.append(error)
+                }
+                do {
+                    self.value2 = try .init(from: decoder)
+                } catch {
+                    errors.append(error)
+                }
+                do {
+                    self.value3 = try .init(from: decoder)
+                } catch {
+                    errors.append(error)
+                }
+                try Swift.DecodingError.verifyAtLeastOneSchemaIsNotNil(
+                    [
+                        self.value1,
+                        self.value2,
+                        self.value3
+                    ],
+                    type: Self.self,
+                    codingPath: decoder.codingPath,
+                    errors: errors
+                )
+            }
+            public func encode(to encoder: any Swift.Encoder) throws {
+                try self.value1?.encode(to: encoder)
+                try self.value2?.encode(to: encoder)
+                try self.value3?.encode(to: encoder)
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/FeedCreateResponse`.
         public struct FeedCreateResponse: Codable, Hashable, Sendable {
             /// - Remark: Generated from `#/components/schemas/FeedCreateResponse/id`.
@@ -8271,6 +9285,8 @@ public enum Components {
             public var owner: Swift.String
             /// - Remark: Generated from `#/components/schemas/EarthquakeStation/location`.
             public var location: Components.Schemas.ParameterLocation
+            /// - Remark: Generated from `#/components/schemas/EarthquakeStation/arv_400`.
+            public var arv_400: Swift.Double?
             /// Creates a new `EarthquakeStation`.
             ///
             /// - Parameters:
@@ -8282,6 +9298,7 @@ public enum Components {
             ///   - source_status:
             ///   - owner:
             ///   - location:
+            ///   - arv_400:
             public init(
                 code: Swift.String,
                 no_code: Swift.String,
@@ -8290,7 +9307,8 @@ public enum Components {
                 status: Components.Schemas.EarthquakeStationStatus,
                 source_status: Swift.String,
                 owner: Swift.String,
-                location: Components.Schemas.ParameterLocation
+                location: Components.Schemas.ParameterLocation,
+                arv_400: Swift.Double? = nil
             ) {
                 self.code = code
                 self.no_code = no_code
@@ -8300,6 +9318,7 @@ public enum Components {
                 self.source_status = source_status
                 self.owner = owner
                 self.location = location
+                self.arv_400 = arv_400
             }
             public enum CodingKeys: String, CodingKey {
                 case code
@@ -8310,6 +9329,7 @@ public enum Components {
                 case source_status
                 case owner
                 case location
+                case arv_400
             }
         }
         /// - Remark: Generated from `#/components/schemas/EarthquakeStationCity`.
@@ -8654,6 +9674,8 @@ public enum Components {
             public var latitude: Swift.Double
             /// - Remark: Generated from `#/components/schemas/ShindoDbStation/longitude`.
             public var longitude: Swift.Double
+            /// - Remark: Generated from `#/components/schemas/ShindoDbStation/city_code`.
+            public var city_code: Swift.String?
             /// Creates a new `ShindoDbStation`.
             ///
             /// - Parameters:
@@ -8661,22 +9683,26 @@ public enum Components {
             ///   - name:
             ///   - latitude:
             ///   - longitude:
+            ///   - city_code:
             public init(
                 code: Swift.String,
                 name: Swift.String,
                 latitude: Swift.Double,
-                longitude: Swift.Double
+                longitude: Swift.Double,
+                city_code: Swift.String? = nil
             ) {
                 self.code = code
                 self.name = name
                 self.latitude = latitude
                 self.longitude = longitude
+                self.city_code = city_code
             }
             public enum CodingKeys: String, CodingKey {
                 case code
                 case name
                 case latitude
                 case longitude
+                case city_code
             }
         }
         /// - Remark: Generated from `#/components/schemas/ShindoDbStationsParameter`.
@@ -8781,6 +9807,91 @@ public enum Components {
                 try self.value3?.encode(to: encoder)
                 try self.value4?.encode(to: encoder)
                 try self.value5?.encode(to: encoder)
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/SeismicityLayerSpan`.
+        @frozen public enum SeismicityLayerSpan: String, Codable, Hashable, Sendable, CaseIterable {
+            case P1M = "P1M"
+            case P3M = "P3M"
+            case P12M = "P12M"
+        }
+        /// - Remark: Generated from `#/components/schemas/SeismicityManifestLayer`.
+        public struct SeismicityManifestLayer: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/SeismicityManifestLayer/type`.
+            public var _type: OpenAPIRuntime.OpenAPIValueContainer
+            /// - Remark: Generated from `#/components/schemas/SeismicityManifestLayer/span`.
+            public var span: Components.Schemas.SeismicityLayerSpan
+            /// - Remark: Generated from `#/components/schemas/SeismicityManifestLayer/url`.
+            public var url: Swift.String
+            /// - Remark: Generated from `#/components/schemas/SeismicityManifestLayer/generated_at`.
+            public var generated_at: Swift.String
+            /// - Remark: Generated from `#/components/schemas/SeismicityManifestLayer/count`.
+            public var count: Swift.Int
+            /// Creates a new `SeismicityManifestLayer`.
+            ///
+            /// - Parameters:
+            ///   - _type:
+            ///   - span:
+            ///   - url:
+            ///   - generated_at:
+            ///   - count:
+            public init(
+                _type: OpenAPIRuntime.OpenAPIValueContainer,
+                span: Components.Schemas.SeismicityLayerSpan,
+                url: Swift.String,
+                generated_at: Swift.String,
+                count: Swift.Int
+            ) {
+                self._type = _type
+                self.span = span
+                self.url = url
+                self.generated_at = generated_at
+                self.count = count
+            }
+            public enum CodingKeys: String, CodingKey {
+                case _type = "type"
+                case span
+                case url
+                case generated_at
+                case count
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/SeismicityManifestResponse`.
+        public struct SeismicityManifestResponse: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/SeismicityManifestResponse/layers`.
+            public var layers: [Components.Schemas.SeismicityManifestLayer]
+            /// Creates a new `SeismicityManifestResponse`.
+            ///
+            /// - Parameters:
+            ///   - layers:
+            public init(layers: [Components.Schemas.SeismicityManifestLayer]) {
+                self.layers = layers
+            }
+            public enum CodingKeys: String, CodingKey {
+                case layers
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/SeismicityServiceUnavailableResponse`.
+        public struct SeismicityServiceUnavailableResponse: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/SeismicityServiceUnavailableResponse/code`.
+            public var code: OpenAPIRuntime.OpenAPIValueContainer
+            /// - Remark: Generated from `#/components/schemas/SeismicityServiceUnavailableResponse/message`.
+            public var message: Swift.String
+            /// Creates a new `SeismicityServiceUnavailableResponse`.
+            ///
+            /// - Parameters:
+            ///   - code:
+            ///   - message:
+            public init(
+                code: OpenAPIRuntime.OpenAPIValueContainer,
+                message: Swift.String
+            ) {
+                self.code = code
+                self.message = message
+            }
+            public enum CodingKeys: String, CodingKey {
+                case code
+                case message
             }
         }
         /// - Remark: Generated from `#/components/schemas/SubscriptionActiveResponse`.
@@ -20926,7 +22037,7 @@ public enum Operations {
             }
         }
     }
-    /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。
+    /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。配信には使用されず、Start送信からToken受信までの遅延計測にのみ用いる。
     ///
     /// - Remark: HTTP `PUT /v2/device/me/live-activity/{liveActivityId}/token`.
     /// - Remark: Generated from `#/paths//v2/device/me/live-activity/{liveActivityId}/token/put(putV2DeviceMeLiveActivityByLiveActivityIdToken)`.
@@ -21927,499 +23038,6 @@ public enum Operations {
                     default:
                         try throwUnexpectedResponseStatus(
                             expectedStatus: "serviceUnavailable",
-                            response: self
-                        )
-                    }
-                }
-            }
-            /// Undocumented response.
-            ///
-            /// A response with a code that is not documented in the OpenAPI document.
-            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
-        }
-        @frozen public enum AcceptableContentType: AcceptableProtocol {
-            case json
-            case other(Swift.String)
-            public init?(rawValue: Swift.String) {
-                switch rawValue.lowercased() {
-                case "application/json":
-                    self = .json
-                default:
-                    self = .other(rawValue)
-                }
-            }
-            public var rawValue: Swift.String {
-                switch self {
-                case let .other(string):
-                    return string
-                case .json:
-                    return "application/json"
-                }
-            }
-            public static var allCases: [Self] {
-                [
-                    .json
-                ]
-            }
-        }
-    }
-    /// 配信サマリー一覧（admin）
-    ///
-    /// - Remark: HTTP `GET /v2/device/me/notification/dispatches`.
-    /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/get(getV2DeviceMeNotificationDispatches)`.
-    public enum getV2DeviceMeNotificationDispatches {
-        public static let id: Swift.String = "getV2DeviceMeNotificationDispatches"
-        public struct Input: Sendable, Hashable {
-            /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/GET/header`.
-            public struct Headers: Sendable, Hashable {
-                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.getV2DeviceMeNotificationDispatches.AcceptableContentType>]
-                /// Creates a new `Headers`.
-                ///
-                /// - Parameters:
-                ///   - accept:
-                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.getV2DeviceMeNotificationDispatches.AcceptableContentType>] = .defaultValues()) {
-                    self.accept = accept
-                }
-            }
-            public var headers: Operations.getV2DeviceMeNotificationDispatches.Input.Headers
-            /// Creates a new `Input`.
-            ///
-            /// - Parameters:
-            ///   - headers:
-            public init(headers: Operations.getV2DeviceMeNotificationDispatches.Input.Headers = .init()) {
-                self.headers = headers
-            }
-        }
-        @frozen public enum Output: Sendable, Hashable {
-            public struct Ok: Sendable, Hashable {
-                /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/GET/responses/200/content`.
-                @frozen public enum Body: Sendable, Hashable {
-                    /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/GET/responses/200/content/application\/json`.
-                    case json(Components.Schemas.DispatchSummaryListResponse)
-                    /// The associated value of the enum case if `self` is `.json`.
-                    ///
-                    /// - Throws: An error if `self` is not `.json`.
-                    /// - SeeAlso: `.json`.
-                    public var json: Components.Schemas.DispatchSummaryListResponse {
-                        get throws {
-                            switch self {
-                            case let .json(body):
-                                return body
-                            }
-                        }
-                    }
-                }
-                /// Received HTTP response body
-                public var body: Operations.getV2DeviceMeNotificationDispatches.Output.Ok.Body
-                /// Creates a new `Ok`.
-                ///
-                /// - Parameters:
-                ///   - body: Received HTTP response body
-                public init(body: Operations.getV2DeviceMeNotificationDispatches.Output.Ok.Body) {
-                    self.body = body
-                }
-            }
-            /// 配信サマリー一覧
-            ///
-            /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/get(getV2DeviceMeNotificationDispatches)/responses/200`.
-            ///
-            /// HTTP response code: `200 ok`.
-            case ok(Operations.getV2DeviceMeNotificationDispatches.Output.Ok)
-            /// The associated value of the enum case if `self` is `.ok`.
-            ///
-            /// - Throws: An error if `self` is not `.ok`.
-            /// - SeeAlso: `.ok`.
-            public var ok: Operations.getV2DeviceMeNotificationDispatches.Output.Ok {
-                get throws {
-                    switch self {
-                    case let .ok(response):
-                        return response
-                    default:
-                        try throwUnexpectedResponseStatus(
-                            expectedStatus: "ok",
-                            response: self
-                        )
-                    }
-                }
-            }
-            public struct Unauthorized: Sendable, Hashable {
-                /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/GET/responses/401/content`.
-                @frozen public enum Body: Sendable, Hashable {
-                    /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/GET/responses/401/content/application\/json`.
-                    case json(Components.Schemas.UnauthorizedResponse)
-                    /// The associated value of the enum case if `self` is `.json`.
-                    ///
-                    /// - Throws: An error if `self` is not `.json`.
-                    /// - SeeAlso: `.json`.
-                    public var json: Components.Schemas.UnauthorizedResponse {
-                        get throws {
-                            switch self {
-                            case let .json(body):
-                                return body
-                            }
-                        }
-                    }
-                }
-                /// Received HTTP response body
-                public var body: Operations.getV2DeviceMeNotificationDispatches.Output.Unauthorized.Body
-                /// Creates a new `Unauthorized`.
-                ///
-                /// - Parameters:
-                ///   - body: Received HTTP response body
-                public init(body: Operations.getV2DeviceMeNotificationDispatches.Output.Unauthorized.Body) {
-                    self.body = body
-                }
-            }
-            /// 認証エラー
-            ///
-            /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/get(getV2DeviceMeNotificationDispatches)/responses/401`.
-            ///
-            /// HTTP response code: `401 unauthorized`.
-            case unauthorized(Operations.getV2DeviceMeNotificationDispatches.Output.Unauthorized)
-            /// The associated value of the enum case if `self` is `.unauthorized`.
-            ///
-            /// - Throws: An error if `self` is not `.unauthorized`.
-            /// - SeeAlso: `.unauthorized`.
-            public var unauthorized: Operations.getV2DeviceMeNotificationDispatches.Output.Unauthorized {
-                get throws {
-                    switch self {
-                    case let .unauthorized(response):
-                        return response
-                    default:
-                        try throwUnexpectedResponseStatus(
-                            expectedStatus: "unauthorized",
-                            response: self
-                        )
-                    }
-                }
-            }
-            public struct Forbidden: Sendable, Hashable {
-                /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/GET/responses/403/content`.
-                @frozen public enum Body: Sendable, Hashable {
-                    /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/GET/responses/403/content/application\/json`.
-                    case json(Components.Schemas.ForbiddenResponse)
-                    /// The associated value of the enum case if `self` is `.json`.
-                    ///
-                    /// - Throws: An error if `self` is not `.json`.
-                    /// - SeeAlso: `.json`.
-                    public var json: Components.Schemas.ForbiddenResponse {
-                        get throws {
-                            switch self {
-                            case let .json(body):
-                                return body
-                            }
-                        }
-                    }
-                }
-                /// Received HTTP response body
-                public var body: Operations.getV2DeviceMeNotificationDispatches.Output.Forbidden.Body
-                /// Creates a new `Forbidden`.
-                ///
-                /// - Parameters:
-                ///   - body: Received HTTP response body
-                public init(body: Operations.getV2DeviceMeNotificationDispatches.Output.Forbidden.Body) {
-                    self.body = body
-                }
-            }
-            /// 権限エラー
-            ///
-            /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/get(getV2DeviceMeNotificationDispatches)/responses/403`.
-            ///
-            /// HTTP response code: `403 forbidden`.
-            case forbidden(Operations.getV2DeviceMeNotificationDispatches.Output.Forbidden)
-            /// The associated value of the enum case if `self` is `.forbidden`.
-            ///
-            /// - Throws: An error if `self` is not `.forbidden`.
-            /// - SeeAlso: `.forbidden`.
-            public var forbidden: Operations.getV2DeviceMeNotificationDispatches.Output.Forbidden {
-                get throws {
-                    switch self {
-                    case let .forbidden(response):
-                        return response
-                    default:
-                        try throwUnexpectedResponseStatus(
-                            expectedStatus: "forbidden",
-                            response: self
-                        )
-                    }
-                }
-            }
-            /// Undocumented response.
-            ///
-            /// A response with a code that is not documented in the OpenAPI document.
-            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
-        }
-        @frozen public enum AcceptableContentType: AcceptableProtocol {
-            case json
-            case other(Swift.String)
-            public init?(rawValue: Swift.String) {
-                switch rawValue.lowercased() {
-                case "application/json":
-                    self = .json
-                default:
-                    self = .other(rawValue)
-                }
-            }
-            public var rawValue: Swift.String {
-                switch self {
-                case let .other(string):
-                    return string
-                case .json:
-                    return "application/json"
-                }
-            }
-            public static var allCases: [Self] {
-                [
-                    .json
-                ]
-            }
-        }
-    }
-    /// 配信サマリー詳細（admin）
-    ///
-    /// - Remark: HTTP `GET /v2/device/me/notification/dispatches/{correlationKey}`.
-    /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/{correlationKey}/get(getV2DeviceMeNotificationDispatchesByCorrelationKey)`.
-    public enum getV2DeviceMeNotificationDispatchesByCorrelationKey {
-        public static let id: Swift.String = "getV2DeviceMeNotificationDispatchesByCorrelationKey"
-        public struct Input: Sendable, Hashable {
-            /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/path`.
-            public struct Path: Sendable, Hashable {
-                /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/path/correlationKey`.
-                public var correlationKey: Swift.String
-                /// Creates a new `Path`.
-                ///
-                /// - Parameters:
-                ///   - correlationKey:
-                public init(correlationKey: Swift.String) {
-                    self.correlationKey = correlationKey
-                }
-            }
-            public var path: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Input.Path
-            /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/header`.
-            public struct Headers: Sendable, Hashable {
-                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.AcceptableContentType>]
-                /// Creates a new `Headers`.
-                ///
-                /// - Parameters:
-                ///   - accept:
-                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.AcceptableContentType>] = .defaultValues()) {
-                    self.accept = accept
-                }
-            }
-            public var headers: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Input.Headers
-            /// Creates a new `Input`.
-            ///
-            /// - Parameters:
-            ///   - path:
-            ///   - headers:
-            public init(
-                path: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Input.Path,
-                headers: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Input.Headers = .init()
-            ) {
-                self.path = path
-                self.headers = headers
-            }
-        }
-        @frozen public enum Output: Sendable, Hashable {
-            public struct Ok: Sendable, Hashable {
-                /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/responses/200/content`.
-                @frozen public enum Body: Sendable, Hashable {
-                    /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/responses/200/content/application\/json`.
-                    case json(Components.Schemas.DispatchSummaryDetailResponse)
-                    /// The associated value of the enum case if `self` is `.json`.
-                    ///
-                    /// - Throws: An error if `self` is not `.json`.
-                    /// - SeeAlso: `.json`.
-                    public var json: Components.Schemas.DispatchSummaryDetailResponse {
-                        get throws {
-                            switch self {
-                            case let .json(body):
-                                return body
-                            }
-                        }
-                    }
-                }
-                /// Received HTTP response body
-                public var body: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Ok.Body
-                /// Creates a new `Ok`.
-                ///
-                /// - Parameters:
-                ///   - body: Received HTTP response body
-                public init(body: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Ok.Body) {
-                    self.body = body
-                }
-            }
-            /// 配信サマリー詳細
-            ///
-            /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/{correlationKey}/get(getV2DeviceMeNotificationDispatchesByCorrelationKey)/responses/200`.
-            ///
-            /// HTTP response code: `200 ok`.
-            case ok(Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Ok)
-            /// The associated value of the enum case if `self` is `.ok`.
-            ///
-            /// - Throws: An error if `self` is not `.ok`.
-            /// - SeeAlso: `.ok`.
-            public var ok: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Ok {
-                get throws {
-                    switch self {
-                    case let .ok(response):
-                        return response
-                    default:
-                        try throwUnexpectedResponseStatus(
-                            expectedStatus: "ok",
-                            response: self
-                        )
-                    }
-                }
-            }
-            public struct Unauthorized: Sendable, Hashable {
-                /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/responses/401/content`.
-                @frozen public enum Body: Sendable, Hashable {
-                    /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/responses/401/content/application\/json`.
-                    case json(Components.Schemas.UnauthorizedResponse)
-                    /// The associated value of the enum case if `self` is `.json`.
-                    ///
-                    /// - Throws: An error if `self` is not `.json`.
-                    /// - SeeAlso: `.json`.
-                    public var json: Components.Schemas.UnauthorizedResponse {
-                        get throws {
-                            switch self {
-                            case let .json(body):
-                                return body
-                            }
-                        }
-                    }
-                }
-                /// Received HTTP response body
-                public var body: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Unauthorized.Body
-                /// Creates a new `Unauthorized`.
-                ///
-                /// - Parameters:
-                ///   - body: Received HTTP response body
-                public init(body: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Unauthorized.Body) {
-                    self.body = body
-                }
-            }
-            /// 認証エラー
-            ///
-            /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/{correlationKey}/get(getV2DeviceMeNotificationDispatchesByCorrelationKey)/responses/401`.
-            ///
-            /// HTTP response code: `401 unauthorized`.
-            case unauthorized(Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Unauthorized)
-            /// The associated value of the enum case if `self` is `.unauthorized`.
-            ///
-            /// - Throws: An error if `self` is not `.unauthorized`.
-            /// - SeeAlso: `.unauthorized`.
-            public var unauthorized: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Unauthorized {
-                get throws {
-                    switch self {
-                    case let .unauthorized(response):
-                        return response
-                    default:
-                        try throwUnexpectedResponseStatus(
-                            expectedStatus: "unauthorized",
-                            response: self
-                        )
-                    }
-                }
-            }
-            public struct Forbidden: Sendable, Hashable {
-                /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/responses/403/content`.
-                @frozen public enum Body: Sendable, Hashable {
-                    /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/responses/403/content/application\/json`.
-                    case json(Components.Schemas.ForbiddenResponse)
-                    /// The associated value of the enum case if `self` is `.json`.
-                    ///
-                    /// - Throws: An error if `self` is not `.json`.
-                    /// - SeeAlso: `.json`.
-                    public var json: Components.Schemas.ForbiddenResponse {
-                        get throws {
-                            switch self {
-                            case let .json(body):
-                                return body
-                            }
-                        }
-                    }
-                }
-                /// Received HTTP response body
-                public var body: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Forbidden.Body
-                /// Creates a new `Forbidden`.
-                ///
-                /// - Parameters:
-                ///   - body: Received HTTP response body
-                public init(body: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Forbidden.Body) {
-                    self.body = body
-                }
-            }
-            /// 権限エラー
-            ///
-            /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/{correlationKey}/get(getV2DeviceMeNotificationDispatchesByCorrelationKey)/responses/403`.
-            ///
-            /// HTTP response code: `403 forbidden`.
-            case forbidden(Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Forbidden)
-            /// The associated value of the enum case if `self` is `.forbidden`.
-            ///
-            /// - Throws: An error if `self` is not `.forbidden`.
-            /// - SeeAlso: `.forbidden`.
-            public var forbidden: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.Forbidden {
-                get throws {
-                    switch self {
-                    case let .forbidden(response):
-                        return response
-                    default:
-                        try throwUnexpectedResponseStatus(
-                            expectedStatus: "forbidden",
-                            response: self
-                        )
-                    }
-                }
-            }
-            public struct NotFound: Sendable, Hashable {
-                /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/responses/404/content`.
-                @frozen public enum Body: Sendable, Hashable {
-                    /// - Remark: Generated from `#/paths/v2/device/me/notification/dispatches/{correlationKey}/GET/responses/404/content/application\/json`.
-                    case json(Components.Schemas.NotFoundResponse)
-                    /// The associated value of the enum case if `self` is `.json`.
-                    ///
-                    /// - Throws: An error if `self` is not `.json`.
-                    /// - SeeAlso: `.json`.
-                    public var json: Components.Schemas.NotFoundResponse {
-                        get throws {
-                            switch self {
-                            case let .json(body):
-                                return body
-                            }
-                        }
-                    }
-                }
-                /// Received HTTP response body
-                public var body: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.NotFound.Body
-                /// Creates a new `NotFound`.
-                ///
-                /// - Parameters:
-                ///   - body: Received HTTP response body
-                public init(body: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.NotFound.Body) {
-                    self.body = body
-                }
-            }
-            /// 未検出
-            ///
-            /// - Remark: Generated from `#/paths//v2/device/me/notification/dispatches/{correlationKey}/get(getV2DeviceMeNotificationDispatchesByCorrelationKey)/responses/404`.
-            ///
-            /// HTTP response code: `404 notFound`.
-            case notFound(Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.NotFound)
-            /// The associated value of the enum case if `self` is `.notFound`.
-            ///
-            /// - Throws: An error if `self` is not `.notFound`.
-            /// - SeeAlso: `.notFound`.
-            public var notFound: Operations.getV2DeviceMeNotificationDispatchesByCorrelationKey.Output.NotFound {
-                get throws {
-                    switch self {
-                    case let .notFound(response):
-                        return response
-                    default:
-                        try throwUnexpectedResponseStatus(
-                            expectedStatus: "notFound",
                             response: self
                         )
                     }
@@ -23759,7 +24377,7 @@ public enum Operations {
             }
         }
     }
-    /// 地震情報一覧。sortByでmagnitude/max_intensity/max_lpgm_intensity/depth/origin_timeを指定した場合、NULL値は常に末尾に配置されます。カーソルベースのページネーション(cursor)はevent_idに基づくため、sortByがevent_id以外の場合はcursorと併用できません（1ページ目の取得のみ対応）。
+    /// 地震情報一覧。sortByでmagnitude/max_intensity/max_lpgm_intensity/depth/origin_timeを指定した場合、NULL値の並び順はPostgreSQLの既定に従います（ASC: 末尾、DESC: 先頭）。カーソルベースのページネーション(cursor)はevent_idに基づくため、sortByがevent_id以外の場合はcursorと併用できません（1ページ目の取得のみ対応）。
     ///
     /// - Remark: HTTP `GET /v2/earthquake`.
     /// - Remark: Generated from `#/paths//v2/earthquake/get(getV2Earthquake)`.
@@ -28217,8 +28835,10 @@ public enum Operations {
                 public var locale: Swift.String?
                 /// - Remark: Generated from `#/paths/v2/feeds/GET/query/limit`.
                 public var limit: Swift.String?
-                /// - Remark: Generated from `#/paths/v2/feeds/GET/query/after`.
-                public var after: Swift.String?
+                /// カーソル情報, {type}:{id} を base64 エンコードしたもの
+                ///
+                /// - Remark: Generated from `#/paths/v2/feeds/GET/query/cursor`.
+                public var cursor: OpenAPIRuntime.Base64EncodedData?
                 /// - Remark: Generated from `#/paths/v2/feeds/GET/query/important`.
                 public var important: Swift.String?
                 /// - Remark: Generated from `#/paths/v2/feeds/GET/query/statuses`.
@@ -28275,19 +28895,19 @@ public enum Operations {
                 /// - Parameters:
                 ///   - locale:
                 ///   - limit:
-                ///   - after:
+                ///   - cursor: カーソル情報, {type}:{id} を base64 エンコードしたもの
                 ///   - important:
                 ///   - statuses:
                 public init(
                     locale: Swift.String? = nil,
                     limit: Swift.String? = nil,
-                    after: Swift.String? = nil,
+                    cursor: OpenAPIRuntime.Base64EncodedData? = nil,
                     important: Swift.String? = nil,
                     statuses: Operations.getV2Feeds.Input.Query.statusesPayload? = nil
                 ) {
                     self.locale = locale
                     self.limit = limit
-                    self.after = after
+                    self.cursor = cursor
                     self.important = important
                     self.statuses = statuses
                 }
@@ -28503,6 +29123,252 @@ public enum Operations {
             }
         }
     }
+    /// 電文ハッシュから Feed を1件取得（通知ディープリンク用）
+    ///
+    /// - Remark: HTTP `GET /v2/feeds/source/{telegramHash}`.
+    /// - Remark: Generated from `#/paths//v2/feeds/source/{telegramHash}/get(getV2FeedsSourceByTelegramHash)`.
+    public enum getV2FeedsSourceByTelegramHash {
+        public static let id: Swift.String = "getV2FeedsSourceByTelegramHash"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/path`.
+            public struct Path: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/path/telegramHash`.
+                public var telegramHash: Swift.String
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - telegramHash:
+                public init(telegramHash: Swift.String) {
+                    self.telegramHash = telegramHash
+                }
+            }
+            public var path: Operations.getV2FeedsSourceByTelegramHash.Input.Path
+            /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/query`.
+            public struct Query: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/query/locale`.
+                public var locale: Swift.String?
+                /// Creates a new `Query`.
+                ///
+                /// - Parameters:
+                ///   - locale:
+                public init(locale: Swift.String? = nil) {
+                    self.locale = locale
+                }
+            }
+            public var query: Operations.getV2FeedsSourceByTelegramHash.Input.Query
+            /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.getV2FeedsSourceByTelegramHash.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.getV2FeedsSourceByTelegramHash.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.getV2FeedsSourceByTelegramHash.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - query:
+            ///   - headers:
+            public init(
+                path: Operations.getV2FeedsSourceByTelegramHash.Input.Path,
+                query: Operations.getV2FeedsSourceByTelegramHash.Input.Query = .init(),
+                headers: Operations.getV2FeedsSourceByTelegramHash.Input.Headers = .init()
+            ) {
+                self.path = path
+                self.query = query
+                self.headers = headers
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/responses/200/content/application\/json`.
+                    case json(Components.Schemas.FeedDetailResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.FeedDetailResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.getV2FeedsSourceByTelegramHash.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.getV2FeedsSourceByTelegramHash.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// Feed
+            ///
+            /// - Remark: Generated from `#/paths//v2/feeds/source/{telegramHash}/get(getV2FeedsSourceByTelegramHash)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.getV2FeedsSourceByTelegramHash.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.getV2FeedsSourceByTelegramHash.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct NotFound: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/responses/404/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/responses/404/content/application\/json`.
+                    case json(Components.Schemas.NotFoundResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.NotFoundResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.getV2FeedsSourceByTelegramHash.Output.NotFound.Body
+                /// Creates a new `NotFound`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.getV2FeedsSourceByTelegramHash.Output.NotFound.Body) {
+                    self.body = body
+                }
+            }
+            /// Not Found
+            ///
+            /// - Remark: Generated from `#/paths//v2/feeds/source/{telegramHash}/get(getV2FeedsSourceByTelegramHash)/responses/404`.
+            ///
+            /// HTTP response code: `404 notFound`.
+            case notFound(Operations.getV2FeedsSourceByTelegramHash.Output.NotFound)
+            /// The associated value of the enum case if `self` is `.notFound`.
+            ///
+            /// - Throws: An error if `self` is not `.notFound`.
+            /// - SeeAlso: `.notFound`.
+            public var notFound: Operations.getV2FeedsSourceByTelegramHash.Output.NotFound {
+                get throws {
+                    switch self {
+                    case let .notFound(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "notFound",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct InternalServerError: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/responses/500/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/feeds/source/{telegramHash}/GET/responses/500/content/application\/json`.
+                    case json(Components.Schemas.InternalServerErrorResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.InternalServerErrorResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.getV2FeedsSourceByTelegramHash.Output.InternalServerError.Body
+                /// Creates a new `InternalServerError`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.getV2FeedsSourceByTelegramHash.Output.InternalServerError.Body) {
+                    self.body = body
+                }
+            }
+            /// Internal Server Error
+            ///
+            /// - Remark: Generated from `#/paths//v2/feeds/source/{telegramHash}/get(getV2FeedsSourceByTelegramHash)/responses/500`.
+            ///
+            /// HTTP response code: `500 internalServerError`.
+            case internalServerError(Operations.getV2FeedsSourceByTelegramHash.Output.InternalServerError)
+            /// The associated value of the enum case if `self` is `.internalServerError`.
+            ///
+            /// - Throws: An error if `self` is not `.internalServerError`.
+            /// - SeeAlso: `.internalServerError`.
+            public var internalServerError: Operations.getV2FeedsSourceByTelegramHash.Output.InternalServerError {
+                get throws {
+                    switch self {
+                    case let .internalServerError(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "internalServerError",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
     /// Feed作成（管理者のみ）
     ///
     /// - Remark: HTTP `POST /v2/feeds/admin`.
@@ -28527,64 +29393,7 @@ public enum Operations {
                 /// - Remark: Generated from `#/paths/v2/feeds/admin/POST/requestBody/json`.
                 public struct jsonPayload: Codable, Hashable, Sendable {
                     /// - Remark: Generated from `#/paths/v2/feeds/admin/POST/requestBody/json/feedType`.
-                    public struct feedTypePayload: Codable, Hashable, Sendable {
-                        /// - Remark: Generated from `#/paths/v2/feeds/admin/POST/requestBody/json/feedType/value1`.
-                        public var value1: OpenAPIRuntime.OpenAPIValueContainer?
-                        /// - Remark: Generated from `#/paths/v2/feeds/admin/POST/requestBody/json/feedType/value2`.
-                        public var value2: OpenAPIRuntime.OpenAPIValueContainer?
-                        /// - Remark: Generated from `#/paths/v2/feeds/admin/POST/requestBody/json/feedType/value3`.
-                        public var value3: OpenAPIRuntime.OpenAPIValueContainer?
-                        /// Creates a new `feedTypePayload`.
-                        ///
-                        /// - Parameters:
-                        ///   - value1:
-                        ///   - value2:
-                        ///   - value3:
-                        public init(
-                            value1: OpenAPIRuntime.OpenAPIValueContainer? = nil,
-                            value2: OpenAPIRuntime.OpenAPIValueContainer? = nil,
-                            value3: OpenAPIRuntime.OpenAPIValueContainer? = nil
-                        ) {
-                            self.value1 = value1
-                            self.value2 = value2
-                            self.value3 = value3
-                        }
-                        public init(from decoder: any Swift.Decoder) throws {
-                            var errors: [any Swift.Error] = []
-                            do {
-                                self.value1 = try .init(from: decoder)
-                            } catch {
-                                errors.append(error)
-                            }
-                            do {
-                                self.value2 = try .init(from: decoder)
-                            } catch {
-                                errors.append(error)
-                            }
-                            do {
-                                self.value3 = try .init(from: decoder)
-                            } catch {
-                                errors.append(error)
-                            }
-                            try Swift.DecodingError.verifyAtLeastOneSchemaIsNotNil(
-                                [
-                                    self.value1,
-                                    self.value2,
-                                    self.value3
-                                ],
-                                type: Self.self,
-                                codingPath: decoder.codingPath,
-                                errors: errors
-                            )
-                        }
-                        public func encode(to encoder: any Swift.Encoder) throws {
-                            try self.value1?.encode(to: encoder)
-                            try self.value2?.encode(to: encoder)
-                            try self.value3?.encode(to: encoder)
-                        }
-                    }
-                    /// - Remark: Generated from `#/paths/v2/feeds/admin/POST/requestBody/json/feedType`.
-                    public var feedType: Operations.postV2FeedsAdmin.Input.Body.jsonPayload.feedTypePayload
+                    public var feedType: Components.Schemas.FeedCreateType
                     /// - Remark: Generated from `#/paths/v2/feeds/admin/POST/requestBody/json/priority`.
                     public struct priorityPayload: Codable, Hashable, Sendable {
                         /// - Remark: Generated from `#/paths/v2/feeds/admin/POST/requestBody/json/priority/value1`.
@@ -28737,7 +29546,7 @@ public enum Operations {
                     ///   - data:
                     ///   - translations:
                     public init(
-                        feedType: Operations.postV2FeedsAdmin.Input.Body.jsonPayload.feedTypePayload,
+                        feedType: Components.Schemas.FeedCreateType,
                         priority: Operations.postV2FeedsAdmin.Input.Body.jsonPayload.priorityPayload,
                         isImportant: Swift.Bool,
                         publishedAt: Swift.String,
@@ -29531,6 +30340,218 @@ public enum Operations {
             /// - Throws: An error if `self` is not `.serviceUnavailable`.
             /// - SeeAlso: `.serviceUnavailable`.
             public var serviceUnavailable: Operations.getV2ParametersByType.Output.ServiceUnavailable {
+                get throws {
+                    switch self {
+                    case let .serviceUnavailable(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "serviceUnavailable",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// 地震活動可視化用GeoJSONレイヤーのmanifest
+    ///
+    /// - Remark: HTTP `GET /v2/seismicity/manifest`.
+    /// - Remark: Generated from `#/paths//v2/seismicity/manifest/get(getV2SeismicityManifest)`.
+    public enum getV2SeismicityManifest {
+        public static let id: Swift.String = "getV2SeismicityManifest"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/v2/seismicity/manifest/GET/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.getV2SeismicityManifest.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.getV2SeismicityManifest.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.getV2SeismicityManifest.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - headers:
+            public init(headers: Operations.getV2SeismicityManifest.Input.Headers = .init()) {
+                self.headers = headers
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/seismicity/manifest/GET/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/seismicity/manifest/GET/responses/200/content/application\/json`.
+                    case json(Components.Schemas.SeismicityManifestResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.SeismicityManifestResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.getV2SeismicityManifest.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.getV2SeismicityManifest.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// 震源レイヤーmanifest
+            ///
+            /// - Remark: Generated from `#/paths//v2/seismicity/manifest/get(getV2SeismicityManifest)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.getV2SeismicityManifest.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.getV2SeismicityManifest.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct InternalServerError: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/seismicity/manifest/GET/responses/500/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/seismicity/manifest/GET/responses/500/content/application\/json`.
+                    case json(Components.Schemas.InternalServerErrorResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.InternalServerErrorResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.getV2SeismicityManifest.Output.InternalServerError.Body
+                /// Creates a new `InternalServerError`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.getV2SeismicityManifest.Output.InternalServerError.Body) {
+                    self.body = body
+                }
+            }
+            /// 内部サーバエラー
+            ///
+            /// - Remark: Generated from `#/paths//v2/seismicity/manifest/get(getV2SeismicityManifest)/responses/500`.
+            ///
+            /// HTTP response code: `500 internalServerError`.
+            case internalServerError(Operations.getV2SeismicityManifest.Output.InternalServerError)
+            /// The associated value of the enum case if `self` is `.internalServerError`.
+            ///
+            /// - Throws: An error if `self` is not `.internalServerError`.
+            /// - SeeAlso: `.internalServerError`.
+            public var internalServerError: Operations.getV2SeismicityManifest.Output.InternalServerError {
+                get throws {
+                    switch self {
+                    case let .internalServerError(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "internalServerError",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct ServiceUnavailable: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/seismicity/manifest/GET/responses/503/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/seismicity/manifest/GET/responses/503/content/application\/json`.
+                    case json(Components.Schemas.SeismicityServiceUnavailableResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.SeismicityServiceUnavailableResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.getV2SeismicityManifest.Output.ServiceUnavailable.Body
+                /// Creates a new `ServiceUnavailable`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.getV2SeismicityManifest.Output.ServiceUnavailable.Body) {
+                    self.body = body
+                }
+            }
+            /// manifestが利用できません
+            ///
+            /// - Remark: Generated from `#/paths//v2/seismicity/manifest/get(getV2SeismicityManifest)/responses/503`.
+            ///
+            /// HTTP response code: `503 serviceUnavailable`.
+            case serviceUnavailable(Operations.getV2SeismicityManifest.Output.ServiceUnavailable)
+            /// The associated value of the enum case if `self` is `.serviceUnavailable`.
+            ///
+            /// - Throws: An error if `self` is not `.serviceUnavailable`.
+            /// - SeeAlso: `.serviceUnavailable`.
+            public var serviceUnavailable: Operations.getV2SeismicityManifest.Output.ServiceUnavailable {
                 get throws {
                     switch self {
                     case let .serviceUnavailable(response):

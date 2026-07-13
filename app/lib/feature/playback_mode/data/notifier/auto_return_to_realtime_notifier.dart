@@ -1,5 +1,5 @@
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auto_return_to_realtime_notifier.g.dart';
@@ -14,14 +14,18 @@ class AutoReturnToRealtimeNotifier extends _$AutoReturnToRealtimeNotifier {
       SharedPreferencesKey.autoReturnToRealtime;
 
   @override
-  bool build() {
-    final prefs = ref.watch(sharedPreferencesProvider);
-    return prefs.getBool(_key.key) ?? true;
+  Future<bool> build() async {
+    final dataSource = await ref.watch(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    return await dataSource.getBool(key: _key) ?? true;
   }
 
   Future<void> set({required bool value}) async {
-    final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.setBool(_key.key, value);
-    state = value;
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await dataSource.setBool(key: _key, value: value);
+    state = AsyncData(value);
   }
 }

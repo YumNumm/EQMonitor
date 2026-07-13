@@ -16,8 +16,8 @@ class FeedRepository {
 
   final api.ApiClient _api;
 
-  Future<FeedListResponse> fetch({String? after}) async {
-    final response = await _api.feed.getV2Feeds(after: after);
+  Future<FeedListResponse> fetch({String? after, api.ApiClient? client}) async {
+    final response = await (client ?? _api).feed.getV2Feeds(cursor: after);
     return response.data.toFeedListResponse();
   }
 

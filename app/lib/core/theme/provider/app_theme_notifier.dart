@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/theme/migration/theme_migration.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
@@ -14,29 +15,26 @@ part 'app_theme_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class AppThemeNotifier extends _$AppThemeNotifier {
-  static const _lightKey = 'app_theme_light';
-  static const _darkKey = 'app_theme_dark';
-  static const _legacyIntensityColorKey = 'intensity_color';
-  static const _legacyEstimatedIntensityColorKey = 'estimated_intensity_color';
-
   @override
-  ({AppTheme lightTheme, AppTheme darkTheme}) build() {
+  Future<({AppTheme lightTheme, AppTheme darkTheme})> build() async {
+    final dataSource = await ref.watch(
+      sharedPreferencesDataSourceProvider.future,
+    );
+
     // 既に新形式のテーマが保存されている場合はマイグレーション不要
-    final savedLight = _load(_lightKey);
-    final savedDark = _load(_darkKey);
+    final savedLight = await _load(dataSource, SharedPreferencesKey.appThemeLight);
+    final savedDark = await _load(dataSource, SharedPreferencesKey.appThemeDark);
     if (savedLight == null && savedDark == null) {
-      final migrated = migrateFromLegacyIntensityColors(
-        ref.read(sharedPreferencesProvider),
-      );
+      final migrated = await migrateFromLegacyIntensityColors(dataSource);
       if (migrated != null) {
         // 新形式の保存が完了してから旧キーを削除する。
         // 途中でプロセスが終了しても旧キーが残るため、
         // 次回起動時にマイグレーションを再試行できる（冪等）。
         unawaited(
           Future.wait([
-            _save(_lightKey, migrated),
-            _save(_darkKey, migrated),
-          ]).then((_) => _removeLegacyKeys()),
+            _save(dataSource, SharedPreferencesKey.appThemeLight, migrated),
+            _save(dataSource, SharedPreferencesKey.appThemeDark, migrated),
+          ]).then((_) => _removeLegacyKeys(dataSource)),
         );
         return (lightTheme: migrated, darkTheme: migrated);
       }
@@ -48,20 +46,27 @@ class AppThemeNotifier extends _$AppThemeNotifier {
     );
   }
 
-  Future<void> _removeLegacyKeys() async {
-    final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.remove(_legacyIntensityColorKey);
-    await prefs.remove(_legacyEstimatedIntensityColorKey);
+  Future<void> _removeLegacyKeys(SharedPreferencesDataSource dataSource) async {
+    await dataSource.remove(key: SharedPreferencesKey.intensityColor);
+    await dataSource.remove(key: SharedPreferencesKey.estimatedIntensityColor);
   }
 
   Future<void> setLightTheme(AppTheme theme) async {
-    state = (lightTheme: theme, darkTheme: state.darkTheme);
-    await _save(_lightKey, theme);
+    final current = await future;
+    state = AsyncData((lightTheme: theme, darkTheme: current.darkTheme));
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await _save(dataSource, SharedPreferencesKey.appThemeLight, theme);
   }
 
   Future<void> setDarkTheme(AppTheme theme) async {
-    state = (lightTheme: state.lightTheme, darkTheme: theme);
-    await _save(_darkKey, theme);
+    final current = await future;
+    state = AsyncData((lightTheme: current.lightTheme, darkTheme: theme));
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await _save(dataSource, SharedPreferencesKey.appThemeDark, theme);
   }
 
   Future<void> setThemeForMode(ThemeBrightnessMode mode, AppTheme theme) {
@@ -101,29 +106,35 @@ class AppThemeNotifier extends _$AppThemeNotifier {
   String exportToJson(AppTheme theme) =>
       const JsonEncoder.withIndent('  ').convert(theme.toJson());
 
-  AppTheme? _load(String key) {
-    final value = ref.read(sharedPreferencesProvider).getString(key);
+  Future<AppTheme?> _load(
+    SharedPreferencesDataSource dataSource,
+    SharedPreferencesKey key,
+  ) async {
+    final value = await dataSource.getString(key: key);
     if (value == null) {
       return null;
     }
     try {
       return AppTheme.fromJson(jsonDecode(value) as Map<String, dynamic>);
-    } on Exception catch (_) {
+    } on Object catch (_) {
       return null;
     }
   }
 
-  Future<void> _save(String key, AppTheme theme) async {
-    await ref
-        .read(sharedPreferencesProvider)
-        .setString(key, jsonEncode(theme.toJson()));
-  }
+  Future<void> _save(
+    SharedPreferencesDataSource dataSource,
+    SharedPreferencesKey key,
+    AppTheme theme,
+  ) => dataSource.setString(
+    key: key,
+    value: jsonEncode(theme.toJson()),
+  );
 }
 
 @riverpod
 ThemeColorSet activeColorSet(Ref ref) {
   final brightness = ref.watch(brightnessProvider);
-  final themes = ref.watch(appThemeProvider);
+  final themes = ref.watch(appThemeProvider).requireValue;
   final theme = switch (brightness) {
     Brightness.light => themes.lightTheme,
     Brightness.dark => themes.darkTheme,
@@ -133,7 +144,7 @@ ThemeColorSet activeColorSet(Ref ref) {
 
 @riverpod
 ThemeColorSet colorSetForBrightness(Ref ref, Brightness brightness) {
-  final themes = ref.watch(appThemeProvider);
+  final themes = ref.watch(appThemeProvider).requireValue;
   final theme = switch (brightness) {
     Brightness.light => themes.lightTheme,
     Brightness.dark => themes.darkTheme,

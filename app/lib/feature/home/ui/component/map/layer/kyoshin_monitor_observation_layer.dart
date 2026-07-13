@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/kyoshin_monitor_points_provider.dart';
@@ -10,9 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
-import 'package:synchronized/synchronized.dart';
 
-class KyoshinMonitorObservationLayer extends HookConsumerWidget {
+class KyoshinMonitorObservationLayer extends ConsumerWidget {
   const KyoshinMonitorObservationLayer({super.key});
 
   static const _sourceId = 'kyoshin-monitor-observations';
@@ -20,14 +20,22 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = MapController.of(context);
-    final styleController = controller.style;
     final useKmoni = ref.watch(
       kyoshinMonitorSettingsProvider.select((v) => v.value?.useKmoni ?? false),
     );
-    if (styleController == null || !useKmoni) {
+    if (!useKmoni) {
       return const SizedBox.shrink();
     }
+    return const _KyoshinMonitorObservationLayerBody();
+  }
+}
+
+class _KyoshinMonitorObservationLayerBody extends HookConsumerWidget {
+  const _KyoshinMonitorObservationLayerBody();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final styleController = MapController.maybeOf(context)?.style;
 
     final markerSize = ref.watch(
       homeConfigurationProvider.select(
@@ -39,14 +47,20 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
       HomeKmoniMarkerSize.medium => 1,
       HomeKmoniMarkerSize.large => 1.35,
     };
-    final lock = useMemoized(Lock.new, []);
+
+    final isInitialized = useRef(false);
+    final enqueue = useMapOperationQueue();
 
     useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
+
       unawaited(
-        lock.synchronized(() async {
+        enqueue(() async {
           await styleController.addSource(
             GeoJsonSource(
-              id: _sourceId,
+              id: KyoshinMonitorObservationLayer._sourceId,
               data: jsonEncode({
                 'type': 'FeatureCollection',
                 'features': <Map<String, dynamic>>[],
@@ -56,8 +70,8 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
 
           await styleController.addLayer(
             CircleStyleLayer(
-              id: _layerId,
-              sourceId: _sourceId,
+              id: KyoshinMonitorObservationLayer._layerId,
+              sourceId: KyoshinMonitorObservationLayer._sourceId,
               paint: {
                 'circle-radius': [
                   'interpolate',
@@ -82,36 +96,56 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
               },
             ),
           );
+          isInitialized.value = true;
         }),
       );
-      return () async => unawaited(
-        lock.synchronized(() async {
-          await styleController.removeLayer(_layerId);
-          await styleController.removeSource(_sourceId);
-        }),
-      );
-    }, [styleController, useKmoni, radiusScaleFactor]);
+      return () {
+        unawaited(
+          enqueue(() async {
+            isInitialized.value = false;
+            await styleController.removeLayer(
+              KyoshinMonitorObservationLayer._layerId,
+            );
+            await styleController.removeSource(
+              KyoshinMonitorObservationLayer._sourceId,
+            );
+          }),
+        );
+      };
+    }, [styleController, radiusScaleFactor]);
 
     useEffect(() {
-      if (!useKmoni) {
+      if (styleController == null) {
         return null;
       }
 
       final subscription = ref.listenManual(
         homeKyoshinMonitorObservationGeoJsonProvider,
-        (_, next) async {
-          final sw = Stopwatch()..start();
-          await Timeline.timeSync(
-            'kmoni.updateGeoJsonSource',
-            () async =>
-                styleController.updateGeoJsonSource(id: _sourceId, data: next),
-            arguments: {'sourceId': _sourceId, 'nextDataLength': next.length},
+        (_, next) {
+          unawaited(
+            enqueue(() async {
+              if (!isInitialized.value) {
+                return;
+              }
+              final sw = Stopwatch()..start();
+              await Timeline.timeSync(
+                'kmoni.updateGeoJsonSource',
+                () async => styleController.updateGeoJsonSource(
+                  id: KyoshinMonitorObservationLayer._sourceId,
+                  data: next,
+                ),
+                arguments: {
+                  'sourceId': KyoshinMonitorObservationLayer._sourceId,
+                  'nextDataLength': next.length,
+                },
+              );
+              sw.stop();
+            }),
           );
-          sw.stop();
         },
       );
       return subscription.close;
-    }, [styleController, useKmoni]);
+    }, [styleController]);
 
     return const SizedBox.shrink();
   }

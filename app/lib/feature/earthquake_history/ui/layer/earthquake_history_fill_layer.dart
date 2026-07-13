@@ -18,11 +18,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-class EarthquakeHistoryFillLayer extends HookConsumerWidget {
+class EarthquakeHistoryFillLayer extends ConsumerWidget {
   const EarthquakeHistoryFillLayer({
     required this.earthquake,
     required this.parameter,
-    required this.enqueue,
     this.fillMode = EarthquakeHistoryFillMode.auto,
     this.showingLpgmIntensity = false,
     super.key,
@@ -30,26 +29,58 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
 
   final Earthquake earthquake;
   final EarthquakeHistoryMapLayerParameter parameter;
-  final MapOperationScheduler enqueue;
   final EarthquakeHistoryFillMode fillMode;
   final bool showingLpgmIntensity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensity = earthquake.intensity;
+    if (intensity == null) {
+      return const SizedBox.shrink();
+    }
 
-    final modeResolver = useMemoized(
-      () => const EarthquakeHistoryMapLayerModeResolver(),
-    );
+    const modeResolver = EarthquakeHistoryMapLayerModeResolver();
     final mode = modeResolver.resolveFillLayerMode(
       earthquake: earthquake,
       fillMode: fillMode,
       showingLpgmIntensity: showingLpgmIntensity,
     );
+    // resolveFillLayerMode は .station を返さないため、.none のみ判定する。
+    if (mode == EarthquakeHistoryMapLayerMode.none) {
+      return const SizedBox.shrink();
+    }
 
+    return _EarthquakeHistoryFillLayerBody(
+      intensity: intensity,
+      parameter: parameter,
+      mode: mode,
+      showingLpgmIntensity: showingLpgmIntensity,
+      modeResolver: modeResolver,
+    );
+  }
+}
+
+class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
+  const _EarthquakeHistoryFillLayerBody({
+    required this.intensity,
+    required this.parameter,
+    required this.mode,
+    required this.showingLpgmIntensity,
+    required this.modeResolver,
+  });
+
+  final EarthquakeIntensity intensity;
+  final EarthquakeHistoryMapLayerParameter parameter;
+  final EarthquakeHistoryMapLayerMode mode;
+  final bool showingLpgmIntensity;
+  final EarthquakeHistoryMapLayerModeResolver modeResolver;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final colorSet = ref.watch(activeColorSetProvider);
     final colorModel = colorSet.intensity;
+    final enqueue = useMapOperationQueue();
     final fillLayerBuilder = useMemoized(
       () => EarthquakeHistoryFillLayerBuilder(modeResolver: modeResolver),
       [modeResolver],
@@ -70,10 +101,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (styleController == null ||
-            intensity == null ||
-            mode == EarthquakeHistoryMapLayerMode.none ||
-            mode == EarthquakeHistoryMapLayerMode.station) {
+        if (styleController == null) {
           return null;
         }
 
@@ -132,16 +160,12 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
 
     useEffect(
       () {
-        final currentMode = latestMode.value;
-        final shouldShow =
-            latestIntensity.value != null &&
-            currentMode != EarthquakeHistoryMapLayerMode.none &&
-            currentMode != EarthquakeHistoryMapLayerMode.station;
-        if (styleController == null || !isInitialized.value || !shouldShow) {
+        if (styleController == null || !isInitialized.value) {
           return null;
         }
 
         final currentIntensity = latestIntensity.value;
+        final currentMode = latestMode.value;
 
         unawaited(
           enqueue(() async {
@@ -156,7 +180,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
             final newIds = <String>[];
             try {
               final layers = fillLayerBuilder.build(
-                intensity: currentIntensity!,
+                intensity: currentIntensity,
                 colorModel: latestColorModel.value,
                 mode: currentMode,
                 showingLpgmIntensity: latestShowingLpgmIntensity.value,
@@ -178,7 +202,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
 
         return null;
       },
-      [styleController, parameter, enqueue],
+      [styleController, parameter, enqueue, fillLayerBuilder],
     );
 
     return const SizedBox.shrink();
@@ -450,19 +474,42 @@ class EarthquakeHistoryFillLayerBuilder {
     EarthquakeIntensity intensity,
     JmaIntensity intensityLevel,
   ) {
-    final codes = <String>[];
     final nodes = intensity.intensityTree[intensityLevel];
     if (nodes == null) {
-      return codes;
+      return [];
     }
+    // 複数レベルの観測点を持つ市区町村は各レベルのバケツに重複して現れる。
+    // 半透明 fill が重なって混色しないよう、最大レベルにのみ含める。
+    final maxLevels = _cityMaxJmaLevels(intensity);
+    final codes = <String>{};
     for (final region in nodes) {
       for (final city in region.cities) {
-        if (city.maxIntensity != null) {
+        if (city.maxIntensity != null &&
+            maxLevels[city.city.code] == intensityLevel) {
           codes.add(city.city.code);
         }
       }
     }
-    return codes;
+    return codes.toList();
+  }
+
+  /// 市区町村コード → 全レベル横断での最大震度レベル
+  Map<String, JmaIntensity> _cityMaxJmaLevels(EarthquakeIntensity intensity) {
+    final maxLevels = <String, JmaIntensity>{};
+    for (final entry in intensity.intensityTree.entries) {
+      for (final region in entry.value) {
+        for (final city in region.cities) {
+          if (city.maxIntensity == null) {
+            continue;
+          }
+          final current = maxLevels[city.city.code];
+          if (current == null || entry.key.orderIndex > current.orderIndex) {
+            maxLevels[city.city.code] = entry.key;
+          }
+        }
+      }
+    }
+    return maxLevels;
   }
 
   List<JmaLpgmIntensity> sortedLpgmLevels(EarthquakeIntensity intensity) {
@@ -489,35 +536,81 @@ class EarthquakeHistoryFillLayerBuilder {
     EarthquakeIntensity intensity,
     JmaLpgmIntensity intensityLevel,
   ) {
-    final codes = <String>[];
     final nodes = intensity.lpgmIntensityTree[intensityLevel];
     if (nodes == null) {
-      return codes;
+      return [];
     }
+    // 複数階級に跨る細分区域は最大階級にのみ含める (jmaCityCodes と同様)。
+    final maxLevels = _regionMaxLpgmLevels(intensity);
+    final codes = <String>{};
     for (final region in nodes) {
-      if (region.maxLpgmIntensity == intensityLevel) {
+      if (region.maxLpgmIntensity != null &&
+          maxLevels[region.region.code] == intensityLevel) {
         codes.add(region.region.code);
       }
     }
-    return codes;
+    return codes.toList();
+  }
+
+  /// 細分区域コード → 全階級横断での最大長周期地震動階級
+  Map<String, JmaLpgmIntensity> _regionMaxLpgmLevels(
+    EarthquakeIntensity intensity,
+  ) {
+    final maxLevels = <String, JmaLpgmIntensity>{};
+    for (final entry in intensity.lpgmIntensityTree.entries) {
+      for (final region in entry.value) {
+        if (region.maxLpgmIntensity == null) {
+          continue;
+        }
+        final current = maxLevels[region.region.code];
+        if (current == null || entry.key.orderIndex > current.orderIndex) {
+          maxLevels[region.region.code] = entry.key;
+        }
+      }
+    }
+    return maxLevels;
   }
 
   List<String> lpgmCityCodes(
     EarthquakeIntensity intensity,
     JmaLpgmIntensity intensityLevel,
   ) {
-    final codes = <String>[];
     final nodes = intensity.lpgmIntensityTree[intensityLevel];
     if (nodes == null) {
-      return codes;
+      return [];
     }
+    // 複数階級に跨る市区町村は最大階級にのみ含める (jmaCityCodes と同様)。
+    final maxLevels = _cityMaxLpgmLevels(intensity);
+    final codes = <String>{};
     for (final region in nodes) {
       for (final city in region.cities) {
-        if (city.maxLpgmIntensity != null) {
+        if (city.maxLpgmIntensity != null &&
+            maxLevels[city.city.code] == intensityLevel) {
           codes.add(city.city.code);
         }
       }
     }
-    return codes;
+    return codes.toList();
+  }
+
+  /// 市区町村コード → 全階級横断での最大長周期地震動階級
+  Map<String, JmaLpgmIntensity> _cityMaxLpgmLevels(
+    EarthquakeIntensity intensity,
+  ) {
+    final maxLevels = <String, JmaLpgmIntensity>{};
+    for (final entry in intensity.lpgmIntensityTree.entries) {
+      for (final region in entry.value) {
+        for (final city in region.cities) {
+          if (city.maxLpgmIntensity == null) {
+            continue;
+          }
+          final current = maxLevels[city.city.code];
+          if (current == null || entry.key.orderIndex > current.orderIndex) {
+            maxLevels[city.city.code] = entry.key;
+          }
+        }
+      }
+    }
+    return maxLevels;
   }
 }

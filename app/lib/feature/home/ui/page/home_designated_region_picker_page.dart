@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/selector/city_selector.dart';
 import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_picker_map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -47,14 +48,17 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
         prefectureCode,
       _ => null,
     });
-    // TODO: 地域名を取得する
-    final selectedName = useState<String?>(switch (initialParameter) {
-      EarthquakeHistoryParameterCity(:final cityCode) => cityCode,
-      EarthquakeHistoryParameterRegion(:final regionCode) => regionCode,
-      EarthquakeHistoryParameterPrefecture(:final prefectureCode) =>
-        prefectureCode,
-      _ => null,
-    });
+    // ユーザー操作で明示的に設定された地域名。未設定時は [resolvedName] で補完する。
+    final selectedName = useState<String?>(null);
+    // selectedCode/selectedType からパラメータ木を辿って地域名を解決する。
+    // (初期パラメータ復元時など selectedName が未設定のケースを補完する)
+    final resolvedName =
+        (selectedCode.value != null && selectedCode.value!.isNotEmpty)
+        ? ref
+              .watch(regionNameProvider(selectedType.value, selectedCode.value!))
+              .value
+        : null;
+    final displayName = selectedName.value ?? resolvedName;
 
     Future<void> openMap() async {
       final result = await RegionPickerMapPage.show(
@@ -72,23 +76,46 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
     final canApply =
         selectedCode.value != null && selectedCode.value!.isNotEmpty;
 
+    /// 選択中の種別([selectedType])とコードから対応する
+    /// [EarthquakeHistoryParameter] を生成する。
+    EarthquakeHistoryParameter buildParameter() {
+      final code =
+          selectedCode.value ??
+          () {
+            throw Exception('code is null');
+          }();
+      return switch (selectedType.value) {
+        RegionSearchType.prefecture => EarthquakeHistoryParameter.prefecture(
+          sortBy: .eventId,
+          sortOrder: .desc,
+          prefectureCode: code,
+        ),
+        RegionSearchType.city => EarthquakeHistoryParameter.city(
+          sortBy: .eventId,
+          sortOrder: .desc,
+          cityCode: code,
+        ),
+        RegionSearchType.region => EarthquakeHistoryParameter.region(
+          sortBy: .eventId,
+          sortOrder: .desc,
+          regionCode: code,
+        ),
+        RegionSearchType.station => EarthquakeHistoryParameter.station(
+          sortBy: .eventId,
+          sortOrder: .desc,
+          stationCode: code,
+        ),
+      };
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('指定地域を選択'),
         actions: [
           if (canApply)
             TextButton(
-              onPressed: () => Navigator.of(context).pop(
-                EarthquakeHistoryParameter.city(
-                  sortBy: .eventId,
-                  sortOrder: .desc,
-                  cityCode:
-                      selectedCode.value ??
-                      () {
-                        throw Exception('city code is null');
-                      }(),
-                ),
-              ),
+              onPressed: () =>
+                  Navigator.of(context).pop(buildParameter()),
               child: const Text('決定'),
             ),
         ],
@@ -164,11 +191,11 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
               label: const Text('地図から選択'),
             ),
             const SizedBox(height: 16),
-            if (selectedName.value != null && selectedName.value!.isNotEmpty)
+            if (displayName != null && displayName.isNotEmpty)
               Card(
                 child: ListTile(
                   leading: const Icon(Icons.place_outlined),
-                  title: Text(selectedName.value!),
+                  title: Text(displayName),
                   subtitle: Text(
                     selectedType.value == RegionSearchType.prefecture
                         ? '都道府県'
@@ -187,21 +214,12 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
             const SizedBox(height: 24),
             FilledButton(
               onPressed: canApply
-                  ? () => Navigator.of(context).pop(
-                      EarthquakeHistoryParameter.city(
-                        sortBy: .eventId,
-                        sortOrder: .desc,
-                        cityCode:
-                            selectedCode.value ??
-                            () {
-                              throw Exception('city code is null');
-                            }(),
-                      ),
-                    )
+                  ? () => Navigator.of(context).pop(buildParameter())
                   : null,
               child: const Text('この地域を設定する'),
             ),
-            if (initialParameter is EarthquakeHistoryParameterCity) ...[
+            if (initialParameter is EarthquakeHistoryParameterCity ||
+                initialParameter is EarthquakeHistoryParameterPrefecture) ...[
               const SizedBox(height: 8),
               OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(

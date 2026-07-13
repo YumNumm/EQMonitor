@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/exception/dio_exception_mapper.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
@@ -24,25 +25,15 @@ part 'push_token_sync_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
-  static final syncMutation = Mutation<void>();
-
-  late final _retryController = RetryController();
-  RetryControllerState get retryState => _retryController.state;
-
-  void reset() => _retryController.reset();
-
-  Future<void> handleAuthenticationFailure() async {
-    final repo = ref.read(deviceProvisioningRepositoryProvider);
-    await repo.clearProvisioned();
-    ref.invalidate(deviceProvisioningProvider, asReload: true);
-  }
-
   @override
   Future<PushTokenSyncSnapshot> build() async {
-    final repo = ref.watch(deviceProvisioningRepositoryProvider);
+    final repository = await ref.watch(
+      deviceProvisioningRepositoryProvider.future,
+    );
 
     // プロビジョニング前は全種 notApplicable
-    if (!repo.isProvisioned()) {
+    final isProvisioned = await repository.isProvisioned();
+    if (!isProvisioned) {
       return const PushTokenSyncSnapshot(
         fcm: NotApplicableTokenState(),
         apnsNotification: NotApplicableTokenState(),
@@ -51,16 +42,36 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     }
 
     final tokenAsync = ref.watch(notificationTokenStreamProvider);
-    return repo.computeSnapshot(tokenAsync.value);
+    final apnsSupported = ref.watch(notificationTokenApnsSupportedProvider);
+    return repository.computeSnapshot(
+      tokenAsync.value,
+      apnsSupported: apnsSupported,
+    );
   }
 
+  late final _retryController = RetryController();
+  RetryControllerState get retryState => _retryController.state;
+
+  void reset() => _retryController.reset();
+
+  Future<void> handleAuthenticationFailure() async {
+    final repo = await ref.read(deviceProvisioningRepositoryProvider.future);
+    await repo.clearProvisioned();
+    ref.invalidate(deviceProvisioningProvider, asReload: true);
+  }
+
+  static final syncMutation = Mutation<void>();
   Future<void> sync() async {
-    final repo = ref.read(deviceProvisioningRepositoryProvider);
+    final repo = await ref.read(deviceProvisioningRepositoryProvider.future);
     final deviceRepo = await ref.read(deviceRepositoryProvider.future);
     final deviceId = await ref.read(deviceIdProvider.future);
+    final apnsSupported = ref.read(notificationTokenApnsSupportedProvider);
     final currentState =
         state.value ??
-        repo.computeSnapshot(ref.read(notificationTokenStreamProvider).value);
+        await repo.computeSnapshot(
+          ref.read(notificationTokenStreamProvider).value,
+          apnsSupported: apnsSupported,
+        );
 
     await _retryController.run(() async {
       final results = <PushTokenKind, PushTokenKindState>{};
@@ -97,14 +108,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
             await handleAuthenticationFailure();
           }
           results[kind] = FailedTokenState(error: e);
-          unawaited(
-            ref.read(telemetryRecorderProvider).record(
-              TelemetryEvent.error(
-                errorType: 'push_token_sync_failed',
-                message: '${kind.name}: $e',
-              ),
-            ).then((_) => ref.read(telemetryUploaderProvider).flush()),
-          );
+          _recordSyncFailureTelemetry(kind, e);
           lastError = e;
         } on DioException catch (e, st) {
           final mapped = mapDioToProvisioningException(e, st);
@@ -113,14 +117,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
             await handleAuthenticationFailure();
           }
           results[kind] = FailedTokenState(error: mapped);
-          unawaited(
-            ref.read(telemetryRecorderProvider).record(
-              TelemetryEvent.error(
-                errorType: 'push_token_sync_failed',
-                message: '${kind.name}: $e',
-              ),
-            ).then((_) => ref.read(telemetryUploaderProvider).flush()),
-          );
+          _recordSyncFailureTelemetry(kind, e);
           lastError = mapped;
         } on Object catch (e, st) {
           final mapped = UnexpectedProvisioningException(
@@ -128,14 +125,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
             stackTrace: st,
           );
           results[kind] = FailedTokenState(error: mapped);
-          unawaited(
-            ref.read(telemetryRecorderProvider).record(
-              TelemetryEvent.error(
-                errorType: 'push_token_sync_failed',
-                message: '${kind.name}: $e',
-              ),
-            ).then((_) => ref.read(telemetryUploaderProvider).flush()),
-          );
+          _recordSyncFailureTelemetry(kind, e);
           lastError = mapped;
         }
       }
@@ -156,6 +146,24 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
         throw lastError;
       }
     });
+  }
+
+  /// テレメトリは観測用の副作用であり、記録失敗（provider 初期化失敗を含む）が
+  /// トークン同期やエラー伝播を壊してはならない。
+  void _recordSyncFailureTelemetry(PushTokenKind kind, Object error) async {
+    try {
+        await ref
+            .read(telemetryRecorderProvider)
+            .record(
+              TelemetryEvent.error(
+                errorType: 'push_token_sync_failed',
+                message: '${kind.name}: $error',
+              ),
+            );
+            await ref.read(telemetryUploaderProvider).flush();
+    } on Exception catch (error) {
+              talker.info('Failed to record telemetry', error);
+    }
   }
 
   Future<void> _syncKind({

@@ -52,7 +52,7 @@ void main() {
     await tester.tap(find.text(AppTheme.jmaStandard().name).first);
     await tester.pumpAndSettle();
 
-    final state = container.read(appThemeProvider);
+    final state = await container.read(appThemeProvider.future);
     expect(state.lightTheme.name, AppTheme.jmaStandard().name);
   });
 
@@ -123,7 +123,7 @@ void main() {
     await tester.tap(find.text('適用'));
     await tester.pumpAndSettle();
 
-    final state = container.read(appThemeProvider);
+    final state = await container.read(appThemeProvider.future);
     expect(state.lightTheme.name, 'インポートテーマ');
   });
 

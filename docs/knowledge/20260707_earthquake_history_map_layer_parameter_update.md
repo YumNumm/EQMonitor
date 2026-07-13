@@ -11,7 +11,7 @@
 
 ## 対策パターン（`HomeMapLabelLayer` と同様）
 
-1. **マップ親（`_MapContent`）で `useMapOperationQueue()` を1回だけ**呼び、`enqueue` を全レイヤーに渡す
+1. **`MapOperationQueueScope`** でマップ単位のキューを提供（`earthquake_history_details_map_view.dart`）。各レイヤーは `useMapOperationQueue()` が Scope のキューを参照する
 2. **init effect**: `parameter` を deps から除外。unmount 時のみ cleanup
 3. **update effect**: deps は `[styleController, parameter, enqueue]` のみ。`isInitialized` ref でガード。cleanup なし（remove → add で更新）
 4. 非 parameter 値は `latest*` ref で update 時に参照

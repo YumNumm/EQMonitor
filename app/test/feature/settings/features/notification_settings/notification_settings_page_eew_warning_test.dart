@@ -1,4 +1,7 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
+import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_global_settings.dart';
@@ -12,6 +15,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,6 +27,20 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          firebaseMessagingProvider.overrideWithValue(
+            _FakeFirebaseMessaging(
+              _notificationSettings(
+                authorizationStatus: AuthorizationStatus.authorized,
+              ),
+            ),
+          ),
+          osNotificationPermissionProvider.overrideWith(
+            (ref) async => OsNotificationPermission.fromNotificationSettings(
+              _notificationSettings(
+                authorizationStatus: AuthorizationStatus.authorized,
+              ),
+            ),
+          ),
           startProvider.overrideWith(_FakeStartNotifier.new),
           notificationPresetProvider.overrideWith(
             _FakeNotificationPresetNotifier.new,
@@ -51,7 +69,7 @@ void main() {
     await tester.tap(find.text('緊急地震速報(警報)'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('緊急地震速報(警報)を通知'));
+    await tester.tap(find.text('通知を受け取る'));
     await tester.pumpAndSettle();
 
     expect(recorder.lastWarningEnabled, isFalse);
@@ -87,7 +105,7 @@ class _FakeStartNotifier extends StartNotifier {
 
 class _FakeNotificationPresetNotifier extends NotificationPresetNotifier {
   @override
-  NotificationPreset build() => NotificationPreset.custom;
+  Future<NotificationPreset> build() async => NotificationPreset.custom;
 }
 
 class _FakeGeneralNotificationSettingsNotifier
@@ -100,7 +118,8 @@ class _FakeGeneralNotificationSettingsNotifier
         trainingEnabled: true,
         nankaiExtraordinaryEnabled: true,
         nankaiRegularEnabled: true,
-        hokkaido3renOffshoreEnabled: true,
+        vyse60Enabled: true,
+        earthquakeNoticeEnabled: true,
       );
 }
 
@@ -186,10 +205,38 @@ class _TestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(
-      extensions: [
-        DesignSystemThemeExtension.light(),
-      ],
+      extensions: [DesignSystemThemeExtension.light()],
     );
     return MaterialApp(theme: theme, home: home);
   }
+}
+
+class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {
+  _FakeFirebaseMessaging(this._settings);
+
+  final NotificationSettings _settings;
+
+  @override
+  Future<NotificationSettings> getNotificationSettings() async => _settings;
+}
+
+NotificationSettings _notificationSettings({
+  AuthorizationStatus authorizationStatus = AuthorizationStatus.notDetermined,
+  AppleNotificationSetting criticalAlert =
+      AppleNotificationSetting.notSupported,
+}) {
+  return NotificationSettings(
+    alert: AppleNotificationSetting.notSupported,
+    announcement: AppleNotificationSetting.notSupported,
+    authorizationStatus: authorizationStatus,
+    badge: AppleNotificationSetting.notSupported,
+    carPlay: AppleNotificationSetting.notSupported,
+    lockScreen: AppleNotificationSetting.notSupported,
+    notificationCenter: AppleNotificationSetting.notSupported,
+    showPreviews: AppleShowPreviewSetting.notSupported,
+    timeSensitive: AppleNotificationSetting.notSupported,
+    criticalAlert: criticalAlert,
+    sound: AppleNotificationSetting.notSupported,
+    providesAppNotificationSettings: AppleNotificationSetting.notSupported,
+  );
 }

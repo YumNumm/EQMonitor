@@ -28,9 +28,8 @@ void main() {
     final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
       ..httpClientAdapter = adapter;
     final repository = DeviceRepository(
-      api.ApiClient(dio),
-      _MemoryDeviceAuthRepository(),
-      dio,
+      api: api.ApiClient(dio),
+      authRepository: _MemoryDeviceAuthRepository(),
       apnsEnvironment: api.ApnsEnvironment.development,
       isApplePlatform: true,
     );

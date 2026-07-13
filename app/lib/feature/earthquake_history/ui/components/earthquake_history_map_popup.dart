@@ -9,11 +9,15 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/material.dart';
 
 /// 観測点タップ時のポップアップ
+///
+/// [intensityLabel] は [intensity] が null のときにラベルテキストで震度を表示する
+/// フォールバック (震度DBの歴史的階級など JmaIntensity に対応しない階級向け)。
 Future<void> showStationPopup(
   BuildContext context, {
   required String stationName,
   required JmaIntensity? intensity,
   required JmaLpgmIntensity? lpgmIntensity,
+  String? intensityLabel,
 }) {
   return showModalBottomSheet(
     context: context,
@@ -22,6 +26,7 @@ Future<void> showStationPopup(
       stationName: stationName,
       intensity: intensity,
       lpgmIntensity: lpgmIntensity,
+      intensityLabel: intensityLabel,
     ),
   );
 }
@@ -51,11 +56,13 @@ class _StationPopupBody extends StatelessWidget {
     required this.stationName,
     required this.intensity,
     required this.lpgmIntensity,
+    this.intensityLabel,
   });
 
   final String stationName;
   final JmaIntensity? intensity;
   final JmaLpgmIntensity? lpgmIntensity;
+  final String? intensityLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +102,8 @@ class _StationPopupBody extends StatelessWidget {
                     '震度 ${intensity!.label}',
                     style: theme.textTheme.bodyLarge,
                   ),
+                ] else if (intensityLabel != null) ...[
+                  Text('震度 $intensityLabel', style: theme.textTheme.bodyLarge),
                 ],
                 if (lpgmIntensity != null &&
                     lpgmIntensity != JmaLpgmIntensity.zero) ...[

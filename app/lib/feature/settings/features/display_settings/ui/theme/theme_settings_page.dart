@@ -48,7 +48,7 @@ class _ModeSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themes = ref.watch(appThemeProvider);
+    final themes = ref.watch(appThemeProvider).requireValue;
     final currentTheme = switch (mode) {
       ThemeBrightnessMode.light => themes.lightTheme,
       ThemeBrightnessMode.dark => themes.darkTheme,
@@ -86,8 +86,7 @@ class _ModeSection extends ConsumerWidget {
           Align(
             alignment: Alignment.centerRight,
             child: FilledButton.tonal(
-              onPressed: () =>
-                  ThemeEditorRoute(mode: mode.name).go(context),
+              onPressed: () => ThemeEditorRoute(mode: mode.name).go(context),
               child: const Text('編集'),
             ),
           ),
@@ -162,9 +161,7 @@ class _Swatch extends StatelessWidget {
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
-            border: Border.all(
-              color: context.designSystem.colorTheme.outline,
-            ),
+            border: Border.all(color: context.designSystem.colorTheme.outline),
           ),
         ),
         Text(label, style: Theme.of(context).textTheme.labelSmall),

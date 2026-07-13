@@ -18,6 +18,7 @@ import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_hist
 import 'package:eqmonitor/feature/intensity_history/ui/components/region_floating_panel.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
@@ -199,39 +200,41 @@ class _MapContent extends HookConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          MapLibreMap(
-            onMapCreated: (controller) {
-              mapController.value = controller;
-              isMapCreated.value = true;
-            },
-            options: mapOptions,
-            onEvent: (event) async {
-              if (event is MapEventClick || event is MapEventLongClick) {
-                final jmaMap = await ref.read(jmaMapProvider.future);
-                final controller = mapController.value;
-                if (!context.mounted || controller == null) {
-                  return;
+          MapOperationQueueScope(
+            child: MapLibreMap(
+              onMapCreated: (controller) {
+                mapController.value = controller;
+                isMapCreated.value = true;
+              },
+              options: mapOptions,
+              onEvent: (event) async {
+                if (event is MapEventClick || event is MapEventLongClick) {
+                  final jmaMap = await ref.read(jmaMapProvider.future);
+                  final controller = mapController.value;
+                  if (!context.mounted || controller == null) {
+                    return;
+                  }
+                  await _handleTap(
+                    mapController: controller,
+                    context: context,
+                    ref: ref,
+                    screenPoint: switch (event) {
+                      MapEventClick(:final screenPoint) => screenPoint,
+                      MapEventLongClick(:final screenPoint) => screenPoint,
+                      _ => throw UnimplementedError(),
+                    },
+                    point: switch (event) {
+                      MapEventClick(:final point) => point,
+                      MapEventLongClick(:final point) => point,
+                      _ => throw UnimplementedError(),
+                    },
+                    jmaMap: jmaMap,
+                    state: state,
+                  );
                 }
-                await _handleTap(
-                  mapController: controller,
-                  context: context,
-                  ref: ref,
-                  screenPoint: switch (event) {
-                    MapEventClick(:final screenPoint) => screenPoint,
-                    MapEventLongClick(:final screenPoint) => screenPoint,
-                    _ => throw UnimplementedError(),
-                  },
-                  point: switch (event) {
-                    MapEventClick(:final point) => point,
-                    MapEventLongClick(:final point) => point,
-                    _ => throw UnimplementedError(),
-                  },
-                  jmaMap: jmaMap,
-                  state: state,
-                );
-              }
-            },
-            children: const [IntensityFillLayer()],
+              },
+              children: const [IntensityFillLayer()],
+            ),
           ),
 
           // フローティングパネル（上部中央）+ キャッシュ表示バナー

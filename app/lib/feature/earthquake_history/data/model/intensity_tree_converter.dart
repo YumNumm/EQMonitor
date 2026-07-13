@@ -5,20 +5,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_statio
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'intensity_tree_converter.g.dart';
-
-@Riverpod(keepAlive: true)
-Future<IntensityTreeConverter> intensityTreeConverter(Ref ref) async {
-  final jmaParam = await ref.watch(
-    jmaParameterProvider.future,
-  );
-  return IntensityTreeConverter(
-    parameter: jmaParam.earthquake,
-    shindoDbStations: jmaParam.shindoDbStations,
-  );
-}
 
 class IntensityTreeConverter {
   const IntensityTreeConverter({
@@ -43,10 +29,7 @@ class IntensityTreeConverter {
     };
     if (shindoDbStations != null) {
       for (final station in shindoDbStations!.stations) {
-        map.putIfAbsent(
-          station.code,
-          station.toEarthquakeParameterStationItem,
-        );
+        map.putIfAbsent(station.code, station.toEarthquakeParameterStationItem);
       }
     }
     return map;
@@ -59,17 +42,10 @@ class IntensityTreeConverter {
           for (final station in city.stations) station.code: city.code,
     };
     if (shindoDbStations != null) {
-      final cityPrefixMap = _cityIdentificationPrefixMap();
       for (final station in shindoDbStations!.stations) {
-        if (map.containsKey(station.code)) {
-          continue;
-        }
-        final prefix = station.code.length >= 5
-            ? station.code.substring(0, 5)
-            : station.code;
-        final city = cityPrefixMap[prefix];
-        if (city != null) {
-          map[station.code] = city.code;
+        final cityCode = station.cityCode;
+        if (cityCode != null) {
+          map.putIfAbsent(station.code, () => cityCode);
         }
       }
     }
@@ -81,21 +57,6 @@ class IntensityTreeConverter {
       for (final region in prefecture.regions)
         for (final city in region.cities) city.code: prefecture,
   };
-
-  /// 市区町村コードの先頭 N 文字でキー付けしたコード → city マップ。
-  Map<String, EarthquakeParameterCityItem> _cityIdentificationPrefixMap() {
-    const prefixLength = 5;
-    final result = <String, EarthquakeParameterCityItem>{};
-    for (final region in _allRegions) {
-      for (final city in region.cities) {
-        final key = city.code.length >= prefixLength
-            ? city.code.substring(0, prefixLength)
-            : city.code;
-        result.putIfAbsent(key, () => city);
-      }
-    }
-    return result;
-  }
 
   Map<JmaIntensity, List<PrefectureIntensityNode>> convertToIntensityTree({
     required api.Intensity intensity,
@@ -183,9 +144,7 @@ class IntensityTreeConverter {
         }
         result
             .putIfAbsent(ji, () => [])
-            .add(
-              IntensityRegion(region: region, maxIntensity: ji),
-            );
+            .add(IntensityRegion(region: region, maxIntensity: ji));
       }
     }
 
@@ -204,7 +163,6 @@ class IntensityTreeConverter {
 
     final stationParam = _stationParamMap();
     final stationCityCode = _stationCityCodeMap();
-    final cityPrefixToCityCode = _cityIdentificationPrefixMap();
 
     final result = <JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>{};
 
@@ -212,7 +170,6 @@ class IntensityTreeConverter {
       final lpgm = tree.lpgmIntensity.toJmaLpgmIntensity;
       final prefecturesByCode = _buildLpgmPrefectureCityStations(
         tree: tree,
-        cityPrefixToCityCode: cityPrefixToCityCode,
         stationCityCode: stationCityCode,
       );
       if (prefecturesByCode.isEmpty) {
@@ -238,7 +195,6 @@ class IntensityTreeConverter {
 
   Map<String, _LpgmPrefectureData> _buildLpgmPrefectureCityStations({
     required api.LpgmIntensityTree tree,
-    required Map<String, EarthquakeParameterCityItem> cityPrefixToCityCode,
     required Map<String, String> stationCityCode,
   }) {
     final result = <String, _LpgmPrefectureData>{};

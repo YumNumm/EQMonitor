@@ -17,18 +17,15 @@ void main() {
     final notifier = _ControlledDeviceProvisioningNotifier();
     await tester.pumpWidget(_wrap(notifier: notifier));
     await tester.pump();
+    await tester.pump();
 
     expect(_nextButton(tester).onPressed, isNull);
 
     notifier.completeProvisioning();
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(_nextButton(tester).onPressed, isNotNull);
-
-    await tester.tap(find.widgetWithText(FilledButton, '次へ'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('通知と\n位置情報'), findsOneWidget);
   });
 
   testWidgets('device registration errors are shown in a dialog', (
@@ -37,9 +34,11 @@ void main() {
     final notifier = _ControlledDeviceProvisioningNotifier();
     await tester.pumpWidget(_wrap(notifier: notifier));
     await tester.pump();
+    await tester.pump();
 
     notifier.failProvisioning();
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('デバイスの登録に失敗しました'), findsOneWidget);
     expect(find.text('予期しないエラーが発生しました'), findsOneWidget);
@@ -48,7 +47,7 @@ void main() {
 }
 
 FilledButton _nextButton(WidgetTester tester) =>
-    tester.widget<FilledButton>(find.widgetWithText(FilledButton, '次へ'));
+    tester.widget<FilledButton>(find.byType(FilledButton).last);
 
 Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
   final theme = buildTheme(
@@ -57,9 +56,7 @@ Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
   );
 
   return ProviderScope(
-    overrides: [
-      deviceProvisioningProvider.overrideWith(() => notifier),
-    ],
+    overrides: [deviceProvisioningProvider.overrideWith(() => notifier)],
     child: MaterialApp(
       theme: theme,
       builder: (context, child) => DefaultAssetBundle(

@@ -21,6 +21,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/page/components/connection_sta
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:eqmonitor/feature/playback_mode/ui/playback_mode_modal.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
@@ -87,7 +88,10 @@ class _MapContent extends ConsumerWidget {
       map: mapSettings,
     );
 
+    // テーマ/ダークモード変更で styleString が変わった場合も含め、
+    // マップ設定が変わるたびに MapLibreMap を再生成する。
     final mapKey = Object.hash(
+      styleString,
       mapSettings.maxZoom,
       mapSettings.lockBearing,
       mapSettings.defaultBounds,
@@ -95,70 +99,120 @@ class _MapContent extends ConsumerWidget {
       showLocation,
     );
 
-    return MapLibreEventProvider(
-      child: Builder(
-        builder: (context) {
-          final mapWidget = MapLibreMap(
-            key: ValueKey(mapKey),
-            options: mapOptions,
-            onMapCreated: (controller) async {
-              await ref
-                  .read(homeMapCameraStateProvider.notifier)
-                  .setController(controller);
-              if (showLocation) {
-                await controller.enableLocation();
-              }
-            },
-            onEvent: (event) =>
-                MapLibreEventProvider.maybeOf(context)?.emit(event),
-            children: [
-              Consumer(
-                builder: (context, ref, _) {
-                  final fillMode = ref.watch(
-                    homeConfigurationProvider.select(
-                      (a) => a.value?.eew.fillMode ?? .intensity,
-                    ),
-                  );
-                  final eews = ref.watch(eewAliveTelegramProvider) ?? [];
-                  final regions = eews
-                      .map((eew) => eew.forecastIntensity?.regions)
-                      .nonNulls
-                      .flattened
-                      .toList();
-                  return switch (fillMode) {
-                    .intensity => EewEstimatedIntensityLayer(
-                      eewRegions: regions,
-                    ),
-                    .warning => EewWarningRegionsLayer(eews: eews),
-                    .none => const SizedBox.shrink(),
-                  };
-                },
+    // MapOperationQueueScope は ValueKey(mapKey) による MapLibreMap の
+    // remount の影響を受けない位置（外側）に置く。マップ単位のオペレーション
+    // キューが remount をまたいで生存することで、旧マップへの残存操作
+    // （削除系）と新マップへの追加操作の順序がマップ単位で直列化される。
+    return MapOperationQueueScope(
+      child: MapLibreEventProvider(
+        child: _MapLibreMapHost(
+          key: ValueKey(mapKey),
+          mapOptions: mapOptions,
+          showLocation: showLocation,
+          children: [
+            Consumer(
+              builder: (context, ref, _) {
+                final fillMode = ref.watch(
+                  homeConfigurationProvider.select(
+                    (a) => a.value?.eew.fillMode ?? .intensity,
+                  ),
+                );
+                final eews = ref.watch(eewAliveTelegramProvider) ?? [];
+                final regions = eews
+                    .map((eew) => eew.forecastIntensity?.regions)
+                    .nonNulls
+                    .flattened
+                    .toList();
+                return switch (fillMode) {
+                  .intensity => EewEstimatedIntensityLayer(eewRegions: regions),
+                  .warning => EewWarningRegionsLayer(eews: eews),
+                  .none => const SizedBox.shrink(),
+                };
+              },
+            ),
+            const KyoshinMonitorObservationLayer(),
+            Consumer(
+              builder: (context, ref, _) {
+                final eews = ref.watch(eewAliveTelegramProvider) ?? [];
+                return EewPsWaveLayer(eews: eews);
+              },
+            ),
+            Consumer(
+              builder: (context, ref, _) => ShakeDetectionLayer(
+                events: ref.watch(shakeDetectionVisibleProvider),
               ),
-              const KyoshinMonitorObservationLayer(),
-              Consumer(
-                builder: (context, ref, _) {
-                  final eews = ref.watch(eewAliveTelegramProvider) ?? [];
-                  return EewPsWaveLayer(eews: eews);
-                },
+            ),
+            Consumer(
+              builder: (context, ref, _) => EewHypocenterLayer(
+                eews: ref.watch(eewAliveTelegramProvider) ?? [],
               ),
-              Consumer(
-                builder: (context, ref, _) => ShakeDetectionLayer(
-                  events: ref.watch(shakeDetectionVisibleProvider),
-                ),
-              ),
-              Consumer(
-                builder: (context, ref, _) => EewHypocenterLayer(
-                  eews: ref.watch(eewAliveTelegramProvider) ?? [],
-                ),
-              ),
-              const HomeMapLabelLayer(),
-              const SafeArea(child: _MapHeader()),
-            ],
-          );
-
-          return mapWidget;
-        },
+            ),
+            const HomeMapLabelLayer(),
+            const SafeArea(child: _MapHeader()),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+/// [MapLibreMap] 本体を保持する Widget。
+///
+/// [ValueKey] による remount（設定トグル・スタイル変更等）が発生すると
+/// この Widget 自体が unmount→remount されるため、`dispose()` で
+/// [HomeMapCameraState] が保持する [MapController] を確実にクリアできる。
+class _MapLibreMapHost extends ConsumerStatefulWidget {
+  const _MapLibreMapHost({
+    required this.mapOptions,
+    required this.showLocation,
+    required this.children,
+    super.key,
+  });
+
+  final MapOptions mapOptions;
+  final bool showLocation;
+  final List<Widget> children;
+
+  @override
+  ConsumerState<_MapLibreMapHost> createState() => _MapLibreMapHostState();
+}
+
+class _MapLibreMapHostState extends ConsumerState<_MapLibreMapHost> {
+  MapController? _controller;
+
+  // dispose() は Element が unmount された後に呼ばれるため、その時点で
+  // ref.read() を呼ぶと StateError になる。Element がactiveな間（build時）
+  // に notifier への参照を取得し、フィールドへ保持しておく。
+  late HomeMapCameraState _cameraNotifier;
+
+  @override
+  void dispose() {
+    final controller = _controller;
+    if (controller != null) {
+      _cameraNotifier.clearController(controller);
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _cameraNotifier = ref.read(homeMapCameraStateProvider.notifier);
+    return MapLibreMap(
+      options: widget.mapOptions,
+      onMapCreated: (controller) async {
+        if (!mounted) {
+          return;
+        }
+        _controller = controller;
+        await ref
+            .read(homeMapCameraStateProvider.notifier)
+            .setController(controller);
+        if (widget.showLocation) {
+          await controller.enableLocation();
+        }
+      },
+      onEvent: (event) => MapLibreEventProvider.maybeOf(context)?.emit(event),
+      children: widget.children,
     );
   }
 }

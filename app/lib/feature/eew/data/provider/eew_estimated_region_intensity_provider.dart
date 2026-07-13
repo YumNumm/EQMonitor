@@ -42,7 +42,7 @@ Future<List<EewEstimatedRegion>> eewEstimatedRegionIntensity(
   }
 
   final isolate = await ref.watch(estimatedIntensityIsolateProvider.future);
-  final travelTimeTables = ref.read(travelTimeProvider);
+  final travelTimeTables = await ref.watch(travelTimeInternalProvider.future);
 
   final intensities = await isolate.computeSingle(
     jmaMagnitude: hypocenter.magnitude!,
@@ -131,12 +131,8 @@ double? _lookupSWaveTravelTime(
     return null;
   }
 
-  final d1 = depthTables.lastWhereOrNull(
-    (t) => t.distance <= distanceKm,
-  );
-  final d2 = depthTables.firstWhereOrNull(
-    (t) => t.distance >= distanceKm,
-  );
+  final d1 = depthTables.lastWhereOrNull((t) => t.distance <= distanceKm);
+  final d2 = depthTables.firstWhereOrNull((t) => t.distance >= distanceKm);
 
   if (d1 == null || d2 == null) {
     return null;
