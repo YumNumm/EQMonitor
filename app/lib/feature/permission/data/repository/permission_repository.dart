@@ -29,9 +29,7 @@ class PermissionRepository {
 
   Future<bool> requestNotificationPermission() async {
     final settings = await _readMessaging().requestPermission();
-    final authStatus = settings.authorizationStatus;
-    return authStatus == AuthorizationStatus.authorized ||
-        authStatus == AuthorizationStatus.provisional;
+    return settings.authorizationStatus == AuthorizationStatus.authorized;
   }
 
   Future<bool> requestCriticalAlertPermission() async {
