@@ -91,7 +91,7 @@ class _MapContent extends HookConsumerWidget {
   final bool showingDb;
 
   static const _stationLayerId = 'eq-history-station-intensity-circle';
-  static const _dbStationLayerId = 'eq-history-shindo-db-station-circle';
+  static const _dbStationLayerId = 'eq-history-shindo-db-station-icon';
   static const _regionSourceLayerId = 'areaForecastLocalE';
   static const _citySourceLayerId = 'areaInformationCityQuake';
 
