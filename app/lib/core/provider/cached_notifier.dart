@@ -37,7 +37,7 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
       );
       unawaited(Future.microtask(() => _revalidateInBackground(gen, cached)));
       return cached;
-    } on Exception catch (e) {
+    } on Object catch (e) {
       if (isCacheMiss(e)) {
         return fetch(await ref.read(apiClientProvider.future));
       }
@@ -59,7 +59,7 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
       if (ref.mounted && gen == _generation) {
         state = AsyncData(fresh);
       }
-    } on Exception catch (e, st) {
+    } on Object catch (e, st) {
       if (ref.mounted && gen == _generation) {
         state = AsyncError<T>(e, st).copyWithPrevious(state);
       }
