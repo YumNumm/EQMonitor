@@ -60,51 +60,20 @@ class EarthquakeHistoryShindoDbFillLayer extends HookConsumerWidget {
       unawaited(
         enqueue(() async {
           try {
-            // region ごとの最大階級を事前計算
-            final regionMaxClass = <String, ShindoDbIntensityClass>{};
-            for (final entry in tree.tree.entries) {
-              final cls = entry.key;
-              for (final pref in entry.value) {
-                for (final cityNode in pref.cities) {
-                  final regionCode = cityNode.region.code;
-                  final current = regionMaxClass[regionCode];
-                  if (current == null || cls.orderIndex > current.orderIndex) {
-                    regionMaxClass[regionCode] = cls;
-                  }
-                }
-              }
-            }
-
-            // orderIndex 昇順(低震度→高震度)で追加し、高震度レイヤーが上に来るようにする
-            final sortedClasses =
-                tree.tree.keys
-                    .where((cls) => cls.colorJmaIntensity != null)
-                    .toList()
-                  ..sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
-
-            for (final cls in sortedClasses) {
+            final fillCodes = computeShindoDbFillCodes(tree);
+            for (final entry in fillCodes.entries) {
               if (disposed) {
                 return;
               }
+              final cls = entry.key;
               final color = colorModel
                   .fromJmaIntensity(cls.colorJmaIntensity!)
                   .background
                   .toHexStringRGB();
               final idPrefix = 'eq-history-shindo-db-${cls.name}';
 
-              final cityCodes = <String>[];
-              final regionCodesForClass = <String>[];
-              final prefNodes = tree.tree[cls] ?? [];
-              for (final pref in prefNodes) {
-                for (final cityNode in pref.cities) {
-                  cityCodes.add(cityNode.city.code);
-                  final regionCode = cityNode.region.code;
-                  if (regionMaxClass[regionCode] == cls &&
-                      !regionCodesForClass.contains(regionCode)) {
-                    regionCodesForClass.add(regionCode);
-                  }
-                }
-              }
+              final cityCodes = entry.value.cityCodes;
+              final regionCodesForClass = entry.value.regionCodes;
 
               // region レイヤー (auto モード相当: ズームで city に切り替わる)
               final mode = EarthquakeHistoryMapLayerMode.auto;
@@ -161,4 +130,65 @@ class EarthquakeHistoryShindoDbFillLayer extends HookConsumerWidget {
 
     return const SizedBox.shrink();
   }
+}
+
+/// 階級ごとの塗り潰し対象コード (orderIndex 昇順 = 低階級→高階級)。
+/// 低階級から順にレイヤー追加することで高階級レイヤーが上に来る。
+Map<
+  ShindoDbIntensityClass,
+  ({List<String> regionCodes, List<String> cityCodes})
+>
+computeShindoDbFillCodes(ShindoDbIntensityTree tree) {
+  // region / city ごとの最大階級を事前計算。
+  // 複数階級に観測点が跨る場合は最大階級にのみ含め、
+  // 半透明 fill の重なりによる混色を防ぐ。
+  final regionMaxClass = <String, ShindoDbIntensityClass>{};
+  final cityMaxClass = <String, ShindoDbIntensityClass>{};
+  for (final entry in tree.tree.entries) {
+    final cls = entry.key;
+    for (final pref in entry.value) {
+      for (final cityNode in pref.cities) {
+        final regionCode = cityNode.region.code;
+        final currentRegion = regionMaxClass[regionCode];
+        if (currentRegion == null ||
+            cls.orderIndex > currentRegion.orderIndex) {
+          regionMaxClass[regionCode] = cls;
+        }
+        final cityCode = cityNode.city.code;
+        final currentCity = cityMaxClass[cityCode];
+        if (currentCity == null || cls.orderIndex > currentCity.orderIndex) {
+          cityMaxClass[cityCode] = cls;
+        }
+      }
+    }
+  }
+
+  final sortedClasses =
+      tree.tree.keys.where((cls) => cls.colorJmaIntensity != null).toList()
+        ..sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
+
+  final result =
+      <
+        ShindoDbIntensityClass,
+        ({List<String> regionCodes, List<String> cityCodes})
+      >{};
+  for (final cls in sortedClasses) {
+    final cityCodes = <String>[];
+    final regionCodes = <String>[];
+    for (final pref in tree.tree[cls] ?? <ShindoDbPrefectureNode>[]) {
+      for (final cityNode in pref.cities) {
+        final cityCode = cityNode.city.code;
+        if (cityMaxClass[cityCode] == cls && !cityCodes.contains(cityCode)) {
+          cityCodes.add(cityCode);
+        }
+        final regionCode = cityNode.region.code;
+        if (regionMaxClass[regionCode] == cls &&
+            !regionCodes.contains(regionCode)) {
+          regionCodes.add(regionCode);
+        }
+      }
+    }
+    result[cls] = (regionCodes: regionCodes, cityCodes: cityCodes);
+  }
+  return result;
 }
