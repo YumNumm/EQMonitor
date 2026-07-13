@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +16,7 @@ class CachedDataBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = context.designSystem.colorTheme;
     final hasStaleError = values.any((v) => v.hasValue && v.hasError);
     final isRevalidating = values.any((v) => v.isFromCache);
 
@@ -72,7 +73,7 @@ class RevalidatingBanner extends StatelessWidget {
     return ValueListenableBuilder<bool>(
       valueListenable: isRevalidating,
       builder: (context, revalidating, _) {
-        final colorScheme = Theme.of(context).colorScheme;
+        final colorScheme = context.designSystem.colorTheme;
         return AnimatedSize(
           duration: const Duration(milliseconds: 200),
           alignment: Alignment.topCenter,

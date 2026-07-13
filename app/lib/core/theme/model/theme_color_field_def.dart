@@ -75,13 +75,6 @@ class ThemeColorFieldDefs {
       setter: (colorSet, color) => colorSet.copyWith(secondary: color),
     ),
     ThemeColorFieldDef(
-      label: 'オンセカンダリ',
-      category: ThemeColorFieldCategory.secondary,
-      description: 'セカンダリ色の上に重ねる文字・アイコンの色。',
-      getter: (colorSet) => colorSet.onSecondary,
-      setter: (colorSet, color) => colorSet.copyWith(onSecondary: color),
-    ),
-    ThemeColorFieldDef(
       label: 'セカンダリコンテナ',
       category: ThemeColorFieldCategory.secondary,
       description: '地震履歴のフィルタチップ（深さ・マグニチュードなど）の選択時の背景色として使用されます。',
@@ -104,13 +97,6 @@ class ThemeColorFieldDefs {
       setter: (colorSet, color) => colorSet.copyWith(tertiary: color),
     ),
     ThemeColorFieldDef(
-      label: 'オンターシャリ',
-      category: ThemeColorFieldCategory.tertiary,
-      description: 'ターシャリ色の上に重ねる文字・アイコンの色。',
-      getter: (colorSet) => colorSet.onTertiary,
-      setter: (colorSet, color) => colorSet.copyWith(onTertiary: color),
-    ),
-    ThemeColorFieldDef(
       label: 'ターシャリコンテナ',
       category: ThemeColorFieldCategory.tertiary,
       description: 'ターシャリ系の淡い背景色。一部のバッジやカードの背景に使用されます。',
@@ -131,13 +117,6 @@ class ThemeColorFieldDefs {
       description: 'エラーを示す色。エラー画面のアイコンや通信切断時のステータス表示などに使用されます。',
       getter: (colorSet) => colorSet.error,
       setter: (colorSet, color) => colorSet.copyWith(error: color),
-    ),
-    ThemeColorFieldDef(
-      label: 'オンエラー',
-      category: ThemeColorFieldCategory.error,
-      description: 'エラー色の上に重ねる文字・アイコンの色。',
-      getter: (colorSet) => colorSet.onError,
-      setter: (colorSet, color) => colorSet.copyWith(onError: color),
     ),
     ThemeColorFieldDef(
       label: 'エラーコンテナ',
@@ -173,14 +152,6 @@ class ThemeColorFieldDefs {
       description: '補足説明やキャプションなど、控えめな文字・アイコンの色として広く使用されます。',
       getter: (colorSet) => colorSet.onSurfaceVariant,
       setter: (colorSet, color) => colorSet.copyWith(onSurfaceVariant: color),
-    ),
-    ThemeColorFieldDef(
-      label: 'サーフェスコンテナ(最低)',
-      category: ThemeColorFieldCategory.surface,
-      description: '最も低い階層のコンテナ背景色。',
-      getter: (colorSet) => colorSet.surfaceContainerLowest,
-      setter: (colorSet, color) =>
-          colorSet.copyWith(surfaceContainerLowest: color),
     ),
     ThemeColorFieldDef(
       label: 'サーフェスコンテナ(低)',
@@ -228,39 +199,11 @@ class ThemeColorFieldDefs {
       setter: (colorSet, color) => colorSet.copyWith(outlineVariant: color),
     ),
     ThemeColorFieldDef(
-      label: 'インバースサーフェス',
-      category: ThemeColorFieldCategory.surface,
-      description: '反転背景色。スナックバーの背景などに使用されます。',
-      getter: (colorSet) => colorSet.inverseSurface,
-      setter: (colorSet, color) => colorSet.copyWith(inverseSurface: color),
-    ),
-    ThemeColorFieldDef(
       label: 'オンインバースサーフェス',
       category: ThemeColorFieldCategory.surface,
       description: '反転背景の上に重ねる文字・アイコンの色。',
       getter: (colorSet) => colorSet.onInverseSurface,
       setter: (colorSet, color) => colorSet.copyWith(onInverseSurface: color),
-    ),
-    ThemeColorFieldDef(
-      label: 'インバースプライマリ',
-      category: ThemeColorFieldCategory.surface,
-      description: '反転背景上でのプライマリ色。',
-      getter: (colorSet) => colorSet.inversePrimary,
-      setter: (colorSet, color) => colorSet.copyWith(inversePrimary: color),
-    ),
-    ThemeColorFieldDef(
-      label: 'シャドウ',
-      category: ThemeColorFieldCategory.surface,
-      description: '影の色。',
-      getter: (colorSet) => colorSet.shadow,
-      setter: (colorSet, color) => colorSet.copyWith(shadow: color),
-    ),
-    ThemeColorFieldDef(
-      label: 'スクリム',
-      category: ThemeColorFieldCategory.surface,
-      description: 'モーダル表示時に背面を覆う半透明レイヤーの色。',
-      getter: (colorSet) => colorSet.scrim,
-      setter: (colorSet, color) => colorSet.copyWith(scrim: color),
     ),
     ThemeColorFieldDef(
       label: '成功',
@@ -277,14 +220,6 @@ class ThemeColorFieldDefs {
       getter: (colorSet) => colorSet.status.warning,
       setter: (colorSet, color) =>
           colorSet.copyWith(status: colorSet.status.copyWith(warning: color)),
-    ),
-    ThemeColorFieldDef(
-      label: '情報',
-      category: ThemeColorFieldCategory.status,
-      description: '情報表示用の色。（現在は未使用・将来のために予約されています）',
-      getter: (colorSet) => colorSet.status.info,
-      setter: (colorSet, color) =>
-          colorSet.copyWith(status: colorSet.status.copyWith(info: color)),
     ),
     ThemeColorFieldDef(
       label: 'マップ背景',
