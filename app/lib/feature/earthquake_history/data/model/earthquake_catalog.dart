@@ -4,6 +4,16 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_catalog.freezed.dart';
 
+const earthquakeCatalogMaxHypocenterCount = 16;
+const earthquakeCatalogMaxStationRecordCount = 2048;
+const earthquakeCatalogMaxMagnitudeCount = 8;
+const earthquakeCatalogMaxTextLength = 128;
+
+String truncateEarthquakeCatalogText(String value) =>
+    value.length <= earthquakeCatalogMaxTextLength
+        ? value
+        : value.substring(0, earthquakeCatalogMaxTextLength);
+
 /// 震度データベース (i####.zip カタログ) 由来の詳細情報
 @freezed
 abstract class EarthquakeCatalog with _$EarthquakeCatalog {
@@ -103,9 +113,11 @@ String formatCatalogPeriodValue(api.CatalogPeriodValue value) {
 extension EarthquakeCatalogApiExtension on api.Catalog {
   EarthquakeCatalog get toEarthquakeCatalog => EarthquakeCatalog(
     hypocenters: hypocenters
+        .take(earthquakeCatalogMaxHypocenterCount)
         .map((e) => e._toEarthquakeCatalogHypocenter)
         .toList(),
     stationRecords: stationRecords
+        .take(earthquakeCatalogMaxStationRecordCount)
         .map((e) => e._toEarthquakeCatalogStationRecord)
         .toList(),
     damageScaleLabel: damageScale?._label,
@@ -118,7 +130,7 @@ extension on api.CatalogHypocenter {
   EarthquakeCatalogHypocenter get _toEarthquakeCatalogHypocenter =>
       EarthquakeCatalogHypocenter(
         seq: seq,
-        epicenterName: epicenterName,
+        epicenterName: truncateEarthquakeCatalogText(epicenterName),
         stationCount: stationCount,
         recordTypeLabel: recordType._label,
         originTime: originTime,
@@ -132,6 +144,7 @@ extension on api.CatalogHypocenter {
         determinationFlagLabel: determinationFlag?._label,
         evaluationLabel: evaluation?._label,
         magnitudes: magnitudes
+            .take(earthquakeCatalogMaxMagnitudeCount)
             .map(
               (m) => EarthquakeCatalogMagnitude(
                 typeLabel: m.type._label,
@@ -145,7 +158,7 @@ extension on api.CatalogHypocenter {
 extension on api.CatalogStationRecord {
   EarthquakeCatalogStationRecord get _toEarthquakeCatalogStationRecord =>
       EarthquakeCatalogStationRecord(
-        stationCode: stationCode,
+        stationCode: truncateEarthquakeCatalogText(stationCode),
         intensityClass: intensity.classValue.toShindoDbIntensityClass,
         instrumentalIntensity: intensity.instrumental?.toDouble(),
         observedAt: observedAt,

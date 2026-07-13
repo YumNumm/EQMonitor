@@ -88,5 +88,62 @@ void main() {
       expect(result.tsunamiScaleLabel, startsWith('1:'));
       expect(result.linkMatchConfidence, 0.98);
     });
+
+    test('過大なカタログ配列と文字列は表示用モデル化時に制限されること', () {
+      final longText = List.filled(
+        earthquakeCatalogMaxTextLength + 1,
+        'A',
+      ).join();
+      final catalog = api.Catalog(
+        hypocenters: List.generate(
+          earthquakeCatalogMaxHypocenterCount + 1,
+          (index) => api.CatalogHypocenter(
+            seq: index,
+            recordType: api.CatalogHypocenterRecordType.a,
+            magnitudes: List.generate(
+              earthquakeCatalogMaxMagnitudeCount + 1,
+              (magnitudeIndex) => api.CatalogHypocenterMagnitude(
+                type: api.CatalogMagnitudeType.upperD,
+                value: magnitudeIndex,
+              ),
+            ),
+            epicenterName: longText,
+            stationCount: 1,
+          ),
+        ),
+        stationRecords: List.generate(
+          earthquakeCatalogMaxStationRecordCount + 1,
+          (index) => api.CatalogStationRecord(
+            stationCode: longText,
+            intensity: const api.CatalogStationIntensity(
+              classValue: api.CatalogIntensityClass.value1,
+            ),
+          ),
+        ),
+      );
+
+      final result = catalog.toEarthquakeCatalog;
+
+      expect(
+        result.hypocenters,
+        hasLength(earthquakeCatalogMaxHypocenterCount),
+      );
+      expect(
+        result.stationRecords,
+        hasLength(earthquakeCatalogMaxStationRecordCount),
+      );
+      expect(
+        result.hypocenters.first.magnitudes,
+        hasLength(earthquakeCatalogMaxMagnitudeCount),
+      );
+      expect(
+        result.hypocenters.first.epicenterName.length,
+        earthquakeCatalogMaxTextLength,
+      );
+      expect(
+        result.stationRecords.first.stationCode.length,
+        earthquakeCatalogMaxTextLength,
+      );
+    });
   });
 }
