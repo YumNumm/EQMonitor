@@ -176,7 +176,6 @@ class EarthquakeHistoryDataSource
         longitudeLte: parameter.longitudeLte,
         sortBy: parameter.sortBy,
         sortOrder: parameter.sortOrder,
-        client: client,
       ),
       EarthquakeHistoryParameterRegion(:final String regionCode) =>
         _repository.searchByRegion(
