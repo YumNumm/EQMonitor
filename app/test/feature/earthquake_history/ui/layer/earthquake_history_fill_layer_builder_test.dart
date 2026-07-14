@@ -23,17 +23,14 @@ void main() {
 
   group('regionCodeFilter', () {
     test('areaForecastLocalE の code フィールドで in フィルタを生成する', () {
-      expect(
-        builder.regionCodeFilter(['001', '002', '003']),
+      expect(builder.regionCodeFilter(['001', '002', '003']), [
+        'in',
+        ['get', 'code'],
         [
-          'in',
-          ['get', 'code'],
-          [
-            'literal',
-            ['001', '002', '003'],
-          ],
+          'literal',
+          ['001', '002', '003'],
         ],
-      );
+      ]);
     });
 
     test('空リストでもフィルタ構造は変わらない', () {
@@ -48,17 +45,14 @@ void main() {
 
   group('cityCodeFilter', () {
     test('areaInformationCityQuake の regioncode フィールドで in フィルタを生成する', () {
-      expect(
-        builder.cityCodeFilter(['1010001', '1310000']),
+      expect(builder.cityCodeFilter(['1010001', '1310000']), [
+        'in',
+        ['get', 'regioncode'],
         [
-          'in',
-          ['get', 'regioncode'],
-          [
-            'literal',
-            ['1010001', '1310000'],
-          ],
+          'literal',
+          ['1010001', '1310000'],
         ],
-      );
+      ]);
     });
 
     test('regionCodeFilter と異なるフィールド名を使う', () {
@@ -434,6 +428,55 @@ void main() {
       expect(jma.every((l) => !l.id.contains('lpgm')), isTrue);
     });
   });
+
+  // ──────────────────────────────────────────────
+  // 複数震度レベルに跨る市区町村・細分区域の重複排除
+  // (重複すると半透明 fill が重なり、意図しない混色になる)
+  // ──────────────────────────────────────────────
+
+  group('jmaCityCodes の重複排除', () {
+    final testData = _FillLayerTestData();
+
+    test('複数レベルに登場する市区町村は最大レベルにのみ含まれる', () {
+      final intensity = testData.cityInMultipleLevelsIntensity();
+      expect(builder.jmaCityCodes(intensity, JmaIntensity.four), ['2110001']);
+      expect(builder.jmaCityCodes(intensity, JmaIntensity.three), ['2110002']);
+    });
+
+    test('buildJmaLayers の city filter に同一市区町村が複数レイヤーで現れない', () {
+      final layers = builder.buildJmaLayers(
+        intensity: testData.cityInMultipleLevelsIntensity(),
+        colorModel: colorModel,
+        mode: EarthquakeHistoryMapLayerMode.city,
+        parameter: parameter,
+      );
+      final codes = layers
+          .whereType<FillStyleLayer>()
+          .expand((l) => ((l.filter![2] as List<Object>)[1] as List<String>))
+          .toList();
+      expect(codes.toSet(), hasLength(codes.length), reason: '市区町村コードの重複なし');
+    });
+  });
+
+  group('lpgmCityCodes / lpgmRegionCodes の重複排除', () {
+    final testData = _FillLayerTestData();
+
+    test('複数階級に登場する市区町村は最大階級にのみ含まれる', () {
+      final intensity = testData.lpgmMultiLevelIntensity();
+      expect(builder.lpgmCityCodes(intensity, JmaLpgmIntensity.two), [
+        '2110001',
+      ]);
+      expect(builder.lpgmCityCodes(intensity, JmaLpgmIntensity.one), [
+        '2210001',
+      ]);
+    });
+
+    test('複数階級に登場する細分区域は最大階級にのみ含まれる', () {
+      final intensity = testData.lpgmMultiLevelIntensity();
+      expect(builder.lpgmRegionCodes(intensity, JmaLpgmIntensity.two), ['210']);
+      expect(builder.lpgmRegionCodes(intensity, JmaLpgmIntensity.one), ['220']);
+    });
+  });
 }
 
 // ──────────────────────────────────────────────
@@ -546,6 +589,107 @@ class _FillLayerTestData {
           ),
         ],
       },
+    );
+  }
+
+  /// 市区町村 2110001 が震度 3・4 の両バケツに登場するデータ
+  /// (震度3の観測点と震度4の観測点を両方持つ市区町村を再現)
+  EarthquakeIntensity cityInMultipleLevelsIntensity() {
+    return EarthquakeIntensity(
+      maxIntensity: JmaIntensity.four,
+      maxLpgmIntensity: null,
+      regions: const {},
+      intensityTree: {
+        JmaIntensity.three: [
+          PrefectureIntensityNode(
+            prefecture: _prefecture('21'),
+            cities: [
+              CityIntensityNode(
+                city: _city('2110001'),
+                maxIntensity: JmaIntensity.three,
+                stations: const [],
+              ),
+              CityIntensityNode(
+                city: _city('2110002'),
+                maxIntensity: JmaIntensity.three,
+                stations: const [],
+              ),
+            ],
+          ),
+        ],
+        JmaIntensity.four: [
+          PrefectureIntensityNode(
+            prefecture: _prefecture('21'),
+            cities: [
+              CityIntensityNode(
+                city: _city('2110001'),
+                maxIntensity: JmaIntensity.four,
+                stations: const [],
+              ),
+            ],
+          ),
+        ],
+      },
+      lpgmIntensityTree: const {},
+    );
+  }
+
+  /// 細分区域 210 (市区町村 2110001) が階級 1・2 の両バケツに、
+  /// 細分区域 220 (市区町村 2210001) が階級 1 のみに登場するデータ
+  EarthquakeIntensity lpgmMultiLevelIntensity() {
+    return EarthquakeIntensity(
+      maxIntensity: JmaIntensity.four,
+      maxLpgmIntensity: JmaLpgmIntensity.two,
+      regions: const {},
+      intensityTree: const {},
+      lpgmIntensityTree: {
+        JmaLpgmIntensity.one: [
+          PrefectureLpgmIntensityNode(
+            region: _regionItem(_regionCode),
+            maxLpgmIntensity: JmaLpgmIntensity.one,
+            cities: [
+              CityLpgmIntensityNode(
+                city: _city('2110001'),
+                maxLpgmIntensity: JmaLpgmIntensity.one,
+                stations: const [],
+              ),
+            ],
+          ),
+          PrefectureLpgmIntensityNode(
+            region: _regionItem(_regionCode2),
+            maxLpgmIntensity: JmaLpgmIntensity.one,
+            cities: [
+              CityLpgmIntensityNode(
+                city: _city('2210001'),
+                maxLpgmIntensity: JmaLpgmIntensity.one,
+                stations: const [],
+              ),
+            ],
+          ),
+        ],
+        JmaLpgmIntensity.two: [
+          PrefectureLpgmIntensityNode(
+            region: _regionItem(_regionCode),
+            maxLpgmIntensity: JmaLpgmIntensity.two,
+            cities: [
+              CityLpgmIntensityNode(
+                city: _city('2110001'),
+                maxLpgmIntensity: JmaLpgmIntensity.two,
+                stations: const [],
+              ),
+            ],
+          ),
+        ],
+      },
+    );
+  }
+
+  EarthquakeParameterRegionItem _regionItem(String code) {
+    return EarthquakeParameterRegionItem(
+      code: code,
+      name: const LocalizedName(ja: 'テスト地域'),
+      kana: null,
+      cities: const [],
     );
   }
 

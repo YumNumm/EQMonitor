@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
@@ -41,6 +42,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
     JmaIntensity.four,
     JmaIntensity.fiveLower,
     JmaIntensity.fiveUpper,
+    JmaIntensity.sixUnknown,
     JmaIntensity.sixLower,
     JmaIntensity.sixUpper,
     JmaIntensity.seven,
@@ -62,9 +64,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           .map(
             (key, values) => MapEntry(
               key,
-              values
-                  .sortedBy<num>((e) => e.intensity.orderIndex)
-                  .last,
+              values.sortedBy<num>((e) => e.intensity.orderIndex).last,
             ),
           )
           .values
@@ -76,17 +76,16 @@ class EewForecastRegionLayer extends HookConsumerWidget {
       return zones.where((z) => z.hadWarning).map((z) => z.code).toList();
     }, [eew]);
 
-    final isIntensityInitialized = useRef(false);
+    final enqueue = useMapOperationQueue();
 
     // 震度モード: 震度レベルごとに1レイヤー作成し、filter のみ更新する
-    useEffect(
-      () {
-        if (styleController == null ||
-            displayMode != EewDisplayMode.intensity) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null || displayMode != EewDisplayMode.intensity) {
+        return null;
+      }
 
-        unawaited(() async {
+      unawaited(
+        enqueue(() async {
           await _intensityLevels.map((intensity) {
             final color = colorModel.fromJmaIntensity(intensity).background;
             final codes = regionMaxIntensities
@@ -99,89 +98,74 @@ class EewForecastRegionLayer extends HookConsumerWidget {
                 sourceId: _sourceId,
                 sourceLayerId: _sourceLayerId,
                 filter: buildEewAreaCodeFilter(codes),
-                paint: {
-                  'fill-color': color.toHexString(),
-                  'fill-opacity': 0.7,
-                },
+                paint: {'fill-color': color.toHexString(), 'fill-opacity': 0.7},
               ),
               belowLayerId: BaseLayer.areaForecastLocalELine.name,
             );
           }).wait;
-          isIntensityInitialized.value = true;
           await _updateIntensityFilters(
             styleController: styleController,
             regionMaxIntensities: regionMaxIntensities,
           );
-        }());
+        }),
+      );
 
-        return () {
-          isIntensityInitialized.value = false;
-          unawaited(
-            _intensityLevels.map((intensity) async {
+      return () {
+        unawaited(
+          enqueue(() async {
+            for (final intensity in _intensityLevels) {
               try {
-                await styleController.removeLayer(
-                  intensity._detailLayerId,
-                );
+                await styleController.removeLayer(intensity._detailLayerId);
               } on Exception {
                 // ignore
               }
-            }).wait,
-          );
-        };
-      },
-      [styleController, displayMode, colorModel],
-    );
+            }
+          }),
+        );
+      };
+    }, [styleController, displayMode, colorModel]);
 
     // 震度モード: データ更新
-    useEffect(
-      () {
-        if (styleController == null ||
-            displayMode != EewDisplayMode.intensity ||
-            !isIntensityInitialized.value) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null || displayMode != EewDisplayMode.intensity) {
+        return null;
+      }
 
-        unawaited(
-          _updateIntensityFilters(
+      unawaited(
+        enqueue(
+          () => _updateIntensityFilters(
             styleController: styleController,
             regionMaxIntensities: regionMaxIntensities,
           ),
-        );
+        ),
+      );
 
-        return null;
-      },
-      [styleController, displayMode, regionMaxIntensities],
-    );
-
-    final warningCleanupDone = useRef<Future<void>>(Future.value());
+      return null;
+    }, [styleController, displayMode, regionMaxIntensities]);
 
     // 警報モード: fill + line の2レイヤー
-    useEffect(
-      () {
-        if (styleController == null ||
-            displayMode != EewDisplayMode.warning ||
-            warningCodes.isEmpty) {
-          return null;
-        }
+    useEffect(() {
+      if (styleController == null ||
+          displayMode != EewDisplayMode.warning ||
+          warningCodes.isEmpty) {
+        return null;
+      }
 
-        final filter = <Object>[
-          'in',
-          ['get', 'code'],
-          ['literal', warningCodes],
-        ];
+      final filter = <Object>[
+        'in',
+        ['get', 'code'],
+        ['literal', warningCodes],
+      ];
 
-        unawaited(() async {
-          await warningCleanupDone.value;
+      unawaited(
+        enqueue(() async {
           await styleController.addLayer(
             FillStyleLayer(
               id: _warningLayerId,
               sourceId: _sourceId,
               sourceLayerId: _sourceLayerId,
               filter: filter,
-              paint: const {
-                'fill-color': '#DD0000',
-                'fill-opacity': 1,
-              },
+              paint: const {'fill-color': '#DD0000', 'fill-opacity': 1},
             ),
             belowLayerId: BaseLayer.areaForecastLocalELine.name,
           );
@@ -197,10 +181,12 @@ class EewForecastRegionLayer extends HookConsumerWidget {
               },
             ),
           );
-        }());
+        }),
+      );
 
-        return () {
-          warningCleanupDone.value = () async {
+      return () {
+        unawaited(
+          enqueue(() async {
             try {
               await styleController.removeLayer(_warningLineLayerId);
             } on Exception {
@@ -211,11 +197,10 @@ class EewForecastRegionLayer extends HookConsumerWidget {
             } on Exception {
               // ignore
             }
-          }();
-        };
-      },
-      [styleController, displayMode, warningCodes, isDarkMode],
-    );
+          }),
+        );
+      };
+    }, [styleController, displayMode, warningCodes, isDarkMode]);
 
     return const SizedBox.shrink();
   }

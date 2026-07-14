@@ -112,6 +112,23 @@ void main() {
   });
 
   test(
+    'BackgroundLocationMonitoringPolicy keeps monitoring when slots unknown',
+    () {
+      const policy = BackgroundLocationMonitoringPolicy();
+      const models = _TestModels();
+
+      final shouldStop = policy.shouldStop(
+        slots: null,
+        shakeDetectionState: models.shakeDetectionState(
+          hasCurrentLocation: false,
+        ),
+      );
+
+      expect(shouldStop, isFalse);
+    },
+  );
+
+  test(
     'BackgroundLocationMonitoringPolicy keeps monitoring with current location',
     () {
       const policy = BackgroundLocationMonitoringPolicy();

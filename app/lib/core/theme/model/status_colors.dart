@@ -10,7 +10,6 @@ abstract class StatusColors with _$StatusColors {
   const factory StatusColors({
     @ColorJsonConverter() required Color success,
     @ColorJsonConverter() required Color warning,
-    @ColorJsonConverter() required Color info,
   }) = _StatusColors;
 
   factory StatusColors.fromJson(Map<String, dynamic> json) =>

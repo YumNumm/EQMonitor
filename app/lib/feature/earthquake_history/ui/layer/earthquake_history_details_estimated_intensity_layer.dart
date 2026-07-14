@@ -24,83 +24,79 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-
-    if (styleController == null) {
-      return const SizedBox.shrink();
-    }
-
     final enqueue = useMapOperationQueue();
 
-    useEffect(
-      () {
-        var disposed = false;
+    useEffect(() {
+      if (styleController == null) {
+        return null;
+      }
 
+      var disposed = false;
+
+      unawaited(
+        enqueue(() async {
+          await styleController.addSource(
+            VectorSource(
+              id: _sourceId,
+              url: 'pmtiles://$tileUrl',
+              volatile: true,
+            ),
+          );
+
+          if (disposed) {
+            return;
+          }
+
+          await styleController.addLayer(
+            const FillStyleLayer(
+              id: _fillLayerId,
+              sourceId: _sourceId,
+              sourceLayerId: 'seismic_intensity',
+              paint: {
+                'fill-opacity': 1,
+                'fill-color': ['get', 'fill'],
+              },
+            ),
+            belowLayerId: BaseLayer.areaForecastLocalELine.name,
+          );
+
+          if (disposed) {
+            return;
+          }
+
+          await styleController.addLayer(
+            const LineStyleLayer(
+              id: _lineLayerId,
+              sourceId: _sourceId,
+              sourceLayerId: 'seismic_intensity',
+              paint: {
+                'line-opacity': 1,
+                'line-color': ['get', 'fill'],
+                'line-width': 0.5,
+              },
+            ),
+            belowLayerId: BaseLayer.areaForecastLocalELine.name,
+          );
+        }),
+      );
+
+      return () {
+        disposed = true;
         unawaited(
           enqueue(() async {
-            await styleController.addSource(
-              VectorSource(
-                id: _sourceId,
-                url: 'pmtiles://$tileUrl',
-                volatile: true,
-              ),
-            );
-
-            if (disposed) {
-              return;
-            }
-
-            await styleController.addLayer(
-              const FillStyleLayer(
-                id: _fillLayerId,
-                sourceId: _sourceId,
-                sourceLayerId: 'seismic_intensity',
-                paint: {
-                  'fill-opacity': 1,
-                  'fill-color': ['get', 'fill'],
-                },
-              ),
-              belowLayerId: BaseLayer.areaForecastLocalELine.name,
-            );
-
-            if (disposed) {
-              return;
-            }
-
-            await styleController.addLayer(
-              const LineStyleLayer(
-                id: _lineLayerId,
-                sourceId: _sourceId,
-                sourceLayerId: 'seismic_intensity',
-                paint: {
-                  'line-opacity': 1,
-                  'line-color': ['get', 'fill'],
-                  'line-width': 0.5,
-                },
-              ),
-              belowLayerId: BaseLayer.areaForecastLocalELine.name,
-            );
+            try {
+              await styleController.removeLayer(_lineLayerId);
+            } on Exception catch (_) {}
+            try {
+              await styleController.removeLayer(_fillLayerId);
+            } on Exception catch (_) {}
+            try {
+              await styleController.removeSource(_sourceId);
+            } on Exception catch (_) {}
           }),
         );
-
-        return () {
-          disposed = true;
-          unawaited(
-            enqueue(() async {
-              try {
-                await styleController.removeLayer(_lineLayerId);
-              } on Exception catch (_) {}
-              try {
-                await styleController.removeLayer(_fillLayerId);
-              } on Exception catch (_) {}
-              try {
-                await styleController.removeSource(_sourceId);
-              } on Exception catch (_) {}
-            }),
-          );
-        };
-      },
-      [styleController, tileUrl],
-    );
+      };
+    }, [styleController, tileUrl]);
 
     return const SizedBox.shrink();
   }

@@ -9,8 +9,18 @@ void main() {
   final base = AppTheme.eqmonitorDefault().light!;
   const probe = Color(0xFF123456);
 
-  test('全39件のフィールド定義が存在する', () {
-    expect(ThemeColorFieldDefs.all.length, 39);
+  test('全30件のフィールド定義が存在する', () {
+    expect(ThemeColorFieldDefs.all.length, 30);
+  });
+
+  test('全定義について description が空でない', () {
+    for (final def in ThemeColorFieldDefs.all) {
+      expect(
+        def.description,
+        isNotEmpty,
+        reason: '${def.label} の description が空です',
+      );
+    }
   });
 
   test('各定義について setter(base, probe) 後に getter が probe を返す', () {
@@ -41,32 +51,24 @@ void main() {
       'primary_container',
       'on_primary_container',
       'secondary',
-      'on_secondary',
       'secondary_container',
       'on_secondary_container',
       'tertiary',
-      'on_tertiary',
       'tertiary_container',
       'on_tertiary_container',
       'error',
-      'on_error',
       'error_container',
       'on_error_container',
       'surface',
       'on_surface',
       'on_surface_variant',
-      'surface_container_lowest',
       'surface_container_low',
       'surface_container',
       'surface_container_high',
       'surface_container_highest',
       'outline',
       'outline_variant',
-      'inverse_surface',
       'on_inverse_surface',
-      'inverse_primary',
-      'shadow',
-      'scrim',
     ];
     for (final key in flatColorKeys) {
       expect(json[key], expectedHex, reason: 'key=$key');
@@ -74,7 +76,7 @@ void main() {
     // ThemeColorSet.toJson()はネストしたFreezedオブジェクト(status/map)を
     // 再帰的にMapへ変換しないため、それぞれの.toJson()を呼び出して検証する。
     final status = (json['status'] as StatusColors).toJson();
-    for (final key in ['success', 'warning', 'info']) {
+    for (final key in ['success', 'warning']) {
       expect(status[key], expectedHex, reason: 'status.$key');
     }
     final map = (json['map'] as MapColors).toJson();

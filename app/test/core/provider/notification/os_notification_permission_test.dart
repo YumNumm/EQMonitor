@@ -56,14 +56,14 @@ void main() {
       expect(permission.authorizationStatus, AuthorizationStatus.authorized);
     });
 
-    test('provisional のとき isOsNotificationGranted が true', () {
+    test('provisional のとき isOsNotificationGranted が false', () {
       final permission = OsNotificationPermission.fromNotificationSettings(
         _notificationSettings(
           authorizationStatus: AuthorizationStatus.provisional,
         ),
       );
 
-      expect(permission.isOsNotificationGranted, isTrue);
+      expect(permission.isOsNotificationGranted, isFalse);
       expect(permission.authorizationStatus, AuthorizationStatus.provisional);
     });
 

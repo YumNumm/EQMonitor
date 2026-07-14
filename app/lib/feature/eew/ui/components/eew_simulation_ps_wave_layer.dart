@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
@@ -26,7 +28,12 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final simulation = ref.watch(eewSimulationProvider);
     ref.watch(travelTimeDepthMapProvider);
+    final enqueue = useMapOperationQueue();
     final initFuture = useRef<Future<void>?>(null);
+    // 破棄開始後は毎フレームの更新(updateGeoJsonSource)を実行しないためのガード。
+    // enqueue にすべての更新を積むとチェーンが肥大化するため、更新自体は
+    // enqueue を経由させず、このフラグで破棄後の実行のみを止める。
+    final disposed = useRef(false);
     final latestPWaveGeoJson = useRef<String?>(null);
     final latestSWaveGeoJson = useRef<String?>(null);
 
@@ -35,15 +42,12 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
         return null;
       }
 
-      final future = _initializeLayers(styleController);
-      initFuture.value = future;
+      disposed.value = false;
+      initFuture.value = enqueue(() => _initializeLayers(styleController));
 
       return () {
-        initFuture.value = null;
-        unawaited(() async {
-          await future;
-          await _removeLayers(styleController);
-        }());
+        disposed.value = true;
+        unawaited(enqueue(() => _removeLayers(styleController)));
       };
     }, [styleController]);
 
@@ -65,10 +69,12 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
         return null;
       }
 
-      var disposed = false;
+      // このリスナー自体の有効期間は `simulation`/`animationController` の
+      // 変化にも連動する（[styleController] のみに連動する [disposed] とは別軸）。
+      var listenerDisposed = false;
 
       void listener() {
-        if (disposed) {
+        if (listenerDisposed || disposed.value) {
           return;
         }
         final sim = ref.read(eewSimulationProvider);
@@ -81,6 +87,7 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
               latestP: latestPWaveGeoJson,
               latestS: latestSWaveGeoJson,
               initFuture: initFuture,
+              disposed: disposed,
             ),
           );
           return;
@@ -103,6 +110,7 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
               latestP: latestPWaveGeoJson,
               latestS: latestSWaveGeoJson,
               initFuture: initFuture,
+              disposed: disposed,
             ),
           );
           return;
@@ -127,6 +135,7 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
               latestP: latestPWaveGeoJson,
               latestS: latestSWaveGeoJson,
               initFuture: initFuture,
+              disposed: disposed,
             ),
           );
           return;
@@ -188,13 +197,14 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
             latestP: latestPWaveGeoJson,
             latestS: latestSWaveGeoJson,
             initFuture: initFuture,
+            disposed: disposed,
           ),
         );
       }
 
       animationController.addListener(listener);
       return () {
-        disposed = true;
+        listenerDisposed = true;
         animationController.removeListener(listener);
       };
     }, [styleController, simulation, animationController]);
@@ -269,8 +279,15 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
     required ObjectRef<String?> latestP,
     required ObjectRef<String?> latestS,
     required ObjectRef<Future<void>?> initFuture,
+    required ObjectRef<bool> disposed,
   }) async {
+    // 初期化(source/layer 追加)の完了を待つ。この await 中に破棄処理
+    // (source/layer 削除)が完了する可能性があるため、await 後に必ず
+    // disposed を再チェックしてから styleController を操作する。
     await initFuture.value;
+    if (disposed.value) {
+      return;
+    }
     final shouldUpdateP = latestP.value != pWaveGeoJson;
     final shouldUpdateS = latestS.value != sWaveGeoJson;
     if (!shouldUpdateP && !shouldUpdateS) {
@@ -278,18 +295,29 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
     }
 
     if (shouldUpdateP) {
-      await styleController.updateGeoJsonSource(
-        id: _pWaveSourceId,
-        data: pWaveGeoJson,
-      );
-      latestP.value = pWaveGeoJson;
+      try {
+        await styleController.updateGeoJsonSource(
+          id: _pWaveSourceId,
+          data: pWaveGeoJson,
+        );
+        latestP.value = pWaveGeoJson;
+      } catch (e, stackTrace) {
+        talker.handle(e, stackTrace);
+      }
+    }
+    if (disposed.value) {
+      return;
     }
     if (shouldUpdateS) {
-      await styleController.updateGeoJsonSource(
-        id: _sWaveSourceId,
-        data: sWaveGeoJson,
-      );
-      latestS.value = sWaveGeoJson;
+      try {
+        await styleController.updateGeoJsonSource(
+          id: _sWaveSourceId,
+          data: sWaveGeoJson,
+        );
+        latestS.value = sWaveGeoJson;
+      } catch (e, stackTrace) {
+        talker.handle(e, stackTrace);
+      }
     }
   }
 

@@ -63,6 +63,20 @@ class _SuccessAdapter implements HttpClientAdapter {
   void close({bool force = false}) {}
 }
 
+class _RecordingSuccessAdapter extends _SuccessAdapter {
+  final requests = <RequestOptions>[];
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    requests.add(options);
+    return super.fetch(options, requestStream, cancelFuture);
+  }
+}
+
 class _FailingAdapter implements HttpClientAdapter {
   @override
   Future<ResponseBody> fetch(
@@ -97,7 +111,11 @@ void main() {
     final cache = SeismicityLocalCacheDataSource(
       directoryProvider: () async => tempDir,
     );
-    final repository = SeismicityRepository(dio: dio, cache: cache);
+    final repository = SeismicityRepository(
+      manifestDio: dio,
+      geoJsonDio: dio,
+      cache: cache,
+    );
 
     final dataset = await repository.fetch(span: SeismicitySpan.p1m);
 
@@ -110,6 +128,38 @@ void main() {
     expect(cached!.events.single.eventId, 'eq-1');
   });
 
+  test('GeoJSON 取得には manifest 用 Dio の端末IDヘッダーを引き継がない', () async {
+    final manifestDio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+      ..httpClientAdapter = _SuccessAdapter()
+      ..interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (options, handler) {
+            options.headers['x-eqmonitor-device-id'] = 'device-id';
+            handler.next(options);
+          },
+        ),
+      );
+    final geoJsonAdapter = _RecordingSuccessAdapter();
+    final geoJsonDio = Dio(BaseOptions(baseUrl: ''))
+      ..httpClientAdapter = geoJsonAdapter;
+    final cache = SeismicityLocalCacheDataSource(
+      directoryProvider: () async => tempDir,
+    );
+    final repository = SeismicityRepository(
+      manifestDio: manifestDio,
+      geoJsonDio: geoJsonDio,
+      cache: cache,
+    );
+
+    await repository.fetch(span: SeismicitySpan.p1m);
+
+    expect(geoJsonAdapter.requests, hasLength(1));
+    expect(
+      geoJsonAdapter.requests.single.headers,
+      isNot(contains('x-eqmonitor-device-id')),
+    );
+  });
+
   test('取得失敗時はローカルキャッシュへフォールバックする', () async {
     final workingDio = Dio(BaseOptions(baseUrl: 'https://example.com'))
       ..httpClientAdapter = _SuccessAdapter();
@@ -118,13 +168,18 @@ void main() {
     );
     // 事前に一度成功させてキャッシュへ書き込んでおく
     await SeismicityRepository(
-      dio: workingDio,
+      manifestDio: workingDio,
+      geoJsonDio: workingDio,
       cache: cache,
     ).fetch(span: SeismicitySpan.p1m);
 
     final failingDio = Dio(BaseOptions(baseUrl: 'https://example.com'))
       ..httpClientAdapter = _FailingAdapter();
-    final repository = SeismicityRepository(dio: failingDio, cache: cache);
+    final repository = SeismicityRepository(
+      manifestDio: failingDio,
+      geoJsonDio: failingDio,
+      cache: cache,
+    );
 
     final dataset = await repository.fetch(span: SeismicitySpan.p1m);
 
@@ -138,7 +193,11 @@ void main() {
     final cache = SeismicityLocalCacheDataSource(
       directoryProvider: () async => tempDir,
     );
-    final repository = SeismicityRepository(dio: failingDio, cache: cache);
+    final repository = SeismicityRepository(
+      manifestDio: failingDio,
+      geoJsonDio: failingDio,
+      cache: cache,
+    );
 
     expect(
       () => repository.fetch(span: SeismicitySpan.p1m),

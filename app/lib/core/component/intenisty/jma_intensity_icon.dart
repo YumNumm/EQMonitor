@@ -23,8 +23,8 @@ class JmaIntensityIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorEntry =
-        context.designSystem.colorTheme.intensity.fromJmaIntensity(intensity);
+    final colorEntry = context.designSystem.colorTheme.intensity
+        .fromJmaIntensity(intensity);
     final (fg, bg) = (colorEntry.resolvedForeground, colorEntry.background);
     final intensityMainText = intensity.mainText;
     final suffix = intensity.label.contains('-')
@@ -44,7 +44,7 @@ class JmaIntensityIcon extends StatelessWidget {
             color: bg,
             border: Border.all(color: borderColor, width: 5),
           ),
-          child: (intensity == .fiveUnknown)
+          child: (intensity == .fiveUnknown || intensity == .sixUnknown)
               ? const SizedBox.shrink()
               : Center(
                   child: Padding(
@@ -69,9 +69,7 @@ class JmaIntensityIcon extends StatelessWidget {
                               color: fg,
                               fontSize: 80,
                               fontFamily: FontFamily.googleSansCode,
-                              fontFamilyFallback: const [
-                                FontFamily.notoSansJP,
-                              ],
+                              fontFamilyFallback: const [FontFamily.notoSansJP],
                             ),
                           ),
                         ],

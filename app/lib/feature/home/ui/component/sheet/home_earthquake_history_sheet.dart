@@ -2,7 +2,9 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -30,15 +32,12 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
     return homeAsync.when(
       data: (home) {
         final scope = home.common.earthquakeHistoryScope;
-        // TODO: 地域名を取得する
-        final locationName = switch (paramAsync.value) {
-          EarthquakeHistoryParameterAll() || null => null,
-          EarthquakeHistoryParameterRegion(:final regionCode) => regionCode,
-          EarthquakeHistoryParameterPrefecture(:final prefectureCode) =>
-            prefectureCode,
-          EarthquakeHistoryParameterCity(:final cityCode) => cityCode,
-          EarthquakeHistoryParameterStation(:final stationCode) => stationCode,
-        };
+        // 地域コードから名称を解決する。解決できない場合はコードをそのまま表示。
+        final selection = paramAsync.value?.regionSelection;
+        final locationName = selection != null
+            ? ref.watch(regionNameProvider(selection.$1, selection.$2)).value ??
+                  selection.$2
+            : null;
 
         Future<void> openRegionPicker() async {
           final result = await HomeDesignatedRegionPickerPage.show(

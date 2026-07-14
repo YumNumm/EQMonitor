@@ -11,20 +11,21 @@ class _FakeMessaging extends Fake implements FirebaseMessaging {
   Future<NotificationSettings> getNotificationSettings() async => _settings;
 }
 
-NotificationSettings _settings(AuthorizationStatus status) => NotificationSettings(
-  alert: AppleNotificationSetting.notSupported,
-  announcement: AppleNotificationSetting.notSupported,
-  authorizationStatus: status,
-  badge: AppleNotificationSetting.notSupported,
-  carPlay: AppleNotificationSetting.notSupported,
-  lockScreen: AppleNotificationSetting.notSupported,
-  notificationCenter: AppleNotificationSetting.notSupported,
-  showPreviews: AppleShowPreviewSetting.notSupported,
-  timeSensitive: AppleNotificationSetting.notSupported,
-  criticalAlert: AppleNotificationSetting.notSupported,
-  sound: AppleNotificationSetting.notSupported,
-  providesAppNotificationSettings: AppleNotificationSetting.notSupported,
-);
+NotificationSettings _settings(AuthorizationStatus status) =>
+    NotificationSettings(
+      alert: AppleNotificationSetting.notSupported,
+      announcement: AppleNotificationSetting.notSupported,
+      authorizationStatus: status,
+      badge: AppleNotificationSetting.notSupported,
+      carPlay: AppleNotificationSetting.notSupported,
+      lockScreen: AppleNotificationSetting.notSupported,
+      notificationCenter: AppleNotificationSetting.notSupported,
+      showPreviews: AppleShowPreviewSetting.notSupported,
+      timeSensitive: AppleNotificationSetting.notSupported,
+      criticalAlert: AppleNotificationSetting.notSupported,
+      sound: AppleNotificationSetting.notSupported,
+      providesAppNotificationSettings: AppleNotificationSetting.notSupported,
+    );
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +42,21 @@ void main() {
     expect(
       await container.read(isNotificationPermissionGrantedProvider.future),
       isTrue,
+    );
+  });
+
+  test('provisional なら granted=false', () async {
+    final container = ProviderContainer(
+      overrides: [
+        firebaseMessagingProvider.overrideWithValue(
+          _FakeMessaging(_settings(AuthorizationStatus.provisional)),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    expect(
+      await container.read(isNotificationPermissionGrantedProvider.future),
+      isFalse,
     );
   });
 

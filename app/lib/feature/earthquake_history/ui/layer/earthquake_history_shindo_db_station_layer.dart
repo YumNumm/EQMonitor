@@ -3,12 +3,11 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
-import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
-import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_intensity_icon_provider.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -26,28 +25,26 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
   final EarthquakeHistoryMapLayerParameter parameter;
 
   static const _sourceId = 'eq-history-shindo-db-station';
-  static const _circleLayerId = 'eq-history-shindo-db-station-circle';
   static const _iconLayerId = 'eq-history-shindo-db-station-icon';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-    final colorModel = ref.watch(activeColorSetProvider).intensity;
     final iconData = ref.watch(intensityIconProvider).value;
+    final dbIconData = ref.watch(shindoDbIntensityIconProvider).value;
     final enqueue = useMapOperationQueue();
 
     useEffect(() {
-      if (styleController == null) {
+      if (styleController == null || iconData == null || dbIconData == null) {
         return null;
       }
 
       var disposed = false;
-      var iconLayerAdded = false;
 
       unawaited(
         enqueue(() async {
           try {
-            final geoJson = _buildGeoJson(tree, colorModel);
+            final geoJson = _buildGeoJson(tree);
 
             if (disposed) {
               return;
@@ -59,78 +56,38 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
             if (disposed) {
               return;
             }
-            final cachedBytes = iconData?.toMapStyleImages;
-            if (cachedBytes != null) {
-              await styleController.addImages(cachedBytes);
-            }
+            await styleController.addImages({
+              ...iconData.toMapStyleImages,
+              ...dbIconData.toMapStyleImages,
+            });
 
             if (disposed) {
               return;
             }
             await styleController.addLayer(
-              CircleStyleLayer(
-                id: _circleLayerId,
+              SymbolStyleLayer(
+                id: _iconLayerId,
                 sourceId: _sourceId,
                 minZoom: parameter.stationMinZoom,
-                layout: const {
-                  'circle-sort-key': ['get', 'sortKey'],
-                },
-                paint: {
-                  'circle-radius': [
+                layout: {
+                  'icon-image': ['get', 'iconId'],
+                  'icon-allow-overlap': true,
+                  'icon-ignore-placement': true,
+                  'symbol-sort-key': ['get', 'sortKey'],
+                  'icon-size': [
                     'interpolate',
                     ['linear'],
                     ['zoom'],
-                    4,
-                    parameter.stationCircleRadiusMin,
-                    10,
-                    parameter.stationCircleRadiusMax,
-                  ],
-                  'circle-color': ['get', 'color'],
-                  'circle-stroke-color': '#ffffff',
-                  'circle-stroke-width': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    4,
-                    0.3,
-                    10,
-                    1.5,
+                    3,
+                    parameter.stationIconSizeMin,
+                    7,
+                    parameter.stationIconSizeMid,
+                    20,
+                    parameter.stationIconSizeMax,
                   ],
                 },
               ),
             );
-
-            if (disposed) {
-              return;
-            }
-            if (iconData != null) {
-              await styleController.addLayer(
-                SymbolStyleLayer(
-                  id: _iconLayerId,
-                  sourceId: _sourceId,
-                  minZoom: parameter.stationMinZoom,
-                  filter: const ['has', 'iconId'],
-                  layout: {
-                    'icon-image': ['get', 'iconId'],
-                    'icon-allow-overlap': true,
-                    'icon-ignore-placement': true,
-                    'symbol-sort-key': ['get', 'sortKey'],
-                    'icon-size': [
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      3,
-                      parameter.stationIconSizeMin,
-                      7,
-                      parameter.stationIconSizeMid,
-                      20,
-                      parameter.stationIconSizeMax,
-                    ],
-                  },
-                ),
-              );
-              iconLayerAdded = true;
-            }
           } on Exception catch (e) {
             talker.log(e);
           }
@@ -142,10 +99,11 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
         unawaited(
           enqueue(() async {
             try {
-              if (iconLayerAdded) {
-                await styleController.removeLayer(_iconLayerId);
-              }
-              await styleController.removeLayer(_circleLayerId);
+              await styleController.removeLayer(_iconLayerId);
+            } on Exception catch (e) {
+              talker.log(e);
+            }
+            try {
               await styleController.removeSource(_sourceId);
             } on Exception catch (e) {
               talker.log(e);
@@ -153,15 +111,12 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
           }),
         );
       };
-    }, [styleController, tree, colorModel, parameter, iconData]);
+    }, [styleController, tree, parameter, iconData, dbIconData]);
 
     return const SizedBox.shrink();
   }
 
-  static String _buildGeoJson(
-    ShindoDbIntensityTree tree,
-    IntensityColors colorModel,
-  ) {
+  static String _buildGeoJson(ShindoDbIntensityTree tree) {
     final features = <Map<String, dynamic>>[];
 
     void addStation(ShindoDbStationNode station, ShindoDbIntensityClass cls) {
@@ -169,26 +124,18 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
       if (loc == null) {
         return;
       }
-      final colorJma = cls.colorJmaIntensity;
-      final color = colorJma != null
-          ? colorModel.fromJmaIntensity(colorJma).background.toHexStringRGB()
-          : '#9e9e9e';
-      final props = <String, dynamic>{
-        'color': color,
-        'name': station.name,
-        'sortKey': cls.orderIndex,
-      };
-      final exactJma = cls.exactJmaIntensity;
-      if (exactJma != null) {
-        props['iconId'] = 'JmaIntensity.small.${exactJma.name}';
-      }
       features.add({
         'type': 'Feature',
         'geometry': {
           'type': 'Point',
           'coordinates': [loc.lon, loc.lat],
         },
-        'properties': props,
+        'properties': {
+          'name': station.name,
+          'iconId': cls.mapIconId,
+          // 高震度が上に描画されるようソートキーに使用
+          'sortKey': cls.orderIndex,
+        },
       });
     }
 

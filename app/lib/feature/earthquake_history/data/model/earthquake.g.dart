@@ -42,6 +42,18 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
             .map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
             .toList(),
       ),
+      telegramComments: $checkedConvert(
+        'telegram_comments',
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map(
+                  (e) => EarthquakeTelegramComment.fromJson(
+                    e as Map<String, dynamic>,
+                  ),
+                )
+                .toList() ??
+            const [],
+      ),
       hypocenter: $checkedConvert(
         'hypocenter',
         (v) => v == null
@@ -68,6 +80,7 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
     'arrivalTime': 'arrival_time',
     'dataSources': 'data_sources',
     'telegramTypes': 'telegram_types',
+    'telegramComments': 'telegram_comments',
     'estimatedIntensityTileUrl': 'estimated_intensity_tile_url',
   },
 );
@@ -86,6 +99,7 @@ Map<String, dynamic> _$EarthquakeToJson(_Earthquake instance) =>
       'telegram_types': instance.telegramTypes
           .map((e) => _$EarthquakeTelegramTypeEnumMap[e]!)
           .toList(),
+      'telegram_comments': instance.telegramComments,
       'hypocenter': instance.hypocenter,
       'intensity': instance.intensity,
       'estimated_intensity_tile_url': instance.estimatedIntensityTileUrl,

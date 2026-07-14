@@ -26,7 +26,8 @@ class _SourceToggleHarness extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasCatalog = earthquake.catalog != null;
+    final catalog = earthquake.catalog;
+    final hasCatalog = catalog != null;
     final hasXml = earthquake.dataSources.contains(
       EarthquakeDataSource.jmaDisasterInformationXml,
     );
@@ -38,7 +39,12 @@ class _SourceToggleHarness extends HookConsumerWidget {
           ? EarthquakeDataSource.jmaIntensityDatabase
           : EarthquakeDataSource.jmaDisasterInformationXml,
     );
-    final showingDb = source.value == EarthquakeDataSource.jmaIntensityDatabase;
+    final effectiveSource =
+        source.value == EarthquakeDataSource.jmaIntensityDatabase && hasCatalog
+        ? EarthquakeDataSource.jmaIntensityDatabase
+        : EarthquakeDataSource.jmaDisasterInformationXml;
+    final showingDb =
+        effectiveSource == EarthquakeDataSource.jmaIntensityDatabase;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,12 +61,12 @@ class _SourceToggleHarness extends HookConsumerWidget {
                 label: '震度データベース',
               ),
             ],
-            selected: source.value,
+            selected: effectiveSource,
             onSelected: (v) => source.value = v,
           ),
-        if (showingDb)
+        if (showingDb && catalog != null)
           ShindoDbHypocenterInformationCard(
-            catalog: earthquake.catalog!,
+            catalog: catalog,
             originTime: earthquake.originTime,
           )
         else
@@ -70,7 +76,7 @@ class _SourceToggleHarness extends HookConsumerWidget {
           displayMode: IntensityDisplayMode.jma,
           onDisplayModeChanged: (_) {},
           availableModes: const [IntensityDisplayMode.jma],
-          source: source.value,
+          source: effectiveSource,
           showDatabaseBadge: isDbOnly,
         ),
       ],
@@ -207,6 +213,28 @@ void main() {
 
     // 震度カードのタイトルが表示される
     expect(find.text('各地の震度'), findsOneWidget);
+  });
+
+  testWidgets('DB選択後にcatalogなしへ更新されてもXML表示へ戻る', (tester) async {
+    await pumpHarness(
+      tester,
+      earthquake: bothSourcesEarthquake,
+      withDbOverride: true,
+    );
+
+    await tester.tap(find.text('防災情報XML'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('震度データベース'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ShindoDbHypocenterInformationCard), findsOneWidget);
+
+    await pumpHarness(tester, earthquake: xmlOnlyEarthquake);
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.byType(EarthquakeHypocenterInformationCard), findsOneWidget);
+    expect(find.byType(ShindoDbHypocenterInformationCard), findsNothing);
   });
 
   testWidgets('(b) XML のみ → トグル非表示・XML カード表示', (tester) async {

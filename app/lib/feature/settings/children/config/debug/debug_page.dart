@@ -67,11 +67,12 @@ class _DebugWidget extends ConsumerWidget {
                   .read(debugProvider.notifier)
                   .save(isEnabled: !isDebugEnabled),
             ),
-            ListTile(
-              title: const Text('Chuck'),
-              leading: const Icon(Icons.list),
-              onTap: () async => ref.read(chuckProvider).showInspector(),
-            ),
+            if (kDebugMode)
+              ListTile(
+                title: const Text('Chuck'),
+                leading: const Icon(Icons.list),
+                onTap: () async => ref.read(chuckProvider).showInspector(),
+              ),
             ListTile(
               title: const Text('Flavor'),
               leading: const Icon(Icons.flag),

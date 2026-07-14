@@ -23,7 +23,7 @@ class _FeedApiClient implements FeedApiClient {
 
   @override
   Future<HttpResponse<FeedListResponse>> getV2Feeds({
-    String? after,
+    String? cursor,
     String? important,
     String? locale = 'ja',
     String? limit = '20',
@@ -31,7 +31,7 @@ class _FeedApiClient implements FeedApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'after': after,
+      r'cursor': cursor,
       r'important': important,
       r'locale': locale,
       r'limit': limit,

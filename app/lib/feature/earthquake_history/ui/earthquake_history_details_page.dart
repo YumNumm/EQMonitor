@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/estimated_intensity_notice_notifier.dart';
@@ -75,7 +76,8 @@ class _LoadedContent extends HookConsumerWidget {
     final hasEstimated = earthquake.estimatedIntensityTileUrl != null;
     final hasLpgm = earthquake.intensity?.maxLpgmIntensity != null;
 
-    final hasCatalog = earthquake.catalog != null;
+    final catalog = earthquake.catalog;
+    final hasCatalog = catalog != null;
     final hasXml = earthquake.dataSources.contains(
       EarthquakeDataSource.jmaDisasterInformationXml,
     );
@@ -87,17 +89,25 @@ class _LoadedContent extends HookConsumerWidget {
           ? EarthquakeDataSource.jmaIntensityDatabase
           : EarthquakeDataSource.jmaDisasterInformationXml,
     );
-    final showingDb = source.value == EarthquakeDataSource.jmaIntensityDatabase;
+    final effectiveSource =
+        source.value == EarthquakeDataSource.jmaIntensityDatabase && hasCatalog
+        ? EarthquakeDataSource.jmaIntensityDatabase
+        : EarthquakeDataSource.jmaDisasterInformationXml;
+    final showingDb =
+        effectiveSource == EarthquakeDataSource.jmaIntensityDatabase;
 
     final displayMode = useState(
       hasEstimated ? IntensityDisplayMode.estimated : IntensityDisplayMode.jma,
     );
 
-    final noticeShown =
-        ref.watch(estimatedIntensityNoticeShownProvider).value ?? false;
+    final noticeShownAsync = ref.watch(estimatedIntensityNoticeShownProvider);
+    final noticeShown = switch (noticeShownAsync) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
 
     useEffect(() {
-      if (hasEstimated && !noticeShown && !showingDb) {
+      if (hasEstimated && noticeShown == false && !showingDb) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!context.mounted) {
             return;
@@ -118,6 +128,9 @@ class _LoadedContent extends HookConsumerWidget {
     ];
 
     final designSystem = context.designSystem;
+    final telegramCommentLines = selectTelegramCommentLines(
+      earthquake.telegramComments,
+    );
 
     return Scaffold(
       body: Stack(
@@ -155,7 +168,7 @@ class _LoadedContent extends HookConsumerWidget {
                                     label: '震度データベース',
                                   ),
                                 ],
-                                selected: source.value,
+                                selected: effectiveSource,
                                 onSelected: (v) => source.value = v,
                               ),
                         ),
@@ -168,12 +181,12 @@ class _LoadedContent extends HookConsumerWidget {
                           ),
                         ],
                       ),
-                      if (showingDb) ...[
+                      if (showingDb && catalog != null) ...[
                         ShindoDbHypocenterInformationCard(
-                          catalog: earthquake.catalog!,
+                          catalog: catalog,
                           originTime: earthquake.originTime,
                         ),
-                        ShindoDbEventNotes(catalog: earthquake.catalog!),
+                        ShindoDbEventNotes(catalog: catalog),
                       ] else
                         EarthquakeHypocenterInformationCard(item: earthquake),
                       CurrentLocationIntensityCard(item: earthquake),
@@ -183,7 +196,7 @@ class _LoadedContent extends HookConsumerWidget {
                         onDisplayModeChanged: (mode) =>
                             displayMode.value = mode,
                         availableModes: availableModes,
-                        source: source.value,
+                        source: effectiveSource,
                         showDatabaseBadge: isDbOnly,
                       ),
                       if (earthquake.originTime != null &&
@@ -242,12 +255,24 @@ class _LoadedContent extends HookConsumerWidget {
                         horizontal: 4,
                         vertical: 2,
                       ),
-                      child: Text(
-                        'データソース: ${earthquake.dataSources.map((e) => switch (e) {
-                          .jmaDisasterInformationXml => "気象庁災害情報XML",
-                          .jmaIntensityDatabase => "気象庁震度データベース",
-                        }).join(', ')}',
-                        style: Theme.of(context).textTheme.bodySmall,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          for (final line in telegramCommentLines)
+                            Text(
+                              line,
+                              style: Theme.of(context).textTheme.bodySmall,
+                              textAlign: TextAlign.end,
+                            ),
+                          Text(
+                            'データソース: ${earthquake.dataSources.map((e) => switch (e) {
+                              .jmaDisasterInformationXml => "気象庁災害情報XML",
+                              .jmaIntensityDatabase => "気象庁震度データベース",
+                            }).join(', ')}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
                       ),
                     ),
                   ),
