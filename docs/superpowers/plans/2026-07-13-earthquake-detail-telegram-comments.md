@@ -591,7 +591,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_teleg
                             ),
                           Text(
                             'データソース: ${earthquake.dataSources.map((e) => switch (e) {
-                              .jmaDisasterInformationXml => "気象庁災害情報XML",
+                              .jmaDisasterInformationXml => "気象庁防災情報XML",
                               .jmaIntensityDatabase => "気象庁震度データベース",
                             }).join(', ')}',
                             style: Theme.of(context).textTheme.bodySmall,
