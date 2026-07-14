@@ -69,8 +69,6 @@ class _FeedDetailsBody extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              FeedPriorityBadge(priority: item.priority),
-              const SizedBox(width: 8),
               FeedTypeBadge(data: item.data),
               const Spacer(),
               Text(dateStr, style: theme.textTheme.labelSmall),

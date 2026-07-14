@@ -6,7 +6,6 @@ import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class FeedPage extends ConsumerWidget {
   const FeedPage({super.key});
@@ -17,7 +16,8 @@ class FeedPage extends ConsumerWidget {
 
     return Scaffold(
       body: dataSourceAsync.when(
-        loading: () => const _FeedSkeleton(),
+        loading: () =>
+            const Center(child: CircularProgressIndicator.adaptive()),
         error: (error, _) => ErrorCard(
           error: error,
           onReload: () async => ref.invalidate(feedDataSourceProvider),
@@ -52,11 +52,33 @@ class _PagingBody extends StatelessWidget {
           ),
           SliverPagingList<String?, FeedItem>(
             dataSource: dataSource,
-            builder: (context, item, index) => FeedItemCard(item: item),
-            initialLoadingWidget: const _FeedSkeleton(scrollable: false),
-            appendLoadingWidget: const _FeedSkeleton(
-              itemCount: 2,
-              scrollable: false,
+            builder: (context, item, index) =>
+                FeedItemListTileContent(item: item),
+            initialLoadingWidget: FeedItemListTileContent(
+              item: FeedItem(
+                id: '1',
+                feedType: FeedType.appUpdate,
+                priority: FeedPriority.normal,
+                isImportant: false,
+                title: 'アップデート',
+                summary: 'アップデートがあります',
+                data: FeedItemData.appUpdate(),
+                publishedAt: DateTime.now(),
+                expiresAt: DateTime.now().add(const Duration(days: 30)),
+              ),
+            ),
+            appendLoadingWidget: FeedItemListTileContent(
+              item: FeedItem(
+                id: '2',
+                feedType: FeedType.appUpdate,
+                priority: FeedPriority.normal,
+                isImportant: false,
+                title: 'アップデート',
+                summary: 'アップデートがあります',
+                data: FeedItemData.appUpdate(),
+                publishedAt: DateTime.now(),
+                expiresAt: DateTime.now().add(const Duration(days: 30)),
+              ),
             ),
             errorBuilder: (context, error, stackTrace) => ErrorCard(
               error: error,
@@ -82,50 +104,6 @@ class _PagingBody extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _FeedSkeleton extends StatelessWidget {
-  const _FeedSkeleton({this.itemCount = 5, this.scrollable = true});
-
-  final int itemCount;
-  final bool scrollable;
-
-  @override
-  Widget build(BuildContext context) {
-    final tiles = [
-      for (var i = 0; i < itemCount; i++)
-        const Card(
-          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    SizedBox(width: 40, height: 16),
-                    SizedBox(width: 8),
-                    SizedBox(width: 60, height: 16),
-                    Spacer(),
-                    SizedBox(width: 80, height: 12),
-                  ],
-                ),
-                SizedBox(height: 8),
-                SizedBox(width: 200, height: 16),
-                SizedBox(height: 4),
-                SizedBox(width: double.infinity, height: 14),
-              ],
-            ),
-          ),
-        ),
-    ];
-
-    return Skeletonizer(
-      child: scrollable
-          ? ListView(children: tiles)
-          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
     );
   }
 }
