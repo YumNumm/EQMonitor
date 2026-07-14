@@ -40,10 +40,15 @@ jobs:
             flutter:
               - 'app/**'
               - 'packages/**'
+              - 'tools/**'
+              - 'pubspec.yaml'
               - 'pubspec.lock'
               - 'mise.lock'
+              - 'analysis_options.yaml'
               - '.github/workflows/flutter.yaml'
               - '.github/workflows/wc-check-dart-*.yaml'
+              - '.github/workflows/pr-flutter-check.yaml'
+              - '.github/workflows/wc-changes.yaml'
             terraform:
               - 'terraform/**'
               - '.github/workflows/terraform.yaml'
