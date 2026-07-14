@@ -59,6 +59,14 @@ final _parsers = <String, Object? Function(Map<String, Object?>)>{
 ///
 /// 境界は「default/named」ではなく「現在判明している乖離」。stub fixture を修正したら
 /// ここから外して gate に昇格する。
+///
+/// - Owner: YumNumm
+/// - β 前の扱い: waiver（影響は fixture 厳密性のみで、ランタイム挙動に影響なし）。
+///   β リリース前に findings doc を再レビューし、stub fixture 側の修正が終わったエントリは
+///   gate に昇格させること。
+/// - このセットを追加/削除する場合は、下部の
+///   `quarantine セットが記録済みの内容から変化していない` テストの期待値も更新し、
+///   findings doc に追記すること（新規追加が無自覚に紛れ込むことを防ぐガード）。
 const _quarantine = <String>{
   'get__v1_changelog.json',
   'get__v1_changelog__with-entries.json',
@@ -89,6 +97,48 @@ void main() {
       indexFile.existsSync(),
       isTrue,
       reason: 'index.json が無い。generate.dart で fixtures をコピーしたか確認',
+    );
+  });
+
+  test('quarantine セットが記録済みの内容から変化していない', () {
+    // 新規 quarantine の追加/削除が無自覚に紛れ込むことを防ぐガード。
+    // _quarantine を変更する場合は、この期待値と
+    // docs/superpowers/specs/2026-05-30-spec1-contract-drift-findings.md
+    // の両方を合わせて更新すること（owner: YumNumm）。
+    const expectedQuarantine = <String>{
+      'get__v1_changelog.json',
+      'get__v1_changelog__with-entries.json',
+      'get__v1_start.json',
+      'get__v1_start__force-update.json',
+      'get__v1_start__maintenance.json',
+      'get__v2_earthquake_eventId__canceled.json',
+      'get__v2_parameters_type.json',
+      'get__v2_parameters_manifest__with-parameters.json',
+      'get__v2_telegram_id.json',
+      'get__v2_telegram_id__vtse41.json',
+      'get__v2_telegram_id__vtse51.json',
+      'get__v2_telegram_id__vtse52.json',
+      'get__v2_telegram_id__vtse56.json',
+      'get__v2_telegram_id__vxse51.json',
+      'get__v2_telegram_id__vxse56.json',
+      'get__v2_telegram_id__vzse40.json',
+      'get__v2_telegram_id__with-comments.json',
+      'get__v2_tsunami_tsunamiId__with-telegrams.json',
+    };
+
+    expect(
+      _quarantine.length,
+      expectedQuarantine.length,
+      reason:
+          '_quarantine の件数が変化した（${_quarantine.length} 件）。'
+          '意図した変更であれば expectedQuarantine と findings doc を更新すること。',
+    );
+    expect(
+      _quarantine,
+      equals(expectedQuarantine),
+      reason:
+          '_quarantine の内容が記録済みの期待値と一致しない。'
+          '意図した変更であれば expectedQuarantine と findings doc を更新すること。',
     );
   });
 

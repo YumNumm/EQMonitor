@@ -47,15 +47,19 @@ void main() {
       expect(eq.earthquake?.magnitude, isNull);
     });
 
-    test('VXSE56 body: EARTHQUAKE type', () {
+    test('VXSE56 body: EARTHQUAKE_EXPLANATION type', () {
       final file = File(
         'test/fixtures/contract/get__v2_telegram_id__vxse56.json',
       );
       final json = jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
       final result = TelegramDetailResponse.fromJson(json);
+      // VXSE56(地震の活動状況等に関する情報)は backend の
+      // dmdata-db-writer/src/telegram/transformer.ts の
+      // transformEarthquakeExplanation() で処理され、
+      // body.type は "EARTHQUAKE" ではなく "EARTHQUAKE_EXPLANATION" になる。
       expect(
         result.telegram.body,
-        isA<TelegramBodyUnionEarthquakeTelegramBody>(),
+        isA<TelegramBodyUnionEarthquakeExplanationTelegramBody>(),
       );
     });
   });
