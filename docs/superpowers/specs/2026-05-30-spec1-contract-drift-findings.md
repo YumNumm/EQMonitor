@@ -50,3 +50,21 @@ named fixtures、または未検証エンドポイント（start/changelog/param
    それらが信頼できる drift オラクルになり、本テストでも gate に昇格できる。
 3. `required_versions` / `parameters/:type` は実スキーマと突き合わせて、stub・openapi の
    どちらが古いかを確定する。
+
+## 運用ノート（#1497 時点で追記）
+
+- **Owner:** YumNumm
+- **β 前の扱い:** waiver。quarantine による影響は fixture の厳密性検証のみに限定され、
+  アプリのランタイム挙動（実際の backend レスポンスの解釈）には影響しない。
+  β 配布のブロッカーとはしない。
+- **追跡ガード:** `packages/eqmonitor_api/test/contract_drift_test.dart` に
+  `_quarantine` セットの件数・全要素を固定検証するテスト
+  （`quarantine セットが記録済みの内容から変化していない`）を追加した。
+  新規に quarantine を追加/削除する場合は、このテストの `expectedQuarantine` と
+  本 doc（上表・件数）を必ず同時に更新すること。無自覚な quarantine の追加を
+  テスト失敗として顕在化させるためのガードであり、本表の記載件数（12件）は
+  導入時点のスナップショットである。コード側の `_quarantine` は現在 18 件
+  （telegram named fixtures の追加分などを含む）まで増えており、本表は
+  未更新分の drift を含む可能性がある。β リリース前レビュー時に、コードの
+  `_quarantine` の全要素を棚卸しし、本表を実態に同期させること。
+- **レビュー期限:** β リリース前（次回 backend stub fixture 更新のタイミングに合わせる）。
