@@ -104,8 +104,14 @@ prominent disclosureを要求する。
 
 ## 2. App Store Connect — App Privacy Answers 対応表
 
-App Store Connect の「App Privacy」→「Data Types」で、収集データ型ごとに
-以下の回答を行う。`app/ios/PrivacyInfo.xcprivacy`(本PRで更新)の内容と一致させること。
+App Store Connect の「App Privacy」→「Data Types」の質問票は、`.xcprivacy`
+プライバシーマニフェスト(SDKに同梱されているものを含む)から**自動入力されない**。
+これはXcode 15以降のビルド時プライバシーレポート(コンパイル警告・Privacy Manifest
+Summary)向けの別機構であり、App Store Connect上の質問票は**開発者が自身の判断で
+毎回手動回答する**必要がある。統合しているサードパーティSDK(AdMob/RevenueCat等)が
+収集するデータも、SDKベンダーが公式に公開している「ASC回答ガイダンス」に従って
+**アプリ側の申告に含める**必要がある(SDKが自分の`.xcprivacy`を持っているからといって
+申告不要にはならない)。
 
 | データ型(App Store Connectの選択肢) | 収集する? | ユーザーに関連付け(Linked)? | トラッキングに使用? | 目的 | 根拠/出どころ |
 |---|---|---|---|---|---|
@@ -113,41 +119,59 @@ App Store Connect の「App Privacy」→「Data Types」で、収集データ�
 | User ID | Yes | No | No | Analytics | 既存宣言(Firebase系識別子)。変更なし |
 | Crash Data | Yes | No | No | Analytics | 既存宣言(Crashlytics)。変更なし |
 | Performance Data | Yes | No | No | Analytics | 既存宣言(Firebase Performance系)。変更なし |
-| Device ID | ベンダーSDK側で申告済み(App単体では追加不要) | - | - | Advertising / Analytics | AdMob(Google Mobile Ads SDK)・Firebase各SDKが自身のPrivacyInfo.xcprivacyを同梱(下記2.1参照)。アプリ本体コードはDevice IDを直接収集しない |
-| Advertising Data | ベンダーSDK側で申告済み | - | - | Advertising / Third-Party Advertising | AdMob SDK側マニフェストに準拠。**ATT(App Tracking Transparency)は現状未呼出**(2.2参照)のためIDFAを介したクロスアプリトラッキングは発生していない前提 |
-| Purchase History | ベンダーSDK側で申告済み | - | - | App Functionality | RevenueCat(`purchases_flutter`)。Purchases iOS SDK v4.37+はPrivacyInfo.xcprivacyを同梱 |
+| Device ID | **Yes** | No(EQMonitorはAdMobにアプリ独自の識別子/個人情報を紐付けていない。ATT未実装につきIDFAへのアクセスも無い) | No(ATT未呼出のためAppleの定義する「トラッキング」には該当しない。将来ATT+パーソナライズ広告を有効化する場合はYesへ見直し必須) | Third-Party Advertising, Analytics | AdMob公式ガイド「App store data disclosure」(`developers.google.com/admob/ios/privacy/data-disclosure`)が、Google Mobile Ads SDKはDevice ID(広告識別子含む)を「third-party advertising and analytics」目的で収集すると明記。ASCの質問票にはアプリ側で明示的にこの回答を入力する必要がある |
+| Advertising Data | **Yes** | 同上(No) | 同上(No、ATT未実装のため) | Third-Party Advertising, Analytics | 同ガイドが、ユーザーに表示した広告の履歴("advertisements the user has seen")を"may be used to power analytics and advertising features"と明記。同様にASCへの明示的な回答が必要 |
+| Purchase History | **Yes** | **No**(`app/lib/feature/subscription/data/repository/revenue_cat_configurator.dart` は `Purchases.configure(PurchasesConfiguration(apiKey))` のみで `appUserID`/`logIn()` を渡しておらず、RevenueCatの匿名App User IDのみを使用。個人を特定する情報とは紐付けていない) | No(RevenueCat自体は購入履歴を他社広告トラッキングに使用しない) | App Functionality, Analytics(**両方選択必須**) | RevenueCat公式ガイド「Apple App Privacy」(`revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy`)が、RevenueCat統合者は"Purchase History"を必ずYesで申告し、"App Functionality"(レシート検証・不正防止・Entitlements)と"Analytics"(Customer History/Charts/Experiments)の両方を選択するよう明記 |
 | Other Diagnostic Data / Product Interaction | Yes(既存宣言のAnalyticsで代替) | No | No | Analytics | Firebase Analytics |
 
-### 2.1 「ベンダーSDK側で申告済み」の判断根拠
+> 上記のDevice ID / Advertising DataのLinked/Tracking回答は、**EQMonitorが現状ATTを
+> 呼び出しておらずパーソナライズ広告を有効化していない**という前提に基づく。
+> ATT実装やユーザーID⇔広告識別子の紐付けを追加した場合は、この回答表を必ず更新すること。
 
-Appleの仕様上、App Store Connectの審査で参照される最終的なプライバシー概要は、
+### 2.1 SDK同梱の`.xcprivacy`マニフェストとの重複宣言回避(参考情報)
+
+**この節は、あくまで`app/ios/PrivacyInfo.xcprivacy`(アプリ本体ターゲットのプライバシー
+マニフェスト)に何を追記すべきかの判断に限定した話であり、上記2.のApp Store Connect
+質問票の回答義務とは別問題である。** SDKが自身の`.xcprivacy`を同梱していても、
+App Store Connectの質問票への回答(Device ID / Advertising Data / Purchase History を
+Yesで申告すること)は免除されない。
+
+Appleの仕様上、Xcodeのビルド時に生成される「プライバシーレポート」は、
 アプリ本体のPrivacyInfo.xcprivacyと、**ipaに含まれる全てのフレームワーク/リソースバンドル
 に同梱されたPrivacyInfo.xcprivacyを集約したもの**になる。以下のSDKは近年のバージョンで
-ベンダー自身のPrivacyInfo.xcprivacyを同梱するため、アプリ側で重複宣言すると
-過剰申告(実際より多くのデータを収集していると誤って回答するリスク)になる。
+ベンダー自身のPrivacyInfo.xcprivacyを同梱するため、**アプリ本体の`.xcprivacy`ファイルに
+同じデータ型を重複宣言する必要はない**(重複させると実装と食い違う過剰申告になり得る)。
+バージョン番号は公開情報から確認した範囲の参考値であり、**実際に使用しているPod/SDK
+バイナリでの実測確認が必要(要実測確認)**。
 
 - Firebase iOS SDK (`firebase_analytics: ^12.0.0` / `firebase_crashlytics: ^5.0.0` /
   `firebase_messaging: ^16.0.0` / `firebase_core: ^4.0.0` などが依存する
-  `Firebase/*` CocoaPods) — Firebase iOS SDK 10.24.0以降、各主要ポッドに
-  PrivacyInfo.xcprivacyが同梱されている。
+  `Firebase/*` CocoaPods) — firebase-ios-sdkリポジトリの各モジュール
+  (`FirebaseCore`/`FirebaseMessaging`等)に`PrivacyInfo.xcprivacy`が同梱されている
+  ことをGitHub上で確認した。**導入された正確なバージョン番号は要実測確認**。
 - Google Mobile Ads SDK (`google_mobile_ads: ^9.0.0` が依存する
-  `Google-Mobile-Ads-SDK` CocoaPod) — 同SDK 10.13.0以降、
-  PrivacyInfo.xcprivacyを同梱している。
+  `Google-Mobile-Ads-SDK` CocoaPod) — Google公式ドキュメント
+  (`developers.google.com/admob/ios/privacy/data-disclosure`)に
+  「Google Mobile Ads SDK version 11.2.0 and higher supports privacy manifest
+  declarations」と明記されている。**要実測確認**(pubspecの`^9.0.0`はFlutterプラグイン
+  バージョンであり、ネイティブSDKバージョンとは別管理のため)。
 - RevenueCat Purchases iOS SDK (`purchases_flutter: ^10.0.1` が依存する
-  `PurchasesHybridCommon`/`RevenueCat` CocoaPod) — Purchases iOS SDK 4.37.0以降、
-  PrivacyInfo.xcprivacyを同梱している。
+  `RevenueCat`/`PurchasesHybridCommon` CocoaPod) — 公開情報ではPurchases iOS SDK
+  4.37.0以降でPrivacyInfo.xcprivacyを同梱するとされる。**要実測確認**。
 
 - [ ] `flutter build ipa` (または CI が生成する `.ipa`)を展開し、
       `unzip -l` で各フレームワーク配下に `PrivacyInfo.xcprivacy` が
       実際に含まれていることを確認する(Linux開発機では`plutil`が無いため、
       `python3 -c "import plistlib; plistlib.load(open('<path>','rb'))"`で
       各ファイルの構文だけでも検証しておく)
-- [ ] App Store Connectの「App Privacy」プレビュー(Xcode Organizer or
-      App Store Connect上のPrivacy Report)で、上記データ型がSDK起因で
+- [ ] Xcode Organizerのビルド時プライバシーレポートで、上記データ型がSDK起因で
       自動的に表示されることを確認する。表示されない場合は当該SDKのポッドが
       静的リンクでリソースバンドルが欠落している可能性があるため、
       `pod install` ログ(`Google-Mobile-Ads-SDK`/`Firebase*`/`RevenueCat`の
       `resource_bundles`)を確認する
+- [ ] このビルド時プライバシーレポートの確認は**App Store Connectの質問票への
+      回答を代替しない**(2.の表の通り、Device ID/Advertising Data/Purchase History は
+      質問票側でも明示的にYes回答が必要)ことを担当者間で認識合わせする
 
 ### 2.2 ATT(App Tracking Transparency)に関する既知の不整合
 
@@ -174,10 +198,21 @@ Appleの仕様上、App Store Connectの審査で参照される最終的なプ�
       (既存回答、変更なし)
 - [ ] Diagnostics → Crash Data, Performance Data: Yes / Linked: No / Tracking: No /
       Purpose: Analytics(既存回答、変更なし)
-- [ ] Purchases → Purchase History の回答はRevenueCat SDK側マニフェストの表示内容と
-      整合するかをXcode Organizerのプライバシーレポートで確認してから決定する
-- [ ] Identifiers/Usage Data(広告関連) はGoogle Mobile Ads SDK側マニフェストの
-      表示内容と整合するかを同様に確認する
+- [ ] Purchases → **AdMobのGoogle公式ASC回答ガイダンス(`developers.google.com/admob/ios/privacy/data-disclosure`)
+      とは別に**、RevenueCat公式ASC回答ガイダンス
+      (`revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy`)
+      に従い、Purchase History を **Collected: Yes** で申告し、
+      Purpose に **App Functionality と Analytics の両方**を選択したか確認する
+      (Linked to you は本アプリの匿名App User ID運用に基づき No を選択。
+      §2表・`revenue_cat_configurator.dart`参照)
+- [ ] Identifiers/Usage Data(広告関連) は AdMob公式ASC回答ガイダンス
+      (`developers.google.com/admob/ios/privacy/data-disclosure`)に従い、
+      Device ID と Advertising Data を **Collected: Yes**、Purpose に
+      **Third-Party Advertising と Analytics** を選択したか確認する
+      (Linked to you / Tracking はATT未実装の現状に基づき No。§2表参照)
+- [ ] 上記の「Yesで申告」は`.xcprivacy`(SDK同梱分を含む)の内容確認では代替できない
+      ことを担当者間で共有した(2.1参照。ビルド時プライバシーレポートの確認は
+      あくまで補助的なダブルチェックとして扱う)
 - [ ] 回答完了後、「Publish」前に差分プレビューをスクリーンショットで保存し、
       本チェックリストに実施日を追記する(実施者記入欄)
 
