@@ -220,11 +220,7 @@ class DeviceRepository {
   }) async {
     final fcm = token.fcmToken;
     if (fcm != null && fcm.isNotEmpty) {
-      final r = await Result.capture(() async {
-        await _api.device.patchV2DeviceMeFcm(
-          body: api.V2DeviceMeFcmRequestBody(token: fcm),
-        );
-      });
+      final r = await upsertPushToken(kind: .fcm, token: fcm);
       if (r is Failure<void, Exception>) {
         return r;
       }
@@ -236,15 +232,7 @@ class DeviceRepository {
 
     final apns = token.apnsToken;
     if (apns != null && apns.isNotEmpty) {
-      final r = await Result.capture(() async {
-        await _api.device.patchV2DeviceMeApnsKind(
-          kind: .notification,
-          body: api.V2DeviceMeApnsKindRequestBody(
-            token: apns,
-            environment: _apnsEnvironment,
-          ),
-        );
-      });
+      final r = await upsertPushToken(kind: .apnsNotification, token: apns);
       if (r is Failure<void, Exception>) {
         return r;
       }
@@ -252,15 +240,10 @@ class DeviceRepository {
 
     final pushToStart = token.apnsPushToStartToken;
     if (pushToStart != null && pushToStart.isNotEmpty) {
-      final r = await Result.capture(() async {
-        await _api.device.patchV2DeviceMeApnsKind(
-          kind: .liveActivityStart,
-          body: api.V2DeviceMeApnsKindRequestBody(
-            token: pushToStart,
-            environment: _apnsEnvironment,
-          ),
-        );
-      });
+      final r = await upsertPushToken(
+        kind: .apnsPushToStart,
+        token: pushToStart,
+      );
       if (r is Failure<void, Exception>) {
         return r;
       }

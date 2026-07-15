@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -27,9 +28,31 @@ void main() {
       {'token': 'fcm-token'},
     ]);
   });
+
+  test('upsertPushToken captures adapter failures', () async {
+    final adapter = _FcmTokenAdapter(statusCode: 500);
+    final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+      ..httpClientAdapter = adapter;
+    final repository = DeviceRepository(
+      api: api.ApiClient(dio),
+      authRepository: _FakeDeviceAuthRepository(),
+      apnsEnvironment: api.ApnsEnvironment.development,
+      isApplePlatform: false,
+    );
+
+    final result = await repository.upsertPushToken(
+      kind: .fcm,
+      token: 'fcm-token',
+    );
+
+    expect(result, isA<Failure<void, Exception>>());
+  });
 }
 
 final class _FcmTokenAdapter implements HttpClientAdapter {
+  _FcmTokenAdapter({this.statusCode = 204});
+
+  final int statusCode;
   final requests = <RequestOptions>[];
 
   @override
@@ -39,7 +62,7 @@ final class _FcmTokenAdapter implements HttpClientAdapter {
     Future<void>? cancelFuture,
   ) async {
     requests.add(options);
-    return ResponseBody.fromString('', 204);
+    return ResponseBody.fromString('', statusCode);
   }
 
   @override

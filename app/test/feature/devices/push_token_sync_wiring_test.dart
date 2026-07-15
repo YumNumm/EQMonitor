@@ -7,8 +7,13 @@ import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.da
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
+import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
+import 'package:eqmonitor/feature/devices/data/model/push_token_platform_capabilities.dart';
+import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
+import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
@@ -55,6 +60,47 @@ void main() {
       const NotificationToken(fcmToken: 'fcm-token'),
     ]);
   });
+
+  test('unsupported platform never calls APNs upsert through wiring', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesKey.deviceProvisioned.key: true,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final authRepository = _MemoryDeviceAuthRepository();
+    final deviceRepository = _UpsertRecordingDeviceRepository();
+    final container = ProviderContainer(
+      overrides: [
+        app_prefs.sharedPreferencesProvider.overrideWithValue(
+          app_prefs.SharedPreferencesAsync(prefs),
+        ),
+        deviceAuthRepositoryProvider.overrideWith(
+          (ref) async => authRepository,
+        ),
+        deviceIdProvider.overrideWith((ref) async => 'device-id'),
+        notificationTokenStreamProvider.overrideWith(
+          (ref) => Stream.value(
+            const NotificationToken(
+              apnsToken: 'apns-token',
+              apnsPushToStartToken: 'push-to-start-token',
+            ),
+          ),
+        ),
+        pushTokenPlatformCapabilitiesProvider.overrideWithValue(
+          const PushTokenPlatformCapabilities(),
+        ),
+        deviceRepositoryProvider.overrideWith((ref) async => deviceRepository),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(pushTokenSyncWiringProvider.future);
+    await pumpEventQueue(times: 10);
+
+    final snapshot = container.read(pushTokenSyncProvider).value;
+    expect(snapshot?.apnsNotification, isA<NotApplicableTokenState>());
+    expect(snapshot?.apnsPushToStart, isA<NotApplicableTokenState>());
+    expect(deviceRepository.upsertedKinds, isEmpty);
+  });
 }
 
 final class _RecordingDeviceRepository extends DeviceRepository {
@@ -82,13 +128,32 @@ final class _RecordingDeviceRepository extends DeviceRepository {
   }
 }
 
+final class _UpsertRecordingDeviceRepository extends DeviceRepository {
+  _UpsertRecordingDeviceRepository()
+    : super(
+        api: api.ApiClient(Dio()),
+        authRepository: _MemoryDeviceAuthRepository(),
+        apnsEnvironment: api.ApnsEnvironment.development,
+        isApplePlatform: true,
+      );
+
+  final upsertedKinds = <PushTokenKind>[];
+
+  @override
+  Future<Result<void, Exception>> upsertPushToken({
+    required PushTokenKind kind,
+    required String token,
+  }) async {
+    upsertedKinds.add(kind);
+    return const Success(null);
+  }
+}
+
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
   _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
 
   @override
-  Future<void> saveToken({
-    required String token,
-  }) async {}
+  Future<void> saveToken({required String token}) async {}
 
   @override
   Future<String?> readToken() async => 'auth-token';
