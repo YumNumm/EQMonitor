@@ -46,7 +46,10 @@ void main() {
         overrides: [
           firebaseMessagingProvider.overrideWithValue(_FakeFirebaseMessaging()),
           pushTokenPlatformCapabilitiesProvider.overrideWithValue(
-            const PushTokenPlatformCapabilities(),
+            PushTokenPlatformCapabilities.forPlatform(
+              platform: PushTokenPlatform.ios,
+              iosMajorVersion: 17,
+            ),
           ),
           eqmLiveActivityUtilProvider.overrideWith((ref) {
             utilityReadCount++;
