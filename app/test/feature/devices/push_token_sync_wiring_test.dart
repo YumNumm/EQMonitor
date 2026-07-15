@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
@@ -55,6 +56,43 @@ void main() {
       const NotificationToken(fcmToken: 'fcm-token'),
     ]);
   });
+
+  test('does not sync when notification token is empty', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesKey.deviceProvisioned.key: true,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final tokenController = StreamController<NotificationToken>();
+    final authRepository = _MemoryDeviceAuthRepository();
+    final deviceRepository = _RecordingDeviceRepository();
+    final container = ProviderContainer(
+      overrides: [
+        app_prefs.sharedPreferencesProvider.overrideWithValue(
+          app_prefs.SharedPreferencesAsync(prefs),
+        ),
+        deviceAuthRepositoryProvider.overrideWith(
+          (ref) async => authRepository,
+        ),
+        deviceIdProvider.overrideWith((ref) async => 'device-id'),
+        notificationTokenStreamProvider.overrideWith(
+          (ref) => tokenController.stream,
+        ),
+        deviceRepositoryProvider.overrideWith((ref) async => deviceRepository),
+      ],
+    );
+    addTearDown(container.dispose);
+    addTearDown(tokenController.close);
+
+    await container.read(pushTokenSyncWiringProvider.future);
+    final tokenFuture = container.read(notificationTokenStreamProvider.future);
+    tokenController.add(const NotificationToken());
+    await tokenFuture;
+
+    final snapshot = await container.read(pushTokenSyncProvider.future);
+
+    expect(deviceRepository.tokens, isEmpty);
+    expect(snapshot.hasPending, isFalse);
+  });
 }
 
 final class _RecordingDeviceRepository extends DeviceRepository {
@@ -86,9 +124,7 @@ final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
   _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
 
   @override
-  Future<void> saveToken({
-    required String token,
-  }) async {}
+  Future<void> saveToken({required String token}) async {}
 
   @override
   Future<String?> readToken() async => 'auth-token';
