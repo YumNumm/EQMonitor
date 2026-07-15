@@ -20,6 +20,7 @@ import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod/experimental/mutation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -61,7 +62,7 @@ void main() {
     ]);
   });
 
-  test('unsupported platform never calls APNs upsert through wiring', () async {
+  test('unsupported platform wiring upserts only FCM', () async {
     SharedPreferences.setMockInitialValues({
       SharedPreferencesKey.deviceProvisioned.key: true,
     });
@@ -80,6 +81,7 @@ void main() {
         notificationTokenStreamProvider.overrideWith(
           (ref) => Stream.value(
             const NotificationToken(
+              fcmToken: 'fcm-token',
               apnsToken: 'apns-token',
               apnsPushToStartToken: 'push-to-start-token',
             ),
@@ -92,14 +94,24 @@ void main() {
       ],
     );
     addTearDown(container.dispose);
+    final syncCompleted = Completer<void>();
+    final mutationSubscription = container.listen(
+      PushTokenSyncNotifier.syncMutation,
+      (_, next) {
+        if (next is MutationSuccess && !syncCompleted.isCompleted) {
+          syncCompleted.complete();
+        }
+      },
+    );
+    addTearDown(mutationSubscription.close);
 
     await container.read(pushTokenSyncWiringProvider.future);
-    await pumpEventQueue(times: 10);
+    await syncCompleted.future.timeout(const Duration(seconds: 5));
 
     final snapshot = container.read(pushTokenSyncProvider).value;
     expect(snapshot?.apnsNotification, isA<NotApplicableTokenState>());
     expect(snapshot?.apnsPushToStart, isA<NotApplicableTokenState>());
-    expect(deviceRepository.upsertedKinds, isEmpty);
+    expect(deviceRepository.upsertedKinds, [PushTokenKind.fcm]);
   });
 }
 
