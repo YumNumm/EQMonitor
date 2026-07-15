@@ -1,34 +1,65 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('APNs token kind json values are used in generated API paths', () async {
+  test('upsertPushToken maps APNs kinds to one request each', () async {
     final adapter = _ApnsKindAdapter();
     final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
       ..httpClientAdapter = adapter;
-    final client = api.ApiClient(dio);
-
-    await client.device.patchV2DeviceMeApnsKind(
-      kind: .notification,
-      body: const api.V2DeviceMeApnsKindRequestBody(token: 'apns-token'),
+    final repository = DeviceRepository(
+      api: api.ApiClient(dio),
+      authRepository: _FakeDeviceAuthRepository(),
+      apnsEnvironment: api.ApnsEnvironment.development,
+      isApplePlatform: true,
     );
-    await client.device.patchV2DeviceMeApnsKind(
-      kind: .liveActivityStart,
-      body: const api.V2DeviceMeApnsKindRequestBody(
-        token: 'push-to-start-token',
-      ),
+
+    await repository.upsertPushToken(
+      kind: .apnsNotification,
+      token: 'apns-token',
+    );
+    await repository.upsertPushToken(
+      kind: .apnsPushToStart,
+      token: 'push-to-start-token',
     );
 
     expect(adapter.requests.map((request) => request.path), [
       '/v2/device/me/apns/NOTIFICATION',
       '/v2/device/me/apns/LIVE_ACTIVITY_START',
     ]);
-    expect(adapter.requests.map((request) => request.data), [
-      {'token': 'apns-token'},
-      {'token': 'push-to-start-token'},
+    final payloads = adapter.requests.map(
+      (request) => jsonDecode(jsonEncode(request.data)),
+    );
+
+    expect(payloads, [
+      {'token': 'apns-token', 'environment': 'development'},
+      {'token': 'push-to-start-token', 'environment': 'development'},
+    ]);
+  });
+
+  test('direct APNs upsert is not silently skipped by platform flag', () async {
+    final adapter = _ApnsKindAdapter();
+    final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+      ..httpClientAdapter = adapter;
+    final repository = DeviceRepository(
+      api: api.ApiClient(dio),
+      authRepository: _FakeDeviceAuthRepository(),
+      apnsEnvironment: api.ApnsEnvironment.development,
+      isApplePlatform: false,
+    );
+
+    await repository.upsertPushToken(
+      kind: .apnsNotification,
+      token: 'apns-token',
+    );
+
+    expect(adapter.requests.map((request) => request.path), [
+      '/v2/device/me/apns/NOTIFICATION',
     ]);
   });
 }
@@ -49,3 +80,6 @@ final class _ApnsKindAdapter implements HttpClientAdapter {
   @override
   void close({bool force = false}) {}
 }
+
+final class _FakeDeviceAuthRepository extends Fake
+    implements DeviceAuthRepository {}

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
@@ -180,6 +181,31 @@ class DeviceRepository {
       liveActivityId: liveActivityId,
       body: api.LiveActivityTokenRequest(token: token),
     );
+  });
+
+  Future<Result<void, Exception>> upsertPushToken({
+    required PushTokenKind kind,
+    required String token,
+  }) => Result.capture(() async {
+    await switch (kind) {
+      .fcm => _api.device.patchV2DeviceMeFcm(
+        body: api.V2DeviceMeFcmRequestBody(token: token),
+      ),
+      .apnsNotification => _api.device.patchV2DeviceMeApnsKind(
+        kind: .notification,
+        body: api.V2DeviceMeApnsKindRequestBody(
+          token: token,
+          environment: _apnsEnvironment,
+        ),
+      ),
+      .apnsPushToStart => _api.device.patchV2DeviceMeApnsKind(
+        kind: .liveActivityStart,
+        body: api.V2DeviceMeApnsKindRequestBody(
+          token: token,
+          environment: _apnsEnvironment,
+        ),
+      ),
+    };
   });
 
   static bool _isNotFound(Exception e) =>
