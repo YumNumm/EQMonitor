@@ -23,7 +23,7 @@ Stream<NotificationToken> notificationTokenStream(Ref ref) async* {
       ? ref.watch(_apnsTokenStreamProvider).value
       : null;
   final apnsPushToStartToken = capabilities.supportsPushToStart
-      ? ref.watch(_apnsPushToStartTokenStreamProvider).value
+      ? ref.watch(apnsPushToStartTokenStreamProvider).value
       : null;
 
   yield NotificationToken(
@@ -69,7 +69,7 @@ Stream<String> _apnsTokenStream(Ref ref) async* {
 }
 
 @Riverpod(keepAlive: true)
-Stream<String> _apnsPushToStartTokenStream(Ref ref) async* {
+Stream<String> apnsPushToStartTokenStream(Ref ref) async* {
   if (!ref.watch(pushTokenPlatformCapabilitiesProvider).supportsPushToStart) {
     return;
   }
