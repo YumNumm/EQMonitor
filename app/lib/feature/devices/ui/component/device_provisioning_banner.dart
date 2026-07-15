@@ -50,6 +50,8 @@ class DeviceProvisioningBanner extends ConsumerWidget {
       bottomSpacing: bottomSpacing,
       activeRetry: activeRetry,
       isLoading: isLoading,
+      isProvisioningRequired:
+          provisionStatus.value == DeviceProvisioningStatus.required,
       onRetry: () {
         if (provisionStatus.value == DeviceProvisioningStatus.required) {
           notifier.reset();
@@ -78,12 +80,14 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
     required this.bottomSpacing,
     required this.activeRetry,
     required this.isLoading,
+    required this.isProvisioningRequired,
     required this.onRetry,
   });
 
   final double bottomSpacing;
   final RetryControllerState activeRetry;
   final bool isLoading;
+  final bool isProvisioningRequired;
   final VoidCallback onRetry;
 
   @override
@@ -125,6 +129,16 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
           width: 20,
           height: 20,
           child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+        ),
+      ),
+      RetryIdle() when isProvisioningRequired => _BannerTile(
+        icon: Icons.warning_amber_outlined,
+        backgroundColor: colorTheme.errorContainer,
+        foregroundColor: colorTheme.onErrorContainer,
+        message: '通知の初期設定が完了していません',
+        trailing: FilledButton.tonal(
+          onPressed: onRetry,
+          child: const Text('再試行'),
         ),
       ),
       _ => null,

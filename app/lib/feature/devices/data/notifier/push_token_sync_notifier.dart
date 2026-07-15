@@ -34,6 +34,11 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
   Future<PushTokenSyncSnapshot> build() async {
     ref.onDispose(() => unawaited(disposeWorkers()));
     final repository = await ref.watch(deviceRepositoryProvider.future);
+    final provisioningRepository = await ref.watch(
+      deviceProvisioningRepositoryProvider.future,
+    );
+    final telemetryRecorder = ref.watch(telemetryRecorderProvider);
+    final telemetryUploader = ref.watch(telemetryUploaderProvider);
     final capabilities = ref.watch(pushTokenPlatformCapabilitiesProvider);
 
     PushTokenSyncWorker createWorker(PushTokenKind kind) {
@@ -61,9 +66,18 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
               if (mapped case AuthorizationException(
                 reason: AuthorizationFailureReason.unauthenticated,
               )) {
-                await handleAuthenticationFailure();
+                await handleAuthenticationFailure(
+                  repository: provisioningRepository,
+                );
               }
-              unawaited(recordSyncFailure(kind: kind, error: mapped));
+              unawaited(
+                recordSyncFailure(
+                  kind: kind,
+                  error: mapped,
+                  recorder: telemetryRecorder,
+                  uploader: telemetryUploader,
+                ),
+              );
               Error.throwWithStackTrace(
                 mapped,
                 mapped.stackTrace ?? stackTrace ?? StackTrace.empty,
@@ -143,28 +157,29 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     retryFailed();
   }
 
-  Future<void> handleAuthenticationFailure() async {
-    final repository = await ref.read(
-      deviceProvisioningRepositoryProvider.future,
-    );
+  Future<void> handleAuthenticationFailure({
+    required DeviceProvisioningRepository repository,
+  }) async {
     await repository.clearProvisioned();
-    ref.invalidate(deviceProvisioningProvider, asReload: true);
+    if (ref.mounted) {
+      ref.invalidate(deviceProvisioningProvider, asReload: true);
+    }
   }
 
   Future<void> recordSyncFailure({
     required PushTokenKind kind,
     required DeviceProvisioningException error,
+    required TelemetryRecorder recorder,
+    required TelemetryUploader uploader,
   }) async {
     try {
-      await ref
-          .read(telemetryRecorderProvider)
-          .record(
-            TelemetryEvent.error(
-              errorType: 'push_token_sync_failed',
-              message: '${kind.name}: $error',
-            ),
-          );
-      await ref.read(telemetryUploaderProvider).flush();
+      await recorder.record(
+        TelemetryEvent.error(
+          errorType: 'push_token_sync_failed',
+          message: '${kind.name}: $error',
+        ),
+      );
+      await uploader.flush();
     } on Exception catch (telemetryError) {
       talker.info('Failed to record telemetry', telemetryError);
     }

@@ -3,18 +3,24 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_platform_capabilities.dart';
+import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.dart';
+import 'package:eqmonitor/feature/devices/data/persistence/shared_preferences_workflow_persistence.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
@@ -51,6 +57,124 @@ void main() {
       (kind: PushTokenKind.fcm, token: 'same-token'),
     ]);
   });
+
+  test(
+    'startup provisions an already-required device and accepts initial token',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final repository = _StartupDeviceRepository();
+      final container = ProviderContainer(
+        overrides: [
+          app_prefs.sharedPreferencesProvider.overrideWithValue(
+            app_prefs.SharedPreferencesAsync(prefs),
+          ),
+          deviceAuthRepositoryProvider.overrideWith(
+            (ref) async => _MemoryDeviceAuthRepository(),
+          ),
+          deviceIdProvider.overrideWith((ref) async => 'device-id'),
+          notificationTokenStreamProvider.overrideWith(
+            (ref) => Stream.value(
+              const NotificationToken(fcmToken: 'initial-token'),
+            ),
+          ),
+          pushTokenPlatformCapabilitiesProvider.overrideWithValue(
+            const PushTokenPlatformCapabilities(supportsFcm: true),
+          ),
+          deviceRepositoryProvider.overrideWith((ref) async => repository),
+          telemetryRecorderProvider.overrideWithValue(_NoopTelemetryRecorder()),
+          telemetryUploaderProvider.overrideWithValue(_NoopTelemetryUploader()),
+        ],
+      );
+      addTearDown(container.dispose);
+      addTearDown(repository.close);
+
+      final startupSubscription = container.listen(
+        pushTokenSyncStartupProvider,
+        (_, _) {},
+      );
+      addTearDown(startupSubscription.close);
+      final initialCall = repository.callEvents.stream.firstWhere(
+        (value) => value.token == 'initial-token',
+      );
+      await container.read(pushTokenSyncStartupProvider.future);
+      final call = await initialCall.timeout(const Duration(seconds: 5));
+
+      expect(call.kind, PushTokenKind.fcm);
+      final provisioningRepository = await container.read(
+        deviceProvisioningRepositoryProvider.future,
+      );
+      expect(await provisioningRepository.isProvisioned(), isTrue);
+    },
+  );
+
+  test(
+    'manual recovery after startup failure activates token wiring',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final tokens = StreamController<NotificationToken>.broadcast();
+      final repository = _RecordingDeviceRepository();
+      final container = ProviderContainer(
+        overrides: [
+          app_prefs.sharedPreferencesProvider.overrideWithValue(
+            app_prefs.SharedPreferencesAsync(prefs),
+          ),
+          deviceAuthRepositoryProvider.overrideWith(
+            (ref) async => _MemoryDeviceAuthRepository(),
+          ),
+          notificationTokenStreamProvider.overrideWith((ref) => tokens.stream),
+          pushTokenPlatformCapabilitiesProvider.overrideWithValue(
+            const PushTokenPlatformCapabilities(supportsFcm: true),
+          ),
+          deviceProvisioningProvider.overrideWith(
+            _FailingThenRecoverableProvisioningNotifier.new,
+          ),
+          deviceRepositoryProvider.overrideWith((ref) async => repository),
+          telemetryRecorderProvider.overrideWithValue(_NoopTelemetryRecorder()),
+          telemetryUploaderProvider.overrideWithValue(_NoopTelemetryUploader()),
+        ],
+      );
+      addTearDown(tokens.close);
+      addTearDown(repository.close);
+      addTearDown(container.dispose);
+
+      final startupSubscription = container.listen(
+        pushTokenSyncStartupProvider,
+        (_, _) {},
+      );
+      addTearDown(startupSubscription.close);
+      await expectLater(
+        container.read(pushTokenSyncStartupProvider.future),
+        throwsA(isA<StateError>()),
+      );
+      final wiringRecomputed = Completer<void>();
+      var completedBuilds = 0;
+      final wiringSubscription = container.listen(pushTokenSyncWiringProvider, (
+        _,
+        next,
+      ) {
+        if (next is AsyncData<void>) {
+          completedBuilds++;
+          if (completedBuilds == 2) {
+            wiringRecomputed.complete();
+          }
+        }
+      }, fireImmediately: true);
+      addTearDown(wiringSubscription.close);
+      final recoveredCall = repository.callEvents.stream.firstWhere(
+        (call) => call.token == 'recovered-token',
+      );
+      final provisioningNotifier =
+          container.read(deviceProvisioningProvider.notifier)
+              as _FailingThenRecoverableProvisioningNotifier;
+      provisioningNotifier.recover();
+      await wiringRecomputed.future.timeout(const Duration(seconds: 5));
+      tokens.add(const NotificationToken(fcmToken: 'recovered-token'));
+
+      await recoveredCall.timeout(const Duration(seconds: 5));
+    },
+  );
 
   test('duplicate token is upserted once within one app session', () async {
     SharedPreferences.setMockInitialValues({
@@ -146,6 +270,79 @@ void main() {
       ]);
     },
   );
+
+  test('rebuilding wiring keeps notifier-owned workers alive', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesKey.deviceProvisioned.key: true,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final harness = _createHarness(prefs: prefs);
+    addTearDown(harness.dispose);
+    await harness.start();
+
+    harness.tokens.add(const NotificationToken(fcmToken: 'first-token'));
+    await harness.waitFor((snapshot) => snapshot.fcm is SyncedTokenState);
+
+    harness.container.invalidate(pushTokenSyncWiringProvider);
+    await harness.start();
+    final secondCall = harness.repository.callEvents.stream.firstWhere(
+      (call) => call.token == 'second-token',
+    );
+    harness.tokens.add(const NotificationToken(fcmToken: 'second-token'));
+
+    await secondCall.timeout(const Duration(seconds: 5));
+    expect(
+      harness.repository.calls.where((call) => call.token == 'second-token'),
+      hasLength(1),
+    );
+  });
+
+  test(
+    'in-flight auth failure after disposal uses resolved dependencies',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        SharedPreferencesKey.deviceProvisioned.key: true,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final tokens = StreamController<NotificationToken>();
+      final repository = _PendingFailureDeviceRepository();
+      final provisioningRepository = _RecordingProvisioningRepository(
+        prefs: prefs,
+      );
+      final container = ProviderContainer(
+        overrides: [
+          app_prefs.sharedPreferencesProvider.overrideWithValue(
+            app_prefs.SharedPreferencesAsync(prefs),
+          ),
+          deviceAuthRepositoryProvider.overrideWith(
+            (ref) async => _MemoryDeviceAuthRepository(),
+          ),
+          notificationTokenStreamProvider.overrideWith((ref) => tokens.stream),
+          pushTokenPlatformCapabilitiesProvider.overrideWithValue(
+            const PushTokenPlatformCapabilities(supportsFcm: true),
+          ),
+          deviceRepositoryProvider.overrideWith((ref) async => repository),
+          deviceProvisioningRepositoryProvider.overrideWith(
+            (ref) async => provisioningRepository,
+          ),
+          telemetryRecorderProvider.overrideWithValue(_NoopTelemetryRecorder()),
+          telemetryUploaderProvider.overrideWithValue(_NoopTelemetryUploader()),
+        ],
+      );
+
+      await container.read(pushTokenSyncWiringProvider.future);
+      tokens.add(const NotificationToken(fcmToken: 'pending-token'));
+      await repository.started.future.timeout(const Duration(seconds: 5));
+      container.dispose();
+      repository.completeUnauthenticated();
+
+      await provisioningRepository.cleared.future.timeout(
+        const Duration(seconds: 5),
+      );
+      await tokens.close();
+      expect(await provisioningRepository.isProvisioned(), isFalse);
+    },
+  );
 }
 
 _WiringHarness _createHarness({
@@ -221,6 +418,7 @@ final class _WiringHarness {
     container.dispose();
     await tokens.close();
     await acks.close();
+    await repository.close();
   }
 }
 
@@ -234,6 +432,8 @@ final class _RecordingDeviceRepository extends DeviceRepository {
 
   final bool failFcmRetryably;
   final calls = <({PushTokenKind kind, String token})>[];
+  final callEvents =
+      StreamController<({PushTokenKind kind, String token})>.broadcast();
 
   @override
   Future<Result<void, Exception>> upsertPushToken({
@@ -241,10 +441,122 @@ final class _RecordingDeviceRepository extends DeviceRepository {
     required String token,
   }) async {
     calls.add((kind: kind, token: token));
+    callEvents.add((kind: kind, token: token));
     if (kind == PushTokenKind.fcm && failFcmRetryably) {
       return const Failure(NetworkUnreachableException());
     }
     return const Success(null);
+  }
+
+  Future<void> close() => callEvents.close();
+}
+
+final class _PendingFailureDeviceRepository extends DeviceRepository {
+  _PendingFailureDeviceRepository()
+    : super(
+        api: api.ApiClient(Dio()),
+        authRepository: _MemoryDeviceAuthRepository(),
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
+
+  final started = Completer<void>();
+  final _result = Completer<Result<void, Exception>>();
+
+  @override
+  Future<Result<void, Exception>> upsertPushToken({
+    required PushTokenKind kind,
+    required String token,
+  }) {
+    if (!started.isCompleted) {
+      started.complete();
+    }
+    return _result.future;
+  }
+
+  void completeUnauthenticated() {
+    _result.complete(
+      const Failure(
+        AuthorizationException(
+          reason: AuthorizationFailureReason.unauthenticated,
+        ),
+      ),
+    );
+  }
+}
+
+final class _StartupDeviceRepository extends DeviceRepository {
+  _StartupDeviceRepository()
+    : super(
+        api: api.ApiClient(Dio()),
+        authRepository: _MemoryDeviceAuthRepository(),
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
+
+  final callEvents =
+      StreamController<({PushTokenKind kind, String token})>.broadcast();
+
+  @override
+  Future<Result<RegisteredDevice, Exception>> registerDevice({
+    required String deviceId,
+    required DevicePlatform devicePlatform,
+    required DeviceLocale deviceLocale,
+  }) async => Success(
+    RegisteredDevice(
+      id: deviceId,
+      platform: devicePlatform,
+      userId: null,
+      locale: deviceLocale,
+      createdAtIso: '2026-07-15T00:00:00Z',
+      updatedAtIso: '2026-07-15T00:00:00Z',
+    ),
+  );
+
+  @override
+  Future<Result<void, Exception>> upsertPushToken({
+    required PushTokenKind kind,
+    required String token,
+  }) async {
+    callEvents.add((kind: kind, token: token));
+    return const Success(null);
+  }
+
+  Future<void> close() => callEvents.close();
+}
+
+final class _RecordingProvisioningRepository
+    extends DeviceProvisioningRepository {
+  _RecordingProvisioningRepository({required SharedPreferences prefs})
+    : super(
+        dataSource: SharedPreferencesDataSource(sharedPreferences: prefs),
+        persistence: SharedPreferencesWorkflowPersistence(
+          app_prefs.SharedPreferencesAsync(prefs),
+        ),
+      );
+
+  final cleared = Completer<void>();
+
+  @override
+  Future<void> clearProvisioned() async {
+    await super.clearProvisioned();
+    if (!cleared.isCompleted) {
+      cleared.complete();
+    }
+  }
+}
+
+final class _FailingThenRecoverableProvisioningNotifier
+    extends DeviceProvisioningNotifier {
+  @override
+  Future<DeviceProvisioningStatus> build() async =>
+      DeviceProvisioningStatus.required;
+
+  @override
+  Future<void> provision() async {
+    throw StateError('automatic provisioning failed');
+  }
+
+  void recover() {
+    state = const AsyncData(DeviceProvisioningStatus.notRequired);
   }
 }
 
