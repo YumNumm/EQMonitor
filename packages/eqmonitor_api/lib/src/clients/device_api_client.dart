@@ -19,8 +19,6 @@ import '../models/eew_settings_response.dart';
 import '../models/eew_warning_config_request.dart';
 import '../models/eew_warning_config_response.dart';
 import '../models/kind.dart';
-import '../models/live_activity_token_request.dart';
-import '../models/live_activity_token_response.dart';
 import '../models/migrate_request.dart';
 import '../models/migration_response.dart';
 import '../models/notification_settings_request.dart';
@@ -224,23 +222,6 @@ abstract class DeviceApiClient {
     @Body() required EewWarningConfigRequest body,
   });
 
-  /// Live Activity updateToken一覧を取得
-  @GET(DeviceApiClientUrls.getV2DeviceMeLiveActivity)
-  Future<HttpResponse<List<LiveActivityTokenResponse>>> getV2DeviceMeLiveActivity();
-
-  /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。配信には使用されず、Start送信からToken受信までの遅延計測にのみ用いる。
-  @PUT(DeviceApiClientUrls.putV2DeviceMeLiveActivityLiveActivityIdToken)
-  Future<HttpResponse<LiveActivityTokenResponse>> putV2DeviceMeLiveActivityLiveActivityIdToken({
-    @Path('liveActivityId') required String liveActivityId,
-    @Body() required LiveActivityTokenRequest body,
-  });
-
-  /// Live Activity updateTokenを削除
-  @DELETE(DeviceApiClientUrls.deleteV2DeviceMeLiveActivityLiveActivityIdToken)
-  Future<HttpResponse<void>> deleteV2DeviceMeLiveActivityLiveActivityIdToken({
-    @Path('liveActivityId') required String liveActivityId,
-  });
-
   /// デバイスの現在地を更新
   @PUT(DeviceApiClientUrls.putV2DeviceMeLocation)
   Future<HttpResponse<DeviceLocationResponse>> putV2DeviceMeLocation({
@@ -326,12 +307,6 @@ abstract class DeviceApiClientUrls {
 	static const getV2DeviceMeSettingsEewWarning = "/v2/device/me/settings/eew-warning";
 	/// /v2/device/me/settings/eew-warning
 	static const patchV2DeviceMeSettingsEewWarning = "/v2/device/me/settings/eew-warning";
-	/// /v2/device/me/live-activity
-	static const getV2DeviceMeLiveActivity = "/v2/device/me/live-activity";
-	/// /v2/device/me/live-activity/{liveActivityId}/token
-	static const putV2DeviceMeLiveActivityLiveActivityIdToken = "/v2/device/me/live-activity/{liveActivityId}/token";
-	/// /v2/device/me/live-activity/{liveActivityId}/token
-	static const deleteV2DeviceMeLiveActivityLiveActivityIdToken = "/v2/device/me/live-activity/{liveActivityId}/token";
 	/// /v2/device/me/location
 	static const putV2DeviceMeLocation = "/v2/device/me/location";
 	/// /v2/device/me/migrate
