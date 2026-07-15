@@ -54,6 +54,8 @@ final class PushTokenSyncWorker {
       return;
     }
     if (token == _lastSyncedToken) {
+      _state = const PushTokenSyncWorkerState.synced();
+      _statesController.add(_state);
       return;
     }
 

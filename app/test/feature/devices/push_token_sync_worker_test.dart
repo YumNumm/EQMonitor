@@ -315,6 +315,46 @@ void main() {
         expect(escapedErrors, isEmpty);
       },
     );
+
+    test(
+      'returning to the applied token clears an idle failure without upsert',
+      () async {
+        final upserts = <String>[];
+        final worker = PushTokenSyncWorker(
+          upsert: (token) async {
+            upserts.add(token);
+            if (token == 'token-b') {
+              throw const InvalidRequestException(statusCode: 400);
+            }
+          },
+          backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+        );
+        addTearDown(worker.dispose);
+
+        worker.accept(token: 'token-a');
+        await worker.states.whereState<PushTokenSyncWorkerSynced>().first;
+        worker.accept(token: 'token-b');
+        await worker.states.whereState<PushTokenSyncWorkerFailed>().first;
+        await Future<void>.delayed(Duration.zero);
+
+        final emittedStates = <PushTokenSyncWorkerState>[];
+        final subscription = worker.states.listen(emittedStates.add);
+        addTearDown(subscription.cancel);
+        worker.accept(token: 'token-a');
+        await Future<void>.delayed(Duration.zero);
+
+        expect(upserts, ['token-a', 'token-b']);
+        expect(worker.state, isA<PushTokenSyncWorkerSynced>());
+        expect(
+          emittedStates.whereType<PushTokenSyncWorkerSynced>(),
+          hasLength(1),
+        );
+
+        worker.retry();
+        await Future<void>.delayed(Duration.zero);
+        expect(upserts, ['token-a', 'token-b']);
+      },
+    );
   });
 }
 
