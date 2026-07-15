@@ -42,7 +42,7 @@ Stream<NotificationToken> notificationTokenStream(Ref ref) async* {
   );
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Stream<String> firebaseMessagingTokenStream(Ref ref) async* {
   final messaging = ref.watch(firebaseMessagingProvider);
 
@@ -59,7 +59,7 @@ Stream<String> firebaseMessagingTokenStream(Ref ref) async* {
   yield* messaging.onTokenRefresh;
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Stream<String> apnsTokenStream(Ref ref) async* {
   final messaging = ref.watch(firebaseMessagingProvider);
   assert(
@@ -77,7 +77,7 @@ Stream<String> apnsTokenStream(Ref ref) async* {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Stream<String> apnsPushToStartTokenStream(Ref ref) async* {
   if (kIsWeb || !(Platform.isIOS || Platform.isMacOS)) {
     return;
@@ -95,7 +95,9 @@ Stream<String> apnsPushToStartTokenStream(Ref ref) async* {
   eqmLiveActivityUtil.observePushToStartTokenUpdates(
     ObjCBlock_ffiVoid_NSString.listener((nsToken) {
       final token = nsToken.toDartString();
-      controller.add(token);
+      if (!controller.isClosed) {
+        controller.add(token);
+      }
     }),
   );
 

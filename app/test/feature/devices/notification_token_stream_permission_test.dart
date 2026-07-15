@@ -54,10 +54,17 @@ class _RecordingFirebaseMessaging extends Fake implements FirebaseMessaging {
 
 class _RecordingTokenStreams {
   _RecordingTokenStreams() {
-    fcm = StreamController<String>(onListen: () => fcmListenCount++);
-    apns = StreamController<String>(onListen: () => apnsListenCount++);
+    fcm = StreamController<String>(
+      onListen: () => fcmListenCount++,
+      onCancel: () => fcmCancelCount++,
+    );
+    apns = StreamController<String>(
+      onListen: () => apnsListenCount++,
+      onCancel: () => apnsCancelCount++,
+    );
     pushToStart = StreamController<String>(
       onListen: () => pushToStartListenCount++,
+      onCancel: () => pushToStartCancelCount++,
     );
   }
 
@@ -67,11 +74,20 @@ class _RecordingTokenStreams {
   int fcmListenCount = 0;
   int apnsListenCount = 0;
   int pushToStartListenCount = 0;
+  int fcmCancelCount = 0;
+  int apnsCancelCount = 0;
+  int pushToStartCancelCount = 0;
 
   void addTokens() {
     fcm.add('fcm-token');
     apns.add('apns-token');
     pushToStart.add('push-to-start-token');
+  }
+
+  void addLateTokens() {
+    fcm.add('late-fcm-token');
+    apns.add('late-apns-token');
+    pushToStart.add('late-push-to-start-token');
   }
 
   Future<void> close() async {
@@ -255,5 +271,69 @@ void main() {
     expect(tokenStreams.fcmListenCount, 1);
     expect(tokenStreams.apnsListenCount, 1);
     expect(tokenStreams.pushToStartListenCount, 1);
+  });
+
+  test('権限が authorized から denied に変わると child Token 購読を解除する', () async {
+    const lateToken = NotificationToken(
+      fcmToken: 'late-fcm-token',
+      apnsToken: 'late-apns-token',
+      apnsPushToStartToken: 'late-push-to-start-token',
+    );
+    final firebaseMessaging = _RecordingFirebaseMessaging(
+      authorizationStatus: AuthorizationStatus.authorized,
+    );
+    final tokenStreams = _RecordingTokenStreams()..addTokens();
+    final container = ProviderContainer(
+      overrides: [
+        firebaseMessagingProvider.overrideWithValue(firebaseMessaging),
+        notificationTokenApnsSupportedProvider.overrideWithValue(true),
+        firebaseMessagingTokenStreamProvider.overrideWith(
+          (ref) => tokenStreams.fcm.stream,
+        ),
+        apnsTokenStreamProvider.overrideWith((ref) => tokenStreams.apns.stream),
+        apnsPushToStartTokenStreamProvider.overrideWith(
+          (ref) => tokenStreams.pushToStart.stream,
+        ),
+      ],
+    );
+    addTearDown(tokenStreams.close);
+    addTearDown(firebaseMessaging.tokenRefreshController.close);
+    addTearDown(container.dispose);
+
+    final acquiredToken = Completer<void>();
+    final deniedToken = Completer<void>();
+    final emissions = <NotificationToken>[];
+    var permissionChangedToDenied = false;
+    container.listen(notificationTokenStreamProvider, (_, next) {
+      if (next.value case final token?) {
+        emissions.add(token);
+        if (token == expectedToken && !acquiredToken.isCompleted) {
+          acquiredToken.complete();
+        }
+        if (permissionChangedToDenied &&
+            token == const NotificationToken() &&
+            !deniedToken.isCompleted) {
+          deniedToken.complete();
+        }
+      }
+    });
+
+    await acquiredToken.future;
+    permissionChangedToDenied = true;
+    firebaseMessaging.settings = _notificationSettings(
+      authorizationStatus: AuthorizationStatus.denied,
+    );
+    container.invalidate(osNotificationPermissionProvider);
+    await deniedToken.future;
+    await pumpEventQueue();
+
+    expect(tokenStreams.fcmCancelCount, 1);
+    expect(tokenStreams.apnsCancelCount, 1);
+    expect(tokenStreams.pushToStartCancelCount, 1);
+
+    tokenStreams.addLateTokens();
+    await pumpEventQueue();
+
+    expect(emissions, isNot(contains(lateToken)));
   });
 }

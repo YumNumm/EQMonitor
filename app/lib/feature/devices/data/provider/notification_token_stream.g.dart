@@ -66,7 +66,7 @@ final class FirebaseMessagingTokenStreamProvider
         argument: null,
         retry: null,
         name: r'firebaseMessagingTokenStreamProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -86,7 +86,7 @@ final class FirebaseMessagingTokenStreamProvider
 }
 
 String _$firebaseMessagingTokenStreamHash() =>
-    r'08ec88426a6ac8f26480814d87c5752bb64216ad';
+    r'cd0a291040799a9f5a697b74bb3fa96656afeb57';
 
 @ProviderFor(apnsTokenStream)
 final apnsTokenStreamProvider = ApnsTokenStreamProvider._();
@@ -100,7 +100,7 @@ final class ApnsTokenStreamProvider
         argument: null,
         retry: null,
         name: r'apnsTokenStreamProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -119,7 +119,7 @@ final class ApnsTokenStreamProvider
   }
 }
 
-String _$apnsTokenStreamHash() => r'51242c680d71d7330e05fc94e8adafb1d2e4498c';
+String _$apnsTokenStreamHash() => r'c1d10e658a7aa00549050e3911497902a700f3ba';
 
 @ProviderFor(apnsPushToStartTokenStream)
 final apnsPushToStartTokenStreamProvider =
@@ -134,7 +134,7 @@ final class ApnsPushToStartTokenStreamProvider
         argument: null,
         retry: null,
         name: r'apnsPushToStartTokenStreamProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -154,4 +154,4 @@ final class ApnsPushToStartTokenStreamProvider
 }
 
 String _$apnsPushToStartTokenStreamHash() =>
-    r'b7acb6a618cee1e3ae3771670a661b8f73a4617c';
+    r'34c8b91e943438401364058040f40a0b7744f5d7';
