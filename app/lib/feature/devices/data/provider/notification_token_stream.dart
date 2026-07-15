@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
+import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/live_activity/data/provider/eqm_live_activity_util.dart';
 import 'package:flutter/foundation.dart';
@@ -18,16 +20,19 @@ final notificationTokenApnsSupportedProvider = Provider<bool>(
 
 @Riverpod(keepAlive: true)
 Stream<NotificationToken> notificationTokenStream(Ref ref) async* {
-  final messaging = ref.watch(firebaseMessagingProvider);
-  await messaging.requestPermission(provisional: true);
+  final permission = await ref.watch(osNotificationPermissionProvider.future);
+  if (!permission.canReceiveRemoteNotifications) {
+    yield const NotificationToken();
+    return;
+  }
   final apnsSupported = ref.watch(notificationTokenApnsSupportedProvider);
 
-  final fcmToken = ref.watch(_firebaseMessagingTokenStreamProvider).value;
+  final fcmToken = ref.watch(firebaseMessagingTokenStreamProvider).value;
   final apnsToken = apnsSupported
-      ? ref.watch(_apnsTokenStreamProvider).value
+      ? ref.watch(apnsTokenStreamProvider).value
       : null;
   final apnsPushToStartToken = apnsSupported
-      ? ref.watch(_apnsPushToStartTokenStreamProvider).value
+      ? ref.watch(apnsPushToStartTokenStreamProvider).value
       : null;
 
   yield NotificationToken(
@@ -38,12 +43,12 @@ Stream<NotificationToken> notificationTokenStream(Ref ref) async* {
 }
 
 @Riverpod(keepAlive: true)
-Stream<String> _firebaseMessagingTokenStream(Ref ref) async* {
+Stream<String> firebaseMessagingTokenStream(Ref ref) async* {
   final messaging = ref.watch(firebaseMessagingProvider);
 
   // iOSの場合は、APNs Tokenを取得してからFCM Tokenを取得する
   if (ref.watch(notificationTokenApnsSupportedProvider)) {
-    await ref.read(_apnsTokenStreamProvider.future);
+    await ref.read(apnsTokenStreamProvider.future);
   }
 
   final initialToken = await messaging.getToken();
@@ -55,7 +60,7 @@ Stream<String> _firebaseMessagingTokenStream(Ref ref) async* {
 }
 
 @Riverpod(keepAlive: true)
-Stream<String> _apnsTokenStream(Ref ref) async* {
+Stream<String> apnsTokenStream(Ref ref) async* {
   final messaging = ref.watch(firebaseMessagingProvider);
   assert(
     kIsWeb || (Platform.isIOS || Platform.isMacOS),
@@ -73,7 +78,7 @@ Stream<String> _apnsTokenStream(Ref ref) async* {
 }
 
 @Riverpod(keepAlive: true)
-Stream<String> _apnsPushToStartTokenStream(Ref ref) async* {
+Stream<String> apnsPushToStartTokenStream(Ref ref) async* {
   if (kIsWeb || !(Platform.isIOS || Platform.isMacOS)) {
     return;
   }
