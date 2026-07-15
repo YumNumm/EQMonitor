@@ -166,17 +166,6 @@ class DeviceRepository {
     });
   }
 
-  Future<Result<void, Exception>> syncLiveActivityUpdateToken({
-    required String deviceId,
-    required String liveActivityId,
-    required String token,
-  }) => Result.capture(() async {
-    await _api.device.putV2DeviceMeLiveActivityLiveActivityIdToken(
-      liveActivityId: liveActivityId,
-      body: api.LiveActivityTokenRequest(token: token),
-    );
-  });
-
   Future<Result<void, Exception>> upsertPushToken({
     required PushTokenKind kind,
     required String token,
