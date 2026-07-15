@@ -194,6 +194,127 @@ void main() {
       expect(upserts, ['in-flight']);
       expect(worker.state, isA<PushTokenSyncWorkerDisposed>());
     });
+
+    test(
+      'reapplies the last synced token when it returns during an in-flight upsert',
+      () async {
+        final secondUpsert = Completer<void>();
+        final upserts = <String>[];
+        var serverToken = '';
+        final worker = PushTokenSyncWorker(
+          upsert: (token) async {
+            upserts.add(token);
+            if (token == 'token-b') {
+              await secondUpsert.future;
+            }
+            serverToken = token;
+          },
+          backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+        );
+        addTearDown(worker.dispose);
+
+        worker.accept(token: 'token-a');
+        await worker.states.whereState<PushTokenSyncWorkerSynced>().first;
+        final syncing = worker.states
+            .whereState<PushTokenSyncWorkerSyncing>()
+            .first;
+        worker.accept(token: 'token-b');
+        await syncing;
+        final restored = worker.states
+            .whereState<PushTokenSyncWorkerSynced>()
+            .first;
+        worker.accept(token: 'token-a');
+        secondUpsert.complete();
+        await restored;
+
+        expect(upserts, ['token-a', 'token-b', 'token-a']);
+        expect(serverToken, 'token-a');
+        expect(worker.state, isA<PushTokenSyncWorkerSynced>());
+      },
+    );
+
+    test(
+      'reverting a token interrupts retry backoff and restores it',
+      () async {
+        final delayed = Completer<void>();
+        final upserts = <String>[];
+        var tokenBCalls = 0;
+        var serverToken = '';
+        final worker = PushTokenSyncWorker(
+          upsert: (token) async {
+            upserts.add(token);
+            if (token == 'token-b' && tokenBCalls++ == 0) {
+              throw const NetworkUnreachableException();
+            }
+            serverToken = token;
+          },
+          backoff: InterruptibleBackoff(delayOverride: (_) => delayed.future),
+        );
+        addTearDown(() async {
+          if (!delayed.isCompleted) {
+            delayed.complete();
+          }
+          await worker.dispose();
+        });
+
+        worker.accept(token: 'token-a');
+        await worker.states.whereState<PushTokenSyncWorkerSynced>().first;
+        worker.accept(token: 'token-b');
+        await worker.states.whereState<PushTokenSyncWorkerWaiting>().first;
+        final restored = worker.states
+            .whereState<PushTokenSyncWorkerSynced>()
+            .first;
+        worker.accept(token: 'token-a');
+        await Future<void>.delayed(Duration.zero);
+        await Future<void>.delayed(Duration.zero);
+
+        expect(upserts, ['token-a', 'token-b', 'token-a']);
+        expect(serverToken, 'token-a');
+        expect(worker.state, isA<PushTokenSyncWorkerSynced>());
+        await restored;
+      },
+    );
+
+    test(
+      'unexpected errors fail once without escaping and dispose closes states',
+      () async {
+        final escapedErrors = <String>[];
+
+        await runZonedGuarded(
+          () async {
+            var calls = 0;
+            final worker = PushTokenSyncWorker(
+              upsert: (_) async {
+                calls++;
+                throw StateError('unexpected upsert failure');
+              },
+              backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+            );
+
+            worker.accept(token: 'unexpected');
+            final failed = await worker.states
+                .whereState<PushTokenSyncWorkerFailed>()
+                .first;
+            expect(failed.error, isA<UnexpectedProvisioningException>());
+            final unexpected = failed.error as UnexpectedProvisioningException;
+            expect(unexpected.cause, isA<StateError>());
+            expect(unexpected.stackTrace, isNotNull);
+
+            worker.accept(token: 'unexpected');
+            await Future<void>.delayed(Duration.zero);
+            expect(calls, 1);
+
+            await worker.dispose();
+            await expectLater(worker.states, emitsDone);
+          },
+          (error, stackTrace) {
+            escapedErrors.add('$error\n$stackTrace');
+          },
+        );
+
+        expect(escapedErrors, isEmpty);
+      },
+    );
   });
 }
 

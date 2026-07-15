@@ -42,15 +42,18 @@ final class PushTokenSyncWorker {
     }
 
     final isNewToken = token != _latestToken;
-    _latestToken = token;
-    if (token == _lastSyncedToken || !isNewToken) {
+    if (!isNewToken) {
       return;
     }
 
+    _latestToken = token;
     _attempt = 0;
     _blockedToken = null;
     _backoff.interrupt();
     if (_pumpFuture != null) {
+      return;
+    }
+    if (token == _lastSyncedToken) {
       return;
     }
 
@@ -91,12 +94,6 @@ final class PushTokenSyncWorker {
       if (attemptedToken == null || attemptedToken.isEmpty) {
         return;
       }
-      if (attemptedToken == _lastSyncedToken) {
-        _state = const PushTokenSyncWorkerState.synced();
-        _statesController.add(_state);
-        return;
-      }
-
       _state = PushTokenSyncWorkerState.syncing(attempt: _attempt);
       _statesController.add(_state);
       try {
@@ -104,8 +101,8 @@ final class PushTokenSyncWorker {
         if (_disposed) {
           return;
         }
+        _lastSyncedToken = attemptedToken;
         if (_latestToken == attemptedToken) {
-          _lastSyncedToken = attemptedToken;
           _state = const PushTokenSyncWorkerState.synced();
           _statesController.add(_state);
           return;
@@ -148,6 +145,21 @@ final class PushTokenSyncWorker {
         } else {
           _attempt = 0;
         }
+      } catch (error, stackTrace) {
+        if (_disposed) {
+          return;
+        }
+        final unexpected = UnexpectedProvisioningException(
+          cause: error,
+          stackTrace: stackTrace,
+        );
+        _blockedToken = attemptedToken;
+        _state = PushTokenSyncWorkerState.failed(
+          attempt: _attempt,
+          error: unexpected,
+        );
+        _statesController.add(_state);
+        return;
       }
     }
   }
