@@ -26,7 +26,6 @@ void main() {
       api: api.ApiClient(dio),
       authRepository: _MemoryDeviceAuthRepository(),
       apnsEnvironment: api.ApnsEnvironment.development,
-      isApplePlatform: true,
     );
   }
 

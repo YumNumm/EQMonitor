@@ -28,7 +28,6 @@ void main() {
       api: api.ApiClient(dio),
       authRepository: _FakeDeviceAuthRepository(),
       apnsEnvironment: api.ApnsEnvironment.development,
-      isApplePlatform: true,
     );
 
     await repository.upsertPushToken(

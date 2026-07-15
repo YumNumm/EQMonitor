@@ -5,169 +5,80 @@ import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
+import 'package:eqmonitor/feature/devices/data/model/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
+import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capabilities.dart';
+import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:telemetry_store/telemetry_store.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('auth failure is treated as recoverable deprovisioning signal', () {
-    const exception = AuthorizationException(
-      reason: AuthorizationFailureReason.unauthenticated,
-    );
-
-    expect(exception.isRetryable, isFalse);
-    expect(exception.userMessage, '認証が必要です');
-  });
-
-  test('handleAuthenticationFailure clears provisioned flag', () async {
-    SharedPreferences.setMockInitialValues({
-      SharedPreferencesKey.deviceProvisioned.key: true,
-    });
-    final prefs = await SharedPreferences.getInstance();
-    final container = ProviderContainer(
-      overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(prefs),
-        ),
-      ],
-    );
-    addTearDown(container.dispose);
-
-    await container
-        .read(pushTokenSyncProvider.notifier)
-        .handleAuthenticationFailure();
-
-    final repo = await container.read(
-      deviceProvisioningRepositoryProvider.future,
-    );
-    expect(await repo.isProvisioned(), isFalse);
-  });
-
   test(
-    'sync clears provisioned flag when push token sync is unauthenticated',
+    'unauthenticated upsert deprovisions and does not retry forever',
     () async {
       SharedPreferences.setMockInitialValues({
         SharedPreferencesKey.deviceProvisioned.key: true,
       });
       final prefs = await SharedPreferences.getInstance();
-      final deviceRepository = _UnauthenticatedDeviceRepository();
+      final tokens = StreamController<NotificationToken>();
+      final repository = _UnauthenticatedDeviceRepository();
       final container = ProviderContainer(
         overrides: [
           app_prefs.sharedPreferencesProvider.overrideWithValue(
             app_prefs.SharedPreferencesAsync(prefs),
           ),
-          deviceIdProvider.overrideWith((ref) async => 'device-id'),
-          notificationTokenStreamProvider.overrideWith(
-            (ref) =>
-                Stream.value(const NotificationToken(fcmToken: 'fcm-token')),
+          deviceAuthRepositoryProvider.overrideWith(
+            (ref) async => _MemoryDeviceAuthRepository(),
           ),
-          deviceRepositoryProvider.overrideWith(
-            (ref) async => deviceRepository,
+          notificationTokenStreamProvider.overrideWith((ref) => tokens.stream),
+          pushTokenPlatformCapabilitiesProvider.overrideWithValue(
+            const PushTokenPlatformCapabilities(supportsFcm: true),
           ),
+          deviceRepositoryProvider.overrideWith((ref) async => repository),
+          telemetryRecorderProvider.overrideWithValue(_NoopTelemetryRecorder()),
+          telemetryUploaderProvider.overrideWithValue(_NoopTelemetryUploader()),
         ],
       );
       addTearDown(container.dispose);
-      final pendingSnapshot = Completer<void>();
+      addTearDown(tokens.close);
+
+      await container.read(pushTokenSyncWiringProvider.future);
+      final failed = Completer<FailedTokenState>();
       final subscription = container.listen(pushTokenSyncProvider, (_, next) {
-        if ((next.value?.hasPending ?? false) && !pendingSnapshot.isCompleted) {
-          pendingSnapshot.complete();
+        final fcm = next.value?.fcm;
+        if (fcm is FailedTokenState && !failed.isCompleted) {
+          failed.complete(fcm);
         }
       });
       addTearDown(subscription.close);
+      tokens.add(const NotificationToken(fcmToken: 'fcm-token'));
 
-      await pendingSnapshot.future.timeout(const Duration(seconds: 5));
-
-      await expectLater(
-        container.read(pushTokenSyncProvider.notifier).sync(),
-        throwsA(
-          isA<AuthorizationException>().having(
-            (exception) => exception.reason,
-            'reason',
-            AuthorizationFailureReason.unauthenticated,
-          ),
-        ),
-      );
-
-      final repo = await container.read(
+      final failure = await failed.future.timeout(const Duration(seconds: 5));
+      final provisioningRepository = await container.read(
         deviceProvisioningRepositoryProvider.future,
       );
-      final state = container.read(pushTokenSyncProvider).value;
-      final fcm = state?.fcm;
-      expect(await repo.isProvisioned(), isFalse);
-      expect(fcm, isA<FailedTokenState>());
-      if (fcm is! FailedTokenState) {
-        fail('fcm token state should be FailedTokenState');
-      }
-      expect(
-        fcm.error,
-        isA<AuthorizationException>().having(
-          (exception) => exception.reason,
-          'reason',
-          AuthorizationFailureReason.unauthenticated,
-        ),
-      );
-      expect(deviceRepository._syncPushTokensCalls, 1);
+
+      expect(await provisioningRepository.isProvisioned(), isFalse);
+      expect(failure.error, isA<AuthorizationException>());
+      expect(failure.error.userMessage, '認証が必要です');
+      expect(repository.calls, 1);
     },
   );
-
-  test('sync retries failed token state after reprovisioning', () async {
-    SharedPreferences.setMockInitialValues({
-      SharedPreferencesKey.deviceProvisioned.key: true,
-    });
-    final prefs = await SharedPreferences.getInstance();
-    final deviceRepository = _RecoveringDeviceRepository();
-    final container = ProviderContainer(
-      overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(prefs),
-        ),
-        deviceIdProvider.overrideWith((ref) async => 'device-id'),
-        notificationTokenStreamProvider.overrideWith(
-          (ref) => Stream.value(const NotificationToken(fcmToken: 'fcm-token')),
-        ),
-        deviceRepositoryProvider.overrideWith(
-          (ref) async => deviceRepository,
-        ),
-      ],
-    );
-    addTearDown(container.dispose);
-    final pendingSnapshot = Completer<void>();
-    final subscription = container.listen(pushTokenSyncProvider, (_, next) {
-      if ((next.value?.hasPending ?? false) && !pendingSnapshot.isCompleted) {
-        pendingSnapshot.complete();
-      }
-    });
-    addTearDown(subscription.close);
-
-    await pendingSnapshot.future.timeout(const Duration(seconds: 5));
-    await expectLater(
-      container.read(pushTokenSyncProvider.notifier).sync(),
-      throwsA(isA<AuthorizationException>()),
-    );
-    final repo = await container.read(
-      deviceProvisioningRepositoryProvider.future,
-    );
-    await repo.markProvisioned();
-
-    await container.read(pushTokenSyncProvider.notifier).sync();
-
-    final state = container.read(pushTokenSyncProvider).value;
-    expect(state?.fcm, isA<SyncedTokenState>());
-    expect(deviceRepository._syncPushTokensCalls, 2);
-  });
 }
 
 final class _UnauthenticatedDeviceRepository extends DeviceRepository {
@@ -176,17 +87,16 @@ final class _UnauthenticatedDeviceRepository extends DeviceRepository {
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
-  var _syncPushTokensCalls = 0;
+  var calls = 0;
 
   @override
-  Future<Result<void, Exception>> syncPushTokens({
-    required String deviceId,
-    required NotificationToken token,
+  Future<Result<void, Exception>> upsertPushToken({
+    required PushTokenKind kind,
+    required String token,
   }) async {
-    _syncPushTokensCalls++;
+    calls++;
     return const Failure(
       AuthorizationException(
         reason: AuthorizationFailureReason.unauthenticated,
@@ -195,44 +105,14 @@ final class _UnauthenticatedDeviceRepository extends DeviceRepository {
   }
 }
 
-final class _RecoveringDeviceRepository extends DeviceRepository {
-  _RecoveringDeviceRepository()
-    : super(
-        api: api.ApiClient(Dio()),
-        authRepository: _MemoryDeviceAuthRepository(),
-        apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
-      );
-
-  var _syncPushTokensCalls = 0;
-
-  @override
-  Future<Result<void, Exception>> syncPushTokens({
-    required String deviceId,
-    required NotificationToken token,
-  }) async {
-    _syncPushTokensCalls++;
-    if (_syncPushTokensCalls == 1) {
-      return const Failure(
-        AuthorizationException(
-          reason: AuthorizationFailureReason.unauthenticated,
-        ),
-      );
-    }
-    return const Success(null);
-  }
-}
-
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
   _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
 
   @override
-  Future<void> saveToken({
-    required String token,
-  }) async {}
+  Future<void> saveToken({required String token}) async {}
 
   @override
-  Future<String?> readToken() async => null;
+  Future<String?> readToken() async => 'auth-token';
 
   @override
   Future<void> clearToken() async {}
@@ -305,4 +185,15 @@ final class _MemorySecurePreferencesDataSource
   Future<void> clear() async {
     values.clear();
   }
+}
+
+final class _NoopTelemetryRecorder extends Fake implements TelemetryRecorder {
+  @override
+  Future<void> record(TelemetryEvent event) async {}
+}
+
+final class _NoopTelemetryUploader extends Fake implements TelemetryUploader {
+  @override
+  Future<UploadResult> flush() async =>
+      const UploadResult(sentCount: 0, failedCount: 0);
 }

@@ -21,9 +21,6 @@ enum SharedPreferencesKey {
   /// v2.6アプリがSupabase device IDの保存に使用していたキー（移行用）
   legacyDeviceId('device_id'),
   deviceProvisioned('device_provisioned'),
-  lastFcmTokenHash('last_fcm_token_hash'),
-  lastApnsTokenHash('last_apns_token_hash'),
-  lastApnsPushToStartTokenHash('last_apns_push_to_start_token_hash'),
   deviceMigratedFromLegacy('device_migrated_from_legacy'),
   adsOptOut('ads_opt_out'),
   autoReturnToRealtime('auto_return_to_realtime'),
@@ -48,8 +45,7 @@ enum SharedPreferencesKey {
   bglDebugNotifyLatLng('bgl_debug_latlng'),
   bglDebugNotifyRegion('bgl_debug_region'),
   bglDebugNotifyPrefecture('bgl_debug_prefecture'),
-  bglDebugNotifyApiUpdate('bgl_debug_api_update'),
-  ;
+  bglDebugNotifyApiUpdate('bgl_debug_api_update');
 
   const SharedPreferencesKey(this.key);
   final String key;

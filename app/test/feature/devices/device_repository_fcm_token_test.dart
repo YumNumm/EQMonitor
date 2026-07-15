@@ -16,7 +16,6 @@ void main() {
       api: api.ApiClient(dio),
       authRepository: _FakeDeviceAuthRepository(),
       apnsEnvironment: api.ApnsEnvironment.development,
-      isApplePlatform: false,
     );
 
     await repository.upsertPushToken(kind: .fcm, token: 'fcm-token');
@@ -37,7 +36,6 @@ void main() {
       api: api.ApiClient(dio),
       authRepository: _FakeDeviceAuthRepository(),
       apnsEnvironment: api.ApnsEnvironment.development,
-      isApplePlatform: false,
     );
 
     final result = await repository.upsertPushToken(

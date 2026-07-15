@@ -27,7 +27,6 @@ void main() {
         api: api.ApiClient(dio),
         authRepository: authRepository,
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
       final result = await repository.registerDevice(
@@ -57,7 +56,6 @@ void main() {
         api: api.ApiClient(dio),
         authRepository: authRepository,
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
       final first = await repository.registerDevice(
@@ -98,7 +96,6 @@ void main() {
         api: api.ApiClient(dio),
         authRepository: authRepository,
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
       final result = await repository.registerDevice(
@@ -133,7 +130,6 @@ void main() {
         api: api.ApiClient(dio),
         authRepository: authRepository,
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
       final result = await repository.fetchOrRegister(
@@ -165,7 +161,6 @@ void main() {
         api: api.ApiClient(dio),
         authRepository: authRepository,
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
       final result = await repository.deleteDevice('local-device-id');

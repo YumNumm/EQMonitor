@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
-import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
@@ -20,7 +19,6 @@ Future<DeviceRepository> deviceRepository(Ref ref) async => DeviceRepository(
   api: await ref.watch(apiClientProvider.future),
   authRepository: await ref.watch(deviceAuthRepositoryProvider.future),
   apnsEnvironment: ref.watch(apnsEnvironmentProvider),
-  isApplePlatform: !kIsWeb && (Platform.isIOS || Platform.isMacOS),
 );
 
 class DeviceRepository {
@@ -28,17 +26,13 @@ class DeviceRepository {
     required api.ApiClient api,
     required DeviceAuthRepository authRepository,
     required api.ApnsEnvironment apnsEnvironment,
-    required bool isApplePlatform,
   }) : _api = api,
        _authRepository = authRepository,
-       _apnsEnvironment = apnsEnvironment,
-       _isApplePlatform = isApplePlatform;
+       _apnsEnvironment = apnsEnvironment;
 
   final api.ApiClient _api;
   final DeviceAuthRepository _authRepository;
   final api.ApnsEnvironment _apnsEnvironment;
-
-  final bool _isApplePlatform;
 
   Future<Result<RegisteredDevice, Exception>> getDevice(String deviceId) =>
       Result.capture(() async {
@@ -213,42 +207,4 @@ class DeviceRepository {
 
   static bool _shouldRegisterAfterGetFailure(Exception e) =>
       e is DioException && (e.response?.statusCode == 401 || _isNotFound(e));
-
-  Future<Result<void, Exception>> syncPushTokens({
-    required String deviceId,
-    required NotificationToken token,
-  }) async {
-    final fcm = token.fcmToken;
-    if (fcm != null && fcm.isNotEmpty) {
-      final r = await upsertPushToken(kind: .fcm, token: fcm);
-      if (r is Failure<void, Exception>) {
-        return r;
-      }
-    }
-
-    if (!_isApplePlatform) {
-      return const Success(null);
-    }
-
-    final apns = token.apnsToken;
-    if (apns != null && apns.isNotEmpty) {
-      final r = await upsertPushToken(kind: .apnsNotification, token: apns);
-      if (r is Failure<void, Exception>) {
-        return r;
-      }
-    }
-
-    final pushToStart = token.apnsPushToStartToken;
-    if (pushToStart != null && pushToStart.isNotEmpty) {
-      final r = await upsertPushToken(
-        kind: .apnsPushToStart,
-        token: pushToStart,
-      );
-      if (r is Failure<void, Exception>) {
-        return r;
-      }
-    }
-
-    return const Success(null);
-  }
 }

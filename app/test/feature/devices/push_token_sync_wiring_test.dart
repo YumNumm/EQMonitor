@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
@@ -17,146 +16,234 @@ import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capa
 import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
+import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod/experimental/mutation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:telemetry_store/telemetry_store.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('syncs automatically when notification token becomes pending', () async {
+  test('same token is upserted once in each fresh app session', () async {
     SharedPreferences.setMockInitialValues({
       SharedPreferencesKey.deviceProvisioned.key: true,
     });
     final prefs = await SharedPreferences.getInstance();
-    final tokenController = StreamController<NotificationToken>();
-    final authRepository = _MemoryDeviceAuthRepository();
-    final deviceRepository = _RecordingDeviceRepository();
-    final container = ProviderContainer(
-      overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(prefs),
-        ),
-        deviceAuthRepositoryProvider.overrideWith(
-          (ref) async => authRepository,
-        ),
-        deviceIdProvider.overrideWith((ref) async => 'device-id'),
-        notificationTokenStreamProvider.overrideWith(
-          (ref) => tokenController.stream,
-        ),
-        deviceRepositoryProvider.overrideWith((ref) async => deviceRepository),
-      ],
-    );
-    addTearDown(container.dispose);
-    addTearDown(tokenController.close);
+    final first = _createHarness(prefs: prefs);
+    await first.start();
+    first.tokens.add(const NotificationToken(fcmToken: 'same-token'));
+    await first.waitFor((snapshot) => snapshot.fcm is SyncedTokenState);
+    await first.dispose();
 
-    await container.read(pushTokenSyncWiringProvider.future);
-    tokenController.add(const NotificationToken(fcmToken: 'fcm-token'));
+    final second = _createHarness(prefs: prefs);
+    await second.start();
+    second.tokens.add(const NotificationToken(fcmToken: 'same-token'));
+    await second.waitFor((snapshot) => snapshot.fcm is SyncedTokenState);
+    await second.dispose();
 
-    await deviceRepository.synced.future.timeout(const Duration(seconds: 5));
-
-    expect(deviceRepository.tokens, [
-      const NotificationToken(fcmToken: 'fcm-token'),
+    expect(first.repository.calls, [
+      (kind: PushTokenKind.fcm, token: 'same-token'),
+    ]);
+    expect(second.repository.calls, [
+      (kind: PushTokenKind.fcm, token: 'same-token'),
     ]);
   });
 
-  test('unsupported platform wiring upserts only FCM', () async {
+  test('duplicate token is upserted once within one app session', () async {
     SharedPreferences.setMockInitialValues({
       SharedPreferencesKey.deviceProvisioned.key: true,
     });
     final prefs = await SharedPreferences.getInstance();
-    final authRepository = _MemoryDeviceAuthRepository();
-    final deviceRepository = _UpsertRecordingDeviceRepository();
-    final container = ProviderContainer(
-      overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(prefs),
-        ),
-        deviceAuthRepositoryProvider.overrideWith(
-          (ref) async => authRepository,
-        ),
-        deviceIdProvider.overrideWith((ref) async => 'device-id'),
-        notificationTokenStreamProvider.overrideWith(
-          (ref) => Stream.value(
-            const NotificationToken(
-              fcmToken: 'fcm-token',
-              apnsToken: 'apns-token',
-              apnsPushToStartToken: 'push-to-start-token',
-            ),
-          ),
-        ),
-        pushTokenPlatformCapabilitiesProvider.overrideWithValue(
-          const PushTokenPlatformCapabilities(),
-        ),
-        deviceRepositoryProvider.overrideWith((ref) async => deviceRepository),
-      ],
-    );
-    addTearDown(container.dispose);
-    final syncCompleted = Completer<void>();
-    final mutationSubscription = container.listen(
-      PushTokenSyncNotifier.syncMutation,
-      (_, next) {
-        if (next is MutationSuccess && !syncCompleted.isCompleted) {
-          syncCompleted.complete();
-        }
-      },
-    );
-    addTearDown(mutationSubscription.close);
+    final harness = _createHarness(prefs: prefs);
+    addTearDown(harness.dispose);
+    await harness.start();
 
-    await container.read(pushTokenSyncWiringProvider.future);
-    await syncCompleted.future.timeout(const Duration(seconds: 5));
+    const token = NotificationToken(fcmToken: 'same-token');
+    harness.tokens.add(token);
+    await harness.waitFor((snapshot) => snapshot.fcm is SyncedTokenState);
+    harness.tokens.add(token);
+    await harness.acks.stream.firstWhere((count) => count == 2);
 
-    final snapshot = container.read(pushTokenSyncProvider).value;
-    expect(snapshot?.apnsNotification, isA<NotApplicableTokenState>());
-    expect(snapshot?.apnsPushToStart, isA<NotApplicableTokenState>());
-    expect(deviceRepository.upsertedKinds, [PushTokenKind.fcm]);
+    expect(harness.repository.calls, [
+      (kind: PushTokenKind.fcm, token: 'same-token'),
+    ]);
   });
-}
 
-final class _RecordingDeviceRepository extends DeviceRepository {
-  _RecordingDeviceRepository()
-    : super(
-        api: api.ApiClient(Dio()),
-        authRepository: _MemoryDeviceAuthRepository(),
-        apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
+  test('retryable FCM failure does not block either APNs worker', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesKey.deviceProvisioned.key: true,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final repository = _RecordingDeviceRepository(failFcmRetryably: true);
+    final harness = _createHarness(
+      prefs: prefs,
+      repository: repository,
+      capabilities: const PushTokenPlatformCapabilities(
+        supportsFcm: true,
+        supportsApns: true,
+        supportsPushToStart: true,
+      ),
+    );
+    addTearDown(harness.dispose);
+    await harness.start();
+
+    harness.tokens.add(
+      const NotificationToken(
+        fcmToken: 'fcm-token',
+        apnsToken: 'apns-token',
+        apnsPushToStartToken: 'push-to-start-token',
+      ),
+    );
+    final snapshot = await harness.waitFor(
+      (value) =>
+          value.apnsNotification is SyncedTokenState &&
+          value.apnsPushToStart is SyncedTokenState &&
+          value.fcm is WaitingTokenState,
+    );
+
+    expect(snapshot.fcm, isA<WaitingTokenState>());
+    expect(
+      repository.calls,
+      containsAll(<({PushTokenKind kind, String token})>[
+        (kind: PushTokenKind.apnsNotification, token: 'apns-token'),
+        (kind: PushTokenKind.apnsPushToStart, token: 'push-to-start-token'),
+      ]),
+    );
+  });
+
+  test(
+    'unsupported kinds are notApplicable and make no repository call',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        SharedPreferencesKey.deviceProvisioned.key: true,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final harness = _createHarness(
+        prefs: prefs,
+        capabilities: const PushTokenPlatformCapabilities(supportsFcm: true),
+      );
+      addTearDown(harness.dispose);
+      await harness.start();
+
+      harness.tokens.add(
+        const NotificationToken(
+          fcmToken: 'fcm-token',
+          apnsToken: 'apns-token',
+          apnsPushToStartToken: 'push-to-start-token',
+        ),
+      );
+      final snapshot = await harness.waitFor(
+        (value) => value.fcm is SyncedTokenState,
       );
 
-  final synced = Completer<void>();
-  final tokens = <NotificationToken>[];
+      expect(snapshot.apnsNotification, isA<NotApplicableTokenState>());
+      expect(snapshot.apnsPushToStart, isA<NotApplicableTokenState>());
+      expect(harness.repository.calls, [
+        (kind: PushTokenKind.fcm, token: 'fcm-token'),
+      ]);
+    },
+  );
+}
 
-  @override
-  Future<Result<void, Exception>> syncPushTokens({
-    required String deviceId,
-    required NotificationToken token,
-  }) async {
-    tokens.add(token);
-    if (!synced.isCompleted) {
-      synced.complete();
-    }
-    return const Success(null);
+_WiringHarness _createHarness({
+  required SharedPreferences prefs,
+  _RecordingDeviceRepository? repository,
+  PushTokenPlatformCapabilities capabilities =
+      const PushTokenPlatformCapabilities(supportsFcm: true),
+}) {
+  final tokens = StreamController<NotificationToken>();
+  final acks = StreamController<int>.broadcast();
+  final resolvedRepository = repository ?? _RecordingDeviceRepository();
+  var emitted = 0;
+  final container = ProviderContainer(
+    overrides: [
+      app_prefs.sharedPreferencesProvider.overrideWithValue(
+        app_prefs.SharedPreferencesAsync(prefs),
+      ),
+      deviceAuthRepositoryProvider.overrideWith(
+        (ref) async => _MemoryDeviceAuthRepository(),
+      ),
+      notificationTokenStreamProvider.overrideWith((ref) async* {
+        await for (final token in tokens.stream) {
+          yield token;
+          emitted++;
+          acks.add(emitted);
+        }
+      }),
+      pushTokenPlatformCapabilitiesProvider.overrideWithValue(capabilities),
+      deviceRepositoryProvider.overrideWith((ref) async => resolvedRepository),
+      telemetryRecorderProvider.overrideWithValue(_NoopTelemetryRecorder()),
+      telemetryUploaderProvider.overrideWithValue(_NoopTelemetryUploader()),
+    ],
+  );
+  return _WiringHarness(
+    container: container,
+    tokens: tokens,
+    acks: acks,
+    repository: resolvedRepository,
+  );
+}
+
+final class _WiringHarness {
+  _WiringHarness({
+    required this.container,
+    required this.tokens,
+    required this.acks,
+    required this.repository,
+  });
+
+  final ProviderContainer container;
+  final StreamController<NotificationToken> tokens;
+  final StreamController<int> acks;
+  final _RecordingDeviceRepository repository;
+
+  Future<void> start() => container.read(pushTokenSyncWiringProvider.future);
+
+  Future<PushTokenSyncSnapshot> waitFor(
+    bool Function(PushTokenSyncSnapshot snapshot) predicate,
+  ) async {
+    final completer = Completer<PushTokenSyncSnapshot>();
+    final subscription = container.listen(pushTokenSyncProvider, (_, next) {
+      final snapshot = next.value;
+      if (snapshot != null && predicate(snapshot) && !completer.isCompleted) {
+        completer.complete(snapshot);
+      }
+    }, fireImmediately: true);
+    final snapshot = await completer.future.timeout(const Duration(seconds: 5));
+    subscription.close();
+    return snapshot;
+  }
+
+  Future<void> dispose() async {
+    container.dispose();
+    await tokens.close();
+    await acks.close();
   }
 }
 
-final class _UpsertRecordingDeviceRepository extends DeviceRepository {
-  _UpsertRecordingDeviceRepository()
+final class _RecordingDeviceRepository extends DeviceRepository {
+  _RecordingDeviceRepository({this.failFcmRetryably = false})
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
-  final upsertedKinds = <PushTokenKind>[];
+  final bool failFcmRetryably;
+  final calls = <({PushTokenKind kind, String token})>[];
 
   @override
   Future<Result<void, Exception>> upsertPushToken({
     required PushTokenKind kind,
     required String token,
   }) async {
-    upsertedKinds.add(kind);
+    calls.add((kind: kind, token: token));
+    if (kind == PushTokenKind.fcm && failFcmRetryably) {
+      return const Failure(NetworkUnreachableException());
+    }
     return const Success(null);
   }
 }
@@ -241,4 +328,15 @@ final class _MemorySecurePreferencesDataSource
   Future<void> clear() async {
     values.clear();
   }
+}
+
+final class _NoopTelemetryRecorder extends Fake implements TelemetryRecorder {
+  @override
+  Future<void> record(TelemetryEvent event) async {}
+}
+
+final class _NoopTelemetryUploader extends Fake implements TelemetryUploader {
+  @override
+  Future<UploadResult> flush() async =>
+      const UploadResult(sentCount: 0, failedCount: 0);
 }

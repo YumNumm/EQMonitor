@@ -255,7 +255,6 @@ class FakeDeviceRepository extends DeviceRepository {
          api: api.ApiClient(Dio()),
          authRepository: _MemoryDeviceAuthRepository(),
          apnsEnvironment: api.ApnsEnvironment.development,
-         isApplePlatform: true,
        );
 
   final Result<RegisteredDevice, Exception> Function() _getResult;

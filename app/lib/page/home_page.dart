@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
-import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
@@ -69,21 +68,6 @@ class _SheetBody extends ConsumerWidget {
               ref,
               (tsx) async =>
                   tsx.get(deviceProvisioningProvider.notifier).provision(),
-            ),
-          );
-        }
-      }
-    });
-
-    // プロビジョニング完了後にトークン同期を自動開始
-    ref.listen(deviceProvisioningProvider, (_, next) {
-      if (next.value == DeviceProvisioningStatus.notRequired) {
-        final mutation = PushTokenSyncNotifier.syncMutation;
-        if (ref.read(mutation) is! MutationPending) {
-          unawaited(
-            mutation.run(
-              ref,
-              (tsx) async => tsx.get(pushTokenSyncProvider.notifier).sync(),
             ),
           );
         }
@@ -203,9 +187,7 @@ class _SheetBody extends ConsumerWidget {
                     NotificationPermissionBanner(bottomSpacing: spacing.md),
                   DeviceProvisioningBanner(bottomSpacing: spacing.md),
                   if (showPermissionBanner) ...[
-                    _LocationPermissionBanner(
-                      bottomSpacing: spacing.md,
-                    ),
+                    _LocationPermissionBanner(bottomSpacing: spacing.md),
                   ],
                   if (shakeEvents.isNotEmpty)
                     Column(
@@ -303,9 +285,7 @@ class _LocationPermissionBanner extends ConsumerWidget {
                         Text(
                           message.$2,
                           style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: colorTheme.onPrimaryContainer,
-                              ),
+                              ?.copyWith(color: colorTheme.onPrimaryContainer),
                         ),
                     ],
                   ),
