@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
-import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/live_activity/data/provider/eqm_live_activity_util.dart';
