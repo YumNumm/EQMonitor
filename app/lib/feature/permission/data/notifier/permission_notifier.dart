@@ -23,7 +23,9 @@ class PermissionNotifier extends _$PermissionNotifier {
 
   Future<PermissionState> _loadFromOs() async {
     final repository = ref.read(permissionRepositoryProvider);
-    final notification = await repository.getNotificationPermission();
+    final notification = await ref.watch(
+      osNotificationPermissionProvider.future,
+    );
     final location = await repository.getLocationPermission();
     return PermissionState.fromOs(
       notification: notification,

@@ -68,6 +68,23 @@ void main() {
     expect(find.textContaining('通知'), findsNothing);
   });
 
+  testWidgets('権限状態の取得エラー時は安全なメッセージを表示する', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          isNotificationPermissionGrantedProvider.overrideWith(
+            (ref) async => throw StateError('sensitive raw error'),
+          ),
+        ],
+        child: _app(const NotificationPermissionBanner(bottomSpacing: 0)),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('通知権限の状態を確認できません'), findsOneWidget);
+    expect(find.textContaining('sensitive raw error'), findsNothing);
+  });
+
   testWidgets('権限要求成功後に OS 通知権限を再取得する', (tester) async {
     var buildCount = 0;
     final container = ProviderContainer(

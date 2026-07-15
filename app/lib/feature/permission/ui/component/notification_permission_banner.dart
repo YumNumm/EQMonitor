@@ -18,8 +18,12 @@ class NotificationPermissionBanner extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final granted =
-        ref.watch(isNotificationPermissionGrantedProvider).value ?? true;
+    final permission = ref.watch(isNotificationPermissionGrantedProvider);
+    final granted = permission.when(
+      data: (value) => value,
+      error: (_, _) => false,
+      loading: () => true,
+    );
     final dismissed =
         ref.watch(notificationPermissionBannerDismissedProvider).value ?? false;
     if (granted || dismissed) {
@@ -29,6 +33,10 @@ class NotificationPermissionBanner extends ConsumerWidget {
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
+    final title = permission.hasError ? '通知権限の状態を確認できません' : '通知が許可されていません';
+    final message = permission.hasError
+        ? '通知設定を確認してから、もう一度お試しください'
+        : '緊急地震速報などの通知を受け取るには通知を許可してください';
 
     return Padding(
       padding: EdgeInsets.only(bottom: bottomSpacing),
@@ -68,13 +76,13 @@ class NotificationPermissionBanner extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '通知が許可されていません',
+                        title,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: colorTheme.onPrimaryContainer,
                         ),
                       ),
                       Text(
-                        '緊急地震速報などの通知を受け取るには通知を許可してください',
+                        message,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: colorTheme.onPrimaryContainer,
                         ),

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
+import 'package:eqmonitor/feature/permission/data/model/permission_item_decision.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/permission_notifier.dart';
 import 'package:eqmonitor/feature/permission/data/repository/permission_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -44,6 +45,26 @@ NotificationSettings _notificationSettings(AuthorizationStatus status) =>
     );
 
 void main() {
+  test('初期化時の通知権限は共有 OS Provider から取得する', () async {
+    final container = ProviderContainer(
+      overrides: [
+        permissionRepositoryProvider.overrideWithValue(
+          _SuccessfulPermissionRepository(),
+        ),
+        osNotificationPermissionProvider.overrideWith(
+          (ref) async => OsNotificationPermission.fromNotificationSettings(
+            _notificationSettings(AuthorizationStatus.authorized),
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final state = await container.read(permissionProvider.future);
+
+    expect(state.notification, PermissionItemDecision.granted);
+  });
+
   test('通知権限要求後に OS 通知権限を再取得する', () async {
     var buildCount = 0;
     final container = ProviderContainer(
