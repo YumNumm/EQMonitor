@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
+import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
@@ -42,7 +43,9 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     }
 
     final tokenAsync = ref.watch(notificationTokenStreamProvider);
-    final apnsSupported = ref.watch(notificationTokenApnsSupportedProvider);
+    final apnsSupported = ref
+        .watch(pushTokenPlatformCapabilitiesProvider)
+        .supportsApns;
     return repository.computeSnapshot(
       tokenAsync.value,
       apnsSupported: apnsSupported,
@@ -65,7 +68,9 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     final repo = await ref.read(deviceProvisioningRepositoryProvider.future);
     final deviceRepo = await ref.read(deviceRepositoryProvider.future);
     final deviceId = await ref.read(deviceIdProvider.future);
-    final apnsSupported = ref.read(notificationTokenApnsSupportedProvider);
+    final apnsSupported = ref
+        .read(pushTokenPlatformCapabilitiesProvider)
+        .supportsApns;
     final currentState =
         state.value ??
         await repo.computeSnapshot(
