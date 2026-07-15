@@ -23,11 +23,14 @@ class DeviceProvisioningBanner extends ConsumerWidget {
     final provisionMutation = ref.watch(
       DeviceProvisioningNotifier.provisionMutation,
     );
-    final syncSnapshot = ref.watch(pushTokenSyncProvider);
+    final syncSnapshot =
+        provisionStatus.value == DeviceProvisioningStatus.notRequired
+        ? ref.watch(pushTokenSyncProvider)
+        : null;
 
     final notifier = ref.watch(deviceProvisioningProvider.notifier);
     final provisionRetry = notifier.retryState;
-    final syncRetry = syncSnapshot.value?.retryState ?? const RetryIdle();
+    final syncRetry = syncSnapshot?.value?.retryState ?? const RetryIdle();
 
     // アクティブなリトライ状態（provisioning 優先）
     final activeRetry = provisionRetry is! RetryIdle
