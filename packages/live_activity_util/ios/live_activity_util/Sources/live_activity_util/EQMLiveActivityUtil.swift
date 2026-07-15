@@ -7,6 +7,8 @@ import Foundation
   @available(iOS 16.1, *)
   @objc(EQMLiveActivityUtil)
   @objcMembers public class EQMLiveActivityUtil: NSObject {
+    @nonobjc private var pushToStartTokenObservationTask: Task<Void, Never>?
+
     @available(iOS 17.2, *)
     public func pushToStartToken() -> String? {
       let data = Activity<MockLiveActivityAttributes>.pushToStartToken
@@ -22,12 +24,21 @@ import Foundation
     public func observePushToStartTokenUpdates(
       _ onUpdate: @escaping @Sendable @convention(block) (NSString) -> Void
     ) {
-      Task {
+      stopObservingPushToStartTokenUpdates()
+      pushToStartTokenObservationTask = Task {
         for await tokenData in Activity<MockLiveActivityAttributes>.pushToStartTokenUpdates {
+          guard !Task.isCancelled else {
+            break
+          }
           let token = tokenData.map { String(format: "%02x", $0) }.joined()
           onUpdate(token as NSString)
         }
       }
+    }
+
+    @objc public func stopObservingPushToStartTokenUpdates() {
+      pushToStartTokenObservationTask?.cancel()
+      pushToStartTokenObservationTask = nil
     }
 
     /// EEW Live Activity の push update token 更新を監視する。

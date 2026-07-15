@@ -1930,6 +1930,8 @@ extension ObjCBlock_ffiVoid_NSString$CallExtension on objc.ObjCBlock<ffi.Void Fu
 
 late final _sel_observePushToStartTokenUpdates_ = objc.registerName("observePushToStartTokenUpdates:");
 final _objc_msgSend_f167m6 = objc.msgSendPointer.cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCBlockImpl> )>>().asFunction<void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCBlockImpl> )>();
+late final _sel_stopObservingPushToStartTokenUpdates = objc.registerName("stopObservingPushToStartTokenUpdates");
+final _objc_msgSend_1pl9qdv = objc.msgSendPointer.cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> )>>().asFunction<void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> )>();
 
 /// Construction methods for `objc.ObjCBlock<ffi.Void Function(objc.NSString, objc.NSString)>`.
 abstract final class ObjCBlock_ffiVoid_NSString_NSString {
@@ -2157,6 +2159,14 @@ _objc_msgSend_f167m6(object$.ref.pointer, _sel_observeShakeDetectionActivityPush
   objc.checkOsVersionInternal('EQMLiveActivityUtil.pushToStartToken', iOS: (false, (17, 2, 0)));
     final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_pushToStartToken);
     return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+
+  /// stopObservingPushToStartTokenUpdates
+  void stopObservingPushToStartTokenUpdates() {
+  objc.checkOsVersionInternal('EQMLiveActivityUtil.stopObservingPushToStartTokenUpdates', iOS: (false, (16, 1, 0)));
+_objc_msgSend_1pl9qdv(object$.ref.pointer, _sel_stopObservingPushToStartTokenUpdates);
+
   }
 
 }

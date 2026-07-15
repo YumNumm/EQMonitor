@@ -90,7 +90,10 @@ Stream<String> apnsPushToStartTokenStream(Ref ref) async* {
   }
 
   final controller = StreamController<String>.broadcast();
-  ref.onDispose(controller.close);
+  ref.onDispose(() {
+    eqmLiveActivityUtil.stopObservingPushToStartTokenUpdates();
+    controller.close().ignore();
+  });
 
   eqmLiveActivityUtil.observePushToStartTokenUpdates(
     ObjCBlock_ffiVoid_NSString.listener((nsToken) {
