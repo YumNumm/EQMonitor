@@ -1,15 +1,9 @@
-import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
+import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-class _FakeMessaging extends Fake implements FirebaseMessaging {
-  _FakeMessaging(this._settings);
-  final NotificationSettings _settings;
-  @override
-  Future<NotificationSettings> getNotificationSettings() async => _settings;
-}
 
 NotificationSettings _settings(AuthorizationStatus status) =>
     NotificationSettings(
@@ -33,8 +27,10 @@ void main() {
   test('authorized なら granted=true', () async {
     final container = ProviderContainer(
       overrides: [
-        firebaseMessagingProvider.overrideWithValue(
-          _FakeMessaging(_settings(AuthorizationStatus.authorized)),
+        osNotificationPermissionProvider.overrideWith(
+          (ref) async => OsNotificationPermission.fromNotificationSettings(
+            _settings(AuthorizationStatus.authorized),
+          ),
         ),
       ],
     );
@@ -48,8 +44,10 @@ void main() {
   test('provisional なら granted=false', () async {
     final container = ProviderContainer(
       overrides: [
-        firebaseMessagingProvider.overrideWithValue(
-          _FakeMessaging(_settings(AuthorizationStatus.provisional)),
+        osNotificationPermissionProvider.overrideWith(
+          (ref) async => OsNotificationPermission.fromNotificationSettings(
+            _settings(AuthorizationStatus.provisional),
+          ),
         ),
       ],
     );
@@ -63,8 +61,10 @@ void main() {
   test('denied なら granted=false', () async {
     final container = ProviderContainer(
       overrides: [
-        firebaseMessagingProvider.overrideWithValue(
-          _FakeMessaging(_settings(AuthorizationStatus.denied)),
+        osNotificationPermissionProvider.overrideWith(
+          (ref) async => OsNotificationPermission.fromNotificationSettings(
+            _settings(AuthorizationStatus.denied),
+          ),
         ),
       ],
     );

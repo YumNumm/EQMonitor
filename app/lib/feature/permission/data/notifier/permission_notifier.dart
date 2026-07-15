@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/model/permission_state.dart';
 import 'package:eqmonitor/feature/permission/data/repository/permission_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -33,6 +34,7 @@ class PermissionNotifier extends _$PermissionNotifier {
   Future<bool> requestNotification() async {
     final repository = ref.read(permissionRepositoryProvider);
     final isGranted = await repository.requestNotificationPermission();
+    ref.invalidate(osNotificationPermissionProvider);
     final current = state.requireValue;
     if (isGranted) {
       state = AsyncData(current.grantNotification());

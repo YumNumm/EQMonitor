@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/permission/data/repository/permission_repository.dart';
@@ -56,7 +57,7 @@ class NotificationPermissionBanner extends ConsumerWidget {
                     final ok = await ref
                         .read(permissionRepositoryProvider)
                         .requestNotificationPermission();
-                    ref.invalidate(isNotificationPermissionGrantedProvider);
+                    ref.invalidate(osNotificationPermissionProvider);
                     if (!ok) {
                       await AppSettings.openAppSettings(
                         type: AppSettingsType.notification,

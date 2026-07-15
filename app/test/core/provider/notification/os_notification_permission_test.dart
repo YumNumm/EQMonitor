@@ -45,6 +45,20 @@ ProviderContainer _container(FirebaseMessaging messaging) {
 
 void main() {
   group('OsNotificationPermission.fromNotificationSettings', () {
+    for (final entry in {
+      AuthorizationStatus.authorized: true,
+      AuthorizationStatus.provisional: true,
+      AuthorizationStatus.notDetermined: false,
+      AuthorizationStatus.denied: false,
+    }.entries) {
+      test('${entry.key} の Token 取得可否は ${entry.value}', () {
+        final permission = OsNotificationPermission.fromNotificationSettings(
+          _notificationSettings(authorizationStatus: entry.key),
+        );
+        expect(permission.canReceiveRemoteNotifications, entry.value);
+      });
+    }
+
     test('authorized のとき isOsNotificationGranted が true', () {
       final permission = OsNotificationPermission.fromNotificationSettings(
         _notificationSettings(
