@@ -1913,6 +1913,259 @@
         }
       }
     },
+    "/v2/device/me/live-activity/test": {
+      "post": {
+        "operationId": "postV2DeviceMeLiveActivityTest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestLiveActivityStartRequest"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Device"
+        ],
+        "description": "テスト用 Live Activity を開始する。Push-to-Start トークン宛に input-push-channel なしの start push を送信するため、チャンネル Broadcast の対象外となり、update/end は updateToken による個別配信でのみ行われる。クライアントは attributes.id（live_activity_id）に対して updateToken を登録すること。",
+        "responses": {
+          "201": {
+            "description": "テスト用 Live Activity の開始 push を送信",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestLiveActivityStartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "iOS 以外のデバイス",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "デバイスまたは Push-to-Start トークンが見つからない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "レート制限",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitedResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "サービス利用不可",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUnavailableResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/device/me/live-activity/test/{liveActivityId}/update": {
+      "post": {
+        "operationId": "postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/LiveActivityIdParam"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestLiveActivityUpdateRequest"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Device"
+        ],
+        "description": "テスト用 Live Activity を updateToken による個別配信で更新する。このエンドポイントで開始した Live Activity（eventId が test-live-activity- で始まるもの）にのみ使用できる。",
+        "responses": {
+          "200": {
+            "description": "update push を送信",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestLiveActivitySendResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "テスト用 Live Activity ではない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Live Activity が見つからない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "updateToken が未登録",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "レート制限",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitedResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "サービス利用不可",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUnavailableResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/device/me/live-activity/test/{liveActivityId}/end": {
+      "post": {
+        "operationId": "postV2DeviceMeLiveActivityTestByLiveActivityIdEnd",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/LiveActivityIdParam"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestLiveActivityEndRequest"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Device"
+        ],
+        "description": "テスト用 Live Activity を updateToken による個別配信で終了（dismiss）する。content_state を省略した場合は最小限の ContentState（eventId のみ）で終了する。",
+        "responses": {
+          "200": {
+            "description": "end push を送信",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestLiveActivitySendResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "テスト用 Live Activity ではない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Live Activity が見つからない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "updateToken が未登録",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "レート制限",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitedResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "サービス利用不可",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUnavailableResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/device/me/live-activity": {
       "get": {
         "operationId": "getV2DeviceMeLiveActivity",
@@ -2312,6 +2565,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "レート制限",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitedResponse"
                 }
               }
             }
@@ -5625,6 +5888,9 @@
             "items": {
               "$ref": "#/components/schemas/ChangelogSection"
             }
+          },
+          "content": {
+            "type": "string"
           }
         },
         "required": [
@@ -6384,9 +6650,13 @@
           },
           "vyse60_enabled": {
             "type": "boolean"
+          },
+          "earthquake_notice_enabled": {
+            "type": "boolean"
           }
         },
         "required": [
+          "earthquake_notice_enabled",
           "nankai_extraordinary_enabled",
           "nankai_regular_enabled",
           "notification_enabled",
@@ -6414,6 +6684,9 @@
             "type": "boolean"
           },
           "vyse60_enabled": {
+            "type": "boolean"
+          },
+          "earthquake_notice_enabled": {
             "type": "boolean"
           }
         }
@@ -7110,6 +7383,157 @@
         "type": "string",
         "description": "Live Activity開始トリガー"
       },
+      "LiveActivityContentState": {
+        "type": "object",
+        "propertyNames": {
+          "type": "string"
+        },
+        "additionalProperties": {},
+        "description": "Live ActivityのContentState。クライアントのContentState型（EewContentState / ShakeDetectionContentState）に一致するJSONオブジェクト"
+      },
+      "TestLiveActivityStartRequest": {
+        "type": "object",
+        "properties": {
+          "start_trigger": {
+            "$ref": "#/components/schemas/LiveActivityStartTrigger"
+          },
+          "content_state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LiveActivityContentState"
+              }
+            ]
+          },
+          "alert": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "body",
+              "title"
+            ]
+          }
+        },
+        "required": [
+          "start_trigger"
+        ]
+      },
+      "TestLiveActivityStartResponse": {
+        "type": "object",
+        "properties": {
+          "live_activity_id": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "start_trigger": {
+            "$ref": "#/components/schemas/LiveActivityStartTrigger"
+          }
+        },
+        "required": [
+          "event_id",
+          "live_activity_id",
+          "start_trigger"
+        ]
+      },
+      "RateLimitedResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "RATE_LIMITED"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "ServiceUnavailableResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "SERVICE_UNAVAILABLE"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "TestLiveActivityUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "content_state": {
+            "$ref": "#/components/schemas/LiveActivityContentState"
+          }
+        },
+        "required": [
+          "content_state"
+        ]
+      },
+      "TestLiveActivitySendResponse": {
+        "type": "object",
+        "properties": {
+          "live_activity_id": {
+            "type": "string"
+          },
+          "event": {
+            "enum": [
+              "update",
+              "end"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "event",
+          "live_activity_id",
+          "message"
+        ]
+      },
+      "ConflictResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "CONFLICT"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "TestLiveActivityEndRequest": {
+        "type": "object",
+        "properties": {
+          "content_state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LiveActivityContentState"
+              }
+            ]
+          }
+        }
+      },
       "LiveActivityTokenResponse": {
         "type": "object",
         "properties": {
@@ -7285,21 +7709,6 @@
         },
         "required": [
           "items"
-        ]
-      },
-      "ServiceUnavailableResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "SERVICE_UNAVAILABLE"
-          },
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message"
         ]
       },
       "TestNotificationType": {
@@ -7530,21 +7939,6 @@
         },
         "required": [
           "migrated"
-        ]
-      },
-      "ConflictResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "CONFLICT"
-          },
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message"
         ]
       },
       "JmaLpgmIntensity": {
