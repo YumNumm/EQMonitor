@@ -30,6 +30,15 @@ struct LargeWidgetView: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let layout: WidgetLayoutKind = switch widgetFamily {
+            case .systemLarge: .large
+            case .systemExtraLarge: .extraLarge
+            default: .medium
+            }
+            let maxCount = WidgetLayoutPolicy.maxItemCount(
+                layout: layout,
+                availableHeight: Double(geometry.size.height)
+            )
             VStack(alignment: .leading, spacing: 0) {
                 WidgetHeader(
                     title: headerTitle,
@@ -46,8 +55,10 @@ struct LargeWidgetView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     VStack(spacing: 6) {
-                        ForEach(displayedEarthquakes) { eq in
-                            EarthquakeRow(earthquake: eq)
+                        ForEach(Array(entry.earthquakes.prefix(maxCount))) { eq in
+                            EarthquakeDetailLink(eventId: eq.id) {
+                                EarthquakeRow(earthquake: eq)
+                            }
                         }
                     }
                     .padding(.horizontal, 12)
@@ -60,17 +71,6 @@ struct LargeWidgetView: View {
         }
     }
 
-    private var displayedEarthquakes: [EarthquakeDisplayItem] {
-        let maxCount: Int
-        switch widgetFamily {
-        case .systemMedium: maxCount = 3
-        case .systemLarge: maxCount = 5
-        case .systemExtraLarge: maxCount = 8
-        default: maxCount = 3
-        }
-        return Array(entry.earthquakes.prefix(maxCount))
-    }
-
     private var headerTitle: String { entry.title }
 }
 
@@ -81,6 +81,10 @@ struct SmallWidgetView: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let maxCount = WidgetLayoutPolicy.maxItemCount(
+                layout: .small,
+                availableHeight: Double(geometry.size.height)
+            )
             VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 6) {
                     Image(systemName: "waveform.path.ecg")
@@ -119,11 +123,13 @@ struct SmallWidgetView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     VStack(spacing: 6) {
-                        ForEach(Array(entry.earthquakes.prefix(3)), id: \.id) { eq in
-                            CompactEarthquakeRow(
-                                earthquake: eq,
-                                availableWidth: geometry.size.width - 24
-                            )
+                        ForEach(Array(entry.earthquakes.prefix(maxCount)), id: \.id) { eq in
+                            EarthquakeDetailLink(eventId: eq.id) {
+                                CompactEarthquakeRow(
+                                    earthquake: eq,
+                                    availableWidth: geometry.size.width - 24
+                                )
+                            }
                         }
                     }
                     .padding(.top, 6)
@@ -137,6 +143,27 @@ struct SmallWidgetView: View {
     }
 
     private var headerTitle: String { entry.compactTitle }
+}
+
+private struct EarthquakeDetailLink<Content: View>: View {
+    let eventId: String
+    let content: Content
+
+    init(eventId: String, @ViewBuilder content: () -> Content) {
+        self.eventId = eventId
+        self.content = content()
+    }
+
+    var body: some View {
+        if let destination = EarthquakeDetailURL.make(eventId: eventId) {
+            Link(destination: destination) {
+                content
+            }
+            .buttonStyle(.plain)
+        } else {
+            content
+        }
+    }
 }
 
 // MARK: - Header

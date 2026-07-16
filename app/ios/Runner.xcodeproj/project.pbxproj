@@ -67,6 +67,11 @@
 		BC0CFBCC72CE2AE431EFB5A8 /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		BFEAEC9B65D462419D75AB02 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
 		C905E0E780206CF2C8BD7D24 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF843E9B82869CED39772C0 /* DesignTokens.swift */; };
+		D11111111111111111111111 /* WidgetLayoutPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11111111111111111111111 /* WidgetLayoutPolicy.swift */; };
+		D11222222222222222222222 /* WidgetLayoutPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11111111111111111111111 /* WidgetLayoutPolicy.swift */; };
+		D11333333333333333333333 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
+		D11444444444444444444444 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
+		D11555555555555555555555 /* WidgetBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11333333333333333333333 /* WidgetBehaviorTests.swift */; };
 		E8CFD3E6506B946469164594 /* ColorRGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */; };
 /* End PBXBuildFile section */
 
@@ -181,6 +186,9 @@
 		B6B6DA9CE2EEF26041AC4AA5 /* WidgetRegionResolver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolver.swift; sourceTree = "<group>"; };
 		C90F30E033EFA7F3A113F856 /* RegionType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegionType.swift; sourceTree = "<group>"; };
 		C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDisplayItemTests.swift; sourceTree = "<group>"; };
+		E11111111111111111111111 /* WidgetLayoutPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetLayoutPolicy.swift; sourceTree = "<group>"; };
+		E11222222222222222222222 /* EarthquakeDetailURL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDetailURL.swift; sourceTree = "<group>"; };
+		E11333333333333333333333 /* WidgetBehaviorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetBehaviorTests.swift; sourceTree = "<group>"; };
 		CEF843E9B82869CED39772C0 /* DesignTokens.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelegramStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -311,6 +319,7 @@
 			isa = PBXGroup;
 			children = (
 				C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */,
+				E11333333333333333333333 /* WidgetBehaviorTests.swift */,
 			);
 			path = WidgetModelsTests;
 			sourceTree = "<group>";
@@ -423,6 +432,8 @@
 				687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */,
 				CEF843E9B82869CED39772C0 /* DesignTokens.swift */,
 				4569B747204EE74872C7E9DB /* IntensityBadge.swift */,
+				E11111111111111111111111 /* WidgetLayoutPolicy.swift */,
+				E11222222222222222222222 /* EarthquakeDetailURL.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -739,6 +750,9 @@
 				8EF4AB3495DB7B973CA66ECE /* TelegramStatus.swift in Sources */,
 				8E635D22711F52F4CFE9A1C8 /* WidgetRegionResolver.swift in Sources */,
 				184FB8BC5F4302620BDD2667 /* EarthquakeDisplayItemTests.swift in Sources */,
+				D11222222222222222222222 /* WidgetLayoutPolicy.swift in Sources */,
+				D11444444444444444444444 /* EarthquakeDetailURL.swift in Sources */,
+				D11555555555555555555555 /* WidgetBehaviorTests.swift in Sources */,
 				1209177840DD3D17C94E1B5D /* RegionType.swift in Sources */,
 				E8CFD3E6506B946469164594 /* ColorRGB.swift in Sources */,
 			);
@@ -757,6 +771,8 @@
 				03155D2EC2B76909DF1A4693 /* ColorRGB.swift in Sources */,
 				A3B5B9968DB246E0B08A8C01 /* DesignTokens.swift in Sources */,
 				54E5BF908232F546B7D6E562 /* IntensityBadge.swift in Sources */,
+				D11111111111111111111111 /* WidgetLayoutPolicy.swift in Sources */,
+				D11333333333333333333333 /* EarthquakeDetailURL.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
