@@ -101,7 +101,8 @@ class _HomeFeedListTile extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(shape.md),
-      onTap: () => FeedDetailsRoute(telegramHash: item.id).push<void>(context),
+      onTap: () async =>
+          FeedItemDetailsRoute(id: item.id, $extra: item).push<void>(context),
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: spacing.lg,

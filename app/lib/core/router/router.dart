@@ -14,7 +14,9 @@ import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_detai
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
+import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_details_page.dart';
+import 'package:eqmonitor/feature/feed/ui/page/feed_item_details_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/intensity_history_page.dart';
@@ -101,7 +103,8 @@ GoRouter goRouter(Ref ref) => GoRouter(
     final isOnboardingCompleted =
         ref.read(onboardingCompletedProvider).value ?? false;
     if (!isOnboardingCompleted) {
-      final allowedDuringOnboarding = [
+      final allowedDuringOnboarding =
+          [
             const OnboardingRoute().location,
             const TermOfServiceRoute($extra: null).location,
             const PrivacyPolicyRoute($extra: null).location,
@@ -158,10 +161,7 @@ class OnboardingRoute extends GoRouteData with $OnboardingRoute {
 
 @TypedGoRoute<OnboardingWebViewRoute>(path: '/onboarding/web-view')
 class OnboardingWebViewRoute extends GoRouteData with $OnboardingWebViewRoute {
-  const OnboardingWebViewRoute({
-    required this.title,
-    required this.url,
-  });
+  const OnboardingWebViewRoute({required this.title, required this.url});
 
   final String title;
   final String url;
@@ -903,6 +903,18 @@ class FeedDetailsRoute extends GoRouteData with $FeedDetailsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       FeedDetailsPage(telegramHash: telegramHash);
+}
+
+@TypedGoRoute<FeedItemDetailsRoute>(path: '/feed/detail/:id')
+class FeedItemDetailsRoute extends GoRouteData with $FeedItemDetailsRoute {
+  const FeedItemDetailsRoute({required this.id, this.$extra});
+
+  final String id;
+  final FeedItem? $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      FeedItemDetailsPage(id: id, item: $extra);
 }
 
 @TypedGoRoute<TsunamiDetailsRoute>(path: '/tsunami/:tsunamiId')
