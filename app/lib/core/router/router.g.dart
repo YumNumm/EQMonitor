@@ -627,6 +627,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugTelemetryRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'live-activity',
+          factory: $DebugLiveActivityRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'tsunami-details',
           factory: $DebugTsunamiDetailsRoute._fromState,
           routes: [
@@ -1444,6 +1448,27 @@ mixin $DebugTelemetryRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/telemetry');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugLiveActivityRoute on GoRouteData {
+  static DebugLiveActivityRoute _fromState(GoRouterState state) =>
+      const DebugLiveActivityRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/live-activity');
 
   @override
   void go(BuildContext context) => context.go(location);

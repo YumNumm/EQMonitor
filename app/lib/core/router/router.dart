@@ -54,6 +54,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navi
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/debug_live_activity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_shared_preferences_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/telemetry/debug_telemetry_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_tsunami_details_page.dart';
@@ -377,6 +378,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugSharedPreferencesRoute>(path: 'shared-preferences'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
         TypedGoRoute<DebugTelemetryRoute>(path: 'telemetry'),
+        TypedGoRoute<DebugLiveActivityRoute>(path: 'live-activity'),
         TypedGoRoute<DebugTsunamiDetailsRoute>(
           path: 'tsunami-details',
           routes: [
@@ -727,6 +729,16 @@ class DebugTelemetryRoute extends GoRouteData with $DebugTelemetryRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugTelemetryPage();
+  }
+}
+
+class DebugLiveActivityRoute extends GoRouteData
+    with $DebugLiveActivityRoute {
+  const DebugLiveActivityRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugLiveActivityPage();
   }
 }
 

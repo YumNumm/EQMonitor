@@ -337,6 +337,14 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   const DebugDeviceSettingsRoute().push<void>(context),
             ),
+            if (Platform.isIOS)
+              ListTile(
+                title: const Text('Live Activity テスト'),
+                subtitle: const Text('テスト用 Live Activity の開始・更新・終了'),
+                leading: const Icon(Icons.broadcast_on_personal),
+                onTap: () async =>
+                    const DebugLiveActivityRoute().push<void>(context),
+              ),
             ListTile(
               title: const Text('通知配信ログ'),
               subtitle: const Text('GET /v2/device/{id}/notification/history'),
