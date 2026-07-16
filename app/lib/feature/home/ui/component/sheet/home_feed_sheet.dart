@@ -27,7 +27,7 @@ class HomeFeedSheet extends ConsumerWidget {
 
     // 初回起動時: フィード読み込み完了時点の最新を既読基準として保存し、
     // 過去のお知らせがバナー表示されないようにする
-    ref.listen(feedProvider, (_, next) {
+    void initializeFeedLastRead(AsyncValue<FeedNotifierState> next) {
       final items = next.value?.items;
       if (items == null || items.isEmpty) {
         return;
@@ -38,7 +38,10 @@ class HomeFeedSheet extends ConsumerWidget {
       unawaited(
         ref.read(feedLastReadProvider.notifier).initializeIfUnset(newest),
       );
-    });
+    }
+
+    ref.listen(feedProvider, (_, next) => initializeFeedLastRead(next));
+    initializeFeedLastRead(state);
     final unreadItem = ref.watch(unreadHighUrgencyFeedProvider);
 
     return Card.outlined(

@@ -125,7 +125,8 @@ void main() {
     await _pump(tester, items: [urgent], lastRead: lastRead);
 
     expect(find.text('タイトル-urgent'), findsNothing);
-    expect(lastRead.initializeCalls, [urgent.publishedAt]);
+    expect(lastRead.initializeCalls, isNotEmpty);
+    expect(lastRead.initializeCalls.first, urgent.publishedAt);
   });
 
   testWidgets('×ボタンで既読化されバナーが消える', (tester) async {
