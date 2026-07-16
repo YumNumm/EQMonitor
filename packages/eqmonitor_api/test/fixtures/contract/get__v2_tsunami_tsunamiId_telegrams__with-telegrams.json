@@ -42,8 +42,13 @@
         ],
         "latest_telegrams": [
           {
+            "id": "stub-telegram-vtse41",
             "type": "VTSE41",
             "title": "大津波警報・津波警報・津波注意報",
+            "editorial_office": "気象庁本庁",
+            "publishing_office": [
+              "気象庁"
+            ],
             "pressed_at": "2011-03-11T05:49:00.000Z",
             "reported_at": "2011-03-11T05:49:02.000Z",
             "info_kind": "津波警報・注意報・予報a",
@@ -250,8 +255,13 @@
         ],
         "latest_telegrams": [
           {
+            "id": "stub-telegram-vtse41",
             "type": "VTSE41",
             "title": "大津波警報・津波警報・津波注意報",
+            "editorial_office": "気象庁本庁",
+            "publishing_office": [
+              "気象庁"
+            ],
             "pressed_at": "2011-03-11T05:49:00.000Z",
             "reported_at": "2011-03-11T05:49:02.000Z",
             "info_kind": "津波警報・注意報・予報a",

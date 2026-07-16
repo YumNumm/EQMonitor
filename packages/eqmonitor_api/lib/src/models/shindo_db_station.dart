@@ -14,9 +14,9 @@ abstract class ShindoDbStation with _$ShindoDbStation {
     required String name,
     required num latitude,
     required num longitude,
-    @JsonKey(includeIfNull: true, name: 'city_code') required String? cityCode,
+    @JsonKey(includeIfNull: true,name: 'city_code')
+    required String? cityCode,
   }) = _ShindoDbStation;
-
-  factory ShindoDbStation.fromJson(Map<String, Object?> json) =>
-      _$ShindoDbStationFromJson(json);
+  
+  factory ShindoDbStation.fromJson(Map<String, Object?> json) => _$ShindoDbStationFromJson(json);
 }
