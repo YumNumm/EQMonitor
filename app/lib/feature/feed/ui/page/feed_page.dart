@@ -1,17 +1,40 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_data_source.dart';
-import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
+import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
+import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dart';
+import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
 
-class FeedPage extends ConsumerWidget {
+class FeedPage extends HookConsumerWidget {
   const FeedPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 一覧を開いたら、読み込み済みの最新お知らせまで既読にする
+    useEffect(() {
+      unawaited(
+        Future(() async {
+          final state = await ref.read(feedProvider.future);
+          if (!context.mounted || state.items.isEmpty) {
+            return;
+          }
+          final newest = state.items
+              .map((e) => e.publishedAt)
+              .reduce((a, b) => a.isAfter(b) ? a : b);
+          await ref.read(feedLastReadProvider.notifier).markRead(newest);
+        }),
+      );
+      return null;
+    }, const []);
+
     final dataSourceAsync = ref.watch(feedDataSourceProvider);
 
     return Scaffold(
@@ -52,34 +75,17 @@ class _PagingBody extends StatelessWidget {
           ),
           SliverPagingList<String?, FeedItem>(
             dataSource: dataSource,
-            builder: (context, item, index) =>
-                FeedItemListTileContent(item: item),
-            initialLoadingWidget: FeedItemListTileContent(
-              item: FeedItem(
-                id: '1',
-                feedType: FeedType.appUpdate,
-                priority: FeedPriority.normal,
-                isImportant: false,
-                title: 'アップデート',
-                summary: 'アップデートがあります',
-                data: FeedItemData.appUpdate(),
-                publishedAt: DateTime.now(),
-                expiresAt: DateTime.now().add(const Duration(days: 30)),
-              ),
+            builder: (context, item, index) => FeedItemListTile(
+              item: item,
+              onTap: () async => FeedItemDetailsRoute(
+                id: item.id,
+                $extra: item,
+              ).push<void>(context),
             ),
-            appendLoadingWidget: FeedItemListTileContent(
-              item: FeedItem(
-                id: '2',
-                feedType: FeedType.appUpdate,
-                priority: FeedPriority.normal,
-                isImportant: false,
-                title: 'アップデート',
-                summary: 'アップデートがあります',
-                data: FeedItemData.appUpdate(),
-                publishedAt: DateTime.now(),
-                expiresAt: DateTime.now().add(const Duration(days: 30)),
-              ),
+            initialLoadingWidget: FeedItemListTile(
+              item: _loadingDummyItem('1'),
             ),
+            appendLoadingWidget: FeedItemListTile(item: _loadingDummyItem('2')),
             errorBuilder: (context, error, stackTrace) => ErrorCard(
               error: error,
               onReload: () async => dataSource.refresh(),
@@ -107,3 +113,15 @@ class _PagingBody extends StatelessWidget {
     );
   }
 }
+
+FeedItem _loadingDummyItem(String id) => FeedItem(
+  id: id,
+  feedType: FeedType.appUpdate,
+  priority: FeedPriority.normal,
+  isImportant: false,
+  title: 'アップデート',
+  summary: 'アップデートがあります',
+  data: const FeedItemData.appUpdate(),
+  publishedAt: DateTime.now(),
+  expiresAt: DateTime.now().add(const Duration(days: 30)),
+);
