@@ -8,7 +8,6 @@ import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/provider/theme_presets_provider.dart';
-import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_json_dialogs.dart';
 import 'package:flutter/material.dart';
@@ -136,10 +135,10 @@ class _ThemePreview extends StatelessWidget {
                 children: JmaIntensity.values
                     .map(
                       (e) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        padding: const .symmetric(horizontal: 2),
                         child: JmaIntensityIcon(
                           intensity: e,
-                          type: IntensityIconType.small,
+                          type: .small,
                           size: 24,
                         ),
                       ),
