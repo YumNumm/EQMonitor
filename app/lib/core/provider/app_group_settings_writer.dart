@@ -4,12 +4,12 @@ import 'package:eqmonitor/core/provider/app_group_preferences.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/provider/widget_timeline_reloader.dart';
+import 'package:eqmonitor/core/provider/widget_current_location_loader.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/data/model/widget_region_selection.dart';
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/data/notifier/widget_region_notifier.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:flutter/foundation.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -83,18 +83,50 @@ Future<bool> _writeWidgetRegion(
     AppGroupKeys.widgetRegionSearchType,
     region.searchType.name,
   );
-  changed |= await _setString(prefs, AppGroupKeys.widgetRegionCode, region.code);
-  changed |= await _setString(prefs, AppGroupKeys.widgetRegionName, region.name);
+  changed |= await _setString(
+    prefs,
+    AppGroupKeys.widgetRegionCode,
+    region.code,
+  );
+  changed |= await _setString(
+    prefs,
+    AppGroupKeys.widgetRegionName,
+    region.name,
+  );
   return changed;
 }
 
-Future<bool> _writeCurrentLocation(Ref ref, SharedPreferencesAsync prefs) async {
-  final resolution = await _resolveCurrentLocation(ref);
-  return writeCurrentLocationRegionToAppGroup(
-    prefs,
-    regionCode: resolution?.regionCode,
-    regionName: resolution?.regionName,
-  );
+Future<bool> _writeCurrentLocation(
+  Ref ref,
+  SharedPreferencesAsync prefs,
+) async {
+  final result = await ref.read(widgetCurrentLocationLoaderProvider).load();
+  switch (result.state) {
+    case WidgetLocationState.permissionDenied:
+      return writeCurrentLocationRegionToAppGroup(
+        prefs,
+        regionCode: null,
+        regionName: null,
+      );
+    case WidgetLocationState.temporarilyUnavailable:
+      return false;
+    case WidgetLocationState.available:
+      if (result.position case final position?) {
+        final resolver = await ref.read(jmaRegionResolverProvider.future);
+        final resolution = resolver.resolveEarthquakeRegion(
+          position.latitude,
+          position.longitude,
+        );
+        if (resolution != null) {
+          return writeCurrentLocationRegionToAppGroup(
+            prefs,
+            regionCode: resolution.regionCode,
+            regionName: resolution.regionName,
+          );
+        }
+      }
+      return false;
+  }
 }
 
 /// 現在地の一次細分化地域コード/名を App Group に書き込む。
@@ -127,30 +159,6 @@ Future<bool> writeCurrentLocationRegionToAppGroup(
   return codeChanged || nameChanged;
 }
 
-/// 位置権限が許可済みのときだけ、キャッシュ済み位置から地震情報用の一次細分化
-/// 地域を解決する。新規の権限要求・GPS 再起動は行わない。
-Future<EarthquakeRegionResolution?> _resolveCurrentLocation(Ref ref) async {
-  try {
-    final permission = await Geolocator.checkPermission();
-    if (permission != LocationPermission.always &&
-        permission != LocationPermission.whileInUse) {
-      return null;
-    }
-    final position = await Geolocator.getLastKnownPosition();
-    if (position == null) {
-      return null;
-    }
-    final resolver = await ref.read(jmaRegionResolverProvider.future);
-    return resolver.resolveEarthquakeRegion(
-      position.latitude,
-      position.longitude,
-    );
-  } on Object catch (e, st) {
-    talker.error('[AppGroup] resolveCurrentLocation failed', e, st);
-    return null;
-  }
-}
-
 Future<bool> _setString(
   SharedPreferencesAsync prefs,
   String key,
@@ -178,7 +186,8 @@ Future<bool> _setBool(
 Future<bool> _removeAll(SharedPreferencesAsync prefs, List<String> keys) async {
   var changed = false;
   for (final key in keys) {
-    if (await prefs.getString(key) != null || await prefs.getBool(key) != null) {
+    if (await prefs.getString(key) != null ||
+        await prefs.getBool(key) != null) {
       await prefs.remove(key);
       changed = true;
     }
