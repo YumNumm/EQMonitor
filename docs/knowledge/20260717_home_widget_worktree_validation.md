@@ -26,4 +26,4 @@ xcrun swiftc \
 /private/tmp/eqmonitor_widget_behavior_check
 ```
 
-これは共通ロジックの高速確認であり、SwiftUI を含むターゲット統合の確認は CI の `WidgetModelsTests` で行う。
+これは共通ロジックの高速確認であり、SwiftUI を含むターゲット統合の代替にはならない。`WidgetModelsTests` を実行する CI は現時点で存在しないため、十分な空き容量がある環境で対象schemeのtest/buildも実行する。

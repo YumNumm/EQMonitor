@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/app_group_preferences.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/provider/widget_timeline_reloader.dart';
 import 'package:eqmonitor/core/provider/widget_current_location_loader.dart';
@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/settings/features/home_widget_settings/data/mo
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/data/notifier/widget_region_notifier.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,7 +39,8 @@ abstract final class AppGroupKeys {
 /// 書き込み内容が実際に変化したときだけ Widget のタイムライン再読み込みを要求する。
 @Riverpod(keepAlive: true)
 Future<void> appGroupSettingsWriter(Ref ref) async {
-  if (!Platform.isIOS) {
+  final lifecycleState = ref.watch(appLifecycleProvider);
+  if (!Platform.isIOS || lifecycleState != AppLifecycleState.resumed) {
     return;
   }
 

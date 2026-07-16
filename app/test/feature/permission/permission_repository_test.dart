@@ -1,6 +1,7 @@
 import 'package:eqmonitor/feature/permission/data/repository/permission_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:geolocator/geolocator.dart';
 
 class _FakeMessaging extends Fake implements FirebaseMessaging {
   _FakeMessaging(this._requestSettings);
@@ -42,6 +43,8 @@ void main() {
       final repository = PermissionRepository(
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.authorized)),
+        requestLocationPermission: () async => LocationPermission.denied,
+        onLocationPermissionGranted: () {},
       );
 
       final isGranted = await repository.requestNotificationPermission();
@@ -53,11 +56,45 @@ void main() {
       final repository = PermissionRepository(
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.provisional)),
+        requestLocationPermission: () async => LocationPermission.denied,
+        onLocationPermissionGranted: () {},
       );
 
       final isGranted = await repository.requestNotificationPermission();
 
       expect(isGranted, isFalse);
+    });
+  });
+
+  group('PermissionRepository.requestForegroundLocationPermission', () {
+    test('権限付与時に現在地のApp Group同期を要求する', () async {
+      var syncRequested = false;
+      final repository = PermissionRepository(
+        readMessaging: () =>
+            _FakeMessaging(_settings(AuthorizationStatus.denied)),
+        requestLocationPermission: () async => LocationPermission.whileInUse,
+        onLocationPermissionGranted: () => syncRequested = true,
+      );
+
+      final isGranted = await repository.requestForegroundLocationPermission();
+
+      expect(isGranted, isTrue);
+      expect(syncRequested, isTrue);
+    });
+
+    test('権限拒否時は現在地のApp Group同期を要求しない', () async {
+      var syncRequested = false;
+      final repository = PermissionRepository(
+        readMessaging: () =>
+            _FakeMessaging(_settings(AuthorizationStatus.denied)),
+        requestLocationPermission: () async => LocationPermission.denied,
+        onLocationPermissionGranted: () => syncRequested = true,
+      );
+
+      final isGranted = await repository.requestForegroundLocationPermission();
+
+      expect(isGranted, isFalse);
+      expect(syncRequested, isFalse);
     });
   });
 }
