@@ -84,12 +84,9 @@ class _FilterChipBar extends ConsumerWidget {
           sortBy: parameter.sortBy,
           sortOrder: parameter.sortOrder,
           sortByLocked: isRegionFiltered,
-          onChanged: (sortBy, sortOrder) {
-            if (sortBy == null || sortOrder == null) {
-              return;
-            }
-            onChanged(parameter.copyWith(sortBy: sortBy, sortOrder: sortOrder));
-          },
+          onChanged: (sortBy, sortOrder) => onChanged(
+            parameter.copyWith(sortBy: sortBy, sortOrder: sortOrder),
+          ),
         ),
       ),
       (

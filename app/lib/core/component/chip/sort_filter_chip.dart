@@ -15,7 +15,7 @@ class SortFilterChip extends StatelessWidget {
 
   final EarthquakeSortBy? sortBy;
   final SortOrder? sortOrder;
-  final void Function(EarthquakeSortBy?, SortOrder?)? onChanged;
+  final void Function(EarthquakeSortBy, SortOrder)? onChanged;
 
   /// true のとき、モーダル内の並び替え項目選択を非表示にする。
   /// 地域絞り込み中など sortBy が固定される場合に使用する。
@@ -23,14 +23,14 @@ class SortFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDefault = sortBy == null && sortOrder == null;
     final displaySortBy = sortBy ?? .eventId;
     final displayOrder = sortOrder ?? .desc;
+    final isDefault = displaySortBy == .eventId && displayOrder == .desc;
 
     return RawChip(
       onSelected: (_) async {
         final result =
-            await showModalBottomSheet<(EarthquakeSortBy?, SortOrder?)?>(
+            await showModalBottomSheet<(EarthquakeSortBy, SortOrder)?>(
               clipBehavior: Clip.antiAlias,
               context: context,
               builder: (context) => _SortFilterModal(
@@ -43,13 +43,11 @@ class SortFilterChip extends StatelessWidget {
           onChanged?.call(result.$1, result.$2);
         }
       },
-      label: isDefault
-          ? const Text('新しい順')
-          : Text(
-              '${displaySortBy.label} ${displayOrder.arrow}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-      onDeleted: isDefault ? null : () => onChanged?.call(null, null),
+      label: Text(
+        '${displaySortBy.label} ${displayOrder.arrow}',
+        style: isDefault ? null : const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      onDeleted: isDefault ? null : () => onChanged?.call(.eventId, .desc),
       selected: !isDefault,
       selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
@@ -150,15 +148,9 @@ class _SortFilterModal extends HookWidget {
                   child: const Text('キャンセル'),
                 ),
                 TextButton(
-                  onPressed: () {
-                    final isDefault =
-                        sortBy.value == .eventId && sortOrder.value == .desc;
-                    Navigator.of(context).pop(
-                      isDefault
-                          ? (null, null)
-                          : (sortBy.value, sortOrder.value),
-                    );
-                  },
+                  onPressed: () => Navigator.of(
+                    context,
+                  ).pop((sortBy.value, sortOrder.value)),
                   child: const Text('完了'),
                 ),
               ],

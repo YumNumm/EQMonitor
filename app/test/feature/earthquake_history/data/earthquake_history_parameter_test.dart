@@ -66,7 +66,7 @@ void main() {
 
     test('city variant でも往復できること', () {
       const original = EarthquakeHistoryParameter.city(
-        sortBy: EarthquakeSortBy.originTime,
+        sortBy: EarthquakeSortBy.maxIntensity,
         sortOrder: SortOrder.desc,
         cityCode: '13101',
         depthGte: 10,
