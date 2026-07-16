@@ -3,30 +3,26 @@ import 'dart:io';
 
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
+import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/live_activity/data/provider/eqm_live_activity_util.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:live_activity_util/live_activity_util.dart';
 import 'package:objective_c/objective_c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_token_stream.g.dart';
 
-final notificationTokenApnsSupportedProvider = Provider<bool>(
-  (_) => !kIsWeb && (Platform.isIOS || Platform.isMacOS),
-);
-
 @Riverpod(keepAlive: true)
 Stream<NotificationToken> notificationTokenStream(Ref ref) async* {
   final messaging = ref.watch(firebaseMessagingProvider);
   await messaging.requestPermission(provisional: true);
-  final apnsSupported = ref.watch(notificationTokenApnsSupportedProvider);
+  final capabilities = ref.watch(pushTokenPlatformCapabilitiesProvider);
 
   final fcmToken = ref.watch(_firebaseMessagingTokenStreamProvider).value;
-  final apnsToken = apnsSupported
+  final apnsToken = capabilities.supportsApns
       ? ref.watch(_apnsTokenStreamProvider).value
       : null;
-  final apnsPushToStartToken = apnsSupported
+  final apnsPushToStartToken = capabilities.supportsPushToStart
       ? ref.watch(_apnsPushToStartTokenStreamProvider).value
       : null;
 
@@ -42,7 +38,7 @@ Stream<String> _firebaseMessagingTokenStream(Ref ref) async* {
   final messaging = ref.watch(firebaseMessagingProvider);
 
   // iOSの場合は、APNs Tokenを取得してからFCM Tokenを取得する
-  if (ref.watch(notificationTokenApnsSupportedProvider)) {
+  if (ref.watch(pushTokenPlatformCapabilitiesProvider).supportsApns) {
     await ref.read(_apnsTokenStreamProvider.future);
   }
 
@@ -74,7 +70,8 @@ Stream<String> _apnsTokenStream(Ref ref) async* {
 
 @Riverpod(keepAlive: true)
 Stream<String> _apnsPushToStartTokenStream(Ref ref) async* {
-  if (kIsWeb || !(Platform.isIOS || Platform.isMacOS)) {
+  // iOS 18未満（およびiOS以外）ではpush-to-start tokenの取得・監視を行わない
+  if (!ref.watch(pushTokenPlatformCapabilitiesProvider).supportsPushToStart) {
     return;
   }
   final eqmLiveActivityUtil = ref.watch(eqmLiveActivityUtilProvider);

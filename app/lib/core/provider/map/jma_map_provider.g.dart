@@ -50,4 +50,4 @@ final class JmaMapProvider
   }
 }
 
-String _$jmaMapHash() => r'66b616db96254fccfe0395f10acb8e5f759d03ba';
+String _$jmaMapHash() => r'8c7b3c7bfc1bb8730e36e67c0c7a5d3644773974';
