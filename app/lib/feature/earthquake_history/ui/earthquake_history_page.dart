@@ -5,6 +5,8 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
@@ -45,18 +47,35 @@ class _SliverListBody extends HookConsumerWidget {
       earthquakeHistoryDataSourceProvider(parameter.value),
     );
 
-    return dataSourceAsync.when(
-      loading: () => const _EarthquakeHistorySkeleton(),
-      error: (error, _) => ErrorCard(
-        error: error,
-        onReload: () async =>
-            ref.refresh(earthquakeHistoryDataSourceProvider(parameter.value)),
-      ),
-      data: (dataSource) => _PagingBody(
-        dataSource: dataSource,
-        parameter: parameter,
-        onParameterChanged: (result) => parameter.value = result,
-        onRefresh: () => dataSource.refresh(),
+    // デフォルト(発生時刻↓)以外のソート中は、戻る操作でページを閉じずに
+    // ソートをデフォルトへ戻す
+    final isDefaultSort =
+        parameter.value.sortBy == EarthquakeSortBy.eventId &&
+        parameter.value.sortOrder == SortOrder.desc;
+
+    return PopScope(
+      canPop: isDefaultSort,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          parameter.value = parameter.value.copyWith(
+            sortBy: EarthquakeSortBy.eventId,
+            sortOrder: SortOrder.desc,
+          );
+        }
+      },
+      child: dataSourceAsync.when(
+        loading: () => const _EarthquakeHistorySkeleton(),
+        error: (error, _) => ErrorCard(
+          error: error,
+          onReload: () async =>
+              ref.refresh(earthquakeHistoryDataSourceProvider(parameter.value)),
+        ),
+        data: (dataSource) => _PagingBody(
+          dataSource: dataSource,
+          parameter: parameter,
+          onParameterChanged: (result) => parameter.value = result,
+          onRefresh: () => dataSource.refresh(),
+        ),
       ),
     );
   }

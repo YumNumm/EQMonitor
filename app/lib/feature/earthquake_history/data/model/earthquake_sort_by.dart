@@ -1,32 +1,32 @@
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
 /// 地震一覧のソート項目
+///
+/// 発生時刻順は eventId ソートで代用する
+/// (eventId は発生時刻ベースの採番のため並びが一致する)。
 enum EarthquakeSortBy {
   eventId,
   magnitude,
   maxIntensity,
   maxLpgmIntensity,
-  depth,
-  originTime;
+  depth;
 
   String get label => switch (this) {
-    .eventId => '新しい順',
+    .eventId => '発生時刻',
     .magnitude => 'マグニチュード',
     .maxIntensity => '最大震度',
     .maxLpgmIntensity => '長周期階級',
     .depth => '震源の深さ',
-    .originTime => '発生時刻',
   };
 }
 
 extension EarthquakeSortByApiExtension on api.EarthquakeSortBy {
   EarthquakeSortBy get toEarthquakeSortBy => switch (this) {
-    .eventId => .eventId,
+    .eventId || .originTime => .eventId,
     .magnitude => .magnitude,
     .maxIntensity => .maxIntensity,
     .maxLpgmIntensity => .maxLpgmIntensity,
     .depth => .depth,
-    .originTime => .originTime,
   };
 }
 
@@ -37,6 +37,5 @@ extension EarthquakeSortByToApiExtension on EarthquakeSortBy {
     .maxIntensity => .maxIntensity,
     .maxLpgmIntensity => .maxLpgmIntensity,
     .depth => .depth,
-    .originTime => .originTime,
   };
 }
