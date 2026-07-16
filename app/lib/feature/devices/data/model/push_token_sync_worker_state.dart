@@ -18,6 +18,7 @@ sealed class PushTokenSyncWorkerState {
   const factory PushTokenSyncWorkerState.waiting({
     required int attempt,
     required DateTime resumeAt,
+    required DeviceProvisioningException error,
   }) = WaitingWorkerState;
 
   const factory PushTokenSyncWorkerState.synced() = SyncedWorkerState;
@@ -41,10 +42,17 @@ final class SyncingWorkerState extends PushTokenSyncWorkerState {
 
 /// リトライ可能なエラーの後、次の試行まで待機中。
 final class WaitingWorkerState extends PushTokenSyncWorkerState {
-  const WaitingWorkerState({required this.attempt, required this.resumeAt});
+  const WaitingWorkerState({
+    required this.attempt,
+    required this.resumeAt,
+    required this.error,
+  });
 
   final int attempt;
   final DateTime resumeAt;
+
+  /// 待機の原因となった、リトライ可能なエラー。
+  final DeviceProvisioningException error;
 }
 
 /// 最新のトークンがサーバーと同期済み。

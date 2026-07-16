@@ -69,6 +69,61 @@ void main() {
     ]);
   });
 
+  test(
+      'wiring picks up a token that already arrived before the listener '
+      'attaches (fireImmediately regression)', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesKey.deviceProvisioned.key: true,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final authRepository = _MemoryDeviceAuthRepository();
+    final deviceRepository = _RecordingDeviceRepository();
+    final container = ProviderContainer(
+      overrides: [
+        app_prefs.sharedPreferencesProvider.overrideWithValue(
+          app_prefs.SharedPreferencesAsync(prefs),
+        ),
+        deviceAuthRepositoryProvider.overrideWith(
+          (ref) async => authRepository,
+        ),
+        // Override the stream provider with one that seeds a value inline.
+        // When the provider is first created it subscribes to the controller's
+        // stream; the pre-added event is delivered in a microtask.
+        notificationTokenStreamProvider.overrideWith((ref) {
+          final c = StreamController<NotificationToken>();
+          ref.onDispose(c.close);
+          c.add(const NotificationToken(fcmToken: 'pre-existing-token'));
+          return c.stream;
+        }),
+        deviceRepositoryProvider.overrideWith((ref) async => deviceRepository),
+        pushTokenPlatformCapabilitiesProvider.overrideWithValue(
+          const PushTokenPlatformCapabilities(supportsFcm: true),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    // Force the stream provider to exist and resolve *before* the wiring
+    // attaches its listener. This simulates the real-world scenario where
+    // FCM delivers the token before the wiring provider activates.
+    container.read(notificationTokenStreamProvider);
+    // Let the buffered event propagate through the provider.
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    // Bring up wiring only now. The notificationTokenStreamProvider is
+    // already in AsyncData state. FCM tokens don't re-emit on their own,
+    // so without `fireImmediately: true` on the
+    // ref.listen(notificationTokenStreamProvider, ...) call this
+    // pre-existing value would be silently dropped forever.
+    await container.read(pushTokenSyncWiringProvider.future);
+
+    await deviceRepository.synced.future.timeout(const Duration(seconds: 5));
+
+    expect(deviceRepository.upsertCalls, [
+      (kind: PushTokenKind.fcm, token: 'pre-existing-token'),
+    ]);
+  });
+
   test('same token emitted twice in same container results in one upsert',
       () async {
     SharedPreferences.setMockInitialValues({

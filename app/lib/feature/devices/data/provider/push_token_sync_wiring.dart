@@ -24,5 +24,5 @@ Future<void> pushTokenSyncWiring(Ref ref) async {
       return;
     }
     notifier.accept(token);
-  });
+  }, fireImmediately: true);
 }

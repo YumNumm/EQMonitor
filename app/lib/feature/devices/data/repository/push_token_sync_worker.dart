@@ -125,6 +125,7 @@ class PushTokenSyncWorker {
         state = PushTokenSyncWorkerState.waiting(
           attempt: _attempt,
           resumeAt: DateTime.now().add(duration),
+          error: error,
         );
 
         await _backoffWait.wait(duration);

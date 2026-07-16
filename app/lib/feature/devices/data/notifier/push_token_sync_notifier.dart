@@ -34,18 +34,18 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     final capabilities = ref.watch(pushTokenPlatformCapabilitiesProvider);
 
     if (capabilities.supportsFcm) {
-      _fcmWorker = _createWorker(kind: PushTokenKind.fcm);
+      _fcmWorker = createWorker(kind: PushTokenKind.fcm);
     }
     if (capabilities.supportsApns) {
-      _apnsWorker = _createWorker(kind: PushTokenKind.apnsNotification);
+      _apnsWorker = createWorker(kind: PushTokenKind.apnsNotification);
     }
     if (capabilities.supportsPushToStart) {
-      _pushToStartWorker = _createWorker(kind: PushTokenKind.apnsPushToStart);
+      _pushToStartWorker = createWorker(kind: PushTokenKind.apnsPushToStart);
     }
 
     ref.onDispose(disposeWorkers);
 
-    return _currentSnapshot();
+    return currentSnapshot();
   }
 
   RetryControllerState get retryState {
@@ -66,7 +66,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
         return RetryWaiting(
           attempt: s.attempt,
           resumeAt: s.resumeAt,
-          lastError: const NetworkUnreachableException(),
+          lastError: s.error,
         );
       }
     }
@@ -132,27 +132,32 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     ref.invalidate(deviceProvisioningProvider, asReload: true);
   }
 
-  PushTokenSyncWorker _createWorker({required PushTokenKind kind}) {
+  /// クラス内 private method を追加しない方針のため public。
+  /// [build] からのみ呼ばれる。
+  PushTokenSyncWorker createWorker({required PushTokenKind kind}) {
     final worker = PushTokenSyncWorker(
-      upsert: (token) => _upsertToken(kind: kind, token: token),
+      upsert: (token) => upsertToken(kind: kind, token: token),
     );
-    _subscriptions.add(worker.states.listen((_) => _updateSnapshot()));
+    _subscriptions.add(worker.states.listen((_) => updateSnapshot()));
     return worker;
   }
 
-  void _updateSnapshot() {
-    state = AsyncData(_currentSnapshot());
+  /// クラス内 private method を追加しない方針のため public。
+  void updateSnapshot() {
+    state = AsyncData(currentSnapshot());
   }
 
-  PushTokenSyncSnapshot _currentSnapshot() {
+  /// クラス内 private method を追加しない方針のため public。
+  PushTokenSyncSnapshot currentSnapshot() {
     return PushTokenSyncSnapshot(
-      fcm: _mapWorkerState(_fcmWorker?.state),
-      apnsNotification: _mapWorkerState(_apnsWorker?.state),
-      apnsPushToStart: _mapWorkerState(_pushToStartWorker?.state),
+      fcm: mapWorkerState(_fcmWorker?.state),
+      apnsNotification: mapWorkerState(_apnsWorker?.state),
+      apnsPushToStart: mapWorkerState(_pushToStartWorker?.state),
     );
   }
 
-  PushTokenKindState _mapWorkerState(PushTokenSyncWorkerState? workerState) {
+  /// クラス内 private method を追加しない方針のため public。
+  PushTokenKindState mapWorkerState(PushTokenSyncWorkerState? workerState) {
     return switch (workerState) {
       null => const NotApplicableTokenState(),
       AbsentWorkerState() => const AbsentTokenState(),
@@ -164,7 +169,8 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     };
   }
 
-  Future<void> _upsertToken({
+  /// クラス内 private method を追加しない方針のため public。
+  Future<void> upsertToken({
     required PushTokenKind kind,
     required String token,
   }) async {
