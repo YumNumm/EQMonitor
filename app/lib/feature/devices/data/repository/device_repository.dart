@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
@@ -242,4 +243,33 @@ class DeviceRepository {
 
     return const Success(null);
   }
+
+  /// Upserts a single push token of [kind] to its dedicated endpoint.
+  Future<Result<void, Exception>> upsertPushToken({
+    required PushTokenKind kind,
+    required String token,
+  }) => Result.capture(() async {
+    switch (kind) {
+      case PushTokenKind.fcm:
+        await _api.device.patchV2DeviceMeFcm(
+          body: api.V2DeviceMeFcmRequestBody(token: token),
+        );
+      case PushTokenKind.apnsNotification:
+        await _api.device.patchV2DeviceMeApnsKind(
+          kind: api.Kind.notification,
+          body: api.V2DeviceMeApnsKindRequestBody(
+            token: token,
+            environment: _apnsEnvironment,
+          ),
+        );
+      case PushTokenKind.apnsPushToStart:
+        await _api.device.patchV2DeviceMeApnsKind(
+          kind: api.Kind.liveActivityStart,
+          body: api.V2DeviceMeApnsKindRequestBody(
+            token: token,
+            environment: _apnsEnvironment,
+          ),
+        );
+    }
+  });
 }
