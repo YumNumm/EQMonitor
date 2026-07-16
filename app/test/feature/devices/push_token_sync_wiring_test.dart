@@ -30,47 +30,50 @@ void main() {
     talker = Talker();
   });
 
-  test('syncs FCM token automatically when notification token arrives',
-      () async {
-    SharedPreferences.setMockInitialValues({
-      SharedPreferencesKey.deviceProvisioned.key: true,
-    });
-    final prefs = await SharedPreferences.getInstance();
-    final tokenController = StreamController<NotificationToken>();
-    final authRepository = _MemoryDeviceAuthRepository();
-    final deviceRepository = _RecordingDeviceRepository();
-    final container = ProviderContainer(
-      overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(prefs),
-        ),
-        deviceAuthRepositoryProvider.overrideWith(
-          (ref) async => authRepository,
-        ),
-        notificationTokenStreamProvider.overrideWith(
-          (ref) => tokenController.stream,
-        ),
-        deviceRepositoryProvider.overrideWith((ref) async => deviceRepository),
-        pushTokenPlatformCapabilitiesProvider.overrideWithValue(
-          const PushTokenPlatformCapabilities(supportsFcm: true),
-        ),
-      ],
-    );
-    addTearDown(container.dispose);
-    addTearDown(tokenController.close);
-
-    await container.read(pushTokenSyncWiringProvider.future);
-    tokenController.add(const NotificationToken(fcmToken: 'fcm-token'));
-
-    await deviceRepository.synced.future.timeout(const Duration(seconds: 5));
-
-    expect(deviceRepository.upsertCalls, [
-      (kind: PushTokenKind.fcm, token: 'fcm-token'),
-    ]);
-  });
-
   test(
-      'wiring picks up a token that already arrived before the listener '
+    'syncs FCM token automatically when notification token arrives',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        SharedPreferencesKey.deviceProvisioned.key: true,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final tokenController = StreamController<NotificationToken>();
+      final authRepository = _MemoryDeviceAuthRepository();
+      final deviceRepository = _RecordingDeviceRepository();
+      final container = ProviderContainer(
+        overrides: [
+          app_prefs.sharedPreferencesProvider.overrideWithValue(
+            app_prefs.SharedPreferencesAsync(prefs),
+          ),
+          deviceAuthRepositoryProvider.overrideWith(
+            (ref) async => authRepository,
+          ),
+          notificationTokenStreamProvider.overrideWith(
+            (ref) => tokenController.stream,
+          ),
+          deviceRepositoryProvider.overrideWith(
+            (ref) async => deviceRepository,
+          ),
+          pushTokenPlatformCapabilitiesProvider.overrideWithValue(
+            const PushTokenPlatformCapabilities(supportsFcm: true),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      addTearDown(tokenController.close);
+
+      await container.read(pushTokenSyncWiringProvider.future);
+      tokenController.add(const NotificationToken(fcmToken: 'fcm-token'));
+
+      await deviceRepository.synced.future.timeout(const Duration(seconds: 5));
+
+      expect(deviceRepository.upsertCalls, [
+        (kind: PushTokenKind.fcm, token: 'fcm-token'),
+      ]);
+    },
+  );
+
+  test('wiring picks up a token that already arrived before the listener '
       'attaches (fireImmediately regression)', () async {
     SharedPreferences.setMockInitialValues({
       SharedPreferencesKey.deviceProvisioned.key: true,
@@ -124,47 +127,51 @@ void main() {
     ]);
   });
 
-  test('same token emitted twice in same container results in one upsert',
-      () async {
-    SharedPreferences.setMockInitialValues({
-      SharedPreferencesKey.deviceProvisioned.key: true,
-    });
-    final prefs = await SharedPreferences.getInstance();
-    final tokenController = StreamController<NotificationToken>();
-    final authRepository = _MemoryDeviceAuthRepository();
-    final deviceRepository = _RecordingDeviceRepository();
-    final container = ProviderContainer(
-      overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(prefs),
-        ),
-        deviceAuthRepositoryProvider.overrideWith(
-          (ref) async => authRepository,
-        ),
-        notificationTokenStreamProvider.overrideWith(
-          (ref) => tokenController.stream,
-        ),
-        deviceRepositoryProvider.overrideWith((ref) async => deviceRepository),
-        pushTokenPlatformCapabilitiesProvider.overrideWithValue(
-          const PushTokenPlatformCapabilities(supportsFcm: true),
-        ),
-      ],
-    );
-    addTearDown(container.dispose);
-    addTearDown(tokenController.close);
+  test(
+    'same token emitted twice in same container results in one upsert',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        SharedPreferencesKey.deviceProvisioned.key: true,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final tokenController = StreamController<NotificationToken>();
+      final authRepository = _MemoryDeviceAuthRepository();
+      final deviceRepository = _RecordingDeviceRepository();
+      final container = ProviderContainer(
+        overrides: [
+          app_prefs.sharedPreferencesProvider.overrideWithValue(
+            app_prefs.SharedPreferencesAsync(prefs),
+          ),
+          deviceAuthRepositoryProvider.overrideWith(
+            (ref) async => authRepository,
+          ),
+          notificationTokenStreamProvider.overrideWith(
+            (ref) => tokenController.stream,
+          ),
+          deviceRepositoryProvider.overrideWith(
+            (ref) async => deviceRepository,
+          ),
+          pushTokenPlatformCapabilitiesProvider.overrideWithValue(
+            const PushTokenPlatformCapabilities(supportsFcm: true),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      addTearDown(tokenController.close);
 
-    await container.read(pushTokenSyncWiringProvider.future);
-    tokenController.add(const NotificationToken(fcmToken: 'fcm-token'));
+      await container.read(pushTokenSyncWiringProvider.future);
+      tokenController.add(const NotificationToken(fcmToken: 'fcm-token'));
 
-    await deviceRepository.synced.future.timeout(const Duration(seconds: 5));
+      await deviceRepository.synced.future.timeout(const Duration(seconds: 5));
 
-    // Emit same token again
-    tokenController.add(const NotificationToken(fcmToken: 'fcm-token'));
-    // Give time for any spurious upsert
-    await Future<void>.delayed(const Duration(milliseconds: 100));
+      // Emit same token again
+      tokenController.add(const NotificationToken(fcmToken: 'fcm-token'));
+      // Give time for any spurious upsert
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
-    expect(deviceRepository.upsertCalls.length, 1);
-  });
+      expect(deviceRepository.upsertCalls.length, 1);
+    },
+  );
 
   test('two independent containers each perform their own upsert', () async {
     SharedPreferences.setMockInitialValues({
@@ -284,10 +291,7 @@ void main() {
     addTearDown(subscription.close);
 
     tokenController.add(
-      const NotificationToken(
-        fcmToken: 'fcm-token',
-        apnsToken: 'apns-token',
-      ),
+      const NotificationToken(fcmToken: 'fcm-token', apnsToken: 'apns-token'),
     );
 
     // Wait for APNs to reach synced state in the snapshot
@@ -310,7 +314,6 @@ final class _RecordingDeviceRepository extends DeviceRepository {
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
   final synced = Completer<void>();
@@ -335,7 +338,6 @@ final class _FailFcmDeviceRepository extends DeviceRepository {
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
   final apnsSynced = Completer<void>();
@@ -346,9 +348,7 @@ final class _FailFcmDeviceRepository extends DeviceRepository {
     required String token,
   }) async {
     if (kind == PushTokenKind.fcm) {
-      return const Failure(
-        InvalidRequestException(statusCode: 400),
-      );
+      return const Failure(InvalidRequestException(statusCode: 400));
     }
     if (!apnsSynced.isCompleted) {
       apnsSynced.complete();

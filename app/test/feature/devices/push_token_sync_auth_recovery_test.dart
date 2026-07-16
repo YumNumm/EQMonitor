@@ -101,14 +101,12 @@ void main() {
       await container.read(pushTokenSyncProvider.future);
 
       // Feed a token to the notifier directly (simulating wiring)
-      container.read(pushTokenSyncProvider.notifier).accept(
-        const NotificationToken(fcmToken: 'fcm-token'),
-      );
+      container
+          .read(pushTokenSyncProvider.notifier)
+          .accept(const NotificationToken(fcmToken: 'fcm-token'));
 
       // Wait for the worker to process
-      await deviceRepository.called.future.timeout(
-        const Duration(seconds: 5),
-      );
+      await deviceRepository.called.future.timeout(const Duration(seconds: 5));
       // Give a bit of time for state propagation
       await Future<void>.delayed(const Duration(milliseconds: 100));
 
@@ -148,12 +146,9 @@ void main() {
           (ref) async => authRepository,
         ),
         notificationTokenStreamProvider.overrideWith(
-          (ref) =>
-              Stream.value(const NotificationToken(fcmToken: 'fcm-token')),
+          (ref) => Stream.value(const NotificationToken(fcmToken: 'fcm-token')),
         ),
-        deviceRepositoryProvider.overrideWith(
-          (ref) async => deviceRepository,
-        ),
+        deviceRepositoryProvider.overrideWith((ref) async => deviceRepository),
         pushTokenPlatformCapabilitiesProvider.overrideWithValue(
           const PushTokenPlatformCapabilities(supportsFcm: true),
         ),
@@ -165,9 +160,9 @@ void main() {
     await container.read(pushTokenSyncProvider.future);
 
     // Feed a token — first call will fail with unauthenticated
-    container.read(pushTokenSyncProvider.notifier).accept(
-      const NotificationToken(fcmToken: 'fcm-token'),
-    );
+    container
+        .read(pushTokenSyncProvider.notifier)
+        .accept(const NotificationToken(fcmToken: 'fcm-token'));
 
     await deviceRepository.firstCallDone.future.timeout(
       const Duration(seconds: 5),
@@ -202,7 +197,6 @@ final class _UnauthenticatedDeviceRepository extends DeviceRepository {
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
   var upsertCallCount = 0;
@@ -231,7 +225,6 @@ final class _RecoveringDeviceRepository extends DeviceRepository {
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.development,
-        isApplePlatform: true,
       );
 
   var upsertCallCount = 0;

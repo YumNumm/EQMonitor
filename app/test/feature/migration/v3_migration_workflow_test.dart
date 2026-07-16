@@ -255,7 +255,6 @@ class FakeDeviceRepository extends DeviceRepository {
          api: api.ApiClient(Dio()),
          authRepository: _MemoryDeviceAuthRepository(),
          apnsEnvironment: api.ApnsEnvironment.development,
-         isApplePlatform: true,
        );
 
   final Result<RegisteredDevice, Exception> Function() _getResult;
@@ -301,9 +300,7 @@ final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
   String? savedToken;
 
   @override
-  Future<void> saveToken({
-    required String token,
-  }) async {
+  Future<void> saveToken({required String token}) async {
     savedToken = token;
   }
 

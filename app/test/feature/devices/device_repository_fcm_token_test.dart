@@ -20,7 +20,6 @@ void main() {
       api: api.ApiClient(dio),
       authRepository: _MemoryDeviceAuthRepository(),
       apnsEnvironment: api.ApnsEnvironment.development,
-      isApplePlatform: true,
     );
 
     await repository.upsertPushToken(kind: PushTokenKind.fcm, token: 'fcm');
@@ -52,7 +51,6 @@ void main() {
         api: api.ApiClient(dio),
         authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.production,
-        isApplePlatform: true,
       );
 
       final result = await repository.upsertPushToken(
