@@ -7,25 +7,21 @@ import Foundation
   @available(iOS 16.1, *)
   @objc(EQMLiveActivityUtil)
   @objcMembers public class EQMLiveActivityUtil: NSObject {
-    @available(iOS 17.2, *)
+    @available(iOS 18.0, *)
     public func pushToStartToken() -> String? {
-      let data = Activity<MockLiveActivityAttributes>.pushToStartToken
-      if let data = data {
-        let token = data.map { String(format: "%02x", $0) }.joined()
-        return token
-      } else {
-        return nil
-      }
+      guard #available(iOS 18.0, *), isLiveActivitySupported() else { return nil }
+      return Activity<MockLiveActivityAttributes>.pushToStartToken?
+        .map { String(format: "%02x", $0) }.joined()
     }
 
-    @available(iOS 17.2, *)
+    @available(iOS 18.0, *)
     public func observePushToStartTokenUpdates(
       _ onUpdate: @escaping @Sendable @convention(block) (NSString) -> Void
     ) {
+      guard #available(iOS 18.0, *), isLiveActivitySupported() else { return }
       Task {
         for await tokenData in Activity<MockLiveActivityAttributes>.pushToStartTokenUpdates {
-          let token = tokenData.map { String(format: "%02x", $0) }.joined()
-          onUpdate(token as NSString)
+          onUpdate(tokenData.map { String(format: "%02x", $0) }.joined() as NSString)
         }
       }
     }
@@ -83,7 +79,7 @@ import Foundation
       if !isLiveActivitySupported() {
         return false
       }
-      guard #available(iOS 17.2, *), !ProcessInfo.processInfo.isiOSAppOnMac else {
+      guard #available(iOS 18.0, *), !ProcessInfo.processInfo.isiOSAppOnMac else {
         return false
       }
       return true

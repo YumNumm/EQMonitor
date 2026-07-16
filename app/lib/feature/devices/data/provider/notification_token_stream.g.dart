@@ -51,7 +51,7 @@ final class NotificationTokenStreamProvider
 }
 
 String _$notificationTokenStreamHash() =>
-    r'8863d1a6f1bb71626a10318c706f34a73ec50858';
+    r'd974fca77f5511906ed5077443649abbeff623d8';
 
 @ProviderFor(_firebaseMessagingTokenStream)
 final _firebaseMessagingTokenStreamProvider =
@@ -86,7 +86,7 @@ final class _FirebaseMessagingTokenStreamProvider
 }
 
 String _$_firebaseMessagingTokenStreamHash() =>
-    r'3537be0aa279d0f27af3fd0c965a0dd52c7c7a4f';
+    r'531082fafb2b2c1693d45b8e952495605f037425';
 
 @ProviderFor(_apnsTokenStream)
 final _apnsTokenStreamProvider = _ApnsTokenStreamProvider._();
@@ -154,4 +154,4 @@ final class _ApnsPushToStartTokenStreamProvider
 }
 
 String _$_apnsPushToStartTokenStreamHash() =>
-    r'12c24adfce5b829929c388e17c9bc051e413c3a9';
+    r'85676000072e89f563b9c2ce34770b8c61339852';
