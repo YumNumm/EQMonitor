@@ -2,9 +2,6 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
-import 'package:eqmonitor/core/designsystem/extensions/shape_theme_extension.dart';
-import 'package:eqmonitor/core/designsystem/extensions/spacing_theme_extension.dart';
-import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
@@ -50,19 +47,19 @@ class _ModeSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themes = ref.watch(appThemeProvider).requireValue;
     final currentTheme = switch (mode) {
-      ThemeBrightnessMode.light => themes.lightTheme,
-      ThemeBrightnessMode.dark => themes.darkTheme,
+      .light => themes.lightTheme,
+      .dark => themes.darkTheme,
     };
     final presets = ref.watch(themePresetsProvider);
-    final brightness = switch (mode) {
-      ThemeBrightnessMode.light => Brightness.light,
-      ThemeBrightnessMode.dark => Brightness.dark,
+    final Brightness brightness = switch (mode) {
+      .light => .light,
+      .dark => .dark,
     };
 
     return BorderedContainer(
-      margin: const EdgeInsets.all(16),
+      margin: const .all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             currentTheme.name,
@@ -71,20 +68,33 @@ class _ModeSection extends ConsumerWidget {
           const SizedBox(height: 8),
           _ThemePreview(colorSet: currentTheme.colorSetFor(brightness)),
           const SizedBox(height: 8),
-          ...presets.map(
-            (preset) => RadioListTile<String>.adaptive(
-              contentPadding: EdgeInsets.zero,
-              title: Text(preset.name),
-              value: preset.name,
-              // ignore: deprecated_member_use
-              groupValue: currentTheme.name,
-              onChanged: (_) async => ref
+          RadioGroup<AppTheme>(
+            groupValue: currentTheme,
+            onChanged: (themeName) async {
+              if (themeName == null) {
+                return;
+              }
+              final preset = presets.firstWhere(
+                (preset) => preset.name == themeName,
+              );
+              await ref
                   .read(appThemeProvider.notifier)
-                  .setThemeForMode(mode, preset),
+                  .setThemeForMode(mode, preset);
+            },
+            child: Column(
+              children: presets
+                  .map(
+                    (preset) => RadioListTile<AppTheme>.adaptive(
+                      contentPadding: .zero,
+                      title: Text(preset.name),
+                      value: preset,
+                    ),
+                  )
+                  .toList(),
             ),
           ),
           Align(
-            alignment: Alignment.centerRight,
+            alignment: .centerRight,
             child: FilledButton.tonal(
               onPressed: () => ThemeEditorRoute(mode: mode.name).go(context),
               child: const Text('編集'),
@@ -108,21 +118,20 @@ class _ThemePreview extends StatelessWidget {
         extensions: [
           DesignSystemThemeExtension(
             colorTheme: colorSet,
-            spacing: SpacingThemeExtension.standard(),
-            shape: ShapeThemeExtension.standard(),
-            typography: TypographyThemeExtension.fromColorTheme(colorSet),
+            spacing: .standard(),
+            shape: .standard(),
+            typography: .fromColorTheme(colorSet),
           ),
         ],
       ),
       child: Row(
+        spacing: 8,
         children: [
           _Swatch(color: colorSet.primary, label: 'Primary'),
-          const SizedBox(width: 8),
           _Swatch(color: colorSet.surface, label: 'Surface'),
-          const SizedBox(width: 8),
           Expanded(
             child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
+              scrollDirection: .horizontal,
               child: Row(
                 children: JmaIntensity.values
                     .map(
