@@ -11,8 +11,8 @@ part 'permission_repository.g.dart';
 PermissionRepository permissionRepository(Ref ref) => PermissionRepository(
   readMessaging: () => ref.read(firebaseMessagingProvider),
   requestLocationPermission: Geolocator.requestPermission,
-  onLocationPermissionGranted: () {
-    ref.invalidate(appGroupSettingsWriterProvider, asReload: true);
+  onLocationPermissionGranted: () async {
+    await ref.refresh(appGroupSettingsWriterProvider.future);
   },
 );
 
@@ -20,14 +20,14 @@ class PermissionRepository {
   const PermissionRepository({
     required FirebaseMessaging Function() readMessaging,
     required Future<LocationPermission> Function() requestLocationPermission,
-    required void Function() onLocationPermissionGranted,
+    required Future<void> Function() onLocationPermissionGranted,
   }) : _readMessaging = readMessaging,
        _requestLocationPermission = requestLocationPermission,
        _onLocationPermissionGranted = onLocationPermissionGranted;
 
   final FirebaseMessaging Function() _readMessaging;
   final Future<LocationPermission> Function() _requestLocationPermission;
-  final void Function() _onLocationPermissionGranted;
+  final Future<void> Function() _onLocationPermissionGranted;
 
   Future<OsNotificationPermission> getNotificationPermission() async {
     final settings = await _readMessaging().getNotificationSettings();
@@ -56,7 +56,7 @@ class PermissionRepository {
         permission == LocationPermission.whileInUse ||
         permission == LocationPermission.always;
     if (isGranted) {
-      _onLocationPermissionGranted();
+      await _onLocationPermissionGranted();
     }
     return isGranted;
   }
@@ -65,7 +65,7 @@ class PermissionRepository {
     final permission = await _requestLocationPermission();
     final isGranted = permission == LocationPermission.always;
     if (isGranted) {
-      _onLocationPermissionGranted();
+      await _onLocationPermissionGranted();
     }
     return isGranted;
   }

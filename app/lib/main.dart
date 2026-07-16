@@ -303,7 +303,7 @@ Future<void> _main() async {
   });
 
   if (!kIsWeb && Platform.isIOS) {
-    unawaited(container.read(appGroupSettingsWriterProvider.future));
+    container.listen(appGroupSettingsWriterProvider, (_, _) {});
     unawaited(container.read(liveActivityTokenSyncWiringProvider.future));
   }
 }

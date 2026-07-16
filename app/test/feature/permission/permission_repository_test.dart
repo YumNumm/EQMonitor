@@ -44,7 +44,7 @@ void main() {
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.authorized)),
         requestLocationPermission: () async => LocationPermission.denied,
-        onLocationPermissionGranted: () {},
+        onLocationPermissionGranted: () async {},
       );
 
       final isGranted = await repository.requestNotificationPermission();
@@ -57,7 +57,7 @@ void main() {
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.provisional)),
         requestLocationPermission: () async => LocationPermission.denied,
-        onLocationPermissionGranted: () {},
+        onLocationPermissionGranted: () async {},
       );
 
       final isGranted = await repository.requestNotificationPermission();
@@ -73,7 +73,10 @@ void main() {
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.denied)),
         requestLocationPermission: () async => LocationPermission.whileInUse,
-        onLocationPermissionGranted: () => syncRequested = true,
+        onLocationPermissionGranted: () async {
+          await Future<void>.delayed(Duration.zero);
+          syncRequested = true;
+        },
       );
 
       final isGranted = await repository.requestForegroundLocationPermission();
@@ -88,7 +91,7 @@ void main() {
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.denied)),
         requestLocationPermission: () async => LocationPermission.denied,
-        onLocationPermissionGranted: () => syncRequested = true,
+        onLocationPermissionGranted: () async => syncRequested = true,
       );
 
       final isGranted = await repository.requestForegroundLocationPermission();
