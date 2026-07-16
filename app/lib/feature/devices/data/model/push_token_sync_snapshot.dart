@@ -17,7 +17,9 @@ final class PushTokenSyncSnapshot {
       SyncedTokenState() ||
       NotApplicableTokenState() ||
       AbsentTokenState() => true,
-      PendingTokenState() || FailedTokenState() => false,
+      PendingTokenState() ||
+      SyncingTokenState() ||
+      FailedTokenState() => false,
     },
   );
 
@@ -57,7 +59,12 @@ final class SyncedTokenState extends PushTokenKindState {
   const SyncedTokenState();
 }
 
-/// 差分あり — 同期が必要。
+/// サーバーへ同期中。
+final class SyncingTokenState extends PushTokenKindState {
+  const SyncingTokenState();
+}
+
+/// リトライ待機中 — 同期が必要。
 final class PendingTokenState extends PushTokenKindState {
   const PendingTokenState();
 }
@@ -73,6 +80,7 @@ extension PushTokenKindStateX on PushTokenKindState {
   static const PushTokenKindState notApplicable = NotApplicableTokenState();
   static const PushTokenKindState absent = AbsentTokenState();
   static const PushTokenKindState synced = SyncedTokenState();
+  static const PushTokenKindState syncing = SyncingTokenState();
   static const PushTokenKindState pending = PendingTokenState();
   static PushTokenKindState failed(DeviceProvisioningException error) =>
       FailedTokenState(error: error);

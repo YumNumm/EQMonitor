@@ -17,7 +17,7 @@ final seismicityRepositoryProvider = SeismicityRepositoryProvider._();
 final class SeismicityRepositoryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<SeismicityRepository>,
+          riverpod.AsyncValue<SeismicityRepository>,
           SeismicityRepository,
           FutureOr<SeismicityRepository>
         >
@@ -51,4 +51,4 @@ final class SeismicityRepositoryProvider
 }
 
 String _$seismicityRepositoryHash() =>
-    r'c3f4353bc3badf3df8854da8cb568b59e8fdebe3';
+    r'ef8c92b707fd167688724154a109bf1f29211a3a';
