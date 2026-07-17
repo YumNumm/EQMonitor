@@ -7,6 +7,7 @@ export 'src/http/cache_miss_exception.dart';
 export 'src/http/cache_only_interceptor.dart';
 export 'src/http/force_fresh_interceptor.dart';
 export 'src/http/http_cache_entry.dart';
+export 'src/http/http_cache_entry_summary.dart';
 export 'src/http/http_cache_interceptor.dart'
     show HttpCacheInterceptor, kForceFreshExtra;
 export 'src/http/http_cache_key.dart';
