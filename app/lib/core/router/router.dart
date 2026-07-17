@@ -49,6 +49,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_hist
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_list_tile_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hinet_seismicity/ui/hinet_seismicity_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
@@ -375,6 +376,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
         TypedGoRoute<DebugSharedPreferencesRoute>(path: 'shared-preferences'),
+        TypedGoRoute<DebugHttpCacheRoute>(path: 'http-cache'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
         TypedGoRoute<DebugTelemetryRoute>(path: 'telemetry'),
         TypedGoRoute<DebugTsunamiDetailsRoute>(
@@ -708,6 +710,15 @@ class DebugSharedPreferencesRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugSharedPreferencesPage();
+  }
+}
+
+class DebugHttpCacheRoute extends GoRouteData with $DebugHttpCacheRoute {
+  const DebugHttpCacheRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugHttpCachePage();
   }
 }
 

@@ -160,6 +160,13 @@ class _DebugWidget extends ConsumerWidget {
               },
             ),
             ListTile(
+              title: const Text('HTTPキャッシュ'),
+              subtitle: const Text('キャッシュエントリの一覧・削除'),
+              leading: const Icon(Icons.storage_outlined),
+              onTap: () async =>
+                  const DebugHttpCacheRoute().push<void>(context),
+            ),
+            ListTile(
               title: const Text('Telemetry Events'),
               leading: const Icon(Icons.analytics_outlined),
               subtitle: const Text('ローカルテレメトリーイベントの閲覧'),
