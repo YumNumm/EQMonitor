@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/core/theme/model/map_colors.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,24 +29,26 @@ class MapStyleUtil {
   }
 
   Future<String> getStyle({required MapColors mapColors}) async {
+    final mapSourceUrl = kIsWeb
+        ? 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles'
+        : switch (defaultTargetPlatform) {
+            .android ||
+            .iOS => 'pmtiles://asset://earthquake_tsunami_all.pmtiles',
+            _ => 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
+          };
     final json = {
       'version': 8,
       'name': 'EQMonitor Style',
       'glyphs': 'https://glyphs.geolonia.com/{fontstack}/{range}.pbf',
       'sources': {
-        'eqmonitor_map': {
-          'type': 'vector',
-          'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
-        },
+        'eqmonitor_map': {'type': 'vector', 'url': mapSourceUrl},
       },
       'layers': [
         // 背景
         {
           'id': BaseLayer.background.name,
           'type': 'background',
-          'paint': {
-            'background-color': mapColors.background.toHexStringRGB(),
-          },
+          'paint': {'background-color': mapColors.background.toHexStringRGB()},
         },
         // 世界地図（塗りつぶし）
         {
@@ -54,9 +57,7 @@ class MapStyleUtil {
           'source': 'eqmonitor_map',
           'source-layer': 'countries',
           'layout': {'visibility': 'visible'},
-          'paint': {
-            'fill-color': mapColors.worldLand.toHexStringRGB(),
-          },
+          'paint': {'fill-color': mapColors.worldLand.toHexStringRGB()},
         },
         // 世界地図（境界線）
         {
@@ -84,9 +85,7 @@ class MapStyleUtil {
           'type': 'fill',
           'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalE',
-          'paint': {
-            'fill-color': mapColors.japanLand.toHexStringRGB(),
-          },
+          'paint': {'fill-color': mapColors.japanLand.toHexStringRGB()},
         },
         // 緊急地震速報用区域（境界線）
         {

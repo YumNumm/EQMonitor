@@ -215,7 +215,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
-    - assets/map/
     - assets/images/
     - assets/images/theme/
     - assets/images/map/
