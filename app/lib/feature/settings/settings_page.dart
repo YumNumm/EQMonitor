@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
+import 'package:eqmonitor/core/util/byte_size_formatter.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -129,7 +130,7 @@ class SettingsPage extends ConsumerWidget {
                   leading: const Icon(Icons.storage_outlined),
                   subtitle: Text(
                     cacheSize.when(
-                      data: formatBytes,
+                      data: const ByteSizeFormatter().format,
                       loading: () => '計算中…',
                       error: (_, _) => '取得に失敗しました',
                     ),
@@ -140,9 +141,7 @@ class SettingsPage extends ConsumerWidget {
                   leading: const Icon(Icons.delete_outline),
                   onTap: () async {
                     final messenger = ScaffoldMessenger.of(context);
-                    final store = await ref.read(
-                      httpCacheStoreProvider.future,
-                    );
+                    final store = await ref.read(httpCacheStoreProvider.future);
                     await store.clearAll();
                     await store.vacuum();
                     ref.invalidate(httpCacheSizeProvider);
@@ -155,7 +154,8 @@ class SettingsPage extends ConsumerWidget {
                   child: Text(
                     'Powered by Flutter',
                     style: textTheme.bodySmall!.copyWith(
-                      color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.8),
+                      color: context.designSystem.colorTheme.onSurface
+                          .withValues(alpha: 0.8),
                     ),
                   ),
                 ),
@@ -164,9 +164,8 @@ class SettingsPage extends ConsumerWidget {
                     child: Text(
                       'Debug Mode',
                       style: textTheme.bodySmall!.copyWith(
-                        color: context.designSystem.colorTheme.onSurface.withValues(
-                          alpha: 0.8,
-                        ),
+                        color: context.designSystem.colorTheme.onSurface
+                            .withValues(alpha: 0.8),
                       ),
                     ),
                   ),
@@ -185,16 +184,6 @@ class SettingsPage extends ConsumerWidget {
       ),
     );
   }
-}
-
-String formatBytes(int bytes) {
-  if (bytes < 1024) {
-    return '$bytes B';
-  }
-  if (bytes < 1024 * 1024) {
-    return '${(bytes / 1024).toStringAsFixed(1)} KB';
-  }
-  return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
 }
 
 class _AppVersionInformation extends HookConsumerWidget {
@@ -223,7 +212,9 @@ class _AppVersionInformation extends HookConsumerWidget {
             Text(
               commitLabel,
               style: textTheme.labelSmall?.copyWith(
-                color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.65),
+                color: context.designSystem.colorTheme.onSurface.withValues(
+                  alpha: 0.65,
+                ),
               ),
               textAlign: TextAlign.center,
             ),
