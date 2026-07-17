@@ -4,13 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 void main() {
-  const packageInfo = PackageInfo(
+  final packageInfo = PackageInfo(
     appName: 'EQMonitor',
     packageName: 'net.yumnumm.eqmonitor',
     version: '3.0.0',
     buildNumber: '100',
   );
-  const matcher = ForcedUpdateRequirementMatcher(packageInfo: packageInfo);
+  final matcher = ForcedUpdateRequirementMatcher(packageInfo: packageInfo);
 
   group('ForcedUpdateRequirementMatcher', () {
     test('requires updates for build-number-only rules', () {
