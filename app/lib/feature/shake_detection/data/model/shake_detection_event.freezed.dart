@@ -26,12 +26,12 @@ $ShakeDetectionEventCopyWith<ShakeDetectionEvent> get copyWith => _$ShakeDetecti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.level, level) || other.level == level)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.minLat, minLat) || other.minLat == minLat)&&(identical(other.maxLat, maxLat) || other.maxLat == maxLat)&&(identical(other.minLng, minLng) || other.minLng == minLng)&&(identical(other.maxLng, maxLng) || other.maxLng == maxLng)&&(identical(other.mergedEewEventId, mergedEewEventId) || other.mergedEewEventId == mergedEewEventId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.level, level)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.minLat, minLat) || other.minLat == minLat)&&(identical(other.maxLat, maxLat) || other.maxLat == maxLat)&&(identical(other.minLng, minLng) || other.minLng == minLng)&&(identical(other.maxLng, maxLng) || other.maxLng == maxLng)&&(identical(other.mergedEewEventId, mergedEewEventId) || other.mergedEewEventId == mergedEewEventId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,eventId,createdAt,level,isReplay,pointCount,minLat,maxLat,minLng,maxLng,mergedEewEventId);
+int get hashCode => Object.hash(runtimeType,eventId,createdAt,const DeepCollectionEquality().hash(level),isReplay,pointCount,minLat,maxLat,minLng,maxLng,mergedEewEventId);
 
 @override
 String toString() {
@@ -63,11 +63,11 @@ class _$ShakeDetectionEventCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? createdAt = null,Object? level = null,Object? isReplay = null,Object? pointCount = null,Object? minLat = null,Object? maxLat = null,Object? minLng = null,Object? maxLng = null,Object? mergedEewEventId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? createdAt = null,Object? level = freezed,Object? isReplay = null,Object? pointCount = null,Object? minLat = null,Object? maxLat = null,Object? minLng = null,Object? maxLng = null,Object? mergedEewEventId = freezed,}) {
   return _then(_self.copyWith(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
+as DateTime,level: freezed == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
 as ShakeDetectionLevel,isReplay: null == isReplay ? _self.isReplay : isReplay // ignore: cast_nullable_to_non_nullable
 as bool,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
 as int,minLat: null == minLat ? _self.minLat : minLat // ignore: cast_nullable_to_non_nullable
@@ -241,12 +241,12 @@ _$ShakeDetectionEventCopyWith<_ShakeDetectionEvent> get copyWith => __$ShakeDete
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.level, level) || other.level == level)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.minLat, minLat) || other.minLat == minLat)&&(identical(other.maxLat, maxLat) || other.maxLat == maxLat)&&(identical(other.minLng, minLng) || other.minLng == minLng)&&(identical(other.maxLng, maxLng) || other.maxLng == maxLng)&&(identical(other.mergedEewEventId, mergedEewEventId) || other.mergedEewEventId == mergedEewEventId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.level, level)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.minLat, minLat) || other.minLat == minLat)&&(identical(other.maxLat, maxLat) || other.maxLat == maxLat)&&(identical(other.minLng, minLng) || other.minLng == minLng)&&(identical(other.maxLng, maxLng) || other.maxLng == maxLng)&&(identical(other.mergedEewEventId, mergedEewEventId) || other.mergedEewEventId == mergedEewEventId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,eventId,createdAt,level,isReplay,pointCount,minLat,maxLat,minLng,maxLng,mergedEewEventId);
+int get hashCode => Object.hash(runtimeType,eventId,createdAt,const DeepCollectionEquality().hash(level),isReplay,pointCount,minLat,maxLat,minLng,maxLng,mergedEewEventId);
 
 @override
 String toString() {
@@ -278,11 +278,11 @@ class __$ShakeDetectionEventCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? createdAt = null,Object? level = null,Object? isReplay = null,Object? pointCount = null,Object? minLat = null,Object? maxLat = null,Object? minLng = null,Object? maxLng = null,Object? mergedEewEventId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? createdAt = null,Object? level = freezed,Object? isReplay = null,Object? pointCount = null,Object? minLat = null,Object? maxLat = null,Object? minLng = null,Object? maxLng = null,Object? mergedEewEventId = freezed,}) {
   return _then(_ShakeDetectionEvent(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
+as DateTime,level: freezed == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
 as ShakeDetectionLevel,isReplay: null == isReplay ? _self.isReplay : isReplay // ignore: cast_nullable_to_non_nullable
 as bool,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
 as int,minLat: null == minLat ? _self.minLat : minLat // ignore: cast_nullable_to_non_nullable
