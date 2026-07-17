@@ -24,11 +24,17 @@ class NotificationPresetSelector extends HookConsumerWidget {
   final NotificationPresetSelectorStyle style;
   final VoidCallback? onCustomSettingsTap;
 
-  static const _presetOrder = <NotificationPreset>[
+  static const _onboardingPresetOrder = <NotificationPreset>[
     NotificationPreset.recommended,
     NotificationPreset.all,
     NotificationPreset.custom,
     NotificationPreset.none,
+  ];
+
+  static const _settingsPresetOrder = <NotificationPreset>[
+    NotificationPreset.recommended,
+    NotificationPreset.all,
+    NotificationPreset.custom,
   ];
 
   @override
@@ -85,7 +91,7 @@ class NotificationPresetSelector extends HookConsumerWidget {
 
     return switch (style) {
       NotificationPresetSelectorStyle.onboarding => _OnboardingPresetList(
-        presets: _presetOrder,
+        presets: _onboardingPresetOrder,
         selectedPreset: selectedPreset,
         isPresetEnabled: isPresetEnabled,
         shouldShowCriticalWarning: shouldShowCriticalWarning,
@@ -94,7 +100,7 @@ class NotificationPresetSelector extends HookConsumerWidget {
             showCriticalAlertPermissionDialog(context, ref),
       ),
       NotificationPresetSelectorStyle.settings => _SettingsPresetGroup(
-        presets: _presetOrder,
+        presets: _settingsPresetOrder,
         selectedPreset: selectedPreset,
         isPresetEnabled: isPresetEnabled,
         shouldShowCriticalWarning: shouldShowCriticalWarning,

@@ -33,6 +33,57 @@ Widget _buildTestWidget({
 
 void main() {
   group('NotificationPresetSelector', () {
+    testWidgets('設定画面では通知しないプリセットを表示しない', (tester) async {
+      final settings = _notificationSettings(
+        authorizationStatus: AuthorizationStatus.authorized,
+      );
+      final permission = OsNotificationPermission.fromNotificationSettings(
+        settings,
+      );
+
+      await tester.pumpWidget(
+        _buildTestWidget(
+          messaging: _FakeFirebaseMessaging(settings),
+          permission: permission,
+          child: NotificationPresetSelector(
+            selectedPreset: NotificationPreset.recommended,
+            onChanged: (_) {},
+            style: NotificationPresetSelectorStyle.settings,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('推奨設定'), findsOneWidget);
+      expect(find.text('すべて'), findsOneWidget);
+      expect(find.text('カスタム'), findsOneWidget);
+      expect(find.text('通知しない'), findsNothing);
+    });
+
+    testWidgets('オンボーディングでは通知しないプリセットを表示する', (tester) async {
+      final settings = _notificationSettings(
+        authorizationStatus: AuthorizationStatus.authorized,
+      );
+      final permission = OsNotificationPermission.fromNotificationSettings(
+        settings,
+      );
+
+      await tester.pumpWidget(
+        _buildTestWidget(
+          messaging: _FakeFirebaseMessaging(settings),
+          permission: permission,
+          child: NotificationPresetSelector(
+            selectedPreset: NotificationPreset.recommended,
+            onChanged: (_) {},
+            style: NotificationPresetSelectorStyle.onboarding,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('通知しない'), findsOneWidget);
+    });
+
     testWidgets('OS権限オフで無効プリセットをタップすると通知権限ダイアログを表示する', (
       tester,
     ) async {
