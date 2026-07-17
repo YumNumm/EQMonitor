@@ -226,6 +226,21 @@ public protocol APIProtocol: Sendable {
     /// - Remark: HTTP `PATCH /v2/device/me/settings/eew-warning`.
     /// - Remark: Generated from `#/paths//v2/device/me/settings/eew-warning/patch(patchV2DeviceMeSettingsEewWarning)`.
     func patchV2DeviceMeSettingsEewWarning(_ input: Operations.patchV2DeviceMeSettingsEewWarning.Input) async throws -> Operations.patchV2DeviceMeSettingsEewWarning.Output
+    /// テスト用 Live Activity を開始する。Push-to-Start トークン宛に input-push-channel なしの start push を送信するため、チャンネル Broadcast の対象外となり、update/end は updateToken による個別配信でのみ行われる。クライアントは attributes.id（live_activity_id）に対して updateToken を登録すること。
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/live-activity/test`.
+    /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/post(postV2DeviceMeLiveActivityTest)`.
+    func postV2DeviceMeLiveActivityTest(_ input: Operations.postV2DeviceMeLiveActivityTest.Input) async throws -> Operations.postV2DeviceMeLiveActivityTest.Output
+    /// テスト用 Live Activity を updateToken による個別配信で更新する。このエンドポイントで開始した Live Activity（eventId が test-live-activity- で始まるもの）にのみ使用できる。
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/live-activity/test/{liveActivityId}/update`.
+    /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/update/post(postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate)`.
+    func postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate(_ input: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input) async throws -> Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output
+    /// テスト用 Live Activity を updateToken による個別配信で終了（dismiss）する。content_state を省略した場合は最小限の ContentState（eventId のみ）で終了する。
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/live-activity/test/{liveActivityId}/end`.
+    /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/end/post(postV2DeviceMeLiveActivityTestByLiveActivityIdEnd)`.
+    func postV2DeviceMeLiveActivityTestByLiveActivityIdEnd(_ input: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input) async throws -> Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output
     /// Live Activity updateToken一覧を取得
     ///
     /// - Remark: HTTP `GET /v2/device/me/live-activity`.
@@ -885,6 +900,49 @@ extension APIProtocol {
             body: body
         ))
     }
+    /// テスト用 Live Activity を開始する。Push-to-Start トークン宛に input-push-channel なしの start push を送信するため、チャンネル Broadcast の対象外となり、update/end は updateToken による個別配信でのみ行われる。クライアントは attributes.id（live_activity_id）に対して updateToken を登録すること。
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/live-activity/test`.
+    /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/post(postV2DeviceMeLiveActivityTest)`.
+    public func postV2DeviceMeLiveActivityTest(
+        headers: Operations.postV2DeviceMeLiveActivityTest.Input.Headers = .init(),
+        body: Operations.postV2DeviceMeLiveActivityTest.Input.Body
+    ) async throws -> Operations.postV2DeviceMeLiveActivityTest.Output {
+        try await postV2DeviceMeLiveActivityTest(Operations.postV2DeviceMeLiveActivityTest.Input(
+            headers: headers,
+            body: body
+        ))
+    }
+    /// テスト用 Live Activity を updateToken による個別配信で更新する。このエンドポイントで開始した Live Activity（eventId が test-live-activity- で始まるもの）にのみ使用できる。
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/live-activity/test/{liveActivityId}/update`.
+    /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/update/post(postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate)`.
+    public func postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate(
+        path: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input.Path,
+        headers: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input.Headers = .init(),
+        body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input.Body
+    ) async throws -> Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output {
+        try await postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// テスト用 Live Activity を updateToken による個別配信で終了（dismiss）する。content_state を省略した場合は最小限の ContentState（eventId のみ）で終了する。
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/live-activity/test/{liveActivityId}/end`.
+    /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/end/post(postV2DeviceMeLiveActivityTestByLiveActivityIdEnd)`.
+    public func postV2DeviceMeLiveActivityTestByLiveActivityIdEnd(
+        path: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input.Path,
+        headers: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input.Headers = .init(),
+        body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input.Body
+    ) async throws -> Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output {
+        try await postV2DeviceMeLiveActivityTestByLiveActivityIdEnd(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
     /// Live Activity updateToken一覧を取得
     ///
     /// - Remark: HTTP `GET /v2/device/me/live-activity`.
@@ -1510,6 +1568,8 @@ public enum Components {
             public var url: Swift.String
             /// - Remark: Generated from `#/components/schemas/ChangelogEntry/sections`.
             public var sections: [Components.Schemas.ChangelogSection]
+            /// - Remark: Generated from `#/components/schemas/ChangelogEntry/content`.
+            public var content: Swift.String?
             /// Creates a new `ChangelogEntry`.
             ///
             /// - Parameters:
@@ -1517,22 +1577,26 @@ public enum Components {
             ///   - date:
             ///   - url:
             ///   - sections:
+            ///   - content:
             public init(
                 version: Swift.String,
                 date: Swift.String,
                 url: Swift.String,
-                sections: [Components.Schemas.ChangelogSection]
+                sections: [Components.Schemas.ChangelogSection],
+                content: Swift.String? = nil
             ) {
                 self.version = version
                 self.date = date
                 self.url = url
                 self.sections = sections
+                self.content = content
             }
             public enum CodingKeys: String, CodingKey {
                 case version
                 case date
                 case url
                 case sections
+                case content
             }
         }
         /// - Remark: Generated from `#/components/schemas/ChangelogResponse`.
@@ -2724,6 +2788,8 @@ public enum Components {
             public var nankai_regular_enabled: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/NotificationSettingsResponse/vyse60_enabled`.
             public var vyse60_enabled: Swift.Bool
+            /// - Remark: Generated from `#/components/schemas/NotificationSettingsResponse/earthquake_notice_enabled`.
+            public var earthquake_notice_enabled: Swift.Bool
             /// Creates a new `NotificationSettingsResponse`.
             ///
             /// - Parameters:
@@ -2733,13 +2799,15 @@ public enum Components {
             ///   - nankai_extraordinary_enabled:
             ///   - nankai_regular_enabled:
             ///   - vyse60_enabled:
+            ///   - earthquake_notice_enabled:
             public init(
                 notification_enabled: Swift.Bool,
                 tsunami_enabled: Swift.Bool,
                 training_enabled: Swift.Bool,
                 nankai_extraordinary_enabled: Swift.Bool,
                 nankai_regular_enabled: Swift.Bool,
-                vyse60_enabled: Swift.Bool
+                vyse60_enabled: Swift.Bool,
+                earthquake_notice_enabled: Swift.Bool
             ) {
                 self.notification_enabled = notification_enabled
                 self.tsunami_enabled = tsunami_enabled
@@ -2747,6 +2815,7 @@ public enum Components {
                 self.nankai_extraordinary_enabled = nankai_extraordinary_enabled
                 self.nankai_regular_enabled = nankai_regular_enabled
                 self.vyse60_enabled = vyse60_enabled
+                self.earthquake_notice_enabled = earthquake_notice_enabled
             }
             public enum CodingKeys: String, CodingKey {
                 case notification_enabled
@@ -2755,6 +2824,7 @@ public enum Components {
                 case nankai_extraordinary_enabled
                 case nankai_regular_enabled
                 case vyse60_enabled
+                case earthquake_notice_enabled
             }
         }
         /// - Remark: Generated from `#/components/schemas/NotificationSettingsRequest`.
@@ -2771,6 +2841,8 @@ public enum Components {
             public var nankai_regular_enabled: Swift.Bool?
             /// - Remark: Generated from `#/components/schemas/NotificationSettingsRequest/vyse60_enabled`.
             public var vyse60_enabled: Swift.Bool?
+            /// - Remark: Generated from `#/components/schemas/NotificationSettingsRequest/earthquake_notice_enabled`.
+            public var earthquake_notice_enabled: Swift.Bool?
             /// Creates a new `NotificationSettingsRequest`.
             ///
             /// - Parameters:
@@ -2780,13 +2852,15 @@ public enum Components {
             ///   - nankai_extraordinary_enabled:
             ///   - nankai_regular_enabled:
             ///   - vyse60_enabled:
+            ///   - earthquake_notice_enabled:
             public init(
                 notification_enabled: Swift.Bool? = nil,
                 tsunami_enabled: Swift.Bool? = nil,
                 training_enabled: Swift.Bool? = nil,
                 nankai_extraordinary_enabled: Swift.Bool? = nil,
                 nankai_regular_enabled: Swift.Bool? = nil,
-                vyse60_enabled: Swift.Bool? = nil
+                vyse60_enabled: Swift.Bool? = nil,
+                earthquake_notice_enabled: Swift.Bool? = nil
             ) {
                 self.notification_enabled = notification_enabled
                 self.tsunami_enabled = tsunami_enabled
@@ -2794,6 +2868,7 @@ public enum Components {
                 self.nankai_extraordinary_enabled = nankai_extraordinary_enabled
                 self.nankai_regular_enabled = nankai_regular_enabled
                 self.vyse60_enabled = vyse60_enabled
+                self.earthquake_notice_enabled = earthquake_notice_enabled
             }
             public enum CodingKeys: String, CodingKey {
                 case notification_enabled
@@ -2802,6 +2877,7 @@ public enum Components {
                 case nankai_extraordinary_enabled
                 case nankai_regular_enabled
                 case vyse60_enabled
+                case earthquake_notice_enabled
             }
         }
         /// - Remark: Generated from `#/components/schemas/EarthquakeSettingsResponse`.
@@ -3922,6 +3998,276 @@ public enum Components {
             case SHAKE_DETECTION = "SHAKE_DETECTION"
             case EEW = "EEW"
         }
+        /// Live ActivityのContentState。クライアントのContentState型（EewContentState / ShakeDetectionContentState）に一致するJSONオブジェクト
+        ///
+        /// - Remark: Generated from `#/components/schemas/LiveActivityContentState`.
+        public struct LiveActivityContentState: Codable, Hashable, Sendable {
+            /// A container of undocumented properties.
+            public var additionalProperties: [String: OpenAPIRuntime.OpenAPIValueContainer]
+            /// Creates a new `LiveActivityContentState`.
+            ///
+            /// - Parameters:
+            ///   - additionalProperties: A container of undocumented properties.
+            public init(additionalProperties: [String: OpenAPIRuntime.OpenAPIValueContainer] = .init()) {
+                self.additionalProperties = additionalProperties
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                additionalProperties = try decoder.decodeAdditionalProperties(knownKeys: [])
+            }
+            public func encode(to encoder: any Swift.Encoder) throws {
+                try encoder.encodeAdditionalProperties(additionalProperties)
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartRequest`.
+        public struct TestLiveActivityStartRequest: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartRequest/start_trigger`.
+            public var start_trigger: Components.Schemas.LiveActivityStartTrigger
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartRequest/content_state`.
+            public struct content_statePayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartRequest/content_state/value1`.
+                public var value1: Components.Schemas.LiveActivityContentState
+                /// Creates a new `content_statePayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.LiveActivityContentState) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartRequest/content_state`.
+            public var content_state: Components.Schemas.TestLiveActivityStartRequest.content_statePayload?
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartRequest/alert`.
+            public struct alertPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartRequest/alert/title`.
+                public var title: Swift.String
+                /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartRequest/alert/body`.
+                public var body: Swift.String
+                /// Creates a new `alertPayload`.
+                ///
+                /// - Parameters:
+                ///   - title:
+                ///   - body:
+                public init(
+                    title: Swift.String,
+                    body: Swift.String
+                ) {
+                    self.title = title
+                    self.body = body
+                }
+                public enum CodingKeys: String, CodingKey {
+                    case title
+                    case body
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartRequest/alert`.
+            public var alert: Components.Schemas.TestLiveActivityStartRequest.alertPayload?
+            /// Creates a new `TestLiveActivityStartRequest`.
+            ///
+            /// - Parameters:
+            ///   - start_trigger:
+            ///   - content_state:
+            ///   - alert:
+            public init(
+                start_trigger: Components.Schemas.LiveActivityStartTrigger,
+                content_state: Components.Schemas.TestLiveActivityStartRequest.content_statePayload? = nil,
+                alert: Components.Schemas.TestLiveActivityStartRequest.alertPayload? = nil
+            ) {
+                self.start_trigger = start_trigger
+                self.content_state = content_state
+                self.alert = alert
+            }
+            public enum CodingKeys: String, CodingKey {
+                case start_trigger
+                case content_state
+                case alert
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartResponse`.
+        public struct TestLiveActivityStartResponse: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartResponse/live_activity_id`.
+            public var live_activity_id: Swift.String
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartResponse/event_id`.
+            public var event_id: Swift.String
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityStartResponse/start_trigger`.
+            public var start_trigger: Components.Schemas.LiveActivityStartTrigger
+            /// Creates a new `TestLiveActivityStartResponse`.
+            ///
+            /// - Parameters:
+            ///   - live_activity_id:
+            ///   - event_id:
+            ///   - start_trigger:
+            public init(
+                live_activity_id: Swift.String,
+                event_id: Swift.String,
+                start_trigger: Components.Schemas.LiveActivityStartTrigger
+            ) {
+                self.live_activity_id = live_activity_id
+                self.event_id = event_id
+                self.start_trigger = start_trigger
+            }
+            public enum CodingKeys: String, CodingKey {
+                case live_activity_id
+                case event_id
+                case start_trigger
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/RateLimitedResponse`.
+        public struct RateLimitedResponse: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/RateLimitedResponse/code`.
+            public var code: OpenAPIRuntime.OpenAPIValueContainer
+            /// - Remark: Generated from `#/components/schemas/RateLimitedResponse/message`.
+            public var message: Swift.String
+            /// Creates a new `RateLimitedResponse`.
+            ///
+            /// - Parameters:
+            ///   - code:
+            ///   - message:
+            public init(
+                code: OpenAPIRuntime.OpenAPIValueContainer,
+                message: Swift.String
+            ) {
+                self.code = code
+                self.message = message
+            }
+            public enum CodingKeys: String, CodingKey {
+                case code
+                case message
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/ServiceUnavailableResponse`.
+        public struct ServiceUnavailableResponse: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/ServiceUnavailableResponse/code`.
+            public var code: OpenAPIRuntime.OpenAPIValueContainer
+            /// - Remark: Generated from `#/components/schemas/ServiceUnavailableResponse/message`.
+            public var message: Swift.String
+            /// Creates a new `ServiceUnavailableResponse`.
+            ///
+            /// - Parameters:
+            ///   - code:
+            ///   - message:
+            public init(
+                code: OpenAPIRuntime.OpenAPIValueContainer,
+                message: Swift.String
+            ) {
+                self.code = code
+                self.message = message
+            }
+            public enum CodingKeys: String, CodingKey {
+                case code
+                case message
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/TestLiveActivityUpdateRequest`.
+        public struct TestLiveActivityUpdateRequest: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityUpdateRequest/content_state`.
+            public var content_state: Components.Schemas.LiveActivityContentState
+            /// Creates a new `TestLiveActivityUpdateRequest`.
+            ///
+            /// - Parameters:
+            ///   - content_state:
+            public init(content_state: Components.Schemas.LiveActivityContentState) {
+                self.content_state = content_state
+            }
+            public enum CodingKeys: String, CodingKey {
+                case content_state
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/TestLiveActivitySendResponse`.
+        public struct TestLiveActivitySendResponse: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivitySendResponse/live_activity_id`.
+            public var live_activity_id: Swift.String
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivitySendResponse/event`.
+            @frozen public enum eventPayload: String, Codable, Hashable, Sendable, CaseIterable {
+                case update = "update"
+                case end = "end"
+            }
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivitySendResponse/event`.
+            public var event: Components.Schemas.TestLiveActivitySendResponse.eventPayload
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivitySendResponse/message`.
+            public var message: Swift.String
+            /// Creates a new `TestLiveActivitySendResponse`.
+            ///
+            /// - Parameters:
+            ///   - live_activity_id:
+            ///   - event:
+            ///   - message:
+            public init(
+                live_activity_id: Swift.String,
+                event: Components.Schemas.TestLiveActivitySendResponse.eventPayload,
+                message: Swift.String
+            ) {
+                self.live_activity_id = live_activity_id
+                self.event = event
+                self.message = message
+            }
+            public enum CodingKeys: String, CodingKey {
+                case live_activity_id
+                case event
+                case message
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/ConflictResponse`.
+        public struct ConflictResponse: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/ConflictResponse/code`.
+            public var code: OpenAPIRuntime.OpenAPIValueContainer
+            /// - Remark: Generated from `#/components/schemas/ConflictResponse/message`.
+            public var message: Swift.String
+            /// Creates a new `ConflictResponse`.
+            ///
+            /// - Parameters:
+            ///   - code:
+            ///   - message:
+            public init(
+                code: OpenAPIRuntime.OpenAPIValueContainer,
+                message: Swift.String
+            ) {
+                self.code = code
+                self.message = message
+            }
+            public enum CodingKeys: String, CodingKey {
+                case code
+                case message
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/TestLiveActivityEndRequest`.
+        public struct TestLiveActivityEndRequest: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityEndRequest/content_state`.
+            public struct content_statePayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/TestLiveActivityEndRequest/content_state/value1`.
+                public var value1: Components.Schemas.LiveActivityContentState
+                /// Creates a new `content_statePayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.LiveActivityContentState) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    self.value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try self.value1.encode(to: encoder)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/TestLiveActivityEndRequest/content_state`.
+            public var content_state: Components.Schemas.TestLiveActivityEndRequest.content_statePayload?
+            /// Creates a new `TestLiveActivityEndRequest`.
+            ///
+            /// - Parameters:
+            ///   - content_state:
+            public init(content_state: Components.Schemas.TestLiveActivityEndRequest.content_statePayload? = nil) {
+                self.content_state = content_state
+            }
+            public enum CodingKeys: String, CodingKey {
+                case content_state
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/LiveActivityTokenResponse`.
         public struct LiveActivityTokenResponse: Codable, Hashable, Sendable {
             /// - Remark: Generated from `#/components/schemas/LiveActivityTokenResponse/live_activity_id`.
@@ -4197,29 +4543,6 @@ public enum Components {
             public enum CodingKeys: String, CodingKey {
                 case items
                 case next_cursor
-            }
-        }
-        /// - Remark: Generated from `#/components/schemas/ServiceUnavailableResponse`.
-        public struct ServiceUnavailableResponse: Codable, Hashable, Sendable {
-            /// - Remark: Generated from `#/components/schemas/ServiceUnavailableResponse/code`.
-            public var code: OpenAPIRuntime.OpenAPIValueContainer
-            /// - Remark: Generated from `#/components/schemas/ServiceUnavailableResponse/message`.
-            public var message: Swift.String
-            /// Creates a new `ServiceUnavailableResponse`.
-            ///
-            /// - Parameters:
-            ///   - code:
-            ///   - message:
-            public init(
-                code: OpenAPIRuntime.OpenAPIValueContainer,
-                message: Swift.String
-            ) {
-                self.code = code
-                self.message = message
-            }
-            public enum CodingKeys: String, CodingKey {
-                case code
-                case message
             }
         }
         /// - Remark: Generated from `#/components/schemas/TestNotificationType`.
@@ -4521,29 +4844,6 @@ public enum Components {
             }
             public enum CodingKeys: String, CodingKey {
                 case migrated
-            }
-        }
-        /// - Remark: Generated from `#/components/schemas/ConflictResponse`.
-        public struct ConflictResponse: Codable, Hashable, Sendable {
-            /// - Remark: Generated from `#/components/schemas/ConflictResponse/code`.
-            public var code: OpenAPIRuntime.OpenAPIValueContainer
-            /// - Remark: Generated from `#/components/schemas/ConflictResponse/message`.
-            public var message: Swift.String
-            /// Creates a new `ConflictResponse`.
-            ///
-            /// - Parameters:
-            ///   - code:
-            ///   - message:
-            public init(
-                code: OpenAPIRuntime.OpenAPIValueContainer,
-                message: Swift.String
-            ) {
-                self.code = code
-                self.message = message
-            }
-            public enum CodingKeys: String, CodingKey {
-                case code
-                case message
             }
         }
         /// LPGM震度
@@ -21876,6 +22176,1166 @@ public enum Operations {
             }
         }
     }
+    /// テスト用 Live Activity を開始する。Push-to-Start トークン宛に input-push-channel なしの start push を送信するため、チャンネル Broadcast の対象外となり、update/end は updateToken による個別配信でのみ行われる。クライアントは attributes.id（live_activity_id）に対して updateToken を登録すること。
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/live-activity/test`.
+    /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/post(postV2DeviceMeLiveActivityTest)`.
+    public enum postV2DeviceMeLiveActivityTest {
+        public static let id: Swift.String = "postV2DeviceMeLiveActivityTest"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.postV2DeviceMeLiveActivityTest.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.postV2DeviceMeLiveActivityTest.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.postV2DeviceMeLiveActivityTest.Input.Headers
+            /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.TestLiveActivityStartRequest)
+            }
+            public var body: Operations.postV2DeviceMeLiveActivityTest.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - headers:
+            ///   - body:
+            public init(
+                headers: Operations.postV2DeviceMeLiveActivityTest.Input.Headers = .init(),
+                body: Operations.postV2DeviceMeLiveActivityTest.Input.Body
+            ) {
+                self.headers = headers
+                self.body = body
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Created: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/201/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/201/content/application\/json`.
+                    case json(Components.Schemas.TestLiveActivityStartResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.TestLiveActivityStartResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTest.Output.Created.Body
+                /// Creates a new `Created`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTest.Output.Created.Body) {
+                    self.body = body
+                }
+            }
+            /// テスト用 Live Activity の開始 push を送信
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/post(postV2DeviceMeLiveActivityTest)/responses/201`.
+            ///
+            /// HTTP response code: `201 created`.
+            case created(Operations.postV2DeviceMeLiveActivityTest.Output.Created)
+            /// The associated value of the enum case if `self` is `.created`.
+            ///
+            /// - Throws: An error if `self` is not `.created`.
+            /// - SeeAlso: `.created`.
+            public var created: Operations.postV2DeviceMeLiveActivityTest.Output.Created {
+                get throws {
+                    switch self {
+                    case let .created(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "created",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct BadRequest: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/400/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/400/content/application\/json`.
+                    case json(Components.Schemas.BadRequestResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.BadRequestResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTest.Output.BadRequest.Body
+                /// Creates a new `BadRequest`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTest.Output.BadRequest.Body) {
+                    self.body = body
+                }
+            }
+            /// iOS 以外のデバイス
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/post(postV2DeviceMeLiveActivityTest)/responses/400`.
+            ///
+            /// HTTP response code: `400 badRequest`.
+            case badRequest(Operations.postV2DeviceMeLiveActivityTest.Output.BadRequest)
+            /// The associated value of the enum case if `self` is `.badRequest`.
+            ///
+            /// - Throws: An error if `self` is not `.badRequest`.
+            /// - SeeAlso: `.badRequest`.
+            public var badRequest: Operations.postV2DeviceMeLiveActivityTest.Output.BadRequest {
+                get throws {
+                    switch self {
+                    case let .badRequest(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "badRequest",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct NotFound: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/404/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/404/content/application\/json`.
+                    case json(Components.Schemas.NotFoundResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.NotFoundResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTest.Output.NotFound.Body
+                /// Creates a new `NotFound`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTest.Output.NotFound.Body) {
+                    self.body = body
+                }
+            }
+            /// デバイスまたは Push-to-Start トークンが見つからない
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/post(postV2DeviceMeLiveActivityTest)/responses/404`.
+            ///
+            /// HTTP response code: `404 notFound`.
+            case notFound(Operations.postV2DeviceMeLiveActivityTest.Output.NotFound)
+            /// The associated value of the enum case if `self` is `.notFound`.
+            ///
+            /// - Throws: An error if `self` is not `.notFound`.
+            /// - SeeAlso: `.notFound`.
+            public var notFound: Operations.postV2DeviceMeLiveActivityTest.Output.NotFound {
+                get throws {
+                    switch self {
+                    case let .notFound(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "notFound",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct TooManyRequests: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/429/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/429/content/application\/json`.
+                    case json(Components.Schemas.RateLimitedResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.RateLimitedResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTest.Output.TooManyRequests.Body
+                /// Creates a new `TooManyRequests`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTest.Output.TooManyRequests.Body) {
+                    self.body = body
+                }
+            }
+            /// レート制限
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/post(postV2DeviceMeLiveActivityTest)/responses/429`.
+            ///
+            /// HTTP response code: `429 tooManyRequests`.
+            case tooManyRequests(Operations.postV2DeviceMeLiveActivityTest.Output.TooManyRequests)
+            /// The associated value of the enum case if `self` is `.tooManyRequests`.
+            ///
+            /// - Throws: An error if `self` is not `.tooManyRequests`.
+            /// - SeeAlso: `.tooManyRequests`.
+            public var tooManyRequests: Operations.postV2DeviceMeLiveActivityTest.Output.TooManyRequests {
+                get throws {
+                    switch self {
+                    case let .tooManyRequests(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "tooManyRequests",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct InternalServerError: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/500/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/500/content/application\/json`.
+                    case json(Components.Schemas.InternalServerErrorResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.InternalServerErrorResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTest.Output.InternalServerError.Body
+                /// Creates a new `InternalServerError`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTest.Output.InternalServerError.Body) {
+                    self.body = body
+                }
+            }
+            /// 内部サーバエラー
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/post(postV2DeviceMeLiveActivityTest)/responses/500`.
+            ///
+            /// HTTP response code: `500 internalServerError`.
+            case internalServerError(Operations.postV2DeviceMeLiveActivityTest.Output.InternalServerError)
+            /// The associated value of the enum case if `self` is `.internalServerError`.
+            ///
+            /// - Throws: An error if `self` is not `.internalServerError`.
+            /// - SeeAlso: `.internalServerError`.
+            public var internalServerError: Operations.postV2DeviceMeLiveActivityTest.Output.InternalServerError {
+                get throws {
+                    switch self {
+                    case let .internalServerError(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "internalServerError",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct ServiceUnavailable: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/503/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/POST/responses/503/content/application\/json`.
+                    case json(Components.Schemas.ServiceUnavailableResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.ServiceUnavailableResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTest.Output.ServiceUnavailable.Body
+                /// Creates a new `ServiceUnavailable`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTest.Output.ServiceUnavailable.Body) {
+                    self.body = body
+                }
+            }
+            /// サービス利用不可
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/post(postV2DeviceMeLiveActivityTest)/responses/503`.
+            ///
+            /// HTTP response code: `503 serviceUnavailable`.
+            case serviceUnavailable(Operations.postV2DeviceMeLiveActivityTest.Output.ServiceUnavailable)
+            /// The associated value of the enum case if `self` is `.serviceUnavailable`.
+            ///
+            /// - Throws: An error if `self` is not `.serviceUnavailable`.
+            /// - SeeAlso: `.serviceUnavailable`.
+            public var serviceUnavailable: Operations.postV2DeviceMeLiveActivityTest.Output.ServiceUnavailable {
+                get throws {
+                    switch self {
+                    case let .serviceUnavailable(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "serviceUnavailable",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// テスト用 Live Activity を updateToken による個別配信で更新する。このエンドポイントで開始した Live Activity（eventId が test-live-activity- で始まるもの）にのみ使用できる。
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/live-activity/test/{liveActivityId}/update`.
+    /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/update/post(postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate)`.
+    public enum postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate {
+        public static let id: Swift.String = "postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/path`.
+            public struct Path: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/path/liveActivityId`.
+                public var liveActivityId: Components.Parameters.LiveActivityIdParam
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - liveActivityId:
+                public init(liveActivityId: Components.Parameters.LiveActivityIdParam) {
+                    self.liveActivityId = liveActivityId
+                }
+            }
+            public var path: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input.Path
+            /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input.Headers
+            /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.TestLiveActivityUpdateRequest)
+            }
+            public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            ///   - body:
+            public init(
+                path: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input.Path,
+                headers: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input.Headers = .init(),
+                body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Input.Body
+            ) {
+                self.path = path
+                self.headers = headers
+                self.body = body
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/200/content/application\/json`.
+                    case json(Components.Schemas.TestLiveActivitySendResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.TestLiveActivitySendResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// update push を送信
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/update/post(postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct BadRequest: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/400/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/400/content/application\/json`.
+                    case json(Components.Schemas.BadRequestResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.BadRequestResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.BadRequest.Body
+                /// Creates a new `BadRequest`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.BadRequest.Body) {
+                    self.body = body
+                }
+            }
+            /// テスト用 Live Activity ではない
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/update/post(postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate)/responses/400`.
+            ///
+            /// HTTP response code: `400 badRequest`.
+            case badRequest(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.BadRequest)
+            /// The associated value of the enum case if `self` is `.badRequest`.
+            ///
+            /// - Throws: An error if `self` is not `.badRequest`.
+            /// - SeeAlso: `.badRequest`.
+            public var badRequest: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.BadRequest {
+                get throws {
+                    switch self {
+                    case let .badRequest(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "badRequest",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct NotFound: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/404/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/404/content/application\/json`.
+                    case json(Components.Schemas.NotFoundResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.NotFoundResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.NotFound.Body
+                /// Creates a new `NotFound`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.NotFound.Body) {
+                    self.body = body
+                }
+            }
+            /// Live Activity が見つからない
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/update/post(postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate)/responses/404`.
+            ///
+            /// HTTP response code: `404 notFound`.
+            case notFound(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.NotFound)
+            /// The associated value of the enum case if `self` is `.notFound`.
+            ///
+            /// - Throws: An error if `self` is not `.notFound`.
+            /// - SeeAlso: `.notFound`.
+            public var notFound: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.NotFound {
+                get throws {
+                    switch self {
+                    case let .notFound(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "notFound",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct Conflict: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/409/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/409/content/application\/json`.
+                    case json(Components.Schemas.ConflictResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.ConflictResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.Conflict.Body
+                /// Creates a new `Conflict`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.Conflict.Body) {
+                    self.body = body
+                }
+            }
+            /// updateToken が未登録
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/update/post(postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate)/responses/409`.
+            ///
+            /// HTTP response code: `409 conflict`.
+            case conflict(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.Conflict)
+            /// The associated value of the enum case if `self` is `.conflict`.
+            ///
+            /// - Throws: An error if `self` is not `.conflict`.
+            /// - SeeAlso: `.conflict`.
+            public var conflict: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.Conflict {
+                get throws {
+                    switch self {
+                    case let .conflict(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "conflict",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct TooManyRequests: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/429/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/429/content/application\/json`.
+                    case json(Components.Schemas.RateLimitedResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.RateLimitedResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.TooManyRequests.Body
+                /// Creates a new `TooManyRequests`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.TooManyRequests.Body) {
+                    self.body = body
+                }
+            }
+            /// レート制限
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/update/post(postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate)/responses/429`.
+            ///
+            /// HTTP response code: `429 tooManyRequests`.
+            case tooManyRequests(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.TooManyRequests)
+            /// The associated value of the enum case if `self` is `.tooManyRequests`.
+            ///
+            /// - Throws: An error if `self` is not `.tooManyRequests`.
+            /// - SeeAlso: `.tooManyRequests`.
+            public var tooManyRequests: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.TooManyRequests {
+                get throws {
+                    switch self {
+                    case let .tooManyRequests(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "tooManyRequests",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct ServiceUnavailable: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/503/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/update/POST/responses/503/content/application\/json`.
+                    case json(Components.Schemas.ServiceUnavailableResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.ServiceUnavailableResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.ServiceUnavailable.Body
+                /// Creates a new `ServiceUnavailable`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.ServiceUnavailable.Body) {
+                    self.body = body
+                }
+            }
+            /// サービス利用不可
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/update/post(postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate)/responses/503`.
+            ///
+            /// HTTP response code: `503 serviceUnavailable`.
+            case serviceUnavailable(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.ServiceUnavailable)
+            /// The associated value of the enum case if `self` is `.serviceUnavailable`.
+            ///
+            /// - Throws: An error if `self` is not `.serviceUnavailable`.
+            /// - SeeAlso: `.serviceUnavailable`.
+            public var serviceUnavailable: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdUpdate.Output.ServiceUnavailable {
+                get throws {
+                    switch self {
+                    case let .serviceUnavailable(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "serviceUnavailable",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// テスト用 Live Activity を updateToken による個別配信で終了（dismiss）する。content_state を省略した場合は最小限の ContentState（eventId のみ）で終了する。
+    ///
+    /// - Remark: HTTP `POST /v2/device/me/live-activity/test/{liveActivityId}/end`.
+    /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/end/post(postV2DeviceMeLiveActivityTestByLiveActivityIdEnd)`.
+    public enum postV2DeviceMeLiveActivityTestByLiveActivityIdEnd {
+        public static let id: Swift.String = "postV2DeviceMeLiveActivityTestByLiveActivityIdEnd"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/path`.
+            public struct Path: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/path/liveActivityId`.
+                public var liveActivityId: Components.Parameters.LiveActivityIdParam
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - liveActivityId:
+                public init(liveActivityId: Components.Parameters.LiveActivityIdParam) {
+                    self.liveActivityId = liveActivityId
+                }
+            }
+            public var path: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input.Path
+            /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input.Headers
+            /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.TestLiveActivityEndRequest)
+            }
+            public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            ///   - body:
+            public init(
+                path: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input.Path,
+                headers: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input.Headers = .init(),
+                body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Input.Body
+            ) {
+                self.path = path
+                self.headers = headers
+                self.body = body
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/200/content/application\/json`.
+                    case json(Components.Schemas.TestLiveActivitySendResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.TestLiveActivitySendResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// end push を送信
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/end/post(postV2DeviceMeLiveActivityTestByLiveActivityIdEnd)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct BadRequest: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/400/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/400/content/application\/json`.
+                    case json(Components.Schemas.BadRequestResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.BadRequestResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.BadRequest.Body
+                /// Creates a new `BadRequest`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.BadRequest.Body) {
+                    self.body = body
+                }
+            }
+            /// テスト用 Live Activity ではない
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/end/post(postV2DeviceMeLiveActivityTestByLiveActivityIdEnd)/responses/400`.
+            ///
+            /// HTTP response code: `400 badRequest`.
+            case badRequest(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.BadRequest)
+            /// The associated value of the enum case if `self` is `.badRequest`.
+            ///
+            /// - Throws: An error if `self` is not `.badRequest`.
+            /// - SeeAlso: `.badRequest`.
+            public var badRequest: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.BadRequest {
+                get throws {
+                    switch self {
+                    case let .badRequest(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "badRequest",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct NotFound: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/404/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/404/content/application\/json`.
+                    case json(Components.Schemas.NotFoundResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.NotFoundResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.NotFound.Body
+                /// Creates a new `NotFound`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.NotFound.Body) {
+                    self.body = body
+                }
+            }
+            /// Live Activity が見つからない
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/end/post(postV2DeviceMeLiveActivityTestByLiveActivityIdEnd)/responses/404`.
+            ///
+            /// HTTP response code: `404 notFound`.
+            case notFound(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.NotFound)
+            /// The associated value of the enum case if `self` is `.notFound`.
+            ///
+            /// - Throws: An error if `self` is not `.notFound`.
+            /// - SeeAlso: `.notFound`.
+            public var notFound: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.NotFound {
+                get throws {
+                    switch self {
+                    case let .notFound(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "notFound",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct Conflict: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/409/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/409/content/application\/json`.
+                    case json(Components.Schemas.ConflictResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.ConflictResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.Conflict.Body
+                /// Creates a new `Conflict`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.Conflict.Body) {
+                    self.body = body
+                }
+            }
+            /// updateToken が未登録
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/end/post(postV2DeviceMeLiveActivityTestByLiveActivityIdEnd)/responses/409`.
+            ///
+            /// HTTP response code: `409 conflict`.
+            case conflict(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.Conflict)
+            /// The associated value of the enum case if `self` is `.conflict`.
+            ///
+            /// - Throws: An error if `self` is not `.conflict`.
+            /// - SeeAlso: `.conflict`.
+            public var conflict: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.Conflict {
+                get throws {
+                    switch self {
+                    case let .conflict(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "conflict",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct TooManyRequests: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/429/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/429/content/application\/json`.
+                    case json(Components.Schemas.RateLimitedResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.RateLimitedResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.TooManyRequests.Body
+                /// Creates a new `TooManyRequests`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.TooManyRequests.Body) {
+                    self.body = body
+                }
+            }
+            /// レート制限
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/end/post(postV2DeviceMeLiveActivityTestByLiveActivityIdEnd)/responses/429`.
+            ///
+            /// HTTP response code: `429 tooManyRequests`.
+            case tooManyRequests(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.TooManyRequests)
+            /// The associated value of the enum case if `self` is `.tooManyRequests`.
+            ///
+            /// - Throws: An error if `self` is not `.tooManyRequests`.
+            /// - SeeAlso: `.tooManyRequests`.
+            public var tooManyRequests: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.TooManyRequests {
+                get throws {
+                    switch self {
+                    case let .tooManyRequests(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "tooManyRequests",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct ServiceUnavailable: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/503/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/live-activity/test/{liveActivityId}/end/POST/responses/503/content/application\/json`.
+                    case json(Components.Schemas.ServiceUnavailableResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.ServiceUnavailableResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.ServiceUnavailable.Body
+                /// Creates a new `ServiceUnavailable`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.ServiceUnavailable.Body) {
+                    self.body = body
+                }
+            }
+            /// サービス利用不可
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/live-activity/test/{liveActivityId}/end/post(postV2DeviceMeLiveActivityTestByLiveActivityIdEnd)/responses/503`.
+            ///
+            /// HTTP response code: `503 serviceUnavailable`.
+            case serviceUnavailable(Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.ServiceUnavailable)
+            /// The associated value of the enum case if `self` is `.serviceUnavailable`.
+            ///
+            /// - Throws: An error if `self` is not `.serviceUnavailable`.
+            /// - SeeAlso: `.serviceUnavailable`.
+            public var serviceUnavailable: Operations.postV2DeviceMeLiveActivityTestByLiveActivityIdEnd.Output.ServiceUnavailable {
+                get throws {
+                    switch self {
+                    case let .serviceUnavailable(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "serviceUnavailable",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
     /// Live Activity updateToken一覧を取得
     ///
     /// - Remark: HTTP `GET /v2/device/me/live-activity`.
@@ -23758,6 +25218,57 @@ public enum Operations {
                     default:
                         try throwUnexpectedResponseStatus(
                             expectedStatus: "notFound",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct TooManyRequests: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v2/device/me/notification/test-scenario-type/POST/responses/429/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v2/device/me/notification/test-scenario-type/POST/responses/429/content/application\/json`.
+                    case json(Components.Schemas.RateLimitedResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.RateLimitedResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.postV2DeviceMeNotificationTestScenarioType.Output.TooManyRequests.Body
+                /// Creates a new `TooManyRequests`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.postV2DeviceMeNotificationTestScenarioType.Output.TooManyRequests.Body) {
+                    self.body = body
+                }
+            }
+            /// レート制限
+            ///
+            /// - Remark: Generated from `#/paths//v2/device/me/notification/test-scenario-type/post(postV2DeviceMeNotificationTestScenarioType)/responses/429`.
+            ///
+            /// HTTP response code: `429 tooManyRequests`.
+            case tooManyRequests(Operations.postV2DeviceMeNotificationTestScenarioType.Output.TooManyRequests)
+            /// The associated value of the enum case if `self` is `.tooManyRequests`.
+            ///
+            /// - Throws: An error if `self` is not `.tooManyRequests`.
+            /// - SeeAlso: `.tooManyRequests`.
+            public var tooManyRequests: Operations.postV2DeviceMeNotificationTestScenarioType.Output.TooManyRequests {
+                get throws {
+                    switch self {
+                    case let .tooManyRequests(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "tooManyRequests",
                             response: self
                         )
                     }
