@@ -110,8 +110,7 @@ void main() {
     ]);
   });
 
-  test('migrate が 200 でも不正なボディなら Failure を返す (パース失敗は成功扱いしない)',
-      () async {
+  test('migrate が 200 でも不正なボディなら Failure を返す (パース失敗は成功扱いしない)', () async {
     final adapter = _MigrateAdapter(malformedMigrateBody: true);
     final repository = buildRepository(adapter);
 
@@ -165,7 +164,10 @@ final class _MigrateAdapter implements HttpClientAdapter {
         throw DioException.badResponse(
           statusCode: migrateStatus,
           requestOptions: options,
-          response: Response(requestOptions: options, statusCode: migrateStatus),
+          response: Response(
+            requestOptions: options,
+            statusCode: migrateStatus,
+          ),
         );
       }
       final body = malformedMigrateBody

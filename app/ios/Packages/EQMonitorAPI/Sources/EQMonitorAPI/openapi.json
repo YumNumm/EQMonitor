@@ -1913,122 +1913,6 @@
         }
       }
     },
-    "/v2/device/me/live-activity": {
-      "get": {
-        "operationId": "getV2DeviceMeLiveActivity",
-        "tags": [
-          "Device"
-        ],
-        "description": "Live Activity updateToken一覧を取得",
-        "responses": {
-          "200": {
-            "description": "Live Activity一覧",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LiveActivityTokenResponse"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部サーバエラー",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/device/me/live-activity/{liveActivityId}/token": {
-      "put": {
-        "operationId": "putV2DeviceMeLiveActivityByLiveActivityIdToken",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/LiveActivityIdParam"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LiveActivityTokenRequest"
-              }
-            }
-          }
-        },
-        "tags": [
-          "Device"
-        ],
-        "description": "Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。配信には使用されず、Start送信からToken受信までの遅延計測にのみ用いる。",
-        "responses": {
-          "200": {
-            "description": "更新後のLive Activity情報",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LiveActivityTokenResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Live Activityが見つからない"
-          },
-          "500": {
-            "description": "内部サーバエラー",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "operationId": "deleteV2DeviceMeLiveActivityByLiveActivityIdToken",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/LiveActivityIdParam"
-          }
-        ],
-        "tags": [
-          "Device"
-        ],
-        "description": "Live Activity updateTokenを削除",
-        "responses": {
-          "204": {
-            "description": "削除成功"
-          },
-          "404": {
-            "description": "トークンが見つからない"
-          },
-          "500": {
-            "description": "内部サーバエラー",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v2/device/me/location": {
       "put": {
         "operationId": "putV2DeviceMeLocation",
@@ -2312,6 +2196,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "レート制限",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitedResponse"
                 }
               }
             }
@@ -5625,6 +5519,9 @@
             "items": {
               "$ref": "#/components/schemas/ChangelogSection"
             }
+          },
+          "content": {
+            "type": "string"
           }
         },
         "required": [
@@ -6384,9 +6281,13 @@
           },
           "vyse60_enabled": {
             "type": "boolean"
+          },
+          "earthquake_notice_enabled": {
+            "type": "boolean"
           }
         },
         "required": [
+          "earthquake_notice_enabled",
           "nankai_extraordinary_enabled",
           "nankai_regular_enabled",
           "notification_enabled",
@@ -6414,6 +6315,9 @@
             "type": "boolean"
           },
           "vyse60_enabled": {
+            "type": "boolean"
+          },
+          "earthquake_notice_enabled": {
             "type": "boolean"
           }
         }
@@ -7102,48 +7006,6 @@
           }
         }
       },
-      "LiveActivityStartTrigger": {
-        "enum": [
-          "SHAKE_DETECTION",
-          "EEW"
-        ],
-        "type": "string",
-        "description": "Live Activity開始トリガー"
-      },
-      "LiveActivityTokenResponse": {
-        "type": "object",
-        "properties": {
-          "live_activity_id": {
-            "type": "string"
-          },
-          "event_id": {
-            "type": "string"
-          },
-          "start_trigger": {
-            "$ref": "#/components/schemas/LiveActivityStartTrigger"
-          },
-          "created_at": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "created_at",
-          "event_id",
-          "live_activity_id",
-          "start_trigger"
-        ]
-      },
-      "LiveActivityTokenRequest": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "token"
-        ]
-      },
       "DeviceLocationRequest": {
         "type": "object",
         "properties": {
@@ -7431,6 +7293,21 @@
           "event_id",
           "message",
           "scenario"
+        ]
+      },
+      "RateLimitedResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "RATE_LIMITED"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
         ]
       },
       "TelemetryEvent": {
@@ -12136,14 +12013,6 @@
       "TsunamiRegionIdParam": {
         "in": "path",
         "name": "regionId",
-        "schema": {
-          "type": "string"
-        },
-        "required": true
-      },
-      "LiveActivityIdParam": {
-        "in": "path",
-        "name": "liveActivityId",
         "schema": {
           "type": "string"
         },

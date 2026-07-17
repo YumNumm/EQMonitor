@@ -1,8 +1,9 @@
+import 'dart:ui';
+
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
@@ -16,7 +17,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/current_locat
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/linkified_text.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/estimated_intensity_notice_dialog.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_event_notes.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_hypocenter_information_card.dart';
@@ -89,10 +89,12 @@ class _LoadedContent extends HookConsumerWidget {
           ? EarthquakeDataSource.jmaIntensityDatabase
           : EarthquakeDataSource.jmaDisasterInformationXml,
     );
-    final effectiveSource = source.value == .jmaIntensityDatabase && hasCatalog
+    final effectiveSource =
+        source.value == EarthquakeDataSource.jmaIntensityDatabase && hasCatalog
         ? EarthquakeDataSource.jmaIntensityDatabase
         : EarthquakeDataSource.jmaDisasterInformationXml;
-    final showingDb = effectiveSource == .jmaIntensityDatabase;
+    final showingDb =
+        effectiveSource == EarthquakeDataSource.jmaIntensityDatabase;
 
     final displayMode = useState(
       hasEstimated ? IntensityDisplayMode.estimated : IntensityDisplayMode.jma,
@@ -119,10 +121,10 @@ class _LoadedContent extends HookConsumerWidget {
       return null;
     }, [hasEstimated, noticeShown, showingDb]);
 
-    final availableModes = <IntensityDisplayMode>[
-      .jma,
-      if (hasLpgm) .lpgm,
-      if (hasEstimated) .estimated,
+    final availableModes = [
+      IntensityDisplayMode.jma,
+      if (hasLpgm) IntensityDisplayMode.lpgm,
+      if (hasEstimated) IntensityDisplayMode.estimated,
     ];
 
     final designSystem = context.designSystem;
@@ -156,11 +158,13 @@ class _LoadedContent extends HookConsumerWidget {
                               CollapsibleSegmentedControl<EarthquakeDataSource>(
                                 segments: const [
                                   SegmentItem(
-                                    value: .jmaDisasterInformationXml,
+                                    value: EarthquakeDataSource
+                                        .jmaDisasterInformationXml,
                                     label: '防災情報XML',
                                   ),
                                   SegmentItem(
-                                    value: .jmaIntensityDatabase,
+                                    value: EarthquakeDataSource
+                                        .jmaIntensityDatabase,
                                     label: '震度データベース',
                                   ),
                                 ],
@@ -186,10 +190,6 @@ class _LoadedContent extends HookConsumerWidget {
                       ] else
                         EarthquakeHypocenterInformationCard(item: earthquake),
                       CurrentLocationIntensityCard(item: earthquake),
-                      _DataSourceAndCommentLabel(
-                        commentLines: telegramCommentLines,
-                        dataSources: earthquake.dataSources,
-                      ),
                       EarthquakeIntensityCard(
                         item: earthquake,
                         displayMode: displayMode.value,
@@ -213,7 +213,7 @@ class _LoadedContent extends HookConsumerWidget {
           if (Navigator.canPop(context))
             SafeArea(
               child: Padding(
-                padding: const .symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: IconButton.filledTonal(
                   style: ButtonStyle(
                     shape: WidgetStatePropertyAll(
@@ -223,7 +223,7 @@ class _LoadedContent extends HookConsumerWidget {
                             alpha: 0.2,
                           ),
                         ),
-                        borderRadius: .circular(128),
+                        borderRadius: BorderRadius.circular(128),
                       ),
                     ),
                   ),
@@ -234,51 +234,54 @@ class _LoadedContent extends HookConsumerWidget {
                 ),
               ),
             ),
+          // データソースラベル
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Align(
+                alignment: .bottomRight,
+                child: Card(
+                  color: Colors.transparent,
+                  elevation: 0,
+                  clipBehavior: .hardEdge,
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 4,
+                      sigmaY: 4,
+                      tileMode: .decal,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 2,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          for (final line in telegramCommentLines)
+                            Text(
+                              line,
+                              style: Theme.of(context).textTheme.bodySmall,
+                              textAlign: TextAlign.end,
+                            ),
+                          Text(
+                            'データソース: ${earthquake.dataSources.map((e) => switch (e) {
+                              .jmaDisasterInformationXml => "気象庁災害情報XML",
+                              .jmaIntensityDatabase => "気象庁震度データベース",
+                            }).join(', ')}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
-    );
-  }
-}
-
-class _DataSourceAndCommentLabel extends StatelessWidget {
-  const _DataSourceAndCommentLabel({
-    required this.commentLines,
-    required this.dataSources,
-  });
-
-  final List<String> commentLines;
-  final List<EarthquakeDataSource> dataSources;
-
-  @override
-  Widget build(BuildContext context) {
-    final bodySmall = Theme.of(context).textTheme.bodySmall;
-    final dataSourceLabel =
-        'データソース: ${dataSources.map((e) => switch (e) {
-          .jmaDisasterInformationXml => '気象庁防災情報XML',
-          .jmaIntensityDatabase => '気象庁震度データベース',
-        }).join(', ')}';
-
-    return Padding(
-      padding: const .symmetric(horizontal: 16, vertical: 4),
-      child: LinkifiedText(
-        text: '${commentLines.join('\n')}\n$dataSourceLabel',
-        style: bodySmall!.copyWith(
-          fontFamily: FontFamily.googleSansCode,
-          fontFamilyFallback: [FontFamily.notoSansJP],
-        ),
-      ),
-      // child: Align(
-      // alignment: .centerRight,
-      // child: Column(
-      //   mainAxisSize: .min,
-      //   crossAxisAlignment: .end,
-      //   children: [
-      //     for (final line in commentLines)
-      //       LinkifiedText(text: line, style: bodySmall),
-      //     Text(dataSourceLabel, style: bodySmall, textAlign: .end),
-      //   ],
-      // ),
-      // ),
     );
   }
 }
@@ -300,7 +303,7 @@ class _TelegramListButton extends StatelessWidget {
         icon: const Icon(Icons.list_alt),
         label: const Text('電文一覧を見る'),
         style: FilledButton.styleFrom(
-          minimumSize: const Size(.infinity, 48),
+          minimumSize: const Size(double.infinity, 48),
           backgroundColor: designSystem.colorTheme.secondaryContainer,
           foregroundColor: designSystem.colorTheme.onSecondaryContainer,
         ),

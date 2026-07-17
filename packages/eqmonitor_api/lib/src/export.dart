@@ -98,6 +98,7 @@ export 'models/test_scenario_response.dart';
 export 'models/test_notification_scenario.dart';
 export 'models/test_scenario_type_request.dart';
 export 'models/test_scenario_type_response.dart';
+export 'models/rate_limited_response.dart';
 export 'models/telemetry_event.dart';
 export 'models/telemetry_events_request.dart';
 export 'models/telemetry_events_response.dart';

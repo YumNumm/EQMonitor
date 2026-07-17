@@ -12,7 +12,6 @@ import 'package:eqmonitor/core/provider/interceptor/device_id_interceptor.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
@@ -44,7 +43,7 @@ Future<Dio> dio(Ref ref) async {
   dio.interceptors.add(deviceIdInterceptor);
   dio.interceptors.add(deviceAuthTokenInterceptor);
 
-  if (kDebugMode) {
+  if (chuckBuildModePolicy.captureTraffic) {
     final chuck = ref.watch(chuckProvider);
     dio.interceptors.add(chuck.dioInterceptor);
   }

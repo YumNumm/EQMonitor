@@ -67,7 +67,7 @@ class _DebugWidget extends ConsumerWidget {
                   .read(debugProvider.notifier)
                   .save(isEnabled: !isDebugEnabled),
             ),
-            if (kDebugMode)
+            if (chuckBuildModePolicy.showInspector)
               ListTile(
                 title: const Text('Chuck'),
                 leading: const Icon(Icons.list),

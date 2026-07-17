@@ -178,9 +178,7 @@ final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
   String? savedToken;
 
   @override
-  Future<void> saveToken({
-    required String token,
-  }) async {
+  Future<void> saveToken({required String token}) async {
     savedToken = token;
   }
 
