@@ -38,10 +38,7 @@ import Foundation
     }
 
     public func isPushToStartSupported() -> Bool {
-      if !isLiveActivitySupported() {
-        return false
-      }
-      guard #available(iOS 18.0, *), !ProcessInfo.processInfo.isiOSAppOnMac else {
+      guard #available(iOS 18.0, *), isLiveActivitySupported() else {
         return false
       }
       return true

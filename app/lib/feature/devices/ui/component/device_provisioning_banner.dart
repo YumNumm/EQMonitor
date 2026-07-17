@@ -23,13 +23,14 @@ class DeviceProvisioningBanner extends ConsumerWidget {
     final provisionMutation = ref.watch(
       DeviceProvisioningNotifier.provisionMutation,
     );
-    final syncMutation = ref.watch(PushTokenSyncNotifier.syncMutation);
+    final syncSnapshot =
+        provisionStatus.value == DeviceProvisioningStatus.notRequired
+        ? ref.watch(pushTokenSyncProvider)
+        : null;
 
     final notifier = ref.watch(deviceProvisioningProvider.notifier);
-    final syncNotifier = ref.watch(pushTokenSyncProvider.notifier);
-
     final provisionRetry = notifier.retryState;
-    final syncRetry = syncNotifier.retryState;
+    final syncRetry = syncSnapshot?.value?.retryState ?? const RetryIdle();
 
     // アクティブなリトライ状態（provisioning 優先）
     final activeRetry = provisionRetry is! RetryIdle
@@ -37,16 +38,13 @@ class DeviceProvisioningBanner extends ConsumerWidget {
         : syncRetry;
 
     final isLoading =
-        provisionMutation is MutationPending || syncMutation is MutationPending;
+        provisionMutation is MutationPending || syncRetry is RetryRunning;
 
     // 表示不要ケース
     final isProvisionDone =
         provisionStatus.value == DeviceProvisioningStatus.notRequired &&
-        provisionMutation is MutationIdle;
-    final isAllDone =
-        isProvisionDone &&
-        syncMutation is MutationIdle &&
-        activeRetry is RetryIdle;
+        provisionMutation is! MutationPending;
+    final isAllDone = isProvisionDone && activeRetry is RetryIdle;
     if (isAllDone) {
       return const SizedBox.shrink();
     }
@@ -55,6 +53,8 @@ class DeviceProvisioningBanner extends ConsumerWidget {
       bottomSpacing: bottomSpacing,
       activeRetry: activeRetry,
       isLoading: isLoading,
+      isProvisioningRequired:
+          provisionStatus.value == DeviceProvisioningStatus.required,
       onRetry: () {
         if (provisionStatus.value == DeviceProvisioningStatus.required) {
           notifier.reset();
@@ -66,7 +66,6 @@ class DeviceProvisioningBanner extends ConsumerWidget {
             ),
           );
         } else {
-          syncNotifier.reset();
           unawaited(
             PushTokenSyncNotifier.syncMutation.run(
               ref,
@@ -84,12 +83,14 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
     required this.bottomSpacing,
     required this.activeRetry,
     required this.isLoading,
+    required this.isProvisioningRequired,
     required this.onRetry,
   });
 
   final double bottomSpacing;
   final RetryControllerState activeRetry;
   final bool isLoading;
+  final bool isProvisioningRequired;
   final VoidCallback onRetry;
 
   @override
@@ -133,6 +134,16 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
           child: CircularProgressIndicator.adaptive(strokeWidth: 2),
         ),
       ),
+      RetryIdle() when isProvisioningRequired => _BannerTile(
+        icon: Icons.warning_amber_outlined,
+        backgroundColor: colorTheme.errorContainer,
+        foregroundColor: colorTheme.onErrorContainer,
+        message: '通知の初期設定が完了していません',
+        trailing: FilledButton.tonal(
+          onPressed: onRetry,
+          child: const Text('再試行'),
+        ),
+      ),
       _ => null,
     };
 
@@ -174,7 +185,9 @@ class _WaitingBanner extends HookWidget {
       icon: Icons.schedule,
       backgroundColor: colorTheme.tertiaryContainer,
       foregroundColor: colorTheme.onTertiaryContainer,
-      message: seconds > 0 ? '$seconds 秒後に再試行します…' : '再試行しています…',
+      message: seconds > 0
+          ? '${error.userMessage}。$seconds 秒後に再試行します…'
+          : '${error.userMessage}。再試行しています…',
     );
   }
 }

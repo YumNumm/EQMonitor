@@ -166,38 +166,34 @@ class DeviceRepository {
     });
   }
 
+  Future<Result<void, Exception>> upsertPushToken({
+    required PushTokenKind kind,
+    required String token,
+  }) => Result.capture(() async {
+    await switch (kind) {
+      .fcm => _api.device.patchV2DeviceMeFcm(
+        body: api.V2DeviceMeFcmRequestBody(token: token),
+      ),
+      .apnsNotification => _api.device.patchV2DeviceMeApnsKind(
+        kind: .notification,
+        body: api.V2DeviceMeApnsKindRequestBody(
+          token: token,
+          environment: _apnsEnvironment,
+        ),
+      ),
+      .apnsPushToStart => _api.device.patchV2DeviceMeApnsKind(
+        kind: .liveActivityStart,
+        body: api.V2DeviceMeApnsKindRequestBody(
+          token: token,
+          environment: _apnsEnvironment,
+        ),
+      ),
+    };
+  });
+
   static bool _isNotFound(Exception e) =>
       e is DioException && e.response?.statusCode == 404;
 
   static bool _shouldRegisterAfterGetFailure(Exception e) =>
       e is DioException && (e.response?.statusCode == 401 || _isNotFound(e));
-
-  /// Upserts a single push token of [kind] to its dedicated endpoint.
-  Future<Result<void, Exception>> upsertPushToken({
-    required PushTokenKind kind,
-    required String token,
-  }) => Result.capture(() async {
-    switch (kind) {
-      case PushTokenKind.fcm:
-        await _api.device.patchV2DeviceMeFcm(
-          body: api.V2DeviceMeFcmRequestBody(token: token),
-        );
-      case PushTokenKind.apnsNotification:
-        await _api.device.patchV2DeviceMeApnsKind(
-          kind: api.Kind.notification,
-          body: api.V2DeviceMeApnsKindRequestBody(
-            token: token,
-            environment: _apnsEnvironment,
-          ),
-        );
-      case PushTokenKind.apnsPushToStart:
-        await _api.device.patchV2DeviceMeApnsKind(
-          kind: api.Kind.liveActivityStart,
-          body: api.V2DeviceMeApnsKindRequestBody(
-            token: token,
-            environment: _apnsEnvironment,
-          ),
-        );
-    }
-  });
 }

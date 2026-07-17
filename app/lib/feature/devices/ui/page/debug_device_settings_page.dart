@@ -41,7 +41,6 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
 
     Future<void> onRefresh() async {
       ref.invalidate(deviceProvisioningProvider, asReload: true);
-      ref.invalidate(pushTokenSyncProvider, asReload: true);
       await ref.read(deviceProvisioningProvider.future);
     }
 
@@ -463,8 +462,16 @@ class _TokenStatusRow extends StatelessWidget {
     final colorTheme = context.designSystem.colorTheme;
     final (icon, color, statusText) = switch (kindState) {
       SyncedTokenState() => (Icons.check_circle, colorTheme.primary, '同期済み'),
-      SyncingTokenState() => (Icons.sync, colorTheme.tertiary, '同期中…'),
-      PendingTokenState() => (Icons.schedule, colorTheme.secondary, '再試行待ち'),
+      SyncingTokenState(:final attempt) => (
+        Icons.sync,
+        colorTheme.secondary,
+        attempt == 0 ? '同期中' : '同期中 (試行 ${attempt + 1})',
+      ),
+      WaitingTokenState(:final attempt, :final error) => (
+        Icons.schedule,
+        colorTheme.tertiary,
+        '待機中 (試行 ${attempt + 1}): ${error.userMessage}',
+      ),
       FailedTokenState(:final error) => (
         Icons.error_outline,
         colorTheme.error,

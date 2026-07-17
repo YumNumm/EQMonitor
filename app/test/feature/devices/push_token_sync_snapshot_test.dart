@@ -1,98 +1,74 @@
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
+import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test(
-    'allSynced is true when platform-inapplicable tokens are not pending',
-    () {
-      const snapshot = PushTokenSyncSnapshot(
-        fcm: SyncedTokenState(),
-        apnsNotification: NotApplicableTokenState(),
-        apnsPushToStart: NotApplicableTokenState(),
-      );
-
-      expect(snapshot.allSynced, isTrue);
-    },
-  );
-
-  test('allSynced is false when any token is pending', () {
+  test('copyWith updates only the selected immutable entry', () {
     const snapshot = PushTokenSyncSnapshot(
-      fcm: SyncedTokenState(),
-      apnsNotification: PendingTokenState(),
-      apnsPushToStart: NotApplicableTokenState(),
-    );
-
-    expect(snapshot.allSynced, isFalse);
-  });
-
-  test('allSynced is false when any token is syncing', () {
-    const snapshot = PushTokenSyncSnapshot(
-      fcm: SyncingTokenState(),
+      fcm: AbsentTokenState(),
       apnsNotification: NotApplicableTokenState(),
-      apnsPushToStart: NotApplicableTokenState(),
+      apnsPushToStart: SyncedTokenState(),
     );
 
-    expect(snapshot.allSynced, isFalse);
+    final updated = snapshot.copyWith(fcm: const SyncingTokenState(attempt: 0));
+
+    expect(updated.fcm, isA<SyncingTokenState>());
+    expect(updated.apnsNotification, same(snapshot.apnsNotification));
+    expect(updated.apnsPushToStart, same(snapshot.apnsPushToStart));
   });
 
-  test('allSynced is false when any token is failed', () {
-    const snapshot = PushTokenSyncSnapshot(
-      fcm: FailedTokenState(error: NetworkUnreachableException()),
-      apnsNotification: NotApplicableTokenState(),
-      apnsPushToStart: NotApplicableTokenState(),
+  test('aggregate retry state prioritizes failed over waiting and running', () {
+    final snapshot = PushTokenSyncSnapshot(
+      fcm: const SyncingTokenState(attempt: 2),
+      apnsNotification: WaitingTokenState(
+        attempt: 1,
+        error: const NetworkUnreachableException(),
+        resumeAt: DateTime.utc(2026),
+      ),
+      apnsPushToStart: const FailedTokenState(
+        error: AuthorizationException(
+          reason: AuthorizationFailureReason.unauthenticated,
+        ),
+      ),
     );
 
-    expect(snapshot.allSynced, isFalse);
+    final retryState = snapshot.retryState;
+
+    expect(retryState, isA<RetryExhausted>());
+    expect(
+      (retryState as RetryExhausted).lastError,
+      isA<AuthorizationException>(),
+    );
   });
 
-  test('allSynced is true when all synced or absent', () {
-    const snapshot = PushTokenSyncSnapshot(
-      fcm: SyncedTokenState(),
-      apnsNotification: AbsentTokenState(),
-      apnsPushToStart: NotApplicableTokenState(),
+  test('aggregate retry state prioritizes waiting over running', () {
+    final resumeAt = DateTime.utc(2026);
+    final snapshot = PushTokenSyncSnapshot(
+      fcm: const SyncingTokenState(attempt: 2),
+      apnsNotification: WaitingTokenState(
+        attempt: 1,
+        error: const NetworkUnreachableException(),
+        resumeAt: resumeAt,
+      ),
+      apnsPushToStart: const SyncedTokenState(),
     );
 
-    expect(snapshot.allSynced, isTrue);
+    final retryState = snapshot.retryState;
+
+    expect(retryState, isA<RetryWaiting>());
+    expect((retryState as RetryWaiting).resumeAt, resumeAt);
+    expect(retryState.attempt, 1);
   });
 
-  test('hasPending returns true when any token is pending', () {
+  test('aggregate retry state is running when a worker is syncing', () {
     const snapshot = PushTokenSyncSnapshot(
-      fcm: SyncedTokenState(),
-      apnsNotification: PendingTokenState(),
-      apnsPushToStart: NotApplicableTokenState(),
-    );
-
-    expect(snapshot.hasPending, isTrue);
-  });
-
-  test('hasPending returns false when no tokens are pending', () {
-    const snapshot = PushTokenSyncSnapshot(
-      fcm: SyncedTokenState(),
-      apnsNotification: SyncingTokenState(),
-      apnsPushToStart: NotApplicableTokenState(),
-    );
-
-    expect(snapshot.hasPending, isFalse);
-  });
-
-  test('hasFailed returns true when any token has failed', () {
-    const snapshot = PushTokenSyncSnapshot(
-      fcm: FailedTokenState(error: NetworkUnreachableException()),
+      fcm: SyncingTokenState(attempt: 3),
       apnsNotification: SyncedTokenState(),
       apnsPushToStart: NotApplicableTokenState(),
     );
 
-    expect(snapshot.hasFailed, isTrue);
-  });
-
-  test('hasFailed returns false when no tokens have failed', () {
-    const snapshot = PushTokenSyncSnapshot(
-      fcm: SyncedTokenState(),
-      apnsNotification: SyncingTokenState(),
-      apnsPushToStart: PendingTokenState(),
-    );
-
-    expect(snapshot.hasFailed, isFalse);
+    expect(snapshot.retryState, isA<RetryRunning>());
+    expect((snapshot.retryState as RetryRunning).attempt, 3);
   });
 }

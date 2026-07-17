@@ -37,7 +37,7 @@ final class PushTokenSyncNotifierProvider
 }
 
 String _$pushTokenSyncNotifierHash() =>
-    r'8a4aa54089799b2dac9b6aa69ac098d61855b219';
+    r'4045dc1b23a3cc4cc0a3910a4d2a9052e21b3563';
 
 abstract class _$PushTokenSyncNotifier
     extends $AsyncNotifier<PushTokenSyncSnapshot> {

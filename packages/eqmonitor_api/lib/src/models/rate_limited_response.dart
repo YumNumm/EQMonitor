@@ -14,6 +14,7 @@ abstract class RateLimitedResponse with _$RateLimitedResponse {
     required String code,
     required String message,
   }) = _RateLimitedResponse;
-  
-  factory RateLimitedResponse.fromJson(Map<String, Object?> json) => _$RateLimitedResponseFromJson(json);
+
+  factory RateLimitedResponse.fromJson(Map<String, Object?> json) =>
+      _$RateLimitedResponseFromJson(json);
 }

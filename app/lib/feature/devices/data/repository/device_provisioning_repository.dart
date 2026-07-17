@@ -13,7 +13,9 @@ part 'device_provisioning_repository.g.dart';
 Future<DeviceProvisioningRepository> deviceProvisioningRepository(
   Ref ref,
 ) async {
-  final dataSource = await ref.watch(sharedPreferencesDataSourceProvider.future);
+  final dataSource = await ref.watch(
+    sharedPreferencesDataSourceProvider.future,
+  );
   final prefs = await ref.watch(data_prefs.sharedPreferencesProvider.future);
   return DeviceProvisioningRepository(
     dataSource: dataSource,

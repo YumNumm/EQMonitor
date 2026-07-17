@@ -227,7 +227,7 @@ Future<void> _main() async {
   container.listen(backgroundLocationServiceProvider, (_, _) {});
   container.listen(firebaseMessagingInteractionProvider, (_, _) {});
   container.listen(appLinksInteractionProvider, (_, _) {});
-  unawaited(container.read(pushTokenSyncWiringProvider.future));
+  container.listen(pushTokenSyncStartupProvider, (_, _) {});
   if (!kIsWeb) {
     unawaited(() async {
       try {

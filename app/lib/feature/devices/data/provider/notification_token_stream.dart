@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/live_activity/data/provider/eqm_live_activity_util.dart';
-import 'package:flutter/foundation.dart';
 import 'package:live_activity_util/live_activity_util.dart';
 import 'package:objective_c/objective_c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -18,12 +16,14 @@ Stream<NotificationToken> notificationTokenStream(Ref ref) async* {
   await messaging.requestPermission(provisional: true);
   final capabilities = ref.watch(pushTokenPlatformCapabilitiesProvider);
 
-  final fcmToken = ref.watch(_firebaseMessagingTokenStreamProvider).value;
+  final fcmToken = capabilities.supportsFcm
+      ? ref.watch(_firebaseMessagingTokenStreamProvider).value
+      : null;
   final apnsToken = capabilities.supportsApns
       ? ref.watch(_apnsTokenStreamProvider).value
       : null;
   final apnsPushToStartToken = capabilities.supportsPushToStart
-      ? ref.watch(_apnsPushToStartTokenStreamProvider).value
+      ? ref.watch(apnsPushToStartTokenStreamProvider).value
       : null;
 
   yield NotificationToken(
@@ -54,8 +54,8 @@ Stream<String> _firebaseMessagingTokenStream(Ref ref) async* {
 Stream<String> _apnsTokenStream(Ref ref) async* {
   final messaging = ref.watch(firebaseMessagingProvider);
   assert(
-    kIsWeb || (Platform.isIOS || Platform.isMacOS),
-    'APNs Token is only supported on iOS and macOS',
+    ref.watch(pushTokenPlatformCapabilitiesProvider).supportsApns,
+    'APNs Token is only supported on iOS',
   );
 
   final initialToken = await messaging.getAPNSToken();
@@ -69,8 +69,7 @@ Stream<String> _apnsTokenStream(Ref ref) async* {
 }
 
 @Riverpod(keepAlive: true)
-Stream<String> _apnsPushToStartTokenStream(Ref ref) async* {
-  // iOS 18未満（およびiOS以外）ではpush-to-start tokenの取得・監視を行わない
+Stream<String> apnsPushToStartTokenStream(Ref ref) async* {
   if (!ref.watch(pushTokenPlatformCapabilitiesProvider).supportsPushToStart) {
     return;
   }

@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
@@ -25,7 +24,6 @@ import 'package:eqmonitor/feature/start/ui/component/whats_new_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod/experimental/mutation.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -57,22 +55,6 @@ class _SheetBody extends ConsumerWidget {
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
-
-    // プロビジョニング未完了なら自動開始
-    ref.listen(deviceProvisioningProvider, (_, next) {
-      if (next.value == DeviceProvisioningStatus.required) {
-        final mutation = DeviceProvisioningNotifier.provisionMutation;
-        if (ref.read(mutation) is! MutationPending) {
-          unawaited(
-            mutation.run(
-              ref,
-              (tsx) async =>
-                  tsx.get(deviceProvisioningProvider.notifier).provision(),
-            ),
-          );
-        }
-      }
-    });
 
     final hasCurrentLocationRegion = ref.watch(
       notificationSlotsProvider.select(
@@ -187,9 +169,7 @@ class _SheetBody extends ConsumerWidget {
                     NotificationPermissionBanner(bottomSpacing: spacing.md),
                   DeviceProvisioningBanner(bottomSpacing: spacing.md),
                   if (showPermissionBanner) ...[
-                    _LocationPermissionBanner(
-                      bottomSpacing: spacing.md,
-                    ),
+                    _LocationPermissionBanner(bottomSpacing: spacing.md),
                   ],
                   if (shakeEvents.isNotEmpty)
                     Column(
@@ -287,9 +267,7 @@ class _LocationPermissionBanner extends ConsumerWidget {
                         Text(
                           message.$2,
                           style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: colorTheme.onPrimaryContainer,
-                              ),
+                              ?.copyWith(color: colorTheme.onPrimaryContainer),
                         ),
                     ],
                   ),

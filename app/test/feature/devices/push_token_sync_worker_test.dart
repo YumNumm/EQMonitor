@@ -3,191 +3,362 @@ import 'dart:async';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_worker_state.dart';
 import 'package:eqmonitor/feature/devices/data/repository/push_token_sync_worker.dart';
-import 'package:fake_async/fake_async.dart';
+import 'package:eqmonitor/feature/devices/data/retry/interruptible_backoff.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('PushTokenSyncWorker session behavior', () {
-    test('同一トークンの再送信は upsert を重複させない', () async {
+  group('PushTokenSyncWorker', () {
+    test('deduplicates a synced token within one session', () async {
       final upserts = <String>[];
       final worker = PushTokenSyncWorker(
-        upsert: (token) async {
-          upserts.add(token);
-        },
+        upsert: (token) async => upserts.add(token),
+        backoff: InterruptibleBackoff(delayOverride: (_) async {}),
       );
       addTearDown(worker.dispose);
 
-      // where().first を都度呼ぶと、subscription を切り替える間に発火したイベントを
-      // 取りこぼす（broadcast stream は過去のイベントを再生しない）ため、
-      // テスト全体で1本の subscription を張り続けてカウントする。
-      var syncedCount = 0;
-      final subscription = worker.states
-          .where((s) => s is SyncedWorkerState)
-          .listen((_) => syncedCount++);
-      addTearDown(subscription.cancel);
-
-      Future<void> waitForSyncedCount(int expected) async {
-        while (syncedCount < expected) {
-          await Future<void>.delayed(Duration.zero);
-        }
-      }
-
       worker.accept(token: 'same-token');
-      await waitForSyncedCount(1);
-      expect(upserts, ['same-token']);
-
+      await worker.states.whereState<PushTokenSyncWorkerSynced>().first;
       worker.accept(token: 'same-token');
       await Future<void>.delayed(Duration.zero);
       expect(upserts, ['same-token']);
-      expect(syncedCount, 1, reason: '同一トークンの再受理では synced を再通知しない');
 
+      final nextSynced = worker.states
+          .whereState<PushTokenSyncWorkerSynced>()
+          .first;
       worker.accept(token: 'new-token');
-      await waitForSyncedCount(2);
+      await nextSynced;
       expect(upserts, ['same-token', 'new-token']);
     });
 
-    test('初期状態は absent', () {
-      final worker = PushTokenSyncWorker(upsert: (_) async {});
-      addTearDown(worker.dispose);
-      expect(worker.state, isA<AbsentWorkerState>());
-    });
-  });
-
-  test('7回のリトライ可能な失敗の後に成功しても6回で打ち切られない', () {
-    fakeAsync((async) {
-      var callCount = 0;
-      final upserts = <String>[];
+    test('keeps retrying after seven retryable failures', () async {
+      var calls = 0;
+      final delays = <Duration>[];
       final worker = PushTokenSyncWorker(
-        upsert: (token) async {
-          callCount++;
-          upserts.add(token);
-          if (callCount <= 7) {
+        upsert: (_) async {
+          calls++;
+          if (calls <= 7) {
             throw const NetworkUnreachableException();
           }
         },
+        backoff: InterruptibleBackoff(
+          delayOverride: (duration) async => delays.add(duration),
+        ),
       );
       addTearDown(worker.dispose);
 
-      final seenStates = <PushTokenSyncWorkerState>[];
-      worker.states.listen(seenStates.add);
+      worker.accept(token: 'eventually-synced');
+      await worker.states.whereState<PushTokenSyncWorkerSynced>().first;
 
-      worker.accept(token: 'flaky-token');
-      async.elapse(const Duration(minutes: 10));
-
-      expect(callCount, 8, reason: '7回失敗した後の8回目で成功するはず');
-      expect(worker.state, isA<SyncedWorkerState>());
-      expect(
-        seenStates.whereType<FailedWorkerState>(),
-        isEmpty,
-        reason: 'リトライ可能なエラーでは6回で failed にならないはず',
-      );
-      expect(
-        seenStates.whereType<WaitingWorkerState>().length,
-        7,
-        reason: '7回の失敗それぞれで waiting 状態を経由するはず',
-      );
+      expect(calls, 8);
+      expect(delays, const [
+        Duration(seconds: 2),
+        Duration(seconds: 4),
+        Duration(seconds: 8),
+        Duration(seconds: 16),
+        Duration(seconds: 32),
+        Duration(seconds: 60),
+        Duration(seconds: 60),
+      ]);
     });
-  });
 
-  test('リトライ不可の失敗は retry() が呼ばれるまで停止する', () async {
-    var callCount = 0;
-    final upserts = <String>[];
-    final worker = PushTokenSyncWorker(
-      upsert: (token) async {
-        callCount++;
-        upserts.add(token);
-        if (callCount == 1) {
-          throw const InvalidRequestException(statusCode: 400);
-        }
+    test(
+      'stops after a non-retryable failure until retry is requested',
+      () async {
+        var calls = 0;
+        final worker = PushTokenSyncWorker(
+          upsert: (_) async {
+            calls++;
+            if (calls == 1) {
+              throw const InvalidRequestException(statusCode: 400);
+            }
+          },
+          backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+        );
+        addTearDown(worker.dispose);
+
+        worker.accept(token: 'manual-retry');
+        final failed = await worker.states
+            .whereState<PushTokenSyncWorkerFailed>()
+            .first;
+        expect(failed.attempt, 0);
+        expect(failed.error, isA<InvalidRequestException>());
+
+        worker.accept(token: 'manual-retry');
+        await Future<void>.delayed(Duration.zero);
+        expect(calls, 1);
+
+        final synced = worker.states
+            .whereState<PushTokenSyncWorkerSynced>()
+            .first;
+        worker.retry();
+        await synced;
+        expect(calls, 2);
       },
     );
-    addTearDown(worker.dispose);
 
-    worker.accept(token: 'bad-token');
-    final failedState = await worker.states.firstWhere(
-      (s) => s is FailedWorkerState,
+    test(
+      'a new token interrupts waiting and only the latest becomes synced',
+      () async {
+        final delayed = Completer<void>();
+        final upserts = <String>[];
+        final worker = PushTokenSyncWorker(
+          upsert: (token) async {
+            upserts.add(token);
+            if (token == 'old-token') {
+              throw const NetworkUnreachableException();
+            }
+          },
+          backoff: InterruptibleBackoff(delayOverride: (_) => delayed.future),
+        );
+        addTearDown(() async {
+          if (!delayed.isCompleted) {
+            delayed.complete();
+          }
+          await worker.dispose();
+        });
+
+        worker.accept(token: 'old-token');
+        await worker.states.whereState<PushTokenSyncWorkerWaiting>().first;
+        final emittedStates = <PushTokenSyncWorkerState>[];
+        final subscription = worker.states.listen(emittedStates.add);
+        addTearDown(subscription.cancel);
+
+        worker.accept(token: 'new-token');
+        await worker.states.whereState<PushTokenSyncWorkerSynced>().first;
+
+        expect(upserts, ['old-token', 'new-token']);
+        expect(
+          emittedStates.whereType<PushTokenSyncWorkerSynced>(),
+          hasLength(1),
+        );
+      },
     );
-    expect(failedState, isA<FailedWorkerState>());
-    expect(
-      (failedState as FailedWorkerState).error,
-      isA<InvalidRequestException>(),
+
+    test(
+      'a token arriving in flight is sent immediately after completion',
+      () async {
+        final firstUpsert = Completer<void>();
+        final upserts = <String>[];
+        final delays = <Duration>[];
+        final worker = PushTokenSyncWorker(
+          upsert: (token) async {
+            upserts.add(token);
+            if (token == 'old-token') {
+              await firstUpsert.future;
+            }
+          },
+          backoff: InterruptibleBackoff(
+            delayOverride: (duration) async => delays.add(duration),
+          ),
+        );
+        addTearDown(worker.dispose);
+
+        final syncing = worker.states
+            .whereState<PushTokenSyncWorkerSyncing>()
+            .first;
+        worker.accept(token: 'old-token');
+        await syncing;
+        worker.accept(token: 'new-token');
+        final synced = worker.states
+            .whereState<PushTokenSyncWorkerSynced>()
+            .first;
+        firstUpsert.complete();
+        await synced;
+
+        expect(upserts, ['old-token', 'new-token']);
+        expect(delays, isEmpty);
+      },
     );
-    expect(callCount, 1);
 
-    // retry() を呼ばない限り再送信されない。
-    await Future<void>.delayed(Duration.zero);
-    expect(callCount, 1);
-
-    worker.retry();
-    await worker.states.firstWhere((s) => s is SyncedWorkerState);
-    expect(callCount, 2);
-    expect(upserts, ['bad-token', 'bad-token']);
-  });
-
-  test('待機中に新しいトークンが届くと待機を中断し、最新の値だけが同期される', () {
-    fakeAsync((async) {
+    test('dispose prevents later upserts', () async {
+      final inFlight = Completer<void>();
       final upserts = <String>[];
       final worker = PushTokenSyncWorker(
         upsert: (token) async {
           upserts.add(token);
-          if (token == 'stale-token') {
-            throw const NetworkUnreachableException();
-          }
+          await inFlight.future;
         },
+        backoff: InterruptibleBackoff(delayOverride: (_) async {}),
       );
-      addTearDown(worker.dispose);
 
-      worker.accept(token: 'stale-token');
-      async.elapse(Duration.zero);
-      expect(worker.state, isA<WaitingWorkerState>());
+      final syncing = worker.states
+          .whereState<PushTokenSyncWorkerSyncing>()
+          .first;
+      worker.accept(token: 'in-flight');
+      await syncing;
+      final disposing = worker.dispose();
+      worker.accept(token: 'after-dispose');
+      inFlight.complete();
+      await disposing;
 
-      worker.accept(token: 'fresh-token');
-      async.flushMicrotasks();
-
-      expect(worker.state, isA<SyncedWorkerState>());
-      expect(upserts, ['stale-token', 'fresh-token']);
+      expect(upserts, ['in-flight']);
+      expect(worker.state, isA<PushTokenSyncWorkerDisposed>());
     });
-  });
 
-  test('upsert 実行中に届いた新しいトークンは完了直後に送信される', () async {
-    final upserts = <String>[];
-    final firstCompleter = Completer<void>();
-    final worker = PushTokenSyncWorker(
-      upsert: (token) async {
-        upserts.add(token);
-        if (token == 'in-flight-token') {
-          await firstCompleter.future;
-        }
+    test(
+      'reapplies the last synced token when it returns during an in-flight upsert',
+      () async {
+        final secondUpsert = Completer<void>();
+        final upserts = <String>[];
+        var serverToken = '';
+        final worker = PushTokenSyncWorker(
+          upsert: (token) async {
+            upserts.add(token);
+            if (token == 'token-b') {
+              await secondUpsert.future;
+            }
+            serverToken = token;
+          },
+          backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+        );
+        addTearDown(worker.dispose);
+
+        worker.accept(token: 'token-a');
+        await worker.states.whereState<PushTokenSyncWorkerSynced>().first;
+        final syncing = worker.states
+            .whereState<PushTokenSyncWorkerSyncing>()
+            .first;
+        worker.accept(token: 'token-b');
+        await syncing;
+        final restored = worker.states
+            .whereState<PushTokenSyncWorkerSynced>()
+            .first;
+        worker.accept(token: 'token-a');
+        secondUpsert.complete();
+        await restored;
+
+        expect(upserts, ['token-a', 'token-b', 'token-a']);
+        expect(serverToken, 'token-a');
+        expect(worker.state, isA<PushTokenSyncWorkerSynced>());
       },
     );
-    addTearDown(worker.dispose);
 
-    worker.accept(token: 'in-flight-token');
-    await Future<void>.delayed(Duration.zero);
-    expect(upserts, ['in-flight-token']);
+    test(
+      'reverting a token interrupts retry backoff and restores it',
+      () async {
+        final delayed = Completer<void>();
+        final upserts = <String>[];
+        var tokenBCalls = 0;
+        var serverToken = '';
+        final worker = PushTokenSyncWorker(
+          upsert: (token) async {
+            upserts.add(token);
+            if (token == 'token-b' && tokenBCalls++ == 0) {
+              throw const NetworkUnreachableException();
+            }
+            serverToken = token;
+          },
+          backoff: InterruptibleBackoff(delayOverride: (_) => delayed.future),
+        );
+        addTearDown(() async {
+          if (!delayed.isCompleted) {
+            delayed.complete();
+          }
+          await worker.dispose();
+        });
 
-    worker.accept(token: 'queued-token');
-    await Future<void>.delayed(Duration.zero);
-    expect(upserts, ['in-flight-token'], reason: 'まだ in-flight の upsert 中');
+        worker.accept(token: 'token-a');
+        await worker.states.whereState<PushTokenSyncWorkerSynced>().first;
+        worker.accept(token: 'token-b');
+        await worker.states.whereState<PushTokenSyncWorkerWaiting>().first;
+        final restored = worker.states
+            .whereState<PushTokenSyncWorkerSynced>()
+            .first;
+        worker.accept(token: 'token-a');
+        await Future<void>.delayed(Duration.zero);
+        await Future<void>.delayed(Duration.zero);
 
-    firstCompleter.complete();
-    await worker.states.firstWhere((s) => s is SyncedWorkerState);
-    expect(upserts, ['in-flight-token', 'queued-token']);
-  });
-
-  test('dispose() 後は accept() しても upsert されない', () async {
-    final upserts = <String>[];
-    final worker = PushTokenSyncWorker(
-      upsert: (token) async {
-        upserts.add(token);
+        expect(upserts, ['token-a', 'token-b', 'token-a']);
+        expect(serverToken, 'token-a');
+        expect(worker.state, isA<PushTokenSyncWorkerSynced>());
+        await restored;
       },
     );
 
-    worker.dispose();
-    expect(worker.state, isA<DisposedWorkerState>());
+    test(
+      'unexpected errors fail once without escaping and dispose closes states',
+      () async {
+        final escapedErrors = <String>[];
 
-    worker.accept(token: 'too-late');
-    await Future<void>.delayed(Duration.zero);
-    expect(upserts, isEmpty);
+        await runZonedGuarded(
+          () async {
+            var calls = 0;
+            final worker = PushTokenSyncWorker(
+              upsert: (_) async {
+                calls++;
+                throw StateError('unexpected upsert failure');
+              },
+              backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+            );
+
+            worker.accept(token: 'unexpected');
+            final failed = await worker.states
+                .whereState<PushTokenSyncWorkerFailed>()
+                .first;
+            expect(failed.error, isA<UnexpectedProvisioningException>());
+            final unexpected = failed.error as UnexpectedProvisioningException;
+            expect(unexpected.cause, isA<StateError>());
+            expect(unexpected.stackTrace, isNotNull);
+
+            worker.accept(token: 'unexpected');
+            await Future<void>.delayed(Duration.zero);
+            expect(calls, 1);
+
+            await worker.dispose();
+            await expectLater(worker.states, emitsDone);
+          },
+          (error, stackTrace) {
+            escapedErrors.add('$error\n$stackTrace');
+          },
+        );
+
+        expect(escapedErrors, isEmpty);
+      },
+    );
+
+    test(
+      'returning to the applied token clears an idle failure without upsert',
+      () async {
+        final upserts = <String>[];
+        final worker = PushTokenSyncWorker(
+          upsert: (token) async {
+            upserts.add(token);
+            if (token == 'token-b') {
+              throw const InvalidRequestException(statusCode: 400);
+            }
+          },
+          backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+        );
+        addTearDown(worker.dispose);
+
+        worker.accept(token: 'token-a');
+        await worker.states.whereState<PushTokenSyncWorkerSynced>().first;
+        worker.accept(token: 'token-b');
+        await worker.states.whereState<PushTokenSyncWorkerFailed>().first;
+        await Future<void>.delayed(Duration.zero);
+
+        final emittedStates = <PushTokenSyncWorkerState>[];
+        final subscription = worker.states.listen(emittedStates.add);
+        addTearDown(subscription.cancel);
+        worker.accept(token: 'token-a');
+        await Future<void>.delayed(Duration.zero);
+
+        expect(upserts, ['token-a', 'token-b']);
+        expect(worker.state, isA<PushTokenSyncWorkerSynced>());
+        expect(
+          emittedStates.whereType<PushTokenSyncWorkerSynced>(),
+          hasLength(1),
+        );
+
+        worker.retry();
+        await Future<void>.delayed(Duration.zero);
+        expect(upserts, ['token-a', 'token-b']);
+      },
+    );
   });
+}
+
+extension on Stream<PushTokenSyncWorkerState> {
+  Stream<T> whereState<T extends PushTokenSyncWorkerState>() =>
+      where((state) => state is T).cast<T>();
 }

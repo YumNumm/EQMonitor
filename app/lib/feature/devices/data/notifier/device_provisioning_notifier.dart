@@ -28,7 +28,6 @@ Future<bool> deviceMigratedFromLegacy(Ref ref) async {
 
 @Riverpod(keepAlive: true)
 class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
-
   late final _retryController = RetryController();
   RetryControllerState get retryState => _retryController.state;
 
@@ -48,7 +47,6 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
     }
     return DeviceProvisioningStatus.notRequired;
   }
-
 
   static final provisionMutation = Mutation<void>();
   Future<void> provision() async {
@@ -107,9 +105,6 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
     });
 
     state = const AsyncData(DeviceProvisioningStatus.notRequired);
-
-    try {
-      await ref.read(pushTokenSyncProvider.notifier).sync();
-    } on Object catch (_) {}
+    ref.invalidate(pushTokenSyncProvider, asReload: true);
   }
 }
