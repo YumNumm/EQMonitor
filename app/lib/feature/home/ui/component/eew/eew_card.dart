@@ -252,6 +252,7 @@ class _EewMainCard extends StatelessWidget {
   }
 }
 
+
 class _EewCardHeader extends StatelessWidget {
   const _EewCardHeader({
     required this.eew,

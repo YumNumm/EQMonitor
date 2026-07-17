@@ -68,6 +68,7 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
             hypo.depth != null &&
             eew.originTime != null &&
             !eew.isCanceled &&
+            // P波/S波レベル越え、IPF法(1点)、または「仮定震源要素」の場合 は除外
             !eew.isPlum;
       }).toList(),
       [eews],
