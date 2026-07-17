@@ -25,12 +25,12 @@ $ShakeDetectionEntryCopyWith<ShakeDetectionEntry> get copyWith => _$ShakeDetecti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.subRegionId, subRegionId) || other.subRegionId == subRegionId)&&(identical(other.subRegionName, subRegionName) || other.subRegionName == subRegionName)&&const DeepCollectionEquality().equals(other.minLevel, minLevel)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.subRegionId, subRegionId) || other.subRegionId == subRegionId)&&(identical(other.subRegionName, subRegionName) || other.subRegionName == subRegionName)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,subRegionId,subRegionName,const DeepCollectionEquality().hash(minLevel),isCurrentLocation);
+int get hashCode => Object.hash(runtimeType,id,subRegionId,subRegionName,minLevel,isCurrentLocation);
 
 @override
 String toString() {
@@ -62,12 +62,12 @@ class _$ShakeDetectionEntryCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? subRegionId = freezed,Object? subRegionName = freezed,Object? minLevel = freezed,Object? isCurrentLocation = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? subRegionId = freezed,Object? subRegionName = freezed,Object? minLevel = null,Object? isCurrentLocation = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,subRegionId: freezed == subRegionId ? _self.subRegionId : subRegionId // ignore: cast_nullable_to_non_nullable
 as String?,subRegionName: freezed == subRegionName ? _self.subRegionName : subRegionName // ignore: cast_nullable_to_non_nullable
-as String?,minLevel: freezed == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
+as String?,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
 as api.ShakeDetectionLevel,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -229,12 +229,12 @@ _$ShakeDetectionEntryCopyWith<_ShakeDetectionEntry> get copyWith => __$ShakeDete
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.subRegionId, subRegionId) || other.subRegionId == subRegionId)&&(identical(other.subRegionName, subRegionName) || other.subRegionName == subRegionName)&&const DeepCollectionEquality().equals(other.minLevel, minLevel)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.subRegionId, subRegionId) || other.subRegionId == subRegionId)&&(identical(other.subRegionName, subRegionName) || other.subRegionName == subRegionName)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,subRegionId,subRegionName,const DeepCollectionEquality().hash(minLevel),isCurrentLocation);
+int get hashCode => Object.hash(runtimeType,id,subRegionId,subRegionName,minLevel,isCurrentLocation);
 
 @override
 String toString() {
@@ -266,12 +266,12 @@ class __$ShakeDetectionEntryCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? subRegionId = freezed,Object? subRegionName = freezed,Object? minLevel = freezed,Object? isCurrentLocation = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? subRegionId = freezed,Object? subRegionName = freezed,Object? minLevel = null,Object? isCurrentLocation = null,}) {
   return _then(_ShakeDetectionEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,subRegionId: freezed == subRegionId ? _self.subRegionId : subRegionId // ignore: cast_nullable_to_non_nullable
 as String?,subRegionName: freezed == subRegionName ? _self.subRegionName : subRegionName // ignore: cast_nullable_to_non_nullable
-as String?,minLevel: freezed == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
+as String?,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
 as api.ShakeDetectionLevel,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

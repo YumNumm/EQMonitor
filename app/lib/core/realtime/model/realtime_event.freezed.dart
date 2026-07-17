@@ -388,12 +388,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeEewUpsertEvent&&const DeepCollectionEquality().equals(other.item, item)&&(identical(other.source, source) || other.source == source));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeEewUpsertEvent&&(identical(other.item, item) || other.item == item)&&(identical(other.source, source) || other.source == source));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(item),source);
+int get hashCode => Object.hash(runtimeType,item,source);
 
 @override
 String toString() {
@@ -412,7 +412,7 @@ $Res call({
 });
 
 
-
+$EewItemWithRelationsCopyWith<$Res> get item;
 
 }
 /// @nodoc
@@ -425,15 +425,24 @@ class _$RealtimeEewUpsertEventCopyWithImpl<$Res>
 
 /// Create a copy of RealtimeEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? item = freezed,Object? source = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? item = null,Object? source = null,}) {
   return _then(RealtimeEewUpsertEvent(
-item: freezed == item ? _self.item : item // ignore: cast_nullable_to_non_nullable
+item: null == item ? _self.item : item // ignore: cast_nullable_to_non_nullable
 as EewItemWithRelations,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as RealtimeSource,
   ));
 }
 
-
+/// Create a copy of RealtimeEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EewItemWithRelationsCopyWith<$Res> get item {
+  
+  return $EewItemWithRelationsCopyWith<$Res>(_self.item, (value) {
+    return _then(_self.copyWith(item: value));
+  });
+}
 }
 
 /// @nodoc
@@ -463,12 +472,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeEarthquakeUpsertEvent&&const DeepCollectionEquality().equals(other.record, record)&&(identical(other.source, source) || other.source == source));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeEarthquakeUpsertEvent&&(identical(other.record, record) || other.record == record)&&(identical(other.source, source) || other.source == source));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(record),source);
+int get hashCode => Object.hash(runtimeType,record,source);
 
 @override
 String toString() {
@@ -487,7 +496,7 @@ $Res call({
 });
 
 
-
+$EarthquakePartialCopyWith<$Res> get record;
 
 }
 /// @nodoc
@@ -500,15 +509,24 @@ class _$RealtimeEarthquakeUpsertEventCopyWithImpl<$Res>
 
 /// Create a copy of RealtimeEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? record = freezed,Object? source = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? record = null,Object? source = null,}) {
   return _then(RealtimeEarthquakeUpsertEvent(
-record: freezed == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
+record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
 as EarthquakePartial,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as RealtimeSource,
   ));
 }
 
-
+/// Create a copy of RealtimeEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakePartialCopyWith<$Res> get record {
+  
+  return $EarthquakePartialCopyWith<$Res>(_self.record, (value) {
+    return _then(_self.copyWith(record: value));
+  });
+}
 }
 
 /// @nodoc
