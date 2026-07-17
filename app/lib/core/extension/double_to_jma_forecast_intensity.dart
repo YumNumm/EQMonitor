@@ -27,6 +27,7 @@ extension JmaIntensityRealtimeEx on JmaIntensity {
     JmaIntensity.fiveUnknown => (4.5, double.infinity),
     JmaIntensity.fiveLower => (4.5, 5.0),
     JmaIntensity.fiveUpper => (5.0, 5.5),
+    JmaIntensity.sixUnknown => (5.5, double.infinity),
     JmaIntensity.sixLower => (5.5, 6.0),
     JmaIntensity.sixUpper => (6.0, 6.5),
     JmaIntensity.seven => (6.5, double.infinity),

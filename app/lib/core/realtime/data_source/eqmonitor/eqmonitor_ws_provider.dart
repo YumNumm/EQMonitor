@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket/web_socket.dart';
@@ -40,9 +41,16 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
 
     try {
       final websocket = await ref.watch(eqmonitorWebSocketProvider.future);
+      const heartbeatResponder = WsHeartbeatResponder();
       _retryCount = 0;
 
       await for (final event in websocket.events) {
+        if (event case TextDataReceived(:final text)) {
+          final response = heartbeatResponder.buildResponse(text);
+          if (response != null) {
+            websocket.sendText(response);
+          }
+        }
         yield event;
         if (event case CloseReceived(:final code, :final reason)) {
           talker.warning(
@@ -55,10 +63,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       talker.error('EQMonitor WebSocket: connection failed', e);
     }
 
-    final delaySeconds = math.min(
-      math.pow(2, _retryCount).toInt(),
-      60,
-    );
+    final delaySeconds = math.min(math.pow(2, _retryCount).toInt(), 60);
     _retryCount++;
     talker.info(
       'EQMonitor WebSocket: reconnecting in ${delaySeconds}s '

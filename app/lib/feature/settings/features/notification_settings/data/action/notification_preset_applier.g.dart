@@ -28,7 +28,7 @@ final class NotificationPresetApplierProvider
         argument: null,
         retry: null,
         name: r'notificationPresetApplierProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -57,4 +57,4 @@ final class NotificationPresetApplierProvider
 }
 
 String _$notificationPresetApplierHash() =>
-    r'14f591f559a3151c821e9c5ca17a07168ec05a8e';
+    r'2a9aeab9bee09d103cc499c6408b6e54edd7d806';

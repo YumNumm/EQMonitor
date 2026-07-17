@@ -7,7 +7,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_preset_applier.g.dart';
 
-@riverpod
+// UI から ref.read で取得後、API 呼び出しの await を跨いで Ref を使うため
+// autoDispose だと途中で dispose され UnmountedRefException になる
+@Riverpod(keepAlive: true)
 NotificationPresetApplier notificationPresetApplier(Ref ref) =>
     NotificationPresetApplier(ref);
 

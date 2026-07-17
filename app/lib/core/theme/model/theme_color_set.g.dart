@@ -34,10 +34,6 @@ _ThemeColorSet _$ThemeColorSetFromJson(Map<String, dynamic> json) =>
             'secondary',
             (v) => const ColorJsonConverter().fromJson(v as String),
           ),
-          onSecondary: $checkedConvert(
-            'on_secondary',
-            (v) => const ColorJsonConverter().fromJson(v as String),
-          ),
           secondaryContainer: $checkedConvert(
             'secondary_container',
             (v) => const ColorJsonConverter().fromJson(v as String),
@@ -50,10 +46,6 @@ _ThemeColorSet _$ThemeColorSetFromJson(Map<String, dynamic> json) =>
             'tertiary',
             (v) => const ColorJsonConverter().fromJson(v as String),
           ),
-          onTertiary: $checkedConvert(
-            'on_tertiary',
-            (v) => const ColorJsonConverter().fromJson(v as String),
-          ),
           tertiaryContainer: $checkedConvert(
             'tertiary_container',
             (v) => const ColorJsonConverter().fromJson(v as String),
@@ -64,10 +56,6 @@ _ThemeColorSet _$ThemeColorSetFromJson(Map<String, dynamic> json) =>
           ),
           error: $checkedConvert(
             'error',
-            (v) => const ColorJsonConverter().fromJson(v as String),
-          ),
-          onError: $checkedConvert(
-            'on_error',
             (v) => const ColorJsonConverter().fromJson(v as String),
           ),
           errorContainer: $checkedConvert(
@@ -88,10 +76,6 @@ _ThemeColorSet _$ThemeColorSetFromJson(Map<String, dynamic> json) =>
           ),
           onSurfaceVariant: $checkedConvert(
             'on_surface_variant',
-            (v) => const ColorJsonConverter().fromJson(v as String),
-          ),
-          surfaceContainerLowest: $checkedConvert(
-            'surface_container_lowest',
             (v) => const ColorJsonConverter().fromJson(v as String),
           ),
           surfaceContainerLow: $checkedConvert(
@@ -118,24 +102,8 @@ _ThemeColorSet _$ThemeColorSetFromJson(Map<String, dynamic> json) =>
             'outline_variant',
             (v) => const ColorJsonConverter().fromJson(v as String),
           ),
-          inverseSurface: $checkedConvert(
-            'inverse_surface',
-            (v) => const ColorJsonConverter().fromJson(v as String),
-          ),
           onInverseSurface: $checkedConvert(
             'on_inverse_surface',
-            (v) => const ColorJsonConverter().fromJson(v as String),
-          ),
-          inversePrimary: $checkedConvert(
-            'inverse_primary',
-            (v) => const ColorJsonConverter().fromJson(v as String),
-          ),
-          shadow: $checkedConvert(
-            'shadow',
-            (v) => const ColorJsonConverter().fromJson(v as String),
-          ),
-          scrim: $checkedConvert(
-            'scrim',
             (v) => const ColorJsonConverter().fromJson(v as String),
           ),
           status: $checkedConvert(
@@ -161,26 +129,20 @@ _ThemeColorSet _$ThemeColorSetFromJson(Map<String, dynamic> json) =>
         'onPrimary': 'on_primary',
         'primaryContainer': 'primary_container',
         'onPrimaryContainer': 'on_primary_container',
-        'onSecondary': 'on_secondary',
         'secondaryContainer': 'secondary_container',
         'onSecondaryContainer': 'on_secondary_container',
-        'onTertiary': 'on_tertiary',
         'tertiaryContainer': 'tertiary_container',
         'onTertiaryContainer': 'on_tertiary_container',
-        'onError': 'on_error',
         'errorContainer': 'error_container',
         'onErrorContainer': 'on_error_container',
         'onSurface': 'on_surface',
         'onSurfaceVariant': 'on_surface_variant',
-        'surfaceContainerLowest': 'surface_container_lowest',
         'surfaceContainerLow': 'surface_container_low',
         'surfaceContainer': 'surface_container',
         'surfaceContainerHigh': 'surface_container_high',
         'surfaceContainerHighest': 'surface_container_highest',
         'outlineVariant': 'outline_variant',
-        'inverseSurface': 'inverse_surface',
         'onInverseSurface': 'on_inverse_surface',
-        'inversePrimary': 'inverse_primary',
         'estimatedIntensity': 'estimated_intensity',
         'mapColors': 'map',
       },
@@ -198,7 +160,6 @@ Map<String, dynamic> _$ThemeColorSetToJson(
     instance.onPrimaryContainer,
   ),
   'secondary': const ColorJsonConverter().toJson(instance.secondary),
-  'on_secondary': const ColorJsonConverter().toJson(instance.onSecondary),
   'secondary_container': const ColorJsonConverter().toJson(
     instance.secondaryContainer,
   ),
@@ -206,7 +167,6 @@ Map<String, dynamic> _$ThemeColorSetToJson(
     instance.onSecondaryContainer,
   ),
   'tertiary': const ColorJsonConverter().toJson(instance.tertiary),
-  'on_tertiary': const ColorJsonConverter().toJson(instance.onTertiary),
   'tertiary_container': const ColorJsonConverter().toJson(
     instance.tertiaryContainer,
   ),
@@ -214,7 +174,6 @@ Map<String, dynamic> _$ThemeColorSetToJson(
     instance.onTertiaryContainer,
   ),
   'error': const ColorJsonConverter().toJson(instance.error),
-  'on_error': const ColorJsonConverter().toJson(instance.onError),
   'error_container': const ColorJsonConverter().toJson(instance.errorContainer),
   'on_error_container': const ColorJsonConverter().toJson(
     instance.onErrorContainer,
@@ -223,9 +182,6 @@ Map<String, dynamic> _$ThemeColorSetToJson(
   'on_surface': const ColorJsonConverter().toJson(instance.onSurface),
   'on_surface_variant': const ColorJsonConverter().toJson(
     instance.onSurfaceVariant,
-  ),
-  'surface_container_lowest': const ColorJsonConverter().toJson(
-    instance.surfaceContainerLowest,
   ),
   'surface_container_low': const ColorJsonConverter().toJson(
     instance.surfaceContainerLow,
@@ -241,13 +197,9 @@ Map<String, dynamic> _$ThemeColorSetToJson(
   ),
   'outline': const ColorJsonConverter().toJson(instance.outline),
   'outline_variant': const ColorJsonConverter().toJson(instance.outlineVariant),
-  'inverse_surface': const ColorJsonConverter().toJson(instance.inverseSurface),
   'on_inverse_surface': const ColorJsonConverter().toJson(
     instance.onInverseSurface,
   ),
-  'inverse_primary': const ColorJsonConverter().toJson(instance.inversePrimary),
-  'shadow': const ColorJsonConverter().toJson(instance.shadow),
-  'scrim': const ColorJsonConverter().toJson(instance.scrim),
   'status': instance.status,
   'intensity': instance.intensity,
   'estimated_intensity': instance.estimatedIntensity,

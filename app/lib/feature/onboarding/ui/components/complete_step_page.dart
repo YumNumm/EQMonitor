@@ -16,6 +16,11 @@ class _CompleteStepPage extends HookConsumerWidget {
         ref,
         (tsx) async => tsx.get(onboardingCompletedProvider.notifier).complete(),
       );
+      // 新規ユーザーは既読版数を現在版に初期化し、初回ホームでバナーを出さない。
+      final version = ref.read(packageInfoProvider).version;
+      await ref
+          .read(updateBannerSeenVersionProvider.notifier)
+          .markSeen(version);
       if (context.mounted) {
         const HomeRoute().go(context);
       }

@@ -1,22 +1,21 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/exception/dio_exception_mapper.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
+import 'package:eqmonitor/feature/devices/data/model/push_token_sync_worker_state.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
-import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
+import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
-import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
+import 'package:eqmonitor/feature/devices/data/repository/push_token_sync_worker.dart';
+import 'package:eqmonitor/feature/devices/data/retry/interruptible_backoff.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:telemetry_store/telemetry_store.dart';
@@ -25,186 +24,188 @@ part 'push_token_sync_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
+  PushTokenSyncWorker? _fcmWorker;
+  PushTokenSyncWorker? _apnsNotificationWorker;
+  PushTokenSyncWorker? _apnsPushToStartWorker;
+  final _workerSubscriptions = <StreamSubscription<PushTokenSyncWorkerState>>[];
+  var _workersDisposed = false;
+
   @override
   Future<PushTokenSyncSnapshot> build() async {
-    final repository = await ref.watch(
+    ref.onDispose(() => unawaited(disposeWorkers()));
+    final repository = await ref.watch(deviceRepositoryProvider.future);
+    final provisioningRepository = await ref.watch(
       deviceProvisioningRepositoryProvider.future,
     );
+    final telemetryRecorder = ref.watch(telemetryRecorderProvider);
+    final telemetryUploader = ref.watch(telemetryUploaderProvider);
+    final capabilities = ref.watch(pushTokenPlatformCapabilitiesProvider);
 
-    // プロビジョニング前は全種 notApplicable
-    final isProvisioned = await repository.isProvisioned();
-    if (!isProvisioned) {
-      return const PushTokenSyncSnapshot(
-        fcm: NotApplicableTokenState(),
-        apnsNotification: NotApplicableTokenState(),
-        apnsPushToStart: NotApplicableTokenState(),
+    PushTokenSyncWorker createWorker(PushTokenKind kind) {
+      final worker = PushTokenSyncWorker(
+        upsert: (token) async {
+          final result = await repository.upsertPushToken(
+            kind: kind,
+            token: token,
+          );
+          switch (result) {
+            case Success():
+              return;
+            case Failure(:final exception, :final stackTrace):
+              final mapped = switch (exception) {
+                DeviceProvisioningException() => exception,
+                DioException() => mapDioToProvisioningException(
+                  exception,
+                  stackTrace ?? StackTrace.empty,
+                ),
+                _ => UnexpectedProvisioningException(
+                  cause: exception,
+                  stackTrace: stackTrace,
+                ),
+              };
+              if (mapped case AuthorizationException(
+                reason: AuthorizationFailureReason.unauthenticated,
+              )) {
+                await handleAuthenticationFailure(
+                  repository: provisioningRepository,
+                );
+              }
+              unawaited(
+                recordSyncFailure(
+                  kind: kind,
+                  error: mapped,
+                  recorder: telemetryRecorder,
+                  uploader: telemetryUploader,
+                ),
+              );
+              Error.throwWithStackTrace(
+                mapped,
+                mapped.stackTrace ?? stackTrace ?? StackTrace.empty,
+              );
+          }
+        },
+        backoff: InterruptibleBackoff(),
       );
+      _workerSubscriptions.add(
+        worker.states.listen((workerState) {
+          final snapshot = state.value;
+          if (snapshot == null || _workersDisposed) {
+            return;
+          }
+          state = AsyncData(
+            snapshot.updateKind(
+              kind: kind,
+              kindState: pushTokenKindStateFromWorker(workerState),
+            ),
+          );
+        }),
+      );
+      return worker;
     }
 
-    final tokenAsync = ref.watch(notificationTokenStreamProvider);
-    final apnsSupported = ref.watch(notificationTokenApnsSupportedProvider);
-    return repository.computeSnapshot(
-      tokenAsync.value,
-      apnsSupported: apnsSupported,
+    _fcmWorker = capabilities.supportsFcm ? createWorker(.fcm) : null;
+    _apnsNotificationWorker = capabilities.supportsApns
+        ? createWorker(.apnsNotification)
+        : null;
+    _apnsPushToStartWorker = capabilities.supportsPushToStart
+        ? createWorker(.apnsPushToStart)
+        : null;
+
+    return PushTokenSyncSnapshot(
+      fcm: capabilities.supportsFcm
+          ? const AbsentTokenState()
+          : const NotApplicableTokenState(),
+      apnsNotification: capabilities.supportsApns
+          ? const AbsentTokenState()
+          : const NotApplicableTokenState(),
+      apnsPushToStart: capabilities.supportsPushToStart
+          ? const AbsentTokenState()
+          : const NotApplicableTokenState(),
     );
-  }
-
-  late final _retryController = RetryController();
-  RetryControllerState get retryState => _retryController.state;
-
-  void reset() => _retryController.reset();
-
-  Future<void> handleAuthenticationFailure() async {
-    final repo = await ref.read(deviceProvisioningRepositoryProvider.future);
-    await repo.clearProvisioned();
-    ref.invalidate(deviceProvisioningProvider, asReload: true);
   }
 
   static final syncMutation = Mutation<void>();
+
+  void accept(NotificationToken token) {
+    final fcmToken = token.fcmToken;
+    if (fcmToken != null) {
+      _fcmWorker?.accept(token: fcmToken);
+    }
+    final apnsToken = token.apnsToken;
+    if (apnsToken != null) {
+      _apnsNotificationWorker?.accept(token: apnsToken);
+    }
+    final pushToStartToken = token.apnsPushToStartToken;
+    if (pushToStartToken != null) {
+      _apnsPushToStartWorker?.accept(token: pushToStartToken);
+    }
+  }
+
+  void retryFailed() {
+    if (_fcmWorker?.state is PushTokenSyncWorkerFailed) {
+      _fcmWorker?.retry();
+    }
+    if (_apnsNotificationWorker?.state is PushTokenSyncWorkerFailed) {
+      _apnsNotificationWorker?.retry();
+    }
+    if (_apnsPushToStartWorker?.state is PushTokenSyncWorkerFailed) {
+      _apnsPushToStartWorker?.retry();
+    }
+  }
+
   Future<void> sync() async {
-    final repo = await ref.read(deviceProvisioningRepositoryProvider.future);
-    final deviceRepo = await ref.read(deviceRepositoryProvider.future);
-    final deviceId = await ref.read(deviceIdProvider.future);
-    final apnsSupported = ref.read(notificationTokenApnsSupportedProvider);
-    final currentState =
-        state.value ??
-        await repo.computeSnapshot(
-          ref.read(notificationTokenStreamProvider).value,
-          apnsSupported: apnsSupported,
-        );
+    retryFailed();
+  }
 
-    await _retryController.run(() async {
-      final results = <PushTokenKind, PushTokenKindState>{};
-      DeviceProvisioningException? lastError;
+  Future<void> handleAuthenticationFailure({
+    required DeviceProvisioningRepository repository,
+  }) async {
+    await repository.clearProvisioned();
+    if (ref.mounted) {
+      ref.invalidate(deviceProvisioningProvider, asReload: true);
+    }
+  }
 
-      for (final entry in currentState.kindEntries) {
-        final kind = entry.key;
-        final kindState = entry.value;
-
-        if (kindState is! PendingTokenState && kindState is! FailedTokenState) {
-          results[kind] = kindState;
-          continue;
-        }
-
-        final currentToken = ref.read(notificationTokenStreamProvider).value;
-        final tokenValue = _tokenFor(kind, currentToken);
-        if (tokenValue == null) {
-          results[kind] = const AbsentTokenState();
-          continue;
-        }
-
-        try {
-          await _syncKind(
-            kind: kind,
-            token: tokenValue,
-            deviceId: deviceId,
-            deviceRepo: deviceRepo,
-          );
-          await repo.saveTokenHash(kind, tokenValue);
-          results[kind] = const SyncedTokenState();
-        } on DeviceProvisioningException catch (e) {
-          if (e is AuthorizationException &&
-              e.reason == AuthorizationFailureReason.unauthenticated) {
-            await handleAuthenticationFailure();
-          }
-          results[kind] = FailedTokenState(error: e);
-          _recordSyncFailureTelemetry(kind, e);
-          lastError = e;
-        } on DioException catch (e, st) {
-          final mapped = mapDioToProvisioningException(e, st);
-          if (mapped is AuthorizationException &&
-              mapped.reason == AuthorizationFailureReason.unauthenticated) {
-            await handleAuthenticationFailure();
-          }
-          results[kind] = FailedTokenState(error: mapped);
-          _recordSyncFailureTelemetry(kind, e);
-          lastError = mapped;
-        } on Object catch (e, st) {
-          final mapped = UnexpectedProvisioningException(
-            cause: e,
-            stackTrace: st,
-          );
-          results[kind] = FailedTokenState(error: mapped);
-          _recordSyncFailureTelemetry(kind, e);
-          lastError = mapped;
-        }
-      }
-
-      state = AsyncData(
-        PushTokenSyncSnapshot(
-          fcm: results[PushTokenKind.fcm] ?? currentState.fcm,
-          apnsNotification:
-              results[PushTokenKind.apnsNotification] ??
-              currentState.apnsNotification,
-          apnsPushToStart:
-              results[PushTokenKind.apnsPushToStart] ??
-              currentState.apnsPushToStart,
+  Future<void> recordSyncFailure({
+    required PushTokenKind kind,
+    required DeviceProvisioningException error,
+    required TelemetryRecorder recorder,
+    required TelemetryUploader uploader,
+  }) async {
+    try {
+      await recorder.record(
+        TelemetryEvent.error(
+          errorType: 'push_token_sync_failed',
+          message: '${kind.name}: $error',
         ),
       );
-
-      if (lastError != null) {
-        throw lastError;
-      }
-    });
-  }
-
-  /// テレメトリは観測用の副作用であり、記録失敗（provider 初期化失敗を含む）が
-  /// トークン同期やエラー伝播を壊してはならない。
-  void _recordSyncFailureTelemetry(PushTokenKind kind, Object error) async {
-    try {
-        await ref
-            .read(telemetryRecorderProvider)
-            .record(
-              TelemetryEvent.error(
-                errorType: 'push_token_sync_failed',
-                message: '${kind.name}: $error',
-              ),
-            );
-            await ref.read(telemetryUploaderProvider).flush();
-    } on Exception catch (error) {
-              talker.info('Failed to record telemetry', error);
+      await uploader.flush();
+    } on Exception catch (telemetryError) {
+      talker.info('Failed to record telemetry', telemetryError);
     }
   }
 
-  Future<void> _syncKind({
-    required PushTokenKind kind,
-    required String token,
-    required String deviceId,
-    required DeviceRepository deviceRepo,
-  }) async {
-    if (kind != PushTokenKind.fcm &&
-        (kIsWeb || !(Platform.isIOS || Platform.isMacOS))) {
+  Future<void> disposeWorkers() async {
+    if (_workersDisposed) {
       return;
     }
-
-    final notificationToken = switch (kind) {
-      PushTokenKind.fcm => NotificationToken(fcmToken: token),
-      PushTokenKind.apnsNotification => NotificationToken(apnsToken: token),
-      PushTokenKind.apnsPushToStart => NotificationToken(
-        apnsPushToStartToken: token,
-      ),
-    };
-
-    final r = await deviceRepo.syncPushTokens(
-      deviceId: deviceId,
-      token: notificationToken,
-    );
-    switch (r) {
-      case Success():
-        break;
-      case Failure(:final exception, :final stackTrace):
-        Error.throwWithStackTrace(exception, stackTrace ?? StackTrace.empty);
+    _workersDisposed = true;
+    for (final subscription in _workerSubscriptions) {
+      await subscription.cancel();
     }
-  }
-
-  String? _tokenFor(PushTokenKind kind, NotificationToken? token) {
-    if (token == null) {
-      return null;
+    final disposeFutures = <Future<void>>[];
+    final fcmWorker = _fcmWorker;
+    if (fcmWorker != null) {
+      disposeFutures.add(fcmWorker.dispose());
     }
-    return switch (kind) {
-      PushTokenKind.fcm => token.fcmToken,
-      PushTokenKind.apnsNotification => token.apnsToken,
-      PushTokenKind.apnsPushToStart => token.apnsPushToStartToken,
-    };
+    final apnsNotificationWorker = _apnsNotificationWorker;
+    if (apnsNotificationWorker != null) {
+      disposeFutures.add(apnsNotificationWorker.dispose());
+    }
+    final apnsPushToStartWorker = _apnsPushToStartWorker;
+    if (apnsPushToStartWorker != null) {
+      disposeFutures.add(apnsPushToStartWorker.dispose());
+    }
+    await Future.wait(disposeFutures);
   }
 }

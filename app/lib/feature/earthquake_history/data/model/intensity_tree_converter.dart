@@ -5,18 +5,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_statio
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'intensity_tree_converter.g.dart';
-
-@Riverpod(keepAlive: true)
-Future<IntensityTreeConverter> intensityTreeConverter(Ref ref) async {
-  final jmaParam = await ref.watch(jmaParameterProvider.future);
-  return IntensityTreeConverter(
-    parameter: jmaParam.earthquake,
-    shindoDbStations: jmaParam.shindoDbStations,
-  );
-}
 
 class IntensityTreeConverter {
   const IntensityTreeConverter({

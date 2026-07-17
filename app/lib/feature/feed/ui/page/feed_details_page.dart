@@ -34,7 +34,7 @@ class FeedDetailsPage extends ConsumerWidget {
                 onReload: () async =>
                     ref.invalidate(feedBySourceProvider(telegramHash)),
               ),
-              data: (item) => _FeedDetailsBody(item: item),
+              data: (item) => FeedDetailsBody(item: item),
             ),
           ),
         ],
@@ -43,8 +43,8 @@ class FeedDetailsPage extends ConsumerWidget {
   }
 }
 
-class _FeedDetailsBody extends StatelessWidget {
-  const _FeedDetailsBody({required this.item});
+class FeedDetailsBody extends StatelessWidget {
+  const FeedDetailsBody({required this.item, super.key});
 
   final FeedDetail item;
 
@@ -69,8 +69,6 @@ class _FeedDetailsBody extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              FeedPriorityBadge(priority: item.priority),
-              const SizedBox(width: 8),
               FeedTypeBadge(data: item.data),
               const Spacer(),
               Text(dateStr, style: theme.textTheme.labelSmall),

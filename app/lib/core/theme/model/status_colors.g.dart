@@ -19,10 +19,6 @@ _StatusColors _$StatusColorsFromJson(Map<String, dynamic> json) =>
           'warning',
           (v) => const ColorJsonConverter().fromJson(v as String),
         ),
-        info: $checkedConvert(
-          'info',
-          (v) => const ColorJsonConverter().fromJson(v as String),
-        ),
       );
       return val;
     });
@@ -31,5 +27,4 @@ Map<String, dynamic> _$StatusColorsToJson(_StatusColors instance) =>
     <String, dynamic>{
       'success': const ColorJsonConverter().toJson(instance.success),
       'warning': const ColorJsonConverter().toJson(instance.warning),
-      'info': const ColorJsonConverter().toJson(instance.info),
     };

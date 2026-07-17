@@ -10,9 +10,7 @@ void main() {
   }) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: DepthText(depth: depth),
-        ),
+        home: Scaffold(body: DepthText(depth: depth)),
       ),
     );
   }
@@ -20,35 +18,30 @@ void main() {
   testWidgets('shallow: "深さ" + "ごく浅い"', (tester) async {
     await pumpDepthText(tester, depth: const EarthquakeDepth.shallow());
 
-    expect(find.text('深さ'), findsOneWidget);
-    expect(find.text('ごく浅い'), findsOneWidget);
+    expect(find.text('深さごく浅い'), findsOneWidget);
   });
 
   testWidgets('value: "深さ" + "<値>km"', (tester) async {
     await pumpDepthText(tester, depth: const EarthquakeDepth.value(value: 30));
 
-    expect(find.text('深さ'), findsOneWidget);
-    expect(find.text('30km'), findsOneWidget);
+    expect(find.text('深さ30km'), findsOneWidget);
   });
 
   testWidgets('over700km: "深さ" + "700km以上"', (tester) async {
     await pumpDepthText(tester, depth: const EarthquakeDepth.over700km());
 
-    expect(find.text('深さ'), findsOneWidget);
-    expect(find.text('700km以上'), findsOneWidget);
+    expect(find.text('深さ700km以上'), findsOneWidget);
   });
 
   testWidgets('unknown: "深さ" + "調査中"', (tester) async {
     await pumpDepthText(tester, depth: const EarthquakeDepth.unknown());
 
-    expect(find.text('深さ'), findsOneWidget);
-    expect(find.text('調査中'), findsOneWidget);
+    expect(find.text('深さ調査中'), findsOneWidget);
   });
 
   testWidgets('null: "深さ" + "調査中"', (tester) async {
     await pumpDepthText(tester, depth: null);
 
-    expect(find.text('深さ'), findsOneWidget);
-    expect(find.text('調査中'), findsOneWidget);
+    expect(find.text('深さ調査中'), findsOneWidget);
   });
 }

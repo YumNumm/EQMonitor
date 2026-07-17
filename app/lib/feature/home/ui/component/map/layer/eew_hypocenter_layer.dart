@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/gen/assets.gen.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -69,6 +69,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
     final lowPreciseEews = hypocenterEews.lowPrecise;
 
     final isInitialized = useRef(false);
+    final enqueue = useMapOperationQueue();
 
     // 点滅制御
     final isVisible = useState(true);
@@ -85,121 +86,135 @@ class EewHypocenterLayer extends HookConsumerWidget {
 
     final iconOpacity = isVisible.value ? 1.0 : 0.75;
 
+    // init操作の実行時点で最新のデータを使えるよう、Refに退避しておく。
+    final latestNormalEews = useRef(normalEews);
+    final latestLowPreciseEews = useRef(lowPreciseEews);
+    final latestIconOpacity = useRef(iconOpacity);
+    latestNormalEews.value = normalEews;
+    latestLowPreciseEews.value = lowPreciseEews;
+    latestIconOpacity.value = iconOpacity;
+
     useEffect(() {
       if (styleController == null) {
         return null;
       }
 
-      unawaited(() async {
-        await (
-          styleController.addImageFromAssets(
-            id: 'normal-hypocenter',
-            asset: Assets.images.map.normalHypocenter.path,
-          ),
-          styleController.addImageFromAssets(
-            id: 'low-precise-hypocenter',
-            asset: Assets.images.map.lowPreciseHypocenter.path,
-          ),
-        ).wait;
+      unawaited(
+        enqueue(() async {
+          await (
+            styleController.addImageFromAssets(
+              id: 'normal-hypocenter',
+              asset: Assets.images.map.normalHypocenter.path,
+            ),
+            styleController.addImageFromAssets(
+              id: 'low-precise-hypocenter',
+              asset: Assets.images.map.lowPreciseHypocenter.path,
+            ),
+          ).wait;
 
-        await (
-          styleController.addSource(
-            GeoJsonSource(
+          await (
+            styleController.addSource(
+              GeoJsonSource(
+                id: sourceId.normal,
+                data: jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': <Map<String, dynamic>>[],
+                }),
+              ),
+            ),
+            styleController.addSource(
+              GeoJsonSource(
+                id: sourceId.lowPrecise,
+                data: jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': <Map<String, dynamic>>[],
+                }),
+              ),
+            ),
+          ).wait;
+
+          await (
+            styleController.addLayer(
+              SymbolStyleLayer(
+                id: layerId.normal,
+                sourceId: sourceId.normal,
+                layout: {
+                  'icon-allow-overlap': true,
+                  'icon-ignore-placement': true,
+                  'icon-image': 'normal-hypocenter',
+                  'icon-size': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    3,
+                    0.15,
+                    20,
+                    0.4,
+                  ],
+                },
+                paint: const {
+                  'icon-opacity': ['get', 'opacity'],
+                },
+              ),
+            ),
+            styleController.addLayer(
+              SymbolStyleLayer(
+                id: layerId.lowPrecise,
+                sourceId: sourceId.lowPrecise,
+                layout: {
+                  'icon-allow-overlap': true,
+                  'icon-ignore-placement': true,
+                  'icon-image': 'low-precise-hypocenter',
+                  'icon-size': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    3,
+                    0.15,
+                    20,
+                    0.4,
+                  ],
+                },
+                paint: const {
+                  'icon-opacity': ['get', 'opacity'],
+                },
+              ),
+            ),
+          ).wait;
+          isInitialized.value = true;
+          await (
+            styleController.updateGeoJsonSource(
               id: sourceId.normal,
               data: jsonEncode({
                 'type': 'FeatureCollection',
-                'features': <Map<String, dynamic>>[],
+                'features': latestNormalEews.value
+                    .map((eew) => _convertEew(eew, latestIconOpacity.value))
+                    .toList(),
               }),
             ),
-          ),
-          styleController.addSource(
-            GeoJsonSource(
+            styleController.updateGeoJsonSource(
               id: sourceId.lowPrecise,
               data: jsonEncode({
                 'type': 'FeatureCollection',
-                'features': <Map<String, dynamic>>[],
+                'features': latestLowPreciseEews.value
+                    .map((eew) => _convertEew(eew, latestIconOpacity.value))
+                    .toList(),
               }),
             ),
-          ),
-        ).wait;
+          ).wait;
+        }),
+      );
 
-        await (
-          styleController.addLayer(
-            SymbolStyleLayer(
-              id: layerId.normal,
-              sourceId: sourceId.normal,
-              layout: {
-                'icon-allow-overlap': true,
-                'icon-ignore-placement': true,
-                'icon-image': 'normal-hypocenter',
-                'icon-size': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
-                  3,
-                  0.15,
-                  20,
-                  0.4,
-                ],
-              },
-              paint: const {
-                'icon-opacity': ['get', 'opacity'],
-              },
-            ),
-          ),
-          styleController.addLayer(
-            SymbolStyleLayer(
-              id: layerId.lowPrecise,
-              sourceId: sourceId.lowPrecise,
-              layout: {
-                'icon-allow-overlap': true,
-                'icon-ignore-placement': true,
-                'icon-image': 'low-precise-hypocenter',
-                'icon-size': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
-                  3,
-                  0.15,
-                  20,
-                  0.4,
-                ],
-              },
-              paint: const {
-                'icon-opacity': ['get', 'opacity'],
-              },
-            ),
-          ),
-        ).wait;
-        isInitialized.value = true;
-        await (
-          styleController.updateGeoJsonSource(
-            id: sourceId.normal,
-            data: jsonEncode({
-              'type': 'FeatureCollection',
-              'features': normalEews
-                  .map((eew) => _convertEew(eew, iconOpacity))
-                  .toList(),
-            }),
-          ),
-          styleController.updateGeoJsonSource(
-            id: sourceId.lowPrecise,
-            data: jsonEncode({
-              'type': 'FeatureCollection',
-              'features': lowPreciseEews
-                  .map((eew) => _convertEew(eew, iconOpacity))
-                  .toList(),
-            }),
-          ),
-        ).wait;
-      }());
-
-      return () async {
-        isInitialized.value = false;
-        await styleController.removeLayer(layerId.normal);
-        await styleController.removeLayer(layerId.lowPrecise);
-        await styleController.removeSource(sourceId.normal);
-        await styleController.removeSource(sourceId.lowPrecise);
+      return () {
+        unawaited(
+          enqueue(() async {
+            isInitialized.value = false;
+            await styleController.removeLayer(layerId.normal);
+            await styleController.removeLayer(layerId.lowPrecise);
+            await styleController.removeSource(sourceId.normal);
+            await styleController.removeSource(sourceId.lowPrecise);
+          }),
+        );
       };
     }, [styleController]);
 
@@ -208,8 +223,8 @@ class EewHypocenterLayer extends HookConsumerWidget {
         return null;
       }
 
-      unawaited(() async {
-        try {
+      unawaited(
+        enqueue(() async {
           await (
             styleController.updateGeoJsonSource(
               id: sourceId.normal,
@@ -230,10 +245,8 @@ class EewHypocenterLayer extends HookConsumerWidget {
               }),
             ),
           ).wait;
-        } on Exception catch (e) {
-          talker.log(e);
-        }
-      }());
+        }),
+      );
 
       return null;
     }, [styleController, normalEews, lowPreciseEews, iconOpacity]);

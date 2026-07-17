@@ -4,8 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
-import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
@@ -15,6 +13,9 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_histor
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_feed_sheet.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/location/data/notifier/location_permission_banner_dismissed_notifier.dart';
+import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
+import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
+import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
@@ -23,7 +24,6 @@ import 'package:eqmonitor/feature/start/ui/component/whats_new_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod/experimental/mutation.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -56,37 +56,6 @@ class _SheetBody extends ConsumerWidget {
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
 
-    // プロビジョニング未完了なら自動開始
-    ref.listen(deviceProvisioningProvider, (_, next) {
-      if (next.value == DeviceProvisioningStatus.required) {
-        final mutation = DeviceProvisioningNotifier.provisionMutation;
-        if (ref.read(mutation) is! MutationPending) {
-          unawaited(
-            mutation.run(
-              ref,
-              (tsx) async =>
-                  tsx.get(deviceProvisioningProvider.notifier).provision(),
-            ),
-          );
-        }
-      }
-    });
-
-    // プロビジョニング完了後にトークン同期を自動開始
-    ref.listen(deviceProvisioningProvider, (_, next) {
-      if (next.value == DeviceProvisioningStatus.notRequired) {
-        final mutation = PushTokenSyncNotifier.syncMutation;
-        if (ref.read(mutation) is! MutationPending) {
-          unawaited(
-            mutation.run(
-              ref,
-              (tsx) async => tsx.get(pushTokenSyncProvider.notifier).sync(),
-            ),
-          );
-        }
-      }
-    });
-
     final hasCurrentLocationRegion = ref.watch(
       notificationSlotsProvider.select(
         (s) =>
@@ -104,6 +73,13 @@ class _SheetBody extends ConsumerWidget {
         permission != null &&
         permission != .always &&
         !isPermissionBannerDismissed;
+
+    final isNotificationGranted =
+        ref.watch(isNotificationPermissionGrantedProvider).value ?? true;
+    final isNotificationBannerDismissed =
+        ref.watch(notificationPermissionBannerDismissedProvider).value ?? false;
+    final showNotificationBanner =
+        !isNotificationGranted && !isNotificationBannerDismissed;
 
     final eewCards = Column(
       children: state.reversed
@@ -189,11 +165,11 @@ class _SheetBody extends ConsumerWidget {
                   if (state.isNotEmpty) eewCards,
                   MaintenanceBanner(bottomSpacing: spacing.md),
                   WhatsNewBanner(bottomSpacing: spacing.md),
+                  if (showNotificationBanner)
+                    NotificationPermissionBanner(bottomSpacing: spacing.md),
                   DeviceProvisioningBanner(bottomSpacing: spacing.md),
                   if (showPermissionBanner) ...[
-                    _LocationPermissionBanner(
-                      bottomSpacing: spacing.md,
-                    ),
+                    _LocationPermissionBanner(bottomSpacing: spacing.md),
                   ],
                   if (shakeEvents.isNotEmpty)
                     Column(
@@ -291,9 +267,7 @@ class _LocationPermissionBanner extends ConsumerWidget {
                         Text(
                           message.$2,
                           style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: colorTheme.onPrimaryContainer,
-                              ),
+                              ?.copyWith(color: colorTheme.onPrimaryContainer),
                         ),
                     ],
                   ),

@@ -31,7 +31,6 @@ import 'package:eqmonitor/core/util/license/init_licenses.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
-import 'package:eqmonitor/feature/live_activity/data/repository/live_activity_token_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
@@ -228,7 +227,7 @@ Future<void> _main() async {
   container.listen(backgroundLocationServiceProvider, (_, _) {});
   container.listen(firebaseMessagingInteractionProvider, (_, _) {});
   container.listen(appLinksInteractionProvider, (_, _) {});
-  unawaited(container.read(pushTokenSyncWiringProvider.future));
+  container.listen(pushTokenSyncStartupProvider, (_, _) {});
   if (!kIsWeb) {
     unawaited(() async {
       try {
@@ -304,7 +303,6 @@ Future<void> _main() async {
 
   if (!kIsWeb && Platform.isIOS) {
     unawaited(container.read(appGroupSettingsWriterProvider.future));
-    unawaited(container.read(liveActivityTokenSyncWiringProvider.future));
   }
 }
 

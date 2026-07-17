@@ -10,10 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LpgmStationDetailSheet extends ConsumerWidget {
-  const LpgmStationDetailSheet({
-    required this.station,
-    super.key,
-  });
+  const LpgmStationDetailSheet({required this.station, super.key});
 
   final StationLpgmIntensityNode station;
 
@@ -36,9 +33,8 @@ class LpgmStationDetailSheet extends ConsumerWidget {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
-                  color: context.designSystem.colorTheme.onSurfaceVariant.withValues(
-                    alpha: 0.4,
-                  ),
+                  color: context.designSystem.colorTheme.onSurfaceVariant
+                      .withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -137,59 +133,56 @@ class _PrePeriodsTable extends StatelessWidget {
         Table(
           border: TableBorder.all(
             color: context.designSystem.colorTheme.outlineVariant,
+            borderRadius: BorderRadius.circular(context.designSystem.shape.sm),
           ),
-          defaultVerticalAlignment: .middle,
 
+          defaultVerticalAlignment: .middle,
           children: [
             TableRow(
               decoration: BoxDecoration(
                 color: context.designSystem.colorTheme.surfaceContainerHighest,
               ),
               children: [
-                _headerCell('周期', theme),
+                _headerCell('周期', theme, context),
                 ...sorted.map(
-                  (p) => _headerCell('${p.band.toInt()}秒台', theme),
+                  (p) => _headerCell('${p.band.toInt()}秒台', theme, context),
                 ),
               ],
             ),
             TableRow(
               children: [
-                _headerCell('階級', theme),
-                ...sorted.map(
-                  (p) {
-                    final entry = intensityColors.fromJmaLpgmIntensity(
-                      p.lpgmIntensity,
-                    );
-                    return TableCell(
-                      verticalAlignment: .fill,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 6,
-                          horizontal: 4,
-                        ),
-                        color: entry.background,
-                        child: Center(
-                          child: Text(
-                            p.lpgmIntensity.label,
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: entry.resolvedForeground,
-                              fontFamily: FontFamily.googleSansCode,
-                            ),
+                _headerCell('階級', theme, context),
+                ...sorted.map((p) {
+                  final entry = intensityColors.fromJmaLpgmIntensity(
+                    p.lpgmIntensity,
+                  );
+                  return TableCell(
+                    verticalAlignment: .fill,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 6,
+                        horizontal: 4,
+                      ),
+                      color: entry.background,
+                      child: Center(
+                        child: Text(
+                          p.lpgmIntensity.label,
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: entry.resolvedForeground,
+                            fontFamily: FontFamily.googleSansCode,
                           ),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                }),
               ],
             ),
             TableRow(
               children: [
-                _headerCell('SVA', theme),
-                ...sorted.map(
-                  (p) => _svaCell(p.sva, theme),
-                ),
+                _headerCell('SVA', theme, context),
+                ...sorted.map((p) => _svaCell(p.sva, theme, context)),
               ],
             ),
           ],
@@ -207,7 +200,7 @@ class _PrePeriodsTable extends StatelessWidget {
     );
   }
 
-  Widget _headerCell(String text, ThemeData theme) {
+  Widget _headerCell(String text, ThemeData theme, BuildContext context) {
     return TableCell(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
@@ -218,6 +211,7 @@ class _PrePeriodsTable extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontFamily: FontFamily.googleSansCode,
               fontFamilyFallback: [FontFamily.notoSansJP],
+              color: context.designSystem.colorTheme.onSurface,
             ),
           ),
         ),
@@ -225,7 +219,7 @@ class _PrePeriodsTable extends StatelessWidget {
     );
   }
 
-  Widget _svaCell(double sva, ThemeData theme) {
+  Widget _svaCell(double sva, ThemeData theme, BuildContext context) {
     return TableCell(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
@@ -234,6 +228,8 @@ class _PrePeriodsTable extends StatelessWidget {
             sva.toStringAsFixed(1),
             style: theme.textTheme.labelSmall?.copyWith(
               fontFamily: FontFamily.googleSansCode,
+              color: context.designSystem.colorTheme.onSurface,
+              fontFamilyFallback: [FontFamily.notoSansJP],
             ),
           ),
         ),

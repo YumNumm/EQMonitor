@@ -1,23 +1,46 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_data_source.dart';
-import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
+import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
+import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dart';
+import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
-class FeedPage extends ConsumerWidget {
+class FeedPage extends HookConsumerWidget {
   const FeedPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 一覧を開いたら、読み込み済みの最新お知らせまで既読にする
+    useEffect(() {
+      unawaited(
+        Future(() async {
+          final state = await ref.read(feedProvider.future);
+          if (!context.mounted || state.items.isEmpty) {
+            return;
+          }
+          final newest = state.items
+              .map((e) => e.publishedAt)
+              .reduce((a, b) => a.isAfter(b) ? a : b);
+          await ref.read(feedLastReadProvider.notifier).markRead(newest);
+        }),
+      );
+      return null;
+    }, const []);
+
     final dataSourceAsync = ref.watch(feedDataSourceProvider);
 
     return Scaffold(
       body: dataSourceAsync.when(
-        loading: () => const _FeedSkeleton(),
+        loading: () =>
+            const Center(child: CircularProgressIndicator.adaptive()),
         error: (error, _) => ErrorCard(
           error: error,
           onReload: () async => ref.invalidate(feedDataSourceProvider),
@@ -52,12 +75,17 @@ class _PagingBody extends StatelessWidget {
           ),
           SliverPagingList<String?, FeedItem>(
             dataSource: dataSource,
-            builder: (context, item, index) => FeedItemCard(item: item),
-            initialLoadingWidget: const _FeedSkeleton(scrollable: false),
-            appendLoadingWidget: const _FeedSkeleton(
-              itemCount: 2,
-              scrollable: false,
+            builder: (context, item, index) => FeedItemListTile(
+              item: item,
+              onTap: () async => FeedItemDetailsRoute(
+                id: item.id,
+                $extra: item,
+              ).push<void>(context),
             ),
+            initialLoadingWidget: FeedItemListTile(
+              item: _loadingDummyItem('1'),
+            ),
+            appendLoadingWidget: FeedItemListTile(item: _loadingDummyItem('2')),
             errorBuilder: (context, error, stackTrace) => ErrorCard(
               error: error,
               onReload: () async => dataSource.refresh(),
@@ -86,46 +114,14 @@ class _PagingBody extends StatelessWidget {
   }
 }
 
-class _FeedSkeleton extends StatelessWidget {
-  const _FeedSkeleton({this.itemCount = 5, this.scrollable = true});
-
-  final int itemCount;
-  final bool scrollable;
-
-  @override
-  Widget build(BuildContext context) {
-    final tiles = [
-      for (var i = 0; i < itemCount; i++)
-        const Card(
-          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    SizedBox(width: 40, height: 16),
-                    SizedBox(width: 8),
-                    SizedBox(width: 60, height: 16),
-                    Spacer(),
-                    SizedBox(width: 80, height: 12),
-                  ],
-                ),
-                SizedBox(height: 8),
-                SizedBox(width: 200, height: 16),
-                SizedBox(height: 4),
-                SizedBox(width: double.infinity, height: 14),
-              ],
-            ),
-          ),
-        ),
-    ];
-
-    return Skeletonizer(
-      child: scrollable
-          ? ListView(children: tiles)
-          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
-    );
-  }
-}
+FeedItem _loadingDummyItem(String id) => FeedItem(
+  id: id,
+  feedType: FeedType.appUpdate,
+  priority: FeedPriority.normal,
+  isImportant: false,
+  title: 'アップデート',
+  summary: 'アップデートがあります',
+  data: const FeedItemData.appUpdate(),
+  publishedAt: DateTime.now(),
+  expiresAt: DateTime.now().add(const Duration(days: 30)),
+);

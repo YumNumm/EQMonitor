@@ -1,18 +1,13 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
-import 'dart:async';
-
-import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
-import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:eqmonitor/core/provider/package_info.dart';
+import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/start/data/notifier/update_banner_seen_version_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-/// ホームシートに表示する「What's New」バナー。
-/// 未閲覧の最新バージョンがある場合のみ表示する。
+/// ホームシートに表示する「アップデートしました」バナー。
+/// アプリのバージョンが更新され、まだ確認していない場合のみ表示する。
+/// タップで変更履歴(Changelog)画面に遷移する。
 class WhatsNewBanner extends ConsumerWidget {
   const WhatsNewBanner({required this.bottomSpacing, super.key});
 
@@ -20,98 +15,40 @@ class WhatsNewBanner extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final startState = ref.watch(startProvider);
-    final latest = startState.value?.app.version.latest;
+    final currentVersion = ref.watch(packageInfoProvider).version;
+    final seenAsync = ref.watch(updateBannerSeenVersionProvider);
 
-    if (latest == null || !latest.showWhatsNew) {
+    // 既読版数がロードされるまでは表示しない（チラつき防止）。
+    if (seenAsync is! AsyncData<String?>) {
       return const SizedBox.shrink();
     }
-
-    return _WhatsNewBannerContent(
-      latest: latest,
-      bottomSpacing: bottomSpacing,
-    );
-  }
-}
-
-class _WhatsNewBannerContent extends HookConsumerWidget {
-  const _WhatsNewBannerContent({
-    required this.latest,
-    required this.bottomSpacing,
-  });
-
-  final api.LatestVersion latest;
-  final double bottomSpacing;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dismissed = useState(false);
-
-    useEffect(() {
-      unawaited(
-        Future.microtask(() async {
-          final dataSource = await ref.read(
-            sharedPreferencesDataSourceProvider.future,
-          );
-          final seen = await dataSource.getString(
-            key: SharedPreferencesKey.whatsNewSeenVersion,
-          );
-          if (seen == latest.version) {
-            dismissed.value = true;
-          }
-        }),
-      );
-      return null;
-    }, const []);
-
-    Future<void> markSeen() async {
-      final dataSource = await ref.read(
-        sharedPreferencesDataSourceProvider.future,
-      );
-      await dataSource.setString(
-        key: SharedPreferencesKey.whatsNewSeenVersion,
-        value: latest.version,
-      );
-      dismissed.value = true;
-    }
-
-    void showDetail(BuildContext context) {
-      showModalBottomSheet<void>(
-        context: context,
-        isScrollControlled: true,
-        builder: (ctx) => DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.6,
-          maxChildSize: 0.95,
-          minChildSize: 0.3,
-          builder: (_, controller) => _WhatsNewSheet(
-            latest: latest,
-            whatsNew: latest.whatsNew,
-            scrollController: controller,
-            onClose: () {
-              Navigator.of(ctx).pop();
-              unawaited(markSeen());
-            },
-          ),
-        ),
-      ).ignore();
-    }
-
-    if (dismissed.value) {
+    if (seenAsync.value == currentVersion) {
       return const SizedBox.shrink();
     }
 
     final colorTheme = context.designSystem.colorTheme;
+    final spacing = context.designSystem.spacing;
+
+    Future<void> markSeen() => ref
+        .read(updateBannerSeenVersionProvider.notifier)
+        .markSeen(currentVersion);
+
     return Padding(
       padding: EdgeInsets.only(bottom: bottomSpacing),
       child: Material(
         color: colorTheme.primaryContainer,
         borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () => showDetail(context),
+          onTap: () {
+            markSeen();
+            const ChangelogRoute().push<void>(context);
+          },
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: EdgeInsets.symmetric(
+              horizontal: spacing.md,
+              vertical: spacing.sm,
+            ),
             child: Row(
               children: [
                 Icon(
@@ -119,11 +56,11 @@ class _WhatsNewBannerContent extends HookConsumerWidget {
                   color: colorTheme.onPrimaryContainer,
                   size: 20,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: spacing.md),
                 Expanded(
                   child: Text(
-                    'v${latest.version} にアップデートしました',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    'v$currentVersion へアップデートしました',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: colorTheme.onPrimaryContainer,
                     ),
                   ),
@@ -133,54 +70,19 @@ class _WhatsNewBannerContent extends HookConsumerWidget {
                   color: colorTheme.onPrimaryContainer,
                   size: 20,
                 ),
+                IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    color: colorTheme.onPrimaryContainer,
+                    size: 20,
+                  ),
+                  tooltip: '閉じる',
+                  onPressed: markSeen,
+                ),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _WhatsNewSheet extends StatelessWidget {
-  const _WhatsNewSheet({
-    required this.latest,
-    required this.whatsNew,
-    required this.scrollController,
-    required this.onClose,
-  });
-
-  final api.LatestVersion latest;
-  final api.WhatsNew? whatsNew;
-  final ScrollController scrollController;
-  final VoidCallback onClose;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final title = whatsNew?.title ?? 'v${latest.version} の新機能';
-    final content = whatsNew?.content ?? '';
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: onClose,
-        ),
-      ),
-      body: SingleChildScrollView(
-        controller: scrollController,
-        padding: const EdgeInsets.all(16),
-        child: content.isNotEmpty
-            ? MarkdownBody(
-                data: content,
-                styleSheet: MarkdownStyleSheet.fromTheme(theme),
-              )
-            : Text(
-                'このバージョンの更新内容はありません。',
-                style: theme.textTheme.bodyMedium,
-              ),
       ),
     );
   }

@@ -1,6 +1,30 @@
+import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
 import 'package:eqmonitor/feature/permission/data/model/permission_item_decision.dart';
 import 'package:eqmonitor/feature/permission/data/model/permission_state.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:geolocator/geolocator.dart';
+
+NotificationSettings _notificationSettings({
+  required AuthorizationStatus authorizationStatus,
+  AppleNotificationSetting criticalAlert =
+      AppleNotificationSetting.notSupported,
+}) {
+  return NotificationSettings(
+    alert: AppleNotificationSetting.notSupported,
+    announcement: AppleNotificationSetting.notSupported,
+    authorizationStatus: authorizationStatus,
+    badge: AppleNotificationSetting.notSupported,
+    carPlay: AppleNotificationSetting.notSupported,
+    lockScreen: AppleNotificationSetting.notSupported,
+    notificationCenter: AppleNotificationSetting.notSupported,
+    showPreviews: AppleShowPreviewSetting.notSupported,
+    timeSensitive: AppleNotificationSetting.notSupported,
+    criticalAlert: criticalAlert,
+    sound: AppleNotificationSetting.notSupported,
+    providesAppNotificationSettings: AppleNotificationSetting.notSupported,
+  );
+}
 
 void main() {
   group('PermissionState', () {
@@ -22,10 +46,9 @@ void main() {
     });
 
     test('unsupported critical alert is not required to continue', () {
-      final state = const PermissionState(isCriticalAlertSupported: false)
-          .grantNotification()
-          .grantForegroundLocation()
-          .grantBackgroundLocation();
+      final state = const PermissionState(
+        isCriticalAlertSupported: false,
+      ).grantNotification().grantForegroundLocation().grantBackgroundLocation();
 
       expect(state.isCriticalAlertVisible, isFalse);
       expect(state.canContinue, isTrue);
@@ -49,14 +72,27 @@ void main() {
     });
 
     test('all visible items must be complete to continue', () {
-      final incomplete = const PermissionState(isCriticalAlertSupported: true)
-          .grantNotification()
-          .grantCriticalAlert()
-          .grantForegroundLocation();
+      final incomplete = const PermissionState(
+        isCriticalAlertSupported: true,
+      ).grantNotification().grantCriticalAlert().grantForegroundLocation();
       final complete = incomplete.skipBackgroundLocation();
 
       expect(incomplete.canContinue, isFalse);
       expect(complete.canContinue, isTrue);
+    });
+
+    test('provisional notification permission is not treated as granted', () {
+      final state = PermissionState.fromOs(
+        notification: OsNotificationPermission.fromNotificationSettings(
+          _notificationSettings(
+            authorizationStatus: AuthorizationStatus.provisional,
+          ),
+        ),
+        location: LocationPermission.always,
+      );
+
+      expect(state.notification, PermissionItemDecision.notRequested);
+      expect(state.canRequestCriticalAlert, isFalse);
     });
   });
 }

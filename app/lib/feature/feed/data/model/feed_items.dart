@@ -330,3 +330,28 @@ extension FeedNankaiEarthquakeInfoKindApiExtension
   FeedNankaiEarthquakeInfoKind toFeedNankaiEarthquakeInfoKind() =>
       FeedNankaiEarthquakeInfoKind(code: code, name: name);
 }
+
+/// [FeedItem] の派生プロパティ・変換。
+extension FeedItemX on FeedItem {
+  /// ユーザーに目立たせるべき緊急度の高いお知らせかどうか。
+  bool get isHighUrgency =>
+      isImportant ||
+      priority == FeedPriority.critical ||
+      priority == FeedPriority.high;
+
+  /// 一覧アイテムから詳細表示用の [FeedDetail] を作る。
+  /// 一覧APIは body を返さないため body は null になるが、
+  /// 詳細画面側で [FeedItemData] 内のテキストから本文が補完される。
+  FeedDetail toDetail() => FeedDetail(
+    id: id,
+    feedType: feedType,
+    priority: priority,
+    isImportant: isImportant,
+    publishedAt: publishedAt,
+    expiresAt: expiresAt,
+    title: title,
+    summary: summary,
+    body: null,
+    data: data,
+  );
+}

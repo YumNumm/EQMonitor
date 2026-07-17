@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
@@ -65,6 +66,8 @@ class IntensityFillLayer extends HookConsumerWidget {
         : null;
     final cityHighest = cityHighestAsync?.whenOrNull(data: (v) => v);
 
+    final enqueue = useMapOperationQueue();
+
     // --- Lv1 fill effect ---
     useEffect(() {
       if (styleController == null || prefectures == null) {
@@ -74,50 +77,48 @@ class IntensityFillLayer extends HookConsumerWidget {
         return null;
       }
 
-      var disposed = false;
-
-      unawaited(() async {
-        try {
-          // 都道府県コード → 配下の細分区域コード(areaForecastLocalE)に展開
-          final pairs = <({String code, JmaIntensity intensity})>[];
-          for (final entry in prefectureHighest) {
-            final regionCodes = regionCodesOfPrefecture(
-              entry.code,
-              prefectures,
-            );
-            for (final code in regionCodes) {
-              pairs.add((code: code, intensity: entry.intensity));
-            }
-          }
-
-          final fillColor = buildIntensityMatchExpression(pairs, colorModel);
-
-          if (disposed) {
-            return;
-          }
-          await styleController.addLayer(
-            FillStyleLayer(
-              id: _lv1FillLayerId,
-              sourceId: 'eqmonitor_map',
-              sourceLayerId: 'areaForecastLocalE',
-              paint: {'fill-color': fillColor, 'fill-opacity': 0.7},
-            ),
-            belowLayerId: BaseLayer.areaForecastLocalELine.name,
-          );
-        } on Exception catch (e) {
-          talker.log(e);
-        }
-      }());
-
-      return () {
-        disposed = true;
-        unawaited(() async {
+      unawaited(
+        enqueue(() async {
           try {
-            await styleController.removeLayer(_lv1FillLayerId);
+            // 都道府県コード → 配下の細分区域コード(areaForecastLocalE)に展開
+            final pairs = <({String code, JmaIntensity intensity})>[];
+            for (final entry in prefectureHighest) {
+              final regionCodes = regionCodesOfPrefecture(
+                entry.code,
+                prefectures,
+              );
+              for (final code in regionCodes) {
+                pairs.add((code: code, intensity: entry.intensity));
+              }
+            }
+
+            final fillColor = buildIntensityMatchExpression(pairs, colorModel);
+
+            await styleController.addLayer(
+              FillStyleLayer(
+                id: _lv1FillLayerId,
+                sourceId: 'eqmonitor_map',
+                sourceLayerId: 'areaForecastLocalE',
+                paint: {'fill-color': fillColor, 'fill-opacity': 0.7},
+              ),
+              belowLayerId: BaseLayer.areaForecastLocalELine.name,
+            );
           } on Exception catch (e) {
             talker.log(e);
           }
-        }());
+        }),
+      );
+
+      return () {
+        unawaited(
+          enqueue(() async {
+            try {
+              await styleController.removeLayer(_lv1FillLayerId);
+            } on Exception catch (e) {
+              talker.log(e);
+            }
+          }),
+        );
       };
     }, [styleController, prefectures, prefectureHighest, colorModel]);
 
@@ -133,144 +134,139 @@ class IntensityFillLayer extends HookConsumerWidget {
           return null;
         }
 
-        var disposed = false;
+        // 追加に成功したレイヤーIDのみを記録し、削除時は逆順で辿る。
+        // (earthquake_history_fill_layer.dart の addedLayerIds/removeAdded 参照)
+        final addedLayerIds = <String>[];
 
-        unawaited(() async {
-          try {
-            // 市区町村 code → 最高震度 pairs (api.JmaIntensity → app.JmaIntensity 変換)
-            final pairs = cityHighest
-                .map((e) => (code: e.code, intensity: e.intensity))
-                .toList();
-            // areaInformationCityQuake のフィーチャ照合プロパティは `regioncode`。
-            // (earthquake_history_fill_layer.dart の cityCodeFilter 参照)
-            final fillColor = buildIntensityMatchExpression(
-              pairs,
-              colorModel,
-              propertyKey: 'regioncode',
-            );
-
-            if (disposed) {
-              return;
+        Future<void> removeAdded() async {
+          for (final id in addedLayerIds.reversed) {
+            try {
+              await styleController.removeLayer(id);
+            } on Exception catch (e) {
+              talker.log(e);
             }
+          }
+        }
 
-            // Lv2 市区町村 fill
-            await styleController.addLayer(
-              FillStyleLayer(
-                id: _lv2FillLayerId,
-                sourceId: 'eqmonitor_map',
-                sourceLayerId: 'areaInformationCityQuake',
-                paint: {'fill-color': fillColor, 'fill-opacity': 0.8},
-              ),
-              belowLayerId: BaseLayer.areaForecastLocalELine.name,
-            );
+        unawaited(
+          enqueue(() async {
+            try {
+              // 市区町村 code → 最高震度 pairs (api.JmaIntensity → app.JmaIntensity 変換)
+              final pairs = cityHighest
+                  .map((e) => (code: e.code, intensity: e.intensity))
+                  .toList();
+              // areaInformationCityQuake のフィーチャ照合プロパティは `regioncode`。
+              // (earthquake_history_fill_layer.dart の cityCodeFilter 参照)
+              final fillColor = buildIntensityMatchExpression(
+                pairs,
+                colorModel,
+                propertyKey: 'regioncode',
+              );
 
-            if (disposed) {
-              return;
-            }
-            final dimAnchorLayerId = selectedCityCode == null
-                ? _lv2FillLayerId
-                : _selectedCityDimLayerId;
+              // Lv2 市区町村 fill
+              await styleController.addLayer(
+                FillStyleLayer(
+                  id: _lv2FillLayerId,
+                  sourceId: 'eqmonitor_map',
+                  sourceLayerId: 'areaInformationCityQuake',
+                  paint: {'fill-color': fillColor, 'fill-opacity': 0.8},
+                ),
+                belowLayerId: BaseLayer.areaForecastLocalELine.name,
+              );
+              addedLayerIds.add(_lv2FillLayerId);
 
-            if (selectedCityCode != null) {
-              final selectedCityCodes = cityCodesOfPrefecture(
+              final dimAnchorLayerId = selectedCityCode == null
+                  ? _lv2FillLayerId
+                  : _selectedCityDimLayerId;
+
+              if (selectedCityCode != null) {
+                final selectedCityCodes = cityCodesOfPrefecture(
+                  selectedPrefCode,
+                  prefectures,
+                );
+                await styleController.addLayer(
+                  FillStyleLayer(
+                    id: _selectedCityDimLayerId,
+                    sourceId: 'eqmonitor_map',
+                    sourceLayerId: 'areaInformationCityQuake',
+                    filter: <Object>[
+                      'all',
+                      <Object>[
+                        'in',
+                        <Object>['get', 'regioncode'],
+                        <Object>['literal', selectedCityCodes],
+                      ],
+                      <Object>[
+                        '!=',
+                        <Object>['get', 'regioncode'],
+                        selectedCityCode,
+                      ],
+                    ],
+                    paint: const {
+                      'fill-color': '#000000',
+                      'fill-opacity': 0.55,
+                    },
+                  ),
+                  aboveLayerId: _lv2FillLayerId,
+                );
+                addedLayerIds.add(_selectedCityDimLayerId);
+              }
+
+              // ディムオーバーレイ: 選択都道府県の細分区域コードを除外した全エリアを半透明黒で覆う
+              final selectedRegionCodes = regionCodesOfPrefecture(
                 selectedPrefCode,
                 prefectures,
               );
+              final dimFilter = <Object>[
+                '!',
+                <Object>[
+                  'in',
+                  <Object>['get', 'code'],
+                  <Object>['literal', selectedRegionCodes],
+                ],
+              ];
+
               await styleController.addLayer(
                 FillStyleLayer(
-                  id: _selectedCityDimLayerId,
+                  id: _dimFillLayerId,
                   sourceId: 'eqmonitor_map',
-                  sourceLayerId: 'areaInformationCityQuake',
-                  filter: <Object>[
-                    'all',
-                    <Object>[
-                      'in',
-                      <Object>['get', 'regioncode'],
-                      <Object>['literal', selectedCityCodes],
-                    ],
-                    <Object>[
-                      '!=',
+                  sourceLayerId: 'areaForecastLocalE',
+                  filter: dimFilter,
+                  paint: const {'fill-color': '#000000', 'fill-opacity': 0.45},
+                ),
+                aboveLayerId: dimAnchorLayerId,
+              );
+              addedLayerIds.add(_dimFillLayerId);
+
+              if (selectedCityCode != null) {
+                await styleController.addLayer(
+                  LineStyleLayer(
+                    id: _selectedCityLineLayerId,
+                    sourceId: 'eqmonitor_map',
+                    sourceLayerId: 'areaInformationCityQuake',
+                    filter: <Object>[
+                      '==',
                       <Object>['get', 'regioncode'],
                       selectedCityCode,
                     ],
-                  ],
-                  paint: const {'fill-color': '#000000', 'fill-opacity': 0.55},
-                ),
-                aboveLayerId: _lv2FillLayerId,
-              );
+                    paint: {
+                      'line-color': isDarkMode ? '#FFFFFF' : '#000000',
+                      'line-width': 4,
+                      'line-opacity': 0.95,
+                    },
+                  ),
+                  aboveLayerId: BaseLayer.areaForecastLocalELine.name,
+                );
+                addedLayerIds.add(_selectedCityLineLayerId);
+              }
+            } on Exception catch (e) {
+              talker.log(e);
             }
-
-            if (disposed) {
-              return;
-            }
-            // ディムオーバーレイ: 選択都道府県の細分区域コードを除外した全エリアを半透明黒で覆う
-            final selectedRegionCodes = regionCodesOfPrefecture(
-              selectedPrefCode,
-              prefectures,
-            );
-            final dimFilter = <Object>[
-              '!',
-              <Object>[
-                'in',
-                <Object>['get', 'code'],
-                <Object>['literal', selectedRegionCodes],
-              ],
-            ];
-
-            await styleController.addLayer(
-              FillStyleLayer(
-                id: _dimFillLayerId,
-                sourceId: 'eqmonitor_map',
-                sourceLayerId: 'areaForecastLocalE',
-                filter: dimFilter,
-                paint: const {'fill-color': '#000000', 'fill-opacity': 0.45},
-              ),
-              aboveLayerId: dimAnchorLayerId,
-            );
-
-            if (selectedCityCode == null || disposed) {
-              return;
-            }
-
-            await styleController.addLayer(
-              LineStyleLayer(
-                id: _selectedCityLineLayerId,
-                sourceId: 'eqmonitor_map',
-                sourceLayerId: 'areaInformationCityQuake',
-                filter: <Object>[
-                  '==',
-                  <Object>['get', 'regioncode'],
-                  selectedCityCode,
-                ],
-                paint: {
-                  'line-color': isDarkMode ? '#FFFFFF' : '#000000',
-                  'line-width': 4,
-                  'line-opacity': 0.95,
-                },
-              ),
-              aboveLayerId: BaseLayer.areaForecastLocalELine.name,
-            );
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }());
+          }),
+        );
 
         return () {
-          disposed = true;
-          unawaited(() async {
-            for (final id in [
-              _selectedCityLineLayerId,
-              _dimFillLayerId,
-              _selectedCityDimLayerId,
-              _lv2FillLayerId,
-            ]) {
-              try {
-                await styleController.removeLayer(id);
-              } on Exception catch (e) {
-                talker.log(e);
-              }
-            }
-          }());
+          unawaited(enqueue(removeAdded));
         };
       },
       [

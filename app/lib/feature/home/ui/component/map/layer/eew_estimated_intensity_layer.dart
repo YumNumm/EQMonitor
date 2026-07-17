@@ -88,6 +88,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
       return () {
         unawaited(
           enqueue(() async {
+            isInitialized.value = false;
             final futures = JmaIntensity.values
                 .where((intensity) => intensity != JmaIntensity.unknown)
                 .map(
@@ -106,9 +107,11 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
       }
 
       unawaited(
-        _updateEewEstimatedIntensityFilters(
-          styleController: styleController,
-          regionMaxIntensities: regionMaxIntensities,
+        enqueue(
+          () => _updateEewEstimatedIntensityFilters(
+            styleController: styleController,
+            regionMaxIntensities: regionMaxIntensities,
+          ),
         ),
       );
 

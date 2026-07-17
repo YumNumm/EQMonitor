@@ -43,8 +43,10 @@ Future<Dio> dio(Ref ref) async {
   dio.interceptors.add(deviceIdInterceptor);
   dio.interceptors.add(deviceAuthTokenInterceptor);
 
-  final chuck = ref.watch(chuckProvider);
-  dio.interceptors.add(chuck.dioInterceptor);
+  if (chuckBuildModePolicy.captureTraffic) {
+    final chuck = ref.watch(chuckProvider);
+    dio.interceptors.add(chuck.dioInterceptor);
+  }
 
   // ETag/304 透過キャッシュ。onResponse は登録順に実行されるため
   // TalkerDioLogger より前に置く。304 ヒット時は handler.resolve で

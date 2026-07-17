@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChangelogEntry {
 
- String get version; DateTime get date; String get url; List<ChangelogSection> get sections;
+ String get version; DateTime get date; String get url; List<ChangelogSection> get sections;@JsonKey(includeIfNull: false) String? get content;
 /// Create a copy of ChangelogEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ChangelogEntryCopyWith<ChangelogEntry> get copyWith => _$ChangelogEntryCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChangelogEntry&&(identical(other.version, version) || other.version == version)&&(identical(other.date, date) || other.date == date)&&(identical(other.url, url) || other.url == url)&&const DeepCollectionEquality().equals(other.sections, sections));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChangelogEntry&&(identical(other.version, version) || other.version == version)&&(identical(other.date, date) || other.date == date)&&(identical(other.url, url) || other.url == url)&&const DeepCollectionEquality().equals(other.sections, sections)&&(identical(other.content, content) || other.content == content));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,version,date,url,const DeepCollectionEquality().hash(sections));
+int get hashCode => Object.hash(runtimeType,version,date,url,const DeepCollectionEquality().hash(sections),content);
 
 @override
 String toString() {
-  return 'ChangelogEntry(version: $version, date: $date, url: $url, sections: $sections)';
+  return 'ChangelogEntry(version: $version, date: $date, url: $url, sections: $sections, content: $content)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ChangelogEntryCopyWith<$Res>  {
   factory $ChangelogEntryCopyWith(ChangelogEntry value, $Res Function(ChangelogEntry) _then) = _$ChangelogEntryCopyWithImpl;
 @useResult
 $Res call({
- String version, DateTime date, String url, List<ChangelogSection> sections
+ String version, DateTime date, String url, List<ChangelogSection> sections,@JsonKey(includeIfNull: false) String? content
 });
 
 
@@ -65,13 +65,14 @@ class _$ChangelogEntryCopyWithImpl<$Res>
 
 /// Create a copy of ChangelogEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? version = null,Object? date = null,Object? url = null,Object? sections = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? version = null,Object? date = null,Object? url = null,Object? sections = null,Object? content = freezed,}) {
   return _then(_self.copyWith(
 version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,sections: null == sections ? _self.sections : sections // ignore: cast_nullable_to_non_nullable
-as List<ChangelogSection>,
+as List<ChangelogSection>,content: freezed == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version,  DateTime date,  String url,  List<ChangelogSection> sections)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version,  DateTime date,  String url,  List<ChangelogSection> sections, @JsonKey(includeIfNull: false)  String? content)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChangelogEntry() when $default != null:
-return $default(_that.version,_that.date,_that.url,_that.sections);case _:
+return $default(_that.version,_that.date,_that.url,_that.sections,_that.content);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.version,_that.date,_that.url,_that.sections);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version,  DateTime date,  String url,  List<ChangelogSection> sections)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version,  DateTime date,  String url,  List<ChangelogSection> sections, @JsonKey(includeIfNull: false)  String? content)  $default,) {final _that = this;
 switch (_that) {
 case _ChangelogEntry():
-return $default(_that.version,_that.date,_that.url,_that.sections);case _:
+return $default(_that.version,_that.date,_that.url,_that.sections,_that.content);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.version,_that.date,_that.url,_that.sections);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version,  DateTime date,  String url,  List<ChangelogSection> sections)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version,  DateTime date,  String url,  List<ChangelogSection> sections, @JsonKey(includeIfNull: false)  String? content)?  $default,) {final _that = this;
 switch (_that) {
 case _ChangelogEntry() when $default != null:
-return $default(_that.version,_that.date,_that.url,_that.sections);case _:
+return $default(_that.version,_that.date,_that.url,_that.sections,_that.content);case _:
   return null;
 
 }
@@ -212,7 +213,7 @@ return $default(_that.version,_that.date,_that.url,_that.sections);case _:
 @JsonSerializable()
 
 class _ChangelogEntry implements ChangelogEntry {
-  const _ChangelogEntry({required this.version, required this.date, required this.url, required final  List<ChangelogSection> sections}): _sections = sections;
+  const _ChangelogEntry({required this.version, required this.date, required this.url, required final  List<ChangelogSection> sections, @JsonKey(includeIfNull: false) this.content}): _sections = sections;
   factory _ChangelogEntry.fromJson(Map<String, dynamic> json) => _$ChangelogEntryFromJson(json);
 
 @override final  String version;
@@ -225,6 +226,7 @@ class _ChangelogEntry implements ChangelogEntry {
   return EqualUnmodifiableListView(_sections);
 }
 
+@override@JsonKey(includeIfNull: false) final  String? content;
 
 /// Create a copy of ChangelogEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangelogEntry&&(identical(other.version, version) || other.version == version)&&(identical(other.date, date) || other.date == date)&&(identical(other.url, url) || other.url == url)&&const DeepCollectionEquality().equals(other._sections, _sections));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangelogEntry&&(identical(other.version, version) || other.version == version)&&(identical(other.date, date) || other.date == date)&&(identical(other.url, url) || other.url == url)&&const DeepCollectionEquality().equals(other._sections, _sections)&&(identical(other.content, content) || other.content == content));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,version,date,url,const DeepCollectionEquality().hash(_sections));
+int get hashCode => Object.hash(runtimeType,version,date,url,const DeepCollectionEquality().hash(_sections),content);
 
 @override
 String toString() {
-  return 'ChangelogEntry(version: $version, date: $date, url: $url, sections: $sections)';
+  return 'ChangelogEntry(version: $version, date: $date, url: $url, sections: $sections, content: $content)';
 }
 
 
@@ -259,7 +261,7 @@ abstract mixin class _$ChangelogEntryCopyWith<$Res> implements $ChangelogEntryCo
   factory _$ChangelogEntryCopyWith(_ChangelogEntry value, $Res Function(_ChangelogEntry) _then) = __$ChangelogEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String version, DateTime date, String url, List<ChangelogSection> sections
+ String version, DateTime date, String url, List<ChangelogSection> sections,@JsonKey(includeIfNull: false) String? content
 });
 
 
@@ -276,13 +278,14 @@ class __$ChangelogEntryCopyWithImpl<$Res>
 
 /// Create a copy of ChangelogEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? version = null,Object? date = null,Object? url = null,Object? sections = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? version = null,Object? date = null,Object? url = null,Object? sections = null,Object? content = freezed,}) {
   return _then(_ChangelogEntry(
 version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,sections: null == sections ? _self._sections : sections // ignore: cast_nullable_to_non_nullable
-as List<ChangelogSection>,
+as List<ChangelogSection>,content: freezed == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

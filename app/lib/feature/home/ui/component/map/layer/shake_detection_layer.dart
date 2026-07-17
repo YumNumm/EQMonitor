@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
@@ -50,6 +51,11 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final isInitialized = useRef(false);
+    final initFuture = useRef<Future<void>?>(null);
+    // 破棄開始後は毎フレームの更新(updateGeoJsonSource)を実行しないためのガード。
+    // enqueue にすべての更新を積むとチェーンが肥大化するため、更新自体は
+    // enqueue を経由させず、このフラグで破棄後の実行のみを止める。
+    final disposed = useRef(false);
     final latestGeoJson = useRef<String?>(null);
     final wasActive = useRef(false);
     final enqueue = useMapOperationQueue();
@@ -60,72 +66,69 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
         return null;
       }
 
-      unawaited(
-        enqueue(() async {
-          try {
-            await styleController.addSource(
-              const GeoJsonSource(
-                id: ShakeDetectionLayer.sourceId,
-                data: _emptyGeoJson,
-              ),
-            );
+      disposed.value = false;
+      initFuture.value = enqueue(() async {
+        await styleController.addSource(
+          const GeoJsonSource(
+            id: ShakeDetectionLayer.sourceId,
+            data: _emptyGeoJson,
+          ),
+        );
 
-            await (
-              styleController.addLayer(
-                const FillStyleLayer(
-                  id: ShakeDetectionLayer._fillLayerId,
-                  sourceId: ShakeDetectionLayer.sourceId,
-                  paint: {
-                    'fill-color': ['get', 'fillColor'],
-                    'fill-opacity': 1,
-                  },
-                ),
-              ),
-              styleController.addLayer(
-                const LineStyleLayer(
-                  id: ShakeDetectionLayer._lineLayerId,
-                  sourceId: ShakeDetectionLayer.sourceId,
-                  paint: {
-                    'line-color': ['get', 'lineColor'],
-                    'line-width': 2,
-                    'line-opacity': 1,
-                  },
-                ),
-              ),
-              styleController.addLayer(
-                const CircleStyleLayer(
-                  id: ShakeDetectionLayer._centerLayerId,
-                  sourceId: ShakeDetectionLayer.sourceId,
-                  paint: {
-                    'circle-radius': [
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      3,
-                      5,
-                      7,
-                      10,
-                      10,
-                      14,
-                    ],
-                    'circle-color': ['get', 'centerColor'],
-                    'circle-opacity': 1,
-                    'circle-stroke-color': ['get', 'strokeColor'],
-                    'circle-stroke-width': 2,
-                    'circle-stroke-opacity': 1,
-                  },
-                ),
-              ),
-            ).wait;
+        await (
+          styleController.addLayer(
+            const FillStyleLayer(
+              id: ShakeDetectionLayer._fillLayerId,
+              sourceId: ShakeDetectionLayer.sourceId,
+              paint: {
+                'fill-color': ['get', 'fillColor'],
+                'fill-opacity': 1,
+              },
+            ),
+          ),
+          styleController.addLayer(
+            const LineStyleLayer(
+              id: ShakeDetectionLayer._lineLayerId,
+              sourceId: ShakeDetectionLayer.sourceId,
+              paint: {
+                'line-color': ['get', 'lineColor'],
+                'line-width': 2,
+                'line-opacity': 1,
+              },
+            ),
+          ),
+          styleController.addLayer(
+            const CircleStyleLayer(
+              id: ShakeDetectionLayer._centerLayerId,
+              sourceId: ShakeDetectionLayer.sourceId,
+              paint: {
+                'circle-radius': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  5,
+                  7,
+                  10,
+                  10,
+                  14,
+                ],
+                'circle-color': ['get', 'centerColor'],
+                'circle-opacity': 1,
+                'circle-stroke-color': ['get', 'strokeColor'],
+                'circle-stroke-width': 2,
+                'circle-stroke-opacity': 1,
+              },
+            ),
+          ),
+        ).wait;
 
-            isInitialized.value = true;
-          } on Exception catch (e) {
-            debugPrint('ShakeDetectionLayer: failed to init layers: $e');
-          }
-        }),
-      );
+        isInitialized.value = true;
+      });
 
       return () {
+        disposed.value = true;
+        isInitialized.value = false;
         unawaited(
           enqueue(() async {
             await styleController.removeLayer(
@@ -171,10 +174,14 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
           animationController.stop();
           if (wasActive.value && isInitialized.value) {
             unawaited(
-              _updateGeoJsonIfChanged(
-                styleController,
-                geoJson: _emptyGeoJson,
-                latestGeoJson: latestGeoJson,
+              enqueue(
+                () => _updateGeoJsonIfChanged(
+                  styleController,
+                  geoJson: _emptyGeoJson,
+                  latestGeoJson: latestGeoJson,
+                  initFuture: initFuture,
+                  disposed: disposed,
+                ),
               ),
             );
           }
@@ -200,8 +207,13 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
           return null;
         }
 
+        // このリスナー自体の有効期間は `settings.animationMode`/
+        // `animationController` の変化にも連動する
+        // （[styleController] のみに連動する [disposed] とは別軸）。
+        var listenerDisposed = false;
+
         void listener() {
-          if (!isInitialized.value) {
+          if (listenerDisposed || disposed.value) {
             return;
           }
           final opacity = _computeOpacity(
@@ -218,6 +230,8 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
               styleController,
               geoJson: geoJson,
               latestGeoJson: latestGeoJson,
+              initFuture: initFuture,
+              disposed: disposed,
             ),
           );
         }
@@ -232,6 +246,7 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
         }
 
         return () {
+          listenerDisposed = true;
           timer?.cancel();
           animationController.removeListener(listener);
         };
@@ -342,13 +357,26 @@ Future<void> _updateGeoJsonIfChanged(
   StyleController styleController, {
   required String geoJson,
   required ObjectRef<String?> latestGeoJson,
+  required ObjectRef<Future<void>?> initFuture,
+  required ObjectRef<bool> disposed,
 }) async {
+  // 初期化(source/layer 追加)の完了を待つ。この await 中に破棄処理
+  // (source/layer 削除)が完了する可能性があるため、await 後に必ず
+  // disposed を再チェックしてから styleController を操作する。
+  await initFuture.value;
+  if (disposed.value) {
+    return;
+  }
   if (latestGeoJson.value == geoJson) {
     return;
   }
-  await styleController.updateGeoJsonSource(
-    id: ShakeDetectionLayer.sourceId,
-    data: geoJson,
-  );
-  latestGeoJson.value = geoJson;
+  try {
+    await styleController.updateGeoJsonSource(
+      id: ShakeDetectionLayer.sourceId,
+      data: geoJson,
+    );
+    latestGeoJson.value = geoJson;
+  } catch (e, stackTrace) {
+    talker.handle(e, stackTrace);
+  }
 }

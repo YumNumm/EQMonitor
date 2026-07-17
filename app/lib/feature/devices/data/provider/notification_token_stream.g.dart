@@ -51,7 +51,7 @@ final class NotificationTokenStreamProvider
 }
 
 String _$notificationTokenStreamHash() =>
-    r'8863d1a6f1bb71626a10318c706f34a73ec50858';
+    r'7f36393a44b21f517cc9595fcc2e6c5ba359a55c';
 
 @ProviderFor(_firebaseMessagingTokenStream)
 final _firebaseMessagingTokenStreamProvider =
@@ -86,7 +86,7 @@ final class _FirebaseMessagingTokenStreamProvider
 }
 
 String _$_firebaseMessagingTokenStreamHash() =>
-    r'3537be0aa279d0f27af3fd0c965a0dd52c7c7a4f';
+    r'531082fafb2b2c1693d45b8e952495605f037425';
 
 @ProviderFor(_apnsTokenStream)
 final _apnsTokenStreamProvider = _ApnsTokenStreamProvider._();
@@ -119,28 +119,28 @@ final class _ApnsTokenStreamProvider
   }
 }
 
-String _$_apnsTokenStreamHash() => r'68d009a70b8d338d7b36bf0d5f28b052b9dbdecb';
+String _$_apnsTokenStreamHash() => r'8a2958cfd75fb295e13e223ebba4e3dbb07cb145';
 
-@ProviderFor(_apnsPushToStartTokenStream)
-final _apnsPushToStartTokenStreamProvider =
-    _ApnsPushToStartTokenStreamProvider._();
+@ProviderFor(apnsPushToStartTokenStream)
+final apnsPushToStartTokenStreamProvider =
+    ApnsPushToStartTokenStreamProvider._();
 
-final class _ApnsPushToStartTokenStreamProvider
+final class ApnsPushToStartTokenStreamProvider
     extends $FunctionalProvider<AsyncValue<String>, String, Stream<String>>
     with $FutureModifier<String>, $StreamProvider<String> {
-  _ApnsPushToStartTokenStreamProvider._()
+  ApnsPushToStartTokenStreamProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'_apnsPushToStartTokenStreamProvider',
+        name: r'apnsPushToStartTokenStreamProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$_apnsPushToStartTokenStreamHash();
+  String debugGetCreateSourceHash() => _$apnsPushToStartTokenStreamHash();
 
   @$internal
   @override
@@ -149,9 +149,9 @@ final class _ApnsPushToStartTokenStreamProvider
 
   @override
   Stream<String> create(Ref ref) {
-    return _apnsPushToStartTokenStream(ref);
+    return apnsPushToStartTokenStream(ref);
   }
 }
 
-String _$_apnsPushToStartTokenStreamHash() =>
-    r'12c24adfce5b829929c388e17c9bc051e413c3a9';
+String _$apnsPushToStartTokenStreamHash() =>
+    r'0a91ffc010baa1780c915d89551ba026c96ae692';

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_span.dart';
 import 'package:eqmonitor/feature/seismicity/data/notifier/seismicity_dataset_notifier.dart';
+import 'package:eqmonitor/feature/seismicity/data/provider/seismicity_repository_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:riverpod/riverpod.dart';
@@ -90,6 +91,10 @@ void main() {
       overrides: [
         dioProvider.overrideWith((ref) async {
           return Dio(BaseOptions(baseUrl: 'https://example.com'))
+            ..httpClientAdapter = _SuccessAdapter();
+        }),
+        seismicityGeoJsonDioProvider.overrideWith((ref) {
+          return Dio(BaseOptions(baseUrl: ''))
             ..httpClientAdapter = _SuccessAdapter();
         }),
       ],

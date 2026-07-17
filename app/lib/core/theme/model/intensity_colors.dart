@@ -38,6 +38,7 @@ extension IntensityColorsLookup on IntensityColors {
         JmaIntensity.fiveUnknown => fiveLower,
         JmaIntensity.fiveLower => fiveLower,
         JmaIntensity.fiveUpper => fiveUpper,
+        JmaIntensity.sixUnknown => sixLower,
         JmaIntensity.sixLower => sixLower,
         JmaIntensity.sixUpper => sixUpper,
         JmaIntensity.seven => seven,

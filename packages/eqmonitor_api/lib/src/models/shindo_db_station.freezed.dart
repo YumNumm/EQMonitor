@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShindoDbStation {
 
- String get code; String get name; num get latitude; num get longitude;
+ String get code; String get name; num get latitude; num get longitude;@JsonKey(includeIfNull: true, name: 'city_code') String? get cityCode;
 /// Create a copy of ShindoDbStation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ShindoDbStationCopyWith<ShindoDbStation> get copyWith => _$ShindoDbStationCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShindoDbStation&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShindoDbStation&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,name,latitude,longitude);
+int get hashCode => Object.hash(runtimeType,code,name,latitude,longitude,cityCode);
 
 @override
 String toString() {
-  return 'ShindoDbStation(code: $code, name: $name, latitude: $latitude, longitude: $longitude)';
+  return 'ShindoDbStation(code: $code, name: $name, latitude: $latitude, longitude: $longitude, cityCode: $cityCode)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ShindoDbStationCopyWith<$Res>  {
   factory $ShindoDbStationCopyWith(ShindoDbStation value, $Res Function(ShindoDbStation) _then) = _$ShindoDbStationCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, num latitude, num longitude
+ String code, String name, num latitude, num longitude,@JsonKey(includeIfNull: true, name: 'city_code') String? cityCode
 });
 
 
@@ -65,13 +65,14 @@ class _$ShindoDbStationCopyWithImpl<$Res>
 
 /// Create a copy of ShindoDbStation
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? latitude = null,Object? longitude = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? latitude = null,Object? longitude = null,Object? cityCode = freezed,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as num,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
-as num,
+as num,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  num latitude,  num longitude)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  num latitude,  num longitude, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShindoDbStation() when $default != null:
-return $default(_that.code,_that.name,_that.latitude,_that.longitude);case _:
+return $default(_that.code,_that.name,_that.latitude,_that.longitude,_that.cityCode);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.code,_that.name,_that.latitude,_that.longitude);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  num latitude,  num longitude)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  num latitude,  num longitude, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode)  $default,) {final _that = this;
 switch (_that) {
 case _ShindoDbStation():
-return $default(_that.code,_that.name,_that.latitude,_that.longitude);case _:
+return $default(_that.code,_that.name,_that.latitude,_that.longitude,_that.cityCode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.code,_that.name,_that.latitude,_that.longitude);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  num latitude,  num longitude)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  num latitude,  num longitude, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode)?  $default,) {final _that = this;
 switch (_that) {
 case _ShindoDbStation() when $default != null:
-return $default(_that.code,_that.name,_that.latitude,_that.longitude);case _:
+return $default(_that.code,_that.name,_that.latitude,_that.longitude,_that.cityCode);case _:
   return null;
 
 }
@@ -212,13 +213,14 @@ return $default(_that.code,_that.name,_that.latitude,_that.longitude);case _:
 @JsonSerializable()
 
 class _ShindoDbStation implements ShindoDbStation {
-  const _ShindoDbStation({required this.code, required this.name, required this.latitude, required this.longitude});
+  const _ShindoDbStation({required this.code, required this.name, required this.latitude, required this.longitude, @JsonKey(includeIfNull: true, name: 'city_code') required this.cityCode});
   factory _ShindoDbStation.fromJson(Map<String, dynamic> json) => _$ShindoDbStationFromJson(json);
 
 @override final  String code;
 @override final  String name;
 @override final  num latitude;
 @override final  num longitude;
+@override@JsonKey(includeIfNull: true, name: 'city_code') final  String? cityCode;
 
 /// Create a copy of ShindoDbStation
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShindoDbStation&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShindoDbStation&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,name,latitude,longitude);
+int get hashCode => Object.hash(runtimeType,code,name,latitude,longitude,cityCode);
 
 @override
 String toString() {
-  return 'ShindoDbStation(code: $code, name: $name, latitude: $latitude, longitude: $longitude)';
+  return 'ShindoDbStation(code: $code, name: $name, latitude: $latitude, longitude: $longitude, cityCode: $cityCode)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$ShindoDbStationCopyWith<$Res> implements $ShindoDbStation
   factory _$ShindoDbStationCopyWith(_ShindoDbStation value, $Res Function(_ShindoDbStation) _then) = __$ShindoDbStationCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, num latitude, num longitude
+ String code, String name, num latitude, num longitude,@JsonKey(includeIfNull: true, name: 'city_code') String? cityCode
 });
 
 
@@ -270,13 +272,14 @@ class __$ShindoDbStationCopyWithImpl<$Res>
 
 /// Create a copy of ShindoDbStation
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? latitude = null,Object? longitude = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? latitude = null,Object? longitude = null,Object? cityCode = freezed,}) {
   return _then(_ShindoDbStation(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as num,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
-as num,
+as num,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

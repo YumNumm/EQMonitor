@@ -25,11 +25,14 @@ melos:
   scripts:
     analyze:
       run: |
-        melos exec -c 1 -- \
+        dart run melos exec -c 1 -- \
           dart analyze . --fatal-infos
       description: |
         Run `dart analyze` in all packages.
         - Note: you can also rely on your IDEs Dart Analysis / Issues window.
+        - Uses `dart run melos exec` (not a bare `melos` call) so this script
+          works whether melos is globally activated or not (e.g. via
+          `dart run melos run analyze` without `dart pub global activate melos`).
     generate:
       run: melos run generate:dart && melos run generate:flutter
       description: Build all generated files for Dart & Flutter packages in this project.

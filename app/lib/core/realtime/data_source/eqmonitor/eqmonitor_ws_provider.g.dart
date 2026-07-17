@@ -91,7 +91,7 @@ final class EqmonitorWsEventStreamProvider
 }
 
 String _$eqmonitorWsEventStreamHash() =>
-    r'6eb16e6c35fbf5c6dcae97b02b814ae3d1c6031d';
+    r'd090a5d6007e78467623a68841fcbf33337a8929';
 
 /// WebSocket イベントストリーム。
 ///

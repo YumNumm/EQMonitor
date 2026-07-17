@@ -11,10 +11,11 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_span.dart';
 /// このリポジトリが返す [SeismicityDataset.events] が唯一の分析用データソース。
 class SeismicityRepository {
   SeismicityRepository({
-    required Dio dio,
+    required Dio manifestDio,
+    required Dio geoJsonDio,
     SeismicityLocalCacheDataSource? cache,
-  }) : _manifestDataSource = SeismicityManifestDataSource(dio),
-       _geoJsonDataSource = SeismicityGeoJsonDataSource(dio),
+  }) : _manifestDataSource = SeismicityManifestDataSource(manifestDio),
+       _geoJsonDataSource = SeismicityGeoJsonDataSource(geoJsonDio),
        _cache = cache ?? SeismicityLocalCacheDataSource();
 
   final SeismicityManifestDataSource _manifestDataSource;

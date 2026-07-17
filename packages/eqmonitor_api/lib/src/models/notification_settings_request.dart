@@ -20,8 +20,10 @@ abstract class NotificationSettingsRequest with _$NotificationSettingsRequest {
     bool? nankaiExtraordinaryEnabled,
     @JsonKey(includeIfNull: false,name: 'nankai_regular_enabled')
     bool? nankaiRegularEnabled,
-    @JsonKey(includeIfNull: false,name: 'hokkaido3ren_offshore_enabled')
-    bool? hokkaido3renOffshoreEnabled,
+    @JsonKey(includeIfNull: false,name: 'vyse60_enabled')
+    bool? vyse60Enabled,
+    @JsonKey(includeIfNull: false,name: 'earthquake_notice_enabled')
+    bool? earthquakeNoticeEnabled,
   }) = _NotificationSettingsRequest;
   
   factory NotificationSettingsRequest.fromJson(Map<String, Object?> json) => _$NotificationSettingsRequestFromJson(json);

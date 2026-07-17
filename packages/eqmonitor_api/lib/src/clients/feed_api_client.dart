@@ -18,10 +18,12 @@ part 'feed_api_client.g.dart';
 abstract class FeedApiClient {
   factory FeedApiClient(Dio dio, {String? baseUrl}) = _FeedApiClient;
 
-  /// Feed一覧（お知らせ・地震関連情報など）
+  /// Feed一覧（お知らせ・地震関連情報など）.
+  ///
+  /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
   @GET(FeedApiClientUrls.getV2Feeds)
   Future<HttpResponse<FeedListResponse>> getV2Feeds({
-    @Query('after') String? after,
+    @Query('cursor') String? cursor,
     @Query('important') String? important,
     @Query('locale') String? locale = 'ja',
     @Query('limit') String? limit = '20',

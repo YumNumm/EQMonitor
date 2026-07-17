@@ -66,6 +66,18 @@ class NotificationSlotRepository {
     await _api.device.deleteV2DeviceMeSettingsSlotsCurrentLocation();
   }
 
+  Future<void> putDeviceLocation({
+    required int regionId,
+    String? cityCode,
+  }) async {
+    await _api.device.putV2DeviceMeLocation(
+      body: api.DeviceLocationRequest(
+        regionId: regionId.toString(),
+        cityCode: cityCode,
+      ),
+    );
+  }
+
   Future<NotificationSlot> putNationwide({
     bool? eewEnabled,
     JmaIntensity? eewMinIntensity,
