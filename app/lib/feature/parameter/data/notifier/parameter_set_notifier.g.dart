@@ -36,7 +36,7 @@ final class ParameterSetNotifierProvider
 }
 
 String _$parameterSetNotifierHash() =>
-    r'c5ab1eaa91a7ac5748630eff5dce0f0d073ff9db';
+    r'e0927a4e8e5d7b927dfa1e9909fefb37369b2094';
 
 abstract class _$ParameterSetNotifier extends $AsyncNotifier<ParameterSet> {
   FutureOr<ParameterSet> build();

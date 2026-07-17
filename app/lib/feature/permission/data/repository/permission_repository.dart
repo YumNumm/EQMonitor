@@ -12,7 +12,8 @@ PermissionRepository permissionRepository(Ref ref) => PermissionRepository(
   readMessaging: () => ref.read(firebaseMessagingProvider),
   requestLocationPermission: Geolocator.requestPermission,
   onLocationPermissionGranted: () async {
-    await ref.refresh(appGroupSettingsWriterProvider.future);
+    ref.invalidate(appGroupSettingsWriterProvider, asReload: true);
+    await ref.read(appGroupSettingsWriterProvider.future);
   },
 );
 

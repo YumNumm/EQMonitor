@@ -7,63 +7,21 @@ import Foundation
   @available(iOS 16.1, *)
   @objc(EQMLiveActivityUtil)
   @objcMembers public class EQMLiveActivityUtil: NSObject {
-    @available(iOS 17.2, *)
+    @available(iOS 18.0, *)
     public func pushToStartToken() -> String? {
-      let data = Activity<MockLiveActivityAttributes>.pushToStartToken
-      if let data = data {
-        let token = data.map { String(format: "%02x", $0) }.joined()
-        return token
-      } else {
-        return nil
-      }
+      guard #available(iOS 18.0, *), isLiveActivitySupported() else { return nil }
+      return Activity<MockLiveActivityAttributes>.pushToStartToken?
+        .map { String(format: "%02x", $0) }.joined()
     }
 
-    @available(iOS 17.2, *)
+    @available(iOS 18.0, *)
     public func observePushToStartTokenUpdates(
       _ onUpdate: @escaping @Sendable @convention(block) (NSString) -> Void
     ) {
+      guard #available(iOS 18.0, *), isLiveActivitySupported() else { return }
       Task {
         for await tokenData in Activity<MockLiveActivityAttributes>.pushToStartTokenUpdates {
-          let token = tokenData.map { String(format: "%02x", $0) }.joined()
-          onUpdate(token as NSString)
-        }
-      }
-    }
-
-    /// EEW Live Activity の push update token 更新を監視する。
-    /// ActivityKit はモジュール名なしの型名でアクティビティを識別するため、
-    /// Widget Extension の EewLiveActivityAttributes と同じ型名を持つミラー型で監視できる。
-    /// callback: (liveActivityId, pushToken)
-    public func observeEewActivityPushTokenUpdates(
-      _ onUpdate: @escaping @Sendable @convention(block) (NSString, NSString) -> Void
-    ) {
-      Task {
-        for await activity in Activity<EewLiveActivityAttributes>.activityUpdates {
-          Task {
-            let activityId = activity.attributes.id.uuidString.lowercased()
-            for await tokenData in activity.pushTokenUpdates {
-              let token = tokenData.map { String(format: "%02x", $0) }.joined()
-              onUpdate(activityId as NSString, token as NSString)
-            }
-          }
-        }
-      }
-    }
-
-    /// 揺れ検知 Live Activity の push update token 更新を監視する。
-    /// callback: (liveActivityId, pushToken)
-    public func observeShakeDetectionActivityPushTokenUpdates(
-      _ onUpdate: @escaping @Sendable @convention(block) (NSString, NSString) -> Void
-    ) {
-      Task {
-        for await activity in Activity<ShakeDetectionLiveActivityAttributes>.activityUpdates {
-          Task {
-            let activityId = activity.attributes.id.uuidString.lowercased()
-            for await tokenData in activity.pushTokenUpdates {
-              let token = tokenData.map { String(format: "%02x", $0) }.joined()
-              onUpdate(activityId as NSString, token as NSString)
-            }
-          }
+          onUpdate(tokenData.map { String(format: "%02x", $0) }.joined() as NSString)
         }
       }
     }
@@ -83,7 +41,7 @@ import Foundation
       if !isLiveActivitySupported() {
         return false
       }
-      guard #available(iOS 17.2, *), !ProcessInfo.processInfo.isiOSAppOnMac else {
+      guard #available(iOS 18.0, *), !ProcessInfo.processInfo.isiOSAppOnMac else {
         return false
       }
       return true
@@ -98,24 +56,6 @@ import Foundation
   }
 
   struct MockLiveActivityContentState: Codable, Hashable {
-  }
-
-  // MARK: - EEW Live Activity mirror types
-  // ActivityKit はモジュール名なしの型名でアクティビティを識別するため、
-  // Widget Extension 側の EewLiveActivityAttributes と同名の型を定義することで
-  // 同じアクティビティを監視できる。
-  // ContentState のフィールドは監視には不要なため空で定義する。
-  struct EewLiveActivityAttributes: ActivityAttributes {
-    struct ContentState: Codable, Hashable {}
-    var id = UUID()
-    let eventId: String
-  }
-
-  // MARK: - ShakeDetection Live Activity mirror types
-  struct ShakeDetectionLiveActivityAttributes: ActivityAttributes {
-    struct ContentState: Codable, Hashable {}
-    var id = UUID()
-    let eventId: String
   }
 
 #endif

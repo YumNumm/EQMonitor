@@ -463,7 +463,8 @@ class _TokenStatusRow extends StatelessWidget {
     final colorTheme = context.designSystem.colorTheme;
     final (icon, color, statusText) = switch (kindState) {
       SyncedTokenState() => (Icons.check_circle, colorTheme.primary, '同期済み'),
-      PendingTokenState() => (Icons.sync, colorTheme.secondary, '同期待ち'),
+      SyncingTokenState() => (Icons.sync, colorTheme.tertiary, '同期中…'),
+      PendingTokenState() => (Icons.schedule, colorTheme.secondary, '再試行待ち'),
       FailedTokenState(:final error) => (
         Icons.error_outline,
         colorTheme.error,

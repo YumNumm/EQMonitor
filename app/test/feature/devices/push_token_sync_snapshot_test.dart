@@ -1,19 +1,6 @@
-import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
-import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
-import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
+import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
-import 'package:eqmonitor/feature/devices/data/persistence/shared_preferences_workflow_persistence.dart';
-import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-DeviceProvisioningRepository _repository(SharedPreferences prefs) =>
-    DeviceProvisioningRepository(
-      dataSource: SharedPreferencesDataSource(sharedPreferences: prefs),
-      persistence: SharedPreferencesWorkflowPersistence(
-        app_prefs.SharedPreferencesAsync(prefs),
-      ),
-    );
 
 void main() {
   test(
@@ -39,25 +26,73 @@ void main() {
     expect(snapshot.allSynced, isFalse);
   });
 
-  test(
-    'APNs token states are notApplicable when APNs is unsupported',
-    () async {
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      final repo = _repository(prefs);
+  test('allSynced is false when any token is syncing', () {
+    const snapshot = PushTokenSyncSnapshot(
+      fcm: SyncingTokenState(),
+      apnsNotification: NotApplicableTokenState(),
+      apnsPushToStart: NotApplicableTokenState(),
+    );
 
-      final snapshot = await repo.computeSnapshot(
-        const NotificationToken(
-          fcmToken: 'fcm-token',
-          apnsToken: 'apns-token',
-          apnsPushToStartToken: 'push-to-start-token',
-        ),
-        apnsSupported: false,
-      );
+    expect(snapshot.allSynced, isFalse);
+  });
 
-      expect(snapshot.fcm, isA<PendingTokenState>());
-      expect(snapshot.apnsNotification, isA<NotApplicableTokenState>());
-      expect(snapshot.apnsPushToStart, isA<NotApplicableTokenState>());
-    },
-  );
+  test('allSynced is false when any token is failed', () {
+    const snapshot = PushTokenSyncSnapshot(
+      fcm: FailedTokenState(error: NetworkUnreachableException()),
+      apnsNotification: NotApplicableTokenState(),
+      apnsPushToStart: NotApplicableTokenState(),
+    );
+
+    expect(snapshot.allSynced, isFalse);
+  });
+
+  test('allSynced is true when all synced or absent', () {
+    const snapshot = PushTokenSyncSnapshot(
+      fcm: SyncedTokenState(),
+      apnsNotification: AbsentTokenState(),
+      apnsPushToStart: NotApplicableTokenState(),
+    );
+
+    expect(snapshot.allSynced, isTrue);
+  });
+
+  test('hasPending returns true when any token is pending', () {
+    const snapshot = PushTokenSyncSnapshot(
+      fcm: SyncedTokenState(),
+      apnsNotification: PendingTokenState(),
+      apnsPushToStart: NotApplicableTokenState(),
+    );
+
+    expect(snapshot.hasPending, isTrue);
+  });
+
+  test('hasPending returns false when no tokens are pending', () {
+    const snapshot = PushTokenSyncSnapshot(
+      fcm: SyncedTokenState(),
+      apnsNotification: SyncingTokenState(),
+      apnsPushToStart: NotApplicableTokenState(),
+    );
+
+    expect(snapshot.hasPending, isFalse);
+  });
+
+  test('hasFailed returns true when any token has failed', () {
+    const snapshot = PushTokenSyncSnapshot(
+      fcm: FailedTokenState(error: NetworkUnreachableException()),
+      apnsNotification: SyncedTokenState(),
+      apnsPushToStart: NotApplicableTokenState(),
+    );
+
+    expect(snapshot.hasFailed, isTrue);
+  });
+
+  test('hasFailed returns false when no tokens have failed', () {
+    const snapshot = PushTokenSyncSnapshot(
+      fcm: SyncedTokenState(),
+      apnsNotification: SyncingTokenState(),
+      apnsPushToStart: PendingTokenState(),
+    );
+
+    expect(snapshot.hasFailed, isFalse);
+  });
 }

@@ -1,9 +1,6 @@
-import 'dart:async';
-
-import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
-import 'package:riverpod/experimental/mutation.dart';
+import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'push_token_sync_wiring.g.dart';
@@ -15,23 +12,17 @@ Future<void> pushTokenSyncWiring(Ref ref) async {
     return;
   }
 
-  ref.listen<AsyncValue<PushTokenSyncSnapshot>>(
-    pushTokenSyncProvider,
-    (_, next) {
-      final snapshot = next.value;
-      if (snapshot == null || !snapshot.hasPending) {
-        return;
-      }
-      final mutation = PushTokenSyncNotifier.syncMutation;
-      if (ref.read(mutation) is MutationPending) {
-        return;
-      }
-      unawaited(
-        mutation.run(
-          ref,
-          (tsx) async => tsx.get(pushTokenSyncProvider.notifier).sync(),
-        ),
-      );
-    },
-  );
+  // ノーティファイアの build() 完了を待つ
+  await ref.read(pushTokenSyncProvider.future);
+  final notifier = ref.read(pushTokenSyncProvider.notifier);
+
+  ref.onDispose(notifier.disposeWorkers);
+
+  ref.listen(notificationTokenStreamProvider, (_, next) {
+    final token = next.value;
+    if (token == null) {
+      return;
+    }
+    notifier.accept(token);
+  }, fireImmediately: true);
 }
