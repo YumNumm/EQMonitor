@@ -93,7 +93,7 @@ void main() {
           return Dio(BaseOptions(baseUrl: 'https://example.com'))
             ..httpClientAdapter = _SuccessAdapter();
         }),
-        seismicityGeoJsonDioProvider.overrideWith((ref) {
+        seismicityGeoJsonDioProvider.overrideWith((ref) async {
           return Dio(BaseOptions(baseUrl: ''))
             ..httpClientAdapter = _SuccessAdapter();
         }),

@@ -15,8 +15,8 @@ part of 'seismicity_repository_provider.dart';
 final seismicityGeoJsonDioProvider = SeismicityGeoJsonDioProvider._();
 
 final class SeismicityGeoJsonDioProvider
-    extends $FunctionalProvider<Dio, Dio, Dio>
-    with $Provider<Dio> {
+    extends $FunctionalProvider<AsyncValue<Dio>, Dio, FutureOr<Dio>>
+    with $FutureModifier<Dio>, $FutureProvider<Dio> {
   SeismicityGeoJsonDioProvider._()
     : super(
         from: null,
@@ -33,25 +33,17 @@ final class SeismicityGeoJsonDioProvider
 
   @$internal
   @override
-  $ProviderElement<Dio> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<Dio> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  Dio create(Ref ref) {
+  FutureOr<Dio> create(Ref ref) {
     return seismicityGeoJsonDio(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Dio value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Dio>(value),
-    );
   }
 }
 
 String _$seismicityGeoJsonDioHash() =>
-    r'f6fa820d8c9f733da99ca8f1adaac1d2b09194fc';
+    r'547a196b006ad32a3937f4026b8cb514b6b2f613';
 
 @ProviderFor(seismicityRepository)
 final seismicityRepositoryProvider = SeismicityRepositoryProvider._();
@@ -93,4 +85,4 @@ final class SeismicityRepositoryProvider
 }
 
 String _$seismicityRepositoryHash() =>
-    r'ef8c92b707fd167688724154a109bf1f29211a3a';
+    r'6a1352b0e51ebf8eb247d2a2ebc62ef156bfeddd';
