@@ -1,11 +1,9 @@
-import 'package:eqmonitor/core/data/preferences/secure/secure_storage.dart';
+import 'package:eqmonitor/core/data/preferences/secure/secure_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hinet_credentials_provider.g.dart';
-
-const _hinetUserIdKey = 'hinet_bosai_user_id';
-const _hinetPasswordKey = 'hinet_bosai_password';
 
 /// Hi-net(BOSAI)認証情報(ユーザーID + パスワード)。
 ///
@@ -28,9 +26,11 @@ class HinetCredentialsNotifier extends _$HinetCredentialsNotifier {
 
   @override
   Future<HinetCredentials?> build() async {
-    final storage = await ref.watch(secureStorageProvider.future);
-    final userId = await storage.read(key: _hinetUserIdKey);
-    final password = await storage.read(key: _hinetPasswordKey);
+    final ds = await ref.watch(securePreferencesDataSourceProvider.future);
+    final userId = await ds.getString(key: SecureStorageKey.hinetBosaiUserId);
+    final password = await ds.getString(
+      key: SecureStorageKey.hinetBosaiPassword,
+    );
     if (userId == null || password == null) {
       return null;
     }
@@ -38,16 +38,19 @@ class HinetCredentialsNotifier extends _$HinetCredentialsNotifier {
   }
 
   Future<void> save({required String userId, required String password}) async {
-    final storage = await ref.read(secureStorageProvider.future);
-    await storage.write(key: _hinetUserIdKey, value: userId);
-    await storage.write(key: _hinetPasswordKey, value: password);
+    final ds = await ref.read(securePreferencesDataSourceProvider.future);
+    await ds.setString(key: SecureStorageKey.hinetBosaiUserId, value: userId);
+    await ds.setString(
+      key: SecureStorageKey.hinetBosaiPassword,
+      value: password,
+    );
     state = AsyncData(HinetCredentials(userId: userId, password: password));
   }
 
   Future<void> clear() async {
-    final storage = await ref.read(secureStorageProvider.future);
-    await storage.delete(key: _hinetUserIdKey);
-    await storage.delete(key: _hinetPasswordKey);
+    final ds = await ref.read(securePreferencesDataSourceProvider.future);
+    await ds.remove(key: SecureStorageKey.hinetBosaiUserId);
+    await ds.remove(key: SecureStorageKey.hinetBosaiPassword);
     state = const AsyncData(null);
   }
 }

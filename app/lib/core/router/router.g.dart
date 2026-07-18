@@ -620,6 +620,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugSharedPreferencesRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'secure-storage',
+          factory: $DebugSecureStorageRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'http-cache',
           factory: $DebugHttpCacheRoute._fromState,
         ),
@@ -1406,6 +1410,28 @@ mixin $DebugSharedPreferencesRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/shared-preferences');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugSecureStorageRoute on GoRouteData {
+  static DebugSecureStorageRoute _fromState(GoRouterState state) =>
+      const DebugSecureStorageRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/secure-storage');
 
   @override
   void go(BuildContext context) => context.go(location);
