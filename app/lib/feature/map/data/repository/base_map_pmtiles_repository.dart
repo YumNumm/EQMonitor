@@ -7,26 +7,34 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'base_map_pmtiles_repository.g.dart';
 
 const _baseMapPmtilesFileName = 'earthquake_tsunami_all.pmtiles';
-const _remoteBaseMapPmtilesUri =
-    'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles';
 
 @Riverpod(keepAlive: true)
 BaseMapPmtilesRepository baseMapPmtilesRepository(Ref ref) =>
     BaseMapPmtilesRepository();
 
 class BaseMapPmtilesRepository {
+  const BaseMapPmtilesRepository();
+
   /// Returns a MapLibre vector source URI for the base map PMTiles.
   ///
   /// iOS/Android: `pmtiles://file://...` from [AssetsUtil].
-  /// Other platforms: remote HTTPS PMTiles.
   Future<String> resolveSourceUri() async {
     if (kIsWeb || !(Platform.isIOS || Platform.isAndroid)) {
-      return _remoteBaseMapPmtilesUri;
+      throw UnimplementedError('PMTiles is not supported on this platform.');
     }
 
     final absolutePath = AssetsUtil.resolveLocalPath(
       fileName: _baseMapPmtilesFileName,
     );
-    return 'pmtiles://${Uri.file(absolutePath)}';
+
+    final file = File(absolutePath);
+    if (!file.existsSync()) {
+      throw StateError('Base PMTiles file not found: $absolutePath');
+    }
+    final info = await file.stat();
+    if (info.size == 0) {
+      throw StateError('Base PMTiles file is empty: $absolutePath');
+    }
+    return 'pmtiles://file://${Uri.file(absolutePath)}';
   }
 }
