@@ -23,6 +23,8 @@
 		2151DA831C4D53D6DDA591BA /* EQMonitorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 295B9FA31E1F0C562110F4A0 /* EQMonitorAPI */; };
 		2709A8772F1FFFF400FBE962 /* LiveActivityUtil.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
 		2709A8782F20000D00FBE962 /* LiveActivityUtil.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A1B2C3D42F6A000100000002 /* AssetsUtil.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B2C3D42F6A000100000001 /* AssetsUtil.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
+		A1B2C3D42F6A000100000003 /* AssetsUtil.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1B2C3D42F6A000100000001 /* AssetsUtil.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		27D62BBE2FF6E75000EF6A27 /* AppIntentExtension.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 27D62BB52FF6E75000EF6A27 /* AppIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2BD20D9F1CCF6217A42DB419 /* EarthquakeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5330C1132EC785A60DE272 /* EarthquakeAPIClient.swift */; };
 		2C755225A37C4C6116012293 /* EarthquakeDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */; };
@@ -131,6 +133,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				2709A8782F20000D00FBE962 /* LiveActivityUtil.xcframework in Embed Frameworks */,
+				A1B2C3D42F6A000100000003 /* AssetsUtil.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -143,6 +146,7 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = LiveActivityUtil.xcframework; sourceTree = "<group>"; };
+		A1B2C3D42F6A000100000001 /* AssetsUtil.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = AssetsUtil.xcframework; sourceTree = "<group>"; };
 		27D62BB52FF6E75000EF6A27 /* AppIntentExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = AppIntentExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IntensityValue.swift; sourceTree = "<group>"; };
 		3993800175F9E9F9140BCEE0 /* WidgetModelsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WidgetModelsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -293,6 +297,7 @@
 			files = (
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 				2709A8772F1FFFF400FBE962 /* LiveActivityUtil.xcframework in Frameworks */,
+				A1B2C3D42F6A000100000002 /* AssetsUtil.xcframework in Frameworks */,
 				859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -304,6 +309,7 @@
 			isa = PBXGroup;
 			children = (
 				2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */,
+				A1B2C3D42F6A000100000001 /* AssetsUtil.xcframework */,
 			);
 			path = Frameworks;
 			sourceTree = "<group>";
