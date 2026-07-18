@@ -16,4 +16,5 @@ final path = AssetsUtil.resolveLocalPath(fileName: 'earthquake_tsunami_all.pmtil
 ## Codegen
 
 - iOS bindings: `flutter build ios` 時に `hook/build.dart` が再生成
-- Android bindings: `dart run tool/jnigen.dart`（example を一度ビルドしてから）
+- Android bindings: example をビルド後に `dart run tool/jnigen.dart`
+  （Kotlin はソースではなく classes jar から要約する）

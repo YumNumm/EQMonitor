@@ -136,9 +136,7 @@ class $AssetsImagesThemeGen {
   List<AssetGenImage> get values => [dark, light];
 }
 
-class Assets {
-  const Assets._();
-
+abstract final class Assets {
   static const String kyoshinShindoColorMap =
       'assets/KyoshinShindoColorMap.json';
   static const $AssetsDebugGen debug = $AssetsDebugGen();

@@ -43,4 +43,4 @@ final class AppLinksInteractionProvider
 }
 
 String _$appLinksInteractionHash() =>
-    r'bc062fb94fc28bc0edcdf11eba16264db0ee91cc';
+    r'ef2c6c39d5343100ba12ace24e03947fc48a5c03';

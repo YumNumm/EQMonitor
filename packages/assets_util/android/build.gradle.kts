@@ -3,6 +3,7 @@ version = "1.0"
 
 plugins {
     id("com.android.library")
+    id("kotlin-android")
 }
 
 android {
@@ -17,5 +18,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    sourceSets {
+        getByName("main").java.srcDirs("src/main/kotlin")
     }
 }

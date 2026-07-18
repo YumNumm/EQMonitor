@@ -14,7 +14,7 @@ MapLibre Native Android の現行ドキュメントは次を明記している�
 - ベースマップ URI の組み立ては `BaseMapPmtilesRepository`
 - ローカル絶対パス解決は `packages/assets_util`（FlutterGen の `Assets` とは別物）
   - iOS: Native Assets + Swift FFI（`EQMAssetsUtil` / Runner `Bundle.main`）
-  - Android: Flutter plugin + Java + jnigen（`filesDir/map/` へ atomic copy、versionCode マーカー）
+  - Android: Flutter plugin + Kotlin + jnigen（`filesDir/map/` へ atomic copy、versionCode マーカー）
 - HTTPS フォールバックはしない
 - URI は `pmtiles://${Uri.file(absolutePath)}` でエンコードする
 

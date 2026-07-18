@@ -4,6 +4,20 @@ import 'package:jnigen/jnigen.dart';
 
 Future<void> main() async {
   final packageRoot = Platform.script.resolve('../');
+  final classesJar = packageRoot.resolve(
+    'example/build/assets_util/intermediates/compile_library_classes_jar/'
+    'debug/bundleLibCompileToJarDebug/classes.jar',
+  );
+  if (!File.fromUri(classesJar).existsSync()) {
+    stderr.writeln(
+      'Missing $classesJar\n'
+      'Build the example first: '
+      '(cd packages/assets_util/example && flutter build apk --debug)',
+    );
+    exitCode = 1;
+    return;
+  }
+
   await generateJniBindings(
     Config(
       outputConfig: OutputConfig(
@@ -17,7 +31,7 @@ Future<void> main() async {
         addGradleDeps: true,
         androidExample: 'example/',
       ),
-      sourcePath: [packageRoot.resolve('android/src/main/java')],
+      classPath: [classesJar],
       classes: [
         'android.content.Context',
         'net.yumnumm.assets_util.AssetsUtil',
