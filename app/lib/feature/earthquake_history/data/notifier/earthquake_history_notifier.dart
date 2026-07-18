@@ -41,6 +41,12 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
             switch (value) {
               case RealtimeEarthquakeUpsertEvent(:final record):
                 _upsertItems([repository.toEarthquakePartial(item: record)]);
+              case RealtimeEarthquakeDeleteEvent(:final eventId):
+                removeByEventId(eventId);
+              case RealtimeReadyEvent():
+                await _revalidateLatest();
+              case RealtimeEstimatedIntensityUpsertEvent():
+                await _revalidateLatest();
               case _:
                 {}
             }
@@ -217,6 +223,22 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       }
     }
     items.sort((a, b) => b.earthquake.eventId.compareTo(a.earthquake.eventId));
+    state = AsyncData(
+      PaginatedResponse(items: items, nextToken: value.nextToken),
+    );
+  }
+
+  void removeByEventId(String eventId) {
+    final value = state.value;
+    if (value == null) {
+      return;
+    }
+    final items = value.items
+        .where((item) => item.earthquake.eventId != eventId)
+        .toList();
+    if (items.length == value.items.length) {
+      return;
+    }
     state = AsyncData(
       PaginatedResponse(items: items, nextToken: value.nextToken),
     );

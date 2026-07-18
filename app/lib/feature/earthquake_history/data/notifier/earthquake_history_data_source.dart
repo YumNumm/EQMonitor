@@ -69,6 +69,20 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
               dataSource.upsertItems([
                 repository.toEarthquakePartial(item: record),
               ]);
+            case RealtimeEarthquakeDeleteEvent(:final eventId):
+              dataSource.removeByEventId(eventId);
+              ref.invalidate(
+                earthquakeHistoryDetailsProvider(eventId),
+                asReload: true,
+              );
+            case RealtimeReadyEvent():
+              await dataSource.revalidateLatest();
+            case RealtimeEstimatedIntensityUpsertEvent(:final eventId):
+              ref.invalidate(
+                earthquakeHistoryDetailsProvider(eventId),
+                asReload: true,
+              );
+              await dataSource.revalidateLatest();
             case _:
               {}
           }
@@ -311,6 +325,15 @@ class EarthquakeHistoryDataSource
             : e.earthquake.eventId.compareTo(item.earthquake.eventId) > 0,
       );
       insertItem(insertAt == -1 ? currentItems.length : insertAt, item);
+    }
+  }
+
+  void removeByEventId(String eventId) {
+    final index = notifier.values.indexWhere(
+      (e) => e.earthquake.eventId == eventId,
+    );
+    if (index != -1) {
+      removeItem(index);
     }
   }
 }

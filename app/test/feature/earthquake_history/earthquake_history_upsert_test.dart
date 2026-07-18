@@ -138,6 +138,33 @@ void main() {
     expect(values.length, 1);
     expect(values[0].earthquake.eventId, '20240101');
   });
+
+  test(
+    'removeByEventId removes a matching realtime deleted earthquake',
+    () async {
+      final repository = _FakeEarthquakeHistoryRepository(
+        items: [_makeEarthquake('20240102'), _makeEarthquake('20240101')],
+      );
+      const parameter = EarthquakeHistoryParameter.all(
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+      );
+      final dataSource = EarthquakeHistoryDataSource(
+        repository: repository,
+        parameter: parameter,
+        cacheOnlyClient: api.ApiClient(Dio()),
+      );
+      addTearDown(dataSource.dispose);
+
+      await dataSource.refresh();
+
+      dataSource.removeByEventId('20240102');
+
+      final values = dataSource.notifier.values;
+      expect(values.length, 1);
+      expect(values.single.earthquake.eventId, '20240101');
+    },
+  );
 }
 
 // ---------------------------------------------------------------------------
