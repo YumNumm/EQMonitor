@@ -20,6 +20,8 @@ class SplashPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // ensure cold-start getInitialLink runs even if main.dart listen is delayed
+    ref.listen(appLinksInteractionProvider, (_, _) {});
     useEffect(() {
       // 重い初期化はトリガーのみ行い、完了を待たずに Home へ遷移する。
       // keepAlive のためバックグラウンドでロードは継続し、各消費画面が
@@ -38,14 +40,20 @@ class SplashPage extends HookConsumerWidget {
         // 解決すればキャッシュされ、redirect が正しい値を参照できる。
         // (解決前に遷移すると AsyncLoading -> false と誤判定され、
         //  完了済みでも再起動のたびにオンボーディングが再表示される)
-        await ref.read(onboardingCompletedProvider.future);
+        //
+        // Widget / カスタムスキームの cold start では getInitialLink が
+        // 非同期のため、解決前に pending を読むと null のまま Home に留まる。
+        await Future.wait([
+          ref.read(onboardingCompletedProvider.future),
+          awaitInitialAppLinkResolved(),
+        ]);
         if (ref.read(buildConfigProvider).isBetaTesting) {
           await ref.read(betaTestingAgreedProvider.future);
         }
         if (!context.mounted) {
           return;
         }
-        context.go(const HomeRoute().location);
+        const HomeRoute().go(context);
         final pending =
             consumePendingNotificationDeepLink() ?? consumePendingAppLink();
         switch (pending) {

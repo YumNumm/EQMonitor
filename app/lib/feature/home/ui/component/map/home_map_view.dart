@@ -99,10 +99,6 @@ class _MapContent extends ConsumerWidget {
       showLocation,
     );
 
-    // MapOperationQueueScope は ValueKey(mapKey) による MapLibreMap の
-    // remount の影響を受けない位置（外側）に置く。マップ単位のオペレーション
-    // キューが remount をまたいで生存することで、旧マップへの残存操作
-    // （削除系）と新マップへの追加操作の順序がマップ単位で直列化される。
     return MapOperationQueueScope(
       child: MapLibreEventProvider(
         child: _MapLibreMapHost(
