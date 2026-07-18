@@ -8,7 +8,7 @@ void main() {
   const mapper = EqMonitorRealtimeEventMapper();
 
   group('EqMonitorRealtimeEventMapper', () {
-    test('snapshot の揺れ検知範囲を RealtimeShakeData に変換できること', () {
+    test('snapshot は現行仕様では初期同期に使わないため破棄すること', () {
       final result = mapper.map(
         WsMessage.snapshot(
           data: WsSnapshotData(
@@ -37,7 +37,7 @@ void main() {
         ),
       );
 
-      expect(result, hasLength(1));
+      expect(result, isEmpty);
     });
 
     test('earthquake delete を削除イベントに変換できること', () {
@@ -105,17 +105,24 @@ void main() {
       );
     });
 
-    test('津波 realtime event は現状未対応として明示的に破棄すること', () {
+    test('津波 realtime event を upsert signal に変換できること', () {
       final result = mapper.map(
         const WsMessage.realtime(
           data: RealtimeEventEnvelope.tsunami(
             operation: .upsert,
             eventId: 'tsunami-1',
+            groupId: 'group-1',
           ),
         ),
       );
 
-      expect(result, isEmpty);
+      expect(result, hasLength(1));
+      final event = result.single;
+      expect(event, isA<RealtimeTsunamiUpsertEvent>());
+      final upsert = event as RealtimeTsunamiUpsertEvent;
+      expect(upsert.eventId, 'tsunami-1');
+      expect(upsert.groupId, 'group-1');
+      expect(upsert.source, RealtimeSource.eqmonitor);
     });
   });
 }
