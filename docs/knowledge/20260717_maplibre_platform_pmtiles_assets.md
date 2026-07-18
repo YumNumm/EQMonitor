@@ -1,17 +1,19 @@
-# MapLibre NativeでPMTilesをPlatform Assetから参照する
+# MapLibre のローカル PMTiles は file:// 絶対パスで解決する
 
 ## ルール
 
-- iOS/AndroidのMapLibre Nativeは `pmtiles://asset://<filename>` でPMTilesを直接参照できる。
-- Flutter AssetからApplication Supportへコピーする処理は不要。
-- 単一ファイルをAndroid assets source setとiOS Bundle Resourcesへ登録し、重複管理しない。
-- Android/iOSでAsset読込に失敗してもHTTPSへフォールバックしない。
+- `pmtiles://asset://` は Android 公式でも未サポート。使わない。
+- iOS/Android のベースマップは `packages/assets_util` で絶対パスを取り、`pmtiles://file://...` にする。
+- Flutter Asset へのコピー経路や MethodChannel は使わない（FFI / JNI）。
+- HTTPS へのサイレントフォールバックはしない。
+- 将来の Background Assets / PAD は `assets_util` 内で差し替える。
 
 ## 構成確認
 
 ```bash
-rg -n "earthquake_tsunami_all.pmtiles|assets/platform" \
+rg -n "earthquake_tsunami_all.pmtiles|pmtiles://|assets_util" \
+  app/lib/feature/map \
+  packages/assets_util \
   app/android/app/build.gradle.kts \
-  app/ios/Runner.xcodeproj/project.pbxproj \
-  app/lib/feature/map/data/provider/map_style_util.dart
+  app/ios/Runner.xcodeproj/project.pbxproj
 ```

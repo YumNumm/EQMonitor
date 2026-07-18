@@ -1295,6 +1295,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  jnigen:
+    dependency: transitive
+    description:
+      name: jnigen
+      sha256: "6079cbd103ac24892f597af5be17c43f817b93cb25acb3b51197684f0b102e87"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.16.0"
   json_annotation:
     dependency: transitive
     description:
@@ -1347,10 +1355,10 @@ packages:
     dependency: transitive
     description:
       name: libserialport_plus
-      sha256: "2970dad57c72fc9427af8f3ec1826a301be1a70861fa7e88594e4cc882af5649"
+      sha256: b6e55f5284fe6c4ac18cc309591a532e77fc8a7ab8518b6195948de0d2b31902
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.2"
+    version: "1.0.1"
   list_counter:
     dependency: transitive
     description:

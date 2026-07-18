@@ -1,0 +1,17 @@
+name: assets_util_example
+publish_to: "none"
+
+environment:
+  sdk: ^3.11.0
+  flutter: ^3.44.0
+
+resolution: workspace
+
+dependencies:
+  assets_util:
+    path: ../
+  flutter:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

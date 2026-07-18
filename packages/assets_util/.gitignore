@@ -1,0 +1,16 @@
+.dart_tool/
+.packages
+build/
+pubspec.lock
+*.iml
+.idea/
+android/.gradle/
+android/local.properties
+ios/.build/
+*.xcframework/
+!../../app/ios/Runner/Frameworks/
+
+example/.dart_tool/
+example/build/
+example/.flutter-plugins-dependencies
+build/

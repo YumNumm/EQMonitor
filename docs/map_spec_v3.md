@@ -11,7 +11,7 @@
 | 項目 | 値 |
 |------|-----|
 | ライブラリ | MapLibre GL (flutter-maplibre 0.3.x) |
-| タイルソース | iOS/Android: `pmtiles://asset://earthquake_tsunami_all.pmtiles`、macOS/Web: `pmtiles://https://v2.map.eqmonitor.app/all.pmtiles` (ベクタータイル) |
+| タイルソース | iOS/Android: `pmtiles://file://...`（`assets_util` で解決した絶対パス）、macOS/Web: `pmtiles://https://v2.map.eqmonitor.app/all.pmtiles` (ベクタータイル) |
 | スタイル | ローカルファイルに書き出して参照 (ダーク/ライト別) |
 | グリフ | `https://glyphs.geolonia.com/{fontstack}/{range}.pbf` |
 

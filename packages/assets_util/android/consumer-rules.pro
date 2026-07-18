@@ -1,0 +1,1 @@
+-keep class net.yumnumm.assets_util.** { *; }
