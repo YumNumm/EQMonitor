@@ -142,6 +142,13 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   const DebugSharedPreferencesRoute().push<void>(context),
             ),
+            ListTile(
+              title: const Text('SecureStorage'),
+              subtitle: const Text('保存されている Key-Value の一覧・編集'),
+              leading: const Icon(Icons.lock_outline),
+              onTap: () async =>
+                  const DebugSecureStorageRoute().push<void>(context),
+            ),
             Builder(
               builder: (context) {
                 final isDisabled =
