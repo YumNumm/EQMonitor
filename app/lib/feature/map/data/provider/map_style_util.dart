@@ -4,16 +4,23 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/core/theme/model/map_colors.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
-import 'package:flutter/foundation.dart';
+import 'package:eqmonitor/feature/map/data/repository/base_map_pmtiles_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'map_style_util.g.dart';
 
 @Riverpod(keepAlive: true)
-MapStyleUtil mapStyleUtil(Ref ref) => MapStyleUtil();
+MapStyleUtil mapStyleUtil(Ref ref) => MapStyleUtil(
+  baseMapPmtilesRepository: ref.watch(baseMapPmtilesRepositoryProvider),
+);
 
 class MapStyleUtil {
+  MapStyleUtil({required BaseMapPmtilesRepository baseMapPmtilesRepository})
+    : _baseMapPmtilesRepository = baseMapPmtilesRepository;
+
+  final BaseMapPmtilesRepository _baseMapPmtilesRepository;
+
   Future<String> _saveStyleJson(Map<String, dynamic> json) async {
     final jsonStr = jsonEncode(json);
     final hash = sha256.convert(utf8.encode(jsonStr)).toString();
@@ -29,13 +36,7 @@ class MapStyleUtil {
   }
 
   Future<String> getStyle({required MapColors mapColors}) async {
-    final mapSourceUrl = kIsWeb
-        ? 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles'
-        : switch (defaultTargetPlatform) {
-            .android ||
-            .iOS => 'pmtiles://asset://earthquake_tsunami_all.pmtiles',
-            _ => 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
-          };
+    final mapSourceUrl = await _baseMapPmtilesRepository.resolveSourceUri();
     final json = {
       'version': 8,
       'name': 'EQMonitor Style',

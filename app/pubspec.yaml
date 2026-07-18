@@ -16,9 +16,7 @@ dependency_overrides:
   freezed: 3.2.6-dev.1
   mockito: 5.6.4
   flutter_inappwebview: 6.2.0-beta.3
-  # https://github.com/juliansteenbakker/flutter_secure_storage/issues/1119
   flutter_secure_storage_darwin: 0.2.0
-  # chuck_interceptor が引く permission_handler_apple を SwiftPM 対応版(9.4.8+)に固定する
   permission_handler_apple: ^9.4.8
   maplibre:
     git:
@@ -182,6 +180,8 @@ dependencies:
   workflows:
     path: ../packages/workflows
   flutter_inappwebview: ^6.2.0-beta.3
+  assets_util:
+    path: ../packages/assets_util
 
 dev_dependencies:
   build_runner: ^2.11.1
