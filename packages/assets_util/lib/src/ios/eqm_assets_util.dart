@@ -1809,11 +1809,7 @@ late final _sel_allocWithZone_ = objc.registerName("allocWithZone:");
 final _objc_msgSend_1cwp428 = objc.msgSendPointer.cast<ffi.NativeFunction<ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.NSZone> )>>().asFunction<ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.NSZone> )>();
 late final _sel_alloc = objc.registerName("alloc");
 
-/// Platform-managed local assets resolver for EQMonitor.
-/// Resolves absolute filesystem paths for files bundled in the Runner app
-/// (not this XCFramework’s own bundle). Future Background Assets support
-/// should replace the implementation of [resolveLocalPath] while keeping
-/// the same ObjC surface for Dart FFI.
+/// EQMAssetsUtil
 extension type EQMAssetsUtil._(objc.ObjCObject object$) implements objc.ObjCObject,objc.NSObject {
   /// Constructs a [EQMAssetsUtil] that points to the same underlying object as [other].
   EQMAssetsUtil.as(objc.ObjCObject other) : object$ = other {
@@ -1864,12 +1860,7 @@ extension EQMAssetsUtil$Methods on EQMAssetsUtil {
   }
 
 
-  /// Returns an absolute path to a file in the main app bundle.
-/// \param fileName File name including extension (e.g. <code>earthquake_tsunami_all.pmtiles</code>).
-/// 
-/// 
-/// returns:
-/// Absolute path, or <code>nil</code> if the resource is missing.
+  /// resolveLocalPathWithFileName:
   objc.NSString? resolveLocalPathWithFileName(objc.NSString fileName) {
     final $ret = _objc_msgSend_1sotr3r(object$.ref.pointer, _sel_resolveLocalPathWithFileName_, fileName.ref.pointer);
     return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
