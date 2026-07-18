@@ -11,15 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Copies a platform asset into app-private storage and returns its absolute path.
- *
- * <p>Reuses an existing copy when the marker matches the current app versionCode. Writes via a
- * temporary file then renames atomically to avoid partial files.
- *
- * <p>Note: assets may be compressed in the APK, so {@link android.content.res.AssetManager#openFd}
- * is not used.
- */
 public final class AssetsUtil {
   private AssetsUtil() {}
 
