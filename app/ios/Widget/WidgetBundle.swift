@@ -12,7 +12,6 @@ import SwiftUI
 struct EQMonitorWidgetBundle: WidgetBundle {
     var body: some Widget {
         EarthquakeWidget()
-        MapEarthquakeWidget()
         if #available(iOS 16.1, *) {
             EewLiveActivityWidget()
             ShakeDetectionLiveActivityWidget()

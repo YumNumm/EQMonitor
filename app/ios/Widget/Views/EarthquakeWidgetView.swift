@@ -4,7 +4,6 @@
 
 import SwiftUI
 import WidgetKit
-import AppIntents
 
 struct EarthquakeWidgetView: View {
     let entry: EarthquakeEntry
@@ -86,34 +85,12 @@ struct SmallWidgetView: View {
                 availableHeight: Double(geometry.size.height)
             )
             VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 6) {
-                    Image(systemName: "waveform.path.ecg")
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(Color.eqBrand)
-                        .widgetAccentable()
-
-                    Text(headerTitle)
-                        .font(AppFonts.flex(size: 11, weight: .semibold))
-                        .foregroundStyle(Color.eqTextSecondary)
-                        .lineLimit(1)
-
-                    Spacer()
-
-                    Button(intent: RefreshWidgetIntent()) {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(Color.eqBrand)
-                    }
-                    .buttonStyle(.plain)
-                }
-                .padding(.horizontal, 12)
-                .padding(.top, 10)
-                .padding(.bottom, 6)
-
-                Rectangle()
-                    .fill(Color.eqOutlineSoft)
-                    .frame(height: 0.5)
-                    .padding(.horizontal, 12)
+                WidgetHeader(
+                    title: headerTitle,
+                    updateTime: entry.date,
+                    width: geometry.size.width,
+                    compact: true
+                )
 
                 if let error = entry.error {
                     EQErrorView(error: error)
@@ -127,7 +104,8 @@ struct SmallWidgetView: View {
                             EarthquakeDetailLink(eventId: eq.id) {
                                 CompactEarthquakeRow(
                                     earthquake: eq,
-                                    availableWidth: geometry.size.width - 24
+                                    availableWidth: geometry.size.width - 24,
+                                    intensityBadgeSize: 26
                                 )
                             }
                         }
@@ -172,53 +150,28 @@ private struct WidgetHeader: View {
     let title: String
     let updateTime: Date
     let width: CGFloat
+    var compact: Bool = false
 
     var body: some View {
-        HStack(spacing: 8) {
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [Color.eqBrand, Color.eqBrand.opacity(0.7)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 30, height: 30)
-
-                Image(systemName: "waveform.path.ecg")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(.white)
-            }
-            .widgetAccentable()
-
-            VStack(alignment: .leading, spacing: 1) {
+        HStack(alignment: .center, spacing: 8) {
+            VStack(alignment: .leading, spacing: compact ? 1 : 2) {
                 Text(title)
-                    .font(AppFonts.flex(size: 15, weight: .bold))
-                    .foregroundStyle(Color.eqTextPrimary)
+                    .font(AppFonts.flex(size: compact ? 12 : 15, weight: .bold))
+                    .foregroundStyle(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
 
                 Text("更新 \(formattedTime)")
-                    .font(AppFonts.code(size: 10))
-                    .foregroundStyle(Color.eqTextTertiary)
+                    .font(AppFonts.code(size: compact ? 9 : 10))
+                    .foregroundStyle(.white.opacity(0.7))
             }
 
-            Spacer()
-
-            Button(intent: RefreshWidgetIntent()) {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Color.eqBrand)
-                    .frame(width: 30, height: 30)
-                    .eqGlass(cornerRadius: 15)
-            }
-            .buttonStyle(.plain)
+            Spacer(minLength: 0)
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 12)
-        .padding(.bottom, 10)
-        .frame(width: width)
+        .padding(.horizontal, compact ? 12 : 16)
+        .padding(.vertical, compact ? 8 : 10)
+        .frame(width: width, alignment: .leading)
+        .background(Color.eqBrand)
     }
 
     private var formattedTime: String {
@@ -275,7 +228,7 @@ struct EarthquakeRow: View {
             Spacer(minLength: 4)
 
             Text(earthquake.magnitude)
-                .font(AppFonts.code(size: 15, weight: .bold))
+                .font(AppFonts.code(size: 12, weight: .bold))
                 .foregroundStyle(Color.eqTextPrimary)
         }
         .padding(.horizontal, 10)
@@ -292,6 +245,7 @@ struct EarthquakeRow: View {
 struct CompactEarthquakeRow: View {
     let earthquake: EarthquakeDisplayItem
     let availableWidth: CGFloat
+    var intensityBadgeSize: CGFloat = 26
 
     private var subtitle: String {
         var parts = [earthquake.formattedTime]
@@ -307,7 +261,7 @@ struct CompactEarthquakeRow: View {
                 intensity: earthquake.formattedIntensity,
                 backgroundColor: earthquake.intensityBackgroundColor,
                 textColor: earthquake.intensityTextColor,
-                size: 32
+                size: intensityBadgeSize
             )
 
             VStack(alignment: .leading, spacing: 1) {
@@ -334,7 +288,7 @@ struct CompactEarthquakeRow: View {
             Spacer(minLength: 2)
 
             Text(earthquake.magnitude)
-                .font(AppFonts.code(size: 12, weight: .bold))
+                .font(AppFonts.code(size: 10, weight: .bold))
                 .foregroundStyle(Color.eqTextPrimary)
         }
         .padding(.horizontal, 8)
