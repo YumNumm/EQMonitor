@@ -8,23 +8,21 @@
 import SwiftUI
 import WidgetKit
 
-// MARK: - EEW用カラー定義（共通定義のエイリアス）
+// MARK: - EEW用カラー定義
 
 private let eewSecondaryTextColor: Color = liveActivitySecondaryTextColor
 private let eewHeaderSecondaryTextColor: Color = liveActivityHeaderSecondaryTextColor
 
-// MARK: - EEW用スタイル（共通スタイルのエイリアス）
+// MARK: - EEW用スタイル
 
 @available(iOS 16.1, *)
 extension View {
-    /// EEW用ラベルスタイルを適用（共通スタイルのラッパー）
     func eewLabelStyle(_ variant: LiveActivityLabelStyle.Variant = .primary) -> some View {
         liveActivityLabelStyle(variant)
     }
 }
 
-// MARK: - Header Container (HIG準拠: インセットコンテナ形状)
-// "When separating a block of content, place it in an inset container shape"
+// MARK: - Header Container
 
 @available(iOS 16.1, *)
 struct HeaderContainer: View {
@@ -67,7 +65,7 @@ struct HeaderContainer: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 // 主要動到達までのカウントダウン
-                if let arrivalDate = arrivalDate, arrivalDate > Date() {
+                if let arrivalDate = arrivalDate, arrivalDate > Date()  {
                     VStack(alignment: .trailing, spacing: 0) {
                         Text("主要動到達まで")
                             .eewLabelStyle(.header)
@@ -146,7 +144,6 @@ struct HeaderContainer: View {
 struct EewLockScreenView: View {
     let state: EewContentState
 
-    // HIG: The standard layout margin for Live Activities on the Lock Screen is 14 points.
     private let standardMargin: CGFloat = 14
 
     var body: some View {
@@ -206,7 +203,7 @@ struct EewLockScreenView: View {
         return formatter.string(from: date)
     }
 
-    // MARK: - Details (震源地, M, 深さ, 発生時刻を縦に)
+    // MARK: - Details (震源地, M, 深さ, 発生時刻)
 
     private var detailsView: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -522,4 +519,3 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
             .previewDisplayName("Minimal - 予報")
     }
 }
-
