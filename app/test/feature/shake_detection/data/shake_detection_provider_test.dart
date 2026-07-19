@@ -208,6 +208,20 @@ void main() {
       expect(subscription.read().map((event) => event.eventId), ['ws-new']);
     });
 
+    test('RESTで採用したcanonical snapshotをreactiveに公開すること', () async {
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      restCompleters[0].complete(
+        Success(domainSnapshot(revision: 7, eventIds: ['rest-baseline'])),
+      );
+      await pumpEventQueue();
+
+      final accepted = container.read(shakeDetectionAcceptedSnapshotProvider);
+      expect(accepted?.revision, 7);
+      expect(accepted?.events.single.eventId, 'rest-baseline');
+    });
+
     test('新しいsnapshotのevents全体で置換すること', () async {
       controller.add(shakeRealtime(revision: 1, eventIds: ['a', 'b']));
       controller.add(shakeRealtime(revision: 2, eventIds: ['b', 'c']));

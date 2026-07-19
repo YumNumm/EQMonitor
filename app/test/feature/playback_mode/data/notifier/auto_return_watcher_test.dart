@@ -7,9 +7,12 @@ import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_statu
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
-import 'package:eqmonitor/feature/playback_mode/data/auto_return_policy.dart';
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_to_realtime_notifier.dart';
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_provider.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -39,15 +42,12 @@ final class MutableWsStatus extends EqMonitorWsStatus {
   }
 }
 
-final class RecordingAutoReturnPolicy extends AutoReturnPolicy {
-  final decisions = <bool>[];
-
+final class MutableAcceptedShakeSnapshot
+    extends ShakeDetectionAcceptedSnapshot {
   @override
-  bool shouldReturnToRealtime(RealtimeEvent event) {
-    final decision = super.shouldReturnToRealtime(event);
-    decisions.add(decision);
-    return decision;
-  }
+  ShakeDetectionSnapshot? build() => null;
+
+  void publish(ShakeDetectionSnapshot snapshot) => state = snapshot;
 }
 
 RealtimeShakeEventData watcherShake(String eventId) => RealtimeShakeEventData(
@@ -77,24 +77,50 @@ RealtimeEvent watcherSnapshot({
   source: RealtimeSource.eqmonitor,
 );
 
+ShakeDetectionSnapshot acceptedSnapshot({
+  required int revision,
+  required List<String> eventIds,
+}) => ShakeDetectionSnapshot(
+  revision: revision,
+  responseAt: now,
+  events: eventIds
+      .map(
+        (eventId) => ShakeDetectionEvent(
+          eventId: eventId,
+          serialNo: 1,
+          createdAt: now,
+          updatedAt: now,
+          expiresAt: now.add(const Duration(minutes: 1)),
+          level: api.ShakeDetectionLevel.medium,
+          pointCount: 1,
+          minLat: 35,
+          maxLat: 36,
+          minLng: 139,
+          maxLng: 140,
+          changeReasons: const ['new_event'],
+        ),
+      )
+      .toList(growable: false),
+);
+
 void main() {
   group('AutoReturnWatcher', () {
     late StreamController<RealtimeEvent> controller;
     late ProviderContainer container;
-    late RecordingAutoReturnPolicy policy;
     late ProviderSubscription<void> watcherSubscription;
 
     setUp(() async {
       controller = StreamController<RealtimeEvent>.broadcast(sync: true);
-      policy = RecordingAutoReturnPolicy();
       container = ProviderContainer(
         overrides: [
           realtimeEventsProvider.overrideWith(
             () => StubRealtimeEvents(controller.stream),
           ),
           autoReturnToRealtimeProvider.overrideWith(EnabledAutoReturn.new),
-          autoReturnPolicyProvider.overrideWithValue(policy),
           eqMonitorWsStatusProvider.overrideWith(MutableWsStatus.new),
+          shakeDetectionAcceptedSnapshotProvider.overrideWith(
+            MutableAcceptedShakeSnapshot.new,
+          ),
         ],
       );
       watcherSubscription = container.listen(
@@ -110,8 +136,11 @@ void main() {
       await controller.close();
     });
 
-    test('通常更新では維持し新しい揺れ検知追加で通常再生へ戻ること', () async {
-      controller.add(watcherSnapshot(revision: 1, eventIds: ['shake-1']));
+    test('REST baseline後の初回の新しいWS eventで通常再生へ戻ること', () async {
+      final accepted =
+          container.read(shakeDetectionAcceptedSnapshotProvider.notifier)
+              as MutableAcceptedShakeSnapshot;
+      accepted.publish(acceptedSnapshot(revision: 1, eventIds: []));
       await pumpEventQueue();
       container
           .read(appClockProvider.notifier)
@@ -119,59 +148,64 @@ void main() {
 
       controller.add(watcherSnapshot(revision: 2, eventIds: ['shake-1']));
       await pumpEventQueue();
-      expect(container.read(appClockProvider), isA<TimeShiftTimeMode>());
-
-      controller.add(
-        watcherSnapshot(revision: 3, eventIds: ['shake-1', 'shake-2']),
-      );
-      await pumpEventQueue();
-      expect(policy.decisions, [false, false, true]);
       expect(container.read(appClockProvider), isA<RealtimeTimeMode>());
     });
 
-    test('再接続後の初回snapshotをbaselineにして誤復帰しないこと', () async {
-      controller.add(watcherSnapshot(revision: 1, eventIds: ['shake-old']));
+    test('通常再生復帰後もaccepted baselineを維持し次の新規eventで戻ること', () async {
+      final accepted =
+          container.read(shakeDetectionAcceptedSnapshotProvider.notifier)
+              as MutableAcceptedShakeSnapshot;
+      accepted.publish(acceptedSnapshot(revision: 1, eventIds: ['shake-old']));
       await pumpEventQueue();
       container
           .read(appClockProvider.notifier)
           .enterTimeShift(const Duration(minutes: -3));
+
+      controller.add(
+        watcherSnapshot(revision: 2, eventIds: ['shake-old', 'shake-first']),
+      );
+      await pumpEventQueue();
+      expect(container.read(appClockProvider), isA<RealtimeTimeMode>());
+
+      final clock = container.read(appClockProvider.notifier);
+      clock.enterTimeShift(const Duration(minutes: -3));
+      await pumpEventQueue();
+      controller.add(
+        watcherSnapshot(
+          revision: 3,
+          eventIds: ['shake-old', 'shake-first', 'shake-second'],
+        ),
+      );
+      await pumpEventQueue();
+
+      expect(container.read(appClockProvider), isA<RealtimeTimeMode>());
+    });
+
+    test('再接続後のREST baselineと次の新しいWS eventを比較すること', () async {
+      final accepted =
+          container.read(shakeDetectionAcceptedSnapshotProvider.notifier)
+              as MutableAcceptedShakeSnapshot;
+      accepted.publish(acceptedSnapshot(revision: 1, eventIds: ['old-life']));
+      await pumpEventQueue();
 
       final status =
           container.read(eqMonitorWsStatusProvider.notifier) as MutableWsStatus;
       status
         ..setPhase(WsPhase.disconnected)
         ..setPhase(WsPhase.connected);
+      accepted.publish(
+        acceptedSnapshot(revision: 10, eventIds: ['rest-current']),
+      );
+      await pumpEventQueue();
+      container
+          .read(appClockProvider.notifier)
+          .enterTimeShift(const Duration(minutes: -3));
       controller.add(
-        watcherSnapshot(
-          revision: 2,
-          eventIds: ['shake-old', 'shake-reconnected'],
-        ),
+        watcherSnapshot(revision: 11, eventIds: ['rest-current', 'ws-new']),
       );
       await pumpEventQueue();
 
-      expect(container.read(appClockProvider), isA<TimeShiftTimeMode>());
-    });
-
-    test('通常再生復帰後はbaselineをresetして次回再生で誤復帰しないこと', () async {
-      controller.add(watcherSnapshot(revision: 1, eventIds: ['shake-old']));
-      await pumpEventQueue();
-
-      final clock = container.read(appClockProvider.notifier);
-      clock.enterTimeShift(const Duration(minutes: -3));
-      await pumpEventQueue();
-      clock.returnToRealtime();
-      await pumpEventQueue();
-      clock.enterTimeShift(const Duration(minutes: -3));
-      await pumpEventQueue();
-      controller.add(
-        watcherSnapshot(
-          revision: 2,
-          eventIds: ['shake-old', 'shake-after-return'],
-        ),
-      );
-      await pumpEventQueue();
-
-      expect(container.read(appClockProvider), isA<TimeShiftTimeMode>());
+      expect(container.read(appClockProvider), isA<RealtimeTimeMode>());
     });
   });
 }

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auto_return_policy.g.dart';
@@ -41,6 +42,18 @@ class AutoReturnPolicy {
       eventIds: {...baseline.eventIds, ...eventIds},
     );
     return hasNewEvent;
+  }
+
+  void acceptShakeSnapshot(ShakeDetectionSnapshot snapshot) {
+    final baseline = _shakeBaseline;
+    if (baseline != null && snapshot.revision <= baseline.revision) {
+      return;
+    }
+    final eventIds = snapshot.events.map((event) => event.eventId);
+    _shakeBaseline = ShakeSnapshotBaseline(
+      revision: snapshot.revision,
+      eventIds: {...?baseline?.eventIds, ...eventIds},
+    );
   }
 
   void resetShakeBaseline() {

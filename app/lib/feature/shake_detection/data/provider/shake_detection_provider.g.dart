@@ -11,6 +11,66 @@ part of 'shake_detection_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
+@ProviderFor(ShakeDetectionAcceptedSnapshot)
+final shakeDetectionAcceptedSnapshotProvider =
+    ShakeDetectionAcceptedSnapshotProvider._();
+
+final class ShakeDetectionAcceptedSnapshotProvider
+    extends
+        $NotifierProvider<
+          ShakeDetectionAcceptedSnapshot,
+          ShakeDetectionSnapshot?
+        > {
+  ShakeDetectionAcceptedSnapshotProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'shakeDetectionAcceptedSnapshotProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$shakeDetectionAcceptedSnapshotHash();
+
+  @$internal
+  @override
+  ShakeDetectionAcceptedSnapshot create() => ShakeDetectionAcceptedSnapshot();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ShakeDetectionSnapshot? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ShakeDetectionSnapshot?>(value),
+    );
+  }
+}
+
+String _$shakeDetectionAcceptedSnapshotHash() =>
+    r'1e319602fe155a88a32c72240d3fd28900a073ae';
+
+abstract class _$ShakeDetectionAcceptedSnapshot
+    extends $Notifier<ShakeDetectionSnapshot?> {
+  ShakeDetectionSnapshot? build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref as $Ref<ShakeDetectionSnapshot?, ShakeDetectionSnapshot?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<ShakeDetectionSnapshot?, ShakeDetectionSnapshot?>,
+              ShakeDetectionSnapshot?,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(ShakeDetection)
 final shakeDetectionProvider = ShakeDetectionProvider._();
 
@@ -43,7 +103,7 @@ final class ShakeDetectionProvider
   }
 }
 
-String _$shakeDetectionHash() => r'1434253db9b440329808087c16beb968ae731c06';
+String _$shakeDetectionHash() => r'767b3cda3de475432fc0e104d9cd8c4466c9e25c';
 
 abstract class _$ShakeDetection extends $Notifier<List<ShakeDetectionEvent>> {
   List<ShakeDetectionEvent> build();

@@ -61,7 +61,7 @@ final class AutoReturnWatcherProvider
   }
 }
 
-String _$autoReturnWatcherHash() => r'3e37246a79b37d0b748e999f8ecd7b0b8b68fe4b';
+String _$autoReturnWatcherHash() => r'17f78d6d8509dd4532381352a146db699ad8d65d';
 
 /// タイムシフト/リプレイ再生中に、ライブの EEW・揺れ検知が
 /// 発生したら通常再生へ自動復帰させる常駐ウォッチャ。

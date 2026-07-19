@@ -28,6 +28,13 @@ REST 同期には世代番号を持たせ、後から開始した同期だけが
 - EEW 相関はサーバーが決めた `correlatedEew.eventId` を `correlatedEewEventId` として使う。アプリで走時表相関を再実装しない。
 - 未知 level を `Weaker` などの弱い値へフォールバックしない。`FormatException` として扱い、REST では typed failure に変換して契約違反を記録する。
 
+## タイムシフトの自動復帰
+
+- 新しい揺れ検知で realtime へ自動復帰する判定は、生の WebSocket snapshot だけで初期化しない。realtime 中に revision reducer が採用した REST / WebSocket 共通の canonical snapshot を baseline にする。
+- realtime へ通常復帰しただけでは baseline を破棄しない。破棄すると、次の time-shift で最初の新規 event を baseline と誤認して見逃す。
+- WebSocket disconnect では接続 lifecycle が変わるため baseline を破棄する。reconnect 後に採用した REST snapshot で baseline を再確立し、それより新しい revision の未観測 event だけを復帰理由にする。
+- revision が進んでも既知 event の更新・削除だけなら復帰しない。同じ接続 lifecycle で一度観測した event ID の再出現も新規追加として扱わない。
+
 ## 検証コマンド
 
 canonical snapshot migration の通常 gate は次を repository root から実行する。
@@ -37,6 +44,7 @@ mise exec -- dart test packages/eqmonitor_websocket/test/ws_message_test.dart
 (cd packages/eqmonitor_api && mise exec -- dart test --exclude-tags integration)
 mise exec -- flutter test app/test/core/realtime
 mise exec -- flutter test app/test/feature/shake_detection
+mise exec -- flutter test app/test/feature/playback_mode
 mise exec -- dart analyze packages/eqmonitor_websocket packages/eqmonitor_api app/lib/core/realtime app/lib/feature/shake_detection
 git --no-pager diff --check
 git --no-pager status --short

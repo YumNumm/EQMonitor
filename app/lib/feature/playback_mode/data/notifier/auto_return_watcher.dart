@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:eqmonitor/feature/playback_mode/data/auto_return_policy.dart';
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_to_realtime_notifier.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auto_return_watcher.g.dart';
@@ -28,11 +29,11 @@ class AutoReturnWatcher extends _$AutoReturnWatcher {
       }
     });
 
-    ref.listen(isRealtimeModeProvider, (previous, next) {
-      if (previous == false && next) {
-        policy.resetShakeBaseline();
+    ref.listen(shakeDetectionAcceptedSnapshotProvider, (_, next) {
+      if (next != null && ref.read(isRealtimeModeProvider)) {
+        policy.acceptShakeSnapshot(next);
       }
-    });
+    }, fireImmediately: true);
 
     ref.listen(realtimeEventsProvider, (_, next) {
       next.whenData((event) {

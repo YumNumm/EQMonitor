@@ -15,13 +15,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'shake_detection_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class ShakeDetection extends _$ShakeDetection {
-  ShakeDetectionSnapshot? _snapshot;
+class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
   bool _readySeen = false;
   int _synchronizationGeneration = 0;
 
   @override
-  List<ShakeDetectionEvent> build() {
+  ShakeDetectionSnapshot? build() {
     ref.onDispose(invalidateSynchronization);
 
     ref.listen(eqMonitorWsStatusProvider, (_, next) {
@@ -34,8 +33,7 @@ class ShakeDetection extends _$ShakeDetection {
     ref.listen(isRealtimeModeProvider, (previous, next) async {
       if (!next) {
         invalidateSynchronization();
-        _snapshot = null;
-        state = [];
+        state = null;
         return;
       }
       if (next && previous == false && _readySeen) {
@@ -90,10 +88,9 @@ class ShakeDetection extends _$ShakeDetection {
 
     if (!ref.read(isRealtimeModeProvider)) {
       invalidateSynchronization();
-      _snapshot = null;
-      return [];
+      return null;
     }
-    return _snapshot?.events ?? [];
+    return null;
   }
 
   Future<void> synchronizeFromRest() async {
@@ -128,14 +125,20 @@ class ShakeDetection extends _$ShakeDetection {
 
   void applySnapshot(ShakeDetectionSnapshot incoming) {
     final reducer = ref.read(shakeDetectionSnapshotReducerProvider);
-    final selected = reducer.selectNewer(
-      current: _snapshot,
-      incoming: incoming,
-    );
-    if (identical(selected, _snapshot)) {
+    final current = state;
+    final selected = reducer.selectNewer(current: current, incoming: incoming);
+    if (identical(selected, current)) {
       return;
     }
-    _snapshot = selected;
-    state = selected.events;
+    state = selected;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class ShakeDetection extends _$ShakeDetection {
+  @override
+  List<ShakeDetectionEvent> build() {
+    return ref.watch(shakeDetectionAcceptedSnapshotProvider)?.events ??
+        const <ShakeDetectionEvent>[];
   }
 }
