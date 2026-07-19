@@ -63,6 +63,7 @@ ShakeDetectionEvent _shake({
   maxLat: centerLat + halfSize,
   minLng: centerLng - halfSize,
   maxLng: centerLng + halfSize,
+  changeReasons: const ['new_event'],
 );
 
 class _StubEewAliveTelegram extends EewAliveTelegram {

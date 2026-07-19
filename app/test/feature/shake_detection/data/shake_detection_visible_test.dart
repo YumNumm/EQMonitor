@@ -20,6 +20,7 @@ ShakeDetectionEvent _ev({
   maxLat: 36,
   minLng: 138,
   maxLng: 140,
+  changeReasons: const ['new_event'],
   mergedEewEventId: mergedEewEventId,
 );
 

@@ -14,7 +14,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShakeDetectionEvent {
 
- String get eventId; int? get serialNo; DateTime get createdAt; DateTime? get updatedAt; DateTime? get expiresAt; ShakeDetectionLevel get level; bool? get isReplay; int get pointCount; double get minLat; double get maxLat; double get minLng; double get maxLng; List<String> get changeReasons;/// Task 6 で canonical correlation/expiry consumer へ移行後に削除する。
+ String get eventId;/// Legacy realtime producer の移行完了まで nullable。REST repository は必ず設定する。
+ int? get serialNo; DateTime get createdAt; DateTime? get updatedAt; DateTime? get expiresAt; ShakeDetectionLevel get level;/// Task 6 で canonical snapshot consumer へ移行後に削除する。
+ bool? get isReplay; int get pointCount; double get minLat; double get maxLat; double get minLng; double get maxLng; List<String> get changeReasons;/// Task 6 で canonical correlation/expiry consumer へ移行後に削除する。
  String? get mergedEewEventId; String? get correlatedEewEventId;
 /// Create a copy of ShakeDetectionEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -221,15 +223,17 @@ return $default(_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_th
 
 
 class _ShakeDetectionEvent implements ShakeDetectionEvent {
-  const _ShakeDetectionEvent({required this.eventId, this.serialNo, required this.createdAt, this.updatedAt, this.expiresAt, required this.level, this.isReplay, required this.pointCount, required this.minLat, required this.maxLat, required this.minLng, required this.maxLng, final  List<String> changeReasons = const <String>[], this.mergedEewEventId, this.correlatedEewEventId}): _changeReasons = changeReasons;
+  const _ShakeDetectionEvent({required this.eventId, this.serialNo, required this.createdAt, this.updatedAt, this.expiresAt, required this.level, this.isReplay, required this.pointCount, required this.minLat, required this.maxLat, required this.minLng, required this.maxLng, required final  List<String> changeReasons, this.mergedEewEventId, this.correlatedEewEventId}): _changeReasons = changeReasons;
   
 
 @override final  String eventId;
+/// Legacy realtime producer の移行完了まで nullable。REST repository は必ず設定する。
 @override final  int? serialNo;
 @override final  DateTime createdAt;
 @override final  DateTime? updatedAt;
 @override final  DateTime? expiresAt;
 @override final  ShakeDetectionLevel level;
+/// Task 6 で canonical snapshot consumer へ移行後に削除する。
 @override final  bool? isReplay;
 @override final  int pointCount;
 @override final  double minLat;
@@ -237,7 +241,7 @@ class _ShakeDetectionEvent implements ShakeDetectionEvent {
 @override final  double minLng;
 @override final  double maxLng;
  final  List<String> _changeReasons;
-@override@JsonKey() List<String> get changeReasons {
+@override List<String> get changeReasons {
   if (_changeReasons is EqualUnmodifiableListView) return _changeReasons;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_changeReasons);

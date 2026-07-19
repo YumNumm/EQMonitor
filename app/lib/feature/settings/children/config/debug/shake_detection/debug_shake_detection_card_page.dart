@@ -34,6 +34,7 @@ class DebugShakeDetectionCardPage extends HookConsumerWidget {
       maxLat: maxLat.value,
       minLng: minLng.value,
       maxLng: maxLng.value,
+      changeReasons: const ['new_event'],
     );
 
     return Scaffold(
@@ -183,6 +184,7 @@ final List<ShakeDetectionEvent> _kSampleEvents = ShakeDetectionLevel.values
         maxLat: 40.5,
         minLng: 140.5,
         maxLng: 141.8,
+        changeReasons: const ['new_event'],
       ),
     )
     .toList();

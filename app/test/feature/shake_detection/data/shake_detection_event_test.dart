@@ -46,12 +46,14 @@ void main() {
         maxLat: 36,
         minLng: 138,
         maxLng: 140,
+        changeReasons: const ['new_event'],
       );
 
       expect(legacy.serialNo, isNull);
       expect(legacy.updatedAt, isNull);
       expect(legacy.expiresAt, isNull);
       expect(legacy.isReplay, isTrue);
+      expect(legacy.changeReasons, ['new_event']);
     });
   });
 

@@ -22,7 +22,7 @@ abstract class ShakeDetectionEvent with _$ShakeDetectionEvent {
     required double maxLat,
     required double minLng,
     required double maxLng,
-    @Default(<String>[]) List<String> changeReasons,
+    required List<String> changeReasons,
 
     /// Task 6 で canonical correlation/expiry consumer へ移行後に削除する。
     String? mergedEewEventId,

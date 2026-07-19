@@ -22,6 +22,7 @@ class _StubRealtimeEvents extends RealtimeEvents {
 RealtimeShakeData _shake({
   required String eventId,
   required DateTime createdAt,
+  List<String> changeReasons = const ['new_event'],
 }) => RealtimeShakeData(
   eventId: eventId,
   createdAt: createdAt,
@@ -32,6 +33,7 @@ RealtimeShakeData _shake({
   maxLat: 36,
   minLng: 139,
   maxLng: 140,
+  changeReasons: changeReasons,
 );
 
 ProviderContainer _container(Stream<RealtimeEvent> stream) {
@@ -67,6 +69,7 @@ void main() {
             data: _shake(
               eventId: 'shake-current',
               createdAt: now.subtract(const Duration(minutes: 2)),
+              changeReasons: const ['level_up', 'region_changed'],
             ),
             source: RealtimeSource.eqmonitor,
           ),
@@ -79,6 +82,7 @@ void main() {
         expect(result.map((event) => event.eventId).toList(), [
           'shake-current',
         ]);
+        expect(result.single.changeReasons, ['level_up', 'region_changed']);
       });
     });
 

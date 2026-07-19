@@ -92,6 +92,7 @@ void main() {
     expect(snapshot.responseAt, DateTime.parse('2026-07-18T12:34:56.789Z'));
     expect(event.eventId, 'shake-1');
     expect(event.serialNo, 3);
+    expect(event.createdAt, DateTime.parse('2026-07-18T12:34:30.000Z'));
     expect(event.updatedAt, DateTime.parse('2026-07-18T12:34:55.000Z'));
     expect(event.level, api.ShakeDetectionLevel.strong);
     expect(event.pointCount, 1);
