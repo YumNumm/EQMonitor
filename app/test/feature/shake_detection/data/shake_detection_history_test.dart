@@ -1,19 +1,23 @@
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_history_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_provider.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+final _baseTime = DateTime.utc(2026, 7, 19, 12);
+
 ShakeDetectionEvent _ev(
   String eventId, {
-  ShakeDetectionLevel level = ShakeDetectionLevel.weak,
+  api.ShakeDetectionLevel level = api.ShakeDetectionLevel.weak,
   int pointCount = 3,
 }) => ShakeDetectionEvent(
   eventId: eventId,
-  createdAt: DateTime.utc(2025, 1, 1, 12),
+  serialNo: 1,
+  createdAt: _baseTime,
+  updatedAt: _baseTime,
+  expiresAt: _baseTime.add(const Duration(minutes: 1)),
   level: level,
-  isReplay: false,
   pointCount: pointCount,
   minLat: 34,
   maxLat: 36,

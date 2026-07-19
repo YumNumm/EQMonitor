@@ -1,16 +1,83 @@
 import 'dart:async';
 
-import 'package:clock/clock.dart';
+import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
-import 'package:eqmonitor/core/realtime/model/realtime_shake_data.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_provider.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' show ShakeDetectionLevel;
+import 'package:eqmonitor/feature/shake_detection/data/repository/shake_detection_repository.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
-class _StubRealtimeEvents extends RealtimeEvents {
+final _baseTime = DateTime.utc(2026, 7, 19, 12);
+
+ShakeDetectionEvent domainEvent(String eventId) => ShakeDetectionEvent(
+  eventId: eventId,
+  serialNo: 1,
+  createdAt: _baseTime,
+  updatedAt: _baseTime,
+  expiresAt: _baseTime.add(const Duration(minutes: 1)),
+  level: api.ShakeDetectionLevel.medium,
+  pointCount: 1,
+  minLat: 35,
+  maxLat: 36,
+  minLng: 139,
+  maxLng: 140,
+  changeReasons: const ['new_event'],
+);
+
+ShakeDetectionSnapshot domainSnapshot({
+  required int revision,
+  required List<String> eventIds,
+}) => ShakeDetectionSnapshot(
+  revision: revision,
+  responseAt: _baseTime,
+  events: eventIds.map(domainEvent).toList(growable: false),
+);
+
+RealtimeShakeSnapshot realtimeSnapshot({
+  required int revision,
+  required List<String> eventIds,
+}) => RealtimeShakeSnapshot(
+  revision: revision,
+  responseAt: _baseTime,
+  events: eventIds
+      .map(
+        (eventId) => RealtimeShakeEventData(
+          eventId: eventId,
+          serialNo: 1,
+          createdAt: _baseTime,
+          updatedAt: _baseTime,
+          expiresAt: _baseTime.add(const Duration(minutes: 1)),
+          level: 'Medium',
+          pointCount: 1,
+          minLat: 35,
+          maxLat: 36,
+          minLng: 139,
+          maxLng: 140,
+          changeReasons: const ['new_event'],
+        ),
+      )
+      .toList(growable: false),
+);
+
+RealtimeEvent shakeRealtime({
+  required int revision,
+  required List<String> eventIds,
+}) => RealtimeEvent.shakeSnapshot(
+  data: realtimeSnapshot(revision: revision, eventIds: eventIds),
+  source: RealtimeSource.eqmonitor,
+);
+
+final class _StubRealtimeEvents extends RealtimeEvents {
   _StubRealtimeEvents(this._stream);
 
   final Stream<RealtimeEvent> _stream;
@@ -19,132 +86,143 @@ class _StubRealtimeEvents extends RealtimeEvents {
   Stream<RealtimeEvent> build() => _stream;
 }
 
-RealtimeShakeData _shake({
-  required String eventId,
-  required DateTime createdAt,
-  List<String> changeReasons = const ['new_event'],
-}) => RealtimeShakeData(
-  eventId: eventId,
-  createdAt: createdAt,
-  level: ShakeDetectionLevel.medium.toJson(),
-  isReplay: false,
-  pointCount: 3,
-  minLat: 35,
-  maxLat: 36,
-  minLng: 139,
-  maxLng: 140,
-  changeReasons: changeReasons,
-);
+final class _StubShakeDetectionRepository implements ShakeDetectionRepository {
+  _StubShakeDetectionRepository(this.result);
 
-ProviderContainer _container(Stream<RealtimeEvent> stream) {
-  final container = ProviderContainer(
-    overrides: [
-      realtimeEventsProvider.overrideWith(() => _StubRealtimeEvents(stream)),
-    ],
-  );
-  addTearDown(container.dispose);
-  return container;
+  final Future<Result<ShakeDetectionSnapshot, ShakeDetectionApiException>>
+  result;
+
+  @override
+  Future<Result<ShakeDetectionSnapshot, ShakeDetectionApiException>>
+  fetchActive() => result;
+}
+
+final class _StubEqMonitorWsStatus extends EqMonitorWsStatus {
+  @override
+  EqMonitorWsStatusState build() =>
+      const EqMonitorWsStatusState(phase: WsPhase.connected);
 }
 
 void main() {
+  setUpAll(() {
+    talker_lib.talker = Talker();
+  });
+
   group('ShakeDetection', () {
-    test('スナップショットに含まれないTTL内の既存揺れ検知を保持すること', () async {
-      final now = DateTime.utc(2025, 1, 1, 12, 2);
-      await withClock(Clock.fixed(now), () async {
-        final controller = StreamController<RealtimeEvent>.broadcast(
-          sync: true,
-        );
-        addTearDown(controller.close);
-        final container = _container(controller.stream);
-        final subscription = container.listen(
-          shakeDetectionProvider,
-          (_, _) {},
-        );
-        addTearDown(subscription.close);
+    late StreamController<RealtimeEvent> controller;
+    late Completer<Result<ShakeDetectionSnapshot, ShakeDetectionApiException>>
+    restCompleter;
+    late ProviderContainer container;
+    late ProviderSubscription<List<ShakeDetectionEvent>> subscription;
 
-        expect(subscription.read(), isEmpty);
-        await pumpEventQueue();
-        controller.add(
-          RealtimeEvent.shakeDetected(
-            data: _shake(
-              eventId: 'shake-current',
-              createdAt: now.subtract(const Duration(minutes: 2)),
-              changeReasons: const ['level_up', 'region_changed'],
-            ),
-            source: RealtimeSource.eqmonitor,
+    setUp(() async {
+      controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+      restCompleter = Completer();
+      container = ProviderContainer(
+        overrides: [
+          realtimeEventsProvider.overrideWith(
+            () => _StubRealtimeEvents(controller.stream),
           ),
-        );
-        await pumpEventQueue();
-
-        await pumpEventQueue();
-
-        final result = subscription.read();
-        expect(result.map((event) => event.eventId).toList(), [
-          'shake-current',
-        ]);
-        expect(result.single.changeReasons, ['level_up', 'region_changed']);
-      });
+          shakeDetectionRepositoryProvider.overrideWith(
+            (ref) async => _StubShakeDetectionRepository(restCompleter.future),
+          ),
+          eqMonitorWsStatusProvider.overrideWith(_StubEqMonitorWsStatus.new),
+        ],
+      );
+      subscription = container.listen(shakeDetectionProvider, (_, _) {});
+      await pumpEventQueue();
     });
 
-    test('タイムシフト中はライブ揺れ検知を表示stateへ取り込まないこと', () async {
-      final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
-      addTearDown(controller.close);
-      final container = _container(controller.stream);
-      final subscription = container.listen(
-        shakeDetectionProvider,
-        (_, _) {},
-      );
-      addTearDown(subscription.close);
+    tearDown(() async {
+      subscription.close();
+      container.dispose();
+      await controller.close();
+    });
 
-      container
-          .read(appClockProvider.notifier)
-          .enterTimeShift(const Duration(minutes: -3));
-      expect(subscription.read(), isEmpty);
+    test('ready後のREST中に新しいWebSocket revisionが来ても巻き戻さないこと', () async {
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
       await pumpEventQueue();
 
       controller.add(
-        RealtimeEvent.shakeDetected(
-          data: _shake(
-            eventId: 'live-shake',
-            createdAt: DateTime.utc(2025, 1, 1, 12),
-          ),
+        RealtimeEvent.shakeSnapshot(
+          data: realtimeSnapshot(revision: 12, eventIds: ['ws-new']),
           source: RealtimeSource.eqmonitor,
         ),
       );
       await pumpEventQueue();
 
+      restCompleter.complete(
+        Success(domainSnapshot(revision: 11, eventIds: ['rest-old'])),
+      );
+      await pumpEventQueue();
+
+      expect(subscription.read().map((event) => event.eventId), ['ws-new']);
+    });
+
+    test('新しいsnapshotのevents全体で置換すること', () async {
+      controller.add(shakeRealtime(revision: 1, eventIds: ['a', 'b']));
+      controller.add(shakeRealtime(revision: 2, eventIds: ['b', 'c']));
+      await pumpEventQueue();
+
+      expect(subscription.read().map((event) => event.eventId), ['b', 'c']);
+    });
+
+    test('空snapshotでactive eventを全件削除すること', () async {
+      controller.add(shakeRealtime(revision: 1, eventIds: ['a']));
+      controller.add(shakeRealtime(revision: 2, eventIds: []));
+      await pumpEventQueue();
+
       expect(subscription.read(), isEmpty);
     });
 
-    test('通常再生からタイムシフトへ切り替えたら既存のライブ揺れ検知を消すこと', () async {
-      final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
-      addTearDown(controller.close);
-      final container = _container(controller.stream);
-      final subscription = container.listen(
-        shakeDetectionProvider,
-        (_, _) {},
-      );
-      addTearDown(subscription.close);
-
-      expect(subscription.read(), isEmpty);
+    test('同一・古いrevisionを無視すること', () async {
+      controller.add(shakeRealtime(revision: 5, eventIds: ['current']));
+      controller.add(shakeRealtime(revision: 5, eventIds: ['same-revision']));
+      controller.add(shakeRealtime(revision: 4, eventIds: ['older']));
       await pumpEventQueue();
+
+      expect(subscription.read().single.eventId, 'current');
+    });
+
+    test('REST 503で現在stateを固定値へ置換しないこと', () async {
+      controller.add(shakeRealtime(revision: 5, eventIds: ['current']));
       controller.add(
-        RealtimeEvent.shakeDetected(
-          data: _shake(
-            eventId: 'live-shake',
-            createdAt: DateTime.utc(2025, 1, 1, 12),
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      restCompleter.complete(
+        const Failure(
+          ShakeDetectionApiException(
+            message: 'Shake detection state is not available.',
+            statusCode: 503,
           ),
-          source: RealtimeSource.eqmonitor,
         ),
       );
       await pumpEventQueue();
-      expect(subscription.read(), hasLength(1));
+
+      expect(subscription.read().single.eventId, 'current');
+    });
+
+    test('タイムシフト復帰時にready済み接続のREST snapshotを再同期すること', () async {
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      await pumpEventQueue();
 
       container
           .read(appClockProvider.notifier)
           .enterTimeShift(const Duration(minutes: -3));
-
+      restCompleter.complete(
+        Success(domainSnapshot(revision: 7, eventIds: ['restored'])),
+      );
+      await pumpEventQueue();
       expect(subscription.read(), isEmpty);
+
+      container.read(appClockProvider.notifier).returnToRealtime();
+      await pumpEventQueue();
+
+      expect(subscription.read().single.eventId, 'restored');
     });
   });
 }
