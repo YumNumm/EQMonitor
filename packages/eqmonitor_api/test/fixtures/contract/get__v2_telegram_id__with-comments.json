@@ -17,7 +17,48 @@
     "info_kind_version": "1.0_0",
     "hash": "stub-hash-vxse53",
     "created_at": "2025-12-15T12:03:05.000Z",
-    "body": null
+    "body": {
+      "type": "EARTHQUAKE",
+      "earthquake": {
+        "eventId": "20251215120000",
+        "status": "NORMAL",
+        "magnitude": "4.5",
+        "maxIntensity": "4",
+        "depth": 10,
+        "latitude": "36.7",
+        "longitude": "140.7",
+        "epicenterCode": 311,
+        "epicenterName": "茨城県北部",
+        "originTime": "2025-12-15T12:00:00.000Z",
+        "originTimePrecision": "SECOND",
+        "datasource": "JMA_DISASTER_INFORMATION_XML"
+      },
+      "intensityRegions": [
+        {
+          "eventId": "20251215120000",
+          "code": "2200",
+          "name": "茨城北部",
+          "intensity": "4",
+          "datasource": "JMA_DISASTER_INFORMATION_XML"
+        },
+        {
+          "eventId": "20251215120000",
+          "code": "2300",
+          "name": "茨城南部",
+          "intensity": "3",
+          "datasource": "JMA_DISASTER_INFORMATION_XML"
+        }
+      ],
+      "intensityPrefectures": [
+        {
+          "eventId": "20251215120000",
+          "code": "8",
+          "name": "茨城県",
+          "intensity": "4",
+          "datasource": "JMA_DISASTER_INFORMATION_XML"
+        }
+      ]
+    }
   },
   "comments": {
     "free_form_comment": "○○地方では揺れに注意してください。",

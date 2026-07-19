@@ -13,10 +13,8 @@
   "origin_time": "2023-11-14T22:10:20.000Z",
   "arrival_time": null,
   "hypocenter": {
-    "value": {
-      "code": "999",
-      "name": "不明"
-    },
+    "code": "999",
+    "name": "不明",
     "magnitude": null,
     "depth": null
   },
@@ -27,10 +25,8 @@
     },
     "regions": [
       {
-        "value": {
-          "code": "2200",
-          "name": "茨城北部"
-        },
+        "code": "2200",
+        "name": "茨城北部",
         "is_plum": true,
         "is_warning": false,
         "intensity": {
