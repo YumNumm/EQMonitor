@@ -53,6 +53,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debu
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/ui/page/debug_live_activity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navigation_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
@@ -373,6 +374,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
           path: 'notification-delivery-log',
         ),
         TypedGoRoute<DebugDeviceAdminRoute>(path: 'device-admin'),
+        TypedGoRoute<DebugLiveActivityRoute>(path: 'live-activity'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
@@ -674,6 +676,15 @@ class DebugDeviceAdminRoute extends GoRouteData with $DebugDeviceAdminRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugDeviceAdminPage();
+  }
+}
+
+class DebugLiveActivityRoute extends GoRouteData with $DebugLiveActivityRoute {
+  const DebugLiveActivityRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugLiveActivityPage();
   }
 }
 
