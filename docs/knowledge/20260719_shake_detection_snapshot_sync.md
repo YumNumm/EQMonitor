@@ -30,10 +30,11 @@ REST 同期には世代番号を持たせ、後から開始した同期だけが
 
 ## 検証コマンド
 
+canonical snapshot migration の通常 gate は次を repository root から実行する。
+
 ```bash
-mise exec -- dart format packages/eqmonitor_websocket/lib packages/eqmonitor_websocket/test app/lib/core/realtime app/lib/feature/shake_detection app/test/core/realtime app/test/feature/shake_detection
-mise exec -- dart test packages/eqmonitor_websocket/test
-mise exec -- dart test packages/eqmonitor_api/test
+mise exec -- dart test packages/eqmonitor_websocket/test/ws_message_test.dart
+(cd packages/eqmonitor_api && mise exec -- dart test --exclude-tags integration)
 mise exec -- flutter test app/test/core/realtime
 mise exec -- flutter test app/test/feature/shake_detection
 mise exec -- dart analyze packages/eqmonitor_websocket packages/eqmonitor_api app/lib/core/realtime app/lib/feature/shake_detection
@@ -41,11 +42,19 @@ git --no-pager diff --check
 git --no-pager status --short
 ```
 
+全体 suite には migration 外の既知の前提・失敗がある。
+
+- `mise exec -- dart test packages/eqmonitor_websocket/test` は、legacy earthquake fixture に必須の `datasources` がない2件で失敗する。canonical parser は上記の focused test で検証する。
+- API test は fixture path が package cwd 基準なので repository root から実行しない。integration test は起動中の api-stub（`STUB_BASE_URL`、既定 `http://localhost:8790`）が必要で、通常 gate では除外する。
+
 生成物を更新した場合は生成コマンドの前後で差分を確認する。
 
 ```bash
 git --no-pager status --short
-mise exec -- dart run build_runner build --delete-conflicting-outputs
+(cd packages/eqmonitor_websocket && mise exec -- dart run build_runner build)
+(cd app && mise exec -- dart run build_runner build)
 git --no-pager diff --check
 git --no-pager status --short
 ```
+
+generator version による migration 外の hash・asset・空白差分を混ぜず、意図した package の生成物だけを review する。
