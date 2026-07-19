@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/clock/time_mode.dart';
-import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:eqmonitor/feature/playback_mode/data/auto_return_policy.dart';
@@ -9,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auto_return_watcher.g.dart';
 
-/// タイムシフト/リプレイ再生中に、ライブの EEW が
+/// タイムシフト/リプレイ再生中に、ライブの EEW・揺れ検知が
 /// 発生したら通常再生へ自動復帰させる常駐ウォッチャ。
 ///
 /// リプレイ中は `eewProvider` 等がライブ受信を遮断するため、ここでは
@@ -19,29 +20,34 @@ part 'auto_return_watcher.g.dart';
 class AutoReturnWatcher extends _$AutoReturnWatcher {
   @override
   void build() {
-    ref.listen(realtimeEventsProvider, (_, next) {
-      next.whenData(_onEvent);
-    });
-  }
+    final policy = ref.read(autoReturnPolicyProvider);
 
-  void _onEvent(RealtimeEvent event) {
-    // 通常再生中は対象外
-    if (ref.read(appClockProvider) is RealtimeTimeMode) {
-      return;
-    }
-    // 設定で無効化されている場合は何もしない
-    if (!(ref.read(autoReturnToRealtimeProvider).value ?? true)) {
-      return;
-    }
-    if (!ref.read(autoReturnPolicyProvider).shouldReturnToRealtime(event)) {
-      return;
-    }
-    // リプレイ中なら再生停止（appClock も通常再生へ戻る）、
-    // タイムシフト中なら通常再生へ戻す。
-    if (ref.read(replayProvider) != null) {
-      ref.read(replayProvider.notifier).exit();
-    } else {
-      ref.read(appClockProvider.notifier).returnToRealtime();
-    }
+    ref.listen(eqMonitorWsStatusProvider, (_, next) {
+      if (next.phase != WsPhase.connected) {
+        policy.resetShakeBaseline();
+      }
+    });
+
+    ref.listen(isRealtimeModeProvider, (previous, next) {
+      if (previous == false && next) {
+        policy.resetShakeBaseline();
+      }
+    });
+
+    ref.listen(realtimeEventsProvider, (_, next) {
+      next.whenData((event) {
+        final shouldReturn = policy.shouldReturnToRealtime(event);
+        if (ref.read(appClockProvider) is RealtimeTimeMode ||
+            !(ref.read(autoReturnToRealtimeProvider).value ?? true) ||
+            !shouldReturn) {
+          return;
+        }
+        if (ref.read(replayProvider) != null) {
+          ref.read(replayProvider.notifier).exit();
+        } else {
+          ref.read(appClockProvider.notifier).returnToRealtime();
+        }
+      });
+    });
   }
 }

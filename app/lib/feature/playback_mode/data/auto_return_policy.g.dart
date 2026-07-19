@@ -55,4 +55,4 @@ final class AutoReturnPolicyProvider
   }
 }
 
-String _$autoReturnPolicyHash() => r'ac63f44efd7e6f69ecec43c9b867283559acd887';
+String _$autoReturnPolicyHash() => r'a407131932305ce0c2f0c9db98c7026491bf4fd1';
