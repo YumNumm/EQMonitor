@@ -199,6 +199,31 @@ Map<String, dynamic> _$RealtimeShakeDetectedEventToJson(
   'runtimeType': instance.$type,
 };
 
+RealtimeShakeSnapshotEvent _$RealtimeShakeSnapshotEventFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('RealtimeShakeSnapshotEvent', json, ($checkedConvert) {
+  final val = RealtimeShakeSnapshotEvent(
+    data: $checkedConvert(
+      'data',
+      (v) => RealtimeShakeSnapshot.fromJson(v as Map<String, dynamic>),
+    ),
+    source: $checkedConvert(
+      'source',
+      (v) => $enumDecode(_$RealtimeSourceEnumMap, v),
+    ),
+    $type: $checkedConvert('runtimeType', (v) => v as String?),
+  );
+  return val;
+}, fieldKeyMap: const {r'$type': 'runtimeType'});
+
+Map<String, dynamic> _$RealtimeShakeSnapshotEventToJson(
+  RealtimeShakeSnapshotEvent instance,
+) => <String, dynamic>{
+  'data': instance.data,
+  'source': _$RealtimeSourceEnumMap[instance.source]!,
+  'runtimeType': instance.$type,
+};
+
 RealtimeEstimatedIntensityUpsertEvent
 _$RealtimeEstimatedIntensityUpsertEventFromJson(Map<String, dynamic> json) =>
     $checkedCreate(

@@ -1,4 +1,5 @@
 import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -44,6 +45,35 @@ void main() {
 
       expect(result.intensity, isNull);
       expect(result.intensityDiff, equals(-0.1));
+    });
+
+    test('intensityDiff が省略された場合は 0 になること', () {
+      final result = WsShakeObservationPoint.fromJson({
+        'code': 'OSK002',
+        'name': '大阪2',
+        'region': '大阪府',
+        'type': 'K-NET',
+        'location': {'latitude': 34.7, 'longitude': 135.5},
+        'intensity': null,
+      });
+
+      expect(result.intensity, isNull);
+      expect(result.intensityDiff, 0);
+    });
+
+    test('intensityDiff が null の場合は拒否すること', () {
+      expect(
+        () => WsShakeObservationPoint.fromJson({
+          'code': 'OSK003',
+          'name': '大阪3',
+          'region': '大阪府',
+          'type': 'K-NET',
+          'location': {'latitude': 34.7, 'longitude': 135.5},
+          'intensity': null,
+          'intensityDiff': null,
+        }),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
     });
 
     test('intensity が 2.5 の場合も正しく扱われること', () {

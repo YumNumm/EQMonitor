@@ -581,13 +581,13 @@ as Map<String, dynamic>?,
 @JsonSerializable()
 
 class WsShakeDetectionRealtimeEvent implements RealtimeEventEnvelope {
-  const WsShakeDetectionRealtimeEvent({required this.revision, required this.responseAt, final  List<WsShakeDetectionEvent> events = const [], final  String? $type}): _events = events,$type = $type ?? 'shake_detection';
+  const WsShakeDetectionRealtimeEvent({required this.revision, required this.responseAt, required final  List<WsShakeDetectionEvent> events, final  String? $type}): _events = events,$type = $type ?? 'shake_detection';
   factory WsShakeDetectionRealtimeEvent.fromJson(Map<String, dynamic> json) => _$WsShakeDetectionRealtimeEventFromJson(json);
 
  final  int revision;
  final  DateTime responseAt;
  final  List<WsShakeDetectionEvent> _events;
-@JsonKey() List<WsShakeDetectionEvent> get events {
+ List<WsShakeDetectionEvent> get events {
   if (_events is EqualUnmodifiableListView) return _events;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_events);

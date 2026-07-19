@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WsShakeObservationPoint {
 
- String get code; String get name; String get region; String get type; WsShakeObservationLocation get location; double get intensityDiff; double? get intensity;
+ String get code; String get name; String get region; String get type; WsShakeObservationLocation get location;@JsonKey(readValue: wsShakeIntensityDiffReadValue) double get intensityDiff; double? get intensity;
 /// Create a copy of WsShakeObservationPoint
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $WsShakeObservationPointCopyWith<$Res>  {
   factory $WsShakeObservationPointCopyWith(WsShakeObservationPoint value, $Res Function(WsShakeObservationPoint) _then) = _$WsShakeObservationPointCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, String region, String type, WsShakeObservationLocation location, double intensityDiff, double? intensity
+ String code, String name, String region, String type, WsShakeObservationLocation location,@JsonKey(readValue: wsShakeIntensityDiffReadValue) double intensityDiff, double? intensity
 });
 
 
@@ -168,7 +168,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  String region,  String type,  WsShakeObservationLocation location,  double intensityDiff,  double? intensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  String region,  String type,  WsShakeObservationLocation location, @JsonKey(readValue: wsShakeIntensityDiffReadValue)  double intensityDiff,  double? intensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WsShakeObservationPoint() when $default != null:
 return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_that.intensityDiff,_that.intensity);case _:
@@ -189,7 +189,7 @@ return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  String region,  String type,  WsShakeObservationLocation location,  double intensityDiff,  double? intensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  String region,  String type,  WsShakeObservationLocation location, @JsonKey(readValue: wsShakeIntensityDiffReadValue)  double intensityDiff,  double? intensity)  $default,) {final _that = this;
 switch (_that) {
 case _WsShakeObservationPoint():
 return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_that.intensityDiff,_that.intensity);case _:
@@ -209,7 +209,7 @@ return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  String region,  String type,  WsShakeObservationLocation location,  double intensityDiff,  double? intensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  String region,  String type,  WsShakeObservationLocation location, @JsonKey(readValue: wsShakeIntensityDiffReadValue)  double intensityDiff,  double? intensity)?  $default,) {final _that = this;
 switch (_that) {
 case _WsShakeObservationPoint() when $default != null:
 return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_that.intensityDiff,_that.intensity);case _:
@@ -224,7 +224,7 @@ return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_th
 @JsonSerializable()
 
 class _WsShakeObservationPoint implements WsShakeObservationPoint {
-  const _WsShakeObservationPoint({required this.code, required this.name, required this.region, required this.type, required this.location, required this.intensityDiff, this.intensity});
+  const _WsShakeObservationPoint({required this.code, required this.name, required this.region, required this.type, required this.location, @JsonKey(readValue: wsShakeIntensityDiffReadValue) this.intensityDiff = 0, this.intensity});
   factory _WsShakeObservationPoint.fromJson(Map<String, dynamic> json) => _$WsShakeObservationPointFromJson(json);
 
 @override final  String code;
@@ -232,7 +232,7 @@ class _WsShakeObservationPoint implements WsShakeObservationPoint {
 @override final  String region;
 @override final  String type;
 @override final  WsShakeObservationLocation location;
-@override final  double intensityDiff;
+@override@JsonKey(readValue: wsShakeIntensityDiffReadValue) final  double intensityDiff;
 @override final  double? intensity;
 
 /// Create a copy of WsShakeObservationPoint
@@ -268,7 +268,7 @@ abstract mixin class _$WsShakeObservationPointCopyWith<$Res> implements $WsShake
   factory _$WsShakeObservationPointCopyWith(_WsShakeObservationPoint value, $Res Function(_WsShakeObservationPoint) _then) = __$WsShakeObservationPointCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, String region, String type, WsShakeObservationLocation location, double intensityDiff, double? intensity
+ String code, String name, String region, String type, WsShakeObservationLocation location,@JsonKey(readValue: wsShakeIntensityDiffReadValue) double intensityDiff, double? intensity
 });
 
 

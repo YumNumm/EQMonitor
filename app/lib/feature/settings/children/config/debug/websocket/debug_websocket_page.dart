@@ -49,18 +49,13 @@ class DebugWebSocketPage extends HookConsumerWidget {
           const Divider(height: 1),
           Expanded(
             child: messages.value.isEmpty
-                ? const Center(
-                    child: Text('受信メッセージはまだありません'),
-                  )
+                ? const Center(child: Text('受信メッセージはまだありません'))
                 : ListView.builder(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     itemCount: messages.value.length,
                     itemBuilder: (context, index) {
                       final e = messages.value[index];
-                      return _WsEventCard(
-                        receivedAt: e.at,
-                        event: e.event,
-                      );
+                      return _WsEventCard(receivedAt: e.at, event: e.event);
                     },
                   ),
           ),
@@ -143,10 +138,7 @@ class _WsStatusCard extends HookWidget {
 }
 
 class _WsEventCard extends StatelessWidget {
-  const _WsEventCard({
-    required this.receivedAt,
-    required this.event,
-  });
+  const _WsEventCard({required this.receivedAt, required this.event});
 
   final DateTime receivedAt;
   final RealtimeEvent event;
@@ -163,6 +155,7 @@ class _WsEventCard extends StatelessWidget {
       RealtimeTsunamiUpsertEvent() => 'tsunami/upsert',
       RealtimeTsunamiDeleteEvent() => 'tsunami/delete',
       RealtimeShakeDetectedEvent() => 'shake_detected',
+      RealtimeShakeSnapshotEvent() => 'shake_detection/snapshot',
       RealtimeEstimatedIntensityUpsertEvent() => 'estimated_intensity/upsert',
     };
 
@@ -177,6 +170,8 @@ class _WsEventCard extends StatelessWidget {
       RealtimeTsunamiDeleteEvent(:final eventId, :final groupId) =>
         'eventId=$eventId groupId=$groupId',
       RealtimeShakeDetectedEvent(:final data) => 'eventId=${data.eventId}',
+      RealtimeShakeSnapshotEvent(:final data) =>
+        'revision=${data.revision} events=${data.events.length}',
       RealtimeEstimatedIntensityUpsertEvent(:final eventId) =>
         'eventId=$eventId',
     };

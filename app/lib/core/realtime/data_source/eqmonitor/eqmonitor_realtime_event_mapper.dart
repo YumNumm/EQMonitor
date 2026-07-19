@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
-import 'package:eqmonitor/core/realtime/model/realtime_shake_data.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
 import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -67,28 +67,35 @@ class EqMonitorRealtimeEventMapper {
             ),
           ],
         },
-      WsShakeDetectedRealtimeEvent(
-        :final eventId,
-        :final createdAt,
-        :final level,
-        :final changeReasons,
-        :final isReplay,
-        :final pointCount,
-        :final region,
+      WsShakeDetectionRealtimeEvent(
+        :final revision,
+        :final responseAt,
+        :final events,
       ) =>
         [
-          RealtimeEvent.shakeDetected(
-            data: RealtimeShakeData(
-              eventId: eventId,
-              createdAt: createdAt,
-              level: level,
-              isReplay: isReplay,
-              pointCount: pointCount,
-              minLat: region.bottomRight.latitude,
-              maxLat: region.topLeft.latitude,
-              minLng: region.topLeft.longitude,
-              maxLng: region.bottomRight.longitude,
-              changeReasons: changeReasons,
+          RealtimeEvent.shakeSnapshot(
+            data: RealtimeShakeSnapshot(
+              revision: revision,
+              responseAt: responseAt,
+              events: events
+                  .map(
+                    (event) => RealtimeShakeEventData(
+                      eventId: event.eventId,
+                      serialNo: event.serialNo,
+                      createdAt: event.createdAt,
+                      updatedAt: event.updatedAt,
+                      expiresAt: event.expiresAt,
+                      level: event.level,
+                      pointCount: event.pointCount,
+                      minLat: event.region.bottomRight.latitude,
+                      maxLat: event.region.topLeft.latitude,
+                      minLng: event.region.topLeft.longitude,
+                      maxLng: event.region.bottomRight.longitude,
+                      changeReasons: event.changeReasons,
+                      correlatedEewEventId: event.correlatedEew?.eventId,
+                    ),
+                  )
+                  .toList(growable: false),
             ),
             source: RealtimeSource.eqmonitor,
           ),

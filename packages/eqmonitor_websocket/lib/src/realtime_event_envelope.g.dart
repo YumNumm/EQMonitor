@@ -125,14 +125,9 @@ WsShakeDetectionRealtimeEvent _$WsShakeDetectionRealtimeEventFromJson(
     ),
     events: $checkedConvert(
       'events',
-      (v) =>
-          (v as List<dynamic>?)
-              ?.map(
-                (e) =>
-                    WsShakeDetectionEvent.fromJson(e as Map<String, dynamic>),
-              )
-              .toList() ??
-          const [],
+      (v) => (v as List<dynamic>)
+          .map((e) => WsShakeDetectionEvent.fromJson(e as Map<String, dynamic>))
+          .toList(),
     ),
     $type: $checkedConvert('type', (v) => v as String?),
   );

@@ -2,6 +2,7 @@ import 'package:eqmonitor_websocket/src/realtime_event_envelope.dart';
 import 'package:eqmonitor_websocket/src/ws_message.dart';
 import 'package:eqmonitor_websocket/src/ws_realtime_operation.dart';
 import 'package:eqmonitor_websocket/src/ws_snapshot_data.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -122,6 +123,61 @@ void main() {
         'shake-absorbed',
       );
       expect(snapshot.events.single.correlatedEew?.eventId, 'eew-1');
+    });
+
+    test('realtime/shake_detection の events が空配列でもパースできること', () {
+      final result = WsMessage.fromJson({
+        'type': 'realtime',
+        'data': {
+          'type': 'shake_detection',
+          'revision': 43,
+          'responseAt': '2026-07-18T12:35:56.789Z',
+          'events': <dynamic>[],
+        },
+      });
+
+      final message = result as WsRealtimeMessage;
+      final snapshot = message.data as WsShakeDetectionRealtimeEvent;
+      expect(snapshot.events, isEmpty);
+    });
+
+    test('realtime/shake_detection の events が省略された場合は拒否すること', () {
+      expect(
+        () => WsMessage.fromJson({
+          'type': 'realtime',
+          'data': {
+            'type': 'shake_detection',
+            'revision': 43,
+            'responseAt': '2026-07-18T12:35:56.789Z',
+          },
+        }),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
+    });
+
+    test('realtime/shake_detection の events が null の場合は拒否すること', () {
+      expect(
+        () => WsMessage.fromJson({
+          'type': 'realtime',
+          'data': {
+            'type': 'shake_detection',
+            'revision': 43,
+            'responseAt': '2026-07-18T12:35:56.789Z',
+            'events': null,
+          },
+        }),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
+    });
+
+    test('legacy realtime/shake_detected は拒否すること', () {
+      expect(
+        () => WsMessage.fromJson({
+          'type': 'realtime',
+          'data': {'type': 'shake_detected', 'eventId': 'legacy-shake'},
+        }),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
     });
 
     test('realtime/ESTIMATED_INTENSITY メッセージを正しくパースできること', () {

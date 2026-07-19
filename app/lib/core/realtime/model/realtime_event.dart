@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/realtime/model/realtime_shake_data.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -9,9 +10,8 @@ enum RealtimeSource { eqmonitor, dmdata }
 
 @Freezed()
 sealed class RealtimeEvent with _$RealtimeEvent {
-  const factory RealtimeEvent.ready({
-    required RealtimeSource source,
-  }) = RealtimeReadyEvent;
+  const factory RealtimeEvent.ready({required RealtimeSource source}) =
+      RealtimeReadyEvent;
 
   const factory RealtimeEvent.eewUpsert({
     required EewItemWithRelations item,
@@ -44,6 +44,11 @@ sealed class RealtimeEvent with _$RealtimeEvent {
     required RealtimeShakeData data,
     required RealtimeSource source,
   }) = RealtimeShakeDetectedEvent;
+
+  const factory RealtimeEvent.shakeSnapshot({
+    required RealtimeShakeSnapshot data,
+    required RealtimeSource source,
+  }) = RealtimeShakeSnapshotEvent;
 
   const factory RealtimeEvent.estimatedIntensityUpsert({
     required String eventId,

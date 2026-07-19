@@ -45,7 +45,7 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
   const factory RealtimeEventEnvelope.shakeDetection({
     required int revision,
     required DateTime responseAt,
-    @Default([]) List<WsShakeDetectionEvent> events,
+    required List<WsShakeDetectionEvent> events,
   }) = WsShakeDetectionRealtimeEvent;
 
   /// 推計震度
