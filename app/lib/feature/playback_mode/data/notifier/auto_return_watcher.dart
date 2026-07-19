@@ -23,9 +23,18 @@ class AutoReturnWatcher extends _$AutoReturnWatcher {
   void build() {
     final policy = ref.read(autoReturnPolicyProvider);
 
-    ref.listen(eqMonitorWsStatusProvider, (_, next) {
+    ref.listen(eqMonitorWsStatusProvider, (previous, next) {
       if (next.phase != WsPhase.connected) {
         policy.resetShakeBaseline();
+        return;
+      }
+      if (previous?.phase != WsPhase.connected) {
+        final acceptedSnapshot = ref.read(
+          shakeDetectionAcceptedSnapshotProvider,
+        );
+        if (acceptedSnapshot != null && ref.read(isRealtimeModeProvider)) {
+          policy.acceptShakeSnapshot(acceptedSnapshot);
+        }
       }
     });
 

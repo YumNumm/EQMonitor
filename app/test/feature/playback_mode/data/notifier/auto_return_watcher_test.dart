@@ -181,11 +181,13 @@ void main() {
       expect(container.read(appClockProvider), isA<RealtimeTimeMode>());
     });
 
-    test('再接続後のREST baselineと次の新しいWS eventを比較すること', () async {
+    test('同revisionのRESTで再接続した後も次の新しいWS eventで戻ること', () async {
       final accepted =
           container.read(shakeDetectionAcceptedSnapshotProvider.notifier)
               as MutableAcceptedShakeSnapshot;
-      accepted.publish(acceptedSnapshot(revision: 1, eventIds: ['old-life']));
+      accepted.publish(
+        acceptedSnapshot(revision: 10, eventIds: ['rest-current']),
+      );
       await pumpEventQueue();
 
       final status =
@@ -193,9 +195,6 @@ void main() {
       status
         ..setPhase(WsPhase.disconnected)
         ..setPhase(WsPhase.connected);
-      accepted.publish(
-        acceptedSnapshot(revision: 10, eventIds: ['rest-current']),
-      );
       await pumpEventQueue();
       container
           .read(appClockProvider.notifier)
@@ -206,6 +205,32 @@ void main() {
       await pumpEventQueue();
 
       expect(container.read(appClockProvider), isA<RealtimeTimeMode>());
+    });
+
+    test('再接続reseed後の同一・古いraw WS revisionでは戻らないこと', () async {
+      final accepted =
+          container.read(shakeDetectionAcceptedSnapshotProvider.notifier)
+              as MutableAcceptedShakeSnapshot;
+      accepted.publish(
+        acceptedSnapshot(revision: 10, eventIds: ['rest-current']),
+      );
+      await pumpEventQueue();
+
+      final status =
+          container.read(eqMonitorWsStatusProvider.notifier) as MutableWsStatus;
+      status
+        ..setPhase(WsPhase.disconnected)
+        ..setPhase(WsPhase.connected);
+      await pumpEventQueue();
+      container
+          .read(appClockProvider.notifier)
+          .enterTimeShift(const Duration(minutes: -3));
+
+      controller.add(watcherSnapshot(revision: 10, eventIds: ['equal-unseen']));
+      controller.add(watcherSnapshot(revision: 9, eventIds: ['stale-unseen']));
+      await pumpEventQueue();
+
+      expect(container.read(appClockProvider), isA<TimeShiftTimeMode>());
     });
   });
 }

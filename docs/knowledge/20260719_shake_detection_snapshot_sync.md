@@ -32,7 +32,7 @@ REST 同期には世代番号を持たせ、後から開始した同期だけが
 
 - 新しい揺れ検知で realtime へ自動復帰する判定は、生の WebSocket snapshot だけで初期化しない。realtime 中に revision reducer が採用した REST / WebSocket 共通の canonical snapshot を baseline にする。
 - realtime へ通常復帰しただけでは baseline を破棄しない。破棄すると、次の time-shift で最初の新規 event を baseline と誤認して見逃す。
-- WebSocket disconnect では接続 lifecycle が変わるため baseline を破棄する。reconnect 後に採用した REST snapshot で baseline を再確立し、それより新しい revision の未観測 event だけを復帰理由にする。
+- WebSocket disconnect では接続 lifecycle が変わるため baseline を破棄する。reconnect で `connected` へ戻った時点に保持中の accepted snapshot を明示的に再投入し、baseline を再確立する。同じ revision の REST 再同期は reducer の state change を発生させないため、REST の provider 通知だけに reseed を依存しない。
 - revision が進んでも既知 event の更新・削除だけなら復帰しない。同じ接続 lifecycle で一度観測した event ID の再出現も新規追加として扱わない。
 
 ## 検証コマンド
