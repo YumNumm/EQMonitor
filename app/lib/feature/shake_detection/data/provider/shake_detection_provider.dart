@@ -18,16 +18,26 @@ part 'shake_detection_provider.g.dart';
 class ShakeDetection extends _$ShakeDetection {
   ShakeDetectionSnapshot? _snapshot;
   bool _readySeen = false;
+  int _synchronizationGeneration = 0;
 
   @override
   List<ShakeDetectionEvent> build() {
+    ref.onDispose(invalidateSynchronization);
+
     ref.listen(eqMonitorWsStatusProvider, (_, next) {
       if (next.phase != WsPhase.connected) {
         _readySeen = false;
+        invalidateSynchronization();
       }
     });
 
     ref.listen(isRealtimeModeProvider, (previous, next) async {
+      if (!next) {
+        invalidateSynchronization();
+        _snapshot = null;
+        state = [];
+        return;
+      }
       if (next && previous == false && _readySeen) {
         await synchronizeFromRest();
       }
@@ -78,7 +88,8 @@ class ShakeDetection extends _$ShakeDetection {
       }
     });
 
-    if (!ref.watch(isRealtimeModeProvider)) {
+    if (!ref.read(isRealtimeModeProvider)) {
+      invalidateSynchronization();
       _snapshot = null;
       return [];
     }
@@ -86,8 +97,16 @@ class ShakeDetection extends _$ShakeDetection {
   }
 
   Future<void> synchronizeFromRest() async {
+    _synchronizationGeneration += 1;
+    final generation = _synchronizationGeneration;
     final repository = await ref.read(shakeDetectionRepositoryProvider.future);
+    if (!ref.mounted || generation != _synchronizationGeneration) {
+      return;
+    }
     final result = await repository.fetchActive();
+    if (!ref.mounted || generation != _synchronizationGeneration) {
+      return;
+    }
     if (!ref.read(isRealtimeModeProvider)) {
       return;
     }
@@ -101,6 +120,10 @@ class ShakeDetection extends _$ShakeDetection {
           stackTrace,
         );
     }
+  }
+
+  void invalidateSynchronization() {
+    _synchronizationGeneration += 1;
   }
 
   void applySnapshot(ShakeDetectionSnapshot incoming) {

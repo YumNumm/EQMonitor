@@ -86,47 +86,92 @@ final class _StubRealtimeEvents extends RealtimeEvents {
   Stream<RealtimeEvent> build() => _stream;
 }
 
-final class _StubShakeDetectionRepository implements ShakeDetectionRepository {
-  _StubShakeDetectionRepository(this.result);
+final class _QueuedShakeDetectionRepository
+    implements ShakeDetectionRepository {
+  _QueuedShakeDetectionRepository(this.results);
 
-  final Future<Result<ShakeDetectionSnapshot, ShakeDetectionApiException>>
-  result;
+  final List<
+    Completer<Result<ShakeDetectionSnapshot, ShakeDetectionApiException>>
+  >
+  results;
+  int callCount = 0;
 
   @override
   Future<Result<ShakeDetectionSnapshot, ShakeDetectionApiException>>
-  fetchActive() => result;
+  fetchActive() {
+    final result = results[callCount];
+    callCount += 1;
+    return result.future;
+  }
 }
 
-final class _StubEqMonitorWsStatus extends EqMonitorWsStatus {
+final class _MutableEqMonitorWsStatus extends EqMonitorWsStatus {
   @override
   EqMonitorWsStatusState build() =>
       const EqMonitorWsStatusState(phase: WsPhase.connected);
+
+  void setPhase(WsPhase phase) {
+    state = state.copyWith(phase: phase);
+  }
 }
+
+final class _RecordingTalkerObserver extends TalkerObserver {
+  int notificationCount = 0;
+
+  void reset() {
+    notificationCount = 0;
+  }
+
+  @override
+  void onError(TalkerError err) {
+    notificationCount += 1;
+  }
+
+  @override
+  void onException(TalkerException err) {
+    notificationCount += 1;
+  }
+
+  @override
+  void onLog(TalkerData log) {
+    notificationCount += 1;
+  }
+}
+
+final _talkerObserver = _RecordingTalkerObserver();
 
 void main() {
   setUpAll(() {
-    talker_lib.talker = Talker();
+    talker_lib.talker = Talker(observer: _talkerObserver);
   });
+
+  setUp(_talkerObserver.reset);
 
   group('ShakeDetection', () {
     late StreamController<RealtimeEvent> controller;
-    late Completer<Result<ShakeDetectionSnapshot, ShakeDetectionApiException>>
-    restCompleter;
+    late List<
+      Completer<Result<ShakeDetectionSnapshot, ShakeDetectionApiException>>
+    >
+    restCompleters;
+    late _QueuedShakeDetectionRepository repository;
     late ProviderContainer container;
     late ProviderSubscription<List<ShakeDetectionEvent>> subscription;
+    var containerDisposed = false;
 
     setUp(() async {
       controller = StreamController<RealtimeEvent>.broadcast(sync: true);
-      restCompleter = Completer();
+      restCompleters = List.generate(4, (_) => Completer());
+      repository = _QueuedShakeDetectionRepository(restCompleters);
+      containerDisposed = false;
       container = ProviderContainer(
         overrides: [
           realtimeEventsProvider.overrideWith(
             () => _StubRealtimeEvents(controller.stream),
           ),
           shakeDetectionRepositoryProvider.overrideWith(
-            (ref) async => _StubShakeDetectionRepository(restCompleter.future),
+            (ref) async => repository,
           ),
-          eqMonitorWsStatusProvider.overrideWith(_StubEqMonitorWsStatus.new),
+          eqMonitorWsStatusProvider.overrideWith(_MutableEqMonitorWsStatus.new),
         ],
       );
       subscription = container.listen(shakeDetectionProvider, (_, _) {});
@@ -134,8 +179,10 @@ void main() {
     });
 
     tearDown(() async {
-      subscription.close();
-      container.dispose();
+      if (!containerDisposed) {
+        subscription.close();
+        container.dispose();
+      }
       await controller.close();
     });
 
@@ -153,7 +200,7 @@ void main() {
       );
       await pumpEventQueue();
 
-      restCompleter.complete(
+      restCompleters[0].complete(
         Success(domainSnapshot(revision: 11, eventIds: ['rest-old'])),
       );
       await pumpEventQueue();
@@ -191,7 +238,7 @@ void main() {
       controller.add(
         const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
       );
-      restCompleter.complete(
+      restCompleters[0].complete(
         const Failure(
           ShakeDetectionApiException(
             message: 'Shake detection state is not available.',
@@ -213,16 +260,205 @@ void main() {
       container
           .read(appClockProvider.notifier)
           .enterTimeShift(const Duration(minutes: -3));
-      restCompleter.complete(
-        Success(domainSnapshot(revision: 7, eventIds: ['restored'])),
-      );
       await pumpEventQueue();
       expect(subscription.read(), isEmpty);
 
       container.read(appClockProvider.notifier).returnToRealtime();
       await pumpEventQueue();
 
+      expect(repository.callCount, 2);
+      restCompleters[0].complete(
+        Success(domainSnapshot(revision: 9, eventIds: ['obsolete'])),
+      );
+      await pumpEventQueue();
+      expect(subscription.read(), isEmpty);
+
+      restCompleters[1].complete(
+        Success(domainSnapshot(revision: 7, eventIds: ['restored'])),
+      );
+      await pumpEventQueue();
       expect(subscription.read().single.eventId, 'restored');
     });
+
+    test('disconnect前のRESTはreconnect後のready同期を上書きしないこと', () async {
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      await pumpEventQueue();
+
+      final wsStatus =
+          container.read(eqMonitorWsStatusProvider.notifier)
+              as _MutableEqMonitorWsStatus;
+      wsStatus.setPhase(WsPhase.disconnected);
+      await pumpEventQueue();
+      controller.add(
+        const RealtimeEvent.tsunamiDelete(
+          eventId: 'separator',
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+      await pumpEventQueue();
+      wsStatus.setPhase(WsPhase.connected);
+      await pumpEventQueue();
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      await pumpEventQueue();
+
+      expect(repository.callCount, 2);
+      restCompleters[0].complete(
+        Success(domainSnapshot(revision: 20, eventIds: ['old-session'])),
+      );
+      restCompleters[1].complete(
+        Success(domainSnapshot(revision: 3, eventIds: ['new-session'])),
+      );
+      await pumpEventQueue();
+
+      expect(subscription.read().single.eventId, 'new-session');
+    });
+
+    test('repeated readyで後発RESTが先に完了しても先発RESTを無視すること', () async {
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      await pumpEventQueue();
+      controller.add(
+        const RealtimeEvent.tsunamiDelete(
+          eventId: 'separator',
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+      await pumpEventQueue();
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      await pumpEventQueue();
+
+      expect(repository.callCount, 2);
+      restCompleters[1].complete(
+        Success(domainSnapshot(revision: 4, eventIds: ['second'])),
+      );
+      await pumpEventQueue();
+      restCompleters[0].complete(
+        Success(domainSnapshot(revision: 30, eventIds: ['obsolete-first'])),
+      );
+      await pumpEventQueue();
+
+      expect(subscription.read().single.eventId, 'second');
+    });
+
+    test('repeated readyで先発RESTが先に完了しても後発RESTだけを採用すること', () async {
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      await pumpEventQueue();
+      controller.add(
+        const RealtimeEvent.tsunamiDelete(
+          eventId: 'separator',
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+      await pumpEventQueue();
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      await pumpEventQueue();
+
+      expect(repository.callCount, 2);
+      restCompleters[0].complete(
+        Success(domainSnapshot(revision: 30, eventIds: ['obsolete-first'])),
+      );
+      await pumpEventQueue();
+      expect(subscription.read(), isEmpty);
+
+      restCompleters[1].complete(
+        Success(domainSnapshot(revision: 4, eventIds: ['second'])),
+      );
+      await pumpEventQueue();
+      expect(subscription.read().single.eventId, 'second');
+    });
+
+    test('obsolete REST failureをstateに適用せずログにも記録しないこと', () async {
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      await pumpEventQueue();
+      controller.add(
+        const RealtimeEvent.tsunamiDelete(
+          eventId: 'separator',
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+      await pumpEventQueue();
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      await pumpEventQueue();
+
+      restCompleters[0].complete(
+        const Failure(ShakeDetectionApiException(message: 'obsolete')),
+      );
+      await pumpEventQueue();
+
+      expect(subscription.read(), isEmpty);
+      expect(_talkerObserver.notificationCount, 0);
+      restCompleters[1].complete(
+        Success(domainSnapshot(revision: 1, eventIds: ['current'])),
+      );
+      await pumpEventQueue();
+      expect(subscription.read().single.eventId, 'current');
+    });
+
+    test('fetch待機中にdisposeしてもstate・ログを更新しないこと', () async {
+      controller.add(
+        const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+      );
+      await pumpEventQueue();
+      expect(repository.callCount, 1);
+
+      subscription.close();
+      container.dispose();
+      containerDisposed = true;
+      restCompleters[0].complete(
+        const Failure(ShakeDetectionApiException(message: 'disposed')),
+      );
+      await pumpEventQueue();
+
+      expect(_talkerObserver.notificationCount, 0);
+    });
+  });
+
+  test('repository解決待機中にdisposeしてもfetch・ログを実行しないこと', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    final repositoryCompleter = Completer<ShakeDetectionRepository>();
+    final restCompleters =
+        <Completer<Result<ShakeDetectionSnapshot, ShakeDetectionApiException>>>[
+          Completer(),
+        ];
+    final repository = _QueuedShakeDetectionRepository(restCompleters);
+    final container = ProviderContainer(
+      overrides: [
+        realtimeEventsProvider.overrideWith(
+          () => _StubRealtimeEvents(controller.stream),
+        ),
+        shakeDetectionRepositoryProvider.overrideWith(
+          (ref) => repositoryCompleter.future,
+        ),
+        eqMonitorWsStatusProvider.overrideWith(_MutableEqMonitorWsStatus.new),
+      ],
+    );
+    final subscription = container.listen(shakeDetectionProvider, (_, _) {});
+    await pumpEventQueue();
+    controller.add(const RealtimeEvent.ready(source: RealtimeSource.eqmonitor));
+    await pumpEventQueue();
+
+    subscription.close();
+    container.dispose();
+    repositoryCompleter.complete(repository);
+    await pumpEventQueue();
+
+    expect(repository.callCount, 0);
+    expect(_talkerObserver.notificationCount, 0);
+    await controller.close();
   });
 }
