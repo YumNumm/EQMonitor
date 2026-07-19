@@ -1,8 +1,7 @@
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:eqmonitor_websocket/src/ws_estimated_intensity_payload.dart';
 import 'package:eqmonitor_websocket/src/ws_realtime_operation.dart';
-import 'package:eqmonitor_websocket/src/ws_shake_observation_point.dart';
-import 'package:eqmonitor_websocket/src/ws_shake_payload.dart';
+import 'package:eqmonitor_websocket/src/ws_shake_detection_snapshot.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'realtime_event_envelope.freezed.dart';
@@ -41,18 +40,13 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
     Map<String, dynamic>? record,
   }) = WsTsunamiRealtimeEvent;
 
-  /// 揺れ検知
-  @FreezedUnionValue('shake_detected')
-  const factory RealtimeEventEnvelope.shakeDetected({
-    required String eventId,
-    required DateTime createdAt,
-    required String level,
-    required bool isReplay,
-    required int pointCount,
-    required WsShakeRegionPayload region,
-    @Default([]) List<String> changeReasons,
-    @Default([]) List<WsShakeObservationPoint> points,
-  }) = WsShakeDetectedRealtimeEvent;
+  /// 揺れ検知 snapshot
+  @FreezedUnionValue('shake_detection')
+  const factory RealtimeEventEnvelope.shakeDetection({
+    required int revision,
+    required DateTime responseAt,
+    @Default([]) List<WsShakeDetectionEvent> events,
+  }) = WsShakeDetectionRealtimeEvent;
 
   /// 推計震度
   @FreezedUnionValue('ESTIMATED_INTENSITY')

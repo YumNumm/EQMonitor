@@ -29,10 +29,7 @@ void main() {
     test('snapshot の eews/earthquakes フィールドが省略された場合デフォルト空リストになること', () {
       final json = <String, dynamic>{
         'type': 'snapshot',
-        'data': {
-          'revision': 1,
-          'updatedAt': '2025-01-15T12:00:00.000Z',
-        },
+        'data': {'revision': 1, 'updatedAt': '2025-01-15T12:00:00.000Z'},
       };
 
       final result = WsMessage.fromJson(json);
@@ -65,38 +62,66 @@ void main() {
       expect(eq.record, isNull);
     });
 
-    test('realtime/shake_detected メッセージを正しくパースできること', () {
-      final json = <String, dynamic>{
+    test('realtime/shake_detection の完全snapshotをパースできること', () {
+      final result = WsMessage.fromJson({
         'type': 'realtime',
         'data': {
-          'type': 'shake_detected',
-          'eventId': 'shake-001',
-          'createdAt': '2025-01-15T12:00:00.000Z',
-          'level': 'Medium',
-          'changeReasons': ['new_event'],
-          'isReplay': false,
-          'pointCount': 10,
-          'region': {
-            'topLeft': {'latitude': 36.0, 'longitude': 139.0},
-            'bottomRight': {'latitude': 35.5, 'longitude': 140.0},
-          },
+          'type': 'shake_detection',
+          'revision': 42,
+          'responseAt': '2026-07-18T12:34:56.789Z',
+          'events': [
+            {
+              'type': 'shake_detection',
+              'eventId': 'shake-canonical',
+              'serialNo': 7,
+              'createdAt': '2026-07-18T12:34:30.000Z',
+              'updatedAt': '2026-07-18T12:34:55.000Z',
+              'expiresAt': '2026-07-18T12:35:35.000Z',
+              'level': 'Strong',
+              'changeReasons': ['level_up'],
+              'mergedEvents': [
+                {
+                  'eventId': 'shake-absorbed',
+                  'mergedAt': '2026-07-18T12:34:50.000Z',
+                },
+              ],
+              'pointCount': 1,
+              'region': {
+                'topLeft': {'latitude': 36.0, 'longitude': 139.0},
+                'bottomRight': {'latitude': 35.0, 'longitude': 140.0},
+              },
+              'points': [
+                {
+                  'code': 'POINT-1',
+                  'name': 'Point 1',
+                  'region': 'Tokyo',
+                  'type': 'K-NET',
+                  'location': {'latitude': 35.5, 'longitude': 139.5},
+                  'intensity': 3.2,
+                  'intensityDiff': 0.4,
+                },
+              ],
+              'correlatedEew': {'eventId': 'eew-1', 'score': 0.9},
+            },
+          ],
         },
-      };
+      });
 
-      final result = WsMessage.fromJson(json);
-
-      expect(result, isA<WsRealtimeMessage>());
-      final realtime = result as WsRealtimeMessage;
-      expect(realtime.data, isA<WsShakeDetectedRealtimeEvent>());
-      final shake = realtime.data as WsShakeDetectedRealtimeEvent;
-      expect(shake.eventId, equals('shake-001'));
-      expect(shake.level, equals('Medium'));
-      expect(shake.isReplay, isFalse);
-      expect(shake.pointCount, equals(10));
-      expect(shake.region.topLeft.latitude, equals(36.0));
-      expect(shake.region.topLeft.longitude, equals(139.0));
-      expect(shake.region.bottomRight.latitude, equals(35.5));
-      expect(shake.region.bottomRight.longitude, equals(140.0));
+      final message = result as WsRealtimeMessage;
+      final snapshot = message.data as WsShakeDetectionRealtimeEvent;
+      expect(snapshot.revision, 42);
+      expect(snapshot.responseAt, DateTime.parse('2026-07-18T12:34:56.789Z'));
+      expect(snapshot.events.single.eventId, 'shake-canonical');
+      expect(snapshot.events.single.serialNo, 7);
+      expect(
+        snapshot.events.single.expiresAt,
+        DateTime.parse('2026-07-18T12:35:35.000Z'),
+      );
+      expect(
+        snapshot.events.single.mergedEvents.single.eventId,
+        'shake-absorbed',
+      );
+      expect(snapshot.events.single.correlatedEew?.eventId, 'eew-1');
     });
 
     test('realtime/ESTIMATED_INTENSITY メッセージを正しくパースできること', () {
@@ -167,29 +192,6 @@ void main() {
       expect(tsunami.operation, equals(WsRealtimeOperation.upsert));
       expect(tsunami.eventId, equals('tsunami-001'));
       expect(tsunami.record, equals({'key': 'value'}));
-    });
-
-    test('shake_detected の is_replay=true を正しくパースできること', () {
-      final json = <String, dynamic>{
-        'type': 'shake_detected',
-        'eventId': 'replay-001',
-        'createdAt': '2025-06-01T09:00:00.000Z',
-        'level': 'Weak',
-        'changeReasons': ['level_changed'],
-        'isReplay': true,
-        'pointCount': 3,
-        'region': {
-          'topLeft': {'latitude': 35.0, 'longitude': 136.0},
-          'bottomRight': {'latitude': 34.0, 'longitude': 137.0},
-        },
-      };
-
-      final result = RealtimeEventEnvelope.fromJson(json);
-
-      expect(result, isA<WsShakeDetectedRealtimeEvent>());
-      final shake = result as WsShakeDetectedRealtimeEvent;
-      expect(shake.isReplay, isTrue);
-      expect(shake.pointCount, equals(3));
     });
 
     test('ESTIMATED_INTENSITY を正しくパースできること', () {
