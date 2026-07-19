@@ -26,9 +26,11 @@ class DebugShakeDetectionCardPage extends HookConsumerWidget {
 
     ShakeDetectionEvent buildEvent() => ShakeDetectionEvent(
       eventId: 'debug-shake-1',
+      serialNo: 1,
       createdAt: createdAt.value,
+      updatedAt: createdAt.value,
+      expiresAt: createdAt.value.add(const Duration(minutes: 1)),
       level: level.value,
-      isReplay: false,
       pointCount: 42,
       minLat: minLat.value,
       maxLat: maxLat.value,
@@ -172,22 +174,25 @@ class DebugShakeDetectionCardPage extends HookConsumerWidget {
 }
 
 // 岩手県付近のバウンディングボックス
-final List<ShakeDetectionEvent> _kSampleEvents = ShakeDetectionLevel.values
-    .map(
-      (level) => ShakeDetectionEvent(
-        eventId: 'sample-${level.name}',
-        createdAt: DateTime(2024, 1, 1, 12),
-        level: level,
-        isReplay: false,
-        pointCount: 30,
-        minLat: 38.9,
-        maxLat: 40.5,
-        minLng: 140.5,
-        maxLng: 141.8,
-        changeReasons: const ['new_event'],
-      ),
-    )
-    .toList();
+final List<ShakeDetectionEvent> _kSampleEvents = ShakeDetectionLevel.values.map(
+  (level) {
+    final createdAt = DateTime(2024, 1, 1, 12);
+    return ShakeDetectionEvent(
+      eventId: 'sample-${level.name}',
+      serialNo: 1,
+      createdAt: createdAt,
+      updatedAt: createdAt,
+      expiresAt: createdAt.add(const Duration(minutes: 1)),
+      level: level,
+      pointCount: 30,
+      minLat: 38.9,
+      maxLat: 40.5,
+      minLng: 140.5,
+      maxLng: 141.8,
+      changeReasons: const ['new_event'],
+    );
+  },
+).toList();
 
 class _ParamSection extends StatelessWidget {
   const _ParamSection({required this.title, required this.child});

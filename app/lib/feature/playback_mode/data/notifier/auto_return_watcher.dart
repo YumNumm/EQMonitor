@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auto_return_watcher.g.dart';
 
-/// タイムシフト/リプレイ再生中に、ライブのリアルタイムイベント（EEW・揺れ検知）が
+/// タイムシフト/リプレイ再生中に、ライブの EEW が
 /// 発生したら通常再生へ自動復帰させる常駐ウォッチャ。
 ///
 /// リプレイ中は `eewProvider` 等がライブ受信を遮断するため、ここでは

@@ -10,7 +10,7 @@ part of 'auto_return_watcher.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// タイムシフト/リプレイ再生中に、ライブのリアルタイムイベント（EEW・揺れ検知）が
+/// タイムシフト/リプレイ再生中に、ライブの EEW が
 /// 発生したら通常再生へ自動復帰させる常駐ウォッチャ。
 ///
 /// リプレイ中は `eewProvider` 等がライブ受信を遮断するため、ここでは
@@ -20,7 +20,7 @@ part of 'auto_return_watcher.dart';
 @ProviderFor(AutoReturnWatcher)
 final autoReturnWatcherProvider = AutoReturnWatcherProvider._();
 
-/// タイムシフト/リプレイ再生中に、ライブのリアルタイムイベント（EEW・揺れ検知）が
+/// タイムシフト/リプレイ再生中に、ライブの EEW が
 /// 発生したら通常再生へ自動復帰させる常駐ウォッチャ。
 ///
 /// リプレイ中は `eewProvider` 等がライブ受信を遮断するため、ここでは
@@ -28,7 +28,7 @@ final autoReturnWatcherProvider = AutoReturnWatcherProvider._();
 /// `main` で起動時に常駐させる。
 final class AutoReturnWatcherProvider
     extends $NotifierProvider<AutoReturnWatcher, void> {
-  /// タイムシフト/リプレイ再生中に、ライブのリアルタイムイベント（EEW・揺れ検知）が
+  /// タイムシフト/リプレイ再生中に、ライブの EEW が
   /// 発生したら通常再生へ自動復帰させる常駐ウォッチャ。
   ///
   /// リプレイ中は `eewProvider` 等がライブ受信を遮断するため、ここでは
@@ -63,7 +63,7 @@ final class AutoReturnWatcherProvider
 
 String _$autoReturnWatcherHash() => r'bd056ac591cc9e28b5ae7d78d082c4d23b6c0a23';
 
-/// タイムシフト/リプレイ再生中に、ライブのリアルタイムイベント（EEW・揺れ検知）が
+/// タイムシフト/リプレイ再生中に、ライブの EEW が
 /// 発生したら通常再生へ自動復帰させる常駐ウォッチャ。
 ///
 /// リプレイ中は `eewProvider` 等がライブ受信を遮断するため、ここでは

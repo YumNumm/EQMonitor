@@ -1,4 +1,3 @@
-import 'package:eqmonitor/core/realtime/model/realtime_shake_data.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -39,11 +38,6 @@ sealed class RealtimeEvent with _$RealtimeEvent {
     required RealtimeSource source,
     String? groupId,
   }) = RealtimeTsunamiDeleteEvent;
-
-  const factory RealtimeEvent.shakeDetected({
-    required RealtimeShakeData data,
-    required RealtimeSource source,
-  }) = RealtimeShakeDetectedEvent;
 
   const factory RealtimeEvent.shakeSnapshot({
     required RealtimeShakeSnapshot data,

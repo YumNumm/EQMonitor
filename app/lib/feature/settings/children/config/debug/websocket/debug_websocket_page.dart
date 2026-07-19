@@ -154,7 +154,6 @@ class _WsEventCard extends StatelessWidget {
       RealtimeEarthquakeDeleteEvent() => 'earthquake/delete',
       RealtimeTsunamiUpsertEvent() => 'tsunami/upsert',
       RealtimeTsunamiDeleteEvent() => 'tsunami/delete',
-      RealtimeShakeDetectedEvent() => 'shake_detected',
       RealtimeShakeSnapshotEvent() => 'shake_detection/snapshot',
       RealtimeEstimatedIntensityUpsertEvent() => 'estimated_intensity/upsert',
     };
@@ -169,7 +168,6 @@ class _WsEventCard extends StatelessWidget {
         'eventId=$eventId groupId=$groupId',
       RealtimeTsunamiDeleteEvent(:final eventId, :final groupId) =>
         'eventId=$eventId groupId=$groupId',
-      RealtimeShakeDetectedEvent(:final data) => 'eventId=${data.eventId}',
       RealtimeShakeSnapshotEvent(:final data) =>
         'revision=${data.revision} events=${data.events.length}',
       RealtimeEstimatedIntensityUpsertEvent(:final eventId) =>

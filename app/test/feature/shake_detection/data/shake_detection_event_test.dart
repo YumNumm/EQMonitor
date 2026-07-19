@@ -34,27 +34,6 @@ void main() {
       expect(correlated.eventId, 'e1');
       expect(correlated, isNot(event()));
     });
-
-    test('移行中のlegacy eventでcanonical値を捏造しないこと', () {
-      final legacy = ShakeDetectionEvent(
-        eventId: 'legacy-1',
-        createdAt: _createdAt,
-        level: ShakeDetectionLevel.weak,
-        isReplay: true,
-        pointCount: 1,
-        minLat: 34,
-        maxLat: 36,
-        minLng: 138,
-        maxLng: 140,
-        changeReasons: const ['new_event'],
-      );
-
-      expect(legacy.serialNo, isNull);
-      expect(legacy.updatedAt, isNull);
-      expect(legacy.expiresAt, isNull);
-      expect(legacy.isReplay, isTrue);
-      expect(legacy.changeReasons, ['new_event']);
-    });
   });
 
   group('ShakeDetectionLevel enum (eqmonitor_api)', () {

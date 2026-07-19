@@ -1,34 +1,37 @@
 import 'package:clock/clock.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final _now = DateTime.utc(2025, 1, 1, 12);
+final _now = DateTime.utc(2026, 7, 19, 12);
 
-ShakeDetectionEvent _ev({
-  required String eventId,
-  String? mergedEewEventId,
+ShakeDetectionEvent event(
+  String eventId, {
+  DateTime? createdAt,
+  required DateTime expiresAt,
+  String? correlatedEewEventId,
 }) => ShakeDetectionEvent(
   eventId: eventId,
-  createdAt: _now,
+  serialNo: 1,
+  createdAt: createdAt ?? _now,
+  updatedAt: _now,
+  expiresAt: expiresAt,
   level: ShakeDetectionLevel.medium,
-  isReplay: false,
-  pointCount: 5,
-  minLat: 34,
+  pointCount: 1,
+  minLat: 35,
   maxLat: 36,
-  minLng: 138,
+  minLng: 139,
   maxLng: 140,
   changeReasons: const ['new_event'],
-  mergedEewEventId: mergedEewEventId,
+  correlatedEewEventId: correlatedEewEventId,
 );
 
-ProviderContainer _container(List<ShakeDetectionEvent> merged) {
+ProviderContainer containerWith(List<ShakeDetectionEvent> events) {
   final container = ProviderContainer(
-    overrides: [
-      shakeDetectionMergedProvider.overrideWithValue(merged),
-    ],
+    overrides: [shakeDetectionProvider.overrideWithValue(events)],
   );
   addTearDown(container.dispose);
   return container;
@@ -36,43 +39,50 @@ ProviderContainer _container(List<ShakeDetectionEvent> merged) {
 
 void main() {
   group('shakeDetectionVisible', () {
-    test('mergedEewEventId が null のもののみ通すこと', () {
+    test('server correlatedEewがあるeventを表示しないこと', () {
       withClock(Clock.fixed(_now), () {
-        final container = _container([
-          _ev(eventId: 'a'),
-          _ev(eventId: 'b', mergedEewEventId: 'EEW-1'),
-          _ev(eventId: 'c'),
+        final container = containerWith([
+          event('visible', expiresAt: _now.add(const Duration(seconds: 1))),
+          event(
+            'correlated',
+            expiresAt: _now.add(const Duration(seconds: 1)),
+            correlatedEewEventId: 'eew-1',
+          ),
         ]);
-        final result = container.read(shakeDetectionVisibleProvider);
-        expect(result.map((e) => e.eventId).toList(), ['a', 'c']);
+        expect(
+          container
+              .read(shakeDetectionVisibleProvider)
+              .map((event) => event.eventId),
+          ['visible'],
+        );
       });
     });
 
-    test('全件 merged の場合は空リスト', () {
-      final container = _container([
-        _ev(eventId: 'a', mergedEewEventId: 'EEW-1'),
-        _ev(eventId: 'b', mergedEewEventId: 'EEW-2'),
-      ]);
-      final result = container.read(shakeDetectionVisibleProvider);
-      expect(result, isEmpty);
-    });
-
-    test('入力が空でも例外にならず空リストを返すこと', () {
-      final container = _container([]);
-      final result = container.read(shakeDetectionVisibleProvider);
-      expect(result, isEmpty);
-    });
-
-    test('順序は merged provider 由来の順序を維持すること', () {
+    test('expiresAt以前だけを表示すること', () {
       withClock(Clock.fixed(_now), () {
-        final container = _container([
-          _ev(eventId: 'z'),
-          _ev(eventId: 'a'),
-          _ev(eventId: 'm', mergedEewEventId: 'EEW-1'),
-          _ev(eventId: 'b'),
+        final container = containerWith([
+          event('expired', expiresAt: _now),
+          event('active', expiresAt: _now.add(const Duration(milliseconds: 1))),
         ]);
-        final result = container.read(shakeDetectionVisibleProvider);
-        expect(result.map((e) => e.eventId).toList(), ['z', 'a', 'b']);
+        expect(
+          container
+              .read(shakeDetectionVisibleProvider)
+              .map((event) => event.eventId),
+          ['active'],
+        );
+      });
+    });
+
+    test('createdAtから3分経過していてもexpiresAtが未来なら表示すること', () {
+      withClock(Clock.fixed(_now), () {
+        final container = containerWith([
+          event(
+            'server-active',
+            createdAt: _now.subtract(const Duration(minutes: 4)),
+            expiresAt: _now.add(const Duration(seconds: 1)),
+          ),
+        ]);
+        expect(container.read(shakeDetectionVisibleProvider), hasLength(1));
       });
     });
   });

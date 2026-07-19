@@ -14,10 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShakeDetectionEvent {
 
- String get eventId;/// Legacy realtime producer の移行完了まで nullable。REST repository は必ず設定する。
- int? get serialNo; DateTime get createdAt; DateTime? get updatedAt; DateTime? get expiresAt; ShakeDetectionLevel get level;/// Task 6 で canonical snapshot consumer へ移行後に削除する。
- bool? get isReplay; int get pointCount; double get minLat; double get maxLat; double get minLng; double get maxLng; List<String> get changeReasons;/// Task 6 で canonical correlation/expiry consumer へ移行後に削除する。
- String? get mergedEewEventId; String? get correlatedEewEventId;
+ String get eventId; int get serialNo; DateTime get createdAt; DateTime get updatedAt; DateTime get expiresAt; ShakeDetectionLevel get level; int get pointCount; double get minLat; double get maxLat; double get minLng; double get maxLng; List<String> get changeReasons; String? get correlatedEewEventId;
 /// Create a copy of ShakeDetectionEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +25,16 @@ $ShakeDetectionEventCopyWith<ShakeDetectionEvent> get copyWith => _$ShakeDetecti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.level, level) || other.level == level)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.minLat, minLat) || other.minLat == minLat)&&(identical(other.maxLat, maxLat) || other.maxLat == maxLat)&&(identical(other.minLng, minLng) || other.minLng == minLng)&&(identical(other.maxLng, maxLng) || other.maxLng == maxLng)&&const DeepCollectionEquality().equals(other.changeReasons, changeReasons)&&(identical(other.mergedEewEventId, mergedEewEventId) || other.mergedEewEventId == mergedEewEventId)&&(identical(other.correlatedEewEventId, correlatedEewEventId) || other.correlatedEewEventId == correlatedEewEventId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.level, level) || other.level == level)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.minLat, minLat) || other.minLat == minLat)&&(identical(other.maxLat, maxLat) || other.maxLat == maxLat)&&(identical(other.minLng, minLng) || other.minLng == minLng)&&(identical(other.maxLng, maxLng) || other.maxLng == maxLng)&&const DeepCollectionEquality().equals(other.changeReasons, changeReasons)&&(identical(other.correlatedEewEventId, correlatedEewEventId) || other.correlatedEewEventId == correlatedEewEventId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,eventId,serialNo,createdAt,updatedAt,expiresAt,level,isReplay,pointCount,minLat,maxLat,minLng,maxLng,const DeepCollectionEquality().hash(changeReasons),mergedEewEventId,correlatedEewEventId);
+int get hashCode => Object.hash(runtimeType,eventId,serialNo,createdAt,updatedAt,expiresAt,level,pointCount,minLat,maxLat,minLng,maxLng,const DeepCollectionEquality().hash(changeReasons),correlatedEewEventId);
 
 @override
 String toString() {
-  return 'ShakeDetectionEvent(eventId: $eventId, serialNo: $serialNo, createdAt: $createdAt, updatedAt: $updatedAt, expiresAt: $expiresAt, level: $level, isReplay: $isReplay, pointCount: $pointCount, minLat: $minLat, maxLat: $maxLat, minLng: $minLng, maxLng: $maxLng, changeReasons: $changeReasons, mergedEewEventId: $mergedEewEventId, correlatedEewEventId: $correlatedEewEventId)';
+  return 'ShakeDetectionEvent(eventId: $eventId, serialNo: $serialNo, createdAt: $createdAt, updatedAt: $updatedAt, expiresAt: $expiresAt, level: $level, pointCount: $pointCount, minLat: $minLat, maxLat: $maxLat, minLng: $minLng, maxLng: $maxLng, changeReasons: $changeReasons, correlatedEewEventId: $correlatedEewEventId)';
 }
 
 
@@ -48,7 +45,7 @@ abstract mixin class $ShakeDetectionEventCopyWith<$Res>  {
   factory $ShakeDetectionEventCopyWith(ShakeDetectionEvent value, $Res Function(ShakeDetectionEvent) _then) = _$ShakeDetectionEventCopyWithImpl;
 @useResult
 $Res call({
- String eventId, int? serialNo, DateTime createdAt, DateTime? updatedAt, DateTime? expiresAt, ShakeDetectionLevel level, bool? isReplay, int pointCount, double minLat, double maxLat, double minLng, double maxLng, List<String> changeReasons, String? mergedEewEventId, String? correlatedEewEventId
+ String eventId, int serialNo, DateTime createdAt, DateTime updatedAt, DateTime expiresAt, ShakeDetectionLevel level, int pointCount, double minLat, double maxLat, double minLng, double maxLng, List<String> changeReasons, String? correlatedEewEventId
 });
 
 
@@ -65,23 +62,21 @@ class _$ShakeDetectionEventCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? serialNo = freezed,Object? createdAt = null,Object? updatedAt = freezed,Object? expiresAt = freezed,Object? level = null,Object? isReplay = freezed,Object? pointCount = null,Object? minLat = null,Object? maxLat = null,Object? minLng = null,Object? maxLng = null,Object? changeReasons = null,Object? mergedEewEventId = freezed,Object? correlatedEewEventId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? serialNo = null,Object? createdAt = null,Object? updatedAt = null,Object? expiresAt = null,Object? level = null,Object? pointCount = null,Object? minLat = null,Object? maxLat = null,Object? minLng = null,Object? maxLng = null,Object? changeReasons = null,Object? correlatedEewEventId = freezed,}) {
   return _then(_self.copyWith(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
-as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
-as ShakeDetectionLevel,isReplay: freezed == isReplay ? _self.isReplay : isReplay // ignore: cast_nullable_to_non_nullable
-as bool?,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
+as String,serialNo: null == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionLevel,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
 as int,minLat: null == minLat ? _self.minLat : minLat // ignore: cast_nullable_to_non_nullable
 as double,maxLat: null == maxLat ? _self.maxLat : maxLat // ignore: cast_nullable_to_non_nullable
 as double,minLng: null == minLng ? _self.minLng : minLng // ignore: cast_nullable_to_non_nullable
 as double,maxLng: null == maxLng ? _self.maxLng : maxLng // ignore: cast_nullable_to_non_nullable
 as double,changeReasons: null == changeReasons ? _self.changeReasons : changeReasons // ignore: cast_nullable_to_non_nullable
-as List<String>,mergedEewEventId: freezed == mergedEewEventId ? _self.mergedEewEventId : mergedEewEventId // ignore: cast_nullable_to_non_nullable
-as String?,correlatedEewEventId: freezed == correlatedEewEventId ? _self.correlatedEewEventId : correlatedEewEventId // ignore: cast_nullable_to_non_nullable
+as List<String>,correlatedEewEventId: freezed == correlatedEewEventId ? _self.correlatedEewEventId : correlatedEewEventId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -167,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String eventId,  int? serialNo,  DateTime createdAt,  DateTime? updatedAt,  DateTime? expiresAt,  ShakeDetectionLevel level,  bool? isReplay,  int pointCount,  double minLat,  double maxLat,  double minLng,  double maxLng,  List<String> changeReasons,  String? mergedEewEventId,  String? correlatedEewEventId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String eventId,  int serialNo,  DateTime createdAt,  DateTime updatedAt,  DateTime expiresAt,  ShakeDetectionLevel level,  int pointCount,  double minLat,  double maxLat,  double minLng,  double maxLng,  List<String> changeReasons,  String? correlatedEewEventId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShakeDetectionEvent() when $default != null:
-return $default(_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.isReplay,_that.pointCount,_that.minLat,_that.maxLat,_that.minLng,_that.maxLng,_that.changeReasons,_that.mergedEewEventId,_that.correlatedEewEventId);case _:
+return $default(_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.pointCount,_that.minLat,_that.maxLat,_that.minLng,_that.maxLng,_that.changeReasons,_that.correlatedEewEventId);case _:
   return orElse();
 
 }
@@ -188,10 +183,10 @@ return $default(_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String eventId,  int? serialNo,  DateTime createdAt,  DateTime? updatedAt,  DateTime? expiresAt,  ShakeDetectionLevel level,  bool? isReplay,  int pointCount,  double minLat,  double maxLat,  double minLng,  double maxLng,  List<String> changeReasons,  String? mergedEewEventId,  String? correlatedEewEventId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String eventId,  int serialNo,  DateTime createdAt,  DateTime updatedAt,  DateTime expiresAt,  ShakeDetectionLevel level,  int pointCount,  double minLat,  double maxLat,  double minLng,  double maxLng,  List<String> changeReasons,  String? correlatedEewEventId)  $default,) {final _that = this;
 switch (_that) {
 case _ShakeDetectionEvent():
-return $default(_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.isReplay,_that.pointCount,_that.minLat,_that.maxLat,_that.minLng,_that.maxLng,_that.changeReasons,_that.mergedEewEventId,_that.correlatedEewEventId);case _:
+return $default(_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.pointCount,_that.minLat,_that.maxLat,_that.minLng,_that.maxLng,_that.changeReasons,_that.correlatedEewEventId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +203,10 @@ return $default(_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String eventId,  int? serialNo,  DateTime createdAt,  DateTime? updatedAt,  DateTime? expiresAt,  ShakeDetectionLevel level,  bool? isReplay,  int pointCount,  double minLat,  double maxLat,  double minLng,  double maxLng,  List<String> changeReasons,  String? mergedEewEventId,  String? correlatedEewEventId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String eventId,  int serialNo,  DateTime createdAt,  DateTime updatedAt,  DateTime expiresAt,  ShakeDetectionLevel level,  int pointCount,  double minLat,  double maxLat,  double minLng,  double maxLng,  List<String> changeReasons,  String? correlatedEewEventId)?  $default,) {final _that = this;
 switch (_that) {
 case _ShakeDetectionEvent() when $default != null:
-return $default(_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.isReplay,_that.pointCount,_that.minLat,_that.maxLat,_that.minLng,_that.maxLng,_that.changeReasons,_that.mergedEewEventId,_that.correlatedEewEventId);case _:
+return $default(_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.pointCount,_that.minLat,_that.maxLat,_that.minLng,_that.maxLng,_that.changeReasons,_that.correlatedEewEventId);case _:
   return null;
 
 }
@@ -223,18 +218,15 @@ return $default(_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_th
 
 
 class _ShakeDetectionEvent implements ShakeDetectionEvent {
-  const _ShakeDetectionEvent({required this.eventId, this.serialNo, required this.createdAt, this.updatedAt, this.expiresAt, required this.level, this.isReplay, required this.pointCount, required this.minLat, required this.maxLat, required this.minLng, required this.maxLng, required final  List<String> changeReasons, this.mergedEewEventId, this.correlatedEewEventId}): _changeReasons = changeReasons;
+  const _ShakeDetectionEvent({required this.eventId, required this.serialNo, required this.createdAt, required this.updatedAt, required this.expiresAt, required this.level, required this.pointCount, required this.minLat, required this.maxLat, required this.minLng, required this.maxLng, required final  List<String> changeReasons, this.correlatedEewEventId}): _changeReasons = changeReasons;
   
 
 @override final  String eventId;
-/// Legacy realtime producer の移行完了まで nullable。REST repository は必ず設定する。
-@override final  int? serialNo;
+@override final  int serialNo;
 @override final  DateTime createdAt;
-@override final  DateTime? updatedAt;
-@override final  DateTime? expiresAt;
+@override final  DateTime updatedAt;
+@override final  DateTime expiresAt;
 @override final  ShakeDetectionLevel level;
-/// Task 6 で canonical snapshot consumer へ移行後に削除する。
-@override final  bool? isReplay;
 @override final  int pointCount;
 @override final  double minLat;
 @override final  double maxLat;
@@ -247,8 +239,6 @@ class _ShakeDetectionEvent implements ShakeDetectionEvent {
   return EqualUnmodifiableListView(_changeReasons);
 }
 
-/// Task 6 で canonical correlation/expiry consumer へ移行後に削除する。
-@override final  String? mergedEewEventId;
 @override final  String? correlatedEewEventId;
 
 /// Create a copy of ShakeDetectionEvent
@@ -261,16 +251,16 @@ _$ShakeDetectionEventCopyWith<_ShakeDetectionEvent> get copyWith => __$ShakeDete
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.level, level) || other.level == level)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.minLat, minLat) || other.minLat == minLat)&&(identical(other.maxLat, maxLat) || other.maxLat == maxLat)&&(identical(other.minLng, minLng) || other.minLng == minLng)&&(identical(other.maxLng, maxLng) || other.maxLng == maxLng)&&const DeepCollectionEquality().equals(other._changeReasons, _changeReasons)&&(identical(other.mergedEewEventId, mergedEewEventId) || other.mergedEewEventId == mergedEewEventId)&&(identical(other.correlatedEewEventId, correlatedEewEventId) || other.correlatedEewEventId == correlatedEewEventId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.level, level) || other.level == level)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.minLat, minLat) || other.minLat == minLat)&&(identical(other.maxLat, maxLat) || other.maxLat == maxLat)&&(identical(other.minLng, minLng) || other.minLng == minLng)&&(identical(other.maxLng, maxLng) || other.maxLng == maxLng)&&const DeepCollectionEquality().equals(other._changeReasons, _changeReasons)&&(identical(other.correlatedEewEventId, correlatedEewEventId) || other.correlatedEewEventId == correlatedEewEventId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,eventId,serialNo,createdAt,updatedAt,expiresAt,level,isReplay,pointCount,minLat,maxLat,minLng,maxLng,const DeepCollectionEquality().hash(_changeReasons),mergedEewEventId,correlatedEewEventId);
+int get hashCode => Object.hash(runtimeType,eventId,serialNo,createdAt,updatedAt,expiresAt,level,pointCount,minLat,maxLat,minLng,maxLng,const DeepCollectionEquality().hash(_changeReasons),correlatedEewEventId);
 
 @override
 String toString() {
-  return 'ShakeDetectionEvent(eventId: $eventId, serialNo: $serialNo, createdAt: $createdAt, updatedAt: $updatedAt, expiresAt: $expiresAt, level: $level, isReplay: $isReplay, pointCount: $pointCount, minLat: $minLat, maxLat: $maxLat, minLng: $minLng, maxLng: $maxLng, changeReasons: $changeReasons, mergedEewEventId: $mergedEewEventId, correlatedEewEventId: $correlatedEewEventId)';
+  return 'ShakeDetectionEvent(eventId: $eventId, serialNo: $serialNo, createdAt: $createdAt, updatedAt: $updatedAt, expiresAt: $expiresAt, level: $level, pointCount: $pointCount, minLat: $minLat, maxLat: $maxLat, minLng: $minLng, maxLng: $maxLng, changeReasons: $changeReasons, correlatedEewEventId: $correlatedEewEventId)';
 }
 
 
@@ -281,7 +271,7 @@ abstract mixin class _$ShakeDetectionEventCopyWith<$Res> implements $ShakeDetect
   factory _$ShakeDetectionEventCopyWith(_ShakeDetectionEvent value, $Res Function(_ShakeDetectionEvent) _then) = __$ShakeDetectionEventCopyWithImpl;
 @override @useResult
 $Res call({
- String eventId, int? serialNo, DateTime createdAt, DateTime? updatedAt, DateTime? expiresAt, ShakeDetectionLevel level, bool? isReplay, int pointCount, double minLat, double maxLat, double minLng, double maxLng, List<String> changeReasons, String? mergedEewEventId, String? correlatedEewEventId
+ String eventId, int serialNo, DateTime createdAt, DateTime updatedAt, DateTime expiresAt, ShakeDetectionLevel level, int pointCount, double minLat, double maxLat, double minLng, double maxLng, List<String> changeReasons, String? correlatedEewEventId
 });
 
 
@@ -298,23 +288,21 @@ class __$ShakeDetectionEventCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? serialNo = freezed,Object? createdAt = null,Object? updatedAt = freezed,Object? expiresAt = freezed,Object? level = null,Object? isReplay = freezed,Object? pointCount = null,Object? minLat = null,Object? maxLat = null,Object? minLng = null,Object? maxLng = null,Object? changeReasons = null,Object? mergedEewEventId = freezed,Object? correlatedEewEventId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? serialNo = null,Object? createdAt = null,Object? updatedAt = null,Object? expiresAt = null,Object? level = null,Object? pointCount = null,Object? minLat = null,Object? maxLat = null,Object? minLng = null,Object? maxLng = null,Object? changeReasons = null,Object? correlatedEewEventId = freezed,}) {
   return _then(_ShakeDetectionEvent(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
-as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
-as ShakeDetectionLevel,isReplay: freezed == isReplay ? _self.isReplay : isReplay // ignore: cast_nullable_to_non_nullable
-as bool?,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
+as String,serialNo: null == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionLevel,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
 as int,minLat: null == minLat ? _self.minLat : minLat // ignore: cast_nullable_to_non_nullable
 as double,maxLat: null == maxLat ? _self.maxLat : maxLat // ignore: cast_nullable_to_non_nullable
 as double,minLng: null == minLng ? _self.minLng : minLng // ignore: cast_nullable_to_non_nullable
 as double,maxLng: null == maxLng ? _self.maxLng : maxLng // ignore: cast_nullable_to_non_nullable
 as double,changeReasons: null == changeReasons ? _self._changeReasons : changeReasons // ignore: cast_nullable_to_non_nullable
-as List<String>,mergedEewEventId: freezed == mergedEewEventId ? _self.mergedEewEventId : mergedEewEventId // ignore: cast_nullable_to_non_nullable
-as String?,correlatedEewEventId: freezed == correlatedEewEventId ? _self.correlatedEewEventId : correlatedEewEventId // ignore: cast_nullable_to_non_nullable
+as List<String>,correlatedEewEventId: freezed == correlatedEewEventId ? _self.correlatedEewEventId : correlatedEewEventId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

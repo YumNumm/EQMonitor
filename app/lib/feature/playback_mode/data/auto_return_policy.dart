@@ -10,12 +10,10 @@ AutoReturnPolicy autoReturnPolicy(Ref ref) => const AutoReturnPolicy();
 class AutoReturnPolicy {
   const AutoReturnPolicy();
 
-  /// 復帰トリガーとなるのは、リアルタイムの EEW 更新、および
-  /// リプレイ由来でない揺れ検知イベント。
-  /// 初期スナップショットや地震情報・推定震度などは対象外。
+  /// 復帰トリガーとなるのはリアルタイムの EEW 更新。
+  /// snapshot や地震情報・推定震度などは対象外。
   bool shouldReturnToRealtime(RealtimeEvent event) => switch (event) {
     RealtimeEewUpsertEvent() => true,
-    RealtimeShakeDetectedEvent(:final data) => !data.isReplay,
     _ => false,
   };
 }

@@ -102,8 +102,6 @@ void main() {
     expect(event.maxLng, 140);
     expect(event.changeReasons, ['level_up']);
     expect(event.correlatedEewEventId, 'eew-1');
-    expect(event.isReplay, isNull);
-    expect(event.mergedEewEventId, isNull);
     expect(event.expiresAt, DateTime.parse('2026-07-18T12:35:35.000Z'));
   });
 

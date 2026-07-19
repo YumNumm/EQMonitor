@@ -1,20 +1,8 @@
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
-import 'package:eqmonitor/core/realtime/model/realtime_shake_data.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
 import 'package:eqmonitor/feature/playback_mode/data/auto_return_policy.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-RealtimeShakeData _shake({required bool isReplay}) => RealtimeShakeData(
-  eventId: 'shake-1',
-  createdAt: DateTime.utc(2024, 1, 1, 7, 10, 8),
-  level: 'weak',
-  isReplay: isReplay,
-  pointCount: 1,
-  minLat: 36,
-  maxLat: 38,
-  minLng: 136,
-  maxLng: 138,
-);
 
 EewItemWithRelations _eewItem() => EewItemWithRelations.fromJson(const {
   'event_id': '20240101161010',
@@ -46,17 +34,13 @@ void main() {
       expect(policy.shouldReturnToRealtime(event), isTrue);
     });
 
-    test('リプレイ由来でない揺れ検知は復帰トリガーになること', () {
-      final event = RealtimeEvent.shakeDetected(
-        data: _shake(isReplay: false),
-        source: RealtimeSource.eqmonitor,
-      );
-      expect(policy.shouldReturnToRealtime(event), isTrue);
-    });
-
-    test('リプレイ由来の揺れ検知は復帰トリガーにならないこと', () {
-      final event = RealtimeEvent.shakeDetected(
-        data: _shake(isReplay: true),
+    test('揺れ検知snapshotは復帰トリガーにならないこと', () {
+      final event = RealtimeEvent.shakeSnapshot(
+        data: RealtimeShakeSnapshot(
+          revision: 1,
+          responseAt: DateTime.utc(2026, 7, 19, 12),
+          events: const [],
+        ),
         source: RealtimeSource.eqmonitor,
       );
       expect(policy.shouldReturnToRealtime(event), isFalse);

@@ -121,19 +121,10 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                               fontFamily: FontFamily.googleSansCode,
                             ),
                           ),
-                          if (event.isReplay == true) ...[
+                          if (event.correlatedEewEventId != null) ...[
                             const SizedBox(width: 6),
                             _TagChip(
-                              label: 'リプレイ',
-                              color: designSystem
-                                  .colorTheme
-                                  .surfaceContainerHighest,
-                            ),
-                          ],
-                          if (event.mergedEewEventId != null) ...[
-                            const SizedBox(width: 6),
-                            _TagChip(
-                              label: 'EEW結合済',
+                              label: 'EEW相関済',
                               color: designSystem.colorTheme.secondaryContainer,
                             ),
                           ],
