@@ -270,7 +270,7 @@ class _Sheet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (event.isReplay)
+                    if (event.isReplay == true)
                       _TagBadge(
                         label: 'リプレイ',
                         color: designSystem.colorTheme.surfaceContainerHighest,

@@ -7,16 +7,25 @@ part 'shake_detection_event.freezed.dart';
 abstract class ShakeDetectionEvent with _$ShakeDetectionEvent {
   const factory ShakeDetectionEvent({
     required String eventId,
+
+    /// Legacy realtime producer の移行完了まで nullable。REST repository は必ず設定する。
+    int? serialNo,
     required DateTime createdAt,
+    DateTime? updatedAt,
+    DateTime? expiresAt,
     required ShakeDetectionLevel level,
-    required bool isReplay,
+
+    /// Task 6 で canonical snapshot consumer へ移行後に削除する。
+    bool? isReplay,
     required int pointCount,
     required double minLat,
     required double maxLat,
     required double minLng,
     required double maxLng,
+    @Default(<String>[]) List<String> changeReasons,
 
-    /// 結合済み EEW の eventId。null なら未結合（表示対象）
+    /// Task 6 で canonical correlation/expiry consumer へ移行後に削除する。
     String? mergedEewEventId,
+    String? correlatedEewEventId,
   }) = _ShakeDetectionEvent;
 }

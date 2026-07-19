@@ -121,7 +121,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                               fontFamily: FontFamily.googleSansCode,
                             ),
                           ),
-                          if (event.isReplay) ...[
+                          if (event.isReplay == true) ...[
                             const SizedBox(width: 6),
                             _TagChip(
                               label: 'リプレイ',
