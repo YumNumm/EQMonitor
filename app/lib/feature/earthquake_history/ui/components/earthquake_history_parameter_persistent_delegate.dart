@@ -15,6 +15,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
+import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -63,6 +64,7 @@ class _FilterChipBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final spacing = context.designSystem.spacing;
+    final isDebugEnabled = ref.watch(debugProvider).value ?? false;
 
     // 地域絞り込み中かどうか
     final isRegionFiltered = parameter is! EarthquakeHistoryParameterAll;
@@ -163,20 +165,21 @@ class _FilterChipBar extends ConsumerWidget {
           ),
         ),
       ),
-      (
-        order: 7,
-        isActive: parameter.statuses != null,
-        chip: StatusFilterChip(
-          statuses: parameter.statuses,
-          onChanged: (statuses) {
-            if (statuses == null) {
-              onChanged(parameter.copyWith(statuses: null));
-            } else {
-              onChanged(parameter.copyWith(statuses: statuses));
-            }
-          },
+      if (isDebugEnabled)
+        (
+          order: 7,
+          isActive: parameter.statuses != null,
+          chip: StatusFilterChip(
+            statuses: parameter.statuses,
+            onChanged: (statuses) {
+              if (statuses == null) {
+                onChanged(parameter.copyWith(statuses: null));
+              } else {
+                onChanged(parameter.copyWith(statuses: statuses));
+              }
+            },
+          ),
         ),
-      ),
       (
         order: 8,
         isActive: isRegionFiltered,
@@ -219,15 +222,16 @@ class _FilterChipBar extends ConsumerWidget {
                 onChanged(parameter.copyWith(datasource: dataSource)),
           ),
         ),
-        (
-          order: 10,
-          isActive: parameter.telegramTypes != null,
-          chip: TelegramTypeFilterChip(
-            telegramTypes: parameter.telegramTypes,
-            onChanged: (types) =>
-                onChanged(parameter.copyWith(telegramTypes: types)),
+        if (isDebugEnabled)
+          (
+            order: 10,
+            isActive: parameter.telegramTypes != null,
+            chip: TelegramTypeFilterChip(
+              telegramTypes: parameter.telegramTypes,
+              onChanged: (types) =>
+                  onChanged(parameter.copyWith(telegramTypes: types)),
+            ),
           ),
-        ),
         (
           order: 11,
           isActive:
