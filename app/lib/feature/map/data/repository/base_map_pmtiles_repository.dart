@@ -22,6 +22,7 @@ class BaseMapPmtilesRepository {
     if (kIsWeb || !(Platform.isIOS || Platform.isAndroid)) {
       throw UnimplementedError('PMTiles is not supported on this platform.');
     }
+    return 'pmtiles://asset://earthquake_tsunami_all.pmtiles';
 
     final absolutePath = AssetsUtil.resolveLocalPath(
       fileName: _baseMapPmtilesFileName,
