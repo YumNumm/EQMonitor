@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'shake_detection_history_provider.g.dart';
 
 /// セッション中に受信したすべての揺れ検知イベントを蓄積するプロバイダー。
-/// shakeDetectionProvider（5分で削除）と異なり、クリーンアップしない。
+/// サーバーの active snapshot から消えたイベントも、履歴からは削除しない。
 @Riverpod(keepAlive: true)
 class ShakeDetectionHistory extends _$ShakeDetectionHistory {
   @override

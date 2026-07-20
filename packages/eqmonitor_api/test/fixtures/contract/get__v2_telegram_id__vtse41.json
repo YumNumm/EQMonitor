@@ -17,7 +17,9 @@
     "info_kind_version": "1.0_0",
     "hash": "stub-hash-vtse41",
     "created_at": "2011-03-11T05:49:05.000Z",
-    "body": null
+    "body": {
+      "type": "TSUNAMI"
+    }
   },
   "comments": {
     "free_form_comment": "高いところへ避難してください。",

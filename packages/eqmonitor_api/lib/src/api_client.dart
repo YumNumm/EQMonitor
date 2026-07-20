@@ -15,6 +15,7 @@ import 'clients/eew_api_client.dart';
 import 'clients/feed_api_client.dart';
 import 'clients/parameters_api_client.dart';
 import 'clients/seismicity_api_client.dart';
+import 'clients/shake_detection_api_client.dart';
 import 'clients/subscription_api_client.dart';
 import 'clients/telegram_api_client.dart';
 import 'clients/tsunami_api_client.dart';
@@ -48,6 +49,7 @@ class ApiClient {
   FeedApiClient? _feed;
   ParametersApiClient? _parameters;
   SeismicityApiClient? _seismicity;
+  ShakeDetectionApiClient? _shakeDetection;
   SubscriptionApiClient? _subscription;
   TelegramApiClient? _telegram;
   TsunamiApiClient? _tsunami;
@@ -76,6 +78,8 @@ class ApiClient {
   ParametersApiClient get parameters => _parameters ??= ParametersApiClient(_dio, baseUrl: _baseUrl);
 
   SeismicityApiClient get seismicity => _seismicity ??= SeismicityApiClient(_dio, baseUrl: _baseUrl);
+
+  ShakeDetectionApiClient get shakeDetection => _shakeDetection ??= ShakeDetectionApiClient(_dio, baseUrl: _baseUrl);
 
   SubscriptionApiClient get subscription => _subscription ??= SubscriptionApiClient(_dio, baseUrl: _baseUrl);
 

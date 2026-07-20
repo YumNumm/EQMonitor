@@ -11,18 +11,18 @@ part of 'shake_detection_history_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// セッション中に受信したすべての揺れ検知イベントを蓄積するプロバイダー。
-/// shakeDetectionProvider（5分で削除）と異なり、クリーンアップしない。
+/// サーバーの active snapshot から消えたイベントも、履歴からは削除しない。
 
 @ProviderFor(ShakeDetectionHistory)
 final shakeDetectionHistoryProvider = ShakeDetectionHistoryProvider._();
 
 /// セッション中に受信したすべての揺れ検知イベントを蓄積するプロバイダー。
-/// shakeDetectionProvider（5分で削除）と異なり、クリーンアップしない。
+/// サーバーの active snapshot から消えたイベントも、履歴からは削除しない。
 final class ShakeDetectionHistoryProvider
     extends
         $NotifierProvider<ShakeDetectionHistory, List<ShakeDetectionEvent>> {
   /// セッション中に受信したすべての揺れ検知イベントを蓄積するプロバイダー。
-  /// shakeDetectionProvider（5分で削除）と異なり、クリーンアップしない。
+  /// サーバーの active snapshot から消えたイベントも、履歴からは削除しない。
   ShakeDetectionHistoryProvider._()
     : super(
         from: null,
@@ -54,7 +54,7 @@ String _$shakeDetectionHistoryHash() =>
     r'93366edec4b0b7bf62fccb4dab8d3eeb142e3e06';
 
 /// セッション中に受信したすべての揺れ検知イベントを蓄積するプロバイダー。
-/// shakeDetectionProvider（5分で削除）と異なり、クリーンアップしない。
+/// サーバーの active snapshot から消えたイベントも、履歴からは削除しない。
 
 abstract class _$ShakeDetectionHistory
     extends $Notifier<List<ShakeDetectionEvent>> {

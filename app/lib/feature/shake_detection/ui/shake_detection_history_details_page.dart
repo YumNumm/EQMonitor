@@ -270,12 +270,6 @@ class _Sheet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (event.isReplay)
-                      _TagBadge(
-                        label: 'リプレイ',
-                        color: designSystem.colorTheme.surfaceContainerHighest,
-                        textColor: designSystem.colorTheme.onSurfaceVariant,
-                      ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -305,10 +299,10 @@ class _Sheet extends StatelessWidget {
                   mono: true,
                   designSystem: designSystem,
                 ),
-                if (event.mergedEewEventId != null)
+                if (event.correlatedEewEventId case final correlatedEewEventId?)
                   _InfoRow(
-                    label: 'EEW結合',
-                    value: event.mergedEewEventId!,
+                    label: '相関EEW',
+                    value: correlatedEewEventId,
                     mono: true,
                     designSystem: designSystem,
                   ),
@@ -354,35 +348,6 @@ class _LevelIndicator extends StatelessWidget {
         border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Icon(Icons.sensors_rounded, color: color, size: 22),
-    );
-  }
-}
-
-class _TagBadge extends StatelessWidget {
-  const _TagBadge({
-    required this.label,
-    required this.color,
-    required this.textColor,
-  });
-
-  final String label;
-  final Color color;
-  final Color textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        label,
-        style: Theme.of(
-          context,
-        ).textTheme.labelSmall?.copyWith(color: textColor),
-      ),
     );
   }
 }
