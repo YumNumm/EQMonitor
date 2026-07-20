@@ -82,7 +82,7 @@ as num?,
 @override
 @pragma('vm:prefer-inline')
 $LocationCopyWith<$Res> get location {
-
+  
   return $LocationCopyWith<$Res>(_self.location, (value) {
     return _then(_self.copyWith(location: value));
   });
@@ -303,7 +303,7 @@ as num?,
 @override
 @pragma('vm:prefer-inline')
 $LocationCopyWith<$Res> get location {
-
+  
   return $LocationCopyWith<$Res>(_self.location, (value) {
     return _then(_self.copyWith(location: value));
   });

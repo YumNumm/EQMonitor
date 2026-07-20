@@ -90,7 +90,7 @@ as CorrelatedEew?,
 @override
 @pragma('vm:prefer-inline')
 $RegionCopyWith<$Res> get region {
-
+  
   return $RegionCopyWith<$Res>(_self.region, (value) {
     return _then(_self.copyWith(region: value));
   });
@@ -368,7 +368,7 @@ as CorrelatedEew?,
 @override
 @pragma('vm:prefer-inline')
 $RegionCopyWith<$Res> get region {
-
+  
   return $RegionCopyWith<$Res>(_self.region, (value) {
     return _then(_self.copyWith(region: value));
   });

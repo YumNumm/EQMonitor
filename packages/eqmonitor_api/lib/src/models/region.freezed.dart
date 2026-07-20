@@ -77,7 +77,7 @@ as BottomRight,
 @override
 @pragma('vm:prefer-inline')
 $TopLeftCopyWith<$Res> get topLeft {
-
+  
   return $TopLeftCopyWith<$Res>(_self.topLeft, (value) {
     return _then(_self.copyWith(topLeft: value));
   });
@@ -86,7 +86,7 @@ $TopLeftCopyWith<$Res> get topLeft {
 @override
 @pragma('vm:prefer-inline')
 $BottomRightCopyWith<$Res> get bottomRight {
-
+  
   return $BottomRightCopyWith<$Res>(_self.bottomRight, (value) {
     return _then(_self.copyWith(bottomRight: value));
   });
@@ -297,7 +297,7 @@ as BottomRight,
 @override
 @pragma('vm:prefer-inline')
 $TopLeftCopyWith<$Res> get topLeft {
-
+  
   return $TopLeftCopyWith<$Res>(_self.topLeft, (value) {
     return _then(_self.copyWith(topLeft: value));
   });
@@ -306,7 +306,7 @@ $TopLeftCopyWith<$Res> get topLeft {
 @override
 @pragma('vm:prefer-inline')
 $BottomRightCopyWith<$Res> get bottomRight {
-
+  
   return $BottomRightCopyWith<$Res>(_self.bottomRight, (value) {
     return _then(_self.copyWith(bottomRight: value));
   });

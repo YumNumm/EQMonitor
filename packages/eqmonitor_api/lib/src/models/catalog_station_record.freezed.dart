@@ -84,7 +84,7 @@ as int?,
 @override
 @pragma('vm:prefer-inline')
 $CatalogStationIntensityCopyWith<$Res> get intensity {
-
+  
   return $CatalogStationIntensityCopyWith<$Res>(_self.intensity, (value) {
     return _then(_self.copyWith(intensity: value));
   });
@@ -331,7 +331,7 @@ as int?,
 @override
 @pragma('vm:prefer-inline')
 $CatalogStationIntensityCopyWith<$Res> get intensity {
-
+  
   return $CatalogStationIntensityCopyWith<$Res>(_self.intensity, (value) {
     return _then(_self.copyWith(intensity: value));
   });
