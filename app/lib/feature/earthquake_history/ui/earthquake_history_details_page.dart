@@ -18,6 +18,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/estimated_intensity_notice_dialog.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/nearby_earthquake_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_event_notes.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_hypocenter_information_card.dart';
 import 'package:flutter/material.dart';
@@ -203,6 +204,7 @@ class _LoadedContent extends HookConsumerWidget {
                           DateTime.now().difference(earthquake.originTime!) >
                               const Duration(hours: 24))
                         const AdBanner(),
+                      NearbyEarthquakeCard(earthquake: earthquake),
                       _TelegramListButton(eventId: earthquake.eventId),
                     ],
                   ),
