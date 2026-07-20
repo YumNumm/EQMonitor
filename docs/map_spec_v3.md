@@ -11,7 +11,7 @@
 | 項目 | 値 |
 |------|-----|
 | ライブラリ | MapLibre GL (flutter-maplibre 0.3.x) |
-| タイルソース | iOS/Android: `pmtiles://file://...`（`assets_util` で解決した絶対パス）、macOS/Web: `pmtiles://https://v2.map.eqmonitor.app/all.pmtiles` (ベクタータイル) |
+| タイルソース | iOS/Android: 旧 `https://v2.map.eqmonitor.app/all.pmtiles` と同じ内容を同梱し、`pmtiles://file://...`（`assets_util` で解決した絶対パス）で参照。macOS/Web: `pmtiles://https://v2.map.eqmonitor.app/all.pmtiles` (ベクタータイル) |
 | スタイル | ローカルファイルに書き出して参照 (ダーク/ライト別) |
 | グリフ | `https://glyphs.geolonia.com/{fontstack}/{range}.pbf` |
 
@@ -26,6 +26,10 @@
 | `areaForecastLocalEewLine` | `areaForecastLocalEew` | line | EEW 地域境界線 |
 | `areaForecastLocalELine` | `areaForecastLocalE` | line | 予報地域細線。zoom 3→opacity 0, zoom 5→0.2, zoom 5.5→1。線幅 0.5px |
 | `areaInformationCityQuakeLine` | `areaInformationCityQuake` | line | 市区町村境界線。線幅 0.5px。zoom 7→opacity 0, zoom 9.5→0.3 |
+
+同梱 PMTiles のメタデータには、上記で参照する `countries`、
+`areaForecastLocalE`、`areaForecastLocalEew`、`areaInformationCityQuake` が
+同じ大文字・小文字で含まれていなければならない。
 
 ### カラーテーマ
 
