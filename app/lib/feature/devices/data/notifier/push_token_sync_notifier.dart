@@ -6,9 +6,11 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/exception/dio_exception_mapper.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
+import 'package:eqmonitor/feature/devices/data/model/push_token_force_resync_result.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_worker_state.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
+import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
@@ -125,6 +127,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
   }
 
   static final syncMutation = Mutation<void>();
+  static final forceResyncMutation = Mutation<PushTokenForceResyncResult>();
 
   void accept(NotificationToken token) {
     final fcmToken = token.fcmToken;
@@ -151,6 +154,39 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     if (_apnsPushToStartWorker?.state is PushTokenSyncWorkerFailed) {
       _apnsPushToStartWorker?.retry();
     }
+  }
+
+  Future<PushTokenForceResyncResult> forceResync({
+    required PushTokenKind kind,
+  }) async {
+    final worker = switch (kind) {
+      PushTokenKind.fcm => _fcmWorker,
+      PushTokenKind.apnsNotification => _apnsNotificationWorker,
+      PushTokenKind.apnsPushToStart => _apnsPushToStartWorker,
+    };
+    if (worker == null) {
+      return PushTokenForceResyncResult.notApplicable;
+    }
+
+    final notificationToken = ref.read(notificationTokenStreamProvider).value;
+    final streamToken = switch (kind) {
+      PushTokenKind.fcm => notificationToken?.fcmToken,
+      PushTokenKind.apnsNotification => notificationToken?.apnsToken,
+      PushTokenKind.apnsPushToStart => notificationToken?.apnsPushToStartToken,
+    };
+    if (streamToken != null && streamToken.isNotEmpty) {
+      worker.accept(token: streamToken);
+      worker.forceResync();
+      return PushTokenForceResyncResult.started;
+    }
+
+    if (worker.state is PushTokenSyncWorkerAbsent ||
+        worker.state is PushTokenSyncWorkerDisposed) {
+      return PushTokenForceResyncResult.tokenAbsent;
+    }
+
+    worker.forceResync();
+    return PushTokenForceResyncResult.started;
   }
 
   Future<void> sync() async {

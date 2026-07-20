@@ -355,6 +355,63 @@ void main() {
         expect(upserts, ['token-a', 'token-b']);
       },
     );
+
+    test('forceResync upserts again after the same token was synced', () async {
+      final upserts = <String>[];
+      final worker = PushTokenSyncWorker(
+        upsert: (token) async => upserts.add(token),
+        backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+      );
+      addTearDown(worker.dispose);
+
+      worker.accept(token: 'same-token');
+      await worker.states.whereState<PushTokenSyncWorkerSynced>().first;
+      expect(upserts, ['same-token']);
+
+      final nextSynced = worker.states
+          .whereState<PushTokenSyncWorkerSynced>()
+          .first;
+      worker.forceResync();
+      await nextSynced;
+      expect(upserts, ['same-token', 'same-token']);
+    });
+
+    test('forceResync clears a non-retryable failure and upserts again', () async {
+      var calls = 0;
+      final worker = PushTokenSyncWorker(
+        upsert: (_) async {
+          calls++;
+          if (calls == 1) {
+            throw const InvalidRequestException(statusCode: 400);
+          }
+        },
+        backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+      );
+      addTearDown(worker.dispose);
+
+      worker.accept(token: 'blocked-token');
+      await worker.states.whereState<PushTokenSyncWorkerFailed>().first;
+      expect(calls, 1);
+
+      final synced = worker.states.whereState<PushTokenSyncWorkerSynced>().first;
+      worker.forceResync();
+      await synced;
+      expect(calls, 2);
+    });
+
+    test('forceResync is a no-op when no token has been accepted', () async {
+      final upserts = <String>[];
+      final worker = PushTokenSyncWorker(
+        upsert: (token) async => upserts.add(token),
+        backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+      );
+      addTearDown(worker.dispose);
+
+      worker.forceResync();
+      await Future<void>.delayed(Duration.zero);
+      expect(upserts, isEmpty);
+      expect(worker.state, isA<PushTokenSyncWorkerAbsent>());
+    });
   });
 }
 

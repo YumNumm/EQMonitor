@@ -10,6 +10,7 @@ import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
+import 'package:eqmonitor/feature/devices/data/model/push_token_force_resync_result.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
@@ -296,6 +297,73 @@ void main() {
       hasLength(1),
     );
   });
+
+  test('forceResync re-upserts the current stream token', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesKey.deviceProvisioned.key: true,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final harness = _createHarness(prefs: prefs);
+    addTearDown(harness.dispose);
+    await harness.start();
+
+    harness.tokens.add(const NotificationToken(fcmToken: 'same-token'));
+    await harness.waitFor((snapshot) => snapshot.fcm is SyncedTokenState);
+    final resyncCall = harness.repository.callEvents.stream.firstWhere(
+      (call) =>
+          call.kind == PushTokenKind.fcm &&
+          call.token == 'same-token' &&
+          harness.repository.calls.length == 2,
+    );
+
+    final result = await harness.container
+        .read(pushTokenSyncProvider.notifier)
+        .forceResync(kind: PushTokenKind.fcm);
+
+    await resyncCall.timeout(const Duration(seconds: 5));
+    expect(result, PushTokenForceResyncResult.started);
+    expect(harness.repository.calls, [
+      (kind: PushTokenKind.fcm, token: 'same-token'),
+      (kind: PushTokenKind.fcm, token: 'same-token'),
+    ]);
+  });
+
+  test('forceResync returns tokenAbsent when no token is available', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesKey.deviceProvisioned.key: true,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final harness = _createHarness(prefs: prefs);
+    addTearDown(harness.dispose);
+    await harness.start();
+
+    final result = await harness.container
+        .read(pushTokenSyncProvider.notifier)
+        .forceResync(kind: PushTokenKind.fcm);
+
+    expect(result, PushTokenForceResyncResult.tokenAbsent);
+    expect(harness.repository.calls, isEmpty);
+  });
+
+  test(
+    'forceResync returns notApplicable for unsupported token kind',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        SharedPreferencesKey.deviceProvisioned.key: true,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final harness = _createHarness(prefs: prefs);
+      addTearDown(harness.dispose);
+      await harness.start();
+
+      final result = await harness.container
+          .read(pushTokenSyncProvider.notifier)
+          .forceResync(kind: PushTokenKind.apnsNotification);
+
+      expect(result, PushTokenForceResyncResult.notApplicable);
+      expect(harness.repository.calls, isEmpty);
+    },
+  );
 
   test(
     'in-flight auth failure after disposal uses resolved dependencies',

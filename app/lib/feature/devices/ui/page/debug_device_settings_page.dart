@@ -7,6 +7,8 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
+import 'package:eqmonitor/feature/devices/data/flow/debug_device_lifecycle_flow.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
@@ -55,6 +57,7 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
               children: [
                 const SizedBox(height: 8),
                 _ProvisioningStartupSection(deviceIdAsync: deviceIdAsync),
+                _DeviceLifecycleSection(deviceIdAsync: deviceIdAsync),
                 _DeviceInfoSection(deviceIdAsync: deviceIdAsync),
                 const _NotificationPermissionSection(),
                 _TokenSection(syncSnapshot: syncSnapshot),
@@ -289,6 +292,106 @@ class _StatusChip extends StatelessWidget {
   }
 }
 
+// ── デバイス操作セクション ───────────────────────────────────────────────────
+
+class _DeviceLifecycleSection extends HookConsumerWidget {
+  const _DeviceLifecycleSection({required this.deviceIdAsync});
+
+  final AsyncValue<String> deviceIdAsync;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final deleteMutation = ref.watch(DeviceProvisioningNotifier.deleteMutation);
+    final reprovisionMutation = ref.watch(
+      DeviceProvisioningNotifier.reprovisionMutation,
+    );
+    final isDeleting = deleteMutation is MutationPending;
+    final isReprovisioning = reprovisionMutation is MutationPending;
+    final isProcessing = isDeleting || isReprovisioning;
+    final colorTheme = context.designSystem.colorTheme;
+
+    ref.listen(DeviceProvisioningNotifier.deleteMutation, (_, next) {
+      if (next is MutationSuccess) {
+        ref.invalidate(_isProvisionedProvider, asReload: true);
+        ref.invalidate(_deviceTokenPresentProvider, asReload: true);
+        if (deviceIdAsync.value case final deviceId? when deviceId.isNotEmpty) {
+          ref.invalidate(_deviceInfoProvider(deviceId), asReload: true);
+        }
+      }
+    });
+    ref.listen(DeviceProvisioningNotifier.reprovisionMutation, (_, next) {
+      if (next is MutationSuccess) {
+        ref.invalidate(_isProvisionedProvider, asReload: true);
+        ref.invalidate(_deviceTokenPresentProvider, asReload: true);
+        if (deviceIdAsync.value case final deviceId? when deviceId.isNotEmpty) {
+          ref.invalidate(_deviceInfoProvider(deviceId), asReload: true);
+        }
+      }
+    });
+
+    return _SectionCard(
+      title: 'デバイス操作',
+      subtitle: 'サーバー登録とローカル認証情報を検証用に操作します',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              FilledButton.tonalIcon(
+                onPressed: isProcessing
+                    ? null
+                    : () {
+                        unawaited(
+                          ref
+                              .read(debugDeviceLifecycleFlowProvider)
+                              .confirmAndDelete(ref, context)
+                              .onError<Object>((_, _) {}),
+                        );
+                      },
+                style: FilledButton.styleFrom(
+                  foregroundColor: colorTheme.error,
+                ),
+                icon: const Icon(Icons.delete_outline),
+                label: const Text('削除'),
+              ),
+              FilledButton.icon(
+                onPressed: isProcessing
+                    ? null
+                    : () {
+                        unawaited(
+                          ref
+                              .read(debugDeviceLifecycleFlowProvider)
+                              .confirmAndReprovision(ref, context)
+                              .onError<Object>((_, _) {}),
+                        );
+                      },
+                icon: const Icon(Icons.sync),
+                label: const Text('再プロビジョニング'),
+              ),
+            ],
+          ),
+          if (isProcessing) ...[
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                ),
+                const SizedBox(width: 8),
+                Text(isDeleting ? 'デバイスを削除中…' : '再プロビジョニング中…'),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 // ── OS通知許可セクション ──────────────────────────────────────────────────────
 
 class _NotificationPermissionSection extends ConsumerWidget {
@@ -420,30 +523,88 @@ Future<RegisteredDevice> _deviceInfo(Ref ref, String deviceId) async {
 
 // ── プッシュトークン同期 ────────────────────────────────────────────────────
 
-class _TokenSection extends StatelessWidget {
+class _TokenSection extends HookConsumerWidget {
   const _TokenSection({required this.syncSnapshot});
 
   final AsyncValue<PushTokenSyncSnapshot> syncSnapshot;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final snapshot = syncSnapshot.value;
+    final forceResyncMutation = ref.watch(
+      PushTokenSyncNotifier.forceResyncMutation,
+    );
+    final isForceResyncing = forceResyncMutation is MutationPending;
+    final flow = ref.read(debugDeviceLifecycleFlowProvider);
 
     return _SectionCard(
       title: 'プッシュトークン同期',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _TokenStatusRow(label: 'FCM', kindState: snapshot?.fcm),
+          _TokenStatusRow(
+            label: 'FCM',
+            kindState: snapshot?.fcm,
+            onResend: switch (snapshot?.fcm) {
+              NotApplicableTokenState() || null => null,
+              _ => () {
+                unawaited(
+                  flow
+                      .forceResyncToken(ref, context, kind: PushTokenKind.fcm)
+                      .onError<Object>((_, _) {}),
+                );
+              },
+            },
+            isResendEnabled: switch (snapshot?.fcm) {
+              SyncingTokenState() => false,
+              _ => isForceResyncing == false,
+            },
+          ),
           const SizedBox(height: 6),
           _TokenStatusRow(
             label: 'APNs（通知）',
             kindState: snapshot?.apnsNotification,
+            onResend: switch (snapshot?.apnsNotification) {
+              NotApplicableTokenState() || null => null,
+              _ => () {
+                unawaited(
+                  flow
+                      .forceResyncToken(
+                        ref,
+                        context,
+                        kind: PushTokenKind.apnsNotification,
+                      )
+                      .onError<Object>((_, _) {}),
+                );
+              },
+            },
+            isResendEnabled: switch (snapshot?.apnsNotification) {
+              SyncingTokenState() => false,
+              _ => isForceResyncing == false,
+            },
           ),
           const SizedBox(height: 6),
           _TokenStatusRow(
             label: 'Push to Start',
             kindState: snapshot?.apnsPushToStart,
+            onResend: switch (snapshot?.apnsPushToStart) {
+              NotApplicableTokenState() || null => null,
+              _ => () {
+                unawaited(
+                  flow
+                      .forceResyncToken(
+                        ref,
+                        context,
+                        kind: PushTokenKind.apnsPushToStart,
+                      )
+                      .onError<Object>((_, _) {}),
+                );
+              },
+            },
+            isResendEnabled: switch (snapshot?.apnsPushToStart) {
+              SyncingTokenState() => false,
+              _ => isForceResyncing == false,
+            },
           ),
         ],
       ),
@@ -452,10 +613,17 @@ class _TokenSection extends StatelessWidget {
 }
 
 class _TokenStatusRow extends StatelessWidget {
-  const _TokenStatusRow({required this.label, required this.kindState});
+  const _TokenStatusRow({
+    required this.label,
+    required this.kindState,
+    required this.isResendEnabled,
+    this.onResend,
+  });
 
   final String label;
   final PushTokenKindState? kindState;
+  final bool isResendEnabled;
+  final VoidCallback? onResend;
 
   @override
   Widget build(BuildContext context) {
@@ -500,6 +668,14 @@ class _TokenStatusRow extends StatelessWidget {
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ),
+        if (onResend case final resend?) ...[
+          const SizedBox(width: 8),
+          TextButton.icon(
+            onPressed: isResendEnabled ? resend : null,
+            icon: const Icon(Icons.send_outlined, size: 16),
+            label: const Text('再送信'),
+          ),
+        ],
       ],
     );
   }

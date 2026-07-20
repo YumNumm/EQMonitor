@@ -57,7 +57,8 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
     await _retryController.run(() async {
       try {
         final legacy = await repo.readLegacyDeviceId();
-        if (legacy != null && legacy.isNotEmpty) {
+        final alreadyMigrated = await repo.wasMigratedFromLegacy();
+        if (legacy != null && legacy.isNotEmpty && !alreadyMigrated) {
           talker.info(
             '[Provisioning] legacy device detected; '
             'running v2→v3 migration workflow',
@@ -106,5 +107,33 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
 
     state = const AsyncData(DeviceProvisioningStatus.notRequired);
     ref.invalidate(pushTokenSyncProvider, asReload: true);
+  }
+
+  static final deleteMutation = Mutation<void>();
+  Future<void> deleteDeviceAndClearLocal() async {
+    final deviceRepo = await ref.read(deviceRepositoryProvider.future);
+    final provisioningRepo = await ref.read(
+      deviceProvisioningRepositoryProvider.future,
+    );
+    final deviceId = await ref.read(deviceIdProvider.future);
+
+    final result = await deviceRepo.deleteDevice(deviceId);
+    switch (result) {
+      case Success():
+        break;
+      case Failure(:final exception, :final stackTrace):
+        Error.throwWithStackTrace(exception, stackTrace ?? StackTrace.empty);
+    }
+
+    await provisioningRepo.clearProvisioned();
+    _retryController.reset();
+    state = const AsyncData(DeviceProvisioningStatus.required);
+    ref.invalidate(pushTokenSyncProvider, asReload: true);
+  }
+
+  static final reprovisionMutation = Mutation<void>();
+  Future<void> reprovision() async {
+    await deleteDeviceAndClearLocal();
+    await provision();
   }
 }
