@@ -47,7 +47,7 @@ class DebugAppGroupAction {
       return;
     }
     final prefs = await ref.read(appGroupPreferencesProvider.future);
-    await prefs.setString('apiServerUrl', result);
+    await prefs.setString(AppGroupKeys.apiServerUrl, result);
     ref
       ..invalidate(appGroupValuesProvider, asReload: true)
       ..invalidate(appGroupSettingsWriterProvider, asReload: true);
@@ -55,7 +55,7 @@ class DebugAppGroupAction {
 
   Future<void> setDebugMode(WidgetRef ref, {required bool value}) async {
     final prefs = await ref.read(appGroupPreferencesProvider.future);
-    await prefs.setBool('debugMode', value);
+    await prefs.setBool(AppGroupKeys.debugMode, value);
     ref
       ..invalidate(appGroupValuesProvider, asReload: true)
       ..invalidate(appGroupSettingsWriterProvider, asReload: true);

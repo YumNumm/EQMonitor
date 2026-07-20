@@ -7,16 +7,17 @@ part 'shake_detection_event.freezed.dart';
 abstract class ShakeDetectionEvent with _$ShakeDetectionEvent {
   const factory ShakeDetectionEvent({
     required String eventId,
+    required int serialNo,
     required DateTime createdAt,
+    required DateTime updatedAt,
+    required DateTime expiresAt,
     required ShakeDetectionLevel level,
-    required bool isReplay,
     required int pointCount,
     required double minLat,
     required double maxLat,
     required double minLng,
     required double maxLng,
-
-    /// 結合済み EEW の eventId。null なら未結合（表示対象）
-    String? mergedEewEventId,
+    required List<String> changeReasons,
+    String? correlatedEewEventId,
   }) = _ShakeDetectionEvent;
 }

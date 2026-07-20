@@ -11,13 +11,47 @@ part of 'seismicity_repository_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
+@ProviderFor(seismicityGeoJsonDio)
+final seismicityGeoJsonDioProvider = SeismicityGeoJsonDioProvider._();
+
+final class SeismicityGeoJsonDioProvider
+    extends $FunctionalProvider<AsyncValue<Dio>, Dio, FutureOr<Dio>>
+    with $FutureModifier<Dio>, $FutureProvider<Dio> {
+  SeismicityGeoJsonDioProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'seismicityGeoJsonDioProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$seismicityGeoJsonDioHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<Dio> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Dio> create(Ref ref) {
+    return seismicityGeoJsonDio(ref);
+  }
+}
+
+String _$seismicityGeoJsonDioHash() =>
+    r'547a196b006ad32a3937f4026b8cb514b6b2f613';
+
 @ProviderFor(seismicityRepository)
 final seismicityRepositoryProvider = SeismicityRepositoryProvider._();
 
 final class SeismicityRepositoryProvider
     extends
         $FunctionalProvider<
-          riverpod.AsyncValue<SeismicityRepository>,
+          AsyncValue<SeismicityRepository>,
           SeismicityRepository,
           FutureOr<SeismicityRepository>
         >
@@ -51,4 +85,4 @@ final class SeismicityRepositoryProvider
 }
 
 String _$seismicityRepositoryHash() =>
-    r'ef8c92b707fd167688724154a109bf1f29211a3a';
+    r'6a1352b0e51ebf8eb247d2a2ebc62ef156bfeddd';

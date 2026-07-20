@@ -19,6 +19,8 @@ import '../models/eew_settings_response.dart';
 import '../models/eew_warning_config_request.dart';
 import '../models/eew_warning_config_response.dart';
 import '../models/kind.dart';
+import '../models/live_activity_token_request.dart';
+import '../models/live_activity_token_response.dart';
 import '../models/migrate_request.dart';
 import '../models/migration_response.dart';
 import '../models/notification_settings_request.dart';
@@ -27,6 +29,11 @@ import '../models/shake_detection_setting_request.dart';
 import '../models/shake_detection_setting_response.dart';
 import '../models/shake_detection_sub_region_response.dart';
 import '../models/slot_response.dart';
+import '../models/test_live_activity_end_request.dart';
+import '../models/test_live_activity_send_response.dart';
+import '../models/test_live_activity_start_request.dart';
+import '../models/test_live_activity_start_response.dart';
+import '../models/test_live_activity_update_request.dart';
 import '../models/tsunami_region_setting_patch_request.dart';
 import '../models/tsunami_region_setting_request.dart';
 import '../models/tsunami_region_setting_response.dart';
@@ -222,6 +229,43 @@ abstract class DeviceApiClient {
     @Body() required EewWarningConfigRequest body,
   });
 
+  /// テスト用 Live Activity を開始する。Push-to-Start トークン宛に input-push-channel なしの start push を送信するため、チャンネル Broadcast の対象外となり、update/end は updateToken による個別配信でのみ行われる。クライアントは attributes.id（live_activity_id）に対して updateToken を登録すること。
+  @POST(DeviceApiClientUrls.postV2DeviceMeLiveActivityTest)
+  Future<HttpResponse<TestLiveActivityStartResponse>> postV2DeviceMeLiveActivityTest({
+    @Body() required TestLiveActivityStartRequest body,
+  });
+
+  /// テスト用 Live Activity を updateToken による個別配信で更新する。このエンドポイントで開始した Live Activity（eventId が test-live-activity- で始まるもの）にのみ使用できる。
+  @POST(DeviceApiClientUrls.postV2DeviceMeLiveActivityTestLiveActivityIdUpdate)
+  Future<HttpResponse<TestLiveActivitySendResponse>> postV2DeviceMeLiveActivityTestLiveActivityIdUpdate({
+    @Path('liveActivityId') required String liveActivityId,
+    @Body() required TestLiveActivityUpdateRequest body,
+  });
+
+  /// テスト用 Live Activity を updateToken による個別配信で終了する。このエンドポイントで開始した Live Activity（eventId が test-live-activity- で始まるもの）にのみ使用できる。
+  @POST(DeviceApiClientUrls.postV2DeviceMeLiveActivityTestLiveActivityIdEnd)
+  Future<HttpResponse<TestLiveActivitySendResponse>> postV2DeviceMeLiveActivityTestLiveActivityIdEnd({
+    @Path('liveActivityId') required String liveActivityId,
+    @Body() required TestLiveActivityEndRequest body,
+  });
+
+  /// デバイスの Live Activity updateToken 一覧を取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeLiveActivity)
+  Future<HttpResponse<List<LiveActivityTokenResponse>>> getV2DeviceMeLiveActivity();
+
+  /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。配信には使用されず、Start送信からToken受信までの遅延計測にのみ用いる。
+  @PUT(DeviceApiClientUrls.putV2DeviceMeLiveActivityLiveActivityIdToken)
+  Future<HttpResponse<LiveActivityTokenResponse>> putV2DeviceMeLiveActivityLiveActivityIdToken({
+    @Path('liveActivityId') required String liveActivityId,
+    @Body() required LiveActivityTokenRequest body,
+  });
+
+  /// Live Activity updateTokenを削除
+  @DELETE(DeviceApiClientUrls.deleteV2DeviceMeLiveActivityLiveActivityIdToken)
+  Future<HttpResponse<void>> deleteV2DeviceMeLiveActivityLiveActivityIdToken({
+    @Path('liveActivityId') required String liveActivityId,
+  });
+
   /// デバイスの現在地を更新
   @PUT(DeviceApiClientUrls.putV2DeviceMeLocation)
   Future<HttpResponse<DeviceLocationResponse>> putV2DeviceMeLocation({
@@ -307,6 +351,18 @@ abstract class DeviceApiClientUrls {
 	static const getV2DeviceMeSettingsEewWarning = "/v2/device/me/settings/eew-warning";
 	/// /v2/device/me/settings/eew-warning
 	static const patchV2DeviceMeSettingsEewWarning = "/v2/device/me/settings/eew-warning";
+	/// /v2/device/me/live-activity/test
+	static const postV2DeviceMeLiveActivityTest = "/v2/device/me/live-activity/test";
+	/// /v2/device/me/live-activity/test/{liveActivityId}/update
+	static const postV2DeviceMeLiveActivityTestLiveActivityIdUpdate = "/v2/device/me/live-activity/test/{liveActivityId}/update";
+	/// /v2/device/me/live-activity/test/{liveActivityId}/end
+	static const postV2DeviceMeLiveActivityTestLiveActivityIdEnd = "/v2/device/me/live-activity/test/{liveActivityId}/end";
+	/// /v2/device/me/live-activity
+	static const getV2DeviceMeLiveActivity = "/v2/device/me/live-activity";
+	/// /v2/device/me/live-activity/{liveActivityId}/token
+	static const putV2DeviceMeLiveActivityLiveActivityIdToken = "/v2/device/me/live-activity/{liveActivityId}/token";
+	/// /v2/device/me/live-activity/{liveActivityId}/token
+	static const deleteV2DeviceMeLiveActivityLiveActivityIdToken = "/v2/device/me/live-activity/{liveActivityId}/token";
 	/// /v2/device/me/location
 	static const putV2DeviceMeLocation = "/v2/device/me/location";
 	/// /v2/device/me/migrate

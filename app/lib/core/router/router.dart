@@ -49,12 +49,15 @@ import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_hist
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_list_tile_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hinet_seismicity/ui/hinet_seismicity_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/ui/page/debug_live_activity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navigation_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_shared_preferences_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/telemetry/debug_telemetry_page.dart';
@@ -371,10 +374,13 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
           path: 'notification-delivery-log',
         ),
         TypedGoRoute<DebugDeviceAdminRoute>(path: 'device-admin'),
+        TypedGoRoute<DebugLiveActivityRoute>(path: 'live-activity'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
         TypedGoRoute<DebugSharedPreferencesRoute>(path: 'shared-preferences'),
+        TypedGoRoute<DebugSecureStorageRoute>(path: 'secure-storage'),
+        TypedGoRoute<DebugHttpCacheRoute>(path: 'http-cache'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
         TypedGoRoute<DebugTelemetryRoute>(path: 'telemetry'),
         TypedGoRoute<DebugTsunamiDetailsRoute>(
@@ -673,6 +679,15 @@ class DebugDeviceAdminRoute extends GoRouteData with $DebugDeviceAdminRoute {
   }
 }
 
+class DebugLiveActivityRoute extends GoRouteData with $DebugLiveActivityRoute {
+  const DebugLiveActivityRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugLiveActivityPage();
+  }
+}
+
 class DebugDeviceSettingsRoute extends GoRouteData
     with $DebugDeviceSettingsRoute {
   const DebugDeviceSettingsRoute();
@@ -708,6 +723,25 @@ class DebugSharedPreferencesRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugSharedPreferencesPage();
+  }
+}
+
+class DebugSecureStorageRoute extends GoRouteData
+    with $DebugSecureStorageRoute {
+  const DebugSecureStorageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugSecureStoragePage();
+  }
+}
+
+class DebugHttpCacheRoute extends GoRouteData with $DebugHttpCacheRoute {
+  const DebugHttpCacheRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugHttpCachePage();
   }
 }
 

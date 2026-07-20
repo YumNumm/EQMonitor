@@ -4,7 +4,6 @@
 
 import SwiftUI
 import WidgetKit
-import AppIntents
 
 struct EarthquakeWidgetView: View {
     let entry: EarthquakeEntry
@@ -30,6 +29,15 @@ struct LargeWidgetView: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let layout: WidgetLayoutKind = switch widgetFamily {
+            case .systemLarge: .large
+            case .systemExtraLarge: .extraLarge
+            default: .medium
+            }
+            let maxCount = WidgetLayoutPolicy.maxItemCount(
+                layout: layout,
+                availableHeight: Double(geometry.size.height)
+            )
             VStack(alignment: .leading, spacing: 0) {
                 WidgetHeader(
                     title: headerTitle,
@@ -46,8 +54,10 @@ struct LargeWidgetView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     VStack(spacing: 6) {
-                        ForEach(displayedEarthquakes) { eq in
-                            EarthquakeRow(earthquake: eq)
+                        ForEach(Array(entry.earthquakes.prefix(maxCount))) { eq in
+                            EarthquakeDetailLink(eventId: eq.id) {
+                                EarthquakeRow(earthquake: eq)
+                            }
                         }
                     }
                     .padding(.horizontal, 12)
@@ -60,17 +70,6 @@ struct LargeWidgetView: View {
         }
     }
 
-    private var displayedEarthquakes: [EarthquakeDisplayItem] {
-        let maxCount: Int
-        switch widgetFamily {
-        case .systemMedium: maxCount = 3
-        case .systemLarge: maxCount = 5
-        case .systemExtraLarge: maxCount = 8
-        default: maxCount = 3
-        }
-        return Array(entry.earthquakes.prefix(maxCount))
-    }
-
     private var headerTitle: String { entry.title }
 }
 
@@ -81,35 +80,17 @@ struct SmallWidgetView: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let maxCount = WidgetLayoutPolicy.maxItemCount(
+                layout: .small,
+                availableHeight: Double(geometry.size.height)
+            )
             VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 6) {
-                    Image(systemName: "waveform.path.ecg")
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(Color.eqBrand)
-                        .widgetAccentable()
-
-                    Text(headerTitle)
-                        .font(AppFonts.flex(size: 11, weight: .semibold))
-                        .foregroundStyle(Color.eqTextSecondary)
-                        .lineLimit(1)
-
-                    Spacer()
-
-                    Button(intent: RefreshWidgetIntent()) {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(Color.eqBrand)
-                    }
-                    .buttonStyle(.plain)
-                }
-                .padding(.horizontal, 12)
-                .padding(.top, 10)
-                .padding(.bottom, 6)
-
-                Rectangle()
-                    .fill(Color.eqOutlineSoft)
-                    .frame(height: 0.5)
-                    .padding(.horizontal, 12)
+                WidgetHeader(
+                    title: headerTitle,
+                    updateTime: entry.date,
+                    width: geometry.size.width,
+                    compact: true
+                )
 
                 if let error = entry.error {
                     EQErrorView(error: error)
@@ -119,11 +100,14 @@ struct SmallWidgetView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     VStack(spacing: 6) {
-                        ForEach(Array(entry.earthquakes.prefix(3)), id: \.id) { eq in
-                            CompactEarthquakeRow(
-                                earthquake: eq,
-                                availableWidth: geometry.size.width - 24
-                            )
+                        ForEach(Array(entry.earthquakes.prefix(maxCount)), id: \.id) { eq in
+                            EarthquakeDetailLink(eventId: eq.id) {
+                                CompactEarthquakeRow(
+                                    earthquake: eq,
+                                    availableWidth: geometry.size.width - 24,
+                                    intensityBadgeSize: 26
+                                )
+                            }
                         }
                     }
                     .padding(.top, 6)
@@ -139,59 +123,55 @@ struct SmallWidgetView: View {
     private var headerTitle: String { entry.compactTitle }
 }
 
+private struct EarthquakeDetailLink<Content: View>: View {
+    let eventId: String
+    let content: Content
+
+    init(eventId: String, @ViewBuilder content: () -> Content) {
+        self.eventId = eventId
+        self.content = content()
+    }
+
+    var body: some View {
+        if let destination = EarthquakeDetailURL.make(eventId: eventId) {
+            Link(destination: destination) {
+                content
+            }
+            .buttonStyle(.plain)
+        } else {
+            content
+        }
+    }
+}
+
 // MARK: - Header
 
 private struct WidgetHeader: View {
     let title: String
     let updateTime: Date
     let width: CGFloat
+    var compact: Bool = false
 
     var body: some View {
-        HStack(spacing: 8) {
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [Color.eqBrand, Color.eqBrand.opacity(0.7)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 30, height: 30)
-
-                Image(systemName: "waveform.path.ecg")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(.white)
-            }
-            .widgetAccentable()
-
-            VStack(alignment: .leading, spacing: 1) {
+        HStack(alignment: .center, spacing: 8) {
+            VStack(alignment: .leading, spacing: compact ? 1 : 2) {
                 Text(title)
-                    .font(AppFonts.flex(size: 15, weight: .bold))
-                    .foregroundStyle(Color.eqTextPrimary)
+                    .font(AppFonts.flex(size: compact ? 12 : 15, weight: .bold))
+                    .foregroundStyle(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
 
                 Text("更新 \(formattedTime)")
-                    .font(AppFonts.code(size: 10))
-                    .foregroundStyle(Color.eqTextTertiary)
+                    .font(AppFonts.code(size: compact ? 9 : 10))
+                    .foregroundStyle(.white.opacity(0.7))
             }
 
-            Spacer()
-
-            Button(intent: RefreshWidgetIntent()) {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Color.eqBrand)
-                    .frame(width: 30, height: 30)
-                    .eqGlass(cornerRadius: 15)
-            }
-            .buttonStyle(.plain)
+            Spacer(minLength: 0)
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 12)
-        .padding(.bottom, 10)
-        .frame(width: width)
+        .padding(.horizontal, compact ? 12 : 16)
+        .padding(.vertical, compact ? 8 : 10)
+        .frame(width: width, alignment: .leading)
+        .background(Color.eqBrand)
     }
 
     private var formattedTime: String {
@@ -248,7 +228,7 @@ struct EarthquakeRow: View {
             Spacer(minLength: 4)
 
             Text(earthquake.magnitude)
-                .font(AppFonts.code(size: 15, weight: .bold))
+                .font(AppFonts.code(size: 12, weight: .bold))
                 .foregroundStyle(Color.eqTextPrimary)
         }
         .padding(.horizontal, 10)
@@ -265,6 +245,7 @@ struct EarthquakeRow: View {
 struct CompactEarthquakeRow: View {
     let earthquake: EarthquakeDisplayItem
     let availableWidth: CGFloat
+    var intensityBadgeSize: CGFloat = 26
 
     private var subtitle: String {
         var parts = [earthquake.formattedTime]
@@ -280,7 +261,7 @@ struct CompactEarthquakeRow: View {
                 intensity: earthquake.formattedIntensity,
                 backgroundColor: earthquake.intensityBackgroundColor,
                 textColor: earthquake.intensityTextColor,
-                size: 32
+                size: intensityBadgeSize
             )
 
             VStack(alignment: .leading, spacing: 1) {
@@ -307,7 +288,7 @@ struct CompactEarthquakeRow: View {
             Spacer(minLength: 2)
 
             Text(earthquake.magnitude)
-                .font(AppFonts.code(size: 12, weight: .bold))
+                .font(AppFonts.code(size: 10, weight: .bold))
                 .foregroundStyle(Color.eqTextPrimary)
         }
         .padding(.horizontal, 8)

@@ -136,39 +136,6 @@ void main() {
     });
   });
 
-  group('RealtimeEventEnvelope — shake_detected の changeReasons', () {
-    Map<String, dynamic> shakeJson({List<String>? changeReasons}) =>
-        <String, dynamic>{
-          'type': 'shake_detected',
-          'eventId': 'shake-1',
-          'createdAt': '2025-01-15T12:00:00.000Z',
-          'level': 'Weak',
-          'changeReasons': ?changeReasons,
-          'isReplay': false,
-          'pointCount': 4,
-          'region': {
-            'topLeft': {'latitude': 35.0, 'longitude': 139.0},
-            'bottomRight': {'latitude': 34.0, 'longitude': 140.0},
-          },
-        };
-
-    test('changeReasons 省略時はデフォルトの空リストになること', () {
-      final result =
-          RealtimeEventEnvelope.fromJson(shakeJson())
-              as WsShakeDetectedRealtimeEvent;
-      expect(result.changeReasons, isEmpty);
-    });
-
-    test('changeReasons は受信した順序を保持すること', () {
-      final result =
-          RealtimeEventEnvelope.fromJson(
-                shakeJson(changeReasons: ['a', 'b', 'c']),
-              )
-              as WsShakeDetectedRealtimeEvent;
-      expect(result.changeReasons, ['a', 'b', 'c']);
-    });
-  });
-
   group('WsEstimatedIntensityPayload', () {
     test('hypocenter なしでパースできること', () {
       final result = WsEstimatedIntensityPayload.fromJson(<String, dynamic>{

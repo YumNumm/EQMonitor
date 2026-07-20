@@ -8,28 +8,35 @@ void main() {
   const mapper = EqMonitorRealtimeEventMapper();
 
   group('EqMonitorRealtimeEventMapper', () {
-    test('snapshot の揺れ検知範囲を RealtimeShakeData に変換できること', () {
+    test('shake_detection をrevision付き完全snapshotへ変換できること', () {
       final result = mapper.map(
-        WsMessage.snapshot(
-          data: WsSnapshotData(
-            revision: 1,
-            updatedAt: DateTime.utc(2026),
-            shakes: [
-              WsSnapshotShakeEntry(
+        WsMessage.realtime(
+          data: RealtimeEventEnvelope.shakeDetection(
+            revision: 42,
+            responseAt: DateTime.utc(2026, 7, 18, 12, 34, 56),
+            events: [
+              WsShakeDetectionEvent(
+                type: 'shake_detection',
                 eventId: 'shake-1',
-                createdAt: DateTime.utc(2026, 5, 1, 9),
-                level: 'medium',
-                isReplay: false,
+                serialNo: 3,
+                createdAt: DateTime.utc(2026, 7, 18, 12, 34, 30),
+                updatedAt: DateTime.utc(2026, 7, 18, 12, 34, 55),
+                expiresAt: DateTime.utc(2026, 7, 18, 12, 35, 35),
+                level: 'Strong',
+                changeReasons: const ['level_up'],
+                mergedEvents: const [],
                 pointCount: 12,
                 region: const WsShakeRegionPayload(
-                  topLeft: WsShakeLocationPayload(
-                    latitude: 36,
-                    longitude: 139,
-                  ),
+                  topLeft: WsShakeLocationPayload(latitude: 36, longitude: 139),
                   bottomRight: WsShakeLocationPayload(
                     latitude: 35,
                     longitude: 140,
                   ),
+                ),
+                points: const [],
+                correlatedEew: const WsShakeCorrelatedEew(
+                  eventId: 'eew-1',
+                  score: 0.8,
                 ),
               ),
             ],
@@ -37,7 +44,12 @@ void main() {
         ),
       );
 
-      expect(result, hasLength(1));
+      final event = result.single as RealtimeShakeSnapshotEvent;
+      expect(event.data.revision, 42);
+      expect(event.data.events.single.serialNo, 3);
+      expect(event.data.events.single.correlatedEewEventId, 'eew-1');
+      expect(event.data.events.single.minLat, 35);
+      expect(event.data.events.single.maxLng, 140);
     });
 
     test('earthquake delete を削除イベントに変換できること', () {
@@ -105,7 +117,7 @@ void main() {
       );
     });
 
-    test('津波 realtime event は現状未対応として明示的に破棄すること', () {
+    test('津波 realtime event を upsert イベントに変換できること', () {
       final result = mapper.map(
         const WsMessage.realtime(
           data: RealtimeEventEnvelope.tsunami(
@@ -115,7 +127,7 @@ void main() {
         ),
       );
 
-      expect(result, isEmpty);
+      expect(result.single, isA<RealtimeTsunamiUpsertEvent>());
     });
   });
 }

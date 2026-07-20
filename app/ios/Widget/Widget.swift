@@ -13,9 +13,7 @@ struct EarthquakeEntry: TimelineEntry {
     let configuration: EarthquakeWidgetIntent
     let earthquakes: [EarthquakeDisplayItem]
     let error: String?
-    /// フォールバック後の実効タイトル（medium / large 用）
     let title: String
-    /// フォールバック後の実効タイトル（small 用）
     let compactTitle: String
 
     init(

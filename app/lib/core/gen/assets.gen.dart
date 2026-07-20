@@ -37,6 +37,10 @@ class $AssetsDocsGen {
   List<String> get values => [aboutThisApp, privacyPolicy, termOfService];
 }
 
+class $AssetsFontsGen {
+  const $AssetsFontsGen();
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -55,17 +59,6 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [icon, iconForeground];
-}
-
-class $AssetsMapGen {
-  const $AssetsMapGen();
-
-  /// File path: assets/map/earthquake_tsunami_all.pmtiles
-  String get earthquakeTsunamiAll =>
-      'assets/map/earthquake_tsunami_all.pmtiles';
-
-  /// List of all assets
-  List<String> get values => [earthquakeTsunamiAll];
 }
 
 class $AssetsParameterGen {
@@ -143,13 +136,12 @@ class $AssetsImagesThemeGen {
   List<AssetGenImage> get values => [dark, light];
 }
 
-class Assets {
-  const Assets._();
-
+abstract final class Assets {
   static const String kyoshinShindoColorMap =
       'assets/KyoshinShindoColorMap.json';
   static const $AssetsDebugGen debug = $AssetsDebugGen();
   static const $AssetsDocsGen docs = $AssetsDocsGen();
+  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const AssetGenImage header = AssetGenImage('assets/header.png');
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const String jmaCodeTable = 'assets/jma_code_table.pb';
@@ -157,7 +149,6 @@ class Assets {
   static const String kyoshinMonitorScale = 'assets/kyoshin_monitor_scale.json';
   static const String kyoshinObservationPoint =
       'assets/kyoshin_observation_point.pb';
-  static const $AssetsMapGen map = $AssetsMapGen();
   static const $AssetsParameterGen parameter = $AssetsParameterGen();
   static const $AssetsParametersGen parameters = $AssetsParametersGen();
   static const String tjma2001 = 'assets/tjma2001.csv';

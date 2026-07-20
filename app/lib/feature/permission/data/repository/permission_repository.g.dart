@@ -57,4 +57,4 @@ final class PermissionRepositoryProvider
 }
 
 String _$permissionRepositoryHash() =>
-    r'9da7985aae0f770d721820cbaec35521691d39cb';
+    r'7697ca203ac664e1ef6f046e5ffdd16391c5fe26';

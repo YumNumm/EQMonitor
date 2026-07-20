@@ -22,8 +22,14 @@ class AppThemeNotifier extends _$AppThemeNotifier {
     );
 
     // 既に新形式のテーマが保存されている場合はマイグレーション不要
-    final savedLight = await _load(dataSource, SharedPreferencesKey.appThemeLight);
-    final savedDark = await _load(dataSource, SharedPreferencesKey.appThemeDark);
+    final savedLight = await _load(
+      dataSource,
+      SharedPreferencesKey.appThemeLight,
+    );
+    final savedDark = await _load(
+      dataSource,
+      SharedPreferencesKey.appThemeDark,
+    );
     if (savedLight == null && savedDark == null) {
       final migrated = await migrateFromLegacyIntensityColors(dataSource);
       if (migrated != null) {
@@ -32,9 +38,12 @@ class AppThemeNotifier extends _$AppThemeNotifier {
         // 次回起動時にマイグレーションを再試行できる（冪等）。
         unawaited(
           Future.wait([
-            _save(dataSource, SharedPreferencesKey.appThemeLight, migrated),
-            _save(dataSource, SharedPreferencesKey.appThemeDark, migrated),
-          ]).then((_) => _removeLegacyKeys(dataSource)),
+            _save(dataSource, .appThemeLight, migrated),
+            _save(dataSource, .appThemeDark, migrated),
+          ]).then((_) async {
+            await dataSource.remove(key: .intensityColor);
+            await dataSource.remove(key: .estimatedIntensityColor);
+          }),
         );
         return (lightTheme: migrated, darkTheme: migrated);
       }
@@ -44,11 +53,6 @@ class AppThemeNotifier extends _$AppThemeNotifier {
       lightTheme: savedLight ?? AppTheme.eqmonitorDefault(),
       darkTheme: savedDark ?? AppTheme.eqmonitorDefault(),
     );
-  }
-
-  Future<void> _removeLegacyKeys(SharedPreferencesDataSource dataSource) async {
-    await dataSource.remove(key: SharedPreferencesKey.intensityColor);
-    await dataSource.remove(key: SharedPreferencesKey.estimatedIntensityColor);
   }
 
   Future<void> setLightTheme(AppTheme theme) async {
@@ -125,10 +129,7 @@ class AppThemeNotifier extends _$AppThemeNotifier {
     SharedPreferencesDataSource dataSource,
     SharedPreferencesKey key,
     AppTheme theme,
-  ) => dataSource.setString(
-    key: key,
-    value: jsonEncode(theme.toJson()),
-  );
+  ) => dataSource.setString(key: key, value: jsonEncode(theme.toJson()));
 }
 
 @riverpod

@@ -60,4 +60,4 @@ final class PushTokenPlatformCapabilitiesProvider
 }
 
 String _$pushTokenPlatformCapabilitiesHash() =>
-    r'906bd0e74a1c2fd27c47490cafac673247b32391';
+    r'60b8ba25692f2210a97b6847edba10c674b409cd';

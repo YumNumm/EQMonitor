@@ -142,6 +142,13 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   const DebugSharedPreferencesRoute().push<void>(context),
             ),
+            ListTile(
+              title: const Text('SecureStorage'),
+              subtitle: const Text('保存されている Key-Value の一覧・編集'),
+              leading: const Icon(Icons.lock_outline),
+              onTap: () async =>
+                  const DebugSecureStorageRoute().push<void>(context),
+            ),
             Builder(
               builder: (context) {
                 final isDisabled =
@@ -158,6 +165,13 @@ class _DebugWidget extends ConsumerWidget {
                   ),
                 );
               },
+            ),
+            ListTile(
+              title: const Text('HTTPキャッシュ'),
+              subtitle: const Text('キャッシュエントリの一覧・削除'),
+              leading: const Icon(Icons.storage_outlined),
+              onTap: () async =>
+                  const DebugHttpCacheRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('Telemetry Events'),
@@ -191,7 +205,9 @@ class _DebugWidget extends ConsumerWidget {
             Builder(
               builder: (context) {
                 final isAllowed =
-                    ref.watch(estimatedIntensityOnEewReplayAllowedProvider).value ??
+                    ref
+                        .watch(estimatedIntensityOnEewReplayAllowedProvider)
+                        .value ??
                     false;
                 return ListTile(
                   title: const Text('EEW 推定震度表示'),
@@ -351,6 +367,14 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   const DebugDeviceAdminRoute().push<void>(context),
             ),
+            if (Platform.isIOS)
+              ListTile(
+                title: const Text('Live Activity テスト'),
+                subtitle: const Text('開始 / 更新 / 終了（自デバイス）'),
+                leading: const Icon(Icons.live_tv_outlined),
+                onTap: () async =>
+                    const DebugLiveActivityRoute().push<void>(context),
+              ),
             const Divider(),
             const _BackgroundLocationDebugSection(),
             const Divider(),

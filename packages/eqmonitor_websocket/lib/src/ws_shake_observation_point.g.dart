@@ -22,7 +22,8 @@ _WsShakeObservationPoint _$WsShakeObservationPointFromJson(
     ),
     intensityDiff: $checkedConvert(
       'intensityDiff',
-      (v) => (v as num).toDouble(),
+      (v) => (v as num?)?.toDouble() ?? 0,
+      readValue: wsShakeIntensityDiffReadValue,
     ),
     intensity: $checkedConvert('intensity', (v) => (v as num?)?.toDouble()),
   );

@@ -1,11 +1,9 @@
-import 'package:eqmonitor/core/data/preferences/secure/secure_storage.dart';
+import 'package:eqmonitor/core/data/preferences/secure/secure_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'knet_credentials_provider.g.dart';
-
-const _knetUserIdKey = 'knet_bosai_user_id';
-const _knetPasswordKey = 'knet_bosai_password';
 
 /// BOSAI 認証情報（ユーザーID + パスワード）
 class KnetCredentials {
@@ -23,9 +21,11 @@ class KnetCredentialsNotifier extends _$KnetCredentialsNotifier {
 
   @override
   Future<KnetCredentials?> build() async {
-    final storage = await ref.watch(secureStorageProvider.future);
-    final userId = await storage.read(key: _knetUserIdKey);
-    final password = await storage.read(key: _knetPasswordKey);
+    final ds = await ref.watch(securePreferencesDataSourceProvider.future);
+    final userId = await ds.getString(key: SecureStorageKey.knetBosaiUserId);
+    final password = await ds.getString(
+      key: SecureStorageKey.knetBosaiPassword,
+    );
     if (userId == null || password == null) {
       return null;
     }
@@ -36,16 +36,19 @@ class KnetCredentialsNotifier extends _$KnetCredentialsNotifier {
     required String userId,
     required String password,
   }) async {
-    final storage = await ref.read(secureStorageProvider.future);
-    await storage.write(key: _knetUserIdKey, value: userId);
-    await storage.write(key: _knetPasswordKey, value: password);
+    final ds = await ref.read(securePreferencesDataSourceProvider.future);
+    await ds.setString(key: SecureStorageKey.knetBosaiUserId, value: userId);
+    await ds.setString(
+      key: SecureStorageKey.knetBosaiPassword,
+      value: password,
+    );
     state = AsyncData(KnetCredentials(userId: userId, password: password));
   }
 
   Future<void> clear() async {
-    final storage = await ref.read(secureStorageProvider.future);
-    await storage.delete(key: _knetUserIdKey);
-    await storage.delete(key: _knetPasswordKey);
+    final ds = await ref.read(securePreferencesDataSourceProvider.future);
+    await ds.remove(key: SecureStorageKey.knetBosaiUserId);
+    await ds.remove(key: SecureStorageKey.knetBosaiPassword);
     state = const AsyncData(null);
   }
 }

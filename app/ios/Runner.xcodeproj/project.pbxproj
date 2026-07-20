@@ -7,21 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B2B30E0935DA561969A279D /* jma_code_table.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CBCF4697AA1879785D2E137 /* jma_code_table.json */; };
-		249D6465025F226E74A29C18 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09B0693317F839417671E186 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf */; };
-		CE4199B16869AA473ED81368 /* GoogleSansCode[MONO,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61F759DEA69779A5080005D8 /* GoogleSansCode[MONO,wght].ttf */; };
 		010DC8E64C7C76B8F4F166D5 /* EarthquakeDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */; };
+		019F719699457ED392A06CFD /* earthquake_tsunami_all.pmtiles in Resources */ = {isa = PBXBuildFile; fileRef = 019F719599457ED392A06CFD /* earthquake_tsunami_all.pmtiles */; };
 		03155D2EC2B76909DF1A4693 /* ColorRGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */; };
 		0653ECA8737307C2CA836FC7 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
 		06C54F953E3BD230BCDE7A3F /* EarthquakeDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */; };
 		06ECEBF5580E9E46FF6E6B4D /* WidgetRegionResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B6DA9CE2EEF26041AC4AA5 /* WidgetRegionResolver.swift */; };
+		0B2B30E0935DA561969A279D /* jma_code_table.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CBCF4697AA1879785D2E137 /* jma_code_table.json */; };
 		1209177840DD3D17C94E1B5D /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		148E1710922ECC78935B0F1B /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09B0693317F839417671E186 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		184FB8BC5F4302620BDD2667 /* EarthquakeDisplayItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */; };
 		2151DA831C4D53D6DDA591BA /* EQMonitorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 295B9FA31E1F0C562110F4A0 /* EQMonitorAPI */; };
+		249D6465025F226E74A29C18 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09B0693317F839417671E186 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf */; };
 		2709A8772F1FFFF400FBE962 /* LiveActivityUtil.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
 		2709A8782F20000D00FBE962 /* LiveActivityUtil.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A1B2C3D42F6A000100000002 /* AssetsUtil.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B2C3D42F6A000100000001 /* AssetsUtil.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
+		A1B2C3D42F6A000100000003 /* AssetsUtil.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1B2C3D42F6A000100000001 /* AssetsUtil.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		27D62BBE2FF6E75000EF6A27 /* AppIntentExtension.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 27D62BB52FF6E75000EF6A27 /* AppIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2BD20D9F1CCF6217A42DB419 /* EarthquakeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5330C1132EC785A60DE272 /* EarthquakeAPIClient.swift */; };
 		2C755225A37C4C6116012293 /* EarthquakeDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */; };
@@ -67,6 +69,12 @@
 		BC0CFBCC72CE2AE431EFB5A8 /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		BFEAEC9B65D462419D75AB02 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
 		C905E0E780206CF2C8BD7D24 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF843E9B82869CED39772C0 /* DesignTokens.swift */; };
+		CE4199B16869AA473ED81368 /* GoogleSansCode[MONO,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61F759DEA69779A5080005D8 /* GoogleSansCode[MONO,wght].ttf */; };
+		D11111111111111111111111 /* WidgetLayoutPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11111111111111111111111 /* WidgetLayoutPolicy.swift */; };
+		D11222222222222222222222 /* WidgetLayoutPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11111111111111111111111 /* WidgetLayoutPolicy.swift */; };
+		D11333333333333333333333 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
+		D11444444444444444444444 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
+		D11555555555555555555555 /* WidgetBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11333333333333333333333 /* WidgetBehaviorTests.swift */; };
 		E8CFD3E6506B946469164594 /* ColorRGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */; };
 /* End PBXBuildFile section */
 
@@ -125,6 +133,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				2709A8782F20000D00FBE962 /* LiveActivityUtil.xcframework in Embed Frameworks */,
+				A1B2C3D42F6A000100000003 /* AssetsUtil.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -132,10 +141,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		019F719599457ED392A06CFD /* earthquake_tsunami_all.pmtiles */ = {isa = PBXFileReference; lastKnownFileType = file; name = earthquake_tsunami_all.pmtiles; path = ../assets/platform/earthquake_tsunami_all.pmtiles; sourceTree = "<group>"; };
 		09B0693317F839417671E186 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; name = "GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf"; path = "../assets/fonts/GoogleSansFlex/GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = LiveActivityUtil.xcframework; sourceTree = "<group>"; };
+		A1B2C3D42F6A000100000001 /* AssetsUtil.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = AssetsUtil.xcframework; sourceTree = "<group>"; };
 		27D62BB52FF6E75000EF6A27 /* AppIntentExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = AppIntentExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IntensityValue.swift; sourceTree = "<group>"; };
 		3993800175F9E9F9140BCEE0 /* WidgetModelsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WidgetModelsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,11 +193,21 @@
 		C90F30E033EFA7F3A113F856 /* RegionType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegionType.swift; sourceTree = "<group>"; };
 		C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDisplayItemTests.swift; sourceTree = "<group>"; };
 		CEF843E9B82869CED39772C0 /* DesignTokens.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
+		E11111111111111111111111 /* WidgetLayoutPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetLayoutPolicy.swift; sourceTree = "<group>"; };
+		E11222222222222222222222 /* EarthquakeDetailURL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDetailURL.swift; sourceTree = "<group>"; };
+		E11333333333333333333333 /* WidgetBehaviorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetBehaviorTests.swift; sourceTree = "<group>"; };
 		FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelegramStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		463834D25A2C7A8F74710E0C /* Exceptions for "AppIntentExtension" folder in "WidgetExtension" target */ = {
+		27D62BC32FF6E75000EF6A27 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 27D62BB42FF6E75000EF6A27 /* AppIntentExtension */;
+		};
+		463834D25A2C7A8F74710E0C /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppIntentExtension.swift,
@@ -195,14 +216,7 @@
 			);
 			target = 85C54CF82E96C7E700BFBBAB /* WidgetExtension */;
 		};
-		27D62BC32FF6E75000EF6A27 /* Exceptions for "AppIntentExtension" folder in "AppIntentExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 27D62BB42FF6E75000EF6A27 /* AppIntentExtension */;
-		};
-		85C54D102E96C7EA00BFBBAB /* Exceptions for "Widget" folder in "WidgetExtension" target */ = {
+		85C54D102E96C7EA00BFBBAB /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -212,31 +226,8 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		27D62BB62FF6E75000EF6A27 /* AppIntentExtension */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				27D62BC32FF6E75000EF6A27 /* Exceptions for "AppIntentExtension" folder in "AppIntentExtension" target */,
-				463834D25A2C7A8F74710E0C /* Exceptions for "AppIntentExtension" folder in "WidgetExtension" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = AppIntentExtension;
-			sourceTree = "<group>";
-		};
-		85C54CFE2E96C7E800BFBBAB /* Widget */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				85C54D102E96C7EA00BFBBAB /* Exceptions for "Widget" folder in "WidgetExtension" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = Widget;
-			sourceTree = "<group>";
-		};
+		27D62BB62FF6E75000EF6A27 /* AppIntentExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (463834D25A2C7A8F74710E0C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 27D62BC32FF6E75000EF6A27 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AppIntentExtension; sourceTree = "<group>"; };
+		85C54CFE2E96C7E800BFBBAB /* Widget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (85C54D102E96C7EA00BFBBAB /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Widget; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,6 +274,7 @@
 			files = (
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 				2709A8772F1FFFF400FBE962 /* LiveActivityUtil.xcframework in Frameworks */,
+				A1B2C3D42F6A000100000002 /* AssetsUtil.xcframework in Frameworks */,
 				859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,6 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */,
+				A1B2C3D42F6A000100000001 /* AssetsUtil.xcframework */,
 			);
 			path = Frameworks;
 			sourceTree = "<group>";
@@ -311,6 +304,7 @@
 			isa = PBXGroup;
 			children = (
 				C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */,
+				E11333333333333333333333 /* WidgetBehaviorTests.swift */,
 			);
 			path = WidgetModelsTests;
 			sourceTree = "<group>";
@@ -361,6 +355,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				019F719599457ED392A06CFD /* earthquake_tsunami_all.pmtiles */,
 				8561B7922E96D04300E0CCAB /* WidgetExtension.entitlements */,
 				85873D0B2E9182A600ED0F72 /* AppIcon-dev.icon */,
 				85873D092E91821A00ED0F72 /* AppIcon-prod.icon */,
@@ -423,6 +418,8 @@
 				687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */,
 				CEF843E9B82869CED39772C0 /* DesignTokens.swift */,
 				4569B747204EE74872C7E9DB /* IntensityBadge.swift */,
+				E11111111111111111111111 /* WidgetLayoutPolicy.swift */,
+				E11222222222222222222222 /* EarthquakeDetailURL.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -474,8 +471,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				85C54CFE2E96C7E800BFBBAB /* Widget */,
 				27D62BB62FF6E75000EF6A27 /* AppIntentExtension */,
+				85C54CFE2E96C7E800BFBBAB /* Widget */,
 			);
 			name = WidgetExtension;
 			packageProductDependencies = (
@@ -592,11 +589,11 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */,
-				AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "EQMonitorAPI" */,
+				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */,
+				AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "Packages/EQMonitorAPI" */,
 				85B405182C08E73300EB3835 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 				85C9C3ED2D9F053700F047DF /* XCRemoteSwiftPackageReference "swift-protobuf" */,
-				85D1E0032F5A000000000003 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
+				85D1E0032F5A000000000003 /* XCRemoteSwiftPackageReference "SQLite" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -643,6 +640,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				019F719699457ED392A06CFD /* earthquake_tsunami_all.pmtiles in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				85873D0A2E91821A00ED0F72 /* AppIcon-prod.icon in Resources */,
 				4F115C462BE9682B00DAAD73 /* PrivacyInfo.xcprivacy in Resources */,
@@ -739,6 +737,9 @@
 				8EF4AB3495DB7B973CA66ECE /* TelegramStatus.swift in Sources */,
 				8E635D22711F52F4CFE9A1C8 /* WidgetRegionResolver.swift in Sources */,
 				184FB8BC5F4302620BDD2667 /* EarthquakeDisplayItemTests.swift in Sources */,
+				D11222222222222222222222 /* WidgetLayoutPolicy.swift in Sources */,
+				D11444444444444444444444 /* EarthquakeDetailURL.swift in Sources */,
+				D11555555555555555555555 /* WidgetBehaviorTests.swift in Sources */,
 				1209177840DD3D17C94E1B5D /* RegionType.swift in Sources */,
 				E8CFD3E6506B946469164594 /* ColorRGB.swift in Sources */,
 			);
@@ -757,6 +758,8 @@
 				03155D2EC2B76909DF1A4693 /* ColorRGB.swift in Sources */,
 				A3B5B9968DB246E0B08A8C01 /* DesignTokens.swift in Sources */,
 				54E5BF908232F546B7D6E562 /* IntensityBadge.swift in Sources */,
+				D11111111111111111111111 /* WidgetLayoutPolicy.swift in Sources */,
+				D11333333333333333333333 /* EarthquakeDetailURL.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1624,11 +1627,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */ = {
+		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
 		};
-		AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "EQMonitorAPI" */ = {
+		AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "Packages/EQMonitorAPI" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/EQMonitorAPI;
 		};
@@ -1651,7 +1654,7 @@
 				minimumVersion = 1.29.0;
 			};
 		};
-		85D1E0032F5A000000000003 /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+		85D1E0032F5A000000000003 /* XCRemoteSwiftPackageReference "SQLite" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
 			requirement = {
@@ -1664,7 +1667,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		295B9FA31E1F0C562110F4A0 /* EQMonitorAPI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "EQMonitorAPI" */;
+			package = AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "Packages/EQMonitorAPI" */;
 			productName = EQMonitorAPI;
 		};
 		78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */ = {
@@ -1683,7 +1686,7 @@
 		};
 		85D1E0022F5A000000000002 /* SQLite */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 85D1E0032F5A000000000003 /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			package = 85D1E0032F5A000000000003 /* XCRemoteSwiftPackageReference "SQLite" */;
 			productName = SQLite;
 		};
 		AABB00022F30A00100000002 /* EQMonitorAPI */ = {
@@ -1692,7 +1695,7 @@
 		};
 		BC34B83B5D16BD405E6A31AB /* EQMonitorAPI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "EQMonitorAPI" */;
+			package = AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "Packages/EQMonitorAPI" */;
 			productName = EQMonitorAPI;
 		};
 /* End XCSwiftPackageProductDependency section */

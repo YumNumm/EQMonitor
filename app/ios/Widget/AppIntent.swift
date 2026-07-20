@@ -8,8 +8,6 @@
 import WidgetKit
 import AppIntents
 
-// RegionType は Shared/RegionType.swift へ移動（WidgetRegionResolver と共有するため）
-
 struct EarthquakeWidgetIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "地震履歴設定" }
     static var description: IntentDescription {
@@ -23,19 +21,5 @@ struct EarthquakeWidgetIntent: WidgetConfigurationIntent {
 
     init(regionType: RegionType) {
         self.regionType = regionType
-    }
-}
-
-// ウィジェット再読み込み用Intent
-struct RefreshWidgetIntent: AppIntent {
-    static var title: LocalizedStringResource { "ウィジェットを更新" }
-    static var description: IntentDescription { "地震情報を最新の状態に更新します" }
-
-    func perform() async throws -> some IntentResult {
-        // すべてのウィジェットを再読み込み
-        WidgetCenter.shared.reloadAllTimelines()
-
-        // 通知を表示
-        return .result(dialog: "地震情報を更新しました")
     }
 }

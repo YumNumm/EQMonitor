@@ -49,7 +49,7 @@ final class HinetCredentialsNotifierProvider
 }
 
 String _$hinetCredentialsNotifierHash() =>
-    r'966632d7766efd6be63aca9f7f82fca4839e263a';
+    r'82748ac34511f0fc4c405bc0c70ff1a303a51404';
 
 /// SecureStorage から Hi-net 認証情報を読み書きするNotifier。
 ///

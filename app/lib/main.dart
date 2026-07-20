@@ -223,7 +223,7 @@ Future<void> _main() async {
 
   container.read(eqMonitorWsStatusProvider);
   container.read(realtimeEventsProvider);
-  container.read(autoReturnWatcherProvider);
+  container.listen(autoReturnWatcherProvider, (_, _) {});
   container.listen(backgroundLocationServiceProvider, (_, _) {});
   container.listen(firebaseMessagingInteractionProvider, (_, _) {});
   container.listen(appLinksInteractionProvider, (_, _) {});
@@ -302,7 +302,7 @@ Future<void> _main() async {
   });
 
   if (!kIsWeb && Platform.isIOS) {
-    unawaited(container.read(appGroupSettingsWriterProvider.future));
+    container.listen(appGroupSettingsWriterProvider, (_, _) {});
   }
 }
 

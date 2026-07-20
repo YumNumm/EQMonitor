@@ -39,7 +39,7 @@ final class KnetCredentialsNotifierProvider
 }
 
 String _$knetCredentialsNotifierHash() =>
-    r'8c38a2d19e302ef7431d9065bac947c5d6b44816';
+    r'efbea7085eb2e59d9f4411d0fc2d30d73734c487';
 
 /// SecureStorage から BOSAI 認証情報を読み書きする Notifier
 
