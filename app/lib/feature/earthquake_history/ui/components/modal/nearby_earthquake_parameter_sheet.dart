@@ -1,9 +1,10 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/nearby_earthquake_parameter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// 震源近傍の地震探索パラメータを調整する BottomSheet
-class NearbyEarthquakeParameterSheet extends StatefulWidget {
+class NearbyEarthquakeParameterSheet extends HookWidget {
   const NearbyEarthquakeParameterSheet({
     required this.initial,
     required this.hasDepth,
@@ -16,26 +17,10 @@ class NearbyEarthquakeParameterSheet extends StatefulWidget {
   final bool hasDepth;
 
   @override
-  State<NearbyEarthquakeParameterSheet> createState() =>
-      _NearbyEarthquakeParameterSheetState();
-}
-
-class _NearbyEarthquakeParameterSheetState
-    extends State<NearbyEarthquakeParameterSheet> {
-  late double _latitudeOffset;
-  late double _longitudeOffset;
-  late int _depthOffset;
-
-  @override
-  void initState() {
-    super.initState();
-    _latitudeOffset = widget.initial.latitudeOffset;
-    _longitudeOffset = widget.initial.longitudeOffset;
-    _depthOffset = widget.initial.depthOffset;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final latitudeOffset = useState(initial.latitudeOffset);
+    final longitudeOffset = useState(initial.longitudeOffset);
+    final depthOffset = useState(initial.depthOffset);
     final theme = Theme.of(context);
 
     return SafeArea(
@@ -66,39 +51,39 @@ class _NearbyEarthquakeParameterSheetState
             const SizedBox(height: 20),
             _SliderRow(
               label: '緯度範囲',
-              value: _latitudeOffset,
+              value: latitudeOffset.value,
               min: 0.1,
               max: 3,
               divisions: 29,
-              displayText: '±${_latitudeOffset.toStringAsFixed(1)}°',
-              onChanged: (v) => setState(() => _latitudeOffset = v),
+              displayText: '±${latitudeOffset.value.toStringAsFixed(1)}°',
+              onChanged: (value) => latitudeOffset.value = value,
             ),
             _SliderRow(
               label: '経度範囲',
-              value: _longitudeOffset,
+              value: longitudeOffset.value,
               min: 0.1,
               max: 3,
               divisions: 29,
-              displayText: '±${_longitudeOffset.toStringAsFixed(1)}°',
-              onChanged: (v) => setState(() => _longitudeOffset = v),
+              displayText: '±${longitudeOffset.value.toStringAsFixed(1)}°',
+              onChanged: (value) => longitudeOffset.value = value,
             ),
-            if (widget.hasDepth)
+            if (hasDepth)
               _SliderRow(
                 label: '深さ範囲',
-                value: _depthOffset.toDouble(),
+                value: depthOffset.value.toDouble(),
                 min: 10,
                 max: 200,
                 divisions: 19,
-                displayText: '±${_depthOffset}km',
-                onChanged: (v) => setState(() => _depthOffset = v.round()),
+                displayText: '±${depthOffset.value}km',
+                onChanged: (value) => depthOffset.value = value.round(),
               ),
             const SizedBox(height: 16),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(
                 NearbyEarthquakeParameter(
-                  latitudeOffset: _latitudeOffset,
-                  longitudeOffset: _longitudeOffset,
-                  depthOffset: _depthOffset,
+                  latitudeOffset: latitudeOffset.value,
+                  longitudeOffset: longitudeOffset.value,
+                  depthOffset: depthOffset.value,
                 ),
               ),
               style: FilledButton.styleFrom(
