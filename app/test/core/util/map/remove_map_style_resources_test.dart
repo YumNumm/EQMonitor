@@ -40,4 +40,26 @@ void main() {
     expect(style.removedSourceIds, ['first-source', 'second-source']);
     expect(style.removedImageIds, ['image']);
   });
+
+  test('複数 layer/source の途中失敗でも全 resource を順に試行する', () async {
+    final style = FakeStyleController(
+      failingLayerIds: {'second-layer'},
+      failingSourceIds: {'first-source'},
+    );
+
+    await removeMapStyleResources(
+      styleController: style,
+      layerIds: const ['first-layer', 'second-layer', 'third-layer'],
+      sourceIds: const ['first-source', 'second-source'],
+      imageIds: const ['first-image', 'second-image'],
+    );
+
+    expect(style.removedLayerIds, [
+      'first-layer',
+      'second-layer',
+      'third-layer',
+    ]);
+    expect(style.removedSourceIds, ['first-source', 'second-source']);
+    expect(style.removedImageIds, ['first-image', 'second-image']);
+  });
 }

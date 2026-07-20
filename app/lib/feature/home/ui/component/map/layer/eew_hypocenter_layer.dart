@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
+import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -207,12 +208,14 @@ class EewHypocenterLayer extends HookConsumerWidget {
 
       return () {
         unawaited(
-          enqueue(() async {
+          enqueue(() {
             isInitialized.value = false;
-            await styleController.removeLayer(layerId.normal);
-            await styleController.removeLayer(layerId.lowPrecise);
-            await styleController.removeSource(sourceId.normal);
-            await styleController.removeSource(sourceId.lowPrecise);
+            return removeMapStyleResources(
+              styleController: styleController,
+              layerIds: [layerId.normal, layerId.lowPrecise],
+              sourceIds: [sourceId.normal, sourceId.lowPrecise],
+              imageIds: const ['normal-hypocenter', 'low-precise-hypocenter'],
+            );
           }),
         );
       };

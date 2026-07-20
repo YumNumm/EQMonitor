@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
+import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
@@ -152,13 +153,20 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
         disposed.value = true;
         isInitialized.value = false;
         unawaited(
-          enqueue(() async {
-            await styleController.removeLayer(EewPsWaveLayer.layerId.pWaveLine);
-            await styleController.removeLayer(EewPsWaveLayer.layerId.sWaveLine);
-            await styleController.removeLayer(EewPsWaveLayer.layerId.sWaveFill);
-            await styleController.removeSource(EewPsWaveLayer.sourceId.pWave);
-            await styleController.removeSource(EewPsWaveLayer.sourceId.sWave);
-          }),
+          enqueue(
+            () => removeMapStyleResources(
+              styleController: styleController,
+              layerIds: [
+                EewPsWaveLayer.layerId.pWaveLine,
+                EewPsWaveLayer.layerId.sWaveLine,
+                EewPsWaveLayer.layerId.sWaveFill,
+              ],
+              sourceIds: [
+                EewPsWaveLayer.sourceId.pWave,
+                EewPsWaveLayer.sourceId.sWave,
+              ],
+            ),
+          ),
         );
       };
     }, [styleController]);
