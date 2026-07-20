@@ -57,7 +57,8 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
     await _retryController.run(() async {
       try {
         final legacy = await repo.readLegacyDeviceId();
-        if (legacy != null && legacy.isNotEmpty) {
+        final alreadyMigrated = await repo.wasMigratedFromLegacy();
+        if (legacy != null && legacy.isNotEmpty && !alreadyMigrated) {
           talker.info(
             '[Provisioning] legacy device detected; '
             'running v2→v3 migration workflow',

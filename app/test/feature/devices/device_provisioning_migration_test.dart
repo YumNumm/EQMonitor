@@ -105,6 +105,30 @@ void main() {
     expect(prefs.getBool(SharedPreferencesKey.deviceProvisioned.key), isTrue);
   });
 
+  test('移行済みなら legacy ID が残っていても registerDevice のみを呼ぶ', () async {
+    final (container, deviceRepo, prefs) = await buildContainer(
+      initialPrefs: {
+        SharedPreferencesKey.legacyDeviceId.key: _legacyId,
+        SharedPreferencesKey.deviceMigratedFromLegacy.key: true,
+      },
+      deviceRepo: FakeDeviceRepository(
+        getResult: () => const Success(_fakeDevice),
+        putResult: () => const Success(_fakeDevice),
+        migrateResult: () => const Success(null),
+      ),
+    );
+
+    await container.read(deviceProvisioningProvider.notifier).provision();
+
+    expect(deviceRepo.migrateCalls, 0);
+    expect(deviceRepo.putCalls, 1);
+    expect(
+      prefs.getBool(SharedPreferencesKey.deviceMigratedFromLegacy.key),
+      isTrue,
+    );
+    expect(prefs.getBool(SharedPreferencesKey.deviceProvisioned.key), isTrue);
+  });
+
   test('migrate が非再試行エラー(400)なら例外が伝播しフラグは立たない', () async {
     final (container, deviceRepo, prefs) = await buildContainer(
       initialPrefs: {SharedPreferencesKey.legacyDeviceId.key: _legacyId},

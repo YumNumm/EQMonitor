@@ -58,3 +58,20 @@
 
 - `dart format` 実行時に `packages/eqmonitor_lints/lib/analysis_options.yaml` が読めない Warning が出たが、format と analyze は完了。
 - 画面への導線は Task 5 まで未接続。
+
+# Final Review Fix: Device Provisioning Migration Guard
+
+## Fix Details
+
+- `DeviceProvisioningNotifier.provision()` の migration 分岐に `wasMigratedFromLegacy()` の確認を追加。
+- legacy ID が残っていても移行済みなら durable migration workflow を再実行せず、通常の `registerDevice` 経路へ進むように修正。
+- `device_provisioning_migration_test.dart` に、移行済みフラグあり + legacy ID 残存時は `migrateFromLegacy` を呼ばず `registerDevice` を呼ぶ回帰テストを追加。
+
+## Test Results
+
+- `cd app && mise exec -- dart format lib/feature/devices/data/notifier/device_provisioning_notifier.dart test/feature/devices/device_provisioning_migration_test.dart`
+  - OK。`packages/eqmonitor_lints/lib/analysis_options.yaml` が読めない Warning は既存環境由来として表示。
+- Cursor IDE diagnostics
+  - 変更ファイルに linter error なし。
+- `cd app && mise exec -- flutter test test/feature/devices/`
+  - OK。91 tests passed。
