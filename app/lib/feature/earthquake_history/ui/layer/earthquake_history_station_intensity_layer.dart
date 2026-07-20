@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
+import 'package:eqmonitor/core/util/map/map_geo_json_source_updater.dart';
+import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
@@ -37,12 +38,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   final bool showStationLabel;
   final bool showingLpgmIntensity;
 
-  static const _iconSmallPrefix = 'JmaIntensity.small.';
-  static const _iconSmallNoTextPrefix = 'JmaIntensity.smallWithoutText.';
-  static const _lpgmIconSmallPrefix = 'JmaLpgmIntensity.small.';
-  static const _lpgmIconSmallNoTextPrefix =
-      'JmaLpgmIntensity.smallWithoutText.';
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensity = earthquake.intensity;
@@ -54,213 +49,263 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     final layerBuilder = useMemoized(
       EarthquakeHistoryStationIntensityLayerBuilder.new,
     );
+    final geoJsonBuilder = useMemoized(
+      EarthquakeHistoryStationGeoJsonBuilder.new,
+    );
 
-    final isInitialized = useRef(false);
-    final iconLayerAdded = useRef(false);
+    final lifecycleToken = useRef<Object?>(null);
+    final initialization = useRef<Future<void>?>(null);
+    final imagesAdded = useRef(false);
+    final latestLayerConfiguration = useRef<Object?>(null);
+    final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
     final latestParameter = useRef(parameter);
     latestParameter.value = parameter;
-    final latestIntensity = useRef(intensity);
-    latestIntensity.value = intensity;
-    final latestColorModel = useRef(colorModel);
-    latestColorModel.value = colorModel;
     final latestStationDisplayMode = useRef(stationDisplayMode);
     latestStationDisplayMode.value = stationDisplayMode;
     final latestShowStationLabel = useRef(showStationLabel);
     latestShowStationLabel.value = showStationLabel;
-    final latestShowingLpgmIntensity = useRef(showingLpgmIntensity);
-    latestShowingLpgmIntensity.value = showingLpgmIntensity;
     final latestIconData = useRef(iconData);
     latestIconData.value = iconData;
-
-    useEffect(
-      () {
-        if (styleController == null || intensity == null) {
-          return null;
-        }
-
-        final currentIntensity = intensity;
-
-        unawaited(
-          enqueue(() async {
-            try {
-              final geoJson = latestShowingLpgmIntensity.value
-                  ? _buildLpgmGeoJson(
-                      currentIntensity,
-                      latestColorModel.value,
-                      latestStationDisplayMode.value,
-                    )
-                  : _buildGeoJson(
-                      currentIntensity,
-                      latestColorModel.value,
-                      latestStationDisplayMode.value,
-                    );
-
-              await styleController.addSource(
-                GeoJsonSource(
-                  id: EarthquakeHistoryStationIntensityLayerBuilder.sourceId,
-                  data: geoJson,
-                ),
-              );
-
-              final cachedBytes = latestIconData.value?.toMapStyleImages;
-              if (cachedBytes != null) {
-                await styleController.addImages(cachedBytes);
-              }
-
-              await styleController.addLayer(
-                layerBuilder.buildCircleLayer(
-                  parameter: latestParameter.value,
-                  stationDisplayMode: latestStationDisplayMode.value,
-                ),
-              );
-
-              if (latestIconData.value != null) {
-                await styleController.addLayer(
-                  layerBuilder.buildIconLayer(parameter: latestParameter.value),
-                );
-                iconLayerAdded.value = true;
-              }
-
-              if (latestShowStationLabel.value) {
-                await styleController.addLayer(
-                  layerBuilder.buildLabelLayer(parameter: latestParameter.value),
-                );
-              }
-
-              isInitialized.value = true;
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }),
-        );
-
-        return () {
-          isInitialized.value = false;
-          unawaited(
-            enqueue(() async {
-              try {
-                if (latestShowStationLabel.value) {
-                  await styleController.removeLayer(
-                    EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
-                  );
-                }
-                if (iconLayerAdded.value) {
-                  await styleController.removeLayer(
-                    EarthquakeHistoryStationIntensityLayerBuilder.iconLayerId,
-                  );
-                  iconLayerAdded.value = false;
-                }
-                await styleController.removeLayer(
-                  EarthquakeHistoryStationIntensityLayerBuilder.circleLayerId,
-                );
-                await styleController.removeSource(
-                  EarthquakeHistoryStationIntensityLayerBuilder.sourceId,
-                );
-              } on Exception catch (e) {
-                talker.log(e);
-              }
-            }),
-          );
-        };
-      },
-      [
-        styleController,
-        intensity,
-        colorModel,
-        stationDisplayMode,
-        showStationLabel,
-        showingLpgmIntensity,
-        iconData,
-        enqueue,
-        layerBuilder,
-      ],
+    final geoJson = geoJsonBuilder.build(
+      intensity: intensity,
+      colorModel: colorModel,
+      stationDisplayMode: stationDisplayMode,
+      showingLpgmIntensity: showingLpgmIntensity,
     );
 
     useEffect(() {
-      if (styleController == null ||
-          !isInitialized.value ||
-          latestIntensity.value == null) {
+      if (styleController == null) {
         return null;
       }
+      final token = Object();
+      lifecycleToken.value = token;
+      imagesAdded.value = false;
+      latestLayerConfiguration.value = null;
+      geoJsonUpdater.reset();
+      initialization.value = enqueue(() async {
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addSource(
+          const GeoJsonSource(
+            id: EarthquakeHistoryStationIntensityLayerBuilder.sourceId,
+            data: '{"type":"FeatureCollection","features":[]}',
+          ),
+        );
+        final cachedBytes = latestIconData.value?.toMapStyleImages;
+        if (cachedBytes != null && lifecycleToken.value == token) {
+          await styleController.addImages(cachedBytes);
+          imagesAdded.value = true;
+        }
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addLayer(
+          layerBuilder.buildCircleLayer(
+            parameter: latestParameter.value,
+            stationDisplayMode: latestStationDisplayMode.value,
+          ),
+        );
+        if (latestIconData.value != null) {
+          await styleController.addLayer(
+            layerBuilder.buildIconLayer(parameter: latestParameter.value),
+          );
+        }
+        if (latestShowStationLabel.value) {
+          await styleController.addLayer(
+            layerBuilder.buildLabelLayer(parameter: latestParameter.value),
+          );
+        }
+        latestLayerConfiguration.value = (
+          parameter: latestParameter.value,
+          stationDisplayMode: latestStationDisplayMode.value,
+          showStationLabel: latestShowStationLabel.value,
+          hasIcon: latestIconData.value != null,
+        );
+      });
 
+      return () {
+        if (lifecycleToken.value == token) {
+          lifecycleToken.value = null;
+        }
+        geoJsonUpdater.reset();
+        unawaited(
+          enqueue(
+            () => removeMapStyleResources(
+              styleController: styleController,
+              layerIds: const [
+                EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
+                EarthquakeHistoryStationIntensityLayerBuilder.iconLayerId,
+                EarthquakeHistoryStationIntensityLayerBuilder.circleLayerId,
+              ],
+              sourceIds: const [
+                EarthquakeHistoryStationIntensityLayerBuilder.sourceId,
+              ],
+            ),
+          ),
+        );
+      };
+    }, [styleController]);
+
+    useEffect(() {
+      final token = lifecycleToken.value;
+      final initialized = initialization.value;
+      if (styleController == null ||
+          token == null ||
+          initialized == null ||
+          iconData == null) {
+        return null;
+      }
       unawaited(
         enqueue(() async {
-          try {
-            if (latestShowStationLabel.value) {
-              await styleController.removeLayer(
-                EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
-              );
-            }
-            if (iconLayerAdded.value) {
-              await styleController.removeLayer(
-                EarthquakeHistoryStationIntensityLayerBuilder.iconLayerId,
-              );
-            }
-            await styleController.removeLayer(
-              EarthquakeHistoryStationIntensityLayerBuilder.circleLayerId,
-            );
+          await initialized;
+          if (lifecycleToken.value != token || imagesAdded.value) {
+            return;
+          }
+          await styleController.addImages(iconData.toMapStyleImages);
+          imagesAdded.value = true;
+        }),
+      );
+      return null;
+    }, [styleController, iconData]);
 
+    useEffect(
+      () {
+        final token = lifecycleToken.value;
+        final initialized = initialization.value;
+        if (styleController == null || token == null || initialized == null) {
+          return null;
+        }
+        final configuration = (
+          parameter: parameter,
+          stationDisplayMode: stationDisplayMode,
+          showStationLabel: showStationLabel,
+          hasIcon: iconData != null,
+        );
+        unawaited(
+          enqueue(() async {
+            await initialized;
+            if (lifecycleToken.value != token ||
+                latestLayerConfiguration.value == configuration) {
+              return;
+            }
+            await removeMapStyleResources(
+              styleController: styleController,
+              layerIds: const [
+                EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
+                EarthquakeHistoryStationIntensityLayerBuilder.iconLayerId,
+                EarthquakeHistoryStationIntensityLayerBuilder.circleLayerId,
+              ],
+            );
+            if (lifecycleToken.value != token) {
+              return;
+            }
             await styleController.addLayer(
               layerBuilder.buildCircleLayer(
                 parameter: parameter,
-                stationDisplayMode: latestStationDisplayMode.value,
+                stationDisplayMode: stationDisplayMode,
               ),
             );
-
-            if (latestIconData.value != null) {
+            if (iconData != null) {
               await styleController.addLayer(
                 layerBuilder.buildIconLayer(parameter: parameter),
               );
-              iconLayerAdded.value = true;
-            } else {
-              iconLayerAdded.value = false;
             }
-
-            if (latestShowStationLabel.value) {
+            if (showStationLabel) {
               await styleController.addLayer(
                 layerBuilder.buildLabelLayer(parameter: parameter),
               );
             }
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }),
-      );
+            latestLayerConfiguration.value = configuration;
+          }),
+        );
+        return null;
+      },
+      [
+        styleController,
+        parameter,
+        stationDisplayMode,
+        showStationLabel,
+        iconData,
+      ],
+    );
 
+    useEffect(() {
+      final token = lifecycleToken.value;
+      if (styleController == null || token == null) {
+        return null;
+      }
+      unawaited(
+        enqueue(
+          () => geoJsonUpdater.update(
+            styleController: styleController,
+            sourceId: EarthquakeHistoryStationIntensityLayerBuilder.sourceId,
+            geoJson: geoJson,
+            initialization: initialization.value,
+            isDisposed: () => lifecycleToken.value != token,
+          ),
+        ),
+      );
       return null;
-    }, [styleController, parameter, enqueue, layerBuilder]);
+    }, [styleController, geoJson]);
 
     return const SizedBox.shrink();
   }
+}
 
-  String _iconIdForStation(
-    String intensityName,
-    bool isFocused,
-    StationDisplayMode stationDisplayMode,
-  ) {
+class EarthquakeHistoryStationGeoJsonBuilder {
+  const EarthquakeHistoryStationGeoJsonBuilder();
+
+  static const iconSmallPrefix = 'JmaIntensity.small.';
+  static const iconSmallNoTextPrefix = 'JmaIntensity.smallWithoutText.';
+  static const lpgmIconSmallPrefix = 'JmaLpgmIntensity.small.';
+  static const lpgmIconSmallNoTextPrefix = 'JmaLpgmIntensity.smallWithoutText.';
+
+  String build({
+    required EarthquakeIntensity? intensity,
+    required IntensityColors colorModel,
+    required StationDisplayMode stationDisplayMode,
+    required bool showingLpgmIntensity,
+  }) => showingLpgmIntensity
+      ? buildLpgmGeoJson(
+          intensity: intensity,
+          colorModel: colorModel,
+          stationDisplayMode: stationDisplayMode,
+        )
+      : buildJmaGeoJson(
+          intensity: intensity,
+          colorModel: colorModel,
+          stationDisplayMode: stationDisplayMode,
+        );
+
+  String iconIdForStation({
+    required String intensityName,
+    required bool isFocused,
+    required StationDisplayMode stationDisplayMode,
+  }) {
     final useSmall = switch (stationDisplayMode) {
       StationDisplayMode.normal => true,
       StationDisplayMode.maxFocused => isFocused,
       StationDisplayMode.allMinimized => false,
     };
-    final prefix = useSmall ? _iconSmallPrefix : _iconSmallNoTextPrefix;
+    final prefix = useSmall ? iconSmallPrefix : iconSmallNoTextPrefix;
     return '$prefix$intensityName';
   }
 
-  String _lpgmIconIdForStation(
-    String lpgmName,
-    StationDisplayMode stationDisplayMode,
-  ) {
+  String lpgmIconIdForStation({
+    required String lpgmName,
+    required StationDisplayMode stationDisplayMode,
+  }) {
     final useSmall = stationDisplayMode != StationDisplayMode.allMinimized;
-    final prefix = useSmall ? _lpgmIconSmallPrefix : _lpgmIconSmallNoTextPrefix;
+    final prefix = useSmall ? lpgmIconSmallPrefix : lpgmIconSmallNoTextPrefix;
     return '$prefix$lpgmName';
   }
 
-  String _buildGeoJson(
-    EarthquakeIntensity? intensity,
-    IntensityColors colorModel,
-    StationDisplayMode stationDisplayMode,
-  ) {
+  String buildJmaGeoJson({
+    required EarthquakeIntensity? intensity,
+    required IntensityColors colorModel,
+    required StationDisplayMode stationDisplayMode,
+  }) {
     if (intensity == null) {
       return jsonEncode({'type': 'FeatureCollection', 'features': <dynamic>[]});
     }
@@ -279,10 +324,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                 .background
                 .toHexStringRGB();
             final isFocused = intensity.maxIntensity == jmaIntensity;
-            final iconId = _iconIdForStation(
-              jmaIntensity.name,
-              isFocused,
-              stationDisplayMode,
+            final iconId = iconIdForStation(
+              intensityName: jmaIntensity.name,
+              isFocused: isFocused,
+              stationDisplayMode: stationDisplayMode,
             );
             final station = stationNode.station;
             features.add({
@@ -307,11 +352,11 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     return jsonEncode({'type': 'FeatureCollection', 'features': features});
   }
 
-  String _buildLpgmGeoJson(
-    EarthquakeIntensity? intensity,
-    IntensityColors colorModel,
-    StationDisplayMode stationDisplayMode,
-  ) {
+  String buildLpgmGeoJson({
+    required EarthquakeIntensity? intensity,
+    required IntensityColors colorModel,
+    required StationDisplayMode stationDisplayMode,
+  }) {
     if (intensity == null) {
       return jsonEncode({'type': 'FeatureCollection', 'features': <dynamic>[]});
     }
@@ -329,9 +374,9 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                 .fromJmaLpgmIntensity(lpgmIntensity)
                 .background
                 .toHexStringRGB();
-            final iconId = _lpgmIconIdForStation(
-              lpgmIntensity.name,
-              stationDisplayMode,
+            final iconId = lpgmIconIdForStation(
+              lpgmName: lpgmIntensity.name,
+              stationDisplayMode: stationDisplayMode,
             );
             final station = stationNode.station;
             features.add({
