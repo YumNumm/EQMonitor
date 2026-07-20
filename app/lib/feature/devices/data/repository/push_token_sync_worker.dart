@@ -90,6 +90,23 @@ final class PushTokenSyncWorker {
     }
   }
 
+  void forceResync() {
+    if (_disposed) {
+      return;
+    }
+    final token = _latestToken;
+    if (token == null || token.isEmpty) {
+      return;
+    }
+
+    _attempt = 0;
+    _blockedToken = null;
+    _lastSyncedToken = null;
+    _latestToken = null;
+    _backoff.interrupt();
+    accept(token: token);
+  }
+
   Future<void> process() async {
     while (!_disposed) {
       final attemptedToken = _latestToken;
