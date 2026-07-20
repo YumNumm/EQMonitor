@@ -17,6 +17,8 @@ MapLibre Native Android の現行ドキュメントは次を明記している�
   - Android: Flutter plugin + Kotlin + jnigen（`filesDir/map/` へ atomic copy、versionCode マーカー）
 - HTTPS フォールバックはしない
 - URI は `pmtiles://${Uri.file(absolutePath)}` でエンコードする
+- 同梱アーカイブの `vector_layers[].id` が `countries`、`areaForecastLocalE`、
+  `areaForecastLocalEew`、`areaInformationCityQuake` を含むことを配布前に確認する
 
 ## 将来の Background Assets / Play Asset Delivery
 
