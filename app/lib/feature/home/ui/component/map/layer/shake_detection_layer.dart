@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
+import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -130,14 +131,17 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
         disposed.value = true;
         isInitialized.value = false;
         unawaited(
-          enqueue(() async {
-            await styleController.removeLayer(
-              ShakeDetectionLayer._centerLayerId,
-            );
-            await styleController.removeLayer(ShakeDetectionLayer._fillLayerId);
-            await styleController.removeLayer(ShakeDetectionLayer._lineLayerId);
-            await styleController.removeSource(ShakeDetectionLayer.sourceId);
-          }),
+          enqueue(
+            () => removeMapStyleResources(
+              styleController: styleController,
+              layerIds: const [
+                ShakeDetectionLayer._centerLayerId,
+                ShakeDetectionLayer._fillLayerId,
+                ShakeDetectionLayer._lineLayerId,
+              ],
+              sourceIds: const [ShakeDetectionLayer.sourceId],
+            ),
+          ),
         );
       };
     }, [styleController]);

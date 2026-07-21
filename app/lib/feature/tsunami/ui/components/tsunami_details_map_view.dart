@@ -7,9 +7,10 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
+import 'package:eqmonitor/core/util/map/map_geo_json_source_updater.dart';
+import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
@@ -181,182 +182,85 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final jmaMapAsync = ref.watch(jmaMapProvider);
     final enqueue = useMapOperationQueue();
+    final lifecycleToken = useRef<Object?>(null);
+    final initialization = useRef<Future<void>?>(null);
+    final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
+    const geoJsonBuilder = TsunamiMapGeoJsonBuilder();
+    final jmaMap = jmaMapAsync.value;
+    final geoJson = jmaMap == null
+        ? TsunamiMapGeoJsonBuilder.emptyFeatureCollection
+        : geoJsonBuilder.buildRegions(
+            tsunamiMapData: jmaMap.areaTsunami,
+            regions: tsunami.regions,
+          );
+    final layerIds = TsunamiMapLayerBuilder.warningKinds
+        .map((kind) => TsunamiMapLayerBuilder.regionLayerId(kind: kind))
+        .toList();
 
     useEffect(() {
       if (styleController == null) {
         return null;
       }
-      final jmaMap = jmaMapAsync.value;
-      if (jmaMap == null) {
-        return null;
-      }
-
-      final addedLayerIds = <String>[];
-
-      unawaited(
-        enqueue(() async {
-          try {
-            final tsunamiMapData = jmaMap.areaTsunami;
-            final geoJson = _buildTsunamiRegionGeoJson(
-              tsunamiMapData,
-              tsunami.regions,
-            );
-
-            await styleController.addSource(
-              GeoJsonSource(
-                id: _MapContent._tsunamiLineSourceId,
-                data: geoJson,
-              ),
-            );
-
-            // 警報種別ごとにラインレイヤーを追加（重要度順: 予報 → 注意報 → 警報 → 大津波警報）
-            final kindOrder = [
-              TsunamiWarningKind.forecast,
-              TsunamiWarningKind.advisory,
-              TsunamiWarningKind.warning,
-              TsunamiWarningKind.majorWarning,
-            ];
-
-            for (final kind in kindOrder) {
-              final color = TsunamiWarningColor.mapBorderColor(
-                kind,
-              ).toHexStringRGB();
-              final layerId =
-                  '${_MapContent._tsunamiLineLayerIdPrefix}${kind.name}';
-              await styleController.addLayer(
-                LineStyleLayer(
-                  id: layerId,
-                  sourceId: _MapContent._tsunamiLineSourceId,
-                  filter: [
-                    '==',
-                    ['get', 'kind'],
-                    kind.name,
-                  ],
-                  paint: {
-                    'line-color': color,
-                    'line-width': switch (kind) {
-                      .majorWarning => 5.0,
-                      .warning => 4.0,
-                      .advisory => 3.0,
-                      .forecast => 2.0,
-                      .none => 1.0,
-                      .advisoryCancel => 0,
-                      .warningCancel => 0,
-                    },
-                    'line-opacity': 0.9,
-                  },
-                ),
-              );
-              addedLayerIds.add(layerId);
-            }
-          } on Exception catch (e) {
-            talker.log(e);
+      final token = Object();
+      lifecycleToken.value = token;
+      geoJsonUpdater.reset();
+      initialization.value = enqueue(() async {
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addSource(
+          const GeoJsonSource(
+            id: _MapContent._tsunamiLineSourceId,
+            data: TsunamiMapGeoJsonBuilder.emptyFeatureCollection,
+          ),
+        );
+        for (final kind in TsunamiMapLayerBuilder.warningKinds) {
+          if (lifecycleToken.value != token) {
+            return;
           }
-        }),
-      );
+          await styleController.addLayer(
+            TsunamiMapLayerBuilder.buildRegionLineLayer(kind: kind),
+          );
+        }
+      });
 
       return () {
+        if (lifecycleToken.value == token) {
+          lifecycleToken.value = null;
+        }
+        geoJsonUpdater.reset();
         unawaited(
-          enqueue(() async {
-            for (final id in addedLayerIds.reversed) {
-              try {
-                await styleController.removeLayer(id);
-              } on Exception catch (e) {
-                talker.log(e);
-              }
-            }
-            try {
-              await styleController.removeSource(
-                _MapContent._tsunamiLineSourceId,
-              );
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }),
+          enqueue(
+            () => removeMapStyleResources(
+              styleController: styleController,
+              layerIds: layerIds.reversed.toList(),
+              sourceIds: const [_MapContent._tsunamiLineSourceId],
+            ),
+          ),
         );
       };
-    }, [styleController, jmaMapAsync, tsunami.regions]);
+    }, [styleController]);
+
+    useEffect(() {
+      final token = lifecycleToken.value;
+      if (styleController == null || token == null) {
+        return null;
+      }
+      unawaited(
+        enqueue(
+          () => geoJsonUpdater.update(
+            styleController: styleController,
+            sourceId: _MapContent._tsunamiLineSourceId,
+            geoJson: geoJson,
+            initialization: initialization.value,
+            isDisposed: () => lifecycleToken.value != token,
+          ),
+        ),
+      );
+      return null;
+    }, [styleController, geoJson]);
 
     return const SizedBox.shrink();
-  }
-
-  /// JMA protobuf の津波予報区 LINE_STRING/MULTI_LINE_STRING データから
-  /// GeoJSON FeatureCollection を構築する。
-  String _buildTsunamiRegionGeoJson(
-    JmaMap_JmaMapData tsunamiMapData,
-    List<TsunamiRegion> regions,
-  ) {
-    // forecastRegion の code → kind マッピング
-    final codeToKind = <String, TsunamiWarningKind>{};
-    for (final region in regions) {
-      codeToKind[region.code] = region.kind;
-    }
-
-    final features = <Map<String, dynamic>>[];
-
-    for (final item in tsunamiMapData.data) {
-      final code = item.property.code;
-      final kind = codeToKind[code];
-      if (kind == null || kind == .none) {
-        continue;
-      }
-
-      final bytes = Uint8List.fromList(item.bytes);
-      final geometry = _decodeGeometry(item.dataType, bytes);
-      if (geometry == null) {
-        continue;
-      }
-
-      features.add({
-        'type': 'Feature',
-        'geometry': geometry,
-        'properties': {
-          'code': code,
-          'name': item.property.name,
-          'kind': kind.name,
-        },
-      });
-    }
-
-    return jsonEncode({'type': 'FeatureCollection', 'features': features});
-  }
-
-  /// protobuf バイナリを GeoJSON geometry オブジェクトにデコードする。
-  Map<String, dynamic>? _decodeGeometry(
-    JmaMap_JmaMapData_DataType dataType,
-    Uint8List bytes,
-  ) {
-    switch (dataType) {
-      case JmaMap_JmaMapData_DataType.LINE_STRING:
-        final lineString = geo.LineString.decode(bytes);
-        return {
-          'type': 'LineString',
-          'coordinates': _chainToCoordinates(lineString.chain),
-        };
-      case JmaMap_JmaMapData_DataType.MULTI_LINE_STRING:
-        final multiLineString = geo.MultiLineString.decode(bytes);
-        return {
-          'type': 'MultiLineString',
-          'coordinates': [
-            for (final chain in multiLineString.chains)
-              _chainToCoordinates(chain),
-          ],
-        };
-      case JmaMap_JmaMapData_DataType.POLYGON:
-      case JmaMap_JmaMapData_DataType.MULTI_POLYGON:
-        // 津波予報区はライン系ジオメトリのみ
-        return null;
-    }
-    return null;
-  }
-
-  /// PositionSeries を GeoJSON coordinates 配列 ([[lng, lat], ...]) に変換。
-  List<List<double>> _chainToCoordinates(geo.PositionSeries chain) {
-    final coords = <List<double>>[];
-    for (var i = 0; i < chain.positionCount; i++) {
-      coords.add([chain.x(i), chain.y(i)]);
-    }
-    return coords;
   }
 }
 
@@ -373,89 +277,83 @@ class _TsunamiHypocenterLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final enqueue = useMapOperationQueue();
+    final lifecycleToken = useRef<Object?>(null);
+    final initialization = useRef<Future<void>?>(null);
+    final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
+    final coords = tsunami.earthquakes.firstOrNull?.hypocenter.coordinates;
+    final geoJson = const TsunamiMapGeoJsonBuilder().buildHypocenter(
+      latitude: coords?.latitude.toDouble(),
+      longitude: coords?.longitude.toDouble(),
+    );
 
     useEffect(() {
       if (styleController == null) {
         return null;
       }
-
-      final coords = tsunami.earthquakes.firstOrNull?.hypocenter.coordinates;
-      if (coords == null) {
-        return null;
-      }
-
-      unawaited(
-        enqueue(() async {
-          try {
-            await styleController.addImageFromAssets(
-              id: _MapContent._hypocenterIconId,
-              asset: Assets.images.map.normalHypocenter.path,
-            );
-
-            await styleController.addSource(
-              GeoJsonSource(
-                id: _MapContent._hypocenterSourceId,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': [
-                    {
-                      'type': 'Feature',
-                      'geometry': {
-                        'type': 'Point',
-                        'coordinates': [coords.longitude, coords.latitude],
-                      },
-                      'properties': <String, dynamic>{},
-                    },
-                  ],
-                }),
-              ),
-            );
-
-            await styleController.addLayer(
-              const SymbolStyleLayer(
-                id: _MapContent._hypocenterLayerId,
-                sourceId: _MapContent._hypocenterSourceId,
-                layout: {
-                  'icon-allow-overlap': true,
-                  'icon-ignore-placement': true,
-                  'icon-image': _MapContent._hypocenterIconId,
-                  'icon-size': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    3,
-                    0.15,
-                    20,
-                    0.4,
-                  ],
-                },
-              ),
-            );
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }),
-      );
+      final token = Object();
+      lifecycleToken.value = token;
+      geoJsonUpdater.reset();
+      initialization.value = enqueue(() async {
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addImageFromAssets(
+          id: _MapContent._hypocenterIconId,
+          asset: Assets.images.map.normalHypocenter.path,
+        );
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addSource(
+          const GeoJsonSource(
+            id: _MapContent._hypocenterSourceId,
+            data: TsunamiMapGeoJsonBuilder.emptyFeatureCollection,
+          ),
+        );
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addLayer(
+          TsunamiMapLayerBuilder.buildHypocenterLayer(),
+        );
+      });
 
       return () {
+        if (lifecycleToken.value == token) {
+          lifecycleToken.value = null;
+        }
+        geoJsonUpdater.reset();
         unawaited(
-          enqueue(() async {
-            try {
-              await styleController.removeLayer(_MapContent._hypocenterLayerId);
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-            try {
-              await styleController.removeSource(
-                _MapContent._hypocenterSourceId,
-              );
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }),
+          enqueue(
+            () => removeMapStyleResources(
+              styleController: styleController,
+              layerIds: const [_MapContent._hypocenterLayerId],
+              sourceIds: const [_MapContent._hypocenterSourceId],
+              imageIds: const [_MapContent._hypocenterIconId],
+            ),
+          ),
         );
       };
-    }, [styleController, tsunami.earthquakes]);
+    }, [styleController]);
+
+    useEffect(() {
+      final token = lifecycleToken.value;
+      if (styleController == null || token == null) {
+        return null;
+      }
+      unawaited(
+        enqueue(
+          () => geoJsonUpdater.update(
+            styleController: styleController,
+            sourceId: _MapContent._hypocenterSourceId,
+            geoJson: geoJson,
+            initialization: initialization.value,
+            isDisposed: () => lifecycleToken.value != token,
+          ),
+        ),
+      );
+      return null;
+    }, [styleController, geoJson]);
 
     return const SizedBox.shrink();
   }
@@ -475,130 +373,182 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final jmaParamAsync = ref.watch(jmaParameterProvider);
     final enqueue = useMapOperationQueue();
+    final lifecycleToken = useRef<Object?>(null);
+    final initialization = useRef<Future<void>?>(null);
+    final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
+    final tsunamiParameter = jmaParamAsync.value?.tsunami;
+    final geoJson = tsunamiParameter == null
+        ? TsunamiMapGeoJsonBuilder.emptyFeatureCollection
+        : const TsunamiMapGeoJsonBuilder().buildObservationStations(
+            tsunami: tsunami,
+            tsunamiParameter: tsunamiParameter,
+          );
 
     useEffect(() {
       if (styleController == null) {
         return null;
       }
-      final jmaParam = jmaParamAsync.value;
-      if (jmaParam == null) {
-        return null;
-      }
-
-      var labelLayerAdded = false;
-
-      unawaited(
-        enqueue(() async {
-          try {
-            final geoJson = _buildObservationStationGeoJson(
-              tsunami,
-              jmaParam.tsunami,
-            );
-
-            await styleController.addSource(
-              GeoJsonSource(id: _MapContent._stationSourceId, data: geoJson),
-            );
-
-            await styleController.addLayer(
-              const CircleStyleLayer(
-                id: _MapContent._stationCircleLayerId,
-                sourceId: _MapContent._stationSourceId,
-                paint: {
-                  'circle-radius': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    3,
-                    3,
-                    10,
-                    8,
-                  ],
-                  'circle-color': ['get', 'color'],
-                  'circle-stroke-color': '#ffffff',
-                  'circle-stroke-width': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    3,
-                    0.3,
-                    10,
-                    1.5,
-                  ],
-                },
-              ),
-            );
-
-            await styleController.addLayer(
-              const SymbolStyleLayer(
-                id: _MapContent._stationLabelLayerId,
-                sourceId: _MapContent._stationSourceId,
-                minZoom: 8,
-                layout: {
-                  'text-field': ['get', 'name'],
-                  'text-size': 10,
-                  'text-offset': [0, 1.2],
-                  'text-anchor': 'top',
-                  'text-allow-overlap': false,
-                  'text-ignore-placement': true,
-                },
-                paint: {
-                  'text-color': '#ffffff',
-                  'text-halo-color': '#000000',
-                  'text-halo-width': 1,
-                },
-              ),
-            );
-            labelLayerAdded = true;
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }),
-      );
+      final token = Object();
+      lifecycleToken.value = token;
+      geoJsonUpdater.reset();
+      initialization.value = enqueue(() async {
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addSource(
+          const GeoJsonSource(
+            id: _MapContent._stationSourceId,
+            data: TsunamiMapGeoJsonBuilder.emptyFeatureCollection,
+          ),
+        );
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addLayer(
+          TsunamiMapLayerBuilder.buildStationCircleLayer(),
+        );
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addLayer(
+          TsunamiMapLayerBuilder.buildStationLabelLayer(),
+        );
+      });
 
       return () {
+        if (lifecycleToken.value == token) {
+          lifecycleToken.value = null;
+        }
+        geoJsonUpdater.reset();
         unawaited(
-          enqueue(() async {
-            if (labelLayerAdded) {
-              try {
-                await styleController.removeLayer(
-                  _MapContent._stationLabelLayerId,
-                );
-              } on Exception catch (e) {
-                talker.log(e);
-              }
-            }
-            try {
-              await styleController.removeLayer(
+          enqueue(
+            () => removeMapStyleResources(
+              styleController: styleController,
+              layerIds: const [
+                _MapContent._stationLabelLayerId,
                 _MapContent._stationCircleLayerId,
-              );
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-            try {
-              await styleController.removeSource(_MapContent._stationSourceId);
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }),
+              ],
+              sourceIds: const [_MapContent._stationSourceId],
+            ),
+          ),
         );
       };
-    }, [styleController, jmaParamAsync, tsunami]);
+    }, [styleController]);
+
+    useEffect(() {
+      final token = lifecycleToken.value;
+      if (styleController == null || token == null) {
+        return null;
+      }
+      unawaited(
+        enqueue(
+          () => geoJsonUpdater.update(
+            styleController: styleController,
+            sourceId: _MapContent._stationSourceId,
+            geoJson: geoJson,
+            initialization: initialization.value,
+            isDisposed: () => lifecycleToken.value != token,
+          ),
+        ),
+      );
+      return null;
+    }, [styleController, geoJson]);
 
     return const SizedBox.shrink();
   }
+}
 
-  /// 津波観測点を GeoJSON FeatureCollection に構築する。
-  ///
-  /// forecastRegions 内の observation.stations と TsunamiParameter の
-  /// 観測点位置情報を照合し、色を maxHeight の条件に基づいて決定する。
-  String _buildObservationStationGeoJson(
-    TsunamiState tsunami,
-    TsunamiParameter tsunamiParam,
-  ) {
-    // TsunamiParameter から観測点コード → 位置のマップを構築
+class TsunamiMapGeoJsonBuilder {
+  const TsunamiMapGeoJsonBuilder();
+
+  static const emptyFeatureCollection =
+      '{"type":"FeatureCollection","features":[]}';
+
+  String buildHypocenter({
+    required double? latitude,
+    required double? longitude,
+  }) => jsonEncode({
+    'type': 'FeatureCollection',
+    'features': <Map<String, dynamic>>[
+      if (latitude != null && longitude != null)
+        {
+          'type': 'Feature',
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [longitude, latitude],
+          },
+          'properties': <String, dynamic>{},
+        },
+    ],
+  });
+
+  String buildRegions({
+    required JmaMap_JmaMapData tsunamiMapData,
+    required List<TsunamiRegion> regions,
+  }) {
+    final codeToKind = {for (final region in regions) region.code: region.kind};
+    final features = <Map<String, dynamic>>[];
+    for (final item in tsunamiMapData.data) {
+      final code = item.property.code;
+      final kind = codeToKind[code];
+      if (kind == null || kind == .none) {
+        continue;
+      }
+      final geometry = decodeGeometry(
+        dataType: item.dataType,
+        bytes: Uint8List.fromList(item.bytes),
+      );
+      if (geometry == null) {
+        continue;
+      }
+      features.add({
+        'type': 'Feature',
+        'geometry': geometry,
+        'properties': {
+          'code': code,
+          'name': item.property.name,
+          'kind': kind.name,
+        },
+      });
+    }
+    return jsonEncode({'type': 'FeatureCollection', 'features': features});
+  }
+
+  Map<String, dynamic>? decodeGeometry({
+    required JmaMap_JmaMapData_DataType dataType,
+    required Uint8List bytes,
+  }) => switch (dataType) {
+    JmaMap_JmaMapData_DataType.LINE_STRING => {
+      'type': 'LineString',
+      'coordinates': chainToCoordinates(
+        chain: geo.LineString.decode(bytes).chain,
+      ),
+    },
+    JmaMap_JmaMapData_DataType.MULTI_LINE_STRING => {
+      'type': 'MultiLineString',
+      'coordinates': [
+        for (final chain in geo.MultiLineString.decode(bytes).chains)
+          chainToCoordinates(chain: chain),
+      ],
+    },
+    JmaMap_JmaMapData_DataType.POLYGON ||
+    JmaMap_JmaMapData_DataType.MULTI_POLYGON => null,
+    _ => null,
+  };
+
+  List<List<double>> chainToCoordinates({required geo.PositionSeries chain}) =>
+      [
+        for (var index = 0; index < chain.positionCount; index++)
+          [chain.x(index), chain.y(index)],
+      ];
+
+  String buildObservationStations({
+    required TsunamiState tsunami,
+    required TsunamiParameter tsunamiParameter,
+  }) {
     final stationLocations = <String, ({double lat, double lon})>{};
-    for (final pref in tsunamiParam.prefectures) {
-      for (final area in pref.areas) {
+    for (final prefecture in tsunamiParameter.prefectures) {
+      for (final area in prefecture.areas) {
         for (final station in area.stations) {
           stationLocations[station.code] = (
             lat: station.location.lat,
@@ -607,21 +557,13 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
         }
       }
     }
-
     final features = <Map<String, dynamic>>[];
-
-    // regions 内の observation stations
     for (final region in tsunami.regions) {
       for (final station in region.stations) {
-        if (station.observation == null) {
-          continue;
-        }
         final location = stationLocations[station.code];
-        if (location == null) {
+        if (station.observation == null || location == null) {
           continue;
         }
-
-        final color = _stationColor(station);
         features.add({
           'type': 'Feature',
           'geometry': {
@@ -630,88 +572,171 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
           },
           'properties': {
             'name': station.name,
-            'color': color,
+            'color': stationColor(station: station),
             'code': station.code,
           },
         });
       }
     }
-
-    // offshoreStations（沖合観測点）
-    for (final obs in tsunami.offshoreStations) {
-      final location = stationLocations[obs.code];
+    for (final station in tsunami.offshoreStations) {
+      final location = stationLocations[station.code];
       if (location == null) {
         continue;
       }
-
-      final color = _offshoreStationColor(obs);
       features.add({
         'type': 'Feature',
         'geometry': {
           'type': 'Point',
           'coordinates': [location.lon, location.lat],
         },
-        'properties': {'name': obs.name, 'color': color, 'code': obs.code},
+        'properties': {
+          'name': station.name,
+          'color': offshoreStationColor(station: station),
+          'code': station.code,
+        },
       });
     }
-
     return jsonEncode({'type': 'FeatureCollection', 'features': features});
   }
 
-  /// 観測点の色を maxHeight の条件に基づいて決定する。
-  ///
-  /// - IMPORTANT or >= 1.0m → 赤
-  /// - OBSERVING or isRising → オレンジ
-  /// - MINOR or < 1.0m → 黄
-  /// - データなし → グレー
-  String _stationColor(TsunamiRegionStation station) {
+  String stationColor({required TsunamiRegionStation station}) {
     final maxHeight = station.observation?.maxHeight;
-    if (maxHeight == null) {
-      return '#9E9E9E'; // grey
-    }
-
-    if (maxHeight.condition == ObservationMaxHeightCondition.important ||
-        (maxHeight.value != null && maxHeight.value! >= 1.0)) {
-      return '#F44336'; // red
-    }
-
-    if (maxHeight.condition == ObservationMaxHeightCondition.observing ||
-        (maxHeight.isRising ?? false)) {
-      return '#FF9800'; // orange
-    }
-
-    if (maxHeight.condition == ObservationMaxHeightCondition.minor ||
-        (maxHeight.value != null && maxHeight.value! < 1.0)) {
-      return '#FFEB3B'; // yellow
-    }
-
-    return '#9E9E9E'; // grey
+    return observationColor(
+      condition: maxHeight?.condition,
+      value: maxHeight?.value,
+      isRising: maxHeight?.isRising,
+    );
   }
 
-  /// 沖合観測点の色を同様のロジックで決定する。
-  String _offshoreStationColor(TsunamiOffshoreStation obs) {
-    final maxHeight = obs.maxHeight;
-    if (maxHeight == null) {
-      return '#9E9E9E'; // grey
-    }
+  String offshoreStationColor({required TsunamiOffshoreStation station}) =>
+      observationColor(
+        condition: station.maxHeight?.condition,
+        value: station.maxHeight?.value,
+        isRising: station.maxHeight?.isRising,
+      );
 
-    if (maxHeight.condition == ObservationMaxHeightCondition.important ||
-        (maxHeight.value != null && maxHeight.value! >= 1.0)) {
-      return '#F44336'; // red
+  String observationColor({
+    required ObservationMaxHeightCondition? condition,
+    required num? value,
+    required bool? isRising,
+  }) {
+    if (condition == ObservationMaxHeightCondition.important ||
+        (value != null && value >= 1)) {
+      return '#F44336';
     }
-
-    if (maxHeight.condition == ObservationMaxHeightCondition.observing ||
-        (maxHeight.isRising ?? false)) {
-      return '#FF9800'; // orange
+    if (condition == ObservationMaxHeightCondition.observing ||
+        (isRising ?? false)) {
+      return '#FF9800';
     }
-
-    if (maxHeight.condition == ObservationMaxHeightCondition.minor ||
-        (maxHeight.value != null && maxHeight.value! < 1.0)) {
-      return '#FFEB3B'; // yellow
+    if (condition == ObservationMaxHeightCondition.minor ||
+        (value != null && value < 1)) {
+      return '#FFEB3B';
     }
-
-    return '#9E9E9E'; // grey
+    return '#9E9E9E';
   }
+}
+
+class TsunamiMapLayerBuilder {
+  const TsunamiMapLayerBuilder._();
+
+  static const warningKinds = [
+    TsunamiWarningKind.forecast,
+    TsunamiWarningKind.advisory,
+    TsunamiWarningKind.warning,
+    TsunamiWarningKind.majorWarning,
+  ];
+
+  static String regionLayerId({required TsunamiWarningKind kind}) =>
+      '${_MapContent._tsunamiLineLayerIdPrefix}${kind.name}';
+
+  static LineStyleLayer buildRegionLineLayer({
+    required TsunamiWarningKind kind,
+  }) => LineStyleLayer(
+    id: regionLayerId(kind: kind),
+    sourceId: _MapContent._tsunamiLineSourceId,
+    filter: [
+      '==',
+      ['get', 'kind'],
+      kind.name,
+    ],
+    paint: {
+      'line-color': TsunamiWarningColor.mapBorderColor(kind).toHexStringRGB(),
+      'line-width': switch (kind) {
+        .majorWarning => 5.0,
+        .warning => 4.0,
+        .advisory => 3.0,
+        .forecast => 2.0,
+        .none => 1.0,
+        .advisoryCancel || .warningCancel => 0,
+      },
+      'line-opacity': 0.9,
+    },
+  );
+
+  static SymbolStyleLayer buildHypocenterLayer() => const SymbolStyleLayer(
+    id: _MapContent._hypocenterLayerId,
+    sourceId: _MapContent._hypocenterSourceId,
+    layout: {
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true,
+      'icon-image': _MapContent._hypocenterIconId,
+      'icon-size': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        3,
+        0.15,
+        20,
+        0.4,
+      ],
+    },
+  );
+
+  static CircleStyleLayer buildStationCircleLayer() => const CircleStyleLayer(
+    id: _MapContent._stationCircleLayerId,
+    sourceId: _MapContent._stationSourceId,
+    paint: {
+      'circle-radius': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        3,
+        3,
+        10,
+        8,
+      ],
+      'circle-color': ['get', 'color'],
+      'circle-stroke-color': '#ffffff',
+      'circle-stroke-width': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        3,
+        0.3,
+        10,
+        1.5,
+      ],
+    },
+  );
+
+  static SymbolStyleLayer buildStationLabelLayer() => const SymbolStyleLayer(
+    id: _MapContent._stationLabelLayerId,
+    sourceId: _MapContent._stationSourceId,
+    minZoom: 8,
+    layout: {
+      'text-field': ['get', 'name'],
+      'text-size': 10,
+      'text-offset': [0, 1.2],
+      'text-anchor': 'top',
+      'text-allow-overlap': false,
+      'text-ignore-placement': true,
+    },
+    paint: {
+      'text-color': '#ffffff',
+      'text-halo-color': '#000000',
+      'text-halo-width': 1,
+    },
+  );
 }
 
 // ---------------------------------------------------------------------------

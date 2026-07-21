@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/map/hypocenter_error_range_util.dart';
+import 'package:eqmonitor/core/util/map/map_geo_json_source_updater.dart';
+import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
@@ -35,118 +36,139 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
       EarthquakeHistoryHypocenterErrorLayerBuilder.new,
     );
 
-    final isInitialized = useRef(false);
-    final latestParameter = useRef(parameter);
-    latestParameter.value = parameter;
-    final latestEarthquake = useRef(earthquake);
-    latestEarthquake.value = earthquake;
-    final latestIsDark = useRef(isDark);
-    latestIsDark.value = isDark;
+    final lifecycleToken = useRef<Object?>(null);
+    final initialization = useRef<Future<void>?>(null);
+    final isLayerInitialized = useRef(false);
+    final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
+    final geoJson = const EarthquakeHistoryHypocenterErrorGeoJsonBuilder()
+        .build(
+          coordinates: earthquake.hypocenter?.coordinates,
+          decimalPlaces:
+              earthquake.telegramTypes.contains(EarthquakeTelegramType.vxse61)
+              ? 3
+              : 1,
+        );
 
     useEffect(() {
       if (styleController == null) {
         return null;
       }
 
-      unawaited(
-        enqueue(() async {
-          try {
-            final coords = latestEarthquake.value.hypocenter?.coordinates;
-            if (coords is! CoordinateLatLng) {
-              return;
-            }
-
-            final decimalPlaces =
-                latestEarthquake.value.telegramTypes.contains(
-                  EarthquakeTelegramType.vxse61,
-                )
-                ? 3
-                : 1;
-            final polygon = hypocenterErrorPolygon(
-              lat: coords.latitude,
-              lon: coords.longitude,
-              decimalPlaces: decimalPlaces,
-            );
-
-            await styleController.addSource(
-              GeoJsonSource(
-                id: EarthquakeHistoryHypocenterErrorLayerBuilder.sourceId,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': [
-                    {
-                      'type': 'Feature',
-                      'geometry': {
-                        'type': 'Polygon',
-                        'coordinates': [polygon],
-                      },
-                      'properties': <String, dynamic>{},
-                    },
-                  ],
-                }),
-              ),
-            );
-
-            await styleController.addLayer(
-              layerBuilder.buildLineLayer(
-                parameter: latestParameter.value,
-                isDark: latestIsDark.value,
-              ),
-            );
-
-            isInitialized.value = true;
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }),
-      );
+      final token = Object();
+      lifecycleToken.value = token;
+      isLayerInitialized.value = false;
+      geoJsonUpdater.reset();
+      initialization.value = enqueue(() async {
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addSource(
+          const GeoJsonSource(
+            id: EarthquakeHistoryHypocenterErrorLayerBuilder.sourceId,
+            data: '{"type":"FeatureCollection","features":[]}',
+          ),
+        );
+      });
 
       return () {
-        isInitialized.value = false;
+        if (lifecycleToken.value == token) {
+          lifecycleToken.value = null;
+        }
+        geoJsonUpdater.reset();
         unawaited(
-          enqueue(() async {
-            try {
-              await styleController.removeLayer(
+          enqueue(
+            () => removeMapStyleResources(
+              styleController: styleController,
+              layerIds: const [
                 EarthquakeHistoryHypocenterErrorLayerBuilder.layerId,
-              );
-              await styleController.removeSource(
+              ],
+              sourceIds: const [
                 EarthquakeHistoryHypocenterErrorLayerBuilder.sourceId,
-              );
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }),
+              ],
+            ),
+          ),
         );
       };
-    }, [styleController, earthquake, isDark, enqueue, layerBuilder]);
+    }, [styleController]);
 
     useEffect(() {
-      if (styleController == null || !isInitialized.value) {
+      final token = lifecycleToken.value;
+      final initialized = initialization.value;
+      if (styleController == null || token == null || initialized == null) {
         return null;
       }
-
       unawaited(
         enqueue(() async {
-          try {
+          await initialized;
+          if (lifecycleToken.value != token) {
+            return;
+          }
+          if (isLayerInitialized.value) {
             await styleController.removeLayer(
               EarthquakeHistoryHypocenterErrorLayerBuilder.layerId,
             );
-            await styleController.addLayer(
-              layerBuilder.buildLineLayer(
-                parameter: parameter,
-                isDark: latestIsDark.value,
-              ),
-            );
-          } on Exception catch (e) {
-            talker.log(e);
           }
+          if (lifecycleToken.value != token) {
+            return;
+          }
+          await styleController.addLayer(
+            layerBuilder.buildLineLayer(parameter: parameter, isDark: isDark),
+          );
+          isLayerInitialized.value = true;
         }),
       );
-
       return null;
-    }, [styleController, parameter, enqueue, layerBuilder]);
+    }, [styleController, parameter, isDark]);
+
+    useEffect(() {
+      final token = lifecycleToken.value;
+      if (styleController == null || token == null) {
+        return null;
+      }
+      unawaited(
+        enqueue(
+          () => geoJsonUpdater.update(
+            styleController: styleController,
+            sourceId: EarthquakeHistoryHypocenterErrorLayerBuilder.sourceId,
+            geoJson: geoJson,
+            initialization: initialization.value,
+            isDisposed: () => lifecycleToken.value != token,
+          ),
+        ),
+      );
+      return null;
+    }, [styleController, geoJson]);
 
     return const SizedBox.shrink();
+  }
+}
+
+class EarthquakeHistoryHypocenterErrorGeoJsonBuilder {
+  const EarthquakeHistoryHypocenterErrorGeoJsonBuilder();
+
+  String build({required Coordinate? coordinates, required int decimalPlaces}) {
+    final polygon = switch (coordinates) {
+      CoordinateLatLng() => hypocenterErrorPolygon(
+        lat: coordinates.latitude,
+        lon: coordinates.longitude,
+        decimalPlaces: decimalPlaces,
+      ),
+      _ => null,
+    };
+    return jsonEncode({
+      'type': 'FeatureCollection',
+      'features': <Map<String, dynamic>>[
+        if (polygon != null)
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Polygon',
+              'coordinates': [polygon],
+            },
+            'properties': <String, dynamic>{},
+          },
+      ],
+    });
   }
 }
 

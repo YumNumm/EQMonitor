@@ -3,7 +3,8 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/util/map/map_geo_json_source_updater.dart';
+import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
@@ -36,113 +37,134 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
     final layerBuilder = useMemoized(
       EarthquakeHistoryHypocenterLayerBuilder.new,
     );
-
-    final isInitialized = useRef(false);
-    final latestParameter = useRef(parameter);
-    latestParameter.value = parameter;
-    final latestEarthquake = useRef(earthquake);
-    latestEarthquake.value = earthquake;
-    final latestDisplayMode = useRef(displayMode);
-    latestDisplayMode.value = displayMode;
+    final lifecycleToken = useRef<Object?>(null);
+    final initialization = useRef<Future<void>?>(null);
+    final isLayerInitialized = useRef(false);
+    final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
+    final geoJson = const EarthquakeHistoryHypocenterGeoJsonBuilder().build(
+      coordinates: earthquake.hypocenter?.coordinates,
+    );
 
     useEffect(() {
       if (styleController == null) {
         return null;
       }
 
-      unawaited(
-        enqueue(() async {
-          try {
-            await styleController.addImageFromAssets(
-              id: EarthquakeHistoryHypocenterLayerBuilder.iconId,
-              asset: Assets.images.map.normalHypocenter.path,
-            );
-
-            final hyp = latestEarthquake.value.hypocenter;
-            final coords = hyp?.coordinates;
-            final features = <Map<String, dynamic>>[
-              if (coords is CoordinateLatLng)
-                {
-                  'type': 'Feature',
-                  'geometry': {
-                    'type': 'Point',
-                    'coordinates': [coords.longitude, coords.latitude],
-                  },
-                  'properties': <String, dynamic>{},
-                },
-            ];
-
-            await styleController.addSource(
-              GeoJsonSource(
-                id: EarthquakeHistoryHypocenterLayerBuilder.sourceId,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': features,
-                }),
-              ),
-            );
-
-            await styleController.addLayer(
-              layerBuilder.buildSymbolLayer(
-                parameter: latestParameter.value,
-                displayMode: latestDisplayMode.value,
-              ),
-            );
-
-            isInitialized.value = true;
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }),
-      );
+      final token = Object();
+      lifecycleToken.value = token;
+      isLayerInitialized.value = false;
+      geoJsonUpdater.reset();
+      initialization.value = enqueue(() async {
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addImageFromAssets(
+          id: EarthquakeHistoryHypocenterLayerBuilder.iconId,
+          asset: Assets.images.map.normalHypocenter.path,
+        );
+        if (lifecycleToken.value != token) {
+          return;
+        }
+        await styleController.addSource(
+          const GeoJsonSource(
+            id: EarthquakeHistoryHypocenterLayerBuilder.sourceId,
+            data: '{"type":"FeatureCollection","features":[]}',
+          ),
+        );
+      });
 
       return () {
-        isInitialized.value = false;
+        if (lifecycleToken.value == token) {
+          lifecycleToken.value = null;
+        }
+        geoJsonUpdater.reset();
         unawaited(
-          enqueue(() async {
-            try {
-              await styleController.removeLayer(
-                EarthquakeHistoryHypocenterLayerBuilder.layerId,
-              );
-              await styleController.removeSource(
+          enqueue(
+            () => removeMapStyleResources(
+              styleController: styleController,
+              layerIds: const [EarthquakeHistoryHypocenterLayerBuilder.layerId],
+              sourceIds: const [
                 EarthquakeHistoryHypocenterLayerBuilder.sourceId,
-              );
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }),
+              ],
+              imageIds: const [EarthquakeHistoryHypocenterLayerBuilder.iconId],
+            ),
+          ),
         );
       };
-    }, [styleController, earthquake, displayMode, enqueue, layerBuilder]);
+    }, [styleController]);
 
     useEffect(() {
-      if (styleController == null || !isInitialized.value) {
+      final token = lifecycleToken.value;
+      final initialized = initialization.value;
+      if (styleController == null || token == null || initialized == null) {
         return null;
       }
-
       unawaited(
         enqueue(() async {
-          try {
+          await initialized;
+          if (lifecycleToken.value != token) {
+            return;
+          }
+          if (isLayerInitialized.value) {
             await styleController.removeLayer(
               EarthquakeHistoryHypocenterLayerBuilder.layerId,
             );
-            await styleController.addLayer(
-              layerBuilder.buildSymbolLayer(
-                parameter: parameter,
-                displayMode: latestDisplayMode.value,
-              ),
-            );
-          } on Exception catch (e) {
-            talker.log(e);
           }
+          if (lifecycleToken.value != token) {
+            return;
+          }
+          await styleController.addLayer(
+            layerBuilder.buildSymbolLayer(
+              parameter: parameter,
+              displayMode: displayMode,
+            ),
+          );
+          isLayerInitialized.value = true;
         }),
       );
-
       return null;
-    }, [styleController, parameter, enqueue, layerBuilder]);
+    }, [styleController, parameter, displayMode]);
+
+    useEffect(() {
+      final token = lifecycleToken.value;
+      if (styleController == null || token == null) {
+        return null;
+      }
+      unawaited(
+        enqueue(
+          () => geoJsonUpdater.update(
+            styleController: styleController,
+            sourceId: EarthquakeHistoryHypocenterLayerBuilder.sourceId,
+            geoJson: geoJson,
+            initialization: initialization.value,
+            isDisposed: () => lifecycleToken.value != token,
+          ),
+        ),
+      );
+      return null;
+    }, [styleController, geoJson]);
 
     return const SizedBox.shrink();
   }
+}
+
+class EarthquakeHistoryHypocenterGeoJsonBuilder {
+  const EarthquakeHistoryHypocenterGeoJsonBuilder();
+
+  String build({required Coordinate? coordinates}) => jsonEncode({
+    'type': 'FeatureCollection',
+    'features': <Map<String, dynamic>>[
+      if (coordinates is CoordinateLatLng)
+        {
+          'type': 'Feature',
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [coordinates.longitude, coordinates.latitude],
+          },
+          'properties': <String, dynamic>{},
+        },
+    ],
+  });
 }
 
 class EarthquakeHistoryHypocenterLayerBuilder {
