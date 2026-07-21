@@ -203,11 +203,6 @@ class _NotificationLogTile extends StatelessWidget {
     final colorTheme = context.designSystem.colorTheme;
     final ok = item.result == PushNotificationDeliveryResult.ok;
     final resultColor = ok ? colorTheme.primary : colorTheme.error;
-    final subtitle = [
-      if (item.title != null) item.title,
-      if (item.body != null) item.body,
-      if (item.errorMessage != null) item.errorMessage,
-    ].join(' ');
 
     return ListTile(
       title: Text(
@@ -221,16 +216,6 @@ class _NotificationLogTile extends StatelessWidget {
       ),
       onTap: onTap,
     );
-  }
-
-  String _formatCreatedAt(String raw) {
-    final parsed = DateTime.tryParse(raw);
-    if (parsed == null) {
-      return raw;
-    }
-    final local = parsed.toLocal();
-    return '${local.year}/${local.month.toString().padLeft(2, '0')}/${local.day.toString().padLeft(2, '0')} '
-        '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
   }
 }
 
