@@ -17,20 +17,28 @@
   },
   "groups" : [
     {
+      "blur-material" : null,
       "layers" : [
         {
-          "glass" : false,
+          "glass" : true,
           "hidden" : false,
           "image-name" : "レイヤー-3 3.svg",
           "name" : "レイヤー-3 3"
         }
       ],
+      "lighting" : "combined",
+      "refractivity" : {
+        "depth" : 0.2865234375,
+        "enabled" : false,
+        "strength" : 1
+      },
       "shadow" : {
         "kind" : "neutral",
         "opacity" : 0.5
       },
+      "specular" : false,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.5
       }
     }

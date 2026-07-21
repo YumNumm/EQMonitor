@@ -17,18 +17,54 @@
   },
   "groups" : [
     {
+      "blur-material" : null,
       "layers" : [
         {
-          "image-name" : "Group 31.svg",
-          "name" : "Group 31"
+          "blend-mode" : "normal",
+          "fill" : "none",
+          "image-name" : "SVG Image 4.svg",
+          "name" : "SVG Image 4",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              224.3121165598418,
+              287.8572687496228
+            ]
+          }
+        },
+        {
+          "fill" : "none",
+          "glass" : false,
+          "image-name" : "SVG Image 3.svg",
+          "name" : "SVG Image 3",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              2.777500000000032,
+              2.4395000000000664
+            ]
+          }
+        },
+        {
+          "glass" : false,
+          "hidden" : true,
+          "image-name" : "SVG Image 2.svg",
+          "name" : "SVG Image 2"
         }
       ],
+      "lighting" : "individual",
+      "refractivity" : {
+        "depth" : 0,
+        "enabled" : false,
+        "strength" : 0.5
+      },
       "shadow" : {
         "kind" : "neutral",
         "opacity" : 0.5
       },
+      "specular" : false,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.5
       }
     }
