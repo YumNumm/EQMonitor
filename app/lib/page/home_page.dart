@@ -109,7 +109,6 @@ class _SheetBody extends ConsumerWidget {
         child: Column(
           children: [
             ListTile(
-              leading: const Icon(Icons.bar_chart_outlined),
               title: Text.rich(
                 TextSpan(
                   children: [
@@ -131,13 +130,11 @@ class _SheetBody extends ConsumerWidget {
             ),
             Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
             ListTile(
-              leading: const Icon(Icons.settings_outlined),
               title: Text('設定', style: typography.titleSmall),
               onTap: () async => const SettingsRoute().push<void>(context),
             ),
             Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
             ListTile(
-              leading: const Icon(Icons.bug_report_outlined),
               title: Text('デバッグページ', style: typography.titleSmall),
               onTap: () async => const DebugRoute().push<void>(context),
             ),

@@ -438,7 +438,7 @@ as RealtimeSource,
 @override
 @pragma('vm:prefer-inline')
 $EewItemWithRelationsCopyWith<$Res> get item {
-
+  
   return $EewItemWithRelationsCopyWith<$Res>(_self.item, (value) {
     return _then(_self.copyWith(item: value));
   });
@@ -835,7 +835,7 @@ as RealtimeSource,
 @override
 @pragma('vm:prefer-inline')
 $RealtimeShakeSnapshotCopyWith<$Res> get data {
-
+  
   return $RealtimeShakeSnapshotCopyWith<$Res>(_self.data, (value) {
     return _then(_self.copyWith(data: value));
   });

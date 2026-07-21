@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -75,13 +74,10 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
       loadingMore.value = false;
     }
 
-    useEffect(
-      () {
-        unawaited(loadFirstPage());
-        return null;
-      },
-      [refreshTick.value],
-    );
+    useEffect(() {
+      unawaited(loadFirstPage());
+      return null;
+    }, [refreshTick.value]);
 
     return Scaffold(
       appBar: AppBar(
@@ -111,10 +107,7 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        error.value.toString(),
-                        textAlign: TextAlign.center,
-                      ),
+                      Text(error.value.toString(), textAlign: TextAlign.center),
                       const SizedBox(height: 16),
                       FilledButton.icon(
                         onPressed: () {
@@ -134,14 +127,13 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   children: [
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.3,
-                    ),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.3),
                     Center(
                       child: Text(
                         '配信ログはまだありません',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: context.designSystem.colorTheme.onSurfaceVariant,
+                          color:
+                              context.designSystem.colorTheme.onSurfaceVariant,
                         ),
                       ),
                     ),
@@ -201,10 +193,7 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
 }
 
 class _NotificationLogTile extends StatelessWidget {
-  const _NotificationLogTile({
-    required this.item,
-    required this.onTap,
-  });
+  const _NotificationLogTile({required this.item, required this.onTap});
 
   final PushNotificationLogEntry item;
   final VoidCallback onTap;
@@ -215,24 +204,17 @@ class _NotificationLogTile extends StatelessWidget {
     final ok = item.result == PushNotificationDeliveryResult.ok;
     final resultColor = ok ? colorTheme.primary : colorTheme.error;
     final subtitle = [
-      item.framework.displayLabel,
-      item.result.displayLabel,
-      if (item.eventId != null) 'event: ${item.eventId}',
       if (item.title != null) item.title,
       if (item.body != null) item.body,
       if (item.errorMessage != null) item.errorMessage,
-    ].join(' · ');
+    ].join(' ');
 
     return ListTile(
       title: Text(
-        _formatCreatedAt(item.createdAtIso),
+        item.title ?? '[タイトルなし]',
         style: Theme.of(context).textTheme.titleSmall,
       ),
-      subtitle: Text(
-        subtitle,
-        maxLines: 4,
-        overflow: TextOverflow.ellipsis,
-      ),
+      subtitle: Text(item.body ?? '[本文なし]', maxLines: 4, overflow: .ellipsis),
       trailing: Icon(
         ok ? Icons.check_circle_outline : Icons.error_outline,
         color: resultColor,
@@ -259,24 +241,6 @@ class _LogDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final entries = <(String, String?)>[
-      ('stream_id', item.streamId),
-      ('device_id', item.deviceId),
-      ('framework', item.framework.displayLabel),
-      ('result', item.result.displayLabel),
-      ('created_at', item.createdAtIso),
-      ('event_id', item.eventId),
-      ('title', item.title),
-      ('body', item.body),
-      ('error_code', item.errorCode),
-      ('error_message', item.errorMessage),
-      ('android_priority', item.androidPriority),
-      ('android_notification_priority', item.androidNotificationPriority),
-      ('channel_id', item.channelId),
-      ('apns_priority', item.apnsPriority),
-      ('interruption_level', item.interruptionLevel),
-    ];
-
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.55,
@@ -298,54 +262,9 @@ class _LogDetailSheet extends StatelessWidget {
                   ),
                   IconButton(
                     tooltip: 'テキストをコピー',
-                    onPressed: () async {
-                      final buffer = StringBuffer();
-                      for (final e in entries) {
-                        if (e.$2 != null && e.$2!.isNotEmpty) {
-                          buffer.writeln('${e.$1}: ${e.$2}');
-                        }
-                      }
-                      await Clipboard.setData(
-                        ClipboardData(text: buffer.toString()),
-                      );
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('コピーしました')),
-                        );
-                      }
-                    },
+                    onPressed: () async {},
                     icon: const Icon(Icons.copy),
                   ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                controller: scrollController,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  for (final e in entries)
-                    if (e.$2 != null && e.$2!.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              e.$1,
-                              style: Theme.of(context).textTheme.labelSmall
-                                  ?.copyWith(
-                                    color: context.designSystem.colorTheme.onSurfaceVariant,
-                                  ),
-                            ),
-                            const SizedBox(height: 4),
-                            SelectableText(
-                              e.$2!,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
-                      ),
                 ],
               ),
             ),

@@ -60,7 +60,7 @@ class NearbyEarthquakeCard extends HookConsumerWidget {
     final state = ref.watch(nearbyEarthquakesProvider(query));
 
     return BorderedContainer(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

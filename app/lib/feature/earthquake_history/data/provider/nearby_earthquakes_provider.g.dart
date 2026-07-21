@@ -68,7 +68,7 @@ final class NearbyEarthquakesProvider
   }
 }
 
-String _$nearbyEarthquakesHash() => r'2044f93838750351c4d1db4d627c75e4f2501cc9';
+String _$nearbyEarthquakesHash() => r'b1b84985e925914d67c12ccfffcd65846839ce69';
 
 final class NearbyEarthquakesFamily extends $Family
     with

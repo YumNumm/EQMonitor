@@ -38,11 +38,11 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
                 outer: ImageFilter.blur(
                   sigmaX: 8,
                   sigmaY: 8,
-                  tileMode: TileMode.mirror,
+                  tileMode: .mirror,
                 ),
                 inner: ColorFilter.mode(
                   designSystem.colorTheme.surfaceContainerLow.withValues(alpha: 0.7),
-                  BlendMode.srcATop,
+                  .srcATop,
                 ),
               ),
               child: const Text(

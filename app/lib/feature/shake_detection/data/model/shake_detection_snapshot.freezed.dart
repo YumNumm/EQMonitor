@@ -209,7 +209,7 @@ return $default(_that.revision,_that.responseAt,_that.events);case _:
 
 class _ShakeDetectionSnapshot implements ShakeDetectionSnapshot {
   const _ShakeDetectionSnapshot({required this.revision, required this.responseAt, required final  List<ShakeDetectionEvent> events}): _events = events;
-
+  
 
 @override final  int revision;
 @override final  DateTime responseAt;

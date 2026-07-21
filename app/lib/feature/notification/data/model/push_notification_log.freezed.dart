@@ -11,6 +11,7 @@ part of 'push_notification_log.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$PushNotificationHistory {
 
@@ -21,6 +22,8 @@ mixin _$PushNotificationHistory {
 @pragma('vm:prefer-inline')
 $PushNotificationHistoryCopyWith<PushNotificationHistory> get copyWith => _$PushNotificationHistoryCopyWithImpl<PushNotificationHistory>(this as PushNotificationHistory, _$identity);
 
+  /// Serializes this PushNotificationHistory to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +31,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationHistory&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.nextCursor, nextCursor) || other.nextCursor == nextCursor));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),nextCursor);
 
@@ -204,11 +207,11 @@ return $default(_that.items,_that.nextCursor);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _PushNotificationHistory implements PushNotificationHistory {
   const _PushNotificationHistory({required final  List<PushNotificationLogEntry> items, this.nextCursor}): _items = items;
-  
+  factory _PushNotificationHistory.fromJson(Map<String, dynamic> json) => _$PushNotificationHistoryFromJson(json);
 
  final  List<PushNotificationLogEntry> _items;
 @override List<PushNotificationLogEntry> get items {
@@ -225,14 +228,17 @@ class _PushNotificationHistory implements PushNotificationHistory {
 @pragma('vm:prefer-inline')
 _$PushNotificationHistoryCopyWith<_PushNotificationHistory> get copyWith => __$PushNotificationHistoryCopyWithImpl<_PushNotificationHistory>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$PushNotificationHistoryToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _PushNotificationHistory&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.nextCursor, nextCursor) || other.nextCursor == nextCursor));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),nextCursor);
 
@@ -277,6 +283,7 @@ as String?,
 
 }
 
+
 /// @nodoc
 mixin _$PushNotificationLogEntry {
 
@@ -287,6 +294,8 @@ mixin _$PushNotificationLogEntry {
 @pragma('vm:prefer-inline')
 $PushNotificationLogEntryCopyWith<PushNotificationLogEntry> get copyWith => _$PushNotificationLogEntryCopyWithImpl<PushNotificationLogEntry>(this as PushNotificationLogEntry, _$identity);
 
+  /// Serializes this PushNotificationLogEntry to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -294,7 +303,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationLogEntry&&(identical(other.streamId, streamId) || other.streamId == streamId)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.framework, framework) || other.framework == framework)&&(identical(other.result, result) || other.result == result)&&(identical(other.createdAtIso, createdAtIso) || other.createdAtIso == createdAtIso)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.androidPriority, androidPriority) || other.androidPriority == androidPriority)&&(identical(other.androidNotificationPriority, androidNotificationPriority) || other.androidNotificationPriority == androidNotificationPriority)&&(identical(other.channelId, channelId) || other.channelId == channelId)&&(identical(other.apnsPriority, apnsPriority) || other.apnsPriority == apnsPriority)&&(identical(other.interruptionLevel, interruptionLevel) || other.interruptionLevel == interruptionLevel));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,streamId,deviceId,framework,result,createdAtIso,errorCode,errorMessage,eventId,title,body,androidPriority,androidNotificationPriority,channelId,apnsPriority,interruptionLevel);
 
@@ -483,11 +492,11 @@ return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _PushNotificationLogEntry implements PushNotificationLogEntry {
   const _PushNotificationLogEntry({required this.streamId, required this.deviceId, required this.framework, required this.result, required this.createdAtIso, this.errorCode, this.errorMessage, this.eventId, this.title, this.body, this.androidPriority, this.androidNotificationPriority, this.channelId, this.apnsPriority, this.interruptionLevel});
-  
+  factory _PushNotificationLogEntry.fromJson(Map<String, dynamic> json) => _$PushNotificationLogEntryFromJson(json);
 
 @override final  String streamId;
 @override final  String deviceId;
@@ -511,14 +520,17 @@ class _PushNotificationLogEntry implements PushNotificationLogEntry {
 @pragma('vm:prefer-inline')
 _$PushNotificationLogEntryCopyWith<_PushNotificationLogEntry> get copyWith => __$PushNotificationLogEntryCopyWithImpl<_PushNotificationLogEntry>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$PushNotificationLogEntryToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _PushNotificationLogEntry&&(identical(other.streamId, streamId) || other.streamId == streamId)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.framework, framework) || other.framework == framework)&&(identical(other.result, result) || other.result == result)&&(identical(other.createdAtIso, createdAtIso) || other.createdAtIso == createdAtIso)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.androidPriority, androidPriority) || other.androidPriority == androidPriority)&&(identical(other.androidNotificationPriority, androidNotificationPriority) || other.androidNotificationPriority == androidNotificationPriority)&&(identical(other.channelId, channelId) || other.channelId == channelId)&&(identical(other.apnsPriority, apnsPriority) || other.apnsPriority == apnsPriority)&&(identical(other.interruptionLevel, interruptionLevel) || other.interruptionLevel == interruptionLevel));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,streamId,deviceId,framework,result,createdAtIso,errorCode,errorMessage,eventId,title,body,androidPriority,androidNotificationPriority,channelId,apnsPriority,interruptionLevel);
 

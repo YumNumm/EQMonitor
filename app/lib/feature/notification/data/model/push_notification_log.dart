@@ -2,6 +2,7 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'push_notification_log.freezed.dart';
+part 'push_notification_log.g.dart';
 
 @freezed
 abstract class PushNotificationHistory with _$PushNotificationHistory {
@@ -9,6 +10,9 @@ abstract class PushNotificationHistory with _$PushNotificationHistory {
     required List<PushNotificationLogEntry> items,
     String? nextCursor,
   }) = _PushNotificationHistory;
+
+  factory PushNotificationHistory.fromJson(Map<String, dynamic> json) =>
+      _$PushNotificationHistoryFromJson(json);
 }
 
 @freezed
@@ -30,17 +34,14 @@ abstract class PushNotificationLogEntry with _$PushNotificationLogEntry {
     String? apnsPriority,
     String? interruptionLevel,
   }) = _PushNotificationLogEntry;
+
+  factory PushNotificationLogEntry.fromJson(Map<String, dynamic> json) =>
+      _$PushNotificationLogEntryFromJson(json);
 }
 
-enum PushNotificationDeliveryFramework {
-  fcm,
-  apns,
-}
+enum PushNotificationDeliveryFramework { fcm, apns }
 
-enum PushNotificationDeliveryResult {
-  ok,
-  ng,
-}
+enum PushNotificationDeliveryResult { ok, ng }
 
 extension PushNotificationDeliveryFrameworkDisplay
     on PushNotificationDeliveryFramework {

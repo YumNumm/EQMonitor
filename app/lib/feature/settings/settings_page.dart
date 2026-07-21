@@ -52,7 +52,6 @@ class SettingsPage extends ConsumerWidget {
                 const SettingsSectionHeader(text: 'EQMonitor Pro'),
                 ListTile(
                   title: const Text('EQMonitor Pro'),
-                  subtitle: const Text('プラン確認・アップグレード・購入の復元'),
                   leading: const Icon(Icons.workspace_premium_outlined),
                   onTap: () async =>
                       const SubscriptionSettingsRoute().push<void>(context),

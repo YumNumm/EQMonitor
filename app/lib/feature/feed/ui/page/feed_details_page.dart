@@ -1,10 +1,11 @@
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_by_source_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -52,12 +53,16 @@ class FeedDetailsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dateStr = DateFormat('yyyy年MM月dd日 HH:mm').format(item.publishedAt);
-    final url = _url(item.data);
+    final rawUrl = feedItemUrl(item.data);
+    final url = (rawUrl != null && rawUrl.isNotEmpty)
+        ? Uri.tryParse(rawUrl)
+        : null;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 8,
+        crossAxisAlignment: .start,
         children: [
           if (item.title case final title?)
             Text(
@@ -66,33 +71,31 @@ class FeedDetailsBody extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-          const SizedBox(height: 8),
           Row(
+            mainAxisAlignment: .spaceBetween,
+            crossAxisAlignment: .start,
             children: [
               FeedTypeBadge(data: item.data),
               const Spacer(),
-              Text(dateStr, style: theme.textTheme.labelSmall),
+              Flexible(
+                child: Text(
+                  dateStr,
+                  style: theme.textTheme.labelSmall!.copyWith(
+                    fontFamily: FontFamily.googleSansCode,
+                    fontFamilyFallback: const [FontFamily.notoSansJP],
+                    letterSpacing: -0.2,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 16),
           const Divider(),
-          const SizedBox(height: 16),
-          MarkdownBody(
-            data: _bodyText(item),
-            softLineBreak: true,
-            styleSheet: MarkdownStyleSheet.fromTheme(theme),
-            onTapLink: (text, href, title) async {
-              final uri = href != null ? Uri.tryParse(href) : null;
-              if (uri != null) {
-                await launchUrl(uri, mode: LaunchMode.externalApplication);
-              }
-            },
-          ),
+          Text(_bodyText(item).toHalfWidth),
           if (url != null) ...[
             const SizedBox(height: 24),
             FilledButton.icon(
-              onPressed: () async =>
-                  launchUrl(url, mode: LaunchMode.externalApplication),
+              onPressed: () async => launchUrl(url, mode: .externalApplication),
               icon: const Icon(Icons.open_in_new),
               label: const Text('詳細を開く'),
             ),
@@ -111,10 +114,5 @@ class FeedDetailsBody extends StatelessWidget {
         text ?? earthquakeInfo?.text ?? item.summary ?? '',
       final data => feedItemDataText(data),
     };
-  }
-
-  static Uri? _url(FeedItemData data) {
-    final url = feedItemUrl(data);
-    return url != null ? Uri.tryParse(url) : null;
   }
 }

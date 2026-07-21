@@ -79,7 +79,7 @@ as SortOrder,
 @override
 @pragma('vm:prefer-inline')
 $NearbyEarthquakeParameterCopyWith<$Res> get parameter {
-
+  
   return $NearbyEarthquakeParameterCopyWith<$Res>(_self.parameter, (value) {
     return _then(_self.copyWith(parameter: value));
   });
@@ -222,7 +222,7 @@ return $default(_that.excludeEventId,_that.latitude,_that.longitude,_that.depth,
 
 class _NearbyEarthquakeQuery extends NearbyEarthquakeQuery {
   const _NearbyEarthquakeQuery({required this.excludeEventId, required this.latitude, required this.longitude, required this.depth, required this.parameter, required this.sortBy, required this.sortOrder}): super._();
-
+  
 
 @override final  String excludeEventId;
 @override final  double latitude;
@@ -297,7 +297,7 @@ as SortOrder,
 @override
 @pragma('vm:prefer-inline')
 $NearbyEarthquakeParameterCopyWith<$Res> get parameter {
-
+  
   return $NearbyEarthquakeParameterCopyWith<$Res>(_self.parameter, (value) {
     return _then(_self.copyWith(parameter: value));
   });
