@@ -85,3 +85,62 @@ git add app/lib/feature/home/data/model/home_map_label_parameter.dart \
   app/test/feature/home/data/model/home_map_label_parameter_test.dart
 git commit -m "fix: 地図ラベルの初期表示を無効化"
 ```
+
+### Task 2: Preserve legacy partial preference deserialization
+
+**Files:**
+- Modify: `app/lib/feature/home/data/model/home_map_label_parameter.dart:8-12`
+- Modify: `app/lib/feature/home/data/model/home_map_label_parameter.freezed.dart` (generated)
+- Modify: `app/lib/feature/home/data/model/home_map_label_parameter.g.dart` (generated)
+- Modify: `app/test/feature/home/data/model/home_map_label_parameter_test.dart`
+
+**Interfaces:**
+- Consumes: `const HomeMapLabelParameter()` and `HomeMapLabelParameter.fromJson(Map<String, dynamic>)`.
+- Produces: constructor defaults of `false`, while JSON that omits either legacy label field restores it as `true`.
+
+- [ ] **Step 1: Extend the failing regression test**
+
+```dart
+test('keeps legacy label defaults when deserializing missing fields', () {
+  final parameter = HomeMapLabelParameter.fromJson(<String, dynamic>{});
+
+  expect(parameter.showRegionLabel, isTrue);
+  expect(parameter.showCityLabel, isTrue);
+});
+```
+
+- [ ] **Step 2: Run the focused test and verify it fails**
+
+Run: `mise exec -- flutter test app/test/feature/home/data/model/home_map_label_parameter_test.dart`
+
+Expected: FAIL because the current generated JSON defaults deserialize omitted label fields as `false`.
+
+- [ ] **Step 3: Preserve the JSON defaults and regenerate code**
+
+```dart
+@JsonKey(defaultValue: true) @Default(false) bool showRegionLabel,
+@JsonKey(defaultValue: true) @Default(false) bool showCityLabel,
+```
+
+Run: `mise exec -- dart run build_runner build --delete-conflicting-outputs`
+
+- [ ] **Step 4: Run focused validation**
+
+Run:
+
+```bash
+mise exec -- flutter test app/test/feature/home/data/model/home_map_label_parameter_test.dart
+mise exec -- dart analyze app/lib/feature/home/data/model/home_map_label_parameter.dart app/test/feature/home/data/model/home_map_label_parameter_test.dart
+```
+
+Expected: the focused test exits with status 0; report any analyzer failure unrelated to this change with its exact configuration error.
+
+- [ ] **Step 5: Commit the repair**
+
+```bash
+git add app/lib/feature/home/data/model/home_map_label_parameter.dart \
+  app/lib/feature/home/data/model/home_map_label_parameter.freezed.dart \
+  app/lib/feature/home/data/model/home_map_label_parameter.g.dart \
+  app/test/feature/home/data/model/home_map_label_parameter_test.dart
+git commit -m "fix: 旧地図ラベル設定の復元を維持"
+```
