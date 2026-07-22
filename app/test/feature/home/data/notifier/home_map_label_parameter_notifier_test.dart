@@ -16,7 +16,9 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    final parameter = await container.read(homeMapLabelParameterProvider.future);
+    final parameter = await container.read(
+      homeMapLabelParameterProvider.future,
+    );
 
     expect(parameter.showRegionLabel, isTrue);
     expect(parameter.showCityLabel, isTrue);
