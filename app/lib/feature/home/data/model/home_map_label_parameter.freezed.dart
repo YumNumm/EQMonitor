@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$HomeMapLabelParameter {
 
- bool get showRegionLabel; bool get showCityLabel; double get regionLabelMinZoom; double get cityLabelMinZoom; double get regionTextSize; double get cityTextSize; double get textHaloWidth;
+@JsonKey(defaultValue: true) bool get showRegionLabel;@JsonKey(defaultValue: true) bool get showCityLabel; double get regionLabelMinZoom; double get cityLabelMinZoom; double get regionTextSize; double get cityTextSize; double get textHaloWidth;
 /// Create a copy of HomeMapLabelParameter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $HomeMapLabelParameterCopyWith<$Res>  {
   factory $HomeMapLabelParameterCopyWith(HomeMapLabelParameter value, $Res Function(HomeMapLabelParameter) _then) = _$HomeMapLabelParameterCopyWithImpl;
 @useResult
 $Res call({
- bool showRegionLabel, bool showCityLabel, double regionLabelMinZoom, double cityLabelMinZoom, double regionTextSize, double cityTextSize, double textHaloWidth
+@JsonKey(defaultValue: true) bool showRegionLabel,@JsonKey(defaultValue: true) bool showCityLabel, double regionLabelMinZoom, double cityLabelMinZoom, double regionTextSize, double cityTextSize, double textHaloWidth
 });
 
 
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showRegionLabel,  bool showCityLabel,  double regionLabelMinZoom,  double cityLabelMinZoom,  double regionTextSize,  double cityTextSize,  double textHaloWidth)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(defaultValue: true)  bool showRegionLabel, @JsonKey(defaultValue: true)  bool showCityLabel,  double regionLabelMinZoom,  double cityLabelMinZoom,  double regionTextSize,  double cityTextSize,  double textHaloWidth)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeMapLabelParameter() when $default != null:
 return $default(_that.showRegionLabel,_that.showCityLabel,_that.regionLabelMinZoom,_that.cityLabelMinZoom,_that.regionTextSize,_that.cityTextSize,_that.textHaloWidth);case _:
@@ -180,7 +180,7 @@ return $default(_that.showRegionLabel,_that.showCityLabel,_that.regionLabelMinZo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showRegionLabel,  bool showCityLabel,  double regionLabelMinZoom,  double cityLabelMinZoom,  double regionTextSize,  double cityTextSize,  double textHaloWidth)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(defaultValue: true)  bool showRegionLabel, @JsonKey(defaultValue: true)  bool showCityLabel,  double regionLabelMinZoom,  double cityLabelMinZoom,  double regionTextSize,  double cityTextSize,  double textHaloWidth)  $default,) {final _that = this;
 switch (_that) {
 case _HomeMapLabelParameter():
 return $default(_that.showRegionLabel,_that.showCityLabel,_that.regionLabelMinZoom,_that.cityLabelMinZoom,_that.regionTextSize,_that.cityTextSize,_that.textHaloWidth);case _:
@@ -200,7 +200,7 @@ return $default(_that.showRegionLabel,_that.showCityLabel,_that.regionLabelMinZo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showRegionLabel,  bool showCityLabel,  double regionLabelMinZoom,  double cityLabelMinZoom,  double regionTextSize,  double cityTextSize,  double textHaloWidth)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(defaultValue: true)  bool showRegionLabel, @JsonKey(defaultValue: true)  bool showCityLabel,  double regionLabelMinZoom,  double cityLabelMinZoom,  double regionTextSize,  double cityTextSize,  double textHaloWidth)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeMapLabelParameter() when $default != null:
 return $default(_that.showRegionLabel,_that.showCityLabel,_that.regionLabelMinZoom,_that.cityLabelMinZoom,_that.regionTextSize,_that.cityTextSize,_that.textHaloWidth);case _:
@@ -215,11 +215,11 @@ return $default(_that.showRegionLabel,_that.showCityLabel,_that.regionLabelMinZo
 @JsonSerializable()
 
 class _HomeMapLabelParameter implements HomeMapLabelParameter {
-  const _HomeMapLabelParameter({this.showRegionLabel = true, this.showCityLabel = true, this.regionLabelMinZoom = 5.0, this.cityLabelMinZoom = 9.0, this.regionTextSize = 14, this.cityTextSize = 12, this.textHaloWidth = 1.0});
+  const _HomeMapLabelParameter({@JsonKey(defaultValue: true) this.showRegionLabel = false, @JsonKey(defaultValue: true) this.showCityLabel = false, this.regionLabelMinZoom = 5.0, this.cityLabelMinZoom = 9.0, this.regionTextSize = 14, this.cityTextSize = 12, this.textHaloWidth = 1.0});
   factory _HomeMapLabelParameter.fromJson(Map<String, dynamic> json) => _$HomeMapLabelParameterFromJson(json);
 
-@override@JsonKey() final  bool showRegionLabel;
-@override@JsonKey() final  bool showCityLabel;
+@override@JsonKey(defaultValue: true) final  bool showRegionLabel;
+@override@JsonKey(defaultValue: true) final  bool showCityLabel;
 @override@JsonKey() final  double regionLabelMinZoom;
 @override@JsonKey() final  double cityLabelMinZoom;
 @override@JsonKey() final  double regionTextSize;
@@ -259,7 +259,7 @@ abstract mixin class _$HomeMapLabelParameterCopyWith<$Res> implements $HomeMapLa
   factory _$HomeMapLabelParameterCopyWith(_HomeMapLabelParameter value, $Res Function(_HomeMapLabelParameter) _then) = __$HomeMapLabelParameterCopyWithImpl;
 @override @useResult
 $Res call({
- bool showRegionLabel, bool showCityLabel, double regionLabelMinZoom, double cityLabelMinZoom, double regionTextSize, double cityTextSize, double textHaloWidth
+@JsonKey(defaultValue: true) bool showRegionLabel,@JsonKey(defaultValue: true) bool showCityLabel, double regionLabelMinZoom, double cityLabelMinZoom, double regionTextSize, double cityTextSize, double textHaloWidth
 });
 
 
