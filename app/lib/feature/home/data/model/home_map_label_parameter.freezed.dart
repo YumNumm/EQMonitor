@@ -215,7 +215,7 @@ return $default(_that.showRegionLabel,_that.showCityLabel,_that.regionLabelMinZo
 @JsonSerializable()
 
 class _HomeMapLabelParameter implements HomeMapLabelParameter {
-  const _HomeMapLabelParameter({this.showRegionLabel = true, this.showCityLabel = true, this.regionLabelMinZoom = 5.0, this.cityLabelMinZoom = 9.0, this.regionTextSize = 14, this.cityTextSize = 12, this.textHaloWidth = 1.0});
+  const _HomeMapLabelParameter({this.showRegionLabel = false, this.showCityLabel = false, this.regionLabelMinZoom = 5.0, this.cityLabelMinZoom = 9.0, this.regionTextSize = 14, this.cityTextSize = 12, this.textHaloWidth = 1.0});
   factory _HomeMapLabelParameter.fromJson(Map<String, dynamic> json) => _$HomeMapLabelParameterFromJson(json);
 
 @override@JsonKey() final  bool showRegionLabel;

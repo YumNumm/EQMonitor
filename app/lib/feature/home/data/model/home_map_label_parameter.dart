@@ -6,8 +6,8 @@ part 'home_map_label_parameter.g.dart';
 @freezed
 abstract class HomeMapLabelParameter with _$HomeMapLabelParameter {
   const factory HomeMapLabelParameter({
-    @Default(true) bool showRegionLabel,
-    @Default(true) bool showCityLabel,
+    @Default(false) bool showRegionLabel,
+    @Default(false) bool showCityLabel,
     @Default(5.0) double regionLabelMinZoom,
     @Default(9.0) double cityLabelMinZoom,
     @Default(14) double regionTextSize,
