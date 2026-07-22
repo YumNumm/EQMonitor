@@ -1,4 +1,3 @@
-import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
 import 'package:eqmonitor/feature/home/data/notifier/home_map_label_parameter_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,14 +13,7 @@ void main() {
     SharedPreferences.setMockInitialValues(<String, Object>{
       'home_map_label_parameter': 'not json',
     });
-    final preferences = await SharedPreferences.getInstance();
-    final container = ProviderContainer(
-      overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(preferences),
-        ),
-      ],
-    );
+    final container = ProviderContainer();
     addTearDown(container.dispose);
 
     final parameter = await container.read(homeMapLabelParameterProvider.future);

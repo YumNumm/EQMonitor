@@ -4,7 +4,7 @@
 
 **Goal:** Disable home-map region and city labels for users without a saved preference.
 
-**Architecture:** The immutable `HomeMapLabelParameter` model is the single source of default values. Its existing notifier returns this model only when the shared-preferences value is absent or invalid, so changing the model defaults preserves all stored user preferences.
+**Architecture:** The immutable `HomeMapLabelParameter` model is the single source of new-user defaults: an absent shared-preferences value returns its `false`/`false` defaults. A malformed saved value deliberately recovers to the legacy `true`/`true` setting, while valid stored preferences are preserved.
 
 **Tech Stack:** Flutter, Dart, Freezed, json_serializable, flutter_test.
 
