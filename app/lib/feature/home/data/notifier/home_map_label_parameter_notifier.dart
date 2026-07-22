@@ -9,6 +9,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'home_map_label_parameter_notifier.g.dart';
 
 const _default = HomeMapLabelParameter();
+const _legacyFallback = HomeMapLabelParameter(
+  showRegionLabel: true,
+  showCityLabel: true,
+);
 
 @Riverpod(keepAlive: true)
 class HomeMapLabelParameterNotifier extends _$HomeMapLabelParameterNotifier {
@@ -34,7 +38,7 @@ class HomeMapLabelParameterNotifier extends _$HomeMapLabelParameterNotifier {
         exception,
         stackTrace,
       );
-      return _default;
+      return _legacyFallback;
     }
   }
 
