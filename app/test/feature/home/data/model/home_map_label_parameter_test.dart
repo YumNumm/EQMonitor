@@ -10,4 +10,11 @@ void main() {
     expect(parameter.regionLabelMinZoom, 5.0);
     expect(parameter.cityLabelMinZoom, 9.0);
   });
+
+  test('keeps legacy label defaults when deserializing missing fields', () {
+    final parameter = HomeMapLabelParameter.fromJson(<String, dynamic>{});
+
+    expect(parameter.showRegionLabel, isTrue);
+    expect(parameter.showCityLabel, isTrue);
+  });
 }

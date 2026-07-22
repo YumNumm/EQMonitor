@@ -17,11 +17,11 @@ _HomeMapLabelParameter _$HomeMapLabelParameterFromJson(
     final val = _HomeMapLabelParameter(
       showRegionLabel: $checkedConvert(
         'show_region_label',
-        (v) => v as bool? ?? false,
+        (v) => v as bool? ?? true,
       ),
       showCityLabel: $checkedConvert(
         'show_city_label',
-        (v) => v as bool? ?? false,
+        (v) => v as bool? ?? true,
       ),
       regionLabelMinZoom: $checkedConvert(
         'region_label_min_zoom',
