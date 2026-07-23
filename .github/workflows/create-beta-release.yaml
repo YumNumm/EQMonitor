@@ -1,0 +1,100 @@
+name: Create Beta Release
+
+on:
+  issue_comment:
+    types:
+      - created
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Beta version override (e.g. v3.1.0-beta.1). Empty for auto-detect."
+        required: false
+        type: string
+
+permissions: {}
+
+jobs:
+  create-beta:
+    runs-on: ubuntu-slim
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: read
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.issue.pull_request &&
+        contains(github.event.issue.title, 'release') &&
+        github.event.comment.body == '/beta'
+      )
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Configure git for tagging
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+
+      - name: Determine next beta version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version || '' }}
+          PR_TITLE: ${{ github.event.issue.title || '' }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "$INPUT_VERSION" ]; then
+            echo "version=${INPUT_VERSION}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Extract base version from Release PR title (e.g. "chore(main): release 3.1.0" -> "3.1.0")
+          BASE_VERSION=$(echo "$PR_TITLE" | grep -oP '\d+\.\d+\.\d+' | head -1)
+          if [ -z "$BASE_VERSION" ]; then
+            echo "::error::Could not determine base version from PR title: $PR_TITLE"
+            exit 1
+          fi
+
+          # Find the highest existing beta number for this version
+          HIGHEST=$(git tag -l "v${BASE_VERSION}-beta.*" | sed 's/.*-beta\.//' | sort -n | tail -1)
+          if [ -z "$HIGHEST" ]; then
+            NEXT=1
+          else
+            NEXT=$((HIGHEST + 1))
+          fi
+
+          echo "version=v${BASE_VERSION}-beta.${NEXT}" >> "$GITHUB_OUTPUT"
+
+      - name: Create beta tag
+        env:
+          BETA_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git tag "$BETA_VERSION"
+          git push origin "$BETA_VERSION"
+
+      - name: Create GitHub pre-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BETA_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "$BETA_VERSION" \
+            --prerelease \
+            --generate-notes \
+            --target develop
+
+      - name: Add reaction to comment
+        if: github.event_name == 'issue_comment'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            });
