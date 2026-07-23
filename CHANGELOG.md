@@ -1,5 +1,307 @@
 # Changelog
 
+## [v3.0.0](https://github.com/YumNumm/EQMonitor/compare/v2.6.0...v3.0.0) - 2026-07-23
+
+- chore: gitleaks設定・ベースラインとhk（util + gitleaks） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1115
+- chore: hk に zizmor・pinact・shellcheck を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1117
+- fix: zizmor template-injection を有効化 (Part 1/3) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1118
+- fix: zizmor cache-poisoning を有効化 (Part 2/3) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1119
+- fix: zizmor excessive-permissions を有効化 (Part 3/3) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1120
+- fix(ci): ghalint policy 001（ジョブ permissions） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1121
+- fix(ci): ghalint policy 004（secrets: inherit の排除） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1122
+- fix(ci): ghalint policy 005/006（GITHUB_TOKEN の配置） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1123
+- fix(ci): ghalint policy 012（timeout-minutes） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1125
+- fix(ci): ghalint policy 013（checkout persist-credentials） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1126
+- fix(ci): ghalint policy 010（create-github-app-token の権限） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1124
+- EEWホームカードをiOS Live ActivityのEEW UIに寄せて再構成 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1129
+- feat: デバッグ画面でEEWカードの表示検証 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1132
+- 地震履歴詳細画面の地図（MapLibre・推計震度・震源）を実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1131
+- fix: dart analyze エラー（TimeOfDay・AsyncValue・LatLng・eventId）を解消 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1133
+- Better Auth 削除とデバッグ用デバイス管理画面の追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1134
+- feat: デバッグに通知配信ログ画面を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1135
+- fix: Firebase App Check ヘッダー名の修正と SSE / Talker ログ by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1136
+- chore(deps): bump ruby/setup-ruby from 1.302.0 to 1.305.0 in the dependencies group across 1 directory by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1137
+- feat(nied): implement F-net catalog data fetching by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1139
+- fix(earthquake-history): 検索条件設定の不具合を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1140
+- chore(deps): bump ruby/setup-ruby from 1.305.0 to 1.306.0 in the dependencies group by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1141
+- chore(deps): bump toshimaru/auto-author-assign from 3.0.1 to 3.0.2 in the dependencies group by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1142
+- feat: ベータテスト同意画面・isBetaTesting フラグ・バナーを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1143
+- [docs] コントリビューションに関するドキュメントを作成 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1144
+- [ImgBot] Optimize images by @imgbot[bot] in https://github.com/YumNumm/EQMonitor/pull/1145
+- chore(ci): dependabotにcooldown設定を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1146
+- chore(todo): F-net カタログページ実装完了のTODOファイルを削除 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1152
+- feat(ui): 共通AppEmptyStateウィジェットで空状態UIを統一 (078) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1150
+- chore: 修正済みバグの todo ファイルを削除 (081, 082) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1149
+- fix(selector): firstWhereOrNull でクラッシュを防止 (085) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1148
+- fix(eew): WebSocket切断時のREST APIフォールバック実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1147
+- 地震履歴詳細地図の描画不具合を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1155
+- fix: prevent MapLibre layer update race before source initialization by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1153
+- Fix replay EEW timing alignment and card horizontal padding by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1156
+- WebSocket の起動時接続を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1157
+- 揺れ検知Live Activityの表示を改善 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1158
+- eqmonitor_api の intensityTree 変更に対応（アプリ側の解析・検索・EEW座標） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1159
+- 地震履歴詳細の震央表示欠落を修正 by @cursor[bot] in https://github.com/YumNumm/EQMonitor/pull/1161
+- feat: パラメーター取得を ParametersApiClient + ローカル/アセット優先読み込みに変更 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1162
+- feat: EEW一点観測フィルタ設定 (one_point_enabled) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1164
+- feat: バックグラウンド位置情報プラグイン（significant location changes） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1165
+- chore(deps): bump github/codeql-action from 4.35.2 to 4.35.3 in the dependencies group by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1166
+- 起動失敗フォールバックとAndroid位置更新欠落を修正 by @cursor[bot] in https://github.com/YumNumm/EQMonitor/pull/1167
+- feat: 通知設定UX改善 — Live Activity・通知履歴・テスト通知・Android設定 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1163
+- chore(deps): bump urllib3 from 2.6.3 to 2.7.0 in /utils/map_converter in the uv group across 1 directory by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1169
+- feat(eew): EEW震度予報区域の塗りつぶしを実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1171
+- feat(earthquake_history): 速報値の震度表示を実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1170
+- fix: EEW推定震度レイヤーの初期フィルターがレースコンディションで未適用になるバグを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1173
+- fix: 地震履歴詳細画面のマップタップ・レイヤー論理状態バグを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1174
+- feat: ホーム地震履歴リストで現在地スコープ時に都道府県・市区町村と震度を表示 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1175
+- fix: live_activity_util の native asset id をファイルパスに合わせる by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1176
+- feat: バックグラウンド位置情報の権限管理とデバッグ通知 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1177
+- refactor: DisplaySettingsScreen→Page リネームと eew/ui ディレクトリ整理 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1181
+- refactor: _screen.dart を _page.dart にリネーム by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1178
+- fix(eqmonitor_api): 生成enumの$unknownメッセージの文字列補間を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1182
+- feat: K-NET/KiK-net 強震波形パーサと API クライアントパッケージを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1184
+- feat: フォントをアセット配置に刷新（Google Sans Flex / Google Sans Code / Noto Sans JP） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1183
+- feat(kyoshin_monitor): 長周期地震動モニタ(LMoni)への切り替え機能を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1185
+- fix: unawaited() を async/await に置換しコールバック非同期安全性を改善 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1186
+- feat: K-NET/KiK-net 強震波形パーサ (ASCII/CSV/Binary) の実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1187
+- fix: unawaited() を async/await に置換 (debug_replay_modal, earthquake_history_details_map_view) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1189
+- fix: unsafe な ! 演算子を null-safe な実装に置き換え by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1192
+- refactor: top-level プライベート関数を廃止 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1194
+- fix: ! 演算子を null-safe な実装に置き換え (batch 2) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1196
+- refactor: top-level プライベート関数を JmaMapUtility.static メソッドに変換 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1197
+- refactor: Widget プライベートメソッドを private class に変換 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1198
+- feat: K-NET PNG図・MP4動画表示機能 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1200
+- fix: 地震履歴詳細画面の市区町村塗りつぶしをデフォルトで有効化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1204
+- fix: 地震履歴詳細の市区町村塗りつぶしをデフォルトで表示するよう修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1203
+- fix: jma_map_utility の minBy() null アサーションによるクラッシュを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1210
+- feat(eqmonitor_api): OpenAPI再生成とUnion型fromJson判別ロジック実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1172
+- fix: 複数箇所の強制アンラップによるクラッシュリスクを解消 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1212
+- fix: 走時表CSVのパースエラーを握りつぶさずエラー状態に遷移するよう修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1214
+- fix(eew): EEW震度予報区域レイヤーの初期フィルターのレース条件を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1213
+- feat(debug): 地震履歴Cardのデバッグページを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1215
+- chore(deps): bump github/codeql-action from 4.35.3 to 4.35.4 in the dependencies group by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1216
+- fix(location): API送信後は成否に関わらずデバッグ通知を表示 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1217
+- docs: サブスクリプション基盤の仕様書を追加 (#088, #089) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1218
+- docs: Start API仕様書を追加 (#88) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1219
+- feat(location): JmaRegionResolverを地震情報マッチング用に拡張 (#087 P6) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1220
+- chore(backend): Live Activity履歴をnotification-logsに記録 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1223
+- feat(api): RegionSetting に city_code/city_name (#087 P8 client) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1221
+- feat(notification): 地震通知の region/city/現在地 picker UI (#087 P7) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1222
+- fix: device API エンドポイント変更に合わせてリポジトリの呼び出しを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1224
+- feat: Start API / Changelog API のアプリ側実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1225
+- docs(todo): defer 085 earthquake history parquet archive by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1226
+- docs(todo): 076 オンボーディング権限フローの TODO を削除 (実装済み) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1227
+- feat(home): 指定地域選択ページを追加し設定画面から導線を整備 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1229
+- chore(backend): bump submodule for ARV implementation by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1228
+- fix(home): スコープ未解決時の「さらに表示」を無効化し一覧と整合させる by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1231
+- feat(home): スコープ未解決時の案内を権限状態に応じて細かく分岐 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1232
+- test(home): 地震履歴スコープ周りのテスト追加と TODO 完了 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1233
+- fix(eqmonitor_api): @Default(ja) のビルドエラーで CD が落ちていたのを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1234
+- docs(design): drop adaptive_platform_ui references by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1235
+- test(ads): add unit tests for shouldShowAdsProvider by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1236
+- feat(app): subscription/ads SDK foundation (purchases_flutter + google_mobile_ads) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1237
+- test(ads): add unit tests for AdsOptOutNotifier by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1238
+- feat(subscription): paywall / management / promo sheet UI scaffold by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1239
+- feat(subscription): wire SubscriptionNotifier to RevenueCat SDK by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1240
+- feat(debug): 端末シェイク・Shift+D でデバッグページを開けるように by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1252
+- feat(map): ホーム設定の maxZoom・方位ロックを全マップで共通化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1253
+- chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1255
+- 課金初期化競合と空リプレイファイルのクラッシュを修正 by @cursor[bot] in https://github.com/YumNumm/EQMonitor/pull/1254
+- refactor: StatefulWidget を HookWidget に移行 + eqmonitor_lints analyzer plugin 実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1256
+- chore(deps): bump idna from 3.10 to 3.15 in /utils/map_converter in the uv group across 1 directory by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1257
+- chore: Flutter 3.44.0 へアップグレード & 依存パッケージのメジャーバージョンアップ by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1258
+- feat(android): HCPP (Hybrid Composition Plus Plus) を有効化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1259
+- fix(android): Flutter 3.44 Built-in Kotlin 移行 — KGP 宣言を削除 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1260
+- fix(android): Kotlin バージョン宣言を復元 — プラグイン向け 2.2.21 を維持 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1261
+- fix(android): extractAnnotations タスクを無効化 — Flutter 3.44 KGP 競合の回避 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1263
+- feat(ai-chat): GenUI/A2UI ベースの AI チャットを試験導入 (デバッグメニュー専用) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1262
+- fix(lint): Dart Analyzer の3つの警告を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1264
+- chore: Configure Renovate by @renovate-yumnumm[bot] in https://github.com/YumNumm/EQMonitor/pull/1265
+- chore(deps): update ruby/setup-ruby action to v1.308.0 by @renovate-yumnumm[bot] in https://github.com/YumNumm/EQMonitor/pull/1268
+- chore(deps): update github/codeql-action action to v4.35.5 by @renovate-yumnumm[bot] in https://github.com/YumNumm/EQMonitor/pull/1283
+- fix: WebSocket地震速報とAndroid CI設定を修正 by @cursor[bot] in https://github.com/YumNumm/EQMonitor/pull/1291
+- feat(app): 再生モード基盤 (TimeMode + appClock) を導入し時刻参照を統一 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1293
+- fix(deps): update dependency analyzer_plugin to ^0.14.0 by @renovate-yumnumm[bot] in https://github.com/YumNumm/EQMonitor/pull/1270
+- fix(deps): update dependency share_plus to v13 by @renovate-yumnumm[bot] in https://github.com/YumNumm/EQMonitor/pull/1280
+- feat(app): タイムシフト再生を追加 (Phase B) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1294
+- fix(deps): renovate の制約引き上げによる依存解決衝突を解消 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1295
+- feat(earthquake_replay): EQRP の EQMonitor EEW フレーム (type 1003) をパース対応 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1296
+- feat(app): EQRP リプレイを本物のパイプラインで再生し旧 debug_replay を廃止 (Phase C) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1297
+- fix(app): リプレイ中のEEWが毎フレーム消えるバグを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1298
+- feat(app): 再生中のリアルタイムイベント自動復帰を追加 (Phase D) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1299
+- fix(kyoshin_monitor): 遅延判定の差分の符号が逆転していた不具合を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1300
+- fix(knet_waveform_parser): 計測震度の0.3秒窓がサンプリング周波数100Hz固定だった不具合を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1301
+- update submodules to latest by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1302
+- fix(eqmonitor_websocket): 揺れ検知の観測点データ (points) フィールドをモデルに追加 + テスト by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1303
+- fix(deps): update dependency com.android.tools:desugar_jdk_libs to v2.1.5 by @renovate-yumnumm[bot] in https://github.com/YumNumm/EQMonitor/pull/1289
+- fix: WebSocket ws.events の二重サブスクリプションを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1306
+- feat(eqmonitor_api): TelegramDetail.body を型安全な TelegramBodyUnion に変更 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1307
+- fix(map): 地震履歴詳細マップのバグ修正・ref.invalidate asReload対応 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1308
+- 再生モードでライブ地震情報が混在する不具合を修正 by @cursor[bot] in https://github.com/YumNumm/EQMonitor/pull/1305
+- fix(map): 地震履歴・EEWマップのバグ修正・ref.invalidate asReload対応 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1309
+- fix(shake_detection): マップ非表示バグ修正・カードUI改善 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1310
+- WebSocket ticketの即時再取得ループを防止 by @cursor[bot] in https://github.com/YumNumm/EQMonitor/pull/1312
+- feat: apple/swift-openapi-generator で EQMonitor API の Swift クライアントを生成 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1313
+- fix: prevent initial EEW map sync misses on home map by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1315
+- chore(deps): bump the dependencies group across 1 directory with 4 updates by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1314
+- chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1317
+- fix(ci): TestFlight外部配布のビルド照会をIPAの実CFBundleVersionに変更 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1321
+- chore(deps): bump the npm_and_yarn group across 1 directory with 3 updates by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1320
+- feat(earthquake_history): /v2/earthquake 強化対応 — チップ集約型フィルタUI by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1322
+- fix(eqmonitor_api): anyOf由来のdynamic型でNoSuchMethodErrorを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1323
+- feat(api): originTime を Date 型 (yyyy-MM-dd) に変更 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1324
+- feat: 津波情報表示画面の実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1325
+- chore(deps): bump ruby/setup-ruby from 1.310.0 to 1.312.0 in the dependencies group across 1 directory by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1318
+- chore(deps): bump ruby/setup-ruby from 1.312.0 to 1.313.0 in the dependencies group by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1326
+- fix(tsunami): align API client with backend OpenAPI spec by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1328
+- feat(lints): UI層での eqmonitor_api 直接利用を禁止する lint ルール追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1331
+- fix(ci): mise.lock に java/python/codemagic の全プラットフォーム URL を補完 (Deploy App iOS 復旧) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1334
+- chore: backend最新main追従 — eqmonitor_api 再生成 ＋ app をAPI新スキーマへ移行 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1332
+- feat(tsunami): 津波電文stateの差分追跡ドメインモデル ＋ debug タイムラインUI by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1333
+- fix(api): APNs kind casing 修正 & dynamic 型 lint 検出の有効化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1336
+- feat: add telemetry_store — client-side event store with Drift by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1335
+- chore(deps): bump toshimaru/auto-author-assign from 3.0.2 to 3.0.3 in the dependencies group across 1 directory by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1329
+- feat(app): add telemetry events debug viewer by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1337
+- feat(cache): new packages/cache + ETag/304 dio interceptor (計画C) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1339
+- chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1338
+- fix: sync pubspec.lock with cache deps by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1340
+- fix(earthquake_history): フィルタ・ソートの修正と地域震度フィルタの追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1341
+- feat(earthquake_history): データソース・電文種別・緯度経度フィルタを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1342
+- feat(home_map): 地域・市区町村ラベル表示とデバッグ調整UI by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1343
+- feat: 類似地震セクションを地震詳細シートに追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1352
+- fix: WebSocket の再接続・初期同期(ready/baseline)の複数バグを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1357
+- feat: 近傍地震一覧をlat/lng/depth範囲検索に変更 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1356
+- feat: 汎用 cache-first SWR 基盤 + /v1/start 移行 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1355
+- fix(cache): 復元元が無い 304 でExceptionを吐く問題を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1358
+- feat(intensity-history): 地域別 最大震度マップを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1361
+- feat: オンボーディングにデバイス登録・権限要求・通知設定を統合 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1363
+- Fix Codex local environment setup by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1364
+- feat(earthquake): 地震履歴詳細画面の震源近傍で発生した地震の探索パラメータをユーザが調整できるようにする by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1365
+- 地震詳細の近傍地震探索範囲を調整可能にする by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1368
+- chore(deps): bump ruby/setup-ruby from 1.313.0 to 1.314.0 in the dependencies group by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1366
+- feat: LPGM観測点の周期帯別詳細をBottomSheetで表示する by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1370
+- fix: 問い合わせ機能のコードレビュー指摘修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1369
+- feat: 通知設定v2データ層 — スロット統合モデル by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1371
+- feat: 通知設定v2 UI層 — スロット統合画面 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1372
+- feat: オンボーディング通知設定をスロットv2に対応 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1373
+- fix: 通知設定v2 レビュー指摘対応 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1374
+- fix: オンボーディングのデバイス登録中にローディング表示を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1383
+- fix: 長周期地震動階級の観測点タップ・アイコン修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1384
+- feat: ads_enabledフラグ接続 & Start APIデバッグオーバーライド by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1385
+- fix: 位置トラッキングのstart/stopバグ修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1388
+- feat: オンボーディングカスタム選択時にcurrent_locationスロット自動作成 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1389
+- fix: デバイスプロビジョニング直後にFCM/APNsトークンを即時同期 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1391
+- feat: グローバル通知設定Notifier（EEW/地震情報）の実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1390
+- feat: 震度別オーバーライド設定UI（Pro機能） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1392
+- feat: 402 Pro誘導ダイアログ + 地域追加UI（Region Picker） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1393
+- feat: 一般通知設定UI + プリセット永続化 + GeneralNotificationSettingsNotifier by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1394
+- fix: 通知設定v2 レビュー指摘3件修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1395
+- fix: EEWレイヤー最適化・震度履歴/LPGM表示改善 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1396
+- [codex] WebSocket Ticketの定期再取得を停止 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1398
+- [codex] EEW警報ON/OFFを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1397
+- [codex] 通知スロット有効化時に最小震度を補完 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1399
+- feat: 推計震度分布図の初回表示時に注意ダイアログを表示 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1400
+- feat: 既存ユーザーのオンボーディングで通知設定を引き継ぐ by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1401
+- feat: Feed画面の実装とホームシートへの統合 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1402
+- [codex] デバッグページに通知シナリオ種別実行を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1403
+- 通知設定UI/UX全面改善 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1404
+- feat: 市区町村選択機能（CityPicker）を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1405
+- fix: EEW Live Activityの表示不具合7件を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1407
+- chore: 同梱パラメータを最新APIから更新 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1408
+- feat(widget): ホーム画面ウィジェットの安定化と地域選択・Pro対応 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1409
+- feat(telemetry): 画面遷移テレメトリ(user_action)を削除 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1410
+- fix(ci): Firebase App Distribution ジョブを x64 ランナーに戻す by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1411
+- feat(settings/debug): HTTPキャッシュ管理とSharedPreferencesデバッグ機能を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1412
+- fix(ui): 地震履歴一覧などでRefreshIndicatorの位置がずれる問題を修正 (#1348) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1414
+- feat(ci): iOS を Firebase App Distribution にも配布 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1413
+- chore(ci): Deploy iOS ジョブ名を Deploy iOS (App Store Connect) に変更 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1416
+- fix(eqmonitor_api): EARTHQUAKE_NANKAI feed item のパースエラーを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1424
+- feat(error): エラーUIキット — エラー画面・ダイアログの統一と刷新 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1420
+- feat: 通知タップで地震履歴詳細・Feed詳細・任意URLへ遷移できるように by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1426
+- chore: backend submodule を main のマージコミットへ更新 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1427
+- feat(ios): App Intents対応 Phase 1 — Interactive Snippetで地震情報カード by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1425
+- fix: 通知スロットの空ボディ PUT による本番 500 エラーを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1428
+- feat(ios): App Intents対応 Phase 2 — コントロールセンターとディープリンク by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1429
+- fix(app): Android起動クラッシュ解消 — sqlite3 v3 native assets を有効化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1434
+- refactor(ios): App Intents対応 Phase 3 — ホーム画面ウィジェットのデザイン刷新 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1435
+- fix(app): S波到達予想円の塗り潰しレイヤー順の修正と震央点滅の不透明度変更 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1436
+- feat: JSONテーマシステム（配色のテーマ単位管理） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1440
+- feat: 地震活動可視化(震央分布/M-T図/積算/深さ断面)+ Hi-net一元化震源ビューア(デバッグ) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1439
+- feat: テーマ設定UI(プリセット/エディタ/JSON入出力)+ avoid_direct_color_scheme lint by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1441
+- 震度データベース詳細を地震詳細に表示 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1442
+- feat(app): キャッシュ先行表示の全面展開 (1/2) — CachedDataBanner + 地震詳細系SWR化 (#1432) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1437
+- feat(app): キャッシュ先行表示の全面展開 (2/2) — 震度履歴・フィード詳細SWR化 (#1432) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1438
+- テーマ設定破損時の起動クラッシュを防止 by @cursor[bot] in https://github.com/YumNumm/EQMonitor/pull/1443
+- perf: アプリ起動最適化 (Splash 非ブロッキング化・起動計測基盤・走時表 compute 化) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1444
+- fix(earthquake_history): フィルターチップ押下時UIの不具合修正と一貫性向上 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1445
+- chore(deps): bump ruby/setup-ruby from 1.314.0 to 1.315.0 in the dependencies group by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1447
+- v2→v3マイグレーション: 観測性強化・単体テスト追加・既存テスト腐敗修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1451
+- fix: 一覧のSWRキャッシュ化 (地震履歴・お知らせ一覧のオフライン対応) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1454
+- feat: 地震履歴詳細に震度データベース表示を統合 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1453
+- feat: 通知プリセット4択とOS権限制御 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1455
+- 起動タイミング計測と MapController 参照修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1446
+- refactor: PermissionNotifierで権限状態を一元管理 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1456
+- fix: オンボーディング完了フラグが保存されない問題を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1457
+- fix: 震度データベースの震源カードデザインをXML版と統一 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1458
+- feat: v2移行スキップ + アップデートバナー + Changelog Markdown化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1459
+- chore(deps): bump the dependencies group with 3 updates by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1460
+- [codex] Swift OpenAPIを再生成 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1461
+- fix: 再起動時にオンボーディング/ベータ版注意事項が再表示される不具合を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1462
+- fix: デバッグ画面表示中のシェイクで再度デバッグ画面が開く問題を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1463
+- feat: テーマ編集画面に各配色の使用箇所説明を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1465
+- chore(deps): bump soupsieve from 2.6 to 2.8.4 in /utils/map_converter in the uv group across 1 directory by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1464
+- fix: マップレイヤーの初期化/破棄レース・スタイル更新不備・震度未入電表示を一括修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1466
+- fix: provisional通知を未許可扱いに修正 by @cursor[bot] in https://github.com/YumNumm/EQMonitor/pull/1469
+- fix(notification): 通知設定APIのbackendスキーマ追従 (vyse60リネーム + VZSE40設定追加) by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1468
+- refactor: 未使用のテーマ色フィールドを削除し、colorSchemeの直接参照を排除 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1467
+- fix: 震度塗り潰しレイヤーで同一地域が複数レベルに重複描画される問題を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1471
+- fix: 指定地域(都道府県/市区町村)選択時の例外を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1470
+- Treat Dart Errors as corrupt-cache failures in CachedNotifier by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1473
+- fix: 地震履歴詳細マップのレイヤーパラメータ変更時の点滅を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1472
+- Fix: do not silently serve stale cache for default earthquake-history refresh by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1476
+- Fix current-location notification region persistence by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1486
+- Do not stop background location when notification slots are unresolved by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1485
+- Enforce build-number-only forced updates by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1484
+- Fix Hi-net jmalist parser ReDoS risk by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1483
+- Fix stale DB source selection in earthquake details by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1482
+- Restrict Chuck network inspector to debug builds by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1480
+- Separate GeoJSON Dio to prevent device ID leakage by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1481
+- Fix WebSocket heartbeat pongを接続層で返す by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1500
+- fix: 震度データベース観測点をSymbolレイヤー単独描画に変更し全階級のアイコンを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1501
+- fix(ios): App Attest environmentをproductionへ統一しTestFlight検証チェックリストを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1503
+- fix: Android βビルドでIS_BETA_TESTINGを有効化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1502
+- feat: 地震履歴詳細画面のデータソースラベルに電文コメントを表示 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1504
+- fix: developのリリースビルド失敗を修正（残存していたclient引数を削除） by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1505
+- fix(ios): PrivacyInfo.xcprivacyに位置情報宣言を追加しストア申告チェックリストを整備 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1507
+- ci: Flutter品質ゲートのpath filter漏れを塞ぎmelos実行を再現可能にする by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1506
+- fix: eqmonitor_apiのcontract drift/fixture不整合17件を解消 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1508
+- chore(deps): bump github/codeql-action/upload-sarif from 4.36.3 to 4.37.0 in the dependencies group by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1509
+- fix: MapLibreのAndroidクラスをR8削除から保護 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1511
+- feat: Release ModeでもChuckを有効化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1512
+- feat: 地震履歴のソートを「発生時刻」に統一しデフォルト時のUI/戻る挙動を改善 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1513
+- feat: Live Activity テスト配信 API クライアント追加・openapi 同期 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1514
+- feat: 起動時プッシュトークン同期を常駐化し、update token経路を削除 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1517
+- feat: Live Activityテスト配信API対応 + デバッグ画面 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1516
+- fix: お知らせ機能の404修正・一覧UI刷新・未読バナー追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1518
+- feat: プッシュトークン同期と定期クリーンアップを実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1520
+- fix: ホームWidgetの表示・現在地・詳細遷移を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1515
+- chore: dart pub upgrade by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1519
+- ベースマップをPlatform Assetから直接参照 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1521
+- fix: 通知設定から通知しないプリセットを削除 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1522
+- Fix seismicityのGeoJSON取得にHTTPキャッシュを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1523
+- refactor: 地震履歴ホームWidgetの整理 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1524
+- feat: SecureStorageデバッグ画面とPreferencesキー監査 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1525
+- feat: Debug 画面に Live Activity テスト機能を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1526
+- feat: デバッグ画面にトークン再送信・デバイス削除・再プロビジョンを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1529
+- 揺れ検知をcanonical snapshot仕様へ移行 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1528
+- fix: 地震履歴のデバッグ用フィルターを限定表示 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1530
+- chore(deps): bump ruby/setup-ruby from 1.316.0 to 1.317.0 in the dependencies group by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1527
+- fix: MapLibreベースマップを復旧 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1531
+- feat: 地震履歴詳細に近傍地震一覧を表示 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1532
+- fix: MapLibreレイヤーのライフサイクルを修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1533
+- chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1534
+- fix: 地図ラベルの初期表示を無効化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/1536
+- chore(deps): bump the dependencies group across 1 directory with 3 updates by @dependabot[bot] in https://github.com/YumNumm/EQMonitor/pull/1537
+
 ## [v2.6.1](https://github.com/YumNumm/EQMonitor/compare/v2.6.0...v2.6.1) - 2024-08-12
 - Fix/ios cd by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/764
 - build(deps): bump the dependencies group with 3 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/765
