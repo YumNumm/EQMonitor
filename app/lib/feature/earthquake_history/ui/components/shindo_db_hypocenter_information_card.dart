@@ -115,8 +115,8 @@ class _PrimaryHypocenterBody extends StatelessWidget {
 
     return Wrap(
       spacing: 8,
-      crossAxisAlignment: WrapCrossAlignment.end,
-      alignment: WrapAlignment.center,
+      crossAxisAlignment: .center,
+      alignment: .center,
       children: [
         const Row(),
         _MagnitudeRow(magnitudes: hypocenter.magnitudes),
@@ -243,23 +243,21 @@ class _OriginTimeRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm頃');
+    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss.SS頃');
 
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.end,
-      spacing: 4,
-      children: [
-        Text('発生時刻: ${dateFormat.format(originTime.toLocal())}'),
-        if (stderrSeconds != null)
-          Text(
-            '±${stderrSeconds!.toStringAsFixed(1)}秒',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: context.designSystem.colorTheme.onSurfaceVariant,
-              fontFamily: FontFamily.googleSansCode,
-              fontFamilyFallback: const [FontFamily.notoSansJP],
-            ),
-          ),
-      ],
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(text: '発生時刻: ${dateFormat.format(originTime.toLocal())}'),
+          if (stderrSeconds != null)
+            TextSpan(text: '±${stderrSeconds!.toStringAsFixed(1)}秒'),
+        ],
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: context.designSystem.colorTheme.onSurfaceVariant,
+          fontFamily: FontFamily.googleSansCode,
+          fontFamilyFallback: const [FontFamily.notoSansJP],
+        ),
+      ),
     );
   }
 }
@@ -274,9 +272,9 @@ class _EpicenterWidget extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Row(
-      textBaseline: TextBaseline.ideographic,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: .ideographic,
+      mainAxisSize: .min,
+      crossAxisAlignment: .baseline,
       children: [
         Text('震源地', style: textTheme.labelStyle(textTheme.bodySmall!)),
         const SizedBox(width: 4),
