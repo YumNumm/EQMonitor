@@ -36,7 +36,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
           install_args: gitleaks
 
@@ -54,7 +54,7 @@ jobs:
       - name: Upload SARIF to GitHub Code Scanning
         if: always() && steps.gitleaks.outcome != 'cancelled' && hashFiles('gitleaks.sarif') != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         continue-on-error: true
-        uses: github/codeql-action/upload-sarif@99df26d4f13ea111d4ec1a7dddef6063f76b97e9 # v4.37.0
+        uses: github/codeql-action/upload-sarif@7188fc363630916deb702c7fdcf4e481b751f97a # v4.37.1
         with:
           sarif_file: gitleaks.sarif
           category: gitleaks
@@ -77,7 +77,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
           install_args: ghalint
 
@@ -137,7 +137,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
           install_args: pinact
 
@@ -161,7 +161,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
           install_args: zizmor
 

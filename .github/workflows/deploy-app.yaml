@@ -105,7 +105,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
           install_args: "flutter xcbeautify"
 
@@ -285,7 +285,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
           install_args: "xcbeautify yq node pnpm"
 
@@ -363,7 +363,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
           install_args: "firebase yq"
 
@@ -450,7 +450,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
           install_args: "flutter java uv python pipx:codemagic-cli-tools"
 
@@ -547,7 +547,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
           install_args: "firebase yq"
 
@@ -652,7 +652,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
           install_args: "github:YumNumm/google-play-cli yq"
 
