@@ -242,14 +242,14 @@ abstract class DeviceApiClient {
     @Body() required TestLiveActivityUpdateRequest body,
   });
 
-  /// テスト用 Live Activity を updateToken による個別配信で終了する。このエンドポイントで開始した Live Activity（eventId が test-live-activity- で始まるもの）にのみ使用できる。
+  /// テスト用 Live Activity を updateToken による個別配信で終了（dismiss）する。content_state を省略した場合は最小限の ContentState（eventId のみ）で終了する。
   @POST(DeviceApiClientUrls.postV2DeviceMeLiveActivityTestLiveActivityIdEnd)
   Future<HttpResponse<TestLiveActivitySendResponse>> postV2DeviceMeLiveActivityTestLiveActivityIdEnd({
     @Path('liveActivityId') required String liveActivityId,
     @Body() required TestLiveActivityEndRequest body,
   });
 
-  /// デバイスの Live Activity updateToken 一覧を取得
+  /// Live Activity updateToken一覧を取得
   @GET(DeviceApiClientUrls.getV2DeviceMeLiveActivity)
   Future<HttpResponse<List<LiveActivityTokenResponse>>> getV2DeviceMeLiveActivity();
 

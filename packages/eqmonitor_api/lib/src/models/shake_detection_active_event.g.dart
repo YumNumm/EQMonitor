@@ -2,16 +2,16 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'events.dart';
+part of 'shake_detection_active_event.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Events _$EventsFromJson(
+_ShakeDetectionActiveEvent _$ShakeDetectionActiveEventFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('_Events', json, ($checkedConvert) {
-  final val = _Events(
+) => $checkedCreate('_ShakeDetectionActiveEvent', json, ($checkedConvert) {
+  final val = _ShakeDetectionActiveEvent(
     type: $checkedConvert('type', (v) => v as String),
     eventId: $checkedConvert('eventId', (v) => v as String),
     serialNo: $checkedConvert('serialNo', (v) => (v as num).toInt()),
@@ -55,7 +55,9 @@ _Events _$EventsFromJson(
   return val;
 });
 
-Map<String, dynamic> _$EventsToJson(_Events instance) => <String, dynamic>{
+Map<String, dynamic> _$ShakeDetectionActiveEventToJson(
+  _ShakeDetectionActiveEvent instance,
+) => <String, dynamic>{
   'type': instance.type,
   'eventId': instance.eventId,
   'serialNo': instance.serialNo,

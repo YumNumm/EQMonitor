@@ -17,10 +17,7 @@
     "info_kind_version": "1.0_0",
     "hash": "stub-hash-vxse56",
     "created_at": "2024-01-01T07:15:05.000Z",
-    "body": {
-      "type": "EARTHQUAKE_EXPLANATION",
-      "text": "この地震の活動状況等に関する情報の本文です。"
-    }
+    "body": null
   },
   "comments": {
     "free_form_comment": "長周期地震動階級3以上を観測した地域があります。",

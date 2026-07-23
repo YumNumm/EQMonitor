@@ -4,20 +4,20 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'level.dart';
 import 'change_reasons.dart';
-import 'merged_events.dart';
-import 'region.dart';
-import 'points.dart';
-import 'test.dart';
 import 'correlated_eew.dart';
+import 'level.dart';
+import 'merged_events.dart';
+import 'points.dart';
+import 'region.dart';
+import 'test.dart';
 
-part 'events.freezed.dart';
-part 'events.g.dart';
+part 'shake_detection_active_event.freezed.dart';
+part 'shake_detection_active_event.g.dart';
 
 @Freezed()
-abstract class Events with _$Events {
-  const factory Events({
+abstract class ShakeDetectionActiveEvent with _$ShakeDetectionActiveEvent {
+  const factory ShakeDetectionActiveEvent({
     /// const: "shake_detection"
     required String type,
     required String eventId,
@@ -35,7 +35,7 @@ abstract class Events with _$Events {
     Test? test,
     @JsonKey(includeIfNull: false)
     CorrelatedEew? correlatedEew,
-  }) = _Events;
+  }) = _ShakeDetectionActiveEvent;
 
-  factory Events.fromJson(Map<String, Object?> json) => _$EventsFromJson(json);
+  factory ShakeDetectionActiveEvent.fromJson(Map<String, Object?> json) => _$ShakeDetectionActiveEventFromJson(json);
 }
