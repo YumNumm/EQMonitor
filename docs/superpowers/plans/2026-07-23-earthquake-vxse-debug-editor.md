@@ -63,11 +63,11 @@ Use Freezed variants named `vxse51`, `vxse52`, `vxse53`, `vxse61`, `vxse62`. Eve
 
 Encode the backend writer ownership exactly:
 
-- VXSE51: max intensity, intensity regions, intensity prefectures, comments.
-- VXSE52: hypocenter, magnitude/depth, comments.
-- VXSE53: hypocenter, magnitude/depth, max intensity, regions, prefectures, cities, stations, comments.
-- VXSE61: hypocenter, magnitude/depth, comments.
-- VXSE62: hypocenter, magnitude/depth, max LPGM intensity, LPGM regions, prefectures, stations, comments.
+- VXSE51: status, last reported time, max intensity, intensity regions, intensity prefectures, comments.
+- VXSE52: status, last reported time, arrival/origin time, hypocenter, magnitude/depth, comments.
+- VXSE53: status, last reported time, arrival/origin time, hypocenter, magnitude/depth, earthquake type, max intensity, regions, prefectures, cities, stations, comments.
+- VXSE61: status, last reported time, arrival/origin time, updated hypocenter, magnitude/depth, comments.
+- VXSE62: status, last reported time, arrival/origin time, hypocenter, magnitude/depth, max intensity, max LPGM intensity, ordinary and LPGM regions, prefectures, stations, comments.
 
 - [ ] **Step 4: Implement deterministic factory**
 
