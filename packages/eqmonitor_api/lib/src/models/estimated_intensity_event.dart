@@ -18,6 +18,6 @@ abstract class EstimatedIntensityEvent with _$EstimatedIntensityEvent {
     @JsonKey(includeIfNull: false)
     EstimatedIntensityHypocenter? hypocenter,
   }) = _EstimatedIntensityEvent;
-  
+
   factory EstimatedIntensityEvent.fromJson(Map<String, Object?> json) => _$EstimatedIntensityEventFromJson(json);
 }

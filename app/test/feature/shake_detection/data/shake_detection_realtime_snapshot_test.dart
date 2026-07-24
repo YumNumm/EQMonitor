@@ -76,8 +76,8 @@ void main() {
 
     controller.add(
       _event(
-        api.ShakeDetectionActiveSnapshot(
-          type: 'shake_detection',
+        api.RealtimeShakeDetectionSnapshotPayload(
+          type: api.Type3.shakeDetection,
           revision: 3,
           responseAt: DateTime.utc(2026, 7, 23, 12, 1),
           events: const [],
@@ -90,9 +90,9 @@ void main() {
   });
 }
 
-api.ShakeDetectionActiveSnapshot? _latestRecord;
+api.RealtimeShakeDetectionSnapshotPayload? _latestRecord;
 
-RealtimeEvent _event(api.ShakeDetectionActiveSnapshot record) {
+RealtimeEvent _event(api.RealtimeShakeDetectionSnapshotPayload record) {
   if (record.revision == 2) {
     _latestRecord = record;
   }
@@ -102,16 +102,16 @@ RealtimeEvent _event(api.ShakeDetectionActiveSnapshot record) {
   );
 }
 
-api.ShakeDetectionActiveSnapshot _snapshot({
+api.RealtimeShakeDetectionSnapshotPayload _snapshot({
   required int revision,
   required String eventId,
-}) => api.ShakeDetectionActiveSnapshot(
-  type: 'shake_detection',
+}) => api.RealtimeShakeDetectionSnapshotPayload(
+  type: api.Type3.shakeDetection,
   revision: revision,
   responseAt: DateTime.utc(2026, 7, 23, 12),
   events: [
-    api.ShakeDetectionActiveEvent(
-      type: 'shake_detection',
+    api.Events2(
+      type: api.Type3.shakeDetection,
       eventId: eventId,
       serialNo: revision,
       createdAt: DateTime.utc(2026, 7, 23, 11, 59),
@@ -120,23 +120,23 @@ api.ShakeDetectionActiveSnapshot _snapshot({
       level: api.Level.strong,
       changeReasons: const [api.ChangeReasons.pointsChanged],
       mergedEvents: [
-        api.MergedEvents(
+        api.MergedEvents2(
           eventId: 'merged-$eventId',
           mergedAt: DateTime.utc(2026, 7, 23, 12),
         ),
       ],
       pointCount: 1,
-      region: const api.Region(
-        topLeft: api.TopLeft(latitude: 36, longitude: 139),
-        bottomRight: api.BottomRight(latitude: 35, longitude: 140),
+      region: const api.Region2(
+        topLeft: api.TopLeft2(latitude: 36, longitude: 139),
+        bottomRight: api.BottomRight2(latitude: 35, longitude: 140),
       ),
       points: [
-        api.Points(
+        api.Points2(
           code: 'point-$eventId',
           name: '観測点',
           region: '東京都',
           type: 'K-NET',
-          location: const api.Location(latitude: 35.5, longitude: 139.5),
+          location: const api.Location2(latitude: 35.5, longitude: 139.5),
           intensity: 3.2,
         ),
       ],

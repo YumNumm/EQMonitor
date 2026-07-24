@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RealtimeShakeDetectionSnapshotPayload {
 
- Type3 get type; Operation3 get operation; ShakeDetectionActiveSnapshot get record;
+ Type3 get type; int get revision; DateTime get responseAt; List<Events2> get events;
 /// Create a copy of RealtimeShakeDetectionSnapshotPayload
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RealtimeShakeDetectionSnapshotPayloadCopyWith<RealtimeShakeDetectionSnapshotPay
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeShakeDetectionSnapshotPayload&&(identical(other.type, type) || other.type == type)&&(identical(other.operation, operation) || other.operation == operation)&&(identical(other.record, record) || other.record == record));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeShakeDetectionSnapshotPayload&&(identical(other.type, type) || other.type == type)&&(identical(other.revision, revision) || other.revision == revision)&&(identical(other.responseAt, responseAt) || other.responseAt == responseAt)&&const DeepCollectionEquality().equals(other.events, events));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,operation,record);
+int get hashCode => Object.hash(runtimeType,type,revision,responseAt,const DeepCollectionEquality().hash(events));
 
 @override
 String toString() {
-  return 'RealtimeShakeDetectionSnapshotPayload(type: $type, operation: $operation, record: $record)';
+  return 'RealtimeShakeDetectionSnapshotPayload(type: $type, revision: $revision, responseAt: $responseAt, events: $events)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $RealtimeShakeDetectionSnapshotPayloadCopyWith<$Res>  {
   factory $RealtimeShakeDetectionSnapshotPayloadCopyWith(RealtimeShakeDetectionSnapshotPayload value, $Res Function(RealtimeShakeDetectionSnapshotPayload) _then) = _$RealtimeShakeDetectionSnapshotPayloadCopyWithImpl;
 @useResult
 $Res call({
- Type3 type, Operation3 operation, ShakeDetectionActiveSnapshot record
+ Type3 type, int revision, DateTime responseAt, List<Events2> events
 });
 
 
-$ShakeDetectionActiveSnapshotCopyWith<$Res> get record;
+
 
 }
 /// @nodoc
@@ -65,24 +65,16 @@ class _$RealtimeShakeDetectionSnapshotPayloadCopyWithImpl<$Res>
 
 /// Create a copy of RealtimeShakeDetectionSnapshotPayload
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? operation = null,Object? record = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? revision = null,Object? responseAt = null,Object? events = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type3,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation3,record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
-as ShakeDetectionActiveSnapshot,
+as Type3,revision: null == revision ? _self.revision : revision // ignore: cast_nullable_to_non_nullable
+as int,responseAt: null == responseAt ? _self.responseAt : responseAt // ignore: cast_nullable_to_non_nullable
+as DateTime,events: null == events ? _self.events : events // ignore: cast_nullable_to_non_nullable
+as List<Events2>,
   ));
 }
-/// Create a copy of RealtimeShakeDetectionSnapshotPayload
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ShakeDetectionActiveSnapshotCopyWith<$Res> get record {
 
-  return $ShakeDetectionActiveSnapshotCopyWith<$Res>(_self.record, (value) {
-    return _then(_self.copyWith(record: value));
-  });
-}
 }
 
 
@@ -164,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type3 type,  Operation3 operation,  ShakeDetectionActiveSnapshot record)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type3 type,  int revision,  DateTime responseAt,  List<Events2> events)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RealtimeShakeDetectionSnapshotPayload() when $default != null:
-return $default(_that.type,_that.operation,_that.record);case _:
+return $default(_that.type,_that.revision,_that.responseAt,_that.events);case _:
   return orElse();
 
 }
@@ -185,10 +177,10 @@ return $default(_that.type,_that.operation,_that.record);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type3 type,  Operation3 operation,  ShakeDetectionActiveSnapshot record)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type3 type,  int revision,  DateTime responseAt,  List<Events2> events)  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeShakeDetectionSnapshotPayload():
-return $default(_that.type,_that.operation,_that.record);case _:
+return $default(_that.type,_that.revision,_that.responseAt,_that.events);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +197,10 @@ return $default(_that.type,_that.operation,_that.record);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type3 type,  Operation3 operation,  ShakeDetectionActiveSnapshot record)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type3 type,  int revision,  DateTime responseAt,  List<Events2> events)?  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeShakeDetectionSnapshotPayload() when $default != null:
-return $default(_that.type,_that.operation,_that.record);case _:
+return $default(_that.type,_that.revision,_that.responseAt,_that.events);case _:
   return null;
 
 }
@@ -220,12 +212,19 @@ return $default(_that.type,_that.operation,_that.record);case _:
 @JsonSerializable()
 
 class _RealtimeShakeDetectionSnapshotPayload implements RealtimeShakeDetectionSnapshotPayload {
-  const _RealtimeShakeDetectionSnapshotPayload({required this.type, required this.operation, required this.record});
+  const _RealtimeShakeDetectionSnapshotPayload({required this.type, required this.revision, required this.responseAt, required final  List<Events2> events}): _events = events;
   factory _RealtimeShakeDetectionSnapshotPayload.fromJson(Map<String, dynamic> json) => _$RealtimeShakeDetectionSnapshotPayloadFromJson(json);
 
 @override final  Type3 type;
-@override final  Operation3 operation;
-@override final  ShakeDetectionActiveSnapshot record;
+@override final  int revision;
+@override final  DateTime responseAt;
+ final  List<Events2> _events;
+@override List<Events2> get events {
+  if (_events is EqualUnmodifiableListView) return _events;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_events);
+}
+
 
 /// Create a copy of RealtimeShakeDetectionSnapshotPayload
 /// with the given fields replaced by the non-null parameter values.
@@ -240,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RealtimeShakeDetectionSnapshotPayload&&(identical(other.type, type) || other.type == type)&&(identical(other.operation, operation) || other.operation == operation)&&(identical(other.record, record) || other.record == record));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RealtimeShakeDetectionSnapshotPayload&&(identical(other.type, type) || other.type == type)&&(identical(other.revision, revision) || other.revision == revision)&&(identical(other.responseAt, responseAt) || other.responseAt == responseAt)&&const DeepCollectionEquality().equals(other._events, _events));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,operation,record);
+int get hashCode => Object.hash(runtimeType,type,revision,responseAt,const DeepCollectionEquality().hash(_events));
 
 @override
 String toString() {
-  return 'RealtimeShakeDetectionSnapshotPayload(type: $type, operation: $operation, record: $record)';
+  return 'RealtimeShakeDetectionSnapshotPayload(type: $type, revision: $revision, responseAt: $responseAt, events: $events)';
 }
 
 
@@ -260,11 +259,11 @@ abstract mixin class _$RealtimeShakeDetectionSnapshotPayloadCopyWith<$Res> imple
   factory _$RealtimeShakeDetectionSnapshotPayloadCopyWith(_RealtimeShakeDetectionSnapshotPayload value, $Res Function(_RealtimeShakeDetectionSnapshotPayload) _then) = __$RealtimeShakeDetectionSnapshotPayloadCopyWithImpl;
 @override @useResult
 $Res call({
- Type3 type, Operation3 operation, ShakeDetectionActiveSnapshot record
+ Type3 type, int revision, DateTime responseAt, List<Events2> events
 });
 
 
-@override $ShakeDetectionActiveSnapshotCopyWith<$Res> get record;
+
 
 }
 /// @nodoc
@@ -277,25 +276,17 @@ class __$RealtimeShakeDetectionSnapshotPayloadCopyWithImpl<$Res>
 
 /// Create a copy of RealtimeShakeDetectionSnapshotPayload
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? operation = null,Object? record = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? revision = null,Object? responseAt = null,Object? events = null,}) {
   return _then(_RealtimeShakeDetectionSnapshotPayload(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type3,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation3,record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
-as ShakeDetectionActiveSnapshot,
+as Type3,revision: null == revision ? _self.revision : revision // ignore: cast_nullable_to_non_nullable
+as int,responseAt: null == responseAt ? _self.responseAt : responseAt // ignore: cast_nullable_to_non_nullable
+as DateTime,events: null == events ? _self._events : events // ignore: cast_nullable_to_non_nullable
+as List<Events2>,
   ));
 }
 
-/// Create a copy of RealtimeShakeDetectionSnapshotPayload
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ShakeDetectionActiveSnapshotCopyWith<$Res> get record {
 
-  return $ShakeDetectionActiveSnapshotCopyWith<$Res>(_self.record, (value) {
-    return _then(_self.copyWith(record: value));
-  });
-}
 }
 
 // dart format on

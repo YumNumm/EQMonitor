@@ -15,14 +15,16 @@ _$RealtimeShakeDetectionSnapshotPayloadFromJson(Map<String, dynamic> json) =>
     ) {
       final val = _RealtimeShakeDetectionSnapshotPayload(
         type: $checkedConvert('type', (v) => $enumDecode(_$Type3EnumMap, v)),
-        operation: $checkedConvert(
-          'operation',
-          (v) => $enumDecode(_$Operation3EnumMap, v),
+        revision: $checkedConvert('revision', (v) => (v as num).toInt()),
+        responseAt: $checkedConvert(
+          'responseAt',
+          (v) => DateTime.parse(v as String),
         ),
-        record: $checkedConvert(
-          'record',
-          (v) =>
-              ShakeDetectionActiveSnapshot.fromJson(v as Map<String, dynamic>),
+        events: $checkedConvert(
+          'events',
+          (v) => (v as List<dynamic>)
+              .map((e) => Events2.fromJson(e as Map<String, dynamic>))
+              .toList(),
         ),
       );
       return val;
@@ -32,10 +34,9 @@ Map<String, dynamic> _$RealtimeShakeDetectionSnapshotPayloadToJson(
   _RealtimeShakeDetectionSnapshotPayload instance,
 ) => <String, dynamic>{
   'type': instance.type,
-  'operation': instance.operation,
-  'record': instance.record,
+  'revision': instance.revision,
+  'responseAt': instance.responseAt.toIso8601String(),
+  'events': instance.events,
 };
 
 const _$Type3EnumMap = {Type3.shakeDetection: 'shake_detection'};
-
-const _$Operation3EnumMap = {Operation3.snapshot: 'snapshot'};

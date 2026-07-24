@@ -49,9 +49,9 @@ final class MutableAcceptedShakeSnapshot
   void publish(ShakeDetectionSnapshot snapshot) => state = snapshot;
 }
 
-api.ShakeDetectionActiveEvent watcherShake(String eventId) =>
-    api.ShakeDetectionActiveEvent(
-      type: 'shake_detection',
+api.Events2 watcherShake(String eventId) =>
+    api.Events2(
+      type: api.Type3.shakeDetection,
       eventId: eventId,
       serialNo: 1,
       createdAt: now,
@@ -60,9 +60,9 @@ api.ShakeDetectionActiveEvent watcherShake(String eventId) =>
       level: api.Level.medium,
       mergedEvents: const [],
       pointCount: 1,
-      region: const api.Region(
-        topLeft: api.TopLeft(latitude: 36, longitude: 139),
-        bottomRight: api.BottomRight(latitude: 35, longitude: 140),
+      region: const api.Region2(
+        topLeft: api.TopLeft2(latitude: 36, longitude: 139),
+        bottomRight: api.BottomRight2(latitude: 35, longitude: 140),
       ),
       points: const [],
       changeReasons: const [api.ChangeReasons.newEvent],
@@ -72,8 +72,8 @@ RealtimeEvent watcherSnapshot({
   required int revision,
   required List<String> eventIds,
 }) => RealtimeEvent.shakeSnapshot(
-  record: api.ShakeDetectionActiveSnapshot(
-    type: 'shake_detection',
+  record: api.RealtimeShakeDetectionSnapshotPayload(
+    type: api.Type3.shakeDetection,
     revision: revision,
     responseAt: now,
     events: eventIds.map(watcherShake).toList(growable: false),

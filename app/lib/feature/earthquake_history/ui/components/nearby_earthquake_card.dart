@@ -135,12 +135,6 @@ class _NearbyEarthquakeHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 0, 4, 0),
       child: Row(
         children: [
-          Icon(
-            Icons.location_searching,
-            size: 18,
-            color: context.designSystem.colorTheme.onSurfaceVariant,
-          ),
-          const SizedBox(width: 6),
           Expanded(
             child: Text(
               'この震源の近傍で発生した地震',

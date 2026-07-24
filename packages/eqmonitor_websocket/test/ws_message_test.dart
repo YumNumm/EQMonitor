@@ -221,15 +221,13 @@ void main() {
           WsMessage.fromJson({
                 'type': 'realtime',
                 'data': {
-                  'type': 'shake_detection',
-                  'operation': 'snapshot',
-                  'record': fullShakeSnapshot,
+                  ...fullShakeSnapshot,
                 },
               })
               as WsRealtimeMessage;
 
       final event = message.data as RealtimeShakeDetectionSnapshotEvent;
-      final shake = event.payload.record.events.single;
+      final shake = event.payload.events.single;
       expect(shake.points.single.intensity, 3.2);
       expect(shake.mergedEvents.single.eventId, 'shake-absorbed');
       expect(shake.correlatedEew?.eventId, '20260101000001');

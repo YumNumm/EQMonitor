@@ -23,9 +23,9 @@ EewItemWithRelations eewItem() => EewItemWithRelations.fromJson(const {
   'report_time': '2024-01-01T07:10:16.000Z',
 });
 
-ShakeDetectionActiveEvent shake(String eventId, {int serialNo = 1}) =>
-    ShakeDetectionActiveEvent(
-      type: 'shake_detection',
+Events2 shake(String eventId, {int serialNo = 1}) =>
+    Events2(
+      type: Type3.shakeDetection,
       eventId: eventId,
       serialNo: serialNo,
       createdAt: _now,
@@ -34,9 +34,9 @@ ShakeDetectionActiveEvent shake(String eventId, {int serialNo = 1}) =>
       level: Level.medium,
       mergedEvents: const [],
       pointCount: 1,
-      region: const Region(
-        topLeft: TopLeft(latitude: 36, longitude: 139),
-        bottomRight: BottomRight(latitude: 35, longitude: 140),
+      region: const Region2(
+        topLeft: TopLeft2(latitude: 36, longitude: 139),
+        bottomRight: BottomRight2(latitude: 35, longitude: 140),
       ),
       points: const [],
       changeReasons: const [ChangeReasons.newEvent],
@@ -44,10 +44,10 @@ ShakeDetectionActiveEvent shake(String eventId, {int serialNo = 1}) =>
 
 RealtimeEvent snapshot({
   required int revision,
-  required List<ShakeDetectionActiveEvent> events,
+  required List<Events2> events,
 }) => RealtimeEvent.shakeSnapshot(
-  record: ShakeDetectionActiveSnapshot(
-    type: 'shake_detection',
+  record: RealtimeShakeDetectionSnapshotPayload(
+    type: Type3.shakeDetection,
     revision: revision,
     responseAt: _now,
     events: events,

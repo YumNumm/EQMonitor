@@ -10,6 +10,6 @@ abstract class ShakeDetectionSnapshot with _$ShakeDetectionSnapshot {
     required int revision,
     required DateTime responseAt,
     required List<ShakeDetectionEvent> events,
-    ShakeDetectionActiveSnapshot? sourceRecord,
+    RealtimeShakeDetectionSnapshotPayload? sourceRecord,
   }) = _ShakeDetectionSnapshot;
 }

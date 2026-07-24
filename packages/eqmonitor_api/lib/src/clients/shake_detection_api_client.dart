@@ -5,7 +5,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../models/shake_detection_active_snapshot.dart';
+import '../models/get_v2_shake_detection_active_response.dart';
 
 part 'shake_detection_api_client.g.dart';
 
@@ -13,9 +13,9 @@ part 'shake_detection_api_client.g.dart';
 abstract class ShakeDetectionApiClient {
   factory ShakeDetectionApiClient(Dio dio, {String? baseUrl}) = _ShakeDetectionApiClient;
 
-  /// 現在有効な揺れ検知イベントの完全Snapshotを取得
+  /// 現在有効な揺れ検知イベントの完全snapshot
   @GET(ShakeDetectionApiClientUrls.getV2ShakeDetectionActive)
-  Future<HttpResponse<ShakeDetectionActiveSnapshot>> getV2ShakeDetectionActive();
+  Future<HttpResponse<GetV2ShakeDetectionActiveResponse>> getV2ShakeDetectionActive();
 }
 
 

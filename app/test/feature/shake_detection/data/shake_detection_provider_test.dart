@@ -42,17 +42,17 @@ ShakeDetectionSnapshot domainSnapshot({
   events: eventIds.map(domainEvent).toList(growable: false),
 );
 
-api.ShakeDetectionActiveSnapshot realtimeSnapshot({
+api.RealtimeShakeDetectionSnapshotPayload realtimeSnapshot({
   required int revision,
   required List<String> eventIds,
-}) => api.ShakeDetectionActiveSnapshot(
-  type: 'shake_detection',
+}) => api.RealtimeShakeDetectionSnapshotPayload(
+  type: api.Type3.shakeDetection,
   revision: revision,
   responseAt: _baseTime,
   events: eventIds
       .map(
-        (eventId) => api.ShakeDetectionActiveEvent(
-          type: 'shake_detection',
+        (eventId) => api.Events2(
+          type: api.Type3.shakeDetection,
           eventId: eventId,
           serialNo: 1,
           createdAt: _baseTime,
@@ -61,9 +61,9 @@ api.ShakeDetectionActiveSnapshot realtimeSnapshot({
           level: api.Level.medium,
           mergedEvents: const [],
           pointCount: 1,
-          region: const api.Region(
-            topLeft: api.TopLeft(latitude: 36, longitude: 139),
-            bottomRight: api.BottomRight(latitude: 35, longitude: 140),
+          region: const api.Region2(
+            topLeft: api.TopLeft2(latitude: 36, longitude: 139),
+            bottomRight: api.BottomRight2(latitude: 35, longitude: 140),
           ),
           points: const [],
           changeReasons: const [api.ChangeReasons.newEvent],

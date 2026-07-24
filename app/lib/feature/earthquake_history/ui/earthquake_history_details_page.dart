@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
@@ -129,6 +127,7 @@ class _LoadedContent extends HookConsumerWidget {
     ];
 
     final designSystem = context.designSystem;
+
     final telegramCommentLines = selectTelegramCommentLines(
       earthquake.telegramComments,
     );
@@ -205,6 +204,35 @@ class _LoadedContent extends HookConsumerWidget {
                               const Duration(hours: 24))
                         const AdBanner(),
                       NearbyEarthquakeCard(earthquake: earthquake),
+                      if (telegramCommentLines.isNotEmpty ||
+                          earthquake.dataSources.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          child: Text.rich(
+                            TextSpan(
+                              children: [
+                                for (final line in telegramCommentLines)
+                                  TextSpan(text: '$line\n'),
+                                TextSpan(
+                                  text:
+                                      'データソース: ${earthquake.dataSources.map((e) => switch (e) {
+                                        EarthquakeDataSource.jmaDisasterInformationXml => '気象庁災害情報XML',
+                                        EarthquakeDataSource.jmaIntensityDatabase => '気象庁震度データベース',
+                                      }).join(', ')}',
+                                ),
+                              ],
+                            ),
+                            style: Theme.of(context).textTheme.bodySmall!
+                                .copyWith(
+                                  color:
+                                      designSystem.colorTheme.onSurfaceVariant,
+                                  fontSize: 11,
+                                ),
+                          ),
+                        ),
                       _TelegramListButton(eventId: earthquake.eventId),
                     ],
                   ),
@@ -236,81 +264,6 @@ class _LoadedContent extends HookConsumerWidget {
                 ),
               ),
             ),
-          // データソースラベル
-          SafeArea(
-            child: IgnorePointer(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Align(
-                  alignment: .bottomRight,
-                  child: Card(
-                    color: Colors.transparent,
-                    elevation: 0,
-                    clipBehavior: .hardEdge,
-                    child: BackdropFilter(
-                      filter: ImageFilter.compose(
-                        outer: ImageFilter.blur(
-                          sigmaX: 4,
-                          sigmaY: 4,
-                          tileMode: .mirror,
-                        ),
-                        inner: ColorFilter.mode(
-                          designSystem.colorTheme.surfaceContainerLow
-                              .withValues(alpha: 0.2),
-                          .srcATop,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 2,
-                        ),
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              for (final line in telegramCommentLines)
-                                TextSpan(text: line + '\n'),
-                              TextSpan(
-                                text:
-                                    'データソース: ${earthquake.dataSources.map((e) => switch (e) {
-                                      .jmaDisasterInformationXml => "気象庁災害情報XML",
-                                      .jmaIntensityDatabase => "気象庁震度データベース",
-                                    }).join(', ')}',
-                              ),
-                            ],
-                          ),
-                          style: Theme.of(context).textTheme.bodySmall!
-                              .copyWith(
-                                color: designSystem.colorTheme.onSurfaceVariant,
-                                fontSize: 11,
-                              ),
-                        ),
-                        // child: Column(
-                        //   mainAxisSize: MainAxisSize.min,
-                        //   crossAxisAlignment: CrossAxisAlignment.end,
-                        //   children: [
-                        //     for (final line in telegramCommentLines)
-                        //       Text(
-                        //         line,
-                        //         style: Theme.of(context).textTheme.bodySmall,
-                        //         textAlign: TextAlign.end,
-                        //       ),
-                        //     Text(
-                        //       'データソース: ${earthquake.dataSources.map((e) => switch (e) {
-                        //         .jmaDisasterInformationXml => "気象庁災害情報XML",
-                        //         .jmaIntensityDatabase => "気象庁震度データベース",
-                        //       }).join(', ')}',
-                        //       style:,
-                        //     ),
-                        //   ],
-                        // ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );

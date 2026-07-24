@@ -180,7 +180,9 @@ RealtimeShakeSnapshotEvent _$RealtimeShakeSnapshotEventFromJson(
   final val = RealtimeShakeSnapshotEvent(
     record: $checkedConvert(
       'record',
-      (v) => ShakeDetectionActiveSnapshot.fromJson(v as Map<String, dynamic>),
+      (v) => RealtimeShakeDetectionSnapshotPayload.fromJson(
+        v as Map<String, dynamic>,
+      ),
     ),
     source: $checkedConvert(
       'source',

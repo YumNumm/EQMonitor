@@ -44,7 +44,6 @@ final class ApiShakeDetectionRepository implements ShakeDetectionRepository {
         ShakeDetectionSnapshot(
           revision: data.revision,
           responseAt: data.responseAt,
-          sourceRecord: data,
           events: data.events
               .map(
                 (event) => ShakeDetectionEvent(

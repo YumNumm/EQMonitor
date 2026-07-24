@@ -20,7 +20,9 @@ class AutoReturnPolicy {
     _ => false,
   };
 
-  bool observeShakeSnapshot(api.ShakeDetectionActiveSnapshot snapshot) {
+  bool observeShakeSnapshot(
+    api.RealtimeShakeDetectionSnapshotPayload snapshot,
+  ) {
     final eventIds = snapshot.events.map((event) => event.eventId).toSet();
     final baseline = _shakeBaseline;
     if (baseline == null) {

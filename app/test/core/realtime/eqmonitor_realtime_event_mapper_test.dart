@@ -13,11 +13,7 @@ void main() {
       final result = mapper.map(
         WsMessage.realtime(
           data: api.RealtimeShakeDetectionSnapshotEvent(
-            api.RealtimeShakeDetectionSnapshotPayload(
-              type: api.Type3.shakeDetection,
-              operation: api.Operation3.snapshot,
-              record: record,
-            ),
+            record,
           ),
         ),
       );
@@ -219,14 +215,14 @@ api.EewItemWithRelations _eew({required int serialNo}) =>
       ),
     );
 
-api.ShakeDetectionActiveSnapshot _shakeSnapshot() =>
-    api.ShakeDetectionActiveSnapshot(
-      type: 'shake_detection',
+api.RealtimeShakeDetectionSnapshotPayload _shakeSnapshot() =>
+    api.RealtimeShakeDetectionSnapshotPayload(
+      type: api.Type3.shakeDetection,
       revision: 42,
       responseAt: DateTime.utc(2026, 7, 18, 12, 34, 56),
       events: [
-        api.ShakeDetectionActiveEvent(
-          type: 'shake_detection',
+        api.Events2(
+          type: api.Type3.shakeDetection,
           eventId: 'shake-1',
           serialNo: 3,
           createdAt: DateTime.utc(2026, 7, 18, 12, 34, 30),
@@ -235,23 +231,23 @@ api.ShakeDetectionActiveSnapshot _shakeSnapshot() =>
           level: api.Level.strong,
           changeReasons: const [api.ChangeReasons.levelUp],
           mergedEvents: [
-            api.MergedEvents(
+            api.MergedEvents2(
               eventId: 'merged-1',
               mergedAt: DateTime.utc(2026, 7, 18, 12, 34, 50),
             ),
           ],
           pointCount: 1,
-          region: const api.Region(
-            topLeft: api.TopLeft(latitude: 36, longitude: 139),
-            bottomRight: api.BottomRight(latitude: 35, longitude: 140),
+          region: const api.Region2(
+            topLeft: api.TopLeft2(latitude: 36, longitude: 139),
+            bottomRight: api.BottomRight2(latitude: 35, longitude: 140),
           ),
           points: const [
-            api.Points(
+            api.Points2(
               code: 'point-1',
               name: '観測点1',
               region: '東京都',
               type: 'K-NET',
-              location: api.Location(latitude: 35.5, longitude: 139.5),
+              location: api.Location2(latitude: 35.5, longitude: 139.5),
               intensity: 3.2,
             ),
           ],

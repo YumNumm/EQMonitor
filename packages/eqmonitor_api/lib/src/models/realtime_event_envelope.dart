@@ -29,7 +29,7 @@ sealed class RealtimeEventEnvelope {
       ('estimated_intensity', 'upsert') => RealtimeEstimatedIntensityUpsertEvent(
         RealtimeEstimatedIntensityUpsertPayload.fromJson(json),
       ),
-      ('shake_detection', 'snapshot') => RealtimeShakeDetectionSnapshotEvent(
+      ('shake_detection', null) => RealtimeShakeDetectionSnapshotEvent(
         RealtimeShakeDetectionSnapshotPayload.fromJson(json),
       ),
       ('tsunami', 'delete') => RealtimeTsunamiDeleteEvent(

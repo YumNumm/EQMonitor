@@ -35,7 +35,7 @@ class EqMonitorRealtimeEventMapper {
       ],
       api.RealtimeShakeDetectionSnapshotEvent(:final payload) => [
         RealtimeEvent.shakeSnapshot(
-          record: payload.record,
+          record: payload,
           source: RealtimeSource.eqmonitor,
         ),
       ],

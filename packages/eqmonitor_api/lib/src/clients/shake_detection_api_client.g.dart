@@ -22,26 +22,29 @@ class _ShakeDetectionApiClient implements ShakeDetectionApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ShakeDetectionActiveSnapshot>>
+  Future<HttpResponse<GetV2ShakeDetectionActiveResponse>>
   getV2ShakeDetectionActive() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<ShakeDetectionActiveSnapshot>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/shake-detection/active',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options =
+        _setStreamType<HttpResponse<GetV2ShakeDetectionActiveResponse>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v2/shake-detection/active',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
     final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late ShakeDetectionActiveSnapshot _value;
+    late GetV2ShakeDetectionActiveResponse _value;
     try {
-      _value = ShakeDetectionActiveSnapshot.fromJson(_result.data!);
+      _value = GetV2ShakeDetectionActiveResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

@@ -46,7 +46,7 @@ sealed class RealtimeEvent with _$RealtimeEvent {
   }) = RealtimeTsunamiDeleteEvent;
 
   const factory RealtimeEvent.shakeSnapshot({
-    required ShakeDetectionActiveSnapshot record,
+    required RealtimeShakeDetectionSnapshotPayload record,
     required RealtimeSource source,
   }) = RealtimeShakeSnapshotEvent;
 
