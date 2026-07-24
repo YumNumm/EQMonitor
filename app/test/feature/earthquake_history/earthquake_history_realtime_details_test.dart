@@ -4,9 +4,13 @@ import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_deleted_exception.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_apply_mode.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
@@ -15,6 +19,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_teleg
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_debug_override_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
@@ -584,6 +589,178 @@ void main() {
     await fixture.container.pump();
 
     expect(_detailsComment(fixture.container), 'new-realtime');
+  });
+
+  test('matching deleteで開いている詳細をRESTなしにerrorへ遷移すること', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final cacheClient = api.ApiClient(Dio());
+    final repository = _SpyRepository(
+      initial: _domainEarthquake(eventId: 'event-1', comment: 'initial'),
+      cacheClient: cacheClient,
+    );
+    final container = _detailsContainer(
+      controller: controller,
+      repository: repository,
+      cacheClient: cacheClient,
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      earthquakeHistoryDetailsProvider('event-1'),
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+    await container.read(earthquakeHistoryDetailsProvider('event-1').future);
+    expect(repository.detailFetchCount, 1);
+
+    controller.add(
+      const RealtimeEvent.earthquakeDelete(
+        eventId: 'event-1',
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await container.pump();
+
+    final state = container.read(earthquakeHistoryDetailsProvider('event-1'));
+    expect(state.hasError, isTrue);
+    expect(state.error, isA<EarthquakeDeletedException>());
+    expect(repository.detailFetchCount, 1);
+  });
+
+  test('初回REST中のdeleteを古いREST完了で復活させないこと', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final cacheClient = api.ApiClient(Dio());
+    final networkResult = Completer<Earthquake>();
+    final repository = _CompletingRepository(
+      cacheClient: cacheClient,
+      cacheResult: () async => throw const CacheMissException(),
+      networkResults: [networkResult],
+    );
+    final container = _detailsContainer(
+      controller: controller,
+      repository: repository,
+      cacheClient: cacheClient,
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      earthquakeHistoryDetailsProvider('event-1'),
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+    await _waitFor(() => repository.networkFetchCount == 1);
+
+    controller.add(
+      const RealtimeEvent.earthquakeDelete(
+        eventId: 'event-1',
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    networkResult.complete(
+      _domainEarthquake(eventId: 'event-1', comment: 'stale-rest'),
+    );
+    await container.pump();
+
+    expect(
+      container.read(earthquakeHistoryDetailsProvider('event-1')).error,
+      isA<EarthquakeDeletedException>(),
+    );
+  });
+
+  test('delete後のsame-ID upsertでfull detail stateへ復帰すること', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final cacheClient = api.ApiClient(Dio());
+    final repository = _SpyRepository(
+      initial: _domainEarthquake(eventId: 'event-1', comment: 'initial'),
+      cacheClient: cacheClient,
+    );
+    final container = _detailsContainer(
+      controller: controller,
+      repository: repository,
+      cacheClient: cacheClient,
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      earthquakeHistoryDetailsProvider('event-1'),
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+    await container.read(earthquakeHistoryDetailsProvider('event-1').future);
+
+    controller
+      ..add(
+        const RealtimeEvent.earthquakeDelete(
+          eventId: 'event-1',
+          source: RealtimeSource.eqmonitor,
+        ),
+      )
+      ..add(
+        RealtimeEvent.earthquakeUpsert(
+          record: _earthquake(eventId: 'event-1', comment: 'restored'),
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+    await container.pump();
+
+    expect(_detailsComment(container), 'restored');
+    expect(repository.detailFetchCount, 1);
+  });
+
+  test('override適用中のdeleteでoverrideをclearすること', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final cacheClient = api.ApiClient(Dio());
+    final initial = _domainEarthquake(eventId: 'event-1', comment: 'initial');
+    final repository = _SpyRepository(
+      initial: initial,
+      cacheClient: cacheClient,
+    );
+    final container = _detailsContainer(
+      controller: controller,
+      repository: repository,
+      cacheClient: cacheClient,
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      earthquakeHistoryDetailsProvider('event-1'),
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+    await container.read(earthquakeHistoryDetailsProvider('event-1').future);
+    container
+        .read(earthquakeDebugOverrideProvider('event-1').notifier)
+        .applyDraft(
+          current: initial,
+          draft: EarthquakeVxseDebugDraft.vxse51(
+            eventId: 'event-1',
+            reportedAt: DateTime.utc(2026, 7, 24),
+            status: initial.status,
+            maxIntensity: JmaIntensity.three,
+            regions: const {},
+            prefectures: const {},
+            comments: const [],
+          ),
+          mode: EarthquakeVxseApplyMode.merge,
+        );
+    expect(
+      container.read(earthquakeDebugOverrideProvider('event-1')),
+      isNotNull,
+    );
+
+    controller.add(
+      const RealtimeEvent.earthquakeDelete(
+        eventId: 'event-1',
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await container.pump();
+
+    expect(container.read(earthquakeDebugOverrideProvider('event-1')), isNull);
+    expect(
+      container.read(earthquakeHistoryDetailsProvider('event-1')).error,
+      isA<EarthquakeDeletedException>(),
+    );
   });
 }
 

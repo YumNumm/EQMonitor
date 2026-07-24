@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart' as app;
+import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
@@ -35,6 +39,7 @@ void main() {
     final repository = _SpyEarthquakeHistoryRepository();
     final container = ProviderContainer(
       overrides: [
+        realtimeEventsProvider.overrideWith(_EmptyRealtimeEvents.new),
         earthquakeHistoryRepositoryProvider.overrideWith(
           (ref) async => repository,
         ),
@@ -70,19 +75,22 @@ void main() {
     },
   );
 
-  test('EarthquakeHistoryParameterPrefecture calls searchByPrefecture', () async {
-    final repository = await readWith(
-      const EarthquakeHistoryParameter.prefecture(
-        sortBy: EarthquakeSortBy.eventId,
-        sortOrder: SortOrder.desc,
-        prefectureCode: '14',
-      ),
-    );
+  test(
+    'EarthquakeHistoryParameterPrefecture calls searchByPrefecture',
+    () async {
+      final repository = await readWith(
+        const EarthquakeHistoryParameter.prefecture(
+          sortBy: EarthquakeSortBy.eventId,
+          sortOrder: SortOrder.desc,
+          prefectureCode: '14',
+        ),
+      );
 
-    expect(repository.searchByPrefectureCodes, equals(['14']));
-    expect(repository.searchByRegionCodes, isEmpty);
-    expect(repository.searchByCityCodes, isEmpty);
-  });
+      expect(repository.searchByPrefectureCodes, equals(['14']));
+      expect(repository.searchByRegionCodes, isEmpty);
+      expect(repository.searchByCityCodes, isEmpty);
+    },
+  );
 
   test('EarthquakeHistoryParameterRegion calls searchByRegion', () async {
     final repository = await readWith(
@@ -110,6 +118,11 @@ void main() {
     expect(repository.searchByRegionCodes, isEmpty);
     expect(repository.searchByCityCodes, isEmpty);
   });
+}
+
+final class _EmptyRealtimeEvents extends RealtimeEvents {
+  @override
+  Stream<RealtimeEvent> build() => const Stream.empty();
 }
 
 // ---------------------------------------------------------------------------

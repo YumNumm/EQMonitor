@@ -4,14 +4,13 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_realtime_list_reconciler.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
@@ -47,6 +46,19 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
 
   ref.onDispose(dataSource.dispose);
 
+  ref.listen(realtimeEventsProvider, (_, next) async {
+    if (next case AsyncData(:final value)) {
+      switch (value) {
+        case RealtimeEarthquakeUpsertEvent(:final record):
+          dataSource.applyRealtimeRecord(record);
+        case RealtimeEarthquakeDeleteEvent(:final eventId):
+          dataSource.applyRealtimeDelete(eventId);
+        case _:
+          {}
+      }
+    }
+  });
+
   if (parameter is EarthquakeHistoryParameterAll) {
     final refetchTimer = Timer.periodic(
       const Duration(minutes: 5),
@@ -57,16 +69,6 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
       ..listen(appLifecycleProvider, (_, next) async {
         if (next == AppLifecycleState.resumed) {
           await dataSource.revalidateLatest();
-        }
-      })
-      ..listen(realtimeEventsProvider, (_, next) async {
-        if (next case AsyncData(:final value)) {
-          switch (value) {
-            case RealtimeEarthquakeUpsertEvent(:final record):
-              dataSource.applyRealtimeRecord(record);
-            case _:
-              {}
-          }
         }
       });
   }
@@ -91,6 +93,9 @@ class EarthquakeHistoryDataSource
 
   final EarthquakeHistoryRepository _repository;
   final EarthquakeHistoryParameter _parameter;
+  final List<_RealtimeListMutation> _mutations = [];
+  var _mutationSequence = 0;
+  var _hasCompletedInitialLoad = false;
 
   final ValueNotifier<bool> isRevalidating = ValueNotifier(false);
   @override
@@ -126,9 +131,14 @@ class EarthquakeHistoryDataSource
 
   Future<void> revalidateLatest() async {
     talker.debug('revalidateLatest');
+    final startedAt = _mutationSequence;
     final latest = await _fetch(limit: 10, cursor: null);
-    if (latest.items.isNotEmpty) {
-      upsertItems(latest.items);
+    final reconciled = _reconcileMutations(
+      items: latest.items,
+      afterSequence: startedAt,
+    );
+    if (reconciled.isNotEmpty) {
+      upsertItems(reconciled);
     }
   }
 
@@ -137,9 +147,16 @@ class EarthquakeHistoryDataSource
     required String? cursor,
   }) async {
     try {
+      final startedAt = _hasCompletedInitialLoad ? _mutationSequence : 0;
       final page = await _fetch(limit: limit, cursor: cursor);
+      final items = _reconcileMutations(
+        items: page.items,
+        afterSequence: startedAt,
+        allowAbsentUpsert: cursor == null,
+      );
+      _hasCompletedInitialLoad = true;
       return Success(
-        page: PageData(data: page.items, appendKey: page.nextToken),
+        page: PageData(data: items, appendKey: page.nextToken),
       );
     } on Exception catch (e, st) {
       return Failure(error: e, stackTrace: st);
@@ -266,10 +283,6 @@ class EarthquakeHistoryDataSource
   }
 
   void upsertItems(List<EarthquakePartial> newItems) {
-    if (_parameter.sortBy != .eventId) {
-      // eventId 以外のソートでは挿入位置が確定できないため反映しない
-      return;
-    }
     final isDesc = _parameter.sortOrder == .desc;
     for (final item in newItems) {
       final currentItems = [...notifier.values];
@@ -278,6 +291,9 @@ class EarthquakeHistoryDataSource
       );
       if (index != -1) {
         updateItem(index, (_) => item);
+        continue;
+      }
+      if (_parameter.sortBy != .eventId) {
         continue;
       }
       // eventId 比較で挿入位置を決める(desc: 大きい順 / asc: 小さい順)
@@ -291,48 +307,142 @@ class EarthquakeHistoryDataSource
   }
 
   void applyRealtimeRecord(api.Earthquake record) {
+    _mutations.add(
+      _RealtimeListUpsert(sequence: ++_mutationSequence, record: record),
+    );
     final previous = notifier.values
         .where((item) => item.earthquake.eventId == record.eventId)
         .firstOrNull;
-    if (previous == null) {
-      return;
-    }
-    upsertItems([
-      earthquakePartialFromRealtimeRecord(
-        record: record,
-        previous: previous.earthquake,
+    _applyDecision(
+      EarthquakeRealtimeListReconciler(
+        parameter: _parameter,
         repository: _repository,
-      ),
-    ]);
+      ).decide(record: record, previous: previous),
+      eventId: record.eventId,
+    );
+  }
+
+  void applyRealtimeDelete(String eventId) {
+    _mutations.add(
+      _RealtimeListDelete(sequence: ++_mutationSequence, eventId: eventId),
+    );
+    final index = notifier.values.indexWhere(
+      (item) => item.earthquake.eventId == eventId,
+    );
+    if (index != -1) {
+      removeItem(index);
+    }
+  }
+
+  List<EarthquakePartial> _reconcileMutations({
+    required List<EarthquakePartial> items,
+    required int afterSequence,
+    bool allowAbsentUpsert = true,
+  }) {
+    final result = [...items];
+    final reconciler = EarthquakeRealtimeListReconciler(
+      parameter: _parameter,
+      repository: _repository,
+    );
+    for (final mutation in _mutations.where(
+      (mutation) => mutation.sequence > afterSequence,
+    )) {
+      final eventId = mutation.eventId;
+      final index = result.indexWhere(
+        (item) => item.earthquake.eventId == eventId,
+      );
+      switch (mutation) {
+        case _RealtimeListDelete():
+          if (index != -1) {
+            result.removeAt(index);
+          }
+        case _RealtimeListUpsert(:final record):
+          if (index == -1 && !allowAbsentUpsert) {
+            continue;
+          }
+          final previous = index == -1 ? null : result[index];
+          _applyDecisionToList(
+            result,
+            reconciler.decide(record: record, previous: previous),
+            eventId: eventId,
+          );
+      }
+    }
+    if (_parameter.sortBy == .eventId) {
+      final descending = _parameter.sortOrder == .desc;
+      result.sort(
+        (a, b) => descending
+            ? b.earthquake.eventId.compareTo(a.earthquake.eventId)
+            : a.earthquake.eventId.compareTo(b.earthquake.eventId),
+      );
+    }
+    return result;
+  }
+
+  void _applyDecision(
+    EarthquakeRealtimeListDecision decision, {
+    required String eventId,
+  }) {
+    switch (decision) {
+      case EarthquakeRealtimeListUpsert(:final item):
+        upsertItems([item]);
+      case EarthquakeRealtimeListRemove():
+        applyRealtimeDeleteWithoutMutation(eventId);
+      case EarthquakeRealtimeListPreserve():
+        return;
+    }
+  }
+
+  void applyRealtimeDeleteWithoutMutation(String eventId) {
+    final index = notifier.values.indexWhere(
+      (item) => item.earthquake.eventId == eventId,
+    );
+    if (index != -1) {
+      removeItem(index);
+    }
   }
 }
 
-EarthquakePartialNormal earthquakePartialFromRealtimeRecord({
-  required api.Earthquake record,
-  required EarthquakePartialNormal previous,
-  required EarthquakeHistoryRepository repository,
+void _applyDecisionToList(
+  List<EarthquakePartial> items,
+  EarthquakeRealtimeListDecision decision, {
+  required String eventId,
 }) {
-  final full = record.toEarthquake(
-    parameter: repository.earthquakeParameter,
-    shindoDbStations: repository.shindoDbStations,
-  );
-  final intensity = full.intensity;
-  return EarthquakePartialNormal(
-    eventId: full.eventId,
-    status: full.status,
-    originTime: full.originTime,
-    originTimePrecision: full.originTimePrecision,
-    arrivalTime: full.arrivalTime,
-    dataSources: full.dataSources,
-    hypocenter: full.hypocenter,
-    intensity: intensity == null
-        ? null
-        : EarthquakeIntensityPartial(
-            maxIntensity: intensity.maxIntensity,
-            maxLpgmIntensity: intensity.maxLpgmIntensity,
-          ),
-    earthquakeType: previous.earthquakeType,
-    telegramTypes: full.telegramTypes,
-    estimatedIntensityTileUrl: full.estimatedIntensityTileUrl,
-  );
+  final index = items.indexWhere((item) => item.earthquake.eventId == eventId);
+  switch (decision) {
+    case EarthquakeRealtimeListUpsert(:final item):
+      if (index == -1) {
+        items.add(item);
+      } else {
+        items[index] = item;
+      }
+    case EarthquakeRealtimeListRemove():
+      if (index != -1) {
+        items.removeAt(index);
+      }
+    case EarthquakeRealtimeListPreserve():
+      return;
+  }
+}
+
+sealed class _RealtimeListMutation {
+  const _RealtimeListMutation({required this.sequence});
+
+  final int sequence;
+  String get eventId;
+}
+
+final class _RealtimeListUpsert extends _RealtimeListMutation {
+  const _RealtimeListUpsert({required super.sequence, required this.record});
+
+  final api.Earthquake record;
+  @override
+  String get eventId => record.eventId;
+}
+
+final class _RealtimeListDelete extends _RealtimeListMutation {
+  const _RealtimeListDelete({required super.sequence, required this.eventId});
+
+  @override
+  final String eventId;
 }

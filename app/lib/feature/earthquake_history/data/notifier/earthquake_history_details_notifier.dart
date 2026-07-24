@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/provider/cached_notifier.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_deleted_exception.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_debug_override_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -16,6 +17,7 @@ class EarthquakeHistoryDetailsNotifier
   api.Earthquake? _pendingRealtimeRecord;
   EarthquakeHistoryRepository? _repository;
   Earthquake? _baseEarthquake;
+  var _isDeleted = false;
 
   @override
   Future<Earthquake> build(String eventId) async {
@@ -28,24 +30,43 @@ class EarthquakeHistoryDetailsNotifier
       }
     });
     ref.listen(realtimeEventsProvider, (_, next) {
-      if (next case AsyncData(
-        value: RealtimeEarthquakeUpsertEvent(:final record),
-      ) when record.eventId == eventId) {
-        advanceCachedAuthority();
-        _pendingRealtimeRecord = record;
-        final repository = _repository;
-        if (repository != null) {
-          final base = earthquakeFromRealtimeRecord(
-            record: record,
-            repository: repository,
-          );
-          _baseEarthquake = base;
-          if (ref.read(earthquakeDebugOverrideProvider(eventId)) == null) {
-            state = AsyncData(base);
-          }
+      if (next case AsyncData(:final value)) {
+        switch (value) {
+          case RealtimeEarthquakeUpsertEvent(:final record)
+              when record.eventId == eventId:
+            advanceCachedAuthority();
+            _isDeleted = false;
+            _pendingRealtimeRecord = record;
+            final repository = _repository;
+            if (repository != null) {
+              final base = earthquakeFromRealtimeRecord(
+                record: record,
+                repository: repository,
+              );
+              _baseEarthquake = base;
+              if (ref.read(earthquakeDebugOverrideProvider(eventId)) == null) {
+                state = AsyncData(base);
+              }
+            }
+          case RealtimeEarthquakeDeleteEvent(:final eventId)
+              when eventId == this.eventId:
+            advanceCachedAuthority();
+            _isDeleted = true;
+            _pendingRealtimeRecord = null;
+            _baseEarthquake = null;
+            ref.read(earthquakeDebugOverrideProvider(eventId).notifier).reset();
+            state = AsyncError<Earthquake>(
+              EarthquakeDeletedException(eventId: eventId),
+              StackTrace.current,
+            ).unwrapPrevious();
+          case _:
+            break;
         }
       }
     });
+    if (_isDeleted) {
+      throw EarthquakeDeletedException(eventId: eventId);
+    }
     final operation = beginCachedOperation();
     final repository = await ref.watch(
       earthquakeHistoryRepositoryProvider.future,
@@ -70,6 +91,9 @@ class EarthquakeHistoryDetailsNotifier
     required CachedOperationToken operation,
     required CachedResultSource source,
   }) {
+    if (_isDeleted) {
+      throw EarthquakeDeletedException(eventId: eventId);
+    }
     final record = _pendingRealtimeRecord;
     final repository = _repository;
     final override = ref.read(earthquakeDebugOverrideProvider(eventId));
