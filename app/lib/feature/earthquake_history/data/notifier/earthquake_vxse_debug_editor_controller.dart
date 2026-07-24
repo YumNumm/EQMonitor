@@ -146,6 +146,12 @@ class EarthquakeVxseDebugEditorController
     );
   }
 
+  String typedInputText({required String fieldId, required String fallback}) =>
+      state.typedInputValues[fieldId] ?? fallback;
+
+  String? typedInputError({required String fieldId}) =>
+      state.typedInputErrors[fieldId];
+
   void setReportedAt(DateTime value) {
     updateDraft(state.draft.copyWith(reportedAt: value));
   }
