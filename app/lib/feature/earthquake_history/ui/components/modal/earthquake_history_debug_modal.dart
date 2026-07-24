@@ -53,21 +53,37 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'レイヤーパラメータ (Debug)',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final usesStackedHeader =
+                        constraints.maxWidth < 480 ||
+                        MediaQuery.textScalerOf(context).scale(1) > 1;
+                    final title = Text(
+                      'レイヤーパラメータ (Debug)',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                    TextButton(
+                    );
+                    final resetButton = TextButton(
                       onPressed: notifier.reset,
                       child: const Text('レイヤー設定をリセット'),
-                    ),
-                  ],
+                    );
+                    if (usesStackedHeader) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          title,
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: resetButton,
+                          ),
+                        ],
+                      );
+                    }
+                    return Row(
+                      children: [Expanded(child: title), resetButton],
+                    );
+                  },
                 ),
               ),
 

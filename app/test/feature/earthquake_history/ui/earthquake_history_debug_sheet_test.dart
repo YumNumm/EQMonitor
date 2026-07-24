@@ -146,6 +146,69 @@ void main() {
     expect(find.text('VXSE53'), findsOneWidget);
   });
 
+  for (final textScale in [1.0, 2.0]) {
+    testWidgets('幅320 scale $textScale のmap tabでresetを表示・実行できる', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(320, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final layerNotifier = _TrackingMapLayerParameterNotifier();
+      final container = ProviderContainer(
+        overrides: [
+          earthquakeHistoryDetailsProvider(
+            _eventId,
+          ).overrideWith(() => _ReadyDetailsNotifier(_baseEarthquake)),
+          earthquakeHistoryMapLayerParameterProvider.overrideWith(
+            () => layerNotifier,
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: ThemeData.light().copyWith(
+              extensions: [DesignSystemThemeExtension.light()],
+            ),
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: TextScaler.linear(textScale),
+              ),
+              child: child ?? const SizedBox.shrink(),
+            ),
+            home: Consumer(
+              builder: (context, ref, child) => Scaffold(
+                body: FilledButton(
+                  onPressed: () => ref
+                      .read(earthquakeHistoryDebugSheetActionProvider)
+                      .show(context: context, eventId: _eventId),
+                  child: const Text('開く'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('開く'));
+      await tester.pumpAndSettle();
+      expect(find.byType(Dialog), findsNothing);
+      await tester.tap(find.text('マップレイヤー'));
+      await tester.pumpAndSettle();
+      final resetButton = find.text('レイヤー設定をリセット');
+      expect(resetButton, findsOneWidget);
+      expect(resetButton.hitTestable(), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.tap(resetButton.hitTestable());
+      await tester.pump();
+      expect(layerNotifier.resetCount, 1);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   testWidgets('広幅ではdialogを使いtext scale 2でもmap layer controlsを表示する', (
     tester,
   ) async {
