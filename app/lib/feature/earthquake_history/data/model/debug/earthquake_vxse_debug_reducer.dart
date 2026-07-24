@@ -6,6 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
@@ -19,6 +20,13 @@ class EarthquakeVxseDebugReducer {
     required EarthquakeVxseApplyMode mode,
   }) {
     final type = earthquakeVxseDraftTelegramType(draft: draft);
+    final validationIssues = validateEarthquakeVxseDebugDraft(
+      draft: draft,
+      type: type,
+    );
+    if (validationIssues.isNotEmpty) {
+      throw EarthquakeVxseDebugDraftValidationException(validationIssues);
+    }
     final base = switch (mode) {
       .merge => current,
       .clearAndApply => clearEarthquakeVxseOwnedFields(
@@ -29,6 +37,27 @@ class EarthquakeVxseDebugReducer {
     return mergeEarthquakeVxseDraft(current: base, draft: draft, type: type);
   }
 }
+
+typedef EarthquakeVxseDebugDraftValidationIssue = ({
+  int commentIndex,
+  EarthquakeTelegramType actualType,
+  EarthquakeTelegramType expectedType,
+});
+
+class EarthquakeVxseDebugDraftValidationException implements Exception {
+  const EarthquakeVxseDebugDraftValidationException(this.issues);
+
+  final List<EarthquakeVxseDebugDraftValidationIssue> issues;
+}
+
+List<EarthquakeVxseDebugDraftValidationIssue> validateEarthquakeVxseDebugDraft({
+  required EarthquakeVxseDebugDraft draft,
+  required EarthquakeTelegramType type,
+}) => [
+  for (final (index, comment) in draft.comments.indexed)
+    if (comment.type != type)
+      (commentIndex: index, actualType: comment.type, expectedType: type),
+];
 
 EarthquakeTelegramType earthquakeVxseDraftTelegramType({
   required EarthquakeVxseDebugDraft draft,
@@ -63,6 +92,9 @@ Earthquake clearEarthquakeVxseOwnedFields({
               .where((comment) => comment.type != type)
               .toList()
         : current.telegramComments,
+    telegramMetadata: current.telegramMetadata
+        .where((entry) => entry.type != type)
+        .toList(),
     intensity: clearEarthquakeVxseOwnedIntensity(
       intensity: current.intensity,
       ownership: ownership,
@@ -122,7 +154,10 @@ clearOwnedOrdinaryIntensityTree({
                 city.copyWith(
                   stations:
                       ownership.owns(EarthquakeVxseOwnedField.intensityStations)
-                      ? const []
+                      ? [
+                          for (final station in city.stations)
+                            station.copyWith(intensity: null),
+                        ]
                       : city.stations,
                 ),
             ],
@@ -149,7 +184,10 @@ clearOwnedLpgmIntensityTree({
             for (final city in node.cities)
               city.copyWith(
                 stations: ownership.owns(EarthquakeVxseOwnedField.lpgmStations)
-                    ? const []
+                    ? [
+                        for (final station in city.stations)
+                          station.copyWith(intensity: null),
+                      ]
                     : city.stations,
               ),
           ],
@@ -170,11 +208,16 @@ Earthquake mergeEarthquakeVxseDraft({
     current: current.telegramComments,
     updates: draft.comments,
   );
+  final telegramMetadata = [
+    ...current.telegramMetadata.where((entry) => entry.type != type),
+    EarthquakeTelegramMetadata(type: type, reportedAt: draft.reportedAt),
+  ];
   return switch (draft) {
     EarthquakeVxse51DebugDraft() => current.copyWith(
       status: draft.status,
       telegramTypes: telegramTypes,
       telegramComments: comments,
+      telegramMetadata: telegramMetadata,
       intensity: applyVxse51Intensity(current: current.intensity, draft: draft),
     ),
     EarthquakeVxse52DebugDraft() => current.copyWith(
@@ -184,6 +227,7 @@ Earthquake mergeEarthquakeVxseDraft({
       hypocenter: draft.hypocenter,
       telegramTypes: telegramTypes,
       telegramComments: comments,
+      telegramMetadata: telegramMetadata,
     ),
     EarthquakeVxse53DebugDraft() => current.copyWith(
       status: draft.status,
@@ -193,6 +237,7 @@ Earthquake mergeEarthquakeVxseDraft({
       earthquakeType: draft.earthquakeType,
       telegramTypes: telegramTypes,
       telegramComments: comments,
+      telegramMetadata: telegramMetadata,
       intensity: applyVxse53Intensity(current: current.intensity, draft: draft),
     ),
     EarthquakeVxse61DebugDraft() => current.copyWith(
@@ -202,6 +247,7 @@ Earthquake mergeEarthquakeVxseDraft({
       hypocenter: draft.hypocenter,
       telegramTypes: telegramTypes,
       telegramComments: comments,
+      telegramMetadata: telegramMetadata,
     ),
     EarthquakeVxse62DebugDraft() => current.copyWith(
       status: draft.status,
@@ -210,6 +256,7 @@ Earthquake mergeEarthquakeVxseDraft({
       hypocenter: draft.hypocenter,
       telegramTypes: telegramTypes,
       telegramComments: comments,
+      telegramMetadata: telegramMetadata,
       intensity: applyVxse62Intensity(current: current.intensity, draft: draft),
     ),
   };
@@ -246,7 +293,10 @@ EarthquakeIntensity applyVxse51Intensity({
 }) => EarthquakeIntensity(
   maxIntensity: draft.maxIntensity,
   maxLpgmIntensity: current?.maxLpgmIntensity,
-  regions: draft.regions,
+  regions: upsertOrdinaryRegionsByCode(
+    current: current?.regions ?? const {},
+    updates: draft.regions,
+  ),
   intensityTree: mergeVxse51IntensityTree(
     current: current?.intensityTree ?? const {},
     prefectures: draft.prefectures,
@@ -257,21 +307,28 @@ EarthquakeIntensity applyVxse51Intensity({
 Map<JmaIntensity, List<PrefectureIntensityNode>> mergeVxse51IntensityTree({
   required Map<JmaIntensity, List<PrefectureIntensityNode>> current,
   required Map<JmaIntensity, List<IntensityPrefecture>> prefectures,
-}) => {
-  for (final entry in prefectures.entries)
-    entry.key: [
+}) {
+  final updates = {
+    for (final entry in prefectures.entries)
       for (final prefecture in entry.value)
-        PrefectureIntensityNode(
-          prefecture: prefecture,
-          cities:
-              findOrdinaryPrefectureNode(
-                tree: current,
-                code: prefecture.prefecture.code,
-              )?.cities ??
-              const [],
+        prefecture.prefecture.code: (
+          level: entry.key,
+          node: PrefectureIntensityNode(
+            prefecture: prefecture,
+            cities:
+                findOrdinaryPrefectureNode(
+                  tree: current,
+                  code: prefecture.prefecture.code,
+                )?.cities ??
+                const [],
+          ),
         ),
-    ],
-};
+  };
+  return upsertOrdinaryPrefectureNodesByCode(
+    current: current,
+    updates: updates,
+  );
+}
 
 PrefectureIntensityNode? findOrdinaryPrefectureNode({
   required Map<JmaIntensity, List<PrefectureIntensityNode>> tree,
@@ -293,8 +350,14 @@ EarthquakeIntensity applyVxse53Intensity({
 }) => EarthquakeIntensity(
   maxIntensity: draft.maxIntensity,
   maxLpgmIntensity: current?.maxLpgmIntensity,
-  regions: draft.regions,
-  intensityTree: draft.intensityTree,
+  regions: upsertOrdinaryRegionsByCode(
+    current: current?.regions ?? const {},
+    updates: draft.regions,
+  ),
+  intensityTree: mergeVxse53IntensityTree(
+    current: current?.intensityTree ?? const {},
+    updates: draft.intensityTree,
+  ),
   lpgmIntensityTree: current?.lpgmIntensityTree ?? const {},
 );
 
@@ -304,7 +367,10 @@ EarthquakeIntensity applyVxse62Intensity({
 }) => EarthquakeIntensity(
   maxIntensity: draft.maxIntensity,
   maxLpgmIntensity: draft.maxLpgmIntensity,
-  regions: draft.regions,
+  regions: upsertOrdinaryRegionsByCode(
+    current: current?.regions ?? const {},
+    updates: draft.regions,
+  ),
   intensityTree: mergeVxse62IntensityTree(
     current: current?.intensityTree ?? const {},
     updates: draft.intensityTree,
@@ -319,28 +385,49 @@ EarthquakeIntensity applyVxse62Intensity({
 Map<JmaIntensity, List<PrefectureIntensityNode>> mergeVxse62IntensityTree({
   required Map<JmaIntensity, List<PrefectureIntensityNode>> current,
   required Map<JmaIntensity, List<PrefectureIntensityNode>> updates,
-}) => {
-  for (final entry in updates.entries)
-    entry.key: [
-      for (final node in entry.value)
-        node.copyWith(
-          cities: [
-            for (final city in node.cities)
-              mergeVxse62OrdinaryCity(current: current, update: city),
-          ],
-        ),
-    ],
-};
-
-CityIntensityNode mergeVxse62OrdinaryCity({
-  required Map<JmaIntensity, List<PrefectureIntensityNode>> current,
-  required CityIntensityNode update,
 }) {
-  final existing = findOrdinaryCityNode(tree: current, code: update.city.code);
-  return update.copyWith(
-    maxIntensity: existing?.maxIntensity,
-    maxLpgmIntensity: existing?.maxLpgmIntensity,
+  final stationUpdates = {
+    for (final prefectures in updates.values)
+      for (final prefecture in prefectures)
+        for (final city in prefecture.cities)
+          for (final station in city.stations) station.station.code: station,
+  };
+  final prefectureUpdates = {
+    for (final entry in updates.entries)
+      for (final update in entry.value)
+        update.prefecture.prefecture.code: (
+          level: entry.key,
+          node: update.copyWith(
+            cities:
+                findOrdinaryPrefectureNode(
+                  tree: current,
+                  code: update.prefecture.prefecture.code,
+                )?.cities ??
+                const [],
+          ),
+        ),
+  };
+  final merged = upsertOrdinaryPrefectureNodesByCode(
+    current: current,
+    updates: prefectureUpdates,
   );
+  return {
+    for (final entry in merged.entries)
+      entry.key: [
+        for (final prefecture in entry.value)
+          prefecture.copyWith(
+            cities: [
+              for (final city in prefecture.cities)
+                city.copyWith(
+                  stations: [
+                    for (final station in city.stations)
+                      stationUpdates[station.station.code] ?? station,
+                  ],
+                ),
+            ],
+          ),
+      ],
+  };
 }
 
 CityIntensityNode? findOrdinaryCityNode({
@@ -364,17 +451,47 @@ mergeVxse62LpgmIntensityTree({
   required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> current,
   required Map<JmaLpgmIntensity, List<LpgmIntensityRegion>> regions,
   required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> updates,
-}) => {
-  for (final entry in updates.entries)
-    entry.key: [
-      for (final node in entry.value)
-        mergeVxse62LpgmPrefecture(
-          current: current,
-          regions: regions,
-          update: node,
+}) {
+  final stationUpdates = {
+    for (final prefectures in updates.values)
+      for (final prefecture in prefectures)
+        for (final city in prefecture.cities)
+          for (final station in city.stations) station.station.code: station,
+  };
+  final prefectureUpdates = {
+    for (final entry in updates.entries)
+      for (final update in entry.value)
+        update.region.code: (
+          level: entry.key,
+          node: mergeVxse62LpgmPrefecture(
+            current: current,
+            regions: regions,
+            update: update,
+          ),
         ),
-    ],
-};
+  };
+  final merged = upsertLpgmPrefectureNodesByCode(
+    current: current,
+    updates: prefectureUpdates,
+  );
+  return {
+    for (final entry in merged.entries)
+      entry.key: [
+        for (final prefecture in entry.value)
+          prefecture.copyWith(
+            cities: [
+              for (final city in prefecture.cities)
+                city.copyWith(
+                  stations: [
+                    for (final station in city.stations)
+                      stationUpdates[station.station.code] ?? station,
+                  ],
+                ),
+            ],
+          ),
+      ],
+  };
+}
 
 PrefectureLpgmIntensityNode mergeVxse62LpgmPrefecture({
   required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> current,
@@ -385,10 +502,12 @@ PrefectureLpgmIntensityNode mergeVxse62LpgmPrefecture({
   return update.copyWith(
     region: region?.region ?? update.region,
     maxLpgmIntensity: region?.maxLpgmIntensity ?? update.maxLpgmIntensity,
-    cities: [
-      for (final city in update.cities)
-        mergeVxse62LpgmCity(current: current, update: city),
-    ],
+    cities:
+        findLpgmPrefectureNode(
+          tree: current,
+          code: update.region.code,
+        )?.cities ??
+        const [],
   );
 }
 
@@ -406,26 +525,136 @@ LpgmIntensityRegion? findLpgmRegion({
   return null;
 }
 
-CityLpgmIntensityNode mergeVxse62LpgmCity({
-  required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> current,
-  required CityLpgmIntensityNode update,
-}) {
-  final existing = findLpgmCityNode(tree: current, code: update.city.code);
-  return update.copyWith(maxLpgmIntensity: existing?.maxLpgmIntensity);
-}
-
-CityLpgmIntensityNode? findLpgmCityNode({
+PrefectureLpgmIntensityNode? findLpgmPrefectureNode({
   required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> tree,
   required String code,
 }) {
   for (final prefectures in tree.values) {
     for (final prefecture in prefectures) {
-      for (final city in prefecture.cities) {
-        if (city.city.code == code) {
-          return city;
-        }
+      if (prefecture.region.code == code) {
+        return prefecture;
       }
     }
   }
   return null;
+}
+
+Map<JmaIntensity, List<IntensityRegion>> upsertOrdinaryRegionsByCode({
+  required Map<JmaIntensity, List<IntensityRegion>> current,
+  required Map<JmaIntensity, List<IntensityRegion>> updates,
+}) {
+  final values = {
+    for (final entry in current.entries)
+      for (final region in entry.value)
+        region.region.code: (level: entry.key, value: region),
+    for (final entry in updates.entries)
+      for (final region in entry.value)
+        region.region.code: (level: entry.key, value: region),
+  };
+  return {
+    for (final level in JmaIntensity.values)
+      if (values.values.any((entry) => entry.level == level))
+        level: [
+          for (final entry in values.values)
+            if (entry.level == level) entry.value,
+        ],
+  };
+}
+
+Map<JmaIntensity, List<PrefectureIntensityNode>>
+upsertOrdinaryPrefectureNodesByCode({
+  required Map<JmaIntensity, List<PrefectureIntensityNode>> current,
+  required Map<String, ({JmaIntensity level, PrefectureIntensityNode node})>
+  updates,
+}) {
+  final values = {
+    for (final entry in current.entries)
+      for (final node in entry.value)
+        node.prefecture.prefecture.code: (level: entry.key, node: node),
+    ...updates,
+  };
+  return {
+    for (final level in JmaIntensity.values)
+      if (values.values.any((entry) => entry.level == level))
+        level: [
+          for (final entry in values.values)
+            if (entry.level == level) entry.node,
+        ],
+  };
+}
+
+Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>
+upsertLpgmPrefectureNodesByCode({
+  required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> current,
+  required Map<
+    String,
+    ({JmaLpgmIntensity level, PrefectureLpgmIntensityNode node})
+  >
+  updates,
+}) {
+  final values = {
+    for (final entry in current.entries)
+      for (final node in entry.value)
+        node.region.code: (level: entry.key, node: node),
+    ...updates,
+  };
+  return {
+    for (final level in JmaLpgmIntensity.values)
+      if (values.values.any((entry) => entry.level == level))
+        level: [
+          for (final entry in values.values)
+            if (entry.level == level) entry.node,
+        ],
+  };
+}
+
+Map<JmaIntensity, List<PrefectureIntensityNode>> mergeVxse53IntensityTree({
+  required Map<JmaIntensity, List<PrefectureIntensityNode>> current,
+  required Map<JmaIntensity, List<PrefectureIntensityNode>> updates,
+}) {
+  final values = {
+    for (final entry in updates.entries)
+      for (final node in entry.value)
+        node.prefecture.prefecture.code: (
+          level: entry.key,
+          node: mergeVxse53PrefectureNode(
+            current: findOrdinaryPrefectureNode(
+              tree: current,
+              code: node.prefecture.prefecture.code,
+            ),
+            update: node,
+          ),
+        ),
+  };
+  return upsertOrdinaryPrefectureNodesByCode(current: current, updates: values);
+}
+
+PrefectureIntensityNode mergeVxse53PrefectureNode({
+  required PrefectureIntensityNode? current,
+  required PrefectureIntensityNode update,
+}) {
+  final cities = {
+    for (final city in current?.cities ?? const <CityIntensityNode>[])
+      city.city.code: city,
+    for (final city in update.cities)
+      city.city.code: mergeVxse53CityNode(
+        current: current?.cities
+            .where((value) => value.city.code == city.city.code)
+            .firstOrNull,
+        update: city,
+      ),
+  };
+  return update.copyWith(cities: cities.values.toList());
+}
+
+CityIntensityNode mergeVxse53CityNode({
+  required CityIntensityNode? current,
+  required CityIntensityNode update,
+}) {
+  final stations = {
+    for (final station in current?.stations ?? const <StationIntensityNode>[])
+      station.station.code: station,
+    for (final station in update.stations) station.station.code: station,
+  };
+  return update.copyWith(stations: stations.values.toList());
 }

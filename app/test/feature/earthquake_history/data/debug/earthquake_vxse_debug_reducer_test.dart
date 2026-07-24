@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
@@ -206,6 +207,49 @@ void main() {
       );
     });
 
+    for (final mode in EarthquakeVxseApplyMode.values) {
+      test('${mode.name}は選択typeのtelegram metadataだけをdraft.reportedAtで更新する', () {
+        final current = _current().copyWith(
+          telegramMetadata: [
+            EarthquakeTelegramMetadata(
+              type: EarthquakeTelegramType.vxse51,
+              reportedAt: DateTime.utc(2026, 7, 24, 1),
+            ),
+            EarthquakeTelegramMetadata(
+              type: EarthquakeTelegramType.vxse52,
+              reportedAt: DateTime.utc(2026, 7, 24, 2),
+            ),
+          ],
+        );
+        final draft = EarthquakeVxseDebugDraft.vxse51(
+          eventId: current.eventId,
+          reportedAt: DateTime.utc(2026, 7, 24, 9),
+          status: TelegramStatus.normal,
+          maxIntensity: JmaIntensity.four,
+          regions: const {},
+          prefectures: const {},
+          comments: const [],
+        );
+
+        final result = reducer.apply(
+          current: current,
+          draft: draft,
+          mode: mode,
+        );
+
+        expect(result.telegramMetadata, [
+          EarthquakeTelegramMetadata(
+            type: EarthquakeTelegramType.vxse52,
+            reportedAt: DateTime.utc(2026, 7, 24, 2),
+          ),
+          EarthquakeTelegramMetadata(
+            type: EarthquakeTelegramType.vxse51,
+            reportedAt: DateTime.utc(2026, 7, 24, 9),
+          ),
+        ]);
+      });
+    }
+
     test('VXSE51適用は非ownedのcity/stationとLPGMを保持する', () {
       final current = _current();
       final result = reducer.apply(
@@ -283,6 +327,197 @@ void main() {
             .maxLpgmIntensity,
       );
     });
+
+    test('VXSE51 mergeはcode単位でupsertしclearAndApplyだけがowned entryを消す', () {
+      final current = _earthquakeWithSecondTopology();
+      final draft = EarthquakeVxseDebugDraft.vxse51(
+        eventId: current.eventId,
+        reportedAt: earthquakeVxseDebugSampleReportedAt,
+        status: TelegramStatus.normal,
+        maxIntensity: JmaIntensity.three,
+        regions: {
+          JmaIntensity.three: [
+            earthquakeVxseDebugSampleIntensityRegion.copyWith(
+              maxIntensity: JmaIntensity.three,
+            ),
+          ],
+        },
+        prefectures: {
+          JmaIntensity.three: [
+            earthquakeVxseDebugSampleIntensityPrefecture.copyWith(
+              maxIntensity: JmaIntensity.three,
+            ),
+          ],
+        },
+        comments: const [],
+      );
+
+      final merged = reducer.apply(
+        current: current,
+        draft: draft,
+        mode: EarthquakeVxseApplyMode.merge,
+      );
+      final cleared = reducer.apply(
+        current: current,
+        draft: draft,
+        mode: EarthquakeVxseApplyMode.clearAndApply,
+      );
+
+      expect(_regionCodes(merged), containsAll(['350', '351']));
+      expect(_prefectureCodes(merged), containsAll(['13', '14']));
+      expect(_cityCodes(merged), containsAll(['1310100', '1410000']));
+      expect(_regionCodes(cleared), ['350']);
+      expect(_prefectureMax(cleared, '14'), isNull);
+      expect(_cityCodes(cleared), containsAll(['1310100', '1410000']));
+    });
+
+    test('VXSE53 mergeはpartial collectionをupsertしclearAndApplyは置換する', () {
+      final current = _earthquakeWithSecondTopology();
+      final draft = factory.create(
+        current: _draftSource(),
+        type: EarthquakeTelegramType.vxse53,
+      );
+
+      final merged = reducer.apply(
+        current: current,
+        draft: draft,
+        mode: EarthquakeVxseApplyMode.merge,
+      );
+      final cleared = reducer.apply(
+        current: current,
+        draft: draft,
+        mode: EarthquakeVxseApplyMode.clearAndApply,
+      );
+
+      expect(_regionCodes(merged), containsAll(['350', '351']));
+      expect(_prefectureCodes(merged), containsAll(['13', '14']));
+      expect(_cityCodes(merged), containsAll(['1310100', '1410000']));
+      expect(_regionCodes(cleared), ['350']);
+      expect(_prefectureCodes(cleared), ['13']);
+      expect(_cityCodes(cleared), ['1310100']);
+    });
+
+    test('VXSE62はdraft topologyが異なっても非owned cityを保持してstationをupsertする', () {
+      final current = _earthquakeWithSecondTopology();
+      final changedCity = earthquakeVxseDebugSampleCity.copyWith(
+        code: 'changed-city',
+      );
+      final updatedStationIntensity = earthquakeVxseDebugSampleStationIntensity
+          .copyWith(name: 'updated');
+      final draft = EarthquakeVxseDebugDraft.vxse62(
+        eventId: current.eventId,
+        reportedAt: earthquakeVxseDebugSampleReportedAt,
+        status: TelegramStatus.normal,
+        arrivalTime: current.arrivalTime,
+        originTime: current.originTime,
+        hypocenter: earthquakeVxseDebugSampleHypocenter,
+        maxIntensity: JmaIntensity.four,
+        maxLpgmIntensity: JmaLpgmIntensity.two,
+        regions: _draftIntensity.regions,
+        intensityTree: {
+          JmaIntensity.four: [
+            PrefectureIntensityNode(
+              prefecture: earthquakeVxseDebugSampleIntensityPrefecture,
+              cities: [
+                CityIntensityNode(
+                  city: changedCity,
+                  maxIntensity: JmaIntensity.one,
+                  stations: [
+                    StationIntensityNode(
+                      station: earthquakeVxseDebugSampleStation,
+                      intensity: updatedStationIntensity,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        },
+        lpgmRegions: const {
+          JmaLpgmIntensity.two: [earthquakeVxseDebugSampleLpgmRegion],
+        },
+        lpgmIntensityTree: {
+          JmaLpgmIntensity.two: [
+            PrefectureLpgmIntensityNode(
+              region: earthquakeVxseDebugSampleRegion,
+              maxLpgmIntensity: JmaLpgmIntensity.two,
+              cities: [
+                CityLpgmIntensityNode(
+                  city: changedCity,
+                  maxLpgmIntensity: JmaLpgmIntensity.one,
+                  stations: [
+                    StationLpgmIntensityNode(
+                      station: earthquakeVxseDebugSampleStation,
+                      intensity: updatedStationIntensity,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        },
+        comments: const [],
+      );
+
+      for (final mode in EarthquakeVxseApplyMode.values) {
+        final result = reducer.apply(
+          current: current,
+          draft: draft,
+          mode: mode,
+        );
+
+        expect(_cityCodes(result), containsAll(['1310100', '1410000']));
+        expect(_lpgmCityCodes(result), containsAll(['1310100', '1410000']));
+        expect(_stationName(result, '1310100'), 'updated');
+        expect(_lpgmStationName(result, '1310100'), 'updated');
+      }
+    });
+
+    for (final mode in EarthquakeVxseApplyMode.values) {
+      test('${mode.name}はdraft variant外のcommentを明示的にrejectする', () {
+        final current = _current().copyWith(
+          telegramComments: [
+            _comment(
+              type: EarthquakeTelegramType.vxse53,
+              reportedAt: earthquakeVxseDebugSampleReportedAt,
+              text: 'preserved',
+            ),
+          ],
+        );
+        final draft = EarthquakeVxseDebugDraft.vxse51(
+          eventId: current.eventId,
+          reportedAt: earthquakeVxseDebugSampleReportedAt,
+          status: TelegramStatus.normal,
+          maxIntensity: JmaIntensity.four,
+          regions: const {},
+          prefectures: const {},
+          comments: [
+            _comment(
+              type: EarthquakeTelegramType.vxse53,
+              reportedAt: earthquakeVxseDebugSampleReportedAt,
+              text: 'colliding-cross-type',
+            ),
+            _comment(
+              type: EarthquakeTelegramType.vxse53,
+              reportedAt: DateTime.utc(2026, 7, 24, 12),
+              text: 'non-colliding-cross-type',
+            ),
+          ],
+        );
+
+        expect(
+          () => reducer.apply(current: current, draft: draft, mode: mode),
+          throwsA(
+            isA<EarthquakeVxseDebugDraftValidationException>().having(
+              (error) => error.issues.length,
+              'issues.length',
+              2,
+            ),
+          ),
+        );
+        expect(current.telegramComments.single.additional, 'preserved');
+      });
+    }
   });
 }
 
@@ -547,3 +782,144 @@ Earthquake _draftSource() => Earthquake(
   earthquakeType: EarthquakeType.distant,
   estimatedIntensityTileUrl: null,
 );
+
+Earthquake _earthquakeWithSecondTopology() {
+  final secondStation = earthquakeVxseDebugSampleStation.copyWith(
+    code: '1410000',
+    noCode: '3510000',
+  );
+  final secondCity = earthquakeVxseDebugSampleCity.copyWith(
+    code: '1410000',
+    stations: [secondStation],
+  );
+  final secondRegion = earthquakeVxseDebugSampleRegion.copyWith(
+    code: '351',
+    cities: [secondCity],
+  );
+  final secondPrefecture = earthquakeVxseDebugSamplePrefecture.copyWith(
+    code: '14',
+    regions: [secondRegion],
+  );
+  final secondIntensity = earthquakeVxseDebugSampleStationIntensity.copyWith(
+    code: '1410000',
+    name: 'second',
+  );
+  return _current().copyWith(
+    intensity: _baseIntensity.copyWith(
+      regions: {
+        ..._baseIntensity.regions,
+        JmaIntensity.four: [
+          IntensityRegion(
+            region: secondRegion,
+            maxIntensity: JmaIntensity.four,
+          ),
+        ],
+      },
+      intensityTree: {
+        ..._baseIntensity.intensityTree,
+        JmaIntensity.four: [
+          PrefectureIntensityNode(
+            prefecture: IntensityPrefecture(
+              prefecture: secondPrefecture,
+              maxIntensity: JmaIntensity.four,
+            ),
+            cities: [
+              CityIntensityNode(
+                city: secondCity,
+                maxIntensity: JmaIntensity.four,
+                stations: [
+                  StationIntensityNode(
+                    station: secondStation,
+                    intensity: secondIntensity,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      },
+      lpgmIntensityTree: {
+        ..._baseIntensity.lpgmIntensityTree,
+        JmaLpgmIntensity.two: [
+          PrefectureLpgmIntensityNode(
+            region: secondRegion,
+            maxLpgmIntensity: JmaLpgmIntensity.two,
+            cities: [
+              CityLpgmIntensityNode(
+                city: secondCity,
+                maxLpgmIntensity: JmaLpgmIntensity.two,
+                stations: [
+                  StationLpgmIntensityNode(
+                    station: secondStation,
+                    intensity: secondIntensity,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      },
+    ),
+  );
+}
+
+List<String> _regionCodes(Earthquake earthquake) =>
+    earthquake.intensity?.regions.values
+        .expand((items) => items)
+        .map((item) => item.region.code)
+        .toList() ??
+    const [];
+
+List<String> _prefectureCodes(Earthquake earthquake) =>
+    earthquake.intensity?.intensityTree.values
+        .expand((items) => items)
+        .map((item) => item.prefecture.prefecture.code)
+        .toList() ??
+    const [];
+
+List<String> _cityCodes(Earthquake earthquake) =>
+    earthquake.intensity?.intensityTree.values
+        .expand((items) => items)
+        .expand((item) => item.cities)
+        .map((item) => item.city.code)
+        .toList() ??
+    const [];
+
+List<String> _lpgmCityCodes(Earthquake earthquake) =>
+    earthquake.intensity?.lpgmIntensityTree.values
+        .expand((items) => items)
+        .expand((item) => item.cities)
+        .map((item) => item.city.code)
+        .toList() ??
+    const [];
+
+JmaIntensity? _prefectureMax(Earthquake earthquake, String code) => earthquake
+    .intensity
+    ?.intensityTree
+    .values
+    .expand((items) => items)
+    .firstWhere((item) => item.prefecture.prefecture.code == code)
+    .prefecture
+    .maxIntensity;
+
+String? _stationName(Earthquake earthquake, String code) => earthquake
+    .intensity
+    ?.intensityTree
+    .values
+    .expand((items) => items)
+    .expand((item) => item.cities)
+    .expand((item) => item.stations)
+    .firstWhere((item) => item.station.code == code)
+    .intensity
+    ?.name;
+
+String? _lpgmStationName(Earthquake earthquake, String code) => earthquake
+    .intensity
+    ?.lpgmIntensityTree
+    .values
+    .expand((items) => items)
+    .expand((item) => item.cities)
+    .expand((item) => item.stations)
+    .firstWhere((item) => item.station.code == code)
+    .intensity
+    ?.name;
