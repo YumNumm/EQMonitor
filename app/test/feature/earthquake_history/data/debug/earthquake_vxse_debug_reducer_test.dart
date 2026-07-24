@@ -89,7 +89,7 @@ void main() {
       }
     }
 
-    test('mergeは同じtype/reportedAtのコメントだけをupsertする', () {
+    test('mergeはcurrent内の同じtype/reportedAtコメントだけをupsertする', () {
       final reportedAt = DateTime.utc(2026, 7, 24, 3);
       final current = _current().copyWith(
         telegramComments: [
@@ -118,11 +118,6 @@ void main() {
         regions: const {},
         prefectures: const {},
         comments: [
-          _comment(
-            type: EarthquakeTelegramType.vxse51,
-            reportedAt: reportedAt,
-            text: 'new',
-          ),
           _comment(
             type: EarthquakeTelegramType.vxse51,
             reportedAt: reportedAt,
@@ -756,6 +751,63 @@ void main() {
         expect(current.telegramComments.single.additional, 'preserved');
       });
     }
+
+    test('map collapse対象のduplicate comment・city・stationを適用前にrejectする', () {
+      final current = _current();
+      final commentDraft =
+          factory.create(
+                current: draftSource,
+                type: EarthquakeTelegramType.vxse53,
+              )
+              as EarthquakeVxse53DebugDraft;
+      final comment = _comment(
+        type: EarthquakeTelegramType.vxse53,
+        reportedAt: DateTime.utc(2026, 7, 24, 10),
+        text: 'duplicate',
+      );
+      final vxse62Draft =
+          factory.create(
+                current: draftSource,
+                type: EarthquakeTelegramType.vxse62,
+              )
+              as EarthquakeVxse62DebugDraft;
+      final prefecture = vxse62Draft.intensityTree.values.single.single;
+      final city = prefecture.cities.single;
+      final station = city.stations.single;
+      final duplicateCityDraft = vxse62Draft.copyWith(
+        intensityTree: {
+          vxse62Draft.intensityTree.keys.single: [
+            prefecture.copyWith(cities: [city, city]),
+          ],
+        },
+      );
+      final duplicateStationDraft = vxse62Draft.copyWith(
+        intensityTree: {
+          vxse62Draft.intensityTree.keys.single: [
+            prefecture.copyWith(
+              cities: [
+                city.copyWith(stations: [station, station]),
+              ],
+            ),
+          ],
+        },
+      );
+
+      for (final draft in <EarthquakeVxseDebugDraft>[
+        commentDraft.copyWith(comments: [comment, comment]),
+        duplicateCityDraft,
+        duplicateStationDraft,
+      ]) {
+        expect(
+          () => reducer.apply(
+            current: current,
+            draft: draft,
+            mode: EarthquakeVxseApplyMode.merge,
+          ),
+          throwsA(isA<EarthquakeVxseDebugDraftValidationException>()),
+        );
+      }
+    });
   });
 }
 

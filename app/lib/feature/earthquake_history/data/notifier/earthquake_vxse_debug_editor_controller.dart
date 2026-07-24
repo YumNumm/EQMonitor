@@ -467,6 +467,36 @@ String prettyEarthquakeVxseDebugJson({
   required EarthquakeVxseDebugDraft draft,
 }) => const JsonEncoder.withIndent('  ').convert(draft.toJson());
 
+String nextEarthquakeVxseDebugCode({
+  required String prefix,
+  required Set<String> usedCodes,
+}) {
+  var suffix = 1;
+  while (usedCodes.contains('$prefix-$suffix')) {
+    suffix++;
+  }
+  return '$prefix-$suffix';
+}
+
+DateTime nextEarthquakeVxseDebugCommentTime({
+  required DateTime base,
+  required Set<DateTime> usedTimes,
+}) {
+  var candidate = base;
+  do {
+    candidate = candidate.add(const Duration(seconds: 1));
+  } while (usedTimes.contains(candidate));
+  return candidate;
+}
+
+double nextEarthquakeVxseDebugPrePeriodBand({required Set<double> usedBands}) {
+  var tenths = 16;
+  while (usedBands.contains(tenths / 10)) {
+    tenths++;
+  }
+  return tenths / 10;
+}
+
 String? validateEditorDraft({
   required Earthquake current,
   required EarthquakeTelegramType selectedType,
@@ -478,14 +508,14 @@ String? validateEditorDraft({
   if (draft.eventId != current.eventId) {
     return '現在の地震とevent IDが一致しません';
   }
+  if (hasDuplicateEarthquakeVxseGroupedCodes(draft: draft)) {
+    return '同じコードの階級項目が重複しています';
+  }
   if (validateEarthquakeVxseDebugDraft(
     draft: draft,
     type: selectedType,
   ).isNotEmpty) {
     return '入力内容の関連付けが正しくありません';
-  }
-  if (hasDuplicateEarthquakeVxseGroupedCodes(draft: draft)) {
-    return '同じコードの階級項目が重複しています';
   }
   if (!hasConsistentEarthquakeVxseGroupLevels(draft: draft)) {
     return '階級グループと項目の階級が一致しません';

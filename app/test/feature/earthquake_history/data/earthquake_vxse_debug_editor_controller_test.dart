@@ -8,7 +8,9 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_factory.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_vxse_debug_editor_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -360,6 +362,94 @@ void main() {
     expect(updatedOrdinary.maxLpgmIntensity, ordinaryCity.maxLpgmIntensity);
     expect(updatedLpgm.maxLpgmIntensity, lpgmCity.maxLpgmIntensity);
     expect(fixture.state.canApply, isTrue);
+  });
+
+  test('comment・city・stationのduplicate identityはApplyを無効にする', () {
+    final commentFixture = _fixture();
+    final commentDraft =
+        commentFixture.state.draft as EarthquakeVxse53DebugDraft;
+    final comment = EarthquakeTelegramComment(
+      type: EarthquakeTelegramType.vxse53,
+      reportedAt: DateTime.utc(2026, 7, 24, 6),
+      additional: 'first',
+      free: 'first',
+    );
+    commentFixture.notifier.updateDraft(
+      commentDraft.copyWith(
+        comments: [
+          comment,
+          comment.copyWith(free: 'second'),
+        ],
+      ),
+    );
+    expect(commentFixture.state.canApply, isFalse);
+
+    final cityFixture = _fixture();
+    final cityDraft = cityFixture.state.draft as EarthquakeVxse53DebugDraft;
+    final prefecture = cityDraft.intensityTree.values.single.single;
+    final city = prefecture.cities.single;
+    cityFixture.notifier.updateDraft(
+      cityDraft.copyWith(
+        intensityTree: {
+          cityDraft.intensityTree.keys.single: [
+            prefecture.copyWith(cities: [city, city]),
+          ],
+        },
+      ),
+    );
+    expect(cityFixture.state.canApply, isFalse);
+
+    final stationFixture = _fixture();
+    stationFixture.notifier.selectType(EarthquakeTelegramType.vxse62);
+    final stationDraft =
+        stationFixture.state.draft as EarthquakeVxse62DebugDraft;
+    final stationPrefecture = stationDraft.intensityTree.values.single.single;
+    final stationCity = stationPrefecture.cities.single;
+    final station = stationCity.stations.single;
+    stationFixture.notifier.updateDraft(
+      stationDraft.copyWith(
+        intensityTree: {
+          stationDraft.intensityTree.keys.single: [
+            stationPrefecture.copyWith(
+              cities: [
+                stationCity.copyWith(stations: [station, station]),
+              ],
+            ),
+          ],
+        },
+      ),
+    );
+    expect(stationFixture.state.canApply, isFalse);
+  });
+
+  test('debug identity generatorは既存値を飛ばして決定的な次値を返す', () {
+    final firstCode = nextEarthquakeVxseDebugCode(
+      prefix: 'debug-station',
+      usedCodes: const {'debug-station-1'},
+    );
+    final secondCode = nextEarthquakeVxseDebugCode(
+      prefix: 'debug-station',
+      usedCodes: {'debug-station-1', firstCode},
+    );
+    final firstTime = nextEarthquakeVxseDebugCommentTime(
+      base: DateTime.utc(2026, 7, 24),
+      usedTimes: {DateTime.utc(2026, 7, 24)},
+    );
+    final secondTime = nextEarthquakeVxseDebugCommentTime(
+      base: DateTime.utc(2026, 7, 24),
+      usedTimes: {DateTime.utc(2026, 7, 24), firstTime},
+    );
+    final firstBand = nextEarthquakeVxseDebugPrePeriodBand(
+      usedBands: {1.6},
+    );
+    final secondBand = nextEarthquakeVxseDebugPrePeriodBand(
+      usedBands: {1.6, firstBand},
+    );
+
+    expect((firstCode, secondCode), ('debug-station-2', 'debug-station-3'));
+    expect(firstTime, DateTime.utc(2026, 7, 24, 0, 0, 1));
+    expect(secondTime, DateTime.utc(2026, 7, 24, 0, 0, 2));
+    expect((firstBand, secondBand), (1.7, 1.8));
   });
 }
 

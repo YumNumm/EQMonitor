@@ -66,6 +66,17 @@ final class EarthquakeVxseDebugStationParentValidationIssue
   final Set<String> cityCodes;
 }
 
+final class EarthquakeVxseDebugDuplicateIdentityValidationIssue
+    extends EarthquakeVxseDebugDraftValidationIssue {
+  const EarthquakeVxseDebugDuplicateIdentityValidationIssue({
+    required this.collection,
+    required this.identity,
+  });
+
+  final String collection;
+  final String identity;
+}
+
 class EarthquakeVxseDebugDraftValidationException implements Exception {
   const EarthquakeVxseDebugDraftValidationException(this.issues);
 
@@ -80,6 +91,9 @@ List<EarthquakeVxseDebugDraftValidationIssue> validateEarthquakeVxseDebugDraft({
     EarthquakeVxse62DebugDraft() => vxse62DraftStationParents(draft: draft),
     _ => const <String, Set<String>>{},
   };
+  final duplicateIdentities = duplicateEarthquakeVxseDebugIdentities(
+    draft: draft,
+  );
   return [
     for (final (index, comment) in draft.comments.indexed)
       if (comment.type != type)
@@ -94,6 +108,140 @@ List<EarthquakeVxseDebugDraftValidationIssue> validateEarthquakeVxseDebugDraft({
           stationCode: entry.key,
           cityCodes: entry.value,
         ),
+    for (final duplicate in duplicateIdentities)
+      EarthquakeVxseDebugDuplicateIdentityValidationIssue(
+        collection: duplicate.collection,
+        identity: duplicate.identity,
+      ),
+  ];
+}
+
+List<({String collection, String identity})>
+duplicateEarthquakeVxseDebugIdentities({
+  required EarthquakeVxseDebugDraft draft,
+}) {
+  final identities = <({String collection, String identity})>[];
+  final comments = draft.comments.map(
+    (comment) => '${comment.type.name}/${comment.reportedAt.toIso8601String()}',
+  );
+  identities.addAll(
+    duplicateEarthquakeVxseDebugKeys(collection: 'comments', keys: comments),
+  );
+
+  final ordinaryRegions = switch (draft) {
+    EarthquakeVxse51DebugDraft(:final regions) ||
+    EarthquakeVxse53DebugDraft(:final regions) ||
+    EarthquakeVxse62DebugDraft(:final regions) => regions,
+    _ => const <JmaIntensity, List<IntensityRegion>>{},
+  };
+  identities.addAll(
+    duplicateEarthquakeVxseDebugKeys(
+      collection: 'ordinaryRegions',
+      keys: ordinaryRegions.values
+          .expand((nodes) => nodes)
+          .map((node) => node.region.code),
+    ),
+  );
+
+  final ordinaryPrefectureCodes = switch (draft) {
+    EarthquakeVxse51DebugDraft(:final prefectures) =>
+      prefectures.values
+          .expand((nodes) => nodes)
+          .map((node) => node.prefecture.code),
+    EarthquakeVxse53DebugDraft(:final intensityTree) ||
+    EarthquakeVxse62DebugDraft(:final intensityTree) =>
+      intensityTree.values
+          .expand((nodes) => nodes)
+          .map((node) => node.prefecture.prefecture.code),
+    _ => const <String>[],
+  };
+  identities.addAll(
+    duplicateEarthquakeVxseDebugKeys(
+      collection: 'ordinaryPrefectures',
+      keys: ordinaryPrefectureCodes,
+    ),
+  );
+
+  final ordinaryTree = switch (draft) {
+    EarthquakeVxse53DebugDraft(:final intensityTree) ||
+    EarthquakeVxse62DebugDraft(:final intensityTree) => intensityTree,
+    _ => const <JmaIntensity, List<PrefectureIntensityNode>>{},
+  };
+  final ordinaryCities = ordinaryTree.values
+      .expand((nodes) => nodes)
+      .expand((node) => node.cities);
+  identities
+    ..addAll(
+      duplicateEarthquakeVxseDebugKeys(
+        collection: 'ordinaryCities',
+        keys: ordinaryCities.map((node) => node.city.code),
+      ),
+    )
+    ..addAll(
+      duplicateEarthquakeVxseDebugKeys(
+        collection: 'ordinaryStations',
+        keys: ordinaryCities
+            .expand((node) => node.stations)
+            .map((node) => node.station.code),
+      ),
+    );
+
+  if (draft case EarthquakeVxse62DebugDraft(
+    :final lpgmRegions,
+    :final lpgmIntensityTree,
+  )) {
+    final lpgmCities = lpgmIntensityTree.values
+        .expand((nodes) => nodes)
+        .expand((node) => node.cities);
+    identities
+      ..addAll(
+        duplicateEarthquakeVxseDebugKeys(
+          collection: 'lpgmRegions',
+          keys: lpgmRegions.values
+              .expand((nodes) => nodes)
+              .map((node) => node.region.code),
+        ),
+      )
+      ..addAll(
+        duplicateEarthquakeVxseDebugKeys(
+          collection: 'lpgmPrefectures',
+          keys: lpgmIntensityTree.values
+              .expand((nodes) => nodes)
+              .map((node) => node.region.code),
+        ),
+      )
+      ..addAll(
+        duplicateEarthquakeVxseDebugKeys(
+          collection: 'lpgmCities',
+          keys: lpgmCities.map((node) => node.city.code),
+        ),
+      )
+      ..addAll(
+        duplicateEarthquakeVxseDebugKeys(
+          collection: 'lpgmStations',
+          keys: lpgmCities
+              .expand((node) => node.stations)
+              .map((node) => node.station.code),
+        ),
+      );
+  }
+  return identities;
+}
+
+List<({String collection, String identity})> duplicateEarthquakeVxseDebugKeys({
+  required String collection,
+  required Iterable<String> keys,
+}) {
+  final seen = <String>{};
+  final duplicates = <String>{};
+  for (final key in keys) {
+    if (!seen.add(key)) {
+      duplicates.add(key);
+    }
+  }
+  return [
+    for (final identity in duplicates)
+      (collection: collection, identity: identity),
   ];
 }
 
