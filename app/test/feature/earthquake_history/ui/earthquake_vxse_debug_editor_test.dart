@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_teleg
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_vxse_debug_editor_controller.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -400,6 +401,132 @@ void main() {
     expect(remaining, 'second-edited');
   });
 
+  for (final surface in _CollectionSurface.values) {
+    testWidgets('${surface.name}は先頭削除後も後続rowのdraft/raw/error identityを保持する', (
+      tester,
+    ) async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final current = _currentEarthquake().copyWith(
+        telegramTypes: [surface.type],
+      );
+      final draft = _twoRowDraft(surface: surface, current: current);
+      await _pumpEditorWithContainer(
+        tester,
+        container: container,
+        current: current,
+      );
+      await _scrollTo(tester, const Key('vxse-json-field'));
+      await tester.enterText(
+        find.byKey(const Key('vxse-json-field')),
+        jsonEncode(draft.toJson()),
+      );
+      await tester.pump();
+      await _scrollToTop(tester);
+
+      final valueFields = surface.valueFields;
+      await _scrollFinderTo(tester, valueFields);
+      await tester.enterText(valueFields.first, surface.firstValue);
+      await tester.pump();
+      await _scrollFinderTo(tester, valueFields);
+      await tester.enterText(valueFields.last, surface.secondValue);
+      await tester.pump();
+      final invalidFields = surface.invalidIdentityFields;
+      if (invalidFields != null) {
+        await _scrollFinderTo(tester, invalidFields);
+        await tester.enterText(invalidFields.first, 'invalid-first');
+        await tester.pump();
+        expect(find.text(surface.invalidError), findsOneWidget);
+      }
+
+      await _scrollToTop(tester);
+      await _scrollFinderTo(tester, valueFields);
+      final firstRow = find.ancestor(
+        of: valueFields.first,
+        matching: find.byWidgetPredicate(surface.isSemanticRow),
+      );
+      final firstRemove = find.descendant(
+        of: firstRow,
+        matching: surface.removeButtons,
+      );
+      expect(firstRemove, findsOneWidget, reason: surface.name);
+      await _scrollFinderTo(tester, firstRemove);
+      expect(firstRemove.hitTestable(), findsOneWidget, reason: surface.name);
+      await tester.tap(firstRemove.hitTestable());
+      await tester.pump();
+
+      final remainingDraft = await _readDraft(tester);
+      expect(
+        _collectionValue(surface: surface, draft: remainingDraft),
+        surface.secondValue,
+        reason: surface.name,
+      );
+      final state = container.read(
+        earthquakeVxseDebugEditorControllerProvider(
+          EarthquakeVxseDebugEditorSession(current: current),
+        ),
+      );
+      expect(
+        state.typedInputValues.values,
+        contains(surface.secondValue),
+        reason: surface.name,
+      );
+      expect(
+        state.typedInputValues.values,
+        isNot(contains(surface.firstValue)),
+        reason: surface.name,
+      );
+      expect(state.typedInputErrors, isEmpty, reason: surface.name);
+      expect(state.canApply, isTrue, reason: surface.name);
+    });
+  }
+
+  for (final surface in _CollectionSurface.values) {
+    testWidgets('${surface.name}は連続追加してもidentityが一意で適用可能', (tester) async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final current = _currentEarthquake().copyWith(
+        telegramTypes: [surface.type],
+      );
+      await _pumpEditorWithContainer(
+        tester,
+        container: container,
+        current: current,
+      );
+
+      for (var count = 0; count < 2; count++) {
+        final addButton = surface.addButton;
+        await _scrollToTop(tester);
+        await _scrollFinderTo(tester, addButton);
+        await tester.tap(addButton.hitTestable().first);
+        await tester.pump();
+      }
+
+      final draft = await _readDraft(tester);
+      final identities = _collectionIdentities(surface: surface, draft: draft);
+      expect(identities.length, greaterThanOrEqualTo(2), reason: surface.name);
+      expect(
+        identities.toSet().length,
+        identities.length,
+        reason: surface.name,
+      );
+      final state = container.read(
+        earthquakeVxseDebugEditorControllerProvider(
+          EarthquakeVxseDebugEditorSession(current: current),
+        ),
+      );
+      expect(state.canApply, isTrue, reason: surface.name);
+      await _scrollTo(tester, const Key('vxse-apply-button'));
+      expect(
+        tester
+            .widget<FilledButton>(find.byKey(const Key('vxse-apply-button')))
+            .onPressed,
+        isNotNull,
+        reason: surface.name,
+      );
+    });
+  }
+
   testWidgets('ordinary階級dropdownはnodeと外側map keyをatomicに移動する', (tester) async {
     await _pumpEditor(tester);
     final dropdown = find.byKey(const Key('ordinary-region-max'));
@@ -695,6 +822,581 @@ Future<void> _pumpEditorWithContainer(
     ),
   ),
 );
+
+enum _CollectionSurface {
+  ordinaryRegion,
+  vxse51Prefecture,
+  ordinaryPrefecture,
+  ordinaryCity,
+  ordinaryStation,
+  lpgmRegion,
+  lpgmPrefecture,
+  lpgmStation,
+  comment,
+  prePeriod;
+
+  EarthquakeTelegramType get type => switch (this) {
+    .vxse51Prefecture => .vxse51,
+    .ordinaryStation ||
+    .lpgmRegion ||
+    .lpgmPrefecture ||
+    .lpgmStation ||
+    .prePeriod => .vxse62,
+    _ => .vxse53,
+  };
+
+  Finder get valueFields => switch (this) {
+    .ordinaryRegion => find.byKey(const Key('ordinary-region-name')),
+    .vxse51Prefecture ||
+    .ordinaryPrefecture => find.byKey(const Key('ordinary-prefecture-name')),
+    .ordinaryCity => find.byKey(const Key('ordinary-city-name')),
+    .ordinaryStation => find.byKey(const Key('ordinary-station-name')),
+    .lpgmRegion => find.byKey(const Key('lpgm-region-name')),
+    .lpgmPrefecture => find.byKey(const Key('lpgm-prefecture-name')),
+    .lpgmStation => find.byKey(const Key('lpgm-station-name')),
+    .comment => find.byKey(const Key('comment-additional')),
+    .prePeriod => find.descendant(
+      of: find.byKey(const Key('ordinary-station-details')),
+      matching: find.byKey(const Key('pre-period-sva')),
+    ),
+  };
+
+  Finder get removeButtons => switch (this) {
+    .ordinaryRegion => find.byKey(const Key('ordinary-region-remove')),
+    .vxse51Prefecture ||
+    .ordinaryPrefecture => find.byKey(const Key('ordinary-prefecture-remove')),
+    .ordinaryCity => find.byKey(const Key('ordinary-city-remove')),
+    .ordinaryStation => find.byKey(const Key('ordinary-station-remove')),
+    .lpgmRegion => find.byKey(const Key('lpgm-region-remove')),
+    .lpgmPrefecture => find.byKey(const Key('lpgm-prefecture-remove')),
+    .lpgmStation => find.byKey(const Key('lpgm-station-remove')),
+    .comment => find.byKey(const Key('comment-remove')),
+    .prePeriod => find.descendant(
+      of: find.byKey(const Key('ordinary-station-details')),
+      matching: find.byKey(const Key('pre-period-remove')),
+    ),
+  };
+
+  Finder get addButton => switch (this) {
+    .ordinaryRegion => find.byKey(const Key('ordinary-region-add')),
+    .vxse51Prefecture ||
+    .ordinaryPrefecture => find.byKey(const Key('ordinary-prefecture-add')),
+    .ordinaryCity => find.byKey(const Key('ordinary-city-add')),
+    .ordinaryStation => find.byKey(const Key('ordinary-station-add')),
+    .lpgmRegion => find.byKey(const Key('lpgm-region-add')),
+    .lpgmPrefecture => find.byKey(const Key('lpgm-prefecture-add')),
+    .lpgmStation => find.byKey(const Key('lpgm-station-add')),
+    .comment => find.byKey(const Key('comment-add')),
+    .prePeriod => find.descendant(
+      of: find.byKey(const Key('ordinary-station-details')),
+      matching: find.byKey(const Key('pre-period-add')),
+    ),
+  };
+
+  bool isSemanticRow(Widget widget) {
+    final key = widget.key;
+    if (key is! ValueKey<String>) {
+      return false;
+    }
+    return switch (this) {
+      .ordinaryRegion => key.value.startsWith('ordinary-region-row.'),
+      .vxse51Prefecture ||
+      .ordinaryPrefecture => key.value.startsWith('ordinary-prefecture-row.'),
+      .ordinaryCity => key.value.startsWith('ordinary-city-row.'),
+      .ordinaryStation => key.value.startsWith('ordinary-station-row.'),
+      .lpgmRegion => key.value.startsWith('lpgm-region-row.'),
+      .lpgmPrefecture => key.value.startsWith('lpgm-prefecture-row.'),
+      .lpgmStation => key.value.startsWith('lpgm-station-row.'),
+      .comment => key.value.startsWith('comment-row.'),
+      .prePeriod => key.value.contains('.prePeriod.'),
+    };
+  }
+
+  Finder? get invalidIdentityFields => switch (this) {
+    .comment => find.byKey(const Key('comment-reported-at')),
+    .prePeriod => find.descendant(
+      of: find.byKey(const Key('ordinary-station-details')),
+      matching: find.byKey(const Key('pre-period-band')),
+    ),
+    _ => null,
+  };
+
+  String get invalidError => switch (this) {
+    .comment => '日時を入力してください',
+    .prePeriod => '数値を入力してください',
+    _ => '',
+  };
+
+  String get firstValue => switch (this) {
+    .prePeriod => '21.1',
+    _ => 'first-$name',
+  };
+
+  String get secondValue => switch (this) {
+    .prePeriod => '22.2',
+    _ => 'second-$name',
+  };
+}
+
+EarthquakeVxseDebugDraft _twoRowDraft({
+  required _CollectionSurface surface,
+  required Earthquake current,
+}) {
+  final draft = const EarthquakeVxseDebugDraftFactory().create(
+    current: current,
+    type: surface.type,
+  );
+  return switch (surface) {
+    .ordinaryRegion => () {
+      final value = draft as EarthquakeVxse53DebugDraft;
+      final level = value.regions.keys.single;
+      final first =
+          value.regions[level]?.single ??
+          earthquakeVxseDebugSampleIntensityRegion;
+      return value.copyWith(
+        regions: {
+          level: [
+            first,
+            first.copyWith(
+              region: first.region.copyWith(code: 'second-region'),
+            ),
+          ],
+        },
+      );
+    }(),
+    .vxse51Prefecture => () {
+      final value = draft as EarthquakeVxse51DebugDraft;
+      final level = value.prefectures.keys.single;
+      final first =
+          value.prefectures[level]?.single ??
+          earthquakeVxseDebugSampleIntensityPrefecture;
+      return value.copyWith(
+        prefectures: {
+          level: [
+            first,
+            first.copyWith(
+              prefecture: first.prefecture.copyWith(code: 'second-prefecture'),
+            ),
+          ],
+        },
+      );
+    }(),
+    .ordinaryPrefecture => () {
+      final value = draft as EarthquakeVxse53DebugDraft;
+      final level = value.intensityTree.keys.single;
+      final first =
+          value.intensityTree[level]?.single ??
+          intensityTreeOrSample(tree: null).values.single.single;
+      return value.copyWith(
+        intensityTree: {
+          level: [
+            first,
+            first.copyWith(
+              prefecture: first.prefecture.copyWith(
+                prefecture: first.prefecture.prefecture.copyWith(
+                  code: 'second-prefecture',
+                ),
+              ),
+              cities: [
+                for (final city in first.cities)
+                  city.copyWith(
+                    city: city.city.copyWith(code: 'second-${city.city.code}'),
+                    stations: [
+                      for (final station in city.stations)
+                        station.copyWith(
+                          station: station.station.copyWith(
+                            code: 'second-${station.station.code}',
+                          ),
+                          intensity: station.intensity?.copyWith(
+                            code: 'second-${station.station.code}',
+                          ),
+                        ),
+                    ],
+                  ),
+              ],
+            ),
+          ],
+        },
+      );
+    }(),
+    .ordinaryCity => () {
+      final value = draft as EarthquakeVxse53DebugDraft;
+      final level = value.intensityTree.keys.single;
+      final prefecture =
+          value.intensityTree[level]?.single ??
+          intensityTreeOrSample(tree: null).values.single.single;
+      final first = prefecture.cities.single;
+      return value.copyWith(
+        intensityTree: {
+          level: [
+            prefecture.copyWith(
+              cities: [
+                first,
+                first.copyWith(
+                  city: first.city.copyWith(code: 'second-city'),
+                  stations: [
+                    for (final station in first.stations)
+                      station.copyWith(
+                        station: station.station.copyWith(
+                          code: 'second-${station.station.code}',
+                        ),
+                        intensity: station.intensity?.copyWith(
+                          code: 'second-${station.station.code}',
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        },
+      );
+    }(),
+    .ordinaryStation => () {
+      final value = draft as EarthquakeVxse62DebugDraft;
+      final level = value.intensityTree.keys.single;
+      final prefecture =
+          value.intensityTree[level]?.single ??
+          intensityTreeOrSample(tree: null).values.single.single;
+      final city = prefecture.cities.single;
+      final first = city.stations.single;
+      return value.copyWith(
+        intensityTree: {
+          level: [
+            prefecture.copyWith(
+              cities: [
+                city.copyWith(
+                  stations: [
+                    first,
+                    first.copyWith(
+                      station: first.station.copyWith(code: 'second-station'),
+                      intensity: first.intensity?.copyWith(
+                        code: 'second-station',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        },
+      );
+    }(),
+    .lpgmRegion => () {
+      final value = draft as EarthquakeVxse62DebugDraft;
+      final level = value.lpgmRegions.keys.single;
+      final first =
+          value.lpgmRegions[level]?.single ??
+          earthquakeVxseDebugSampleLpgmRegion;
+      return value.copyWith(
+        lpgmRegions: {
+          level: [
+            first,
+            first.copyWith(
+              region: first.region.copyWith(code: 'second-lpgm-region'),
+            ),
+          ],
+        },
+      );
+    }(),
+    .lpgmPrefecture => () {
+      final value = draft as EarthquakeVxse62DebugDraft;
+      final level = value.lpgmIntensityTree.keys.single;
+      final first =
+          value.lpgmIntensityTree[level]?.single ??
+          lpgmTreeOrSample(tree: null).values.single.single;
+      return value.copyWith(
+        lpgmIntensityTree: {
+          level: [
+            first,
+            first.copyWith(
+              region: first.region.copyWith(code: 'second-lpgm-prefecture'),
+              cities: [
+                for (final city in first.cities)
+                  city.copyWith(
+                    city: city.city.copyWith(code: 'second-${city.city.code}'),
+                    stations: [
+                      for (final station in city.stations)
+                        station.copyWith(
+                          station: station.station.copyWith(
+                            code: 'second-${station.station.code}',
+                          ),
+                          intensity: station.intensity?.copyWith(
+                            code: 'second-${station.station.code}',
+                          ),
+                        ),
+                    ],
+                  ),
+              ],
+            ),
+          ],
+        },
+      );
+    }(),
+    .lpgmStation => () {
+      final value = draft as EarthquakeVxse62DebugDraft;
+      final level = value.lpgmIntensityTree.keys.single;
+      final prefecture =
+          value.lpgmIntensityTree[level]?.single ??
+          lpgmTreeOrSample(tree: null).values.single.single;
+      final city = prefecture.cities.single;
+      final first = city.stations.single;
+      return value.copyWith(
+        lpgmIntensityTree: {
+          level: [
+            prefecture.copyWith(
+              cities: [
+                city.copyWith(
+                  stations: [
+                    first,
+                    first.copyWith(
+                      station: first.station.copyWith(code: 'second-station'),
+                      intensity: first.intensity?.copyWith(
+                        code: 'second-station',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        },
+      );
+    }(),
+    .comment => draft.copyWith(
+      comments: [
+        EarthquakeTelegramComment(
+          type: surface.type,
+          reportedAt: DateTime.utc(2026, 7, 24, 1),
+          additional: 'first',
+          free: 'first',
+        ),
+        EarthquakeTelegramComment(
+          type: surface.type,
+          reportedAt: DateTime.utc(2026, 7, 24, 2),
+          additional: 'second',
+          free: 'second',
+        ),
+      ],
+    ),
+    .prePeriod => () {
+      final value = draft as EarthquakeVxse62DebugDraft;
+      final level = value.intensityTree.keys.single;
+      final prefecture =
+          value.intensityTree[level]?.single ??
+          intensityTreeOrSample(tree: null).values.single.single;
+      final city = prefecture.cities.single;
+      final station = city.stations.single;
+      final intensity =
+          station.intensity ?? earthquakeVxseDebugSampleStationIntensity;
+      final first =
+          intensity.prePeriods?.single ??
+          earthquakeVxseDebugSampleStationIntensity.prePeriods?.single;
+      return value.copyWith(
+        intensityTree: {
+          level: [
+            prefecture.copyWith(
+              cities: [
+                city.copyWith(
+                  stations: [
+                    station.copyWith(
+                      intensity: intensity.copyWith(
+                        prePeriods: first == null
+                            ? const []
+                            : [first, first.copyWith(band: 2)],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        },
+      );
+    }(),
+  };
+}
+
+String? _collectionValue({
+  required _CollectionSurface surface,
+  required EarthquakeVxseDebugDraft draft,
+}) => switch (surface) {
+  .ordinaryRegion =>
+    (draft as EarthquakeVxse53DebugDraft)
+        .regions
+        .values
+        .single
+        .single
+        .region
+        .name
+        .ja,
+  .vxse51Prefecture =>
+    (draft as EarthquakeVxse51DebugDraft)
+        .prefectures
+        .values
+        .single
+        .single
+        .prefecture
+        .name
+        .ja,
+  .ordinaryPrefecture =>
+    (draft as EarthquakeVxse53DebugDraft)
+        .intensityTree
+        .values
+        .single
+        .single
+        .prefecture
+        .prefecture
+        .name
+        .ja,
+  .ordinaryCity =>
+    (draft as EarthquakeVxse53DebugDraft)
+        .intensityTree
+        .values
+        .single
+        .single
+        .cities
+        .single
+        .city
+        .name
+        .ja,
+  .ordinaryStation =>
+    (draft as EarthquakeVxse62DebugDraft)
+        .intensityTree
+        .values
+        .single
+        .single
+        .cities
+        .single
+        .stations
+        .single
+        .station
+        .name
+        .ja,
+  .lpgmRegion =>
+    (draft as EarthquakeVxse62DebugDraft)
+        .lpgmRegions
+        .values
+        .single
+        .single
+        .region
+        .name
+        .ja,
+  .lpgmPrefecture =>
+    (draft as EarthquakeVxse62DebugDraft)
+        .lpgmIntensityTree
+        .values
+        .single
+        .single
+        .region
+        .name
+        .ja,
+  .lpgmStation =>
+    (draft as EarthquakeVxse62DebugDraft)
+        .lpgmIntensityTree
+        .values
+        .single
+        .single
+        .cities
+        .single
+        .stations
+        .single
+        .station
+        .name
+        .ja,
+  .comment => draft.comments.single.additional,
+  .prePeriod =>
+    (draft as EarthquakeVxse62DebugDraft)
+        .intensityTree
+        .values
+        .single
+        .single
+        .cities
+        .single
+        .stations
+        .single
+        .intensity
+        ?.prePeriods
+        ?.single
+        .sva
+        .toString(),
+};
+
+List<String> _collectionIdentities({
+  required _CollectionSurface surface,
+  required EarthquakeVxseDebugDraft draft,
+}) => switch (surface) {
+  .ordinaryRegion => [
+    for (final region
+        in (draft as EarthquakeVxse53DebugDraft).regions.values.expand(
+          (values) => values,
+        ))
+      region.region.code,
+  ],
+  .vxse51Prefecture => [
+    for (final prefecture
+        in (draft as EarthquakeVxse51DebugDraft).prefectures.values.expand(
+          (values) => values,
+        ))
+      prefecture.prefecture.code,
+  ],
+  .ordinaryPrefecture => [
+    for (final prefecture
+        in (draft as EarthquakeVxse53DebugDraft).intensityTree.values.expand(
+          (values) => values,
+        ))
+      prefecture.prefecture.prefecture.code,
+  ],
+  .ordinaryCity => [
+    for (final city
+        in (draft as EarthquakeVxse53DebugDraft).intensityTree.values
+            .expand((values) => values)
+            .expand((prefecture) => prefecture.cities))
+      city.city.code,
+  ],
+  .ordinaryStation => [
+    for (final station
+        in (draft as EarthquakeVxse62DebugDraft).intensityTree.values
+            .expand((values) => values)
+            .expand((prefecture) => prefecture.cities)
+            .expand((city) => city.stations))
+      station.station.code,
+  ],
+  .lpgmRegion => [
+    for (final region
+        in (draft as EarthquakeVxse62DebugDraft).lpgmRegions.values.expand(
+          (values) => values,
+        ))
+      region.region.code,
+  ],
+  .lpgmPrefecture => [
+    for (final prefecture
+        in (draft as EarthquakeVxse62DebugDraft).lpgmIntensityTree.values
+            .expand((values) => values))
+      prefecture.region.code,
+  ],
+  .lpgmStation => [
+    for (final station
+        in (draft as EarthquakeVxse62DebugDraft).lpgmIntensityTree.values
+            .expand((values) => values)
+            .expand((prefecture) => prefecture.cities)
+            .expand((city) => city.stations))
+      station.station.code,
+  ],
+  .comment => [
+    for (final comment in draft.comments)
+      '${comment.type.name}.${comment.reportedAt.toIso8601String()}',
+  ],
+  .prePeriod => [
+    for (final period
+        in (draft as EarthquakeVxse62DebugDraft).intensityTree.values
+            .expand((values) => values)
+            .expand((prefecture) => prefecture.cities)
+            .expand((city) => city.stations)
+            .expand((station) => station.intensity?.prePeriods ?? const []))
+      period.band.toString(),
+  ],
+};
 
 Earthquake _currentEarthquake() => Earthquake(
   eventId: '20260724010101',

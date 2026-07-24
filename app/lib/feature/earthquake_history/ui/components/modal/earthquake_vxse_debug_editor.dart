@@ -32,7 +32,10 @@ class EarthquakeVxseDebugEditor extends HookConsumerWidget {
     );
     final state = ref.watch(provider);
     final notifier = ref.read(provider.notifier);
-    notifier.updateCurrent(current);
+    useEffect(() {
+      notifier.updateCurrent(current);
+      return null;
+    }, [notifier, current]);
     final draft = state.draft;
     final ownsHypocenter = draft is! EarthquakeVxse51DebugDraft;
     final ownsIntensity =
@@ -613,7 +616,7 @@ class _SeismicIntensityFields extends StatelessWidget {
                 _OrdinaryRegionRow(
                   notifier: notifier,
                   fieldPrefix:
-                      'ordinaryRegion.${region.region.code}.'
+                      'ordinaryRegion.${entry.key.name}.${region.region.code}.'
                       '${entry.value.take(index).where((candidate) => candidate.region.code == region.region.code).length}',
                   level: entry.key,
                   region: region,
@@ -655,13 +658,25 @@ class _SeismicIntensityFields extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: TextButton.icon(
                 key: const Key('ordinary-region-add'),
-                onPressed: () => notifier.setRegions({
-                  ...regions,
-                  maxIntensity: [
-                    ...regions[maxIntensity] ?? const [],
-                    earthquakeVxseDebugSampleIntensityRegion,
-                  ],
-                }),
+                onPressed: () {
+                  final code = nextEarthquakeVxseDebugCode(
+                    prefix: 'debug-region',
+                    usedCodes: regions.values
+                        .expand((nodes) => nodes)
+                        .map((node) => node.region.code)
+                        .toSet(),
+                  );
+                  notifier.setRegions({
+                    ...regions,
+                    maxIntensity: [
+                      ...regions[maxIntensity] ?? const [],
+                      earthquakeVxseDebugSampleIntensityRegion.copyWith(
+                        region: earthquakeVxseDebugSampleIntensityRegion.region
+                            .copyWith(code: code),
+                      ),
+                    ],
+                  });
+                },
                 icon: const Icon(Icons.add),
                 label: const Text('地域を追加'),
               ),
@@ -707,7 +722,9 @@ class _Vxse51PrefectureFields extends StatelessWidget {
         for (final (index, prefecture) in entry.value.indexed)
           _OrdinaryPrefectureRow(
             notifier: notifier,
-            fieldPrefix: 'vxse51Prefecture.${entry.key.name}.$index',
+            fieldPrefix:
+                'vxse51Prefecture.${entry.key.name}.${prefecture.prefecture.code}.'
+                '${entry.value.take(index).where((candidate) => candidate.prefecture.code == prefecture.prefecture.code).length}',
             level: entry.key,
             prefecture: prefecture,
             onChanged: (updated) => notifier.setPrefectures(
@@ -747,13 +764,26 @@ class _Vxse51PrefectureFields extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: TextButton.icon(
           key: const Key('ordinary-prefecture-add'),
-          onPressed: () => notifier.setPrefectures({
-            ...prefectures,
-            maxIntensity: [
-              ...prefectures[maxIntensity] ?? const [],
-              earthquakeVxseDebugSampleIntensityPrefecture,
-            ],
-          }),
+          onPressed: () {
+            final code = nextEarthquakeVxseDebugCode(
+              prefix: 'debug-prefecture',
+              usedCodes: prefectures.values
+                  .expand((nodes) => nodes)
+                  .map((node) => node.prefecture.code)
+                  .toSet(),
+            );
+            notifier.setPrefectures({
+              ...prefectures,
+              maxIntensity: [
+                ...prefectures[maxIntensity] ?? const [],
+                earthquakeVxseDebugSampleIntensityPrefecture.copyWith(
+                  prefecture: earthquakeVxseDebugSampleIntensityPrefecture
+                      .prefecture
+                      .copyWith(code: code),
+                ),
+              ],
+            });
+          },
           icon: const Icon(Icons.add),
           label: const Text('都道府県を追加'),
         ),
@@ -787,7 +817,8 @@ class _OrdinaryTreeFields extends StatelessWidget {
           _OrdinaryPrefectureRow(
             notifier: notifier,
             fieldPrefix:
-                'ordinaryPrefecture.${entry.key.name}.$prefectureIndex',
+                'ordinaryPrefecture.${entry.key.name}.${prefecture.prefecture.prefecture.code}.'
+                '${entry.value.take(prefectureIndex).where((candidate) => candidate.prefecture.prefecture.code == prefecture.prefecture.prefecture.code).length}',
             level: entry.key,
             prefecture: prefecture.prefecture,
             onChanged: (updated) => notifier.setIntensityTree(
@@ -827,7 +858,9 @@ class _OrdinaryTreeFields extends StatelessWidget {
             if (ownsCities)
               _OrdinaryCityRow(
                 notifier: notifier,
-                fieldPrefix: 'ordinaryCity.$prefectureIndex.$cityIndex',
+                fieldPrefix:
+                    'ordinaryCity.${entry.key.name}.${prefecture.prefecture.prefecture.code}.${city.city.code}.'
+                    '${prefecture.cities.take(cityIndex).where((candidate) => candidate.city.code == city.city.code).length}',
                 city: city,
                 onChanged: (updated) => notifier.setIntensityTree({
                   for (final currentEntry in tree.entries)
@@ -871,7 +904,8 @@ class _OrdinaryTreeFields extends StatelessWidget {
               _OrdinaryStationRow(
                 notifier: notifier,
                 fieldPrefix:
-                    'ordinaryStation.$prefectureIndex.$cityIndex.$stationIndex',
+                    'ordinaryStation.${entry.key.name}.${prefecture.prefecture.prefecture.code}.${city.city.code}.${station.station.code}.'
+                    '${city.stations.take(stationIndex).where((candidate) => candidate.station.code == station.station.code).length}',
                 ownsStationDetails: ownsStationDetails,
                 station: station,
                 onChanged: (updated) => notifier.setIntensityTree({
@@ -943,7 +977,9 @@ class _OrdinaryTreeFields extends StatelessWidget {
             if (!ownsCities)
               _StationParentCityLocator(
                 notifier: notifier,
-                fieldPrefix: 'ordinaryParentCity.$prefectureIndex.$cityIndex',
+                fieldPrefix:
+                    'ordinaryParentCity.${entry.key.name}.${prefecture.prefecture.prefecture.code}.${city.city.code}.'
+                    '${prefecture.cities.take(cityIndex).where((candidate) => candidate.city.code == city.city.code).length}',
                 currentCode: city.city.code,
                 currentName: city.city.name.ja,
                 onCodeChanged: (value) => notifier.setVxse62StationParentCity(
@@ -964,16 +1000,31 @@ class _OrdinaryTreeFields extends StatelessWidget {
         children: [
           TextButton.icon(
             key: const Key('ordinary-prefecture-add'),
-            onPressed: () => notifier.setIntensityTree({
-              ...tree,
-              maxIntensity: [
-                ...tree[maxIntensity] ?? const [],
-                const PrefectureIntensityNode(
-                  prefecture: earthquakeVxseDebugSampleIntensityPrefecture,
-                  cities: [],
-                ),
-              ],
-            }),
+            onPressed: () {
+              final code = nextEarthquakeVxseDebugCode(
+                prefix: 'debug-prefecture',
+                usedCodes: tree.values
+                    .expand((nodes) => nodes)
+                    .map((node) => node.prefecture.prefecture.code)
+                    .toSet(),
+              );
+              notifier.setIntensityTree({
+                ...tree,
+                maxIntensity: [
+                  ...tree[maxIntensity] ?? const [],
+                  PrefectureIntensityNode(
+                    prefecture: earthquakeVxseDebugSampleIntensityPrefecture
+                        .copyWith(
+                          prefecture:
+                              earthquakeVxseDebugSampleIntensityPrefecture
+                                  .prefecture
+                                  .copyWith(code: code),
+                        ),
+                    cities: const [],
+                  ),
+                ],
+              });
+            },
             icon: const Icon(Icons.add),
             label: const Text('都道府県'),
           ),
@@ -982,34 +1033,32 @@ class _OrdinaryTreeFields extends StatelessWidget {
               key: const Key('ordinary-city-add'),
               onPressed: () {
                 final values = tree[maxIntensity] ?? const [];
+                final code = nextEarthquakeVxseDebugCode(
+                  prefix: 'debug-city',
+                  usedCodes: tree.values
+                      .expand((nodes) => nodes)
+                      .expand((node) => node.cities)
+                      .map((node) => node.city.code)
+                      .toSet(),
+                );
+                final addedCity = CityIntensityNode(
+                  city: earthquakeVxseDebugSampleCity.copyWith(code: code),
+                  maxIntensity: earthquakeVxseDebugSampleMaxIntensity,
+                  stations: const [],
+                );
                 notifier.setIntensityTree({
                   ...tree,
                   maxIntensity: values.isEmpty
-                      ? const [
+                      ? [
                           PrefectureIntensityNode(
                             prefecture:
                                 earthquakeVxseDebugSampleIntensityPrefecture,
-                            cities: [
-                              CityIntensityNode(
-                                city: earthquakeVxseDebugSampleCity,
-                                maxIntensity:
-                                    earthquakeVxseDebugSampleMaxIntensity,
-                                stations: [],
-                              ),
-                            ],
+                            cities: [addedCity],
                           ),
                         ]
                       : [
                           values.first.copyWith(
-                            cities: [
-                              ...values.first.cities,
-                              const CityIntensityNode(
-                                city: earthquakeVxseDebugSampleCity,
-                                maxIntensity:
-                                    earthquakeVxseDebugSampleMaxIntensity,
-                                stations: [],
-                              ),
-                            ],
+                            cities: [...values.first.cities, addedCity],
                           ),
                           ...values.skip(1),
                         ],
@@ -1022,6 +1071,15 @@ class _OrdinaryTreeFields extends StatelessWidget {
             key: const Key('ordinary-station-add'),
             onPressed: () {
               final values = tree[maxIntensity] ?? const [];
+              final stationCode = nextEarthquakeVxseDebugCode(
+                prefix: 'debug-station',
+                usedCodes: tree.values
+                    .expand((nodes) => nodes)
+                    .expand((node) => node.cities)
+                    .expand((node) => node.stations)
+                    .map((node) => node.station.code)
+                    .toSet(),
+              );
               final base = values.isEmpty
                   ? const PrefectureIntensityNode(
                       prefecture: earthquakeVxseDebugSampleIntensityPrefecture,
@@ -1044,10 +1102,12 @@ class _OrdinaryTreeFields extends StatelessWidget {
                       city.copyWith(
                         stations: [
                           ...city.stations,
-                          const StationIntensityNode(
-                            station: earthquakeVxseDebugSampleStation,
-                            intensity:
-                                earthquakeVxseDebugSampleStationIntensity,
+                          StationIntensityNode(
+                            station: earthquakeVxseDebugSampleStation.copyWith(
+                              code: stationCode,
+                            ),
+                            intensity: earthquakeVxseDebugSampleStationIntensity
+                                .copyWith(code: stationCode),
                           ),
                         ],
                       ),
@@ -1103,7 +1163,9 @@ class _LpgmFields extends StatelessWidget {
             for (final (index, region) in entry.value.indexed)
               _LpgmRegionRow(
                 notifier: notifier,
-                fieldPrefix: 'lpgmRegion.${entry.key.name}.$index',
+                fieldPrefix:
+                    'lpgmRegion.${entry.key.name}.${region.region.code}.'
+                    '${entry.value.take(index).where((candidate) => candidate.region.code == region.region.code).length}',
                 level: entry.key,
                 region: region,
                 onChanged: (updated) => notifier.setLpgmRegions(
@@ -1142,13 +1204,26 @@ class _LpgmFields extends StatelessWidget {
               ),
           TextButton.icon(
             key: const Key('lpgm-region-add'),
-            onPressed: () => notifier.setLpgmRegions({
-              ...draft.lpgmRegions,
-              draft.maxLpgmIntensity: [
-                ...draft.lpgmRegions[draft.maxLpgmIntensity] ?? const [],
-                earthquakeVxseDebugSampleLpgmRegion,
-              ],
-            }),
+            onPressed: () {
+              final code = nextEarthquakeVxseDebugCode(
+                prefix: 'debug-lpgm-region',
+                usedCodes: draft.lpgmRegions.values
+                    .expand((nodes) => nodes)
+                    .map((node) => node.region.code)
+                    .toSet(),
+              );
+              notifier.setLpgmRegions({
+                ...draft.lpgmRegions,
+                draft.maxLpgmIntensity: [
+                  ...draft.lpgmRegions[draft.maxLpgmIntensity] ?? const [],
+                  earthquakeVxseDebugSampleLpgmRegion.copyWith(
+                    region: earthquakeVxseDebugSampleLpgmRegion.region.copyWith(
+                      code: code,
+                    ),
+                  ),
+                ],
+              });
+            },
             icon: const Icon(Icons.add),
             label: const Text('地域を追加'),
           ),
@@ -1159,7 +1234,8 @@ class _LpgmFields extends StatelessWidget {
               _LpgmPrefectureRow(
                 notifier: notifier,
                 fieldPrefix:
-                    'lpgmPrefecture.${entry.key.name}.$prefectureIndex',
+                    'lpgmPrefecture.${entry.key.name}.${prefecture.region.code}.'
+                    '${entry.value.take(prefectureIndex).where((candidate) => candidate.region.code == prefecture.region.code).length}',
                 level: entry.key,
                 prefecture: prefecture,
                 onChanged: (updated) => notifier.setLpgmIntensityTree(
@@ -1200,7 +1276,9 @@ class _LpgmFields extends StatelessWidget {
               for (final (cityIndex, city) in prefecture.cities.indexed) ...[
                 _StationParentCityLocator(
                   notifier: notifier,
-                  fieldPrefix: 'lpgmParentCity.$prefectureIndex.$cityIndex',
+                  fieldPrefix:
+                      'lpgmParentCity.${entry.key.name}.${prefecture.region.code}.${city.city.code}.'
+                      '${prefecture.cities.take(cityIndex).where((candidate) => candidate.city.code == city.city.code).length}',
                   currentCode: city.city.code,
                   currentName: city.city.name.ja,
                   onCodeChanged: (value) => notifier.setVxse62StationParentCity(
@@ -1218,7 +1296,8 @@ class _LpgmFields extends StatelessWidget {
                   _LpgmStationRow(
                     notifier: notifier,
                     fieldPrefix:
-                        'lpgmStation.$prefectureIndex.$cityIndex.$stationIndex',
+                        'lpgmStation.${entry.key.name}.${prefecture.region.code}.${city.city.code}.${station.station.code}.'
+                        '${city.stations.take(stationIndex).where((candidate) => candidate.station.code == station.station.code).length}',
                     station: station,
                     onChanged: (updated) => notifier.setLpgmIntensityTree({
                       for (final currentEntry
@@ -1295,19 +1374,30 @@ class _LpgmFields extends StatelessWidget {
             children: [
               TextButton.icon(
                 key: const Key('lpgm-prefecture-add'),
-                onPressed: () => notifier.setLpgmIntensityTree({
-                  ...draft.lpgmIntensityTree,
-                  draft.maxLpgmIntensity: [
-                    ...draft.lpgmIntensityTree[draft.maxLpgmIntensity] ??
-                        const [],
-                    const PrefectureLpgmIntensityNode(
-                      region: earthquakeVxseDebugSampleRegion,
-                      maxLpgmIntensity:
-                          earthquakeVxseDebugSampleMaxLpgmIntensity,
-                      cities: [],
-                    ),
-                  ],
-                }),
+                onPressed: () {
+                  final code = nextEarthquakeVxseDebugCode(
+                    prefix: 'debug-lpgm-prefecture',
+                    usedCodes: draft.lpgmIntensityTree.values
+                        .expand((nodes) => nodes)
+                        .map((node) => node.region.code)
+                        .toSet(),
+                  );
+                  notifier.setLpgmIntensityTree({
+                    ...draft.lpgmIntensityTree,
+                    draft.maxLpgmIntensity: [
+                      ...draft.lpgmIntensityTree[draft.maxLpgmIntensity] ??
+                          const [],
+                      PrefectureLpgmIntensityNode(
+                        region: earthquakeVxseDebugSampleRegion.copyWith(
+                          code: code,
+                        ),
+                        maxLpgmIntensity:
+                            earthquakeVxseDebugSampleMaxLpgmIntensity,
+                        cities: const [],
+                      ),
+                    ],
+                  });
+                },
                 icon: const Icon(Icons.add),
                 label: const Text('地域階級'),
               ),
@@ -1317,6 +1407,15 @@ class _LpgmFields extends StatelessWidget {
                   final values =
                       draft.lpgmIntensityTree[draft.maxLpgmIntensity] ??
                       const [];
+                  final stationCode = nextEarthquakeVxseDebugCode(
+                    prefix: 'debug-lpgm-station',
+                    usedCodes: draft.lpgmIntensityTree.values
+                        .expand((nodes) => nodes)
+                        .expand((node) => node.cities)
+                        .expand((node) => node.stations)
+                        .map((node) => node.station.code)
+                        .toSet(),
+                  );
                   final base = values.isEmpty
                       ? const PrefectureLpgmIntensityNode(
                           region: earthquakeVxseDebugSampleRegion,
@@ -1342,10 +1441,12 @@ class _LpgmFields extends StatelessWidget {
                           city.copyWith(
                             stations: [
                               ...city.stations,
-                              const StationLpgmIntensityNode(
-                                station: earthquakeVxseDebugSampleStation,
+                              StationLpgmIntensityNode(
+                                station: earthquakeVxseDebugSampleStation
+                                    .copyWith(code: stationCode),
                                 intensity:
-                                    earthquakeVxseDebugSampleStationIntensity,
+                                    earthquakeVxseDebugSampleStationIntensity
+                                        .copyWith(code: stationCode),
                               ),
                             ],
                           ),
@@ -1389,7 +1490,9 @@ class _CommentsFields extends StatelessWidget {
           Text('コメント', style: Theme.of(context).textTheme.titleMedium),
           for (final (index, comment) in draft.comments.indexed)
             _CommentRow(
-              index: index,
+              fieldPrefix:
+                  'comment.${selectedType.name}.${comment.reportedAt.toIso8601String()}.'
+                  '${draft.comments.take(index).where((candidate) => candidate.type == comment.type && candidate.reportedAt == comment.reportedAt).length}',
               comment: comment,
               notifier: notifier,
               onChanged: (updated) => notifier.setComments([
@@ -1402,11 +1505,18 @@ class _CommentsFields extends StatelessWidget {
               ]),
             ),
           TextButton.icon(
+            key: const Key('comment-add'),
             onPressed: () => notifier.setComments([
               ...draft.comments,
               EarthquakeTelegramComment(
                 type: selectedType,
-                reportedAt: draft.reportedAt,
+                reportedAt: nextEarthquakeVxseDebugCommentTime(
+                  base: draft.reportedAt,
+                  usedTimes: draft.comments
+                      .where((comment) => comment.type == selectedType)
+                      .map((comment) => comment.reportedAt)
+                      .toSet(),
+                ),
                 additional: '',
                 free: '',
               ),
@@ -1503,14 +1613,20 @@ class _OrdinaryRegionRow extends StatelessWidget {
                 value: region.region.code,
                 label: '地域コード',
                 notifier: notifier,
-                onValidChanged: (value) => onChanged(
-                  region.copyWith(region: region.region.copyWith(code: value)),
-                ),
+                onValidChanged: (value) {
+                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  onChanged(
+                    region.copyWith(
+                      region: region.region.copyWith(code: value),
+                    ),
+                  );
+                },
               ),
             ),
             SizedBox(
               width: 180,
               child: _ControlledTextFormField(
+                fieldKey: const Key('ordinary-region-name'),
                 fieldId: '$fieldPrefix.name',
                 value: region.region.name.ja,
                 label: '地域名',
@@ -1537,13 +1653,19 @@ class _OrdinaryRegionRow extends StatelessWidget {
                   .toList(),
               onChanged: (value) {
                 if (value != null) {
+                  if (value != level) {
+                    notifier.pruneTypedInputPrefix(fieldPrefix);
+                  }
                   onChanged(region.copyWith(maxIntensity: value));
                 }
               },
             ),
             IconButton(
               key: const Key('ordinary-region-remove'),
-              onPressed: onRemove,
+              onPressed: () {
+                notifier.pruneTypedInputPrefix(fieldPrefix);
+                onRemove();
+              },
               tooltip: '地域を削除',
               icon: const Icon(Icons.delete_outline),
             ),
@@ -1572,66 +1694,81 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
   final VoidCallback onRemove;
 
   @override
-  Widget build(BuildContext context) => Card(
-    key: const Key('ordinary-prefecture-row'),
-    child: Padding(
-      padding: const EdgeInsets.all(8),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          SizedBox(
-            width: 100,
-            child: _ControlledTextFormField(
-              fieldId: '$fieldPrefix.code',
-              value: prefecture.prefecture.code,
-              label: '都道府県コード',
-              notifier: notifier,
-              onValidChanged: (value) => onChanged(
-                prefecture.copyWith(
-                  prefecture: prefecture.prefecture.copyWith(code: value),
-                ),
+  Widget build(BuildContext context) => KeyedSubtree(
+    key: ValueKey('ordinary-prefecture-row.$fieldPrefix'),
+    child: Card(
+      key: const Key('ordinary-prefecture-row'),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            SizedBox(
+              width: 100,
+              child: _ControlledTextFormField(
+                fieldKey: const Key('ordinary-prefecture-code'),
+                fieldId: '$fieldPrefix.code',
+                value: prefecture.prefecture.code,
+                label: '都道府県コード',
+                notifier: notifier,
+                onValidChanged: (value) {
+                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  onChanged(
+                    prefecture.copyWith(
+                      prefecture: prefecture.prefecture.copyWith(code: value),
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-          SizedBox(
-            width: 180,
-            child: _ControlledTextFormField(
-              fieldId: '$fieldPrefix.name',
-              value: prefecture.prefecture.name.ja,
-              label: '都道府県名',
-              notifier: notifier,
-              onValidChanged: (value) => onChanged(
-                prefecture.copyWith(
-                  prefecture: prefecture.prefecture.copyWith(
-                    name: prefecture.prefecture.name.copyWith(ja: value),
+            SizedBox(
+              width: 180,
+              child: _ControlledTextFormField(
+                fieldKey: const Key('ordinary-prefecture-name'),
+                fieldId: '$fieldPrefix.name',
+                value: prefecture.prefecture.name.ja,
+                label: '都道府県名',
+                notifier: notifier,
+                onValidChanged: (value) => onChanged(
+                  prefecture.copyWith(
+                    prefecture: prefecture.prefecture.copyWith(
+                      name: prefecture.prefecture.name.copyWith(ja: value),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          DropdownButton<JmaIntensity>(
-            key: const Key('ordinary-prefecture-max'),
-            value: prefecture.maxIntensity ?? level,
-            items: JmaIntensity.values
-                .map(
-                  (value) => DropdownMenuItem<JmaIntensity>(
-                    value: value,
-                    child: Text(value.label),
-                  ),
-                )
-                .toList(),
-            onChanged: (value) =>
-                onChanged(prefecture.copyWith(maxIntensity: value)),
-          ),
-          IconButton(
-            key: const Key('ordinary-prefecture-remove'),
-            onPressed: onRemove,
-            tooltip: '都道府県を削除',
-            icon: const Icon(Icons.delete_outline),
-          ),
-        ],
+            DropdownButton<JmaIntensity>(
+              key: const Key('ordinary-prefecture-max'),
+              value: prefecture.maxIntensity ?? level,
+              items: JmaIntensity.values
+                  .map(
+                    (value) => DropdownMenuItem<JmaIntensity>(
+                      value: value,
+                      child: Text(value.label),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value != level) {
+                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                }
+                onChanged(prefecture.copyWith(maxIntensity: value));
+              },
+            ),
+            IconButton(
+              key: const Key('ordinary-prefecture-remove'),
+              onPressed: () {
+                notifier.pruneTypedInputPrefix(fieldPrefix);
+                onRemove();
+              },
+              tooltip: '都道府県を削除',
+              icon: const Icon(Icons.delete_outline),
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -1653,65 +1790,76 @@ class _OrdinaryCityRow extends StatelessWidget {
   final VoidCallback onRemove;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(left: 16),
-    child: Card(
-      key: const Key('ordinary-city-row'),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            SizedBox(
-              width: 120,
-              child: _ControlledTextFormField(
-                fieldId: '$fieldPrefix.code',
-                value: city.city.code,
-                label: '市区町村コード',
-                notifier: notifier,
-                onValidChanged: (value) => onChanged(
-                  city.copyWith(city: city.city.copyWith(code: value)),
+  Widget build(BuildContext context) => KeyedSubtree(
+    key: ValueKey('ordinary-city-row.$fieldPrefix'),
+    child: Padding(
+      padding: const EdgeInsets.only(left: 16),
+      child: Card(
+        key: const Key('ordinary-city-row'),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              SizedBox(
+                width: 120,
+                child: _ControlledTextFormField(
+                  fieldKey: const Key('ordinary-city-code'),
+                  fieldId: '$fieldPrefix.code',
+                  value: city.city.code,
+                  label: '市区町村コード',
+                  notifier: notifier,
+                  onValidChanged: (value) {
+                    notifier.pruneTypedInputPrefix(fieldPrefix);
+                    onChanged(
+                      city.copyWith(city: city.city.copyWith(code: value)),
+                    );
+                  },
                 ),
               ),
-            ),
-            SizedBox(
-              width: 180,
-              child: _ControlledTextFormField(
-                fieldId: '$fieldPrefix.name',
-                value: city.city.name.ja,
-                label: '市区町村名',
-                notifier: notifier,
-                onValidChanged: (value) => onChanged(
-                  city.copyWith(
-                    city: city.city.copyWith(
-                      name: city.city.name.copyWith(ja: value),
+              SizedBox(
+                width: 180,
+                child: _ControlledTextFormField(
+                  fieldKey: const Key('ordinary-city-name'),
+                  fieldId: '$fieldPrefix.name',
+                  value: city.city.name.ja,
+                  label: '市区町村名',
+                  notifier: notifier,
+                  onValidChanged: (value) => onChanged(
+                    city.copyWith(
+                      city: city.city.copyWith(
+                        name: city.city.name.copyWith(ja: value),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            DropdownButton<JmaIntensity?>(
-              value: city.maxIntensity,
-              items: JmaIntensity.values
-                  .map(
-                    (value) => DropdownMenuItem<JmaIntensity?>(
-                      value: value,
-                      child: Text(value.label),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) =>
-                  onChanged(city.copyWith(maxIntensity: value)),
-            ),
-            IconButton(
-              key: const Key('ordinary-city-remove'),
-              onPressed: onRemove,
-              tooltip: '市区町村を削除',
-              icon: const Icon(Icons.delete_outline),
-            ),
-          ],
+              DropdownButton<JmaIntensity?>(
+                value: city.maxIntensity,
+                items: JmaIntensity.values
+                    .map(
+                      (value) => DropdownMenuItem<JmaIntensity?>(
+                        value: value,
+                        child: Text(value.label),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) =>
+                    onChanged(city.copyWith(maxIntensity: value)),
+              ),
+              IconButton(
+                key: const Key('ordinary-city-remove'),
+                onPressed: () {
+                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  onRemove();
+                },
+                tooltip: '市区町村を削除',
+                icon: const Icon(Icons.delete_outline),
+              ),
+            ],
+          ),
         ),
       ),
     ),
@@ -1736,39 +1884,45 @@ class _StationParentCityLocator extends StatelessWidget {
   final ValueChanged<String> onNameChanged;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    key: const Key('station-parent-city-locator'),
-    padding: const EdgeInsets.only(left: 16),
-    child: Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            SizedBox(
-              width: 120,
-              child: _ControlledTextFormField(
-                fieldKey: const Key('station-parent-city-code'),
-                fieldId: '$fieldPrefix.code',
-                value: currentCode,
-                label: '親市区町村コード',
-                notifier: notifier,
-                onValidChanged: onCodeChanged,
+  Widget build(BuildContext context) => KeyedSubtree(
+    key: ValueKey('station-parent-city-locator.$fieldPrefix'),
+    child: Padding(
+      key: const Key('station-parent-city-locator'),
+      padding: const EdgeInsets.only(left: 16),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              SizedBox(
+                width: 120,
+                child: _ControlledTextFormField(
+                  fieldKey: const Key('station-parent-city-code'),
+                  fieldId: '$fieldPrefix.code',
+                  value: currentCode,
+                  label: '親市区町村コード',
+                  notifier: notifier,
+                  onValidChanged: (value) {
+                    notifier.pruneTypedInputPrefix(fieldPrefix);
+                    onCodeChanged(value);
+                  },
+                ),
               ),
-            ),
-            SizedBox(
-              width: 180,
-              child: _ControlledTextFormField(
-                fieldKey: const Key('station-parent-city-name'),
-                fieldId: '$fieldPrefix.name',
-                value: currentName,
-                label: '親市区町村名',
-                notifier: notifier,
-                onValidChanged: onNameChanged,
+              SizedBox(
+                width: 180,
+                child: _ControlledTextFormField(
+                  fieldKey: const Key('station-parent-city-name'),
+                  fieldId: '$fieldPrefix.name',
+                  value: currentName,
+                  label: '親市区町村名',
+                  notifier: notifier,
+                  onValidChanged: onNameChanged,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ),
@@ -1796,81 +1950,92 @@ class _OrdinaryStationRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final intensity =
         station.intensity ?? earthquakeVxseDebugSampleStationIntensity;
-    return Padding(
-      padding: const EdgeInsets.only(left: 32),
-      child: Card(
-        key: const Key('ordinary-station-row'),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              SizedBox(
-                width: 120,
-                child: _ControlledTextFormField(
-                  fieldId: '$fieldPrefix.code',
-                  value: station.station.code,
-                  label: '観測点コード',
-                  notifier: notifier,
-                  onValidChanged: (value) => onChanged(
-                    station.copyWith(
-                      station: station.station.copyWith(code: value),
-                      intensity: intensity.copyWith(code: value),
+    return KeyedSubtree(
+      key: ValueKey('ordinary-station-row.$fieldPrefix'),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 32),
+        child: Card(
+          key: const Key('ordinary-station-row'),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                SizedBox(
+                  width: 120,
+                  child: _ControlledTextFormField(
+                    fieldKey: const Key('ordinary-station-code'),
+                    fieldId: '$fieldPrefix.code',
+                    value: station.station.code,
+                    label: '観測点コード',
+                    notifier: notifier,
+                    onValidChanged: (value) {
+                      notifier.pruneTypedInputPrefix(fieldPrefix);
+                      onChanged(
+                        station.copyWith(
+                          station: station.station.copyWith(code: value),
+                          intensity: intensity.copyWith(code: value),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 180,
+                  child: _ControlledTextFormField(
+                    fieldKey: const Key('ordinary-station-name'),
+                    fieldId: '$fieldPrefix.name',
+                    value: station.station.name.ja,
+                    label: '観測点名',
+                    notifier: notifier,
+                    onValidChanged: (value) => onChanged(
+                      station.copyWith(
+                        station: station.station.copyWith(
+                          name: station.station.name.copyWith(ja: value),
+                        ),
+                        intensity: intensity.copyWith(name: value),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 180,
-                child: _ControlledTextFormField(
-                  fieldId: '$fieldPrefix.name',
-                  value: station.station.name.ja,
-                  label: '観測点名',
-                  notifier: notifier,
-                  onValidChanged: (value) => onChanged(
+                DropdownButton<JmaIntensity?>(
+                  value: intensity.maxIntensity,
+                  items: JmaIntensity.values
+                      .map(
+                        (value) => DropdownMenuItem<JmaIntensity?>(
+                          value: value,
+                          child: Text(value.label),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) => onChanged(
                     station.copyWith(
-                      station: station.station.copyWith(
-                        name: station.station.name.copyWith(ja: value),
-                      ),
-                      intensity: intensity.copyWith(name: value),
+                      intensity: intensity.copyWith(maxIntensity: value),
                     ),
                   ),
                 ),
-              ),
-              DropdownButton<JmaIntensity?>(
-                value: intensity.maxIntensity,
-                items: JmaIntensity.values
-                    .map(
-                      (value) => DropdownMenuItem<JmaIntensity?>(
-                        value: value,
-                        child: Text(value.label),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) => onChanged(
-                  station.copyWith(
-                    intensity: intensity.copyWith(maxIntensity: value),
+                if (ownsStationDetails)
+                  _StationDetailsFields(
+                    key: const Key('ordinary-station-details'),
+                    fieldPrefix: fieldPrefix,
+                    intensity: intensity,
+                    notifier: notifier,
+                    onChanged: (updated) =>
+                        onChanged(station.copyWith(intensity: updated)),
                   ),
+                IconButton(
+                  key: const Key('ordinary-station-remove'),
+                  onPressed: () {
+                    notifier.pruneTypedInputPrefix(fieldPrefix);
+                    onRemove();
+                  },
+                  tooltip: '観測点を削除',
+                  icon: const Icon(Icons.delete_outline),
                 ),
-              ),
-              if (ownsStationDetails)
-                _StationDetailsFields(
-                  key: const Key('ordinary-station-details'),
-                  fieldPrefix: fieldPrefix,
-                  intensity: intensity,
-                  notifier: notifier,
-                  onChanged: (updated) =>
-                      onChanged(station.copyWith(intensity: updated)),
-                ),
-              IconButton(
-                key: const Key('ordinary-station-remove'),
-                onPressed: onRemove,
-                tooltip: '観測点を削除',
-                icon: const Icon(Icons.delete_outline),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -1896,64 +2061,81 @@ class _LpgmRegionRow extends StatelessWidget {
   final VoidCallback onRemove;
 
   @override
-  Widget build(BuildContext context) => Card(
-    key: const Key('lpgm-region-row'),
-    child: Padding(
-      padding: const EdgeInsets.all(8),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          SizedBox(
-            width: 120,
-            child: _ControlledTextFormField(
-              fieldId: '$fieldPrefix.code',
-              value: region.region.code,
-              label: '地域コード',
-              notifier: notifier,
-              onValidChanged: (value) => onChanged(
-                region.copyWith(region: region.region.copyWith(code: value)),
+  Widget build(BuildContext context) => KeyedSubtree(
+    key: ValueKey('lpgm-region-row.$fieldPrefix'),
+    child: Card(
+      key: const Key('lpgm-region-row'),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            SizedBox(
+              width: 120,
+              child: _ControlledTextFormField(
+                fieldKey: const Key('lpgm-region-code'),
+                fieldId: '$fieldPrefix.code',
+                value: region.region.code,
+                label: '地域コード',
+                notifier: notifier,
+                onValidChanged: (value) {
+                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  onChanged(
+                    region.copyWith(
+                      region: region.region.copyWith(code: value),
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-          SizedBox(
-            width: 180,
-            child: _ControlledTextFormField(
-              fieldId: '$fieldPrefix.name',
-              value: region.region.name.ja,
-              label: '地域名',
-              notifier: notifier,
-              onValidChanged: (value) => onChanged(
-                region.copyWith(
-                  region: region.region.copyWith(
-                    name: region.region.name.copyWith(ja: value),
+            SizedBox(
+              width: 180,
+              child: _ControlledTextFormField(
+                fieldKey: const Key('lpgm-region-name'),
+                fieldId: '$fieldPrefix.name',
+                value: region.region.name.ja,
+                label: '地域名',
+                notifier: notifier,
+                onValidChanged: (value) => onChanged(
+                  region.copyWith(
+                    region: region.region.copyWith(
+                      name: region.region.name.copyWith(ja: value),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          DropdownButton<JmaLpgmIntensity>(
-            value: region.maxLpgmIntensity ?? level,
-            key: const Key('lpgm-region-max'),
-            items: JmaLpgmIntensity.values
-                .map(
-                  (value) => DropdownMenuItem<JmaLpgmIntensity>(
-                    value: value,
-                    child: Text(value.label),
-                  ),
-                )
-                .toList(),
-            onChanged: (value) =>
-                onChanged(region.copyWith(maxLpgmIntensity: value)),
-          ),
-          IconButton(
-            key: const Key('lpgm-region-remove'),
-            onPressed: onRemove,
-            tooltip: '地域を削除',
-            icon: const Icon(Icons.delete_outline),
-          ),
-        ],
+            DropdownButton<JmaLpgmIntensity>(
+              value: region.maxLpgmIntensity ?? level,
+              key: const Key('lpgm-region-max'),
+              items: JmaLpgmIntensity.values
+                  .map(
+                    (value) => DropdownMenuItem<JmaLpgmIntensity>(
+                      value: value,
+                      child: Text(value.label),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value != level) {
+                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                }
+                onChanged(region.copyWith(maxLpgmIntensity: value));
+              },
+            ),
+            IconButton(
+              key: const Key('lpgm-region-remove'),
+              onPressed: () {
+                notifier.pruneTypedInputPrefix(fieldPrefix);
+                onRemove();
+              },
+              tooltip: '地域を削除',
+              icon: const Icon(Icons.delete_outline),
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -1977,67 +2159,83 @@ class _LpgmPrefectureRow extends StatelessWidget {
   final VoidCallback onRemove;
 
   @override
-  Widget build(BuildContext context) => Card(
-    key: const Key('lpgm-prefecture-row'),
-    child: Padding(
-      padding: const EdgeInsets.all(8),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          SizedBox(
-            width: 120,
-            child: _ControlledTextFormField(
-              fieldId: '$fieldPrefix.code',
-              value: prefecture.region.code,
-              label: '地域コード',
-              notifier: notifier,
-              onValidChanged: (value) => onChanged(
-                prefecture.copyWith(
-                  region: prefecture.region.copyWith(code: value),
-                ),
+  Widget build(BuildContext context) => KeyedSubtree(
+    key: ValueKey('lpgm-prefecture-row.$fieldPrefix'),
+    child: Card(
+      key: const Key('lpgm-prefecture-row'),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            SizedBox(
+              width: 120,
+              child: _ControlledTextFormField(
+                fieldKey: const Key('lpgm-prefecture-code'),
+                fieldId: '$fieldPrefix.code',
+                value: prefecture.region.code,
+                label: '地域コード',
+                notifier: notifier,
+                onValidChanged: (value) {
+                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  onChanged(
+                    prefecture.copyWith(
+                      region: prefecture.region.copyWith(code: value),
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-          DropdownButton<JmaLpgmIntensity>(
-            key: const Key('lpgm-prefecture-max'),
-            value: prefecture.maxLpgmIntensity ?? level,
-            items: JmaLpgmIntensity.values
-                .map(
-                  (value) =>
-                      DropdownMenuItem(value: value, child: Text(value.label)),
-                )
-                .toList(),
-            onChanged: (value) {
-              if (value != null) {
-                onChanged(prefecture.copyWith(maxLpgmIntensity: value));
-              }
-            },
-          ),
-          SizedBox(
-            width: 180,
-            child: _ControlledTextFormField(
-              fieldId: '$fieldPrefix.name',
-              value: prefecture.region.name.ja,
-              label: '地域名',
-              notifier: notifier,
-              onValidChanged: (value) => onChanged(
-                prefecture.copyWith(
-                  region: prefecture.region.copyWith(
-                    name: prefecture.region.name.copyWith(ja: value),
+            DropdownButton<JmaLpgmIntensity>(
+              key: const Key('lpgm-prefecture-max'),
+              value: prefecture.maxLpgmIntensity ?? level,
+              items: JmaLpgmIntensity.values
+                  .map(
+                    (value) => DropdownMenuItem(
+                      value: value,
+                      child: Text(value.label),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  if (value != level) {
+                    notifier.pruneTypedInputPrefix(fieldPrefix);
+                  }
+                  onChanged(prefecture.copyWith(maxLpgmIntensity: value));
+                }
+              },
+            ),
+            SizedBox(
+              width: 180,
+              child: _ControlledTextFormField(
+                fieldKey: const Key('lpgm-prefecture-name'),
+                fieldId: '$fieldPrefix.name',
+                value: prefecture.region.name.ja,
+                label: '地域名',
+                notifier: notifier,
+                onValidChanged: (value) => onChanged(
+                  prefecture.copyWith(
+                    region: prefecture.region.copyWith(
+                      name: prefecture.region.name.copyWith(ja: value),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          IconButton(
-            key: const Key('lpgm-prefecture-remove'),
-            onPressed: onRemove,
-            tooltip: '地域階級を削除',
-            icon: const Icon(Icons.delete_outline),
-          ),
-        ],
+            IconButton(
+              key: const Key('lpgm-prefecture-remove'),
+              onPressed: () {
+                notifier.pruneTypedInputPrefix(fieldPrefix);
+                onRemove();
+              },
+              tooltip: '地域階級を削除',
+              icon: const Icon(Icons.delete_outline),
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -2062,80 +2260,91 @@ class _LpgmStationRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final intensity =
         station.intensity ?? earthquakeVxseDebugSampleStationIntensity;
-    return Padding(
-      padding: const EdgeInsets.only(left: 32),
-      child: Card(
-        key: const Key('lpgm-station-row'),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              SizedBox(
-                width: 120,
-                child: _ControlledTextFormField(
-                  fieldId: '$fieldPrefix.code',
-                  value: station.station.code,
-                  label: '観測点コード',
-                  notifier: notifier,
-                  onValidChanged: (value) => onChanged(
-                    station.copyWith(
-                      station: station.station.copyWith(code: value),
-                      intensity: intensity.copyWith(code: value),
+    return KeyedSubtree(
+      key: ValueKey('lpgm-station-row.$fieldPrefix'),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 32),
+        child: Card(
+          key: const Key('lpgm-station-row'),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                SizedBox(
+                  width: 120,
+                  child: _ControlledTextFormField(
+                    fieldKey: const Key('lpgm-station-code'),
+                    fieldId: '$fieldPrefix.code',
+                    value: station.station.code,
+                    label: '観測点コード',
+                    notifier: notifier,
+                    onValidChanged: (value) {
+                      notifier.pruneTypedInputPrefix(fieldPrefix);
+                      onChanged(
+                        station.copyWith(
+                          station: station.station.copyWith(code: value),
+                          intensity: intensity.copyWith(code: value),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 180,
+                  child: _ControlledTextFormField(
+                    fieldKey: const Key('lpgm-station-name'),
+                    fieldId: '$fieldPrefix.name',
+                    value: station.station.name.ja,
+                    label: '観測点名',
+                    notifier: notifier,
+                    onValidChanged: (value) => onChanged(
+                      station.copyWith(
+                        station: station.station.copyWith(
+                          name: station.station.name.copyWith(ja: value),
+                        ),
+                        intensity: intensity.copyWith(name: value),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 180,
-                child: _ControlledTextFormField(
-                  fieldId: '$fieldPrefix.name',
-                  value: station.station.name.ja,
-                  label: '観測点名',
-                  notifier: notifier,
-                  onValidChanged: (value) => onChanged(
+                DropdownButton<JmaLpgmIntensity?>(
+                  value: intensity.maxLpgmIntensity,
+                  items: JmaLpgmIntensity.values
+                      .map(
+                        (value) => DropdownMenuItem<JmaLpgmIntensity?>(
+                          value: value,
+                          child: Text(value.label),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) => onChanged(
                     station.copyWith(
-                      station: station.station.copyWith(
-                        name: station.station.name.copyWith(ja: value),
-                      ),
-                      intensity: intensity.copyWith(name: value),
+                      intensity: intensity.copyWith(maxLpgmIntensity: value),
                     ),
                   ),
                 ),
-              ),
-              DropdownButton<JmaLpgmIntensity?>(
-                value: intensity.maxLpgmIntensity,
-                items: JmaLpgmIntensity.values
-                    .map(
-                      (value) => DropdownMenuItem<JmaLpgmIntensity?>(
-                        value: value,
-                        child: Text(value.label),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) => onChanged(
-                  station.copyWith(
-                    intensity: intensity.copyWith(maxLpgmIntensity: value),
-                  ),
+                _StationDetailsFields(
+                  key: const Key('lpgm-station-details'),
+                  fieldPrefix: fieldPrefix,
+                  intensity: intensity,
+                  notifier: notifier,
+                  onChanged: (updated) =>
+                      onChanged(station.copyWith(intensity: updated)),
                 ),
-              ),
-              _StationDetailsFields(
-                key: const Key('lpgm-station-details'),
-                fieldPrefix: fieldPrefix,
-                intensity: intensity,
-                notifier: notifier,
-                onChanged: (updated) =>
-                    onChanged(station.copyWith(intensity: updated)),
-              ),
-              IconButton(
-                key: const Key('lpgm-station-remove'),
-                onPressed: onRemove,
-                tooltip: '観測点を削除',
-                icon: const Icon(Icons.delete_outline),
-              ),
-            ],
+                IconButton(
+                  key: const Key('lpgm-station-remove'),
+                  onPressed: () {
+                    notifier.pruneTypedInputPrefix(fieldPrefix);
+                    onRemove();
+                  },
+                  tooltip: '観測点を削除',
+                  icon: const Icon(Icons.delete_outline),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -2181,7 +2390,10 @@ class _StationDetailsFields extends StatelessWidget {
         for (final (index, prePeriod)
             in (intensity.prePeriods ?? const []).indexed)
           Card.outlined(
-            key: ValueKey('$fieldPrefix.prePeriod.$index'),
+            key: ValueKey(
+              '$fieldPrefix.prePeriod.${prePeriod.band}.'
+              '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}',
+            ),
             child: Padding(
               key: const Key('pre-period-row'),
               padding: const EdgeInsets.all(8),
@@ -2194,24 +2406,34 @@ class _StationDetailsFields extends StatelessWidget {
                     width: 90,
                     child: _ControlledTextFormField(
                       fieldKey: const Key('pre-period-band'),
-                      fieldId: '$fieldPrefix.prePeriod.$index.band',
+                      fieldId:
+                          '$fieldPrefix.prePeriod.${prePeriod.band}.'
+                          '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}.band',
                       value: prePeriod.band.toString(),
                       label: '周期帯',
                       notifier: notifier,
                       keyboardType: TextInputType.number,
                       validation: (value) =>
                           double.tryParse(value) == null ? '数値を入力してください' : null,
-                      onValidChanged: (value) => onChanged(
-                        intensity.copyWith(
-                          prePeriods: [
-                            for (final (currentIndex, current)
-                                in (intensity.prePeriods ?? const []).indexed)
-                              currentIndex == index
-                                  ? current.copyWith(band: double.parse(value))
-                                  : current,
-                          ],
-                        ),
-                      ),
+                      onValidChanged: (value) {
+                        notifier.pruneTypedInputPrefix(
+                          '$fieldPrefix.prePeriod.${prePeriod.band}.'
+                          '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}',
+                        );
+                        onChanged(
+                          intensity.copyWith(
+                            prePeriods: [
+                              for (final (currentIndex, current)
+                                  in (intensity.prePeriods ?? const []).indexed)
+                                currentIndex == index
+                                    ? current.copyWith(
+                                        band: double.parse(value),
+                                      )
+                                    : current,
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ),
                   SizedBox(
@@ -2248,7 +2470,10 @@ class _StationDetailsFields extends StatelessWidget {
                   SizedBox(
                     width: 90,
                     child: _ControlledTextFormField(
-                      fieldId: '$fieldPrefix.prePeriod.$index.sva',
+                      fieldKey: const Key('pre-period-sva'),
+                      fieldId:
+                          '$fieldPrefix.prePeriod.${prePeriod.band}.'
+                          '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}.sva',
                       value: prePeriod.sva.toString(),
                       label: 'SVA',
                       notifier: notifier,
@@ -2271,15 +2496,21 @@ class _StationDetailsFields extends StatelessWidget {
                   IconButton(
                     key: const Key('pre-period-remove'),
                     tooltip: '周期帯を削除',
-                    onPressed: () => onChanged(
-                      intensity.copyWith(
-                        prePeriods: [
-                          for (final (currentIndex, current)
-                              in (intensity.prePeriods ?? const []).indexed)
-                            if (currentIndex != index) current,
-                        ],
-                      ),
-                    ),
+                    onPressed: () {
+                      notifier.pruneTypedInputPrefix(
+                        '$fieldPrefix.prePeriod.${prePeriod.band}.'
+                        '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}',
+                      );
+                      onChanged(
+                        intensity.copyWith(
+                          prePeriods: [
+                            for (final (currentIndex, current)
+                                in (intensity.prePeriods ?? const []).indexed)
+                              if (currentIndex != index) current,
+                          ],
+                        ),
+                      );
+                    },
                     icon: const Icon(Icons.delete_outline),
                   ),
                 ],
@@ -2292,8 +2523,12 @@ class _StationDetailsFields extends StatelessWidget {
             intensity.copyWith(
               prePeriods: [
                 ...intensity.prePeriods ?? const [],
-                const PrePeriod(
-                  band: 1.6,
+                PrePeriod(
+                  band: nextEarthquakeVxseDebugPrePeriodBand(
+                    usedBands: (intensity.prePeriods ?? const [])
+                        .map((prePeriod) => prePeriod.band)
+                        .toSet(),
+                  ),
                   lpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
                   sva: 12.3,
                 ),
@@ -2310,64 +2545,74 @@ class _StationDetailsFields extends StatelessWidget {
 
 class _CommentRow extends StatelessWidget {
   const _CommentRow({
-    required this.index,
+    required this.fieldPrefix,
     required this.comment,
     required this.notifier,
     required this.onChanged,
     required this.onRemove,
   });
 
-  final int index;
+  final String fieldPrefix;
   final EarthquakeTelegramComment comment;
   final EarthquakeVxseDebugEditorController notifier;
   final ValueChanged<EarthquakeTelegramComment> onChanged;
   final VoidCallback onRemove;
 
   @override
-  Widget build(BuildContext context) => Card(
-    key: const Key('comment-row'),
-    child: Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        children: [
-          _ControlledTextFormField(
-            fieldKey: const Key('comment-reported-at'),
-            fieldId: 'comment.$index.reportedAt',
-            value: comment.reportedAt.toIso8601String(),
-            label: 'コメント発表時刻',
-            notifier: notifier,
-            validation: (value) =>
-                DateTime.tryParse(value) == null ? '日時を入力してください' : null,
-            onValidChanged: (value) =>
-                onChanged(comment.copyWith(reportedAt: DateTime.parse(value))),
-          ),
-          _ControlledTextFormField(
-            fieldId: 'comment.$index.additional',
-            value: comment.additional ?? '',
-            label: '固定付加文',
-            notifier: notifier,
-            maxLines: null,
-            onValidChanged: (value) =>
-                onChanged(comment.copyWith(additional: value)),
-          ),
-          _ControlledTextFormField(
-            fieldId: 'comment.$index.free',
-            value: comment.free ?? '',
-            label: '自由付加文',
-            notifier: notifier,
-            maxLines: null,
-            onValidChanged: (value) => onChanged(comment.copyWith(free: value)),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              key: const Key('comment-remove'),
-              onPressed: onRemove,
-              tooltip: 'コメントを削除',
-              icon: const Icon(Icons.delete_outline),
+  Widget build(BuildContext context) => KeyedSubtree(
+    key: ValueKey('comment-row.$fieldPrefix'),
+    child: Card(
+      key: const Key('comment-row'),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            _ControlledTextFormField(
+              fieldKey: const Key('comment-reported-at'),
+              fieldId: '$fieldPrefix.reportedAt',
+              value: comment.reportedAt.toIso8601String(),
+              label: 'コメント発表時刻',
+              notifier: notifier,
+              validation: (value) =>
+                  DateTime.tryParse(value) == null ? '日時を入力してください' : null,
+              onValidChanged: (value) {
+                notifier.pruneTypedInputPrefix(fieldPrefix);
+                onChanged(comment.copyWith(reportedAt: DateTime.parse(value)));
+              },
             ),
-          ),
-        ],
+            _ControlledTextFormField(
+              fieldKey: const Key('comment-additional'),
+              fieldId: '$fieldPrefix.additional',
+              value: comment.additional ?? '',
+              label: '固定付加文',
+              notifier: notifier,
+              maxLines: null,
+              onValidChanged: (value) =>
+                  onChanged(comment.copyWith(additional: value)),
+            ),
+            _ControlledTextFormField(
+              fieldId: '$fieldPrefix.free',
+              value: comment.free ?? '',
+              label: '自由付加文',
+              notifier: notifier,
+              maxLines: null,
+              onValidChanged: (value) =>
+                  onChanged(comment.copyWith(free: value)),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                key: const Key('comment-remove'),
+                onPressed: () {
+                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  onRemove();
+                },
+                tooltip: 'コメントを削除',
+                icon: const Icon(Icons.delete_outline),
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );
