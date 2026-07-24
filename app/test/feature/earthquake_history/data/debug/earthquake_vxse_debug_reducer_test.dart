@@ -474,6 +474,241 @@ void main() {
     });
 
     for (final mode in EarthquakeVxseApplyMode.values) {
+      test('${mode.name}のVXSE62は既存cityへdraft-only stationを通常・LPGM双方で追加する', () {
+        final current = _current();
+        final newStation = earthquakeVxseDebugSampleStation.copyWith(
+          code: 'new-station',
+          noCode: 'new-no-code',
+        );
+        final newIntensity = earthquakeVxseDebugSampleStationIntensity.copyWith(
+          code: 'new-station',
+          name: 'new-station',
+        );
+        final draft = _vxse62DraftWithTrees(
+          current: current,
+          ordinaryTree: {
+            JmaIntensity.four: [
+              PrefectureIntensityNode(
+                prefecture: earthquakeVxseDebugSampleIntensityPrefecture,
+                cities: [
+                  CityIntensityNode(
+                    city: earthquakeVxseDebugSampleCity,
+                    maxIntensity: JmaIntensity.one,
+                    stations: [
+                      StationIntensityNode(
+                        station: newStation,
+                        intensity: newIntensity,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          },
+          lpgmTree: {
+            JmaLpgmIntensity.two: [
+              PrefectureLpgmIntensityNode(
+                region: earthquakeVxseDebugSampleRegion,
+                maxLpgmIntensity: JmaLpgmIntensity.two,
+                cities: [
+                  CityLpgmIntensityNode(
+                    city: earthquakeVxseDebugSampleCity,
+                    maxLpgmIntensity: JmaLpgmIntensity.one,
+                    stations: [
+                      StationLpgmIntensityNode(
+                        station: newStation,
+                        intensity: newIntensity,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          },
+        );
+
+        final result = reducer.apply(
+          current: current,
+          draft: draft,
+          mode: mode,
+        );
+
+        expect(_stationCodes(result, '1310100'), contains('new-station'));
+        expect(_lpgmStationCodes(result, '1310100'), contains('new-station'));
+        expect(_stationNameByCode(result, 'new-station'), 'new-station');
+        expect(_lpgmStationNameByCode(result, 'new-station'), 'new-station');
+      });
+
+      test('${mode.name}のVXSE62はdraftが明示した新規city topologyへstationを追加する', () {
+        final current = _current();
+        final newStation = earthquakeVxseDebugSampleStation.copyWith(
+          code: 'new-city-station',
+          noCode: 'new-city-no-code',
+        );
+        final newCity = earthquakeVxseDebugSampleCity.copyWith(
+          code: 'new-city',
+          stations: [newStation],
+        );
+        final newIntensity = earthquakeVxseDebugSampleStationIntensity.copyWith(
+          code: 'new-city-station',
+          name: 'new-city-station',
+        );
+        final draft = _vxse62DraftWithTrees(
+          current: current,
+          ordinaryTree: {
+            JmaIntensity.four: [
+              PrefectureIntensityNode(
+                prefecture: earthquakeVxseDebugSampleIntensityPrefecture,
+                cities: [
+                  CityIntensityNode(
+                    city: newCity,
+                    maxIntensity: JmaIntensity.one,
+                    stations: [
+                      StationIntensityNode(
+                        station: newStation,
+                        intensity: newIntensity,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          },
+          lpgmTree: {
+            JmaLpgmIntensity.two: [
+              PrefectureLpgmIntensityNode(
+                region: earthquakeVxseDebugSampleRegion,
+                maxLpgmIntensity: JmaLpgmIntensity.two,
+                cities: [
+                  CityLpgmIntensityNode(
+                    city: newCity,
+                    maxLpgmIntensity: JmaLpgmIntensity.one,
+                    stations: [
+                      StationLpgmIntensityNode(
+                        station: newStation,
+                        intensity: newIntensity,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          },
+        );
+
+        final result = reducer.apply(
+          current: current,
+          draft: draft,
+          mode: mode,
+        );
+
+        expect(_cityCodes(result), contains('new-city'));
+        expect(_lpgmCityCodes(result), contains('new-city'));
+        expect(_stationCodes(result, 'new-city'), ['new-city-station']);
+        expect(_lpgmStationCodes(result, 'new-city'), ['new-city-station']);
+      });
+
+      test('${mode.name}のVXSE62はtree更新なしのlpgmRegionsをcode単位でupsertする', () {
+        final current = _current();
+        final newRegion = earthquakeVxseDebugSampleRegion.copyWith(
+          code: 'new-lpgm-region',
+        );
+        final draft = _vxse62DraftWithTrees(
+          current: current,
+          ordinaryTree: const {},
+          lpgmRegions: {
+            JmaLpgmIntensity.one: [
+              earthquakeVxseDebugSampleLpgmRegion.copyWith(
+                maxLpgmIntensity: JmaLpgmIntensity.one,
+              ),
+              LpgmIntensityRegion(
+                region: newRegion,
+                maxLpgmIntensity: JmaLpgmIntensity.one,
+              ),
+            ],
+          },
+          lpgmTree: const {},
+        );
+
+        final result = reducer.apply(
+          current: current,
+          draft: draft,
+          mode: mode,
+        );
+
+        expect(_lpgmRegionMax(result, '350'), JmaLpgmIntensity.one);
+        expect(_lpgmRegionMax(result, 'new-lpgm-region'), JmaLpgmIntensity.one);
+      });
+
+      test('${mode.name}のVXSE62は新規stationのdraft親cityが競合する場合にrejectする', () {
+        final current = _current();
+        final station = earthquakeVxseDebugSampleStation.copyWith(
+          code: 'ambiguous-station',
+          noCode: 'ambiguous-no-code',
+        );
+        final otherCity = earthquakeVxseDebugSampleCity.copyWith(
+          code: 'other-city',
+          stations: [station],
+        );
+        final stationIntensity = earthquakeVxseDebugSampleStationIntensity
+            .copyWith(code: 'ambiguous-station');
+        final draft = _vxse62DraftWithTrees(
+          current: current,
+          ordinaryTree: {
+            JmaIntensity.four: [
+              PrefectureIntensityNode(
+                prefecture: earthquakeVxseDebugSampleIntensityPrefecture,
+                cities: [
+                  CityIntensityNode(
+                    city: earthquakeVxseDebugSampleCity,
+                    maxIntensity: JmaIntensity.one,
+                    stations: [
+                      StationIntensityNode(
+                        station: station,
+                        intensity: stationIntensity,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          },
+          lpgmTree: {
+            JmaLpgmIntensity.two: [
+              PrefectureLpgmIntensityNode(
+                region: earthquakeVxseDebugSampleRegion,
+                maxLpgmIntensity: JmaLpgmIntensity.two,
+                cities: [
+                  CityLpgmIntensityNode(
+                    city: otherCity,
+                    maxLpgmIntensity: JmaLpgmIntensity.one,
+                    stations: [
+                      StationLpgmIntensityNode(
+                        station: station,
+                        intensity: stationIntensity,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          },
+        );
+
+        expect(
+          () => reducer.apply(current: current, draft: draft, mode: mode),
+          throwsA(
+            isA<EarthquakeVxseDebugDraftValidationException>().having(
+              (error) => error.issues.length,
+              'issues.length',
+              1,
+            ),
+          ),
+        );
+      });
+    }
+
+    for (final mode in EarthquakeVxseApplyMode.values) {
       test('${mode.name}はdraft variant外のcommentを明示的にrejectする', () {
         final current = _current().copyWith(
           telegramComments: [
@@ -633,6 +868,27 @@ EarthquakeTelegramComment _comment({
   reportedAt: reportedAt,
   additional: text,
   free: null,
+);
+
+EarthquakeVxseDebugDraft _vxse62DraftWithTrees({
+  required Earthquake current,
+  required Map<JmaIntensity, List<PrefectureIntensityNode>> ordinaryTree,
+  required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmTree,
+  Map<JmaLpgmIntensity, List<LpgmIntensityRegion>> lpgmRegions = const {},
+}) => EarthquakeVxseDebugDraft.vxse62(
+  eventId: current.eventId,
+  reportedAt: earthquakeVxseDebugSampleReportedAt,
+  status: TelegramStatus.normal,
+  arrivalTime: current.arrivalTime,
+  originTime: current.originTime,
+  hypocenter: earthquakeVxseDebugSampleHypocenter,
+  maxIntensity: JmaIntensity.four,
+  maxLpgmIntensity: JmaLpgmIntensity.two,
+  regions: const {},
+  intensityTree: ordinaryTree,
+  lpgmRegions: lpgmRegions,
+  lpgmIntensityTree: lpgmTree,
+  comments: const [],
 );
 
 const _supportedTypes = [
@@ -923,3 +1179,47 @@ String? _lpgmStationName(Earthquake earthquake, String code) => earthquake
     .firstWhere((item) => item.station.code == code)
     .intensity
     ?.name;
+
+List<String> _stationCodes(Earthquake earthquake, String cityCode) =>
+    earthquake.intensity?.intensityTree.values
+        .expand((items) => items)
+        .expand((item) => item.cities)
+        .firstWhere((item) => item.city.code == cityCode)
+        .stations
+        .map((item) => item.station.code)
+        .toList() ??
+    const [];
+
+List<String> _lpgmStationCodes(Earthquake earthquake, String cityCode) =>
+    earthquake.intensity?.lpgmIntensityTree.values
+        .expand((items) => items)
+        .expand((item) => item.cities)
+        .firstWhere((item) => item.city.code == cityCode)
+        .stations
+        .map((item) => item.station.code)
+        .toList() ??
+    const [];
+
+String? _stationNameByCode(Earthquake earthquake, String stationCode) =>
+    earthquake.intensity?.intensityTree.values
+        .expand((items) => items)
+        .expand((item) => item.cities)
+        .expand((item) => item.stations)
+        .firstWhere((item) => item.station.code == stationCode)
+        .intensity
+        ?.name;
+
+String? _lpgmStationNameByCode(Earthquake earthquake, String stationCode) =>
+    earthquake.intensity?.lpgmIntensityTree.values
+        .expand((items) => items)
+        .expand((item) => item.cities)
+        .expand((item) => item.stations)
+        .firstWhere((item) => item.station.code == stationCode)
+        .intensity
+        ?.name;
+
+JmaLpgmIntensity? _lpgmRegionMax(Earthquake earthquake, String regionCode) =>
+    earthquake.intensity?.lpgmIntensityTree.values
+        .expand((items) => items)
+        .firstWhere((item) => item.region.code == regionCode)
+        .maxLpgmIntensity;
