@@ -49,7 +49,23 @@ const fullEarthquake = <String, Object?>{
       'comments': null,
     },
   ],
-  'catalog': {'hypocenters': <Object?>[], 'station_records': <Object?>[]},
+  'catalog': {
+    'hypocenters': [
+      {
+        'seq': 0,
+        'record_type': 'A',
+        'magnitudes': <Object?>[],
+        'epicenter_name': '石狩地方北部',
+        'station_count': 1,
+      },
+    ],
+    'station_records': [
+      {
+        'station_code': 'POINT-1',
+        'intensity': {'class': '4', 'instrumental': 3.7},
+      },
+    ],
+  },
 };
 
 const partialEarthquake = <String, Object?>{
@@ -176,7 +192,9 @@ void main() {
         event.payload.record.telegrams.single.telegram.type.toJson(),
         'VXSE53',
       );
-      expect(event.payload.record.catalog?.hypocenters, isEmpty);
+      final catalog = event.payload.record.catalog;
+      expect(catalog?.hypocenters.single.epicenterName, '石狩地方北部');
+      expect(catalog?.stationRecords.single.stationCode, 'POINT-1');
     });
 
     test('full EEW warning relations parse', () {
@@ -241,6 +259,20 @@ void main() {
             'operation': 'upsert',
             'event_id': '20260101000000',
             'record': partialEarthquake,
+          },
+        }),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
+    });
+
+    test('earthquake upsert without record is rejected', () {
+      expect(
+        () => WsMessage.fromJson({
+          'type': 'realtime',
+          'data': {
+            'type': 'earthquake',
+            'operation': 'upsert',
+            'event_id': '20260101000000',
           },
         }),
         throwsA(isA<CheckedFromJsonException>()),

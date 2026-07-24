@@ -359,7 +359,7 @@ void _generateRealtimeEventEnvelope({
     ..writeln('    return switch (discriminator) {');
   for (final variant in variants) {
     final operation = variant.operation == null
-        ? '_'
+        ? 'null'
         : "'${variant.operation}'";
     buffer
       ..writeln(
