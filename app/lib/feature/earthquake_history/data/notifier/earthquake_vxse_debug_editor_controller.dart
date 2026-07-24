@@ -152,6 +152,44 @@ class EarthquakeVxseDebugEditorController
   String? typedInputError({required String fieldId}) =>
       state.typedInputErrors[fieldId];
 
+  void pruneTypedInputPrefix(String prefix) {
+    final values = {
+      for (final entry in state.typedInputValues.entries)
+        if (!entry.key.startsWith('$prefix.')) entry.key: entry.value,
+    };
+    final errors = {
+      for (final entry in state.typedInputErrors.entries)
+        if (!entry.key.startsWith('$prefix.')) entry.key: entry.value,
+    };
+    state = state.copyWith(
+      typedInputValues: values,
+      typedInputErrors: errors,
+      canApply: state.validationError == null && errors.isEmpty,
+    );
+  }
+
+  void migrateTypedInputPrefix({required String from, required String to}) {
+    final values = {
+      for (final entry in state.typedInputValues.entries)
+        if (!entry.key.startsWith('$from.')) entry.key: entry.value,
+      for (final entry in state.typedInputValues.entries)
+        if (entry.key.startsWith('$from.'))
+          '$to${entry.key.substring(from.length)}': entry.value,
+    };
+    final errors = {
+      for (final entry in state.typedInputErrors.entries)
+        if (!entry.key.startsWith('$from.')) entry.key: entry.value,
+      for (final entry in state.typedInputErrors.entries)
+        if (entry.key.startsWith('$from.'))
+          '$to${entry.key.substring(from.length)}': entry.value,
+    };
+    state = state.copyWith(
+      typedInputValues: values,
+      typedInputErrors: errors,
+      canApply: state.validationError == null && errors.isEmpty,
+    );
+  }
+
   void setReportedAt(DateTime value) {
     updateDraft(state.draft.copyWith(reportedAt: value));
   }

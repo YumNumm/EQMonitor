@@ -10,7 +10,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_vxse_debug_editor_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -439,9 +438,7 @@ void main() {
       base: DateTime.utc(2026, 7, 24),
       usedTimes: {DateTime.utc(2026, 7, 24), firstTime},
     );
-    final firstBand = nextEarthquakeVxseDebugPrePeriodBand(
-      usedBands: {1.6},
-    );
+    final firstBand = nextEarthquakeVxseDebugPrePeriodBand(usedBands: {1.6});
     final secondBand = nextEarthquakeVxseDebugPrePeriodBand(
       usedBands: {1.6, firstBand},
     );
@@ -450,6 +447,60 @@ void main() {
     expect(firstTime, DateTime.utc(2026, 7, 24, 0, 0, 1));
     expect(secondTime, DateTime.utc(2026, 7, 24, 0, 0, 2));
     expect((firstBand, secondBand), (1.7, 1.8));
+  });
+
+  test('collection row削除は対象semantic prefixのraw/errorだけをpruneする', () {
+    for (final category in const [
+      'ordinaryRegion',
+      'ordinaryPrefecture',
+      'ordinaryCity',
+      'ordinaryStation',
+      'vxse51Prefecture',
+      'lpgmRegion',
+      'lpgmPrefecture',
+      'lpgmStation',
+      'comment',
+      'prePeriod',
+    ]) {
+      final fixture = _fixture();
+      final firstPrefix = '$category/first/0';
+      final secondPrefix = '$category/second/0';
+      fixture.notifier
+        ..setTypedInput(
+          fieldId: '$firstPrefix.value',
+          text: 'invalid-first',
+          error: 'invalid',
+        )
+        ..setTypedInput(fieldId: '$secondPrefix.value', text: 'second-raw')
+        ..pruneTypedInputPrefix(firstPrefix);
+
+      expect(fixture.state.typedInputValues, {
+        '$secondPrefix.value': 'second-raw',
+      }, reason: category);
+      expect(fixture.state.typedInputErrors, isEmpty, reason: category);
+      expect(fixture.state.canApply, isTrue, reason: category);
+    }
+  });
+
+  test('bucket moveは対象row raw/errorを新semantic prefixへmigrateする', () {
+    final fixture = _fixture();
+    fixture.notifier
+      ..setTypedInput(
+        fieldId: 'ordinaryRegion/four/350/0.name',
+        text: 'moving-raw',
+        error: 'moving-error',
+      )
+      ..migrateTypedInputPrefix(
+        from: 'ordinaryRegion/four/350/0',
+        to: 'ordinaryRegion/fiveLower/350/0',
+      );
+
+    expect(fixture.state.typedInputValues, {
+      'ordinaryRegion/fiveLower/350/0.name': 'moving-raw',
+    });
+    expect(fixture.state.typedInputErrors, {
+      'ordinaryRegion/fiveLower/350/0.name': 'moving-error',
+    });
   });
 }
 
