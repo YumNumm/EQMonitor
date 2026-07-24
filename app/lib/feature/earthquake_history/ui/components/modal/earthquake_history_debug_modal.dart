@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryDebugModal extends ConsumerWidget {
-  const EarthquakeHistoryDebugModal._();
+  const EarthquakeHistoryDebugModal({super.key});
 
   static Future<void> show({required BuildContext context}) =>
       showModalBottomSheet(
         context: context,
         clipBehavior: Clip.antiAlias,
         isScrollControlled: true,
-        builder: (context) => const EarthquakeHistoryDebugModal._(),
+        builder: (context) => const EarthquakeHistoryDebugModal(),
       );
 
   @override
@@ -45,7 +45,9 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                   height: 4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(2),
-                    color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.3),
+                    color: context.designSystem.colorTheme.onSurface.withValues(
+                      alpha: 0.3,
+                    ),
                   ),
                 ),
               ),

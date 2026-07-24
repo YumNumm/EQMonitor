@@ -34,4 +34,8 @@ class EarthquakeVxseDebugAction {
       context,
     ).showSnackBar(const SnackBar(content: Text('デバッグ変更を適用しました')));
   }
+
+  void reset({required WidgetRef ref, required Earthquake current}) {
+    ref.read(earthquakeDebugOverrideProvider(current.eventId).notifier).reset();
+  }
 }
