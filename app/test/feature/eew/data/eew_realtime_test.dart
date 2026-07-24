@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
@@ -77,6 +78,7 @@ void main() {
     final subscription = container.listen(eewProvider, (_, _) {});
     addTearDown(subscription.close);
     await _waitFor(() => restFetchCount == 1);
+    await _waitFor(() => container.read(eewProvider).hasValue);
 
     controller.add(const RealtimeEvent.ready(source: RealtimeSource.eqmonitor));
     await _waitFor(() => restFetchCount == 2);
@@ -96,6 +98,92 @@ void main() {
     expect(item?.serialNo, 2);
     expect(item?.warning?.zones.single.name, 'realtime');
     expect(restFetchCount, 2);
+  });
+
+  test('同一serialのREST確認後はrealtime overlayを退役させること', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    var restFetchCount = 0;
+    final results = <List<EewTelegramItem>>[
+      [],
+      [_eew(serialNo: 2, zoneName: 'confirmed').toEewTelegramItem],
+      [_eew(serialNo: 1, zoneName: 'later-rest').toEewTelegramItem],
+    ];
+    final container = ProviderContainer(
+      overrides: [
+        realtimeEventsProvider.overrideWith(
+          () => _StubRealtimeEvents(controller.stream),
+        ),
+        eewRestProvider.overrideWith((ref) async {
+          final result = results[restFetchCount];
+          restFetchCount += 1;
+          return result;
+        }),
+      ],
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(eewProvider, (_, _) {});
+    addTearDown(subscription.close);
+    await _waitFor(() => restFetchCount == 1);
+    await _waitFor(() => container.read(eewProvider).hasValue);
+
+    controller.add(
+      RealtimeEvent.eewUpsert(
+        record: _eew(serialNo: 2, zoneName: 'realtime'),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await container.pump();
+    container.invalidate(eewRestProvider);
+    await _waitFor(() => restFetchCount == 2);
+    await container.pump();
+    expect(
+      container.read(eewProvider).value?.single.warning?.zones.single.name,
+      'confirmed',
+    );
+
+    container.invalidate(eewRestProvider);
+    await _waitFor(() => restFetchCount == 3);
+    await container.pump();
+    final item = container.read(eewProvider).value?.single;
+    expect(item?.serialNo, 1);
+    expect(item?.warning?.zones.single.name, 'later-rest');
+  });
+
+  test('非realtime再生への遷移でrealtime overlayを破棄すること', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final container = ProviderContainer(
+      overrides: [
+        realtimeEventsProvider.overrideWith(
+          () => _StubRealtimeEvents(controller.stream),
+        ),
+        eewRestProvider.overrideWith((ref) async => []),
+      ],
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(eewProvider, (_, _) {});
+    addTearDown(subscription.close);
+    await _waitFor(() => container.read(eewProvider).hasValue);
+
+    controller.add(
+      RealtimeEvent.eewUpsert(
+        record: _eew(serialNo: 2, zoneName: 'realtime'),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await container.pump();
+    expect(container.read(eewProvider).value?.single.serialNo, 2);
+
+    container
+        .read(appClockProvider.notifier)
+        .enterTimeShift(const Duration(minutes: -1));
+    await container.pump();
+    expect(container.read(eewProvider).value, isEmpty);
+
+    container.read(appClockProvider.notifier).returnToRealtime();
+    await container.pump();
+    expect(container.read(eewProvider).value, isEmpty);
   });
 }
 

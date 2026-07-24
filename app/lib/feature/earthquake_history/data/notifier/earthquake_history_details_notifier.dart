@@ -12,31 +12,55 @@ part 'earthquake_history_details_notifier.g.dart';
 class EarthquakeHistoryDetailsNotifier
     extends _$EarthquakeHistoryDetailsNotifier
     with CachedNotifier<Earthquake> {
-  api.Earthquake? _latestRealtimeRecord;
+  api.Earthquake? _pendingRealtimeRecord;
   EarthquakeHistoryRepository? _repository;
 
   @override
   Future<Earthquake> build(String eventId) async {
-    final repository = await ref.watch(
-      earthquakeHistoryRepositoryProvider.future,
-    );
-    _repository = repository;
     ref.listen(realtimeEventsProvider, (_, next) {
       if (next case AsyncData(
         value: RealtimeEarthquakeUpsertEvent(:final record),
       ) when record.eventId == eventId) {
-        _latestRealtimeRecord = record;
-        state = AsyncData(
-          earthquakeFromRealtimeRecord(record: record, repository: repository),
-        );
+        advanceCachedAuthority();
+        _pendingRealtimeRecord = record;
+        final repository = _repository;
+        if (repository != null) {
+          state = AsyncData(
+            earthquakeFromRealtimeRecord(
+              record: record,
+              repository: repository,
+            ),
+          );
+        }
       }
     });
-    return cachedBuild();
+    final operation = beginCachedOperation();
+    final repository = await ref.watch(
+      earthquakeHistoryRepositoryProvider.future,
+    );
+    _repository = repository;
+    final pendingRecord = _pendingRealtimeRecord;
+    if (pendingRecord != null) {
+      state = AsyncData(
+        earthquakeFromRealtimeRecord(
+          record: pendingRecord,
+          repository: repository,
+        ),
+      );
+    }
+    return cachedBuild(operation: operation);
   }
 
   @override
-  Earthquake reconcile(Earthquake value) {
-    final record = _latestRealtimeRecord;
+  Earthquake reconcile(
+    Earthquake value, {
+    required CachedOperationToken operation,
+  }) {
+    if (isCachedOperationCurrent(operation)) {
+      _pendingRealtimeRecord = null;
+      return value;
+    }
+    final record = _pendingRealtimeRecord;
     final repository = _repository;
     if (record == null || repository == null) {
       return value;

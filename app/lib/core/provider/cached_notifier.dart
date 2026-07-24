@@ -13,16 +13,32 @@ import 'package:flutter/widgets.dart';
 import 'package:riverpod/src/internals.dart' show DataKind;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+final class CachedOperationToken {
+  const CachedOperationToken._(this._authority);
+
+  final int _authority;
+}
+
 mixin CachedNotifier<T> on $AsyncNotifier<T> {
   Future<T> fetch(ApiClient client);
 
-  T reconcile(T value) => value;
+  T reconcile(T value, {required CachedOperationToken operation}) => value;
 
   bool get revalidateOnAppResume => false;
 
   var _generation = 0;
+  var _authority = 0;
 
-  Future<T> cachedBuild() async {
+  CachedOperationToken beginCachedOperation() =>
+      CachedOperationToken._(_authority);
+
+  void advanceCachedAuthority() => _authority += 1;
+
+  bool isCachedOperationCurrent(CachedOperationToken operation) =>
+      operation._authority == _authority;
+
+  Future<T> cachedBuild({CachedOperationToken? operation}) async {
+    final currentOperation = operation ?? beginCachedOperation();
     if (revalidateOnAppResume) {
       ref.listen(appLifecycleProvider, (prev, next) {
         if (prev != null &&
@@ -36,30 +52,46 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
     try {
       final cached = reconcile(
         await fetch(await ref.read(cacheOnlyApiClientProvider.future)),
+        operation: currentOperation,
       );
-      unawaited(Future.microtask(() => _revalidateInBackground(gen, cached)));
+      unawaited(
+        Future.microtask(
+          () => _revalidateInBackground(gen, cached, currentOperation),
+        ),
+      );
       return cached;
     } on Object catch (e) {
       if (isCacheMiss(e)) {
-        return reconcile(await fetch(await ref.read(apiClientProvider.future)));
+        return reconcile(
+          await fetch(await ref.read(apiClientProvider.future)),
+          operation: currentOperation,
+        );
       }
       // 壊れたキャッシュ: force-fresh で if-none-match を抑止し、
       // 200 取得 → HttpCacheInterceptor が corrupt エントリを上書き
-      return _fetchForceFresh();
+      return _fetchForceFresh(currentOperation);
     }
   }
 
-  Future<void> _revalidateInBackground(int gen, T cached) async {
+  Future<void> _revalidateInBackground(
+    int gen,
+    T cached,
+    CachedOperationToken cachedOperation,
+  ) async {
     if (!ref.mounted || gen != _generation) {
       return;
     }
-    state = AsyncLoading<T>().copyWithPrevious(
-      AsyncData<T>(cached, kind: DataKind.cache),
-    );
+    final operation = beginCachedOperation();
+    final cacheState = AsyncData<T>(cached, kind: DataKind.cache);
+    final previous =
+        !isCachedOperationCurrent(cachedOperation) && state.hasValue
+        ? state
+        : cacheState;
+    state = AsyncLoading<T>().copyWithPrevious(previous);
     try {
       final fresh = await fetch(await ref.read(apiClientProvider.future));
       if (ref.mounted && gen == _generation) {
-        state = AsyncData(reconcile(fresh));
+        state = AsyncData(reconcile(fresh, operation: operation));
       }
     } on Object catch (e, st) {
       if (ref.mounted && gen == _generation) {
@@ -68,11 +100,11 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
     }
   }
 
-  Future<T> _fetchForceFresh() async {
+  Future<T> _fetchForceFresh(CachedOperationToken operation) async {
     final normalDio = await ref.read(dioProvider.future);
     final dio = Dio(normalDio.options);
     dio.interceptors.add(ForceFreshInterceptor());
     dio.interceptors.addAll(normalDio.interceptors);
-    return reconcile(await fetch(ApiClient(dio)));
+    return reconcile(await fetch(ApiClient(dio)), operation: operation);
   }
 }

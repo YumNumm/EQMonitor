@@ -61,7 +61,7 @@ final class _CompletingRepository extends EarthquakeHistoryRepository {
   _CompletingRepository({
     required this.cacheClient,
     required this.cacheResult,
-    required this.networkResult,
+    required this.networkResults,
   }) : super(
          earthquake: api.ApiClient(Dio()).earthquake,
          earthquakeParameter: _earthquakeParameter,
@@ -70,7 +70,7 @@ final class _CompletingRepository extends EarthquakeHistoryRepository {
 
   final api.ApiClient cacheClient;
   final Future<Earthquake> Function() cacheResult;
-  final Completer<Earthquake> networkResult;
+  final List<Completer<Earthquake>> networkResults;
   int networkFetchCount = 0;
 
   @override
@@ -82,7 +82,7 @@ final class _CompletingRepository extends EarthquakeHistoryRepository {
       return cacheResult();
     }
     networkFetchCount += 1;
-    return networkResult.future;
+    return networkResults[networkFetchCount - 1].future;
   }
 }
 
@@ -233,6 +233,67 @@ void main() {
     expect(repository.detailFetchCount, 0);
   });
 
+  test('repository初期化中のrealtimeを初回RESTで上書きしないこと', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final cacheClient = api.ApiClient(Dio());
+    final networkResult = Completer<Earthquake>();
+    final repository = _CompletingRepository(
+      cacheClient: cacheClient,
+      cacheResult: () async => throw const CacheMissException(),
+      networkResults: [networkResult],
+    );
+    final repositoryResult = Completer<EarthquakeHistoryRepository>();
+    final container = ProviderContainer(
+      overrides: [
+        realtimeEventsProvider.overrideWith(
+          () => _StubRealtimeEvents(controller.stream),
+        ),
+        earthquakeHistoryRepositoryProvider.overrideWith(
+          (ref) => repositoryResult.future,
+        ),
+        cacheOnlyApiClientProvider.overrideWith((ref) async => cacheClient),
+        apiClientProvider.overrideWith((ref) async => api.ApiClient(Dio())),
+      ],
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      earthquakeHistoryDetailsProvider('event-1'),
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+
+    controller.add(
+      RealtimeEvent.earthquakeUpsert(
+        record: _earthquake(eventId: 'event-1', comment: 'realtime'),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await container.pump();
+    expect(repository.networkFetchCount, 0);
+
+    repositoryResult.complete(repository);
+    await _waitFor(() => repository.networkFetchCount == 1);
+    networkResult.complete(
+      _earthquake(eventId: 'event-1', comment: 'old-rest').toEarthquake(
+        parameter: _earthquakeParameter,
+        shindoDbStations: _shindoDbStations,
+      ),
+    );
+    await container.pump();
+
+    expect(
+      container
+          .read(earthquakeHistoryDetailsProvider('event-1'))
+          .value
+          ?.telegramComments
+          .single
+          .additional,
+      'realtime',
+    );
+    expect(repository.networkFetchCount, 1);
+  });
+
   test('初回REST完了前のrealtimeを古い初回結果で上書きしないこと', () async {
     final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
     addTearDown(controller.close);
@@ -242,7 +303,7 @@ void main() {
     final repository = _CompletingRepository(
       cacheClient: cacheClient,
       cacheResult: () async => throw const CacheMissException(),
-      networkResult: networkResult,
+      networkResults: [networkResult],
     );
     final container = ProviderContainer(
       overrides: [
@@ -304,7 +365,7 @@ void main() {
             parameter: _earthquakeParameter,
             shindoDbStations: _shindoDbStations,
           ),
-      networkResult: networkResult,
+      networkResults: [networkResult],
     );
     final container = ProviderContainer(
       overrides: [
@@ -353,7 +414,143 @@ void main() {
     );
     expect(repository.networkFetchCount, 1);
   });
+
+  test('realtime後に開始したrefreshのREST結果を採用すること', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final cacheClient = api.ApiClient(Dio());
+    final initialResult = Completer<Earthquake>();
+    final refreshResult = Completer<Earthquake>();
+    final repository = _CompletingRepository(
+      cacheClient: cacheClient,
+      cacheResult: () async => throw const CacheMissException(),
+      networkResults: [initialResult, refreshResult],
+    );
+    final container = _detailsContainer(
+      controller: controller,
+      repository: repository,
+      cacheClient: cacheClient,
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      earthquakeHistoryDetailsProvider('event-1'),
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+    await _waitFor(() => repository.networkFetchCount == 1);
+    initialResult.complete(
+      _domainEarthquake(eventId: 'event-1', comment: 'initial-rest'),
+    );
+    await container.pump();
+
+    controller.add(
+      RealtimeEvent.earthquakeUpsert(
+        record: _earthquake(eventId: 'event-1', comment: 'old-realtime'),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await container.pump();
+    container.invalidate(earthquakeHistoryDetailsProvider('event-1'));
+    await _waitFor(() => repository.networkFetchCount == 2);
+    refreshResult.complete(
+      _domainEarthquake(eventId: 'event-1', comment: 'new-rest'),
+    );
+    await container.pump();
+
+    expect(
+      container
+          .read(earthquakeHistoryDetailsProvider('event-1'))
+          .value
+          ?.telegramComments
+          .single
+          .additional,
+      'new-rest',
+    );
+  });
+
+  test('refresh REST中の新しいrealtimeをREST完了で上書きしないこと', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final cacheClient = api.ApiClient(Dio());
+    final initialResult = Completer<Earthquake>();
+    final refreshResult = Completer<Earthquake>();
+    final repository = _CompletingRepository(
+      cacheClient: cacheClient,
+      cacheResult: () async => throw const CacheMissException(),
+      networkResults: [initialResult, refreshResult],
+    );
+    final container = _detailsContainer(
+      controller: controller,
+      repository: repository,
+      cacheClient: cacheClient,
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      earthquakeHistoryDetailsProvider('event-1'),
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+    await _waitFor(() => repository.networkFetchCount == 1);
+    initialResult.complete(
+      _domainEarthquake(eventId: 'event-1', comment: 'initial-rest'),
+    );
+    await container.pump();
+
+    controller.add(
+      RealtimeEvent.earthquakeUpsert(
+        record: _earthquake(eventId: 'event-1', comment: 'old-realtime'),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await container.pump();
+    container.invalidate(earthquakeHistoryDetailsProvider('event-1'));
+    await _waitFor(() => repository.networkFetchCount == 2);
+    controller.add(
+      RealtimeEvent.earthquakeUpsert(
+        record: _earthquake(eventId: 'event-1', comment: 'new-realtime'),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await container.pump();
+    refreshResult.complete(
+      _domainEarthquake(eventId: 'event-1', comment: 'new-rest'),
+    );
+    await container.pump();
+
+    expect(
+      container
+          .read(earthquakeHistoryDetailsProvider('event-1'))
+          .value
+          ?.telegramComments
+          .single
+          .additional,
+      'new-realtime',
+    );
+  });
 }
+
+ProviderContainer _detailsContainer({
+  required StreamController<RealtimeEvent> controller,
+  required EarthquakeHistoryRepository repository,
+  required api.ApiClient cacheClient,
+}) => ProviderContainer(
+  overrides: [
+    realtimeEventsProvider.overrideWith(
+      () => _StubRealtimeEvents(controller.stream),
+    ),
+    earthquakeHistoryRepositoryProvider.overrideWith((ref) async => repository),
+    cacheOnlyApiClientProvider.overrideWith((ref) async => cacheClient),
+    apiClientProvider.overrideWith((ref) async => api.ApiClient(Dio())),
+  ],
+);
+
+Earthquake _domainEarthquake({
+  required String eventId,
+  required String comment,
+}) => _earthquake(eventId: eventId, comment: comment).toEarthquake(
+  parameter: _earthquakeParameter,
+  shindoDbStations: _shindoDbStations,
+);
 
 Future<void> _waitFor(bool Function() condition) async {
   for (var i = 0; i < 20 && !condition(); i += 1) {
