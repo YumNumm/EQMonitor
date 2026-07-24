@@ -22,22 +22,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-String _semanticComponent(Object value) =>
-    base64Url.encode(utf8.encode(value.toString())).replaceAll('=', '');
+String _semanticComponent(String value) =>
+    base64Url.encode(utf8.encode(value)).replaceAll('=', '');
 
-String _semanticPrefix(String surface, List<Object> components) =>
+String _semanticPrefix(String surface, List<String> components) =>
     [surface, ...components.map(_semanticComponent)].join('.');
 
 String _prePeriodPrefix({
   required String stationPrefix,
-  required double band,
-  required int occurrence,
+  required String band,
+  required String occurrence,
 }) => '$stationPrefix.${_semanticPrefix('prePeriod', [band, occurrence])}';
 
 String _withSemanticComponent({
   required String prefix,
   required int segmentIndex,
-  required Object value,
+  required String value,
 }) {
   final components = prefix.split('.');
   components[segmentIndex] = _semanticComponent(value);
@@ -648,7 +648,8 @@ class _SeismicIntensityFields extends StatelessWidget {
                           (candidate) =>
                               candidate.region.code == region.region.code,
                         )
-                        .length,
+                        .length
+                        .toString(),
                   ]),
                   level: entry.key,
                   region: region,
@@ -763,7 +764,8 @@ class _Vxse51PrefectureFields extends StatelessWidget {
                     (candidate) =>
                         candidate.prefecture.code == prefecture.prefecture.code,
                   )
-                  .length,
+                  .length
+                  .toString(),
             ]),
             level: entry.key,
             prefecture: prefecture,
@@ -866,7 +868,8 @@ class _OrdinaryTreeFields extends StatelessWidget {
                         candidate.prefecture.prefecture.code ==
                         prefecture.prefecture.prefecture.code,
                   )
-                  .length,
+                  .length
+                  .toString(),
             ]),
             level: entry.key,
             prefecture: prefecture.prefecture,
@@ -916,7 +919,8 @@ class _OrdinaryTreeFields extends StatelessWidget {
                       .where(
                         (candidate) => candidate.city.code == city.city.code,
                       )
-                      .length,
+                      .length
+                      .toString(),
                 ]),
                 city: city,
                 onChanged: (updated) => notifier.setIntensityTree({
@@ -971,7 +975,8 @@ class _OrdinaryTreeFields extends StatelessWidget {
                         (candidate) =>
                             candidate.station.code == station.station.code,
                       )
-                      .length,
+                      .length
+                      .toString(),
                 ]),
                 ownsStationDetails: ownsStationDetails,
                 station: station,
@@ -1053,7 +1058,8 @@ class _OrdinaryTreeFields extends StatelessWidget {
                       .where(
                         (candidate) => candidate.city.code == city.city.code,
                       )
-                      .length,
+                      .length
+                      .toString(),
                 ]),
                 currentCode: city.city.code,
                 currentName: city.city.name.ja,
@@ -1247,7 +1253,8 @@ class _LpgmFields extends StatelessWidget {
                         (candidate) =>
                             candidate.region.code == region.region.code,
                       )
-                      .length,
+                      .length
+                      .toString(),
                 ]),
                 level: entry.key,
                 region: region,
@@ -1325,7 +1332,8 @@ class _LpgmFields extends StatelessWidget {
                         (candidate) =>
                             candidate.region.code == prefecture.region.code,
                       )
-                      .length,
+                      .length
+                      .toString(),
                 ]),
                 level: entry.key,
                 prefecture: prefecture,
@@ -1376,7 +1384,8 @@ class _LpgmFields extends StatelessWidget {
                         .where(
                           (candidate) => candidate.city.code == city.city.code,
                         )
-                        .length,
+                        .length
+                        .toString(),
                   ]),
                   currentCode: city.city.code,
                   currentName: city.city.name.ja,
@@ -1405,7 +1414,8 @@ class _LpgmFields extends StatelessWidget {
                             (candidate) =>
                                 candidate.station.code == station.station.code,
                           )
-                          .length,
+                          .length
+                          .toString(),
                     ]),
                     station: station,
                     onChanged: (updated) => notifier.setLpgmIntensityTree({
@@ -1609,7 +1619,8 @@ class _CommentsFields extends StatelessWidget {
                           candidate.type == comment.type &&
                           candidate.reportedAt == comment.reportedAt,
                     )
-                    .length,
+                    .length
+                    .toString(),
               ]),
               comment: comment,
               notifier: notifier,
@@ -2595,11 +2606,12 @@ class _StationDetailsFields extends StatelessWidget {
             key: ValueKey(
               _prePeriodPrefix(
                 stationPrefix: fieldPrefix,
-                band: prePeriod.band,
+                band: prePeriod.band.toString(),
                 occurrence: (intensity.prePeriods ?? const [])
                     .take(index)
                     .where((candidate) => candidate.band == prePeriod.band)
-                    .length,
+                    .length
+                    .toString(),
               ),
             ),
             child: Padding(
@@ -2615,7 +2627,7 @@ class _StationDetailsFields extends StatelessWidget {
                     child: _ControlledTextFormField(
                       fieldKey: const Key('pre-period-band'),
                       fieldId:
-                          '${_prePeriodPrefix(stationPrefix: fieldPrefix, band: prePeriod.band, occurrence: (intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length)}.band',
+                          '${_prePeriodPrefix(stationPrefix: fieldPrefix, band: prePeriod.band.toString(), occurrence: (intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length.toString())}.band',
                       value: prePeriod.band.toString(),
                       label: '周期帯',
                       notifier: notifier,
@@ -2625,20 +2637,21 @@ class _StationDetailsFields extends StatelessWidget {
                       onValidChanged: (value) {
                         final prefix = _prePeriodPrefix(
                           stationPrefix: fieldPrefix,
-                          band: prePeriod.band,
+                          band: prePeriod.band.toString(),
                           occurrence: (intensity.prePeriods ?? const [])
                               .take(index)
                               .where(
                                 (candidate) => candidate.band == prePeriod.band,
                               )
-                              .length,
+                              .length
+                              .toString(),
                         );
                         notifier.migrateTypedInputPrefix(
                           from: prefix,
                           to: _withSemanticComponent(
                             prefix: prefix,
                             segmentIndex: 7,
-                            value: double.parse(value),
+                            value: double.parse(value).toString(),
                           ),
                         );
                         onChanged(
@@ -2693,7 +2706,7 @@ class _StationDetailsFields extends StatelessWidget {
                     child: _ControlledTextFormField(
                       fieldKey: const Key('pre-period-sva'),
                       fieldId:
-                          '${_prePeriodPrefix(stationPrefix: fieldPrefix, band: prePeriod.band, occurrence: (intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length)}.sva',
+                          '${_prePeriodPrefix(stationPrefix: fieldPrefix, band: prePeriod.band.toString(), occurrence: (intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length.toString())}.sva',
                       value: prePeriod.sva.toString(),
                       label: 'SVA',
                       notifier: notifier,
@@ -2720,13 +2733,14 @@ class _StationDetailsFields extends StatelessWidget {
                       notifier.pruneTypedInputPrefix(
                         _prePeriodPrefix(
                           stationPrefix: fieldPrefix,
-                          band: prePeriod.band,
+                          band: prePeriod.band.toString(),
                           occurrence: (intensity.prePeriods ?? const [])
                               .take(index)
                               .where(
                                 (candidate) => candidate.band == prePeriod.band,
                               )
-                              .length,
+                              .length
+                              .toString(),
                         ),
                       );
                       onChanged(
