@@ -2,7 +2,10 @@ import 'package:eqmonitor_api/eqmonitor_api.dart'
     hide
         RealtimeEarthquakeUpsertEvent,
         RealtimeEewUpsertEvent,
-        RealtimeShakeDetectionSnapshotEvent;
+        RealtimeShakeDetectionSnapshotEvent,
+        RealtimeTsunamiUpsertEvent,
+        RealtimeTsunamiDeleteEvent,
+        RealtimeEstimatedIntensityUpsertEvent;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'realtime_event.freezed.dart';

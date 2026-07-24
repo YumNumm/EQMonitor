@@ -308,11 +308,16 @@ export 'models/user_response.dart';
 export 'models/user_device_response.dart';
 export 'models/session_response.dart';
 export 'models/realtime_ticket_response.dart';
+export 'models/estimated_intensity_event.dart';
 export 'models/realtime_earthquake_upsert_payload.dart';
 export 'models/realtime_earthquake_delete_payload.dart';
 export 'models/realtime_eew_upsert_payload.dart';
 export 'models/realtime_shake_detection_snapshot_payload.dart';
+export 'models/realtime_tsunami_upsert_payload.dart';
+export 'models/realtime_tsunami_delete_payload.dart';
+export 'models/realtime_estimated_intensity_upsert_payload.dart';
 export 'models/realtime_event_envelope.dart';
+export 'models/estimated_intensity_hypocenter.dart';
 export 'models/post_v2_admin_test_live_event_response.dart';
 export 'models/target_union.dart';
 export 'models/v2_admin_test_live_event_request_body.dart';
@@ -361,6 +366,8 @@ export 'models/operation2.dart';
 export 'models/type2.dart';
 export 'models/type3.dart';
 export 'models/operation3.dart';
+export 'models/type4.dart';
+export 'models/type5.dart';
 // Root client
 export 'api_client.dart';
 

@@ -39,6 +39,27 @@ class EqMonitorRealtimeEventMapper {
           source: RealtimeSource.eqmonitor,
         ),
       ],
+      api.RealtimeTsunamiUpsertEvent(:final payload) => [
+        RealtimeEvent.tsunamiUpsert(
+          eventId: payload.eventId,
+          groupId: payload.groupId,
+          source: RealtimeSource.eqmonitor,
+        ),
+      ],
+      api.RealtimeTsunamiDeleteEvent(:final payload) => [
+        RealtimeEvent.tsunamiDelete(
+          eventId: payload.eventId,
+          groupId: payload.groupId,
+          source: RealtimeSource.eqmonitor,
+        ),
+      ],
+      api.RealtimeEstimatedIntensityUpsertEvent(:final payload) => [
+        RealtimeEvent.estimatedIntensityUpsert(
+          eventId: payload.eventId,
+          estimatedIntensityTile: payload.record.estimatedIntensityKey,
+          source: RealtimeSource.eqmonitor,
+        ),
+      ],
     },
     WsPingMessage() => const <RealtimeEvent>[],
     WsReadyMessage() => [

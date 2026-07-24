@@ -6,7 +6,10 @@ import 'package:json_annotation/json_annotation.dart';
 import 'realtime_earthquake_delete_payload.dart';
 import 'realtime_earthquake_upsert_payload.dart';
 import 'realtime_eew_upsert_payload.dart';
+import 'realtime_estimated_intensity_upsert_payload.dart';
 import 'realtime_shake_detection_snapshot_payload.dart';
+import 'realtime_tsunami_delete_payload.dart';
+import 'realtime_tsunami_upsert_payload.dart';
 
 sealed class RealtimeEventEnvelope {
   const RealtimeEventEnvelope();
@@ -23,8 +26,17 @@ sealed class RealtimeEventEnvelope {
       ('eew', 'upsert') => RealtimeEewUpsertEvent(
         RealtimeEewUpsertPayload.fromJson(json),
       ),
+      ('estimated_intensity', 'upsert') => RealtimeEstimatedIntensityUpsertEvent(
+        RealtimeEstimatedIntensityUpsertPayload.fromJson(json),
+      ),
       ('shake_detection', 'snapshot') => RealtimeShakeDetectionSnapshotEvent(
         RealtimeShakeDetectionSnapshotPayload.fromJson(json),
+      ),
+      ('tsunami', 'delete') => RealtimeTsunamiDeleteEvent(
+        RealtimeTsunamiDeletePayload.fromJson(json),
+      ),
+      ('tsunami', 'upsert') => RealtimeTsunamiUpsertEvent(
+        RealtimeTsunamiUpsertPayload.fromJson(json),
       ),
       final value => throw CheckedFromJsonException(
         json,
@@ -54,8 +66,26 @@ final class RealtimeEewUpsertEvent extends RealtimeEventEnvelope {
   final RealtimeEewUpsertPayload payload;
 }
 
+final class RealtimeEstimatedIntensityUpsertEvent extends RealtimeEventEnvelope {
+  const RealtimeEstimatedIntensityUpsertEvent(this.payload);
+
+  final RealtimeEstimatedIntensityUpsertPayload payload;
+}
+
 final class RealtimeShakeDetectionSnapshotEvent extends RealtimeEventEnvelope {
   const RealtimeShakeDetectionSnapshotEvent(this.payload);
 
   final RealtimeShakeDetectionSnapshotPayload payload;
+}
+
+final class RealtimeTsunamiDeleteEvent extends RealtimeEventEnvelope {
+  const RealtimeTsunamiDeleteEvent(this.payload);
+
+  final RealtimeTsunamiDeletePayload payload;
+}
+
+final class RealtimeTsunamiUpsertEvent extends RealtimeEventEnvelope {
+  const RealtimeTsunamiUpsertEvent(this.payload);
+
+  final RealtimeTsunamiUpsertPayload payload;
 }

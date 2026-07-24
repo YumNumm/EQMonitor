@@ -91,6 +91,72 @@ void main() {
       expect(identical(event.record, record), isTrue);
       expect(event.record.warning?.zones.single.code, '9011');
     });
+
+    test('tsunami upsert/delete の eventId と groupId を保持すること', () {
+      const upsert = api.RealtimeTsunamiUpsertEvent(
+        api.RealtimeTsunamiUpsertPayload(
+          type: api.Type4.tsunami,
+          operation: api.Operation.upsert,
+          eventId: 'tsunami-1',
+          groupId: 'group-1',
+        ),
+      );
+      const delete = api.RealtimeTsunamiDeleteEvent(
+        api.RealtimeTsunamiDeletePayload(
+          type: api.Type4.tsunami,
+          operation: api.Operation2.delete,
+          eventId: 'tsunami-2',
+        ),
+      );
+
+      final upsertResult = mapper.map(const WsMessage.realtime(data: upsert));
+      final deleteResult = mapper.map(const WsMessage.realtime(data: delete));
+
+      expect(
+        upsertResult.single,
+        const RealtimeEvent.tsunamiUpsert(
+          eventId: 'tsunami-1',
+          groupId: 'group-1',
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+      expect(
+        deleteResult.single,
+        const RealtimeEvent.tsunamiDelete(
+          eventId: 'tsunami-2',
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+    });
+
+    test('estimated intensity の tile key を保持すること', () {
+      final record = api.EstimatedIntensityEvent(
+        eventId: 'estimated-1',
+        estimatedIntensityKey: 'ixac41/estimated-1.pmtiles',
+        createdAt: '2026-01-01T00:00:00.000Z',
+      );
+      final result = mapper.map(
+        WsMessage.realtime(
+          data: api.RealtimeEstimatedIntensityUpsertEvent(
+            api.RealtimeEstimatedIntensityUpsertPayload(
+              type: api.Type5.estimatedIntensity,
+              operation: api.Operation.upsert,
+              eventId: 'estimated-1',
+              record: record,
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        result.single,
+        const RealtimeEvent.estimatedIntensityUpsert(
+          eventId: 'estimated-1',
+          estimatedIntensityTile: 'ixac41/estimated-1.pmtiles',
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+    });
   });
 }
 

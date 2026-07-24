@@ -250,6 +250,66 @@ void main() {
       expect(event.payload.eventId, '20260101000000');
     });
 
+    test('tsunami upsert parses group_id', () {
+      final message =
+          WsMessage.fromJson({
+                'type': 'realtime',
+                'data': {
+                  'type': 'tsunami',
+                  'operation': 'upsert',
+                  'event_id': 'tsunami-1',
+                  'group_id': 'group-1',
+                },
+              })
+              as WsRealtimeMessage;
+
+      final event = message.data as RealtimeTsunamiUpsertEvent;
+      expect(event.payload.eventId, 'tsunami-1');
+      expect(event.payload.groupId, 'group-1');
+    });
+
+    test('tsunami delete parses without group_id', () {
+      final message =
+          WsMessage.fromJson({
+                'type': 'realtime',
+                'data': {
+                  'type': 'tsunami',
+                  'operation': 'delete',
+                  'event_id': 'tsunami-2',
+                },
+              })
+              as WsRealtimeMessage;
+
+      final event = message.data as RealtimeTsunamiDeleteEvent;
+      expect(event.payload.eventId, 'tsunami-2');
+      expect(event.payload.groupId, isNull);
+    });
+
+    test('estimated intensity upsert parses the canonical record', () {
+      final message =
+          WsMessage.fromJson({
+                'type': 'realtime',
+                'data': {
+                  'type': 'estimated_intensity',
+                  'operation': 'upsert',
+                  'event_id': 'estimated-1',
+                  'record': {
+                    'eventId': 'estimated-1',
+                    'estimatedIntensityKey': 'ixac41/estimated-1.pmtiles',
+                    'createdAt': fixtureTime,
+                  },
+                },
+              })
+              as WsRealtimeMessage;
+
+      final event = message.data as RealtimeEstimatedIntensityUpsertEvent;
+      expect(event.payload.eventId, 'estimated-1');
+      expect(
+        event.payload.record.estimatedIntensityKey,
+        'ixac41/estimated-1.pmtiles',
+      );
+    });
+
     test('partial Earthquake record is rejected', () {
       expect(
         () => WsMessage.fromJson({
