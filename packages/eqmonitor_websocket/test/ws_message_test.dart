@@ -7,6 +7,7 @@ const fixtureTime = '2026-01-01T00:00:00.000Z';
 const fullEarthquake = <String, Object?>{
   'event_id': '20260101000000',
   'status': 'NORMAL',
+  'earthquake_type': 'NORMAL',
   'origin_time': fixtureTime,
   'origin_time_precision': 'SECOND',
   'hypocenter': {
