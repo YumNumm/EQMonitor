@@ -20,6 +20,10 @@ EarthquakeVxse51DebugDraft _$EarthquakeVxse51DebugDraftFromJson(
         'reported_at',
         (v) => DateTime.parse(v as String),
       ),
+      status: $checkedConvert(
+        'status',
+        (v) => $enumDecode(_$TelegramStatusEnumMap, v),
+      ),
       maxIntensity: $checkedConvert(
         'max_intensity',
         (v) => $enumDecode(_$JmaIntensityEnumMap, v),
@@ -75,6 +79,7 @@ Map<String, dynamic> _$EarthquakeVxse51DebugDraftToJson(
 ) => <String, dynamic>{
   'event_id': instance.eventId,
   'reported_at': instance.reportedAt.toIso8601String(),
+  'status': _$TelegramStatusEnumMap[instance.status]!,
   'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity]!,
   'regions': instance.regions.map(
     (k, e) => MapEntry(_$JmaIntensityEnumMap[k]!, e),
@@ -84,6 +89,12 @@ Map<String, dynamic> _$EarthquakeVxse51DebugDraftToJson(
   ),
   'comments': instance.comments,
   'type': instance.$type,
+};
+
+const _$TelegramStatusEnumMap = {
+  TelegramStatus.normal: 'NORMAL',
+  TelegramStatus.training: 'TRAINING',
+  TelegramStatus.test: 'TEST',
 };
 
 const _$JmaIntensityEnumMap = {
@@ -114,6 +125,18 @@ EarthquakeVxse52DebugDraft _$EarthquakeVxse52DebugDraftFromJson(
         'reported_at',
         (v) => DateTime.parse(v as String),
       ),
+      status: $checkedConvert(
+        'status',
+        (v) => $enumDecode(_$TelegramStatusEnumMap, v),
+      ),
+      arrivalTime: $checkedConvert(
+        'arrival_time',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      originTime: $checkedConvert(
+        'origin_time',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
       hypocenter: $checkedConvert(
         'hypocenter',
         (v) => EarthquakeHypocenter.fromJson(v as Map<String, dynamic>),
@@ -134,6 +157,8 @@ EarthquakeVxse52DebugDraft _$EarthquakeVxse52DebugDraftFromJson(
   fieldKeyMap: const {
     'eventId': 'event_id',
     'reportedAt': 'reported_at',
+    'arrivalTime': 'arrival_time',
+    'originTime': 'origin_time',
     r'$type': 'type',
   },
 );
@@ -143,6 +168,9 @@ Map<String, dynamic> _$EarthquakeVxse52DebugDraftToJson(
 ) => <String, dynamic>{
   'event_id': instance.eventId,
   'reported_at': instance.reportedAt.toIso8601String(),
+  'status': _$TelegramStatusEnumMap[instance.status]!,
+  'arrival_time': instance.arrivalTime?.toIso8601String(),
+  'origin_time': instance.originTime?.toIso8601String(),
   'hypocenter': instance.hypocenter,
   'comments': instance.comments,
   'type': instance.$type,
@@ -160,9 +188,25 @@ EarthquakeVxse53DebugDraft _$EarthquakeVxse53DebugDraftFromJson(
         'reported_at',
         (v) => DateTime.parse(v as String),
       ),
+      status: $checkedConvert(
+        'status',
+        (v) => $enumDecode(_$TelegramStatusEnumMap, v),
+      ),
+      arrivalTime: $checkedConvert(
+        'arrival_time',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      originTime: $checkedConvert(
+        'origin_time',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
       hypocenter: $checkedConvert(
         'hypocenter',
         (v) => EarthquakeHypocenter.fromJson(v as Map<String, dynamic>),
+      ),
+      earthquakeType: $checkedConvert(
+        'earthquake_type',
+        (v) => $enumDecode(_$EarthquakeTypeEnumMap, v),
       ),
       maxIntensity: $checkedConvert(
         'max_intensity',
@@ -210,6 +254,9 @@ EarthquakeVxse53DebugDraft _$EarthquakeVxse53DebugDraftFromJson(
   fieldKeyMap: const {
     'eventId': 'event_id',
     'reportedAt': 'reported_at',
+    'arrivalTime': 'arrival_time',
+    'originTime': 'origin_time',
+    'earthquakeType': 'earthquake_type',
     'maxIntensity': 'max_intensity',
     'intensityTree': 'intensity_tree',
     r'$type': 'type',
@@ -221,7 +268,11 @@ Map<String, dynamic> _$EarthquakeVxse53DebugDraftToJson(
 ) => <String, dynamic>{
   'event_id': instance.eventId,
   'reported_at': instance.reportedAt.toIso8601String(),
+  'status': _$TelegramStatusEnumMap[instance.status]!,
+  'arrival_time': instance.arrivalTime?.toIso8601String(),
+  'origin_time': instance.originTime?.toIso8601String(),
   'hypocenter': instance.hypocenter,
+  'earthquake_type': _$EarthquakeTypeEnumMap[instance.earthquakeType]!,
   'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity]!,
   'regions': instance.regions.map(
     (k, e) => MapEntry(_$JmaIntensityEnumMap[k]!, e),
@@ -231,6 +282,12 @@ Map<String, dynamic> _$EarthquakeVxse53DebugDraftToJson(
   ),
   'comments': instance.comments,
   'type': instance.$type,
+};
+
+const _$EarthquakeTypeEnumMap = {
+  EarthquakeType.normal: 'NORMAL',
+  EarthquakeType.distant: 'DISTANT',
+  EarthquakeType.volcano: 'VOLCANO',
 };
 
 EarthquakeVxse61DebugDraft _$EarthquakeVxse61DebugDraftFromJson(
@@ -244,6 +301,18 @@ EarthquakeVxse61DebugDraft _$EarthquakeVxse61DebugDraftFromJson(
       reportedAt: $checkedConvert(
         'reported_at',
         (v) => DateTime.parse(v as String),
+      ),
+      status: $checkedConvert(
+        'status',
+        (v) => $enumDecode(_$TelegramStatusEnumMap, v),
+      ),
+      arrivalTime: $checkedConvert(
+        'arrival_time',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      originTime: $checkedConvert(
+        'origin_time',
+        (v) => v == null ? null : DateTime.parse(v as String),
       ),
       hypocenter: $checkedConvert(
         'hypocenter',
@@ -265,6 +334,8 @@ EarthquakeVxse61DebugDraft _$EarthquakeVxse61DebugDraftFromJson(
   fieldKeyMap: const {
     'eventId': 'event_id',
     'reportedAt': 'reported_at',
+    'arrivalTime': 'arrival_time',
+    'originTime': 'origin_time',
     r'$type': 'type',
   },
 );
@@ -274,6 +345,9 @@ Map<String, dynamic> _$EarthquakeVxse61DebugDraftToJson(
 ) => <String, dynamic>{
   'event_id': instance.eventId,
   'reported_at': instance.reportedAt.toIso8601String(),
+  'status': _$TelegramStatusEnumMap[instance.status]!,
+  'arrival_time': instance.arrivalTime?.toIso8601String(),
+  'origin_time': instance.originTime?.toIso8601String(),
   'hypocenter': instance.hypocenter,
   'comments': instance.comments,
   'type': instance.$type,
@@ -291,13 +365,55 @@ EarthquakeVxse62DebugDraft _$EarthquakeVxse62DebugDraftFromJson(
         'reported_at',
         (v) => DateTime.parse(v as String),
       ),
+      status: $checkedConvert(
+        'status',
+        (v) => $enumDecode(_$TelegramStatusEnumMap, v),
+      ),
+      arrivalTime: $checkedConvert(
+        'arrival_time',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      originTime: $checkedConvert(
+        'origin_time',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
       hypocenter: $checkedConvert(
         'hypocenter',
         (v) => EarthquakeHypocenter.fromJson(v as Map<String, dynamic>),
       ),
+      maxIntensity: $checkedConvert(
+        'max_intensity',
+        (v) => $enumDecode(_$JmaIntensityEnumMap, v),
+      ),
       maxLpgmIntensity: $checkedConvert(
         'max_lpgm_intensity',
         (v) => $enumDecode(_$JmaLpgmIntensityEnumMap, v),
+      ),
+      regions: $checkedConvert(
+        'regions',
+        (v) => (v as Map<String, dynamic>).map(
+          (k, e) => MapEntry(
+            $enumDecode(_$JmaIntensityEnumMap, k),
+            (e as List<dynamic>)
+                .map((e) => IntensityRegion.fromJson(e as Map<String, dynamic>))
+                .toList(),
+          ),
+        ),
+      ),
+      intensityTree: $checkedConvert(
+        'intensity_tree',
+        (v) => (v as Map<String, dynamic>).map(
+          (k, e) => MapEntry(
+            $enumDecode(_$JmaIntensityEnumMap, k),
+            (e as List<dynamic>)
+                .map(
+                  (e) => PrefectureIntensityNode.fromJson(
+                    e as Map<String, dynamic>,
+                  ),
+                )
+                .toList(),
+          ),
+        ),
       ),
       lpgmRegions: $checkedConvert(
         'lpgm_regions',
@@ -344,7 +460,11 @@ EarthquakeVxse62DebugDraft _$EarthquakeVxse62DebugDraftFromJson(
   fieldKeyMap: const {
     'eventId': 'event_id',
     'reportedAt': 'reported_at',
+    'arrivalTime': 'arrival_time',
+    'originTime': 'origin_time',
+    'maxIntensity': 'max_intensity',
     'maxLpgmIntensity': 'max_lpgm_intensity',
+    'intensityTree': 'intensity_tree',
     'lpgmRegions': 'lpgm_regions',
     'lpgmIntensityTree': 'lpgm_intensity_tree',
     r'$type': 'type',
@@ -356,8 +476,18 @@ Map<String, dynamic> _$EarthquakeVxse62DebugDraftToJson(
 ) => <String, dynamic>{
   'event_id': instance.eventId,
   'reported_at': instance.reportedAt.toIso8601String(),
+  'status': _$TelegramStatusEnumMap[instance.status]!,
+  'arrival_time': instance.arrivalTime?.toIso8601String(),
+  'origin_time': instance.originTime?.toIso8601String(),
   'hypocenter': instance.hypocenter,
+  'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity]!,
   'max_lpgm_intensity': _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensity]!,
+  'regions': instance.regions.map(
+    (k, e) => MapEntry(_$JmaIntensityEnumMap[k]!, e),
+  ),
+  'intensity_tree': instance.intensityTree.map(
+    (k, e) => MapEntry(_$JmaIntensityEnumMap[k]!, e),
+  ),
   'lpgm_regions': instance.lpgmRegions.map(
     (k, e) => MapEntry(_$JmaLpgmIntensityEnumMap[k]!, e),
   ),

@@ -1,7 +1,9 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -14,6 +16,7 @@ sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
   const factory EarthquakeVxseDebugDraft.vxse51({
     required String eventId,
     required DateTime reportedAt,
+    required TelegramStatus status,
     required JmaIntensity maxIntensity,
     required Map<JmaIntensity, List<IntensityRegion>> regions,
     required Map<JmaIntensity, List<IntensityPrefecture>> prefectures,
@@ -23,6 +26,9 @@ sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
   const factory EarthquakeVxseDebugDraft.vxse52({
     required String eventId,
     required DateTime reportedAt,
+    required TelegramStatus status,
+    required DateTime? arrivalTime,
+    required DateTime? originTime,
     required EarthquakeHypocenter hypocenter,
     required List<EarthquakeTelegramComment> comments,
   }) = EarthquakeVxse52DebugDraft;
@@ -30,7 +36,11 @@ sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
   const factory EarthquakeVxseDebugDraft.vxse53({
     required String eventId,
     required DateTime reportedAt,
+    required TelegramStatus status,
+    required DateTime? arrivalTime,
+    required DateTime? originTime,
     required EarthquakeHypocenter hypocenter,
+    required EarthquakeType earthquakeType,
     required JmaIntensity maxIntensity,
     required Map<JmaIntensity, List<IntensityRegion>> regions,
     required Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
@@ -40,6 +50,9 @@ sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
   const factory EarthquakeVxseDebugDraft.vxse61({
     required String eventId,
     required DateTime reportedAt,
+    required TelegramStatus status,
+    required DateTime? arrivalTime,
+    required DateTime? originTime,
     required EarthquakeHypocenter hypocenter,
     required List<EarthquakeTelegramComment> comments,
   }) = EarthquakeVxse61DebugDraft;
@@ -47,8 +60,14 @@ sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
   const factory EarthquakeVxseDebugDraft.vxse62({
     required String eventId,
     required DateTime reportedAt,
+    required TelegramStatus status,
+    required DateTime? arrivalTime,
+    required DateTime? originTime,
     required EarthquakeHypocenter hypocenter,
+    required JmaIntensity maxIntensity,
     required JmaLpgmIntensity maxLpgmIntensity,
+    required Map<JmaIntensity, List<IntensityRegion>> regions,
+    required Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
     required Map<JmaLpgmIntensity, List<LpgmIntensityRegion>> lpgmRegions,
     required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>
     lpgmIntensityTree,

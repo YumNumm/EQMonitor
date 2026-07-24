@@ -8,18 +8,24 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypoc
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 /// Debug drafts without source data always use this documented instant.
 final earthquakeVxseDebugSampleReportedAt = DateTime.utc(2020, 1, 1);
+final earthquakeVxseDebugSampleOriginTime = DateTime.utc(2020, 1, 1);
+final earthquakeVxseDebugSampleArrivalTime = DateTime.utc(2020, 1, 1, 0, 1);
 
 const earthquakeVxseDebugSampleMaxIntensity = JmaIntensity.four;
 const earthquakeVxseDebugSampleMaxLpgmIntensity = JmaLpgmIntensity.two;
+const earthquakeVxseDebugSampleEarthquakeType = EarthquakeType.normal;
 
 const earthquakeVxseDebugSampleHypocenter = EarthquakeHypocenter(
-  code: '471',
+  code: '477',
   name: '東京湾',
   coordinates: Coordinate.latLng(latitude: 35.5, longitude: 139.8),
   magnitude: EarthquakeMagnitude.value(value: 5),
@@ -28,11 +34,30 @@ const earthquakeVxseDebugSampleHypocenter = EarthquakeHypocenter(
   detailedName: null,
 );
 
+const earthquakeVxseDebugSampleStation = EarthquakeParameterStationItem(
+  code: '1310100',
+  noCode: '3500000',
+  name: LocalizedName(ja: '東京千代田区大手町'),
+  kana: 'トウキョウチヨダクオオテマチ',
+  status: EarthquakeStationStatus.operating,
+  sourceStatus: '現',
+  owner: '気象庁',
+  location: LatLng(35.6889, 139.7558),
+  arv400: 1.43,
+);
+
+const earthquakeVxseDebugSampleCity = EarthquakeParameterCityItem(
+  code: '1310100',
+  name: LocalizedName(ja: '東京千代田区'),
+  kana: 'トウキョウチヨダク',
+  stations: [earthquakeVxseDebugSampleStation],
+);
+
 const earthquakeVxseDebugSampleRegion = EarthquakeParameterRegionItem(
-  code: '130000',
-  name: LocalizedName(ja: '東京都'),
-  kana: 'とうきょうと',
-  cities: [],
+  code: '350',
+  name: LocalizedName(ja: '東京都２３区'),
+  kana: 'トウキョウトニジュウサンク',
+  cities: [earthquakeVxseDebugSampleCity],
 );
 
 const earthquakeVxseDebugSamplePrefecture = EarthquakeParameterPrefectureItem(
@@ -49,6 +74,21 @@ const earthquakeVxseDebugSampleIntensityRegion = IntensityRegion(
 const earthquakeVxseDebugSampleIntensityPrefecture = IntensityPrefecture(
   prefecture: earthquakeVxseDebugSamplePrefecture,
   maxIntensity: earthquakeVxseDebugSampleMaxIntensity,
+);
+
+const earthquakeVxseDebugSampleStationIntensity = IntensityStation(
+  code: '1310100',
+  name: '東京千代田区大手町',
+  sva: 12.3,
+  prePeriods: [
+    PrePeriod(
+      band: 1.6,
+      lpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
+      sva: 12.3,
+    ),
+  ],
+  maxIntensity: earthquakeVxseDebugSampleMaxIntensity,
+  maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
 );
 
 const earthquakeVxseDebugSampleLpgmRegion = LpgmIntensityRegion(
@@ -75,6 +115,7 @@ class EarthquakeVxseDebugDraftFactory {
       .vxse51 => EarthquakeVxseDebugDraft.vxse51(
         eventId: current.eventId,
         reportedAt: reportedAt,
+        status: current.status,
         maxIntensity:
             intensity?.maxIntensity ?? earthquakeVxseDebugSampleMaxIntensity,
         regions: intensityRegionsOrSample(regions: intensity?.regions),
@@ -86,13 +127,22 @@ class EarthquakeVxseDebugDraftFactory {
       .vxse52 => EarthquakeVxseDebugDraft.vxse52(
         eventId: current.eventId,
         reportedAt: reportedAt,
+        status: current.status,
+        arrivalTime:
+            current.arrivalTime ?? earthquakeVxseDebugSampleArrivalTime,
+        originTime: current.originTime ?? earthquakeVxseDebugSampleOriginTime,
         hypocenter: hypocenter,
         comments: comments,
       ),
       .vxse53 => EarthquakeVxseDebugDraft.vxse53(
         eventId: current.eventId,
         reportedAt: reportedAt,
+        status: current.status,
+        arrivalTime:
+            current.arrivalTime ?? earthquakeVxseDebugSampleArrivalTime,
+        originTime: current.originTime ?? earthquakeVxseDebugSampleOriginTime,
         hypocenter: hypocenter,
+        earthquakeType: earthquakeVxseDebugSampleEarthquakeType,
         maxIntensity:
             intensity?.maxIntensity ?? earthquakeVxseDebugSampleMaxIntensity,
         regions: intensityRegionsOrSample(regions: intensity?.regions),
@@ -102,16 +152,28 @@ class EarthquakeVxseDebugDraftFactory {
       .vxse61 => EarthquakeVxseDebugDraft.vxse61(
         eventId: current.eventId,
         reportedAt: reportedAt,
+        status: current.status,
+        arrivalTime:
+            current.arrivalTime ?? earthquakeVxseDebugSampleArrivalTime,
+        originTime: current.originTime ?? earthquakeVxseDebugSampleOriginTime,
         hypocenter: hypocenter,
         comments: comments,
       ),
       .vxse62 => EarthquakeVxseDebugDraft.vxse62(
         eventId: current.eventId,
         reportedAt: reportedAt,
+        status: current.status,
+        arrivalTime:
+            current.arrivalTime ?? earthquakeVxseDebugSampleArrivalTime,
+        originTime: current.originTime ?? earthquakeVxseDebugSampleOriginTime,
         hypocenter: hypocenter,
+        maxIntensity:
+            intensity?.maxIntensity ?? earthquakeVxseDebugSampleMaxIntensity,
         maxLpgmIntensity:
             intensity?.maxLpgmIntensity ??
             earthquakeVxseDebugSampleMaxLpgmIntensity,
+        regions: intensityRegionsOrSample(regions: intensity?.regions),
+        intensityTree: intensityTreeOrSample(tree: intensity?.intensityTree),
         lpgmRegions: lpgmRegionsOrSample(tree: intensity?.lpgmIntensityTree),
         lpgmIntensityTree: lpgmTreeOrSample(tree: intensity?.lpgmIntensityTree),
         comments: comments,
@@ -167,7 +229,19 @@ Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTreeOrSample({
         earthquakeVxseDebugSampleMaxIntensity: [
           PrefectureIntensityNode(
             prefecture: earthquakeVxseDebugSampleIntensityPrefecture,
-            cities: [],
+            cities: [
+              CityIntensityNode(
+                city: earthquakeVxseDebugSampleCity,
+                maxIntensity: earthquakeVxseDebugSampleMaxIntensity,
+                stations: [
+                  StationIntensityNode(
+                    station: earthquakeVxseDebugSampleStation,
+                    intensity: earthquakeVxseDebugSampleStationIntensity,
+                  ),
+                ],
+                maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
+              ),
+            ],
           ),
         ],
       }
@@ -204,7 +278,18 @@ Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmTreeOrSample({
           PrefectureLpgmIntensityNode(
             region: earthquakeVxseDebugSampleRegion,
             maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
-            cities: [],
+            cities: [
+              CityLpgmIntensityNode(
+                city: earthquakeVxseDebugSampleCity,
+                maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
+                stations: [
+                  StationLpgmIntensityNode(
+                    station: earthquakeVxseDebugSampleStation,
+                    intensity: earthquakeVxseDebugSampleStationIntensity,
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       }
