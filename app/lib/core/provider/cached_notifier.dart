@@ -19,10 +19,18 @@ final class CachedOperationToken {
   final int _authority;
 }
 
+enum CachedResultSource { cache, fresh }
+
 mixin CachedNotifier<T> on $AsyncNotifier<T> {
   Future<T> fetch(ApiClient client);
 
-  T reconcile(T value, {required CachedOperationToken operation}) => value;
+  T reconcile(
+    T value, {
+    required CachedOperationToken operation,
+    required CachedResultSource source,
+  }) => value;
+
+  bool preserveValueOnBackgroundError(CachedOperationToken operation) => false;
 
   bool get revalidateOnAppResume => false;
 
@@ -53,6 +61,7 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
       final cached = reconcile(
         await fetch(await ref.read(cacheOnlyApiClientProvider.future)),
         operation: currentOperation,
+        source: CachedResultSource.cache,
       );
       unawaited(
         Future.microtask(
@@ -65,6 +74,7 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
         return reconcile(
           await fetch(await ref.read(apiClientProvider.future)),
           operation: currentOperation,
+          source: CachedResultSource.fresh,
         );
       }
       // 壊れたキャッシュ: force-fresh で if-none-match を抑止し、
@@ -91,11 +101,21 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
     try {
       final fresh = await fetch(await ref.read(apiClientProvider.future));
       if (ref.mounted && gen == _generation) {
-        state = AsyncData(reconcile(fresh, operation: operation));
+        state = AsyncData(
+          reconcile(
+            fresh,
+            operation: operation,
+            source: CachedResultSource.fresh,
+          ),
+        );
       }
     } on Object catch (e, st) {
       if (ref.mounted && gen == _generation) {
-        state = AsyncError<T>(e, st).copyWithPrevious(state);
+        if (preserveValueOnBackgroundError(operation) && state.hasValue) {
+          state = AsyncData(state.requireValue);
+        } else {
+          state = AsyncError<T>(e, st).copyWithPrevious(state);
+        }
       }
     }
   }
@@ -105,6 +125,10 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
     final dio = Dio(normalDio.options);
     dio.interceptors.add(ForceFreshInterceptor());
     dio.interceptors.addAll(normalDio.interceptors);
-    return reconcile(await fetch(ApiClient(dio)), operation: operation);
+    return reconcile(
+      await fetch(ApiClient(dio)),
+      operation: operation,
+      source: CachedResultSource.fresh,
+    );
   }
 }

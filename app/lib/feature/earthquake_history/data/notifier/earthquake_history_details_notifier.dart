@@ -55,18 +55,32 @@ class EarthquakeHistoryDetailsNotifier
   Earthquake reconcile(
     Earthquake value, {
     required CachedOperationToken operation,
+    required CachedResultSource source,
   }) {
+    final record = _pendingRealtimeRecord;
+    final repository = _repository;
+    if (source == CachedResultSource.cache) {
+      if (record == null || repository == null) {
+        return value;
+      }
+      return earthquakeFromRealtimeRecord(
+        record: record,
+        repository: repository,
+      );
+    }
     if (isCachedOperationCurrent(operation)) {
       _pendingRealtimeRecord = null;
       return value;
     }
-    final record = _pendingRealtimeRecord;
-    final repository = _repository;
     if (record == null || repository == null) {
       return value;
     }
     return earthquakeFromRealtimeRecord(record: record, repository: repository);
   }
+
+  @override
+  bool preserveValueOnBackgroundError(CachedOperationToken operation) =>
+      _pendingRealtimeRecord != null;
 
   @override
   Future<Earthquake> fetch(api.ApiClient client) async {

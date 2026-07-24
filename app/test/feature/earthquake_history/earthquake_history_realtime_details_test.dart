@@ -527,7 +527,116 @@ void main() {
       'new-realtime',
     );
   });
+
+  test('realtime後のrefreshでstale cacheを表示せずfresh成功を採用すること', () async {
+    final fixture = await _startCacheHitRefresh();
+
+    expect(_detailsComment(fixture.container), 'old-realtime');
+    fixture.refreshResult.complete(
+      _domainEarthquake(eventId: 'event-1', comment: 'new-fresh'),
+    );
+    await fixture.container.pump();
+
+    expect(_detailsComment(fixture.container), 'new-fresh');
+  });
+
+  test('realtime後のrefreshでfresh失敗時もrealtimeを維持すること', () async {
+    final fixture = await _startCacheHitRefresh();
+
+    expect(_detailsComment(fixture.container), 'old-realtime');
+    fixture.refreshResult.completeError(StateError('fresh failed'));
+    await fixture.container.pump();
+
+    final state = fixture.container.read(
+      earthquakeHistoryDetailsProvider('event-1'),
+    );
+    expect(_detailsComment(fixture.container), 'old-realtime');
+    expect(state.hasError, isFalse);
+  });
+
+  test('cache-hit refreshのfresh取得中に来たrealtimeを維持すること', () async {
+    final fixture = await _startCacheHitRefresh();
+
+    fixture.controller.add(
+      RealtimeEvent.earthquakeUpsert(
+        record: _earthquake(eventId: 'event-1', comment: 'new-realtime'),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await fixture.container.pump();
+    fixture.refreshResult.complete(
+      _domainEarthquake(eventId: 'event-1', comment: 'new-fresh'),
+    );
+    await fixture.container.pump();
+
+    expect(_detailsComment(fixture.container), 'new-realtime');
+  });
 }
+
+final class _CacheHitRefreshFixture {
+  const _CacheHitRefreshFixture({
+    required this.controller,
+    required this.container,
+    required this.refreshResult,
+  });
+
+  final StreamController<RealtimeEvent> controller;
+  final ProviderContainer container;
+  final Completer<Earthquake> refreshResult;
+}
+
+Future<_CacheHitRefreshFixture> _startCacheHitRefresh() async {
+  final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+  addTearDown(controller.close);
+  final cacheClient = api.ApiClient(Dio());
+  final initialFreshResult = Completer<Earthquake>();
+  final refreshResult = Completer<Earthquake>();
+  final repository = _CompletingRepository(
+    cacheClient: cacheClient,
+    cacheResult: () async =>
+        _domainEarthquake(eventId: 'event-1', comment: 'stale-cache'),
+    networkResults: [initialFreshResult, refreshResult],
+  );
+  final container = _detailsContainer(
+    controller: controller,
+    repository: repository,
+    cacheClient: cacheClient,
+  );
+  addTearDown(container.dispose);
+  final subscription = container.listen(
+    earthquakeHistoryDetailsProvider('event-1'),
+    (_, _) {},
+  );
+  addTearDown(subscription.close);
+  await _waitFor(() => repository.networkFetchCount == 1);
+  initialFreshResult.complete(
+    _domainEarthquake(eventId: 'event-1', comment: 'initial-fresh'),
+  );
+  await container.pump();
+
+  controller.add(
+    RealtimeEvent.earthquakeUpsert(
+      record: _earthquake(eventId: 'event-1', comment: 'old-realtime'),
+      source: RealtimeSource.eqmonitor,
+    ),
+  );
+  await container.pump();
+  container.invalidate(earthquakeHistoryDetailsProvider('event-1'));
+  await _waitFor(() => repository.networkFetchCount == 2);
+
+  return _CacheHitRefreshFixture(
+    controller: controller,
+    container: container,
+    refreshResult: refreshResult,
+  );
+}
+
+String? _detailsComment(ProviderContainer container) => container
+    .read(earthquakeHistoryDetailsProvider('event-1'))
+    .value
+    ?.telegramComments
+    .single
+    .additional;
 
 ProviderContainer _detailsContainer({
   required StreamController<RealtimeEvent> controller,
