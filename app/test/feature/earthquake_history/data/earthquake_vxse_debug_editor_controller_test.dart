@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_apply_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_factory.dart';
@@ -111,24 +113,227 @@ void main() {
     expect(fixture.state.canApply, isTrue);
   });
 
-  test('同じeventIdの新しいcurrentは別family keyとして再初期化する', () {
+  test('同じeventIdのcurrent更新は編集中stateを保持し型切替だけ最新currentを使う', () {
     final container = ProviderContainer.test();
     final first = _currentEarthquake();
     final refreshed = first.copyWith(
       status: TelegramStatus.training,
       telegramTypes: const [EarthquakeTelegramType.vxse52],
     );
+    final session = EarthquakeVxseDebugEditorSession(current: first);
+    final provider = earthquakeVxseDebugEditorControllerProvider(session);
+    final notifier = container.read(provider.notifier);
 
-    final firstState = container.read(
-      earthquakeVxseDebugEditorControllerProvider(first),
+    notifier.setApplyMode(EarthquakeVxseApplyMode.clearAndApply);
+    notifier.validateJson('{editing');
+    notifier.updateCurrent(refreshed);
+
+    expect(
+      container.read(provider).selectedType,
+      EarthquakeTelegramType.vxse53,
     );
-    final refreshedState = container.read(
-      earthquakeVxseDebugEditorControllerProvider(refreshed),
+    expect(
+      container.read(provider).applyMode,
+      EarthquakeVxseApplyMode.clearAndApply,
+    );
+    expect(container.read(provider).jsonText, '{editing');
+    expect(container.read(provider).canApply, isFalse);
+
+    notifier.selectType(EarthquakeTelegramType.vxse52);
+
+    expect(
+      container.read(provider).selectedType,
+      EarthquakeTelegramType.vxse52,
+    );
+    expect(container.read(provider).draft.status, TelegramStatus.training);
+  });
+
+  test('eventIdが異なるeditor sessionは分離する', () {
+    final container = ProviderContainer.test();
+    final first = _currentEarthquake();
+    final second = first.copyWith(eventId: 'other-event');
+    final firstProvider = earthquakeVxseDebugEditorControllerProvider(
+      EarthquakeVxseDebugEditorSession(current: first),
+    );
+    final secondProvider = earthquakeVxseDebugEditorControllerProvider(
+      EarthquakeVxseDebugEditorSession(current: second),
     );
 
-    expect(firstState.selectedType, EarthquakeTelegramType.vxse53);
-    expect(refreshedState.selectedType, EarthquakeTelegramType.vxse52);
-    expect(refreshedState.draft.status, TelegramStatus.training);
+    container.read(firstProvider.notifier).validateJson('{editing');
+
+    expect(container.read(firstProvider).jsonText, '{editing');
+    expect(container.read(secondProvider).draft.eventId, 'other-event');
+    expect(container.read(secondProvider).canApply, isTrue);
+  });
+
+  test('typed input errorはraw textを保持しApplyを無効にする', () {
+    final fixture = _fixture();
+    final before = fixture.state.draft.reportedAt;
+
+    fixture.notifier.setTypedInput(
+      fieldId: 'reportedAt',
+      text: 'invalid-time',
+      error: '日時を入力してください',
+    );
+
+    expect(fixture.state.typedInputValues['reportedAt'], 'invalid-time');
+    expect(fixture.state.typedInputErrors['reportedAt'], '日時を入力してください');
+    expect(fixture.state.draft.reportedAt, before);
+    expect(fixture.state.canApply, isFalse);
+
+    fixture.notifier.setTypedInput(
+      fieldId: 'reportedAt',
+      text: '2026-07-24T05:00:00.000Z',
+    );
+    fixture.notifier.setReportedAt(DateTime.utc(2026, 7, 24, 5));
+
+    expect(fixture.state.typedInputValues['reportedAt'], contains('05:00'));
+    expect(fixture.state.typedInputErrors, isEmpty);
+    expect(fixture.state.canApply, isTrue);
+  });
+
+  test('ordinary grouped level変更はnodeと外Map keyをatomicに移す', () {
+    final source = {
+      JmaIntensity.four: [earthquakeVxseDebugSampleIntensityRegion],
+      JmaIntensity.fiveLower: [
+        earthquakeVxseDebugSampleIntensityRegion.copyWith(
+          region: earthquakeVxseDebugSampleIntensityRegion.region.copyWith(
+            code: '351',
+          ),
+          maxIntensity: JmaIntensity.fiveLower,
+        ),
+      ],
+    };
+
+    final moved = moveIntensityRegionLevel(
+      source: source,
+      from: JmaIntensity.four,
+      index: 0,
+      to: JmaIntensity.fiveLower,
+    );
+
+    expect(moved.containsKey(JmaIntensity.four), isFalse);
+    expect(moved[JmaIntensity.fiveLower], hasLength(2));
+    expect(
+      moved[JmaIntensity.fiveLower]!.last.maxIntensity,
+      JmaIntensity.fiveLower,
+    );
+    expect(moved[JmaIntensity.fiveLower]!.first.region.code, '351');
+  });
+
+  test('LPGM grouped level変更はnodeと外Map keyをatomicに移す', () {
+    final source = {
+      JmaLpgmIntensity.two: [earthquakeVxseDebugSampleLpgmRegion],
+      JmaLpgmIntensity.three: [
+        earthquakeVxseDebugSampleLpgmRegion.copyWith(
+          region: earthquakeVxseDebugSampleLpgmRegion.region.copyWith(
+            code: '351',
+          ),
+          maxLpgmIntensity: JmaLpgmIntensity.three,
+        ),
+      ],
+    };
+
+    final moved = moveLpgmRegionLevel(
+      source: source,
+      from: JmaLpgmIntensity.two,
+      index: 0,
+      to: JmaLpgmIntensity.three,
+    );
+
+    expect(moved.containsKey(JmaLpgmIntensity.two), isFalse);
+    expect(moved[JmaLpgmIntensity.three], hasLength(2));
+    expect(
+      moved[JmaLpgmIntensity.three]!.last.maxLpgmIntensity,
+      JmaLpgmIntensity.three,
+    );
+  });
+
+  test('prefecture grouped level変更もordinary/LPGMの外Map keyを移す', () {
+    final ordinary = moveIntensityPrefectureLevel(
+      source: {
+        JmaIntensity.four: [earthquakeVxseDebugSampleIntensityPrefecture],
+      },
+      from: JmaIntensity.four,
+      index: 0,
+      to: JmaIntensity.fiveLower,
+    );
+    final lpgm = moveLpgmPrefectureLevel(
+      source: {
+        JmaLpgmIntensity.two: [lpgmTreeOrSample(tree: null).values.first.first],
+      },
+      from: JmaLpgmIntensity.two,
+      index: 0,
+      to: JmaLpgmIntensity.three,
+    );
+    final ordinaryTree = moveIntensityTreePrefectureLevel(
+      source: {
+        JmaIntensity.four: [
+          intensityTreeOrSample(tree: null).values.first.first,
+        ],
+      },
+      from: JmaIntensity.four,
+      index: 0,
+      to: JmaIntensity.fiveLower,
+    );
+
+    expect(ordinary.containsKey(JmaIntensity.four), isFalse);
+    expect(
+      ordinary[JmaIntensity.fiveLower]!.single.maxIntensity,
+      JmaIntensity.fiveLower,
+    );
+    expect(lpgm.containsKey(JmaLpgmIntensity.two), isFalse);
+    expect(
+      lpgm[JmaLpgmIntensity.three]!.single.maxLpgmIntensity,
+      JmaLpgmIntensity.three,
+    );
+    expect(ordinaryTree.containsKey(JmaIntensity.four), isFalse);
+    expect(
+      ordinaryTree[JmaIntensity.fiveLower]!.single.prefecture.maxIntensity,
+      JmaIntensity.fiveLower,
+    );
+  });
+
+  test('group移動先の同一codeは暗黙上書きせず保持してApplyを無効にする', () {
+    final fixture = _fixture();
+    final draft = fixture.state.draft as EarthquakeVxse53DebugDraft;
+    final duplicate = earthquakeVxseDebugSampleIntensityRegion.copyWith(
+      maxIntensity: JmaIntensity.fiveLower,
+    );
+    final moved = moveIntensityRegionLevel(
+      source: {
+        JmaIntensity.four: [earthquakeVxseDebugSampleIntensityRegion],
+        JmaIntensity.fiveLower: [duplicate],
+      },
+      from: JmaIntensity.four,
+      index: 0,
+      to: JmaIntensity.fiveLower,
+    );
+
+    fixture.notifier.updateDraft(draft.copyWith(regions: moved));
+
+    expect(moved[JmaIntensity.fiveLower], hasLength(2));
+    expect(fixture.state.validationError, '同じコードの階級項目が重複しています');
+    expect(fixture.state.canApply, isFalse);
+  });
+
+  test('group keyとnode scalarが不一致ならApplyを無効にする', () {
+    final fixture = _fixture();
+    final draft = fixture.state.draft as EarthquakeVxse53DebugDraft;
+    fixture.notifier.updateDraft(
+      draft.copyWith(
+        regions: {
+          JmaIntensity.four: [
+            earthquakeVxseDebugSampleIntensityRegion.copyWith(
+              maxIntensity: JmaIntensity.fiveLower,
+            ),
+          ],
+        },
+      ),
+    );
+
+    expect(fixture.state.validationError, '階級グループと項目の階級が一致しません');
+    expect(fixture.state.canApply, isFalse);
   });
 
   test('VXSE62のstation親city locatorは両treeへ同期し階級値を変えない', () {
@@ -171,11 +376,16 @@ class _Fixture {
   final Earthquake current;
 
   EarthquakeVxseDebugEditorController get notifier => container.read(
-    earthquakeVxseDebugEditorControllerProvider(current).notifier,
+    earthquakeVxseDebugEditorControllerProvider(
+      EarthquakeVxseDebugEditorSession(current: current),
+    ).notifier,
   );
 
-  EarthquakeVxseDebugEditorState get state =>
-      container.read(earthquakeVxseDebugEditorControllerProvider(current));
+  EarthquakeVxseDebugEditorState get state => container.read(
+    earthquakeVxseDebugEditorControllerProvider(
+      EarthquakeVxseDebugEditorSession(current: current),
+    ),
+  );
 }
 
 const _eventId = '20260724010101';

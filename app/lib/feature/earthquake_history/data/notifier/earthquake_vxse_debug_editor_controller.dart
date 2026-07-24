@@ -27,6 +27,8 @@ class EarthquakeVxseDebugEditorState {
     required this.jsonText,
     required this.validationError,
     required this.canApply,
+    this.typedInputValues = const {},
+    this.typedInputErrors = const {},
   });
 
   final EarthquakeTelegramType selectedType;
@@ -35,6 +37,8 @@ class EarthquakeVxseDebugEditorState {
   final String jsonText;
   final String? validationError;
   final bool canApply;
+  final Map<String, String> typedInputValues;
+  final Map<String, String> typedInputErrors;
 
   EarthquakeVxseDebugEditorState copyWith({
     EarthquakeTelegramType? selectedType,
@@ -44,6 +48,8 @@ class EarthquakeVxseDebugEditorState {
     String? validationError,
     bool clearValidationError = false,
     bool? canApply,
+    Map<String, String>? typedInputValues,
+    Map<String, String>? typedInputErrors,
   }) => EarthquakeVxseDebugEditorState(
     selectedType: selectedType ?? this.selectedType,
     applyMode: applyMode ?? this.applyMode,
@@ -53,14 +59,34 @@ class EarthquakeVxseDebugEditorState {
         ? null
         : validationError ?? this.validationError,
     canApply: canApply ?? this.canApply,
+    typedInputValues: typedInputValues ?? this.typedInputValues,
+    typedInputErrors: typedInputErrors ?? this.typedInputErrors,
   );
+}
+
+/// Provider identity is the event ID; [current] only bootstraps the session.
+class EarthquakeVxseDebugEditorSession {
+  const EarthquakeVxseDebugEditorSession({required this.current});
+
+  final Earthquake current;
+
+  @override
+  int get hashCode => current.eventId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      other is EarthquakeVxseDebugEditorSession &&
+      other.current.eventId == current.eventId;
 }
 
 @riverpod
 class EarthquakeVxseDebugEditorController
     extends _$EarthquakeVxseDebugEditorController {
   @override
-  EarthquakeVxseDebugEditorState build(Earthquake current) {
+  EarthquakeVxseDebugEditorState build(
+    EarthquakeVxseDebugEditorSession session,
+  ) {
+    _latestCurrent = session.current;
     final type = initialEarthquakeVxseDebugType(current: current);
     final draft = const EarthquakeVxseDebugDraftFactory().create(
       current: current,
@@ -71,6 +97,18 @@ class EarthquakeVxseDebugEditorController
       applyMode: EarthquakeVxseApplyMode.merge,
       draft: draft,
     );
+  }
+
+  late Earthquake _latestCurrent;
+
+  Earthquake get current => _latestCurrent;
+
+  /// Refreshes only the source used by an explicit type switch or reload.
+  void updateCurrent(Earthquake value) {
+    if (value.eventId != current.eventId) {
+      throw ArgumentError.value(value.eventId, 'value', 'event ID mismatch');
+    }
+    _latestCurrent = value;
   }
 
   void selectType(EarthquakeTelegramType type) {
@@ -87,6 +125,25 @@ class EarthquakeVxseDebugEditorController
 
   void setApplyMode(EarthquakeVxseApplyMode mode) {
     state = state.copyWith(applyMode: mode);
+  }
+
+  void setTypedInput({
+    required String fieldId,
+    required String text,
+    String? error,
+  }) {
+    final values = {...state.typedInputValues, fieldId: text};
+    final errors = {...state.typedInputErrors};
+    if (error == null) {
+      errors.remove(fieldId);
+    } else {
+      errors[fieldId] = error;
+    }
+    state = state.copyWith(
+      typedInputValues: values,
+      typedInputErrors: errors,
+      canApply: state.validationError == null && errors.isEmpty,
+    );
   }
 
   void setReportedAt(DateTime value) {
@@ -296,6 +353,8 @@ class EarthquakeVxseDebugEditorController
             selectedType: state.selectedType,
             applyMode: state.applyMode,
             draft: draft,
+            typedInputValues: state.typedInputValues,
+            typedInputErrors: state.typedInputErrors,
           )
         : state.copyWith(
             draft: draft,
@@ -331,6 +390,8 @@ class EarthquakeVxseDebugEditorController
               jsonText: text,
               clearValidationError: true,
               canApply: true,
+              typedInputValues: const {},
+              typedInputErrors: const {},
             )
           : invalidEarthquakeVxseDebugEditorState(
               state: state,
@@ -377,13 +438,17 @@ EarthquakeVxseDebugEditorState validEarthquakeVxseDebugEditorState({
   required EarthquakeTelegramType selectedType,
   required EarthquakeVxseApplyMode applyMode,
   required EarthquakeVxseDebugDraft draft,
+  Map<String, String> typedInputValues = const {},
+  Map<String, String> typedInputErrors = const {},
 }) => EarthquakeVxseDebugEditorState(
   selectedType: selectedType,
   applyMode: applyMode,
   draft: draft,
   jsonText: prettyEarthquakeVxseDebugJson(draft: draft),
   validationError: null,
-  canApply: true,
+  canApply: typedInputErrors.isEmpty,
+  typedInputValues: typedInputValues,
+  typedInputErrors: typedInputErrors,
 );
 
 EarthquakeVxseDebugEditorState invalidEarthquakeVxseDebugEditorState({
@@ -413,5 +478,271 @@ String? validateEditorDraft({
   ).isNotEmpty) {
     return '入力内容の関連付けが正しくありません';
   }
+  if (hasDuplicateEarthquakeVxseGroupedCodes(draft: draft)) {
+    return '同じコードの階級項目が重複しています';
+  }
+  if (!hasConsistentEarthquakeVxseGroupLevels(draft: draft)) {
+    return '階級グループと項目の階級が一致しません';
+  }
   return null;
+}
+
+bool hasDuplicateEarthquakeVxseGroupedCodes({
+  required EarthquakeVxseDebugDraft draft,
+}) {
+  final ordinaryRegionCodes = <String>{};
+  final ordinaryRegions = switch (draft) {
+    EarthquakeVxse51DebugDraft(:final regions) ||
+    EarthquakeVxse53DebugDraft(:final regions) ||
+    EarthquakeVxse62DebugDraft(:final regions) => regions,
+    _ => const <JmaIntensity, List<IntensityRegion>>{},
+  };
+  for (final node in ordinaryRegions.values.expand((nodes) => nodes)) {
+    if (!ordinaryRegionCodes.add(node.region.code)) {
+      return true;
+    }
+  }
+  final ordinaryPrefectureCodes = <String>{};
+  final ordinaryPrefectures = switch (draft) {
+    EarthquakeVxse51DebugDraft(:final prefectures) =>
+      prefectures.values
+          .expand((nodes) => nodes)
+          .map((node) => node.prefecture.code),
+    EarthquakeVxse53DebugDraft(:final intensityTree) ||
+    EarthquakeVxse62DebugDraft(:final intensityTree) =>
+      intensityTree.values
+          .expand((nodes) => nodes)
+          .map((node) => node.prefecture.prefecture.code),
+    _ => const <String>[],
+  };
+  for (final code in ordinaryPrefectures) {
+    if (!ordinaryPrefectureCodes.add(code)) {
+      return true;
+    }
+  }
+  if (draft case EarthquakeVxse62DebugDraft(
+    :final lpgmRegions,
+    :final lpgmIntensityTree,
+  )) {
+    final lpgmRegionCodes = <String>{};
+    for (final node in lpgmRegions.values.expand((nodes) => nodes)) {
+      if (!lpgmRegionCodes.add(node.region.code)) {
+        return true;
+      }
+    }
+    final lpgmPrefectureCodes = <String>{};
+    for (final node in lpgmIntensityTree.values.expand((nodes) => nodes)) {
+      if (!lpgmPrefectureCodes.add(node.region.code)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool hasConsistentEarthquakeVxseGroupLevels({
+  required EarthquakeVxseDebugDraft draft,
+}) {
+  final regions = switch (draft) {
+    EarthquakeVxse51DebugDraft(:final regions) ||
+    EarthquakeVxse53DebugDraft(:final regions) ||
+    EarthquakeVxse62DebugDraft(:final regions) => regions,
+    _ => const <JmaIntensity, List<IntensityRegion>>{},
+  };
+  if (regions.entries.any(
+    (entry) => entry.value.any(
+      (node) => node.maxIntensity != null && node.maxIntensity != entry.key,
+    ),
+  )) {
+    return false;
+  }
+  final ordinaryTree = switch (draft) {
+    EarthquakeVxse53DebugDraft(:final intensityTree) ||
+    EarthquakeVxse62DebugDraft(:final intensityTree) => intensityTree,
+    _ => const <JmaIntensity, List<PrefectureIntensityNode>>{},
+  };
+  if (ordinaryTree.entries.any(
+    (entry) => entry.value.any(
+      (node) =>
+          node.prefecture.maxIntensity != null &&
+          node.prefecture.maxIntensity != entry.key,
+    ),
+  )) {
+    return false;
+  }
+  if (draft case EarthquakeVxse51DebugDraft(:final prefectures)) {
+    if (prefectures.entries.any(
+      (entry) => entry.value.any(
+        (node) => node.maxIntensity != null && node.maxIntensity != entry.key,
+      ),
+    )) {
+      return false;
+    }
+  }
+  if (draft case EarthquakeVxse62DebugDraft(
+    :final lpgmRegions,
+    :final lpgmIntensityTree,
+  )) {
+    if (lpgmRegions.entries.any(
+          (entry) => entry.value.any(
+            (node) =>
+                node.maxLpgmIntensity != null &&
+                node.maxLpgmIntensity != entry.key,
+          ),
+        ) ||
+        lpgmIntensityTree.entries.any(
+          (entry) => entry.value.any(
+            (node) =>
+                node.maxLpgmIntensity != null &&
+                node.maxLpgmIntensity != entry.key,
+          ),
+        )) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/// Moves a node without replacing destination collisions; validation owns
+/// duplicate-code rejection so no existing payload is silently discarded.
+Map<JmaIntensity, List<IntensityRegion>> moveIntensityRegionLevel({
+  required Map<JmaIntensity, List<IntensityRegion>> source,
+  required JmaIntensity from,
+  required int index,
+  required JmaIntensity to,
+}) {
+  final node = source[from]?[index];
+  if (node == null) {
+    return source;
+  }
+  return {
+    for (final entry in source.entries)
+      if (entry.key != from && entry.key != to) entry.key: entry.value,
+    if (from != to && (source[from]?.length ?? 0) > 1)
+      from: [
+        for (final (currentIndex, current) in source[from]!.indexed)
+          if (currentIndex != index) current,
+      ],
+    to: [
+      if (to != from) ...source[to] ?? const [],
+      node.copyWith(maxIntensity: to),
+      if (to == from)
+        for (final (currentIndex, current) in source[from]!.indexed)
+          if (currentIndex != index) current,
+    ],
+  };
+}
+
+Map<JmaLpgmIntensity, List<LpgmIntensityRegion>> moveLpgmRegionLevel({
+  required Map<JmaLpgmIntensity, List<LpgmIntensityRegion>> source,
+  required JmaLpgmIntensity from,
+  required int index,
+  required JmaLpgmIntensity to,
+}) {
+  final node = source[from]?[index];
+  if (node == null) {
+    return source;
+  }
+  return {
+    for (final entry in source.entries)
+      if (entry.key != from && entry.key != to) entry.key: entry.value,
+    if (from != to && (source[from]?.length ?? 0) > 1)
+      from: [
+        for (final (currentIndex, current) in source[from]!.indexed)
+          if (currentIndex != index) current,
+      ],
+    to: [
+      if (to != from) ...source[to] ?? const [],
+      node.copyWith(maxLpgmIntensity: to),
+      if (to == from)
+        for (final (currentIndex, current) in source[from]!.indexed)
+          if (currentIndex != index) current,
+    ],
+  };
+}
+
+Map<JmaIntensity, List<IntensityPrefecture>> moveIntensityPrefectureLevel({
+  required Map<JmaIntensity, List<IntensityPrefecture>> source,
+  required JmaIntensity from,
+  required int index,
+  required JmaIntensity to,
+}) {
+  final node = source[from]?[index];
+  if (node == null) {
+    return source;
+  }
+  return {
+    for (final entry in source.entries)
+      if (entry.key != from && entry.key != to) entry.key: entry.value,
+    if (from != to && (source[from]?.length ?? 0) > 1)
+      from: [
+        for (final (currentIndex, current) in source[from]!.indexed)
+          if (currentIndex != index) current,
+      ],
+    to: [
+      if (to != from) ...source[to] ?? const [],
+      node.copyWith(maxIntensity: to),
+      if (to == from)
+        for (final (currentIndex, current) in source[from]!.indexed)
+          if (currentIndex != index) current,
+    ],
+  };
+}
+
+Map<JmaIntensity, List<PrefectureIntensityNode>>
+moveIntensityTreePrefectureLevel({
+  required Map<JmaIntensity, List<PrefectureIntensityNode>> source,
+  required JmaIntensity from,
+  required int index,
+  required JmaIntensity to,
+}) {
+  final node = source[from]?[index];
+  if (node == null) {
+    return source;
+  }
+  return {
+    for (final entry in source.entries)
+      if (entry.key != from && entry.key != to) entry.key: entry.value,
+    if (from != to && (source[from]?.length ?? 0) > 1)
+      from: [
+        for (final (currentIndex, current) in source[from]!.indexed)
+          if (currentIndex != index) current,
+      ],
+    to: [
+      if (to != from) ...source[to] ?? const [],
+      node.copyWith(prefecture: node.prefecture.copyWith(maxIntensity: to)),
+      if (to == from)
+        for (final (currentIndex, current) in source[from]!.indexed)
+          if (currentIndex != index) current,
+    ],
+  };
+}
+
+Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>
+moveLpgmPrefectureLevel({
+  required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> source,
+  required JmaLpgmIntensity from,
+  required int index,
+  required JmaLpgmIntensity to,
+}) {
+  final node = source[from]?[index];
+  if (node == null) {
+    return source;
+  }
+  return {
+    for (final entry in source.entries)
+      if (entry.key != from && entry.key != to) entry.key: entry.value,
+    if (from != to && (source[from]?.length ?? 0) > 1)
+      from: [
+        for (final (currentIndex, current) in source[from]!.indexed)
+          if (currentIndex != index) current,
+      ],
+    to: [
+      if (to != from) ...source[to] ?? const [],
+      node.copyWith(maxLpgmIntensity: to),
+      if (to == from)
+        for (final (currentIndex, current) in source[from]!.indexed)
+          if (currentIndex != index) current,
+    ],
+  };
 }

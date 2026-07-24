@@ -23,7 +23,7 @@ final class EarthquakeVxseDebugEditorControllerProvider
         > {
   EarthquakeVxseDebugEditorControllerProvider._({
     required EarthquakeVxseDebugEditorControllerFamily super.from,
-    required Earthquake super.argument,
+    required EarthquakeVxseDebugEditorSession super.argument,
   }) : super(
          retry: null,
          name: r'earthquakeVxseDebugEditorControllerProvider',
@@ -71,7 +71,7 @@ final class EarthquakeVxseDebugEditorControllerProvider
 }
 
 String _$earthquakeVxseDebugEditorControllerHash() =>
-    r'dac6b0a3605937be755853ffbe854bc2a1717cf1';
+    r'75f3c7ee49037ad7a5d9afb94fd9b1cdd8fc2f43';
 
 final class EarthquakeVxseDebugEditorControllerFamily extends $Family
     with
@@ -80,7 +80,7 @@ final class EarthquakeVxseDebugEditorControllerFamily extends $Family
           EarthquakeVxseDebugEditorState,
           EarthquakeVxseDebugEditorState,
           EarthquakeVxseDebugEditorState,
-          Earthquake
+          EarthquakeVxseDebugEditorSession
         > {
   EarthquakeVxseDebugEditorControllerFamily._()
     : super(
@@ -91,11 +91,12 @@ final class EarthquakeVxseDebugEditorControllerFamily extends $Family
         isAutoDispose: true,
       );
 
-  EarthquakeVxseDebugEditorControllerProvider call(Earthquake current) =>
-      EarthquakeVxseDebugEditorControllerProvider._(
-        argument: current,
-        from: this,
-      );
+  EarthquakeVxseDebugEditorControllerProvider call(
+    EarthquakeVxseDebugEditorSession session,
+  ) => EarthquakeVxseDebugEditorControllerProvider._(
+    argument: session,
+    from: this,
+  );
 
   @override
   String toString() => r'earthquakeVxseDebugEditorControllerProvider';
@@ -103,10 +104,12 @@ final class EarthquakeVxseDebugEditorControllerFamily extends $Family
 
 abstract class _$EarthquakeVxseDebugEditorController
     extends $Notifier<EarthquakeVxseDebugEditorState> {
-  late final _$args = ref.$arg as Earthquake;
-  Earthquake get current => _$args;
+  late final _$args = ref.$arg as EarthquakeVxseDebugEditorSession;
+  EarthquakeVxseDebugEditorSession get session => _$args;
 
-  EarthquakeVxseDebugEditorState build(Earthquake current);
+  EarthquakeVxseDebugEditorState build(
+    EarthquakeVxseDebugEditorSession session,
+  );
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
