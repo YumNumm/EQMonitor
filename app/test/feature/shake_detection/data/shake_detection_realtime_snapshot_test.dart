@@ -73,6 +73,20 @@ void main() {
           .eventId,
       'new',
     );
+
+    controller.add(
+      _event(
+        api.ShakeDetectionActiveSnapshot(
+          type: 'shake_detection',
+          revision: 3,
+          responseAt: DateTime.utc(2026, 7, 23, 12, 1),
+          events: const [],
+        ),
+      ),
+    );
+    await container.pump();
+    expect(container.read(shakeDetectionProvider), isEmpty);
+    expect(repository.fetchCount, 0);
   });
 }
 

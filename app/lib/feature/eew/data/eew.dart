@@ -23,10 +23,11 @@ class Eew extends _$Eew {
     // 非リアルタイム再生中はライブ受信を切り離し、再生中の時刻基準と
     // 現在発生しているEEWが混在することを防ぐ。
     if (!ref.watch(isRealtimeModeProvider)) {
+      _realtimeRecords.clear();
       return const AsyncData([]);
     }
 
-    final restResult = ref.watch(eewRestProvider);
+    final restResult = ref.watch(eewRestProvider).whenData(reconcileRestItems);
 
     ref.listen(appLifecycleProvider, (_, next) {
       if (next == AppLifecycleState.resumed) {
@@ -89,6 +90,28 @@ class Eew extends _$Eew {
     }
     _realtimeRecords[record.eventId] = record;
     _upsert(record.toEewTelegramItem);
+  }
+
+  List<EewTelegramItem> reconcileRestItems(List<EewTelegramItem> restItems) {
+    final items = [...restItems];
+    final retiredEventIds = <String>[];
+    for (final entry in _realtimeRecords.entries.toList(growable: false)) {
+      final record = entry.value;
+      final index = items.indexWhere((item) => item.eventId == entry.key);
+      if (index == -1) {
+        items.add(record.toEewTelegramItem);
+        continue;
+      }
+      if (items[index].serialNo < record.serialNo) {
+        items[index] = record.toEewTelegramItem;
+      } else {
+        retiredEventIds.add(entry.key);
+      }
+    }
+    for (final eventId in retiredEventIds) {
+      _realtimeRecords.remove(eventId);
+    }
+    return items;
   }
 }
 

@@ -16,30 +16,32 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 mixin CachedNotifier<T> on $AsyncNotifier<T> {
   Future<T> fetch(ApiClient client);
 
+  T reconcile(T value) => value;
+
   bool get revalidateOnAppResume => false;
 
   var _generation = 0;
 
   Future<T> cachedBuild() async {
     if (revalidateOnAppResume) {
-    ref.listen(appLifecycleProvider, (prev, next) {
-      if (prev != null &&
-          prev != AppLifecycleState.resumed &&
-          next == AppLifecycleState.resumed) {
-        ref.invalidateSelf();
-      }
-    });
+      ref.listen(appLifecycleProvider, (prev, next) {
+        if (prev != null &&
+            prev != AppLifecycleState.resumed &&
+            next == AppLifecycleState.resumed) {
+          ref.invalidateSelf();
+        }
+      });
     }
     final gen = ++_generation;
     try {
-      final cached = await fetch(
-        await ref.read(cacheOnlyApiClientProvider.future),
+      final cached = reconcile(
+        await fetch(await ref.read(cacheOnlyApiClientProvider.future)),
       );
       unawaited(Future.microtask(() => _revalidateInBackground(gen, cached)));
       return cached;
     } on Object catch (e) {
       if (isCacheMiss(e)) {
-        return fetch(await ref.read(apiClientProvider.future));
+        return reconcile(await fetch(await ref.read(apiClientProvider.future)));
       }
       // 壊れたキャッシュ: force-fresh で if-none-match を抑止し、
       // 200 取得 → HttpCacheInterceptor が corrupt エントリを上書き
@@ -57,7 +59,7 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
     try {
       final fresh = await fetch(await ref.read(apiClientProvider.future));
       if (ref.mounted && gen == _generation) {
-        state = AsyncData(fresh);
+        state = AsyncData(reconcile(fresh));
       }
     } on Object catch (e, st) {
       if (ref.mounted && gen == _generation) {
@@ -71,6 +73,6 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
     final dio = Dio(normalDio.options);
     dio.interceptors.add(ForceFreshInterceptor());
     dio.interceptors.addAll(normalDio.interceptors);
-    return fetch(ApiClient(dio));
+    return reconcile(await fetch(ApiClient(dio)));
   }
 }

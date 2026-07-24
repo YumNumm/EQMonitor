@@ -12,24 +12,36 @@ part 'earthquake_history_details_notifier.g.dart';
 class EarthquakeHistoryDetailsNotifier
     extends _$EarthquakeHistoryDetailsNotifier
     with CachedNotifier<Earthquake> {
+  api.Earthquake? _latestRealtimeRecord;
+  EarthquakeHistoryRepository? _repository;
+
   @override
   Future<Earthquake> build(String eventId) async {
     final repository = await ref.watch(
       earthquakeHistoryRepositoryProvider.future,
     );
+    _repository = repository;
     ref.listen(realtimeEventsProvider, (_, next) {
       if (next case AsyncData(
         value: RealtimeEarthquakeUpsertEvent(:final record),
       ) when record.eventId == eventId) {
+        _latestRealtimeRecord = record;
         state = AsyncData(
-          record.toEarthquake(
-            parameter: repository.earthquakeParameter,
-            shindoDbStations: repository.shindoDbStations,
-          ),
+          earthquakeFromRealtimeRecord(record: record, repository: repository),
         );
       }
     });
     return cachedBuild();
+  }
+
+  @override
+  Earthquake reconcile(Earthquake value) {
+    final record = _latestRealtimeRecord;
+    final repository = _repository;
+    if (record == null || repository == null) {
+      return value;
+    }
+    return earthquakeFromRealtimeRecord(record: record, repository: repository);
   }
 
   @override
@@ -40,3 +52,11 @@ class EarthquakeHistoryDetailsNotifier
     return repository.fetchEarthquakeDetail(eventId: eventId, client: client);
   }
 }
+
+Earthquake earthquakeFromRealtimeRecord({
+  required api.Earthquake record,
+  required EarthquakeHistoryRepository repository,
+}) => record.toEarthquake(
+  parameter: repository.earthquakeParameter,
+  shindoDbStations: repository.shindoDbStations,
+);
