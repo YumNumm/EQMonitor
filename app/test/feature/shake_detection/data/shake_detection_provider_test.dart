@@ -6,7 +6,6 @@ import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
-import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
@@ -43,27 +42,31 @@ ShakeDetectionSnapshot domainSnapshot({
   events: eventIds.map(domainEvent).toList(growable: false),
 );
 
-RealtimeShakeSnapshot realtimeSnapshot({
+api.ShakeDetectionActiveSnapshot realtimeSnapshot({
   required int revision,
   required List<String> eventIds,
-}) => RealtimeShakeSnapshot(
+}) => api.ShakeDetectionActiveSnapshot(
+  type: 'shake_detection',
   revision: revision,
   responseAt: _baseTime,
   events: eventIds
       .map(
-        (eventId) => RealtimeShakeEventData(
+        (eventId) => api.ShakeDetectionActiveEvent(
+          type: 'shake_detection',
           eventId: eventId,
           serialNo: 1,
           createdAt: _baseTime,
           updatedAt: _baseTime,
           expiresAt: _baseTime.add(const Duration(minutes: 1)),
-          level: 'Medium',
+          level: api.Level.medium,
+          mergedEvents: const [],
           pointCount: 1,
-          minLat: 35,
-          maxLat: 36,
-          minLng: 139,
-          maxLng: 140,
-          changeReasons: const ['new_event'],
+          region: const api.Region(
+            topLeft: api.TopLeft(latitude: 36, longitude: 139),
+            bottomRight: api.BottomRight(latitude: 35, longitude: 140),
+          ),
+          points: const [],
+          changeReasons: const [api.ChangeReasons.newEvent],
         ),
       )
       .toList(growable: false),
@@ -73,7 +76,7 @@ RealtimeEvent shakeRealtime({
   required int revision,
   required List<String> eventIds,
 }) => RealtimeEvent.shakeSnapshot(
-  data: realtimeSnapshot(revision: revision, eventIds: eventIds),
+  record: realtimeSnapshot(revision: revision, eventIds: eventIds),
   source: RealtimeSource.eqmonitor,
 );
 
@@ -194,7 +197,7 @@ void main() {
 
       controller.add(
         RealtimeEvent.shakeSnapshot(
-          data: realtimeSnapshot(revision: 12, eventIds: ['ws-new']),
+          record: realtimeSnapshot(revision: 12, eventIds: ['ws-new']),
           source: RealtimeSource.eqmonitor,
         ),
       );

@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/provider/clock/time_mode.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
-import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_to_realtime_notifier.dart';
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
@@ -50,26 +49,31 @@ final class MutableAcceptedShakeSnapshot
   void publish(ShakeDetectionSnapshot snapshot) => state = snapshot;
 }
 
-RealtimeShakeEventData watcherShake(String eventId) => RealtimeShakeEventData(
-  eventId: eventId,
-  serialNo: 1,
-  createdAt: now,
-  updatedAt: now,
-  expiresAt: now.add(const Duration(minutes: 1)),
-  level: 'Medium',
-  pointCount: 1,
-  minLat: 35,
-  maxLat: 36,
-  minLng: 139,
-  maxLng: 140,
-  changeReasons: const ['new_event'],
-);
+api.ShakeDetectionActiveEvent watcherShake(String eventId) =>
+    api.ShakeDetectionActiveEvent(
+      type: 'shake_detection',
+      eventId: eventId,
+      serialNo: 1,
+      createdAt: now,
+      updatedAt: now,
+      expiresAt: now.add(const Duration(minutes: 1)),
+      level: api.Level.medium,
+      mergedEvents: const [],
+      pointCount: 1,
+      region: const api.Region(
+        topLeft: api.TopLeft(latitude: 36, longitude: 139),
+        bottomRight: api.BottomRight(latitude: 35, longitude: 140),
+      ),
+      points: const [],
+      changeReasons: const [api.ChangeReasons.newEvent],
+    );
 
 RealtimeEvent watcherSnapshot({
   required int revision,
   required List<String> eventIds,
 }) => RealtimeEvent.shakeSnapshot(
-  data: RealtimeShakeSnapshot(
+  record: api.ShakeDetectionActiveSnapshot(
+    type: 'shake_detection',
     revision: revision,
     responseAt: now,
     events: eventIds.map(watcherShake).toList(growable: false),

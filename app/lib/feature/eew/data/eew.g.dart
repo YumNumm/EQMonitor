@@ -45,7 +45,7 @@ final class EewProvider
   }
 }
 
-String _$eewHash() => r'5df2ce02be3290cfd80f64b45a64b86eea25533c';
+String _$eewHash() => r'70c0c1ab9802a63c05d4f541511aed78b368794b';
 
 abstract class _$Eew extends $Notifier<AsyncValue<List<EewTelegramItem>>> {
   AsyncValue<List<EewTelegramItem>> build();
@@ -73,10 +73,10 @@ abstract class _$Eew extends $Notifier<AsyncValue<List<EewTelegramItem>>> {
   }
 }
 
-@ProviderFor(_eewRest)
-final _eewRestProvider = _EewRestProvider._();
+@ProviderFor(eewRest)
+final eewRestProvider = EewRestProvider._();
 
-final class _EewRestProvider
+final class EewRestProvider
     extends
         $FunctionalProvider<
           AsyncValue<List<EewTelegramItem>>,
@@ -86,19 +86,19 @@ final class _EewRestProvider
     with
         $FutureModifier<List<EewTelegramItem>>,
         $FutureProvider<List<EewTelegramItem>> {
-  _EewRestProvider._()
+  EewRestProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'_eewRestProvider',
+        name: r'eewRestProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$_eewRestHash();
+  String debugGetCreateSourceHash() => _$eewRestHash();
 
   @$internal
   @override
@@ -108,8 +108,8 @@ final class _EewRestProvider
 
   @override
   FutureOr<List<EewTelegramItem>> create(Ref ref) {
-    return _eewRest(ref);
+    return eewRest(ref);
   }
 }
 
-String _$_eewRestHash() => r'8f688579fc41f21f4679b2c6044b7c922b4c953a';
+String _$eewRestHash() => r'd69f4421e4998eb4cbdbee58c222a0a7c63c37a8';

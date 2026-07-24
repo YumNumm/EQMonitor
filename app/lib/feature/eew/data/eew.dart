@@ -9,12 +9,15 @@ import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_statu
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew.g.dart';
 
 @Riverpod(keepAlive: true)
 class Eew extends _$Eew {
+  final Map<String, api.EewItemWithRelations> _realtimeRecords = {};
+
   @override
   AsyncValue<List<EewTelegramItem>> build() {
     // 非リアルタイム再生中はライブ受信を切り離し、再生中の時刻基準と
@@ -23,11 +26,11 @@ class Eew extends _$Eew {
       return const AsyncData([]);
     }
 
-    final restResult = ref.watch(_eewRestProvider);
+    final restResult = ref.watch(eewRestProvider);
 
     ref.listen(appLifecycleProvider, (_, next) {
       if (next == AppLifecycleState.resumed) {
-        ref.invalidate(_eewRestProvider, asReload: true);
+        ref.invalidate(eewRestProvider, asReload: true);
       }
     });
 
@@ -35,24 +38,21 @@ class Eew extends _$Eew {
       next.whenData((event) {
         switch (event) {
           case RealtimeReadyEvent():
-            ref.invalidate(_eewRestProvider, asReload: true);
-          case RealtimeEewUpsertEvent(:final item):
-            _upsert(item.toEewTelegramItem);
+            ref.invalidate(eewRestProvider, asReload: true);
+          case RealtimeEewUpsertEvent(:final record):
+            applyRealtimeRecord(record);
           default:
             return;
         }
       });
     });
 
-    final refreshTimer = Timer.periodic(
-      const Duration(seconds: 10),
-      (_) {
-        final wsPhase = ref.read(eqMonitorWsStatusProvider).phase;
-        if (wsPhase != WsPhase.connected) {
-          ref.invalidate(_eewRestProvider, asReload: true);
-        }
-      },
-    );
+    final refreshTimer = Timer.periodic(const Duration(seconds: 10), (_) {
+      final wsPhase = ref.read(eqMonitorWsStatusProvider).phase;
+      if (wsPhase != WsPhase.connected) {
+        ref.invalidate(eewRestProvider, asReload: true);
+      }
+    });
     ref.onDispose(refreshTimer.cancel);
     return restResult;
   }
@@ -76,15 +76,25 @@ class Eew extends _$Eew {
   void upsert(EewTelegramItem eew) {
     _upsert(eew);
   }
+
+  void applyRealtimeRecord(api.EewItemWithRelations record) {
+    final previousSerial =
+        _realtimeRecords[record.eventId]?.serialNo.toInt() ??
+        state.value
+            ?.where((item) => item.eventId == record.eventId)
+            .firstOrNull
+            ?.serialNo;
+    if (previousSerial != null && previousSerial > record.serialNo) {
+      return;
+    }
+    _realtimeRecords[record.eventId] = record;
+    _upsert(record.toEewTelegramItem);
+  }
 }
 
 @Riverpod(keepAlive: true)
-Future<List<EewTelegramItem>> _eewRest(Ref ref) async {
+Future<List<EewTelegramItem>> eewRest(Ref ref) async {
   final api = await ref.watch(apiClientProvider.future);
   final response = await api.eew.getV2EewLatest();
-  return response.data.items
-      .map(
-        (e) => e.toEewTelegramItem,
-      )
-      .toList();
+  return response.data.items.map((e) => e.toEewTelegramItem).toList();
 }

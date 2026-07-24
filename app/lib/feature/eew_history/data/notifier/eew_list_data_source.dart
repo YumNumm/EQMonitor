@@ -55,7 +55,7 @@ Future<EewListDataSource> eewListDataSource(
     ref.listen(realtimeEventsProvider, (_, next) async {
       if (next case AsyncData(:final value)) {
         if (value is RealtimeEewUpsertEvent) {
-          dataSource.upsertItems([value.item.toEewTelegramItem]);
+          dataSource.upsertItems([value.record.toEewTelegramItem]);
         }
       }
     });

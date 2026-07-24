@@ -4,13 +4,16 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
@@ -60,9 +63,7 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
         if (next case AsyncData(:final value)) {
           switch (value) {
             case RealtimeEarthquakeUpsertEvent(:final record):
-              dataSource.upsertItems([
-                repository.toEarthquakePartial(item: record),
-              ]);
+              dataSource.applyRealtimeRecord(record);
             case _:
               {}
           }
@@ -288,4 +289,50 @@ class EarthquakeHistoryDataSource
       insertItem(insertAt == -1 ? currentItems.length : insertAt, item);
     }
   }
+
+  void applyRealtimeRecord(api.Earthquake record) {
+    final previous = notifier.values
+        .where((item) => item.earthquake.eventId == record.eventId)
+        .firstOrNull;
+    if (previous == null) {
+      return;
+    }
+    upsertItems([
+      earthquakePartialFromRealtimeRecord(
+        record: record,
+        previous: previous.earthquake,
+        repository: _repository,
+      ),
+    ]);
+  }
+}
+
+EarthquakePartialNormal earthquakePartialFromRealtimeRecord({
+  required api.Earthquake record,
+  required EarthquakePartialNormal previous,
+  required EarthquakeHistoryRepository repository,
+}) {
+  final full = record.toEarthquake(
+    parameter: repository.earthquakeParameter,
+    shindoDbStations: repository.shindoDbStations,
+  );
+  final intensity = full.intensity;
+  return EarthquakePartialNormal(
+    eventId: full.eventId,
+    status: full.status,
+    originTime: full.originTime,
+    originTimePrecision: full.originTimePrecision,
+    arrivalTime: full.arrivalTime,
+    dataSources: full.dataSources,
+    hypocenter: full.hypocenter,
+    intensity: intensity == null
+        ? null
+        : EarthquakeIntensityPartial(
+            maxIntensity: intensity.maxIntensity,
+            maxLpgmIntensity: intensity.maxLpgmIntensity,
+          ),
+    earthquakeType: previous.earthquakeType,
+    telegramTypes: full.telegramTypes,
+    estimatedIntensityTileUrl: full.estimatedIntensityTileUrl,
+  );
 }

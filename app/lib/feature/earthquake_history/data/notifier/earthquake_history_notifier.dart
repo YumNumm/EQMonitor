@@ -9,7 +9,9 @@ import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -40,7 +42,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
             );
             switch (value) {
               case RealtimeEarthquakeUpsertEvent(:final record):
-                _upsertItems([repository.toEarthquakePartial(item: record)]);
+                applyRealtimeRecord(record, repository);
               case _:
                 {}
             }
@@ -220,6 +222,29 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     state = AsyncData(
       PaginatedResponse(items: items, nextToken: value.nextToken),
     );
+  }
+
+  void applyRealtimeRecord(
+    api.Earthquake record,
+    EarthquakeHistoryRepository repository,
+  ) {
+    final value = state.value;
+    if (value == null) {
+      return;
+    }
+    final previous = value.items
+        .where((item) => item.earthquake.eventId == record.eventId)
+        .firstOrNull;
+    if (previous == null) {
+      return;
+    }
+    _upsertItems([
+      earthquakePartialFromRealtimeRecord(
+        record: record,
+        previous: previous.earthquake,
+        repository: repository,
+      ),
+    ]);
   }
 }
 

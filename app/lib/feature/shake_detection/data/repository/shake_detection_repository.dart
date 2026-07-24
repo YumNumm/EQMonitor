@@ -44,6 +44,7 @@ final class ApiShakeDetectionRepository implements ShakeDetectionRepository {
         ShakeDetectionSnapshot(
           revision: data.revision,
           responseAt: data.responseAt,
+          sourceRecord: data,
           events: data.events
               .map(
                 (event) => ShakeDetectionEvent(
@@ -62,6 +63,9 @@ final class ApiShakeDetectionRepository implements ShakeDetectionRepository {
                       .map((reason) => reason.toJson())
                       .toList(growable: false),
                   correlatedEewEventId: event.correlatedEew?.eventId,
+                  mergedEvents: event.mergedEvents,
+                  points: event.points,
+                  correlatedEew: event.correlatedEew,
                 ),
               )
               .toList(growable: false),

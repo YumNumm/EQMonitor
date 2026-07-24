@@ -218,16 +218,16 @@ return estimatedIntensityUpsert(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( RealtimeSource source)?  ready,TResult Function( EewItemWithRelations item,  RealtimeSource source)?  eewUpsert,TResult Function( EarthquakePartial record,  RealtimeSource source)?  earthquakeUpsert,TResult Function( String eventId,  RealtimeSource source)?  earthquakeDelete,TResult Function( String eventId,  RealtimeSource source,  String? groupId)?  tsunamiUpsert,TResult Function( String eventId,  RealtimeSource source,  String? groupId)?  tsunamiDelete,TResult Function( RealtimeShakeSnapshot data,  RealtimeSource source)?  shakeSnapshot,TResult Function( String eventId,  String estimatedIntensityTile,  RealtimeSource source)?  estimatedIntensityUpsert,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( RealtimeSource source)?  ready,TResult Function( EewItemWithRelations record,  RealtimeSource source)?  eewUpsert,TResult Function( Earthquake record,  RealtimeSource source)?  earthquakeUpsert,TResult Function( String eventId,  RealtimeSource source)?  earthquakeDelete,TResult Function( String eventId,  RealtimeSource source,  String? groupId)?  tsunamiUpsert,TResult Function( String eventId,  RealtimeSource source,  String? groupId)?  tsunamiDelete,TResult Function( ShakeDetectionActiveSnapshot record,  RealtimeSource source)?  shakeSnapshot,TResult Function( String eventId,  String estimatedIntensityTile,  RealtimeSource source)?  estimatedIntensityUpsert,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case RealtimeReadyEvent() when ready != null:
 return ready(_that.source);case RealtimeEewUpsertEvent() when eewUpsert != null:
-return eewUpsert(_that.item,_that.source);case RealtimeEarthquakeUpsertEvent() when earthquakeUpsert != null:
+return eewUpsert(_that.record,_that.source);case RealtimeEarthquakeUpsertEvent() when earthquakeUpsert != null:
 return earthquakeUpsert(_that.record,_that.source);case RealtimeEarthquakeDeleteEvent() when earthquakeDelete != null:
 return earthquakeDelete(_that.eventId,_that.source);case RealtimeTsunamiUpsertEvent() when tsunamiUpsert != null:
 return tsunamiUpsert(_that.eventId,_that.source,_that.groupId);case RealtimeTsunamiDeleteEvent() when tsunamiDelete != null:
 return tsunamiDelete(_that.eventId,_that.source,_that.groupId);case RealtimeShakeSnapshotEvent() when shakeSnapshot != null:
-return shakeSnapshot(_that.data,_that.source);case RealtimeEstimatedIntensityUpsertEvent() when estimatedIntensityUpsert != null:
+return shakeSnapshot(_that.record,_that.source);case RealtimeEstimatedIntensityUpsertEvent() when estimatedIntensityUpsert != null:
 return estimatedIntensityUpsert(_that.eventId,_that.estimatedIntensityTile,_that.source);case _:
   return orElse();
 
@@ -246,16 +246,16 @@ return estimatedIntensityUpsert(_that.eventId,_that.estimatedIntensityTile,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( RealtimeSource source)  ready,required TResult Function( EewItemWithRelations item,  RealtimeSource source)  eewUpsert,required TResult Function( EarthquakePartial record,  RealtimeSource source)  earthquakeUpsert,required TResult Function( String eventId,  RealtimeSource source)  earthquakeDelete,required TResult Function( String eventId,  RealtimeSource source,  String? groupId)  tsunamiUpsert,required TResult Function( String eventId,  RealtimeSource source,  String? groupId)  tsunamiDelete,required TResult Function( RealtimeShakeSnapshot data,  RealtimeSource source)  shakeSnapshot,required TResult Function( String eventId,  String estimatedIntensityTile,  RealtimeSource source)  estimatedIntensityUpsert,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( RealtimeSource source)  ready,required TResult Function( EewItemWithRelations record,  RealtimeSource source)  eewUpsert,required TResult Function( Earthquake record,  RealtimeSource source)  earthquakeUpsert,required TResult Function( String eventId,  RealtimeSource source)  earthquakeDelete,required TResult Function( String eventId,  RealtimeSource source,  String? groupId)  tsunamiUpsert,required TResult Function( String eventId,  RealtimeSource source,  String? groupId)  tsunamiDelete,required TResult Function( ShakeDetectionActiveSnapshot record,  RealtimeSource source)  shakeSnapshot,required TResult Function( String eventId,  String estimatedIntensityTile,  RealtimeSource source)  estimatedIntensityUpsert,}) {final _that = this;
 switch (_that) {
 case RealtimeReadyEvent():
 return ready(_that.source);case RealtimeEewUpsertEvent():
-return eewUpsert(_that.item,_that.source);case RealtimeEarthquakeUpsertEvent():
+return eewUpsert(_that.record,_that.source);case RealtimeEarthquakeUpsertEvent():
 return earthquakeUpsert(_that.record,_that.source);case RealtimeEarthquakeDeleteEvent():
 return earthquakeDelete(_that.eventId,_that.source);case RealtimeTsunamiUpsertEvent():
 return tsunamiUpsert(_that.eventId,_that.source,_that.groupId);case RealtimeTsunamiDeleteEvent():
 return tsunamiDelete(_that.eventId,_that.source,_that.groupId);case RealtimeShakeSnapshotEvent():
-return shakeSnapshot(_that.data,_that.source);case RealtimeEstimatedIntensityUpsertEvent():
+return shakeSnapshot(_that.record,_that.source);case RealtimeEstimatedIntensityUpsertEvent():
 return estimatedIntensityUpsert(_that.eventId,_that.estimatedIntensityTile,_that.source);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -270,16 +270,16 @@ return estimatedIntensityUpsert(_that.eventId,_that.estimatedIntensityTile,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( RealtimeSource source)?  ready,TResult? Function( EewItemWithRelations item,  RealtimeSource source)?  eewUpsert,TResult? Function( EarthquakePartial record,  RealtimeSource source)?  earthquakeUpsert,TResult? Function( String eventId,  RealtimeSource source)?  earthquakeDelete,TResult? Function( String eventId,  RealtimeSource source,  String? groupId)?  tsunamiUpsert,TResult? Function( String eventId,  RealtimeSource source,  String? groupId)?  tsunamiDelete,TResult? Function( RealtimeShakeSnapshot data,  RealtimeSource source)?  shakeSnapshot,TResult? Function( String eventId,  String estimatedIntensityTile,  RealtimeSource source)?  estimatedIntensityUpsert,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( RealtimeSource source)?  ready,TResult? Function( EewItemWithRelations record,  RealtimeSource source)?  eewUpsert,TResult? Function( Earthquake record,  RealtimeSource source)?  earthquakeUpsert,TResult? Function( String eventId,  RealtimeSource source)?  earthquakeDelete,TResult? Function( String eventId,  RealtimeSource source,  String? groupId)?  tsunamiUpsert,TResult? Function( String eventId,  RealtimeSource source,  String? groupId)?  tsunamiDelete,TResult? Function( ShakeDetectionActiveSnapshot record,  RealtimeSource source)?  shakeSnapshot,TResult? Function( String eventId,  String estimatedIntensityTile,  RealtimeSource source)?  estimatedIntensityUpsert,}) {final _that = this;
 switch (_that) {
 case RealtimeReadyEvent() when ready != null:
 return ready(_that.source);case RealtimeEewUpsertEvent() when eewUpsert != null:
-return eewUpsert(_that.item,_that.source);case RealtimeEarthquakeUpsertEvent() when earthquakeUpsert != null:
+return eewUpsert(_that.record,_that.source);case RealtimeEarthquakeUpsertEvent() when earthquakeUpsert != null:
 return earthquakeUpsert(_that.record,_that.source);case RealtimeEarthquakeDeleteEvent() when earthquakeDelete != null:
 return earthquakeDelete(_that.eventId,_that.source);case RealtimeTsunamiUpsertEvent() when tsunamiUpsert != null:
 return tsunamiUpsert(_that.eventId,_that.source,_that.groupId);case RealtimeTsunamiDeleteEvent() when tsunamiDelete != null:
 return tsunamiDelete(_that.eventId,_that.source,_that.groupId);case RealtimeShakeSnapshotEvent() when shakeSnapshot != null:
-return shakeSnapshot(_that.data,_that.source);case RealtimeEstimatedIntensityUpsertEvent() when estimatedIntensityUpsert != null:
+return shakeSnapshot(_that.record,_that.source);case RealtimeEstimatedIntensityUpsertEvent() when estimatedIntensityUpsert != null:
 return estimatedIntensityUpsert(_that.eventId,_that.estimatedIntensityTile,_that.source);case _:
   return null;
 
@@ -365,10 +365,10 @@ as RealtimeSource,
 @JsonSerializable()
 
 class RealtimeEewUpsertEvent implements RealtimeEvent {
-  const RealtimeEewUpsertEvent({required this.item, required this.source, final  String? $type}): $type = $type ?? 'eewUpsert';
+  const RealtimeEewUpsertEvent({required this.record, required this.source, final  String? $type}): $type = $type ?? 'eewUpsert';
   factory RealtimeEewUpsertEvent.fromJson(Map<String, dynamic> json) => _$RealtimeEewUpsertEventFromJson(json);
 
- final  EewItemWithRelations item;
+ final  EewItemWithRelations record;
 @override final  RealtimeSource source;
 
 @JsonKey(name: 'runtimeType')
@@ -388,16 +388,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeEewUpsertEvent&&(identical(other.item, item) || other.item == item)&&(identical(other.source, source) || other.source == source));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeEewUpsertEvent&&(identical(other.record, record) || other.record == record)&&(identical(other.source, source) || other.source == source));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,item,source);
+int get hashCode => Object.hash(runtimeType,record,source);
 
 @override
 String toString() {
-  return 'RealtimeEvent.eewUpsert(item: $item, source: $source)';
+  return 'RealtimeEvent.eewUpsert(record: $record, source: $source)';
 }
 
 
@@ -408,11 +408,11 @@ abstract mixin class $RealtimeEewUpsertEventCopyWith<$Res> implements $RealtimeE
   factory $RealtimeEewUpsertEventCopyWith(RealtimeEewUpsertEvent value, $Res Function(RealtimeEewUpsertEvent) _then) = _$RealtimeEewUpsertEventCopyWithImpl;
 @override @useResult
 $Res call({
- EewItemWithRelations item, RealtimeSource source
+ EewItemWithRelations record, RealtimeSource source
 });
 
 
-$EewItemWithRelationsCopyWith<$Res> get item;
+$EewItemWithRelationsCopyWith<$Res> get record;
 
 }
 /// @nodoc
@@ -425,9 +425,9 @@ class _$RealtimeEewUpsertEventCopyWithImpl<$Res>
 
 /// Create a copy of RealtimeEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? item = null,Object? source = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? record = null,Object? source = null,}) {
   return _then(RealtimeEewUpsertEvent(
-item: null == item ? _self.item : item // ignore: cast_nullable_to_non_nullable
+record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
 as EewItemWithRelations,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as RealtimeSource,
   ));
@@ -437,10 +437,10 @@ as RealtimeSource,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$EewItemWithRelationsCopyWith<$Res> get item {
+$EewItemWithRelationsCopyWith<$Res> get record {
   
-  return $EewItemWithRelationsCopyWith<$Res>(_self.item, (value) {
-    return _then(_self.copyWith(item: value));
+  return $EewItemWithRelationsCopyWith<$Res>(_self.record, (value) {
+    return _then(_self.copyWith(record: value));
   });
 }
 }
@@ -452,7 +452,7 @@ class RealtimeEarthquakeUpsertEvent implements RealtimeEvent {
   const RealtimeEarthquakeUpsertEvent({required this.record, required this.source, final  String? $type}): $type = $type ?? 'earthquakeUpsert';
   factory RealtimeEarthquakeUpsertEvent.fromJson(Map<String, dynamic> json) => _$RealtimeEarthquakeUpsertEventFromJson(json);
 
- final  EarthquakePartial record;
+ final  Earthquake record;
 @override final  RealtimeSource source;
 
 @JsonKey(name: 'runtimeType')
@@ -492,11 +492,11 @@ abstract mixin class $RealtimeEarthquakeUpsertEventCopyWith<$Res> implements $Re
   factory $RealtimeEarthquakeUpsertEventCopyWith(RealtimeEarthquakeUpsertEvent value, $Res Function(RealtimeEarthquakeUpsertEvent) _then) = _$RealtimeEarthquakeUpsertEventCopyWithImpl;
 @override @useResult
 $Res call({
- EarthquakePartial record, RealtimeSource source
+ Earthquake record, RealtimeSource source
 });
 
 
-$EarthquakePartialCopyWith<$Res> get record;
+$EarthquakeCopyWith<$Res> get record;
 
 }
 /// @nodoc
@@ -512,7 +512,7 @@ class _$RealtimeEarthquakeUpsertEventCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? record = null,Object? source = null,}) {
   return _then(RealtimeEarthquakeUpsertEvent(
 record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
-as EarthquakePartial,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as Earthquake,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as RealtimeSource,
   ));
 }
@@ -521,9 +521,9 @@ as RealtimeSource,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$EarthquakePartialCopyWith<$Res> get record {
+$EarthquakeCopyWith<$Res> get record {
   
-  return $EarthquakePartialCopyWith<$Res>(_self.record, (value) {
+  return $EarthquakeCopyWith<$Res>(_self.record, (value) {
     return _then(_self.copyWith(record: value));
   });
 }
@@ -762,10 +762,10 @@ as String?,
 @JsonSerializable()
 
 class RealtimeShakeSnapshotEvent implements RealtimeEvent {
-  const RealtimeShakeSnapshotEvent({required this.data, required this.source, final  String? $type}): $type = $type ?? 'shakeSnapshot';
+  const RealtimeShakeSnapshotEvent({required this.record, required this.source, final  String? $type}): $type = $type ?? 'shakeSnapshot';
   factory RealtimeShakeSnapshotEvent.fromJson(Map<String, dynamic> json) => _$RealtimeShakeSnapshotEventFromJson(json);
 
- final  RealtimeShakeSnapshot data;
+ final  ShakeDetectionActiveSnapshot record;
 @override final  RealtimeSource source;
 
 @JsonKey(name: 'runtimeType')
@@ -785,16 +785,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeShakeSnapshotEvent&&(identical(other.data, data) || other.data == data)&&(identical(other.source, source) || other.source == source));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeShakeSnapshotEvent&&(identical(other.record, record) || other.record == record)&&(identical(other.source, source) || other.source == source));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,data,source);
+int get hashCode => Object.hash(runtimeType,record,source);
 
 @override
 String toString() {
-  return 'RealtimeEvent.shakeSnapshot(data: $data, source: $source)';
+  return 'RealtimeEvent.shakeSnapshot(record: $record, source: $source)';
 }
 
 
@@ -805,11 +805,11 @@ abstract mixin class $RealtimeShakeSnapshotEventCopyWith<$Res> implements $Realt
   factory $RealtimeShakeSnapshotEventCopyWith(RealtimeShakeSnapshotEvent value, $Res Function(RealtimeShakeSnapshotEvent) _then) = _$RealtimeShakeSnapshotEventCopyWithImpl;
 @override @useResult
 $Res call({
- RealtimeShakeSnapshot data, RealtimeSource source
+ ShakeDetectionActiveSnapshot record, RealtimeSource source
 });
 
 
-$RealtimeShakeSnapshotCopyWith<$Res> get data;
+$ShakeDetectionActiveSnapshotCopyWith<$Res> get record;
 
 }
 /// @nodoc
@@ -822,10 +822,10 @@ class _$RealtimeShakeSnapshotEventCopyWithImpl<$Res>
 
 /// Create a copy of RealtimeEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? data = null,Object? source = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? record = null,Object? source = null,}) {
   return _then(RealtimeShakeSnapshotEvent(
-data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
-as RealtimeShakeSnapshot,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionActiveSnapshot,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as RealtimeSource,
   ));
 }
@@ -834,10 +834,10 @@ as RealtimeSource,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$RealtimeShakeSnapshotCopyWith<$Res> get data {
+$ShakeDetectionActiveSnapshotCopyWith<$Res> get record {
   
-  return $RealtimeShakeSnapshotCopyWith<$Res>(_self.data, (value) {
-    return _then(_self.copyWith(data: value));
+  return $ShakeDetectionActiveSnapshotCopyWith<$Res>(_self.record, (value) {
+    return _then(_self.copyWith(record: value));
   });
 }
 }

@@ -1,5 +1,8 @@
-import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart'
+    hide
+        RealtimeEarthquakeUpsertEvent,
+        RealtimeEewUpsertEvent,
+        RealtimeShakeDetectionSnapshotEvent;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'realtime_event.freezed.dart';
@@ -13,12 +16,12 @@ sealed class RealtimeEvent with _$RealtimeEvent {
       RealtimeReadyEvent;
 
   const factory RealtimeEvent.eewUpsert({
-    required EewItemWithRelations item,
+    required EewItemWithRelations record,
     required RealtimeSource source,
   }) = RealtimeEewUpsertEvent;
 
   const factory RealtimeEvent.earthquakeUpsert({
-    required EarthquakePartial record,
+    required Earthquake record,
     required RealtimeSource source,
   }) = RealtimeEarthquakeUpsertEvent;
 
@@ -40,7 +43,7 @@ sealed class RealtimeEvent with _$RealtimeEvent {
   }) = RealtimeTsunamiDeleteEvent;
 
   const factory RealtimeEvent.shakeSnapshot({
-    required RealtimeShakeSnapshot data,
+    required ShakeDetectionActiveSnapshot record,
     required RealtimeSource source,
   }) = RealtimeShakeSnapshotEvent;
 

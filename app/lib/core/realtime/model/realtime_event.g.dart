@@ -35,8 +35,8 @@ RealtimeEewUpsertEvent _$RealtimeEewUpsertEventFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('RealtimeEewUpsertEvent', json, ($checkedConvert) {
   final val = RealtimeEewUpsertEvent(
-    item: $checkedConvert(
-      'item',
+    record: $checkedConvert(
+      'record',
       (v) => EewItemWithRelations.fromJson(v as Map<String, dynamic>),
     ),
     source: $checkedConvert(
@@ -51,7 +51,7 @@ RealtimeEewUpsertEvent _$RealtimeEewUpsertEventFromJson(
 Map<String, dynamic> _$RealtimeEewUpsertEventToJson(
   RealtimeEewUpsertEvent instance,
 ) => <String, dynamic>{
-  'item': instance.item,
+  'record': instance.record,
   'source': _$RealtimeSourceEnumMap[instance.source]!,
   'runtimeType': instance.$type,
 };
@@ -62,7 +62,7 @@ RealtimeEarthquakeUpsertEvent _$RealtimeEarthquakeUpsertEventFromJson(
   final val = RealtimeEarthquakeUpsertEvent(
     record: $checkedConvert(
       'record',
-      (v) => EarthquakePartial.fromJson(v as Map<String, dynamic>),
+      (v) => Earthquake.fromJson(v as Map<String, dynamic>),
     ),
     source: $checkedConvert(
       'source',
@@ -178,9 +178,9 @@ RealtimeShakeSnapshotEvent _$RealtimeShakeSnapshotEventFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('RealtimeShakeSnapshotEvent', json, ($checkedConvert) {
   final val = RealtimeShakeSnapshotEvent(
-    data: $checkedConvert(
-      'data',
-      (v) => RealtimeShakeSnapshot.fromJson(v as Map<String, dynamic>),
+    record: $checkedConvert(
+      'record',
+      (v) => ShakeDetectionActiveSnapshot.fromJson(v as Map<String, dynamic>),
     ),
     source: $checkedConvert(
       'source',
@@ -194,7 +194,7 @@ RealtimeShakeSnapshotEvent _$RealtimeShakeSnapshotEventFromJson(
 Map<String, dynamic> _$RealtimeShakeSnapshotEventToJson(
   RealtimeShakeSnapshotEvent instance,
 ) => <String, dynamic>{
-  'data': instance.data,
+  'record': instance.record,
   'source': _$RealtimeSourceEnumMap[instance.source]!,
   'runtimeType': instance.$type,
 };
