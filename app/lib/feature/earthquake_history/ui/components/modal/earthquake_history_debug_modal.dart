@@ -33,7 +33,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
           AsyncLoading() => const Center(
             child: CircularProgressIndicator.adaptive(),
           ),
-          AsyncError(:final error) => Center(child: Text('Error: $error')),
+          AsyncError() => const Center(child: Text('レイヤー設定を読み込めませんでした')),
           AsyncData(:final value) => ListView(
             controller: scrollController,
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -55,16 +55,17 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Row(
                   children: [
-                    Text(
-                      'レイヤーパラメータ (Debug)',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Text(
+                        'レイヤーパラメータ (Debug)',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    const Spacer(),
                     TextButton(
                       onPressed: notifier.reset,
-                      child: const Text('リセット'),
+                      child: const Text('レイヤー設定をリセット'),
                     ),
                   ],
                 ),

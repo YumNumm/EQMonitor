@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/action/earthquake_vxse_debug_action.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor.dart';
@@ -15,10 +16,7 @@ final earthquakeHistoryDebugSheetActionProvider = Provider(
 class EarthquakeHistoryDebugSheetAction {
   const EarthquakeHistoryDebugSheetAction();
 
-  Future<void> show({
-    required BuildContext context,
-    required Earthquake current,
-  }) {
+  Future<void> show({required BuildContext context, required String eventId}) {
     final size = MediaQuery.sizeOf(context);
     if (size.width >= 840) {
       return showDialog<void>(
@@ -28,7 +26,7 @@ class EarthquakeHistoryDebugSheetAction {
           child: SizedBox(
             width: math.min(size.width * 0.8, 960),
             height: size.height * 0.9,
-            child: EarthquakeHistoryDebugSheet(current: current),
+            child: EarthquakeHistoryDebugSheet(eventId: eventId),
           ),
         ),
       );
@@ -39,14 +37,32 @@ class EarthquakeHistoryDebugSheetAction {
       isScrollControlled: true,
       builder: (context) => FractionallySizedBox(
         heightFactor: 0.9,
-        child: EarthquakeHistoryDebugSheet(current: current),
+        child: EarthquakeHistoryDebugSheet(eventId: eventId),
       ),
     );
   }
 }
 
 class EarthquakeHistoryDebugSheet extends ConsumerWidget {
-  const EarthquakeHistoryDebugSheet({required this.current, super.key});
+  const EarthquakeHistoryDebugSheet({required this.eventId, super.key});
+
+  final String eventId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final details = ref.watch(earthquakeHistoryDetailsProvider(eventId));
+    return switch (details) {
+      AsyncValue(:final value?) => _EarthquakeHistoryDebugSheetContent(
+        current: value,
+      ),
+      AsyncError() => const Center(child: Text('地震情報を読み込めませんでした')),
+      _ => const Center(child: CircularProgressIndicator.adaptive()),
+    };
+  }
+}
+
+class _EarthquakeHistoryDebugSheetContent extends ConsumerWidget {
+  const _EarthquakeHistoryDebugSheetContent({required this.current});
 
   final Earthquake current;
 
@@ -68,13 +84,6 @@ class EarthquakeHistoryDebugSheet extends ConsumerWidget {
                   ),
                 ),
               ),
-              TextButton(
-                key: const Key('earthquake-debug-reset-button'),
-                onPressed: () => ref
-                    .read(earthquakeVxseDebugActionProvider)
-                    .reset(ref: ref, current: current),
-                child: const Text('リセット'),
-              ),
             ],
           ),
         ),
@@ -87,7 +96,24 @@ class EarthquakeHistoryDebugSheet extends ConsumerWidget {
         Expanded(
           child: TabBarView(
             children: [
-              EarthquakeVxseDebugEditor(current: current),
+              Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: TextButton(
+                        key: const Key('earthquake-debug-reset-button'),
+                        onPressed: () => ref
+                            .read(earthquakeVxseDebugActionProvider)
+                            .reset(ref: ref, current: current),
+                        child: const Text('地震情報をリセット'),
+                      ),
+                    ),
+                  ),
+                  Expanded(child: EarthquakeVxseDebugEditor(current: current)),
+                ],
+              ),
               const EarthquakeHistoryDebugModal(),
             ],
           ),

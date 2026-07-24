@@ -77,6 +77,11 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   }
 }
 
+bool shouldShowEarthquakeHistoryDebugger({
+  required bool isDebugBuild,
+  required AsyncValue<bool> debugPreference,
+}) => isDebugBuild || (debugPreference.value ?? false);
+
 class _MapContent extends HookConsumerWidget {
   const _MapContent({
     required this.styleString,
@@ -107,7 +112,10 @@ class _MapContent extends HookConsumerWidget {
         (v) => v.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final isDebugger = kDebugMode || (ref.watch(debugProvider).value ?? false);
+    final isDebugger = shouldShowEarthquakeHistoryDebugger(
+      isDebugBuild: kDebugMode,
+      debugPreference: ref.watch(debugProvider),
+    );
     final mapController = useState<MapController?>(null);
 
     ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (
@@ -252,7 +260,7 @@ class _MapContent extends HookConsumerWidget {
                   ? () async {
                       await ref
                           .read(earthquakeHistoryDebugSheetActionProvider)
-                          .show(context: context, current: earthquake);
+                          .show(context: context, eventId: earthquake.eventId);
                     }
                   : null,
             ),
