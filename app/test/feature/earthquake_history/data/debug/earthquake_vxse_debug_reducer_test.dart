@@ -606,6 +606,9 @@ void main() {
         expect(_lpgmCityCodes(result), contains('new-city'));
         expect(_stationCodes(result, 'new-city'), ['new-city-station']);
         expect(_lpgmStationCodes(result, 'new-city'), ['new-city-station']);
+        expect(_ordinaryCity(result, 'new-city')?.maxIntensity, isNull);
+        expect(_ordinaryCity(result, 'new-city')?.maxLpgmIntensity, isNull);
+        expect(_lpgmCity(result, 'new-city')?.maxLpgmIntensity, isNull);
       });
 
       test('${mode.name}のVXSE62はtree更新なしのlpgmRegionsをcode単位でupsertする', () {
@@ -1223,3 +1226,15 @@ JmaLpgmIntensity? _lpgmRegionMax(Earthquake earthquake, String regionCode) =>
         .expand((items) => items)
         .firstWhere((item) => item.region.code == regionCode)
         .maxLpgmIntensity;
+
+CityIntensityNode? _ordinaryCity(Earthquake earthquake, String cityCode) =>
+    earthquake.intensity?.intensityTree.values
+        .expand((items) => items)
+        .expand((item) => item.cities)
+        .firstWhere((item) => item.city.code == cityCode);
+
+CityLpgmIntensityNode? _lpgmCity(Earthquake earthquake, String cityCode) =>
+    earthquake.intensity?.lpgmIntensityTree.values
+        .expand((items) => items)
+        .expand((item) => item.cities)
+        .firstWhere((item) => item.city.code == cityCode);

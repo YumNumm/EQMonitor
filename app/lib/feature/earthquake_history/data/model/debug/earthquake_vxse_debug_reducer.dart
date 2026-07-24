@@ -528,6 +528,8 @@ PrefectureIntensityNode mergeVxse62OrdinaryPrefecture({
         if (!currentCityCodes.contains(city.city.code) &&
             (newStationsByCityCode[city.city.code]?.isNotEmpty ?? false))
           city.copyWith(
+            maxIntensity: null,
+            maxLpgmIntensity: null,
             stations: newStationsByCityCode[city.city.code] ?? const [],
           ),
     ],
@@ -670,6 +672,7 @@ PrefectureLpgmIntensityNode mergeVxse62LpgmPrefecture({
         if (!currentCityCodes.contains(city.city.code) &&
             (newStationsByCityCode[city.city.code]?.isNotEmpty ?? false))
           city.copyWith(
+            maxLpgmIntensity: null,
             stations: newStationsByCityCode[city.city.code] ?? const [],
           ),
     ],
