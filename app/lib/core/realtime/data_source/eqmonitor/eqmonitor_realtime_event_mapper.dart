@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
-import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
-import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:eqmonitor_websocket/eqmonitor_websocket.dart'
+    show WsMessage, WsPingMessage, WsReadyMessage, WsRealtimeMessage;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eqmonitor_realtime_event_mapper.g.dart';
@@ -12,99 +13,50 @@ EqMonitorRealtimeEventMapper eqMonitorRealtimeEventMapper(Ref ref) =>
 class EqMonitorRealtimeEventMapper {
   const EqMonitorRealtimeEventMapper();
 
-  static const tilesBaseUrl = 'https://tiles.eqmonitor.app';
-
   List<RealtimeEvent> map(WsMessage message) => switch (message) {
-    WsSnapshotMessage() => const <RealtimeEvent>[],
     WsRealtimeMessage(:final data) => switch (data) {
-      WsEewRealtimeEvent(:final item) => [
-        RealtimeEvent.eewUpsert(item: item, source: RealtimeSource.eqmonitor),
-      ],
-      WsEarthquakeBroadcastEvent(:final item) => [
-        RealtimeEvent.earthquakeUpsert(
-          record: item,
+      api.RealtimeEewUpsertEvent(:final payload) => [
+        RealtimeEvent.eewUpsert(
+          record: payload.record,
           source: RealtimeSource.eqmonitor,
         ),
       ],
-      WsEarthquakeRealtimeEvent(
-        :final operation,
-        :final eventId,
-        :final record,
-      ) =>
-        switch (operation) {
-          WsRealtimeOperation.upsert when record != null => [
-            RealtimeEvent.earthquakeUpsert(
-              record: record,
-              source: RealtimeSource.eqmonitor,
-            ),
-          ],
-          WsRealtimeOperation.delete => [
-            RealtimeEvent.earthquakeDelete(
-              eventId: eventId,
-              source: RealtimeSource.eqmonitor,
-            ),
-          ],
-          _ => const <RealtimeEvent>[],
-        },
-      WsTsunamiRealtimeEvent(
-        :final operation,
-        :final eventId,
-        :final groupId,
-      ) =>
-        switch (operation) {
-          WsRealtimeOperation.upsert => [
-            RealtimeEvent.tsunamiUpsert(
-              eventId: eventId,
-              groupId: groupId,
-              source: RealtimeSource.eqmonitor,
-            ),
-          ],
-          WsRealtimeOperation.delete => [
-            RealtimeEvent.tsunamiDelete(
-              eventId: eventId,
-              groupId: groupId,
-              source: RealtimeSource.eqmonitor,
-            ),
-          ],
-        },
-      WsShakeDetectionRealtimeEvent(
-        :final revision,
-        :final responseAt,
-        :final events,
-      ) =>
-        [
-          RealtimeEvent.shakeSnapshot(
-            data: RealtimeShakeSnapshot(
-              revision: revision,
-              responseAt: responseAt,
-              events: events
-                  .map(
-                    (event) => RealtimeShakeEventData(
-                      eventId: event.eventId,
-                      serialNo: event.serialNo,
-                      createdAt: event.createdAt,
-                      updatedAt: event.updatedAt,
-                      expiresAt: event.expiresAt,
-                      level: event.level,
-                      pointCount: event.pointCount,
-                      minLat: event.region.bottomRight.latitude,
-                      maxLat: event.region.topLeft.latitude,
-                      minLng: event.region.topLeft.longitude,
-                      maxLng: event.region.bottomRight.longitude,
-                      changeReasons: event.changeReasons,
-                      correlatedEewEventId: event.correlatedEew?.eventId,
-                    ),
-                  )
-                  .toList(growable: false),
-            ),
-            source: RealtimeSource.eqmonitor,
-          ),
-        ],
-      WsEstimatedIntensityRealtimeEvent(:final estimatedIntensity) => [
+      api.RealtimeEarthquakeUpsertEvent(:final payload) => [
+        RealtimeEvent.earthquakeUpsert(
+          record: payload.record,
+          source: RealtimeSource.eqmonitor,
+        ),
+      ],
+      api.RealtimeEarthquakeDeleteEvent(:final payload) => [
+        RealtimeEvent.earthquakeDelete(
+          eventId: payload.eventId,
+          source: RealtimeSource.eqmonitor,
+        ),
+      ],
+      api.RealtimeShakeDetectionSnapshotEvent(:final payload) => [
+        RealtimeEvent.shakeSnapshot(
+          record: payload,
+          source: RealtimeSource.eqmonitor,
+        ),
+      ],
+      api.RealtimeTsunamiUpsertEvent(:final payload) => [
+        RealtimeEvent.tsunamiUpsert(
+          eventId: payload.eventId,
+          groupId: payload.groupId,
+          source: RealtimeSource.eqmonitor,
+        ),
+      ],
+      api.RealtimeTsunamiDeleteEvent(:final payload) => [
+        RealtimeEvent.tsunamiDelete(
+          eventId: payload.eventId,
+          groupId: payload.groupId,
+          source: RealtimeSource.eqmonitor,
+        ),
+      ],
+      api.RealtimeEstimatedIntensityUpsertEvent(:final payload) => [
         RealtimeEvent.estimatedIntensityUpsert(
-          eventId: estimatedIntensity.eventId,
-          estimatedIntensityTile:
-              '$tilesBaseUrl/${estimatedIntensity.estimatedIntensityKey}',
+          eventId: payload.eventId,
+          estimatedIntensityTile: payload.record.estimatedIntensityKey,
           source: RealtimeSource.eqmonitor,
         ),
       ],

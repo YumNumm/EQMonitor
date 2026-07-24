@@ -94,7 +94,7 @@ DMDATA (気象庁データプロバイダ)
 | 認証 | `api/api` の `GET /v2/realtime/ticket` で発行した JWT チケット |
 |------|-----|
 | エンドポイント | `GET /v2/realtime/ws?ticket=<JWT>` |
-| 接続時 | Redis から `realtime:snapshot:v2` を読み込み `{type:"snapshot", data:{...}}` を送信 |
+| 接続時 | Redis Pub/Sub の購読完了後に `{type:"ready"}` を送信。クライアントはその後 REST 同期 |
 | リアルタイム | `realtime:broadcast:v1` Pub/Sub を subscribe し `{type:"realtime", data:{...}}` で転送 |
 | ping/pong | 15 秒ごとに `{type:"ping"}` を送信し、15 秒以内に `{type:"pong"}` がなければ切断 |
 
@@ -185,7 +185,7 @@ DMDATA → dmdata-websocket-proxy (分割受信)
        └─[Redis Streams: estimated-intensity-events]
             └─► notification-resolver
                  ├─ EARTHQUAKE 通知済みデバイスへサイレント通知
-                 └─ Pub/Sub publish {type:"ESTIMATED_INTENSITY", estimatedIntensity:{...}}
+                 └─ Pub/Sub publish {type:"estimated_intensity", operation:"upsert", event_id, record}
                       └─► api/websocket ─► Flutter
 ```
 
@@ -289,12 +289,11 @@ type: "snapshot"  → WsSnapshotMessage
 
 type: "realtime"  → WsRealtimeMessage
   data: RealtimeEventEnvelope  (discriminated union by type)
-    "EEW"                → EewItemWithRelations
-    "EARTHQUAKE"         → EarthquakePartial  (broadcast)
-    "earthquake"         → upsert/delete + EarthquakePartial
-    "tsunami"            → upsert/delete
-    "shake_detected"     → 揺れ検知データ (points含む)
-    "ESTIMATED_INTENSITY"→ estimatedIntensityKey
+    "eew"                 → upsert + EewItemWithRelations
+    "earthquake"          → upsert/delete + 完全な Earthquake
+    "tsunami"             → upsert/delete
+    "shake_detection"     → snapshot + ShakeDetectionActiveSnapshot
+    "estimated_intensity" → upsert + EstimatedIntensityEvent
 
 type: "ping"      → WsPingMessage
   (EqMonitorWsStatusNotifier が {type:"pong"} を自動返送)

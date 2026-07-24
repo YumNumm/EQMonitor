@@ -18,7 +18,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_int
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_camera.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_legend.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_popup.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_sheet.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_error_layer.dart';
@@ -77,6 +77,11 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   }
 }
 
+bool shouldShowEarthquakeHistoryDebugger({
+  required bool isDebugBuild,
+  required AsyncValue<bool> debugPreference,
+}) => isDebugBuild || (debugPreference.value ?? false);
+
 class _MapContent extends HookConsumerWidget {
   const _MapContent({
     required this.styleString,
@@ -107,7 +112,10 @@ class _MapContent extends HookConsumerWidget {
         (v) => v.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final isDebugger = kDebugMode || (ref.watch(debugProvider).value ?? false);
+    final isDebugger = shouldShowEarthquakeHistoryDebugger(
+      isDebugBuild: kDebugMode,
+      debugPreference: ref.watch(debugProvider),
+    );
     final mapController = useState<MapController?>(null);
 
     ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (
@@ -250,7 +258,9 @@ class _MapContent extends HookConsumerWidget {
               },
               onDebugTap: isDebugger
                   ? () async {
-                      await EarthquakeHistoryDebugModal.show(context: context);
+                      await ref
+                          .read(earthquakeHistoryDebugSheetActionProvider)
+                          .show(context: context, eventId: earthquake.eventId);
                     }
                   : null,
             ),

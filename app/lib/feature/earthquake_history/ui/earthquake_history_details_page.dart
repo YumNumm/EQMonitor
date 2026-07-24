@@ -34,7 +34,6 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     final detailsState = ref.watch(earthquakeHistoryDetailsProvider(eventId));
 
     return switch (detailsState) {
-      AsyncValue(:final value?) => _LoadedContent(earthquake: value),
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(),
         body: ErrorCard(
@@ -43,6 +42,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
               ref.refresh(earthquakeHistoryDetailsProvider(eventId)),
         ),
       ),
+      AsyncValue(:final value?) => _LoadedContent(earthquake: value),
       _ => Scaffold(
         appBar: AppBar(),
         body: Center(

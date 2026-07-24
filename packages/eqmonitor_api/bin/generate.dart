@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 void main(List<String> args) async {
+  final packageDir = File.fromUri(Platform.script).parent.parent;
   final externalOpenapiPath = await File(
-    '../../backend/api/api/openapi.json',
+    '${packageDir.path}/../../backend/api/api/openapi.json',
   ).resolveSymbolicLinks();
 
-  final packageDir = Directory.current;
   final openapiFile = File('${packageDir.path}/openapi/openapi.json');
   final libDir = Directory('${packageDir.path}/lib/src');
 
@@ -43,6 +43,10 @@ void main(List<String> args) async {
 
   await _step('swagger_parser でクライアントコードを生成', () async {
     await _run('dart', ['run', 'swagger_parser'], packageDir.path);
+  });
+
+  await _step('RealtimeEventEnvelope dispatcher を生成', () async {
+    _generateRealtimeEventEnvelope(libDir: libDir, openapiFile: openapiFile);
   });
 
   /// swagger_parser が生成した震度 enum のメンバー名を修正する。
@@ -113,6 +117,10 @@ void main(List<String> args) async {
 
   await _step('値のみ union を enum に変換', () async {
     _patchValueOnlyUnionsToEnum(libDir, openapiFile);
+  });
+
+  await _step('enum の dynamic JSON 型を String に修正', () async {
+    _patchEnumDynamicJsonToString(libDir);
   });
 
   await _step(r'$unknown 文字列補間パッチ', () async {
@@ -199,7 +207,7 @@ void main(List<String> args) async {
   /// メインリポに取り込む」流儀（app CI は submodule を checkout しないため必須）。
   await _step('契約 fixtures を submodule からコピー', () async {
     final srcDir = Directory(
-      '../../backend/api/api-stub/generated/contract-fixtures',
+      '${packageDir.path}/../../backend/api/api-stub/generated/contract-fixtures',
     );
     final dstDir = Directory('${packageDir.path}/test/fixtures/contract');
     if (!srcDir.existsSync()) {
@@ -223,6 +231,219 @@ void main(List<String> args) async {
   });
 
   stdout.writeln('\n✅ コード生成が完了しました');
+}
+
+void _generateRealtimeEventEnvelope({
+  required Directory libDir,
+  required File openapiFile,
+}) {
+  final document = jsonDecode(openapiFile.readAsStringSync());
+  if (document is! Map<String, dynamic>) {
+    throw const FormatException('OpenAPI document must be a JSON object');
+  }
+
+  final components = document['components'];
+  final schemasValue = components is Map<String, dynamic>
+      ? components['schemas']
+      : null;
+  if (schemasValue is! Map<String, dynamic>) {
+    throw const FormatException('OpenAPI components.schemas is missing');
+  }
+  final schemas = schemasValue;
+  final envelopeValue = schemas['RealtimeEventEnvelope'];
+  if (envelopeValue is! Map<String, dynamic>) {
+    throw const FormatException(
+      'OpenAPI RealtimeEventEnvelope schema is missing',
+    );
+  }
+  final discriminator = envelopeValue['discriminator'];
+  final discriminatorKey = discriminator is Map<String, dynamic>
+      ? discriminator['propertyName']
+      : null;
+  if (discriminatorKey is! String || discriminatorKey.isEmpty) {
+    throw const FormatException(
+      'RealtimeEventEnvelope discriminator.propertyName is missing',
+    );
+  }
+
+  final schemaNames = <String>{};
+  void collectRefs(Object? value) {
+    if (value is! Map<String, dynamic>) {
+      return;
+    }
+    final ref = value[r'$ref'];
+    if (ref is String && ref.startsWith('#/components/schemas/')) {
+      schemaNames.add(ref.substring('#/components/schemas/'.length));
+    }
+    final oneOf = value['oneOf'];
+    if (oneOf is List) {
+      for (final item in oneOf) {
+        collectRefs(item);
+      }
+    }
+  }
+
+  collectRefs(envelopeValue);
+  if (schemaNames.isEmpty) {
+    throw const FormatException(
+      'RealtimeEventEnvelope does not reference concrete schemas',
+    );
+  }
+
+  final variants =
+      schemaNames.map((schemaName) {
+        final schema = schemas[schemaName];
+        if (schema is! Map<String, dynamic>) {
+          throw FormatException('Realtime schema is missing: $schemaName');
+        }
+        final properties = schema['properties'];
+        if (properties is! Map<String, dynamic>) {
+          throw FormatException(
+            'Realtime schema has no properties: $schemaName',
+          );
+        }
+        final type = _singleEnumValue(
+          properties[discriminatorKey],
+          '$schemaName.$discriminatorKey',
+        );
+        final operationValue = properties['operation'];
+        final operation = operationValue == null
+            ? null
+            : _singleEnumValue(operationValue, '$schemaName.operation');
+        return (
+          schemaName: schemaName,
+          type: type,
+          operation: operation,
+          eventName: schemaName.replaceFirst(RegExp(r'Payload$'), 'Event'),
+          fileName: _toSnakeCase(schemaName),
+        );
+      }).toList()..sort((a, b) {
+        final typeComparison = a.type.compareTo(b.type);
+        if (typeComparison != 0) {
+          return typeComparison;
+        }
+        return (a.operation ?? '').compareTo(b.operation ?? '');
+      });
+
+  final dispatchKeys = <String>{};
+  for (final variant in variants) {
+    final key = '${variant.type}\u0000${variant.operation ?? ''}';
+    if (!dispatchKeys.add(key)) {
+      throw FormatException(
+        'Duplicate realtime discriminator: '
+        '${variant.type}/${variant.operation}',
+      );
+    }
+  }
+
+  final buffer = StringBuffer()
+    ..writeln('// coverage:ignore-file')
+    ..writeln('// GENERATED CODE - DO NOT MODIFY BY HAND')
+    ..writeln('// ignore_for_file: unused_import')
+    ..writeln()
+    ..writeln("import 'package:json_annotation/json_annotation.dart';");
+  for (final variant in variants) {
+    buffer.writeln("import '${variant.fileName}.dart';");
+  }
+  buffer
+    ..writeln()
+    ..writeln('sealed class RealtimeEventEnvelope {')
+    ..writeln('  const RealtimeEventEnvelope();')
+    ..writeln()
+    ..writeln(
+      '  factory RealtimeEventEnvelope.fromJson(Map<String, Object?> json) {',
+    )
+    ..writeln(
+      "    final discriminator = (json['$discriminatorKey'], json['operation']);",
+    )
+    ..writeln('    return switch (discriminator) {');
+  for (final variant in variants) {
+    final operation = variant.operation == null
+        ? 'null'
+        : "'${variant.operation}'";
+    buffer
+      ..writeln(
+        "      ('${variant.type}', $operation) => ${variant.eventName}(",
+      )
+      ..writeln('        ${variant.schemaName}.fromJson(json),')
+      ..writeln('      ),');
+  }
+  buffer
+    ..writeln('      final value => throw CheckedFromJsonException(')
+    ..writeln('        json,')
+    ..writeln("        '$discriminatorKey',")
+    ..writeln("        'RealtimeEventEnvelope',")
+    ..writeln("        'Unknown realtime discriminator: \$value',")
+    ..writeln('      ),')
+    ..writeln('    };')
+    ..writeln('  }')
+    ..writeln('}')
+    ..writeln();
+  for (final variant in variants) {
+    buffer
+      ..writeln(
+        'final class ${variant.eventName} extends RealtimeEventEnvelope {',
+      )
+      ..writeln('  const ${variant.eventName}(this.payload);')
+      ..writeln()
+      ..writeln('  final ${variant.schemaName} payload;')
+      ..writeln('}')
+      ..writeln();
+  }
+
+  final output = File('${libDir.path}/models/realtime_event_envelope.dart');
+  output.writeAsStringSync(buffer.toString());
+  for (final suffix in ['freezed.dart', 'g.dart']) {
+    final stale = File('${libDir.path}/models/realtime_event_envelope.$suffix');
+    if (stale.existsSync()) {
+      stale.deleteSync();
+    }
+  }
+  stdout.writeln('  generated: ${output.path}');
+}
+
+String _singleEnumValue(Object? value, String path) {
+  if (value is! Map<String, dynamic>) {
+    throw FormatException('Realtime discriminator property is invalid: $path');
+  }
+  final enumValues = value['enum'];
+  if (enumValues is! List ||
+      enumValues.length != 1 ||
+      enumValues.single is! String) {
+    throw FormatException(
+      'Realtime discriminator must have one string enum value: $path',
+    );
+  }
+  return enumValues.single as String;
+}
+
+void _patchEnumDynamicJsonToString(Directory libDir) {
+  final modelsDir = Directory('${libDir.path}/models');
+  if (!modelsDir.existsSync()) {
+    return;
+  }
+  for (final file in modelsDir.listSync().whereType<File>()) {
+    if (!file.path.endsWith('.dart') ||
+        file.path.endsWith('.freezed.dart') ||
+        file.path.endsWith('.g.dart')) {
+      continue;
+    }
+    final original = file.readAsStringSync();
+    if (!original.contains('@JsonEnum()') ||
+        !original.contains('final dynamic json;')) {
+      continue;
+    }
+    final patched = original
+        .replaceAll('final dynamic json;', 'final String? json;')
+        .replaceAll('dynamic toJson()', 'String toJson()')
+        .replaceAll(
+          'null JSON representation to dynamic.',
+          'null JSON representation to String.',
+        )
+        .replaceAll('return value as dynamic;', 'return value;');
+    file.writeAsStringSync(patched);
+    stdout.writeln('  patched: ${file.path}');
+  }
 }
 
 Future<void> _step(String label, Future<void> Function() action) async {
@@ -258,22 +479,35 @@ Future<void> _patchGeneratedFiles(Directory libDir) async {
 }
 
 void _stripTrailingWhitespace(Directory libDir) {
+  const realtimeDependencyFiles = {
+    'bottom_right.dart',
+    'correlated_eew.dart',
+    'location.dart',
+    'merged_events.dart',
+    'points.dart',
+    'region.dart',
+    'test.dart',
+    'top_left.dart',
+  };
   final dartFiles = libDir.listSync(recursive: true).whereType<File>().where((
-    f,
+    file,
   ) {
-    if (!f.path.endsWith('.dart')) {
+    if (!file.path.endsWith('.dart')) {
       return false;
     }
-    final name = f.uri.pathSegments.last;
-    return name == 'catalog.dart' || name.startsWith('catalog_');
+    final name = file.uri.pathSegments.last;
+    return name == 'catalog.dart' ||
+        name.startsWith('catalog_') ||
+        name == 'shake_detection_api_client.dart' ||
+        name.startsWith('realtime_') ||
+        name.startsWith('shake_detection_active_') ||
+        realtimeDependencyFiles.contains(name);
   });
 
   for (final file in dartFiles) {
     final original = file.readAsStringSync();
-    final patched = original.replaceAll(
-      RegExp(r'[ \t]+$', multiLine: true),
-      '',
-    );
+    final patched =
+        '${original.replaceAll(RegExp(r'[ \t]+$', multiLine: true), '').trimRight()}\n';
     if (patched != original) {
       file.writeAsStringSync(patched);
       stdout.writeln('  stripped: ${file.path}');

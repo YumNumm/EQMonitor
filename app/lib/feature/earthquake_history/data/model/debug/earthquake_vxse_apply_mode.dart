@@ -1,0 +1,1 @@
+enum EarthquakeVxseApplyMode { merge, clearAndApply }

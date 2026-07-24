@@ -1,5 +1,4 @@
 import 'package:eqmonitor_websocket/src/realtime_event_envelope.dart';
-import 'package:eqmonitor_websocket/src/ws_snapshot_data.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'ws_message.freezed.dart';
@@ -7,17 +6,11 @@ part 'ws_message.g.dart';
 
 /// WebSocket から受信するトップレベルメッセージ。
 /// `type` フィールドで分岐する discriminated union。
-@Freezed(unionKey: 'type')
+@Freezed(unionKey: 'type', toJson: false)
 sealed class WsMessage with _$WsMessage {
-  @FreezedUnionValue('snapshot')
-  const factory WsMessage.snapshot({
-    required WsSnapshotData data,
-  }) = WsSnapshotMessage;
-
   @FreezedUnionValue('realtime')
-  const factory WsMessage.realtime({
-    required RealtimeEventEnvelope data,
-  }) = WsRealtimeMessage;
+  const factory WsMessage.realtime({required RealtimeEventEnvelope data}) =
+      WsRealtimeMessage;
 
   @FreezedUnionValue('ping')
   const factory WsMessage.ping() = WsPingMessage;

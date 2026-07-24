@@ -22,6 +22,8 @@ abstract class EarthquakePartial with _$EarthquakePartial {
     @JsonKey(name: 'event_id')
     required String eventId,
     required TelegramStatus status,
+    @JsonKey(name: 'earthquake_type')
+    required EarthquakeType earthquakeType,
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
 
@@ -31,8 +33,6 @@ abstract class EarthquakePartial with _$EarthquakePartial {
     /// この地震イベントに紐づく電文タイプの配列
     @JsonKey(name: 'telegram_types')
     required List<EarthquakeTelegramType> telegramTypes,
-    @JsonKey(name: 'earthquake_type')
-    required EarthquakeType earthquakeType,
     @JsonKey(includeIfNull: false,name: 'origin_time')
     DateTime? originTime,
     @JsonKey(includeIfNull: false,name: 'arrival_time')

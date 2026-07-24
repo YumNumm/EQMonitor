@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
-import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
 import 'package:eqmonitor/feature/playback_mode/data/auto_return_policy.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,27 +23,31 @@ EewItemWithRelations eewItem() => EewItemWithRelations.fromJson(const {
   'report_time': '2024-01-01T07:10:16.000Z',
 });
 
-RealtimeShakeEventData shake(String eventId, {int serialNo = 1}) =>
-    RealtimeShakeEventData(
+Events2 shake(String eventId, {int serialNo = 1}) =>
+    Events2(
+      type: Type3.shakeDetection,
       eventId: eventId,
       serialNo: serialNo,
       createdAt: _now,
       updatedAt: _now,
       expiresAt: _now.add(const Duration(minutes: 1)),
-      level: 'Medium',
+      level: Level.medium,
+      mergedEvents: const [],
       pointCount: 1,
-      minLat: 35,
-      maxLat: 36,
-      minLng: 139,
-      maxLng: 140,
-      changeReasons: const ['new_event'],
+      region: const Region2(
+        topLeft: TopLeft2(latitude: 36, longitude: 139),
+        bottomRight: BottomRight2(latitude: 35, longitude: 140),
+      ),
+      points: const [],
+      changeReasons: const [ChangeReasons.newEvent],
     );
 
 RealtimeEvent snapshot({
   required int revision,
-  required List<RealtimeShakeEventData> events,
+  required List<Events2> events,
 }) => RealtimeEvent.shakeSnapshot(
-  data: RealtimeShakeSnapshot(
+  record: RealtimeShakeDetectionSnapshotPayload(
+    type: Type3.shakeDetection,
     revision: revision,
     responseAt: _now,
     events: events,
@@ -57,7 +60,7 @@ void main() {
     test('EEW更新は復帰トリガーになること', () {
       final policy = AutoReturnPolicy();
       final event = RealtimeEvent.eewUpsert(
-        item: eewItem(),
+        record: eewItem(),
         source: RealtimeSource.eqmonitor,
       );
       expect(policy.shouldReturnToRealtime(event), isTrue);

@@ -2,6 +2,7 @@
   "earthquake": {
     "event_id": "20251215120000",
     "status": "NORMAL",
+    "earthquake_type": "NORMAL",
     "origin_time_precision": "SECOND",
     "intensity": {
       "max_intensity": "5+",

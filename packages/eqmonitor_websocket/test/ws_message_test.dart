@@ -1,284 +1,374 @@
-import 'package:eqmonitor_websocket/src/realtime_event_envelope.dart';
-import 'package:eqmonitor_websocket/src/ws_message.dart';
-import 'package:eqmonitor_websocket/src/ws_realtime_operation.dart';
-import 'package:eqmonitor_websocket/src/ws_snapshot_data.dart';
+import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:test/test.dart';
 
+const fixtureTime = '2026-01-01T00:00:00.000Z';
+
+const fullEarthquake = <String, Object?>{
+  'event_id': '20260101000000',
+  'status': 'NORMAL',
+  'earthquake_type': 'NORMAL',
+  'origin_time': fixtureTime,
+  'origin_time_precision': 'SECOND',
+  'hypocenter': {
+    'code': '100',
+    'name': '石狩地方北部',
+    'coordinates': {'latitude': 43.5, 'longitude': 141.5},
+    'magnitude': {'type': 'NORMAL', 'value': 5.1},
+    'depth': {'type': 'NORMAL', 'value': 20},
+  },
+  'intensity': {
+    'max_intensity': '4',
+    'intensity_tree': [
+      {
+        'intensity': '4',
+        'regions': ['100'],
+        'stations': ['POINT-1'],
+      },
+    ],
+  },
+  'datasources': ['JMA_DISASTER_INFORMATION_XML'],
+  'telegrams': [
+    {
+      'telegram': {
+        'id': 'telegram-1',
+        'event_id': '20260101000000',
+        'serial_no': 1,
+        'type': 'VXSE53',
+        'title': '震源・震度に関する情報',
+        'status': 'NORMAL',
+        'info_type': 'PUBLICATION',
+        'editorial_office': '気象庁',
+        'publishing_office': ['気象庁'],
+        'pressed_at': fixtureTime,
+        'reported_at': fixtureTime,
+        'info_kind': 'VXSE53',
+        'info_kind_version': '1.0_1',
+        'hash': 'telegram-hash',
+        'created_at': fixtureTime,
+      },
+      'comments': null,
+    },
+  ],
+  'catalog': {
+    'hypocenters': [
+      {
+        'seq': 0,
+        'record_type': 'A',
+        'magnitudes': <Object?>[],
+        'epicenter_name': '石狩地方北部',
+        'station_count': 1,
+      },
+    ],
+    'station_records': [
+      {
+        'station_code': 'POINT-1',
+        'intensity': {'class': '4', 'instrumental': 3.7},
+      },
+    ],
+  },
+};
+
+const partialEarthquake = <String, Object?>{
+  'event_id': '20260101000000',
+  'status': 'NORMAL',
+  'origin_time': fixtureTime,
+  'origin_time_precision': 'SECOND',
+  'hypocenter': {
+    'code': '100',
+    'name': '石狩地方北部',
+    'coordinates': {'latitude': 43.5, 'longitude': 141.5},
+    'magnitude': {'type': 'NORMAL', 'value': 5.1},
+    'depth': {'type': 'NORMAL', 'value': 20},
+  },
+  'intensity': {'max_intensity': '4'},
+  'datasources': ['JMA_DISASTER_INFORMATION_XML'],
+  'telegram_types': ['VXSE53'],
+  'earthquake_type': 'NORMAL',
+};
+
+const fullEew = <String, Object?>{
+  'event_id': '20260101000001',
+  'type': 'VXSE45',
+  'status': 'NORMAL',
+  'info_type': 'PUBLICATION',
+  'serial_no': 2,
+  'headline': '緊急地震速報（警報）',
+  'is_canceled': false,
+  'is_warning': true,
+  'is_last_info': false,
+  'origin_time': fixtureTime,
+  'arrival_time': fixtureTime,
+  'hypocenter': {
+    'code': '100',
+    'name': '石狩地方北部',
+    'coordinates': {'latitude': 43.5, 'longitude': 141.5},
+    'magnitude': 5.1,
+    'depth': 20,
+  },
+  'forecast_intensity': {
+    'max_intensity': {'value': '5-', 'is_over': false},
+    'regions': <Object?>[],
+  },
+  'accuracy': {
+    'epicenter': 1,
+    'hypocenter': 1,
+    'depth': 1,
+    'magnitude_calculation': 1,
+    'number_of_magnitude_calculation': 4,
+  },
+  'is_plum': false,
+  'editorial_office': '気象庁',
+  'report_time': fixtureTime,
+  'warning': {
+    'zones': [
+      {'code': '9011', 'name': '北海道道央', 'had_warning': false},
+    ],
+    'prefectures': [
+      {'code': '01', 'name': '北海道', 'had_warning': false},
+    ],
+    'regions': [
+      {'code': '100', 'name': '石狩地方北部', 'had_warning': false},
+    ],
+  },
+};
+
+const fullShakeSnapshot = <String, Object?>{
+  'type': 'shake_detection',
+  'revision': 42,
+  'responseAt': fixtureTime,
+  'events': [
+    {
+      'type': 'shake_detection',
+      'eventId': 'shake-canonical',
+      'serialNo': 7,
+      'createdAt': '2025-12-31T23:59:30.000Z',
+      'updatedAt': '2025-12-31T23:59:55.000Z',
+      'expiresAt': '2026-01-01T00:00:35.000Z',
+      'level': 'Strong',
+      'changeReasons': ['level_up'],
+      'mergedEvents': [
+        {'eventId': 'shake-absorbed', 'mergedAt': '2025-12-31T23:59:50.000Z'},
+      ],
+      'pointCount': 1,
+      'region': {
+        'topLeft': {'latitude': 36.0, 'longitude': 139.0},
+        'bottomRight': {'latitude': 35.0, 'longitude': 140.0},
+      },
+      'points': [
+        {
+          'code': 'POINT-1',
+          'name': 'Point 1',
+          'region': 'Tokyo',
+          'type': 'K-NET',
+          'location': {'latitude': 35.5, 'longitude': 139.5},
+          'intensity': 3.2,
+          'intensityDiff': 0.4,
+        },
+      ],
+      'test': {'targetDeviceId': 'device-1'},
+      'correlatedEew': {'eventId': '20260101000001', 'score': 0.9},
+    },
+  ],
+};
+
 void main() {
-  group('WsMessage.fromJson', () {
-    test('snapshot メッセージを正しくパースできること', () {
-      final json = <String, dynamic>{
-        'type': 'snapshot',
-        'data': {
-          'revision': 42,
-          'updatedAt': '2025-01-15T12:00:00.000Z',
-          'eews': <dynamic>[],
-          'earthquakes': <dynamic>[],
-        },
-      };
-
-      final result = WsMessage.fromJson(json);
-
-      expect(result, isA<WsSnapshotMessage>());
-      final snapshot = result as WsSnapshotMessage;
-      expect(snapshot.data.revision, equals(42));
-      expect(snapshot.data.eews, isEmpty);
-      expect(snapshot.data.earthquakes, isEmpty);
-    });
-
-    test('snapshot の eews/earthquakes フィールドが省略された場合デフォルト空リストになること', () {
-      final json = <String, dynamic>{
-        'type': 'snapshot',
-        'data': {'revision': 1, 'updatedAt': '2025-01-15T12:00:00.000Z'},
-      };
-
-      final result = WsMessage.fromJson(json);
-
-      expect(result, isA<WsSnapshotMessage>());
-      final snapshot = result as WsSnapshotMessage;
-      expect(snapshot.data.eews, isEmpty);
-      expect(snapshot.data.earthquakes, isEmpty);
-    });
-
-    test('realtime/earthquake メッセージを正しくパースできること', () {
-      final json = <String, dynamic>{
-        'type': 'realtime',
-        'data': {
-          'type': 'earthquake',
-          'operation': 'delete',
-          'event_id': '20250115120000',
-          'record': null,
-        },
-      };
-
-      final result = WsMessage.fromJson(json);
-
-      expect(result, isA<WsRealtimeMessage>());
-      final realtime = result as WsRealtimeMessage;
-      expect(realtime.data, isA<WsEarthquakeRealtimeEvent>());
-      final eq = realtime.data as WsEarthquakeRealtimeEvent;
-      expect(eq.operation, equals(WsRealtimeOperation.delete));
-      expect(eq.eventId, equals('20250115120000'));
-      expect(eq.record, isNull);
-    });
-
-    test('realtime/shake_detection の完全snapshotをパースできること', () {
-      final result = WsMessage.fromJson({
-        'type': 'realtime',
-        'data': {
-          'type': 'shake_detection',
-          'revision': 42,
-          'responseAt': '2026-07-18T12:34:56.789Z',
-          'events': [
-            {
-              'type': 'shake_detection',
-              'eventId': 'shake-canonical',
-              'serialNo': 7,
-              'createdAt': '2026-07-18T12:34:30.000Z',
-              'updatedAt': '2026-07-18T12:34:55.000Z',
-              'expiresAt': '2026-07-18T12:35:35.000Z',
-              'level': 'Strong',
-              'changeReasons': ['level_up'],
-              'mergedEvents': [
-                {
-                  'eventId': 'shake-absorbed',
-                  'mergedAt': '2026-07-18T12:34:50.000Z',
+  group('WsMessage.fromJson realtime contract', () {
+    test('full Earthquake trees, telegrams, and catalog parse', () {
+      final message =
+          WsMessage.fromJson({
+                'type': 'realtime',
+                'data': {
+                  'type': 'earthquake',
+                  'operation': 'upsert',
+                  'event_id': '20260101000000',
+                  'record': fullEarthquake,
                 },
-              ],
-              'pointCount': 1,
-              'region': {
-                'topLeft': {'latitude': 36.0, 'longitude': 139.0},
-                'bottomRight': {'latitude': 35.0, 'longitude': 140.0},
-              },
-              'points': [
-                {
-                  'code': 'POINT-1',
-                  'name': 'Point 1',
-                  'region': 'Tokyo',
-                  'type': 'K-NET',
-                  'location': {'latitude': 35.5, 'longitude': 139.5},
-                  'intensity': 3.2,
-                  'intensityDiff': 0.4,
+              })
+              as WsRealtimeMessage;
+
+      final event = message.data as RealtimeEarthquakeUpsertEvent;
+      expect(event.payload.record.intensity?.intensityTree, hasLength(1));
+      expect(
+        event.payload.record.telegrams.single.telegram.type.toJson(),
+        'VXSE53',
+      );
+      final catalog = event.payload.record.catalog;
+      expect(catalog?.hypocenters.single.epicenterName, '石狩地方北部');
+      expect(catalog?.stationRecords.single.stationCode, 'POINT-1');
+    });
+
+    test('full EEW warning relations parse', () {
+      final message =
+          WsMessage.fromJson({
+                'type': 'realtime',
+                'data': {
+                  'type': 'eew',
+                  'operation': 'upsert',
+                  'event_id': '20260101000001',
+                  'record': fullEew,
                 },
-              ],
-              'correlatedEew': {'eventId': 'eew-1', 'score': 0.9},
+              })
+              as WsRealtimeMessage;
+
+      final event = message.data as RealtimeEewUpsertEvent;
+      expect(event.payload.record.isWarning, isTrue);
+      expect(event.payload.record.warning?.zones.single.code, '9011');
+    });
+
+    test('shake points, merged events, and correlation parse', () {
+      final message =
+          WsMessage.fromJson({
+                'type': 'realtime',
+                'data': {
+                  ...fullShakeSnapshot,
+                },
+              })
+              as WsRealtimeMessage;
+
+      final event = message.data as RealtimeShakeDetectionSnapshotEvent;
+      final shake = event.payload.events.single;
+      expect(shake.points.single.intensity, 3.2);
+      expect(shake.mergedEvents.single.eventId, 'shake-absorbed');
+      expect(shake.correlatedEew?.eventId, '20260101000001');
+    });
+
+    test('earthquake delete parses without record', () {
+      final message =
+          WsMessage.fromJson({
+                'type': 'realtime',
+                'data': {
+                  'type': 'earthquake',
+                  'operation': 'delete',
+                  'event_id': '20260101000000',
+                },
+              })
+              as WsRealtimeMessage;
+
+      final event = message.data as RealtimeEarthquakeDeleteEvent;
+      expect(event.payload.eventId, '20260101000000');
+    });
+
+    test('tsunami upsert parses group_id', () {
+      final message =
+          WsMessage.fromJson({
+                'type': 'realtime',
+                'data': {
+                  'type': 'tsunami',
+                  'operation': 'upsert',
+                  'event_id': 'tsunami-1',
+                  'group_id': 'group-1',
+                },
+              })
+              as WsRealtimeMessage;
+
+      final event = message.data as RealtimeTsunamiUpsertEvent;
+      expect(event.payload.eventId, 'tsunami-1');
+      expect(event.payload.groupId, 'group-1');
+    });
+
+    test('tsunami delete parses without group_id', () {
+      final message =
+          WsMessage.fromJson({
+                'type': 'realtime',
+                'data': {
+                  'type': 'tsunami',
+                  'operation': 'delete',
+                  'event_id': 'tsunami-2',
+                },
+              })
+              as WsRealtimeMessage;
+
+      final event = message.data as RealtimeTsunamiDeleteEvent;
+      expect(event.payload.eventId, 'tsunami-2');
+      expect(event.payload.groupId, isNull);
+    });
+
+    test('estimated intensity upsert parses the canonical record', () {
+      final message =
+          WsMessage.fromJson({
+                'type': 'realtime',
+                'data': {
+                  'type': 'estimated_intensity',
+                  'operation': 'upsert',
+                  'event_id': 'estimated-1',
+                  'record': {
+                    'eventId': 'estimated-1',
+                    'estimatedIntensityKey': 'ixac41/estimated-1.pmtiles',
+                    'createdAt': fixtureTime,
+                  },
+                },
+              })
+              as WsRealtimeMessage;
+
+      final event = message.data as RealtimeEstimatedIntensityUpsertEvent;
+      expect(event.payload.eventId, 'estimated-1');
+      expect(
+        event.payload.record.estimatedIntensityKey,
+        'ixac41/estimated-1.pmtiles',
+      );
+    });
+
+    test('partial Earthquake record is rejected', () {
+      expect(
+        () => WsMessage.fromJson({
+          'type': 'realtime',
+          'data': {
+            'type': 'earthquake',
+            'operation': 'upsert',
+            'event_id': '20260101000000',
+            'record': partialEarthquake,
+          },
+        }),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
+    });
+
+    test('earthquake upsert without record is rejected', () {
+      expect(
+        () => WsMessage.fromJson({
+          'type': 'realtime',
+          'data': {
+            'type': 'earthquake',
+            'operation': 'upsert',
+            'event_id': '20260101000000',
+          },
+        }),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
+    });
+
+    test('uppercase EEW is rejected', () {
+      expect(
+        () => WsMessage.fromJson({
+          'type': 'realtime',
+          'data': {'type': 'EEW', 'item': fullEew},
+        }),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
+    });
+
+    test('legacy shake_detected envelope is rejected', () {
+      expect(
+        () => WsMessage.fromJson({
+          'type': 'realtime',
+          'data': {
+            'type': 'shake_detected',
+            'eventId': 'shake-old',
+            'createdAt': fixtureTime,
+            'level': 'Medium',
+            'changeReasons': ['new_event'],
+            'isReplay': false,
+            'pointCount': 0,
+            'region': {
+              'topLeft': {'latitude': 35, 'longitude': 135},
+              'bottomRight': {'latitude': 34, 'longitude': 136},
             },
-          ],
-        },
-      });
-
-      final message = result as WsRealtimeMessage;
-      final snapshot = message.data as WsShakeDetectionRealtimeEvent;
-      expect(snapshot.revision, 42);
-      expect(snapshot.responseAt, DateTime.parse('2026-07-18T12:34:56.789Z'));
-      expect(snapshot.events.single.eventId, 'shake-canonical');
-      expect(snapshot.events.single.serialNo, 7);
-      expect(
-        snapshot.events.single.expiresAt,
-        DateTime.parse('2026-07-18T12:35:35.000Z'),
-      );
-      expect(
-        snapshot.events.single.mergedEvents.single.eventId,
-        'shake-absorbed',
-      );
-      expect(snapshot.events.single.correlatedEew?.eventId, 'eew-1');
-    });
-
-    test('realtime/shake_detection の events が空配列でもパースできること', () {
-      final result = WsMessage.fromJson({
-        'type': 'realtime',
-        'data': {
-          'type': 'shake_detection',
-          'revision': 43,
-          'responseAt': '2026-07-18T12:35:56.789Z',
-          'events': <dynamic>[],
-        },
-      });
-
-      final message = result as WsRealtimeMessage;
-      final snapshot = message.data as WsShakeDetectionRealtimeEvent;
-      expect(snapshot.events, isEmpty);
-    });
-
-    test('realtime/shake_detection の events が省略された場合は拒否すること', () {
-      expect(
-        () => WsMessage.fromJson({
-          'type': 'realtime',
-          'data': {
-            'type': 'shake_detection',
-            'revision': 43,
-            'responseAt': '2026-07-18T12:35:56.789Z',
+            'points': <Object?>[],
           },
         }),
         throwsA(isA<CheckedFromJsonException>()),
       );
-    });
-
-    test('realtime/shake_detection の events が null の場合は拒否すること', () {
-      expect(
-        () => WsMessage.fromJson({
-          'type': 'realtime',
-          'data': {
-            'type': 'shake_detection',
-            'revision': 43,
-            'responseAt': '2026-07-18T12:35:56.789Z',
-            'events': null,
-          },
-        }),
-        throwsA(isA<CheckedFromJsonException>()),
-      );
-    });
-
-    test('legacy realtime/shake_detected は拒否すること', () {
-      expect(
-        () => WsMessage.fromJson({
-          'type': 'realtime',
-          'data': {'type': 'shake_detected', 'eventId': 'legacy-shake'},
-        }),
-        throwsA(isA<CheckedFromJsonException>()),
-      );
-    });
-
-    test('realtime/ESTIMATED_INTENSITY メッセージを正しくパースできること', () {
-      final json = <String, dynamic>{
-        'type': 'realtime',
-        'data': {
-          'type': 'ESTIMATED_INTENSITY',
-          'estimatedIntensity': {
-            'eventId': 'test-event',
-            'estimatedIntensityKey': 'test-key',
-            'createdAt': '2025-01-15T12:00:00.000Z',
-          },
-        },
-      };
-
-      final result = WsMessage.fromJson(json);
-
-      expect(result, isA<WsRealtimeMessage>());
-      final realtime = result as WsRealtimeMessage;
-      expect(realtime.data, isA<WsEstimatedIntensityRealtimeEvent>());
-    });
-  });
-
-  group('RealtimeEventEnvelope.fromJson', () {
-    test('earthquake upsert を正しくパースできること', () {
-      final json = <String, dynamic>{
-        'type': 'earthquake',
-        'operation': 'upsert',
-        'event_id': '20250115120000',
-        'record': null,
-      };
-
-      final result = RealtimeEventEnvelope.fromJson(json);
-
-      expect(result, isA<WsEarthquakeRealtimeEvent>());
-      final eq = result as WsEarthquakeRealtimeEvent;
-      expect(eq.operation, equals(WsRealtimeOperation.upsert));
-      expect(eq.eventId, equals('20250115120000'));
-      expect(eq.record, isNull);
-    });
-
-    test('earthquake delete を正しくパースできること', () {
-      final json = <String, dynamic>{
-        'type': 'earthquake',
-        'operation': 'delete',
-        'event_id': '20250115120000',
-      };
-
-      final result = RealtimeEventEnvelope.fromJson(json);
-
-      expect(result, isA<WsEarthquakeRealtimeEvent>());
-      final eq = result as WsEarthquakeRealtimeEvent;
-      expect(eq.operation, equals(WsRealtimeOperation.delete));
-    });
-
-    test('tsunami を正しくパースできること', () {
-      final json = <String, dynamic>{
-        'type': 'tsunami',
-        'operation': 'upsert',
-        'event_id': 'tsunami-001',
-        'record': {'key': 'value'},
-      };
-
-      final result = RealtimeEventEnvelope.fromJson(json);
-
-      expect(result, isA<WsTsunamiRealtimeEvent>());
-      final tsunami = result as WsTsunamiRealtimeEvent;
-      expect(tsunami.operation, equals(WsRealtimeOperation.upsert));
-      expect(tsunami.eventId, equals('tsunami-001'));
-      expect(tsunami.record, equals({'key': 'value'}));
-    });
-
-    test('ESTIMATED_INTENSITY を正しくパースできること', () {
-      final json = <String, dynamic>{
-        'type': 'ESTIMATED_INTENSITY',
-        'estimatedIntensity': {
-          'eventId': 'test-event',
-          'estimatedIntensityKey': 'test-key',
-          'createdAt': '2025-01-15T12:00:00.000Z',
-        },
-      };
-
-      final result = RealtimeEventEnvelope.fromJson(json);
-
-      expect(result, isA<WsEstimatedIntensityRealtimeEvent>());
-    });
-  });
-
-  group('WsSnapshotData.fromJson', () {
-    test('updatedAt が正しくパースされること', () {
-      final json = <String, dynamic>{
-        'revision': 5,
-        'updatedAt': '2025-03-20T08:30:00.000Z',
-        'eews': <dynamic>[],
-        'earthquakes': <dynamic>[],
-      };
-
-      final result = WsSnapshotData.fromJson(json);
-
-      expect(result.revision, equals(5));
-      expect(result.updatedAt, equals(DateTime.utc(2025, 3, 20, 8, 30)));
     });
   });
 }

@@ -160,7 +160,7 @@ class _WsEventCard extends StatelessWidget {
 
     final detail = switch (event) {
       RealtimeReadyEvent(:final source) => 'source=$source',
-      RealtimeEewUpsertEvent(:final item) => 'eventId=${item.eventId}',
+      RealtimeEewUpsertEvent(:final record) => 'eventId=${record.eventId}',
       RealtimeEarthquakeUpsertEvent(:final record) =>
         'eventId=${record.eventId}',
       RealtimeEarthquakeDeleteEvent(:final eventId) => 'eventId=$eventId',
@@ -168,8 +168,8 @@ class _WsEventCard extends StatelessWidget {
         'eventId=$eventId groupId=$groupId',
       RealtimeTsunamiDeleteEvent(:final eventId, :final groupId) =>
         'eventId=$eventId groupId=$groupId',
-      RealtimeShakeSnapshotEvent(:final data) =>
-        'revision=${data.revision} events=${data.events.length}',
+      RealtimeShakeSnapshotEvent(:final record) =>
+        'revision=${record.revision} events=${record.events.length}',
       RealtimeEstimatedIntensityUpsertEvent(:final eventId) =>
         'eventId=$eventId',
     };

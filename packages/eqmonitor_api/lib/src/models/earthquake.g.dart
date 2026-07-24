@@ -18,6 +18,10 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
         'status',
         (v) => $enumDecode(_$TelegramStatusEnumMap, v),
       ),
+      earthquakeType: $checkedConvert(
+        'earthquake_type',
+        (v) => $enumDecode(_$EarthquakeTypeEnumMap, v),
+      ),
       originTimePrecision: $checkedConvert(
         'origin_time_precision',
         (v) => $enumDecode(_$OriginTimePrecisionEnumMap, v),
@@ -64,6 +68,7 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
   },
   fieldKeyMap: const {
     'eventId': 'event_id',
+    'earthquakeType': 'earthquake_type',
     'originTimePrecision': 'origin_time_precision',
     'originTime': 'origin_time',
     'arrivalTime': 'arrival_time',
@@ -75,6 +80,7 @@ Map<String, dynamic> _$EarthquakeToJson(_Earthquake instance) =>
     <String, dynamic>{
       'event_id': instance.eventId,
       'status': instance.status,
+      'earthquake_type': instance.earthquakeType,
       'origin_time_precision': instance.originTimePrecision,
       'datasources': instance.datasources,
       'telegrams': instance.telegrams,
@@ -90,6 +96,12 @@ const _$TelegramStatusEnumMap = {
   TelegramStatus.normal: 'NORMAL',
   TelegramStatus.training: 'TRAINING',
   TelegramStatus.test: 'TEST',
+};
+
+const _$EarthquakeTypeEnumMap = {
+  EarthquakeType.normal: 'NORMAL',
+  EarthquakeType.distant: 'DISTANT',
+  EarthquakeType.volcano: 'VOLCANO',
 };
 
 const _$OriginTimePrecisionEnumMap = {

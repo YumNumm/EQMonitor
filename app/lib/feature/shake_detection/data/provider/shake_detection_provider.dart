@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_lev
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 import 'package:eqmonitor/feature/shake_detection/data/notifier/shake_detection_snapshot_reducer.dart';
 import 'package:eqmonitor/feature/shake_detection/data/repository/shake_detection_repository.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_provider.g.dart';
@@ -52,15 +53,16 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
           if (ref.read(isRealtimeModeProvider)) {
             await synchronizeFromRest();
           }
-        case RealtimeShakeSnapshotEvent(:final data):
+        case RealtimeShakeSnapshotEvent(:final record):
           if (!ref.read(isRealtimeModeProvider)) {
             return;
           }
           applySnapshot(
             ShakeDetectionSnapshot(
-              revision: data.revision,
-              responseAt: data.responseAt,
-              events: data.events
+              revision: record.revision,
+              responseAt: record.responseAt,
+              sourceRecord: record,
+              events: record.events
                   .map(
                     (event) => ShakeDetectionEvent(
                       eventId: event.eventId,
@@ -68,14 +70,47 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
                       createdAt: event.createdAt,
                       updatedAt: event.updatedAt,
                       expiresAt: event.expiresAt,
-                      level: event.level.toShakeDetectionLevel(),
+                      level: event.level.toJson().toShakeDetectionLevel(),
                       pointCount: event.pointCount,
-                      minLat: event.minLat,
-                      maxLat: event.maxLat,
-                      minLng: event.minLng,
-                      maxLng: event.maxLng,
-                      changeReasons: event.changeReasons,
-                      correlatedEewEventId: event.correlatedEewEventId,
+                      minLat: event.region.bottomRight.latitude.toDouble(),
+                      maxLat: event.region.topLeft.latitude.toDouble(),
+                      minLng: event.region.topLeft.longitude.toDouble(),
+                      maxLng: event.region.bottomRight.longitude.toDouble(),
+                      changeReasons: event.changeReasons
+                          .map((reason) => reason.toJson())
+                          .toList(growable: false),
+                      correlatedEewEventId: event.correlatedEew?.eventId,
+                      mergedEvents: event.mergedEvents
+                          .map(
+                            (merged) => api.MergedEvents(
+                              eventId: merged.eventId,
+                              mergedAt: merged.mergedAt,
+                            ),
+                          )
+                          .toList(growable: false),
+                      points: event.points
+                          .map(
+                            (point) => api.Points(
+                              code: point.code,
+                              name: point.name,
+                              region: point.region,
+                              type: point.type,
+                              location: api.Location(
+                                latitude: point.location.latitude,
+                                longitude: point.location.longitude,
+                              ),
+                              intensity: point.intensity,
+                              intensityDiff: point.intensityDiff,
+                            ),
+                          )
+                          .toList(growable: false),
+                      correlatedEew: switch (event.correlatedEew) {
+                        final correlated? => api.CorrelatedEew(
+                          eventId: correlated.eventId,
+                          score: correlated.score,
+                        ),
+                        null => null,
+                      },
                     ),
                   )
                   .toList(growable: false),

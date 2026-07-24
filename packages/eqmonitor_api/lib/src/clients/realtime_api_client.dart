@@ -23,4 +23,3 @@ abstract class RealtimeApiClientUrls {
 	/// /v2/realtime/ticket
 	static const getV2RealtimeTicket = "/v2/realtime/ticket";
 }
-

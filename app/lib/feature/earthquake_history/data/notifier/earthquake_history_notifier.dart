@@ -9,7 +9,9 @@ import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_realtime_list_reconciler.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,10 +19,27 @@ part 'earthquake_history_notifier.g.dart';
 
 @riverpod
 class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
+  final List<_NotifierRealtimeMutation> _mutations = [];
+  EarthquakeHistoryRepository? _repository;
+  var _mutationSequence = 0;
+  var _hasCompletedInitialLoad = false;
+
   @override
   Future<PaginatedResponse<EarthquakePartial>> build(
     EarthquakeHistoryParameter parameter,
   ) async {
+    ref.listen(realtimeEventsProvider, (_, next) {
+      if (next case AsyncData(:final value)) {
+        switch (value) {
+          case RealtimeEarthquakeUpsertEvent(:final record):
+            applyRealtimeRecord(record);
+          case RealtimeEarthquakeDeleteEvent(:final eventId):
+            applyRealtimeDelete(eventId);
+          case _:
+            {}
+        }
+      }
+    });
     if (parameter is EarthquakeHistoryParameterAll) {
       final refetchTimer = Timer.periodic(
         const Duration(minutes: 5),
@@ -32,34 +51,26 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           if (next == AppLifecycleState.resumed) {
             await _revalidateLatest();
           }
-        })
-        ..listen(realtimeEventsProvider, (_, next) async {
-          if (next case AsyncData(:final value)) {
-            final repository = await ref.read(
-              earthquakeHistoryRepositoryProvider.future,
-            );
-            switch (value) {
-              case RealtimeEarthquakeUpsertEvent(:final record):
-                _upsertItems([repository.toEarthquakePartial(item: record)]);
-              case _:
-                {}
-            }
-          }
         });
     }
 
-    return _fetch(
+    final startedAt = _hasCompletedInitialLoad ? _mutationSequence : 0;
+    final result = await _fetch(
       parameter: parameter,
       limit: parameter is EarthquakeHistoryParameterAll ? 10 : 50,
       cursor: null,
     );
+    _hasCompletedInitialLoad = true;
+    return _reconcileMutations(result, afterSequence: startedAt);
   }
 
   Future<void> _revalidateLatest() async {
     talker.debug('revalidateLatest');
+    final startedAt = _mutationSequence;
     final latest = await _fetch(parameter: parameter, limit: 10, cursor: null);
-    if (latest.items.isNotEmpty) {
-      _upsertItems(latest.items);
+    final reconciled = _reconcileMutations(latest, afterSequence: startedAt);
+    if (reconciled.items.isNotEmpty) {
+      _upsertItems(reconciled.items);
     }
   }
 
@@ -71,6 +82,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     final repository = await ref.read(
       earthquakeHistoryRepositoryProvider.future,
     );
+    _repository = repository;
 
     return switch (parameter) {
       EarthquakeHistoryParameterAll() => repository.fetchEarthquakeList(
@@ -82,12 +94,19 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         depthLte: parameter.depthLte,
         intensityGte: parameter.intensityGte,
         intensityLte: parameter.intensityLte,
+        statuses: parameter.statuses,
         epicenterCodes: parameter.epicenterCodes,
         earthquakeType: parameter.earthquakeType,
+        datasource: parameter.datasource,
+        telegramTypes: parameter.telegramTypes,
         originTimeGte: parameter.originTimeGte,
         originTimeLte: parameter.originTimeLte,
         maxLpgmIntensityGte: parameter.maxLpgmIntensityGte,
         maxLpgmIntensityLte: parameter.maxLpgmIntensityLte,
+        latitudeGte: parameter.latitudeGte,
+        latitudeLte: parameter.latitudeLte,
+        longitudeGte: parameter.longitudeGte,
+        longitudeLte: parameter.longitudeLte,
         sortBy: parameter.sortBy,
         sortOrder: parameter.sortOrder,
       ),
@@ -102,6 +121,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           depthLte: parameter.depthLte,
           intensityGte: parameter.intensityGte,
           intensityLte: parameter.intensityLte,
+          statuses: parameter.statuses,
           epicenterCodes: parameter.epicenterCodes,
           earthquakeType: parameter.earthquakeType,
           originTimeGte: parameter.originTimeGte,
@@ -122,6 +142,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           depthLte: parameter.depthLte,
           intensityGte: parameter.intensityGte,
           intensityLte: parameter.intensityLte,
+          statuses: parameter.statuses,
           epicenterCodes: parameter.epicenterCodes,
           earthquakeType: parameter.earthquakeType,
           originTimeGte: parameter.originTimeGte,
@@ -142,6 +163,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           depthLte: parameter.depthLte,
           intensityGte: parameter.intensityGte,
           intensityLte: parameter.intensityLte,
+          statuses: parameter.statuses,
           epicenterCodes: parameter.epicenterCodes,
           earthquakeType: parameter.earthquakeType,
           originTimeGte: parameter.originTimeGte,
@@ -162,6 +184,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           depthLte: parameter.depthLte,
           intensityGte: parameter.intensityGte,
           intensityLte: parameter.intensityLte,
+          statuses: parameter.statuses,
           epicenterCodes: parameter.epicenterCodes,
           earthquakeType: parameter.earthquakeType,
           originTimeGte: parameter.originTimeGte,
@@ -184,24 +207,27 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
 
     state = await state.guardPlus(() async {
+      final startedAt = _mutationSequence;
       final result = await _fetch(
         parameter: parameter,
         limit: 50,
         cursor: currentState.nextToken,
       );
-      final mergedItems = <EarthquakePartial>[
-        ...currentState.items,
-        ...result.items,
-      ].sorted((a, b) => b.earthquake.eventId.compareTo(a.earthquake.eventId));
-      return .new(items: mergedItems, nextToken: result.nextToken);
+      final merged = PaginatedResponse(
+        items: <EarthquakePartial>[...currentState.items, ...result.items],
+        nextToken: result.nextToken,
+      );
+      return _reconcileMutations(
+        merged,
+        afterSequence: startedAt,
+        allowAbsentUpsert: false,
+      );
     });
   }
 
   void _upsertItems(List<EarthquakePartial> newItems) {
     final value = state.value;
-    if (value == null ||
-        parameter.sortBy != .eventId ||
-        parameter.sortOrder != .desc) {
+    if (value == null) {
       return;
     }
     var items = [...value.items];
@@ -211,16 +237,162 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       );
       final index = rawIndex == -1 ? null : rawIndex;
       if (index == null) {
+        if (parameter.sortBy != .eventId) {
+          continue;
+        }
         items.add(item);
       } else {
         items[index] = item;
       }
     }
-    items.sort((a, b) => b.earthquake.eventId.compareTo(a.earthquake.eventId));
+    if (parameter.sortBy == .eventId) {
+      final descending = parameter.sortOrder == .desc;
+      items.sort(
+        (a, b) => descending
+            ? b.earthquake.eventId.compareTo(a.earthquake.eventId)
+            : a.earthquake.eventId.compareTo(b.earthquake.eventId),
+      );
+    }
     state = AsyncData(
       PaginatedResponse(items: items, nextToken: value.nextToken),
     );
   }
+
+  void applyRealtimeRecord(api.Earthquake record) {
+    _mutations.add(
+      _NotifierRealtimeUpsert(sequence: ++_mutationSequence, record: record),
+    );
+    final repository = _repository;
+    final value = state.value;
+    if (value == null || repository == null) {
+      return;
+    }
+    final previous = value.items
+        .where((item) => item.earthquake.eventId == record.eventId)
+        .firstOrNull;
+    final decision = EarthquakeRealtimeListReconciler(
+      parameter: parameter,
+      repository: repository,
+    ).decide(record: record, previous: previous);
+    switch (decision) {
+      case EarthquakeRealtimeListUpsert(:final item):
+        _upsertItems([item]);
+      case EarthquakeRealtimeListRemove():
+        _removeItem(record.eventId);
+      case EarthquakeRealtimeListPreserve():
+        return;
+    }
+  }
+
+  void applyRealtimeDelete(String eventId) {
+    _mutations.add(
+      _NotifierRealtimeDelete(sequence: ++_mutationSequence, eventId: eventId),
+    );
+    _removeItem(eventId);
+  }
+
+  void _removeItem(String eventId) {
+    final value = state.value;
+    if (value == null) {
+      return;
+    }
+    state = AsyncData(
+      PaginatedResponse(
+        items: value.items
+            .where((item) => item.earthquake.eventId != eventId)
+            .toList(),
+        nextToken: value.nextToken,
+      ),
+    );
+  }
+
+  PaginatedResponse<EarthquakePartial> _reconcileMutations(
+    PaginatedResponse<EarthquakePartial> page, {
+    required int afterSequence,
+    bool allowAbsentUpsert = true,
+  }) {
+    final repository = _repository;
+    if (repository == null) {
+      return page;
+    }
+    final items = [...page.items];
+    final reconciler = EarthquakeRealtimeListReconciler(
+      parameter: parameter,
+      repository: repository,
+    );
+    for (final mutation in _mutations.where(
+      (mutation) => mutation.sequence > afterSequence,
+    )) {
+      final index = items.indexWhere(
+        (item) => item.earthquake.eventId == mutation.eventId,
+      );
+      switch (mutation) {
+        case _NotifierRealtimeDelete():
+          if (index != -1) {
+            items.removeAt(index);
+          }
+        case _NotifierRealtimeUpsert(:final record):
+          if (index == -1 && !allowAbsentUpsert) {
+            continue;
+          }
+          final decision = reconciler.decide(
+            record: record,
+            previous: index == -1 ? null : items[index],
+          );
+          switch (decision) {
+            case EarthquakeRealtimeListUpsert(:final item):
+              if (index == -1) {
+                items.add(item);
+              } else {
+                items[index] = item;
+              }
+            case EarthquakeRealtimeListRemove():
+              if (index != -1) {
+                items.removeAt(index);
+              }
+            case EarthquakeRealtimeListPreserve():
+              break;
+          }
+      }
+    }
+    if (parameter.sortBy == .eventId) {
+      final descending = parameter.sortOrder == .desc;
+      items.sort(
+        (a, b) => descending
+            ? b.earthquake.eventId.compareTo(a.earthquake.eventId)
+            : a.earthquake.eventId.compareTo(b.earthquake.eventId),
+      );
+    }
+    return PaginatedResponse(items: items, nextToken: page.nextToken);
+  }
+}
+
+sealed class _NotifierRealtimeMutation {
+  const _NotifierRealtimeMutation({required this.sequence});
+
+  final int sequence;
+  String get eventId;
+}
+
+final class _NotifierRealtimeUpsert extends _NotifierRealtimeMutation {
+  const _NotifierRealtimeUpsert({
+    required super.sequence,
+    required this.record,
+  });
+
+  final api.Earthquake record;
+  @override
+  String get eventId => record.eventId;
+}
+
+final class _NotifierRealtimeDelete extends _NotifierRealtimeMutation {
+  const _NotifierRealtimeDelete({
+    required super.sequence,
+    required this.eventId,
+  });
+
+  @override
+  final String eventId;
 }
 
 class EarthquakeParameterHasNotInitializedException implements Exception {}

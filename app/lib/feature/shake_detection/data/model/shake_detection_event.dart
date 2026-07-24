@@ -19,5 +19,8 @@ abstract class ShakeDetectionEvent with _$ShakeDetectionEvent {
     required double maxLng,
     required List<String> changeReasons,
     String? correlatedEewEventId,
+    @Default([]) List<MergedEvents> mergedEvents,
+    @Default([]) List<Points> points,
+    CorrelatedEew? correlatedEew,
   }) = _ShakeDetectionEvent;
 }

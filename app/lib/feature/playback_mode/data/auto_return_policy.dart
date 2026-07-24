@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
-import 'package:eqmonitor/core/realtime/model/realtime_shake_snapshot.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auto_return_policy.g.dart';
@@ -16,11 +16,13 @@ class AutoReturnPolicy {
   /// 揺れ検知 snapshot を復帰トリガーとする。
   bool shouldReturnToRealtime(RealtimeEvent event) => switch (event) {
     RealtimeEewUpsertEvent() => true,
-    RealtimeShakeSnapshotEvent(:final data) => observeShakeSnapshot(data),
+    RealtimeShakeSnapshotEvent(:final record) => observeShakeSnapshot(record),
     _ => false,
   };
 
-  bool observeShakeSnapshot(RealtimeShakeSnapshot snapshot) {
+  bool observeShakeSnapshot(
+    api.RealtimeShakeDetectionSnapshotPayload snapshot,
+  ) {
     final eventIds = snapshot.events.map((event) => event.eventId).toSet();
     final baseline = _shakeBaseline;
     if (baseline == null) {

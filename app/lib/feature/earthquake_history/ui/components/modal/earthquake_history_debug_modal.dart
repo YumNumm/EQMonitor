@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryDebugModal extends ConsumerWidget {
-  const EarthquakeHistoryDebugModal._();
+  const EarthquakeHistoryDebugModal({super.key});
 
   static Future<void> show({required BuildContext context}) =>
       showModalBottomSheet(
         context: context,
         clipBehavior: Clip.antiAlias,
         isScrollControlled: true,
-        builder: (context) => const EarthquakeHistoryDebugModal._(),
+        builder: (context) => const EarthquakeHistoryDebugModal(),
       );
 
   @override
@@ -33,7 +33,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
           AsyncLoading() => const Center(
             child: CircularProgressIndicator.adaptive(),
           ),
-          AsyncError(:final error) => Center(child: Text('Error: $error')),
+          AsyncError() => const Center(child: Text('レイヤー設定を読み込めませんでした')),
           AsyncData(:final value) => ListView(
             controller: scrollController,
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -45,26 +45,45 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                   height: 4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(2),
-                    color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.3),
+                    color: context.designSystem.colorTheme.onSurface.withValues(
+                      alpha: 0.3,
+                    ),
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  children: [
-                    Text(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final usesStackedHeader =
+                        constraints.maxWidth < 480 ||
+                        MediaQuery.textScalerOf(context).scale(1) > 1;
+                    final title = Text(
                       'レイヤーパラメータ (Debug)',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
-                    const Spacer(),
-                    TextButton(
+                    );
+                    final resetButton = TextButton(
                       onPressed: notifier.reset,
-                      child: const Text('リセット'),
-                    ),
-                  ],
+                      child: const Text('レイヤー設定をリセット'),
+                    );
+                    if (usesStackedHeader) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          title,
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: resetButton,
+                          ),
+                        ],
+                      );
+                    }
+                    return Row(
+                      children: [Expanded(child: title), resetButton],
+                    );
+                  },
                 ),
               ),
 
