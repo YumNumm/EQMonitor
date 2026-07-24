@@ -163,6 +163,7 @@ void main() {
 api.Earthquake _earthquake() => api.Earthquake(
   eventId: '20260501090000',
   status: api.TelegramStatus.normal,
+  earthquakeType: api.EarthquakeType.normal,
   originTimePrecision: api.OriginTimePrecision.second,
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
   telegrams: [

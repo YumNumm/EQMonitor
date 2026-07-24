@@ -19,6 +19,10 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
             'status',
             (v) => $enumDecode(_$TelegramStatusEnumMap, v),
           ),
+          earthquakeType: $checkedConvert(
+            'earthquake_type',
+            (v) => $enumDecode(_$EarthquakeTypeEnumMap, v),
+          ),
           originTimePrecision: $checkedConvert(
             'origin_time_precision',
             (v) => $enumDecode(_$OriginTimePrecisionEnumMap, v),
@@ -34,10 +38,6 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
             (v) => (v as List<dynamic>)
                 .map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
                 .toList(),
-          ),
-          earthquakeType: $checkedConvert(
-            'earthquake_type',
-            (v) => $enumDecode(_$EarthquakeTypeEnumMap, v),
           ),
           originTime: $checkedConvert(
             'origin_time',
@@ -68,9 +68,9 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
       },
       fieldKeyMap: const {
         'eventId': 'event_id',
+        'earthquakeType': 'earthquake_type',
         'originTimePrecision': 'origin_time_precision',
         'telegramTypes': 'telegram_types',
-        'earthquakeType': 'earthquake_type',
         'originTime': 'origin_time',
         'arrivalTime': 'arrival_time',
         'estimatedIntensityTile': 'estimated_intensity_tile',
@@ -81,10 +81,10 @@ Map<String, dynamic> _$EarthquakePartialToJson(_EarthquakePartial instance) =>
     <String, dynamic>{
       'event_id': instance.eventId,
       'status': instance.status,
+      'earthquake_type': instance.earthquakeType,
       'origin_time_precision': instance.originTimePrecision,
       'datasources': instance.datasources,
       'telegram_types': instance.telegramTypes,
-      'earthquake_type': instance.earthquakeType,
       'origin_time': ?instance.originTime?.toIso8601String(),
       'arrival_time': ?instance.arrivalTime?.toIso8601String(),
       'hypocenter': ?instance.hypocenter,
@@ -96,6 +96,12 @@ const _$TelegramStatusEnumMap = {
   TelegramStatus.normal: 'NORMAL',
   TelegramStatus.training: 'TRAINING',
   TelegramStatus.test: 'TEST',
+};
+
+const _$EarthquakeTypeEnumMap = {
+  EarthquakeType.normal: 'NORMAL',
+  EarthquakeType.distant: 'DISTANT',
+  EarthquakeType.volcano: 'VOLCANO',
 };
 
 const _$OriginTimePrecisionEnumMap = {
@@ -121,10 +127,4 @@ const _$EarthquakeTelegramTypeEnumMap = {
   EarthquakeTelegramType.vxse62: 'VXSE62',
   EarthquakeTelegramType.vxse45Forecast: 'VXSE45_FORECAST',
   EarthquakeTelegramType.vxse45Warning: 'VXSE45_WARNING',
-};
-
-const _$EarthquakeTypeEnumMap = {
-  EarthquakeType.normal: 'NORMAL',
-  EarthquakeType.distant: 'DISTANT',
-  EarthquakeType.volcano: 'VOLCANO',
 };

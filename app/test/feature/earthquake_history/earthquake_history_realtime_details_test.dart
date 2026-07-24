@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cache/cache.dart';
-import 'package:core/core.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
@@ -11,6 +10,9 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
@@ -87,6 +89,18 @@ final class _CompletingRepository extends EarthquakeHistoryRepository {
 }
 
 void main() {
+  test('detail API converterはearthquake typeとtelegram metadataを保持する', () {
+    final result = _domainEarthquake(eventId: 'event-1', comment: 'detail');
+
+    expect(result.earthquakeType, EarthquakeType.distant);
+    expect(result.telegramMetadata, [
+      EarthquakeTelegramMetadata(
+        type: EarthquakeTelegramType.vxse53,
+        reportedAt: DateTime.utc(2026, 5, 1, 9),
+      ),
+    ]);
+  });
+
   test('matching full earthquakeで詳細stateをRESTなしに置換すること', () async {
     final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
     addTearDown(controller.close);
@@ -674,6 +688,7 @@ api.Earthquake _earthquake({
 }) => api.Earthquake(
   eventId: eventId,
   status: api.TelegramStatus.normal,
+  earthquakeType: api.EarthquakeType.distant,
   originTimePrecision: api.OriginTimePrecision.second,
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
   telegrams: [

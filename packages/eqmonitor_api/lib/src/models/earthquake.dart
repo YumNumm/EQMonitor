@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'catalog.dart';
 import 'earthquake_datasource.dart';
 import 'earthquake_telegram.dart';
+import 'earthquake_type.dart';
 import 'hypocenter.dart';
 import 'intensity.dart';
 import 'origin_time_precision.dart';
@@ -22,6 +23,8 @@ abstract class Earthquake with _$Earthquake {
     @JsonKey(name: 'event_id')
     required String eventId,
     required TelegramStatus status,
+    @JsonKey(name: 'earthquake_type')
+    required EarthquakeType earthquakeType,
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
 

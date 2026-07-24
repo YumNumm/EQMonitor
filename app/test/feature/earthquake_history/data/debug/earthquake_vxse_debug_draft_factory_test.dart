@@ -14,6 +14,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypoc
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
@@ -48,6 +49,22 @@ void main() {
             ?.single
             .prefecture,
       ]);
+    });
+
+    test('reportedAtはcommentではなく選択typeのtelegram metadataを使う', () {
+      final draft = factory.create(
+        current: current.copyWith(
+          telegramMetadata: [
+            EarthquakeTelegramMetadata(
+              type: EarthquakeTelegramType.vxse53,
+              reportedAt: DateTime.utc(2026, 7, 24, 9),
+            ),
+          ],
+        ),
+        type: EarthquakeTelegramType.vxse53,
+      );
+
+      expect(draft.reportedAt, DateTime.utc(2026, 7, 24, 9));
     });
 
     test('VXSE52は現在の震源を使う', () {

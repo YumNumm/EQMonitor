@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
@@ -106,7 +106,10 @@ class EarthquakeVxseDebugDraftFactory {
     final comments = current.telegramComments
         .where((comment) => comment.type == type)
         .toList();
-    final reportedAt = latestReportedAt(comments: comments);
+    final reportedAt = latestEarthquakeTelegramReportedAt(
+      metadata: current.telegramMetadata,
+      type: type,
+    );
     final hypocenter =
         current.hypocenter ?? earthquakeVxseDebugSampleHypocenter;
     final intensity = current.intensity;
@@ -188,13 +191,20 @@ class EarthquakeVxseDebugDraftFactory {
   }
 }
 
-DateTime latestReportedAt({required List<EarthquakeTelegramComment> comments}) {
-  if (comments.isEmpty) {
+DateTime latestEarthquakeTelegramReportedAt({
+  required List<EarthquakeTelegramMetadata> metadata,
+  required EarthquakeTelegramType type,
+}) {
+  final reportedAt = metadata
+      .where((entry) => entry.type == type)
+      .map((entry) => entry.reportedAt)
+      .toList();
+  if (reportedAt.isEmpty) {
     return earthquakeVxseDebugSampleReportedAt;
   }
-  return comments
-      .map((comment) => comment.reportedAt)
-      .reduce((latest, next) => next.isAfter(latest) ? next : latest);
+  return reportedAt.reduce(
+    (latest, next) => next.isAfter(latest) ? next : latest,
+  );
 }
 
 Map<JmaIntensity, List<IntensityRegion>> intensityRegionsOrSample({

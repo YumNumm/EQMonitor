@@ -2,6 +2,7 @@
   "earthquake": {
     "event_id": "20251215120000",
     "status": "NORMAL",
+    "earthquake_type": "DISTANT",
     "origin_time": "2023-11-14T20:13:20.000Z",
     "origin_time_precision": "SECOND",
     "hypocenter": {

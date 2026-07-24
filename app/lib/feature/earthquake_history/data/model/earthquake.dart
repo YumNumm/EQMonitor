@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
@@ -24,6 +25,7 @@ abstract class Earthquake with _$Earthquake {
     required DateTime? arrivalTime,
     required List<EarthquakeDataSource> dataSources,
     required List<EarthquakeTelegramType> telegramTypes,
+    @Default([]) List<EarthquakeTelegramMetadata> telegramMetadata,
 
     /// 電文コメント（固定付加文・自由付加文）
     @Default([]) List<EarthquakeTelegramComment> telegramComments,
@@ -56,6 +58,18 @@ extension EarthquakeApiExtension on api.Earthquake {
         .map((e) => e.telegram.type.toEarthquakeTelegramTypeOrNull)
         .whereType<EarthquakeTelegramType>()
         .toList(),
+    telegramMetadata: telegrams
+        .map((entry) {
+          final type = entry.telegram.type.toEarthquakeTelegramTypeOrNull;
+          return type == null
+              ? null
+              : EarthquakeTelegramMetadata(
+                  type: type,
+                  reportedAt: entry.telegram.reportedAt,
+                );
+        })
+        .whereType<EarthquakeTelegramMetadata>()
+        .toList(),
     telegramComments: extractTelegramComments(telegrams),
     hypocenter: hypocenter?.toEarthquakeHypocenter,
     estimatedIntensityTileUrl: estimatedIntensityTile,
@@ -64,6 +78,6 @@ extension EarthquakeApiExtension on api.Earthquake {
       parameter: parameter,
       shindoDbStations: shindoDbStations,
     ),
-    earthquakeType: null,
+    earthquakeType: earthquakeType.toEarthquakeType,
   );
 }
