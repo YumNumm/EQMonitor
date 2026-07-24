@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/provider/cached_notifier.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_debug_override_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,9 +15,18 @@ class EarthquakeHistoryDetailsNotifier
     with CachedNotifier<Earthquake> {
   api.Earthquake? _pendingRealtimeRecord;
   EarthquakeHistoryRepository? _repository;
+  Earthquake? _baseEarthquake;
 
   @override
   Future<Earthquake> build(String eventId) async {
+    ref.listen(earthquakeDebugOverrideProvider(eventId), (_, override) {
+      final base = _baseEarthquake;
+      if (override != null) {
+        state = AsyncData(override);
+      } else if (base != null) {
+        state = AsyncData(base);
+      }
+    });
     ref.listen(realtimeEventsProvider, (_, next) {
       if (next case AsyncData(
         value: RealtimeEarthquakeUpsertEvent(:final record),
@@ -25,12 +35,14 @@ class EarthquakeHistoryDetailsNotifier
         _pendingRealtimeRecord = record;
         final repository = _repository;
         if (repository != null) {
-          state = AsyncData(
-            earthquakeFromRealtimeRecord(
-              record: record,
-              repository: repository,
-            ),
+          final base = earthquakeFromRealtimeRecord(
+            record: record,
+            repository: repository,
           );
+          _baseEarthquake = base;
+          if (ref.read(earthquakeDebugOverrideProvider(eventId)) == null) {
+            state = AsyncData(base);
+          }
         }
       }
     });
@@ -41,12 +53,13 @@ class EarthquakeHistoryDetailsNotifier
     _repository = repository;
     final pendingRecord = _pendingRealtimeRecord;
     if (pendingRecord != null) {
-      state = AsyncData(
-        earthquakeFromRealtimeRecord(
-          record: pendingRecord,
-          repository: repository,
-        ),
+      final base = earthquakeFromRealtimeRecord(
+        record: pendingRecord,
+        repository: repository,
       );
+      _baseEarthquake = base;
+      final override = ref.read(earthquakeDebugOverrideProvider(eventId));
+      state = AsyncData(override ?? base);
     }
     return cachedBuild(operation: operation);
   }
@@ -59,28 +72,35 @@ class EarthquakeHistoryDetailsNotifier
   }) {
     final record = _pendingRealtimeRecord;
     final repository = _repository;
+    late final Earthquake base;
     if (source == CachedResultSource.cache) {
       if (record == null || repository == null) {
-        return value;
+        base = value;
+      } else {
+        base = earthquakeFromRealtimeRecord(
+          record: record,
+          repository: repository,
+        );
       }
-      return earthquakeFromRealtimeRecord(
+    } else if (isCachedOperationCurrent(operation)) {
+      _pendingRealtimeRecord = null;
+      base = value;
+    } else if (record == null || repository == null) {
+      base = value;
+    } else {
+      base = earthquakeFromRealtimeRecord(
         record: record,
         repository: repository,
       );
     }
-    if (isCachedOperationCurrent(operation)) {
-      _pendingRealtimeRecord = null;
-      return value;
-    }
-    if (record == null || repository == null) {
-      return value;
-    }
-    return earthquakeFromRealtimeRecord(record: record, repository: repository);
+    _baseEarthquake = base;
+    return ref.read(earthquakeDebugOverrideProvider(eventId)) ?? base;
   }
 
   @override
   bool preserveValueOnBackgroundError(CachedOperationToken operation) =>
-      _pendingRealtimeRecord != null;
+      _pendingRealtimeRecord != null ||
+      ref.read(earthquakeDebugOverrideProvider(eventId)) != null;
 
   @override
   Future<Earthquake> fetch(api.ApiClient client) async {
