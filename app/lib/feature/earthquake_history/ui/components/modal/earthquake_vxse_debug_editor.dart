@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
@@ -20,18 +22,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-String _withSemanticIdentity(String prefix, String identity) {
-  final occurrenceSeparator = prefix.lastIndexOf('.');
-  final identitySeparator = prefix.lastIndexOf('.', occurrenceSeparator - 1);
-  return '${prefix.substring(0, identitySeparator + 1)}$identity'
-      '${prefix.substring(occurrenceSeparator)}';
-}
+String _semanticComponent(Object value) =>
+    base64Url.encode(utf8.encode(value.toString())).replaceAll('=', '');
 
-String _withSemanticBucket(String prefix, String bucket) {
-  final surfaceSeparator = prefix.indexOf('.');
-  final bucketSeparator = prefix.indexOf('.', surfaceSeparator + 1);
-  return '${prefix.substring(0, surfaceSeparator + 1)}$bucket'
-      '${prefix.substring(bucketSeparator)}';
+String _semanticPrefix(String surface, List<Object> components) =>
+    [surface, ...components.map(_semanticComponent)].join('.');
+
+String _prePeriodPrefix({
+  required String stationPrefix,
+  required double band,
+  required int occurrence,
+}) => '$stationPrefix.${_semanticPrefix('prePeriod', [band, occurrence])}';
+
+String _withSemanticComponent({
+  required String prefix,
+  required int segmentIndex,
+  required Object value,
+}) {
+  final components = prefix.split('.');
+  components[segmentIndex] = _semanticComponent(value);
+  return components.join('.');
 }
 
 class EarthquakeVxseDebugEditor extends HookConsumerWidget {
@@ -629,9 +639,17 @@ class _SeismicIntensityFields extends StatelessWidget {
               for (final (index, region) in entry.value.indexed)
                 _OrdinaryRegionRow(
                   notifier: notifier,
-                  fieldPrefix:
-                      'ordinaryRegion.${entry.key.name}.${region.region.code}.'
-                      '${entry.value.take(index).where((candidate) => candidate.region.code == region.region.code).length}',
+                  fieldPrefix: _semanticPrefix('ordinaryRegion', [
+                    entry.key.name,
+                    region.region.code,
+                    entry.value
+                        .take(index)
+                        .where(
+                          (candidate) =>
+                              candidate.region.code == region.region.code,
+                        )
+                        .length,
+                  ]),
                   level: entry.key,
                   region: region,
                   onChanged: (updated) => notifier.setRegions(
@@ -736,9 +754,17 @@ class _Vxse51PrefectureFields extends StatelessWidget {
         for (final (index, prefecture) in entry.value.indexed)
           _OrdinaryPrefectureRow(
             notifier: notifier,
-            fieldPrefix:
-                'vxse51Prefecture.${entry.key.name}.${prefecture.prefecture.code}.'
-                '${entry.value.take(index).where((candidate) => candidate.prefecture.code == prefecture.prefecture.code).length}',
+            fieldPrefix: _semanticPrefix('vxse51Prefecture', [
+              entry.key.name,
+              prefecture.prefecture.code,
+              entry.value
+                  .take(index)
+                  .where(
+                    (candidate) =>
+                        candidate.prefecture.code == prefecture.prefecture.code,
+                  )
+                  .length,
+            ]),
             level: entry.key,
             prefecture: prefecture,
             onChanged: (updated) => notifier.setPrefectures(
@@ -830,9 +856,18 @@ class _OrdinaryTreeFields extends StatelessWidget {
         for (final (prefectureIndex, prefecture) in entry.value.indexed) ...[
           _OrdinaryPrefectureRow(
             notifier: notifier,
-            fieldPrefix:
-                'ordinaryPrefecture.${entry.key.name}.${prefecture.prefecture.prefecture.code}.'
-                '${entry.value.take(prefectureIndex).where((candidate) => candidate.prefecture.prefecture.code == prefecture.prefecture.prefecture.code).length}',
+            fieldPrefix: _semanticPrefix('ordinaryPrefecture', [
+              entry.key.name,
+              prefecture.prefecture.prefecture.code,
+              entry.value
+                  .take(prefectureIndex)
+                  .where(
+                    (candidate) =>
+                        candidate.prefecture.prefecture.code ==
+                        prefecture.prefecture.prefecture.code,
+                  )
+                  .length,
+            ]),
             level: entry.key,
             prefecture: prefecture.prefecture,
             onChanged: (updated) => notifier.setIntensityTree(
@@ -872,9 +907,17 @@ class _OrdinaryTreeFields extends StatelessWidget {
             if (ownsCities)
               _OrdinaryCityRow(
                 notifier: notifier,
-                fieldPrefix:
-                    'ordinaryCity.${entry.key.name}.${prefecture.prefecture.prefecture.code}.${city.city.code}.'
-                    '${prefecture.cities.take(cityIndex).where((candidate) => candidate.city.code == city.city.code).length}',
+                fieldPrefix: _semanticPrefix('ordinaryCity', [
+                  entry.key.name,
+                  prefecture.prefecture.prefecture.code,
+                  city.city.code,
+                  prefecture.cities
+                      .take(cityIndex)
+                      .where(
+                        (candidate) => candidate.city.code == city.city.code,
+                      )
+                      .length,
+                ]),
                 city: city,
                 onChanged: (updated) => notifier.setIntensityTree({
                   for (final currentEntry in tree.entries)
@@ -917,9 +960,19 @@ class _OrdinaryTreeFields extends StatelessWidget {
             for (final (stationIndex, station) in city.stations.indexed)
               _OrdinaryStationRow(
                 notifier: notifier,
-                fieldPrefix:
-                    'ordinaryStation.${entry.key.name}.${prefecture.prefecture.prefecture.code}.${city.city.code}.${station.station.code}.'
-                    '${city.stations.take(stationIndex).where((candidate) => candidate.station.code == station.station.code).length}',
+                fieldPrefix: _semanticPrefix('ordinaryStation', [
+                  entry.key.name,
+                  prefecture.prefecture.prefecture.code,
+                  city.city.code,
+                  station.station.code,
+                  city.stations
+                      .take(stationIndex)
+                      .where(
+                        (candidate) =>
+                            candidate.station.code == station.station.code,
+                      )
+                      .length,
+                ]),
                 ownsStationDetails: ownsStationDetails,
                 station: station,
                 onChanged: (updated) => notifier.setIntensityTree({
@@ -991,9 +1044,17 @@ class _OrdinaryTreeFields extends StatelessWidget {
             if (!ownsCities)
               _StationParentCityLocator(
                 notifier: notifier,
-                fieldPrefix:
-                    'ordinaryParentCity.${entry.key.name}.${prefecture.prefecture.prefecture.code}.${city.city.code}.'
-                    '${prefecture.cities.take(cityIndex).where((candidate) => candidate.city.code == city.city.code).length}',
+                fieldPrefix: _semanticPrefix('ordinaryParentCity', [
+                  entry.key.name,
+                  prefecture.prefecture.prefecture.code,
+                  city.city.code,
+                  prefecture.cities
+                      .take(cityIndex)
+                      .where(
+                        (candidate) => candidate.city.code == city.city.code,
+                      )
+                      .length,
+                ]),
                 currentCode: city.city.code,
                 currentName: city.city.name.ja,
                 onCodeChanged: (value) => notifier.setVxse62StationParentCity(
@@ -1177,9 +1238,17 @@ class _LpgmFields extends StatelessWidget {
             for (final (index, region) in entry.value.indexed)
               _LpgmRegionRow(
                 notifier: notifier,
-                fieldPrefix:
-                    'lpgmRegion.${entry.key.name}.${region.region.code}.'
-                    '${entry.value.take(index).where((candidate) => candidate.region.code == region.region.code).length}',
+                fieldPrefix: _semanticPrefix('lpgmRegion', [
+                  entry.key.name,
+                  region.region.code,
+                  entry.value
+                      .take(index)
+                      .where(
+                        (candidate) =>
+                            candidate.region.code == region.region.code,
+                      )
+                      .length,
+                ]),
                 level: entry.key,
                 region: region,
                 onChanged: (updated) => notifier.setLpgmRegions(
@@ -1247,9 +1316,17 @@ class _LpgmFields extends StatelessWidget {
                 in entry.value.indexed) ...[
               _LpgmPrefectureRow(
                 notifier: notifier,
-                fieldPrefix:
-                    'lpgmPrefecture.${entry.key.name}.${prefecture.region.code}.'
-                    '${entry.value.take(prefectureIndex).where((candidate) => candidate.region.code == prefecture.region.code).length}',
+                fieldPrefix: _semanticPrefix('lpgmPrefecture', [
+                  entry.key.name,
+                  prefecture.region.code,
+                  entry.value
+                      .take(prefectureIndex)
+                      .where(
+                        (candidate) =>
+                            candidate.region.code == prefecture.region.code,
+                      )
+                      .length,
+                ]),
                 level: entry.key,
                 prefecture: prefecture,
                 onChanged: (updated) => notifier.setLpgmIntensityTree(
@@ -1290,9 +1367,17 @@ class _LpgmFields extends StatelessWidget {
               for (final (cityIndex, city) in prefecture.cities.indexed) ...[
                 _StationParentCityLocator(
                   notifier: notifier,
-                  fieldPrefix:
-                      'lpgmParentCity.${entry.key.name}.${prefecture.region.code}.${city.city.code}.'
-                      '${prefecture.cities.take(cityIndex).where((candidate) => candidate.city.code == city.city.code).length}',
+                  fieldPrefix: _semanticPrefix('lpgmParentCity', [
+                    entry.key.name,
+                    prefecture.region.code,
+                    city.city.code,
+                    prefecture.cities
+                        .take(cityIndex)
+                        .where(
+                          (candidate) => candidate.city.code == city.city.code,
+                        )
+                        .length,
+                  ]),
                   currentCode: city.city.code,
                   currentName: city.city.name.ja,
                   onCodeChanged: (value) => notifier.setVxse62StationParentCity(
@@ -1309,9 +1394,19 @@ class _LpgmFields extends StatelessWidget {
                 for (final (stationIndex, station) in city.stations.indexed)
                   _LpgmStationRow(
                     notifier: notifier,
-                    fieldPrefix:
-                        'lpgmStation.${entry.key.name}.${prefecture.region.code}.${city.city.code}.${station.station.code}.'
-                        '${city.stations.take(stationIndex).where((candidate) => candidate.station.code == station.station.code).length}',
+                    fieldPrefix: _semanticPrefix('lpgmStation', [
+                      entry.key.name,
+                      prefecture.region.code,
+                      city.city.code,
+                      station.station.code,
+                      city.stations
+                          .take(stationIndex)
+                          .where(
+                            (candidate) =>
+                                candidate.station.code == station.station.code,
+                          )
+                          .length,
+                    ]),
                     station: station,
                     onChanged: (updated) => notifier.setLpgmIntensityTree({
                       for (final currentEntry
@@ -1504,9 +1599,18 @@ class _CommentsFields extends StatelessWidget {
           Text('コメント', style: Theme.of(context).textTheme.titleMedium),
           for (final (index, comment) in draft.comments.indexed)
             _CommentRow(
-              fieldPrefix:
-                  'comment.${selectedType.name}.${comment.reportedAt.toIso8601String()}.'
-                  '${draft.comments.take(index).where((candidate) => candidate.type == comment.type && candidate.reportedAt == comment.reportedAt).length}',
+              fieldPrefix: _semanticPrefix('comment', [
+                selectedType.name,
+                comment.reportedAt.toIso8601String(),
+                draft.comments
+                    .take(index)
+                    .where(
+                      (candidate) =>
+                          candidate.type == comment.type &&
+                          candidate.reportedAt == comment.reportedAt,
+                    )
+                    .length,
+              ]),
               comment: comment,
               notifier: notifier,
               onChanged: (updated) => notifier.setComments([
@@ -1630,7 +1734,11 @@ class _OrdinaryRegionRow extends StatelessWidget {
                 onValidChanged: (value) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticIdentity(fieldPrefix, value),
+                    to: _withSemanticComponent(
+                      prefix: fieldPrefix,
+                      segmentIndex: 2,
+                      value: value,
+                    ),
                   );
                   onChanged(
                     region.copyWith(
@@ -1673,7 +1781,11 @@ class _OrdinaryRegionRow extends StatelessWidget {
                   if (value != level) {
                     notifier.migrateTypedInputPrefix(
                       from: fieldPrefix,
-                      to: _withSemanticBucket(fieldPrefix, value.name),
+                      to: _withSemanticComponent(
+                        prefix: fieldPrefix,
+                        segmentIndex: 1,
+                        value: value.name,
+                      ),
                     );
                   }
                   onChanged(region.copyWith(maxIntensity: value));
@@ -1736,7 +1848,11 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
                 onValidChanged: (value) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticIdentity(fieldPrefix, value),
+                    to: _withSemanticComponent(
+                      prefix: fieldPrefix,
+                      segmentIndex: 2,
+                      value: value,
+                    ),
                   );
                   onChanged(
                     prefecture.copyWith(
@@ -1778,9 +1894,10 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
                 if (value != level) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticBucket(
-                      fieldPrefix,
-                      value?.name ?? level.name,
+                    to: _withSemanticComponent(
+                      prefix: fieldPrefix,
+                      segmentIndex: 1,
+                      value: value?.name ?? level.name,
                     ),
                   );
                 }
@@ -1843,7 +1960,11 @@ class _OrdinaryCityRow extends StatelessWidget {
                   onValidChanged: (value) {
                     notifier.migrateTypedInputPrefix(
                       from: fieldPrefix,
-                      to: _withSemanticIdentity(fieldPrefix, value),
+                      to: _withSemanticComponent(
+                        prefix: fieldPrefix,
+                        segmentIndex: 3,
+                        value: value,
+                      ),
                     );
                     onChanged(
                       city.copyWith(city: city.city.copyWith(code: value)),
@@ -1939,7 +2060,11 @@ class _StationParentCityLocator extends StatelessWidget {
                   onValidChanged: (value) {
                     notifier.migrateTypedInputPrefix(
                       from: fieldPrefix,
-                      to: _withSemanticIdentity(fieldPrefix, value),
+                      to: _withSemanticComponent(
+                        prefix: fieldPrefix,
+                        segmentIndex: 3,
+                        value: value,
+                      ),
                     );
                     onCodeChanged(value);
                   },
@@ -2009,7 +2134,11 @@ class _OrdinaryStationRow extends StatelessWidget {
                     onValidChanged: (value) {
                       notifier.migrateTypedInputPrefix(
                         from: fieldPrefix,
-                        to: _withSemanticIdentity(fieldPrefix, value),
+                        to: _withSemanticComponent(
+                          prefix: fieldPrefix,
+                          segmentIndex: 4,
+                          value: value,
+                        ),
                       );
                       onChanged(
                         station.copyWith(
@@ -2121,7 +2250,11 @@ class _LpgmRegionRow extends StatelessWidget {
                 onValidChanged: (value) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticIdentity(fieldPrefix, value),
+                    to: _withSemanticComponent(
+                      prefix: fieldPrefix,
+                      segmentIndex: 2,
+                      value: value,
+                    ),
                   );
                   onChanged(
                     region.copyWith(
@@ -2163,9 +2296,10 @@ class _LpgmRegionRow extends StatelessWidget {
                 if (value != level) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticBucket(
-                      fieldPrefix,
-                      value?.name ?? level.name,
+                    to: _withSemanticComponent(
+                      prefix: fieldPrefix,
+                      segmentIndex: 1,
+                      value: value?.name ?? level.name,
                     ),
                   );
                 }
@@ -2228,7 +2362,11 @@ class _LpgmPrefectureRow extends StatelessWidget {
                 onValidChanged: (value) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticIdentity(fieldPrefix, value),
+                    to: _withSemanticComponent(
+                      prefix: fieldPrefix,
+                      segmentIndex: 2,
+                      value: value,
+                    ),
                   );
                   onChanged(
                     prefecture.copyWith(
@@ -2254,7 +2392,11 @@ class _LpgmPrefectureRow extends StatelessWidget {
                   if (value != level) {
                     notifier.migrateTypedInputPrefix(
                       from: fieldPrefix,
-                      to: _withSemanticBucket(fieldPrefix, value.name),
+                      to: _withSemanticComponent(
+                        prefix: fieldPrefix,
+                        segmentIndex: 1,
+                        value: value.name,
+                      ),
                     );
                   }
                   onChanged(prefecture.copyWith(maxLpgmIntensity: value));
@@ -2337,7 +2479,11 @@ class _LpgmStationRow extends StatelessWidget {
                     onValidChanged: (value) {
                       notifier.migrateTypedInputPrefix(
                         from: fieldPrefix,
-                        to: _withSemanticIdentity(fieldPrefix, value),
+                        to: _withSemanticComponent(
+                          prefix: fieldPrefix,
+                          segmentIndex: 4,
+                          value: value,
+                        ),
                       );
                       onChanged(
                         station.copyWith(
@@ -2447,8 +2593,14 @@ class _StationDetailsFields extends StatelessWidget {
             in (intensity.prePeriods ?? const []).indexed)
           Card.outlined(
             key: ValueKey(
-              '$fieldPrefix.prePeriod.${prePeriod.band}.'
-              '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}',
+              _prePeriodPrefix(
+                stationPrefix: fieldPrefix,
+                band: prePeriod.band,
+                occurrence: (intensity.prePeriods ?? const [])
+                    .take(index)
+                    .where((candidate) => candidate.band == prePeriod.band)
+                    .length,
+              ),
             ),
             child: Padding(
               key: const Key('pre-period-row'),
@@ -2463,8 +2615,7 @@ class _StationDetailsFields extends StatelessWidget {
                     child: _ControlledTextFormField(
                       fieldKey: const Key('pre-period-band'),
                       fieldId:
-                          '$fieldPrefix.prePeriod.${prePeriod.band}.'
-                          '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}.band',
+                          '${_prePeriodPrefix(stationPrefix: fieldPrefix, band: prePeriod.band, occurrence: (intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length)}.band',
                       value: prePeriod.band.toString(),
                       label: '周期帯',
                       notifier: notifier,
@@ -2472,14 +2623,23 @@ class _StationDetailsFields extends StatelessWidget {
                       validation: (value) =>
                           double.tryParse(value) == null ? '数値を入力してください' : null,
                       onValidChanged: (value) {
-                        final prefix =
-                            '$fieldPrefix.prePeriod.${prePeriod.band}.'
-                            '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}';
+                        final prefix = _prePeriodPrefix(
+                          stationPrefix: fieldPrefix,
+                          band: prePeriod.band,
+                          occurrence: (intensity.prePeriods ?? const [])
+                              .take(index)
+                              .where(
+                                (candidate) => candidate.band == prePeriod.band,
+                              )
+                              .length,
+                        );
                         notifier.migrateTypedInputPrefix(
                           from: prefix,
-                          to:
-                              '$fieldPrefix.prePeriod.$value'
-                              '${prefix.substring(prefix.lastIndexOf('.'))}',
+                          to: _withSemanticComponent(
+                            prefix: prefix,
+                            segmentIndex: 7,
+                            value: double.parse(value),
+                          ),
                         );
                         onChanged(
                           intensity.copyWith(
@@ -2533,8 +2693,7 @@ class _StationDetailsFields extends StatelessWidget {
                     child: _ControlledTextFormField(
                       fieldKey: const Key('pre-period-sva'),
                       fieldId:
-                          '$fieldPrefix.prePeriod.${prePeriod.band}.'
-                          '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}.sva',
+                          '${_prePeriodPrefix(stationPrefix: fieldPrefix, band: prePeriod.band, occurrence: (intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length)}.sva',
                       value: prePeriod.sva.toString(),
                       label: 'SVA',
                       notifier: notifier,
@@ -2559,8 +2718,16 @@ class _StationDetailsFields extends StatelessWidget {
                     tooltip: '周期帯を削除',
                     onPressed: () {
                       notifier.pruneTypedInputPrefix(
-                        '$fieldPrefix.prePeriod.${prePeriod.band}.'
-                        '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}',
+                        _prePeriodPrefix(
+                          stationPrefix: fieldPrefix,
+                          band: prePeriod.band,
+                          occurrence: (intensity.prePeriods ?? const [])
+                              .take(index)
+                              .where(
+                                (candidate) => candidate.band == prePeriod.band,
+                              )
+                              .length,
+                        ),
                       );
                       onChanged(
                         intensity.copyWith(
@@ -2637,13 +2804,13 @@ class _CommentRow extends StatelessWidget {
               validation: (value) =>
                   DateTime.tryParse(value) == null ? '日時を入力してください' : null,
               onValidChanged: (value) {
-                final occurrenceSeparator = fieldPrefix.lastIndexOf('.');
                 notifier.migrateTypedInputPrefix(
                   from: fieldPrefix,
-                  to:
-                      'comment.${comment.type.name}.'
-                      '${DateTime.parse(value).toIso8601String()}'
-                      '${fieldPrefix.substring(occurrenceSeparator)}',
+                  to: _withSemanticComponent(
+                    prefix: fieldPrefix,
+                    segmentIndex: 2,
+                    value: DateTime.parse(value).toIso8601String(),
+                  ),
                 );
                 onChanged(comment.copyWith(reportedAt: DateTime.parse(value)));
               },

@@ -489,9 +489,7 @@ void main() {
       final current = _currentEarthquake().copyWith(
         telegramTypes: [surface.type],
       );
-      final overrideProvider = earthquakeDebugOverrideProvider(
-        current.eventId,
-      );
+      final overrideProvider = earthquakeDebugOverrideProvider(current.eventId);
       final overrideSubscription = container.listen(
         overrideProvider,
         (previous, next) {},
@@ -619,6 +617,74 @@ void main() {
           )
           .canApply,
       isFalse,
+    );
+  });
+
+  testWidgets('delimiterとUnicodeを含むstation identityの再編集・削除・追加を分離する', (
+    tester,
+  ) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final current = _currentEarthquake().copyWith(
+      telegramTypes: const [EarthquakeTelegramType.vxse62],
+    );
+    await _pumpEditorWithContainer(
+      tester,
+      container: container,
+      current: current,
+    );
+
+    final stationCodes = find.byKey(const Key('ordinary-station-code'));
+    await _scrollFinderTo(tester, stationCodes);
+    await tester.enterText(stationCodes.first, 'first.part|区.α');
+    await tester.pump();
+    final stationSva = find.descendant(
+      of: find.byKey(const Key('ordinary-station-details')),
+      matching: find.byKey(const Key('station-sva')),
+    );
+    await _scrollFinderTo(tester, stationSva);
+    await tester.enterText(stationSva, 'invalid-delimiter-sva');
+    await tester.pump();
+    await _scrollFinderTo(tester, stationCodes);
+    await tester.enterText(stationCodes.first, 'second.part/区:β');
+    await tester.pump();
+
+    await _scrollFinderTo(tester, stationSva);
+    expect(find.text('invalid-delimiter-sva'), findsOneWidget);
+    expect(find.text('数値を入力してください'), findsOneWidget);
+    final provider = earthquakeVxseDebugEditorControllerProvider(
+      EarthquakeVxseDebugEditorSession(current: current),
+    );
+    expect(container.read(provider).canApply, isFalse);
+
+    await _scrollFinderTo(tester, stationCodes);
+    final row = find.ancestor(
+      of: stationCodes.first,
+      matching: find.byWidgetPredicate(
+        _CollectionSurface.ordinaryStation.isSemanticRow,
+      ),
+    );
+    final remove = find.descendant(
+      of: row,
+      matching: find.byKey(const Key('ordinary-station-remove')),
+    );
+    await _scrollFinderTo(tester, remove);
+    await tester.tap(remove.hitTestable());
+    await tester.pump();
+    expect(container.read(provider).typedInputErrors, isEmpty);
+    expect(container.read(provider).canApply, isTrue);
+
+    final add = find.byKey(const Key('ordinary-station-add'));
+    await _scrollFinderTo(tester, add);
+    await tester.tap(add.hitTestable());
+    await tester.pump();
+    final draft = await _readDraft(tester);
+    expect(
+      _collectionIdentities(
+        surface: _CollectionSurface.ordinaryStation,
+        draft: draft,
+      ),
+      contains(startsWith('debug-station-')),
     );
   });
 
