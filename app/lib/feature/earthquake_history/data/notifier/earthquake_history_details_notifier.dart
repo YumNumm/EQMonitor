@@ -72,15 +72,19 @@ class EarthquakeHistoryDetailsNotifier
   }) {
     final record = _pendingRealtimeRecord;
     final repository = _repository;
+    final override = ref.read(earthquakeDebugOverrideProvider(eventId));
+    final currentBase = _baseEarthquake;
     late final Earthquake base;
     if (source == CachedResultSource.cache) {
-      if (record == null || repository == null) {
-        base = value;
-      } else {
+      if (record != null && repository != null) {
         base = earthquakeFromRealtimeRecord(
           record: record,
           repository: repository,
         );
+      } else if (override != null && currentBase != null) {
+        base = currentBase;
+      } else {
+        base = value;
       }
     } else if (isCachedOperationCurrent(operation)) {
       _pendingRealtimeRecord = null;
@@ -94,7 +98,7 @@ class EarthquakeHistoryDetailsNotifier
       );
     }
     _baseEarthquake = base;
-    return ref.read(earthquakeDebugOverrideProvider(eventId)) ?? base;
+    return override ?? base;
   }
 
   @override

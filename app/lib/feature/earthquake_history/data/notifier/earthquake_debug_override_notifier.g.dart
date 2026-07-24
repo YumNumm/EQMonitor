@@ -63,7 +63,7 @@ final class EarthquakeDebugOverrideNotifierProvider
 }
 
 String _$earthquakeDebugOverrideNotifierHash() =>
-    r'dc2b252d7c5c5a8f42829bee0b96f51cd3313a5e';
+    r'a819453faefa7edf2958e25e9cedcd4892cae564';
 
 final class EarthquakeDebugOverrideNotifierFamily extends $Family
     with

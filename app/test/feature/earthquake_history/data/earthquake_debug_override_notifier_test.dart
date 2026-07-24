@@ -181,12 +181,11 @@ void main() {
       draft: draft,
       mode: EarthquakeVxseApplyMode.merge,
     );
-    fixture.repository.initial = _apiEarthquake(
-      comment: 'new-rest',
-    ).toEarthquake(
-      parameter: _earthquakeParameter,
-      shindoDbStations: _shindoDbStations,
-    );
+    fixture.repository.initial = _apiEarthquake(comment: 'new-rest')
+        .toEarthquake(
+          parameter: _earthquakeParameter,
+          shindoDbStations: _shindoDbStations,
+        );
 
     fixture.container.invalidate(earthquakeHistoryDetailsProvider(_eventId));
     await fixture.container.read(
@@ -199,6 +198,40 @@ void main() {
     expect(_details(fixture.container).hypocenter, isNull);
     expect(_comment(fixture.container), 'new-rest');
     expect(fixture.repository.detailFetchCount, 2);
+  });
+
+  test('override中のstale cacheでbaseを巻き戻さずfresh完了時に更新する', () async {
+    final fixture = await _startFixture();
+    final base = _details(fixture.container);
+    final draft = factory.create(
+      current: base,
+      type: EarthquakeTelegramType.vxse52,
+    );
+    final notifier = fixture.container.read(
+      earthquakeDebugOverrideProvider(_eventId).notifier,
+    );
+    notifier.applyDraft(
+      current: base,
+      draft: draft,
+      mode: EarthquakeVxseApplyMode.merge,
+    );
+    fixture.repository.cacheResult = _domainEarthquake(comment: 'stale-cache');
+    final freshResult = Completer<Earthquake>();
+    fixture.repository.freshResult = freshResult;
+
+    fixture.container.invalidate(earthquakeHistoryDetailsProvider(_eventId));
+    await fixture.container.read(
+      earthquakeHistoryDetailsProvider(_eventId).future,
+    );
+    await _waitFor(() => fixture.repository.detailFetchCount == 2);
+    notifier.reset();
+
+    expect(_comment(fixture.container), 'old-rest');
+
+    freshResult.complete(_domainEarthquake(comment: 'fresh-rest'));
+    await fixture.container.pump();
+
+    expect(_comment(fixture.container), 'fresh-rest');
   });
 }
 
@@ -257,6 +290,19 @@ Earthquake _details(ProviderContainer container) =>
 String? _comment(ProviderContainer container) =>
     _details(container).telegramComments.single.additional;
 
+Earthquake _domainEarthquake({required String comment}) =>
+    _apiEarthquake(comment: comment).toEarthquake(
+      parameter: _earthquakeParameter,
+      shindoDbStations: _shindoDbStations,
+    );
+
+Future<void> _waitFor(bool Function() condition) async {
+  for (var i = 0; i < 20 && !condition(); i += 1) {
+    await Future<void>.delayed(Duration.zero);
+  }
+  expect(condition(), isTrue);
+}
+
 final class _StubRealtimeEvents extends RealtimeEvents {
   _StubRealtimeEvents(this.stream);
 
@@ -277,6 +323,8 @@ final class _SpyRepository extends EarthquakeHistoryRepository {
   Earthquake initial;
   final api.ApiClient cacheClient;
   int detailFetchCount = 0;
+  Earthquake? cacheResult;
+  Completer<Earthquake>? freshResult;
 
   @override
   Future<Earthquake> fetchEarthquakeDetail({
@@ -284,9 +332,17 @@ final class _SpyRepository extends EarthquakeHistoryRepository {
     api.ApiClient? client,
   }) async {
     if (identical(client, cacheClient)) {
+      final cached = cacheResult;
+      if (cached != null) {
+        return cached;
+      }
       throw const CacheMissException();
     }
     detailFetchCount += 1;
+    final pendingFresh = freshResult;
+    if (pendingFresh != null) {
+      return pendingFresh.future;
+    }
     return initial;
   }
 }
