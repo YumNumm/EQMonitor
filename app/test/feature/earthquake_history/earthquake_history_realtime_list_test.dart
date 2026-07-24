@@ -177,6 +177,105 @@ void main() {
     expect(dataSource.notifier.values, isEmpty);
   });
 
+  test('region filterはtype・epicenter・maxLpgmの共通条件でも出入りする', () {
+    final repository = _CompletingListRepository([]);
+    final dataSource = _dataSource(
+      repository: repository,
+      parameter: const EarthquakeHistoryParameter.region(
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+        regionCode: '010100',
+        earthquakeType: EarthquakeType.distant,
+        epicenterCodes: [100],
+        maxLpgmIntensityGte: JmaLpgmIntensity.two,
+      ),
+    );
+    addTearDown(dataSource.dispose);
+
+    void apply({
+      api.EarthquakeType type = api.EarthquakeType.distant,
+      String epicenterCode = '100',
+      api.JmaLpgmIntensity lpgm = api.JmaLpgmIntensity.value2,
+    }) => dataSource.applyRealtimeRecord(
+      _earthquake(
+        eventId: '20260724010000',
+        earthquakeType: type,
+        epicenterCode: epicenterCode,
+        intensity: api.Intensity(
+          maxIntensity: api.JmaIntensity.value4,
+          maxLpgmIntensity: lpgm,
+          intensityTree: const [
+            api.IntensityTree(
+              intensity: api.JmaIntensity.value4,
+              regions: ['010100'],
+            ),
+          ],
+        ),
+      ),
+    );
+
+    apply();
+    expect(dataSource.notifier.values, hasLength(1));
+    apply(type: api.EarthquakeType.normal);
+    expect(dataSource.notifier.values, isEmpty);
+    apply();
+    apply(epicenterCode: '200');
+    expect(dataSource.notifier.values, isEmpty);
+    apply();
+    apply(lpgm: api.JmaLpgmIntensity.value1);
+    expect(dataSource.notifier.values, isEmpty);
+  });
+
+  test('station filterはtype・epicenter・maxLpgmの共通条件でも出入りする', () {
+    final repository = _CompletingListRepository([]);
+    final dataSource = _dataSource(
+      repository: repository,
+      parameter: const EarthquakeHistoryParameter.station(
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+        stationCode: '0123456',
+        earthquakeType: EarthquakeType.distant,
+        epicenterCodes: [100],
+        maxLpgmIntensityGte: JmaLpgmIntensity.two,
+      ),
+    );
+    addTearDown(dataSource.dispose);
+
+    void apply({
+      api.EarthquakeType type = api.EarthquakeType.distant,
+      String epicenterCode = '100',
+      api.JmaLpgmIntensity lpgm = api.JmaLpgmIntensity.value2,
+    }) => dataSource.applyRealtimeRecord(
+      _earthquake(
+        eventId: '20260724010000',
+        earthquakeType: type,
+        epicenterCode: epicenterCode,
+        intensity: api.Intensity(
+          maxIntensity: api.JmaIntensity.value4,
+          maxLpgmIntensity: lpgm,
+          intensityTree: const [
+            api.IntensityTree(
+              intensity: api.JmaIntensity.value4,
+              regions: [],
+              stations: ['0123456'],
+            ),
+          ],
+        ),
+      ),
+    );
+
+    apply();
+    expect(dataSource.notifier.values, hasLength(1));
+    apply(type: api.EarthquakeType.normal);
+    expect(dataSource.notifier.values, isEmpty);
+    apply();
+    apply(epicenterCode: '200');
+    expect(dataSource.notifier.values, isEmpty);
+    apply();
+    apply(lpgm: api.JmaLpgmIntensity.value1);
+    expect(dataSource.notifier.values, isEmpty);
+  });
+
   test('prefecture filterは既存membershipだけを更新し新規を推測しない', () {
     final repository = _CompletingListRepository([]);
     final dataSource = _dataSource(
@@ -455,6 +554,7 @@ api.Earthquake _earthquake({
   required String eventId,
   required api.EarthquakeType earthquakeType,
   api.Intensity? intensity,
+  String? epicenterCode,
 }) => api.Earthquake(
   eventId: eventId,
   status: api.TelegramStatus.normal,
@@ -463,6 +563,16 @@ api.Earthquake _earthquake({
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
   telegrams: const [],
   intensity: intensity,
+  hypocenter: epicenterCode == null
+      ? null
+      : api.Hypocenter(
+          magnitude: const api.Magnitude(
+            type: api.MagnitudeType.normal,
+            value: 5,
+          ),
+          depth: const api.Depth(type: api.DepthType.normal, value: 10),
+          code: epicenterCode,
+        ),
 );
 
 const _metadata = ParameterMetadata(

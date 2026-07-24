@@ -171,6 +171,8 @@ final class EarthquakeRealtimeListReconciler {
       EarthquakeDepthOver700km() => 700,
       _ => null,
     };
+    final epicenterCode = int.tryParse(hypocenter?.code ?? '');
+    final epicenterCodes = parameter.epicenterCodes;
     return _inRange(
           magnitude,
           parameter.magnitudeGte,
@@ -181,6 +183,16 @@ final class EarthquakeRealtimeListReconciler {
           earthquake.originTime,
           parameter.originTimeGte?.toDateTime(),
           parameter.originTimeLte?.toDateTime(),
+        ) &&
+        (epicenterCodes == null ||
+            (epicenterCode != null &&
+                epicenterCodes.contains(epicenterCode))) &&
+        (parameter.earthquakeType == null ||
+            earthquake.earthquakeType == parameter.earthquakeType) &&
+        _inOrderRange(
+          earthquake.intensity?.maxLpgmIntensity?.orderIndex,
+          parameter.maxLpgmIntensityGte?.orderIndex,
+          parameter.maxLpgmIntensityLte?.orderIndex,
         );
   }
 
@@ -195,22 +207,12 @@ final class EarthquakeRealtimeListReconciler {
       ),
       _ => null,
     };
-    final epicenterCode = int.tryParse(hypocenter?.code ?? '');
+    final telegramTypes = p.telegramTypes;
     return _matchesIntensity(intensity?.maxIntensity) &&
-        _inOrderRange(
-          intensity?.maxLpgmIntensity?.orderIndex,
-          p.maxLpgmIntensityGte?.orderIndex,
-          p.maxLpgmIntensityLte?.orderIndex,
-        ) &&
-        (p.epicenterCodes == null ||
-            (epicenterCode != null &&
-                p.epicenterCodes!.contains(epicenterCode))) &&
-        (p.earthquakeType == null ||
-            earthquake.earthquakeType == p.earthquakeType) &&
         (p.datasource == null ||
             earthquake.dataSources.contains(p.datasource)) &&
-        (p.telegramTypes == null ||
-            p.telegramTypes!.every(earthquake.telegramTypes.contains)) &&
+        (telegramTypes == null ||
+            telegramTypes.every(earthquake.telegramTypes.contains)) &&
         _inRange(coordinates?.latitude, p.latitudeGte, p.latitudeLte) &&
         _inRange(coordinates?.longitude, p.longitudeGte, p.longitudeLte);
   }
