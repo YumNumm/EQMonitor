@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypoc
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -28,6 +29,7 @@ abstract class Earthquake with _$Earthquake {
     @Default([]) List<EarthquakeTelegramComment> telegramComments,
     required EarthquakeHypocenter? hypocenter,
     required EarthquakeIntensity? intensity,
+    EarthquakeType? earthquakeType,
 
     /// 推計震度PMTilesのフルURL
     required String? estimatedIntensityTileUrl,
@@ -62,5 +64,6 @@ extension EarthquakeApiExtension on api.Earthquake {
       parameter: parameter,
       shindoDbStations: shindoDbStations,
     ),
+    earthquakeType: null,
   );
 }

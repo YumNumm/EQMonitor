@@ -142,7 +142,8 @@ class EarthquakeVxseDebugDraftFactory {
             current.arrivalTime ?? earthquakeVxseDebugSampleArrivalTime,
         originTime: current.originTime ?? earthquakeVxseDebugSampleOriginTime,
         hypocenter: hypocenter,
-        earthquakeType: earthquakeVxseDebugSampleEarthquakeType,
+        earthquakeType:
+            current.earthquakeType ?? earthquakeVxseDebugSampleEarthquakeType,
         maxIntensity:
             intensity?.maxIntensity ?? earthquakeVxseDebugSampleMaxIntensity,
         regions: intensityRegionsOrSample(regions: intensity?.regions),

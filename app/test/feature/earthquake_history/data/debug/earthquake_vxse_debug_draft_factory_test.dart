@@ -76,7 +76,7 @@ void main() {
       expect(vxse53.status, TelegramStatus.normal);
       expect(vxse53.originTime, current.originTime);
       expect(vxse53.arrivalTime, current.arrivalTime);
-      expect(vxse53.earthquakeType, EarthquakeType.normal);
+      expect(vxse53.earthquakeType, EarthquakeType.distant);
       expect(vxse53.maxIntensity, JmaIntensity.fiveLower);
       expect(vxse53.regions, current.intensity?.regions);
       expect(vxse53.intensityTree, current.intensity?.intensityTree);
@@ -405,6 +405,7 @@ Earthquake _fullEarthquake() => Earthquake(
       ],
     },
   ),
+  earthquakeType: EarthquakeType.distant,
   estimatedIntensityTileUrl: null,
 );
 
@@ -418,5 +419,6 @@ Earthquake _minimalEarthquake() => const Earthquake(
   telegramTypes: [],
   hypocenter: null,
   intensity: null,
+  earthquakeType: null,
   estimatedIntensityTileUrl: null,
 );
