@@ -502,6 +502,33 @@ void main() {
       'ordinaryRegion/fiveLower/350/0.name': 'moving-error',
     });
   });
+
+  test('prefix migrationは移送先の既存raw/errorを上書きしない', () {
+    final fixture = _fixture();
+    fixture.notifier
+      ..setTypedInput(
+        fieldId: 'ordinaryRegion.four.350.0.name',
+        text: 'moving-raw',
+        error: 'moving-error',
+      )
+      ..setTypedInput(
+        fieldId: 'ordinaryRegion.fiveLower.350.0.name',
+        text: 'existing-raw',
+        error: 'existing-error',
+      )
+      ..migrateTypedInputPrefix(
+        from: 'ordinaryRegion.four.350.0',
+        to: 'ordinaryRegion.fiveLower.350.0',
+      );
+
+    expect(fixture.state.typedInputValues, {
+      'ordinaryRegion.fiveLower.350.0.name': 'existing-raw',
+    });
+    expect(fixture.state.typedInputErrors, {
+      'ordinaryRegion.fiveLower.350.0.name': 'existing-error',
+    });
+    expect(fixture.state.canApply, isFalse);
+  });
 }
 
 _Fixture _fixture() {

@@ -20,6 +20,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+String _withSemanticIdentity(String prefix, String identity) {
+  final occurrenceSeparator = prefix.lastIndexOf('.');
+  final identitySeparator = prefix.lastIndexOf('.', occurrenceSeparator - 1);
+  return '${prefix.substring(0, identitySeparator + 1)}$identity'
+      '${prefix.substring(occurrenceSeparator)}';
+}
+
+String _withSemanticBucket(String prefix, String bucket) {
+  final surfaceSeparator = prefix.indexOf('.');
+  final bucketSeparator = prefix.indexOf('.', surfaceSeparator + 1);
+  return '${prefix.substring(0, surfaceSeparator + 1)}$bucket'
+      '${prefix.substring(bucketSeparator)}';
+}
+
 class EarthquakeVxseDebugEditor extends HookConsumerWidget {
   const EarthquakeVxseDebugEditor({required this.current, super.key});
 
@@ -1614,7 +1628,10 @@ class _OrdinaryRegionRow extends StatelessWidget {
                 label: '地域コード',
                 notifier: notifier,
                 onValidChanged: (value) {
-                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  notifier.migrateTypedInputPrefix(
+                    from: fieldPrefix,
+                    to: _withSemanticIdentity(fieldPrefix, value),
+                  );
                   onChanged(
                     region.copyWith(
                       region: region.region.copyWith(code: value),
@@ -1654,7 +1671,10 @@ class _OrdinaryRegionRow extends StatelessWidget {
               onChanged: (value) {
                 if (value != null) {
                   if (value != level) {
-                    notifier.pruneTypedInputPrefix(fieldPrefix);
+                    notifier.migrateTypedInputPrefix(
+                      from: fieldPrefix,
+                      to: _withSemanticBucket(fieldPrefix, value.name),
+                    );
                   }
                   onChanged(region.copyWith(maxIntensity: value));
                 }
@@ -1714,7 +1734,10 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
                 label: '都道府県コード',
                 notifier: notifier,
                 onValidChanged: (value) {
-                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  notifier.migrateTypedInputPrefix(
+                    from: fieldPrefix,
+                    to: _withSemanticIdentity(fieldPrefix, value),
+                  );
                   onChanged(
                     prefecture.copyWith(
                       prefecture: prefecture.prefecture.copyWith(code: value),
@@ -1753,7 +1776,13 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
                   .toList(),
               onChanged: (value) {
                 if (value != level) {
-                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  notifier.migrateTypedInputPrefix(
+                    from: fieldPrefix,
+                    to: _withSemanticBucket(
+                      fieldPrefix,
+                      value?.name ?? level.name,
+                    ),
+                  );
                 }
                 onChanged(prefecture.copyWith(maxIntensity: value));
               },
@@ -1812,7 +1841,10 @@ class _OrdinaryCityRow extends StatelessWidget {
                   label: '市区町村コード',
                   notifier: notifier,
                   onValidChanged: (value) {
-                    notifier.pruneTypedInputPrefix(fieldPrefix);
+                    notifier.migrateTypedInputPrefix(
+                      from: fieldPrefix,
+                      to: _withSemanticIdentity(fieldPrefix, value),
+                    );
                     onChanged(
                       city.copyWith(city: city.city.copyWith(code: value)),
                     );
@@ -1905,7 +1937,10 @@ class _StationParentCityLocator extends StatelessWidget {
                   label: '親市区町村コード',
                   notifier: notifier,
                   onValidChanged: (value) {
-                    notifier.pruneTypedInputPrefix(fieldPrefix);
+                    notifier.migrateTypedInputPrefix(
+                      from: fieldPrefix,
+                      to: _withSemanticIdentity(fieldPrefix, value),
+                    );
                     onCodeChanged(value);
                   },
                 ),
@@ -1972,7 +2007,10 @@ class _OrdinaryStationRow extends StatelessWidget {
                     label: '観測点コード',
                     notifier: notifier,
                     onValidChanged: (value) {
-                      notifier.pruneTypedInputPrefix(fieldPrefix);
+                      notifier.migrateTypedInputPrefix(
+                        from: fieldPrefix,
+                        to: _withSemanticIdentity(fieldPrefix, value),
+                      );
                       onChanged(
                         station.copyWith(
                           station: station.station.copyWith(code: value),
@@ -2081,7 +2119,10 @@ class _LpgmRegionRow extends StatelessWidget {
                 label: '地域コード',
                 notifier: notifier,
                 onValidChanged: (value) {
-                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  notifier.migrateTypedInputPrefix(
+                    from: fieldPrefix,
+                    to: _withSemanticIdentity(fieldPrefix, value),
+                  );
                   onChanged(
                     region.copyWith(
                       region: region.region.copyWith(code: value),
@@ -2120,7 +2161,13 @@ class _LpgmRegionRow extends StatelessWidget {
                   .toList(),
               onChanged: (value) {
                 if (value != level) {
-                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  notifier.migrateTypedInputPrefix(
+                    from: fieldPrefix,
+                    to: _withSemanticBucket(
+                      fieldPrefix,
+                      value?.name ?? level.name,
+                    ),
+                  );
                 }
                 onChanged(region.copyWith(maxLpgmIntensity: value));
               },
@@ -2179,7 +2226,10 @@ class _LpgmPrefectureRow extends StatelessWidget {
                 label: '地域コード',
                 notifier: notifier,
                 onValidChanged: (value) {
-                  notifier.pruneTypedInputPrefix(fieldPrefix);
+                  notifier.migrateTypedInputPrefix(
+                    from: fieldPrefix,
+                    to: _withSemanticIdentity(fieldPrefix, value),
+                  );
                   onChanged(
                     prefecture.copyWith(
                       region: prefecture.region.copyWith(code: value),
@@ -2202,7 +2252,10 @@ class _LpgmPrefectureRow extends StatelessWidget {
               onChanged: (value) {
                 if (value != null) {
                   if (value != level) {
-                    notifier.pruneTypedInputPrefix(fieldPrefix);
+                    notifier.migrateTypedInputPrefix(
+                      from: fieldPrefix,
+                      to: _withSemanticBucket(fieldPrefix, value.name),
+                    );
                   }
                   onChanged(prefecture.copyWith(maxLpgmIntensity: value));
                 }
@@ -2282,7 +2335,10 @@ class _LpgmStationRow extends StatelessWidget {
                     label: '観測点コード',
                     notifier: notifier,
                     onValidChanged: (value) {
-                      notifier.pruneTypedInputPrefix(fieldPrefix);
+                      notifier.migrateTypedInputPrefix(
+                        from: fieldPrefix,
+                        to: _withSemanticIdentity(fieldPrefix, value),
+                      );
                       onChanged(
                         station.copyWith(
                           station: station.station.copyWith(code: value),
@@ -2416,9 +2472,14 @@ class _StationDetailsFields extends StatelessWidget {
                       validation: (value) =>
                           double.tryParse(value) == null ? '数値を入力してください' : null,
                       onValidChanged: (value) {
-                        notifier.pruneTypedInputPrefix(
-                          '$fieldPrefix.prePeriod.${prePeriod.band}.'
-                          '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}',
+                        final prefix =
+                            '$fieldPrefix.prePeriod.${prePeriod.band}.'
+                            '${(intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length}';
+                        notifier.migrateTypedInputPrefix(
+                          from: prefix,
+                          to:
+                              '$fieldPrefix.prePeriod.$value'
+                              '${prefix.substring(prefix.lastIndexOf('.'))}',
                         );
                         onChanged(
                           intensity.copyWith(
@@ -2576,7 +2637,14 @@ class _CommentRow extends StatelessWidget {
               validation: (value) =>
                   DateTime.tryParse(value) == null ? '日時を入力してください' : null,
               onValidChanged: (value) {
-                notifier.pruneTypedInputPrefix(fieldPrefix);
+                final occurrenceSeparator = fieldPrefix.lastIndexOf('.');
+                notifier.migrateTypedInputPrefix(
+                  from: fieldPrefix,
+                  to:
+                      'comment.${comment.type.name}.'
+                      '${DateTime.parse(value).toIso8601String()}'
+                      '${fieldPrefix.substring(occurrenceSeparator)}',
+                );
                 onChanged(comment.copyWith(reportedAt: DateTime.parse(value)));
               },
             ),

@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_teleg
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_debug_override_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_vxse_debug_editor_controller.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor.dart';
 import 'package:flutter/material.dart';
@@ -482,12 +483,20 @@ void main() {
   }
 
   for (final surface in _CollectionSurface.values) {
-    testWidgets('${surface.name}は連続追加してもidentityが一意で適用可能', (tester) async {
+    testWidgets('${surface.name}は連続追加を実Applyして全identityを保持する', (tester) async {
       final container = ProviderContainer();
       addTearDown(container.dispose);
       final current = _currentEarthquake().copyWith(
         telegramTypes: [surface.type],
       );
+      final overrideProvider = earthquakeDebugOverrideProvider(
+        current.eventId,
+      );
+      final overrideSubscription = container.listen(
+        overrideProvider,
+        (previous, next) {},
+      );
+      addTearDown(overrideSubscription.close);
       await _pumpEditorWithContainer(
         tester,
         container: container,
@@ -516,14 +525,22 @@ void main() {
         ),
       );
       expect(state.canApply, isTrue, reason: surface.name);
-      await _scrollTo(tester, const Key('vxse-apply-button'));
-      expect(
-        tester
-            .widget<FilledButton>(find.byKey(const Key('vxse-apply-button')))
-            .onPressed,
-        isNotNull,
-        reason: surface.name,
+      final applyButton = find.byKey(const Key('vxse-apply-button'));
+      await _scrollFinderTo(tester, applyButton);
+      expect(applyButton.hitTestable(), findsOneWidget, reason: surface.name);
+      await tester.tap(applyButton.hitTestable());
+      await tester.pump();
+      final overridden = container.read(overrideProvider);
+      expect(overridden, isNotNull, reason: surface.name);
+      final appliedDraft = const EarthquakeVxseDebugDraftFactory().create(
+        current: overridden ?? current,
+        type: surface.type,
       );
+      final appliedIdentities = _collectionIdentities(
+        surface: surface,
+        draft: appliedDraft,
+      );
+      expect(appliedIdentities, containsAll(identities), reason: surface.name);
     });
   }
 
@@ -563,6 +580,143 @@ void main() {
       JmaLpgmIntensity.three,
     );
   });
+
+  testWidgets('station code変更は同じrowのinvalid SVA raw/errorを移送する', (
+    tester,
+  ) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final current = _currentEarthquake().copyWith(
+      telegramTypes: const [EarthquakeTelegramType.vxse62],
+    );
+    await _pumpEditorWithContainer(
+      tester,
+      container: container,
+      current: current,
+    );
+
+    final stationSva = find.descendant(
+      of: find.byKey(const Key('ordinary-station-details')),
+      matching: find.byKey(const Key('station-sva')),
+    );
+    await _scrollFinderTo(tester, stationSva);
+    await tester.enterText(stationSva, 'invalid-station-sva');
+    await tester.pump();
+    final stationCode = find.byKey(const Key('ordinary-station-code')).first;
+    await _scrollFinderTo(tester, stationCode);
+    await tester.enterText(stationCode, 'migrated-station');
+    await tester.pump();
+
+    await _scrollFinderTo(tester, stationSva);
+    expect(find.text('invalid-station-sva'), findsOneWidget);
+    expect(find.text('数値を入力してください'), findsOneWidget);
+    expect(
+      container
+          .read(
+            earthquakeVxseDebugEditorControllerProvider(
+              EarthquakeVxseDebugEditorSession(current: current),
+            ),
+          )
+          .canApply,
+      isFalse,
+    );
+  });
+
+  testWidgets('prePeriod band変更は同じrowのinvalid SVA raw/errorを移送する', (
+    tester,
+  ) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final current = _currentEarthquake().copyWith(
+      telegramTypes: const [EarthquakeTelegramType.vxse62],
+    );
+    await _pumpEditorWithContainer(
+      tester,
+      container: container,
+      current: current,
+    );
+
+    final prePeriodSva = find.descendant(
+      of: find.byKey(const Key('ordinary-station-details')),
+      matching: find.byKey(const Key('pre-period-sva')),
+    );
+    await _scrollFinderTo(tester, prePeriodSva);
+    await tester.enterText(prePeriodSva, 'invalid-period-sva');
+    await tester.pump();
+    final band = find.descendant(
+      of: find.byKey(const Key('ordinary-station-details')),
+      matching: find.byKey(const Key('pre-period-band')),
+    );
+    await _scrollFinderTo(tester, band);
+    await tester.enterText(band, '9.9');
+    await tester.pump();
+
+    await _scrollFinderTo(tester, prePeriodSva);
+    expect(find.text('invalid-period-sva'), findsOneWidget);
+    expect(find.text('数値を入力してください'), findsOneWidget);
+    expect(
+      container
+          .read(
+            earthquakeVxseDebugEditorControllerProvider(
+              EarthquakeVxseDebugEditorSession(current: current),
+            ),
+          )
+          .canApply,
+      isFalse,
+    );
+  });
+
+  for (final bucketSurface in [
+    _CollectionSurface.ordinaryRegion,
+    _CollectionSurface.ordinaryPrefecture,
+  ]) {
+    testWidgets('${bucketSurface.name} bucket変更はrow rawと別field errorを保持する', (
+      tester,
+    ) async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final current = _currentEarthquake();
+      await _pumpEditorWithContainer(
+        tester,
+        container: container,
+        current: current,
+      );
+      await tester.enterText(
+        find.byKey(const Key('reported-at-field')),
+        'invalid-reported-at',
+      );
+      await tester.pump();
+      final valueFields = bucketSurface.valueFields;
+      await _scrollFinderTo(tester, valueFields);
+      await tester.enterText(
+        valueFields.first,
+        'migrated-${bucketSurface.name}',
+      );
+      await tester.pump();
+      final dropdown = find.byKey(
+        bucketSurface == _CollectionSurface.ordinaryRegion
+            ? const Key('ordinary-region-max')
+            : const Key('ordinary-prefecture-max'),
+      );
+      await _scrollFinderTo(tester, dropdown);
+      await tester.tap(dropdown.hitTestable().first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('5-').last);
+      await tester.pumpAndSettle();
+
+      final state = container.read(
+        earthquakeVxseDebugEditorControllerProvider(
+          EarthquakeVxseDebugEditorSession(current: current),
+        ),
+      );
+      expect(
+        state.typedInputValues.values,
+        contains('migrated-${bucketSurface.name}'),
+      );
+      expect(state.typedInputErrors.values, contains('日時を入力してください'));
+      expect(state.canApply, isFalse);
+    });
+  }
 
   testWidgets('選択したVXSE型が所有するフォームだけを表示する', (tester) async {
     await _pumpEditor(tester);

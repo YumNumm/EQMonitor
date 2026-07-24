@@ -171,17 +171,17 @@ class EarthquakeVxseDebugEditorController
   void migrateTypedInputPrefix({required String from, required String to}) {
     final values = {
       for (final entry in state.typedInputValues.entries)
-        if (!entry.key.startsWith('$from.')) entry.key: entry.value,
-      for (final entry in state.typedInputValues.entries)
         if (entry.key.startsWith('$from.'))
           '$to${entry.key.substring(from.length)}': entry.value,
+      for (final entry in state.typedInputValues.entries)
+        if (!entry.key.startsWith('$from.')) entry.key: entry.value,
     };
     final errors = {
       for (final entry in state.typedInputErrors.entries)
-        if (!entry.key.startsWith('$from.')) entry.key: entry.value,
-      for (final entry in state.typedInputErrors.entries)
         if (entry.key.startsWith('$from.'))
           '$to${entry.key.substring(from.length)}': entry.value,
+      for (final entry in state.typedInputErrors.entries)
+        if (!entry.key.startsWith('$from.')) entry.key: entry.value,
     };
     state = state.copyWith(
       typedInputValues: values,
