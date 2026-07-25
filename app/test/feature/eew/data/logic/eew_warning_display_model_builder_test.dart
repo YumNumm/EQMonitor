@@ -52,6 +52,14 @@ void main() {
       expectedEventId: 'unarrived',
     ),
     (
+      name: '到達区分は不明を到達済みより優先する',
+      candidates: [
+        candidate(eventId: 'unknown'),
+        candidate(eventId: 'arrived', isArrived: true),
+      ],
+      expectedEventId: 'unknown',
+    ),
+    (
       name: '到達区分が同じなら震度の高い候補を優先する',
       candidates: [
         candidate(
