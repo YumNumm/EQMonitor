@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
@@ -88,21 +89,18 @@ class _CityPanel extends ConsumerWidget {
         ? (code: cityCode, name: cityName)
         : null;
     final prefectureHighestAsync = ref.watch(prefectureHighestProvider);
-    final prefectureEntry = prefectureHighestAsync.whenOrNull(
-      data: (list) => list.where((e) => e.code == prefectureCode).firstOrNull,
-    );
+    final prefectureEntry = prefectureHighestAsync.valueOrPrevious
+        ?.where((e) => e.code == prefectureCode)
+        .firstOrNull;
     final cityHighestAsync = selectedCity != null
         ? ref.watch(cityHighestProvider(prefectureCode))
         : null;
     final selectedCityEntryCode = selectedCity?.code;
-    final cityEntry = cityHighestAsync?.whenOrNull(
-      data: (list) {
-        if (selectedCityEntryCode == null) {
-          return null;
-        }
-        return list.where((e) => e.code == selectedCityEntryCode).firstOrNull;
-      },
-    );
+    final cityEntry = selectedCityEntryCode == null
+        ? null
+        : cityHighestAsync?.valueOrPrevious
+              ?.where((e) => e.code == selectedCityEntryCode)
+              .firstOrNull;
     final entry = selectedCity != null ? cityEntry : prefectureEntry;
     final displayName = selectedCity?.name ?? prefectureName;
 

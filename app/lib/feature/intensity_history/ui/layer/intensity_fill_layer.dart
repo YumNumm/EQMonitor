@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -47,13 +48,11 @@ class IntensityFillLayer extends HookConsumerWidget {
 
     // --- パラメーター (AsyncValue) ---
     final parameterAsync = ref.watch(parameterSetProvider);
-    final prefectures = parameterAsync.whenOrNull(
-      data: (p) => p.earthquake.prefectures,
-    );
+    final prefectures = parameterAsync.valueOrPrevious?.earthquake.prefectures;
 
     // --- Lv1: 都道府県最高震度 ---
     final prefectureHighestAsync = ref.watch(prefectureHighestProvider);
-    final prefectureHighest = prefectureHighestAsync.whenOrNull(data: (v) => v);
+    final prefectureHighest = prefectureHighestAsync.valueOrPrevious;
 
     // --- Lv2: 市区町村最高震度 (City 状態のときのみ) ---
     final selectedPrefCode = state is IntensityHistoryStateCity
@@ -65,7 +64,7 @@ class IntensityFillLayer extends HookConsumerWidget {
     final cityHighestAsync = selectedPrefCode != null
         ? ref.watch(cityHighestProvider(selectedPrefCode))
         : null;
-    final cityHighest = cityHighestAsync?.whenOrNull(data: (v) => v);
+    final cityHighest = cityHighestAsync?.valueOrPrevious;
 
     final enqueue = useMapOperationQueue();
 

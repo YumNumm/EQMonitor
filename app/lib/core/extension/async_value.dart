@@ -4,6 +4,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // https://zenn.dev/k9i/articles/b8c333e1bb8b9b
 extension AsyncValueX<T> on AsyncValue<T> {
+  /// loading/error 中でも保持済みの値があれば返す。
+  T? get valueOrPrevious => hasValue ? requireValue : null;
+
   /// guard関数の拡張版
   /// 例外時に前回のデータを持たせてエラーを返す
   Future<AsyncValue<T>> guardPlus(Future<T> Function() future) async {

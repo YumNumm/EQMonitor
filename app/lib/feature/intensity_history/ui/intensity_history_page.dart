@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
@@ -47,19 +48,14 @@ class IntensityHistoryPage extends HookConsumerWidget {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
 
     final paramAsync = ref.watch(parameterSetProvider);
-    final initialPrefName = paramAsync.whenOrNull(
-      data: (p) {
-        final code = initialPrefectureCode;
-        if (code == null) {
-          return null;
-        }
-        return p.earthquake.prefectures
-            .where((pref) => pref.code == code)
-            .firstOrNull
-            ?.name
-            .ja;
-      },
-    );
+    final code = initialPrefectureCode;
+    final initialPrefName = code == null
+        ? null
+        : paramAsync.valueOrPrevious?.earthquake.prefectures
+              .where((pref) => pref.code == code)
+              .firstOrNull
+              ?.name
+              .ja;
 
     return switch (mapConfiguration) {
       AsyncData(:final value) when value.styleString != null => _MapContent(
@@ -129,9 +125,8 @@ class _MapContent extends HookConsumerWidget {
           return null;
         }
 
-        final prefectures = parameterAsync.whenOrNull(
-          data: (p) => p.earthquake.prefectures,
-        );
+        final prefectures =
+            parameterAsync.valueOrPrevious?.earthquake.prefectures;
         if (prefectures == null) {
           return null;
         }
@@ -358,7 +353,7 @@ class _MapContent extends HookConsumerWidget {
 
       final paramAsync = ref.read(parameterSetProvider);
       final prefectures =
-          paramAsync.whenOrNull(data: (p) => p.earthquake.prefectures) ?? [];
+          paramAsync.valueOrPrevious?.earthquake.prefectures ?? [];
 
       final cityPrefCode = prefectureCodeOfCity(cityCode, prefectures);
       if (cityPrefCode != null && cityPrefCode != state.prefectureCode) {
@@ -394,7 +389,7 @@ class _MapContent extends HookConsumerWidget {
       final prefCode = state.prefectureCode;
       final cityHighest = ref
           .read(cityHighestProvider(prefCode))
-          .whenOrNull(data: (v) => v);
+          .valueOrPrevious;
       HighestIntensityEntry? summary;
       if (cityHighest != null) {
         summary = cityHighest.where((e) => e.code == cityCode).firstOrNull;
@@ -430,7 +425,7 @@ class _MapContent extends HookConsumerWidget {
 
       final paramAsync = ref.read(parameterSetProvider);
       final prefectures =
-          paramAsync.whenOrNull(data: (p) => p.earthquake.prefectures) ?? [];
+          paramAsync.valueOrPrevious?.earthquake.prefectures ?? [];
 
       final prefInfo = prefectureOfRegionCode(regionCode, prefectures);
       if (prefInfo == null) {
