@@ -366,3 +366,62 @@ Expected: clean branch containing only the design, plan, sanitizer, focused test
 - [ ] **Step 5: Create the pull request after all implementation is verified**
 
 Open a draft PR from `fix/beta-release-deployment` to `develop`. Include root cause, beta distribution destinations, Release Notes sanitization boundary, repair instructions, and exact verification commands/results. Do not claim that the live stores or current Release were updated until the merged workflow is dispatched and GitHub Deployments/store results are verified.
+
+### Task 5: Checkout repository before resolving deployment policy
+
+**Files:**
+- Modify: `.github/workflows/deploy-app.yaml`
+- Modify: `scripts/ci/test_resolve_deploy_app_policy.sh`
+- Modify: `docs/knowledge/20260725_beta_release_deployment.md`
+
+**Interfaces:**
+- Consumes: repository contents checked out at the workflow run ref.
+- Produces: an executable `scripts/ci/resolve_deploy_app_policy.sh` in the
+  `define-matrix` runner workspace before the policy step starts.
+
+- [x] **Step 1: Add a failing workflow contract test**
+
+Parse `.jobs.define-matrix.steps` using `mise exec -- yq`. Resolve the index of
+the `actions/checkout` step and the index of the step invoking
+`resolve_deploy_app_policy.sh`; fail unless both exist and checkout comes first.
+
+- [x] **Step 2: Run the focused test and verify RED**
+
+```bash
+mise exec -- bash scripts/ci/test_resolve_deploy_app_policy.sh
+```
+
+Expected: FAIL because `define-matrix` invokes the repository script without a
+checkout step.
+
+- [x] **Step 3: Add the minimal checkout step**
+
+Add the pinned repository checkout action before `Decide which app to deploy`:
+
+```yaml
+- name: Checkout
+  uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+  with:
+    persist-credentials: false
+```
+
+- [x] **Step 4: Record the runner workspace requirement**
+
+Add the failure mode and the rule that repository scripts require checkout to
+`docs/knowledge/20260725_beta_release_deployment.md`.
+
+- [x] **Step 5: Run focused and workflow verification**
+
+```bash
+mise exec -- bash scripts/ci/test_resolve_deploy_app_policy.sh
+mise exec -- actionlint .github/workflows/*.yaml
+git --no-pager diff --check
+```
+
+Expected: all commands exit 0 without warnings.
+
+- [ ] **Step 6: Commit, push, and open the draft PR**
+
+Stage only the workflow, test, design, plan, and knowledge files. Commit with
+`fix: 配布ポリシー実行前にcheckoutする`, push the existing branch, then open a
+draft PR targeting `develop`.
