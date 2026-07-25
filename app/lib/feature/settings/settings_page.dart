@@ -9,6 +9,8 @@ import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
+import 'package:eqmonitor/feature/eew/data/notifier/eew_warning_overlay_enabled_notifier.dart';
+import 'package:eqmonitor/feature/eew/data/notifier/eew_warning_overlay_simulation_notifier.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
@@ -62,6 +64,27 @@ class SettingsPage extends ConsumerWidget {
                   leading: const Icon(Icons.notifications_outlined),
                   onTap: () async =>
                       const NotificationSettingsRoute().push<void>(context),
+                ),
+                AppSwitchListTile(
+                  title: 'アプリ使用中の緊急地震速報警報',
+                  subtitle: '現在地が警報対象になった時に全画面で知らせます',
+                  value:
+                      ref.watch(eewWarningOverlayEnabledProvider).value ?? true,
+                  onChanged: (value) async {
+                    await ref
+                        .read(eewWarningOverlayEnabledProvider.notifier)
+                        .set(value: value);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.play_arrow),
+                  title: const Text('警報画面をシミュレーション'),
+                  subtitle: const Text('固定の訓練データで表示と振動を確認します'),
+                  onTap: () {
+                    ref
+                        .read(eewWarningOverlaySimulationProvider.notifier)
+                        .start();
+                  },
                 ),
                 ListTile(
                   title: const Text('表示設定'),
