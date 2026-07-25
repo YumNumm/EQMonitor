@@ -119,9 +119,7 @@ typedef _OpenModal = void Function(BuildContext context);
 Widget _modalTestApp({required _OpenModal onPressed}) {
   return MaterialApp(
     theme: ThemeData.light().copyWith(
-      extensions: [
-        DesignSystemThemeExtension.light(),
-      ],
+      extensions: [DesignSystemThemeExtension.light()],
     ),
     home: Scaffold(
       body: Builder(

@@ -100,13 +100,9 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: ThemeData.light().copyWith(
-            extensions: [
-              DesignSystemThemeExtension.light(),
-            ],
+            extensions: [DesignSystemThemeExtension.light()],
           ),
-          home: const Scaffold(
-            body: RegionFloatingPanel(),
-          ),
+          home: const Scaffold(body: RegionFloatingPanel()),
         ),
       ),
     );
@@ -132,23 +128,16 @@ void main() {
     // Lv2 状態に遷移
     container
         .read(intensityHistoryControllerProvider.notifier)
-        .focusPrefecture(
-          code: '0100',
-          name: '北海道',
-        );
+        .focusPrefecture(code: '0100', name: '北海道');
 
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
           theme: ThemeData.light().copyWith(
-            extensions: [
-              DesignSystemThemeExtension.light(),
-            ],
+            extensions: [DesignSystemThemeExtension.light()],
           ),
-          home: const Scaffold(
-            body: RegionFloatingPanel(),
-          ),
+          home: const Scaffold(body: RegionFloatingPanel()),
         ),
       ),
     );
@@ -186,13 +175,9 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: ThemeData.light().copyWith(
-            extensions: [
-              DesignSystemThemeExtension.light(),
-            ],
+            extensions: [DesignSystemThemeExtension.light()],
           ),
-          home: const Scaffold(
-            body: RegionFloatingPanel(),
-          ),
+          home: const Scaffold(body: RegionFloatingPanel()),
         ),
       ),
     );
@@ -232,9 +217,7 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: ThemeData.light().copyWith(
-            extensions: [
-              DesignSystemThemeExtension.light(),
-            ],
+            extensions: [DesignSystemThemeExtension.light()],
           ),
           home: const Scaffold(body: Center(child: RegionFloatingPanel())),
         ),

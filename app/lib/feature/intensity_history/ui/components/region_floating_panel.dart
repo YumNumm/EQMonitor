@@ -165,8 +165,10 @@ class _CityPanel extends ConsumerWidget {
                         Text(
                           prefectureName,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color:
-                                context.designSystem.colorTheme.onSurfaceVariant,
+                            color: context
+                                .designSystem
+                                .colorTheme
+                                .onSurfaceVariant,
                           ),
                         ),
                       Text(

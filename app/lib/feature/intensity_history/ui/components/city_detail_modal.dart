@@ -1,7 +1,6 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
@@ -152,9 +151,7 @@ class _AreaDetailModal extends ConsumerWidget {
                   ),
                 ),
               ],
-              _ => const [
-                SliverToBoxAdapter(child: SizedBox.shrink()),
-              ],
+              _ => const [SliverToBoxAdapter(child: SizedBox.shrink())],
             },
             SliverToBoxAdapter(
               child: SizedBox(
@@ -289,10 +286,8 @@ class _SummarySection extends StatelessWidget {
                       Text(
                         parentAreaName,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: context
-                              .designSystem
-                              .colorTheme
-                              .onSurfaceVariant,
+                          color:
+                              context.designSystem.colorTheme.onSurfaceVariant,
                         ),
                       ),
                     Text(
@@ -334,10 +329,7 @@ class _SummarySection extends StatelessWidget {
                             '代表: ${DateFormat('yyyy/MM/dd HH:mm').format(originTime.toLocal())}発生',
                             style: theme.textTheme.bodySmall,
                           ),
-                        Text(
-                          hypocenterName,
-                          style: theme.textTheme.bodySmall,
-                        ),
+                        Text(hypocenterName, style: theme.textTheme.bodySmall),
                       ],
                     ),
                   ),
