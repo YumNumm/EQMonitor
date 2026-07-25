@@ -1,5 +1,15 @@
+import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
@@ -7,10 +17,36 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-/// 市区町村の詳細モーダルを表示する。
-///
-/// サマリ(地域名・最高震度バッジ・件数・代表地震)と
-/// ページネーション付きの過去地震一覧を表示する。
+enum _AreaDetailType {
+  prefecture(label: '都道府県'),
+  city(label: '市区町村');
+
+  const _AreaDetailType({required this.label});
+  final String label;
+}
+
+Future<void> showPrefectureDetailModal(
+  BuildContext context, {
+  required String prefectureCode,
+  required String prefectureName,
+  HighestIntensityEntry? summary,
+}) => showModalBottomSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  clipBehavior: Clip.antiAlias,
+  builder: (context) => _AreaDetailModal(
+    areaType: _AreaDetailType.prefecture,
+    areaName: prefectureName,
+    parentAreaName: null,
+    parameter: EarthquakeHistoryParameter.prefecture(
+      prefectureCode: prefectureCode,
+      sortBy: EarthquakeSortBy.eventId,
+      sortOrder: SortOrder.desc,
+    ),
+    summary: summary,
+  ),
+);
+
 Future<void> showCityDetailModal(
   BuildContext context, {
   required String cityCode,
@@ -21,29 +57,39 @@ Future<void> showCityDetailModal(
   context: context,
   isScrollControlled: true,
   clipBehavior: Clip.antiAlias,
-  builder: (context) => _CityDetailModal(
-    cityCode: cityCode,
-    cityName: cityName,
+  builder: (context) => _AreaDetailModal(
+    areaType: _AreaDetailType.city,
+    areaName: cityName,
+    parentAreaName: regionName,
+    parameter: EarthquakeHistoryParameter.city(
+      cityCode: cityCode,
+      sortBy: EarthquakeSortBy.eventId,
+      sortOrder: SortOrder.desc,
+    ),
     summary: summary,
-    regionName: regionName,
   ),
 );
 
-class _CityDetailModal extends ConsumerWidget {
-  const _CityDetailModal({
-    required this.cityCode,
-    required this.cityName,
-    required this.regionName,
+class _AreaDetailModal extends ConsumerWidget {
+  const _AreaDetailModal({
+    required this.areaType,
+    required this.areaName,
+    required this.parentAreaName,
+    required this.parameter,
     required this.summary,
   });
 
-  final String cityCode;
-  final String cityName;
-  final String regionName;
+  final _AreaDetailType areaType;
+  final String areaName;
+  final String? parentAreaName;
+  final EarthquakeHistoryParameter parameter;
   final HighestIntensityEntry? summary;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final asyncPage = ref.watch(earthquakeHistoryProvider(parameter));
+    final visiblePage = asyncPage.hasValue ? asyncPage.requireValue : null;
+
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.6,
@@ -53,48 +99,63 @@ class _CityDetailModal extends ConsumerWidget {
         return CustomScrollView(
           controller: scrollController,
           slivers: [
-            // ドラッグハンドル
-            SliverToBoxAdapter(
-              child: Center(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(2),
-                    color: context.designSystem.colorTheme.onSurface.withValues(
-                      alpha: 0.3,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            // サマリ
+            SliverToBoxAdapter(child: _DragHandle()),
             SliverToBoxAdapter(
               child: _SummarySection(
-                regionName: regionName,
-                cityName: cityName,
+                areaType: areaType,
+                parentAreaName: parentAreaName,
+                areaName: areaName,
                 summary: summary,
               ),
             ),
-            // 区切り
             SliverToBoxAdapter(
               child: Divider(
                 height: 0,
                 color: context.designSystem.colorTheme.outlineVariant,
               ),
             ),
-            // 一覧 or ローディング or エラー
             SliverToBoxAdapter(
-              child: SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: Placeholder(
-                  child: Center(child: Text('TODO: 一覧を表示する...')),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: Text(
+                  '観測した地震',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-            // BottomPadding
+            ...switch ((visiblePage, asyncPage)) {
+              (final PaginatedResponse<EarthquakePartial> page?, _) =>
+                _buildEarthquakeListSlivers(
+                  context: context,
+                  ref: ref,
+                  parameter: parameter,
+                  page: page,
+                ),
+              (null, AsyncLoading()) => const [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: CircularProgressIndicator.adaptive()),
+                ),
+              ],
+              (null, AsyncError(:final error)) => [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: ErrorCard(
+                      error: error,
+                      onReload: () async {
+                        ref.invalidate(earthquakeHistoryProvider(parameter));
+                      },
+                    ),
+                  ),
+                ),
+              ],
+              _ => const [
+                SliverToBoxAdapter(child: SizedBox.shrink()),
+              ],
+            },
             SliverToBoxAdapter(
               child: SizedBox(
                 height: MediaQuery.paddingOf(context).bottom + 16,
@@ -107,26 +168,102 @@ class _CityDetailModal extends ConsumerWidget {
   }
 }
 
+List<Widget> _buildEarthquakeListSlivers({
+  required BuildContext context,
+  required WidgetRef ref,
+  required EarthquakeHistoryParameter parameter,
+  required PaginatedResponse<EarthquakePartial> page,
+}) {
+  if (page.items.isEmpty) {
+    return const [
+      SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(child: Text('この地域で観測された地震はありません')),
+      ),
+    ];
+  }
+
+  return [
+    SliverList.builder(
+      itemCount: page.items.length,
+      itemBuilder: (context, index) {
+        final item = page.items[index];
+        return EarthquakeHistoryListTile(
+          item: item,
+          searchParameter: parameter,
+          dense: true,
+          visualDensity: VisualDensity.compact,
+          showBackgroundColor: false,
+          onTap: () async {
+            await EarthquakeHistoryDetailsRoute(
+              eventId: item.earthquake.eventId,
+            ).push<void>(context);
+          },
+        );
+      },
+    ),
+    if (page.nextToken != null)
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+          child: OutlinedButton.icon(
+            onPressed: () async {
+              await ref
+                  .read(earthquakeHistoryProvider(parameter).notifier)
+                  .fetchNextData();
+            },
+            icon: const Icon(Icons.expand_more_rounded),
+            label: const Text('さらに読み込む'),
+          ),
+        ),
+      ),
+  ];
+}
+
+class _DragHandle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        width: 36,
+        height: 4,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2),
+          color: context.designSystem.colorTheme.onSurface.withValues(
+            alpha: 0.3,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _SummarySection extends StatelessWidget {
   const _SummarySection({
-    required this.regionName,
-    required this.cityName,
+    required this.areaType,
+    required this.parentAreaName,
+    required this.areaName,
     required this.summary,
   });
 
-  final String regionName;
-  final String cityName;
+  final _AreaDetailType areaType;
+  final String? parentAreaName;
+  final String areaName;
   final HighestIntensityEntry? summary;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
     final entry = summary;
     final earthquakePartial = entry?.earthquake;
     final originTime = earthquakePartial?.earthquake.originTime;
     final hypocenter = earthquakePartial?.earthquake.hypocenter;
     final magnitude = hypocenter?.magnitude;
+    final hypocenterName = switch (hypocenter?.name) {
+      final String name when name.isNotEmpty => name,
+      _ => '震源不明',
+    };
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -134,6 +271,7 @@ class _SummarySection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (entry != null) ...[
                 JmaIntensityIcon(
@@ -145,17 +283,29 @@ class _SummarySection extends StatelessWidget {
               ],
               Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (parentAreaName case final parentAreaName?)
+                      Text(
+                        parentAreaName,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: context
+                              .designSystem
+                              .colorTheme
+                              .onSurfaceVariant,
+                        ),
+                      ),
                     Text(
-                      regionName,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: context.designSystem.colorTheme.onSurfaceVariant,
+                      areaName,
+                      textAlign: TextAlign.left,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      cityName,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                      areaType.label,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: context.designSystem.colorTheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -166,7 +316,7 @@ class _SummarySection extends StatelessWidget {
           if (entry != null) ...[
             const SizedBox(height: 8),
             Text(
-              'この震度を観測した地震: ${entry.count}件',
+              '最高震度を観測した地震: ${entry.count}件',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: context.designSystem.colorTheme.onSurface,
               ),
@@ -181,14 +331,13 @@ class _SummarySection extends StatelessWidget {
                       children: [
                         if (originTime != null)
                           Text(
-                            '代表: ${dateFormatter.format(originTime.toLocal())}発生',
+                            '代表: ${DateFormat('yyyy/MM/dd HH:mm').format(originTime.toLocal())}発生',
                             style: theme.textTheme.bodySmall,
                           ),
-                        if (hypocenter != null)
-                          Text(
-                            hypocenter.name ?? '', // TODO: 名前がない場合のUIを決める
-                            style: theme.textTheme.bodySmall,
-                          ),
+                        Text(
+                          hypocenterName,
+                          style: theme.textTheme.bodySmall,
+                        ),
                       ],
                     ),
                   ),
