@@ -18,7 +18,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class NearbyEarthquakeCard extends HookConsumerWidget {
-  const NearbyEarthquakeCard({required this.earthquake, super.key});
+  const NearbyEarthquakeCard({required this.earthquake, super.key,});
 
   final Earthquake earthquake;
 

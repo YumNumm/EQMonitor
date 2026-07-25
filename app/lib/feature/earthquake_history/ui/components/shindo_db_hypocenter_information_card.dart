@@ -243,7 +243,7 @@ class _OriginTimeRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss.SS頃');
+    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss.SSS頃');
 
     return Text.rich(
       TextSpan(
