@@ -122,62 +122,71 @@ class _CityPanel extends ConsumerWidget {
             BlendMode.srcATop,
           ),
         ),
-        child: InkWell(
-          onTap: () async {
-            if (selectedCity != null) {
-              await showCityDetailModal(
+        child: Semantics(
+          button: true,
+          label: '$displayNameの詳細を表示',
+          child: InkWell(
+            onTap: () async {
+              if (selectedCity != null) {
+                await showCityDetailModal(
+                  context,
+                  cityCode: selectedCity.code,
+                  cityName: selectedCity.name,
+                  regionName: prefectureName,
+                  summary: cityEntry,
+                );
+                return;
+              }
+              await showPrefectureDetailModal(
                 context,
-                cityCode: selectedCity.code,
-                cityName: selectedCity.name,
-                regionName: prefectureName,
-                summary: cityEntry,
+                prefectureCode: prefectureCode,
+                prefectureName: prefectureName,
+                summary: prefectureEntry,
               );
-              return;
-            }
-            throw UnimplementedError('TODO: 都道府県詳細モーダルを表示する');
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (entry != null) ...[
-                  JmaIntensityIcon(
-                    intensity: entry.intensity,
-                    type: IntensityIconType.filled,
-                    size: 36,
-                  ),
-                  const SizedBox(width: 10),
-                ],
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (selectedCity != null)
-                      Text(
-                        prefectureName,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color:
-                              context.designSystem.colorTheme.onSurfaceVariant,
-                        ),
-                      ),
-                    Text(
-                      displayName,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (entry != null) ...[
+                    JmaIntensityIcon(
+                      intensity: entry.intensity,
+                      type: IntensityIconType.filled,
+                      size: 36,
                     ),
-                    if (entry != null)
+                    const SizedBox(width: 10),
+                  ],
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (selectedCity != null)
+                        Text(
+                          prefectureName,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color:
+                                context.designSystem.colorTheme.onSurfaceVariant,
+                          ),
+                        ),
                       Text(
-                        '${entry.count}件',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: context.designSystem.colorTheme.onSurface
-                              .withValues(alpha: 0.7),
+                        displayName,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                  ],
-                ),
-              ],
+                      if (entry != null)
+                        Text(
+                          '${entry.count}件',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: context.designSystem.colorTheme.onSurface
+                                .withValues(alpha: 0.7),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
