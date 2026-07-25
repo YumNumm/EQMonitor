@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/station_icon_image_expression.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -26,7 +27,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   const EarthquakeHistoryStationIntensityLayer({
     required this.earthquake,
     required this.parameter,
-    this.stationDisplayMode = StationDisplayMode.maxFocused,
+    this.stationDisplayMode = StationDisplayMode.auto,
     this.showStationLabel = false,
     this.showingLpgmIntensity = false,
     super.key,
@@ -69,7 +70,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     final geoJson = geoJsonBuilder.build(
       intensity: intensity,
       colorModel: colorModel,
-      stationDisplayMode: stationDisplayMode,
       showingLpgmIntensity: showingLpgmIntensity,
     );
 
@@ -108,7 +108,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         );
         if (latestIconData.value != null) {
           await styleController.addLayer(
-            layerBuilder.buildIconLayer(parameter: latestParameter.value),
+            layerBuilder.buildIconLayer(
+              parameter: latestParameter.value,
+              stationDisplayMode: latestStationDisplayMode.value,
+            ),
           );
         }
         if (latestShowStationLabel.value) {
@@ -208,7 +211,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             );
             if (iconData != null) {
               await styleController.addLayer(
-                layerBuilder.buildIconLayer(parameter: parameter),
+                layerBuilder.buildIconLayer(
+                  parameter: parameter,
+                  stationDisplayMode: stationDisplayMode,
+                ),
               );
             }
             if (showStationLabel) {
@@ -264,48 +270,14 @@ class EarthquakeHistoryStationGeoJsonBuilder {
   String build({
     required EarthquakeIntensity? intensity,
     required IntensityColors colorModel,
-    required StationDisplayMode stationDisplayMode,
     required bool showingLpgmIntensity,
   }) => showingLpgmIntensity
-      ? buildLpgmGeoJson(
-          intensity: intensity,
-          colorModel: colorModel,
-          stationDisplayMode: stationDisplayMode,
-        )
-      : buildJmaGeoJson(
-          intensity: intensity,
-          colorModel: colorModel,
-          stationDisplayMode: stationDisplayMode,
-        );
-
-  String iconIdForStation({
-    required String intensityName,
-    required bool isFocused,
-    required StationDisplayMode stationDisplayMode,
-  }) {
-    final useSmall = switch (stationDisplayMode) {
-      StationDisplayMode.normal => true,
-      StationDisplayMode.auto ||
-      StationDisplayMode.maxFocused => isFocused,
-      StationDisplayMode.allMinimized => false,
-    };
-    final prefix = useSmall ? iconSmallPrefix : iconSmallNoTextPrefix;
-    return '$prefix$intensityName';
-  }
-
-  String lpgmIconIdForStation({
-    required String lpgmName,
-    required StationDisplayMode stationDisplayMode,
-  }) {
-    final useSmall = stationDisplayMode != StationDisplayMode.allMinimized;
-    final prefix = useSmall ? lpgmIconSmallPrefix : lpgmIconSmallNoTextPrefix;
-    return '$prefix$lpgmName';
-  }
+      ? buildLpgmGeoJson(intensity: intensity, colorModel: colorModel)
+      : buildJmaGeoJson(intensity: intensity, colorModel: colorModel);
 
   String buildJmaGeoJson({
     required EarthquakeIntensity? intensity,
     required IntensityColors colorModel,
-    required StationDisplayMode stationDisplayMode,
   }) {
     if (intensity == null) {
       return jsonEncode({'type': 'FeatureCollection', 'features': <dynamic>[]});
@@ -324,12 +296,7 @@ class EarthquakeHistoryStationGeoJsonBuilder {
                 .fromJmaIntensity(jmaIntensity)
                 .background
                 .toHexStringRGB();
-            final isFocused = intensity.maxIntensity == jmaIntensity;
-            final iconId = iconIdForStation(
-              intensityName: jmaIntensity.name,
-              isFocused: isFocused,
-              stationDisplayMode: stationDisplayMode,
-            );
+            final isMax = intensity.maxIntensity == jmaIntensity;
             final station = stationNode.station;
             features.add({
               'type': 'Feature',
@@ -340,8 +307,9 @@ class EarthquakeHistoryStationGeoJsonBuilder {
               'properties': {
                 'color': color,
                 'name': station.name.ja,
-                'isFocused': isFocused,
-                'iconId': iconId,
+                'isMax': isMax,
+                'iconIdFull': '$iconSmallPrefix${jmaIntensity.name}',
+                'iconIdPlain': '$iconSmallNoTextPrefix${jmaIntensity.name}',
                 'sortKey': jmaIntensity.index,
               },
             });
@@ -356,7 +324,6 @@ class EarthquakeHistoryStationGeoJsonBuilder {
   String buildLpgmGeoJson({
     required EarthquakeIntensity? intensity,
     required IntensityColors colorModel,
-    required StationDisplayMode stationDisplayMode,
   }) {
     if (intensity == null) {
       return jsonEncode({'type': 'FeatureCollection', 'features': <dynamic>[]});
@@ -375,10 +342,7 @@ class EarthquakeHistoryStationGeoJsonBuilder {
                 .fromJmaLpgmIntensity(lpgmIntensity)
                 .background
                 .toHexStringRGB();
-            final iconId = lpgmIconIdForStation(
-              lpgmName: lpgmIntensity.name,
-              stationDisplayMode: stationDisplayMode,
-            );
+            final isMax = intensity.maxLpgmIntensity == lpgmIntensity;
             final station = stationNode.station;
             features.add({
               'type': 'Feature',
@@ -389,8 +353,10 @@ class EarthquakeHistoryStationGeoJsonBuilder {
               'properties': {
                 'color': color,
                 'name': station.name.ja,
-                'isFocused': false,
-                'iconId': iconId,
+                'isMax': isMax,
+                'iconIdFull': '$lpgmIconSmallPrefix${lpgmIntensity.name}',
+                'iconIdPlain':
+                    '$lpgmIconSmallNoTextPrefix${lpgmIntensity.name}',
                 'sortKey': lpgmIntensity.index,
               },
             });
@@ -450,14 +416,14 @@ class EarthquakeHistoryStationIntensityLayerBuilder {
             4,
             [
               'case',
-              ['get', 'isFocused'],
+              ['get', 'isMax'],
               parameter.stationCircleRadiusMin * 1.5,
               parameter.stationCircleRadiusMin * 0.5,
             ],
             10,
             [
               'case',
-              ['get', 'isFocused'],
+              ['get', 'isMax'],
               parameter.stationCircleRadiusMax * 1.25,
               parameter.stationCircleRadiusMax * 0.875,
             ],
@@ -480,13 +446,17 @@ class EarthquakeHistoryStationIntensityLayerBuilder {
 
   SymbolStyleLayer buildIconLayer({
     required EarthquakeHistoryMapLayerParameter parameter,
+    required StationDisplayMode stationDisplayMode,
   }) {
     return SymbolStyleLayer(
       id: iconLayerId,
       sourceId: sourceId,
       minZoom: parameter.stationMinZoom,
       layout: {
-        'icon-image': ['get', 'iconId'],
+        'icon-image': stationIconImageExpression(
+          stationDisplayMode: stationDisplayMode,
+          stationTextZoom: parameter.stationTextZoom,
+        ),
         'icon-allow-overlap': true,
         'icon-ignore-placement': true,
         'symbol-sort-key': ['get', 'sortKey'],
