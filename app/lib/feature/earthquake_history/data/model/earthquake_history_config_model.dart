@@ -6,8 +6,11 @@ part 'earthquake_history_config_model.g.dart';
 
 @freezed
 abstract class EarthquakeHistoryConfig with _$EarthquakeHistoryConfig {
+  @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory EarthquakeHistoryConfig({
     required EarthquakeHistoryListConfig list,
+    @Default(EarthquakeHistoryDetailsConfig())
+    EarthquakeHistoryDetailsConfig details,
   }) = _EarthquakeHistoryConfig;
 
   factory EarthquakeHistoryConfig.fromJson(Map<String, dynamic> json) =>
@@ -30,6 +33,19 @@ abstract class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
       _$EarthquakeHistoryListConfigFromJson(json);
 }
 
+/// 地震履歴詳細画面の設定
+@freezed
+abstract class EarthquakeHistoryDetailsConfig
+    with _$EarthquakeHistoryDetailsConfig {
+  const factory EarthquakeHistoryDetailsConfig({
+    /// 観測点アイコンの表示モード
+    @Default(StationDisplayMode.auto) StationDisplayMode stationDisplayMode,
+  }) = _EarthquakeHistoryDetailsConfig;
+
+  factory EarthquakeHistoryDetailsConfig.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeHistoryDetailsConfigFromJson(json);
+}
+
 /// 地震履歴詳細画面における塗りつぶし表示モード
 enum EarthquakeHistoryFillMode {
   none,
@@ -40,6 +56,8 @@ enum EarthquakeHistoryFillMode {
 
 /// 観測点の表示方法
 enum StationDisplayMode {
+  /// ズームに応じて自動切替 (閾値未満: 最大震度のみ数字入り / 閾値以上: すべて数字入り)
+  auto,
   maxFocused,
   normal,
   allMinimized,

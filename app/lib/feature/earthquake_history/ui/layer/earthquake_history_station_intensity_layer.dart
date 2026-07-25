@@ -285,6 +285,7 @@ class EarthquakeHistoryStationGeoJsonBuilder {
   }) {
     final useSmall = switch (stationDisplayMode) {
       StationDisplayMode.normal => true,
+      StationDisplayMode.auto ||
       StationDisplayMode.maxFocused => isFocused,
       StationDisplayMode.allMinimized => false,
     };
@@ -441,6 +442,7 @@ class EarthquakeHistoryStationIntensityLayerBuilder {
             10,
             parameter.stationCircleRadiusMax,
           ],
+          StationDisplayMode.auto ||
           StationDisplayMode.maxFocused => [
             'interpolate',
             ['linear'],
