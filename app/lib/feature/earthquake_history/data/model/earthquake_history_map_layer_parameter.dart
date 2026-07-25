@@ -11,6 +11,7 @@ abstract class EarthquakeHistoryMapLayerParameter
     @Default(0) double regionToCity,
     @Default(8) double stationMinZoom,
     @Default(9) double stationLabelMinZoom,
+    @Default(9) double stationTextZoom,
     @Default(8) double hypocenterFadeZoom,
     @Default(8) double hypocenterErrorMinZoom,
 
