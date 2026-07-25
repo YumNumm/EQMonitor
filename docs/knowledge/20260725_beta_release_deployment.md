@@ -31,6 +31,22 @@ Google Play `external` が失敗しても `internal` へフォールバックし
 通常の `develop` pushと手動実行ではAndroidの `internal` trackを維持する。
 `develop` pushの `[external]` は従来どおりiOSのTestFlight外部配布だけを有効にする。
 
+## リポジトリ内スクリプトをjobで実行する
+
+GitHub-hosted runnerのworkspaceは、job開始時点ではリポジトリのファイルを含まない。
+`scripts/ci/resolve_deploy_app_policy.sh` のようなリポジトリ内スクリプトを実行する
+jobは、そのstepより前に `actions/checkout` を置く。
+
+checkoutを省略すると、スクリプトがコミット済みで実行権限を持っていても次のように
+失敗する。
+
+```text
+scripts/ci/resolve_deploy_app_policy.sh: No such file or directory
+```
+
+workflow変更後は、stepの存在だけでなくcheckoutがスクリプト実行より前にあることを
+focused testで確認する。
+
 ## GitHub Deploymentsで実配布を確認する
 
 タグとReleaseの存在だけでは、アプリが配布された証拠にならない。

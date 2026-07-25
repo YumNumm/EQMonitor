@@ -2,7 +2,9 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+ROOT_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)
 RESOLVER="$SCRIPT_DIR/resolve_deploy_app_policy.sh"
+WORKFLOW="$ROOT_DIR/.github/workflows/deploy-app.yaml"
 TEST_DIR=$(mktemp -d)
 trap 'rm -rf "$TEST_DIR"' EXIT
 
@@ -77,5 +79,17 @@ fi
 
 grep -Fx "Unsupported deployment event/ref: push tag v3.0.0" \
   "$TEST_DIR/unsupported.stderr"
+
+checkout_index=$(mise exec -- yq -r \
+  '.jobs.define-matrix.steps | to_entries | map(select(.value.uses == "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1")) | .[0].key // ""' \
+  "$WORKFLOW")
+resolver_index=$(mise exec -- yq -r \
+  '.jobs.define-matrix.steps | to_entries | map(select((.value.run // "") | contains("scripts/ci/resolve_deploy_app_policy.sh"))) | .[0].key // ""' \
+  "$WORKFLOW")
+
+if [[ -z "$checkout_index" || -z "$resolver_index" || "$checkout_index" -ge "$resolver_index" ]]; then
+  echo "define-matrix must checkout the repository before invoking the deploy policy resolver" >&2
+  exit 1
+fi
 
 echo "deploy app policy tests passed"

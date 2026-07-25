@@ -45,6 +45,12 @@ jobs:
       deploy-ios-external: ${{ steps.define-environment-matrix.outputs.deploy-ios-external }}
       android-track: ${{ steps.define-environment-matrix.outputs.android-track }}
     steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
       - name: Decide which app to deploy
         id: define-environment-matrix
         env:
