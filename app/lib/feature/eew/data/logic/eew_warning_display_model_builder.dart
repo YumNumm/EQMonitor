@@ -3,14 +3,35 @@ import 'package:eqmonitor/feature/eew/data/logic/eew_warning_arrival_classifier.
 import 'package:eqmonitor/feature/eew/data/logic/eew_warning_representative_selector.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_candidate.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_display_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'eew_warning_display_model_builder.g.dart';
+
+@riverpod
+EewWarningDisplayModelBuilder eewWarningDisplayModelBuilder(Ref ref) =>
+    EewWarningDisplayModelBuilder(
+      arrivalClassifier: ref.watch(eewWarningArrivalClassifierProvider),
+      representativeSelector: ref.watch(
+        eewWarningRepresentativeSelectorProvider,
+      ),
+    );
 
 class EewWarningDisplayModelBuilder {
+  EewWarningDisplayModelBuilder({
+    EewWarningArrivalClassifier? arrivalClassifier,
+    EewWarningRepresentativeSelector? representativeSelector,
+  }) : _arrivalClassifier = arrivalClassifier ?? EewWarningArrivalClassifier(),
+       _representativeSelector =
+           representativeSelector ?? EewWarningRepresentativeSelector();
+
+  final EewWarningArrivalClassifier _arrivalClassifier;
+  final EewWarningRepresentativeSelector _representativeSelector;
+
   EewWarningOverlayDisplayModel? build({
     required List<EewWarningOverlayCandidate> candidates,
     required DateTime now,
   }) {
-    final representativeSelector = EewWarningRepresentativeSelector();
-    final representative = representativeSelector.select(
+    final representative = _representativeSelector.select(
       candidates: candidates,
       now: now,
     );
@@ -21,7 +42,7 @@ class EewWarningDisplayModelBuilder {
     final sortedCandidates = [...candidates]
       ..sort(
         (left, right) =>
-            representativeSelector.compare(left: left, right: right, now: now),
+            _representativeSelector.compare(left: left, right: right, now: now),
       );
 
     final zoneNamesByCode = <String, String>{};
@@ -51,7 +72,7 @@ class EewWarningDisplayModelBuilder {
             preferredHypocenterName.isEmpty
         ? null
         : preferredHypocenterName;
-    final arrivalState = EewWarningArrivalClassifier().classify(
+    final arrivalState = _arrivalClassifier.classify(
       candidate: representative,
       now: now,
     );

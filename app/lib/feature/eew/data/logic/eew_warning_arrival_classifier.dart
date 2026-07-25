@@ -1,5 +1,12 @@
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_candidate.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_display_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'eew_warning_arrival_classifier.g.dart';
+
+@riverpod
+EewWarningArrivalClassifier eewWarningArrivalClassifier(Ref ref) =>
+    EewWarningArrivalClassifier();
 
 class EewWarningArrivalClassifier {
   EewWarningArrivalState classify({

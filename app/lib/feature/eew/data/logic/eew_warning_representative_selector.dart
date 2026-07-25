@@ -1,8 +1,23 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_warning_arrival_classifier.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_candidate.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'eew_warning_representative_selector.g.dart';
+
+@riverpod
+EewWarningRepresentativeSelector eewWarningRepresentativeSelector(Ref ref) =>
+    EewWarningRepresentativeSelector(
+      arrivalClassifier: ref.watch(eewWarningArrivalClassifierProvider),
+    );
 
 class EewWarningRepresentativeSelector {
+  EewWarningRepresentativeSelector({
+    EewWarningArrivalClassifier? arrivalClassifier,
+  }) : _arrivalClassifier = arrivalClassifier ?? EewWarningArrivalClassifier();
+
+  final EewWarningArrivalClassifier _arrivalClassifier;
+
   EewWarningOverlayCandidate? select({
     required List<EewWarningOverlayCandidate> candidates,
     required DateTime now,
@@ -20,11 +35,12 @@ class EewWarningRepresentativeSelector {
     required EewWarningOverlayCandidate right,
     required DateTime now,
   }) {
-    final classifier = EewWarningArrivalClassifier();
-    final arrivalComparison = classifier
+    final arrivalComparison = _arrivalClassifier
         .classify(candidate: left, now: now)
         .index
-        .compareTo(classifier.classify(candidate: right, now: now).index);
+        .compareTo(
+          _arrivalClassifier.classify(candidate: right, now: now).index,
+        );
     if (arrivalComparison != 0) {
       return arrivalComparison;
     }

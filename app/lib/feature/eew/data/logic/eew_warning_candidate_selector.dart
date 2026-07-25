@@ -1,5 +1,12 @@
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_candidate.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'eew_warning_candidate_selector.g.dart';
+
+@riverpod
+EewWarningCandidateSelector eewWarningCandidateSelector(Ref ref) =>
+    EewWarningCandidateSelector();
 
 class EewWarningCandidateSelector {
   List<EewWarningOverlayCandidate> select({
