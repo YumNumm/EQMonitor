@@ -43,6 +43,11 @@ betaタグとGitHub prereleaseを作成する。しかし `Deploy App` は `deve
   `[external]` 判定を維持し、Android trackは `internal` のままにする。
 - `workflow_dispatch`: 現在の入力を維持し、Android trackは `internal` とする。
 
+配布ポリシーはリポジトリ内のshell scriptとして実行するため、`define-matrix` は
+resolver実行前に `actions/checkout` で対象refを取得する。checkoutを省略すると、
+GitHub-hosted runnerのworkspaceに `scripts/ci/resolve_deploy_app_policy.sh` が存在せず、
+ポリシー判定前にjobが失敗する。
+
 AndroidのGoogle Play公開ジョブはmatrixが出力するtrack名を受け取り、固定値の
 `internal` の代わりに使用する。`external` はGoogle Playのクローズドテスト用
 トラックとして最初の公開時に作成する。
@@ -102,10 +107,11 @@ Release不在、API失敗のいずれもjobを失敗させ、成功扱いには�
 1. `deploy-app.yaml` がbetaタグを監視する。
 2. betaタグではiOS externalが有効になり、Android trackが `external` になる。
 3. `develop` pushと手動実行ではAndroid trackが `internal` のままである。
-4. `@Default(ja)`、`@foo`、複数の `@` を含む変更タイトルが `&#64;` へ変換される。
-5. `by @YumNumm` とNew Contributorsの正式メンションは保持される。
-6. サニタイズを2回適用しても結果が変わらない。
-7. 既存Release修復モードでは新しいタグを作らない。
+4. `define-matrix` はresolver実行前にリポジトリをcheckoutする。
+5. `@Default(ja)`、`@foo`、複数の `@` を含む変更タイトルが `&#64;` へ変換される。
+6. `by @YumNumm` とNew Contributorsの正式メンションは保持される。
+7. サニタイズを2回適用しても結果が変わらない。
+8. 既存Release修復モードでは新しいタグを作らない。
 
 加えて `mise exec -- actionlint .github/workflows/*.yaml` と、追加したfocused testを
 実行する。実際のストア公開はローカルテストでは行わず、修正後のbetaでActions
