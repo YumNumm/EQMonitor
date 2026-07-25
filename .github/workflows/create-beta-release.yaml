@@ -10,6 +10,11 @@ on:
         description: "Beta version override (e.g. v3.1.0-beta.1). Empty for auto-detect."
         required: false
         type: string
+      repair_existing_release:
+        description: "Sanitize an existing beta release instead of creating one"
+        required: false
+        default: false
+        type: boolean
 
 permissions: {}
 
@@ -44,6 +49,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
+        with:
+          cache: false
+          install_args: "python"
+
       - name: Configure git for tagging
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
@@ -55,8 +67,14 @@ jobs:
         env:
           INPUT_VERSION: ${{ inputs.version || '' }}
           PR_TITLE: ${{ github.event.issue.title || '' }}
+          REPAIR_EXISTING_RELEASE: ${{ inputs.repair_existing_release || false }}
         run: |
           set -euo pipefail
+
+          if [ "$REPAIR_EXISTING_RELEASE" = "true" ] && [ -z "$INPUT_VERSION" ]; then
+            echo "::error::version is required when repairing an existing release"
+            exit 1
+          fi
 
           if [ -n "$INPUT_VERSION" ]; then
             echo "version=${INPUT_VERSION}" >> "$GITHUB_OUTPUT"
@@ -81,6 +99,7 @@ jobs:
           echo "version=v${BASE_VERSION}-beta.${NEXT}" >> "$GITHUB_OUTPUT"
 
       - name: Create beta tag
+        if: ${{ !inputs.repair_existing_release }}
         env:
           BETA_VERSION: ${{ steps.version.outputs.version }}
         run: |
@@ -88,14 +107,40 @@ jobs:
           git push origin "$BETA_VERSION"
 
       - name: Create GitHub pre-release
+        if: ${{ !inputs.repair_existing_release }}
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           BETA_VERSION: ${{ steps.version.outputs.version }}
         run: |
+          gh api \
+            --method POST \
+            "repos/${{ github.repository }}/releases/generate-notes" \
+            -f tag_name="$BETA_VERSION" \
+            -f target_commitish=develop \
+            --jq .body \
+            > release-notes.raw.md
+          mise exec -- python3 scripts/release/sanitize_release_notes.py \
+            < release-notes.raw.md \
+            > release-notes.md
           gh release create "$BETA_VERSION" \
             --prerelease \
-            --generate-notes \
+            --notes-file release-notes.md \
             --target develop
+
+      - name: Repair existing GitHub pre-release
+        if: ${{ inputs.repair_existing_release }}
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          BETA_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release view "$BETA_VERSION" \
+            --json body \
+            --jq .body \
+            > release-notes.raw.md
+          mise exec -- python3 scripts/release/sanitize_release_notes.py \
+            < release-notes.raw.md \
+            > release-notes.md
+          gh release edit "$BETA_VERSION" --notes-file release-notes.md
 
       - name: Add reaction to comment
         if: github.event_name == 'issue_comment'
