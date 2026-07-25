@@ -65,6 +65,32 @@ class _PagedEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
   }
 }
 
+class _CountingPagedEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
+  static var fetchNextDataCallCount = 0;
+  static Completer<void>? fetchNextDataCompleter;
+
+  static void reset() {
+    fetchNextDataCallCount = 0;
+    fetchNextDataCompleter = Completer<void>();
+  }
+
+  @override
+  Future<PaginatedResponse<EarthquakePartial>> build(
+    EarthquakeHistoryParameter parameter,
+  ) async {
+    return PaginatedResponse(
+      items: [_earthquakePartialForList(parameter)],
+      nextToken: 'next-token',
+    );
+  }
+
+  @override
+  Future<void> fetchNextData() async {
+    fetchNextDataCallCount += 1;
+    await fetchNextDataCompleter?.future;
+  }
+}
+
 class _PendingEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
   @override
   Future<PaginatedResponse<EarthquakePartial>> build(
@@ -298,6 +324,7 @@ void main() {
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.text('地震一覧を読み込んでいます'), findsOneWidget);
   });
 
   testWidgets('続きがある場合はさらに読み込むボタンを表示する', (tester) async {
@@ -330,5 +357,48 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('さらに読み込む'), findsOneWidget);
+  });
+
+  testWidgets('追加読み込み中の二重押下は1回に抑制される', (tester) async {
+    _CountingPagedEarthquakeHistoryNotifier.reset();
+    addTearDown(() {
+      _CountingPagedEarthquakeHistoryNotifier.fetchNextDataCompleter?.complete();
+    });
+    await tester.binding.setSurfaceSize(const Size(800, 1200));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          earthquakeHistoryProvider(
+            const EarthquakeHistoryParameter.city(
+              cityCode: '1720400',
+              sortBy: EarthquakeSortBy.eventId,
+              sortOrder: SortOrder.desc,
+            ),
+          ).overrideWith(_CountingPagedEarthquakeHistoryNotifier.new),
+        ],
+        child: _modalTestApp(
+          onPressed: (context) => showCityDetailModal(
+            context,
+            cityCode: '1720400',
+            cityName: '輪島市',
+            regionName: '石川県',
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pumpAndSettle();
+
+    final loadMoreButton = find.widgetWithText(OutlinedButton, 'さらに読み込む');
+
+    await tester.tap(loadMoreButton);
+    await tester.pump();
+    await tester.tap(loadMoreButton);
+    await tester.pump();
+
+    expect(_CountingPagedEarthquakeHistoryNotifier.fetchNextDataCallCount, 1);
   });
 }

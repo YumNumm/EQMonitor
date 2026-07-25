@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_tex
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -125,19 +126,13 @@ class _AreaDetailModal extends ConsumerWidget {
               ),
             ),
             ...switch ((visiblePage, asyncPage)) {
-              (final PaginatedResponse<EarthquakePartial> page?, _) =>
-                _buildEarthquakeListSlivers(
-                  context: context,
-                  ref: ref,
+              (final PaginatedResponse<EarthquakePartial> page?, _) => [
+                _AreaEarthquakeListSliverGroup(
                   parameter: parameter,
                   page: page,
                 ),
-              (null, AsyncLoading()) => const [
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Center(child: CircularProgressIndicator.adaptive()),
-                ),
               ],
+              (null, AsyncLoading()) => const [_InitialLoadingSliver()],
               (null, AsyncError(:final error)) => [
                 SliverFillRemaining(
                   hasScrollBody: false,
@@ -165,56 +160,96 @@ class _AreaDetailModal extends ConsumerWidget {
   }
 }
 
-List<Widget> _buildEarthquakeListSlivers({
-  required BuildContext context,
-  required WidgetRef ref,
-  required EarthquakeHistoryParameter parameter,
-  required PaginatedResponse<EarthquakePartial> page,
-}) {
-  if (page.items.isEmpty) {
-    return const [
-      SliverFillRemaining(
+class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
+  const _AreaEarthquakeListSliverGroup({
+    required this.parameter,
+    required this.page,
+  });
+
+  final EarthquakeHistoryParameter parameter;
+  final PaginatedResponse<EarthquakePartial> page;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (page.items.isEmpty) {
+      return const SliverFillRemaining(
         hasScrollBody: false,
         child: Center(child: Text('この地域で観測された地震はありません')),
-      ),
-    ];
-  }
+      );
+    }
 
-  return [
-    SliverList.builder(
-      itemCount: page.items.length,
-      itemBuilder: (context, index) {
-        final item = page.items[index];
-        return EarthquakeHistoryListTile(
-          item: item,
-          searchParameter: parameter,
-          dense: true,
-          visualDensity: VisualDensity.compact,
-          showBackgroundColor: false,
-          onTap: () async {
-            await EarthquakeHistoryDetailsRoute(
-              eventId: item.earthquake.eventId,
-            ).push<void>(context);
+    final activeCursor = useState<String?>(null);
+    final nextToken = page.nextToken;
+    final isAppending = nextToken != null && activeCursor.value == nextToken;
+
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverList.builder(
+          itemCount: page.items.length,
+          itemBuilder: (context, index) {
+            final item = page.items[index];
+            return EarthquakeHistoryListTile(
+              item: item,
+              searchParameter: parameter,
+              dense: true,
+              visualDensity: VisualDensity.compact,
+              showBackgroundColor: false,
+              onTap: () async {
+                await EarthquakeHistoryDetailsRoute(
+                  eventId: item.earthquake.eventId,
+                ).push<void>(context);
+              },
+            );
           },
-        );
-      },
-    ),
-    if (page.nextToken != null)
-      SliverToBoxAdapter(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-          child: OutlinedButton.icon(
-            onPressed: () async {
-              await ref
-                  .read(earthquakeHistoryProvider(parameter).notifier)
-                  .fetchNextData();
-            },
-            icon: const Icon(Icons.expand_more_rounded),
-            label: const Text('さらに読み込む'),
+        ),
+        if (nextToken != null)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: OutlinedButton.icon(
+                onPressed: isAppending
+                    ? null
+                    : () async {
+                        activeCursor.value = nextToken;
+                        try {
+                          await ref
+                              .read(earthquakeHistoryProvider(parameter).notifier)
+                              .fetchNextData();
+                        } finally {
+                          if (activeCursor.value == nextToken) {
+                            activeCursor.value = null;
+                          }
+                        }
+                      },
+                icon: const Icon(Icons.expand_more_rounded),
+                label: const Text('さらに読み込む'),
+              ),
+            ),
           ),
+      ],
+    );
+  }
+}
+
+class _InitialLoadingSliver extends StatelessWidget {
+  const _InitialLoadingSliver();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SliverFillRemaining(
+      hasScrollBody: false,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator.adaptive(),
+            SizedBox(height: 12),
+            Text('地震一覧を読み込んでいます'),
+          ],
         ),
       ),
-  ];
+    );
+  }
 }
 
 class _DragHandle extends StatelessWidget {
