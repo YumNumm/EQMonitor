@@ -15,6 +15,16 @@ installation tokenで `v<version>-beta.<number>` タグをpushする。
   - Firebase App Distributionへ配布
   - Google Playの `external` クローズドテストトラックへ公開
 
+`google-play-cli 1.0.1` は既存trackの更新だけを行うため、`external` が無い状態で
+直接publishすると失敗する。Google Play公開jobはpublish前に
+`scripts/release/ensure_google_play_track.sh` を実行する。このスクリプトは
+Android Publisher APIのedit内でtrack一覧を確認し、無い場合だけ
+`CLOSED_TESTING` / `DEFAULT` の `external` trackを作成してeditをcommitする。
+
+track作成後、Play Consoleの Testing > Closed testing > External で、外部テスターの
+Google Groupまたはメールリストとフィードバック先を一度設定する。Publishing APIの
+track作成だけではテスターは自動追加されない。
+
 Google Play `external` が失敗しても `internal` へフォールバックしない。失敗は
 該当jobとGitHub Deployment Statusのfailureとして扱う。
 

@@ -214,6 +214,15 @@ env:
 Add `define-matrix` to `deploy-android-google-play.needs`, then use
 `--track "$GOOGLE_PLAY_TRACK"`.
 
+`google-play-cli 1.0.1` はtrack作成を行わないため、PR前レビューで次の境界を追加する。
+
+- `scripts/release/ensure_google_play_track.sh` はAndroid Publisher APIでeditを作り、
+  `external` が無い場合だけ `CLOSED_TESTING` / `DEFAULT` trackを作成・commitする。
+- `scripts/ci/test_ensure_google_play_track.sh` はfake curlで未作成時のcreate/commitと
+  作成済み時の再作成抑止を検証する。
+- Google認証actionは `token_format: access_token` を出力し、external公開時だけ
+  ensure scriptへ渡す。
+
 - [ ] **Step 6: Run focused tests and actionlint**
 
 ```bash

@@ -686,6 +686,15 @@ jobs:
         with:
           workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
+          token_format: access_token
+
+      - name: Ensure Google Play track exists
+        if: ${{ needs.define-matrix.outputs.android-track == 'external' }}
+        env:
+          GOOGLE_PLAY_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          PACKAGE_NAME: net.yumnumm.eqmonitor
+          TRACK_NAME: ${{ needs.define-matrix.outputs.android-track }}
+        run: scripts/release/ensure_google_play_track.sh
 
       - name: Upload AAB to Google Play
         env:
