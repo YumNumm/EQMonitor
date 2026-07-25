@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
+import 'package:eqmonitor/core/util/map/replace_map_style_layers.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
@@ -94,14 +95,22 @@ class IntensityFillLayer extends HookConsumerWidget {
 
             final fillColor = buildIntensityMatchExpression(pairs, colorModel);
 
-            await styleController.addLayer(
-              FillStyleLayer(
-                id: _lv1FillLayerId,
-                sourceId: 'eqmonitor_map',
-                sourceLayerId: 'areaForecastLocalE',
-                paint: {'fill-color': fillColor, 'fill-opacity': 0.7},
-              ),
-              belowLayerId: BaseLayer.areaForecastLocalELine.name,
+            await replaceMapStyleLayers(
+              styleController: styleController,
+              layerIds: const [_lv1FillLayerId],
+              layers: [
+                (
+                  layer: FillStyleLayer(
+                    id: _lv1FillLayerId,
+                    sourceId: 'eqmonitor_map',
+                    sourceLayerId: 'areaForecastLocalE',
+                    paint: {'fill-color': fillColor, 'fill-opacity': 0.7},
+                  ),
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                  aboveLayerId: null,
+                  atIndex: null,
+                ),
+              ],
             );
           } on Exception catch (e) {
             talker.log(e);
@@ -134,20 +143,6 @@ class IntensityFillLayer extends HookConsumerWidget {
           return null;
         }
 
-        // 追加に成功したレイヤーIDのみを記録し、削除時は逆順で辿る。
-        // (earthquake_history_fill_layer.dart の addedLayerIds/removeAdded 参照)
-        final addedLayerIds = <String>[];
-
-        Future<void> removeAdded() async {
-          for (final id in addedLayerIds.reversed) {
-            try {
-              await styleController.removeLayer(id);
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }
-        }
-
         unawaited(
           enqueue(() async {
             try {
@@ -163,17 +158,19 @@ class IntensityFillLayer extends HookConsumerWidget {
                 propertyKey: 'regioncode',
               );
 
-              // Lv2 市区町村 fill
-              await styleController.addLayer(
-                FillStyleLayer(
-                  id: _lv2FillLayerId,
-                  sourceId: 'eqmonitor_map',
-                  sourceLayerId: 'areaInformationCityQuake',
-                  paint: {'fill-color': fillColor, 'fill-opacity': 0.8},
+              final layers = <MapStyleLayerEntry>[
+                (
+                  layer: FillStyleLayer(
+                    id: _lv2FillLayerId,
+                    sourceId: 'eqmonitor_map',
+                    sourceLayerId: 'areaInformationCityQuake',
+                    paint: {'fill-color': fillColor, 'fill-opacity': 0.8},
+                  ),
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                  aboveLayerId: null,
+                  atIndex: null,
                 ),
-                belowLayerId: BaseLayer.areaForecastLocalELine.name,
-              );
-              addedLayerIds.add(_lv2FillLayerId);
+              ];
 
               final dimAnchorLayerId = selectedCityCode == null
                   ? _lv2FillLayerId
@@ -184,8 +181,8 @@ class IntensityFillLayer extends HookConsumerWidget {
                   selectedPrefCode,
                   prefectures,
                 );
-                await styleController.addLayer(
-                  FillStyleLayer(
+                layers.add((
+                  layer: FillStyleLayer(
                     id: _selectedCityDimLayerId,
                     sourceId: 'eqmonitor_map',
                     sourceLayerId: 'areaInformationCityQuake',
@@ -207,9 +204,10 @@ class IntensityFillLayer extends HookConsumerWidget {
                       'fill-opacity': 0.55,
                     },
                   ),
+                  belowLayerId: null,
                   aboveLayerId: _lv2FillLayerId,
-                );
-                addedLayerIds.add(_selectedCityDimLayerId);
+                  atIndex: null,
+                ));
               }
 
               // ディムオーバーレイ: 選択都道府県の細分区域コードを除外した全エリアを半透明黒で覆う
@@ -226,21 +224,22 @@ class IntensityFillLayer extends HookConsumerWidget {
                 ],
               ];
 
-              await styleController.addLayer(
-                FillStyleLayer(
+              layers.add((
+                layer: FillStyleLayer(
                   id: _dimFillLayerId,
                   sourceId: 'eqmonitor_map',
                   sourceLayerId: 'areaForecastLocalE',
                   filter: dimFilter,
                   paint: const {'fill-color': '#000000', 'fill-opacity': 0.45},
                 ),
+                belowLayerId: null,
                 aboveLayerId: dimAnchorLayerId,
-              );
-              addedLayerIds.add(_dimFillLayerId);
+                atIndex: null,
+              ));
 
               if (selectedCityCode != null) {
-                await styleController.addLayer(
-                  LineStyleLayer(
+                layers.add((
+                  layer: LineStyleLayer(
                     id: _selectedCityLineLayerId,
                     sourceId: 'eqmonitor_map',
                     sourceLayerId: 'areaInformationCityQuake',
@@ -255,10 +254,22 @@ class IntensityFillLayer extends HookConsumerWidget {
                       'line-opacity': 0.95,
                     },
                   ),
+                  belowLayerId: null,
                   aboveLayerId: BaseLayer.areaForecastLocalELine.name,
-                );
-                addedLayerIds.add(_selectedCityLineLayerId);
+                  atIndex: null,
+                ));
               }
+
+              await replaceMapStyleLayers(
+                styleController: styleController,
+                layerIds: const [
+                  _lv2FillLayerId,
+                  _selectedCityDimLayerId,
+                  _dimFillLayerId,
+                  _selectedCityLineLayerId,
+                ],
+                layers: layers,
+              );
             } on Exception catch (e) {
               talker.log(e);
             }
@@ -266,7 +277,22 @@ class IntensityFillLayer extends HookConsumerWidget {
         );
 
         return () {
-          unawaited(enqueue(removeAdded));
+          unawaited(
+            enqueue(() async {
+              for (final id in [
+                _lv2FillLayerId,
+                _selectedCityDimLayerId,
+                _dimFillLayerId,
+                _selectedCityLineLayerId,
+              ]) {
+                try {
+                  await styleController.removeLayer(id);
+                } on Exception catch (e) {
+                  talker.log(e);
+                }
+              }
+            }),
+          );
         };
       },
       [

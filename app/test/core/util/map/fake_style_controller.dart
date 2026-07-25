@@ -7,14 +7,17 @@ class FakeStyleController implements StyleController {
     this.failingLayerIds = const {},
     this.failingSourceIds = const {},
     this.failingImageIds = const {},
+    this.throwOnDuplicateLayerIds = false,
   });
 
   final Set<String> failingLayerIds;
   final Set<String> failingSourceIds;
   final Set<String> failingImageIds;
+  final bool throwOnDuplicateLayerIds;
 
   final addedSources = <Source>[];
   final addedLayers = <StyleLayer>[];
+  final activeLayerIds = <String>{};
   final addedImageIds = <String>[];
   final updatedGeoJsonSources = <({String id, String data})>[];
   final removedLayerIds = <String>[];
@@ -30,7 +33,13 @@ class FakeStyleController implements StyleController {
     String? belowLayerId,
     String? aboveLayerId,
     int? atIndex,
-  }) async => addedLayers.add(layer);
+  }) async {
+    if (throwOnDuplicateLayerIds && activeLayerIds.contains(layer.id)) {
+      throw Exception('A Layer with the id "${layer.id}" already exists');
+    }
+    activeLayerIds.add(layer.id);
+    addedLayers.add(layer);
+  }
 
   @override
   Future<void> addImage(String id, Uint8List bytes) async {
@@ -48,6 +57,7 @@ class FakeStyleController implements StyleController {
   @override
   Future<void> removeLayer(String id) async {
     removedLayerIds.add(id);
+    activeLayerIds.remove(id);
     if (failingLayerIds.contains(id)) {
       throw Exception('removeLayer failed: $id');
     }
