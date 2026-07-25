@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - develop
+    tags:
+      - "v*-beta.*"
   workflow_dispatch:
     inputs:
       ios:
@@ -41,43 +43,19 @@ jobs:
       deploy-ios: ${{ steps.define-environment-matrix.outputs.deploy-ios }}
       deploy-android: ${{ steps.define-environment-matrix.outputs.deploy-android }}
       deploy-ios-external: ${{ steps.define-environment-matrix.outputs.deploy-ios-external }}
+      android-track: ${{ steps.define-environment-matrix.outputs.android-track }}
     steps:
       - name: Decide which app to deploy
         id: define-environment-matrix
         env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
           COMMITS_JSON: ${{ toJSON(github.event.commits) }}
-        run: |
-          platforms=()
-          external="false"
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ inputs.ios }}" = "true" ]; then
-              platforms+=("ios")
-            fi
-            if [ "${{ inputs.android }}" = "true" ]; then
-              platforms+=("android")
-            fi
-            if [ "${{ inputs.external }}" = "true" ]; then
-              external="true"
-            fi
-          elif [ "${{ github.event_name }}" = "push" ]; then
-              # [release only] タグがない場合は全プラットフォームをデプロイ
-              echo "commit message does not contain [release only platform], deploy all platforms"
-              platforms+=("ios" "android")
-              # push に含まれる全コミットのメッセージに [external] があれば外部配布
-              if printf '%s' "$COMMITS_JSON" | grep -qF '[external]'; then
-                external="true"
-              fi
-          else
-            echo "Unknown event name: ${{ github.event_name }}"
-            exit 1
-          fi
-
-          echo "デプロイするプラットフォーム: ${platforms[*]}"
-          for platform in "${platforms[@]}"; do
-            echo "deploy-${platform}=true" >> "$GITHUB_OUTPUT"
-          done
-          echo "外部配布(external): ${external}"
-          echo "deploy-ios-external=${external}" >> "$GITHUB_OUTPUT"
+          INPUT_IOS: ${{ inputs.ios || false }}
+          INPUT_ANDROID: ${{ inputs.android || false }}
+          INPUT_EXTERNAL: ${{ inputs.external || false }}
+        run: scripts/ci/resolve_deploy_app_policy.sh >> "$GITHUB_OUTPUT"
 
   build-ios:
     name: Build iOS
@@ -107,6 +85,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
+          cache: false
           install_args: "flutter xcbeautify"
 
       - name: Set environment variables
@@ -287,6 +266,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
+          cache: false
           install_args: "xcbeautify yq node pnpm"
 
       - name: Set environment variables
@@ -365,6 +345,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
+          cache: false
           install_args: "firebase yq"
 
       - name: Set environment variables
@@ -452,6 +433,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
+          cache: false
           install_args: "flutter java uv python pipx:codemagic-cli-tools"
 
       - name: Set environment variables
@@ -549,6 +531,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
+          cache: false
           install_args: "firebase yq"
 
       - name: Set environment variables
@@ -611,7 +594,9 @@ jobs:
 
   deploy-android-google-play:
     name: Deploy Android (Google Play)
-    needs: build-android
+    needs:
+      - build-android
+      - define-matrix
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
     permissions:
@@ -654,6 +639,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
         with:
+          cache: false
           install_args: "github:YumNumm/google-play-cli yq"
 
       - name: Set environment variables
@@ -700,14 +686,24 @@ jobs:
         with:
           workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
+          token_format: access_token
+
+      - name: Ensure Google Play track exists
+        if: ${{ needs.define-matrix.outputs.android-track == 'external' }}
+        env:
+          GOOGLE_PLAY_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          PACKAGE_NAME: net.yumnumm.eqmonitor
+          TRACK_NAME: ${{ needs.define-matrix.outputs.android-track }}
+        run: scripts/release/ensure_google_play_track.sh
 
       - name: Upload AAB to Google Play
         env:
           RELEASE_NAME: ${{ steps.output_release_version.outputs.release_version }}
+          GOOGLE_PLAY_TRACK: ${{ needs.define-matrix.outputs.android-track }}
         run: |
           google-play-cli bundles publish \
             --bundle app.aab \
-            --track "internal" \
+            --track "$GOOGLE_PLAY_TRACK" \
             --release-notes="$(cat release-notes.json)" \
             --release-name "$RELEASE_NAME" \
             --package-name "net.yumnumm.eqmonitor"
