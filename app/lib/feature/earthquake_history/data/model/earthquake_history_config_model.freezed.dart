@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeHistoryConfig {
 
- EarthquakeHistoryListConfig get list;
+ EarthquakeHistoryListConfig get list; EarthquakeHistoryDetailsConfig get details;
 /// Create a copy of EarthquakeHistoryConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $EarthquakeHistoryConfigCopyWith<EarthquakeHistoryConfig> get copyWith => _$Eart
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryConfig&&(identical(other.list, list) || other.list == list));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryConfig&&(identical(other.list, list) || other.list == list)&&(identical(other.details, details) || other.details == details));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,list);
+int get hashCode => Object.hash(runtimeType,list,details);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryConfig(list: $list)';
+  return 'EarthquakeHistoryConfig(list: $list, details: $details)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $EarthquakeHistoryConfigCopyWith<$Res>  {
   factory $EarthquakeHistoryConfigCopyWith(EarthquakeHistoryConfig value, $Res Function(EarthquakeHistoryConfig) _then) = _$EarthquakeHistoryConfigCopyWithImpl;
 @useResult
 $Res call({
- EarthquakeHistoryListConfig list
+ EarthquakeHistoryListConfig list, EarthquakeHistoryDetailsConfig details
 });
 
 
-$EarthquakeHistoryListConfigCopyWith<$Res> get list;
+$EarthquakeHistoryListConfigCopyWith<$Res> get list;$EarthquakeHistoryDetailsConfigCopyWith<$Res> get details;
 
 }
 /// @nodoc
@@ -65,10 +65,11 @@ class _$EarthquakeHistoryConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? list = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? list = null,Object? details = null,}) {
   return _then(_self.copyWith(
 list: null == list ? _self.list : list // ignore: cast_nullable_to_non_nullable
-as EarthquakeHistoryListConfig,
+as EarthquakeHistoryListConfig,details: null == details ? _self.details : details // ignore: cast_nullable_to_non_nullable
+as EarthquakeHistoryDetailsConfig,
   ));
 }
 /// Create a copy of EarthquakeHistoryConfig
@@ -79,6 +80,15 @@ $EarthquakeHistoryListConfigCopyWith<$Res> get list {
   
   return $EarthquakeHistoryListConfigCopyWith<$Res>(_self.list, (value) {
     return _then(_self.copyWith(list: value));
+  });
+}/// Create a copy of EarthquakeHistoryConfig
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeHistoryDetailsConfigCopyWith<$Res> get details {
+  
+  return $EarthquakeHistoryDetailsConfigCopyWith<$Res>(_self.details, (value) {
+    return _then(_self.copyWith(details: value));
   });
 }
 }
@@ -162,10 +172,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeHistoryListConfig list)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeHistoryListConfig list,  EarthquakeHistoryDetailsConfig details)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryConfig() when $default != null:
-return $default(_that.list);case _:
+return $default(_that.list,_that.details);case _:
   return orElse();
 
 }
@@ -183,10 +193,10 @@ return $default(_that.list);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeHistoryListConfig list)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeHistoryListConfig list,  EarthquakeHistoryDetailsConfig details)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryConfig():
-return $default(_that.list);case _:
+return $default(_that.list,_that.details);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +213,10 @@ return $default(_that.list);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeHistoryListConfig list)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeHistoryListConfig list,  EarthquakeHistoryDetailsConfig details)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryConfig() when $default != null:
-return $default(_that.list);case _:
+return $default(_that.list,_that.details);case _:
   return null;
 
 }
@@ -215,13 +225,14 @@ return $default(_that.list);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
 
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _EarthquakeHistoryConfig implements EarthquakeHistoryConfig {
-  const _EarthquakeHistoryConfig({required this.list});
+  const _EarthquakeHistoryConfig({required this.list, this.details = const EarthquakeHistoryDetailsConfig()});
   factory _EarthquakeHistoryConfig.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryConfigFromJson(json);
 
 @override final  EarthquakeHistoryListConfig list;
+@override@JsonKey() final  EarthquakeHistoryDetailsConfig details;
 
 /// Create a copy of EarthquakeHistoryConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -236,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryConfig&&(identical(other.list, list) || other.list == list));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryConfig&&(identical(other.list, list) || other.list == list)&&(identical(other.details, details) || other.details == details));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,list);
+int get hashCode => Object.hash(runtimeType,list,details);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryConfig(list: $list)';
+  return 'EarthquakeHistoryConfig(list: $list, details: $details)';
 }
 
 
@@ -256,11 +267,11 @@ abstract mixin class _$EarthquakeHistoryConfigCopyWith<$Res> implements $Earthqu
   factory _$EarthquakeHistoryConfigCopyWith(_EarthquakeHistoryConfig value, $Res Function(_EarthquakeHistoryConfig) _then) = __$EarthquakeHistoryConfigCopyWithImpl;
 @override @useResult
 $Res call({
- EarthquakeHistoryListConfig list
+ EarthquakeHistoryListConfig list, EarthquakeHistoryDetailsConfig details
 });
 
 
-@override $EarthquakeHistoryListConfigCopyWith<$Res> get list;
+@override $EarthquakeHistoryListConfigCopyWith<$Res> get list;@override $EarthquakeHistoryDetailsConfigCopyWith<$Res> get details;
 
 }
 /// @nodoc
@@ -273,10 +284,11 @@ class __$EarthquakeHistoryConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? list = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? list = null,Object? details = null,}) {
   return _then(_EarthquakeHistoryConfig(
 list: null == list ? _self.list : list // ignore: cast_nullable_to_non_nullable
-as EarthquakeHistoryListConfig,
+as EarthquakeHistoryListConfig,details: null == details ? _self.details : details // ignore: cast_nullable_to_non_nullable
+as EarthquakeHistoryDetailsConfig,
   ));
 }
 
@@ -288,6 +300,15 @@ $EarthquakeHistoryListConfigCopyWith<$Res> get list {
   
   return $EarthquakeHistoryListConfigCopyWith<$Res>(_self.list, (value) {
     return _then(_self.copyWith(list: value));
+  });
+}/// Create a copy of EarthquakeHistoryConfig
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeHistoryDetailsConfigCopyWith<$Res> get details {
+  
+  return $EarthquakeHistoryDetailsConfigCopyWith<$Res>(_self.details, (value) {
+    return _then(_self.copyWith(details: value));
   });
 }
 }
@@ -562,6 +583,271 @@ as bool,designatedRegionSearchType: freezed == designatedRegionSearchType ? _sel
 as RegionSearchType?,designatedRegionCode: freezed == designatedRegionCode ? _self.designatedRegionCode : designatedRegionCode // ignore: cast_nullable_to_non_nullable
 as String?,designatedRegionName: freezed == designatedRegionName ? _self.designatedRegionName : designatedRegionName // ignore: cast_nullable_to_non_nullable
 as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$EarthquakeHistoryDetailsConfig {
+
+/// 観測点アイコンの表示モード
+ StationDisplayMode get stationDisplayMode;
+/// Create a copy of EarthquakeHistoryDetailsConfig
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EarthquakeHistoryDetailsConfigCopyWith<EarthquakeHistoryDetailsConfig> get copyWith => _$EarthquakeHistoryDetailsConfigCopyWithImpl<EarthquakeHistoryDetailsConfig>(this as EarthquakeHistoryDetailsConfig, _$identity);
+
+  /// Serializes this EarthquakeHistoryDetailsConfig to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryDetailsConfig&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,stationDisplayMode);
+
+@override
+String toString() {
+  return 'EarthquakeHistoryDetailsConfig(stationDisplayMode: $stationDisplayMode)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EarthquakeHistoryDetailsConfigCopyWith<$Res>  {
+  factory $EarthquakeHistoryDetailsConfigCopyWith(EarthquakeHistoryDetailsConfig value, $Res Function(EarthquakeHistoryDetailsConfig) _then) = _$EarthquakeHistoryDetailsConfigCopyWithImpl;
+@useResult
+$Res call({
+ StationDisplayMode stationDisplayMode
+});
+
+
+
+
+}
+/// @nodoc
+class _$EarthquakeHistoryDetailsConfigCopyWithImpl<$Res>
+    implements $EarthquakeHistoryDetailsConfigCopyWith<$Res> {
+  _$EarthquakeHistoryDetailsConfigCopyWithImpl(this._self, this._then);
+
+  final EarthquakeHistoryDetailsConfig _self;
+  final $Res Function(EarthquakeHistoryDetailsConfig) _then;
+
+/// Create a copy of EarthquakeHistoryDetailsConfig
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? stationDisplayMode = null,}) {
+  return _then(_self.copyWith(
+stationDisplayMode: null == stationDisplayMode ? _self.stationDisplayMode : stationDisplayMode // ignore: cast_nullable_to_non_nullable
+as StationDisplayMode,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [EarthquakeHistoryDetailsConfig].
+extension EarthquakeHistoryDetailsConfigPatterns on EarthquakeHistoryDetailsConfig {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EarthquakeHistoryDetailsConfig value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _EarthquakeHistoryDetailsConfig() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EarthquakeHistoryDetailsConfig value)  $default,){
+final _that = this;
+switch (_that) {
+case _EarthquakeHistoryDetailsConfig():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EarthquakeHistoryDetailsConfig value)?  $default,){
+final _that = this;
+switch (_that) {
+case _EarthquakeHistoryDetailsConfig() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StationDisplayMode stationDisplayMode)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _EarthquakeHistoryDetailsConfig() when $default != null:
+return $default(_that.stationDisplayMode);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StationDisplayMode stationDisplayMode)  $default,) {final _that = this;
+switch (_that) {
+case _EarthquakeHistoryDetailsConfig():
+return $default(_that.stationDisplayMode);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StationDisplayMode stationDisplayMode)?  $default,) {final _that = this;
+switch (_that) {
+case _EarthquakeHistoryDetailsConfig() when $default != null:
+return $default(_that.stationDisplayMode);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _EarthquakeHistoryDetailsConfig implements EarthquakeHistoryDetailsConfig {
+  const _EarthquakeHistoryDetailsConfig({this.stationDisplayMode = StationDisplayMode.auto});
+  factory _EarthquakeHistoryDetailsConfig.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryDetailsConfigFromJson(json);
+
+/// 観測点アイコンの表示モード
+@override@JsonKey() final  StationDisplayMode stationDisplayMode;
+
+/// Create a copy of EarthquakeHistoryDetailsConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EarthquakeHistoryDetailsConfigCopyWith<_EarthquakeHistoryDetailsConfig> get copyWith => __$EarthquakeHistoryDetailsConfigCopyWithImpl<_EarthquakeHistoryDetailsConfig>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$EarthquakeHistoryDetailsConfigToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryDetailsConfig&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,stationDisplayMode);
+
+@override
+String toString() {
+  return 'EarthquakeHistoryDetailsConfig(stationDisplayMode: $stationDisplayMode)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EarthquakeHistoryDetailsConfigCopyWith<$Res> implements $EarthquakeHistoryDetailsConfigCopyWith<$Res> {
+  factory _$EarthquakeHistoryDetailsConfigCopyWith(_EarthquakeHistoryDetailsConfig value, $Res Function(_EarthquakeHistoryDetailsConfig) _then) = __$EarthquakeHistoryDetailsConfigCopyWithImpl;
+@override @useResult
+$Res call({
+ StationDisplayMode stationDisplayMode
+});
+
+
+
+
+}
+/// @nodoc
+class __$EarthquakeHistoryDetailsConfigCopyWithImpl<$Res>
+    implements _$EarthquakeHistoryDetailsConfigCopyWith<$Res> {
+  __$EarthquakeHistoryDetailsConfigCopyWithImpl(this._self, this._then);
+
+  final _EarthquakeHistoryDetailsConfig _self;
+  final $Res Function(_EarthquakeHistoryDetailsConfig) _then;
+
+/// Create a copy of EarthquakeHistoryDetailsConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? stationDisplayMode = null,}) {
+  return _then(_EarthquakeHistoryDetailsConfig(
+stationDisplayMode: null == stationDisplayMode ? _self.stationDisplayMode : stationDisplayMode // ignore: cast_nullable_to_non_nullable
+as StationDisplayMode,
   ));
 }
 

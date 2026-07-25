@@ -110,6 +110,13 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                 (v) => notifier.save(value.copyWith(stationLabelMinZoom: v)),
               ),
               _slider(
+                '観測点 数字表示 (自動)',
+                value.stationTextZoom,
+                3,
+                15,
+                (v) => notifier.save(value.copyWith(stationTextZoom: v)),
+              ),
+              _slider(
                 '震央 半透明化',
                 value.hypocenterFadeZoom,
                 3,

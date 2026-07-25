@@ -16,13 +16,22 @@ _EarthquakeHistoryConfig _$EarthquakeHistoryConfigFromJson(
       'list',
       (v) => EarthquakeHistoryListConfig.fromJson(v as Map<String, dynamic>),
     ),
+    details: $checkedConvert(
+      'details',
+      (v) => v == null
+          ? const EarthquakeHistoryDetailsConfig()
+          : EarthquakeHistoryDetailsConfig.fromJson(v as Map<String, dynamic>),
+    ),
   );
   return val;
 });
 
 Map<String, dynamic> _$EarthquakeHistoryConfigToJson(
   _EarthquakeHistoryConfig instance,
-) => <String, dynamic>{'list': instance.list};
+) => <String, dynamic>{
+  'list': instance.list.toJson(),
+  'details': instance.details.toJson(),
+};
 
 _EarthquakeHistoryListConfig _$EarthquakeHistoryListConfigFromJson(
   Map<String, dynamic> json,
@@ -73,4 +82,37 @@ const _$RegionSearchTypeEnumMap = {
   RegionSearchType.region: 'region',
   RegionSearchType.city: 'city',
   RegionSearchType.station: 'station',
+};
+
+_EarthquakeHistoryDetailsConfig _$EarthquakeHistoryDetailsConfigFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_EarthquakeHistoryDetailsConfig',
+  json,
+  ($checkedConvert) {
+    final val = _EarthquakeHistoryDetailsConfig(
+      stationDisplayMode: $checkedConvert(
+        'station_display_mode',
+        (v) =>
+            $enumDecodeNullable(_$StationDisplayModeEnumMap, v) ??
+            StationDisplayMode.auto,
+      ),
+    );
+    return val;
+  },
+  fieldKeyMap: const {'stationDisplayMode': 'station_display_mode'},
+);
+
+Map<String, dynamic> _$EarthquakeHistoryDetailsConfigToJson(
+  _EarthquakeHistoryDetailsConfig instance,
+) => <String, dynamic>{
+  'station_display_mode':
+      _$StationDisplayModeEnumMap[instance.stationDisplayMode]!,
+};
+
+const _$StationDisplayModeEnumMap = {
+  StationDisplayMode.auto: 'auto',
+  StationDisplayMode.maxFocused: 'maxFocused',
+  StationDisplayMode.normal: 'normal',
+  StationDisplayMode.allMinimized: 'allMinimized',
 };

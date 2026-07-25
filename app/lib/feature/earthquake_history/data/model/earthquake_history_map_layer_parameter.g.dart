@@ -27,6 +27,10 @@ _$EarthquakeHistoryMapLayerParameterFromJson(Map<String, dynamic> json) =>
             'station_label_min_zoom',
             (v) => (v as num?)?.toDouble() ?? 9,
           ),
+          stationTextZoom: $checkedConvert(
+            'station_text_zoom',
+            (v) => (v as num?)?.toDouble() ?? 9,
+          ),
           hypocenterFadeZoom: $checkedConvert(
             'hypocenter_fade_zoom',
             (v) => (v as num?)?.toDouble() ?? 8,
@@ -86,6 +90,7 @@ _$EarthquakeHistoryMapLayerParameterFromJson(Map<String, dynamic> json) =>
         'regionToCity': 'region_to_city',
         'stationMinZoom': 'station_min_zoom',
         'stationLabelMinZoom': 'station_label_min_zoom',
+        'stationTextZoom': 'station_text_zoom',
         'hypocenterFadeZoom': 'hypocenter_fade_zoom',
         'hypocenterErrorMinZoom': 'hypocenter_error_min_zoom',
         'regionFillOpacity': 'region_fill_opacity',
@@ -108,6 +113,7 @@ Map<String, dynamic> _$EarthquakeHistoryMapLayerParameterToJson(
   'region_to_city': instance.regionToCity,
   'station_min_zoom': instance.stationMinZoom,
   'station_label_min_zoom': instance.stationLabelMinZoom,
+  'station_text_zoom': instance.stationTextZoom,
   'hypocenter_fade_zoom': instance.hypocenterFadeZoom,
   'hypocenter_error_min_zoom': instance.hypocenterErrorMinZoom,
   'region_fill_opacity': instance.regionFillOpacity,
