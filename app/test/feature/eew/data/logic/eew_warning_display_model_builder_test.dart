@@ -39,29 +39,77 @@ void main() {
     );
   });
 
-  test('代表は到達区分 震度 reportTime eventIdの辞書順で決まる', () {
-    final selected = EewWarningRepresentativeSelector().select(
+  final representativeCases = [
+    (
+      name: '到達区分は未到達を不明より優先する',
       candidates: [
-        candidate(eventId: 'd', intensity: JmaIntensity.seven, isArrived: true),
-        candidate(eventId: 'c', intensity: JmaIntensity.fiveLower),
+        candidate(eventId: 'unknown'),
+        candidate(
+          eventId: 'unarrived',
+          arrivalTime: now.add(const Duration(seconds: 10)),
+        ),
+      ],
+      expectedEventId: 'unarrived',
+    ),
+    (
+      name: '到達区分が同じなら震度の高い候補を優先する',
+      candidates: [
+        candidate(
+          eventId: 'lower',
+          intensity: JmaIntensity.fiveUpper,
+          arrivalTime: now.add(const Duration(seconds: 10)),
+        ),
+        candidate(
+          eventId: 'higher',
+          intensity: JmaIntensity.sixLower,
+          arrivalTime: now.add(const Duration(seconds: 10)),
+        ),
+      ],
+      expectedEventId: 'higher',
+    ),
+    (
+      name: '到達区分と震度が同じなら新しいreportTimeを優先する',
+      candidates: [
+        candidate(
+          eventId: 'older',
+          arrivalTime: now.add(const Duration(seconds: 10)),
+          reportTime: now.subtract(const Duration(seconds: 1)),
+        ),
+        candidate(
+          eventId: 'newer',
+          arrivalTime: now.add(const Duration(seconds: 10)),
+          reportTime: now,
+        ),
+      ],
+      expectedEventId: 'newer',
+    ),
+    (
+      name: '前三条件が同じならeventIdの辞書順を優先する',
+      candidates: [
         candidate(
           eventId: 'b',
-          intensity: JmaIntensity.sixLower,
           arrivalTime: now.add(const Duration(seconds: 10)),
           reportTime: now,
         ),
         candidate(
           eventId: 'a',
-          intensity: JmaIntensity.sixLower,
           arrivalTime: now.add(const Duration(seconds: 10)),
           reportTime: now,
         ),
       ],
-      now: now,
-    );
+      expectedEventId: 'a',
+    ),
+  ];
+  for (final testCase in representativeCases) {
+    test(testCase.name, () {
+      final selected = EewWarningRepresentativeSelector().select(
+        candidates: testCase.candidates,
+        now: now,
+      );
 
-    expect(selected?.event.eventId, 'a');
-  });
+      expect(selected?.event.eventId, testCase.expectedEventId);
+    });
+  }
 
   test('実警報表示を構造化データから集約する', () {
     final model = EewWarningDisplayModelBuilder().build(
