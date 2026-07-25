@@ -2,6 +2,7 @@ import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart' as app;
 import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
@@ -119,13 +120,13 @@ void main() {
 
     container.listen(cityHighestProvider('01'), (_, _) {});
     final stale = await container.read(cityHighestProvider('01').future);
-    expect(stale.single.intensity, JmaIntensity.value3);
+    expect(stale.single.intensity, app.JmaIntensity.three);
     expect(container.read(cityHighestProvider('01')).isFromCache, isTrue);
 
     await _pumpMicrotasks();
 
     final state = container.read(cityHighestProvider('01'));
-    expect(state.requireValue.single.intensity, JmaIntensity.value5plus);
+    expect(state.requireValue.single.intensity, app.JmaIntensity.fiveUpper);
     expect(state.isLoading, isFalse);
   });
 
@@ -134,7 +135,7 @@ void main() {
 
     final result = await container.read(cityHighestProvider('01').future);
 
-    expect(result.single.intensity, JmaIntensity.value4);
+    expect(result.single.intensity, app.JmaIntensity.four);
   });
 
   test('再検証失敗時は stale を維持しエラーを併記する', () async {
@@ -149,7 +150,7 @@ void main() {
 
     final state = container.read(cityHighestProvider('01'));
     expect(state.hasValue, isTrue);
-    expect(state.requireValue.single.intensity, JmaIntensity.value2);
+    expect(state.requireValue.single.intensity, app.JmaIntensity.two);
     expect(state.hasError, isTrue);
   });
 }
