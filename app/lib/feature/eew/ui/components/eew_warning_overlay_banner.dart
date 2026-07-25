@@ -1,7 +1,8 @@
-import 'package:eqmonitor/core/component/decoration/warning_stripe_decoration.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_display_model.dart';
+import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_top_stripe.dart';
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_arrival_formatter.dart';
+import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_intensity_formatter.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,14 @@ class EewWarningOverlayBanner extends StatelessWidget {
       state: displayModel.arrivalState,
       secondsUntilArrival: displayModel.secondsUntilArrival,
     );
-    final intensityQualifier = displayModel.localIntensityIsOver ? '以上' : '';
+    final intensityText = formatEewWarningOverlayIntensity(
+      intensity: displayModel.localIntensity,
+      isOver: displayModel.localIntensityIsOver,
+    );
+    final bannerLabel = formatEewWarningOverlayBannerLabel(
+      source: displayModel.source,
+      reportLabel: displayModel.reportLabel,
+    );
     final headline = displayModel.hypocenterHeadline == null
         ? displayModel.strongMotionHeadline
         : '${displayModel.hypocenterHeadline}\n${displayModel.strongMotionHeadline}';
@@ -37,12 +45,9 @@ class EewWarningOverlayBanner extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const WarningStripeDecoration(
-            colors: [Colors.red, Colors.black],
-            height: 10,
-          ),
+          const EewWarningOverlayTopStripe(),
           SafeArea(
-            top: true,
+            top: false,
             bottom: false,
             child: InkWell(
               onTap: onExpand,
@@ -51,10 +56,12 @@ class EewWarningOverlayBanner extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    JmaIntensityIcon(
-                      intensity: displayModel.localIntensity,
-                      type: IntensityIconType.filled,
-                      size: 52,
+                    ExcludeSemantics(
+                      child: JmaIntensityIcon(
+                        intensity: displayModel.localIntensity,
+                        type: IntensityIconType.filled,
+                        size: 52,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -63,7 +70,7 @@ class EewWarningOverlayBanner extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '緊急地震速報（警報）',
+                            bannerLabel,
                             style: theme.textTheme.labelLarge?.copyWith(
                               color: colorScheme.onErrorContainer,
                               fontWeight: FontWeight.w800,
@@ -84,7 +91,7 @@ class EewWarningOverlayBanner extends StatelessWidget {
                             runSpacing: 2,
                             children: [
                               Text(
-                                '予想震度${displayModel.localIntensity.label}$intensityQualifier',
+                                '予想震度$intensityText',
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: colorScheme.onErrorContainer,
                                   fontWeight: FontWeight.w700,

@@ -1,7 +1,8 @@
-import 'package:eqmonitor/core/component/decoration/warning_stripe_decoration.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_display_model.dart';
+import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_top_stripe.dart';
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_arrival_formatter.dart';
+import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_intensity_formatter.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,10 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
       state: displayModel.arrivalState,
       secondsUntilArrival: displayModel.secondsUntilArrival,
     );
-    final intensityQualifier = displayModel.localIntensityIsOver ? '以上' : '';
+    final intensityText = formatEewWarningOverlayIntensity(
+      intensity: displayModel.localIntensity,
+      isOver: displayModel.localIntensityIsOver,
+    );
     final magnitudeText = switch (displayModel.magnitude) {
       null => '不明',
       final double magnitude => 'M${magnitude.toStringAsFixed(1)}',
@@ -36,100 +40,100 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
       final int depth => '${depth}km',
     };
 
-    return Semantics(
-      label: '緊急地震速報警報',
-      scopesRoute: true,
-      explicitChildNodes: true,
-      child: SizedBox.expand(
-        child: Material(
-          color: colorScheme.errorContainer,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const WarningStripeDecoration(
-                colors: [Colors.red, Colors.black],
-                height: 10,
-              ),
-              Expanded(
-                child: SafeArea(
-                  top: true,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: ListView(
-                            children: [
-                              Text(
-                                displayModel.reportLabel,
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  color: colorScheme.onErrorContainer,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-                              _EewWarningHeadline(displayModel: displayModel),
-                              const SizedBox(height: 28),
-                              _EewWarningLocalIntensity(
-                                displayModel: displayModel,
-                                arrivalText: arrivalText,
-                                intensityQualifier: intensityQualifier,
-                              ),
-                              const SizedBox(height: 24),
-                              _EewWarningDetails(
-                                displayModel: displayModel,
-                                magnitudeText: magnitudeText,
-                                depthText: depthText,
-                              ),
-                              if (displayModel.alertCount > 1) ...[
-                                const SizedBox(height: 16),
+    return BlockSemantics(
+      child: Semantics(
+        label: '緊急地震速報警報',
+        scopesRoute: true,
+        explicitChildNodes: true,
+        child: SizedBox.expand(
+          child: Material(
+            color: colorScheme.errorContainer,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const EewWarningOverlayTopStripe(),
+                Expanded(
+                  child: SafeArea(
+                    top: false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: ListView(
+                              children: [
                                 Text(
-                                  '${displayModel.alertCount}件の警報から代表表示',
-                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                  displayModel.reportLabel,
+                                  style: theme.textTheme.titleMedium?.copyWith(
                                     color: colorScheme.onErrorContainer,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
+                                const SizedBox(height: 24),
+                                _EewWarningHeadline(displayModel: displayModel),
+                                const SizedBox(height: 28),
+                                _EewWarningLocalIntensity(
+                                  displayModel: displayModel,
+                                  arrivalText: arrivalText,
+                                  intensityText: intensityText,
+                                ),
+                                const SizedBox(height: 24),
+                                _EewWarningDetails(
+                                  displayModel: displayModel,
+                                  magnitudeText: magnitudeText,
+                                  depthText: depthText,
+                                ),
+                                if (displayModel.alertCount > 1) ...[
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    '${displayModel.alertCount}件の警報から代表表示',
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: colorScheme.onErrorContainer,
+                                    ),
+                                  ),
+                                ],
                               ],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  onPressed: onMinimize,
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor:
+                                        colorScheme.onErrorContainer,
+                                    side: BorderSide(
+                                      color: colorScheme.onErrorContainer,
+                                    ),
+                                  ),
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  label: const Text('最小化'),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: FilledButton.icon(
+                                  onPressed: onClose,
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: colorScheme.error,
+                                    foregroundColor: colorScheme.onError,
+                                  ),
+                                  icon: const Icon(Icons.close),
+                                  label: const Text('閉じる'),
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: OutlinedButton.icon(
-                                onPressed: onMinimize,
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: colorScheme.onErrorContainer,
-                                  side: BorderSide(
-                                    color: colorScheme.onErrorContainer,
-                                  ),
-                                ),
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                label: const Text('最小化'),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: FilledButton.icon(
-                                onPressed: onClose,
-                                style: FilledButton.styleFrom(
-                                  backgroundColor: colorScheme.error,
-                                  foregroundColor: colorScheme.onError,
-                                ),
-                                icon: const Icon(Icons.close),
-                                label: const Text('閉じる'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -167,12 +171,12 @@ class _EewWarningLocalIntensity extends StatelessWidget {
   const _EewWarningLocalIntensity({
     required this.displayModel,
     required this.arrivalText,
-    required this.intensityQualifier,
+    required this.intensityText,
   });
 
   final EewWarningOverlayDisplayModel displayModel;
   final String? arrivalText;
-  final String intensityQualifier;
+  final String intensityText;
 
   @override
   Widget build(BuildContext context) {
@@ -184,10 +188,12 @@ class _EewWarningLocalIntensity extends StatelessWidget {
       runSpacing: 16,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        JmaIntensityIcon(
-          intensity: displayModel.localIntensity,
-          type: IntensityIconType.filled,
-          size: 104,
+        ExcludeSemantics(
+          child: JmaIntensityIcon(
+            intensity: displayModel.localIntensity,
+            type: IntensityIconType.filled,
+            size: 104,
+          ),
         ),
         Column(
           mainAxisSize: MainAxisSize.min,
@@ -198,7 +204,7 @@ class _EewWarningLocalIntensity extends StatelessWidget {
               style: theme.textTheme.titleMedium?.copyWith(color: color),
             ),
             Text(
-              '震度${displayModel.localIntensity.label}$intensityQualifier',
+              '震度$intensityText',
               style: theme.textTheme.headlineSmall?.copyWith(
                 color: color,
                 fontWeight: FontWeight.w800,
