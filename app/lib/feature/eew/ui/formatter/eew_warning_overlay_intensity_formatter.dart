@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_display_model.dart';
 
 String formatEewWarningOverlayIntensity({
   required JmaIntensity intensity,
@@ -25,11 +24,3 @@ String formatEewWarningOverlayIntensity({
   }
   return '$value以上';
 }
-
-String formatEewWarningOverlayBannerLabel({
-  required EewWarningOverlaySource source,
-  required String reportLabel,
-}) => switch (source) {
-  EewWarningOverlaySource.real => '緊急地震速報（警報）',
-  EewWarningOverlaySource.simulation => reportLabel,
-};

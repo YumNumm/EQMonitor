@@ -3,6 +3,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_display_mod
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_top_stripe.dart';
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_arrival_formatter.dart';
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_intensity_formatter.dart';
+import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_label_formatter.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +43,9 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
 
     return BlockSemantics(
       child: Semantics(
-        label: '緊急地震速報警報',
+        label: formatEewWarningOverlaySemanticsLabel(
+          source: displayModel.source,
+        ),
         scopesRoute: true,
         explicitChildNodes: true,
         child: SizedBox.expand(
