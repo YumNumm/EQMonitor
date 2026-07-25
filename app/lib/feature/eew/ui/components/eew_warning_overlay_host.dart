@@ -3,19 +3,49 @@ import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_state.dart'
 import 'package:eqmonitor/feature/eew/data/notifier/eew_warning_overlay_notifier.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_banner.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_fullscreen.dart';
+import 'package:eqmonitor/feature/eew/ui/controller/eew_warning_overlay_back_dispatcher_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EewWarningOverlayHost extends ConsumerWidget {
-  const EewWarningOverlayHost({required this.child, super.key});
+class EewWarningOverlayHost extends HookConsumerWidget {
+  const EewWarningOverlayHost({
+    required this.child,
+    required this.backButtonDispatcher,
+    super.key,
+  });
 
   final Widget child;
+  final BackButtonDispatcher backButtonDispatcher;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final lifecycle = ref.watch(appLifecycleProvider);
     final state = ref.watch(eewWarningOverlayNotifierProvider);
     final displayModel = state.displayModel;
+    final shouldInterceptBack =
+        lifecycle == AppLifecycleState.resumed &&
+        state.mode == EewWarningOverlayMode.fullscreen &&
+        displayModel != null;
+    final backDispatcherController = useMemoized(
+      () => EewWarningOverlayBackDispatcherController(
+        parent: backButtonDispatcher,
+        onFullscreenBack: () async {
+          await ref.read(eewWarningOverlayNotifierProvider.notifier).minimize();
+        },
+      ),
+      [backButtonDispatcher],
+    );
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        backDispatcherController.attach();
+      });
+      return backDispatcherController.dispose;
+    }, [backDispatcherController]);
+    useEffect(() {
+      backDispatcherController.update(shouldIntercept: shouldInterceptBack);
+      return null;
+    }, [backDispatcherController, shouldInterceptBack]);
 
     if (lifecycle != AppLifecycleState.resumed ||
         state.mode == EewWarningOverlayMode.hidden ||
@@ -50,14 +80,6 @@ class EewWarningOverlayHost extends ConsumerWidget {
       EewWarningOverlayMode.hidden => const SizedBox.shrink(),
     };
 
-    return PopScope<Object?>(
-      canPop: state.mode != EewWarningOverlayMode.fullscreen,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (!didPop && state.mode == EewWarningOverlayMode.fullscreen) {
-          await notifier.minimize();
-        }
-      },
-      child: Stack(fit: StackFit.expand, children: [child, overlay]),
-    );
+    return Stack(fit: StackFit.expand, children: [child, overlay]);
   }
 }

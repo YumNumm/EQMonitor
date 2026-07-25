@@ -33,6 +33,7 @@ class App extends HookConsumerWidget {
       themeMode: theme.value,
       routerConfig: routerConfig,
       builder: (context, child) => EewWarningOverlayHost(
+        backButtonDispatcher: routerConfig.backButtonDispatcher,
         child: DebugLauncher(child: child ?? const SizedBox.shrink()),
       ),
       theme: buildTheme(colorSet: lightColorSet, brightness: Brightness.light),
