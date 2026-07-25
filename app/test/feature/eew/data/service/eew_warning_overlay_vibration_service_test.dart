@@ -13,8 +13,9 @@ void main() {
       talker: Talker(),
     );
 
-    await service.start();
+    final started = await service.start();
 
+    expect(started, isTrue);
     expect(gateway.pattern, eewWarningOverlayVibrationPattern);
     expect(gateway.vibrateCalls, 1);
     expect(gateway.vibrateOnceCalls, 0);
@@ -51,11 +52,12 @@ void main() {
         hasCustomVibrationsSupportResult: false,
       );
 
-      await EewWarningOverlayVibrationService(
+      final started = await EewWarningOverlayVibrationService(
         gateway: gateway,
         talker: Talker(),
       ).start();
 
+      expect(started, isTrue);
       expect(gateway.vibrateCalls, 0);
       expect(gateway.vibrateOnceCalls, 1);
       expect(gateway.durationMs, 700);
@@ -65,11 +67,12 @@ void main() {
   test('unsupported device is ignored', () async {
     final gateway = _FakeVibrationGateway(hasVibratorResult: false);
 
-    await EewWarningOverlayVibrationService(
+    final started = await EewWarningOverlayVibrationService(
       gateway: gateway,
       talker: Talker(),
     ).start();
 
+    expect(started, isFalse);
     expect(gateway.vibrateCalls, 0);
     expect(gateway.vibrateOnceCalls, 0);
   });
@@ -84,7 +87,7 @@ void main() {
       talker: Talker(),
     );
 
-    await expectLater(service.start(), completes);
+    expect(await service.start(), isFalse);
     await expectLater(service.cancel(), completes);
   });
 

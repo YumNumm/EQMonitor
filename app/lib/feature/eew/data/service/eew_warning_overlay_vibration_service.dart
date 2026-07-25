@@ -72,22 +72,24 @@ class EewWarningOverlayVibrationService {
   final EewWarningOverlayVibrationGateway _gateway;
   final Talker _talker;
 
-  Future<void> start() async {
+  Future<bool> start() async {
     try {
       if (!await _gateway.hasVibrator()) {
-        return;
+        return false;
       }
       if (await _gateway.hasCustomVibrationsSupport()) {
         await _gateway.vibrate(pattern: eewWarningOverlayVibrationPattern);
       } else {
         await _gateway.vibrateOnce(durationMs: 700);
       }
+      return true;
     } on Object catch (error, stackTrace) {
       _talker.error(
         '[EEW warning overlay] vibration start failed',
         error,
         stackTrace,
       );
+      return false;
     }
   }
 

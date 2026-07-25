@@ -82,16 +82,27 @@ final class FakeScheduler implements EewWarningOverlayScheduler {
 }
 
 final class FakeVibrationGateway implements EewWarningOverlayVibrationGateway {
-  FakeVibrationGateway({this.startBarrier});
+  FakeVibrationGateway({
+    this.startBarriers = const [],
+    this.cancelBarriers = const [],
+    this.hasVibratorResult = true,
+  });
 
-  final Completer<void>? startBarrier;
+  final List<Completer<void>?> startBarriers;
+  final List<Completer<void>?> cancelBarriers;
+  final bool hasVibratorResult;
   int startCalls = 0;
   int cancelCalls = 0;
+  int hasVibratorCalls = 0;
+  bool isVibrating = false;
 
   @override
   Future<bool> hasVibrator() async {
-    await startBarrier?.future;
-    return true;
+    final index = hasVibratorCalls++;
+    if (index < startBarriers.length) {
+      await startBarriers[index]?.future;
+    }
+    return hasVibratorResult;
   }
 
   @override
@@ -100,16 +111,23 @@ final class FakeVibrationGateway implements EewWarningOverlayVibrationGateway {
   @override
   Future<void> vibrate({required List<int> pattern}) async {
     startCalls += 1;
+    isVibrating = true;
   }
 
   @override
   Future<void> vibrateOnce({required int durationMs}) async {
     startCalls += 1;
+    isVibrating = true;
   }
 
   @override
   Future<void> cancel() async {
+    final index = cancelCalls;
+    if (index < cancelBarriers.length) {
+      await cancelBarriers[index]?.future;
+    }
     cancelCalls += 1;
+    isVibrating = false;
   }
 }
 
@@ -262,7 +280,7 @@ void main() {
   test('振動開始中の同一eventId更新も振動を途中停止しない', () async {
     final startBarrier = Completer<void>();
     final context = createContext(
-      vibrationGateway: FakeVibrationGateway(startBarrier: startBarrier),
+      vibrationGateway: FakeVibrationGateway(startBarriers: [startBarrier]),
     );
     addTearDown(context.container.dispose);
 
@@ -277,6 +295,70 @@ void main() {
     expect(context.state.displayModel?.serialNo, 2);
     expect(context.vibration.startCalls, 1);
     expect(context.vibration.cancelCalls, 0);
+  });
+
+  test('known実警報がsimulationをpreemptすると最小化して警報動作を止める', () async {
+    final context = createContext();
+    addTearDown(context.container.dispose);
+    await context.publishReal(display(eventIds: ['A']));
+    await context.publishReal(null);
+    context.container
+        .read(eewWarningOverlaySimulationProvider.notifier)
+        .start();
+    await context.settle();
+    expect(context.state.mode, EewWarningOverlayMode.fullscreen);
+    expect(context.vibration.isVibrating, isTrue);
+
+    await context.publishReal(display(eventIds: ['A'], serialNo: 2));
+
+    expect(context.state.mode, EewWarningOverlayMode.minimized);
+    expect(context.state.displayModel?.source, EewWarningOverlaySource.real);
+    expect(context.scheduler.activeTaskCount, 0);
+    expect(context.vibration.isVibrating, isFalse);
+  });
+
+  test('新規Bのcancel待機中の同一内容更新はBの振動開始を中止しない', () async {
+    final cancelBarrier = Completer<void>();
+    final context = createContext(
+      vibrationGateway: FakeVibrationGateway(cancelBarriers: [cancelBarrier]),
+    );
+    addTearDown(context.container.dispose);
+    await context.publishReal(display(eventIds: ['A']));
+
+    context.real.publish(display(eventIds: ['A', 'B']));
+    await Future<void>.delayed(Duration.zero);
+    context.real.publish(display(eventIds: ['A', 'B'], serialNo: 2));
+    await context.container.pump();
+    expect(context.state.displayModel?.serialNo, 2);
+    cancelBarrier.complete();
+    await context.settle();
+
+    expect(context.vibration.startCalls, 2);
+    expect(context.vibration.isVibrating, isTrue);
+  });
+
+  test('古いAのstart完了は後から開始したBの振動を停止しない', () async {
+    final oldStartBarrier = Completer<void>();
+    final context = createContext(
+      vibrationGateway: FakeVibrationGateway(
+        startBarriers: [oldStartBarrier, null],
+      ),
+    );
+    addTearDown(context.container.dispose);
+
+    context.real.publish(display(eventIds: ['A']));
+    await Future<void>.delayed(Duration.zero);
+    context.real.publish(display(eventIds: ['A', 'B']));
+    await context.container.pump();
+    await Future<void>.delayed(Duration.zero);
+    expect(context.vibration.startCalls, 0);
+    expect(context.vibration.isVibrating, isFalse);
+
+    oldStartBarrier.complete();
+    await context.settle();
+
+    expect(context.vibration.startCalls, 2);
+    expect(context.vibration.isVibrating, isTrue);
   });
 
   test('closeは有効群をdismissし新規Cだけ再開条件にする', () async {
@@ -468,5 +550,19 @@ void main() {
 
     expect(context.scheduler.activeTaskCount, 0);
     expect(context.vibration.cancelCalls, 1);
+  });
+
+  test('非対応端末では未開始の振動を停止対象として保持しない', () async {
+    final context = createContext(
+      vibrationGateway: FakeVibrationGateway(hasVibratorResult: false),
+    );
+    addTearDown(context.container.dispose);
+    await context.publishReal(display(eventIds: ['A']));
+
+    await context.scheduler.elapse(const Duration(seconds: 10));
+
+    expect(context.vibration.startCalls, 0);
+    expect(context.vibration.cancelCalls, 0);
+    expect(context.state.mode, EewWarningOverlayMode.minimized);
   });
 }

@@ -18,9 +18,10 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
   EewWarningOverlayScheduledTask? _initializationTask;
   late EewWarningOverlayScheduler _scheduler;
   late EewWarningOverlayVibrationService _vibrationService;
-  var _transitionEpoch = 0;
-  var _vibrationEpoch = 0;
-  var _alertActive = false;
+  var _displayEpoch = 0;
+  var _alertGeneration = 0;
+  var _vibrationActive = false;
+  Future<void> _vibrationQueue = Future.value();
 
   @override
   EewWarningOverlayState build() {
@@ -37,10 +38,10 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
         await handleLifecycleChange(next);
       })
       ..onDispose(() async {
-        _transitionEpoch += 1;
+        _displayEpoch += 1;
         _initializationTask?.cancel();
         cancelScheduledTask();
-        await cancelVibration();
+        await stopVibration();
       });
     final initialDisplay = ref.read(eewWarningOverlayEffectiveDisplayProvider);
     if (initialDisplay != null &&
@@ -49,7 +50,7 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
         delay: Duration.zero,
         callback: () async {
           _initializationTask = null;
-          if (_transitionEpoch == 0) {
+          if (_displayEpoch == 0) {
             await handleDisplayChange(initialDisplay);
           }
         },
@@ -59,7 +60,7 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
   }
 
   Future<void> handleDisplayChange(EewWarningOverlayDisplayModel? model) async {
-    final transition = ++_transitionEpoch;
+    _displayEpoch += 1;
     if (model == null) {
       await hide();
       return;
@@ -69,14 +70,14 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
       return;
     }
     if (model.source == EewWarningOverlaySource.simulation) {
-      await handleSimulation(model: model, transition: transition);
+      await handleSimulation(model: model);
       return;
     }
-    await handleReal(model: model, transition: transition);
+    await handleReal(model: model);
   }
 
   Future<void> handleLifecycleChange(AppLifecycleState lifecycle) async {
-    _transitionEpoch += 1;
+    _displayEpoch += 1;
     if (lifecycle != AppLifecycleState.resumed) {
       await minimizeForBackground();
       return;
@@ -88,8 +89,8 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
 
   Future<void> handleReal({
     required EewWarningOverlayDisplayModel model,
-    required int transition,
   }) async {
+    final previousSource = state.displayModel?.source;
     final eventIds = model.eventIds.toSet();
     final activeIds = eventIds.difference(state.dismissedEventIds);
     if (activeIds.isEmpty) {
@@ -103,7 +104,17 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
         seenEventIds: {...state.seenEventIds, ...eventIds},
         simulationSessionActive: false,
       );
-      await beginFullscreen(next: next, transition: transition);
+      await beginFullscreen(next: next);
+      return;
+    }
+    if (previousSource == EewWarningOverlaySource.simulation) {
+      cancelScheduledTask();
+      state = state.copyWith(
+        mode: EewWarningOverlayMode.minimized,
+        displayModel: model,
+        simulationSessionActive: false,
+      );
+      await stopVibration();
       return;
     }
     state = state.copyWith(
@@ -117,7 +128,6 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
 
   Future<void> handleSimulation({
     required EewWarningOverlayDisplayModel model,
-    required int transition,
   }) async {
     if (state.simulationSessionActive) {
       state = state.copyWith(displayModel: model);
@@ -127,7 +137,7 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
       displayModel: model,
       simulationSessionActive: true,
     );
-    await beginFullscreen(next: next, transition: transition);
+    await beginFullscreen(next: next);
   }
 
   Future<void> retainWhileBackgrounded({
@@ -143,7 +153,7 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
           ? state.simulationSessionActive
           : false,
     );
-    await cancelVibration();
+    await stopVibration();
   }
 
   Future<void> minimizeForBackground() async {
@@ -153,43 +163,31 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
           ? EewWarningOverlayMode.minimized
           : state.mode,
     );
-    await cancelVibration();
+    await stopVibration();
   }
 
-  Future<void> beginFullscreen({
-    required EewWarningOverlayState next,
-    required int transition,
-  }) async {
+  Future<void> beginFullscreen({required EewWarningOverlayState next}) async {
     cancelScheduledTask();
-    final cancellation = cancelVibration();
     state = next.copyWith(mode: EewWarningOverlayMode.fullscreen);
     _scheduledTask = _scheduler.schedule(
       delay: eewWarningOverlayFullscreenDuration,
       callback: minimize,
     );
-    _alertActive = true;
-    final vibration = ++_vibrationEpoch;
-    await cancellation;
-    if (transition != _transitionEpoch || !ref.mounted) {
-      return;
-    }
-    await _vibrationService.start();
-    if (vibration != _vibrationEpoch || !ref.mounted) {
-      await _vibrationService.cancel();
-    }
+    final generation = ++_alertGeneration;
+    await startVibration(generation: generation);
   }
 
   Future<void> minimize() async {
-    _transitionEpoch += 1;
+    _displayEpoch += 1;
     cancelScheduledTask();
     if (state.displayModel != null) {
       state = state.copyWith(mode: EewWarningOverlayMode.minimized);
     }
-    await cancelVibration();
+    await stopVibration();
   }
 
   void expand() {
-    _transitionEpoch += 1;
+    _displayEpoch += 1;
     cancelScheduledTask();
     if (state.mode == EewWarningOverlayMode.minimized &&
         state.displayModel != null) {
@@ -198,7 +196,7 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
   }
 
   Future<void> close() async {
-    _transitionEpoch += 1;
+    _displayEpoch += 1;
     final model = state.displayModel;
     if (model?.source == EewWarningOverlaySource.simulation) {
       ref.read(eewWarningOverlaySimulationProvider.notifier).stop();
@@ -217,7 +215,7 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
       dismissedEventIds: dismissedEventIds ?? state.dismissedEventIds,
       simulationSessionActive: false,
     );
-    await cancelVibration();
+    await stopVibration();
   }
 
   void cancelScheduledTask() {
@@ -225,13 +223,40 @@ class EewWarningOverlayNotifier extends _$EewWarningOverlayNotifier {
     _scheduledTask = null;
   }
 
-  Future<void> cancelVibration() async {
-    _vibrationEpoch += 1;
-    if (!_alertActive) {
-      return;
-    }
-    _alertActive = false;
-    await _vibrationService.cancel();
+  Future<void> startVibration({required int generation}) {
+    final operation = _vibrationQueue.then((_) async {
+      if (_vibrationActive) {
+        _vibrationActive = false;
+        await _vibrationService.cancel();
+      }
+      if (generation != _alertGeneration || !ref.mounted) {
+        return;
+      }
+      final started = await _vibrationService.start();
+      if (generation == _alertGeneration && ref.mounted) {
+        _vibrationActive = started;
+        return;
+      }
+      if (started) {
+        await _vibrationService.cancel();
+      }
+      _vibrationActive = false;
+    });
+    _vibrationQueue = operation;
+    return operation;
+  }
+
+  Future<void> stopVibration() {
+    _alertGeneration += 1;
+    final operation = _vibrationQueue.then((_) async {
+      if (!_vibrationActive) {
+        return;
+      }
+      _vibrationActive = false;
+      await _vibrationService.cancel();
+    });
+    _vibrationQueue = operation;
+    return operation;
   }
 }
 

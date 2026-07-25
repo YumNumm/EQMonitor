@@ -45,7 +45,7 @@ final class EewWarningOverlayNotifierProvider
 }
 
 String _$eewWarningOverlayNotifierHash() =>
-    r'df44c1d01355aff5e7619c9db6b04d697587937e';
+    r'137eeea0239a552ac2dc4519eaf1cd07c60ac907';
 
 abstract class _$EewWarningOverlayNotifier
     extends $Notifier<EewWarningOverlayState> {
