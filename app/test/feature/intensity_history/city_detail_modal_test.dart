@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -63,6 +65,15 @@ class _PagedEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
   }
 }
 
+class _PendingEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
+  @override
+  Future<PaginatedResponse<EarthquakePartial>> build(
+    EarthquakeHistoryParameter parameter,
+  ) {
+    return Completer<PaginatedResponse<EarthquakePartial>>().future;
+  }
+}
+
 EarthquakePartial _earthquakePartialForList(
   EarthquakeHistoryParameter parameter,
 ) {
@@ -108,7 +119,7 @@ typedef _OpenModal = void Function(BuildContext context);
 Widget _modalTestApp({required _OpenModal onPressed}) {
   return MaterialApp(
     theme: ThemeData.light().copyWith(
-      extensions: <ThemeExtension<dynamic>>[
+      extensions: [
         DesignSystemThemeExtension.light(),
       ],
     ),
@@ -257,6 +268,38 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ErrorCard), findsOneWidget);
+  });
+
+  testWidgets('地震一覧の初回読み込み中はローディング表示になる', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(800, 1200));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          earthquakeHistoryProvider(
+            const EarthquakeHistoryParameter.city(
+              cityCode: '1720400',
+              sortBy: EarthquakeSortBy.eventId,
+              sortOrder: SortOrder.desc,
+            ),
+          ).overrideWith(_PendingEarthquakeHistoryNotifier.new),
+        ],
+        child: _modalTestApp(
+          onPressed: (context) => showCityDetailModal(
+            context,
+            cityCode: '1720400',
+            cityName: '輪島市',
+            regionName: '石川県',
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
   testWidgets('続きがある場合はさらに読み込むボタンを表示する', (tester) async {
