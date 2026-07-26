@@ -591,6 +591,106 @@ void main() {
     expect(_detailsComment(fixture.container), 'new-realtime');
   });
 
+  test('推計震度upsertで同じeventIdの詳細を再検証すること', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final cacheClient = api.ApiClient(Dio());
+    final initialResult = Completer<Earthquake>();
+    final refreshResult = Completer<Earthquake>();
+    final repository = _CompletingRepository(
+      cacheClient: cacheClient,
+      cacheResult: () async => throw const CacheMissException(),
+      networkResults: [initialResult, refreshResult],
+    );
+    final container = _detailsContainer(
+      controller: controller,
+      repository: repository,
+      cacheClient: cacheClient,
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      earthquakeHistoryDetailsProvider('event-1'),
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+    await _waitFor(() => repository.networkFetchCount == 1);
+    initialResult.complete(
+      _domainEarthquake(eventId: 'event-1', comment: 'without-tile'),
+    );
+    await container.pump();
+
+    controller.add(
+      RealtimeEvent.estimatedIntensityUpsert(
+        eventId: 'event-1',
+        estimatedIntensityTile: 'estimated/key.pmtiles',
+        generatedAt: DateTime.utc(2026, 7, 27),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await _waitFor(() => repository.networkFetchCount == 2);
+
+    final refreshing = container.read(
+      earthquakeHistoryDetailsProvider('event-1'),
+    );
+    expect(refreshing.isLoading, isTrue);
+    expect(refreshing.hasValue, isTrue);
+    expect(
+      refreshing.value?.telegramComments.single.additional,
+      'without-tile',
+    );
+    expect(refreshing.value?.estimatedIntensityTileUrl, isNull);
+
+    refreshResult.complete(
+      _domainEarthquake(
+        eventId: 'event-1',
+        comment: 'with-tile',
+        estimatedIntensityTileUrl: 'https://example.test/estimated.pmtiles',
+      ),
+    );
+    final refreshed = await container.read(
+      earthquakeHistoryDetailsProvider('event-1').future,
+    );
+
+    expect(
+      refreshed.estimatedIntensityTileUrl,
+      'https://example.test/estimated.pmtiles',
+    );
+  });
+
+  test('別eventIdの推計震度upsertでは詳細を再検証しないこと', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final cacheClient = api.ApiClient(Dio());
+    final repository = _SpyRepository(
+      initial: _domainEarthquake(eventId: 'event-1', comment: 'initial'),
+      cacheClient: cacheClient,
+    );
+    final container = _detailsContainer(
+      controller: controller,
+      repository: repository,
+      cacheClient: cacheClient,
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      earthquakeHistoryDetailsProvider('event-1'),
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+    await container.read(earthquakeHistoryDetailsProvider('event-1').future);
+
+    controller.add(
+      RealtimeEvent.estimatedIntensityUpsert(
+        eventId: 'event-2',
+        estimatedIntensityTile: 'estimated/other.pmtiles',
+        generatedAt: DateTime.utc(2026, 7, 27),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await container.pump();
+
+    expect(repository.detailFetchCount, 1);
+  });
+
   test('matching deleteで開いている詳細をRESTなしにerrorへ遷移すること', () async {
     final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
     addTearDown(controller.close);
@@ -847,10 +947,16 @@ ProviderContainer _detailsContainer({
 Earthquake _domainEarthquake({
   required String eventId,
   required String comment,
-}) => _earthquake(eventId: eventId, comment: comment).toEarthquake(
-  parameter: _earthquakeParameter,
-  shindoDbStations: _shindoDbStations,
-);
+  String? estimatedIntensityTileUrl,
+}) =>
+    _earthquake(
+      eventId: eventId,
+      comment: comment,
+      estimatedIntensityTile: estimatedIntensityTileUrl,
+    ).toEarthquake(
+      parameter: _earthquakeParameter,
+      shindoDbStations: _shindoDbStations,
+    );
 
 Future<void> _waitFor(bool Function() condition) async {
   for (var i = 0; i < 20 && !condition(); i += 1) {
@@ -862,12 +968,14 @@ Future<void> _waitFor(bool Function() condition) async {
 api.Earthquake _earthquake({
   required String eventId,
   required String comment,
+  String? estimatedIntensityTile,
 }) => api.Earthquake(
   eventId: eventId,
   status: api.TelegramStatus.normal,
   earthquakeType: api.EarthquakeType.distant,
   originTimePrecision: api.OriginTimePrecision.second,
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
+  estimatedIntensityTile: estimatedIntensityTile,
   telegrams: [
     api.EarthquakeTelegram(
       telegram: api.Telegram(
