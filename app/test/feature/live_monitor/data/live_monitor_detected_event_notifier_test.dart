@@ -123,10 +123,15 @@ final class _StubHistoryNotifier extends EarthquakeHistoryNotifier {
 final class _DetailStore {
   final values = <String, Earthquake>{};
   final failures = <String>{};
+  final firstLoads = <String, Completer<Earthquake>>{};
   final fetchCounts = <String, int>{};
 
   Future<Earthquake> load(String eventId) async {
     fetchCounts.update(eventId, (count) => count + 1, ifAbsent: () => 1);
+    final firstLoad = firstLoads[eventId];
+    if (fetchCounts[eventId] == 1 && firstLoad != null) {
+      return firstLoad.future;
+    }
     if (failures.contains(eventId)) {
       throw StateError('detail unavailable: $eventId');
     }
@@ -238,6 +243,82 @@ void main() {
     ]);
   });
 
+  test('初期detail待機中に届いた同一VXSE更新を一度だけ発行する', () async {
+    final initialDetail = Completer<Earthquake>();
+    final record = earthquakeRecord(eventId: 'Q', telegramType: .vxse62);
+    final fixture = createFixture(
+      details: {'Q': earthquake(eventId: 'Q')},
+      firstDetailLoads: {'Q': initialDetail},
+    );
+    addTearDown(fixture.container.dispose);
+    final initialization = fixture.container.read(
+      liveMonitorDetectedEventProvider.future,
+    );
+    await fixture.settle();
+
+    fixture.realtime.add(
+      RealtimeEvent.earthquakeUpsert(
+        record: record,
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    initialDetail.complete(
+      record.toEarthquake(
+        parameter: _earthquakeParameter,
+        shindoDbStations: _shindoDbStations,
+      ),
+    );
+    await initialization;
+    await fixture.settle();
+
+    final events = fixture.events.where(
+      (envelope) => envelope.event is LiveMonitorEarthquakeUpsertEvent,
+    );
+    expect(events, hasLength(1));
+    final event = events.single.event as LiveMonitorEarthquakeUpsertEvent;
+    expect(event.trigger.kind, LiveMonitorEarthquakeTriggerKind.vxse62);
+  });
+
+  test('初期detail待機中に届いた同一推計震度を一度だけ発行する', () async {
+    final initialDetail = Completer<Earthquake>();
+    final generatedAt = _now.subtract(const Duration(seconds: 1));
+    final fixture = createFixture(
+      details: {'Q': earthquake(eventId: 'Q')},
+      firstDetailLoads: {'Q': initialDetail},
+    );
+    addTearDown(fixture.container.dispose);
+    final initialization = fixture.container.read(
+      liveMonitorDetectedEventProvider.future,
+    );
+    await fixture.settle();
+
+    fixture.realtime.add(
+      RealtimeEvent.estimatedIntensityUpsert(
+        eventId: 'Q',
+        estimatedIntensityTile: 'estimated/tile-2.pmtiles',
+        generatedAt: generatedAt,
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    final resolvedDetail = earthquake(
+      eventId: 'Q',
+      tileUrl: 'https://tiles.eqmonitor.app/estimated/tile-2.pmtiles',
+    );
+    fixture.detailStore.values['Q'] = resolvedDetail;
+    initialDetail.complete(resolvedDetail);
+    await initialization;
+    await fixture.settle();
+
+    final events = fixture.events
+        .map((envelope) => envelope.event)
+        .whereType<LiveMonitorEarthquakeUpsertEvent>();
+    expect(events, hasLength(1));
+    expect(
+      events.single.trigger,
+      LiveMonitorEarthquakeTrigger.estimatedIntensity(generatedAt: generatedAt),
+    );
+  });
+
   test('RealtimeとRESTの同一VXSE更新を一度だけ発行する', () async {
     final initial = earthquake(eventId: 'Q');
     final fixture = createFixture(details: {'Q': initial});
@@ -296,7 +377,7 @@ void main() {
     fixture.realtime.add(
       RealtimeEvent.estimatedIntensityUpsert(
         eventId: 'Q',
-        estimatedIntensityTile: 'tile-2',
+        estimatedIntensityTile: 'tile-2.pmtiles',
         generatedAt: _now,
         source: RealtimeSource.eqmonitor,
       ),
@@ -306,7 +387,7 @@ void main() {
 
     fixture.detailStore.values['Q'] = earthquake(
       eventId: 'Q',
-      tileUrl: 'https://example.test/tile-2.pmtiles',
+      tileUrl: 'https://tiles.eqmonitor.app/tile-2.pmtiles',
     );
     fixture.realtime.add(
       const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
@@ -322,6 +403,154 @@ void main() {
     expect(event.earthquake.estimatedIntensityTileUrl, isNotNull);
   });
 
+  test('推計震度はraw identifierと一致するfull URLまでpendingを維持する', () async {
+    final generatedAt = _now.subtract(const Duration(seconds: 1));
+    final fixture = createFixture(
+      details: {
+        'Q': earthquake(
+          eventId: 'Q',
+          tileUrl: 'https://tiles.eqmonitor.app/estimated/tile-1.pmtiles',
+        ),
+      },
+    );
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+
+    fixture.realtime.add(
+      RealtimeEvent.estimatedIntensityUpsert(
+        eventId: 'Q',
+        estimatedIntensityTile: 'estimated/tile-2.pmtiles',
+        generatedAt: generatedAt,
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await fixture.settle();
+    expect(fixture.events, isEmpty);
+
+    fixture.detailStore.values['Q'] = earthquake(
+      eventId: 'Q',
+      tileUrl: 'https://tiles.eqmonitor.app/estimated/tile-2.pmtiles',
+    );
+    fixture.realtime.add(
+      const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+    );
+    await fixture.settle();
+
+    final event =
+        fixture.events.single.event as LiveMonitorEarthquakeUpsertEvent;
+    expect(
+      event.trigger,
+      LiveMonitorEarthquakeTrigger.estimatedIntensity(generatedAt: generatedAt),
+    );
+  });
+
+  test('推計震度は相対URLで解決せずabsolute URLまでpendingを維持する', () async {
+    final generatedAt = _now.subtract(const Duration(seconds: 1));
+    final fixture = createFixture(details: {'Q': earthquake(eventId: 'Q')});
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+
+    fixture.realtime.add(
+      RealtimeEvent.estimatedIntensityUpsert(
+        eventId: 'Q',
+        estimatedIntensityTile: 'estimated/tile-2.pmtiles',
+        generatedAt: generatedAt,
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await fixture.settle();
+    fixture.detailStore.values['Q'] = earthquake(
+      eventId: 'Q',
+      tileUrl: 'estimated/tile-2.pmtiles',
+    );
+    fixture.realtime.add(
+      const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+    );
+    await fixture.settle();
+    expect(fixture.events, isEmpty);
+
+    fixture.detailStore.values['Q'] = earthquake(
+      eventId: 'Q',
+      tileUrl: 'https://tiles.eqmonitor.app/estimated/tile-2.pmtiles',
+    );
+    fixture.realtime.add(
+      const RealtimeEvent.ready(source: RealtimeSource.dmdata),
+    );
+    await fixture.settle();
+
+    final event =
+        fixture.events.single.event as LiveMonitorEarthquakeUpsertEvent;
+    expect(
+      event.trigger,
+      LiveMonitorEarthquakeTrigger.estimatedIntensity(generatedAt: generatedAt),
+    );
+  });
+
+  test('複数推計震度identifierを到着順と各generatedAtのまま解決する', () async {
+    final tile2GeneratedAt = _now.subtract(const Duration(seconds: 2));
+    final tile3GeneratedAt = _now.subtract(const Duration(seconds: 1));
+    final fixture = createFixture(
+      details: {
+        'Q': earthquake(
+          eventId: 'Q',
+          tileUrl: 'https://tiles.eqmonitor.app/estimated/tile-1.pmtiles',
+        ),
+      },
+    );
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+
+    fixture.realtime
+      ..add(
+        RealtimeEvent.estimatedIntensityUpsert(
+          eventId: 'Q',
+          estimatedIntensityTile: 'estimated/tile-2.pmtiles',
+          generatedAt: tile2GeneratedAt,
+          source: RealtimeSource.eqmonitor,
+        ),
+      )
+      ..add(
+        RealtimeEvent.estimatedIntensityUpsert(
+          eventId: 'Q',
+          estimatedIntensityTile: 'estimated/tile-3.pmtiles',
+          generatedAt: tile3GeneratedAt,
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+    await fixture.settle();
+    expect(fixture.events, isEmpty);
+
+    fixture.detailStore.values['Q'] = earthquake(
+      eventId: 'Q',
+      tileUrl: 'https://tiles.eqmonitor.app/estimated/tile-2.pmtiles',
+    );
+    fixture.realtime.add(
+      const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+    );
+    await fixture.settle();
+
+    fixture.detailStore.values['Q'] = earthquake(
+      eventId: 'Q',
+      tileUrl: 'https://tiles.eqmonitor.app/estimated/tile-3.pmtiles',
+    );
+    fixture.realtime.add(
+      const RealtimeEvent.ready(source: RealtimeSource.dmdata),
+    );
+    await fixture.settle();
+
+    final generatedTimes = fixture.events
+        .map((envelope) => envelope.event)
+        .whereType<LiveMonitorEarthquakeUpsertEvent>()
+        .map(
+          (event) => switch (event.trigger) {
+            LiveMonitorEstimatedIntensityTrigger(:final generatedAt) =>
+              generatedAt,
+            LiveMonitorTelegramTrigger() => null,
+          },
+        );
+    expect(generatedTimes, [tile2GeneratedAt, tile3GeneratedAt]);
+  });
+
   test('推計震度detail失敗時はCardを合成せずforegroundで再試行する', () async {
     final fixture = createFixture(details: {'Q': earthquake(eventId: 'Q')});
     addTearDown(fixture.container.dispose);
@@ -331,7 +560,7 @@ void main() {
     fixture.realtime.add(
       const RealtimeEvent.estimatedIntensityUpsert(
         eventId: 'Q',
-        estimatedIntensityTile: 'tile-2',
+        estimatedIntensityTile: 'tile-2.pmtiles',
         generatedAt: null,
         source: RealtimeSource.eqmonitor,
       ),
@@ -343,7 +572,7 @@ void main() {
       ..failures.remove('Q')
       ..values['Q'] = earthquake(
         eventId: 'Q',
-        tileUrl: 'https://example.test/tile-2.pmtiles',
+        tileUrl: 'https://tiles.eqmonitor.app/tile-2.pmtiles',
       );
     fixture.lifecycle
       ..publish(AppLifecycleState.paused)
@@ -373,6 +602,27 @@ void main() {
     await fixture.settle();
 
     expect(fixture.events.single.event.eventId, 'AFTER-ERROR');
+  });
+
+  test('foreground REST再同期失敗を隔離して後続raw eventを処理する', () async {
+    final fixture = createFixture();
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+    fixture.pageStore.failAfterFirstLoad = true;
+
+    fixture.lifecycle
+      ..publish(AppLifecycleState.paused)
+      ..publish(AppLifecycleState.resumed);
+    await fixture.settle();
+    fixture.realtime.add(
+      const RealtimeEvent.earthquakeDelete(
+        eventId: 'AFTER-FOREGROUND-ERROR',
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await fixture.settle();
+
+    expect(fixture.events.single.event.eventId, 'AFTER-FOREGROUND-ERROR');
   });
 
   test('canonical揺れ検知は結合済みと期限切れを除外する', () async {
@@ -412,6 +662,7 @@ _DetectedEventFixture createFixture({
   ShakeDetectionSnapshot? shakeSnapshot,
   Map<String, Earthquake> details = const {},
   Completer<PaginatedResponse<EarthquakePartial>>? pageCompleter,
+  Map<String, Completer<Earthquake>> firstDetailLoads = const {},
 }) {
   final realtime = StreamController<RealtimeEvent>.broadcast(sync: true);
   addTearDown(realtime.close);
@@ -425,7 +676,9 @@ _DetectedEventFixture createFixture({
       nextToken: null,
     ),
   )..firstLoad = pageCompleter;
-  final detailStore = _DetailStore()..values.addAll(details);
+  final detailStore = _DetailStore()
+    ..values.addAll(details)
+    ..firstLoads.addAll(firstDetailLoads);
   final repository = EarthquakeHistoryRepository(
     earthquake: api.ApiClient(Dio()).earthquake,
     earthquakeParameter: _earthquakeParameter,

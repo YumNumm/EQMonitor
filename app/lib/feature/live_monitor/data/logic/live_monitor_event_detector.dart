@@ -4,6 +4,27 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 
+Uri? liveMonitorEstimatedIntensityUri(String? fullUrl) {
+  if (fullUrl == null) {
+    return null;
+  }
+  final uri = Uri.tryParse(fullUrl);
+  if (uri == null || !uri.isAbsolute || !uri.hasAuthority) {
+    return null;
+  }
+  return uri;
+}
+
+bool liveMonitorEstimatedIntensityUrlMatchesIdentifier({
+  required String fullUrl,
+  required String identifier,
+}) {
+  final uri = liveMonitorEstimatedIntensityUri(fullUrl);
+  return identifier.isNotEmpty &&
+      uri != null &&
+      uri.pathSegments.join('/') == identifier;
+}
+
 class LiveMonitorEventDetector {
   final Map<String, int> _eewSerials = {};
   final Map<String, int> _shakeSerials = {};
@@ -96,7 +117,11 @@ class LiveMonitorEventDetector {
         ));
       }
     }
-    _estimatedUrls[earthquake.eventId] = earthquake.estimatedIntensityTileUrl;
+    final estimatedIntensityTileUrl = earthquake.estimatedIntensityTileUrl;
+    _estimatedUrls[earthquake.eventId] =
+        liveMonitorEstimatedIntensityUri(estimatedIntensityTileUrl) == null
+        ? null
+        : estimatedIntensityTileUrl;
   }
 
   List<LiveMonitorEarthquakeUpsertEvent> detectEarthquake(
@@ -137,7 +162,11 @@ class LiveMonitorEventDetector {
       );
     }
 
-    final nextUrl = earthquake.estimatedIntensityTileUrl;
+    final estimatedIntensityTileUrl = earthquake.estimatedIntensityTileUrl;
+    final nextUrl =
+        liveMonitorEstimatedIntensityUri(estimatedIntensityTileUrl) == null
+        ? null
+        : estimatedIntensityTileUrl;
     final previousUrl = _estimatedUrls[earthquake.eventId];
     _estimatedUrls[earthquake.eventId] = nextUrl;
     if (nextUrl != null && nextUrl != previousUrl) {
@@ -165,7 +194,11 @@ class LiveMonitorEventDetector {
     required DateTime? generatedAt,
     required Earthquake earthquake,
   }) {
-    final nextUrl = earthquake.estimatedIntensityTileUrl;
+    final estimatedIntensityTileUrl = earthquake.estimatedIntensityTileUrl;
+    final nextUrl =
+        liveMonitorEstimatedIntensityUri(estimatedIntensityTileUrl) == null
+        ? null
+        : estimatedIntensityTileUrl;
     final previousUrl = _estimatedUrls[eventId];
     _estimatedUrls[eventId] = nextUrl;
     if (nextUrl == null || nextUrl == previousUrl) {

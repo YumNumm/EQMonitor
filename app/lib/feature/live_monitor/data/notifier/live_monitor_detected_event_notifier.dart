@@ -43,8 +43,6 @@ class LiveMonitorDetectedEventNotifier
       return null;
     }
     listenCanonicalSources();
-    initialized = true;
-    await drainRealtimeEvents();
     return state.value;
   }
 
@@ -75,16 +73,13 @@ class LiveMonitorDetectedEventNotifier
       })
       ..listen(appLifecycleProvider, (_, next) async {
         if (next == AppLifecycleState.resumed) {
-          await resolvePendingEstimatedIntensity();
-          if (!ref.mounted) {
-            return;
-          }
-          await synchronizeEarthquakes();
+          await resynchronizeEarthquakes();
         }
       });
   }
 
   Future<void> initializeBaselines() async {
+    final earthquakeBaselines = <Earthquake>[];
     final page = await ref.read(
       earthquakeHistoryProvider(liveMonitorLatestParameter).future,
     );
@@ -100,7 +95,7 @@ class LiveMonitorDetectedEventNotifier
         return;
       }
       if (earthquake != null) {
-        detector.seedEarthquake(earthquake);
+        earthquakeBaselines.add(earthquake);
       }
     }
 
@@ -112,9 +107,16 @@ class LiveMonitorDetectedEventNotifier
     if (shakeSnapshot != null) {
       detector.detectShakeSnapshot(visibleShakeSnapshot(shakeSnapshot));
     }
+    await drainRealtimeEvents(
+      initialEarthquakeBaselines: earthquakeBaselines,
+      completeInitialization: true,
+    );
   }
 
-  Future<void> drainRealtimeEvents() async {
+  Future<void> drainRealtimeEvents({
+    List<Earthquake> initialEarthquakeBaselines = const [],
+    bool completeInitialization = false,
+  }) async {
     if (isDrainingRealtimeEvents) {
       return;
     }
@@ -131,6 +133,13 @@ class LiveMonitorDetectedEventNotifier
             stackTrace,
           );
         }
+      }
+      // detail取得中に届いたrawを先に確定し、後着REST baselineへの吸収を防ぐ。
+      for (final earthquake in initialEarthquakeBaselines) {
+        detector.seedEarthquake(earthquake);
+      }
+      if (completeInitialization) {
+        initialized = true;
       }
     } finally {
       isDrainingRealtimeEvents = false;
@@ -167,11 +176,10 @@ class LiveMonitorDetectedEventNotifier
   Future<void> acceptRealtimeEvent(RealtimeEvent event) async {
     switch (event) {
       case RealtimeReadyEvent():
-        await resolvePendingEstimatedIntensity();
-        if (!ref.mounted) {
+        if (!initialized) {
           return;
         }
-        await synchronizeEarthquakes();
+        await resynchronizeEarthquakes();
       case RealtimeEarthquakeUpsertEvent(:final record):
         final repository = await ref.read(
           earthquakeHistoryRepositoryProvider.future,
@@ -229,19 +237,42 @@ class LiveMonitorDetectedEventNotifier
     }
   }
 
+  Future<void> resynchronizeEarthquakes() async {
+    try {
+      await resolvePendingEstimatedIntensity();
+      if (!ref.mounted) {
+        return;
+      }
+      await synchronizeEarthquakes();
+    } catch (error, stackTrace) {
+      talker.error(
+        '[LiveMonitor] failed to resynchronize earthquakes',
+        error,
+        stackTrace,
+      );
+    }
+  }
+
   Future<void> resolvePendingEstimatedIntensity({String? eventId}) async {
     final pending = pendingEstimatedEvents
         .where((event) => eventId == null || event.eventId == eventId)
         .toList(growable: false);
+    final blockedEventIds = <String>{};
     for (final event in pending) {
-      await resolvePendingEstimatedEvent(event);
+      if (blockedEventIds.contains(event.eventId)) {
+        continue;
+      }
+      final resolved = await resolvePendingEstimatedEvent(event);
       if (!ref.mounted) {
         return;
+      }
+      if (!resolved) {
+        blockedEventIds.add(event.eventId);
       }
     }
   }
 
-  Future<void> resolvePendingEstimatedEvent(
+  Future<bool> resolvePendingEstimatedEvent(
     LiveMonitorPendingEstimatedIntensity event,
   ) async {
     final earthquake = await loadEarthquakeDetail(
@@ -249,26 +280,28 @@ class LiveMonitorDetectedEventNotifier
       invalidate: true,
     );
     if (!ref.mounted) {
-      return;
+      return false;
     }
-    final resolvedEarthquake = switch (earthquake) {
-      final Earthquake value when value.estimatedIntensityTileUrl != null =>
-        value,
-      _ => null,
-    };
-    if (resolvedEarthquake == null) {
-      return;
+    final fullUrl = earthquake?.estimatedIntensityTileUrl;
+    if (earthquake == null ||
+        fullUrl == null ||
+        !liveMonitorEstimatedIntensityUrlMatchesIdentifier(
+          fullUrl: fullUrl,
+          identifier: event.identifier,
+        )) {
+      return false;
     }
     pendingEstimatedEvents.remove(event);
     final detected = detector.detectEstimatedIntensity(
       eventId: event.eventId,
       identifier: event.identifier,
       generatedAt: event.generatedAt,
-      earthquake: resolvedEarthquake,
+      earthquake: earthquake,
     );
     if (detected != null) {
       publish(detected);
     }
+    return true;
   }
 
   Future<Earthquake?> loadEarthquakeDetail({
