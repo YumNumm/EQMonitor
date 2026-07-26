@@ -34,6 +34,7 @@ class LiveMonitorDetectedEventNotifier
   var sequence = 0;
   var initialized = false;
   var isDrainingRealtimeEvents = false;
+  var shouldResynchronize = false;
 
   @override
   Future<LiveMonitorEventEnvelope?> build() async {
@@ -121,26 +122,43 @@ class LiveMonitorDetectedEventNotifier
       return;
     }
     isDrainingRealtimeEvents = true;
+    var shouldApplyInitialBaselines = completeInitialization;
     try {
-      while (pendingRealtimeEvents.isNotEmpty && ref.mounted) {
-        final event = pendingRealtimeEvents.removeAt(0);
-        try {
-          await acceptRealtimeEvent(event);
-        } catch (error, stackTrace) {
-          talker.error(
-            '[LiveMonitor] failed to process realtime event',
-            error,
-            stackTrace,
-          );
+      do {
+        while (pendingRealtimeEvents.isNotEmpty && ref.mounted) {
+          final event = pendingRealtimeEvents.removeAt(0);
+          try {
+            await acceptRealtimeEvent(event);
+          } catch (error, stackTrace) {
+            talker.error(
+              '[LiveMonitor] failed to process realtime event',
+              error,
+              stackTrace,
+            );
+          }
+          final nextIsReady =
+              pendingRealtimeEvents.isNotEmpty &&
+              pendingRealtimeEvents.first is RealtimeReadyEvent;
+          if (initialized && shouldResynchronize && !nextIsReady) {
+            shouldResynchronize = false;
+            await resynchronizeEarthquakes();
+          }
         }
-      }
-      // detail取得中に届いたrawを先に確定し、後着REST baselineへの吸収を防ぐ。
-      for (final earthquake in initialEarthquakeBaselines) {
-        detector.seedEarthquake(earthquake);
-      }
-      if (completeInitialization) {
-        initialized = true;
-      }
+        if (shouldApplyInitialBaselines) {
+          // detail取得中に届いたrawを先に確定し、後着REST baselineへの吸収を防ぐ。
+          for (final earthquake in initialEarthquakeBaselines) {
+            detector.seedEarthquake(earthquake);
+          }
+          initialized = true;
+          shouldApplyInitialBaselines = false;
+        }
+        if (initialized && shouldResynchronize) {
+          shouldResynchronize = false;
+          await resynchronizeEarthquakes();
+        }
+      } while (ref.mounted &&
+          (pendingRealtimeEvents.isNotEmpty ||
+              (initialized && shouldResynchronize)));
     } finally {
       isDrainingRealtimeEvents = false;
     }
@@ -176,10 +194,8 @@ class LiveMonitorDetectedEventNotifier
   Future<void> acceptRealtimeEvent(RealtimeEvent event) async {
     switch (event) {
       case RealtimeReadyEvent():
-        if (!initialized) {
-          return;
-        }
-        await resynchronizeEarthquakes();
+        shouldResynchronize = true;
+        return;
       case RealtimeEarthquakeUpsertEvent(:final record):
         final repository = await ref.read(
           earthquakeHistoryRepositoryProvider.future,
@@ -257,17 +273,10 @@ class LiveMonitorDetectedEventNotifier
     final pending = pendingEstimatedEvents
         .where((event) => eventId == null || event.eventId == eventId)
         .toList(growable: false);
-    final blockedEventIds = <String>{};
     for (final event in pending) {
-      if (blockedEventIds.contains(event.eventId)) {
-        continue;
-      }
-      final resolved = await resolvePendingEstimatedEvent(event);
+      await resolvePendingEstimatedEvent(event);
       if (!ref.mounted) {
         return;
-      }
-      if (!resolved) {
-        blockedEventIds.add(event.eventId);
       }
     }
   }
@@ -291,7 +300,15 @@ class LiveMonitorDetectedEventNotifier
         )) {
       return false;
     }
-    pendingEstimatedEvents.remove(event);
+    final matchedIndex = pendingEstimatedEvents.indexOf(event);
+    if (matchedIndex < 0) {
+      return false;
+    }
+    final superseded = pendingEstimatedEvents
+        .take(matchedIndex + 1)
+        .where((candidate) => candidate.eventId == event.eventId)
+        .toSet();
+    pendingEstimatedEvents.removeWhere(superseded.contains);
     final detected = detector.detectEstimatedIntensity(
       eventId: event.eventId,
       identifier: event.identifier,

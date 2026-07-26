@@ -118,10 +118,12 @@ class LiveMonitorEventDetector {
       }
     }
     final estimatedIntensityTileUrl = earthquake.estimatedIntensityTileUrl;
-    _estimatedUrls[earthquake.eventId] =
-        liveMonitorEstimatedIntensityUri(estimatedIntensityTileUrl) == null
-        ? null
-        : estimatedIntensityTileUrl;
+    _estimatedUrls.putIfAbsent(
+      earthquake.eventId,
+      () => liveMonitorEstimatedIntensityUri(estimatedIntensityTileUrl) == null
+          ? null
+          : estimatedIntensityTileUrl,
+    );
   }
 
   List<LiveMonitorEarthquakeUpsertEvent> detectEarthquake(
