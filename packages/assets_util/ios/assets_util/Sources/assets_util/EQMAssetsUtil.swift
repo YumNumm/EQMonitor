@@ -76,8 +76,15 @@ import BackgroundAssets
     let manager = AssetPackManager.shared
 
     // `assetPackIsAvailableLocally(withID:)` only exists from iOS 26.4;
-    // treat it as an extra readiness signal when available, but don't
-    // require it (this app's own minimum is 26.0).
+    // treat it as an extra, cheap early-exit readiness signal when
+    // available, but don't require it (this app's own minimum is 26.0).
+    // This alone is NOT sufficient readiness evidence even when available:
+    // per `BADownload.h`, Background Assets tracks download state per
+    // *file*, not per pack — there's no guarantee the pack's files land
+    // atomically as a unit. The manifest-driven completeness check below
+    // (`verifyAllManifestAssetsExist`) is what actually verifies every
+    // asset the pack claims to contain is present, and runs regardless of
+    // OS version (26.0+).
     if #available(iOS 26.4, *) {
       guard manager.assetPackIsAvailableLocally(withID: packIdentifier) else {
         return nil
@@ -103,7 +110,63 @@ import BackgroundAssets
       return nil
     }
 
-    return manifestURL.deletingLastPathComponent().path
+    let packRoot = manifestURL.deletingLastPathComponent()
+
+    // Background Assets has no "pack is fully, atomically in place" API
+    // (readiness is tracked per-file, per `BADownload.h`) — `manifest.json`
+    // existing doesn't imply every asset it lists has finished downloading
+    // (e.g. `map/all.pmtiles` could still be mid-download on iOS
+    // 26.0–26.3, where `assetPackIsAvailableLocally` isn't even available
+    // to short-circuit this). So parse the manifest and verify every
+    // listed asset is actually present (and correctly sized, when
+    // `size_bytes` is given) before declaring the pack root ready.
+    guard verifyAllManifestAssetsExist(manifestURL: manifestURL, packRoot: packRoot) else {
+      return nil
+    }
+
+    return packRoot.path
+  }
+
+  /// Parses `manifest.json` (schema: `AssetPackManifest` in
+  /// `backend/docs/superpowers/specs/2026-07-18-asset-pack-design.md`, an
+  /// object with an `assets` array of `{ path, size_bytes, ... }`) and
+  /// verifies every listed asset actually exists under `packRoot`, with
+  /// matching file size when `size_bytes` is present. This is the
+  /// OS-version-independent completeness check described above — it's
+  /// deliberately conservative: any parse failure or missing/mismatched
+  /// asset means "not ready" (`false`), never "assume ready".
+  private func verifyAllManifestAssetsExist(manifestURL: URL, packRoot: URL) -> Bool {
+    guard let manifestData = try? Data(contentsOf: manifestURL) else {
+      return false
+    }
+    guard
+      let manifestJSON = try? JSONSerialization.jsonObject(with: manifestData) as? [String: Any],
+      let assets = manifestJSON["assets"] as? [[String: Any]],
+      !assets.isEmpty
+    else {
+      return false
+    }
+
+    let fileManager = FileManager.default
+    for asset in assets {
+      guard let relativePath = asset["path"] as? String, !relativePath.isEmpty else {
+        return false
+      }
+      let assetURL = packRoot.appendingPathComponent(relativePath)
+      guard fileManager.fileExists(atPath: assetURL.path) else {
+        return false
+      }
+      if let expectedSize = asset["size_bytes"] as? Int {
+        guard
+          let attributes = try? fileManager.attributesOfItem(atPath: assetURL.path),
+          let actualSize = attributes[.size] as? Int,
+          actualSize == expectedSize
+        else {
+          return false
+        }
+      }
+    }
+    return true
   }
   #endif
 }

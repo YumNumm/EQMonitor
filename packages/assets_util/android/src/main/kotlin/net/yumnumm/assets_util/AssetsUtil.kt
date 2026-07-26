@@ -162,6 +162,11 @@ object AssetsUtil {
    * [destDir]. `AssetManager.list(path)` returns a non-empty array for
    * directories and an empty array for files, which is the only way to
    * distinguish the two via this API.
+   *
+   * Each file is written via a `.tmp` sibling + atomic rename (same
+   * pattern as [resolveLocalPath]'s single-file copy), so a
+   * process-death mid-copy can never leave a truncated file at the final
+   * path — only an orphaned `.tmp` that a retried extraction overwrites.
    */
   private fun copyAssetDirectoryRecursively(
     context: Context,
@@ -180,11 +185,28 @@ object AssetsUtil {
         copyAssetDirectoryRecursively(context, childAssetPath, childDestDir)
       } else {
         val destFile = File(destDir, entry)
+        val tmpFile = File(destDir, "$entry.tmp")
+        if (tmpFile.exists() && !tmpFile.delete()) {
+          throw IllegalStateException("Failed to delete partial file: ${tmpFile.absolutePath}")
+        }
         context.assets.open(childAssetPath).use { input ->
-          FileOutputStream(destFile).use { output ->
+          FileOutputStream(tmpFile).use { output ->
             input.copyTo(output)
             output.fd.sync()
           }
+        }
+        if (destFile.exists() && !destFile.delete()) {
+          tmpFile.delete()
+          throw IllegalStateException("Failed to replace existing file: ${destFile.absolutePath}")
+        }
+        if (!tmpFile.renameTo(destFile)) {
+          FileInputStream(tmpFile).use { input ->
+            FileOutputStream(destFile).use { output ->
+              input.copyTo(output)
+              output.fd.sync()
+            }
+          }
+          tmpFile.delete()
         }
       }
     }
