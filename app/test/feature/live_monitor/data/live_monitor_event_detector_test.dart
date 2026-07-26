@@ -245,6 +245,22 @@ void main() {
       );
     });
 
+    test('live検出済みの新規metadataをRESTから再投入しても一度だけ検出する', () {
+      final detector = LiveMonitorEventDetector();
+      detector.seedEarthquake(earthquake(eventId: 'A'));
+      final liveUpsert = earthquake(
+        eventId: 'A',
+        metadata: [metadata(type: .vxse53, minute: 1)],
+      );
+
+      expect(
+        detector.detectEarthquake(liveUpsert).single.trigger.kind,
+        LiveMonitorEarthquakeTriggerKind.vxse53,
+      );
+
+      expect(detector.detectEarthquake(liveUpsert), isEmpty);
+    });
+
     test('推計震度はeventId・識別値・full URLで重複排除する', () {
       final detector = LiveMonitorEventDetector()
         ..seedEarthquake(earthquake(eventId: 'A', tileUrl: 'https://tiles/1'));
