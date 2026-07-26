@@ -46,7 +46,6 @@ android {
     sourceSets {
         getByName("main") {
             java.srcDirs("src/main/kotlin")
-            assets.srcDir("../../assets/platform")
         }
     }
 

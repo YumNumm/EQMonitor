@@ -42,11 +42,13 @@ concurrency:
 
 env:
   ASC_APP_ID: "6447546703" # deploy-app.yaml
-  # Managed Background Assets pack identifier. Must match whatever Task 9
-  # registers as the Background Assets capability's asset pack id in the
-  # iOS app AND whatever is created manually in App Store Connect per
-  # docs/asset-pack-cd.md. Not yet coordinated with Task 9 as of this
-  # workflow's authoring — confirm before first real run.
+  # Managed Background Assets pack identifier. This is the canonical id
+  # `net.yumnumm.eqmonitor.assets`, aligned with the app's
+  # `_iosAssetPackIdentifier` in packages/assets_util/lib/assets_util.dart and
+  # with the pack created in App Store Connect per docs/asset-pack-cd.md.
+  # Before the first real run, the Background Assets capability must already be
+  # registered on the Xcode Runner target with this exact id (see
+  # docs/ios-background-assets.md).
   IOS_BACKGROUND_ASSET_PACK_ID: "net.yumnumm.eqmonitor.assets"
   # Xcode version for the iOS Managed Background Assets job ONLY. Deliberately
   # independent of deploy-app.yaml's `XCODE_VERSION` (app builds keep their own

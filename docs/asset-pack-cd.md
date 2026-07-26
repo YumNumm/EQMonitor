@@ -77,7 +77,7 @@ it (this is also this workflow's mandatory pre-check #2; see below).
 
 **Manual setup (one-time, per Apple's documented flow):**
 
-1. In Xcode, add the **Background Assets** capability to the Runner target and configure the asset pack ID that will be used (this repo's chosen ID: `net.yumnumm.eqmonitor.assets`, set as `IOS_BACKGROUND_ASSET_PACK_ID` in the workflow — **this must be coordinated with whichever task wires up the Xcode capability**; it is not yet coordinated as of this workflow's authoring).
+1. In Xcode, add the **Background Assets** capability to the Runner target and configure the asset pack ID that will be used. The canonical ID is `net.yumnumm.eqmonitor.assets`, aligned across `IOS_BACKGROUND_ASSET_PACK_ID` in the workflow and `_iosAssetPackIdentifier` in `packages/assets_util/lib/assets_util.dart`. This Xcode-side capability registration (see `docs/ios-background-assets.md`) must exist before the first real `upload-asset-pack` run.
 2. In App Store Connect, under the app's Background Assets management (Account Holder/Admin/App Manager/Developer role required — [App Store Connect Help: Manage Asset Packs](https://developer.apple.com/help/app-store-connect/manage-asset-packs/upload-apple-hosted-asset-packs)), choose **Apple-hosted** so Apple hosts and serves the pack (this workflow assumes Apple-hosted; self-hosted Background Assets would need an entirely different, non-ASC-API upload path).
 3. Upload an initial version once by hand (Transporter drag-and-drop is the simplest — see "Manual fallback" below) to create the `backgroundAssets` resource that this workflow's pre-check looks for. Subsequent versions can then go through the automated `upload-ios` job.
 

@@ -8,7 +8,8 @@ Platform-managed local assets（FlutterGen の `Assets` とは別物）の絶対
 ## API
 
 ```dart
-final path = AssetsUtil.resolveLocalPath(fileName: 'earthquake_tsunami_all.pmtiles');
+// Platform-managed local asset の絶対パスを解決する（例: バンドル同梱ファイル）。
+final path = AssetsUtil.resolveLocalPath(fileName: 'example.bin');
 
 // Asset Pack (manifest.json / map/all.pmtiles / parameters/*.json) のルート。
 // - iOS: Managed Background Assets（`net.yumnumm.eqmonitor.assets`）
