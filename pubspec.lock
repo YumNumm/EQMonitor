@@ -2515,6 +2515,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  vibration:
+    dependency: transitive
+    description:
+      name: vibration
+      sha256: c6c25eb7acadfd231925a60004736443cbf63f1eb5740d6dd83a1bc09cf00f6d
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
+  vibration_platform_interface:
+    dependency: transitive
+    description:
+      name: vibration_platform_interface
+      sha256: "258c273268f8aa40c88d29741137c536874a738779b92ddb8aa32ed093721ec5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2"
   video_player:
     dependency: transitive
     description:
