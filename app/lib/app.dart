@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/debug/launcher/debug_launcher.dart';
+import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_host.dart';
 import 'package:eqmonitor/feature/start/ui/component/forced_update_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,30 +21,35 @@ class App extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeModeProvider);
     final routerConfig = ref.watch(goRouterProvider);
-    final lightColorSet = ref.watch(colorSetForBrightnessProvider(Brightness.light));
-    final darkColorSet = ref.watch(colorSetForBrightnessProvider(Brightness.dark));
+    final lightColorSet = ref.watch(
+      colorSetForBrightnessProvider(Brightness.light),
+    );
+    final darkColorSet = ref.watch(
+      colorSetForBrightnessProvider(Brightness.dark),
+    );
 
     final app = MaterialApp.router(
       title: 'EQMonitor',
       themeMode: theme.value,
       routerConfig: routerConfig,
-      builder: (context, child) =>
-          DebugLauncher(child: child ?? const SizedBox.shrink()),
+      builder: (context, child) => EewWarningOverlayHost(
+        backButtonDispatcher: routerConfig.backButtonDispatcher,
+        child: DebugLauncher(child: child ?? const SizedBox.shrink()),
+      ),
       theme: buildTheme(colorSet: lightColorSet, brightness: Brightness.light),
-      darkTheme: buildTheme(colorSet: darkColorSet, brightness: Brightness.dark),
+      darkTheme: buildTheme(
+        colorSet: darkColorSet,
+        brightness: Brightness.dark,
+      ),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('ja', 'JP'),
-      ],
+      supportedLocales: const [Locale('ja', 'JP')],
     );
     final buildConfig = ref.watch(buildConfigProvider);
-    Widget result = ForcedUpdateWrapper(
-      child: app,
-    );
+    Widget result = ForcedUpdateWrapper(child: app);
 
     if (!kDebugMode && buildConfig.isBetaTesting) {
       result = Directionality(
