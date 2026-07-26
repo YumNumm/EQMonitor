@@ -10,12 +10,27 @@ part of 'parameter_set_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// パラメータは Asset Pack が唯一のソースであるため、HTTP キャッシュ層
+/// （`CachedNotifier`）は使わず、単純に [ParameterRepository.loadAsset] を
+/// 呼び出すだけの Notifier とする。Pack 未取得/破損時は
+/// `AssetPackNotReadyException` が [build] からそのまま `AsyncError` として
+/// 伝播する（偽データへのフォールバックはしない）。
 
 @ProviderFor(ParameterSetNotifier)
 final parameterSetProvider = ParameterSetNotifierProvider._();
 
+/// パラメータは Asset Pack が唯一のソースであるため、HTTP キャッシュ層
+/// （`CachedNotifier`）は使わず、単純に [ParameterRepository.loadAsset] を
+/// 呼び出すだけの Notifier とする。Pack 未取得/破損時は
+/// `AssetPackNotReadyException` が [build] からそのまま `AsyncError` として
+/// 伝播する（偽データへのフォールバックはしない）。
 final class ParameterSetNotifierProvider
     extends $AsyncNotifierProvider<ParameterSetNotifier, ParameterSet> {
+  /// パラメータは Asset Pack が唯一のソースであるため、HTTP キャッシュ層
+  /// （`CachedNotifier`）は使わず、単純に [ParameterRepository.loadAsset] を
+  /// 呼び出すだけの Notifier とする。Pack 未取得/破損時は
+  /// `AssetPackNotReadyException` が [build] からそのまま `AsyncError` として
+  /// 伝播する（偽データへのフォールバックはしない）。
   ParameterSetNotifierProvider._()
     : super(
         from: null,
@@ -36,7 +51,13 @@ final class ParameterSetNotifierProvider
 }
 
 String _$parameterSetNotifierHash() =>
-    r'e0927a4e8e5d7b927dfa1e9909fefb37369b2094';
+    r'c5cc776b32cb28c70d0f5b423641b3d1994c032b';
+
+/// パラメータは Asset Pack が唯一のソースであるため、HTTP キャッシュ層
+/// （`CachedNotifier`）は使わず、単純に [ParameterRepository.loadAsset] を
+/// 呼び出すだけの Notifier とする。Pack 未取得/破損時は
+/// `AssetPackNotReadyException` が [build] からそのまま `AsyncError` として
+/// 伝播する（偽データへのフォールバックはしない）。
 
 abstract class _$ParameterSetNotifier extends $AsyncNotifier<ParameterSet> {
   FutureOr<ParameterSet> build();

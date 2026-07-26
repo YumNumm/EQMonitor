@@ -222,7 +222,6 @@ flutter:
     - assets/fonts/
     - assets/docs/
     - assets/parameter/
-    - assets/parameters/
     - assets/debug/
 
   fonts:

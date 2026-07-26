@@ -1,40 +1,62 @@
 import 'dart:io';
 
-import 'package:assets_util/assets_util.dart';
+import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'base_map_pmtiles_repository.g.dart';
 
-const _baseMapPmtilesFileName = 'earthquake_tsunami_all.pmtiles';
-
 @Riverpod(keepAlive: true)
 BaseMapPmtilesRepository baseMapPmtilesRepository(Ref ref) =>
-    BaseMapPmtilesRepository();
+    BaseMapPmtilesRepository(
+      assetPackRepository: ref.watch(assetPackRepositoryProvider),
+    );
 
 class BaseMapPmtilesRepository {
-  const BaseMapPmtilesRepository();
+  BaseMapPmtilesRepository({
+    required AssetPackRepository assetPackRepository,
+    bool Function()? isWeb,
+    bool Function()? isSupportedPlatform,
+  }) : _assetPackRepository = assetPackRepository,
+       _isWeb = isWeb ?? (() => kIsWeb),
+       _isSupportedPlatform =
+           isSupportedPlatform ??
+           (() => Platform.isIOS || Platform.isAndroid || Platform.isMacOS);
+
+  final AssetPackRepository _assetPackRepository;
+
+  /// DI seam for [kIsWeb] so the Web error path can be exercised from a
+  /// plain VM unit test (Flutter's `kIsWeb` is a compile-time constant
+  /// that's always `false` under `flutter test`).
+  final bool Function() _isWeb;
+
+  /// DI seam for the iOS/Android/macOS platform check, so tests don't
+  /// depend on the host OS running `flutter test` (e.g. CI runs on
+  /// Ubuntu, where `Platform.isIOS/isAndroid/isMacOS` are all `false`).
+  final bool Function() _isSupportedPlatform;
 
   /// Returns a MapLibre vector source URI for the base map PMTiles.
   ///
-  /// iOS/Android: `pmtiles://file://...` from [AssetsUtil].
+  /// iOS/Android/macOS: `pmtiles://file://...` resolved via
+  /// [AssetPackRepository] (Managed Background Assets / Play Asset
+  /// Delivery / bundled `Contents/Resources/platform`).
+  ///
+  /// Throws [UnsupportedError] on Web (地図機能は Web 未サポート) and on any
+  /// other platform without an Asset Pack backend.
   Future<String> resolveSourceUri() async {
-    if (kIsWeb || !(Platform.isIOS || Platform.isAndroid)) {
-      throw UnimplementedError('PMTiles is not supported on this platform.');
+    if (_isWeb()) {
+      throw UnsupportedError('地図機能は Web ではサポートされていません');
+    }
+    if (!_isSupportedPlatform()) {
+      throw UnsupportedError(
+        '地図機能は Asset Pack 未対応プラットフォームではサポートされていません',
+      );
     }
 
-    final absolutePath = AssetsUtil.resolveLocalPath(
-      fileName: _baseMapPmtilesFileName,
+    final file = await _assetPackRepository.resolveAsset(
+      AssetPackAssetId.baseMapPmtiles,
     );
-
-    final file = File(absolutePath);
-    if (!file.existsSync()) {
-      throw StateError('Base PMTiles file not found: $absolutePath');
-    }
-    final info = await file.stat();
-    if (info.size == 0) {
-      throw StateError('Base PMTiles file is empty: $absolutePath');
-    }
-    return 'pmtiles://${Uri.file(absolutePath)}';
+    return 'pmtiles://${Uri.file(file.path)}';
   }
 }

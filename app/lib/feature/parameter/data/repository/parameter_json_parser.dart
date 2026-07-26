@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter_converter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -13,14 +14,10 @@ ParameterJsonParser parameterJsonParser(Ref ref) => const ParameterJsonParser();
 final class ParameterJsonParser {
   const ParameterJsonParser();
 
-  ParameterManifest parseManifest(String source) =>
-      ParameterManifest.fromJson(decodeObject(source));
-
   ParameterSet parseSet({
-    required String manifestJson,
+    required AssetPackManifest manifest,
     required Map<ParameterType, String> parameterJsonByType,
   }) {
-    final manifest = parseManifest(manifestJson);
     final jmaCodeTable = parseJmaCodeTable(
       parameterJsonByType[ParameterType.jmaCodeTable] ??
           (throw const FormatException('Missing jma_code_table parameter')),

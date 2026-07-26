@@ -57,4 +57,4 @@ final class BaseMapPmtilesRepositoryProvider
 }
 
 String _$baseMapPmtilesRepositoryHash() =>
-    r'6f48c9622e85f0153790543a91a6e28f5ab24863';
+    r'9387f8682ae425026ae28179b155d5b734b0eb9c';

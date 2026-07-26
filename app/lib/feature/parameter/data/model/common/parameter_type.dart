@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -25,6 +26,18 @@ extension ParameterTypeApiExtension on ParameterType {
   };
 
   api.ParameterType get toApiParameterType => switch (this) {
+    .jmaCodeTable => .jmaCodeTable,
+    .kyoshinObservationPoints => .kyoshinObservationPoints,
+    .earthquakeStations => .earthquakeStations,
+    .tsunamiStations => .tsunamiStations,
+    .shindoDbStations => .shindoDbStations,
+  };
+
+  /// Maps to the corresponding Asset Pack asset id (see
+  /// `AssetPackAssetId` / backend `AssetId`). Every [ParameterType] has a
+  /// 1:1 counterpart asset id; only `BASE_MAP_PMTILES` has no
+  /// [ParameterType] counterpart (it's map data, not a parameter).
+  AssetPackAssetId get toAssetPackAssetId => switch (this) {
     .jmaCodeTable => .jmaCodeTable,
     .kyoshinObservationPoints => .kyoshinObservationPoints,
     .earthquakeStations => .earthquakeStations,

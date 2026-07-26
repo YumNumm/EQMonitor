@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/parameter/data/model/common/parameter_manifest.dart';
+import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/jma_code_table/jma_code_table_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/kyoshin/kyoshin_observation_points_parameter.dart';
@@ -11,7 +11,9 @@ part 'parameter_set.freezed.dart';
 @freezed
 abstract class ParameterSet with _$ParameterSet {
   const factory ParameterSet({
-    required ParameterManifest manifest,
+    /// Asset Pack の `manifest.json`（地図アセットも含む）。パラメータ固有のメタ
+    /// データが必要な場合は `manifest.findAsset(...)` を利用する。
+    required AssetPackManifest manifest,
     required JmaCodeTableParameter jmaCodeTable,
     required KyoshinObservationPointsParameter kyoshinObservationPoints,
     required EarthquakeParameter earthquake,

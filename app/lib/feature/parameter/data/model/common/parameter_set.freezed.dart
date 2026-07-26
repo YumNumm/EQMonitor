@@ -14,7 +14,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParameterSet {
 
- ParameterManifest get manifest; JmaCodeTableParameter get jmaCodeTable; KyoshinObservationPointsParameter get kyoshinObservationPoints; EarthquakeParameter get earthquake; TsunamiParameter get tsunami; ShindoDbStationsParameter get shindoDbStations;
+/// Asset Pack の `manifest.json`（地図アセットも含む）。パラメータ固有のメタ
+/// データが必要な場合は `manifest.findAsset(...)` を利用する。
+ AssetPackManifest get manifest; JmaCodeTableParameter get jmaCodeTable; KyoshinObservationPointsParameter get kyoshinObservationPoints; EarthquakeParameter get earthquake; TsunamiParameter get tsunami; ShindoDbStationsParameter get shindoDbStations;
 /// Create a copy of ParameterSet
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,11 +47,11 @@ abstract mixin class $ParameterSetCopyWith<$Res>  {
   factory $ParameterSetCopyWith(ParameterSet value, $Res Function(ParameterSet) _then) = _$ParameterSetCopyWithImpl;
 @useResult
 $Res call({
- ParameterManifest manifest, JmaCodeTableParameter jmaCodeTable, KyoshinObservationPointsParameter kyoshinObservationPoints, EarthquakeParameter earthquake, TsunamiParameter tsunami, ShindoDbStationsParameter shindoDbStations
+ AssetPackManifest manifest, JmaCodeTableParameter jmaCodeTable, KyoshinObservationPointsParameter kyoshinObservationPoints, EarthquakeParameter earthquake, TsunamiParameter tsunami, ShindoDbStationsParameter shindoDbStations
 });
 
 
-$ParameterManifestCopyWith<$Res> get manifest;$JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable;$KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints;$EarthquakeParameterCopyWith<$Res> get earthquake;$TsunamiParameterCopyWith<$Res> get tsunami;$ShindoDbStationsParameterCopyWith<$Res> get shindoDbStations;
+$JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable;$KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints;$EarthquakeParameterCopyWith<$Res> get earthquake;$TsunamiParameterCopyWith<$Res> get tsunami;$ShindoDbStationsParameterCopyWith<$Res> get shindoDbStations;
 
 }
 /// @nodoc
@@ -65,7 +67,7 @@ class _$ParameterSetCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? manifest = null,Object? jmaCodeTable = null,Object? kyoshinObservationPoints = null,Object? earthquake = null,Object? tsunami = null,Object? shindoDbStations = null,}) {
   return _then(_self.copyWith(
 manifest: null == manifest ? _self.manifest : manifest // ignore: cast_nullable_to_non_nullable
-as ParameterManifest,jmaCodeTable: null == jmaCodeTable ? _self.jmaCodeTable : jmaCodeTable // ignore: cast_nullable_to_non_nullable
+as AssetPackManifest,jmaCodeTable: null == jmaCodeTable ? _self.jmaCodeTable : jmaCodeTable // ignore: cast_nullable_to_non_nullable
 as JmaCodeTableParameter,kyoshinObservationPoints: null == kyoshinObservationPoints ? _self.kyoshinObservationPoints : kyoshinObservationPoints // ignore: cast_nullable_to_non_nullable
 as KyoshinObservationPointsParameter,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameter,tsunami: null == tsunami ? _self.tsunami : tsunami // ignore: cast_nullable_to_non_nullable
@@ -74,15 +76,6 @@ as ShindoDbStationsParameter,
   ));
 }
 /// Create a copy of ParameterSet
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ParameterManifestCopyWith<$Res> get manifest {
-  
-  return $ParameterManifestCopyWith<$Res>(_self.manifest, (value) {
-    return _then(_self.copyWith(manifest: value));
-  });
-}/// Create a copy of ParameterSet
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -209,7 +202,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami,  ShindoDbStationsParameter shindoDbStations)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AssetPackManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami,  ShindoDbStationsParameter shindoDbStations)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParameterSet() when $default != null:
 return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints,_that.earthquake,_that.tsunami,_that.shindoDbStations);case _:
@@ -230,7 +223,7 @@ return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami,  ShindoDbStationsParameter shindoDbStations)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AssetPackManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami,  ShindoDbStationsParameter shindoDbStations)  $default,) {final _that = this;
 switch (_that) {
 case _ParameterSet():
 return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints,_that.earthquake,_that.tsunami,_that.shindoDbStations);case _:
@@ -250,7 +243,7 @@ return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami,  ShindoDbStationsParameter shindoDbStations)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AssetPackManifest manifest,  JmaCodeTableParameter jmaCodeTable,  KyoshinObservationPointsParameter kyoshinObservationPoints,  EarthquakeParameter earthquake,  TsunamiParameter tsunami,  ShindoDbStationsParameter shindoDbStations)?  $default,) {final _that = this;
 switch (_that) {
 case _ParameterSet() when $default != null:
 return $default(_that.manifest,_that.jmaCodeTable,_that.kyoshinObservationPoints,_that.earthquake,_that.tsunami,_that.shindoDbStations);case _:
@@ -268,7 +261,9 @@ class _ParameterSet implements ParameterSet {
   const _ParameterSet({required this.manifest, required this.jmaCodeTable, required this.kyoshinObservationPoints, required this.earthquake, required this.tsunami, required this.shindoDbStations});
   
 
-@override final  ParameterManifest manifest;
+/// Asset Pack の `manifest.json`（地図アセットも含む）。パラメータ固有のメタ
+/// データが必要な場合は `manifest.findAsset(...)` を利用する。
+@override final  AssetPackManifest manifest;
 @override final  JmaCodeTableParameter jmaCodeTable;
 @override final  KyoshinObservationPointsParameter kyoshinObservationPoints;
 @override final  EarthquakeParameter earthquake;
@@ -305,11 +300,11 @@ abstract mixin class _$ParameterSetCopyWith<$Res> implements $ParameterSetCopyWi
   factory _$ParameterSetCopyWith(_ParameterSet value, $Res Function(_ParameterSet) _then) = __$ParameterSetCopyWithImpl;
 @override @useResult
 $Res call({
- ParameterManifest manifest, JmaCodeTableParameter jmaCodeTable, KyoshinObservationPointsParameter kyoshinObservationPoints, EarthquakeParameter earthquake, TsunamiParameter tsunami, ShindoDbStationsParameter shindoDbStations
+ AssetPackManifest manifest, JmaCodeTableParameter jmaCodeTable, KyoshinObservationPointsParameter kyoshinObservationPoints, EarthquakeParameter earthquake, TsunamiParameter tsunami, ShindoDbStationsParameter shindoDbStations
 });
 
 
-@override $ParameterManifestCopyWith<$Res> get manifest;@override $JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable;@override $KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints;@override $EarthquakeParameterCopyWith<$Res> get earthquake;@override $TsunamiParameterCopyWith<$Res> get tsunami;@override $ShindoDbStationsParameterCopyWith<$Res> get shindoDbStations;
+@override $JmaCodeTableParameterCopyWith<$Res> get jmaCodeTable;@override $KyoshinObservationPointsParameterCopyWith<$Res> get kyoshinObservationPoints;@override $EarthquakeParameterCopyWith<$Res> get earthquake;@override $TsunamiParameterCopyWith<$Res> get tsunami;@override $ShindoDbStationsParameterCopyWith<$Res> get shindoDbStations;
 
 }
 /// @nodoc
@@ -325,7 +320,7 @@ class __$ParameterSetCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? manifest = null,Object? jmaCodeTable = null,Object? kyoshinObservationPoints = null,Object? earthquake = null,Object? tsunami = null,Object? shindoDbStations = null,}) {
   return _then(_ParameterSet(
 manifest: null == manifest ? _self.manifest : manifest // ignore: cast_nullable_to_non_nullable
-as ParameterManifest,jmaCodeTable: null == jmaCodeTable ? _self.jmaCodeTable : jmaCodeTable // ignore: cast_nullable_to_non_nullable
+as AssetPackManifest,jmaCodeTable: null == jmaCodeTable ? _self.jmaCodeTable : jmaCodeTable // ignore: cast_nullable_to_non_nullable
 as JmaCodeTableParameter,kyoshinObservationPoints: null == kyoshinObservationPoints ? _self.kyoshinObservationPoints : kyoshinObservationPoints // ignore: cast_nullable_to_non_nullable
 as KyoshinObservationPointsParameter,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameter,tsunami: null == tsunami ? _self.tsunami : tsunami // ignore: cast_nullable_to_non_nullable
@@ -335,15 +330,6 @@ as ShindoDbStationsParameter,
 }
 
 /// Create a copy of ParameterSet
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ParameterManifestCopyWith<$Res> get manifest {
-  
-  return $ParameterManifestCopyWith<$Res>(_self.manifest, (value) {
-    return _then(_self.copyWith(manifest: value));
-  });
-}/// Create a copy of ParameterSet
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

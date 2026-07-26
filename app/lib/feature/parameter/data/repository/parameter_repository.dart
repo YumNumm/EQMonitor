@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:eqmonitor/feature/parameter/data/data_source/parameter_asset_data_source.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/repository/parameter_json_parser.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'parameter_repository.g.dart';
@@ -16,6 +13,10 @@ Future<ParameterRepository> parameterRepository(Ref ref) async {
   );
 }
 
+/// Loads [ParameterSet] from the platform Asset Pack. This is the sole
+/// source of parameter data (no HTTP fetch, no bundled-asset fallback):
+/// if the pack isn't ready, `AssetPackNotReadyException` propagates from
+/// [assetDataSource] unchanged.
 final class ParameterRepository {
   const ParameterRepository({
     required ParameterAssetDataSource assetDataSource,
@@ -27,7 +28,7 @@ final class ParameterRepository {
   final ParameterJsonParser _parser;
 
   Future<ParameterSet> loadAsset() async {
-    final manifestJson = await _assetDataSource.readManifestJson();
+    final manifest = await _assetDataSource.readManifest();
     final parameterJsonByType = <ParameterType, String>{};
     for (final type in ParameterType.values) {
       parameterJsonByType[type] = await _assetDataSource.readParameterJson(
@@ -35,25 +36,7 @@ final class ParameterRepository {
       );
     }
     return _parser.parseSet(
-      manifestJson: manifestJson,
-      parameterJsonByType: parameterJsonByType,
-    );
-  }
-
-  Future<ParameterSet> fetch(api.ApiClient client) async {
-    final manifestResponse = await client.parameters.getV2ParametersManifest();
-    final manifestJson = jsonEncode(manifestResponse.data.toJson());
-    final parameterJsonByType = <ParameterType, String>{};
-
-    for (final type in ParameterType.values) {
-      final response = await client.parameters.getV2ParametersType(
-        type: type.toApiParameterType,
-      );
-      parameterJsonByType[type] = jsonEncode(response.data);
-    }
-
-    return _parser.parseSet(
-      manifestJson: manifestJson,
+      manifest: manifest,
       parameterJsonByType: parameterJsonByType,
     );
   }
