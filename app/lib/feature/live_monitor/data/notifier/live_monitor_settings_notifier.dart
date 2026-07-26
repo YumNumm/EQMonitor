@@ -38,14 +38,15 @@ class LiveMonitorSettingsNotifier extends _$LiveMonitorSettingsNotifier {
       if (raw == null) {
         return const LiveMonitorSettings();
       }
-      final Object? decoded = jsonDecode(raw);
-      if (decoded is! Map<String, dynamic>) {
-        talker.warning('[LiveMonitor] settings JSON is not an object');
-        return const LiveMonitorSettings();
+      switch (jsonDecode(raw)) {
+        case final Map<String, dynamic> decoded:
+          return normalizeLiveMonitorSettings(
+            LiveMonitorSettings.fromJson(decoded),
+          );
+        default:
+          talker.warning('[LiveMonitor] settings JSON is not an object');
+          return const LiveMonitorSettings();
       }
-      return normalizeLiveMonitorSettings(
-        LiveMonitorSettings.fromJson(decoded),
-      );
     } catch (error, stackTrace) {
       talker.error('[LiveMonitor] failed to load settings', error, stackTrace);
       return const LiveMonitorSettings();
