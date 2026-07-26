@@ -223,7 +223,7 @@ class LiveMonitorDetectedEventNotifier
             generatedAt: generatedAt,
           ));
         }
-        await resolvePendingEstimatedIntensity(eventId: eventId);
+        await resolvePendingEstimatedIntensity();
       case RealtimeEewUpsertEvent() ||
           RealtimeShakeSnapshotEvent() ||
           RealtimeTsunamiUpsertEvent() ||
@@ -269,27 +269,33 @@ class LiveMonitorDetectedEventNotifier
     }
   }
 
-  Future<void> resolvePendingEstimatedIntensity({String? eventId}) async {
-    final pending = pendingEstimatedEvents
-        .where((event) => eventId == null || event.eventId == eventId)
-        .toList(growable: false);
+  Future<void> resolvePendingEstimatedIntensity() async {
+    final pending = pendingEstimatedEvents.toList(growable: false);
+    final details = <String, Earthquake?>{};
     for (final event in pending) {
-      await resolvePendingEstimatedEvent(event);
-      if (!ref.mounted) {
-        return;
+      Earthquake? earthquake;
+      if (details.containsKey(event.eventId)) {
+        earthquake = details[event.eventId];
+      } else {
+        earthquake = await loadEarthquakeDetail(
+          eventId: event.eventId,
+          invalidate: true,
+        );
+        if (!ref.mounted) {
+          return;
+        }
+        details[event.eventId] = earthquake;
       }
+      resolvePendingEstimatedEvent(event: event, earthquake: earthquake);
     }
   }
 
-  Future<bool> resolvePendingEstimatedEvent(
-    LiveMonitorPendingEstimatedIntensity event,
-  ) async {
-    final earthquake = await loadEarthquakeDetail(
-      eventId: event.eventId,
-      invalidate: true,
-    );
+  void resolvePendingEstimatedEvent({
+    required LiveMonitorPendingEstimatedIntensity event,
+    required Earthquake? earthquake,
+  }) {
     if (!ref.mounted) {
-      return false;
+      return;
     }
     final fullUrl = earthquake?.estimatedIntensityTileUrl;
     if (earthquake == null ||
@@ -298,11 +304,11 @@ class LiveMonitorDetectedEventNotifier
           fullUrl: fullUrl,
           identifier: event.identifier,
         )) {
-      return false;
+      return;
     }
     final matchedIndex = pendingEstimatedEvents.indexOf(event);
     if (matchedIndex < 0) {
-      return false;
+      return;
     }
     final superseded = pendingEstimatedEvents
         .take(matchedIndex + 1)
@@ -318,7 +324,6 @@ class LiveMonitorDetectedEventNotifier
     if (detected != null) {
       publish(detected);
     }
-    return true;
   }
 
   Future<Earthquake?> loadEarthquakeDetail({
