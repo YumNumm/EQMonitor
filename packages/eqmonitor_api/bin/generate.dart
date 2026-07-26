@@ -305,11 +305,16 @@ void _generateRealtimeEventEnvelope({
         final type = _singleEnumValue(
           properties[discriminatorKey],
           '$schemaName.$discriminatorKey',
+          schemas,
         );
         final operationValue = properties['operation'];
         final operation = operationValue == null
             ? null
-            : _singleEnumValue(operationValue, '$schemaName.operation');
+            : _singleEnumValue(
+                operationValue,
+                '$schemaName.operation',
+                schemas,
+              );
         return (
           schemaName: schemaName,
           type: type,
@@ -402,11 +407,30 @@ void _generateRealtimeEventEnvelope({
   stdout.writeln('  generated: ${output.path}');
 }
 
-String _singleEnumValue(Object? value, String path) {
-  if (value is! Map<String, dynamic>) {
+String _singleEnumValue(
+  Object? value,
+  String path,
+  Map<String, dynamic> schemas,
+) {
+  var resolved = value;
+  final visitedRefs = <String>{};
+  while (resolved is Map<String, dynamic>) {
+    final ref = resolved[r'$ref'];
+    if (ref is! String) {
+      break;
+    }
+    const componentPrefix = '#/components/schemas/';
+    if (!ref.startsWith(componentPrefix) || !visitedRefs.add(ref)) {
+      throw FormatException(
+        'Realtime discriminator reference is invalid: $path',
+      );
+    }
+    resolved = schemas[ref.substring(componentPrefix.length)];
+  }
+  if (resolved is! Map<String, dynamic>) {
     throw FormatException('Realtime discriminator property is invalid: $path');
   }
-  final enumValues = value['enum'];
+  final enumValues = resolved['enum'];
   if (enumValues is! List ||
       enumValues.length != 1 ||
       enumValues.single is! String) {
