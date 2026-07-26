@@ -50,6 +50,7 @@ ShakeDetectionEvent _shake({
   required double maxLat,
   required double minLng,
   required double maxLng,
+  String? correlatedEewEventId,
 }) => ShakeDetectionEvent(
   eventId: 'shake',
   serialNo: 1,
@@ -63,10 +64,14 @@ ShakeDetectionEvent _shake({
   minLng: minLng,
   maxLng: maxLng,
   changeReasons: const ['new_event'],
+  correlatedEewEventId: correlatedEewEventId,
 );
 
-Earthquake _earthquakeWithHypocenterAndStation() {
-  const station = EarthquakeParameterStationItem(
+Earthquake _earthquakeWithHypocenterAndStation({
+  Coordinate? hypocenterCoordinates,
+  LatLng? stationLocation,
+}) {
+  final station = EarthquakeParameterStationItem(
     code: 'station',
     noCode: 'station',
     name: LocalizedName(ja: 'テスト観測点'),
@@ -74,15 +79,15 @@ Earthquake _earthquakeWithHypocenterAndStation() {
     status: EarthquakeStationStatus.operating,
     sourceStatus: 'test',
     owner: 'test',
-    location: LatLng(42, 145),
+    location: stationLocation ?? const LatLng(42, 145),
   );
-  const city = EarthquakeParameterCityItem(
+  final city = EarthquakeParameterCityItem(
     code: 'city',
     name: LocalizedName(ja: 'テスト市'),
     kana: null,
     stations: [station],
   );
-  const prefecture = EarthquakeParameterPrefectureItem(
+  final prefecture = EarthquakeParameterPrefectureItem(
     code: 'prefecture',
     name: LocalizedName(ja: 'テスト県'),
     regions: [],
@@ -95,12 +100,14 @@ Earthquake _earthquakeWithHypocenterAndStation() {
     arrivalTime: _now,
     dataSources: const [],
     telegramTypes: const [],
-    hypocenter: const EarthquakeHypocenter(
+    hypocenter: EarthquakeHypocenter(
       code: '002',
       name: 'テスト震源',
-      coordinates: Coordinate.latLng(latitude: 34, longitude: 131),
-      magnitude: EarthquakeMagnitude.value(value: 5),
-      depth: EarthquakeDepth.value(value: 10),
+      coordinates:
+          hypocenterCoordinates ??
+          const Coordinate.latLng(latitude: 34, longitude: 131),
+      magnitude: const EarthquakeMagnitude.value(value: 5),
+      depth: const EarthquakeDepth.value(value: 10),
       detailedCode: null,
       detailedName: null,
     ),
@@ -110,7 +117,7 @@ Earthquake _earthquakeWithHypocenterAndStation() {
       regions: const {},
       intensityTree: {
         JmaIntensity.four: [
-          const PrefectureIntensityNode(
+          PrefectureIntensityNode(
             prefecture: IntensityPrefecture(
               prefecture: prefecture,
               maxIntensity: JmaIntensity.four,
@@ -122,7 +129,7 @@ Earthquake _earthquakeWithHypocenterAndStation() {
                 stations: [
                   StationIntensityNode(
                     station: station,
-                    intensity: IntensityStation(
+                    intensity: const IntensityStation(
                       code: 'station',
                       name: 'テスト観測点',
                       sva: null,
@@ -202,6 +209,80 @@ void main() {
     expect(focus.bounds, _homeBounds);
   });
 
+  test('結合済み揺れ検知だけではHome fallbackを使う', () {
+    final focus = builder.forRealtime(
+      homeBounds: _homeBounds,
+      eews: const [],
+      shakes: [
+        _shake(
+          minLat: 33,
+          maxLat: 34,
+          minLng: 130,
+          maxLng: 132,
+          correlatedEewEventId: 'eew-1',
+        ),
+      ],
+      obscuredBottom: 0,
+    );
+
+    expect(focus.bounds, _homeBounds);
+  });
+
+  test('未結合揺れ検知と混在しても結合済み矩形を含めない', () {
+    final focus = builder.forRealtime(
+      homeBounds: _homeBounds,
+      eews: const [],
+      shakes: [
+        _shake(minLat: 33, maxLat: 34, minLng: 130, maxLng: 132),
+        _shake(
+          minLat: 80,
+          maxLat: 81,
+          minLng: 170,
+          maxLng: 171,
+          correlatedEewEventId: 'eew-1',
+        ),
+      ],
+      obscuredBottom: 0,
+    );
+
+    expect(focus.bounds.contains(latitude: 33, longitude: 130), isTrue);
+    expect(focus.bounds.maxLat, lessThan(80));
+    expect(focus.bounds.maxLng, lessThan(170));
+  });
+
+  test('不正EEW座標と揺れ矩形を除外して有効点を維持する', () {
+    final focus = builder.forRealtime(
+      homeBounds: _homeBounds,
+      eews: [
+        _eew(latitude: double.nan, longitude: 139),
+        _eew(latitude: double.infinity, longitude: 139),
+        _eew(latitude: 91, longitude: 139),
+        _eew(latitude: 36, longitude: 140),
+      ],
+      shakes: [
+        _shake(minLat: double.nan, maxLat: 34, minLng: 130, maxLng: 132),
+        _shake(minLat: 33, maxLat: 34, minLng: 181, maxLng: 182),
+      ],
+      obscuredBottom: 0,
+    );
+
+    expect(focus.bounds.contains(latitude: 36, longitude: 140), isTrue);
+    expect(focus.bounds.maxLat, lessThan(80));
+  });
+
+  test('全ての不正 realtime targetではHome fallbackを使う', () {
+    final focus = builder.forRealtime(
+      homeBounds: _homeBounds,
+      eews: [_eew(latitude: -91, longitude: 139)],
+      shakes: [
+        _shake(minLat: 33, maxLat: double.infinity, minLng: 130, maxLng: 132),
+      ],
+      obscuredBottom: 0,
+    );
+
+    expect(focus.bounds, _homeBounds);
+  });
+
   test('地震は震源と取得済み観測点を含む', () {
     final focus = builder.forEarthquake(
       earthquake: _earthquakeWithHypocenterAndStation(),
@@ -229,6 +310,38 @@ void main() {
     );
     final focus = builder.forEarthquake(
       earthquake: earthquake,
+      fallbackBounds: _homeBounds,
+      obscuredBottom: 0,
+    );
+
+    expect(focus.bounds, _homeBounds);
+  });
+
+  test('不正な地震震源を除外して有効な観測点を維持する', () {
+    final focus = builder.forEarthquake(
+      earthquake: _earthquakeWithHypocenterAndStation(
+        hypocenterCoordinates: const Coordinate.latLng(
+          latitude: double.nan,
+          longitude: 131,
+        ),
+      ),
+      fallbackBounds: _homeBounds,
+      obscuredBottom: 0,
+    );
+
+    expect(focus.bounds.contains(latitude: 42, longitude: 145), isTrue);
+    expect(focus.bounds.minLat, greaterThan(40));
+  });
+
+  test('全ての不正な地震座標ではcaller fallbackを使う', () {
+    final focus = builder.forEarthquake(
+      earthquake: _earthquakeWithHypocenterAndStation(
+        hypocenterCoordinates: const Coordinate.latLng(
+          latitude: double.infinity,
+          longitude: 131,
+        ),
+        stationLocation: const LatLng(91, 145),
+      ),
       fallbackBounds: _homeBounds,
       obscuredBottom: 0,
     );

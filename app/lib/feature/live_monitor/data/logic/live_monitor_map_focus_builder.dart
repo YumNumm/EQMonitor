@@ -101,6 +101,9 @@ Iterable<LiveMonitorGeoCoordinate> liveMonitorEewTargetCoordinates(
 Iterable<LiveMonitorGeoCoordinate> liveMonitorShakeTargetCoordinates(
   ShakeDetectionEvent shake,
 ) sync* {
+  if (shake.correlatedEewEventId != null) {
+    return;
+  }
   final minimum = liveMonitorGeoCoordinate(
     latitude: shake.minLat,
     longitude: shake.minLng,
