@@ -455,3 +455,13 @@ jobs:
             --app-id "$ASC_APP_ID" \
             --asset-pack-id "$IOS_BACKGROUND_ASSET_PACK_ID" \
             upload --archive-path "$archive_path"
+
+      # This is a new workflow (unlike deploy-app.yaml's equivalent steps, which
+      # rely on the runner being torn down at job end), so clean up the private
+      # key material explicitly rather than assuming that's enough. Runs even if
+      # an earlier step in this job failed/exited early.
+      - name: Remove App Store Connect API private key
+        if: always()
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+        run: rm -f "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"

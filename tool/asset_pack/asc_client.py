@@ -303,9 +303,27 @@ class AscClient:
                 f"commit backgroundAssetUploadFiles failed: {res.status} {json.dumps(res.body)}"
             )
 
+    # Terminal-success state names are unverified (see the module docstring's
+    # UNVERIFIED SURFACE WARNING) -- both candidates below are plausible based
+    # on ASC's naming conventions for other processing pipelines (builds use
+    # PROCESSING/VALID/INVALID/FAILED, TestFlight beta review uses similar
+    # READY_FOR_* naming). Kept as a class attribute (not a magic tuple inline)
+    # so the "what counts as success" allow-list is easy to find and audit.
+    KNOWN_SUCCESS_STATES = ("READY_FOR_TESTING", "PROCESSING_COMPLETE")
+    KNOWN_FAILURE_STATES = ("FAILED_PROCESSING", "REJECTED", "INVALID")
+
     def poll_background_asset_version_state(
         self, version_id: str, timeout_seconds: int = 20 * 60, interval_seconds: int = 20
     ) -> str:
+        """Poll until the backgroundAssetVersion reaches a known terminal state.
+
+        Raises ``AscApiError`` -- never returns normally -- unless the state
+        lands in ``KNOWN_SUCCESS_STATES``. This includes the timeout case: an
+        unrecognized (not explicitly known-good, not explicitly known-bad)
+        state at deadline is treated as a failure, not a silent pass, because
+        the terminal state name is unverified (see class docstring) and a
+        real stuck/failed upload must not make this job report green.
+        """
         deadline = time.time() + timeout_seconds
         last_state = "UNKNOWN"
         while time.time() < deadline:
@@ -317,20 +335,26 @@ class AscClient:
             attributes = res.body.get("data", {}).get("attributes", {})
             last_state = attributes.get("state") or attributes.get("assetPackState") or "UNKNOWN"
             print(f"asc_client: backgroundAssetVersion {version_id} state={last_state}")
-            if last_state in ("FAILED_PROCESSING", "REJECTED", "INVALID"):
-                raise AscApiError(f"backgroundAssetVersion processing failed: state={last_state}")
-            # NOTE: the exact terminal "success" state name is unverified (see the
-            # module docstring's UNVERIFIED SURFACE WARNING). Both candidates below
-            # are plausible based on ASC's naming conventions for other processing
-            # pipelines (builds use PROCESSING/VALID/INVALID/FAILED, TestFlight beta
-            # review uses similar READY_FOR_* naming). If neither ever matches, this
-            # loop times out (non-fatal to the overall upload, which has already
-            # committed) and prints an actionable message to check ASC manually.
-            if last_state in ("READY_FOR_TESTING", "PROCESSING_COMPLETE"):
+            if last_state in self.KNOWN_FAILURE_STATES:
+                raise AscApiError(
+                    f"backgroundAssetVersion {version_id} processing failed: "
+                    f"state={last_state}. Check App Store Connect manually -- see "
+                    "docs/asset-pack-cd.md 'Manual verification if polling fails "
+                    "or times out'."
+                )
+            if last_state in self.KNOWN_SUCCESS_STATES:
                 return last_state
             time.sleep(interval_seconds)
-        print(
-            f"asc_client: timed out waiting for backgroundAssetVersion {version_id} "
-            f"to finish processing (last state={last_state}); check App Store Connect manually"
+        raise AscApiError(
+            f"timed out after {timeout_seconds}s waiting for backgroundAssetVersion "
+            f"{version_id} to reach a known terminal state (last observed state="
+            f"{last_state!r}, not in KNOWN_SUCCESS_STATES={self.KNOWN_SUCCESS_STATES}). "
+            "The terminal state name is unverified against the live API (see this "
+            "module's UNVERIFIED SURFACE WARNING) -- this may mean the upload is "
+            "still processing normally under a state name this client doesn't "
+            "recognize yet, OR that it is genuinely stuck/failed. Either way this "
+            "must not be silently treated as success: check App Store Connect "
+            "manually -- see docs/asset-pack-cd.md 'Manual verification if polling "
+            "fails or times out' -- and, if the observed state is a legitimate "
+            "success state, add it to KNOWN_SUCCESS_STATES above."
         )
-        return last_state

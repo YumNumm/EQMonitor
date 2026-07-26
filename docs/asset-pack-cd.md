@@ -155,6 +155,28 @@ password>` (requires adding new Apple ID credential secrets not currently in
 this repo) — always remains available if the automated path needs to be
 bypassed for a release.
 
+### Manual verification if polling fails or times out
+
+`AscClient.poll_background_asset_version_state` (in `tool/asset_pack/asc_client.py`)
+only returns normally when the observed state is in its `KNOWN_SUCCESS_STATES`
+allow-list (`READY_FOR_TESTING`, `PROCESSING_COMPLETE`). Any explicitly-known
+failure state (`FAILED_PROCESSING`, `REJECTED`, `INVALID`) **or** a 20-minute
+timeout on an unrecognized state both raise `AscApiError` and fail the
+`upload-ios` job — on purpose, because the terminal state name is unverified
+(see above) and this job must never report green for an upload that's
+actually stuck or failed.
+
+If this happens, the file itself was already uploaded and committed
+successfully (polling only starts after `commit_background_asset_upload`
+succeeds) — only the *processing* status is in question. To check by hand:
+
+1. Open App Store Connect → the app (`ASC_APP_ID` `6447546703`) → **Background Assets** → the pack matching `IOS_BACKGROUND_ASSET_PACK_ID` (`net.yumnumm.eqmonitor.assets`).
+2. Find the version the failed job created — the workflow log prints `created backgroundAssetVersion <id>` right before polling starts; match it, or just look at the most recent version's timestamp.
+3. Read its status directly in the UI:
+   - If it shows a legitimate success state (e.g. ready for TestFlight/App Store submission) under a name this client doesn't recognize, add that literal state string to `KNOWN_SUCCESS_STATES` in `tool/asset_pack/asc_client.py` so future runs don't need manual checking.
+   - If it shows a genuine failure/rejection, treat the Asset Pack version as failed: re-run `upload-ios` (it creates a fresh `backgroundAssetVersion` each time, so a failed one doesn't block retrying) after investigating the cause in the UI's error detail, if shown.
+   - If it's still legitimately processing beyond 20 minutes, either re-run the poll manually (`python3 -m tool.asset_pack.upload_ios_background_assets ... check-exists` won't re-poll a specific version; use the ASC UI, or `curl`/the App Store Connect API directly against `GET /v1/backgroundAssetVersions/<id>`) or raise `timeout_seconds` in the workflow if this turns out to be normal/expected latency.
+
 ## Xcode version for `ba-package`
 
 `upload-ios` pins its own `IOS_ASSET_PACK_XCODE_VERSION` (currently `26.3`,

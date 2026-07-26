@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tool.asset_pack.asc_client import build_es256_jwt
+from tool.asset_pack.asc_client import AscApiError, AscClient, AscResponse, build_es256_jwt
 
 
 def _b64url_decode(segment: str) -> bytes:
@@ -101,6 +101,50 @@ class BuildEs256JwtTest(unittest.TestCase):
         )
         self.assertEqual(verify.returncode, 0, verify.stdout + verify.stderr)
         self.assertIn(b"Verified OK", verify.stdout)
+
+
+class _ScriptedAscClient(AscClient):
+    """AscClient whose `request` returns a scripted sequence of states,
+    without any real network I/O -- used to test polling logic in isolation."""
+
+    def __init__(self, states: list[str]) -> None:
+        # Deliberately skip AscClient.__init__: no real key material needed
+        # since `request` is fully overridden below.
+        self._states = list(states)
+
+    def request(self, method, path, json_body=None, extra_headers=None, raw_body=None):  # noqa: D401
+        del method, path, json_body, extra_headers, raw_body
+        state = self._states.pop(0) if self._states else self._states_last
+        self._states_last = state
+        return AscResponse(status=200, body={"data": {"attributes": {"state": state}}})
+
+
+class PollBackgroundAssetVersionStateTest(unittest.TestCase):
+    def test_returns_state_on_known_success_state(self) -> None:
+        client = _ScriptedAscClient(["PROCESSING", "READY_FOR_TESTING"])
+        result = client.poll_background_asset_version_state(
+            "v1", timeout_seconds=5, interval_seconds=0
+        )
+        self.assertEqual(result, "READY_FOR_TESTING")
+
+    def test_raises_immediately_on_known_failure_state(self) -> None:
+        client = _ScriptedAscClient(["FAILED_PROCESSING"])
+        with self.assertRaises(AscApiError) as ctx:
+            client.poll_background_asset_version_state("v1", timeout_seconds=5, interval_seconds=0)
+        self.assertIn("FAILED_PROCESSING", str(ctx.exception))
+
+    def test_raises_on_timeout_with_unrecognized_state_instead_of_silently_passing(self) -> None:
+        # This is the Important-1 fix under test: an unknown state that is
+        # neither a known success nor a known failure must NOT be treated as
+        # success just because the poll loop timed out.
+        client = _ScriptedAscClient(["SOME_UNKNOWN_STATE_NAME"])
+        with self.assertRaises(AscApiError) as ctx:
+            client.poll_background_asset_version_state(
+                "v1", timeout_seconds=0.05, interval_seconds=0.01
+            )
+        message = str(ctx.exception)
+        self.assertIn("SOME_UNKNOWN_STATE_NAME", message)
+        self.assertIn("docs/asset-pack-cd.md", message)
 
 
 if __name__ == "__main__":
