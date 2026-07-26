@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'events2.dart';
+import 'shake_detection_state.dart';
 import 'type3.dart';
 
 part 'realtime_shake_detection_snapshot_payload.freezed.dart';
@@ -16,7 +16,7 @@ abstract class RealtimeShakeDetectionSnapshotPayload with _$RealtimeShakeDetecti
     required Type3 type,
     required int revision,
     required DateTime responseAt,
-    required List<Events2> events,
+    required List<ShakeDetectionState> events,
   }) = _RealtimeShakeDetectionSnapshotPayload;
 
   factory RealtimeShakeDetectionSnapshotPayload.fromJson(Map<String, Object?> json) => _$RealtimeShakeDetectionSnapshotPayloadFromJson(json);

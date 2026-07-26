@@ -223,7 +223,7 @@ return $default(_that.mode,_that.displayModel,_that.seenEventIds,_that.dismissed
 
 class _EewWarningOverlayState implements EewWarningOverlayState {
   const _EewWarningOverlayState({this.mode = EewWarningOverlayMode.hidden, this.displayModel, final  Set<String> seenEventIds = const <String>{}, final  Set<String> dismissedEventIds = const <String>{}, this.simulationSessionActive = false}): _seenEventIds = seenEventIds,_dismissedEventIds = dismissedEventIds;
-
+  
 
 @override@JsonKey() final  EewWarningOverlayMode mode;
 @override final  EewWarningOverlayDisplayModel? displayModel;

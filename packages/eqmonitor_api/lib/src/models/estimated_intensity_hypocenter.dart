@@ -19,6 +19,6 @@ abstract class EstimatedIntensityHypocenter with _$EstimatedIntensityHypocenter 
     @JsonKey(includeIfNull: false)
     num? depthKm,
   }) = _EstimatedIntensityHypocenter;
-
+  
   factory EstimatedIntensityHypocenter.fromJson(Map<String, Object?> json) => _$EstimatedIntensityHypocenterFromJson(json);
 }

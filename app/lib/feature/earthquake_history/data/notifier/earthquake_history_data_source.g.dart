@@ -71,7 +71,7 @@ final class EarthquakeHistoryDataSourceProvider
 }
 
 String _$earthquakeHistoryDataSourceHash() =>
-    r'e02bc6ac22d319b07dd2440ca92466b7819add1f';
+    r'9716617ba885e99877962015977e2d3ef6333883';
 
 final class EarthquakeHistoryDataSourceFamily extends $Family
     with

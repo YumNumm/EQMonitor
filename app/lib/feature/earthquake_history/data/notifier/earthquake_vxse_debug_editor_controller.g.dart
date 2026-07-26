@@ -71,7 +71,7 @@ final class EarthquakeVxseDebugEditorControllerProvider
 }
 
 String _$earthquakeVxseDebugEditorControllerHash() =>
-    r'75f3c7ee49037ad7a5d9afb94fd9b1cdd8fc2f43';
+    r'18d81822bb30cc08543b282d80784cf3511243cf';
 
 final class EarthquakeVxseDebugEditorControllerFamily extends $Family
     with

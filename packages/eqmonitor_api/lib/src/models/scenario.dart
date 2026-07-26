@@ -5,11 +5,19 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
-enum Type2 {
-  @JsonValue('eew')
-  eew('eew');
+enum Scenario {
+  @JsonValue('combined')
+  combined('combined'),
+  @JsonValue('intensity_escalation')
+  intensityEscalation('intensity_escalation'),
+  @JsonValue('warning_transition')
+  warningTransition('warning_transition'),
+  @JsonValue('cancel')
+  cancel('cancel'),
+  @JsonValue('simple')
+  simple('simple');
 
-  const Type2(this.json);
+  const Scenario(this.json);
 
   final String? json;
   String toJson() {

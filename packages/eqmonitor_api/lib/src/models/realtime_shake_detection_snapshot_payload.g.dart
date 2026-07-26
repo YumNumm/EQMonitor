@@ -23,7 +23,9 @@ _$RealtimeShakeDetectionSnapshotPayloadFromJson(Map<String, dynamic> json) =>
         events: $checkedConvert(
           'events',
           (v) => (v as List<dynamic>)
-              .map((e) => Events2.fromJson(e as Map<String, dynamic>))
+              .map(
+                (e) => ShakeDetectionState.fromJson(e as Map<String, dynamic>),
+              )
               .toList(),
         ),
       );

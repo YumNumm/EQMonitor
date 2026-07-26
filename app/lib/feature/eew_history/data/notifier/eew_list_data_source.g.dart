@@ -68,7 +68,7 @@ final class EewListDataSourceProvider
   }
 }
 
-String _$eewListDataSourceHash() => r'29b0fd2af75bc169b498f05cc5e23cf704baa902';
+String _$eewListDataSourceHash() => r'987c9767436a322f1ef51e98e7ac333079232ea6';
 
 final class EewListDataSourceFamily extends $Family
     with
