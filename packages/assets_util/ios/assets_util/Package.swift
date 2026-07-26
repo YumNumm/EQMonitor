@@ -5,7 +5,11 @@ import PackageDescription
 let package = Package(
   name: "assets_util",
   platforms: [
-    .iOS(.v13)
+    .iOS(.v13),
+    // Runner's actual MACOSX_DEPLOYMENT_TARGET is 15.6
+    // (app/macos/Runner.xcodeproj/project.pbxproj); SwiftPM only expresses
+    // major versions, so .v15 is the closest floor.
+    .macOS(.v15),
   ],
   products: [
     .library(

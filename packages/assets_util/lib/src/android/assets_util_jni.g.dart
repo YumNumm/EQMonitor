@@ -7338,6 +7338,71 @@ extension type AssetsUtil._(jni$_.JObject _$this) implements jni$_.JObject {
       _$fileName.pointer,
     ).object<jni$_.JString?>();
   }
+
+  // NOTE (Task 9, not jnigen-generated): `dart run tool/jnigen.dart` currently
+  // fails in this repo's environment with:
+  //   java.lang.IllegalArgumentException: Provided Metadata instance has
+  //   version 2.2.0, while maximum supported version is 2.1.0. To support
+  //   newer versions, update the kotlinx-metadata-jvm library.
+  // This is jnigen 0.16.0's bundled ApiSummarizer (kotlinx-metadata-jvm
+  // 0.9.0) failing to parse `@Metadata` on classes compiled by this
+  // project's pinned Kotlin Gradle Plugin (2.2.21) — a known upstream gap
+  // (see e.g. google/dagger#4779, google/dagger#5001 hitting the same
+  // "maximum supported version" wall against newer Kotlin compilers), not
+  // something introduced by this change: it reproduces identically for the
+  // pre-existing `resolveLocalPath` binding above (confirmed by rebuilding
+  // `example`'s classes.jar and re-running jnigen). `bundleLibCompileToJarDebug`
+  // for the `assets_util` Gradle module itself succeeds fine (verified);
+  // only jnigen's own metadata-reading step can't run right now.
+  //
+  // `resolvePackRoot` below has the *identical* JVM signature shape
+  // (`Context, String -> String`) as the jnigen-generated `resolveLocalPath`
+  // immediately above, so it was hand-mirrored from that exact,
+  // already-verified pattern rather than guessed. Once jnigen/kotlinx-metadata-jvm
+  // supports Kotlin 2.2's metadata format, re-run
+  // `dart run tool/jnigen.dart` and delete this note — the regenerated file
+  // should produce byte-for-byte the same shape for this method.
+  static final _id_resolvePackRoot = _class.staticMethodId(
+    r'resolvePackRoot',
+    r'(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;',
+  );
+
+  static final _resolvePackRoot =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+                jni$_.VarArgs<
+                  (jni$_.Pointer<jni$_.Void>, jni$_.Pointer<jni$_.Void>)
+                >,
+              )
+            >
+          >('globalEnv_CallStaticObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+            )
+          >();
+
+  /// from: `static public java.lang.String resolvePackRoot(android.content.Context context, java.lang.String packName)`
+  /// The returned object must be released after use, by calling the [release] method.
+  static jni$_.JString? resolvePackRoot(
+    Context? context,
+    jni$_.JString? packName,
+  ) {
+    final _$context = context?.reference ?? jni$_.jNullReference;
+    final _$packName = packName?.reference ?? jni$_.jNullReference;
+    return _resolvePackRoot(
+      _class.reference.pointer,
+      _id_resolvePackRoot.pointer,
+      _$context.pointer,
+      _$packName.pointer,
+    ).object<jni$_.JString?>();
+  }
 }
 
 final class $AssetsUtil$Type$ extends jni$_.JType<AssetsUtil> {

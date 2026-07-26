@@ -28,3 +28,11 @@ android {
         getByName("main").java.srcDirs("src/main/kotlin")
     }
 }
+
+dependencies {
+    // Play Asset Delivery: AssetPackManager / AssetPackLocation for
+    // resolving the eqmonitor_assets install-time pack's on-device
+    // location (resolvePackRoot). Version 2.3.0 confirmed as the latest
+    // available via https://dl.google.com/android/maven2/com/google/android/play/group-index.xml.
+    implementation("com.google.android.play:asset-delivery-ktx:2.3.0")
+}
