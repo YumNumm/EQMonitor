@@ -100,7 +100,7 @@ class LiveMonitorEarthquakeCard extends ConsumerWidget {
             context,
           ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
-      EarthquakeSummaryHeader(item: earthquake),
+      EarthquakeSummaryHeader(item: earthquake, showStatusWatermark: true),
       CurrentLocationIntensityCard(item: earthquake),
       if (displayMode == IntensityDisplayMode.lpgm)
         EarthquakeLpgmIntensityCard(item: earthquake),

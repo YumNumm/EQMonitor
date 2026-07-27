@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_teleg
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_summary_header.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_earthquake_card_presenter.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
@@ -96,6 +97,12 @@ ShakeDetectionEvent _shake({
 );
 
 void main() {
+  test('EarthquakeSummaryHeaderは既存detail向けにwatermarkを既定で無効にする', () {
+    final header = EarthquakeSummaryHeader(item: _earthquake());
+
+    expect(header.showStatusWatermark, isFalse);
+  });
+
   group('preferredIntensityMode', () {
     test('VXSE62はLPGMデータがあれば長周期地震動を選ぶ', () {
       final mode = preferredIntensityMode(

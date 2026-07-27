@@ -14,9 +14,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class EarthquakeSummaryHeader extends StatelessWidget {
-  const EarthquakeSummaryHeader({required this.item, super.key});
+  const EarthquakeSummaryHeader({
+    required this.item,
+    this.showStatusWatermark = false,
+    super.key,
+  });
 
   final Earthquake item;
+  final bool showStatusWatermark;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,7 @@ class EarthquakeSummaryHeader extends StatelessWidget {
             ),
           ],
         ),
-        if (item.status != TelegramStatus.normal)
+        if (showStatusWatermark && item.status != TelegramStatus.normal)
           Positioned.fill(
             child: IgnorePointer(
               child: Center(
