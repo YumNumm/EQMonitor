@@ -48,11 +48,28 @@ class LiveMonitorSplitView extends HookConsumerWidget {
         final standardDividerExtent = totalExtent < 24 ? totalExtent : 24.0;
         final availableExtent = totalExtent - standardDividerExtent;
         final mediaQuery = MediaQuery.of(context);
+        final splitViewGlobalOrigin = switch (context.findRenderObject()) {
+          final RenderBox renderBox => renderBox.localToGlobal(Offset.zero),
+          _ => null,
+        };
         Rect? splitDisplayFeatureBounds;
-        for (final bounds in DisplayFeatureSubScreen.avoidBounds(mediaQuery)) {
+        for (final screenBounds in DisplayFeatureSubScreen.avoidBounds(
+          mediaQuery,
+        )) {
+          final bounds = switch (splitViewGlobalOrigin) {
+            final Offset origin => liveMonitorDisplayFeatureLocalBounds(
+              screenBounds: screenBounds,
+              splitViewGlobalOrigin: origin,
+              splitViewSize: constraints.biggest,
+            ),
+            null => null,
+          };
+          if (bounds == null) {
+            continue;
+          }
           final splitsInLayoutDirection = isPortrait
-              ? bounds.width >= mediaQuery.size.width
-              : bounds.height >= mediaQuery.size.height;
+              ? bounds.width >= constraints.maxWidth
+              : bounds.height >= constraints.maxHeight;
           if (splitsInLayoutDirection) {
             splitDisplayFeatureBounds = bounds;
             break;
