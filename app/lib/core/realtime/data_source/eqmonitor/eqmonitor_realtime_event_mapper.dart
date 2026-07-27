@@ -57,6 +57,7 @@ class EqMonitorRealtimeEventMapper {
         RealtimeEvent.estimatedIntensityUpsert(
           eventId: payload.eventId,
           estimatedIntensityTile: payload.record.estimatedIntensityKey,
+          generatedAt: DateTime.tryParse(payload.record.createdAt)?.toUtc(),
           source: RealtimeSource.eqmonitor,
         ),
       ],

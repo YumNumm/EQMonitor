@@ -213,6 +213,10 @@ _$RealtimeEstimatedIntensityUpsertEventFromJson(Map<String, dynamic> json) =>
             'estimated_intensity_tile',
             (v) => v as String,
           ),
+          generatedAt: $checkedConvert(
+            'generated_at',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
           source: $checkedConvert(
             'source',
             (v) => $enumDecode(_$RealtimeSourceEnumMap, v),
@@ -224,6 +228,7 @@ _$RealtimeEstimatedIntensityUpsertEventFromJson(Map<String, dynamic> json) =>
       fieldKeyMap: const {
         'eventId': 'event_id',
         'estimatedIntensityTile': 'estimated_intensity_tile',
+        'generatedAt': 'generated_at',
         r'$type': 'runtimeType',
       },
     );
@@ -233,6 +238,7 @@ Map<String, dynamic> _$RealtimeEstimatedIntensityUpsertEventToJson(
 ) => <String, dynamic>{
   'event_id': instance.eventId,
   'estimated_intensity_tile': instance.estimatedIntensityTile,
+  'generated_at': instance.generatedAt?.toIso8601String(),
   'source': _$RealtimeSourceEnumMap[instance.source]!,
   'runtimeType': instance.$type,
 };

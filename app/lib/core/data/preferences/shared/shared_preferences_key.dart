@@ -10,6 +10,7 @@ enum SharedPreferencesKey {
   intensityColor('intensity_color'),
   locationTrackingMode('location_tracking_mode'),
   homeConfiguration('home_configuration'),
+  liveMonitorSettings('live_monitor_settings'),
   onboardingCompleted('onboarding_completed'),
   betaTestingAgreed('beta_testing_agreed'),
   startEtag('start_etag'),

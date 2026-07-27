@@ -28,6 +28,7 @@ import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_station_waveform_
 import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_settings_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
+import 'package:eqmonitor/feature/live_monitor/ui/page/live_monitor_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
@@ -267,6 +268,15 @@ class ShakeDetectionHistoryDetailsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       ShakeDetectionHistoryDetailsPage(event: $extra);
+}
+
+@TypedGoRoute<LiveMonitorRoute>(path: '/live-monitor')
+class LiveMonitorRoute extends GoRouteData with $LiveMonitorRoute {
+  const LiveMonitorRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const LiveMonitorPage();
 }
 
 @TypedGoRoute<TelegramListByEventIdRoute>(path: '/telegram-list/:eventId')

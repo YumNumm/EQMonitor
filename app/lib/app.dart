@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/debug/launcher/debug_launcher.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_host.dart';
+import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_wake_lock_controller.dart';
 import 'package:eqmonitor/feature/start/ui/component/forced_update_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(liveMonitorWakeLockControllerProvider);
     final theme = ref.watch(themeModeProvider);
     final routerConfig = ref.watch(goRouterProvider);
     final lightColorSet = ref.watch(
