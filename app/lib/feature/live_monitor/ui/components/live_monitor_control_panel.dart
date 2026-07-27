@@ -1,0 +1,191 @@
+import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_validator.dart';
+import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
+import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
+import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_settings_notifier.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+class LiveMonitorControlPanel extends HookConsumerWidget {
+  const LiveMonitorControlPanel({required this.onExit, super.key});
+
+  final Future<void> Function() onExit;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings =
+        ref.watch(liveMonitorSettingsProvider).value ??
+        const LiveMonitorSettings();
+    final durationController = useTextEditingController(
+      text: settings.earthquakeDisplaySeconds.toString(),
+    );
+    final durationFocusNode = useFocusNode();
+    final durationError = useState<String?>(null);
+    final lastSavedDuration = useRef(settings.earthquakeDisplaySeconds);
+
+    final Future<void> Function(String) saveDuration = (raw) async {
+      final validation = validateLiveMonitorDuration(raw);
+      final seconds = validation.seconds;
+      if (seconds == null) {
+        durationError.value = '3〜300の整数を入力してください';
+        return;
+      }
+      durationError.value = null;
+      if (seconds == lastSavedDuration.value) {
+        return;
+      }
+      await LiveMonitorSettingsNotifier.saveMutation.run(ref, (tsx) async {
+        final current = await tsx.get(liveMonitorSettingsProvider.future);
+        await tsx
+            .get(liveMonitorSettingsProvider.notifier)
+            .save(current.copyWith(earthquakeDisplaySeconds: seconds));
+      });
+      lastSavedDuration.value = seconds;
+    };
+
+    useEffect(() {
+      void handleFocusChanged() async {
+        if (!durationFocusNode.hasFocus) {
+          await saveDuration(durationController.text);
+        }
+      }
+
+      durationFocusNode.addListener(handleFocusChanged);
+      return () => durationFocusNode.removeListener(handleFocusChanged);
+    }, [durationController, durationFocusNode]);
+
+    final panelHeight = MediaQuery.sizeOf(context).height * 0.9;
+    final colorScheme = Theme.of(context).colorScheme;
+    return SafeArea(
+      minimum: const EdgeInsets.all(8),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 560, maxHeight: panelHeight),
+        child: Material(
+          color: colorScheme.surfaceContainerHigh,
+          elevation: 8,
+          clipBehavior: Clip.antiAlias,
+          borderRadius: BorderRadius.circular(28),
+          child: ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(20),
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'LiveMonitor モード',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      ref
+                          .read(liveMonitorControlPanelProvider.notifier)
+                          .close();
+                    },
+                    tooltip: '閉じる',
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text('表示方式', style: Theme.of(context).textTheme.labelLarge),
+              const SizedBox(height: 8),
+              SegmentedButton<LiveMonitorDisplayMode>(
+                segments: const [
+                  ButtonSegment(
+                    value: LiveMonitorDisplayMode.automatic,
+                    label: Text('自動切替'),
+                    icon: Icon(Icons.auto_awesome),
+                  ),
+                  ButtonSegment(
+                    value: LiveMonitorDisplayMode.split,
+                    label: Text('分割表示'),
+                    icon: Icon(Icons.splitscreen),
+                  ),
+                ],
+                selected: {settings.displayMode},
+                onSelectionChanged: (selection) async {
+                  final displayMode = selection.first;
+                  await LiveMonitorSettingsNotifier.saveMutation.run(ref, (
+                    tsx,
+                  ) async {
+                    final current = await tsx.get(
+                      liveMonitorSettingsProvider.future,
+                    );
+                    await tsx
+                        .get(liveMonitorSettingsProvider.notifier)
+                        .save(current.copyWith(displayMode: displayMode));
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: durationController,
+                focusNode: durationFocusNode,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: '地震情報の表示時間（秒）',
+                  helperText: '3〜300秒',
+                  errorText: durationError.value,
+                ),
+                onChanged: (raw) {
+                  durationError.value =
+                      validateLiveMonitorDuration(raw).error == null
+                      ? null
+                      : '3〜300の整数を入力してください';
+                },
+                onSubmitted: (raw) async {
+                  await saveDuration(raw);
+                },
+              ),
+              const SizedBox(height: 8),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('画面の点灯を維持'),
+                value: settings.keepScreenAwake,
+                onChanged: (keepScreenAwake) async {
+                  await LiveMonitorSettingsNotifier.saveMutation.run(ref, (
+                    tsx,
+                  ) async {
+                    final current = await tsx.get(
+                      liveMonitorSettingsProvider.future,
+                    );
+                    await tsx
+                        .get(liveMonitorSettingsProvider.notifier)
+                        .save(
+                          current.copyWith(keepScreenAwake: keepScreenAwake),
+                        );
+                  });
+                },
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      ref
+                          .read(liveMonitorControlPanelProvider.notifier)
+                          .close();
+                    },
+                    child: const Text('閉じる'),
+                  ),
+                  const SizedBox(width: 8),
+                  FilledButton.tonalIcon(
+                    onPressed: () async {
+                      await onExit();
+                    },
+                    icon: const Icon(Icons.logout),
+                    label: const Text('LiveMonitor モードを終了'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
