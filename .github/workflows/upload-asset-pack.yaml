@@ -361,6 +361,34 @@ jobs:
         with:
           persist-credentials: false
 
+      # ASC credentials live in SOPS-encrypted `.env.json` (same path as
+      # deploy-app.yaml), not as GitHub Actions secrets named
+      # APP_STORE_CONNECT_*. Decrypt via mise after writing the age key.
+      - name: Extract SOPS Age Key File
+        run: |
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml.example mise.local.toml
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
+        with:
+          cache: false
+          # Only need `mise env` to decrypt .env.json — skip installing the
+          # full tool chain (flutter etc.) that deploy-app.yaml needs.
+          install: false
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
       # https://github.com/maxim-lobanov/setup-xcode
       - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
@@ -373,10 +401,12 @@ jobs:
           path: extracted
 
       - name: Extract App Store Connect API Key
-        env:
-          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
-          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
         run: |
+          set -euo pipefail
+          if [ -z "${APP_STORE_CONNECT_API_KEY_BASE64:-}" ] || [ -z "${APP_STORE_CONNECT_API_KEY_ID:-}" ]; then
+            echo "::error::APP_STORE_CONNECT_API_KEY_BASE64 / APP_STORE_CONNECT_API_KEY_ID missing after mise env decrypt. Check .env.json + secrets.AGE_KEY."
+            exit 1
+          fi
           mkdir -p "$HOME/.private_keys"
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
             > "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
@@ -396,15 +426,10 @@ jobs:
           fi
           cat /tmp/ba-package-help.txt
 
-      # Mandatory pre-check #2 (per task brief): the Managed Background Assets
-      # pack itself must already exist in App Store Connect -- this workflow
-      # never creates one. See docs/asset-pack-cd.md for the one-time manual
-      # setup and tool/asset_pack/asc_client.py's docstring for exactly what
-      # about this API call is doc-verified vs. best-effort.
-      - name: "Pre-check: App Store Connect asset pack exists"
-        env:
-          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+      # Ensure the Managed Background Assets pack exists in App Store Connect
+      # (creates via POST /v1/backgroundAssets when missing — Apple's
+      # documented first step before version upload).
+      - name: "Ensure App Store Connect asset pack exists"
         run: |
           set -euo pipefail
           KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
@@ -414,7 +439,7 @@ jobs:
             --key-path "$KEY_PATH" \
             --app-id "$ASC_APP_ID" \
             --asset-pack-id "$IOS_BACKGROUND_ASSET_PACK_ID" \
-            check-exists
+            ensure-exists
 
       - name: Build ba-package manifest
         run: |
@@ -454,9 +479,6 @@ jobs:
           echo "archive_path=$archive_path" >> "$GITHUB_ENV"
 
       - name: Upload to App Store Connect (Managed Background Assets)
-        env:
-          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
         run: |
           set -euo pipefail
           KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
@@ -474,6 +496,4 @@ jobs:
       # an earlier step in this job failed/exited early.
       - name: Remove App Store Connect API private key
         if: always()
-        env:
-          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
         run: rm -f "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"

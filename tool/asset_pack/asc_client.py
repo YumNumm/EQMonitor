@@ -205,6 +205,48 @@ class AscClient:
             )
         return None
 
+    def create_background_asset(self, app_id: str, asset_pack_identifier: str) -> str:
+        """Create a ``backgroundAssets`` record (Apple-hosted pack registration).
+
+        Confirmed request shape per Apple's
+        ``managing-apple-hosted-background-assets`` / WWDC25 session 325:
+        ``POST /v1/backgroundAssets`` with ``assetPackIdentifier`` and an
+        ``app`` relationship.
+        """
+        res = self.request(
+            "POST",
+            "/v1/backgroundAssets",
+            json_body={
+                "data": {
+                    "type": "backgroundAssets",
+                    "attributes": {"assetPackIdentifier": asset_pack_identifier},
+                    "relationships": {
+                        "app": {"data": {"type": "apps", "id": app_id}}
+                    },
+                }
+            },
+        )
+        if res.status not in (200, 201):
+            raise AscApiError(
+                f"create backgroundAssets failed: {res.status} {json.dumps(res.body)}"
+            )
+        background_asset_id = res.body.get("data", {}).get("id")
+        if not background_asset_id:
+            raise AscApiError(
+                f"backgroundAssets create response missing data.id: {json.dumps(res.body)}"
+            )
+        return background_asset_id
+
+    def ensure_background_asset_id(self, app_id: str, asset_pack_identifier: str) -> str:
+        existing = self.find_background_asset_id(app_id, asset_pack_identifier)
+        if existing is not None:
+            return existing
+        print(
+            f"asc_client: no backgroundAssets for '{asset_pack_identifier}'; "
+            "creating via POST /v1/backgroundAssets"
+        )
+        return self.create_background_asset(app_id, asset_pack_identifier)
+
     def create_background_asset_version(self, background_asset_id: str) -> str:
         res = self.request(
             "POST",
@@ -243,7 +285,9 @@ class AscClient:
                     "attributes": {
                         "fileName": file_name,
                         "fileSize": file_size,
-                        "assetType": "ARCHIVE",
+                        # OpenAPI enum for backgroundAssetUploadFiles is ASSET | MANIFEST
+                        # (not ARCHIVE). The uploaded file is the ba-package `.aar`.
+                        "assetType": "ASSET",
                     },
                     "relationships": {
                         "backgroundAssetVersion": {

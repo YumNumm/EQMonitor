@@ -3,16 +3,17 @@
 
 Two modes, both used by .github/workflows/upload-asset-pack.yaml:
 
-  check-exists   Pre-check: does App Store Connect already have a
-                 backgroundAssets resource for --asset-pack-id under
-                 --app-id? Exits 0 with "found" / 1 with "not-found"
-                 printed to stdout. Run BEFORE attempting any upload --
-                 asset packs must be created once, manually, in App Store
-                 Connect first (see docs/asset-pack-cd.md); this workflow
-                 never creates one.
+  ensure-exists  Ensure App Store Connect has a backgroundAssets resource
+                 for --asset-pack-id under --app-id. Creates one via
+                 POST /v1/backgroundAssets when missing (WWDC25 / ASC API
+                 "Create an asset pack record").
 
-  upload         Create a new backgroundAssetVersion, reserve+upload the
-                 archive, commit it, and poll for a terminal state.
+  check-exists   Legacy alias of ensure-exists (kept so older workflow
+                 revisions keep working).
+
+  upload         Ensure the pack exists, then create a new
+                 backgroundAssetVersion, reserve+upload the archive,
+                 commit it, and poll for a terminal state.
 
 See tool/asset_pack/asc_client.py's module docstring for the load-bearing
 "UNVERIFIED SURFACE WARNING" about which parts of this flow are doc/WWDC
@@ -40,19 +41,9 @@ def _client_from_env(args: argparse.Namespace) -> AscClient:
     )
 
 
-def cmd_check_exists(args: argparse.Namespace) -> int:
+def cmd_ensure_exists(args: argparse.Namespace) -> int:
     client = _client_from_env(args)
-    background_asset_id = client.find_background_asset_id(args.app_id, args.asset_pack_id)
-    if background_asset_id is None:
-        print("not-found")
-        print(
-            "::error::No Managed Background Assets pack found in App Store Connect "
-            f"for app {args.app_id} matching asset pack id '{args.asset_pack_id}'. "
-            "This must be created manually once -- see docs/asset-pack-cd.md "
-            "'App Store Connect: Managed Background Assets 初回セットアップ'.",
-            file=sys.stderr,
-        )
-        return 1
+    background_asset_id = client.ensure_background_asset_id(args.app_id, args.asset_pack_id)
     print("found")
     print(f"background_asset_id={background_asset_id}")
     return 0
@@ -60,15 +51,8 @@ def cmd_check_exists(args: argparse.Namespace) -> int:
 
 def cmd_upload(args: argparse.Namespace) -> int:
     client = _client_from_env(args)
-    background_asset_id = client.find_background_asset_id(args.app_id, args.asset_pack_id)
-    if background_asset_id is None:
-        print(
-            "::error::Refusing to upload: no backgroundAssets resource found for "
-            f"'{args.asset_pack_id}'. Run the check-exists pre-check first / create "
-            "the asset pack manually in App Store Connect (docs/asset-pack-cd.md).",
-            file=sys.stderr,
-        )
-        return 1
+    background_asset_id = client.ensure_background_asset_id(args.app_id, args.asset_pack_id)
+    print(f"using background_asset_id={background_asset_id}")
 
     file_size = os.path.getsize(args.archive_path)
     file_name = os.path.basename(args.archive_path)
@@ -107,7 +91,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    subparsers.add_parser("check-exists")
+    subparsers.add_parser("ensure-exists")
+    subparsers.add_parser("check-exists")  # legacy alias of ensure-exists
 
     upload_parser = subparsers.add_parser("upload")
     upload_parser.add_argument("--archive-path", required=True, help="path to the packaged archive")
@@ -118,8 +103,8 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str]) -> int:
     args = build_parser().parse_args(argv)
     try:
-        if args.command == "check-exists":
-            return cmd_check_exists(args)
+        if args.command in ("ensure-exists", "check-exists"):
+            return cmd_ensure_exists(args)
         if args.command == "upload":
             return cmd_upload(args)
         raise AssertionError(f"unhandled command: {args.command}")
