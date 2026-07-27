@@ -27,6 +27,7 @@ class LiveMonitorPage extends HookConsumerWidget {
     final confirmingExit = useRef(false);
     final durationDraft = useRef<String?>(null);
     final lastSavedDuration = useRef<int?>(null);
+    final durationSaveInFlight = useRef<Future<bool>?>(null);
     final tapTracker = useMemoized(
       () => LiveMonitorTapTracker(touchSlop: kTouchSlop),
     );
@@ -42,32 +43,45 @@ class LiveMonitorPage extends HookConsumerWidget {
       if (seconds == null) {
         return;
       }
+      final precedingSave = durationSaveInFlight.value;
+      if (precedingSave != null) {
+        await precedingSave;
+      }
       if (seconds == lastSavedDuration.value) {
         if (durationDraft.value == raw) {
           durationDraft.value = null;
         }
         return;
       }
-      final previousDuration = lastSavedDuration.value;
-      lastSavedDuration.value = seconds;
+      final saveOperation = () async {
+        try {
+          await LiveMonitorSettingsNotifier.saveMutation.run(ref, (tsx) async {
+            final current = await tsx.get(liveMonitorSettingsProvider.future);
+            await tsx
+                .get(liveMonitorSettingsProvider.notifier)
+                .save(current.copyWith(earthquakeDisplaySeconds: seconds));
+          });
+          lastSavedDuration.value = seconds;
+          if (durationDraft.value == raw) {
+            durationDraft.value = null;
+          }
+          return true;
+        } on Exception catch (error, stackTrace) {
+          talker.error(
+            '[LiveMonitor] failed to save duration',
+            error,
+            stackTrace,
+          );
+          return false;
+        }
+      }();
+      durationSaveInFlight.value = saveOperation;
       try {
-        await LiveMonitorSettingsNotifier.saveMutation.run(ref, (tsx) async {
-          final current = await tsx.get(liveMonitorSettingsProvider.future);
-          await tsx
-              .get(liveMonitorSettingsProvider.notifier)
-              .save(current.copyWith(earthquakeDisplaySeconds: seconds));
-        });
-      } on Exception catch (error, stackTrace) {
-        lastSavedDuration.value = previousDuration;
-        talker.error(
-          '[LiveMonitor] failed to save duration',
-          error,
-          stackTrace,
-        );
-        return;
-      }
-      if (durationDraft.value == raw) {
-        durationDraft.value = null;
+        await saveOperation;
+      } finally {
+        if (identical(durationSaveInFlight.value, saveOperation)) {
+          durationSaveInFlight.value = null;
+        }
       }
     };
 
