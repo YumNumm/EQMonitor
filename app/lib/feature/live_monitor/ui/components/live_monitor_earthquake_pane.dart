@@ -27,29 +27,32 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
       final message = latest.hasError
           ? '最新の地震情報を読み込めませんでした'
           : '表示できる地震情報はありません';
-      return switch (latest) {
-        AsyncLoading() => const Center(
-          child: Card(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator.adaptive(),
-                  SizedBox(height: 12),
-                  Text('最新の地震情報を読み込んでいます'),
-                ],
+      return SafeArea(
+        minimum: const EdgeInsets.all(8),
+        child: switch (latest) {
+          AsyncLoading() => const Center(
+            child: Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator.adaptive(),
+                    SizedBox(height: 12),
+                    Text('最新の地震情報を読み込んでいます'),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        _ => LiveMonitorLatestEarthquakeUnavailable(
-          message: message,
-          onRetry: () {
-            ref.invalidate(liveMonitorLatestEarthquakeProvider);
-          },
-        ),
-      };
+          _ => LiveMonitorLatestEarthquakeUnavailable(
+            message: message,
+            onRetry: () {
+              ref.invalidate(liveMonitorLatestEarthquakeProvider);
+            },
+          ),
+        },
+      );
     }
 
     final mapSettings = ref.watch(
