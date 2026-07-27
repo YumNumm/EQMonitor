@@ -6,6 +6,7 @@ import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_session_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_settings_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_wake_lock_controller.dart';
+import 'package:eqmonitor/feature/live_monitor/data/service/live_monitor_wake_lock_owner.dart';
 import 'package:eqmonitor/feature/live_monitor/data/service/live_monitor_wake_lock_platform.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -86,12 +87,14 @@ final class WakeLockFixture {
     required this.platform,
     required this.settings,
     required this.lifecycle,
+    required this.owner,
   });
 
   final ProviderContainer container;
   final FakeLiveMonitorWakeLockPlatform platform;
   final MutableLiveMonitorSettings settings;
   final MutableAppLifecycle lifecycle;
+  final LiveMonitorWakeLockOwner owner;
   LiveMonitorSessionLease? lease;
 
   void activateSession() {
@@ -119,6 +122,11 @@ final class WakeLockFixture {
     container.read(liveMonitorWakeLockControllerProvider);
     await Future<void>.delayed(Duration.zero);
   }
+
+  Future<void> dispose() async {
+    container.dispose();
+    await owner.disposed;
+  }
 }
 
 void main() {
@@ -126,7 +134,7 @@ void main() {
 
   test('resumedでenableしbackgroundでdisableする', () async {
     final fixture = createWakeLockFixture();
-    addTearDown(fixture.container.dispose);
+    addTearDown(fixture.dispose);
     fixture.activateSession();
 
     await fixture.settle();
@@ -145,7 +153,7 @@ void main() {
     final fixture = createWakeLockFixture(
       initialSettings: const LiveMonitorSettings(keepScreenAwake: false),
     );
-    addTearDown(fixture.container.dispose);
+    addTearDown(fixture.dispose);
     fixture.activateSession();
 
     await fixture.settle();
@@ -155,7 +163,7 @@ void main() {
 
   test('session開始時にenableしexit時にdisableする', () async {
     final fixture = createWakeLockFixture();
-    addTearDown(fixture.container.dispose);
+    addTearDown(fixture.dispose);
 
     await fixture.settle();
     expect(fixture.platform.calls, [false]);
@@ -171,7 +179,7 @@ void main() {
 
   test('session中に画面点灯設定を無効にするとdisableする', () async {
     final fixture = createWakeLockFixture();
-    addTearDown(fixture.container.dispose);
+    addTearDown(fixture.dispose);
     fixture.activateSession();
     await fixture.settle();
 
@@ -183,7 +191,7 @@ void main() {
 
   test('desired stateが変わらなければplatform callを重複させない', () async {
     final fixture = createWakeLockFixture();
-    addTearDown(fixture.container.dispose);
+    addTearDown(fixture.dispose);
     fixture.activateSession();
     await fixture.settle();
 
@@ -198,7 +206,7 @@ void main() {
   test('platform例外を記録してsessionやcontrollerをエラーにしない', () async {
     talker_lib.talker.cleanHistory();
     final fixture = createWakeLockFixture();
-    addTearDown(fixture.container.dispose);
+    addTearDown(fixture.dispose);
     fixture.platform.nextError = Exception('wakelock failed');
     fixture.activateSession();
 
@@ -224,7 +232,7 @@ void main() {
 
   test('enable完了前にbackgroundへ移行しても最後は直列にdisableする', () async {
     final fixture = createWakeLockFixture();
-    addTearDown(fixture.container.dispose);
+    addTearDown(fixture.dispose);
     fixture.activateSession();
     final blockedEnable = fixture.platform.blockNextCall();
     final initialTransition = fixture.settle();
@@ -245,7 +253,7 @@ void main() {
 
   test('enable完了前にsessionをexitしても最後はdisableする', () async {
     final fixture = createWakeLockFixture();
-    addTearDown(fixture.container.dispose);
+    addTearDown(fixture.dispose);
     fixture.activateSession();
     final blockedEnable = fixture.platform.blockNextCall();
     final initialTransition = fixture.settle();
@@ -265,7 +273,7 @@ void main() {
 
   test('in-flight中の複数変更は古い中間状態を飛ばして最新へ収束する', () async {
     final fixture = createWakeLockFixture();
-    addTearDown(fixture.container.dispose);
+    addTearDown(fixture.dispose);
     fixture.activateSession();
     final blockedEnable = fixture.platform.blockNextCall();
     final initialTransition = fixture.settle();
@@ -286,6 +294,92 @@ void main() {
     expect(fixture.platform.calls, [true, false]);
     expect(fixture.platform.maxInFlight, 1);
     expect(fixture.platform.enabled, isFalse);
+  });
+
+  test('enable中にpauseしてcontainerをdisposeしても最後はdisableする', () async {
+    final fixture = createWakeLockFixture();
+    fixture.activateSession();
+    final blockedEnable = fixture.platform.blockNextCall();
+    final initialTransition = fixture.settle();
+    await blockedEnable.started.future;
+
+    fixture.lifecycle.publish(AppLifecycleState.paused);
+    await fixture.pumpController();
+    final disposeFuture = fixture.dispose();
+    blockedEnable.release.complete();
+    await Future.wait([initialTransition, disposeFuture]);
+
+    expect(fixture.platform.calls, [true, false]);
+    expect(fixture.platform.maxInFlight, 1);
+    expect(fixture.platform.enabled, isFalse);
+  });
+
+  test('enable中にexitしてcontainerをdisposeしても最後はdisableする', () async {
+    final fixture = createWakeLockFixture();
+    fixture.activateSession();
+    final blockedEnable = fixture.platform.blockNextCall();
+    final initialTransition = fixture.settle();
+    await blockedEnable.started.future;
+
+    fixture.exitSession();
+    await fixture.pumpController();
+    final disposeFuture = fixture.dispose();
+    blockedEnable.release.complete();
+    await Future.wait([initialTransition, disposeFuture]);
+
+    expect(fixture.platform.calls, [true, false]);
+    expect(fixture.platform.maxInFlight, 1);
+    expect(fixture.platform.enabled, isFalse);
+  });
+
+  test('enable中に設定をoffにしてcontainerをdisposeしても最後はdisableする', () async {
+    final fixture = createWakeLockFixture();
+    fixture.activateSession();
+    final blockedEnable = fixture.platform.blockNextCall();
+    final initialTransition = fixture.settle();
+    await blockedEnable.started.future;
+
+    fixture.settings.publish(const LiveMonitorSettings(keepScreenAwake: false));
+    await fixture.pumpController();
+    final disposeFuture = fixture.dispose();
+    blockedEnable.release.complete();
+    await Future.wait([initialTransition, disposeFuture]);
+
+    expect(fixture.platform.calls, [true, false]);
+    expect(fixture.platform.maxInFlight, 1);
+    expect(fixture.platform.enabled, isFalse);
+  });
+
+  test('enabledのままcontainerをdisposeすると最後にdisableする', () async {
+    final fixture = createWakeLockFixture();
+    fixture.activateSession();
+    await fixture.settle();
+
+    await fixture.dispose();
+
+    expect(fixture.platform.calls, [true, false]);
+    expect(fixture.platform.enabled, isFalse);
+  });
+
+  test('disable失敗後もqueueを継続して最新のdisableを適用する', () async {
+    talker_lib.talker.cleanHistory();
+    final platform = FakeLiveMonitorWakeLockPlatform();
+    final owner = LiveMonitorWakeLockOwner(platform: platform);
+    addTearDown(owner.dispose);
+    await owner.setDesired(enabled: true);
+    platform.nextError = Exception('disable failed');
+
+    await owner.setDesired(enabled: false);
+    await owner.setDesired(enabled: false);
+
+    expect(platform.calls, [true, false, false]);
+    expect(platform.enabled, isFalse);
+    expect(
+      talker_lib.talker.history.any(
+        (entry) => entry.message == '[LiveMonitor] failed to update wake lock',
+      ),
+      isTrue,
+    );
   });
 }
 
@@ -308,10 +402,12 @@ WakeLockFixture createWakeLockFixture({
     (_, _) {},
     fireImmediately: true,
   );
+  final owner = container.read(liveMonitorWakeLockOwnerProvider);
   return WakeLockFixture(
     container: container,
     platform: platform,
     settings: settings,
     lifecycle: lifecycle,
+    owner: owner,
   );
 }

@@ -6,6 +6,8 @@
 - 画面点灯を有効にするのは、LiveMonitor session が active、`keepScreenAwake` が有効、かつ lifecycle が `resumed` の場合だけにする。
 - background 移行、LiveMonitor からの exit、または設定の無効化は、いずれも画面点灯の無効化へ収束させる。
 - plugin 呼び出しは直列化し、処理中に状態が複数回変わった場合は generation で古い未実行状態を破棄する。enable の完了後に pause や exit が残っている場合は、続けて disable を完了する。
+- adapter・queue・generation・適用済み状態は Riverpod の `Ref` に依存しない owner が保持する。queue の非同期区間から `Ref` を参照しない。
+- owner Provider の lifetime 終了時は generation を進め、実行中の処理後に強制 disable を queue する。依存値による controller の再構築ごとに owner を破棄しない。
 - 同じ desired state への plugin 呼び出しは重複させない。
 - plugin の例外は talker に記録し、地震・緊急地震速報などの表示状態や UI のエラーへ置き換えない。
 

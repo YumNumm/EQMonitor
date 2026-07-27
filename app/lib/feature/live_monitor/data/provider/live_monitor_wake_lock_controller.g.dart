@@ -37,7 +37,7 @@ final class LiveMonitorWakeLockControllerProvider
 }
 
 String _$liveMonitorWakeLockControllerHash() =>
-    r'73328b820979ce8e0cb656d84943ccd5080f15e7';
+    r'7278d73f3b2b8d994aa5eb6ec635e8661aa0df6f';
 
 abstract class _$LiveMonitorWakeLockController extends $AsyncNotifier<void> {
   FutureOr<void> build();
