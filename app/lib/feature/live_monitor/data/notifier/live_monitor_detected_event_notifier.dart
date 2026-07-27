@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_event_detector.dart';
+import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_initial_canonical_boundary.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_initial_earthquake_boundary.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_latest_earthquake_provider.dart';
@@ -30,6 +31,7 @@ typedef LiveMonitorPendingEstimatedIntensity = ({
 class LiveMonitorDetectedEventNotifier
     extends _$LiveMonitorDetectedEventNotifier {
   final detector = LiveMonitorEventDetector();
+  final initialCanonicalBoundary = LiveMonitorInitialCanonicalBoundary();
   final initialEarthquakeBoundary = LiveMonitorInitialEarthquakeBoundary();
   final pendingRealtimeEvents = <RealtimeEvent>[];
   final pendingEstimatedEvents = <LiveMonitorPendingEstimatedIntensity>[];
@@ -37,6 +39,8 @@ class LiveMonitorDetectedEventNotifier
   var initialized = false;
   var isDrainingRealtimeEvents = false;
   var shouldResynchronize = false;
+  var hasEewCanonicalBaseline = false;
+  var hasShakeCanonicalBaseline = false;
 
   @override
   Future<LiveMonitorEventEnvelope?> build() async {
@@ -54,6 +58,14 @@ class LiveMonitorDetectedEventNotifier
       final event = next.value;
       if (event == null) {
         return;
+      }
+      final shouldRecordCanonicalBoundary = switch (event) {
+        RealtimeEewUpsertEvent() => !hasEewCanonicalBaseline,
+        RealtimeShakeSnapshotEvent() => !hasShakeCanonicalBaseline,
+        _ => false,
+      };
+      if (shouldRecordCanonicalBoundary) {
+        initialCanonicalBoundary.record(event);
       }
       final shouldRecordInitialBoundary =
           !initialized ||
@@ -76,26 +88,22 @@ class LiveMonitorDetectedEventNotifier
 
   void seedAndListenCanonicalSources() {
     final eews = ref.read(eewAliveTelegramProvider);
-    detector.detectEews(eews ?? const <EewTelegramItem>[]);
+    if (eews != null) {
+      acceptCanonicalEewState(eews);
+    }
     final shakeSnapshot = ref.read(shakeDetectionAcceptedSnapshotProvider);
-    final shakeBaseline =
-        shakeSnapshot ??
-        ShakeDetectionSnapshot(
-          // revision 0 は有効な初回値なので、それより小さい空の境界を使う。
-          revision: -1,
-          responseAt: ref.read(appClockProvider.notifier).now().toUtc(),
-          events: const [],
-        );
-    detector.detectShakeSnapshot(visibleShakeSnapshot(shakeBaseline));
+    if (shakeSnapshot != null) {
+      acceptCanonicalShakeSnapshot(shakeSnapshot);
+    }
     ref
       ..listen(eewAliveTelegramProvider, (_, next) {
         if (next != null) {
-          acceptEewState(next);
+          acceptCanonicalEewState(next);
         }
       })
       ..listen(shakeDetectionAcceptedSnapshotProvider, (_, next) {
         if (next != null) {
-          acceptShakeSnapshot(next);
+          acceptCanonicalShakeSnapshot(next);
         }
       })
       ..listen(appLifecycleProvider, (_, next) async {
@@ -203,10 +211,23 @@ class LiveMonitorDetectedEventNotifier
     }
   }
 
-  void acceptShakeSnapshot(ShakeDetectionSnapshot snapshot) {
-    for (final event in detector.detectShakeSnapshot(
-      visibleShakeSnapshot(snapshot),
-    )) {
+  void acceptCanonicalEewState(List<EewTelegramItem> eews) {
+    if (!hasEewCanonicalBaseline) {
+      detector.detectEews(initialCanonicalBoundary.eewBaseline(eews));
+      hasEewCanonicalBaseline = true;
+    }
+    acceptEewState(eews);
+  }
+
+  void acceptCanonicalShakeSnapshot(ShakeDetectionSnapshot snapshot) {
+    final visibleSnapshot = visibleShakeSnapshot(snapshot);
+    if (!hasShakeCanonicalBaseline) {
+      detector.detectShakeSnapshot(
+        initialCanonicalBoundary.shakeBaseline(visibleSnapshot),
+      );
+      hasShakeCanonicalBaseline = true;
+    }
+    for (final event in detector.detectShakeSnapshot(visibleSnapshot)) {
       publish(event);
     }
   }

@@ -228,6 +228,40 @@ void main() {
     );
   });
 
+  test('初期EEWがnullの後にRESTで取得した既存EEWは発行しない', () async {
+    final fixture = createFixture(
+      eews: null,
+      shakeSnapshot: snapshot(revision: 0, events: const []),
+    );
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+
+    final existingEew = [eew(eventId: 'EXISTING-EEW', serialNo: 1)];
+    fixture.eews.publish(existingEew);
+    await fixture.settle();
+    fixture.eews.publish(existingEew);
+    await fixture.settle();
+
+    expect(fixture.events, isEmpty);
+  });
+
+  test('初期揺れ検知がnullの後にRESTで取得した既存snapshotは発行しない', () async {
+    final fixture = createFixture(shakeSnapshot: null);
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+
+    final existingSnapshot = snapshot(
+      revision: 0,
+      events: [shakeEvent(eventId: 'EXISTING-SHAKE', serialNo: 1)],
+    );
+    fixture.shake.publish(existingSnapshot);
+    await fixture.settle();
+    fixture.shake.publish(existingSnapshot);
+    await fixture.settle();
+
+    expect(fixture.events, isEmpty);
+  });
+
   test('初期EEWがnullでもslow detail中の最初のEEWを一度発行してパネルを閉じる', () async {
     final initialDetail = Completer<Earthquake>();
     final fixture = createFixture(
@@ -246,7 +280,20 @@ void main() {
       ..read(liveMonitorControlPanelProvider.notifier).open();
     await fixture.settle();
 
-    final firstEew = [eew(eventId: 'NEW-EEW', serialNo: 1)];
+    fixture.realtime
+      ..add(
+        RealtimeEvent.eewUpsert(
+          record: rawEew(eventId: 'NEW-EEW', serialNo: 1),
+          source: RealtimeSource.eqmonitor,
+        ),
+      )
+      ..add(
+        RealtimeEvent.eewUpsert(
+          record: rawEew(eventId: 'NEW-EEW', serialNo: 2),
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+    final firstEew = [eew(eventId: 'NEW-EEW', serialNo: 2)];
     fixture.eews.publish(firstEew);
     await fixture.settle();
     fixture.eews.publish(firstEew);
@@ -255,7 +302,7 @@ void main() {
     expect(fixture.events.map((envelope) => envelope.event), [
       const LiveMonitorDetectedEvent.eewStarted(
         eventId: 'NEW-EEW',
-        serialNo: 1,
+        serialNo: 2,
       ),
     ]);
     expect(fixture.container.read(liveMonitorControlPanelProvider), isFalse);
@@ -277,9 +324,30 @@ void main() {
     );
     await fixture.settle();
 
+    fixture.realtime.add(
+      RealtimeEvent.shakeSnapshot(
+        record: rawShakeSnapshot(
+          revision: 0,
+          events: [
+            rawShakeEvent(eventId: 'NEW-SHAKE', serialNo: 1),
+            rawShakeEvent(eventId: 'CORRELATED-SHAKE', serialNo: 1),
+            rawShakeEvent(eventId: 'EXPIRED-SHAKE', serialNo: 1),
+          ],
+        ),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
     final firstSnapshot = snapshot(
       revision: 0,
-      events: [shakeEvent(eventId: 'NEW-SHAKE', serialNo: 1)],
+      events: [
+        shakeEvent(eventId: 'NEW-SHAKE', serialNo: 1),
+        shakeEvent(
+          eventId: 'CORRELATED-SHAKE',
+          serialNo: 1,
+          correlatedEewEventId: 'E',
+        ),
+        shakeEvent(eventId: 'EXPIRED-SHAKE', serialNo: 1, expiresAt: _now),
+      ],
     );
     fixture.shake.publish(firstSnapshot);
     await fixture.settle();
@@ -295,6 +363,38 @@ void main() {
 
     initialDetail.complete(earthquake(eventId: 'Q'));
     await initialization;
+  });
+
+  test('初期EEWがnullでrawよりcanonicalが遅れても一致した後に一度発行する', () async {
+    final fixture = createFixture(
+      eews: null,
+      shakeSnapshot: snapshot(revision: 0, events: const []),
+    );
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+
+    fixture.realtime.add(
+      RealtimeEvent.eewUpsert(
+        record: rawEew(eventId: 'DELAYED-EEW', serialNo: 2),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    fixture.eews.publish([eew(eventId: 'DELAYED-EEW', serialNo: 1)]);
+    await fixture.settle();
+    expect(fixture.events, isEmpty);
+
+    final latestEew = [eew(eventId: 'DELAYED-EEW', serialNo: 2)];
+    fixture.eews.publish(latestEew);
+    await fixture.settle();
+    fixture.eews.publish(latestEew);
+    await fixture.settle();
+
+    expect(fixture.events.map((envelope) => envelope.event), [
+      const LiveMonitorDetectedEvent.eewUpdated(
+        eventId: 'DELAYED-EEW',
+        serialNo: 2,
+      ),
+    ]);
   });
 
   test('初期detail待機中も新規EEWと揺れ検知を即時発行しEEWでパネルを閉じる', () async {
@@ -1591,6 +1691,27 @@ EewTelegramItem eew({required String eventId, required int serialNo}) =>
       isPlum: false,
     );
 
+api.EewItemWithRelations rawEew({
+  required String eventId,
+  required int serialNo,
+}) => api.EewItemWithRelations(
+  eventId: eventId,
+  type: api.TelegramType.vxse45,
+  status: api.TelegramStatus.normal,
+  infoType: api.InfoType.publication,
+  serialNo: serialNo,
+  headline: null,
+  isCanceled: false,
+  isWarning: false,
+  isLastInfo: false,
+  originTime: null,
+  arrivalTime: null,
+  accuracy: null,
+  isPlum: false,
+  editorialOffice: '気象庁',
+  reportTime: _now,
+);
+
 ShakeDetectionSnapshot snapshot({
   required int revision,
   required List<ShakeDetectionEvent> events,
@@ -1619,6 +1740,37 @@ ShakeDetectionEvent shakeEvent({
   maxLng: 140,
   changeReasons: const ['new_event'],
   correlatedEewEventId: correlatedEewEventId,
+);
+
+api.RealtimeShakeDetectionSnapshotPayload rawShakeSnapshot({
+  required int revision,
+  required List<api.ShakeDetectionState> events,
+}) => api.RealtimeShakeDetectionSnapshotPayload(
+  type: api.Type3.shakeDetection,
+  revision: revision,
+  responseAt: _now,
+  events: events,
+);
+
+api.ShakeDetectionState rawShakeEvent({
+  required String eventId,
+  required int serialNo,
+}) => api.ShakeDetectionState(
+  type: 'shake_detection',
+  eventId: eventId,
+  serialNo: serialNo,
+  createdAt: _now,
+  updatedAt: _now,
+  expiresAt: _now.add(const Duration(minutes: 1)),
+  level: api.Level.medium,
+  changeReasons: const [api.ChangeReasons.newEvent],
+  mergedEvents: const [],
+  pointCount: 1,
+  region: const api.Region(
+    topLeft: api.TopLeft(latitude: 36, longitude: 139),
+    bottomRight: api.BottomRight(latitude: 35, longitude: 140),
+  ),
+  points: const [],
 );
 
 Earthquake earthquake({
