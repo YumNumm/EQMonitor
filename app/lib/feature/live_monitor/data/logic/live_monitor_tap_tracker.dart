@@ -67,4 +67,11 @@ class LiveMonitorTapTracker {
       _cancelled = false;
     }
   }
+
+  void cancelAll() {
+    _activePointers.clear();
+    _tapCandidatePointer = null;
+    _startPosition = null;
+    _cancelled = false;
+  }
 }

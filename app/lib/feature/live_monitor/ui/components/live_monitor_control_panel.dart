@@ -11,18 +11,17 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
     required this.onDurationChanged,
     required this.onDurationCommit,
     required this.onExit,
+    required this.settings,
     super.key,
   });
 
   final ValueChanged<String> onDurationChanged;
   final Future<void> Function(String raw) onDurationCommit;
   final Future<void> Function() onExit;
+  final LiveMonitorSettings settings;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings =
-        ref.watch(liveMonitorSettingsProvider).value ??
-        const LiveMonitorSettings();
     final durationController = useTextEditingController(
       text: settings.earthquakeDisplaySeconds.toString(),
     );
@@ -43,13 +42,45 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
     useEffect(() {
       void handleFocusChanged() async {
         if (!durationFocusNode.hasFocus) {
-          await saveDuration(durationController.text);
+          final committedRaw = durationController.text;
+          await saveDuration(committedRaw);
+          if (!shouldApplyCommittedLiveMonitorDuration(
+            hasFocus: durationFocusNode.hasFocus,
+            currentRaw: durationController.text,
+            committedRaw: committedRaw,
+          )) {
+            return;
+          }
+          final resolvedSettings = ref.read(liveMonitorSettingsProvider).value;
+          if (resolvedSettings != null) {
+            durationError.value = null;
+            final resolvedText = resolvedSettings.earthquakeDisplaySeconds
+                .toString();
+            if (durationController.text != resolvedText) {
+              durationController.value = durationController.value.copyWith(
+                text: resolvedText,
+                selection: TextSelection.collapsed(offset: resolvedText.length),
+              );
+            }
+          }
         }
       }
 
       durationFocusNode.addListener(handleFocusChanged);
       return () => durationFocusNode.removeListener(handleFocusChanged);
     }, [durationController, durationFocusNode]);
+
+    useEffect(() {
+      final resolvedText = settings.earthquakeDisplaySeconds.toString();
+      if (!durationFocusNode.hasFocus &&
+          durationController.text != resolvedText) {
+        durationController.value = durationController.value.copyWith(
+          text: resolvedText,
+          selection: TextSelection.collapsed(offset: resolvedText.length),
+        );
+      }
+      return null;
+    }, [settings.earthquakeDisplaySeconds]);
 
     final panelHeight = MediaQuery.sizeOf(context).height * 0.9;
     final colorScheme = Theme.of(context).colorScheme;
@@ -108,12 +139,12 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                   await LiveMonitorSettingsNotifier.saveMutation.run(ref, (
                     tsx,
                   ) async {
-                    final current = await tsx.get(
-                      liveMonitorSettingsProvider.future,
-                    );
                     await tsx
                         .get(liveMonitorSettingsProvider.notifier)
-                        .save(current.copyWith(displayMode: displayMode));
+                        .updateSettings(
+                          transform: (current) =>
+                              current.copyWith(displayMode: displayMode),
+                        );
                   });
                 },
               ),
@@ -148,20 +179,21 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                   await LiveMonitorSettingsNotifier.saveMutation.run(ref, (
                     tsx,
                   ) async {
-                    final current = await tsx.get(
-                      liveMonitorSettingsProvider.future,
-                    );
                     await tsx
                         .get(liveMonitorSettingsProvider.notifier)
-                        .save(
-                          current.copyWith(keepScreenAwake: keepScreenAwake),
+                        .updateSettings(
+                          transform: (current) => current.copyWith(
+                            keepScreenAwake: keepScreenAwake,
+                          ),
                         );
                   });
                 },
               ),
               const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+              Wrap(
+                alignment: WrapAlignment.end,
+                spacing: 8,
+                runSpacing: 8,
                 children: [
                   TextButton(
                     onPressed: () async {
@@ -172,7 +204,6 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                     },
                     child: const Text('閉じる'),
                   ),
-                  const SizedBox(width: 8),
                   FilledButton.tonalIcon(
                     onPressed: () async {
                       await saveDuration(durationController.text);

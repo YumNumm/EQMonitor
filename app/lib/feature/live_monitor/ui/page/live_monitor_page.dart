@@ -31,7 +31,9 @@ class LiveMonitorPage extends HookConsumerWidget {
     final tapTracker = useMemoized(
       () => LiveMonitorTapTracker(touchSlop: kTouchSlop),
     );
-    if (settings != null && lastSavedDuration.value == null) {
+    if (settings != null &&
+        durationDraft.value == null &&
+        durationSaveInFlight.value == null) {
       lastSavedDuration.value = settings.earthquakeDisplaySeconds;
     }
 
@@ -56,10 +58,12 @@ class LiveMonitorPage extends HookConsumerWidget {
       final saveOperation = () async {
         try {
           await LiveMonitorSettingsNotifier.saveMutation.run(ref, (tsx) async {
-            final current = await tsx.get(liveMonitorSettingsProvider.future);
             await tsx
                 .get(liveMonitorSettingsProvider.notifier)
-                .save(current.copyWith(earthquakeDisplaySeconds: seconds));
+                .updateSettings(
+                  transform: (current) =>
+                      current.copyWith(earthquakeDisplaySeconds: seconds),
+                );
           });
           lastSavedDuration.value = seconds;
           if (durationDraft.value == raw) {
@@ -86,6 +90,9 @@ class LiveMonitorPage extends HookConsumerWidget {
     };
 
     ref.listen(liveMonitorControlPanelProvider, (previous, next) async {
+      if (previous != next) {
+        tapTracker.cancelAll();
+      }
       if (previous == true && !next) {
         await saveDuration(durationDraft.value);
       }
@@ -118,16 +125,14 @@ class LiveMonitorPage extends HookConsumerWidget {
     };
 
     final body = switch (settings) {
-      null => const SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator.adaptive(),
-              SizedBox(height: 12),
-              Text('LiveMonitor モードを準備しています'),
-            ],
-          ),
+      null => const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator.adaptive(),
+            SizedBox(height: 12),
+            Text('LiveMonitor モードを準備しています'),
+          ],
         ),
       ),
       LiveMonitorSettings(:final displayMode) => switch (displayMode) {
@@ -147,54 +152,63 @@ class LiveMonitorPage extends HookConsumerWidget {
         }
       },
       child: Scaffold(
-        body: Listener(
-          behavior: HitTestBehavior.translucent,
-          onPointerDown: (event) {
-            tapTracker.pointerDown(
-              pointer: event.pointer,
-              position: event.position,
-            );
-          },
-          onPointerMove: (event) {
-            tapTracker.pointerMove(
-              pointer: event.pointer,
-              position: event.position,
-            );
-          },
-          onPointerUp: (event) {
-            final isTap = tapTracker.pointerUp(
-              pointer: event.pointer,
-              position: event.position,
-            );
-            if (isTap) {
-              ref.read(liveMonitorControlPanelProvider.notifier).open();
-            }
-          },
-          onPointerCancel: (event) {
-            tapTracker.pointerCancel(pointer: event.pointer);
-          },
-          child: Stack(
-            children: [
-              Positioned.fill(child: body),
-              const Positioned.fill(child: LiveMonitorConnectionBanner()),
-              if (panelOpen) ...[
-                const Positioned.fill(child: ModalBarrier(dismissible: false)),
-                Positioned.fill(
-                  child: DisplayFeatureSubScreen(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: LiveMonitorControlPanel(
-                        onDurationChanged: (raw) {
-                          durationDraft.value = raw;
-                        },
-                        onDurationCommit: saveDuration,
-                        onExit: requestExit,
+        body: SafeArea(
+          child: Listener(
+            behavior: HitTestBehavior.translucent,
+            onPointerDown: (event) {
+              if (settings == null || panelOpen) {
+                tapTracker.cancelAll();
+                return;
+              }
+              tapTracker.pointerDown(
+                pointer: event.pointer,
+                position: event.position,
+              );
+            },
+            onPointerMove: (event) {
+              tapTracker.pointerMove(
+                pointer: event.pointer,
+                position: event.position,
+              );
+            },
+            onPointerUp: (event) {
+              final isTap = tapTracker.pointerUp(
+                pointer: event.pointer,
+                position: event.position,
+              );
+              if (isTap && settings != null && !panelOpen) {
+                ref.read(liveMonitorControlPanelProvider.notifier).open();
+              }
+            },
+            onPointerCancel: (event) {
+              tapTracker.pointerCancel(pointer: event.pointer);
+            },
+            child: Stack(
+              children: [
+                Positioned.fill(child: body),
+                const Positioned.fill(child: LiveMonitorConnectionBanner()),
+                if (settings != null && panelOpen) ...[
+                  const Positioned.fill(
+                    child: ModalBarrier(dismissible: false),
+                  ),
+                  Positioned.fill(
+                    child: DisplayFeatureSubScreen(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: LiveMonitorControlPanel(
+                          settings: settings,
+                          onDurationChanged: (raw) {
+                            durationDraft.value = raw;
+                          },
+                          onDurationCommit: saveDuration,
+                          onExit: requestExit,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

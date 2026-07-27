@@ -35,4 +35,13 @@ void main() {
       isFalse,
     );
   });
+
+  test('panel表示状態が変わったgestureのupはtapにしない', () {
+    final tracker = LiveMonitorTapTracker(touchSlop: 18);
+    tracker.pointerDown(pointer: 1, position: Offset.zero);
+
+    tracker.cancelAll();
+
+    expect(tracker.pointerUp(pointer: 1, position: Offset.zero), isFalse);
+  });
 }

@@ -18,4 +18,31 @@ void main() {
       LiveMonitorDurationValidationError.outOfRange,
     );
   });
+
+  test('保存中に再編集した入力は保存済み値で上書きしない', () {
+    expect(
+      shouldApplyCommittedLiveMonitorDuration(
+        hasFocus: false,
+        currentRaw: '60',
+        committedRaw: '60',
+      ),
+      isTrue,
+    );
+    expect(
+      shouldApplyCommittedLiveMonitorDuration(
+        hasFocus: true,
+        currentRaw: '60',
+        committedRaw: '60',
+      ),
+      isFalse,
+    );
+    expect(
+      shouldApplyCommittedLiveMonitorDuration(
+        hasFocus: false,
+        currentRaw: '90',
+        committedRaw: '60',
+      ),
+      isFalse,
+    );
+  });
 }

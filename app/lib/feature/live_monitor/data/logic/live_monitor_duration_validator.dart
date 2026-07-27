@@ -18,3 +18,9 @@ LiveMonitorDurationValidation validateLiveMonitorDuration(String raw) {
   }
   return (seconds: seconds, error: null);
 }
+
+bool shouldApplyCommittedLiveMonitorDuration({
+  required bool hasFocus,
+  required String currentRaw,
+  required String committedRaw,
+}) => !hasFocus && currentRaw == committedRaw;
