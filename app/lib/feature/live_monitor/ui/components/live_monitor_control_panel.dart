@@ -7,8 +7,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LiveMonitorControlPanel extends HookConsumerWidget {
-  const LiveMonitorControlPanel({required this.onExit, super.key});
+  const LiveMonitorControlPanel({
+    required this.onDurationChanged,
+    required this.onDurationCommit,
+    required this.onExit,
+    super.key,
+  });
 
+  final ValueChanged<String> onDurationChanged;
+  final Future<void> Function(String raw) onDurationCommit;
   final Future<void> Function() onExit;
 
   @override
@@ -21,7 +28,6 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
     );
     final durationFocusNode = useFocusNode();
     final durationError = useState<String?>(null);
-    final lastSavedDuration = useRef(settings.earthquakeDisplaySeconds);
 
     final Future<void> Function(String) saveDuration = (raw) async {
       final validation = validateLiveMonitorDuration(raw);
@@ -31,16 +37,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
         return;
       }
       durationError.value = null;
-      if (seconds == lastSavedDuration.value) {
-        return;
-      }
-      await LiveMonitorSettingsNotifier.saveMutation.run(ref, (tsx) async {
-        final current = await tsx.get(liveMonitorSettingsProvider.future);
-        await tsx
-            .get(liveMonitorSettingsProvider.notifier)
-            .save(current.copyWith(earthquakeDisplaySeconds: seconds));
-      });
-      lastSavedDuration.value = seconds;
+      await onDurationCommit(raw);
     };
 
     useEffect(() {
@@ -78,7 +75,8 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      await saveDuration(durationController.text);
                       ref
                           .read(liveMonitorControlPanelProvider.notifier)
                           .close();
@@ -131,6 +129,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                   errorText: durationError.value,
                 ),
                 onChanged: (raw) {
+                  onDurationChanged(raw);
                   durationError.value =
                       validateLiveMonitorDuration(raw).error == null
                       ? null
@@ -165,7 +164,8 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      await saveDuration(durationController.text);
                       ref
                           .read(liveMonitorControlPanelProvider.notifier)
                           .close();
@@ -175,6 +175,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                   const SizedBox(width: 8),
                   FilledButton.tonalIcon(
                     onPressed: () async {
+                      await saveDuration(durationController.text);
                       await onExit();
                     },
                     icon: const Icon(Icons.logout),

@@ -24,5 +24,15 @@ void main() {
     tracker.pointerDown(pointer: 1, position: Offset.zero);
     tracker.pointerDown(pointer: 2, position: const Offset(20, 20));
     expect(tracker.pointerUp(pointer: 1, position: Offset.zero), isFalse);
+
+    tracker.pointerDown(pointer: 3, position: const Offset(40, 40));
+    expect(
+      tracker.pointerUp(pointer: 3, position: const Offset(40, 40)),
+      isFalse,
+    );
+    expect(
+      tracker.pointerUp(pointer: 2, position: const Offset(20, 20)),
+      isFalse,
+    );
   });
 }

@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_validator.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_tap_tracker.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
@@ -23,30 +25,82 @@ class LiveMonitorPage extends HookConsumerWidget {
     final panelOpen = ref.watch(liveMonitorControlPanelProvider);
     final allowExit = useState(false);
     final confirmingExit = useRef(false);
+    final durationDraft = useRef<String?>(null);
+    final lastSavedDuration = useRef<int?>(null);
     final tapTracker = useMemoized(
       () => LiveMonitorTapTracker(touchSlop: kTouchSlop),
     );
+    if (settings != null && lastSavedDuration.value == null) {
+      lastSavedDuration.value = settings.earthquakeDisplaySeconds;
+    }
+
+    final Future<void> Function(String?) saveDuration = (raw) async {
+      if (raw == null) {
+        return;
+      }
+      final seconds = validateLiveMonitorDuration(raw).seconds;
+      if (seconds == null) {
+        return;
+      }
+      if (seconds == lastSavedDuration.value) {
+        if (durationDraft.value == raw) {
+          durationDraft.value = null;
+        }
+        return;
+      }
+      final previousDuration = lastSavedDuration.value;
+      lastSavedDuration.value = seconds;
+      try {
+        await LiveMonitorSettingsNotifier.saveMutation.run(ref, (tsx) async {
+          final current = await tsx.get(liveMonitorSettingsProvider.future);
+          await tsx
+              .get(liveMonitorSettingsProvider.notifier)
+              .save(current.copyWith(earthquakeDisplaySeconds: seconds));
+        });
+      } on Exception catch (error, stackTrace) {
+        lastSavedDuration.value = previousDuration;
+        talker.error(
+          '[LiveMonitor] failed to save duration',
+          error,
+          stackTrace,
+        );
+        return;
+      }
+      if (durationDraft.value == raw) {
+        durationDraft.value = null;
+      }
+    };
+
+    ref.listen(liveMonitorControlPanelProvider, (previous, next) async {
+      if (previous == true && !next) {
+        await saveDuration(durationDraft.value);
+      }
+    });
 
     final Future<void> Function() requestExit = () async {
       if (confirmingExit.value) {
         return;
       }
       confirmingExit.value = true;
-      await ref
-          .read(liveMonitorExitActionProvider)
-          .confirm(
-            ref: ref,
-            context: context,
-            onConfirmed: () {
-              allowExit.value = true;
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (context.mounted) {
-                  context.pop();
-                }
-              });
-            },
-          );
-      confirmingExit.value = false;
+      try {
+        await saveDuration(durationDraft.value);
+        await ref
+            .read(liveMonitorExitActionProvider)
+            .confirm(
+              ref: ref,
+              context: context,
+              onConfirmed: () {
+                allowExit.value = true;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (context.mounted) {
+                    context.pop();
+                  }
+                });
+              },
+            );
+      } finally {
+        confirmingExit.value = false;
+      }
     };
 
     final body = switch (settings) {
@@ -115,7 +169,13 @@ class LiveMonitorPage extends HookConsumerWidget {
                   child: DisplayFeatureSubScreen(
                     child: Align(
                       alignment: Alignment.bottomCenter,
-                      child: LiveMonitorControlPanel(onExit: requestExit),
+                      child: LiveMonitorControlPanel(
+                        onDurationChanged: (raw) {
+                          durationDraft.value = raw;
+                        },
+                        onDurationCommit: saveDuration,
+                        onExit: requestExit,
+                      ),
                     ),
                   ),
                 ),

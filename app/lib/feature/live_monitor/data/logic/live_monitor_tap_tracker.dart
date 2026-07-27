@@ -5,22 +5,24 @@ class LiveMonitorTapTracker {
 
   final double touchSlop;
 
-  int? _activePointer;
+  final Set<int> _activePointers = {};
+  int? _tapCandidatePointer;
   Offset? _startPosition;
   bool _cancelled = false;
 
   void pointerDown({required int pointer, required Offset position}) {
-    if (_activePointer != null) {
+    if (_activePointers.isNotEmpty) {
       _cancelled = true;
-      return;
+    } else {
+      _tapCandidatePointer = pointer;
+      _startPosition = position;
+      _cancelled = false;
     }
-    _activePointer = pointer;
-    _startPosition = position;
-    _cancelled = false;
+    _activePointers.add(pointer);
   }
 
   void pointerMove({required int pointer, required Offset position}) {
-    if (pointer != _activePointer) {
+    if (pointer != _tapCandidatePointer) {
       return;
     }
     final startPosition = _startPosition;
@@ -31,25 +33,38 @@ class LiveMonitorTapTracker {
   }
 
   bool pointerUp({required int pointer, required Offset position}) {
-    if (pointer != _activePointer) {
+    if (!_activePointers.contains(pointer)) {
       return false;
     }
-    pointerMove(pointer: pointer, position: position);
-    final isTap = !_cancelled;
-    _activePointer = null;
-    _startPosition = null;
-    _cancelled = false;
+    if (pointer == _tapCandidatePointer) {
+      pointerMove(pointer: pointer, position: position);
+    }
+    final isTap =
+        pointer == _tapCandidatePointer &&
+        _activePointers.length == 1 &&
+        !_cancelled;
+    _activePointers.remove(pointer);
+    if (pointer == _tapCandidatePointer) {
+      _tapCandidatePointer = null;
+      _startPosition = null;
+    }
+    if (_activePointers.isEmpty) {
+      _cancelled = false;
+    }
     return isTap;
   }
 
   void pointerCancel({required int pointer}) {
-    if (_activePointer == null) {
+    if (!_activePointers.remove(pointer)) {
       return;
     }
     _cancelled = true;
-    if (pointer == _activePointer) {
-      _activePointer = null;
+    if (pointer == _tapCandidatePointer) {
+      _tapCandidatePointer = null;
       _startPosition = null;
+    }
+    if (_activePointers.isEmpty) {
+      _cancelled = false;
     }
   }
 }
