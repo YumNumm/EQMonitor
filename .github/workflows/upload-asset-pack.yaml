@@ -26,13 +26,14 @@ concurrency:
 
 env:
   ASC_APP_ID: "6447546703" # deploy-app.yaml
-  # Managed Background Assets pack identifier. This is the canonical id
-  # `eqmonitor-assets`, aligned with the app's
-  # `_iosAssetPackIdentifier` in packages/assets_util/lib/assets_util.dart and
-  # with the pack created in App Store Connect per docs/asset-pack-cd.md.
-  # Before the first real run, the Background Assets capability must already be
-  # registered on the Xcode Runner target with this exact id (see
-  # docs/ios-background-assets.md).
+  # Managed Background Assets pack identifier. Dots are rejected by App Store
+  # Connect with ITMS-91133, so this is NOT reverse-DNS
+  # (docs/knowledge/20260728_asset_pack_id_charset.md). It must match
+  # `_iosAssetPackIdentifier` in packages/assets_util/lib/assets_util.dart —
+  # the "Verify asset pack id" step below enforces that. Nothing in the Xcode
+  # project declares this id; it only appears in the ba-package manifest CI
+  # generates, in the runtime AssetPackManager lookup, and in App Store
+  # Connect (see docs/ios-background-assets.md).
   IOS_BACKGROUND_ASSET_PACK_ID: "eqmonitor-assets"
   # Xcode version for the iOS Managed Background Assets job ONLY. Deliberately
   # independent of deploy-app.yaml's `XCODE_VERSION` (app builds keep their own
@@ -166,6 +167,14 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      # A pack uploaded under an id the shipped app never asks for downloads
+      # fine and then fails to resolve on device, so catch drift before
+      # spending the job on packaging and uploading.
+      - name: Verify asset pack id
+        run: |
+          python3 -m tool.asset_pack.check_asset_pack_id \
+            --asset-pack-id "$IOS_BACKGROUND_ASSET_PACK_ID"
 
       # ASC credentials live in SOPS-encrypted `.env.json` (same path as
       # deploy-app.yaml), not as GitHub Actions secrets named
