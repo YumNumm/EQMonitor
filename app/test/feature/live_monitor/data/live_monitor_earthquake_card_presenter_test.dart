@@ -204,14 +204,7 @@ void main() {
       );
 
       expect(presentation.displayMode, IntensityDisplayMode.estimated);
-      expect(presentation.trigger, isNull);
-      expect(
-        presentation.latestPublication,
-        LiveMonitorEarthquakeTrigger.telegram(
-          kind: LiveMonitorEarthquakeTriggerKind.vxse62,
-          reportedAt: _reportedAt,
-        ),
-      );
+      expect(presentation.publicationAt, _reportedAt);
     });
 
     test('event表示はfullの最新電文で補完せず実際のtriggerを表示方針に使う', () {
@@ -237,14 +230,30 @@ void main() {
       );
 
       expect(presentation.displayMode, IntensityDisplayMode.jma);
-      expect(presentation.trigger, trigger);
-      expect(
-        presentation.latestPublication,
-        LiveMonitorEarthquakeTrigger.telegram(
-          kind: LiveMonitorEarthquakeTriggerKind.vxse62,
-          reportedAt: latestAt,
+      expect(presentation.publicationAt, latestAt);
+    });
+
+    test('fullに対応電文がない場合だけ現在のtelegram triggerを発表時刻に使う', () {
+      final presentation = LiveMonitorEarthquakePresentation.forTrigger(
+        earthquake: _earthquake(),
+        trigger: LiveMonitorEarthquakeTrigger.telegram(
+          kind: LiveMonitorEarthquakeTriggerKind.vxse53,
+          reportedAt: _reportedAt,
         ),
       );
+
+      expect(presentation.publicationAt, _reportedAt);
+    });
+
+    test('発表時刻がない推計震度triggerから時刻を推測しない', () {
+      final presentation = LiveMonitorEarthquakePresentation.forTrigger(
+        earthquake: _earthquake(),
+        trigger: LiveMonitorEarthquakeTrigger.estimatedIntensity(
+          generatedAt: _reportedAt,
+        ),
+      );
+
+      expect(presentation.publicationAt, isNull);
     });
   });
 

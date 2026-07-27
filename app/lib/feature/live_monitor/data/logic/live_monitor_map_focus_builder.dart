@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -36,6 +37,7 @@ class LiveMonitorMapFocusBuilder {
         minLng: bounds.longitudeWest,
         maxLng: bounds.longitudeEast,
       ),
+      obscuredTop: 0,
       obscuredBottom: obscuredBottom,
     );
   }
@@ -43,10 +45,12 @@ class LiveMonitorMapFocusBuilder {
   LiveMonitorMapFocus forEarthquake({
     required Earthquake earthquake,
     required LiveMonitorGeoBounds fallbackBounds,
+    required double obscuredTop,
     required double obscuredBottom,
   }) => liveMonitorMapFocusForTargets(
     targets: liveMonitorEarthquakeTargetCoordinates(earthquake).toList(),
     fallbackBounds: fallbackBounds,
+    obscuredTop: obscuredTop,
     obscuredBottom: obscuredBottom,
   );
 }
@@ -54,21 +58,25 @@ class LiveMonitorMapFocusBuilder {
 LiveMonitorMapFocus liveMonitorMapFocusForTargets({
   required List<LiveMonitorGeoCoordinate> targets,
   required LiveMonitorGeoBounds fallbackBounds,
+  required double obscuredTop,
   required double obscuredBottom,
 }) => liveMonitorMapFocusForBounds(
   bounds: liveMonitorBoundsForTargets(
     targets: targets,
     fallbackBounds: fallbackBounds,
   ),
+  obscuredTop: obscuredTop,
   obscuredBottom: obscuredBottom,
 );
 
 LiveMonitorMapFocus liveMonitorMapFocusForBounds({
   required LiveMonitorGeoBounds bounds,
+  required double obscuredTop,
   required double obscuredBottom,
 }) => LiveMonitorMapFocus(
   bounds: bounds,
   padding: LiveMonitorMapPadding(
+    top: liveMonitorMapSafeSpacing + (obscuredTop.isNegative ? 0 : obscuredTop),
     bottom:
         liveMonitorMapSafeSpacing +
         (obscuredBottom.isNegative ? 0 : obscuredBottom),
@@ -126,6 +134,11 @@ Iterable<LiveMonitorGeoCoordinate> liveMonitorEarthquakeTargetCoordinates(
     for (final node in nodes) {
       for (final city in node.cities) {
         for (final station in city.stations) {
+          final intensity = station.intensity?.maxIntensity;
+          if (intensity == null ||
+              intensity.orderIndex < JmaIntensity.one.orderIndex) {
+            continue;
+          }
           final coordinate = liveMonitorGeoCoordinate(
             latitude: station.station.location.lat,
             longitude: station.station.location.lon,

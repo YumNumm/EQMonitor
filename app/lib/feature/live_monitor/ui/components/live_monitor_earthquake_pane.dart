@@ -66,6 +66,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
     final focus = const LiveMonitorMapFocusBuilder().forEarthquake(
       earthquake: earthquake,
       fallbackBounds: homeBounds,
+      obscuredTop: 0,
       obscuredBottom: cardHeight.value,
     );
     final presentation = LiveMonitorEarthquakePresentation.forSplit(

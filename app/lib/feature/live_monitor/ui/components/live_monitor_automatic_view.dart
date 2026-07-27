@@ -64,6 +64,7 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
         const LiveMonitorMapFocusBuilder().forEarthquake(
           earthquake: earthquake,
           fallbackBounds: homeBounds,
+          obscuredTop: 0,
           obscuredBottom: earthquakeCardHeight.value,
         ),
       ),

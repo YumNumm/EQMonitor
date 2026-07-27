@@ -37,6 +37,12 @@ final class LiveMonitorEarthquakePresentation {
   final IntensityDisplayMode displayMode;
   final LiveMonitorEarthquakeTrigger? trigger;
   final LiveMonitorEarthquakeTrigger? latestPublication;
+
+  DateTime? get publicationAt => switch ((latestPublication, trigger)) {
+    (LiveMonitorTelegramTrigger(:final reportedAt), _) => reportedAt,
+    (_, LiveMonitorTelegramTrigger(:final reportedAt)) => reportedAt,
+    _ => null,
+  };
 }
 
 IntensityDisplayMode preferredIntensityMode({

@@ -311,7 +311,9 @@ git commit -m "feat: HomeMapでEEWと揺れ検知へ自動フォーカス"
 - Modify: `app/test/feature/live_monitor/data/live_monitor_earthquake_card_presenter_test.dart:180-320`
 - Create: `app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_publication_card.dart`
 - Create: `app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_overlay.dart`
-- Delete: `app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_card.dart`
+- Modify: `app/lib/feature/live_monitor/ui/components/live_monitor_automatic_view.dart`（Task 4 まで `obscuredTop: 0` を渡す一時配線のみ）
+- Modify: `app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_pane.dart`（Task 4 まで `obscuredTop: 0` を渡す一時配線のみ）
+- Keep temporarily: `app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_card.dart`（Task 4 の automatic/split 配線と同時に削除）
 
 **Interfaces:**
 - Consumes: `Earthquake`, `LiveMonitorEarthquakePresentation`, `EarthquakeHypocenterInformationCard`, `timeTickerProvider(const Duration(minutes: 1))`。
@@ -346,6 +348,8 @@ Expected: `obscuredTop` 未定義または震度 0・不明が bounds に含ま�
 - [ ] **Step 3: 地震 target と padding を実装する**
 
 `StationIntensityNode.intensity?.maxIntensity?.orderIndex` が `JmaIntensity.one.orderIndex` 以上の場合だけ station 座標を yield する。`liveMonitorMapFocusForTargets` に `obscuredTop` を追加し、負値を 0 として `top = 8 + obscuredTop`、`bottom = 8 + obscuredBottom` を設定する。realtime 呼び出しは `obscuredTop: 0` を渡す。
+
+`forEarthquake` の required signature を保ったまま Task 3 の focused test をコンパイル可能にするため、automatic/split の既存 call site は Task 4 まで一時的に `obscuredTop: 0` を渡す。実測値への置換や UI 配線変更は Task 4 に残す。
 
 - [ ] **Step 4: 発表時刻 formatter の失敗する test を書く**
 
@@ -388,9 +392,11 @@ String formatLiveMonitorPublicationTime({
 }
 ```
 
-- [ ] **Step 6: presentation を地図 mode と発表時刻選択へ縮小する**
+- [ ] **Step 6: presentation に発表時刻選択を追加する**
 
-`LiveMonitorEarthquakePresentation` に `DateTime? get publicationAt` を追加し、full earthquake の最新対応電文を優先し、存在しない場合だけ現在の `LiveMonitorTelegramTrigger.reportedAt` を使う。`maximumIntensityRegions`、`LiveMonitorIntensityRegionGroup`、`orderedIntensityRegions` と対応 test を削除する。`preferredIntensityMode`、`latestSupportedTelegramTrigger`、EEW/揺れ Card の並び替えは維持する。
+`LiveMonitorEarthquakePresentation` に `DateTime? get publicationAt` を追加し、full earthquake の最新対応電文を優先し、存在しない場合だけ現在の `LiveMonitorTelegramTrigger.reportedAt` を使う。発表時刻を持たない推計震度 trigger から時刻を推測しない。`preferredIntensityMode`、`latestSupportedTelegramTrigger`、EEW/揺れ Card の並び替えは維持する。
+
+`maximumIntensityRegions`、`LiveMonitorIntensityRegionGroup`、`orderedIntensityRegions`、旧 presentation field と対応 test の削除は、大型 Card を物理削除する Task 4 の同一 commit へ移す。Task 3 単独で compile 可能な境界を維持するため、旧 Card 依存 API はここでは残す。
 
 - [ ] **Step 7: 左上 Card と既存震源情報 Card の overlay を実装する**
 
@@ -426,7 +432,9 @@ class LiveMonitorEarthquakePublicationCard extends ConsumerWidget {
 
 `LiveMonitorEarthquakeOverlay` は `Stack` で publication Card を `Alignment.topLeft`、`EarthquakeHypocenterInformationCard(item: earthquake)` を `Alignment.bottomCenter` に置く。両方を `LiveMonitorMeasuredCardOverlay` で個別に測定して `onTopHeightChanged` と `onBottomHeightChanged` へ通知する。`publicationAt == null` の場合は左上 Card を生成せず、top height として 0 を通知する。overlay 自体には SafeArea を掛けず、caller が一度だけ SafeArea を適用する。
 
-- [ ] **Step 8: 大型 Card を削除し、Task 3 test を通す**
+- [ ] **Step 8: 新 component の compile と Task 3 test を通す**
+
+大型 `LiveMonitorEarthquakeCard` は Task 4 の automatic/split 配線と同時に削除する。Task 3 では互換 wrapper を作らず、既存 UI も新 overlay へ切り替えない。
 
 Run from `app/`: `mise exec -- flutter test test/feature/live_monitor/data/live_monitor_map_focus_builder_test.dart test/feature/live_monitor/data/live_monitor_publication_time_formatter_test.dart test/feature/live_monitor/data/live_monitor_earthquake_card_presenter_test.dart`
 
@@ -435,7 +443,7 @@ Expected: PASS。
 - [ ] **Step 9: Task 3 をコミットする**
 
 ```bash
-git add app/lib/feature/live_monitor/data/logic/live_monitor_map_focus_builder.dart app/lib/feature/live_monitor/data/logic/live_monitor_publication_time_formatter.dart app/lib/feature/live_monitor/data/logic/live_monitor_earthquake_card_presenter.dart app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_publication_card.dart app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_overlay.dart app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_card.dart app/test/feature/live_monitor/data/live_monitor_map_focus_builder_test.dart app/test/feature/live_monitor/data/live_monitor_publication_time_formatter_test.dart app/test/feature/live_monitor/data/live_monitor_earthquake_card_presenter_test.dart
+git add app/lib/feature/live_monitor/data/logic/live_monitor_map_focus_builder.dart app/lib/feature/live_monitor/data/logic/live_monitor_publication_time_formatter.dart app/lib/feature/live_monitor/data/logic/live_monitor_earthquake_card_presenter.dart app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_publication_card.dart app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_overlay.dart app/lib/feature/live_monitor/ui/components/live_monitor_automatic_view.dart app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_pane.dart app/test/feature/live_monitor/data/live_monitor_map_focus_builder_test.dart app/test/feature/live_monitor/data/live_monitor_publication_time_formatter_test.dart app/test/feature/live_monitor/data/live_monitor_earthquake_card_presenter_test.dart
 git commit -m "feat: LiveMonitorの地震情報Cardを小型化"
 ```
 
@@ -446,6 +454,9 @@ git commit -m "feat: LiveMonitorの地震情報Cardを小型化"
 **Files:**
 - Modify: `app/lib/feature/live_monitor/ui/components/live_monitor_automatic_view.dart:1-120`
 - Modify: `app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_pane.dart:1-135`
+- Modify: `app/lib/feature/live_monitor/data/logic/live_monitor_earthquake_card_presenter.dart`
+- Modify: `app/test/feature/live_monitor/data/live_monitor_earthquake_card_presenter_test.dart`
+- Delete: `app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_card.dart`
 - Modify: `app/lib/feature/live_monitor/ui/page/live_monitor_page.dart:229-314`
 
 **Interfaces:**
@@ -479,6 +490,8 @@ realtime 状態は既存 `LiveMonitorRealtimeCards` と bottom padding を維持
 
 `cardHeight` を上下2値へ分け、`LiveMonitorEarthquakeOverlay` と `presentation.publicationAt` を使用する。最新情報取得失敗 banner は既存どおり SafeArea 内に残し、左上 Card と重なる場合は banner を top center に維持する。
 
+automatic/split 両方の旧 class/import 参照を除去した直後に大型 `LiveMonitorEarthquakeCard` を物理削除する。同じ commit で `maximumIntensityRegions`、`LiveMonitorIntensityRegionGroup`、`orderedIntensityRegions`、旧 presentation field と対応 test を削除し、presentation を地図 mode と発表時刻選択だけへ縮小する。
+
 - [ ] **Step 3: LiveMonitorPage の MapLibre と tap listener を full-bleed 化する**
 
 `Positioned.fill > SafeArea > Listener > body` から外側の `SafeArea` だけを削除し、`Positioned.fill > Listener > body` にする。`LiveMonitorConnectionBanner` は自身の SafeArea、`LiveMonitorControlPanel` は自身の SafeArea を維持する。これにより map と tap/gesture 対象だけが status bar・home indicator の背後まで広がる。
@@ -505,7 +518,7 @@ Expected: 全 test PASS、analyze は `No issues found!`。
 - [ ] **Step 6: Task 4 をコミットする**
 
 ```bash
-git add app/lib/feature/live_monitor/ui/components/live_monitor_automatic_view.dart app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_pane.dart app/lib/feature/live_monitor/ui/page/live_monitor_page.dart
+git add app/lib/feature/live_monitor/ui/components/live_monitor_automatic_view.dart app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_pane.dart app/lib/feature/live_monitor/data/logic/live_monitor_earthquake_card_presenter.dart app/lib/feature/live_monitor/ui/components/live_monitor_earthquake_card.dart app/lib/feature/live_monitor/ui/page/live_monitor_page.dart app/test/feature/live_monitor/data/live_monitor_earthquake_card_presenter_test.dart
 git commit -m "fix: LiveMonitorの地図と地震overlayを調整"
 ```
 
