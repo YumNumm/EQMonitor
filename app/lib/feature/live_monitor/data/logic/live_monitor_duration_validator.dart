@@ -20,7 +20,19 @@ LiveMonitorDurationValidation validateLiveMonitorDuration(String raw) {
 }
 
 bool shouldApplyCommittedLiveMonitorDuration({
+  required bool didCommit,
   required bool hasFocus,
   required String currentRaw,
   required String committedRaw,
-}) => !hasFocus && currentRaw == committedRaw;
+}) => didCommit && !hasFocus && currentRaw == committedRaw;
+
+bool shouldClearLiveMonitorDurationDraft({
+  required bool didCommit,
+  required String? currentDraft,
+  required String committedRaw,
+}) => didCommit && currentDraft == committedRaw;
+
+bool shouldJoinLiveMonitorDurationSave({
+  required String inFlightRaw,
+  required String requestedRaw,
+}) => inFlightRaw == requestedRaw;

@@ -22,6 +22,7 @@ void main() {
   test('保存中に再編集した入力は保存済み値で上書きしない', () {
     expect(
       shouldApplyCommittedLiveMonitorDuration(
+        didCommit: true,
         hasFocus: false,
         currentRaw: '60',
         committedRaw: '60',
@@ -30,6 +31,7 @@ void main() {
     );
     expect(
       shouldApplyCommittedLiveMonitorDuration(
+        didCommit: true,
         hasFocus: true,
         currentRaw: '60',
         committedRaw: '60',
@@ -38,10 +40,61 @@ void main() {
     );
     expect(
       shouldApplyCommittedLiveMonitorDuration(
+        didCommit: true,
         hasFocus: false,
         currentRaw: '90',
         committedRaw: '60',
       ),
+      isFalse,
+    );
+  });
+
+  test('保存失敗時は同じ入力でも保存済み値を反映しない', () {
+    expect(
+      shouldApplyCommittedLiveMonitorDuration(
+        didCommit: false,
+        hasFocus: false,
+        currentRaw: '60',
+        committedRaw: '60',
+      ),
+      isFalse,
+    );
+  });
+
+  test('保存に成功した世代と一致するdraftだけを破棄する', () {
+    expect(
+      shouldClearLiveMonitorDurationDraft(
+        didCommit: true,
+        currentDraft: '60',
+        committedRaw: '60',
+      ),
+      isTrue,
+    );
+    expect(
+      shouldClearLiveMonitorDurationDraft(
+        didCommit: false,
+        currentDraft: '60',
+        committedRaw: '60',
+      ),
+      isFalse,
+    );
+    expect(
+      shouldClearLiveMonitorDurationDraft(
+        didCommit: true,
+        currentDraft: '90',
+        committedRaw: '60',
+      ),
+      isFalse,
+    );
+  });
+
+  test('同じrawの保存が進行中なら新しい保存を始めない', () {
+    expect(
+      shouldJoinLiveMonitorDurationSave(inFlightRaw: '60', requestedRaw: '60'),
+      isTrue,
+    );
+    expect(
+      shouldJoinLiveMonitorDurationSave(inFlightRaw: '60', requestedRaw: '90'),
       isFalse,
     );
   });

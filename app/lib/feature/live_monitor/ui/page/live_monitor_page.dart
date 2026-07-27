@@ -27,7 +27,9 @@ class LiveMonitorPage extends HookConsumerWidget {
     final confirmingExit = useRef(false);
     final durationDraft = useRef<String?>(null);
     final lastSavedDuration = useRef<int?>(null);
-    final durationSaveInFlight = useRef<Future<bool>?>(null);
+    final durationSaveInFlight = useRef<({String raw, Future<bool> future})?>(
+      null,
+    );
     final tapTracker = useMemoized(
       () => LiveMonitorTapTracker(touchSlop: kTouchSlop),
     );
@@ -37,23 +39,36 @@ class LiveMonitorPage extends HookConsumerWidget {
       lastSavedDuration.value = settings.earthquakeDisplaySeconds;
     }
 
-    final Future<void> Function(String?) saveDuration = (raw) async {
+    final Future<bool> Function(String?) saveDuration = (raw) async {
       if (raw == null) {
-        return;
+        return true;
       }
       final seconds = validateLiveMonitorDuration(raw).seconds;
       if (seconds == null) {
-        return;
+        return false;
       }
       final precedingSave = durationSaveInFlight.value;
       if (precedingSave != null) {
-        await precedingSave;
+        if (shouldJoinLiveMonitorDurationSave(
+          inFlightRaw: precedingSave.raw,
+          requestedRaw: raw,
+        )) {
+          return precedingSave.future;
+        }
+        await precedingSave.future;
+        if (!context.mounted) {
+          return false;
+        }
       }
       if (seconds == lastSavedDuration.value) {
-        if (durationDraft.value == raw) {
+        if (shouldClearLiveMonitorDurationDraft(
+          didCommit: true,
+          currentDraft: durationDraft.value,
+          committedRaw: raw,
+        )) {
           durationDraft.value = null;
         }
-        return;
+        return true;
       }
       final saveOperation = () async {
         try {
@@ -65,8 +80,15 @@ class LiveMonitorPage extends HookConsumerWidget {
                       current.copyWith(earthquakeDisplaySeconds: seconds),
                 );
           });
+          if (!context.mounted) {
+            return true;
+          }
           lastSavedDuration.value = seconds;
-          if (durationDraft.value == raw) {
+          if (shouldClearLiveMonitorDurationDraft(
+            didCommit: true,
+            currentDraft: durationDraft.value,
+            committedRaw: raw,
+          )) {
             durationDraft.value = null;
           }
           return true;
@@ -79,11 +101,12 @@ class LiveMonitorPage extends HookConsumerWidget {
           return false;
         }
       }();
-      durationSaveInFlight.value = saveOperation;
+      durationSaveInFlight.value = (raw: raw, future: saveOperation);
       try {
-        await saveOperation;
+        return await saveOperation;
       } finally {
-        if (identical(durationSaveInFlight.value, saveOperation)) {
+        if (context.mounted &&
+            identical(durationSaveInFlight.value?.future, saveOperation)) {
           durationSaveInFlight.value = null;
         }
       }
@@ -94,7 +117,14 @@ class LiveMonitorPage extends HookConsumerWidget {
         tapTracker.cancelAll();
       }
       if (previous == true && !next) {
-        await saveDuration(durationDraft.value);
+        final closingRaw = durationDraft.value;
+        final didCommit = await saveDuration(closingRaw);
+        if (!context.mounted) {
+          return;
+        }
+        if (!didCommit && durationDraft.value == closingRaw) {
+          durationDraft.value = null;
+        }
       }
     });
 
@@ -104,7 +134,10 @@ class LiveMonitorPage extends HookConsumerWidget {
       }
       confirmingExit.value = true;
       try {
-        await saveDuration(durationDraft.value);
+        final didCommit = await saveDuration(durationDraft.value);
+        if (!context.mounted || !didCommit) {
+          return;
+        }
         await ref
             .read(liveMonitorExitActionProvider)
             .confirm(
@@ -120,7 +153,9 @@ class LiveMonitorPage extends HookConsumerWidget {
               },
             );
       } finally {
-        confirmingExit.value = false;
+        if (context.mounted) {
+          confirmingExit.value = false;
+        }
       }
     };
 
@@ -152,64 +187,64 @@ class LiveMonitorPage extends HookConsumerWidget {
         }
       },
       child: Scaffold(
-        body: SafeArea(
-          child: Listener(
-            behavior: HitTestBehavior.translucent,
-            onPointerDown: (event) {
-              if (settings == null || panelOpen) {
-                tapTracker.cancelAll();
-                return;
-              }
-              tapTracker.pointerDown(
-                pointer: event.pointer,
-                position: event.position,
-              );
-            },
-            onPointerMove: (event) {
-              tapTracker.pointerMove(
-                pointer: event.pointer,
-                position: event.position,
-              );
-            },
-            onPointerUp: (event) {
-              final isTap = tapTracker.pointerUp(
-                pointer: event.pointer,
-                position: event.position,
-              );
-              if (isTap && settings != null && !panelOpen) {
-                ref.read(liveMonitorControlPanelProvider.notifier).open();
-              }
-            },
-            onPointerCancel: (event) {
-              tapTracker.pointerCancel(pointer: event.pointer);
-            },
-            child: Stack(
-              children: [
-                Positioned.fill(child: body),
-                const Positioned.fill(child: LiveMonitorConnectionBanner()),
-                if (settings != null && panelOpen) ...[
-                  const Positioned.fill(
-                    child: ModalBarrier(dismissible: false),
-                  ),
-                  Positioned.fill(
-                    child: DisplayFeatureSubScreen(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: LiveMonitorControlPanel(
-                          settings: settings,
-                          onDurationChanged: (raw) {
-                            durationDraft.value = raw;
-                          },
-                          onDurationCommit: saveDuration,
-                          onExit: requestExit,
-                        ),
-                      ),
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: SafeArea(
+                child: Listener(
+                  behavior: HitTestBehavior.translucent,
+                  onPointerDown: (event) {
+                    if (settings == null || panelOpen) {
+                      tapTracker.cancelAll();
+                      return;
+                    }
+                    tapTracker.pointerDown(
+                      pointer: event.pointer,
+                      position: event.position,
+                    );
+                  },
+                  onPointerMove: (event) {
+                    tapTracker.pointerMove(
+                      pointer: event.pointer,
+                      position: event.position,
+                    );
+                  },
+                  onPointerUp: (event) {
+                    final isTap = tapTracker.pointerUp(
+                      pointer: event.pointer,
+                      position: event.position,
+                    );
+                    if (isTap && settings != null && !panelOpen) {
+                      ref.read(liveMonitorControlPanelProvider.notifier).open();
+                    }
+                  },
+                  onPointerCancel: (event) {
+                    tapTracker.pointerCancel(pointer: event.pointer);
+                  },
+                  child: body,
+                ),
+              ),
+            ),
+            const Positioned.fill(child: LiveMonitorConnectionBanner()),
+            if (settings != null && panelOpen) ...[
+              const Positioned.fill(child: ModalBarrier(dismissible: false)),
+              Positioned.fill(
+                child: DisplayFeatureSubScreen(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: LiveMonitorControlPanel(
+                      settings: settings,
+                      onDurationChanged: (raw) {
+                        durationDraft.value = raw;
+                      },
+                      onDurationCommit: saveDuration,
+                      onExit: requestExit,
                     ),
                   ),
-                ],
-              ],
-            ),
-          ),
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );

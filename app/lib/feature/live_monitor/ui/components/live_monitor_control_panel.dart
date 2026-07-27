@@ -16,7 +16,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
   });
 
   final ValueChanged<String> onDurationChanged;
-  final Future<void> Function(String raw) onDurationCommit;
+  final Future<bool> Function(String raw) onDurationCommit;
   final Future<void> Function() onExit;
   final LiveMonitorSettings settings;
 
@@ -28,23 +28,34 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
     final durationFocusNode = useFocusNode();
     final durationError = useState<String?>(null);
 
-    final Future<void> Function(String) saveDuration = (raw) async {
+    final Future<bool> Function(String) saveDuration = (raw) async {
       final validation = validateLiveMonitorDuration(raw);
       final seconds = validation.seconds;
       if (seconds == null) {
         durationError.value = '3〜300の整数を入力してください';
-        return;
+        return false;
       }
       durationError.value = null;
-      await onDurationCommit(raw);
+      final didCommit = await onDurationCommit(raw);
+      if (!context.mounted) {
+        return false;
+      }
+      if (!didCommit && durationController.text == raw) {
+        durationError.value = '表示時間を保存できませんでした';
+      }
+      return didCommit;
     };
 
     useEffect(() {
       void handleFocusChanged() async {
         if (!durationFocusNode.hasFocus) {
           final committedRaw = durationController.text;
-          await saveDuration(committedRaw);
+          final didCommit = await saveDuration(committedRaw);
+          if (!context.mounted) {
+            return;
+          }
           if (!shouldApplyCommittedLiveMonitorDuration(
+            didCommit: didCommit,
             hasFocus: durationFocusNode.hasFocus,
             currentRaw: durationController.text,
             committedRaw: committedRaw,
@@ -107,7 +118,12 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                   ),
                   IconButton(
                     onPressed: () async {
-                      await saveDuration(durationController.text);
+                      final didCommit = await saveDuration(
+                        durationController.text,
+                      );
+                      if (!context.mounted || !didCommit) {
+                        return;
+                      }
                       ref
                           .read(liveMonitorControlPanelProvider.notifier)
                           .close();
@@ -197,7 +213,12 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      await saveDuration(durationController.text);
+                      final didCommit = await saveDuration(
+                        durationController.text,
+                      );
+                      if (!context.mounted || !didCommit) {
+                        return;
+                      }
                       ref
                           .read(liveMonitorControlPanelProvider.notifier)
                           .close();
@@ -206,7 +227,12 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                   ),
                   FilledButton.tonalIcon(
                     onPressed: () async {
-                      await saveDuration(durationController.text);
+                      final didCommit = await saveDuration(
+                        durationController.text,
+                      );
+                      if (!context.mounted || !didCommit) {
+                        return;
+                      }
                       await onExit();
                     },
                     icon: const Icon(Icons.logout),
