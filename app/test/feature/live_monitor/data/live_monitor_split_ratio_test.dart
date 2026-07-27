@@ -101,4 +101,72 @@ void main() {
       isFalse,
     );
   });
+
+  test('viewport sizeが同じでもglobal originが変われば再計測する', () {
+    final previous = (
+      globalOrigin: const Offset(44, 0),
+      viewportSize: const Size(756, 400),
+      screenSize: const Size(800, 400),
+      viewPadding: EdgeInsets.zero,
+      viewInsets: EdgeInsets.zero,
+      orientation: Orientation.landscape,
+    );
+    expect(
+      shouldReportLiveMonitorSplitViewportMeasurement(
+        previous: previous,
+        current: (
+          globalOrigin: Offset.zero,
+          viewportSize: previous.viewportSize,
+          screenSize: previous.screenSize,
+          viewPadding: previous.viewPadding,
+          viewInsets: previous.viewInsets,
+          orientation: previous.orientation,
+        ),
+      ),
+      isTrue,
+    );
+  });
+
+  test('geometryが同じでもMediaQuery署名が変われば再計測する', () {
+    final previous = (
+      globalOrigin: const Offset(44, 0),
+      viewportSize: const Size(756, 400),
+      screenSize: const Size(800, 400),
+      viewPadding: EdgeInsets.zero,
+      viewInsets: EdgeInsets.zero,
+      orientation: Orientation.landscape,
+    );
+    expect(
+      shouldReportLiveMonitorSplitViewportMeasurement(
+        previous: previous,
+        current: (
+          globalOrigin: previous.globalOrigin,
+          viewportSize: previous.viewportSize,
+          screenSize: previous.screenSize,
+          viewPadding: previous.viewPadding,
+          viewInsets: const EdgeInsets.only(bottom: 200),
+          orientation: previous.orientation,
+        ),
+      ),
+      isTrue,
+    );
+  });
+
+  test('geometryとMediaQuery署名が同じなら再計測しない', () {
+    final measurement = (
+      globalOrigin: const Offset(44, 0),
+      viewportSize: const Size(756, 400),
+      screenSize: const Size(800, 400),
+      viewPadding: EdgeInsets.zero,
+      viewInsets: EdgeInsets.zero,
+      orientation: Orientation.landscape,
+    );
+    expect(
+      shouldReportLiveMonitorSplitViewportMeasurement(
+        previous: measurement,
+        current: measurement,
+      ),
+      isFalse,
+    );
+  });
 }

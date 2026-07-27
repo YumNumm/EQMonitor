@@ -1,4 +1,20 @@
-import 'dart:ui';
+import 'package:flutter/widgets.dart';
+
+typedef LiveMonitorSplitViewportEnvironment = ({
+  Size screenSize,
+  EdgeInsets viewPadding,
+  EdgeInsets viewInsets,
+  Orientation orientation,
+});
+
+typedef LiveMonitorSplitViewportMeasurement = ({
+  Offset globalOrigin,
+  Size viewportSize,
+  Size screenSize,
+  EdgeInsets viewPadding,
+  EdgeInsets viewInsets,
+  Orientation orientation,
+});
 
 double updateLiveMonitorSplitRatio({
   required double current,
@@ -40,3 +56,8 @@ bool isLiveMonitorSplitViewportMeasurementCurrent({
   required Size measuredViewportSize,
   required Size currentViewportSize,
 }) => measuredViewportSize == currentViewportSize;
+
+bool shouldReportLiveMonitorSplitViewportMeasurement({
+  required LiveMonitorSplitViewportMeasurement? previous,
+  required LiveMonitorSplitViewportMeasurement current,
+}) => previous != current;
