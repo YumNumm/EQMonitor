@@ -1,6 +1,7 @@
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
+import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_map_instance_owner.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_map_focus.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
@@ -27,23 +28,45 @@ class LiveMonitorMapHost extends HookConsumerWidget {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
     final homeConfiguration = ref.watch(homeConfigurationProvider);
     final mapSettings = homeConfiguration.value?.map ?? const HomeMapSettings();
-    final controller = useState<MapController?>(null);
-    final generation = useRef<int>(0);
+    final instanceOwner = useMemoized(
+      LiveMonitorMapInstanceOwner<MapController>.new,
+    );
+    final instanceKey = switch (mapConfiguration) {
+      AsyncData(:final value) when value.styleString != null => (
+        slotId,
+        value.styleString,
+        mapSettings,
+      ),
+      _ => null,
+    };
+    final instanceIdentity = useMemoized(instanceOwner.switchInstance, [
+      instanceKey,
+    ]);
+    final controllerBinding =
+        useState<
+          ({LiveMonitorMapInstanceIdentity identity, MapController controller})?
+        >(null);
+    useEffect(() => instanceOwner.invalidate, [instanceOwner]);
     final cameraOperation = useMemoized(() async {
-      final captured = controller.value;
+      final captured = controllerBinding.value;
       if (captured == null) {
         return;
       }
-      final capturedGeneration = ++generation.value;
-      await captured.fitBounds(
+      final operation = instanceOwner.beginCameraOperation(
+        identity: captured.identity,
+        controller: captured.controller,
+      );
+      if (operation == null) {
+        return;
+      }
+      await captured.controller.fitBounds(
         bounds: focus.bounds.toLngLatBounds(),
         padding: focus.padding.toEdgeInsets(),
       );
-      if (!identical(captured, controller.value) ||
-          capturedGeneration != generation.value) {
+      if (!instanceOwner.acceptCameraCompletion(operation)) {
         return;
       }
-    }, [controller.value, focus]);
+    }, [controllerBinding.value, focus, instanceIdentity]);
     useFuture(cameraOperation);
 
     return switch (mapConfiguration) {
@@ -56,7 +79,16 @@ class LiveMonitorMapHost extends HookConsumerWidget {
               mapSettings: mapSettings,
               layers: layers,
               onMapCreated: (createdController) {
-                controller.value = createdController;
+                if (!instanceOwner.acceptController(
+                  identity: instanceIdentity,
+                  controller: createdController,
+                )) {
+                  return;
+                }
+                controllerBinding.value = (
+                  identity: instanceIdentity,
+                  controller: createdController,
+                );
               },
             ),
           ),
