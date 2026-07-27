@@ -13,15 +13,26 @@ guessed from documentation that couldn't be fetched).
 
 | Platform | Identifier | Where it's declared |
 |---|---|---|
-| iOS (Background Assets) | `eqmonitor-assets` | `packages/assets_util/lib/assets_util.dart` (`_iosAssetPackIdentifier`), `IOS_BACKGROUND_ASSET_PACK_ID` in `.github/workflows/upload-asset-pack.yaml`, App Store Connect's Background Assets pack, and (once created) the Xcode Background Assets capability's `assetPackID`. |
+| iOS (Background Assets) | `eqmonitor-assets` | `packages/assets_util/lib/assets_util.dart` (`_iosAssetPackIdentifier`), `IOS_BACKGROUND_ASSET_PACK_ID` in `.github/workflows/upload-asset-pack.yaml` (which CI writes into the `ba-package` manifest's `assetPackID`), and the Background Assets pack record in App Store Connect. |
 | Android (Play Asset Delivery) | `eqmonitor_assets` | `packages/assets_util/lib/assets_util.dart` (`_androidAssetPackName`), `app/android/assetpacks/eqmonitor_assets/build.gradle.kts`'s `packName`, `assetPacks += setOf(":assetpacks:eqmonitor_assets")` in `app/android/app/build.gradle.kts`. |
 
-These are deliberately **different literal strings** — Android Gradle
-module/pack names disallow dots, iOS asset pack IDs are conventionally
-reverse-DNS — and were already chosen and documented by Task 7's
-`docs/asset-pack-cd.md` before this task; this document doesn't introduce a
-new value, it just points `packages/assets_util`'s Dart contract at the
-existing one so CD / Xcode / App Store Connect stay consistent.
+**Nothing in the Xcode project declares the iOS identifier.** For an
+Apple-hosted managed pack there is no per-pack `assetPackID` field in the
+Background Assets capability, in `Runner.entitlements`, or in
+`Runner/Info.plist` — the capability only contributes the `BAAppGroupID` /
+`BAHasManagedAssetPacks` / `BAUsesAppleHosting` keys and the
+`AssetDownloader` extension. The id is supplied at runtime by the Dart
+constant above and matched against whatever CI uploaded, so drift between
+the Dart constant and the workflow is invisible at build time. That's what
+`tool/asset_pack/check_asset_pack_id.py` guards; `upload-asset-pack.yaml`
+runs it before packaging, and
+`tool/asset_pack/test_check_asset_pack_id.py` covers it locally.
+
+The two platform strings are deliberately **different literals**: Android
+Gradle module/pack names disallow hyphens, and App Store Connect rejects the
+dots of a reverse-DNS id with ITMS-91133 (see
+`docs/knowledge/20260728_asset_pack_id_charset.md`), so neither string can be
+used on the other platform.
 
 ## What `packages/assets_util` implements today
 
@@ -55,12 +66,14 @@ The `AssetDownloader` ExtensionKit target (`app/ios/AssetDownloader/`) and
 `BAHasManagedAssetPacks`, `BAUsesAppleHosting`) are in the repo. Before the
 first real device / TestFlight run, still complete:
 
-1. Register the **Background Assets** capability in the Apple Developer portal
-   for `net.yumnumm.eqmonitor` with asset pack ID
-   `eqmonitor-assets` (Xcode Signing & Capabilities should mirror
-   the plist keys above once profiles are refreshed).
+1. Enable the **Background Assets** capability for `net.yumnumm.eqmonitor` in
+   the Apple Developer portal and refresh the provisioning profiles. The
+   capability is per-app, not per-pack — there is no asset pack ID to enter
+   here or in Xcode's Signing & Capabilities.
 2. Create the Apple-hosted Background Assets pack in App Store Connect and
    upload an initial `.aar` once (see `docs/asset-pack-cd.md`).
+   `upload-asset-pack.yaml` creates the pack record automatically when it's
+   missing, so in practice this happens on the workflow's first successful run.
 
 ### `ba-package` / Xcode version
 
@@ -82,6 +95,9 @@ delivery. `AssetsUtil.resolvePackRoot()` on macOS instead resolves the
 `platform` folder bundled directly into `Bundle.main` (registered as a
 Bundle Resources **folder reference** — not individual file references — in
 `app/macos/Runner.xcodeproj/project.pbxproj`, so the directory structure is
-preserved at `Contents/Resources/platform/`), which is always present since
-it's git-committed and synced by `upload-asset-pack.yaml`'s `sync-macos`
-job. No entitlements, capabilities, or extensions are needed for this path.
+preserved at `Contents/Resources/platform/`). Those files are **not**
+git-committed — `tool/asset_pack/stage_from_release.sh --target macos`
+downloads and verifies them from the backend Release before the build, the
+same way Android stages its Play Asset Delivery module (see
+`docs/knowledge/20260728_asset_pack_release_staging.md`). No entitlements,
+capabilities, or extensions are needed for this path.

@@ -10,15 +10,16 @@ export 'package:assets_util/src/assets_util_android.dart' show AssetsUtilAndroid
 /// The Asset Pack identifier registered in App Store Connect's Background
 /// Assets management (`IOS_BACKGROUND_ASSET_PACK_ID` in
 /// `.github/workflows/upload-asset-pack.yaml`; see `docs/asset-pack-cd.md`
-/// and `docs/ios-background-assets.md`). Must stay in sync with the Xcode
-/// Background Assets capability and the App Store Connect resource.
+/// and `docs/ios-background-assets.md`). The Xcode project does not declare
+/// it anywhere — a mismatch with the workflow is therefore invisible at
+/// build time, and is guarded by `tool/asset_pack/check_asset_pack_id.py`.
 const _iosAssetPackIdentifier = 'eqmonitor-assets';
 
 /// The Play Asset Delivery install-time pack's module name (
 /// `app/android/assetpacks/eqmonitor_assets`, wired via
-/// `assetPacks += setOf(":assetpacks:eqmonitor_assets")`). Deliberately a
-/// different literal than the iOS identifier: Android Gradle module/pack
-/// names disallow dots, iOS asset pack IDs are conventionally reverse-DNS.
+/// `assetPacks += setOf(":assetpacks:eqmonitor_assets")`). Necessarily a
+/// different literal than the iOS identifier: Gradle module names disallow
+/// hyphens, and App Store Connect rejects underscores and dots (ITMS-91133).
 const _androidAssetPackName = 'eqmonitor_assets';
 
 /// Platform-managed local assets resolver.

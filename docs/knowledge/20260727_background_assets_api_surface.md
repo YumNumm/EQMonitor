@@ -146,9 +146,11 @@ upload).
 
 **Still outstanding before end-to-end works on a real device:**
 
-1. Apple Developer portal / provisioning: Background Assets capability for
-   `eqmonitor-assets` (plist keys are in place; entitlements may
-   need refresh after capability is enabled in the portal).
+1. Apple Developer portal / provisioning: enable the Background Assets
+   capability for the `net.yumnumm.eqmonitor` App ID and refresh profiles.
+   The capability is per-app — the pack id `eqmonitor-assets` is never
+   entered in Xcode or the portal, only in the `ba-package` manifest, the
+   runtime lookup, and App Store Connect (plist keys are already in place).
 2. App Store Connect: create the Apple-hosted pack and upload an initial
    `.aar` (see `docs/asset-pack-cd.md`).
 3. Unrelated iOS build blocker: `jma_code_table.json` bundle reference drift
@@ -172,8 +174,9 @@ upload).
   `Pods`/`Flutter Assemble` aggregate targets which sit at 13.3) — far below
   `AssetPackManager`'s `macOS 26` floor. This matches the plan's own Global
   Constraints: macOS is explicitly **out of scope** for Managed Background
-  Assets and uses git-committed native bundling instead
-  (`app/assets/platform/` as a Bundle Resources folder reference). The
+  Assets and uses plain native bundling instead (`app/assets/platform/` as a
+  Bundle Resources folder reference, staged from the backend Release at
+  build time by `tool/asset_pack/stage_from_release.sh`, not committed). The
   macOS branch of `EQMAssetsUtil.resolvePackRoot` therefore never touches
   `BackgroundAssets` at all (`#if os(iOS)`-gated import).
 

@@ -25,11 +25,36 @@ iOS 側の参照箇所:
 
 - `packages/assets_util/lib/assets_util.dart` (`_iosAssetPackIdentifier`)
 - `.github/workflows/upload-asset-pack.yaml` (`IOS_BACKGROUND_ASSET_PACK_ID`)
-- `ba-package` マニフェストの `assetPackID`
+- `ba-package` マニフェストの `assetPackID`（CI が上記 env から生成）
 - App Store Connect の Background Assets レコード
+
+## Xcode プロジェクトには ID が存在しない
+
+Apple ホスティングの Managed Asset Pack では、**Xcode 側に pack ID を書く場所が
+一切ない**。Background Assets capability が付与するのは以下だけで、いずれも
+pack 単位ではなくアプリ単位:
+
+- `Runner/Info.plist`: `BAAppGroupID` / `BAHasManagedAssetPacks` / `BAUsesAppleHosting`
+- `AssetDownloader` ExtensionKit ターゲット（`StoreDownloaderExtension` 準拠）
+- Apple Developer Portal の capability 登録（App ID 単位）
+
+つまり ID は「実行時に Dart が渡す値」と「CI がアップロードした値」の一致だけが
+頼りで、不一致でもビルドは通り、端末上で pack が落ちてくるのに解決できない、
+という形でしか表面化しない。
+
+## ドリフト防止
+
+`tool/asset_pack/check_asset_pack_id.py` が Dart 定数と workflow env の一致、
+および上記の文字種制約を検証する。`upload-asset-pack.yaml` の
+`Verify asset pack id` ステップがパッケージング前に実行する。
+
+```bash
+python3 -m tool.asset_pack.check_asset_pack_id --asset-pack-id eqmonitor-assets
+python3 -m unittest tool.asset_pack.test_check_asset_pack_id
+```
 
 ## 実測
 
 2026-07-27 の `upload-asset-pack.yaml` 実行で
 `net.yumnumm.eqmonitor.assets` を指定したところ ASC が 409 で拒否。
-`eqmonitor-assets` に変更して再試行する。
+`eqmonitor-assets` に変更して成功。
