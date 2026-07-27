@@ -21,6 +21,9 @@ void main() {
 
     final dio = await container.read(seismicityGeoJsonDioProvider.future);
 
-    expect(dio.interceptors.whereType<HttpCacheInterceptor>(), hasLength(1));
+    expect(dio.interceptors, [
+      isNot(isA<HttpCacheInterceptor>()),
+      isA<HttpCacheInterceptor>(),
+    ]);
   });
 }
