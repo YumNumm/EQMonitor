@@ -61,7 +61,6 @@ class LiveMonitorDetectedEventNotifier
       }
       final shouldRecordCanonicalBoundary = switch (event) {
         RealtimeEewUpsertEvent() => !hasEewCanonicalBaseline,
-        RealtimeShakeSnapshotEvent() => !hasShakeCanonicalBaseline,
         _ => false,
       };
       if (shouldRecordCanonicalBoundary) {
@@ -98,6 +97,12 @@ class LiveMonitorDetectedEventNotifier
     ref
       ..listen(eewAliveTelegramProvider, (_, next) {
         if (next != null) {
+          if (!hasEewCanonicalBaseline) {
+            final currentRealtimeEvent = ref.read(realtimeEventsProvider).value;
+            if (currentRealtimeEvent != null) {
+              initialCanonicalBoundary.record(currentRealtimeEvent);
+            }
+          }
           acceptCanonicalEewState(next);
         }
       })
@@ -222,9 +227,7 @@ class LiveMonitorDetectedEventNotifier
   void acceptCanonicalShakeSnapshot(ShakeDetectionSnapshot snapshot) {
     final visibleSnapshot = visibleShakeSnapshot(snapshot);
     if (!hasShakeCanonicalBaseline) {
-      detector.detectShakeSnapshot(
-        initialCanonicalBoundary.shakeBaseline(visibleSnapshot),
-      );
+      detector.detectShakeSnapshot(visibleSnapshot);
       hasShakeCanonicalBaseline = true;
     }
     for (final event in detector.detectShakeSnapshot(visibleSnapshot)) {

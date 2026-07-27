@@ -21,6 +21,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_prec
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
+import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
@@ -204,6 +205,37 @@ final class _DetectedEventFixture {
   }
 }
 
+final class _IntegratedCanonicalFixture {
+  _IntegratedCanonicalFixture({
+    required this.container,
+    required this.realtime,
+    required this.events,
+  });
+
+  final ProviderContainer container;
+  final StreamController<RealtimeEvent> realtime;
+  final List<LiveMonitorEventEnvelope> events;
+
+  Future<void> start() async {
+    container.listen(liveMonitorDetectedEventProvider, (_, next) {
+      final envelope = next.value;
+      if (envelope != null &&
+          events.every((event) => event.sequence != envelope.sequence)) {
+        events.add(envelope);
+      }
+    }, fireImmediately: true);
+    await container.read(liveMonitorDetectedEventProvider.future);
+    await settle();
+  }
+
+  Future<void> settle() async {
+    for (var i = 0; i < 12; i += 1) {
+      await container.pump();
+      await Future<void>.delayed(Duration.zero);
+    }
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   talker_lib.talker = Talker(settings: TalkerSettings(useConsoleLogs: false));
@@ -226,6 +258,92 @@ void main() {
       fixture.container.read(liveMonitorDetectedEventProvider).value,
       isNull,
     );
+  });
+
+  test('Homeのcanonical購読が先行してもraw EEWを一度だけ発行する', () async {
+    final fixture = createIntegratedCanonicalFixture();
+    addTearDown(fixture.container.dispose);
+    final eewSubscription = fixture.container.listen(
+      eewAliveTelegramProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    final shakeSubscription = fixture.container.listen(
+      shakeDetectionAcceptedSnapshotProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    addTearDown(eewSubscription.close);
+    addTearDown(shakeSubscription.close);
+    await fixture.settle();
+    await fixture.start();
+
+    final raw = RealtimeEvent.eewUpsert(
+      record: rawEew(eventId: 'HOME-EEW', serialNo: 1),
+      source: RealtimeSource.eqmonitor,
+    );
+    fixture.realtime.add(raw);
+    await fixture.settle();
+    fixture.realtime.add(raw);
+    await fixture.settle();
+
+    expect(fixture.events.map((envelope) => envelope.event), [
+      const LiveMonitorDetectedEvent.eewStarted(
+        eventId: 'HOME-EEW',
+        serialNo: 1,
+      ),
+    ]);
+  });
+
+  test('Homeのcanonical購読先行時のraw Shake fullはentry後の追加だけ発行する', () async {
+    final fixture = createIntegratedCanonicalFixture();
+    addTearDown(fixture.container.dispose);
+    final eewSubscription = fixture.container.listen(
+      eewAliveTelegramProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    final shakeSubscription = fixture.container.listen(
+      shakeDetectionAcceptedSnapshotProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    addTearDown(eewSubscription.close);
+    addTearDown(shakeSubscription.close);
+    await fixture.settle();
+    fixture.realtime.add(
+      RealtimeEvent.shakeSnapshot(
+        record: rawShakeSnapshot(
+          revision: 0,
+          events: [rawShakeEvent(eventId: 'EXISTING-SHAKE', serialNo: 1)],
+        ),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await fixture.settle();
+    await fixture.start();
+
+    final raw = RealtimeEvent.shakeSnapshot(
+      record: rawShakeSnapshot(
+        revision: 1,
+        events: [
+          rawShakeEvent(eventId: 'EXISTING-SHAKE', serialNo: 1),
+          rawShakeEvent(eventId: 'NEW-SHAKE', serialNo: 1),
+        ],
+      ),
+      source: RealtimeSource.eqmonitor,
+    );
+    fixture.realtime.add(raw);
+    await fixture.settle();
+    fixture.realtime.add(raw);
+    await fixture.settle();
+
+    expect(fixture.events.map((envelope) => envelope.event), [
+      const LiveMonitorDetectedEvent.shakeDetected(
+        eventId: 'NEW-SHAKE',
+        serialNo: 1,
+      ),
+    ]);
   });
 
   test('初期EEWがnullの後にRESTで取得した既存EEWは発行しない', () async {
@@ -311,7 +429,7 @@ void main() {
     await initialization;
   });
 
-  test('初期揺れ検知がnullでもslow detail中のrevision 0を一度発行する', () async {
+  test('初期揺れ検知がnullの初回raw fullは全visible eventをbaselineにする', () async {
     final initialDetail = Completer<Earthquake>();
     final fixture = createFixture(
       shakeSnapshot: null,
@@ -329,6 +447,7 @@ void main() {
         record: rawShakeSnapshot(
           revision: 0,
           events: [
+            rawShakeEvent(eventId: 'EXISTING-SHAKE', serialNo: 1),
             rawShakeEvent(eventId: 'NEW-SHAKE', serialNo: 1),
             rawShakeEvent(eventId: 'CORRELATED-SHAKE', serialNo: 1),
             rawShakeEvent(eventId: 'EXPIRED-SHAKE', serialNo: 1),
@@ -340,6 +459,7 @@ void main() {
     final firstSnapshot = snapshot(
       revision: 0,
       events: [
+        shakeEvent(eventId: 'EXISTING-SHAKE', serialNo: 1),
         shakeEvent(eventId: 'NEW-SHAKE', serialNo: 1),
         shakeEvent(
           eventId: 'CORRELATED-SHAKE',
@@ -354,12 +474,7 @@ void main() {
     fixture.shake.publish(firstSnapshot);
     await fixture.settle();
 
-    expect(fixture.events.map((envelope) => envelope.event), [
-      const LiveMonitorDetectedEvent.shakeDetected(
-        eventId: 'NEW-SHAKE',
-        serialNo: 1,
-      ),
-    ]);
+    expect(fixture.events, isEmpty);
 
     initialDetail.complete(earthquake(eventId: 'Q'));
     await initialization;
@@ -1673,6 +1788,33 @@ _DetectedEventFixture createFixture({
     pageStore: pageStore,
     detailStore: detailStore,
     events: events,
+  );
+}
+
+_IntegratedCanonicalFixture createIntegratedCanonicalFixture() {
+  final realtime = StreamController<RealtimeEvent>.broadcast(sync: true);
+  addTearDown(realtime.close);
+  final pendingEewRest = Completer<List<EewTelegramItem>>();
+  final pageStore = _PageStore(emptyPage());
+  final lifecycle = _MutableLifecycle();
+  final container = ProviderContainer(
+    overrides: [
+      realtimeEventsProvider.overrideWith(
+        () => _StubRealtimeEvents(realtime.stream),
+      ),
+      eewRestProvider.overrideWith((ref) => pendingEewRest.future),
+      appLifecycleProvider.overrideWith(() => lifecycle),
+      appClockProvider.overrideWith(_FixedAppClock.new),
+      liveMonitorSettingsProvider.overrideWith(_StaticSettings.new),
+      earthquakeHistoryProvider(
+        liveMonitorLatestParameter,
+      ).overrideWith(() => _StubHistoryNotifier(pageStore)),
+    ],
+  );
+  return _IntegratedCanonicalFixture(
+    container: container,
+    realtime: realtime,
+    events: [],
   );
 }
 
