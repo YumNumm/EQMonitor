@@ -13,7 +13,6 @@ import 'package:eqmonitor/feature/devices/data/provider/notification_token_strea
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
-import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
@@ -567,10 +566,10 @@ class _ParameterDebugSection extends HookConsumerWidget {
           ),
           AsyncData(:final value) => Column(
             children: [
-              for (final item in value.manifest.parameters)
+              for (final item in value.manifest.assets)
                 ListTile(
                   dense: true,
-                  title: Text(item.type.pathSegment),
+                  title: Text(item.id.name),
                   subtitle: Text(
                     'ver: ${item.sourceVersion}  updated: ${item.sourceUpdatedAt}\n'
                     'sha256: ${item.sha256.substring(0, 8)}…',

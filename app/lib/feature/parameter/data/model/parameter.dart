@@ -1,6 +1,5 @@
 export 'common/parameter_common.dart';
 export 'common/parameter_json_converters.dart';
-export 'common/parameter_manifest.dart';
 export 'common/parameter_metadata.dart';
 export 'common/parameter_set.dart';
 export 'common/parameter_type.dart';

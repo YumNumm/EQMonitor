@@ -57,4 +57,4 @@ final class ParameterAssetDataSourceProvider
 }
 
 String _$parameterAssetDataSourceHash() =>
-    r'09a70d25b33baf8510574fe3298ed9d7f9b3da2a';
+    r'fee2277d691ae6ae242226ee5d1fd4c6a321879a';

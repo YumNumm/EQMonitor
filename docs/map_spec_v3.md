@@ -11,7 +11,7 @@
 | 項目 | 値 |
 |------|-----|
 | ライブラリ | MapLibre GL (flutter-maplibre 0.3.x) |
-| タイルソース | iOS/Android: 旧 `https://v2.map.eqmonitor.app/all.pmtiles` と同じ内容を同梱し、`pmtiles://file://...`（`assets_util` で解決した絶対パス）で参照。macOS/Web: `pmtiles://https://v2.map.eqmonitor.app/all.pmtiles` (ベクタータイル) |
+| タイルソース | iOS/Android: Asset Pack（iOS Background Assets / Android Play Asset Delivery）で配布された `all.pmtiles` を、`pmtiles://file://...`（`assets_util` で解決した絶対パス）で参照。macOS: 同内容をネイティブ同梱（アプリバンドル内）し、同じく `pmtiles://file://...` で参照。Web: 地図機能は廃止（未サポート）。旧 `https://v2.map.eqmonitor.app/all.pmtiles` によるベース地図配信は停止済み |
 | スタイル | ローカルファイルに書き出して参照 (ダーク/ライト別) |
 | グリフ | `https://glyphs.geolonia.com/{fontstack}/{range}.pbf` |
 

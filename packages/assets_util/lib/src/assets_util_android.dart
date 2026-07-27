@@ -1,4 +1,5 @@
 import 'package:assets_util/src/android/assets_util_jni.g.dart' as jni;
+import 'package:assets_util/src/asset_pack_not_ready_exception.dart';
 import 'package:jni/jni.dart';
 import 'package:jni_flutter/jni_flutter.dart';
 
@@ -20,6 +21,24 @@ class AssetsUtilAndroid {
       return jPath.toDartString(releaseOriginal: true);
     } finally {
       jFileName.release();
+      context.release();
+    }
+  }
+
+  static Future<String> resolvePackRoot({required String packName}) async {
+    final context = androidApplicationContext.as(jni.Context.type);
+    final jPackName = packName.toJString();
+    try {
+      final jPath = jni.AssetsUtil.resolvePackRoot(context, jPackName);
+      if (jPath == null) {
+        throw AssetPackNotReadyException(
+          'Asset Pack ($packName) is not available locally yet '
+          '(Play Asset Delivery install-time pack not delivered).',
+        );
+      }
+      return jPath.toDartString(releaseOriginal: true);
+    } finally {
+      jPackName.release();
       context.release();
     }
   }

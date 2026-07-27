@@ -31,6 +31,8 @@ android {
     compileSdk = 36
     ndkVersion = "29.0.14206865"
 
+    assetPacks += setOf(":assetpacks:eqmonitor_assets")
+
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
@@ -44,7 +46,6 @@ android {
     sourceSets {
         getByName("main") {
             java.srcDirs("src/main/kotlin")
-            assets.srcDir("../../assets/platform")
         }
     }
 
