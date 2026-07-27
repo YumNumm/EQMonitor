@@ -103,29 +103,29 @@ Map<String, Object?> _parameterJson(String type) => switch (type) {
   'JMA_CODE_TABLE' => {
     'metadata': _metadataJson(type),
     'code_tables': {
-      'area_forecast_local_eew': <Object?>[],
-      'area_information_prefecture_earthquake': <Object?>[],
-      'area_information_city': <Object?>[],
-      'area_epicenter': <Object?>[],
-      'area_epicenter_abbreviation': <Object?>[],
-      'area_epicenter_detail': <Object?>[],
+      'area_forecast_local_eew': <Map<String, dynamic>>[],
+      'area_information_prefecture_earthquake': <Map<String, dynamic>>[],
+      'area_information_city': <Map<String, dynamic>>[],
+      'area_epicenter': <Map<String, dynamic>>[],
+      'area_epicenter_abbreviation': <Map<String, dynamic>>[],
+      'area_epicenter_detail': <Map<String, dynamic>>[],
     },
   },
   'KYOSHIN_OBSERVATION_POINTS' => {
     'metadata': _metadataJson(type),
-    'points': <Object?>[],
+    'points': <Map<String, dynamic>>[],
   },
   'EARTHQUAKE_STATIONS' => {
     'metadata': _metadataJson(type),
-    'prefectures': <Object?>[],
+    'prefectures': <Map<String, dynamic>>[],
   },
   'TSUNAMI_STATIONS' => {
     'metadata': _metadataJson(type),
-    'prefectures': <Object?>[],
+    'prefectures': <Map<String, dynamic>>[],
   },
   'SHINDO_DB_STATIONS' => {
     'metadata': _metadataJson(type),
-    'stations': <Object?>[],
+    'stations': <Map<String, dynamic>>[],
   },
   _ => throw StateError('Unexpected parameter type: $type'),
 };
