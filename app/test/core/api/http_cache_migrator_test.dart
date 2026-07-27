@@ -16,7 +16,7 @@ void main() {
     addTearDown(db.close);
     final store = HttpCacheStore(db: db, schemaVersion: 1, appBuild: 'test');
     await store.write(_entry('old'));
-    SharedPreferences.setMockInitialValues(<String, Object>{});
+    SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     final dataSource = SharedPreferencesDataSource(sharedPreferences: prefs);
 
@@ -54,7 +54,7 @@ void main() {
   });
 
   test('削除失敗時はversionを保存しない', () async {
-    SharedPreferences.setMockInitialValues(<String, Object>{});
+    SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
 
     await expectLater(

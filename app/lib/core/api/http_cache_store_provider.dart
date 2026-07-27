@@ -23,7 +23,7 @@ Future<HttpCacheStore> httpCacheStore(Ref ref) async {
       clearCache: store.clearAll,
       dataSource: dataSource,
     ).migrate();
-  } on Object {
+  } catch (_) {
     await db.close();
     rethrow;
   }
