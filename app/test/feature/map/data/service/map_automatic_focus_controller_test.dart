@@ -126,6 +126,108 @@ void main() {
         expect(target, isNull);
       }
     });
+
+    test('南端緯度が北端緯度を超えるboundsはtargetを作らない', () {
+      final target = mapAutomaticFocusTargetForBounds(
+        bounds: const LngLatBounds(
+          longitudeWest: 139,
+          longitudeEast: 140,
+          latitudeSouth: 36,
+          latitudeNorth: 35,
+        ),
+        viewportSize: const Size(375, 667),
+        padding: EdgeInsets.zero,
+      );
+
+      expect(target, isNull);
+    });
+
+    for (final (:name, :invalidBounds) in [
+      (
+        name: '南端緯度が-90未満',
+        invalidBounds: const LngLatBounds(
+          longitudeWest: 139,
+          longitudeEast: 140,
+          latitudeSouth: -90.1,
+          latitudeNorth: 35,
+        ),
+      ),
+      (
+        name: '北端緯度が90超',
+        invalidBounds: const LngLatBounds(
+          longitudeWest: 139,
+          longitudeEast: 140,
+          latitudeSouth: 35,
+          latitudeNorth: 90.1,
+        ),
+      ),
+    ]) {
+      test('$nameのboundsはtargetを作らない', () {
+        final target = mapAutomaticFocusTargetForBounds(
+          bounds: invalidBounds,
+          viewportSize: const Size(375, 667),
+          padding: EdgeInsets.zero,
+        );
+
+        expect(target, isNull);
+      });
+    }
+
+    for (final (:name, :invalidBounds) in [
+      (
+        name: '西端経度が-180未満',
+        invalidBounds: const LngLatBounds(
+          longitudeWest: -180.1,
+          longitudeEast: 140,
+          latitudeSouth: 35,
+          latitudeNorth: 36,
+        ),
+      ),
+      (
+        name: '東端経度が180超',
+        invalidBounds: const LngLatBounds(
+          longitudeWest: 139,
+          longitudeEast: 180.1,
+          latitudeSouth: 35,
+          latitudeNorth: 36,
+        ),
+      ),
+      (
+        name: '経度が非有限',
+        invalidBounds: const LngLatBounds(
+          longitudeWest: 139,
+          longitudeEast: double.nan,
+          latitudeSouth: 35,
+          latitudeNorth: 36,
+        ),
+      ),
+    ]) {
+      test('$nameのboundsはtargetを作らない', () {
+        final target = mapAutomaticFocusTargetForBounds(
+          bounds: invalidBounds,
+          viewportSize: const Size(375, 667),
+          padding: EdgeInsets.zero,
+        );
+
+        expect(target, isNull);
+      });
+    }
+
+    test('日付変更線を横断する有効boundsはtargetを作る', () {
+      final target = mapAutomaticFocusTargetForBounds(
+        bounds: const LngLatBounds(
+          longitudeWest: 170,
+          longitudeEast: -170,
+          latitudeSouth: 35,
+          latitudeNorth: 36,
+        ),
+        viewportSize: const Size(375, 667),
+        padding: EdgeInsets.zero,
+      );
+
+      expect(target, isNotNull);
+      expect(target?.center.lon, 180);
+    });
   });
 
   group('MapAutomaticFocusController', () {
@@ -230,6 +332,101 @@ void main() {
 
         expect(result, isFalse);
       }
+      verifyNoMoreInteractions(controller);
+    });
+
+    for (final (:name, :invalidBounds) in [
+      (
+        name: '南北緯度が逆転した',
+        invalidBounds: const LngLatBounds(
+          longitudeWest: 139,
+          longitudeEast: 140,
+          latitudeSouth: 36,
+          latitudeNorth: 35,
+        ),
+      ),
+      (
+        name: '緯度が範囲外の',
+        invalidBounds: const LngLatBounds(
+          longitudeWest: 139,
+          longitudeEast: 140,
+          latitudeSouth: -91,
+          latitudeNorth: 35,
+        ),
+      ),
+      (
+        name: '経度が範囲外の',
+        invalidBounds: const LngLatBounds(
+          longitudeWest: 139,
+          longitudeEast: 181,
+          latitudeSouth: 35,
+          latitudeNorth: 36,
+        ),
+      ),
+      (
+        name: '経度が非有限の',
+        invalidBounds: const LngLatBounds(
+          longitudeWest: double.infinity,
+          longitudeEast: 140,
+          latitudeSouth: 35,
+          latitudeNorth: 36,
+        ),
+      ),
+    ]) {
+      test('$name boundsではcamera命令を出さない', () async {
+        final controller = MockMapController();
+
+        final result = await const MapAutomaticFocusController().fit(
+          controller: controller,
+          bounds: invalidBounds,
+          viewportSize: const Size(375, 667),
+          isCurrent: () => true,
+        );
+
+        expect(result, isFalse);
+        verifyNoMoreInteractions(controller);
+      });
+    }
+
+    test('日付変更線を横断する有効boundsではcamera命令を出す', () async {
+      final controller = MockMapController();
+      when(
+        controller.animateCamera(
+          center: anyNamed('center'),
+          zoom: anyNamed('zoom'),
+          bearing: anyNamed('bearing'),
+          pitch: anyNamed('pitch'),
+          nativeDuration: anyNamed('nativeDuration'),
+          webSpeed: anyNamed('webSpeed'),
+          webMaxDuration: anyNamed('webMaxDuration'),
+          padding: anyNamed('padding'),
+        ),
+      ).thenAnswer((_) async {});
+
+      final result = await const MapAutomaticFocusController().fit(
+        controller: controller,
+        bounds: const LngLatBounds(
+          longitudeWest: 170,
+          longitudeEast: -170,
+          latitudeSouth: 35,
+          latitudeNorth: 36,
+        ),
+        viewportSize: const Size(375, 667),
+        isCurrent: () => true,
+      );
+
+      expect(result, isTrue);
+      final center =
+          verify(
+                controller.animateCamera(
+                  center: captureAnyNamed('center'),
+                  zoom: anyNamed('zoom'),
+                  bearing: 0,
+                  pitch: 0,
+                ),
+              ).captured.single
+              as Geographic;
+      expect(center.lon, 180);
       verifyNoMoreInteractions(controller);
     });
 

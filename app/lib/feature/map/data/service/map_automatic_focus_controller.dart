@@ -19,7 +19,21 @@ MapAutomaticFocusTarget? mapAutomaticFocusTargetForBounds({
   if (!width.isFinite || !height.isFinite || width <= 0 || height <= 0) {
     return null;
   }
-  if (!bounds.latitudeSouth.isFinite || !bounds.latitudeNorth.isFinite) {
+  if (!bounds.latitudeSouth.isFinite ||
+      !bounds.latitudeNorth.isFinite ||
+      !bounds.longitudeWest.isFinite ||
+      !bounds.longitudeEast.isFinite) {
+    return null;
+  }
+  if (bounds.latitudeSouth < -90 ||
+      bounds.latitudeSouth > 90 ||
+      bounds.latitudeNorth < -90 ||
+      bounds.latitudeNorth > 90 ||
+      bounds.longitudeWest < -180 ||
+      bounds.longitudeWest > 180 ||
+      bounds.longitudeEast < -180 ||
+      bounds.longitudeEast > 180 ||
+      bounds.latitudeSouth > bounds.latitudeNorth) {
     return null;
   }
 
