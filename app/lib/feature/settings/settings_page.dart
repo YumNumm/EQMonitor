@@ -9,6 +9,7 @@ import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
+import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_manifest_provider.dart';
 import 'package:eqmonitor/feature/eew/data/notifier/eew_warning_overlay_enabled_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/notifier/eew_warning_overlay_simulation_notifier.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -181,6 +182,7 @@ class SettingsPage extends ConsumerWidget {
                     ),
                   ),
                 ),
+                const _AssetPackVersionInformation(),
                 if (isDebugEnabled ?? false) ...[
                   Center(
                     child: Text(
@@ -203,6 +205,38 @@ class SettingsPage extends ConsumerWidget {
           ),
           const AdBanner(),
         ],
+      ),
+    );
+  }
+}
+
+class _AssetPackVersionInformation extends ConsumerWidget {
+  const _AssetPackVersionInformation();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final manifestAsync = ref.watch(assetPackManifestProvider);
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
+    final text = switch (manifestAsync) {
+      AsyncData(:final value) => 'Asset Pack v${value.packVersion}',
+      AsyncError() => 'Asset Pack: 未取得',
+      _ => 'Asset Pack: 確認中…',
+    };
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Text(
+          text,
+          style: textTheme.bodySmall!.copyWith(
+            color: context.designSystem.colorTheme.onSurface.withValues(
+              alpha: 0.8,
+            ),
+          ),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
