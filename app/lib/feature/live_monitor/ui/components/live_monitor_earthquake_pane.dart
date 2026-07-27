@@ -68,9 +68,8 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
       fallbackBounds: homeBounds,
       obscuredBottom: cardHeight.value,
     );
-    final displayMode = preferredIntensityMode(
+    final presentation = LiveMonitorEarthquakePresentation.forSplit(
       earthquake: earthquake,
-      trigger: null,
     );
     final now = ref.read(appClockProvider.notifier).now();
 
@@ -86,7 +85,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
                 layers: [
                   LiveMonitorEarthquakeLayers(
                     earthquake: earthquake,
-                    displayMode: displayMode,
+                    displayMode: presentation.displayMode,
                   ),
                 ],
               ),
@@ -96,7 +95,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
                 minimum: const EdgeInsets.all(8),
                 child: LiveMonitorEarthquakeCard(
                   earthquake: earthquake,
-                  trigger: null,
+                  presentation: presentation,
                   compact: false,
                   now: now,
                   maximumHeight: constraints.maxHeight * 0.5,

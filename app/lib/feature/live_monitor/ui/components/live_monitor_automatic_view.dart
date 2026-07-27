@@ -55,10 +55,10 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
         <Widget>[
           LiveMonitorEarthquakeLayers(
             earthquake: earthquake,
-            displayMode: preferredIntensityMode(
+            displayMode: LiveMonitorEarthquakePresentation.forTrigger(
               earthquake: earthquake,
               trigger: trigger,
-            ),
+            ).displayMode,
           ),
         ],
         const LiveMonitorMapFocusBuilder().forEarthquake(
@@ -86,7 +86,10 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
           ) =>
             LiveMonitorEarthquakeCard(
               earthquake: earthquake,
-              trigger: trigger,
+              presentation: LiveMonitorEarthquakePresentation.forTrigger(
+                earthquake: earthquake,
+                trigger: trigger,
+              ),
               compact: true,
               now: now,
               maximumHeight: maximumCardHeight,

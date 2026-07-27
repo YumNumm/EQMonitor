@@ -18,7 +18,7 @@ import 'package:intl/intl.dart';
 class LiveMonitorEarthquakeCard extends ConsumerWidget {
   const LiveMonitorEarthquakeCard({
     required this.earthquake,
-    required this.trigger,
+    required this.presentation,
     required this.compact,
     required this.now,
     this.maximumHeight,
@@ -27,7 +27,7 @@ class LiveMonitorEarthquakeCard extends ConsumerWidget {
   });
 
   final Earthquake earthquake;
-  final LiveMonitorEarthquakeTrigger? trigger;
+  final LiveMonitorEarthquakePresentation presentation;
   final bool compact;
   final DateTime now;
   final double? maximumHeight;
@@ -36,13 +36,9 @@ class LiveMonitorEarthquakeCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tickerNow = ref.watch(timeTickerProvider()).value ?? now;
-    final effectiveTrigger =
-        trigger ?? latestSupportedTelegramTrigger(earthquake);
-    final displayMode = preferredIntensityMode(
-      earthquake: earthquake,
-      trigger: effectiveTrigger,
-    );
-    final latestPublication = latestSupportedTelegramTrigger(earthquake);
+    final effectiveTrigger = presentation.trigger;
+    final displayMode = presentation.displayMode;
+    final latestPublication = presentation.latestPublication;
     final publicationAt = switch ((latestPublication, effectiveTrigger)) {
       (LiveMonitorTelegramTrigger(:final reportedAt), _) => reportedAt,
       (_, LiveMonitorTelegramTrigger(:final reportedAt)) => reportedAt,
@@ -74,7 +70,7 @@ class LiveMonitorEarthquakeCard extends ConsumerWidget {
       LiveMonitorEstimatedIntensityTrigger() => null,
       null => null,
     };
-    final generatedAt = switch (trigger) {
+    final generatedAt = switch (effectiveTrigger) {
       LiveMonitorEstimatedIntensityTrigger(:final generatedAt) => generatedAt,
       _ => null,
     };

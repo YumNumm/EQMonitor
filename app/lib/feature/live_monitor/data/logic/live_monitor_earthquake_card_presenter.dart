@@ -7,6 +7,38 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 
+final class LiveMonitorEarthquakePresentation {
+  const LiveMonitorEarthquakePresentation._({
+    required this.displayMode,
+    required this.trigger,
+    required this.latestPublication,
+  });
+
+  factory LiveMonitorEarthquakePresentation.forSplit({
+    required Earthquake earthquake,
+  }) => LiveMonitorEarthquakePresentation._(
+    displayMode: preferredIntensityMode(earthquake: earthquake, trigger: null),
+    trigger: null,
+    latestPublication: latestSupportedTelegramTrigger(earthquake),
+  );
+
+  factory LiveMonitorEarthquakePresentation.forTrigger({
+    required Earthquake earthquake,
+    required LiveMonitorEarthquakeTrigger trigger,
+  }) => LiveMonitorEarthquakePresentation._(
+    displayMode: preferredIntensityMode(
+      earthquake: earthquake,
+      trigger: trigger,
+    ),
+    trigger: trigger,
+    latestPublication: latestSupportedTelegramTrigger(earthquake),
+  );
+
+  final IntensityDisplayMode displayMode;
+  final LiveMonitorEarthquakeTrigger? trigger;
+  final LiveMonitorEarthquakeTrigger? latestPublication;
+}
+
 IntensityDisplayMode preferredIntensityMode({
   required Earthquake earthquake,
   required LiveMonitorEarthquakeTrigger? trigger,

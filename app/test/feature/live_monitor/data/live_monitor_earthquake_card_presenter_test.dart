@@ -186,6 +186,68 @@ void main() {
     });
   });
 
+  group('LiveMonitorEarthquakePresentation', () {
+    test('splitは推計震度URLがあればtriggerを補完せず推計震度を選ぶ', () {
+      final earthquake = _earthquake(
+        maxLpgmIntensity: JmaLpgmIntensity.two,
+        estimatedIntensityTileUrl: 'https://example.com/estimated.pmtiles',
+        telegramMetadata: [
+          EarthquakeTelegramMetadata(
+            type: EarthquakeTelegramType.vxse62,
+            reportedAt: _reportedAt,
+          ),
+        ],
+      );
+
+      final presentation = LiveMonitorEarthquakePresentation.forSplit(
+        earthquake: earthquake,
+      );
+
+      expect(presentation.displayMode, IntensityDisplayMode.estimated);
+      expect(presentation.trigger, isNull);
+      expect(
+        presentation.latestPublication,
+        LiveMonitorEarthquakeTrigger.telegram(
+          kind: LiveMonitorEarthquakeTriggerKind.vxse62,
+          reportedAt: _reportedAt,
+        ),
+      );
+    });
+
+    test('event表示はfullの最新電文で補完せず実際のtriggerを表示方針に使う', () {
+      final trigger = LiveMonitorEarthquakeTrigger.telegram(
+        kind: LiveMonitorEarthquakeTriggerKind.vxse53,
+        reportedAt: _reportedAt,
+      );
+      final latestAt = _reportedAt.add(const Duration(minutes: 1));
+      final earthquake = _earthquake(
+        maxLpgmIntensity: JmaLpgmIntensity.two,
+        estimatedIntensityTileUrl: 'https://example.com/estimated.pmtiles',
+        telegramMetadata: [
+          EarthquakeTelegramMetadata(
+            type: EarthquakeTelegramType.vxse62,
+            reportedAt: latestAt,
+          ),
+        ],
+      );
+
+      final presentation = LiveMonitorEarthquakePresentation.forTrigger(
+        earthquake: earthquake,
+        trigger: trigger,
+      );
+
+      expect(presentation.displayMode, IntensityDisplayMode.jma);
+      expect(presentation.trigger, trigger);
+      expect(
+        presentation.latestPublication,
+        LiveMonitorEarthquakeTrigger.telegram(
+          kind: LiveMonitorEarthquakeTriggerKind.vxse62,
+          reportedAt: latestAt,
+        ),
+      );
+    });
+  });
+
   test('maximumIntensityRegionsは最大震度階級の地域だけを元の順序で返す', () {
     final earthquake = _earthquake(
       regions: {
