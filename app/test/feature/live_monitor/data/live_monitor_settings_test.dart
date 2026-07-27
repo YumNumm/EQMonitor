@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
@@ -92,4 +93,53 @@ void main() {
       },
     );
   });
+
+  test('同時に異なるfieldを更新しても両方を保持する', () async {
+    final notifier = _DelayedSaveSettingsNotifier();
+    final container = ProviderContainer(
+      overrides: [liveMonitorSettingsProvider.overrideWith(() => notifier)],
+    );
+    addTearDown(container.dispose);
+    await container.read(liveMonitorSettingsProvider.future);
+
+    final displayModeUpdate = notifier.updateSettings(
+      transform: (current) =>
+          current.copyWith(displayMode: LiveMonitorDisplayMode.split),
+    );
+    await notifier.firstSaveStarted.future;
+    final wakeLockUpdate = notifier.updateSettings(
+      transform: (current) => current.copyWith(keepScreenAwake: false),
+    );
+
+    expect(notifier.saveCount, 1);
+    notifier.releaseFirstSave.complete();
+    await Future.wait([displayModeUpdate, wakeLockUpdate]);
+
+    expect(
+      container.read(liveMonitorSettingsProvider).value,
+      const LiveMonitorSettings(
+        displayMode: LiveMonitorDisplayMode.split,
+        keepScreenAwake: false,
+      ),
+    );
+  });
+}
+
+final class _DelayedSaveSettingsNotifier extends LiveMonitorSettingsNotifier {
+  final firstSaveStarted = Completer<void>();
+  final releaseFirstSave = Completer<void>();
+  var saveCount = 0;
+
+  @override
+  Future<LiveMonitorSettings> build() async => const LiveMonitorSettings();
+
+  @override
+  Future<void> save(LiveMonitorSettings settings) async {
+    saveCount++;
+    if (saveCount == 1) {
+      firstSaveStarted.complete();
+      await releaseFirstSave.future;
+    }
+    state = AsyncData(settings);
+  }
 }

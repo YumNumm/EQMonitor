@@ -25,6 +25,7 @@ LiveMonitorSettings normalizeLiveMonitorSettings(LiveMonitorSettings settings) {
 @riverpod
 class LiveMonitorSettingsNotifier extends _$LiveMonitorSettingsNotifier {
   static final saveMutation = Mutation<void>();
+  Future<void> _settingsUpdateQueue = Future.value();
 
   @override
   Future<LiveMonitorSettings> build() async {
@@ -71,5 +72,20 @@ class LiveMonitorSettingsNotifier extends _$LiveMonitorSettingsNotifier {
       value: jsonEncode(normalized.toJson()),
     );
     state = AsyncData(normalized);
+  }
+
+  Future<void> updateSettings({
+    required LiveMonitorSettings Function(LiveMonitorSettings current)
+    transform,
+  }) {
+    final operation = _settingsUpdateQueue.then((_) async {
+      final current = state.value;
+      if (current == null) {
+        throw StateError('LiveMonitor settings are not loaded');
+      }
+      await save(transform(current));
+    });
+    _settingsUpdateQueue = operation.catchError((_) {});
+    return operation;
   }
 }

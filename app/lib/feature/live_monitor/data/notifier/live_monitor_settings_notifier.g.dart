@@ -40,7 +40,7 @@ final class LiveMonitorSettingsNotifierProvider
 }
 
 String _$liveMonitorSettingsNotifierHash() =>
-    r'a84e464ab3cab8083ef45e12c1fc1419c64c4c88';
+    r'0ea8690bbe6831dbeaaa26228f1f4ec2f3432b48';
 
 abstract class _$LiveMonitorSettingsNotifier
     extends $AsyncNotifier<LiveMonitorSettings> {

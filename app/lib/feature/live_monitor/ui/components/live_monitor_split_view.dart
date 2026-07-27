@@ -40,11 +40,13 @@ class LiveMonitorSplitView extends HookConsumerWidget {
     final Future<void> Function() saveRatio = () async {
       final ratio = localRatio.value;
       await LiveMonitorSettingsNotifier.saveMutation.run(ref, (tsx) async {
-        final current = await tsx.get(liveMonitorSettingsProvider.future);
-        final updated = isPortrait
-            ? current.copyWith(portraitRealtimeRatio: ratio)
-            : current.copyWith(landscapeRealtimeRatio: ratio);
-        await tsx.get(liveMonitorSettingsProvider.notifier).save(updated);
+        await tsx
+            .get(liveMonitorSettingsProvider.notifier)
+            .updateSettings(
+              transform: (current) => isPortrait
+                  ? current.copyWith(portraitRealtimeRatio: ratio)
+                  : current.copyWith(landscapeRealtimeRatio: ratio),
+            );
       });
     };
 
