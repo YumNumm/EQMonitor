@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_lp
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_summary_header.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_earthquake_card_presenter.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
+import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_measured_card_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +21,8 @@ class LiveMonitorEarthquakeCard extends ConsumerWidget {
     required this.trigger,
     required this.compact,
     required this.now,
+    this.maximumHeight,
+    this.onHeightChanged,
     super.key,
   });
 
@@ -27,6 +30,8 @@ class LiveMonitorEarthquakeCard extends ConsumerWidget {
   final LiveMonitorEarthquakeTrigger? trigger;
   final bool compact;
   final DateTime now;
+  final double? maximumHeight;
+  final ValueChanged<double>? onHeightChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -124,32 +129,42 @@ class LiveMonitorEarthquakeCard extends ConsumerWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final maximumHeight = compact && constraints.hasBoundedHeight
-            ? constraints.maxHeight * 0.5
-            : constraints.maxHeight;
-        return Align(
-          alignment: Alignment.bottomCenter,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: maximumHeight),
-            child: Card(
-              margin: EdgeInsets.zero,
-              elevation: 0,
-              clipBehavior: Clip.antiAlias,
-              color: colorTheme.surfaceContainerHigh,
-              shape: RoundedSuperellipseBorder(
-                borderRadius: BorderRadius.circular(shape.card),
-                side: BorderSide(color: colorTheme.outlineVariant),
-              ),
-              child: ListView.separated(
-                shrinkWrap: compact,
-                padding: EdgeInsets.all(spacing.sm),
-                itemCount: children.length,
-                separatorBuilder: (context, index) =>
-                    SizedBox(height: spacing.sm),
-                itemBuilder: (context, index) => children[index],
-              ),
+        final effectiveMaximumHeight =
+            maximumHeight ??
+            (compact && constraints.hasBoundedHeight
+                ? constraints.maxHeight * 0.5
+                : constraints.maxHeight);
+        final card = ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: effectiveMaximumHeight),
+          child: Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            clipBehavior: Clip.antiAlias,
+            color: colorTheme.surfaceContainerHigh,
+            shape: RoundedSuperellipseBorder(
+              borderRadius: BorderRadius.circular(shape.card),
+              side: BorderSide(color: colorTheme.outlineVariant),
+            ),
+            child: ListView.separated(
+              shrinkWrap: compact,
+              padding: EdgeInsets.all(spacing.sm),
+              itemCount: children.length,
+              separatorBuilder: (context, index) =>
+                  SizedBox(height: spacing.sm),
+              itemBuilder: (context, index) => children[index],
             ),
           ),
+        );
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: switch (onHeightChanged) {
+            final ValueChanged<double> callback =>
+              LiveMonitorMeasuredCardOverlay(
+                onHeightChanged: callback,
+                child: card,
+              ),
+            null => card,
+          },
         );
       },
     );
