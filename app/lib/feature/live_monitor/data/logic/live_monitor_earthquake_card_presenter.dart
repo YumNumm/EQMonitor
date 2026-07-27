@@ -1,8 +1,6 @@
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
@@ -10,39 +8,45 @@ import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_eve
 final class LiveMonitorEarthquakePresentation {
   const LiveMonitorEarthquakePresentation._({
     required this.displayMode,
-    required this.trigger,
-    required this.latestPublication,
+    required this.publicationAt,
   });
 
   factory LiveMonitorEarthquakePresentation.forSplit({
     required Earthquake earthquake,
-  }) => LiveMonitorEarthquakePresentation._(
-    displayMode: preferredIntensityMode(earthquake: earthquake, trigger: null),
-    trigger: null,
-    latestPublication: latestSupportedTelegramTrigger(earthquake),
-  );
+  }) {
+    final latestPublication = latestSupportedTelegramTrigger(earthquake);
+    return LiveMonitorEarthquakePresentation._(
+      displayMode: preferredIntensityMode(
+        earthquake: earthquake,
+        trigger: null,
+      ),
+      publicationAt: switch (latestPublication) {
+        LiveMonitorTelegramTrigger(:final reportedAt) => reportedAt,
+        _ => null,
+      },
+    );
+  }
 
   factory LiveMonitorEarthquakePresentation.forTrigger({
     required Earthquake earthquake,
     required LiveMonitorEarthquakeTrigger trigger,
-  }) => LiveMonitorEarthquakePresentation._(
-    displayMode: preferredIntensityMode(
-      earthquake: earthquake,
-      trigger: trigger,
-    ),
-    trigger: trigger,
-    latestPublication: latestSupportedTelegramTrigger(earthquake),
-  );
+  }) {
+    final latestPublication = latestSupportedTelegramTrigger(earthquake);
+    return LiveMonitorEarthquakePresentation._(
+      displayMode: preferredIntensityMode(
+        earthquake: earthquake,
+        trigger: trigger,
+      ),
+      publicationAt: switch ((latestPublication, trigger)) {
+        (LiveMonitorTelegramTrigger(:final reportedAt), _) => reportedAt,
+        (_, LiveMonitorTelegramTrigger(:final reportedAt)) => reportedAt,
+        _ => null,
+      },
+    );
+  }
 
   final IntensityDisplayMode displayMode;
-  final LiveMonitorEarthquakeTrigger? trigger;
-  final LiveMonitorEarthquakeTrigger? latestPublication;
-
-  DateTime? get publicationAt => switch ((latestPublication, trigger)) {
-    (LiveMonitorTelegramTrigger(:final reportedAt), _) => reportedAt,
-    (_, LiveMonitorTelegramTrigger(:final reportedAt)) => reportedAt,
-    _ => null,
-  };
+  final DateTime? publicationAt;
 }
 
 IntensityDisplayMode preferredIntensityMode({
@@ -63,38 +67,6 @@ IntensityDisplayMode preferredIntensityMode({
       IntensityDisplayMode.estimated,
     _ => IntensityDisplayMode.jma,
   };
-}
-
-List<IntensityRegion> maximumIntensityRegions(Earthquake earthquake) {
-  final intensity = earthquake.intensity;
-  if (intensity == null || intensity.regions.isEmpty) {
-    return const [];
-  }
-  final maximum = intensity.regions.keys.reduce(
-    (left, right) => left.orderIndex >= right.orderIndex ? left : right,
-  );
-  return List.unmodifiable(intensity.regions[maximum] ?? const []);
-}
-
-typedef LiveMonitorIntensityRegionGroup = ({
-  JmaIntensity intensity,
-  List<IntensityRegion> regions,
-});
-
-List<LiveMonitorIntensityRegionGroup> orderedIntensityRegions(
-  Earthquake earthquake,
-) {
-  final entries = [
-    ...?earthquake.intensity?.regions.entries,
-  ]..sort((left, right) => right.key.orderIndex.compareTo(left.key.orderIndex));
-  return List.unmodifiable(
-    entries.map(
-      (entry) => (
-        intensity: entry.key,
-        regions: List<IntensityRegion>.unmodifiable(entry.value),
-      ),
-    ),
-  );
 }
 
 LiveMonitorEarthquakeTrigger? latestSupportedTelegramTrigger(

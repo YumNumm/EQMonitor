@@ -7,8 +7,8 @@ import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_earthquak
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_map_focus_builder.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_map_focus.dart';
 import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_latest_earthquake_provider.dart';
-import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_card.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_layers.dart';
+import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_overlay.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_map_host.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -19,7 +19,8 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cardHeight = useState(0.0);
+    final topCardHeight = useState(0.0);
+    final bottomCardHeight = useState(0.0);
     final latest = ref.watch(liveMonitorLatestEarthquakeProvider);
     final earthquake = latest.valueOrPrevious;
     if (earthquake == null) {
@@ -66,71 +67,68 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
     final focus = const LiveMonitorMapFocusBuilder().forEarthquake(
       earthquake: earthquake,
       fallbackBounds: homeBounds,
-      obscuredTop: 0,
-      obscuredBottom: cardHeight.value,
+      obscuredTop: topCardHeight.value,
+      obscuredBottom: bottomCardHeight.value,
     );
     final presentation = LiveMonitorEarthquakePresentation.forSplit(
       earthquake: earthquake,
     );
     final now = ref.read(appClockProvider.notifier).now();
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Stack(
-          children: [
-            Positioned.fill(
-              child: LiveMonitorMapHost(
-                key: const ValueKey('live-monitor-earthquake-map'),
-                slotId: 'earthquakeSplit',
-                focus: focus,
-                layers: [
-                  LiveMonitorEarthquakeLayers(
-                    earthquake: earthquake,
-                    displayMode: presentation.displayMode,
-                  ),
-                ],
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: LiveMonitorMapHost(
+            key: const ValueKey('live-monitor-earthquake-map'),
+            slotId: 'earthquakeSplit',
+            focus: focus,
+            layers: [
+              LiveMonitorEarthquakeLayers(
+                earthquake: earthquake,
+                displayMode: presentation.displayMode,
               ),
+            ],
+          ),
+        ),
+        Positioned.fill(
+          child: SafeArea(
+            minimum: const EdgeInsets.all(8),
+            child: LiveMonitorEarthquakeOverlay(
+              earthquake: earthquake,
+              presentation: presentation,
+              initialNow: now,
+              onTopHeightChanged: (height) {
+                topCardHeight.value = height;
+              },
+              onBottomHeightChanged: (height) {
+                bottomCardHeight.value = height;
+              },
             ),
-            Positioned.fill(
+          ),
+        ),
+        if (latest.hasError)
+          Positioned.fill(
+            child: IgnorePointer(
               child: SafeArea(
                 minimum: const EdgeInsets.all(8),
-                child: LiveMonitorEarthquakeCard(
-                  earthquake: earthquake,
-                  presentation: presentation,
-                  compact: false,
-                  now: now,
-                  maximumHeight: constraints.maxHeight * 0.5,
-                  onHeightChanged: (height) {
-                    cardHeight.value = height;
-                  },
-                ),
-              ),
-            ),
-            if (latest.hasError)
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: SafeArea(
-                    minimum: const EdgeInsets.all(8),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Material(
-                        color: Theme.of(context).colorScheme.errorContainer,
-                        borderRadius: BorderRadius.circular(20),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          child: Text('更新に失敗しました'),
-                        ),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Material(
+                    color: Theme.of(context).colorScheme.errorContainer,
+                    borderRadius: BorderRadius.circular(20),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
                       ),
+                      child: Text('更新に失敗しました'),
                     ),
                   ),
                 ),
               ),
-          ],
-        );
-      },
+            ),
+          ),
+      ],
     );
   }
 }

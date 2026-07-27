@@ -237,49 +237,47 @@ class LiveMonitorPage extends HookConsumerWidget {
         body: Stack(
           children: [
             Positioned.fill(
-              child: SafeArea(
-                child: Listener(
-                  behavior: HitTestBehavior.translucent,
-                  onPointerDown: (event) {
-                    if (settings == null || panelOpen) {
-                      tapTracker.cancelAll();
-                      return;
-                    }
-                    tapTracker.pointerDown(
-                      pointer: event.pointer,
-                      position: event.position,
-                    );
-                  },
-                  onPointerMove: (event) {
-                    tapTracker.pointerMove(
-                      pointer: event.pointer,
-                      position: event.position,
-                    );
-                  },
-                  onPointerUp: (event) {
-                    final isTap = tapTracker.pointerUp(
-                      pointer: event.pointer,
-                      position: event.position,
-                    );
-                    tapTracker.scheduleSingleTap(
-                      isTap: isTap,
-                      delay: kDoubleTapTimeout,
-                      onTap: () {
-                        if (context.mounted &&
-                            settings != null &&
-                            !ref.read(liveMonitorControlPanelProvider)) {
-                          ref
-                              .read(liveMonitorControlPanelProvider.notifier)
-                              .open();
-                        }
-                      },
-                    );
-                  },
-                  onPointerCancel: (event) {
-                    tapTracker.pointerCancel(pointer: event.pointer);
-                  },
-                  child: body,
-                ),
+              child: Listener(
+                behavior: HitTestBehavior.translucent,
+                onPointerDown: (event) {
+                  if (settings == null || panelOpen) {
+                    tapTracker.cancelAll();
+                    return;
+                  }
+                  tapTracker.pointerDown(
+                    pointer: event.pointer,
+                    position: event.position,
+                  );
+                },
+                onPointerMove: (event) {
+                  tapTracker.pointerMove(
+                    pointer: event.pointer,
+                    position: event.position,
+                  );
+                },
+                onPointerUp: (event) {
+                  final isTap = tapTracker.pointerUp(
+                    pointer: event.pointer,
+                    position: event.position,
+                  );
+                  tapTracker.scheduleSingleTap(
+                    isTap: isTap,
+                    delay: kDoubleTapTimeout,
+                    onTap: () {
+                      if (context.mounted &&
+                          settings != null &&
+                          !ref.read(liveMonitorControlPanelProvider)) {
+                        ref
+                            .read(liveMonitorControlPanelProvider.notifier)
+                            .open();
+                      }
+                    },
+                  );
+                },
+                onPointerCancel: (event) {
+                  tapTracker.pointerCancel(pointer: event.pointer);
+                },
+                child: body,
               ),
             ),
             const Positioned.fill(child: LiveMonitorConnectionBanner()),
