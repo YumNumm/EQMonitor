@@ -54,3 +54,7 @@ moves the `backgroundAssetVersion` through:
 `COMPLETE`. Older guessed names (`READY_FOR_TESTING`, `PROCESSING_COMPLETE`)
 remain as additional allow-list entries.
 
+## 手動フォールバック
+
+自動アップロードが失敗した場合は [Upload Apple-hosted asset packs](https://developer.apple.com/jp/help/app-store-connect/manage-asset-packs/upload-apple-hosted-asset-packs) のとおり Transporter へ `.aar` をドラッグ＆ドロップする。
+
