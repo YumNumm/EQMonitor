@@ -5,8 +5,8 @@ import 'dart:typed_data';
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/native.dart';
-import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
 import 'package:eqmonitor/feature/changelog/data/notifier/changelog_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
@@ -53,7 +53,7 @@ void main() {
           cacheOnlyApiClientProvider.overrideWith(
             (ref) async => api.ApiClient(cacheOnlyDio),
           ),
-          apiClientProvider.overrideWith(
+          httpCachedApiClientProvider.overrideWith(
             (ref) async => api.ApiClient(normalDio),
           ),
         ],
