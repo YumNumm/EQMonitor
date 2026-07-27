@@ -3,23 +3,27 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/data/model/home_map_bounds.dart';
 import 'package:eqmonitor/feature/home/data/model/map_camera_state.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
-import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
+import 'package:eqmonitor/feature/map/data/logic/seismic_map_focus_builder.dart';
+import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
+import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_operation_queue.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'map_camera_state_provider.g.dart';
 
-enum HomeMapCameraUpdateAction { fitToEews, returnToHome, none }
+enum HomeMapCameraUpdateAction { fitToRealtime, returnToHome, none }
 
 HomeMapCameraUpdateAction resolveHomeMapCameraUpdateAction({
-  required List<EewTelegramItem>? previous,
-  required List<EewTelegramItem> next,
+  required bool hasRealtimeTargets,
+  required bool isAtHome,
 }) {
-  if (next.isNotEmpty) {
-    return HomeMapCameraUpdateAction.fitToEews;
+  if (hasRealtimeTargets) {
+    return HomeMapCameraUpdateAction.fitToRealtime;
   }
-  if (previous != null && previous.isNotEmpty) {
+  if (!isAtHome) {
     return HomeMapCameraUpdateAction.returnToHome;
   }
   return HomeMapCameraUpdateAction.none;
@@ -28,22 +32,41 @@ HomeMapCameraUpdateAction resolveHomeMapCameraUpdateAction({
 @Riverpod(keepAlive: true)
 class HomeMapCameraState extends _$HomeMapCameraState {
   MapController? _controller;
-  var _cameraTransitionId = 0;
+  Size? _viewportSize;
+  var _cameraGeneration = 0;
+  var _isHomeFocusRequested = true;
+  var _operationQueue = MapAutomaticFocusOperationQueue();
 
   @override
   MapCameraState build() {
-    ref.listen(eewAliveTelegramProvider, (previous, next) async {
-      await _handleEewTransition(previous: previous, next: next ?? []);
+    ref.listen(eewAliveTelegramProvider, (_, _) async {
+      await _handleRealtimeTransition(
+        eews: ref.read(eewAliveTelegramProvider) ?? [],
+        shakes: ref.read(shakeDetectionVisibleProvider),
+      );
+    });
+    ref.listen(shakeDetectionVisibleProvider, (_, _) async {
+      await _handleRealtimeTransition(
+        eews: ref.read(eewAliveTelegramProvider) ?? [],
+        shakes: ref.read(shakeDetectionVisibleProvider),
+      );
     });
 
     return MapCameraState.home();
   }
 
-  Future<void> setController(MapController controller) async {
+  Future<void> setController(
+    MapController controller, {
+    required Size viewportSize,
+  }) async {
+    _cameraGeneration += 1;
     _controller = controller;
-    await _handleEewTransition(
-      previous: null,
-      next: ref.read(eewAliveTelegramProvider) ?? [],
+    _viewportSize = viewportSize;
+    _isHomeFocusRequested = true;
+    _operationQueue = MapAutomaticFocusOperationQueue();
+    await _handleRealtimeTransition(
+      eews: ref.read(eewAliveTelegramProvider) ?? [],
+      shakes: ref.read(shakeDetectionVisibleProvider),
     );
   }
 
@@ -54,127 +77,113 @@ class HomeMapCameraState extends _$HomeMapCameraState {
   /// 既に新しい controller に置き換わっている場合は何もしないため安全。
   void clearController(MapController controller) {
     if (identical(_controller, controller)) {
+      _cameraGeneration += 1;
       _controller = null;
+      _viewportSize = null;
+      _isHomeFocusRequested = true;
+      _operationQueue = MapAutomaticFocusOperationQueue();
     }
   }
 
-  Future<void> _handleEewTransition({
-    required List<EewTelegramItem>? previous,
-    required List<EewTelegramItem> next,
+  Future<void> _handleRealtimeTransition({
+    required List<EewTelegramItem> eews,
+    required List<ShakeDetectionEvent> shakes,
   }) async {
-    final transitionId = ++_cameraTransitionId;
-    switch (resolveHomeMapCameraUpdateAction(previous: previous, next: next)) {
-      case HomeMapCameraUpdateAction.fitToEews:
-        await _fitToEews(next, transitionId: transitionId);
+    final generation = ++_cameraGeneration;
+    final targets = const SeismicMapFocusBuilder().realtimeTargetCoordinates(
+      eews: eews,
+      shakes: shakes,
+    );
+    switch (resolveHomeMapCameraUpdateAction(
+      hasRealtimeTargets: targets.isNotEmpty,
+      isAtHome: _isHomeFocusRequested,
+    )) {
+      case HomeMapCameraUpdateAction.fitToRealtime:
+        await _fitToRealtime(
+          eews: eews,
+          shakes: shakes,
+          generation: generation,
+        );
         return;
       case HomeMapCameraUpdateAction.returnToHome:
-        await _returnToHome(transitionId: transitionId);
+        await _returnToHome(generation: generation);
         return;
       case HomeMapCameraUpdateAction.none:
         return;
     }
   }
 
-  bool _isStaleTransition(int transitionId) =>
-      transitionId != _cameraTransitionId;
-
-  Future<void> _fitToEews(
-    List<EewTelegramItem> eews, {
-    required int transitionId,
+  Future<void> _fitToRealtime({
+    required List<EewTelegramItem> eews,
+    required List<ShakeDetectionEvent> shakes,
+    required int generation,
   }) async {
-    if (_controller == null) {
-      return;
-    }
-
     final home = await ref.read(homeConfigurationProvider.future);
-    if (_isStaleTransition(transitionId) || _controller == null) {
+    final controller = _controller;
+    final viewportSize = _viewportSize;
+    final isCurrent = () =>
+        generation == _cameraGeneration &&
+        identical(controller, _controller) &&
+        viewportSize == _viewportSize;
+    if (controller == null || viewportSize == null || !isCurrent()) {
       return;
     }
     if (!home.eew.autoZoom) {
       return;
     }
 
-    final bounds = _calculateBounds(eews);
-    await _controller?.fitBounds(bounds: bounds);
-    if (_isStaleTransition(transitionId) || _controller == null) {
-      return;
+    _isHomeFocusRequested = false;
+    final homeBounds = lngLatBoundsForHomeMapSettings(home.map);
+    final bounds = const SeismicMapFocusBuilder().forRealtime(
+      fallbackBounds: homeBounds,
+      eews: eews,
+      shakes: shakes,
+    );
+    final completedCurrent = await _operationQueue.schedule(
+      operation: () => const MapAutomaticFocusController().fit(
+        controller: controller,
+        bounds: bounds,
+        viewportSize: viewportSize,
+        isCurrent: isCurrent,
+      ),
+    );
+    if (completedCurrent) {
+      state = state.copyWith(isAtHome: false);
     }
-    state = state.copyWith(isAtHome: false);
   }
 
-  Future<void> _returnToHome({required int transitionId}) async {
-    if (_controller == null) {
-      return;
-    }
-
+  Future<void> _returnToHome({required int generation}) async {
+    _isHomeFocusRequested = true;
     final home = await ref.read(homeConfigurationProvider.future);
-    if (_isStaleTransition(transitionId) || _controller == null) {
+    final controller = _controller;
+    final viewportSize = _viewportSize;
+    final isCurrent = () =>
+        generation == _cameraGeneration &&
+        identical(controller, _controller) &&
+        viewportSize == _viewportSize;
+    if (controller == null || viewportSize == null || !isCurrent()) {
       return;
     }
     final bounds = lngLatBoundsForHomeMapSettings(home.map);
 
-    await _controller?.fitBounds(
-      bounds: bounds,
-      nativeDuration: const Duration(milliseconds: 200),
-      bearing: 0,
-      pitch: 0,
-      padding: const EdgeInsets.all(4),
+    final completedCurrent = await _operationQueue.schedule(
+      operation: () => const MapAutomaticFocusController().fit(
+        controller: controller,
+        bounds: bounds,
+        viewportSize: viewportSize,
+        isCurrent: isCurrent,
+        nativeDuration: const Duration(milliseconds: 200),
+        bearing: 0,
+        pitch: 0,
+        padding: const EdgeInsets.all(4),
+      ),
     );
-    if (_isStaleTransition(transitionId) || _controller == null) {
-      return;
+    if (completedCurrent) {
+      state = state.copyWith(isAtHome: true);
     }
-    state = state.copyWith(isAtHome: true);
-  }
-
-  LngLatBounds _calculateBounds(List<EewTelegramItem> eews) {
-    final validEews = eews.where((e) {
-      return e.hypocenter?.latitude != null && e.hypocenter?.longitude != null;
-    }).toList();
-
-    if (validEews.isEmpty) {
-      return const LngLatBounds(
-        longitudeWest: JapanBounds.minLng,
-        longitudeEast: JapanBounds.maxLng,
-        latitudeSouth: JapanBounds.minLat,
-        latitudeNorth: JapanBounds.maxLat,
-      );
-    }
-
-    final firstHypo = validEews.first.hypocenter!;
-    var minLat = firstHypo.latitude!;
-    var maxLat = firstHypo.latitude!;
-    var minLng = firstHypo.longitude!;
-    var maxLng = firstHypo.longitude!;
-
-    for (final eew in validEews) {
-      final hypo = eew.hypocenter!;
-      final lat = hypo.latitude!;
-      final lng = hypo.longitude!;
-
-      if (lat < minLat) {
-        minLat = lat;
-      }
-      if (lat > maxLat) {
-        maxLat = lat;
-      }
-      if (lng < minLng) {
-        minLng = lng;
-      }
-      if (lng > maxLng) {
-        maxLng = lng;
-      }
-    }
-
-    const padding = 3.0;
-    return LngLatBounds(
-      longitudeWest: minLng - padding,
-      longitudeEast: maxLng + padding,
-      latitudeSouth: minLat - padding,
-      latitudeNorth: maxLat + padding,
-    );
   }
 
   Future<void> returnToHome() async {
-    await _returnToHome(transitionId: ++_cameraTransitionId);
+    await _returnToHome(generation: ++_cameraGeneration);
   }
 }

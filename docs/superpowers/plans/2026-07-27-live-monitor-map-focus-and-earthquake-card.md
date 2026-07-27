@@ -26,7 +26,7 @@
 ## File Structure
 
 - Create `app/lib/feature/map/data/logic/seismic_map_focus_builder.dart`: EEW・未結合揺れ検知の有効座標抽出と共通 realtime bounds 計算。
-- Create `app/lib/feature/map/data/service/map_automatic_focus_controller.dart`: MapLibre の `fitBounds` 後に native camera を zoom 8 以下へ補正する共通操作。
+- Create `app/lib/feature/map/data/service/map_automatic_focus_controller.dart`: actual viewport と bounds から zoom 8 以下の camera target を事前計算し、世代 guard 付きの単一 camera 操作を行う。
 - Modify `app/lib/feature/live_monitor/data/logic/live_monitor_map_focus_builder.dart`: 共通 realtime builder を利用し、地震の有感観測点と上下 padding を計算。
 - Modify `app/lib/feature/home/data/provider/map_camera_state_provider.dart`: EEW と揺れ検知の両 Provider を購読し、共通 bounds と camera 操作を使用。
 - Modify `app/lib/feature/live_monitor/ui/components/live_monitor_map_host.dart`: LiveMonitor の camera 操作を共通 auto-focus controller 経由にする。
@@ -155,93 +155,62 @@ git commit -m "feat: 地震リアルタイム表示のフォーカス計算を�
 
 **Files:**
 - Create: `app/lib/feature/map/data/service/map_automatic_focus_controller.dart`
+- Create: `app/lib/feature/map/data/service/map_automatic_focus_operation_queue.dart`
 - Create: `app/test/feature/map/data/service/map_automatic_focus_controller_test.dart`
 - Create generated: `app/test/feature/map/data/service/map_automatic_focus_controller_test.mocks.dart`
 - Modify: `app/lib/feature/home/data/provider/map_camera_state_provider.dart:1-180`
 - Modify generated: `app/lib/feature/home/data/provider/map_camera_state_provider.g.dart`
+- Modify: `app/lib/feature/home/ui/component/map/home_map_view.dart`
 - Modify: `app/lib/feature/live_monitor/ui/components/live_monitor_map_host.dart:1-90`
 - Modify: `app/test/feature/home/data/provider/map_camera_state_provider_test.dart:1-60`
 
 **Interfaces:**
 - Consumes: Task 1 の `SeismicMapFocusBuilder` と既存 `shakeDetectionVisibleProvider`。
-- Produces: `MapAutomaticFocusController.fit({required MapController controller, required LngLatBounds bounds, EdgeInsets padding, Duration nativeDuration, double? bearing, double? pitch}) -> Future<void>`、`mapAutomaticFocusMaxZoom = 8.0`、combined target 対応の `HomeMapCameraUpdateAction`。
+- Produces: `MapAutomaticFocusController.fit({required MapController controller, required LngLatBounds bounds, required Size viewportSize, required bool Function() isCurrent, EdgeInsets padding, Duration nativeDuration, double bearing = 0, double pitch = 0}) -> Future<bool>`、`mapAutomaticFocusMaxZoom = 8.0`、combined target 対応の `HomeMapCameraUpdateAction`。
 
-- [ ] **Step 1: auto zoom controller の失敗する単体テストを書く**
+- [ ] **Step 1: 事前計算 target と operation guard の失敗する単体テストを書く**
 
 ```dart
-@GenerateNiceMocks([MockSpec<MapController>()])
-void main() {
-  const bounds = LngLatBounds(
-    longitudeWest: 139,
-    longitudeEast: 140,
-    latitudeSouth: 35,
-    latitudeNorth: 36,
+test('狭いboundsでも事前計算したzoom 8のcameraを一度だけ送る', () async {
+  final controller = MockMapController();
+  when(controller.animateCamera(
+    center: anyNamed('center'),
+    zoom: anyNamed('zoom'),
+    bearing: anyNamed('bearing'),
+    pitch: anyNamed('pitch'),
+    nativeDuration: anyNamed('nativeDuration'),
+    webSpeed: anyNamed('webSpeed'),
+    webMaxDuration: anyNamed('webMaxDuration'),
+    padding: anyNamed('padding'),
+  )).thenAnswer((_) async {});
+
+  await const MapAutomaticFocusController().fit(
+    controller: controller,
+    bounds: bounds,
+    viewportSize: const Size(375, 667),
+    isCurrent: () => true,
   );
 
-  test('native fit後にzoom 8を超えたcameraだけ8へ補正する', () async {
-    final controller = MockMapController();
-    const camera = MapCamera(
-      center: Geographic(lon: 139.5, lat: 35.5),
-      zoom: 11,
-      bearing: 0,
-      pitch: 0,
-    );
-    when(controller.fitBounds(
-      bounds: anyNamed('bounds'),
-      bearing: anyNamed('bearing'),
-      pitch: anyNamed('pitch'),
-      nativeDuration: anyNamed('nativeDuration'),
-      webSpeed: anyNamed('webSpeed'),
-      webMaxDuration: anyNamed('webMaxDuration'),
-      offset: anyNamed('offset'),
-      webMaxZoom: anyNamed('webMaxZoom'),
-      webLinear: anyNamed('webLinear'),
-      padding: anyNamed('padding'),
-    )).thenAnswer((_) async {});
-    when(controller.getCamera()).thenReturn(camera);
-    when(controller.animateCamera(
-      center: anyNamed('center'),
-      zoom: anyNamed('zoom'),
-      bearing: anyNamed('bearing'),
-      pitch: anyNamed('pitch'),
-      nativeDuration: anyNamed('nativeDuration'),
-      webSpeed: anyNamed('webSpeed'),
-      webMaxDuration: anyNamed('webMaxDuration'),
-      padding: anyNamed('padding'),
-    )).thenAnswer((_) async {});
-
-    await const MapAutomaticFocusController().fit(
-      controller: controller,
-      bounds: bounds,
-    );
-
-    verify(controller.fitBounds(
-      bounds: bounds,
-      webMaxZoom: 8,
-      padding: EdgeInsets.zero,
-    ));
-    verify(controller.animateCamera(
-      center: camera.center,
-      zoom: 8,
-      bearing: camera.bearing,
-      pitch: camera.pitch,
-      nativeDuration: const Duration(milliseconds: 200),
-    ));
-  });
-}
+  verify(controller.animateCamera(
+    center: anyNamed('center'),
+    zoom: 8,
+  ));
+  verifyNever(controller.fitBounds(bounds: anyNamed('bounds')));
+  verifyNever(controller.getCamera());
+});
 ```
 
-zoom が 8 以下なら `animateCamera` を呼ばない test も追加する。
+pure target の center/zoom、padding 控除後の非正値 viewport no-op、guard が開始時・移動直前・完了後に false となる境界、LiveMonitor instance switch 後に旧 controller を再参照しないケースも追加する。
 
-- [ ] **Step 2: Mockito mock を生成し、未定義 controller で失敗することを確認する**
+- [ ] **Step 2: Mockito mock を生成し、旧 post-fit 補正実装で失敗することを確認する**
 
 Run from `app/`: `mise exec -- dart run build_runner build --delete-conflicting-outputs`
 
 Run from `app/`: `mise exec -- flutter test test/feature/map/data/service/map_automatic_focus_controller_test.dart`
 
-Expected: `MapAutomaticFocusController` が未定義のため FAIL。
+Expected: `viewportSize` / `isCurrent` が未定義、または `fitBounds` / `getCamera` が呼ばれるため FAIL。
 
-- [ ] **Step 3: web と native の両方を zoom 8 以下にする controller を実装する**
+- [ ] **Step 3: viewport から zoom 8 以下の target を移動前に算出する controller を実装する**
 
 ```dart
 const mapAutomaticFocusMaxZoom = 8.0;
@@ -249,38 +218,41 @@ const mapAutomaticFocusMaxZoom = 8.0;
 class MapAutomaticFocusController {
   const MapAutomaticFocusController();
 
-  Future<void> fit({
+  Future<bool> fit({
     required MapController controller,
     required LngLatBounds bounds,
+    required Size viewportSize,
+    required bool Function() isCurrent,
     EdgeInsets padding = EdgeInsets.zero,
     Duration nativeDuration = const Duration(seconds: 2),
-    double? bearing,
-    double? pitch,
+    double bearing = 0,
+    double pitch = 0,
   }) async {
-    await controller.fitBounds(
+    if (!isCurrent()) {
+      return false;
+    }
+    final target = mapAutomaticFocusTargetForBounds(
       bounds: bounds,
+      viewportSize: viewportSize,
+      padding: padding,
+    );
+    if (target == null || !isCurrent()) {
+      return false;
+    }
+    await controller.animateCamera(
+      center: target.center,
+      zoom: target.zoom,
       bearing: bearing,
       pitch: pitch,
       nativeDuration: nativeDuration,
-      webMaxZoom: mapAutomaticFocusMaxZoom,
       padding: padding,
     );
-    final camera = controller.getCamera();
-    if (camera.zoom <= mapAutomaticFocusMaxZoom) {
-      return;
-    }
-    await controller.animateCamera(
-      center: camera.center,
-      zoom: mapAutomaticFocusMaxZoom,
-      bearing: camera.bearing,
-      pitch: camera.pitch,
-      nativeDuration: const Duration(milliseconds: 200),
-    );
+    return isCurrent();
   }
 }
 ```
 
-`fitBounds` の `webMaxZoom` が Web を直接制限し、完了後の `getCamera()` と短い `animateCamera` が Android/iOS/macOS の native 実装だけを補正する。MapOptions の `maxZoom` は変更しないため manual gesture はユーザー設定値を維持する。
+MapLibre と同じ 512px world size の Web Mercator へ投影した bounds と padding 控除後の actual viewport から target を純粋計算し、zoom を `0...8` に clamp して単一 `animateCamera` へ渡す。bounds 収容を保証するため bearing / pitch は既定で 0 に戻す。非正値 viewport は no-op。`fitBounds` 完了契約、`getCamera()`、任意 delay には依存しない。MapOptions の `maxZoom` は変更しない。
 
 - [ ] **Step 4: HomeMap の camera action test を combined target 仕様へ更新する**
 
@@ -307,9 +279,11 @@ expect(
 
 `HomeMapCameraState.build()` で `eewAliveTelegramProvider` と `shakeDetectionVisibleProvider` の双方を `ref.listen` し、どちらの更新でも現在の両リストを読み直して `_handleRealtimeTransition` を呼ぶ。`setController` でも両リストを評価する。target があれば `SeismicMapFocusBuilder.forRealtime`、なければ `lngLatBoundsForHomeMapSettings(home.map)` を使い、既存 `home.eew.autoZoom` が有効な場合だけ realtime target へ自動移動する。Home 復帰と realtime fit は `MapAutomaticFocusController.fit` を通す。
 
+`setController` は actual viewport `Size` も受け取る。HomeMap は viewport size を `MapLibreMap` の key に含め、回転・リサイズ時に新 controller と新 viewport で focus を再評価する。全 target 更新と明示 Home 復帰で generation を進め、controller identity と generation を `isCurrent` で各 operation 境界に検証する。同一 controller は FIFO で直列化し、最新 generation の命令を最終適用する。target 消滅、明示 Home 復帰、controller 切替の in-flight race を provider 単体テストで固定する。
+
 - [ ] **Step 6: LiveMonitorMapHost も共通 auto-focus controller を使う**
 
-`captured.controller.fitBounds(...)` を `MapAutomaticFocusController.fit(controller: captured.controller, bounds: focus.bounds.toLngLatBounds(), padding: focus.padding.toEdgeInsets())` に置き換える。instance identity の開始・完了検証は現状の順序を維持する。
+`LiveMonitorMapHost` は `LayoutBuilder` で actual viewport を取得する外側と hook/controller lifecycle を持つ内側へ分ける。`MapAutomaticFocusController.fit` に `viewportSize` と `isCurrent: () => instanceOwner.acceptCameraCompletion(operation)` を渡し、開始時・移動直前・完了後に identity/controller/generation を検証する。instance switch/dispose 後に旧 controller を再参照しない単体テストを追加する。
 
 - [ ] **Step 7: Task 2 の対象 test を通す**
 
@@ -320,7 +294,7 @@ Expected: PASS。
 - [ ] **Step 8: Task 2 をコミットする**
 
 ```bash
-git add app/lib/feature/map/data/service/map_automatic_focus_controller.dart app/lib/feature/home/data/provider/map_camera_state_provider.dart app/lib/feature/home/data/provider/map_camera_state_provider.g.dart app/lib/feature/live_monitor/ui/components/live_monitor_map_host.dart app/test/feature/map/data/service/map_automatic_focus_controller_test.dart app/test/feature/map/data/service/map_automatic_focus_controller_test.mocks.dart app/test/feature/home/data/provider/map_camera_state_provider_test.dart
+git add docs/superpowers/plans/2026-07-27-live-monitor-map-focus-and-earthquake-card.md app/pubspec.yaml app/lib/feature/map/data/service/map_automatic_focus_controller.dart app/lib/feature/map/data/service/map_automatic_focus_operation_queue.dart app/lib/feature/home/data/provider/map_camera_state_provider.dart app/lib/feature/home/data/provider/map_camera_state_provider.g.dart app/lib/feature/home/ui/component/map/home_map_view.dart app/lib/feature/live_monitor/ui/components/live_monitor_map_host.dart app/test/feature/map/data/service/map_automatic_focus_controller_test.dart app/test/feature/map/data/service/map_automatic_focus_controller_test.mocks.dart app/test/feature/home/data/provider/map_camera_state_provider_test.dart
 git commit -m "feat: HomeMapでEEWと揺れ検知へ自動フォーカス"
 ```
 
@@ -600,4 +574,3 @@ git push origin codex/live-monitor-mode
 ```
 
 generator・formatter が差分を作らなかった場合は空コミットを作らず、Tasks 1-4 のコミットをそのまま push する。既存 draft PR #1552 の説明へ今回の受け入れ条件と検証結果を追記する。
-
