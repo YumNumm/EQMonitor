@@ -132,20 +132,18 @@ fetches). The following is what could actually be confirmed, and how:
 
 - The exact JSON:API attribute names inside each request/response body
   (`fileName`/`fileSize`/`assetType` on the reservation, `uploadOperations`
-  entries' shape, `sourceFileChecksum` as MD5, the terminal processing state
+  entries' shape, `sourceFileChecksums` (MD5 via the Checksums type; the
+  deprecated `sourceFileChecksum` attribute must not be used on ASC API 4.1+),
+  the terminal processing state
   name). `tool/asset_pack/asc_client.py`'s module docstring has the full
   "UNVERIFIED SURFACE WARNING" and cites why this shape was chosen (it
   mirrors the reservation/upload/commit pattern used by every other ASC API
   asset-upload family — appScreenshots, appPreviews, buildIcons — which has
   been stable for years).
 - The exact filename/extension `ba-package` writes its output archive as.
-  The WWDC transcript's command form (`ba-package <manifest> <output-path>`)
-  implies the given output path is respected, but this could not be verified
-  against a real invocation (no macOS 26 + Xcode 26 environment was
-  available in the implementation sandbox). The workflow's "Package archive
-  with ba-package" step therefore checks for the exact requested path first,
-  then falls back to a glob (`ios-background-asset*`) and fails loudly with
-  actionable instructions if neither is found.
+  Confirmed locally (Xcode 27 / `ba-package` CLI): use the `package`
+  subcommand with `--output-path` / `-o`, and the path **must** end with
+  `.aar` — see `docs/knowledge/20260728_ba_package_cli.md`.
 - The attribute name App Store Connect uses to store a `backgroundAssets`
   resource's asset pack identifier (needed by the pre-check to find "our"
   pack among possibly several). `find_background_asset_id` in
@@ -203,9 +201,10 @@ This value must be **identical** to:
 - the `assetPackID` configured in Xcode's Background Assets capability for the Runner target, and
 - the identifier App Store Connect stores for the manually-created asset pack (step 1 of the App Store Connect setup above).
 
-As of this workflow's authoring, no other task has registered the Xcode
-capability yet — confirm this value (or change it consistently in all three
-places) before the first real run.
+As of 2026-07-28, the Xcode side registers this via the `AssetDownloader`
+ExtensionKit target and `Runner/Info.plist` BA keys — confirm the Apple
+Developer portal capability and App Store Connect pack use the same id before
+the first `upload-ios` run.
 
 ## macOS folder-reference check: known simplification
 

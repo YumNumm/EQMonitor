@@ -48,58 +48,19 @@ against fetching "the root" via `url(for:)`. Since this app manages exactly
 one pack, resolving a known top-level file and taking its parent directory
 is the correct, defensible adaptation.
 
-## What is *not* implemented yet — required before this works on a real device
+## Xcode / App Store Connect — remaining manual steps
 
-Apple's Background Assets header documentation states, verbatim, that using
-`AssetPackManager` **requires the app to also have a companion Background
-Download App Extension** — for Apple-hosted asset packs (this project's
-choice, per `docs/asset-pack-cd.md`), one that adopts `SKDownloaderExtension`
-from StoreKit:
+The `AssetDownloader` ExtensionKit target (`app/ios/AssetDownloader/`) and
+`Runner/Info.plist` Background Assets keys (`BAAppGroupID`,
+`BAHasManagedAssetPacks`, `BAUsesAppleHosting`) are in the repo. Before the
+first real device / TestFlight run, still complete:
 
-> "When using the asset-pack manager, make sure that you also adopt the
-> corresponding managed extension protocol. For applications that use Apple
-> hosting, the corresponding protocol is `SKDownloaderExtension` from
-> StoreKit... **Not adopting the right protocol is a programmer error.**"
-
-**This repository's `app/ios/Runner.xcodeproj` does not have this extension
-yet.** The existing extension targets (`AppIntentExtension`,
-`WidgetExtension`, `FcmServiceExtension`) are unrelated. Creating this
-target is deliberately **out of scope for this task** — hand-authoring a new
-`PBXNativeTarget` (build phases, entitlements, provisioning profile,
-`Info.plist` `EXAppExtensionAttributes`, an "Embed App Extensions" copy
-phase) via raw `project.pbxproj` text edits is high-risk and easy to get
-subtly wrong in ways that don't surface until a real device/TestFlight run.
-
-### One-time manual setup (do this in Xcode, not by hand-editing `project.pbxproj`)
-
-1. **Add the Background Assets capability to `Runner`.** Xcode → `Runner`
-   target → Signing & Capabilities → **+ Capability** → *Background
-   Assets*. Set the asset pack ID to `net.yumnumm.eqmonitor.assets`. This
-   both links `BackgroundAssets.framework` properly and adds the
-   corresponding entitlement.
-2. **Add a Background Download Extension target.** Xcode → File → New →
-   Target → search "Background Download Extension" → choose the
-   **"Apple-Hosted, Managed"** option (this project uses Apple hosting;
-   see `docs/asset-pack-cd.md`'s App Store Connect setup section). Xcode's
-   template wires up `SKDownloaderExtension` conformance, the
-   `EXAppExtensionAttributes`/`EXPrincipalClass` `Info.plist` entries, and
-   the "Embed App Extensions" copy-files build phase automatically — this
-   is exactly the kind of multi-part wiring that's unsafe to hand-write.
-3. Confirm the extension's target explicitly links
-   `BackgroundAssets.framework` under Frameworks and Libraries (per
-   `BAManagedDownloaderExtension.h`'s own setup instructions, step 6).
-4. Re-run `mise exec -- flutter build ios --no-codesign` from `app/` and
-   confirm it still succeeds with the new extension target present.
-
-### App Store Connect coordination
-
-Already documented in detail in `docs/asset-pack-cd.md`'s "App Store
-Connect: Managed Background Assets asset pack creation" section — in
-summary: create the `net.yumnumm.eqmonitor.assets` Background Assets pack
-as **Apple-hosted** in App Store Connect (Account Holder/Admin/App
-Manager/Developer role required), and upload an initial version by hand
-(Transporter) once to create the resource `upload-asset-pack.yaml`'s
-`upload-ios` job's pre-check looks for.
+1. Register the **Background Assets** capability in the Apple Developer portal
+   for `net.yumnumm.eqmonitor` with asset pack ID
+   `net.yumnumm.eqmonitor.assets` (Xcode Signing & Capabilities should mirror
+   the plist keys above once profiles are refreshed).
+2. Create the Apple-hosted Background Assets pack in App Store Connect and
+   upload an initial `.aar` once (see `docs/asset-pack-cd.md`).
 
 ### `ba-package` / Xcode version
 

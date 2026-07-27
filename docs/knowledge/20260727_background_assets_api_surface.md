@@ -116,7 +116,7 @@ exists at the specified relative path", so its return value alone is not a
 reliable readiness signal on any OS version — the `FileManager` check is
 the one guard available across the entire 26.0+ range).
 
-## Finding 3 — Managed Background Assets requires a companion App Extension; **this repository doesn't have one yet**
+## Finding 3 — Managed Background Assets requires a companion App Extension (**now implemented as `AssetDownloader`**)
 
 The `BAAssetPackManager`/`AssetPackManager` header doc states, verbatim:
 
@@ -133,38 +133,26 @@ The `BAAssetPackManager`/`AssetPackManager` header doc states, verbatim:
 step-by-step "Creating an Objective-C Downloader Extension" walkthrough that
 starts from "Xcode's Background Download extension template" — i.e. Apple
 expects a **separate App Extension target** (Apple-hosted apps adopt
-`SKDownloaderExtension` from StoreKit; self-hosted apps adopt
+`StoreDownloaderExtension` from StoreKit; self-hosted apps adopt
 `BAManagedDownloaderExtension`), not just framework calls from the main app.
 
-**This repository's `app/ios/Runner.xcodeproj` currently has no such
-extension.** The only existing extension targets are `AppIntentExtension`,
-`WidgetExtension`, and `FcmServiceExtension` (confirmed via
-`grep PBXNativeTarget app/ios/Runner.xcodeproj/project.pbxproj`) — none of
-them relate to Background Assets, and there is no
-`com.apple.developer.background-asset-access`-style entitlement anywhere
-under `app/ios/*.entitlements`.
+**Status (2026-07-28):** `app/ios/AssetDownloader/` is an ExtensionKit target
+embedded from `Runner`, adopting `StoreDownloaderExtension` with a shared App
+Group (`group.net.yumnumm.eqmonitor`). `Runner/Info.plist` sets
+`BAAppGroupID`, `BAHasManagedAssetPacks`, and `BAUsesAppleHosting`. See
+`docs/ios-background-assets.md` for the remaining manual steps (Apple
+Developer portal capability registration, App Store Connect initial `.aar`
+upload).
 
-**Consequence:** the Swift/Dart/ffigen code added by this task compiles and
-`flutter build ios --no-codesign` succeeds, but the iOS `resolvePackRoot()`
-path is **not functionally complete end-to-end** until a follow-up adds:
+**Still outstanding before end-to-end works on a real device:**
 
-1. The **Background Assets** capability (+ entitlement) to the `Runner`
-   target in Xcode's Signing & Capabilities UI, with
-   `assetPackID = net.yumnumm.eqmonitor.assets` (the identifier already
-   chosen and documented in `docs/asset-pack-cd.md` for
-   `IOS_BACKGROUND_ASSET_PACK_ID`).
-2. A new **Background Download Extension** target (Xcode's own template,
-   "Apple-Hosted, Managed" option) adopting `SKDownloaderExtension`.
-
-This is a **new Xcode target**, not a change to `packages/assets_util` or a
-`project.pbxproj` folder-reference tweak — the kind of change explicitly
-called out by this task's own instructions as grounds to report
-**NEEDS_CONTEXT** before large-scale implementation, since authoring a
-correct multi-section `PBXNativeTarget` (build phases, entitlements,
-provisioning, Info.plist `EXAppExtensionAttributes`, embed-extension copy
-phase) by hand via `pbxproj` text surgery is high-risk and out of this
-task's scoped file list. See `docs/ios-background-assets.md` and the Task 9
-report's "Concerns" section for the recommended follow-up.
+1. Apple Developer portal / provisioning: Background Assets capability for
+   `net.yumnumm.eqmonitor.assets` (plist keys are in place; entitlements may
+   need refresh after capability is enabled in the portal).
+2. App Store Connect: create the Apple-hosted pack and upload an initial
+   `.aar` (see `docs/asset-pack-cd.md`).
+3. Unrelated iOS build blocker: `jma_code_table.json` bundle reference drift
+   (`docs/todo/850_ios_missing_jma_code_table_json_build_break.md`).
 
 ## Finding 4 — deployment target compatibility
 
