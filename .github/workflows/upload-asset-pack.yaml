@@ -444,6 +444,10 @@ jobs:
       - name: Build ba-package manifest
         run: |
           set -euo pipefail
+          # fileSelectors are resolved against the packaging CWD (`extracted/`).
+          # Do NOT use `{ "directory": "." }` — ba-package stages into a Contents
+          # tree and fails with "couldn't be copied … already exists" when the
+          # selector is the packaging directory itself.
           cat > ba-package-manifest.json <<EOF
           {
             "assetPackID": "${IOS_BACKGROUND_ASSET_PACK_ID}",
@@ -453,7 +457,9 @@ jobs:
               }
             },
             "fileSelectors": [
-              { "directory": "." }
+              { "file": "manifest.json" },
+              { "directory": "map" },
+              { "directory": "parameters" }
             ],
             "platforms": ["iOS"]
           }
@@ -463,19 +469,18 @@ jobs:
       - name: Package archive with ba-package
         run: |
           set -euo pipefail
-          cp ba-package-manifest.json extracted/ba-package-manifest.json
           archive_path="ios-background-asset.aar"
           (
             cd extracted
-            # `xcrun ba-package package <manifest> -o <output>` requires a `.aar`
-            # extension and resolves fileSelectors relative to this directory.
-            # See docs/knowledge/20260728_ba_package_cli.md.
-            xcrun ba-package package ba-package-manifest.json -o "../${archive_path}"
+            # Manifest stays outside `extracted/` so it is not packaged.
+            # Selectors above resolve relative to this CWD.
+            xcrun ba-package package ../ba-package-manifest.json -o "../${archive_path}"
           )
           if [ ! -f "$archive_path" ]; then
             echo "::error::ba-package did not produce ${archive_path}. Inspect 'xcrun ba-package help package' output from the pre-check step above. Manual fallback: package with Xcode locally and upload via Transporter (docs/asset-pack-cd.md)."
             exit 1
           fi
+          ls -lah "$archive_path"
           echo "archive_path=$archive_path" >> "$GITHUB_ENV"
 
       - name: Upload to App Store Connect (Managed Background Assets)

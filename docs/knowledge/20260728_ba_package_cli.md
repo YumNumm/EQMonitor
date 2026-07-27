@@ -40,6 +40,7 @@ xcrun ba-package package Manifest.json -o /path/to/output.aar
 | `xcrun ba-package manifest.json ../out.archive` | `xcrun ba-package package manifest.json -o ../out.aar` |
 | 出力拡張子 `.archive` / 拡張子なし | `.aar` |
 | manifest だけリポジトリに置き、アセット本体の CWD を合わせない | `cd` で `fileSelectors` の基準ディレクトリに移動してから実行 |
+| `"fileSelectors": [{ "directory": "." }]` | `manifest.json` / `map` / `parameters` など具体パスを列挙する（`.` は staging 衝突で失敗する） |
 
 ## 手動フォールバック
 
