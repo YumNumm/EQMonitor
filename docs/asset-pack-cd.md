@@ -26,16 +26,13 @@ integration tests) and uses `gh release download`. Unauthenticated `curl` of
 
 | Stage | Automated? | Notes |
 |---|---|---|
-| Download + sha256 verify + structure assert + `pack_version` match | Yes | GitHub App token（`eqmonitor-backend` `contents:read`）で private Release を `gh release download`（失敗時は認証付き curl）。`tool/asset_pack/verify_zip.sh` で検証し、3 ジョブ共通 Artifact へ |
-| macOS native bundling sync (`app/assets/platform/`) | Yes, via PR | Replaces the directory's contents with the pack's `manifest.json` / `map/all.pmtiles` / `parameters/*.json` |
-| macOS Xcode folder-reference registration check | Check only, no auto-fix | Fails loudly until a separate task registers `app/assets/platform` as a Bundle Resources folder reference in `app/macos/Runner.xcodeproj` |
-| Android Play Asset Delivery module sync (`app/android/assetpacks/eqmonitor_assets/src/main/assets/`) | Yes, via PR | Requires the module to already exist (a separate task creates `app/android/assetpacks/eqmonitor_assets/`); fails loudly (`test -d` guard) until it does |
-| Android live Google Play upload | **No** | See "Android: why there is no standalone upload" below |
-| iOS Managed Background Assets upload | Yes, via App Store Connect API | Requires the asset pack to already exist in App Store Connect (see below); fails loudly if it doesn't |
+| Download + sha256 verify + structure assert + `pack_version` match | Yes | GitHub App token で private Release を取得し Artifact 化 |
+| iOS Managed Background Assets upload | Yes | `ba-package` → ASC API（パック未作成なら `POST /v1/backgroundAssets` で作成） |
+| Android Play Asset Delivery contents | **Not in this workflow** | `deploy-app.yaml` の `build-android` が `tool/asset_pack/stage_from_release.sh` で最新 Release をビルド直前に展開 |
+| macOS bundled assets | **Not in this workflow** | ローカル / 将来の macOS CI で同じ `stage_from_release.sh --target macos` を使う。git にはコミットしない |
 
-Every platform runs as its own GitHub Actions job so a failure in one (e.g.
-the Android module not existing yet) never hides a success or failure in
-another.
+**pmtiles はリポジトリに置かない。** 正本は常に `eqmonitor-backend` の `asset-pack-v*` Release。Git LFS / sync-PR は使わない（100MB 制限を踏むだけなので廃止）。
+
 
 ## One-time manual setup required before this workflow can succeed end-to-end
 
@@ -59,36 +56,38 @@ which uploads the whole `.aab` (asset packs and all).
 2. Declare it as an `install-time` delivery asset pack in the module's `build.gradle`/`AndroidManifest.xml` (per [Android's Play Asset Delivery guide](https://developer.android.com/guide/playcore/asset-delivery)) and reference it from the base app module.
 3. Nothing needs to be pre-created in the Play Console UI itself for an install-time pack — Play derives the asset pack from the uploaded `.aab`'s module structure the first time a bundle containing it is uploaded through `deploy-app.yaml`.
 
-**What this means for automation:** because Play ties install-time asset
-packs to a full bundle upload, there is no way to publish a new asset pack
-version independently of an app release using Google's supported public
-API surface. `sync-android` in this workflow therefore only updates
-`app/android/assetpacks/eqmonitor_assets/src/main/assets/` on `develop` (via
-PR) — the new pack contents ship the next time `deploy-app.yaml` builds and
-publishes an AAB, not immediately when the Asset Pack is released. This is
-the brief-mandated fallback (`docs/asset-pack-cd.md` documenting the
-constraint instead of forcing full independence), but based on this task's
-research it is not merely a workaround for a tooling gap — it reflects a
-real limitation of Play's public upload API for install-time packs. If a
-faster path is ever needed, the two realistic options are (a) switch this
+**What this means for automation:** Play ties install-time asset packs to a
+full AAB upload, so there is no independent "upload asset pack only" path.
+Instead, `deploy-app.yaml` stages the latest `asset-pack-v*` Release into
+`app/android/assetpacks/eqmonitor_assets/src/main/assets/` immediately before
+`flutter build appbundle` via `tool/asset_pack/stage_from_release.sh`. The new
+pack therefore ships with the next Android app release — not via a git PR of
+binaries. Staged files are gitignored.
+
+If a faster path is ever needed, the two realistic options are (a) switch this
 asset pack to **on-demand** delivery, which supports `bundletool
 build-apks`/`install-apks` workflows closer to independent updates, or (b)
 accept the "ships with the next app release" cadence permanently and instead
 tighten `deploy-app.yaml`'s release cadence.
 
-### 2. App Store Connect: Managed Background Assets asset pack creation
+### 2. App Store Connect: Managed Background Assets
 
-The iOS job (`upload-ios`) never creates the Background Assets pack itself —
-App Store Connect requires it to exist before any version can be uploaded to
-it (this is also this workflow's mandatory pre-check #2; see below).
+The iOS job (`upload-ios`) packages the Release zip with `xcrun ba-package`
+and uploads via App Store Connect API. If the `backgroundAssets` record for
+`eqmonitor-assets` does not exist yet, the job creates it
+(`POST /v1/backgroundAssets`) before creating a version and uploading.
 
-**Manual setup (one-time, per Apple's documented flow):**
+**One-time / ongoing alignment:**
 
-1. In Xcode, add the **Background Assets** capability to the Runner target and configure the asset pack ID that will be used. The canonical ID is `eqmonitor-assets`, aligned across `IOS_BACKGROUND_ASSET_PACK_ID` in the workflow and `_iosAssetPackIdentifier` in `packages/assets_util/lib/assets_util.dart`. This Xcode-side capability registration (see `docs/ios-background-assets.md`) must exist before the first real `upload-asset-pack` run.
-2. In App Store Connect, under the app's Background Assets management (Account Holder/Admin/App Manager/Developer role required — [App Store Connect Help: Manage Asset Packs](https://developer.apple.com/help/app-store-connect/manage-asset-packs/upload-apple-hosted-asset-packs)), choose **Apple-hosted** so Apple hosts and serves the pack (this workflow assumes Apple-hosted; self-hosted Background Assets would need an entirely different, non-ASC-API upload path).
-3. Upload an initial version once by hand (Transporter drag-and-drop is the simplest — see "Manual fallback" below) to create the `backgroundAssets` resource that this workflow's pre-check looks for. Subsequent versions can then go through the automated `upload-ios` job.
+1. Xcode Runner target Background Assets capability の asset pack ID は
+   **`eqmonitor-assets`**（ドット付き reverse-DNS は ASC が拒否 — ITMS-91133）。
+   `packages/assets_util` の `_iosAssetPackIdentifier` と一致させる。
+2. Info.plist: `BAHasManagedAssetPacks` / `BAUsesAppleHosting` / `BAAppGroupID`
+   （リポジトリ済み）。
+3. `AssetDownloader` ExtensionKit target（リポジトリ済み）。
 
-Reference: [Overview of Apple-hosted asset packs](https://developer.apple.com/help/app-store-connect/manage-asset-packs/overview-of-apple-hosted-asset-packs), [Creating managed asset packs](https://developer.apple.com/documentation/backgroundassets/creating-managed-asset-packs).
+Manual Transporter upload remains a fallback if the API path fails
+(see below).
 
 ## iOS: what is doc/WWDC-verified vs. best-effort
 

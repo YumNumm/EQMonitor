@@ -457,6 +457,25 @@ jobs:
         working-directory: app
         run: flutter pub get --enforce-lockfile
 
+      # Play Asset Delivery install-time pack contents are not committed.
+      # Stage the latest asset-pack-v* Release from eqmonitor-backend into the
+      # Gradle module before building the AAB (see docs/asset-pack-cd.md).
+      - name: Generate GitHub App token (eqmonitor-backend contents:read)
+        id: asset-pack-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
+          private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
+          owner: YumNumm
+          repositories: |
+            eqmonitor-backend
+          permission-contents: read
+
+      - name: Stage Android Asset Pack from backend Release
+        env:
+          GH_TOKEN: ${{ steps.asset-pack-token.outputs.token }}
+        run: tool/asset_pack/stage_from_release.sh --target android
+
       - name: Extract keystore
         run: |
           echo "$SIGNING_KEY" | base64 -d > app/android/app/key.jks

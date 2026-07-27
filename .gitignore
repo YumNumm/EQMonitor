@@ -187,3 +187,12 @@ secret/
 .codex/worktrees/
 
 /.memo
+
+# Asset Pack contents staged from eqmonitor-backend Releases
+# (tool/asset_pack/stage_from_release.sh). Do not commit these binaries.
+app/android/assetpacks/eqmonitor_assets/src/main/assets/**
+!app/android/assetpacks/eqmonitor_assets/src/main/assets/.gitkeep
+app/assets/platform/map/
+app/assets/platform/parameters/
+app/assets/platform/manifest.json
+app/assets/platform/**/*.pmtiles

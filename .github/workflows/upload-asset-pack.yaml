@@ -42,12 +42,10 @@ env:
   # version bump is expected to be necessary, but the probe step below
   # verifies this rather than assuming it.
   IOS_ASSET_PACK_XCODE_VERSION: "26.3"
-  ANDROID_ASSET_PACK_ASSETS_DIR: "app/android/assetpacks/eqmonitor_assets/src/main/assets"
-  MACOS_ASSET_DIR: "app/assets/platform"
 
 jobs:
   # ---------------------------------------------------------------------
-  # Step 1: download + verify (shared by every downstream job/platform)
+  # Step 1: download + verify (feeds the iOS upload job)
   # ---------------------------------------------------------------------
   download-and-verify:
     name: Download & verify Asset Pack
@@ -148,203 +146,11 @@ jobs:
           retention-days: 3
 
   # ---------------------------------------------------------------------
-  # Step 2: macOS native bundling sync (smallest blast radius; do first)
+  # Step 2: iOS Managed Background Assets upload
+  # Android / macOS do NOT sync into git. Those platforms stage the pack at
+  # build time from the backend Release via tool/asset_pack/stage_from_release.sh
+  # (see deploy-app.yaml build-android and docs/asset-pack-cd.md).
   # ---------------------------------------------------------------------
-  sync-macos:
-    name: Sync macOS bundled assets (PR)
-    needs: download-and-verify
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    permissions:
-      contents: read
-    steps:
-      - name: Generate eqmonitor GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
-          private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
-          permission-contents: write
-          permission-pull-requests: write
-
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: develop
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Configure git remote with app token
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
-          git config user.name "eqmonitor-bot[bot]"
-          git config user.email "eqmonitor-bot[bot]@users.noreply.github.com"
-
-      - name: Download extracted Asset Pack
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: asset-pack-extracted
-          path: extracted
-
-      - name: Replace app/assets/platform with pack contents
-        env:
-          PACK_VERSION: ${{ needs.download-and-verify.outputs.pack_version }}
-        run: |
-          set -euo pipefail
-          branch="asset-pack/macos-sync-v${PACK_VERSION}"
-          echo "branch=${branch}" >> "$GITHUB_ENV"
-          git switch -c "$branch"
-          rm -rf "${MACOS_ASSET_DIR:?}"
-          mkdir -p "$MACOS_ASSET_DIR"
-          cp -R extracted/. "$MACOS_ASSET_DIR"/
-          git add -- "$MACOS_ASSET_DIR"
-
-      - name: Commit and open PR if contents changed
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          PACK_VERSION: ${{ needs.download-and-verify.outputs.pack_version }}
-        run: |
-          set -euo pipefail
-          if git diff --cached --quiet -- "$MACOS_ASSET_DIR"; then
-            echo "::notice::app/assets/platform already matches Asset Pack v${PACK_VERSION}; nothing to commit"
-            exit 0
-          fi
-          git commit -m "chore: sync macOS bundled assets to Asset Pack v${PACK_VERSION}"
-          git push origin "$branch"
-          gh pr create \
-            --repo YumNumm/EQMonitor \
-            --base develop \
-            --head "$branch" \
-            --title "chore: sync macOS bundled assets to Asset Pack v${PACK_VERSION}" \
-            --body "$(cat <<EOF
-          Automated sync from Asset Pack \`v${PACK_VERSION}\` (upload-asset-pack.yaml).
-
-          Replaces \`app/assets/platform/\` with the pack's \`manifest.json\` /
-          \`map/all.pmtiles\` / \`parameters/*.json\` (this also removes the
-          previously-committed \`earthquake_tsunami_all.pmtiles\`, which the pack
-          supersedes).
-
-          Native macOS bundling (Xcode Bundle Resources folder-reference
-          registration) is Task 9's responsibility; this PR only updates the
-          files on disk.
-          EOF
-          )"
-
-      - name: Check app/assets/platform is registered as an Xcode folder reference
-        run: |
-          set -euo pipefail
-          pbxproj="app/macos/Runner.xcodeproj/project.pbxproj"
-          # Heuristic: a genuine "blue folder" reference is a PBXFileReference
-          # with lastKnownFileType = folder (NOT folder.assetcatalog, which is
-          # what yellow-group asset catalogs use) whose `path` mentions
-          # "platform". This does not resolve the full on-disk path through
-          # parent group nesting -- Task 9 must confirm the registered folder
-          # actually resolves to app/assets/platform, not just that some
-          # "platform"-named folder reference exists.
-          if grep -n 'lastKnownFileType = folder;' "$pbxproj" | grep -q 'path = .*platform'; then
-            echo "app/assets/platform folder reference found in $pbxproj"
-          else
-            echo "::error::app/assets/platform is not registered as an Xcode folder reference (blue folder) in Bundle Resources of $pbxproj. This is expected until Task 9 lands -- see docs/asset-pack-cd.md. Files were still synced/PR'd above; native bundling itself is out of scope for this workflow."
-            exit 1
-          fi
-
-  # ---------------------------------------------------------------------
-  # Step 3: Android Play Asset Delivery module sync
-  # ---------------------------------------------------------------------
-  sync-android:
-    name: Sync Android asset pack module (PR)
-    needs: download-and-verify
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    permissions:
-      contents: read
-    steps:
-      - name: Generate eqmonitor GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
-          private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
-          permission-contents: write
-          permission-pull-requests: write
-
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: develop
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Assert Android asset pack module exists (created by Task 8)
-        run: |
-          if [ ! -d "$ANDROID_ASSET_PACK_ASSETS_DIR" ]; then
-            echo "::error::${ANDROID_ASSET_PACK_ASSETS_DIR} does not exist yet. The Play Asset Delivery install-time pack module (app/android/assetpacks/eqmonitor_assets/) is created by a separate task (Task 8) that has not landed on develop yet. This job intentionally fails loudly so the gap stays visible instead of silently skipping the Android sync -- see docs/asset-pack-cd.md."
-            exit 1
-          fi
-
-      - name: Configure git remote with app token
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
-          git config user.name "eqmonitor-bot[bot]"
-          git config user.email "eqmonitor-bot[bot]@users.noreply.github.com"
-
-      - name: Download extracted Asset Pack
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: asset-pack-extracted
-          path: extracted
-
-      - name: Replace asset pack module assets with pack contents
-        env:
-          PACK_VERSION: ${{ needs.download-and-verify.outputs.pack_version }}
-        run: |
-          set -euo pipefail
-          branch="asset-pack/android-sync-v${PACK_VERSION}"
-          echo "branch=${branch}" >> "$GITHUB_ENV"
-          git switch -c "$branch"
-          rm -rf "${ANDROID_ASSET_PACK_ASSETS_DIR:?}"
-          mkdir -p "$ANDROID_ASSET_PACK_ASSETS_DIR"
-          cp -R extracted/. "$ANDROID_ASSET_PACK_ASSETS_DIR"/
-          git add -- "$ANDROID_ASSET_PACK_ASSETS_DIR"
-
-      - name: Commit and open PR if contents changed
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          PACK_VERSION: ${{ needs.download-and-verify.outputs.pack_version }}
-        run: |
-          set -euo pipefail
-          if git diff --cached --quiet -- "$ANDROID_ASSET_PACK_ASSETS_DIR"; then
-            echo "::notice::${ANDROID_ASSET_PACK_ASSETS_DIR} already matches Asset Pack v${PACK_VERSION}; nothing to commit"
-            exit 0
-          fi
-          git commit -m "chore: sync Android asset pack module to Asset Pack v${PACK_VERSION}"
-          git push origin "$branch"
-          gh pr create \
-            --repo YumNumm/EQMonitor \
-            --base develop \
-            --head "$branch" \
-            --title "chore: sync Android asset pack module to Asset Pack v${PACK_VERSION}" \
-            --body "$(cat <<EOF
-          Automated sync from Asset Pack \`v${PACK_VERSION}\` (upload-asset-pack.yaml).
-
-          Replaces \`${ANDROID_ASSET_PACK_ASSETS_DIR}\` with the pack's contents.
-
-          NOTE: this only stages the asset pack module for the **next regular**
-          \`deploy-app.yaml\` app release -- \`google-play-cli\` does not support
-          uploading a Play Asset Delivery pack independently of an AAB (verified:
-          it only exposes \`bundles publish\` / \`get-latest-build-number\`), so
-          there is no standalone Google Play upload here. See
-          docs/asset-pack-cd.md for the Google Play Developer API
-          (\`edits.assetpacks\`) path that would remove this limitation.
-          EOF
-          )"
-
-  # ---------------------------------------------------------------------
-  # Step 4: iOS Managed Background Assets upload
   # ---------------------------------------------------------------------
   upload-ios:
     name: Upload iOS Managed Background Assets
