@@ -42,7 +42,7 @@ final class LiveMonitorDetectedEventNotifierProvider
 }
 
 String _$liveMonitorDetectedEventNotifierHash() =>
-    r'5d94ac449960cfcdf659c6cfb94b69f4c77918e0';
+    r'154d1e6b57c112c53ada08665f36765b48a4b645';
 
 abstract class _$LiveMonitorDetectedEventNotifier
     extends $AsyncNotifier<LiveMonitorEventEnvelope?> {
