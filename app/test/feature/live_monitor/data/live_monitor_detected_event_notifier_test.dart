@@ -403,17 +403,76 @@ void main() {
       'NEW-EEW',
       'NEW-SHAKE',
       'Q',
-      'Q',
     ]);
     expect(
       fixture.events
           .map((envelope) => envelope.event)
           .whereType<LiveMonitorEarthquakeUpsertEvent>()
           .map((event) => event.trigger.kind),
-      [
-        LiveMonitorEarthquakeTriggerKind.vxse53,
-        LiveMonitorEarthquakeTriggerKind.vxse62,
+      [LiveMonitorEarthquakeTriggerKind.vxse62],
+    );
+    expect(fixture.pageStore.loadCount, 3);
+  });
+
+  test('初期一覧失敗後の初回resyncはcumulative detailをbaselineにして次の差分だけ発行する', () async {
+    final fixture = createFixture(
+      failFirstPageLoad: true,
+      details: {'Q': earthquake(eventId: 'Q')},
+    );
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+
+    fixture.detailStore.values['Q'] = earthquake(
+      eventId: 'Q',
+      metadata: [
+        metadata(type: .vxse51, minute: 1),
+        metadata(type: .vxse52, minute: 2),
+        metadata(type: .vxse53, minute: 3),
+        metadata(type: .vxse61, minute: 4),
+        metadata(type: .vxse62, minute: 5),
       ],
+      tileUrl: 'https://tiles.eqmonitor.app/estimated/existing.pmtiles',
+    );
+    fixture.realtime.add(
+      const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+    );
+    await fixture.settle();
+
+    expect(
+      fixture.events.where(
+        (envelope) => envelope.event is LiveMonitorEarthquakeUpsertEvent,
+      ),
+      isEmpty,
+    );
+
+    fixture.detailStore.values['Q'] = earthquake(
+      eventId: 'Q',
+      metadata: [
+        metadata(type: .vxse51, minute: 1),
+        metadata(type: .vxse52, minute: 2),
+        metadata(type: .vxse53, minute: 3),
+        metadata(type: .vxse61, minute: 4),
+        metadata(type: .vxse62, minute: 5),
+        metadata(type: .vxse53, minute: 6),
+      ],
+      tileUrl: 'https://tiles.eqmonitor.app/estimated/existing.pmtiles',
+    );
+    fixture.lifecycle
+      ..publish(AppLifecycleState.paused)
+      ..publish(AppLifecycleState.resumed);
+    await fixture.settle();
+
+    final events = fixture.events
+        .map((envelope) => envelope.event)
+        .whereType<LiveMonitorEarthquakeUpsertEvent>()
+        .toList(growable: false);
+    expect(events, hasLength(1));
+    expect(
+      events.single.trigger,
+      LiveMonitorEarthquakeTrigger.telegram(
+        kind: .vxse53,
+        reportedAt: _reportedAt.add(const Duration(minutes: 6)),
+      ),
     );
     expect(fixture.pageStore.loadCount, 3);
   });

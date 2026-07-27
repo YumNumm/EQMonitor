@@ -288,6 +288,11 @@ class LiveMonitorDetectedEventNotifier
         return;
       }
       if (earthquake != null) {
+        if (!detector.hasEarthquakeBaseline(earthquake.eventId)) {
+          detector.seedEarthquake(
+            initialEarthquakeBoundary.baselineSnapshot(earthquake),
+          );
+        }
         acceptEarthquake(earthquake);
       }
     }
