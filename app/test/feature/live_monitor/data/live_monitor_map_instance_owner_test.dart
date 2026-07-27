@@ -3,11 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('remount後に遅延した旧onMapCreatedを無視してcurrentだけを受理する', () {
-    final owner = LiveMonitorMapInstanceOwner<Object>();
+    final owner = LiveMonitorMapInstanceOwner<_MapController>();
     final oldIdentity = owner.switchInstance();
     final currentIdentity = owner.switchInstance();
-    final oldController = Object();
-    final currentController = Object();
+    final oldController = _MapController();
+    final currentController = _MapController();
 
     expect(
       owner.acceptController(identity: oldIdentity, controller: oldController),
@@ -26,20 +26,22 @@ void main() {
   });
 
   test('instance切替は旧controllerと進行中camera generationを無効化する', () {
-    final owner = LiveMonitorMapInstanceOwner<Object>();
+    final owner = LiveMonitorMapInstanceOwner<_MapController>();
     final oldIdentity = owner.switchInstance();
-    final oldController = Object();
+    final oldController = _MapController();
     owner.acceptController(identity: oldIdentity, controller: oldController);
     final oldCamera = owner.beginCameraOperation(
       identity: oldIdentity,
       controller: oldController,
     );
+    if (oldCamera == null) {
+      throw StateError('current controllerのcamera operationが作成されませんでした');
+    }
 
     final currentIdentity = owner.switchInstance();
 
     expect(owner.currentController, isNull);
-    expect(oldCamera, isNotNull);
-    expect(owner.acceptCameraCompletion(oldCamera!), isFalse);
+    expect(owner.acceptCameraCompletion(oldCamera), isFalse);
     expect(
       owner.beginCameraOperation(
         identity: oldIdentity,
@@ -51,9 +53,9 @@ void main() {
   });
 
   test('current identityのcontrollerと最新cameraだけを受理する', () {
-    final owner = LiveMonitorMapInstanceOwner<Object>();
+    final owner = LiveMonitorMapInstanceOwner<_MapController>();
     final identity = owner.switchInstance();
-    final controller = Object();
+    final controller = _MapController();
     owner.acceptController(identity: identity, controller: controller);
     final staleCamera = owner.beginCameraOperation(
       identity: identity,
@@ -63,10 +65,13 @@ void main() {
       identity: identity,
       controller: controller,
     );
+    if (staleCamera == null || currentCamera == null) {
+      throw StateError('current controllerのcamera operationが作成されませんでした');
+    }
 
-    expect(staleCamera, isNotNull);
-    expect(currentCamera, isNotNull);
-    expect(owner.acceptCameraCompletion(staleCamera!), isFalse);
-    expect(owner.acceptCameraCompletion(currentCamera!), isTrue);
+    expect(owner.acceptCameraCompletion(staleCamera), isFalse);
+    expect(owner.acceptCameraCompletion(currentCamera), isTrue);
   });
 }
+
+final class _MapController {}

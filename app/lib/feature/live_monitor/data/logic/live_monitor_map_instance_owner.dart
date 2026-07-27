@@ -4,7 +4,7 @@ final class LiveMonitorMapInstanceIdentity {
   final int generation;
 }
 
-final class LiveMonitorMapCameraOperation<T extends Object> {
+final class LiveMonitorMapCameraOperation<T> {
   const LiveMonitorMapCameraOperation._({
     required this.identity,
     required this.controller,
@@ -16,7 +16,7 @@ final class LiveMonitorMapCameraOperation<T extends Object> {
   final int generation;
 }
 
-class LiveMonitorMapInstanceOwner<T extends Object> {
+class LiveMonitorMapInstanceOwner<T> {
   LiveMonitorMapInstanceIdentity? _currentIdentity;
   T? _currentController;
   var _instanceGeneration = 0;
