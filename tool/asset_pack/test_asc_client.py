@@ -148,7 +148,7 @@ class PollBackgroundAssetVersionStateTest(unittest.TestCase):
 
 
 class CommitBackgroundAssetUploadTest(unittest.TestCase):
-    def test_uses_source_file_checksums_instead_of_deprecated_attribute(self) -> None:
+    def test_commits_with_uploaded_true_and_without_checksum_attributes(self) -> None:
         captured: dict = {}
 
         class _CaptureClient(AscClient):
@@ -166,13 +166,10 @@ class CommitBackgroundAssetUploadTest(unittest.TestCase):
             client.commit_background_asset_upload("upload-file-id", tmp.name)
 
         attributes = captured["json_body"]["data"]["attributes"]
+        self.assertEqual(captured["method"], "PATCH")
         self.assertTrue(attributes["uploaded"])
         self.assertNotIn("sourceFileChecksum", attributes)
-        checksums = attributes["sourceFileChecksums"]
-        self.assertEqual(checksums["file"]["algorithm"], "MD5")
-        self.assertEqual(checksums["composite"]["algorithm"], "MD5")
-        self.assertEqual(checksums["file"]["hash"], checksums["composite"]["hash"])
-        self.assertEqual(len(checksums["file"]["hash"]), 32)
+        self.assertNotIn("sourceFileChecksums", attributes)
 
 
 if __name__ == "__main__":
