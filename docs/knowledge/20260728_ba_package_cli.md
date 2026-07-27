@@ -42,6 +42,15 @@ xcrun ba-package package Manifest.json -o /path/to/output.aar
 | manifest だけリポジトリに置き、アセット本体の CWD を合わせない | `cd` で `fileSelectors` の基準ディレクトリに移動してから実行 |
 | `"fileSelectors": [{ "directory": "." }]` | `manifest.json` / `map` / `parameters` など具体パスを列挙する（`.` は staging 衝突で失敗する） |
 
-## 手動フォールバック
+## Terminal state (live-confirmed 2026-07-27)
 
-自動アップロードが失敗した場合は [Upload Apple-hosted asset packs](https://developer.apple.com/jp/help/app-store-connect/manage-asset-packs/upload-apple-hosted-asset-packs) のとおり Transporter へ `.aar` をドラッグ＆ドロップする。
+After `ba-package` → reserve → multipart upload → commit, App Store Connect
+moves the `backgroundAssetVersion` through:
+
+1. `PROCESSING`
+2. `COMPLETE` ← **success** (this is what the live API returned)
+
+`tool/asset_pack/asc_client.py`'s `KNOWN_SUCCESS_STATES` therefore includes
+`COMPLETE`. Older guessed names (`READY_FOR_TESTING`, `PROCESSING_COMPLETE`)
+remain as additional allow-list entries.
+

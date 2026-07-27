@@ -356,7 +356,10 @@ class AscClient:
     # PROCESSING/VALID/INVALID/FAILED, TestFlight beta review uses similar
     # READY_FOR_* naming). Kept as a class attribute (not a magic tuple inline)
     # so the "what counts as success" allow-list is easy to find and audit.
-    KNOWN_SUCCESS_STATES = ("READY_FOR_TESTING", "PROCESSING_COMPLETE")
+    # Live-confirmed (2026-07-27 upload of eqmonitor-assets): PROCESSING → COMPLETE.
+    # READY_FOR_TESTING / PROCESSING_COMPLETE kept as additional plausible names
+    # from other ASC pipelines / docs.
+    KNOWN_SUCCESS_STATES = ("COMPLETE", "READY_FOR_TESTING", "PROCESSING_COMPLETE")
     KNOWN_FAILURE_STATES = ("FAILED_PROCESSING", "REJECTED", "INVALID")
 
     def poll_background_asset_version_state(
