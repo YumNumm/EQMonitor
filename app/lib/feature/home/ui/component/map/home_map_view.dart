@@ -185,7 +185,7 @@ class _MapLibreMapHostState extends ConsumerState<_MapLibreMapHost> {
   void dispose() {
     final controller = _controller;
     if (controller != null) {
-      _cameraNotifier.clearController(controller);
+      _cameraNotifier.clearController(controller: controller);
     }
     super.dispose();
   }
@@ -204,7 +204,10 @@ class _MapLibreMapHostState extends ConsumerState<_MapLibreMapHost> {
           _controller = controller;
           await ref
               .read(homeMapCameraStateProvider.notifier)
-              .setController(controller, viewportSize: constraints.biggest);
+              .setController(
+                controller: controller,
+                viewportSize: constraints.biggest,
+              );
           if (widget.showLocation) {
             await controller.enableLocation();
           }

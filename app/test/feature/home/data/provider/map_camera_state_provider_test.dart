@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
@@ -7,12 +5,14 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/map_camera_state_provider.dart';
+import 'package:eqmonitor/feature/home/data/service/home_map_camera_coordinator.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' show ShakeDetectionLevel;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../map/data/service/map_automatic_focus_controller_test.mocks.dart';
@@ -23,6 +23,10 @@ final _testShakesProvider =
 class _TestShakes extends Notifier<List<ShakeDetectionEvent>> {
   @override
   List<ShakeDetectionEvent> build() => const [];
+
+  void replace(List<ShakeDetectionEvent> value) {
+    state = value;
+  }
 }
 
 class _MutableEewAliveTelegram extends EewAliveTelegram {
@@ -44,25 +48,102 @@ class _StubHomeConfiguration extends HomeConfigurationNotifier {
       const HomeConfigurationModel();
 }
 
-EewTelegramItem _sampleEew({String eventId = '20250101120000'}) =>
-    EewTelegramItem(
-      eventId: eventId,
-      status: TelegramStatus.normal,
-      infoType: TelegramInfoType.publication,
-      serialNo: 1,
-      isCanceled: false,
-      isLastInfo: false,
-      reportTime: DateTime.utc(2025, 1, 1, 12),
-      isPlum: false,
-      hypocenter: const EewHypocenterInfo(
-        code: '101',
-        name: '東京都',
-        latitude: 35.5,
-        longitude: 139.5,
-      ),
-    );
+class _RecordingHomeMapCameraCoordinator extends HomeMapCameraCoordinator {
+  bool? setControllerResult;
+  bool? realtimeTransitionResult;
+  bool? returnToHomeResult;
+  var setControllerCallCount = 0;
+  var realtimeTransitionCallCount = 0;
+  var clearControllerCallCount = 0;
+  var returnToHomeCallCount = 0;
+  MapController? receivedController;
+  Size? receivedViewportSize;
+  List<EewTelegramItem> receivedEews = const [];
+  List<ShakeDetectionEvent> receivedShakes = const [];
 
-ProviderContainer _container({required _MutableEewAliveTelegram eews}) {
+  @override
+  Future<bool?> setController({
+    required MapController controller,
+    required Size viewportSize,
+    required Future<HomeConfigurationModel> home,
+    required List<EewTelegramItem> eews,
+    required List<ShakeDetectionEvent> shakes,
+  }) async {
+    await home;
+    setControllerCallCount += 1;
+    receivedController = controller;
+    receivedViewportSize = viewportSize;
+    receivedEews = eews;
+    receivedShakes = shakes;
+    return setControllerResult;
+  }
+
+  @override
+  void clearController({required MapController controller}) {
+    clearControllerCallCount += 1;
+    receivedController = controller;
+  }
+
+  @override
+  Future<bool?> handleRealtimeTransition({
+    required Future<HomeConfigurationModel> home,
+    required List<EewTelegramItem> eews,
+    required List<ShakeDetectionEvent> shakes,
+  }) {
+    realtimeTransitionCallCount += 1;
+    receivedEews = eews;
+    receivedShakes = shakes;
+    return SynchronousFuture(realtimeTransitionResult);
+  }
+
+  @override
+  Future<bool?> returnToHome({
+    required Future<HomeConfigurationModel> home,
+  }) async {
+    await home;
+    returnToHomeCallCount += 1;
+    return returnToHomeResult;
+  }
+}
+
+final _now = DateTime.utc(2025, 1, 1, 12);
+
+EewTelegramItem _sampleEew() => EewTelegramItem(
+  eventId: '20250101120000',
+  status: TelegramStatus.normal,
+  infoType: TelegramInfoType.publication,
+  serialNo: 1,
+  isCanceled: false,
+  isLastInfo: false,
+  reportTime: _now,
+  isPlum: false,
+  hypocenter: const EewHypocenterInfo(
+    code: '101',
+    name: '東京都',
+    latitude: 35.5,
+    longitude: 139.5,
+  ),
+);
+
+ShakeDetectionEvent _sampleShake() => ShakeDetectionEvent(
+  eventId: 'shake',
+  serialNo: 1,
+  createdAt: _now,
+  updatedAt: _now,
+  expiresAt: _now.add(const Duration(minutes: 1)),
+  level: ShakeDetectionLevel.medium,
+  pointCount: 1,
+  minLat: 35,
+  maxLat: 36,
+  minLng: 139,
+  maxLng: 140,
+  changeReasons: const ['new_event'],
+);
+
+ProviderContainer _container({
+  required _MutableEewAliveTelegram eews,
+  required HomeMapCameraCoordinator coordinator,
+}) {
   final container = ProviderContainer(
     overrides: [
       eewAliveTelegramProvider.overrideWith(() => eews),
@@ -70,6 +151,7 @@ ProviderContainer _container({required _MutableEewAliveTelegram eews}) {
         (ref) => ref.watch(_testShakesProvider),
       ),
       homeConfigurationProvider.overrideWith(_StubHomeConfiguration.new),
+      homeMapCameraCoordinatorProvider.overrideWithValue(coordinator),
     ],
   );
   addTearDown(container.dispose);
@@ -103,289 +185,87 @@ void main() {
     });
   });
 
-  group('HomeMapCameraState camera race', () {
-    test('target消滅とcontroller切替が重なっても新controllerをHomeへ戻す', () async {
+  group('HomeMapCameraState Provider wiring', () {
+    test('setControllerをDIしたcoordinatorへ委譲し結果を公開する', () async {
       final eews = _MutableEewAliveTelegram([_sampleEew()]);
-      final container = _container(eews: eews);
-      final oldController = MockMapController();
-      final newController = MockMapController();
-      final oldRealtimeAnimation = Completer<void>();
-      final newHomeAnimation = Completer<void>();
-      var oldCameraCallCount = 0;
-      when(
-        oldController.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
-        ),
-      ).thenAnswer((_) {
-        oldCameraCallCount += 1;
-        return oldCameraCallCount == 1
-            ? Future<void>.value()
-            : oldRealtimeAnimation.future;
-      });
-      when(
-        newController.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
-        ),
-      ).thenAnswer((_) => newHomeAnimation.future);
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..setControllerResult = false;
+      final container = _container(eews: eews, coordinator: coordinator);
+      final controller = MockMapController();
+
+      await container
+          .read(homeMapCameraStateProvider.notifier)
+          .setController(
+            controller: controller,
+            viewportSize: const Size(375, 667),
+          );
+
+      expect(coordinator.setControllerCallCount, 1);
+      expect(coordinator.receivedController, same(controller));
+      expect(coordinator.receivedViewportSize, const Size(375, 667));
+      expect(coordinator.receivedEews, hasLength(1));
+      expect(container.read(homeMapCameraStateProvider).isAtHome, isFalse);
+    });
+
+    test('EEWと揺れ検知の購読更新をcoordinatorへ委譲する', () async {
+      final eews = _MutableEewAliveTelegram(const []);
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..realtimeTransitionResult = false;
+      final container = _container(eews: eews, coordinator: coordinator);
+      container.read(homeMapCameraStateProvider);
+
+      eews.replace([_sampleEew()]);
+      await container.pump();
+      expect(coordinator.realtimeTransitionCallCount, 1);
+      expect(coordinator.receivedEews, hasLength(1));
+      expect(container.read(homeMapCameraStateProvider).isAtHome, isFalse);
+
+      coordinator.realtimeTransitionResult = true;
+      container.read(_testShakesProvider.notifier).replace([_sampleShake()]);
+      await container.pump();
+      expect(container.read(shakeDetectionVisibleProvider), hasLength(1));
+      expect(coordinator.realtimeTransitionCallCount, 2);
+      expect(coordinator.receivedEews, hasLength(1));
+      expect(coordinator.receivedShakes, hasLength(1));
+      expect(container.read(homeMapCameraStateProvider).isAtHome, isTrue);
+    });
+
+    test('clearControllerをDIしたcoordinatorへ委譲する', () {
+      final coordinator = _RecordingHomeMapCameraCoordinator();
+      final container = _container(
+        eews: _MutableEewAliveTelegram(const []),
+        coordinator: coordinator,
+      );
+      final controller = MockMapController();
+
+      container
+          .read(homeMapCameraStateProvider.notifier)
+          .clearController(controller: controller);
+
+      expect(coordinator.clearControllerCallCount, 1);
+      expect(coordinator.receivedController, same(controller));
+    });
+
+    test('Home復帰をcoordinatorへ委譲し結果を公開する', () async {
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..setControllerResult = false
+        ..returnToHomeResult = true;
+      final container = _container(
+        eews: _MutableEewAliveTelegram([_sampleEew()]),
+        coordinator: coordinator,
+      );
       final notifier = container.read(homeMapCameraStateProvider.notifier);
 
       await notifier.setController(
-        oldController,
+        controller: MockMapController(),
         viewportSize: const Size(375, 667),
       );
       expect(container.read(homeMapCameraStateProvider).isAtHome, isFalse);
 
-      eews.replace([_sampleEew(eventId: '20250101120001')]);
-      await container.pump();
-      expect(oldCameraCallCount, 2);
+      await notifier.returnToHome();
 
-      eews.replace(const []);
-      await container.pump();
-      expect(oldCameraCallCount, 2);
-
-      final newControllerFocus = notifier.setController(
-        newController,
-        viewportSize: const Size(667, 375),
-      );
-      await container.pump();
-
-      final newHomeCenter =
-          verify(
-                newController.animateCamera(
-                  center: captureAnyNamed('center'),
-                  zoom: anyNamed('zoom'),
-                  bearing: 0,
-                  pitch: 0,
-                  nativeDuration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.all(4),
-                ),
-              ).captured.single
-              as Geographic;
-      expect(newHomeCenter.lon, 137);
-
-      newHomeAnimation.complete();
-      await newControllerFocus;
+      expect(coordinator.returnToHomeCallCount, 1);
       expect(container.read(homeMapCameraStateProvider).isAtHome, isTrue);
-
-      oldRealtimeAnimation.complete();
-      await container.pump();
-      verify(
-        oldController.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: 0,
-          pitch: 0,
-        ),
-      ).called(2);
-      verifyNoMoreInteractions(oldController);
-      verifyNoMoreInteractions(newController);
-    });
-
-    test('controller切替後は新controllerへactual viewportでfocusする', () async {
-      final eews = _MutableEewAliveTelegram([_sampleEew()]);
-      final container = _container(eews: eews);
-      final oldController = MockMapController();
-      final newController = MockMapController();
-      final oldAnimation = Completer<void>();
-      final newAnimation = Completer<void>();
-      when(
-        oldController.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
-        ),
-      ).thenAnswer((_) => oldAnimation.future);
-      when(
-        newController.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
-        ),
-      ).thenAnswer((_) => newAnimation.future);
-      final notifier = container.read(homeMapCameraStateProvider.notifier);
-
-      final oldFocus = notifier.setController(
-        oldController,
-        viewportSize: const Size(375, 667),
-      );
-      await container.pump();
-      verify(
-        oldController.animateCamera(
-          center: anyNamed('center'),
-          zoom: 8,
-          bearing: 0,
-          pitch: 0,
-        ),
-      ).called(1);
-
-      final newFocus = notifier.setController(
-        newController,
-        viewportSize: const Size(667, 375),
-      );
-      await container.pump();
-      verify(
-        newController.animateCamera(
-          center: anyNamed('center'),
-          zoom: 8,
-          bearing: 0,
-          pitch: 0,
-        ),
-      ).called(1);
-
-      newAnimation.complete();
-      await newFocus;
-      oldAnimation.complete();
-      await oldFocus;
-
-      expect(container.read(homeMapCameraStateProvider).isAtHome, isFalse);
-      verifyNoMoreInteractions(oldController);
-      verifyNoMoreInteractions(newController);
-    });
-
-    test('realtime fit中にtargetが消えたらHome cameraを最後に適用する', () async {
-      final eews = _MutableEewAliveTelegram([_sampleEew()]);
-      final container = _container(eews: eews);
-      final controller = MockMapController();
-      final realtimeAnimation = Completer<void>();
-      final homeAnimation = Completer<void>();
-      var cameraCallCount = 0;
-      when(
-        controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
-        ),
-      ).thenAnswer((_) {
-        cameraCallCount += 1;
-        return cameraCallCount == 1
-            ? realtimeAnimation.future
-            : homeAnimation.future;
-      });
-      final notifier = container.read(homeMapCameraStateProvider.notifier);
-
-      final initialFocus = notifier.setController(
-        controller,
-        viewportSize: const Size(375, 667),
-      );
-      await container.pump();
-      expect(cameraCallCount, 1);
-
-      eews.replace(const []);
-      await container.pump();
-      expect(cameraCallCount, 1);
-
-      realtimeAnimation.complete();
-      await initialFocus;
-      await container.pump();
-      expect(cameraCallCount, 2);
-
-      homeAnimation.complete();
-      await container.pump();
-      expect(container.read(homeMapCameraStateProvider).isAtHome, isTrue);
-      final centers = verify(
-        controller.animateCamera(
-          center: captureAnyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
-        ),
-      ).captured;
-      expect((centers.first as Geographic).lon, 139.5);
-      expect((centers.last as Geographic).lon, 137);
-    });
-
-    test('realtime fit中の明示Home復帰を最後に適用する', () async {
-      final eews = _MutableEewAliveTelegram([_sampleEew()]);
-      final container = _container(eews: eews);
-      final controller = MockMapController();
-      final realtimeAnimation = Completer<void>();
-      final homeAnimation = Completer<void>();
-      var cameraCallCount = 0;
-      when(
-        controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
-        ),
-      ).thenAnswer((_) {
-        cameraCallCount += 1;
-        return cameraCallCount == 1
-            ? realtimeAnimation.future
-            : homeAnimation.future;
-      });
-      final notifier = container.read(homeMapCameraStateProvider.notifier);
-
-      final initialFocus = notifier.setController(
-        controller,
-        viewportSize: const Size(375, 667),
-      );
-      await container.pump();
-      expect(cameraCallCount, 1);
-
-      final returnHome = notifier.returnToHome();
-      await container.pump();
-      expect(cameraCallCount, 1);
-
-      realtimeAnimation.complete();
-      await initialFocus;
-      await container.pump();
-      expect(cameraCallCount, 2);
-
-      homeAnimation.complete();
-      await returnHome;
-      expect(container.read(homeMapCameraStateProvider).isAtHome, isTrue);
-      final centers = verify(
-        controller.animateCamera(
-          center: captureAnyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
-        ),
-      ).captured;
-      expect((centers.first as Geographic).lon, 139.5);
-      expect((centers.last as Geographic).lon, 137);
     });
   });
 }
