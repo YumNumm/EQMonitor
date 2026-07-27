@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 
 class LiveMonitorTapTracker {
@@ -9,14 +11,18 @@ class LiveMonitorTapTracker {
   int? _tapCandidatePointer;
   Offset? _startPosition;
   bool _cancelled = false;
+  Timer? _pendingSingleTap;
 
   void pointerDown({required int pointer, required Offset position}) {
+    final cancelsPendingSingleTap = _pendingSingleTap?.isActive ?? false;
+    _pendingSingleTap?.cancel();
+    _pendingSingleTap = null;
     if (_activePointers.isNotEmpty) {
       _cancelled = true;
     } else {
       _tapCandidatePointer = pointer;
       _startPosition = position;
-      _cancelled = false;
+      _cancelled = cancelsPendingSingleTap;
     }
     _activePointers.add(pointer);
   }
@@ -68,7 +74,24 @@ class LiveMonitorTapTracker {
     }
   }
 
+  void scheduleSingleTap({
+    required bool isTap,
+    required Duration delay,
+    required VoidCallback onTap,
+  }) {
+    if (!isTap) {
+      return;
+    }
+    _pendingSingleTap?.cancel();
+    _pendingSingleTap = Timer(delay, () {
+      _pendingSingleTap = null;
+      onTap();
+    });
+  }
+
   void cancelAll() {
+    _pendingSingleTap?.cancel();
+    _pendingSingleTap = null;
     _activePointers.clear();
     _tapCandidatePointer = null;
     _startPosition = null;

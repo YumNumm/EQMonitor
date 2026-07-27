@@ -3,9 +3,11 @@ import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_validator.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_exit_policy.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_tap_tracker.dart';
+import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_coordinator.dart';
+import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_detected_event_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_session_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_settings_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/action/live_monitor_exit_action.dart';
@@ -42,6 +44,7 @@ class LiveMonitorPage extends HookConsumerWidget {
     final tapTracker = useMemoized(
       () => LiveMonitorTapTracker(touchSlop: kTouchSlop),
     );
+    useEffect(() => tapTracker.cancelAll, [tapTracker]);
     if (settings != null &&
         durationDraft.value == null &&
         !durationSaveQueue.hasInFlight) {
@@ -126,6 +129,11 @@ class LiveMonitorPage extends HookConsumerWidget {
             currentDraft?.raw == closingDraft?.raw) {
           durationDraft.value = null;
         }
+      }
+    });
+    ref.listen(liveMonitorDetectedEventProvider, (_, next) {
+      if (next.value?.event is LiveMonitorEewStartedEvent) {
+        tapTracker.cancelAll();
       }
     });
 
@@ -253,9 +261,19 @@ class LiveMonitorPage extends HookConsumerWidget {
                       pointer: event.pointer,
                       position: event.position,
                     );
-                    if (isTap && settings != null && !panelOpen) {
-                      ref.read(liveMonitorControlPanelProvider.notifier).open();
-                    }
+                    tapTracker.scheduleSingleTap(
+                      isTap: isTap,
+                      delay: kDoubleTapTimeout,
+                      onTap: () {
+                        if (context.mounted &&
+                            settings != null &&
+                            !ref.read(liveMonitorControlPanelProvider)) {
+                          ref
+                              .read(liveMonitorControlPanelProvider.notifier)
+                              .open();
+                        }
+                      },
+                    );
                   },
                   onPointerCancel: (event) {
                     tapTracker.pointerCancel(pointer: event.pointer);
