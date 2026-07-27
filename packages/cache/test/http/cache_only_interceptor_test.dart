@@ -248,4 +248,33 @@ void main() {
     final response = await dio.get<dynamic>('/image');
     expect(response.data, body);
   });
+
+  test('disabled constructorはstoreなしで必ずcache missを返す', () async {
+    final disabledDio = Dio()
+      ..interceptors.add(CacheOnlyInterceptor.disabled())
+      ..httpClientAdapter = _FailIfCalledAdapter();
+
+    await expectLater(
+      disabledDio.get<Map<String, Object?>>('https://example.com/value'),
+      throwsA(
+        isA<DioException>().having(
+          (e) => e.error,
+          'error',
+          isA<CacheMissException>(),
+        ),
+      ),
+    );
+  });
+}
+
+final class _FailIfCalledAdapter implements HttpClientAdapter {
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) => throw StateError('network must not be called');
+
+  @override
+  void close({bool force = false}) {}
 }

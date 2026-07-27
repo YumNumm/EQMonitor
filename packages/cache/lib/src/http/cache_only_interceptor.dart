@@ -4,9 +4,10 @@ import 'package:cache/src/http/restore_response.dart';
 import 'package:dio/dio.dart';
 
 class CacheOnlyInterceptor extends Interceptor {
-  CacheOnlyInterceptor(this.store);
+  CacheOnlyInterceptor(HttpCacheStore store) : _store = store;
+  CacheOnlyInterceptor.disabled() : _store = null;
 
-  final HttpCacheStore store;
+  final HttpCacheStore? _store;
 
   @override
   Future<void> onRequest(
@@ -20,12 +21,12 @@ class CacheOnlyInterceptor extends Interceptor {
       message: 'Cacheミスのため、リクエストをキャンセルします',
       stackTrace: StackTrace.current,
     );
-    if (options.method.toUpperCase() != 'GET') {
+    final store = _store;
+    if (options.method.toUpperCase() != 'GET' || store == null) {
       handler.reject(cacheMiss);
       return;
     }
-    final key = store.primaryKeyForUrl(options);
-    final cached = await store.read(key);
+    final cached = await store.read(store.primaryKeyForUrl(options));
     if (cached == null) {
       handler.reject(cacheMiss);
       return;
