@@ -1,28 +1,36 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_repository.dart';
 import 'package:eqmonitor/feature/map/data/repository/base_map_pmtiles_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Map<String, Object?> _manifestJson() => {
-  'pack_version': '1.0.0',
-  'schema_version': 1,
-  'generated_at': '2026-07-18T09:00:00+09:00',
-  'assets': [
-    {
-      'id': 'BASE_MAP_PMTILES',
-      'kind': 'pmtiles',
-      'path': 'map/all.pmtiles',
-      'schema_version': 1,
-      'source_version': '20260718',
-      'source_updated_at': '2026-07-18T00:00:00+09:00',
-      'source_urls': ['https://www.data.jma.go.jp/developer/gis.html'],
-      'sha256': 'a' * 64,
-      'size_bytes': 12,
-    },
-  ],
-};
+const _pmtilesContent = 'pmtiles-bytes';
+
+/// Manifest whose `BASE_MAP_PMTILES` entry matches [content] on disk so it
+/// passes [AssetPackRepository.resolveAsset]'s size/sha256 integrity checks.
+Map<String, Object?> _manifestJson(String content) {
+  final bytes = utf8.encode(content);
+  return {
+    'pack_version': '1.0.0',
+    'schema_version': 1,
+    'generated_at': '2026-07-18T09:00:00+09:00',
+    'assets': [
+      {
+        'id': 'BASE_MAP_PMTILES',
+        'kind': 'pmtiles',
+        'path': 'map/all.pmtiles',
+        'schema_version': 1,
+        'source_version': '20260718',
+        'source_updated_at': '2026-07-18T00:00:00+09:00',
+        'source_urls': ['https://www.data.jma.go.jp/developer/gis.html'],
+        'sha256': sha256.convert(bytes).toString(),
+        'size_bytes': bytes.length,
+      },
+    ],
+  };
+}
 
 void main() {
   group('BaseMapPmtilesRepository', () {
@@ -60,11 +68,11 @@ void main() {
         addTearDown(() => tempDir.delete(recursive: true));
         await File(
           '${tempDir.path}/manifest.json',
-        ).writeAsString(jsonEncode(_manifestJson()));
+        ).writeAsString(jsonEncode(_manifestJson(_pmtilesContent)));
         final mapDir = Directory('${tempDir.path}/map')
           ..createSync(recursive: true);
         final pmtilesFile = File('${mapDir.path}/all.pmtiles')
-          ..writeAsStringSync('pmtiles-bytes');
+          ..writeAsStringSync(_pmtilesContent);
 
         final repository = BaseMapPmtilesRepository(
           assetPackRepository: AssetPackRepository(

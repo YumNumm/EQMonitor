@@ -2,12 +2,32 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:assets_util/assets_util.dart';
+import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final _sha256A = 'a' * 64;
 final _sha256B = 'b' * 64;
+
+/// Returns a manifest copy whose `JMA_CODE_TABLE` entry has its `size_bytes`
+/// and (unless [sha256Override] is given) `sha256` set to match [content],
+/// so a file written with [content] passes [AssetPackRepository.resolveAsset]
+/// integrity checks. Pass [sha256Override] to deliberately break the SHA-256
+/// check while keeping the size check satisfied.
+Map<String, Object?> _manifestMatchingJmaCodeTable(
+  String content, {
+  String? sha256Override,
+}) {
+  final bytes = utf8.encode(content);
+  final json = _validManifestJson();
+  final item = (json['assets']! as List)
+      .cast<Map<String, Object?>>()
+      .firstWhere((a) => a['id'] == 'JMA_CODE_TABLE');
+  item['size_bytes'] = bytes.length;
+  item['sha256'] = sha256Override ?? sha256.convert(bytes).toString();
+  return json;
+}
 
 Map<String, Object?> _validManifestJson() => {
   'pack_version': '1.0.0',
@@ -144,8 +164,9 @@ void main() {
     });
 
     test('resolveAsset returns the file at the manifest-listed path', () async {
-      await writeManifest(_validManifestJson());
-      await writeAsset('parameters/jma_code_table.json', '{"ok":true}');
+      const content = '{"ok":true}';
+      await writeManifest(_manifestMatchingJmaCodeTable(content));
+      await writeAsset('parameters/jma_code_table.json', content);
       final repository = AssetPackRepository(
         resolvePackRoot: () async => tempDir.path,
       );
@@ -153,8 +174,109 @@ void main() {
       final file = await repository.resolveAsset(AssetPackAssetId.jmaCodeTable);
 
       expect(file.path, '${tempDir.path}/parameters/jma_code_table.json');
-      expect(await file.readAsString(), '{"ok":true}');
+      expect(await file.readAsString(), content);
     });
+
+    test(
+      'resolveAsset throws AssetPackNotReadyException when the file length '
+      'does not match the manifest size_bytes',
+      () async {
+        const content = '{"ok":true}';
+        // Manifest advertises a different size than the file on disk.
+        final json = _manifestMatchingJmaCodeTable(content);
+        (json['assets']! as List)
+            .cast<Map<String, Object?>>()
+            .firstWhere((a) => a['id'] == 'JMA_CODE_TABLE')['size_bytes'] = 999;
+        await writeManifest(json);
+        await writeAsset('parameters/jma_code_table.json', content);
+        final repository = AssetPackRepository(
+          resolvePackRoot: () async => tempDir.path,
+        );
+
+        await expectLater(
+          repository.resolveAsset(AssetPackAssetId.jmaCodeTable),
+          throwsA(
+            isA<AssetPackNotReadyException>().having(
+              (e) => e.message,
+              'message',
+              contains('size mismatch'),
+            ),
+          ),
+        );
+      },
+    );
+
+    test(
+      'resolveAsset throws AssetPackNotReadyException when the file has the '
+      'right size but corrupted content (sha256 mismatch)',
+      () async {
+        const content = '{"ok":true}';
+        // Right size_bytes for the content, but a bogus sha256.
+        await writeManifest(
+          _manifestMatchingJmaCodeTable(content, sha256Override: _sha256A),
+        );
+        await writeAsset('parameters/jma_code_table.json', content);
+        final repository = AssetPackRepository(
+          resolvePackRoot: () async => tempDir.path,
+        );
+
+        await expectLater(
+          repository.resolveAsset(AssetPackAssetId.jmaCodeTable),
+          throwsA(
+            isA<AssetPackNotReadyException>().having(
+              (e) => e.message,
+              'message',
+              contains('sha256 mismatch'),
+            ),
+          ),
+        );
+      },
+    );
+
+    test(
+      'resolveAsset verifies sha256 only once per repository instance: '
+      'a same-size corruption after a successful resolve is not re-detected '
+      '(deliberate once-per-session semantics), but a fresh instance catches '
+      'it',
+      () async {
+        const content = 'AAAAAAA'; // 7 bytes
+        const corrupted = 'BBBBBBB'; // 7 bytes, same length, different sha256
+        await writeManifest(_manifestMatchingJmaCodeTable(content));
+        await writeAsset('parameters/jma_code_table.json', content);
+        final repository = AssetPackRepository(
+          resolvePackRoot: () async => tempDir.path,
+        );
+
+        // First resolve verifies and caches the sha256.
+        await repository.resolveAsset(AssetPackAssetId.jmaCodeTable);
+
+        // Corrupt the file in place, keeping the byte length identical so the
+        // cheap size check still passes.
+        await writeAsset('parameters/jma_code_table.json', corrupted);
+
+        // Same instance: sha256 is not re-hashed, so the corruption slips
+        // through — this documents the deliberate once-per-session cache.
+        final file = await repository.resolveAsset(
+          AssetPackAssetId.jmaCodeTable,
+        );
+        expect(await file.readAsString(), corrupted);
+
+        // A fresh repository instance has an empty cache and detects it.
+        final freshRepository = AssetPackRepository(
+          resolvePackRoot: () async => tempDir.path,
+        );
+        await expectLater(
+          freshRepository.resolveAsset(AssetPackAssetId.jmaCodeTable),
+          throwsA(
+            isA<AssetPackNotReadyException>().having(
+              (e) => e.message,
+              'message',
+              contains('sha256 mismatch'),
+            ),
+          ),
+        );
+      },
+    );
 
     test(
       'pack not ready: resolvePackRoot throwing AssetPackNotReadyException '

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/data_source/parameter_asset_data_source.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
@@ -18,15 +19,23 @@ void main() {
       );
       addTearDown(() => tempDir.delete(recursive: true));
 
+      // Encode each per-type JSON once so the manifest's size_bytes/sha256 and
+      // the file written to disk are derived from the identical bytes, and the
+      // Asset Pack integrity checks pass.
+      final contents = <ParameterType, String>{
+        for (final type in ParameterType.values)
+          type: jsonEncode(_parameterJson(type.toApiParameterType.toJson())),
+      };
+
       await File(
         '${tempDir.path}/manifest.json',
-      ).writeAsString(jsonEncode(_manifestJson()));
+      ).writeAsString(jsonEncode(_manifestJson(contents)));
       final paramsDir = Directory('${tempDir.path}/parameters')
         ..createSync(recursive: true);
       for (final type in ParameterType.values) {
-        await File('${paramsDir.path}/${type.pathSegment}.json').writeAsString(
-          jsonEncode(_parameterJson(type.toApiParameterType.toJson())),
-        );
+        await File(
+          '${paramsDir.path}/${type.pathSegment}.json',
+        ).writeAsString(contents[type]!);
       }
 
       final assetPackRepository = AssetPackRepository(
@@ -74,12 +83,14 @@ void main() {
   );
 }
 
-Map<String, Object?> _manifestJson() => {
+Map<String, Object?> _manifestJson(Map<ParameterType, String> contents) => {
   'pack_version': '1.0.0',
   'schema_version': 1,
   'generated_at': '2026-06-04T00:00:00Z',
   'assets': [
     {
+      // Not resolved by ParameterRepository.loadAsset, so its integrity
+      // fields are unchecked.
       'id': 'BASE_MAP_PMTILES',
       'kind': 'pmtiles',
       'path': 'map/all.pmtiles',
@@ -99,8 +110,8 @@ Map<String, Object?> _manifestJson() => {
         'source_version': 'test',
         'source_updated_at': null,
         'source_urls': <String>[],
-        'sha256': 'b' * 64,
-        'size_bytes': 1,
+        'sha256': sha256.convert(utf8.encode(contents[type]!)).toString(),
+        'size_bytes': utf8.encode(contents[type]!).length,
       },
   ],
 };
