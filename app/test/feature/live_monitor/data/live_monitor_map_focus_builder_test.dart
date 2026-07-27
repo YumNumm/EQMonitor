@@ -70,22 +70,36 @@ ShakeDetectionEvent _shake({
 Earthquake _earthquakeWithHypocenterAndStation({
   Coordinate? hypocenterCoordinates,
   LatLng? stationLocation,
+  List<({String code, JmaIntensity intensity, LatLng location})>? stations,
 }) {
-  final station = EarthquakeParameterStationItem(
-    code: 'station',
-    noCode: 'station',
-    name: LocalizedName(ja: 'テスト観測点'),
-    kana: null,
-    status: EarthquakeStationStatus.operating,
-    sourceStatus: 'test',
-    owner: 'test',
-    location: stationLocation ?? const LatLng(42, 145),
-  );
+  final stationFixtures =
+      stations ??
+      [
+        (
+          code: 'station',
+          intensity: JmaIntensity.four,
+          location: stationLocation ?? const LatLng(42, 145),
+        ),
+      ];
+  final stationItems = stationFixtures
+      .map(
+        (fixture) => EarthquakeParameterStationItem(
+          code: fixture.code,
+          noCode: fixture.code,
+          name: LocalizedName(ja: 'テスト観測点${fixture.code}'),
+          kana: null,
+          status: EarthquakeStationStatus.operating,
+          sourceStatus: 'test',
+          owner: 'test',
+          location: fixture.location,
+        ),
+      )
+      .toList(growable: false);
   final city = EarthquakeParameterCityItem(
     code: 'city',
     name: LocalizedName(ja: 'テスト市'),
     kana: null,
-    stations: [station],
+    stations: stationItems,
   );
   final prefecture = EarthquakeParameterPrefectureItem(
     code: 'prefecture',
@@ -126,19 +140,25 @@ Earthquake _earthquakeWithHypocenterAndStation({
               CityIntensityNode(
                 city: city,
                 maxIntensity: JmaIntensity.four,
-                stations: [
-                  StationIntensityNode(
-                    station: station,
-                    intensity: const IntensityStation(
-                      code: 'station',
-                      name: 'テスト観測点',
-                      sva: null,
-                      prePeriods: null,
-                      maxIntensity: JmaIntensity.four,
-                      maxLpgmIntensity: null,
-                    ),
-                  ),
-                ],
+                stations: stationItems
+                    .map(
+                      (station) => StationIntensityNode(
+                        station: station,
+                        intensity: IntensityStation(
+                          code: station.code,
+                          name: station.name.ja,
+                          sva: null,
+                          prePeriods: null,
+                          maxIntensity: stationFixtures
+                              .firstWhere(
+                                (fixture) => fixture.code == station.code,
+                              )
+                              .intensity,
+                          maxLpgmIntensity: null,
+                        ),
+                      ),
+                    )
+                    .toList(growable: false),
               ),
             ],
           ),
@@ -287,12 +307,68 @@ void main() {
     final focus = builder.forEarthquake(
       earthquake: _earthquakeWithHypocenterAndStation(),
       fallbackBounds: _homeBounds,
+      obscuredTop: 0,
       obscuredBottom: 120,
     );
 
     expect(focus.bounds.contains(latitude: 34, longitude: 131), isTrue);
     expect(focus.bounds.contains(latitude: 42, longitude: 145), isTrue);
     expect(focus.padding.bottom, 128);
+  });
+
+  test('地震は震度1以上の観測点だけを含み上下の遮蔽量をpaddingへ加える', () {
+    const unknownLocation = LatLng(46, 151);
+    const zeroLocation = LatLng(45, 150);
+    const oneLocation = LatLng(35, 132);
+    const fourLocation = LatLng(36, 133);
+    final focus = builder.forEarthquake(
+      earthquake: _earthquakeWithHypocenterAndStation(
+        stations: const [
+          (
+            code: 'unknown',
+            intensity: JmaIntensity.unknown,
+            location: unknownLocation,
+          ),
+          (code: 'zero', intensity: JmaIntensity.zero, location: zeroLocation),
+          (code: 'one', intensity: JmaIntensity.one, location: oneLocation),
+          (code: 'four', intensity: JmaIntensity.four, location: fourLocation),
+        ],
+      ),
+      fallbackBounds: _homeBounds,
+      obscuredTop: 36,
+      obscuredBottom: 92,
+    );
+
+    expect(
+      focus.bounds.contains(
+        latitude: oneLocation.lat,
+        longitude: oneLocation.lon,
+      ),
+      isTrue,
+    );
+    expect(
+      focus.bounds.contains(
+        latitude: fourLocation.lat,
+        longitude: fourLocation.lon,
+      ),
+      isTrue,
+    );
+    expect(
+      focus.bounds.contains(
+        latitude: zeroLocation.lat,
+        longitude: zeroLocation.lon,
+      ),
+      isFalse,
+    );
+    expect(
+      focus.bounds.contains(
+        latitude: unknownLocation.lat,
+        longitude: unknownLocation.lon,
+      ),
+      isFalse,
+    );
+    expect(focus.padding.top, 44);
+    expect(focus.padding.bottom, 100);
   });
 
   test('地震の座標が欠ける場合はcaller fallbackを使う', () {
@@ -311,6 +387,7 @@ void main() {
     final focus = builder.forEarthquake(
       earthquake: earthquake,
       fallbackBounds: _homeBounds,
+      obscuredTop: 0,
       obscuredBottom: 0,
     );
 
@@ -326,6 +403,7 @@ void main() {
         ),
       ),
       fallbackBounds: _homeBounds,
+      obscuredTop: 0,
       obscuredBottom: 0,
     );
 
@@ -343,6 +421,7 @@ void main() {
         stationLocation: const LatLng(91, 145),
       ),
       fallbackBounds: _homeBounds,
+      obscuredTop: 0,
       obscuredBottom: 0,
     );
 
@@ -358,6 +437,7 @@ void main() {
         ),
       ),
       fallbackBounds: _homeBounds,
+      obscuredTop: 0,
       obscuredBottom: 0,
     );
 
@@ -371,6 +451,7 @@ void main() {
         stationLocation: const LatLng(double.nan, double.infinity),
       ),
       fallbackBounds: _homeBounds,
+      obscuredTop: 0,
       obscuredBottom: 0,
     );
 
@@ -388,6 +469,7 @@ void main() {
         stationLocation: const LatLng(double.nan, double.infinity),
       ),
       fallbackBounds: _homeBounds,
+      obscuredTop: 0,
       obscuredBottom: 0,
     );
 

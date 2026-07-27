@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_map_instance_owner.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_map_focus.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-class LiveMonitorMapHost extends HookConsumerWidget {
+class LiveMonitorMapHost extends StatelessWidget {
   const LiveMonitorMapHost({
     required this.slotId,
     required this.focus,
@@ -22,6 +23,32 @@ class LiveMonitorMapHost extends HookConsumerWidget {
   final String slotId;
   final LiveMonitorMapFocus focus;
   final List<Widget> layers;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) => _LiveMonitorMapViewport(
+        slotId: slotId,
+        focus: focus,
+        layers: layers,
+        viewportSize: constraints.biggest,
+      ),
+    );
+  }
+}
+
+class _LiveMonitorMapViewport extends HookConsumerWidget {
+  const _LiveMonitorMapViewport({
+    required this.slotId,
+    required this.focus,
+    required this.layers,
+    required this.viewportSize,
+  });
+
+  final String slotId;
+  final LiveMonitorMapFocus focus;
+  final List<Widget> layers;
+  final Size viewportSize;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,14 +86,17 @@ class LiveMonitorMapHost extends HookConsumerWidget {
       if (operation == null) {
         return;
       }
-      await captured.controller.fitBounds(
+      await const MapAutomaticFocusController().fit(
+        controller: captured.controller,
         bounds: focus.bounds.toLngLatBounds(),
+        viewportSize: viewportSize,
         padding: focus.padding.toEdgeInsets(),
+        isCurrent: () => instanceOwner.acceptCameraCompletion(operation),
       );
       if (!instanceOwner.acceptCameraCompletion(operation)) {
         return;
       }
-    }, [controllerBinding.value, focus, instanceIdentity]);
+    }, [controllerBinding.value, focus, instanceIdentity, viewportSize]);
     useFuture(cameraOperation);
 
     return switch (mapConfiguration) {

@@ -8,8 +8,8 @@ import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_map_focus
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_display_state.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_map_focus.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_coordinator.dart';
-import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_card.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_layers.dart';
+import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_overlay.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_map_host.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_realtime_cards.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_realtime_layers.dart';
@@ -39,12 +39,26 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
       maxLng: homeMapBounds.longitudeEast,
     );
     final realtimeCardHeight = useState(0.0);
-    final earthquakeCardHeight = useState(0.0);
+    final earthquakeTopCardHeight = useState(0.0);
+    final earthquakeBottomCardHeight = useState(0.0);
+    final systemInsets = MediaQuery.paddingOf(context);
+    final realtimeObscuredInsets = liveMonitorMapObscuredInsets(
+      systemTopInset: systemInsets.top,
+      systemBottomInset: systemInsets.bottom,
+      topCardHeight: 0,
+      bottomCardHeight: realtimeCardHeight.value,
+    );
+    final earthquakeObscuredInsets = liveMonitorMapObscuredInsets(
+      systemTopInset: systemInsets.top,
+      systemBottomInset: systemInsets.bottom,
+      topCardHeight: earthquakeTopCardHeight.value,
+      bottomCardHeight: earthquakeBottomCardHeight.value,
+    );
     final realtimeFocus = const LiveMonitorMapFocusBuilder().forRealtime(
       homeBounds: homeBounds,
       eews: eews,
       shakes: shakes,
-      obscuredBottom: realtimeCardHeight.value,
+      obscuredBottom: realtimeObscuredInsets.bottom,
     );
     final (layers, focus) = switch (state) {
       LiveMonitorRealtimeDisplayState() => (
@@ -64,7 +78,8 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
         const LiveMonitorMapFocusBuilder().forEarthquake(
           earthquake: earthquake,
           fallbackBounds: homeBounds,
-          obscuredBottom: earthquakeCardHeight.value,
+          obscuredTop: earthquakeObscuredInsets.top,
+          obscuredBottom: earthquakeObscuredInsets.bottom,
         ),
       ),
     };
@@ -84,17 +99,18 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
             :final earthquake,
             :final trigger,
           ) =>
-            LiveMonitorEarthquakeCard(
+            LiveMonitorEarthquakeOverlay(
               earthquake: earthquake,
               presentation: LiveMonitorEarthquakePresentation.forTrigger(
                 earthquake: earthquake,
                 trigger: trigger,
               ),
-              compact: true,
-              now: now,
-              maximumHeight: maximumCardHeight,
-              onHeightChanged: (height) {
-                earthquakeCardHeight.value = height;
+              initialNow: now,
+              onTopHeightChanged: (height) {
+                earthquakeTopCardHeight.value = height;
+              },
+              onBottomHeightChanged: (height) {
+                earthquakeBottomCardHeight.value = height;
               },
             ),
         };

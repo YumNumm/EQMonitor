@@ -32,11 +32,18 @@ class LiveMonitorRealtimePane extends HookConsumerWidget {
       maxLng: homeMapBounds.longitudeEast,
     );
     final cardHeight = useState(0.0);
+    final systemInsets = MediaQuery.paddingOf(context);
+    final obscuredInsets = liveMonitorMapObscuredInsets(
+      systemTopInset: systemInsets.top,
+      systemBottomInset: systemInsets.bottom,
+      topCardHeight: 0,
+      bottomCardHeight: cardHeight.value,
+    );
     final focus = const LiveMonitorMapFocusBuilder().forRealtime(
       homeBounds: homeBounds,
       eews: eews,
       shakes: shakes,
-      obscuredBottom: cardHeight.value,
+      obscuredBottom: obscuredInsets.bottom,
     );
 
     return LayoutBuilder(

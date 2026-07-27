@@ -1,13 +1,42 @@
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_map_focus.dart';
+import 'package:eqmonitor/feature/map/data/logic/seismic_map_focus_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:maplibre/maplibre.dart';
 
-const liveMonitorMapFocusMargin = 0.1;
 const liveMonitorMapSafeSpacing = 8.0;
 
 typedef LiveMonitorGeoCoordinate = ({double latitude, double longitude});
+typedef LiveMonitorMapObscuredInsets = ({double top, double bottom});
+
+/// [SafeArea] が確保する余白のうち、地図側の固定余白を超える分と
+/// Card の実測高さを合成する。
+LiveMonitorMapObscuredInsets liveMonitorMapObscuredInsets({
+  required double systemTopInset,
+  required double systemBottomInset,
+  required double topCardHeight,
+  required double bottomCardHeight,
+}) {
+  final effectiveTopInset = systemTopInset > liveMonitorMapSafeSpacing
+      ? systemTopInset
+      : liveMonitorMapSafeSpacing;
+  final effectiveBottomInset = systemBottomInset > liveMonitorMapSafeSpacing
+      ? systemBottomInset
+      : liveMonitorMapSafeSpacing;
+  return (
+    top:
+        effectiveTopInset -
+        liveMonitorMapSafeSpacing +
+        (topCardHeight.isNegative ? 0 : topCardHeight),
+    bottom:
+        effectiveBottomInset -
+        liveMonitorMapSafeSpacing +
+        (bottomCardHeight.isNegative ? 0 : bottomCardHeight),
+  );
+}
 
 class LiveMonitorMapFocusBuilder {
   const LiveMonitorMapFocusBuilder();
@@ -17,22 +46,38 @@ class LiveMonitorMapFocusBuilder {
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
     required double obscuredBottom,
-  }) => liveMonitorMapFocusForTargets(
-    targets: [
-      ...eews.expand(liveMonitorEewTargetCoordinates),
-      ...shakes.expand(liveMonitorShakeTargetCoordinates),
-    ],
-    fallbackBounds: homeBounds,
-    obscuredBottom: obscuredBottom,
-  );
+  }) {
+    final bounds = const SeismicMapFocusBuilder().forRealtime(
+      fallbackBounds: LngLatBounds(
+        longitudeWest: homeBounds.minLng,
+        longitudeEast: homeBounds.maxLng,
+        latitudeSouth: homeBounds.minLat,
+        latitudeNorth: homeBounds.maxLat,
+      ),
+      eews: eews,
+      shakes: shakes,
+    );
+    return liveMonitorMapFocusForBounds(
+      bounds: LiveMonitorGeoBounds(
+        minLat: bounds.latitudeSouth,
+        maxLat: bounds.latitudeNorth,
+        minLng: bounds.longitudeWest,
+        maxLng: bounds.longitudeEast,
+      ),
+      obscuredTop: 0,
+      obscuredBottom: obscuredBottom,
+    );
+  }
 
   LiveMonitorMapFocus forEarthquake({
     required Earthquake earthquake,
     required LiveMonitorGeoBounds fallbackBounds,
+    required double obscuredTop,
     required double obscuredBottom,
   }) => liveMonitorMapFocusForTargets(
     targets: liveMonitorEarthquakeTargetCoordinates(earthquake).toList(),
     fallbackBounds: fallbackBounds,
+    obscuredTop: obscuredTop,
     obscuredBottom: obscuredBottom,
   );
 }
@@ -40,13 +85,25 @@ class LiveMonitorMapFocusBuilder {
 LiveMonitorMapFocus liveMonitorMapFocusForTargets({
   required List<LiveMonitorGeoCoordinate> targets,
   required LiveMonitorGeoBounds fallbackBounds,
+  required double obscuredTop,
   required double obscuredBottom,
-}) => LiveMonitorMapFocus(
+}) => liveMonitorMapFocusForBounds(
   bounds: liveMonitorBoundsForTargets(
     targets: targets,
     fallbackBounds: fallbackBounds,
   ),
+  obscuredTop: obscuredTop,
+  obscuredBottom: obscuredBottom,
+);
+
+LiveMonitorMapFocus liveMonitorMapFocusForBounds({
+  required LiveMonitorGeoBounds bounds,
+  required double obscuredTop,
+  required double obscuredBottom,
+}) => LiveMonitorMapFocus(
+  bounds: bounds,
   padding: LiveMonitorMapPadding(
+    top: liveMonitorMapSafeSpacing + (obscuredTop.isNegative ? 0 : obscuredTop),
     bottom:
         liveMonitorMapSafeSpacing +
         (obscuredBottom.isNegative ? 0 : obscuredBottom),
@@ -78,49 +135,11 @@ LiveMonitorGeoBounds liveMonitorBoundsForTargets({
     (value, point) => point.longitude > value ? point.longitude : value,
   );
   return LiveMonitorGeoBounds(
-    minLat: (minLat - liveMonitorMapFocusMargin).clamp(-90, 90).toDouble(),
-    maxLat: (maxLat + liveMonitorMapFocusMargin).clamp(-90, 90).toDouble(),
-    minLng: (minLng - liveMonitorMapFocusMargin).clamp(-180, 180).toDouble(),
-    maxLng: (maxLng + liveMonitorMapFocusMargin).clamp(-180, 180).toDouble(),
+    minLat: (minLat - seismicMapFocusMargin).clamp(-90, 90).toDouble(),
+    maxLat: (maxLat + seismicMapFocusMargin).clamp(-90, 90).toDouble(),
+    minLng: (minLng - seismicMapFocusMargin).clamp(-180, 180).toDouble(),
+    maxLng: (maxLng + seismicMapFocusMargin).clamp(-180, 180).toDouble(),
   );
-}
-
-Iterable<LiveMonitorGeoCoordinate> liveMonitorEewTargetCoordinates(
-  EewTelegramItem eew,
-) sync* {
-  final hypocenter = eew.hypocenter;
-  final coordinate = liveMonitorGeoCoordinate(
-    latitude: hypocenter?.latitude,
-    longitude: hypocenter?.longitude,
-  );
-  if (coordinate != null) {
-    yield coordinate;
-  }
-}
-
-Iterable<LiveMonitorGeoCoordinate> liveMonitorShakeTargetCoordinates(
-  ShakeDetectionEvent shake,
-) sync* {
-  if (shake.correlatedEewEventId != null) {
-    return;
-  }
-  final minimum = liveMonitorGeoCoordinate(
-    latitude: shake.minLat,
-    longitude: shake.minLng,
-  );
-  final maximum = liveMonitorGeoCoordinate(
-    latitude: shake.maxLat,
-    longitude: shake.maxLng,
-  );
-  if (minimum == null || maximum == null) {
-    return;
-  }
-  if (minimum.latitude > maximum.latitude ||
-      minimum.longitude > maximum.longitude) {
-    return;
-  }
-  yield minimum;
-  yield maximum;
 }
 
 Iterable<LiveMonitorGeoCoordinate> liveMonitorEarthquakeTargetCoordinates(
@@ -142,6 +161,11 @@ Iterable<LiveMonitorGeoCoordinate> liveMonitorEarthquakeTargetCoordinates(
     for (final node in nodes) {
       for (final city in node.cities) {
         for (final station in city.stations) {
+          final intensity = station.intensity?.maxIntensity;
+          if (intensity == null ||
+              intensity.orderIndex < JmaIntensity.one.orderIndex) {
+            continue;
+          }
           final coordinate = liveMonitorGeoCoordinate(
             latitude: station.station.location.lat,
             longitude: station.station.location.lon,
