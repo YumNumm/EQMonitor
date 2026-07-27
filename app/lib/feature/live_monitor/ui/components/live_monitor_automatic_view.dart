@@ -41,11 +41,24 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
     final realtimeCardHeight = useState(0.0);
     final earthquakeTopCardHeight = useState(0.0);
     final earthquakeBottomCardHeight = useState(0.0);
+    final systemInsets = MediaQuery.paddingOf(context);
+    final realtimeObscuredInsets = liveMonitorMapObscuredInsets(
+      systemTopInset: systemInsets.top,
+      systemBottomInset: systemInsets.bottom,
+      topCardHeight: 0,
+      bottomCardHeight: realtimeCardHeight.value,
+    );
+    final earthquakeObscuredInsets = liveMonitorMapObscuredInsets(
+      systemTopInset: systemInsets.top,
+      systemBottomInset: systemInsets.bottom,
+      topCardHeight: earthquakeTopCardHeight.value,
+      bottomCardHeight: earthquakeBottomCardHeight.value,
+    );
     final realtimeFocus = const LiveMonitorMapFocusBuilder().forRealtime(
       homeBounds: homeBounds,
       eews: eews,
       shakes: shakes,
-      obscuredBottom: realtimeCardHeight.value,
+      obscuredBottom: realtimeObscuredInsets.bottom,
     );
     final (layers, focus) = switch (state) {
       LiveMonitorRealtimeDisplayState() => (
@@ -65,8 +78,8 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
         const LiveMonitorMapFocusBuilder().forEarthquake(
           earthquake: earthquake,
           fallbackBounds: homeBounds,
-          obscuredTop: earthquakeTopCardHeight.value,
-          obscuredBottom: earthquakeBottomCardHeight.value,
+          obscuredTop: earthquakeObscuredInsets.top,
+          obscuredBottom: earthquakeObscuredInsets.bottom,
         ),
       ),
     };

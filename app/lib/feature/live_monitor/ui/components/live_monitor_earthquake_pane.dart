@@ -67,11 +67,18 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
       minLng: homeMapBounds.longitudeWest,
       maxLng: homeMapBounds.longitudeEast,
     );
+    final systemInsets = MediaQuery.paddingOf(context);
+    final obscuredInsets = liveMonitorMapObscuredInsets(
+      systemTopInset: systemInsets.top,
+      systemBottomInset: systemInsets.bottom,
+      topCardHeight: topCardHeight.value,
+      bottomCardHeight: bottomCardHeight.value,
+    );
     final focus = const LiveMonitorMapFocusBuilder().forEarthquake(
       earthquake: earthquake,
       fallbackBounds: homeBounds,
-      obscuredTop: topCardHeight.value,
-      obscuredBottom: bottomCardHeight.value,
+      obscuredTop: obscuredInsets.top,
+      obscuredBottom: obscuredInsets.bottom,
     );
     final presentation = LiveMonitorEarthquakePresentation.forSplit(
       earthquake: earthquake,

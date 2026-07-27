@@ -10,6 +10,33 @@ import 'package:maplibre/maplibre.dart';
 const liveMonitorMapSafeSpacing = 8.0;
 
 typedef LiveMonitorGeoCoordinate = ({double latitude, double longitude});
+typedef LiveMonitorMapObscuredInsets = ({double top, double bottom});
+
+/// [SafeArea] が確保する余白のうち、地図側の固定余白を超える分と
+/// Card の実測高さを合成する。
+LiveMonitorMapObscuredInsets liveMonitorMapObscuredInsets({
+  required double systemTopInset,
+  required double systemBottomInset,
+  required double topCardHeight,
+  required double bottomCardHeight,
+}) {
+  final effectiveTopInset = systemTopInset > liveMonitorMapSafeSpacing
+      ? systemTopInset
+      : liveMonitorMapSafeSpacing;
+  final effectiveBottomInset = systemBottomInset > liveMonitorMapSafeSpacing
+      ? systemBottomInset
+      : liveMonitorMapSafeSpacing;
+  return (
+    top:
+        effectiveTopInset -
+        liveMonitorMapSafeSpacing +
+        (topCardHeight.isNegative ? 0 : topCardHeight),
+    bottom:
+        effectiveBottomInset -
+        liveMonitorMapSafeSpacing +
+        (bottomCardHeight.isNegative ? 0 : bottomCardHeight),
+  );
+}
 
 class LiveMonitorMapFocusBuilder {
   const LiveMonitorMapFocusBuilder();
