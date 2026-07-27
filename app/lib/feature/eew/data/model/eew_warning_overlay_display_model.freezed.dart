@@ -222,7 +222,7 @@ return $default(_that.source,_that.eventIds,_that.representativeEventId,_that.se
 
 class _EewWarningOverlayDisplayModel implements EewWarningOverlayDisplayModel {
   const _EewWarningOverlayDisplayModel({required this.source, required final  List<String> eventIds, required this.representativeEventId, required this.serialNo, required this.alertCount, required this.reportLabel, required this.hypocenterHeadline, required this.strongMotionHeadline, required this.currentRegionName, required this.localIntensity, required this.localIntensityIsOver, required this.arrivalState, required this.secondsUntilArrival, required this.hypocenterName, required this.magnitude, required this.depth}): _eventIds = eventIds;
-
+  
 
 @override final  EewWarningOverlaySource source;
  final  List<String> _eventIds;

@@ -73,6 +73,9 @@ class $AssetsParameterGen {
 class $AssetsParametersGen {
   const $AssetsParametersGen();
 
+  /// File path: assets/parameters/Untitled
+  String get untitled => 'assets/parameters/Untitled';
+
   /// File path: assets/parameters/earthquake_stations.json
   String get earthquakeStations => 'assets/parameters/earthquake_stations.json';
 
@@ -94,6 +97,7 @@ class $AssetsParametersGen {
 
   /// List of all assets
   List<String> get values => [
+    untitled,
     earthquakeStations,
     jmaCodeTable,
     kyoshinObservationPoints,

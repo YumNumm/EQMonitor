@@ -28,6 +28,7 @@ import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_station_waveform_
 import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_settings_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
+import 'package:eqmonitor/feature/live_monitor/ui/page/live_monitor_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
@@ -53,7 +54,6 @@ import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debu
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/ui/page/debug_live_activity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navigation_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
@@ -270,6 +270,15 @@ class ShakeDetectionHistoryDetailsRoute extends GoRouteData
       ShakeDetectionHistoryDetailsPage(event: $extra);
 }
 
+@TypedGoRoute<LiveMonitorRoute>(path: '/live-monitor')
+class LiveMonitorRoute extends GoRouteData with $LiveMonitorRoute {
+  const LiveMonitorRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const LiveMonitorPage();
+}
+
 @TypedGoRoute<TelegramListByEventIdRoute>(path: '/telegram-list/:eventId')
 class TelegramListByEventIdRoute extends GoRouteData
     with $TelegramListByEventIdRoute {
@@ -374,7 +383,6 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
           path: 'notification-delivery-log',
         ),
         TypedGoRoute<DebugDeviceAdminRoute>(path: 'device-admin'),
-        TypedGoRoute<DebugLiveActivityRoute>(path: 'live-activity'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
@@ -676,15 +684,6 @@ class DebugDeviceAdminRoute extends GoRouteData with $DebugDeviceAdminRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugDeviceAdminPage();
-  }
-}
-
-class DebugLiveActivityRoute extends GoRouteData with $DebugLiveActivityRoute {
-  const DebugLiveActivityRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const DebugLiveActivityPage();
   }
 }
 

@@ -35,7 +35,7 @@ EarthquakeVxseDebugDraft _$EarthquakeVxseDebugDraftFromJson(
           return EarthquakeVxse62DebugDraft.fromJson(
             json
           );
-
+        
           default:
             throw CheckedFromJsonException(
   json,
@@ -44,7 +44,7 @@ EarthquakeVxseDebugDraft _$EarthquakeVxseDebugDraftFromJson(
   'Invalid union type "${json['type']}"!'
 );
         }
-
+      
 }
 
 /// @nodoc
@@ -457,7 +457,7 @@ as List<EarthquakeTelegramComment>,
 @override
 @pragma('vm:prefer-inline')
 $EarthquakeHypocenterCopyWith<$Res> get hypocenter {
-
+  
   return $EarthquakeHypocenterCopyWith<$Res>(_self.hypocenter, (value) {
     return _then(_self.copyWith(hypocenter: value));
   });
@@ -577,7 +577,7 @@ as List<EarthquakeTelegramComment>,
 @override
 @pragma('vm:prefer-inline')
 $EarthquakeHypocenterCopyWith<$Res> get hypocenter {
-
+  
   return $EarthquakeHypocenterCopyWith<$Res>(_self.hypocenter, (value) {
     return _then(_self.copyWith(hypocenter: value));
   });
@@ -677,7 +677,7 @@ as List<EarthquakeTelegramComment>,
 @override
 @pragma('vm:prefer-inline')
 $EarthquakeHypocenterCopyWith<$Res> get hypocenter {
-
+  
   return $EarthquakeHypocenterCopyWith<$Res>(_self.hypocenter, (value) {
     return _then(_self.copyWith(hypocenter: value));
   });
@@ -813,7 +813,7 @@ as List<EarthquakeTelegramComment>,
 @override
 @pragma('vm:prefer-inline')
 $EarthquakeHypocenterCopyWith<$Res> get hypocenter {
-
+  
   return $EarthquakeHypocenterCopyWith<$Res>(_self.hypocenter, (value) {
     return _then(_self.copyWith(hypocenter: value));
   });

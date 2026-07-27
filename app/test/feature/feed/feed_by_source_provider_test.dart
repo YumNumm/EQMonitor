@@ -1,8 +1,8 @@
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
-import 'package:eqmonitor/core/provider/dio_provider.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
+import 'package:eqmonitor/core/provider/http_cached_dio_provider.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_by_source_provider.dart';
 import 'package:eqmonitor/feature/feed/data/repository/feed_repository.dart';
@@ -66,8 +66,8 @@ ProviderContainer _container(_FakeFeedRepository repository) {
     overrides: [
       feedRepositoryProvider.overrideWith((ref) async => repository),
       cacheOnlyApiClientProvider.overrideWith((ref) async => _cacheOnlyClient),
-      apiClientProvider.overrideWith((ref) async => _networkClient),
-      dioProvider.overrideWith((ref) async => Dio()),
+      httpCachedApiClientProvider.overrideWith((ref) async => _networkClient),
+      httpCachedDioProvider.overrideWith((ref) async => Dio()),
     ],
   );
 }

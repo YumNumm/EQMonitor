@@ -14,6 +14,6 @@ abstract class ShakeDetectionServiceUnavailableResponse with _$ShakeDetectionSer
     required String code,
     required String message,
   }) = _ShakeDetectionServiceUnavailableResponse;
-
+  
   factory ShakeDetectionServiceUnavailableResponse.fromJson(Map<String, Object?> json) => _$ShakeDetectionServiceUnavailableResponseFromJson(json);
 }

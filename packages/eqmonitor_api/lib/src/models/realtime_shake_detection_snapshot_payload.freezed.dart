@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RealtimeShakeDetectionSnapshotPayload {
 
- Type3 get type; int get revision; DateTime get responseAt; List<Events2> get events;
+ Type3 get type; int get revision; DateTime get responseAt; List<ShakeDetectionState> get events;
 /// Create a copy of RealtimeShakeDetectionSnapshotPayload
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RealtimeShakeDetectionSnapshotPayloadCopyWith<$Res>  {
   factory $RealtimeShakeDetectionSnapshotPayloadCopyWith(RealtimeShakeDetectionSnapshotPayload value, $Res Function(RealtimeShakeDetectionSnapshotPayload) _then) = _$RealtimeShakeDetectionSnapshotPayloadCopyWithImpl;
 @useResult
 $Res call({
- Type3 type, int revision, DateTime responseAt, List<Events2> events
+ Type3 type, int revision, DateTime responseAt, List<ShakeDetectionState> events
 });
 
 
@@ -71,7 +71,7 @@ type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as Type3,revision: null == revision ? _self.revision : revision // ignore: cast_nullable_to_non_nullable
 as int,responseAt: null == responseAt ? _self.responseAt : responseAt // ignore: cast_nullable_to_non_nullable
 as DateTime,events: null == events ? _self.events : events // ignore: cast_nullable_to_non_nullable
-as List<Events2>,
+as List<ShakeDetectionState>,
   ));
 }
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type3 type,  int revision,  DateTime responseAt,  List<Events2> events)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type3 type,  int revision,  DateTime responseAt,  List<ShakeDetectionState> events)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RealtimeShakeDetectionSnapshotPayload() when $default != null:
 return $default(_that.type,_that.revision,_that.responseAt,_that.events);case _:
@@ -177,7 +177,7 @@ return $default(_that.type,_that.revision,_that.responseAt,_that.events);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type3 type,  int revision,  DateTime responseAt,  List<Events2> events)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type3 type,  int revision,  DateTime responseAt,  List<ShakeDetectionState> events)  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeShakeDetectionSnapshotPayload():
 return $default(_that.type,_that.revision,_that.responseAt,_that.events);case _:
@@ -197,7 +197,7 @@ return $default(_that.type,_that.revision,_that.responseAt,_that.events);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type3 type,  int revision,  DateTime responseAt,  List<Events2> events)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type3 type,  int revision,  DateTime responseAt,  List<ShakeDetectionState> events)?  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeShakeDetectionSnapshotPayload() when $default != null:
 return $default(_that.type,_that.revision,_that.responseAt,_that.events);case _:
@@ -212,14 +212,14 @@ return $default(_that.type,_that.revision,_that.responseAt,_that.events);case _:
 @JsonSerializable()
 
 class _RealtimeShakeDetectionSnapshotPayload implements RealtimeShakeDetectionSnapshotPayload {
-  const _RealtimeShakeDetectionSnapshotPayload({required this.type, required this.revision, required this.responseAt, required final  List<Events2> events}): _events = events;
+  const _RealtimeShakeDetectionSnapshotPayload({required this.type, required this.revision, required this.responseAt, required final  List<ShakeDetectionState> events}): _events = events;
   factory _RealtimeShakeDetectionSnapshotPayload.fromJson(Map<String, dynamic> json) => _$RealtimeShakeDetectionSnapshotPayloadFromJson(json);
 
 @override final  Type3 type;
 @override final  int revision;
 @override final  DateTime responseAt;
- final  List<Events2> _events;
-@override List<Events2> get events {
+ final  List<ShakeDetectionState> _events;
+@override List<ShakeDetectionState> get events {
   if (_events is EqualUnmodifiableListView) return _events;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_events);
@@ -259,7 +259,7 @@ abstract mixin class _$RealtimeShakeDetectionSnapshotPayloadCopyWith<$Res> imple
   factory _$RealtimeShakeDetectionSnapshotPayloadCopyWith(_RealtimeShakeDetectionSnapshotPayload value, $Res Function(_RealtimeShakeDetectionSnapshotPayload) _then) = __$RealtimeShakeDetectionSnapshotPayloadCopyWithImpl;
 @override @useResult
 $Res call({
- Type3 type, int revision, DateTime responseAt, List<Events2> events
+ Type3 type, int revision, DateTime responseAt, List<ShakeDetectionState> events
 });
 
 
@@ -282,7 +282,7 @@ type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as Type3,revision: null == revision ? _self.revision : revision // ignore: cast_nullable_to_non_nullable
 as int,responseAt: null == responseAt ? _self.responseAt : responseAt // ignore: cast_nullable_to_non_nullable
 as DateTime,events: null == events ? _self._events : events // ignore: cast_nullable_to_non_nullable
-as List<Events2>,
+as List<ShakeDetectionState>,
   ));
 }
 

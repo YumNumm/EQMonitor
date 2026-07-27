@@ -10,7 +10,9 @@ import '../models/admin_dispatch_summary_list_response.dart';
 import '../models/admin_replay_file_detail_response.dart';
 import '../models/admin_replay_file_download_url_response.dart';
 import '../models/admin_replay_file_list_response.dart';
+import '../models/post_v2_admin_simulation_eew_response.dart';
 import '../models/post_v2_admin_test_live_event_response.dart';
+import '../models/v2_admin_simulation_eew_request_body.dart';
 import '../models/v2_admin_test_live_event_request_body.dart';
 
 part 'admin_api_client.g.dart';
@@ -33,6 +35,12 @@ abstract class AdminApiClient {
   @POST(AdminApiClientUrls.postV2AdminTestLiveEvent)
   Future<HttpResponse<PostV2AdminTestLiveEventResponse>> postV2AdminTestLiveEvent({
     @Body() required V2AdminTestLiveEventRequestBody body,
+  });
+
+  /// EEW Live Activity 高頻度シミュレーション。指定シナリオのイベントを Redis events ストリームに投入する。test-scenario- プレフィクス + targetDeviceId で安全に1台のみへ配信。
+  @POST(AdminApiClientUrls.postV2AdminSimulationEew)
+  Future<HttpResponse<PostV2AdminSimulationEewResponse>> postV2AdminSimulationEew({
+    @Body() required V2AdminSimulationEewRequestBody body,
   });
 
   /// リプレイファイル一覧.
@@ -65,6 +73,8 @@ abstract class AdminApiClientUrls {
 	static const getV2AdminDispatchesCorrelationKey = "/v2/admin/dispatches/{correlationKey}";
 	/// /v2/admin/test-live-event
 	static const postV2AdminTestLiveEvent = "/v2/admin/test-live-event";
+	/// /v2/admin/simulation/eew
+	static const postV2AdminSimulationEew = "/v2/admin/simulation/eew";
 	/// /v2/admin/replay-files
 	static const getV2AdminReplayFiles = "/v2/admin/replay-files";
 	/// /v2/admin/replay-files/{id}

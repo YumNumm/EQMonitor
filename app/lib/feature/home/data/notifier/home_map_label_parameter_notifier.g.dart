@@ -40,7 +40,7 @@ final class HomeMapLabelParameterNotifierProvider
 }
 
 String _$homeMapLabelParameterNotifierHash() =>
-    r'e72d462a41efe247ae9ee3331923dc52c309f574';
+    r'1725aba5eec4e4551e79967e768120db1983c986';
 
 abstract class _$HomeMapLabelParameterNotifier
     extends $AsyncNotifier<HomeMapLabelParameter> {

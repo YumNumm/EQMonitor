@@ -20,6 +20,7 @@ List<RouteBase> get $appRoutes => [
   $earthquakeHistoryDetailsRoute,
   $shakeDetectionHistoryRoute,
   $shakeDetectionHistoryDetailsRoute,
+  $liveMonitorRoute,
   $telegramListByEventIdRoute,
   $homeRoute,
   $talkerRoute,
@@ -355,6 +356,32 @@ mixin $ShakeDetectionHistoryDetailsRoute on GoRouteData {
       context.replace(location, extra: _self.$extra);
 }
 
+RouteBase get $liveMonitorRoute => GoRouteData.$route(
+  path: '/live-monitor',
+  factory: $LiveMonitorRoute._fromState,
+);
+
+mixin $LiveMonitorRoute on GoRouteData {
+  static LiveMonitorRoute _fromState(GoRouterState state) =>
+      const LiveMonitorRoute();
+
+  @override
+  String get location => GoRouteData.$location('/live-monitor');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $telegramListByEventIdRoute => GoRouteData.$route(
   path: '/telegram-list/:eventId',
   factory: $TelegramListByEventIdRoute._fromState,
@@ -602,10 +629,6 @@ RouteBase get $settingsRoute => GoRouteData.$route(
         GoRouteData.$route(
           path: 'device-admin',
           factory: $DebugDeviceAdminRoute._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'live-activity',
-          factory: $DebugLiveActivityRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'device-settings',
@@ -1328,27 +1351,6 @@ mixin $DebugDeviceAdminRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/device-admin');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $DebugLiveActivityRoute on GoRouteData {
-  static DebugLiveActivityRoute _fromState(GoRouterState state) =>
-      const DebugLiveActivityRoute();
-
-  @override
-  String get location => GoRouteData.$location('/settings/debug/live-activity');
 
   @override
   void go(BuildContext context) => context.go(location);

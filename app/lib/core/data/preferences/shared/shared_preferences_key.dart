@@ -10,6 +10,7 @@ enum SharedPreferencesKey {
   intensityColor('intensity_color'),
   locationTrackingMode('location_tracking_mode'),
   homeConfiguration('home_configuration'),
+  liveMonitorSettings('live_monitor_settings'),
   onboardingCompleted('onboarding_completed'),
   betaTestingAgreed('beta_testing_agreed'),
   startEtag('start_etag'),
@@ -32,6 +33,7 @@ enum SharedPreferencesKey {
   ),
   widgetRegionSelection('widget_region_selection'),
   httpCacheDisabled('http_cache_disabled'),
+  httpCacheScopeMigrationVersion('http_cache_scope_migration_version'),
   locationPermissionBannerDismissed('location_permission_banner_dismissed'),
   notificationPermissionBannerDismissed(
     'notification_permission_banner_dismissed',

@@ -185,7 +185,7 @@ class _MapLibreMapHostState extends ConsumerState<_MapLibreMapHost> {
   void dispose() {
     final controller = _controller;
     if (controller != null) {
-      _cameraNotifier.clearController(controller);
+      _cameraNotifier.clearController(controller: controller);
     }
     super.dispose();
   }
@@ -193,22 +193,28 @@ class _MapLibreMapHostState extends ConsumerState<_MapLibreMapHost> {
   @override
   Widget build(BuildContext context) {
     _cameraNotifier = ref.read(homeMapCameraStateProvider.notifier);
-    return MapLibreMap(
-      options: widget.mapOptions,
-      onMapCreated: (controller) async {
-        if (!mounted) {
-          return;
-        }
-        _controller = controller;
-        await ref
-            .read(homeMapCameraStateProvider.notifier)
-            .setController(controller);
-        if (widget.showLocation) {
-          await controller.enableLocation();
-        }
-      },
-      onEvent: (event) => MapLibreEventProvider.maybeOf(context)?.emit(event),
-      children: widget.children,
+    return LayoutBuilder(
+      builder: (context, constraints) => MapLibreMap(
+        key: ValueKey(constraints.biggest),
+        options: widget.mapOptions,
+        onMapCreated: (controller) async {
+          if (!mounted) {
+            return;
+          }
+          _controller = controller;
+          await ref
+              .read(homeMapCameraStateProvider.notifier)
+              .setController(
+                controller: controller,
+                viewportSize: constraints.biggest,
+              );
+          if (widget.showLocation) {
+            await controller.enableLocation();
+          }
+        },
+        onEvent: (event) => MapLibreEventProvider.maybeOf(context)?.emit(event),
+        children: widget.children,
+      ),
     );
   }
 }

@@ -1,29 +1,12 @@
-import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
-import 'package:eqmonitor/core/provider/dio_provider.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/data/repository/feed_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-late api.ApiClient _cacheOnlyClient;
-late api.ApiClient _networkClient;
-
-final _cachedFeed = FeedItem(
-  id: 'cached-1',
-  feedType: FeedType.incident,
-  priority: FeedPriority.normal,
-  isImportant: false,
-  publishedAt: DateTime.parse('2026-07-01T00:00:00+09:00'),
-  expiresAt: null,
-  title: 'キャッシュデータ',
-  summary: null,
-  data: const FeedItemData.incident(),
-);
 
 final _freshFeed = FeedItem(
   id: 'fresh-1',
@@ -37,17 +20,21 @@ final _freshFeed = FeedItem(
   data: const FeedItemData.incident(),
 );
 
-class _FakeFeedRepository implements FeedRepository {
-  _FakeFeedRepository();
+final class _RecordingFeedRepository implements FeedRepository {
+  _RecordingFeedRepository({this.nextCursor});
+
+  final String? nextCursor;
+  final List<api.ApiClient?> clients = [];
+  final List<String?> cursors = [];
 
   @override
   Future<FeedListResponse> fetch({String? after, api.ApiClient? client}) async {
-    if (identical(client, _cacheOnlyClient)) {
-      // キャッシュヒット: キャッシュ用クライアントのときはキャッシュデータを返す
-      return FeedListResponse(feeds: [_cachedFeed], nextCursor: null);
-    }
-    // 通常クライアント: フレッシュデータを返す
-    return FeedListResponse(feeds: [_freshFeed], nextCursor: null);
+    clients.add(client);
+    cursors.add(after);
+    return FeedListResponse(
+      feeds: [_freshFeed],
+      nextCursor: after == null ? nextCursor : null,
+    );
   }
 
   @override
@@ -57,82 +44,50 @@ class _FakeFeedRepository implements FeedRepository {
   }) => throw UnimplementedError();
 }
 
-class _CacheMissFeedRepository implements FeedRepository {
-  @override
-  Future<FeedListResponse> fetch({String? after, api.ApiClient? client}) async {
-    if (identical(client, _cacheOnlyClient)) {
-      throw DioException(
-        requestOptions: RequestOptions(),
-        error: const CacheMissException(),
-      );
-    }
-    return FeedListResponse(feeds: [_freshFeed], nextCursor: null);
-  }
-
-  @override
-  Future<FeedDetail> fetchByTelegramHash(
-    String telegramHash, {
-    api.ApiClient? client,
-  }) => throw UnimplementedError();
-}
-
-ProviderContainer _container(FeedRepository repository) {
-  _cacheOnlyClient = api.ApiClient(Dio());
-  _networkClient = api.ApiClient(Dio());
+ProviderContainer _container(_RecordingFeedRepository repository) {
   return ProviderContainer(
     retry: (retryCount, error) => null,
     overrides: [
       feedRepositoryProvider.overrideWith((ref) async => repository),
-      cacheOnlyApiClientProvider.overrideWith((ref) async => _cacheOnlyClient),
-      apiClientProvider.overrideWith((ref) async => _networkClient),
-      dioProvider.overrideWith((ref) async => Dio()),
+      cacheOnlyApiClientProvider.overrideWith(
+        (ref) async => api.ApiClient(Dio()),
+      ),
+      httpCachedApiClientProvider.overrideWith(
+        (ref) async => api.ApiClient(Dio()),
+      ),
     ],
   );
 }
 
-Future<void> _pumpMicrotasks() async {
-  await Future<void>.delayed(Duration.zero);
-  await Future<void>.delayed(Duration.zero);
-  await Future<void>.delayed(Duration.zero);
-}
-
 void main() {
-  group('FeedNotifier (CachedNotifier)', () {
-    test('cache hit: 初回値はキャッシュ由来', () async {
-      final container = _container(_FakeFeedRepository());
-      addTearDown(container.dispose);
-
-      final result = await container.read(feedProvider.future);
-
-      expect(result.items.first.id, 'cached-1');
-      expect(result.nextCursor, isNull);
-    });
-
-    test('cache hit → SWR: フレッシュデータで更新される', () async {
-      final container = _container(_FakeFeedRepository());
-      addTearDown(container.dispose);
-
-      container.listen(feedProvider, (_, _) {});
-
-      await container.read(feedProvider.future);
-      expect(container.read(feedProvider).value!.items.first.id, 'cached-1');
-
-      await _pumpMicrotasks();
-
-      expect(container.read(feedProvider).value!.items.first.id, 'fresh-1');
-    });
-
-    test('cache miss: ネットワークから直接取得', () async {
-      final container = _container(_CacheMissFeedRepository());
+  group('FeedNotifier', () {
+    test('初回取得はcache-only clientを渡さない', () async {
+      final repository = _RecordingFeedRepository();
+      final container = _container(repository);
       addTearDown(container.dispose);
 
       final result = await container.read(feedProvider.future);
 
       expect(result.items.first.id, 'fresh-1');
+      expect(repository.clients, [null]);
+      expect(repository.cursors, [null]);
+    });
+
+    test('次ページもcursorだけを渡しcache clientを渡さない', () async {
+      final repository = _RecordingFeedRepository(nextCursor: 'next-1');
+      final container = _container(repository);
+      addTearDown(container.dispose);
+      await container.read(feedProvider.future);
+
+      await container.read(feedProvider.notifier).fetchNextData();
+
+      expect(repository.clients, [null, null]);
+      expect(repository.cursors, [null, 'next-1']);
     });
 
     test('FeedNotifierState の shape が正しい', () async {
-      final container = _container(_FakeFeedRepository());
+      final repository = _RecordingFeedRepository();
+      final container = _container(repository);
       addTearDown(container.dispose);
 
       final result = await container.read(feedProvider.future);

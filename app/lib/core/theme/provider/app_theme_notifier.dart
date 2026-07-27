@@ -137,8 +137,8 @@ ThemeColorSet activeColorSet(Ref ref) {
   final brightness = ref.watch(brightnessProvider);
   final themes = ref.watch(appThemeProvider).requireValue;
   final theme = switch (brightness) {
-    Brightness.light => themes.lightTheme,
-    Brightness.dark => themes.darkTheme,
+    .light => themes.lightTheme,
+    .dark => themes.darkTheme,
   };
   return theme.colorSetFor(brightness);
 }

@@ -77,7 +77,7 @@ as EewForecastRegionInfo?,
 @override
 @pragma('vm:prefer-inline')
 $EewTelegramItemCopyWith<$Res> get event {
-
+  
   return $EewTelegramItemCopyWith<$Res>(_self.event, (value) {
     return _then(_self.copyWith(event: value));
   });
@@ -232,7 +232,7 @@ return $default(_that.event,_that.warningAreaCode,_that.warningAreaName,_that.fo
 
 class _EewWarningOverlayCandidate implements EewWarningOverlayCandidate {
   const _EewWarningOverlayCandidate({required this.event, required this.warningAreaCode, required this.warningAreaName, required this.forecastAreaName, required this.localForecastRegion});
-
+  
 
 @override final  EewTelegramItem event;
 @override final  String warningAreaCode;
@@ -303,7 +303,7 @@ as EewForecastRegionInfo?,
 @override
 @pragma('vm:prefer-inline')
 $EewTelegramItemCopyWith<$Res> get event {
-
+  
   return $EewTelegramItemCopyWith<$Res>(_self.event, (value) {
     return _then(_self.copyWith(event: value));
   });

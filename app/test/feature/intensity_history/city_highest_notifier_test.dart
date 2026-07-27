@@ -1,9 +1,9 @@
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart' as app;
-import 'package:eqmonitor/core/provider/dio_provider.dart';
+import 'package:eqmonitor/core/provider/http_cached_dio_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/repository/intensity_highest_repository.dart';
@@ -104,8 +104,8 @@ void main() {
         cacheOnlyApiClientProvider.overrideWith(
           (ref) async => _cacheOnlyClient,
         ),
-        apiClientProvider.overrideWith((ref) async => _networkClient),
-        dioProvider.overrideWith((ref) async => Dio()),
+        httpCachedApiClientProvider.overrideWith((ref) async => _networkClient),
+        httpCachedDioProvider.overrideWith((ref) async => Dio()),
       ],
     );
   });

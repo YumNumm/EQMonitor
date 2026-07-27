@@ -53,6 +53,7 @@ sealed class RealtimeEvent with _$RealtimeEvent {
   const factory RealtimeEvent.estimatedIntensityUpsert({
     required String eventId,
     required String estimatedIntensityTile,
+    required DateTime? generatedAt,
     required RealtimeSource source,
   }) = RealtimeEstimatedIntensityUpsertEvent;
 

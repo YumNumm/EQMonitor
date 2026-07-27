@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_histor
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_feed_sheet.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/location/data/notifier/location_permission_banner_dismissed_notifier.dart';
+import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_entry_card.dart';
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
@@ -179,6 +180,10 @@ class _SheetBody extends ConsumerWidget {
                           )
                           .toList(),
                     ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: spacing.md),
+                    child: const LiveMonitorEntryCard(),
+                  ),
                   const HomeEarthquakeHistorySheet(),
                   SizedBox(height: spacing.md),
                   const HomeFeedSheet(),

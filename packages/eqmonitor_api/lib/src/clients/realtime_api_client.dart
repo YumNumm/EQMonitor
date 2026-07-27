@@ -16,10 +16,16 @@ abstract class RealtimeApiClient {
   /// WebSocket 接続用チケット（JWT）を発行する。x-eqmonitor-device-id ヘッダーが必要。
   @GET(RealtimeApiClientUrls.getV2RealtimeTicket)
   Future<HttpResponse<RealtimeTicketResponse>> getV2RealtimeTicket();
+
+  /// WebSocket 配信型を OpenAPI に公開するための mock endpoint
+  @GET(RealtimeApiClientUrls.getV2RealtimeExample)
+  Future<HttpResponse<void>> getV2RealtimeExample();
 }
 
 
 abstract class RealtimeApiClientUrls {
 	/// /v2/realtime/ticket
 	static const getV2RealtimeTicket = "/v2/realtime/ticket";
+	/// /v2/realtime/example
+	static const getV2RealtimeExample = "/v2/realtime/example";
 }

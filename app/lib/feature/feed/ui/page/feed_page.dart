@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
@@ -67,11 +66,6 @@ class _PagingBody extends StatelessWidget {
             pinned: true,
             centerTitle: false,
             title: Text('お知らせ'),
-          ),
-          SliverToBoxAdapter(
-            child: RevalidatingBanner(
-              isRevalidating: dataSource.isRevalidating,
-            ),
           ),
           SliverPagingList<String?, FeedItem>(
             dataSource: dataSource,

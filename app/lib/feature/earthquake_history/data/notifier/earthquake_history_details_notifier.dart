@@ -59,6 +59,10 @@ class EarthquakeHistoryDetailsNotifier
               EarthquakeDeletedException(eventId: eventId),
               StackTrace.current,
             ).unwrapPrevious();
+          case RealtimeEstimatedIntensityUpsertEvent(:final eventId)
+              when eventId == this.eventId:
+            advanceCachedAuthority();
+            ref.invalidateSelf();
           case _:
             break;
         }

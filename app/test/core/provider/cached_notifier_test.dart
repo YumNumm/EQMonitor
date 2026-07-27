@@ -6,14 +6,16 @@ import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
 import 'package:eqmonitor/core/provider/cached_notifier.dart';
-import 'package:eqmonitor/core/provider/dio_provider.dart';
+import 'package:eqmonitor/core/provider/http_cached_dio_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:riverpod/riverpod.dart';
 
 late ApiClient _cacheOnlyClient;
-late ApiClient _normalClient;
+late Dio _httpCachedDio;
+late ApiClient _httpCachedClient;
 var _shouldCacheHit = false;
 var _cachedValue = 'cached';
 var _freshValue = 'fresh';
@@ -64,7 +66,8 @@ void main() {
 
   setUp(() {
     _cacheOnlyClient = ApiClient(Dio());
-    _normalClient = ApiClient(Dio());
+    _httpCachedDio = Dio();
+    _httpCachedClient = ApiClient(_httpCachedDio);
     _shouldCacheHit = false;
     _cachedValue = 'cached';
     _freshValue = 'fresh';
@@ -77,8 +80,13 @@ void main() {
         cacheOnlyApiClientProvider.overrideWith(
           (ref) async => _cacheOnlyClient,
         ),
-        apiClientProvider.overrideWith((ref) async => _normalClient),
-        dioProvider.overrideWith((ref) async => Dio()),
+        httpCachedApiClientProvider.overrideWith(
+          (ref) async => _httpCachedClient,
+        ),
+        httpCachedDioProvider.overrideWith((ref) async => _httpCachedDio),
+        apiClientProvider.overrideWith(
+          (ref) async => throw StateError('normal ApiClient must not be used'),
+        ),
       ],
     );
   });
@@ -312,20 +320,17 @@ void main() {
       },
     );
 
-    test(
-      'invalidation after container dispose does not throw',
-      () async {
-        _shouldCacheHit = true;
-        _cachedValue = 'stale';
-        _freshValue = 'fresh';
+    test('invalidation after container dispose does not throw', () async {
+      _shouldCacheHit = true;
+      _cachedValue = 'stale';
+      _freshValue = 'fresh';
 
-        await container.read(_testProvider.future);
-        container.dispose();
+      await container.read(_testProvider.future);
+      container.dispose();
 
-        // Rebind so tearDown doesn't double-dispose
-        container = ProviderContainer();
-      },
-    );
+      // Rebind so tearDown doesn't double-dispose
+      container = ProviderContainer();
+    });
   });
 
   group('state transition sequence', () {
@@ -375,28 +380,25 @@ void main() {
       },
     );
 
-    test(
-      'cache hit + error: AsyncData(stale) → isRefreshing → '
-      'AsyncError with previous value',
-      () async {
-        _shouldCacheHit = true;
-        _cachedValue = 'stale';
-        _networkCompleter = Completer<String>();
+    test('cache hit + error: AsyncData(stale) → isRefreshing → '
+        'AsyncError with previous value', () async {
+      _shouldCacheHit = true;
+      _cachedValue = 'stale';
+      _networkCompleter = Completer<String>();
 
-        final states = <AsyncValue<String>>[];
-        container.listen(_testProvider, (_, next) => states.add(next));
+      final states = <AsyncValue<String>>[];
+      container.listen(_testProvider, (_, next) => states.add(next));
 
-        await container.read(_testProvider.future);
-        await Future<void>.delayed(Duration.zero);
+      await container.read(_testProvider.future);
+      await Future<void>.delayed(Duration.zero);
 
-        _networkCompleter!.completeError(Exception('fail'));
-        await _pumpMicrotasks();
+      _networkCompleter!.completeError(Exception('fail'));
+      await _pumpMicrotasks();
 
-        final finalState = container.read(_testProvider);
-        expect(finalState.hasError, isTrue);
-        expect(finalState.hasValue, isTrue);
-        expect(finalState.value, 'stale');
-      },
-    );
+      final finalState = container.read(_testProvider);
+      expect(finalState.hasError, isTrue);
+      expect(finalState.hasValue, isTrue);
+      expect(finalState.value, 'stale');
+    });
   });
 }

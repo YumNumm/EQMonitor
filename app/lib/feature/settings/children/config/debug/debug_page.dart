@@ -366,14 +366,6 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   const DebugDeviceAdminRoute().push<void>(context),
             ),
-            if (Platform.isIOS)
-              ListTile(
-                title: const Text('Live Activity テスト'),
-                subtitle: const Text('開始 / 更新 / 終了（自デバイス）'),
-                leading: const Icon(Icons.live_tv_outlined),
-                onTap: () async =>
-                    const DebugLiveActivityRoute().push<void>(context),
-              ),
             const Divider(),
             const _BackgroundLocationDebugSection(),
             const Divider(),

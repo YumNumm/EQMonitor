@@ -8,9 +8,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class ShakeDetectionCard extends ConsumerWidget {
-  const ShakeDetectionCard({required this.event, super.key});
+  const ShakeDetectionCard({
+    required this.event,
+    this.outerPadding = const EdgeInsets.symmetric(horizontal: 16),
+    super.key,
+  });
 
   final ShakeDetectionEvent event;
+  final EdgeInsetsGeometry outerPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,11 +23,10 @@ class ShakeDetectionCard extends ConsumerWidget {
 
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: spacing.lg),
+      padding: outerPadding,
       child: Card(
         elevation: 0,
         clipBehavior: Clip.antiAlias,
