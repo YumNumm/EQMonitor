@@ -43,6 +43,7 @@ void main() {
         'KYOSHIN_OBSERVATION_POINTS',
         'EARTHQUAKE_STATIONS',
         'TSUNAMI_STATIONS',
+        'SHINDO_DB_STATIONS',
       ]);
     },
   );
@@ -104,6 +105,7 @@ Map<String, Object?> _parameterJson(String type) => switch (type) {
     'code_tables': {
       'area_forecast_local_eew': <Object?>[],
       'area_information_prefecture_earthquake': <Object?>[],
+      'area_information_city': <Object?>[],
       'area_epicenter': <Object?>[],
       'area_epicenter_abbreviation': <Object?>[],
       'area_epicenter_detail': <Object?>[],
@@ -120,6 +122,10 @@ Map<String, Object?> _parameterJson(String type) => switch (type) {
   'TSUNAMI_STATIONS' => {
     'metadata': _metadataJson(type),
     'prefectures': <Object?>[],
+  },
+  'SHINDO_DB_STATIONS' => {
+    'metadata': _metadataJson(type),
+    'stations': <Object?>[],
   },
   _ => throw StateError('Unexpected parameter type: $type'),
 };
