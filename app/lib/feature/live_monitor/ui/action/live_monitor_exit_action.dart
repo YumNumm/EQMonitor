@@ -51,7 +51,51 @@ class LiveMonitorExitAction {
     if (confirmed != true || !context.mounted) {
       return;
     }
-    ref.read(liveMonitorControlPanelProvider.notifier).close();
     onConfirmed();
+    ref.read(liveMonitorControlPanelProvider.notifier).close();
+  }
+
+  Future<void> confirmDiscardAndExit({
+    required WidgetRef ref,
+    required BuildContext context,
+    required bool dismissWhenPanelCloses,
+    required VoidCallback onConfirmed,
+  }) async {
+    final navigator = Navigator.of(context, rootNavigator: true);
+    final route = DialogRoute<bool>(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: const Text('表示時間を保存できませんでした'),
+        content: const Text('入力中の変更を破棄してLiveMonitor モードを終了しますか？'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('戻る'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('変更を破棄して終了'),
+          ),
+        ],
+      ),
+    );
+    final panelSubscription = dismissWhenPanelCloses
+        ? ref.listenManual(liveMonitorControlPanelProvider, (_, next) {
+            if (!next && route.isActive) {
+              route.navigator?.removeRoute(route, false);
+            }
+          })
+        : null;
+    bool? confirmed;
+    try {
+      confirmed = await navigator.push(route);
+    } finally {
+      panelSubscription?.close();
+    }
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
+    onConfirmed();
+    ref.read(liveMonitorControlPanelProvider.notifier).close();
   }
 }

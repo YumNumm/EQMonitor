@@ -141,10 +141,18 @@ class LiveMonitorPage extends HookConsumerWidget {
               raw: exitingDraft?.raw,
               revision: exitingDraft?.revision,
             );
-            if (!context.mounted || !didCommit) {
+            if (!context.mounted) {
               return;
             }
-            if (durationDraft.value != null) {
+            final currentDraft = durationDraft.value;
+            final draftDecision = resolveLiveMonitorExitDraft(
+              didCommit: didCommit,
+              exitingRaw: exitingDraft?.raw,
+              exitingRevision: exitingDraft?.revision,
+              currentRaw: currentDraft?.raw,
+              currentRevision: currentDraft?.revision,
+            );
+            if (draftDecision == LiveMonitorExitDraftDecision.cancel) {
               return;
             }
             if (!shouldContinueLiveMonitorExit(
@@ -153,21 +161,36 @@ class LiveMonitorPage extends HookConsumerWidget {
             )) {
               return;
             }
-            await ref
-                .read(liveMonitorExitActionProvider)
-                .confirm(
+            final exitAction = ref.read(liveMonitorExitActionProvider);
+            final VoidCallback onConfirmed = () {
+              durationDraft.value = null;
+              allowExit.value = true;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  context.pop();
+                }
+              });
+            };
+            switch (draftDecision) {
+              case LiveMonitorExitDraftDecision.continueExit:
+                await exitAction.confirm(
                   ref: ref,
                   context: context,
                   dismissWhenPanelCloses: source == .panel,
-                  onConfirmed: () {
-                    allowExit.value = true;
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (context.mounted) {
-                        context.pop();
-                      }
-                    });
-                  },
+                  onConfirmed: onConfirmed,
                 );
+                break;
+              case LiveMonitorExitDraftDecision.confirmDiscard:
+                await exitAction.confirmDiscardAndExit(
+                  ref: ref,
+                  context: context,
+                  dismissWhenPanelCloses: source == .panel,
+                  onConfirmed: onConfirmed,
+                );
+                break;
+              case LiveMonitorExitDraftDecision.cancel:
+                return;
+            }
           } finally {
             if (context.mounted) {
               confirmingExit.value = false;

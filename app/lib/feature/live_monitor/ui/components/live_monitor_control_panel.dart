@@ -265,22 +265,6 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                   ),
                   FilledButton.tonalIcon(
                     onPressed: () async {
-                      final committedRaw = durationController.text;
-                      final committedRevision = durationRevision.value;
-                      final didCommit = await saveDuration(
-                        raw: committedRaw,
-                        revision: committedRevision,
-                      );
-                      if (!context.mounted ||
-                          !didCommit ||
-                          !isCurrentLiveMonitorDurationGeneration(
-                            currentRaw: durationController.text,
-                            currentRevision: durationRevision.value,
-                            committedRaw: committedRaw,
-                            committedRevision: committedRevision,
-                          )) {
-                        return;
-                      }
                       await onExit();
                     },
                     icon: const Icon(Icons.logout),
