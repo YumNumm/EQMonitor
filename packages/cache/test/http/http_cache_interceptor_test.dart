@@ -208,11 +208,20 @@ void main() {
 
     final response = await dio.get<Map<String, dynamic>>(
       path,
-      options: Options(headers: {'if-none-match': 'W/"stale"'}),
+      options: Options(
+        headers: {
+          'if-none-match': 'W/"stale"',
+          'if-modified-since': 'Mon, 27 Jul 2026 12:00:00 GMT',
+        },
+      ),
     );
 
     expect(response.data, <String, dynamic>{'ok': true});
     expect(response.requestOptions.headers, isNot(contains('if-none-match')));
+    expect(
+      response.requestOptions.headers,
+      isNot(contains('if-modified-since')),
+    );
   });
 
   test('store.write例外時も成功した200応答を返す', () async {

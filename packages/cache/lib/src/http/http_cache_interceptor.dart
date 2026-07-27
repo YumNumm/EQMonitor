@@ -48,6 +48,7 @@ class HttpCacheInterceptor extends Interceptor {
       cached = await store.read(key);
     } catch (_) {
       options.headers.remove('if-none-match');
+      options.headers.remove('if-modified-since');
       handler.next(options);
       return;
     }
