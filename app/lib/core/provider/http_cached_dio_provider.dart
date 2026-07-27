@@ -17,7 +17,7 @@ Future<Dio> httpCachedDio(Ref ref) async {
   try {
     final store = await ref.watch(httpCacheStoreProvider.future);
     return factory.build(httpCacheStore: store);
-  } on Object catch (error, stackTrace) {
+  } catch (error, stackTrace) {
     talker.warning('HTTPキャッシュを利用できないため通常通信へ切り替えます', error, stackTrace);
     return factory.build();
   }

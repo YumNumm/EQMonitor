@@ -255,7 +255,7 @@ void main() {
       ..httpClientAdapter = _FailIfCalledAdapter();
 
     await expectLater(
-      disabledDio.get<Map<String, Object?>>('https://example.com/value'),
+      disabledDio.get<Map<String, dynamic>>('https://example.com/value'),
       throwsA(
         isA<DioException>().having(
           (e) => e.error,

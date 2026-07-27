@@ -117,7 +117,7 @@ void main() {
 
     expect(dio.interceptors.whereType<CacheOnlyInterceptor>(), hasLength(1));
     await expectLater(
-      dio.get<Map<String, Object?>>('/value'),
+      dio.get<Map<String, dynamic>>('/value'),
       throwsA(
         isA<DioException>().having(
           (e) => e.error,
