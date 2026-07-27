@@ -109,7 +109,7 @@ class LiveMonitorEarthquakeCard extends ConsumerWidget {
       CurrentLocationIntensityCard(item: earthquake),
       if (displayMode == IntensityDisplayMode.lpgm)
         EarthquakeLpgmIntensityCard(item: earthquake),
-      if (effectiveTrigger is LiveMonitorEstimatedIntensityTrigger)
+      if (displayMode == IntensityDisplayMode.estimated)
         _EstimatedIntensitySummary(generatedAt: generatedAt),
       if (compactRegions.isNotEmpty || regionGroups.isNotEmpty)
         Text(

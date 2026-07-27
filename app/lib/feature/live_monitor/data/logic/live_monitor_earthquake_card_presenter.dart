@@ -11,6 +11,9 @@ IntensityDisplayMode preferredIntensityMode({
   required Earthquake earthquake,
   required LiveMonitorEarthquakeTrigger? trigger,
 }) {
+  if (trigger == null && earthquake.estimatedIntensityTileUrl != null) {
+    return IntensityDisplayMode.estimated;
+  }
   final effectiveTrigger =
       trigger ?? latestSupportedTelegramTrigger(earthquake);
   return switch (effectiveTrigger) {

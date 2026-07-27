@@ -152,6 +152,24 @@ void main() {
       expect(mode, IntensityDisplayMode.jma);
     });
 
+    test('分割表示はtriggerなしでもfull推計震度URLがあれば推計震度を選ぶ', () {
+      final mode = preferredIntensityMode(
+        earthquake: _earthquake(
+          maxLpgmIntensity: JmaLpgmIntensity.two,
+          estimatedIntensityTileUrl: 'https://example.com/estimated.pmtiles',
+          telegramMetadata: [
+            EarthquakeTelegramMetadata(
+              type: EarthquakeTelegramType.vxse62,
+              reportedAt: _reportedAt,
+            ),
+          ],
+        ),
+        trigger: null,
+      );
+
+      expect(mode, IntensityDisplayMode.estimated);
+    });
+
     test('VXSE53は気象庁震度を選ぶ', () {
       final mode = preferredIntensityMode(
         earthquake: _earthquake(
