@@ -286,7 +286,15 @@ class AscClient:
 
     def commit_background_asset_upload(self, upload_file_id: str, archive_path: str) -> None:
         with open(archive_path, "rb") as f:
-            checksum = hashlib.md5(f.read()).hexdigest()  # noqa: S324
+            md5_hash = hashlib.md5(f.read()).hexdigest()  # noqa: S324
+        # ASC API 4.1+: `sourceFileChecksum` is deprecated; use `sourceFileChecksums`
+        # (Checksums type). For a single-part archive upload, file and composite
+        # both use the whole-file MD5. Checksums are optional per Apple, but we
+        # still send them for integrity validation.
+        source_file_checksums = {
+            "file": {"hash": md5_hash, "algorithm": "MD5"},
+            "composite": {"hash": md5_hash, "algorithm": "MD5"},
+        }
         res = self.request(
             "PATCH",
             f"/v1/backgroundAssetUploadFiles/{upload_file_id}",
@@ -294,7 +302,10 @@ class AscClient:
                 "data": {
                     "type": "backgroundAssetUploadFiles",
                     "id": upload_file_id,
-                    "attributes": {"uploaded": True, "sourceFileChecksum": checksum},
+                    "attributes": {
+                        "uploaded": True,
+                        "sourceFileChecksums": source_file_checksums,
+                    },
                 }
             },
         )

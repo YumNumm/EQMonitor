@@ -147,5 +147,33 @@ class PollBackgroundAssetVersionStateTest(unittest.TestCase):
         self.assertIn("docs/asset-pack-cd.md", message)
 
 
+class CommitBackgroundAssetUploadTest(unittest.TestCase):
+    def test_uses_source_file_checksums_instead_of_deprecated_attribute(self) -> None:
+        captured: dict = {}
+
+        class _CaptureClient(AscClient):
+            def request(self, method, path, json_body=None, extra_headers=None, raw_body=None):
+                del extra_headers, raw_body
+                captured["method"] = method
+                captured["path"] = path
+                captured["json_body"] = json_body
+                return AscResponse(status=200, body={})
+
+        with tempfile.NamedTemporaryFile(suffix=".aar") as tmp:
+            tmp.write(b"hello-asset-pack")
+            tmp.flush()
+            client = _CaptureClient("kid", "iss", "/dev/null")
+            client.commit_background_asset_upload("upload-file-id", tmp.name)
+
+        attributes = captured["json_body"]["data"]["attributes"]
+        self.assertTrue(attributes["uploaded"])
+        self.assertNotIn("sourceFileChecksum", attributes)
+        checksums = attributes["sourceFileChecksums"]
+        self.assertEqual(checksums["file"]["algorithm"], "MD5")
+        self.assertEqual(checksums["composite"]["algorithm"], "MD5")
+        self.assertEqual(checksums["file"]["hash"], checksums["composite"]["hash"])
+        self.assertEqual(len(checksums["file"]["hash"]), 32)
+
+
 if __name__ == "__main__":
     unittest.main()

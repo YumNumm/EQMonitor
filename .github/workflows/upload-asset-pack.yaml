@@ -1,21 +1,5 @@
 name: Upload Asset Pack
 
-# Consumes the `asset_pack_released` repository_dispatch sent by
-# YumNumm/eqmonitor-backend's `.github/workflows/release-asset-pack.yaml`
-# (client_payload: pack_version, artifact_url, manifest_url, sha256 — see
-# backend/.superpowers/sdd/2026-07-18-asset-pack/task-6-brief.md), verifies
-# the published zip, then fans out to three independent, separately
-# reviewable destinations so a failure in one never hides in another:
-#   - macOS native bundling sync (app/assets/platform, via PR)
-#   - Android Play Asset Delivery module sync (via PR; live Play Store
-#     upload is NOT automated yet — see docs/asset-pack-cd.md)
-#   - iOS Managed Background Assets upload (App Store Connect API)
-#
-# See docs/asset-pack-cd.md for one-time manual setup this workflow assumes
-# already exists (Google Play asset delivery config, App Store Connect
-# Managed Background Assets pack creation) and for what remains unverified
-# until this workflow's first real run.
-
 on:
   repository_dispatch:
     types: [asset_pack_released]
@@ -455,26 +439,19 @@ jobs:
         run: |
           set -euo pipefail
           cp ba-package-manifest.json extracted/ba-package-manifest.json
+          archive_path="ios-background-asset.aar"
           (
             cd extracted
-            # Command form confirmed via WWDC25 "Discover Apple-Hosted Background
-            # Assets" session transcript: `ba-package <manifest-path> <output-path>`,
-            # run from the directory whose contents the fileSelectors describe.
-            xcrun ba-package ba-package-manifest.json ../ios-background-asset.archive
+            # `xcrun ba-package package <manifest> -o <output>` requires a `.aar`
+            # extension and resolves fileSelectors relative to this directory.
+            # See docs/knowledge/20260728_ba_package_cli.md.
+            xcrun ba-package package ba-package-manifest.json -o "../${archive_path}"
           )
-          if [ -f ios-background-asset.archive ]; then
-            echo "archive_path=ios-background-asset.archive" >> "$GITHUB_ENV"
-          else
-            # The exact output file extension ba-package uses was not verifiable
-            # offline (see tool/asset_pack/asc_client.py docstring); fall back to
-            # a glob rather than guessing wrong and silently uploading nothing.
-            found=$(find . -maxdepth 1 -name 'ios-background-asset*' -print -quit)
-            if [ -z "$found" ]; then
-              echo "::error::ba-package did not produce an output archive at the requested path or any ios-background-asset* file. Inspect 'xcrun ba-package --help' output from the pre-check step above and fix the invocation. Manual fallback: package with Xcode locally and upload via Transporter (docs/asset-pack-cd.md)."
-              exit 1
-            fi
-            echo "archive_path=$found" >> "$GITHUB_ENV"
+          if [ ! -f "$archive_path" ]; then
+            echo "::error::ba-package did not produce ${archive_path}. Inspect 'xcrun ba-package help package' output from the pre-check step above. Manual fallback: package with Xcode locally and upload via Transporter (docs/asset-pack-cd.md)."
+            exit 1
           fi
+          echo "archive_path=$archive_path" >> "$GITHUB_ENV"
 
       - name: Upload to App Store Connect (Managed Background Assets)
         env:
