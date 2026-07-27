@@ -84,4 +84,21 @@ void main() {
       isNull,
     );
   });
+
+  test('現在のviewportと一致するpost-frame measurementだけを利用する', () {
+    expect(
+      isLiveMonitorSplitViewportMeasurementCurrent(
+        measuredViewportSize: const Size(800, 752),
+        currentViewportSize: const Size(800, 752),
+      ),
+      isTrue,
+    );
+    expect(
+      isLiveMonitorSplitViewportMeasurementCurrent(
+        measuredViewportSize: const Size(800, 752),
+        currentViewportSize: const Size(752, 800),
+      ),
+      isFalse,
+    );
+  });
 }

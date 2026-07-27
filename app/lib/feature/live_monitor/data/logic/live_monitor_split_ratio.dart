@@ -35,3 +35,8 @@ Rect? liveMonitorDisplayFeatureLocalBounds({
     localBounds.bottom.clamp(0, splitViewSize.height).toDouble(),
   );
 }
+
+bool isLiveMonitorSplitViewportMeasurementCurrent({
+  required Size measuredViewportSize,
+  required Size currentViewportSize,
+}) => measuredViewportSize == currentViewportSize;
