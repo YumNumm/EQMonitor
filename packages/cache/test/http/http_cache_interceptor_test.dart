@@ -29,6 +29,12 @@ void main() {
     return dio;
   }
 
+  Dio buildDioWithStore(HttpCacheStore store) {
+    final dio = Dio(BaseOptions(baseUrl: 'https://v2.api.eqmonitor.app'))
+      ..interceptors.add(HttpCacheInterceptor(store));
+    return dio;
+  }
+
   test('200 で保存 → 再GETで 304 → body 復元', () async {
     const path = '/v2/earthquake';
     final dio = buildDio();
@@ -187,4 +193,70 @@ void main() {
     final res = await dio2.get<dynamic>(path);
     expect((res.data as Map)['gen'], 2);
   });
+
+  test('store.read例外時は条件付きヘッダーを除去してネットワーク継続', () async {
+    const path = '/v2/earthquake';
+    final store = _ReadFailureHttpCacheStore(db: db);
+    final dio = buildDioWithStore(store);
+    final adapter = DioAdapter(dio: dio);
+    adapter.onGet(
+      path,
+      (server) => server.reply(200, <String, dynamic>{
+        'ok': true,
+      }, headers: jsonHeaders('W/"v2"')),
+    );
+
+    final response = await dio.get<Map<String, dynamic>>(
+      path,
+      options: Options(
+        headers: {
+          'if-none-match': 'W/"stale"',
+          'if-modified-since': 'Mon, 27 Jul 2026 12:00:00 GMT',
+        },
+      ),
+    );
+
+    expect(response.data, <String, dynamic>{'ok': true});
+    expect(response.requestOptions.headers, isNot(contains('if-none-match')));
+    expect(
+      response.requestOptions.headers,
+      isNot(contains('if-modified-since')),
+    );
+  });
+
+  test('store.write例外時も成功した200応答を返す', () async {
+    const path = '/v2/earthquake';
+    final store = _WriteFailureHttpCacheStore(db: db);
+    final dio = buildDioWithStore(store);
+    final adapter = DioAdapter(dio: dio);
+    adapter.onGet(
+      path,
+      (server) => server.reply(200, <String, dynamic>{
+        'ok': true,
+      }, headers: jsonHeaders('W/"v1"')),
+    );
+
+    final response = await dio.get<Map<String, dynamic>>(path);
+
+    expect(response.statusCode, 200);
+    expect(response.data, <String, dynamic>{'ok': true});
+  });
+}
+
+final class _ReadFailureHttpCacheStore extends HttpCacheStore {
+  _ReadFailureHttpCacheStore({required CacheDatabase db})
+    : super(db: db, schemaVersion: 1, appBuild: 'test');
+
+  @override
+  Future<HttpCacheEntry?> read(String key) async =>
+      throw StateError('read unavailable');
+}
+
+final class _WriteFailureHttpCacheStore extends HttpCacheStore {
+  _WriteFailureHttpCacheStore({required CacheDatabase db})
+    : super(db: db, schemaVersion: 1, appBuild: 'test');
+
+  @override
+  Future<void> write(HttpCacheEntry entry) async =>
+      throw StateError('write unavailable');
 }

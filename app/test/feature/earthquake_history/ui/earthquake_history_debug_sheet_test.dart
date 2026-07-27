@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
@@ -174,9 +174,9 @@ void main() {
               extensions: [DesignSystemThemeExtension.light()],
             ),
             builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: TextScaler.linear(textScale),
-              ),
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(textScale)),
               child: child ?? const SizedBox.shrink(),
             ),
             home: Consumer(
@@ -637,7 +637,9 @@ _ProductionFixture _productionFixture() {
         (ref) async => repository,
       ),
       cacheOnlyApiClientProvider.overrideWith((ref) async => cacheClient),
-      apiClientProvider.overrideWith((ref) async => api.ApiClient(Dio())),
+      httpCachedApiClientProvider.overrideWith(
+        (ref) async => api.ApiClient(Dio()),
+      ),
       earthquakeHistoryMapLayerParameterProvider.overrideWith(
         _TrackingMapLayerParameterNotifier.new,
       ),
