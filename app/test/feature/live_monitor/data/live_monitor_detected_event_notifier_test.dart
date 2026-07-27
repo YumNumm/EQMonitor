@@ -349,6 +349,136 @@ void main() {
     expect(fixture.pageStore.loadCount, 3);
   });
 
+  test('初期一覧失敗後の初回cumulative rawは最新VXSEだけを発行しReadyで重複しない', () async {
+    final cumulativeRecord = earthquakeRecord(
+      eventId: 'Q',
+      metadata: [
+        metadata(type: .vxse51, minute: 1),
+        metadata(type: .vxse52, minute: 2),
+        metadata(type: .vxse53, minute: 3),
+        metadata(type: .vxse61, minute: 4),
+        metadata(type: .vxse62, minute: 5),
+        metadata(type: .vxse53, minute: 6),
+      ],
+    );
+    final cumulativeEarthquake = cumulativeRecord.toEarthquake(
+      parameter: _earthquakeParameter,
+      shindoDbStations: _shindoDbStations,
+    );
+    final fixture = createFixture(
+      failFirstPageLoad: true,
+      details: {'Q': earthquake(eventId: 'Q')},
+    );
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+
+    fixture.realtime.add(
+      RealtimeEvent.earthquakeUpsert(
+        record: cumulativeRecord,
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await fixture.settle();
+    fixture.detailStore.values['Q'] = cumulativeEarthquake;
+    fixture.realtime.add(
+      const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+    );
+    await fixture.settle();
+
+    final events = fixture.events
+        .map((envelope) => envelope.event)
+        .whereType<LiveMonitorEarthquakeUpsertEvent>()
+        .toList(growable: false);
+    expect(events, hasLength(1));
+    expect(
+      events.single.trigger,
+      LiveMonitorEarthquakeTrigger.telegram(
+        kind: .vxse53,
+        reportedAt: _reportedAt.add(const Duration(minutes: 6)),
+      ),
+    );
+  });
+
+  test('初期detail欠損後の初回cumulative rawも最新VXSEだけを発行する', () async {
+    final cumulativeRecord = earthquakeRecord(
+      eventId: 'Q',
+      metadata: [
+        metadata(type: .vxse51, minute: 1),
+        metadata(type: .vxse52, minute: 2),
+        metadata(type: .vxse53, minute: 3),
+        metadata(type: .vxse62, minute: 4),
+      ],
+    );
+    final cumulativeEarthquake = cumulativeRecord.toEarthquake(
+      parameter: _earthquakeParameter,
+      shindoDbStations: _shindoDbStations,
+    );
+    final fixture = createFixture(details: {'Q': earthquake(eventId: 'Q')});
+    fixture.detailStore.failures.add('Q');
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+    fixture.detailStore.failures.remove('Q');
+
+    fixture.realtime.add(
+      RealtimeEvent.earthquakeUpsert(
+        record: cumulativeRecord,
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await fixture.settle();
+    fixture.detailStore.values['Q'] = cumulativeEarthquake;
+    fixture.realtime.add(
+      const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+    );
+    await fixture.settle();
+
+    final events = fixture.events
+        .map((envelope) => envelope.event)
+        .whereType<LiveMonitorEarthquakeUpsertEvent>()
+        .toList(growable: false);
+    expect(events, hasLength(1));
+    expect(
+      events.single.trigger,
+      LiveMonitorEarthquakeTrigger.telegram(
+        kind: .vxse62,
+        reportedAt: _reportedAt.add(const Duration(minutes: 4)),
+      ),
+    );
+  });
+
+  test('初回rawに新規候補がなければfullをbaselineにして推計震度を誤発行しない', () async {
+    final cumulativeRecord = earthquakeRecord(
+      eventId: 'Q',
+      metadata: const [],
+      tileUrl: 'https://tiles.eqmonitor.app/estimated/existing.pmtiles',
+    );
+    final cumulativeEarthquake = cumulativeRecord.toEarthquake(
+      parameter: _earthquakeParameter,
+      shindoDbStations: _shindoDbStations,
+    );
+    final fixture = createFixture(
+      failFirstPageLoad: true,
+      details: {'Q': earthquake(eventId: 'Q')},
+    );
+    addTearDown(fixture.container.dispose);
+    await fixture.start();
+
+    fixture.realtime.add(
+      RealtimeEvent.earthquakeUpsert(
+        record: cumulativeRecord,
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    await fixture.settle();
+    fixture.detailStore.values['Q'] = cumulativeEarthquake;
+    fixture.realtime.add(
+      const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+    );
+    await fixture.settle();
+
+    expect(fixture.events, isEmpty);
+  });
+
   test('初期baseline中のraw eventを到着順に発行する', () async {
     final pageCompleter = Completer<PaginatedResponse<EarthquakePartial>>();
     final fixture = createFixture(pageCompleter: pageCompleter);

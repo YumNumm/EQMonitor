@@ -55,7 +55,16 @@ class LiveMonitorDetectedEventNotifier
       if (event == null) {
         return;
       }
-      if (!initialized) {
+      final shouldRecordInitialBoundary =
+          !initialized ||
+          switch (event) {
+            RealtimeEarthquakeUpsertEvent(:final record) =>
+              !detector.hasEarthquakeBaseline(record.eventId),
+            RealtimeEstimatedIntensityUpsertEvent(:final eventId) =>
+              !detector.hasEarthquakeBaseline(eventId),
+            _ => false,
+          };
+      if (shouldRecordInitialBoundary) {
         initialEarthquakeBoundary.record(event);
       }
       pendingRealtimeEvents.add(event);
@@ -223,9 +232,16 @@ class LiveMonitorDetectedEventNotifier
         if (!ref.mounted) {
           return;
         }
-        acceptEarthquake(
-          earthquakeFromRealtimeRecord(record: record, repository: repository),
+        final earthquake = earthquakeFromRealtimeRecord(
+          record: record,
+          repository: repository,
         );
+        if (!detector.hasEarthquakeBaseline(earthquake.eventId)) {
+          detector.seedEarthquake(
+            initialEarthquakeBoundary.baselineSnapshot(earthquake),
+          );
+        }
+        acceptEarthquake(earthquake);
       case RealtimeEarthquakeDeleteEvent(:final eventId):
         publish(LiveMonitorDetectedEvent.earthquakeDeleted(eventId: eventId));
       case RealtimeEstimatedIntensityUpsertEvent(

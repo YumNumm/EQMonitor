@@ -35,6 +35,9 @@ class LiveMonitorEventDetector {
   bool _hasEewBaseline = false;
   int? _lastShakeRevision;
 
+  bool hasEarthquakeBaseline(String eventId) =>
+      _estimatedUrls.containsKey(eventId);
+
   List<LiveMonitorDetectedEvent> detectEews(List<EewTelegramItem> eews) {
     if (!_hasEewBaseline) {
       _hasEewBaseline = true;
