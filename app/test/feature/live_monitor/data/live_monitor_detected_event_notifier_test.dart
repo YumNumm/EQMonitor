@@ -24,7 +24,11 @@ import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
+import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
+import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
+import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_coordinator.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_detected_event_notifier.dart';
+import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_settings_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_latest_earthquake_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
@@ -95,10 +99,14 @@ final class _PageStore {
   Completer<PaginatedResponse<EarthquakePartial>>? firstLoad;
   final delayedLoads = <int, Completer<PaginatedResponse<EarthquakePartial>>>{};
   var loadCount = 0;
+  var failFirstLoad = false;
   var failAfterFirstLoad = false;
 
   Future<PaginatedResponse<EarthquakePartial>> load() async {
     loadCount += 1;
+    if (loadCount == 1 && failFirstLoad) {
+      throw StateError('initial page unavailable');
+    }
     final pending = firstLoad;
     if (loadCount == 1 && pending != null) {
       return pending.future;
@@ -112,6 +120,11 @@ final class _PageStore {
     }
     return page;
   }
+}
+
+final class _StaticSettings extends LiveMonitorSettingsNotifier {
+  @override
+  Future<LiveMonitorSettings> build() async => const LiveMonitorSettings();
 }
 
 final class _StubHistoryNotifier extends EarthquakeHistoryNotifier {
@@ -215,6 +228,127 @@ void main() {
     );
   });
 
+  test('初期detail待機中も新規EEWと揺れ検知を即時発行しEEWでパネルを閉じる', () async {
+    final initialDetail = Completer<Earthquake>();
+    final fixture = createFixture(
+      eews: [eew(eventId: 'BASELINE-EEW', serialNo: 1)],
+      shakeSnapshot: snapshot(
+        revision: 1,
+        events: [shakeEvent(eventId: 'BASELINE-SHAKE', serialNo: 1)],
+      ),
+      details: {'Q': earthquake(eventId: 'Q')},
+      firstDetailLoads: {'Q': initialDetail},
+    );
+    addTearDown(fixture.container.dispose);
+    final initialization = fixture.container.read(
+      liveMonitorDetectedEventProvider.future,
+    );
+    fixture.container
+      ..read(eewAliveTelegramProvider)
+      ..read(shakeDetectionAcceptedSnapshotProvider);
+    await fixture.container.read(liveMonitorSettingsProvider.future);
+    fixture.container
+      ..listen(liveMonitorCoordinatorProvider, (_, _) {}, fireImmediately: true)
+      ..read(liveMonitorControlPanelProvider.notifier).open();
+    await fixture.settle();
+
+    fixture.eews.publish([
+      eew(eventId: 'BASELINE-EEW', serialNo: 1),
+      eew(eventId: 'NEW-EEW', serialNo: 1),
+    ]);
+    fixture.shake.publish(
+      snapshot(
+        revision: 2,
+        events: [
+          shakeEvent(eventId: 'BASELINE-SHAKE', serialNo: 1),
+          shakeEvent(eventId: 'NEW-SHAKE', serialNo: 1),
+        ],
+      ),
+    );
+    await fixture.settle();
+
+    expect(fixture.events.map((envelope) => envelope.event), [
+      const LiveMonitorDetectedEvent.eewStarted(
+        eventId: 'NEW-EEW',
+        serialNo: 1,
+      ),
+      const LiveMonitorDetectedEvent.shakeDetected(
+        eventId: 'NEW-SHAKE',
+        serialNo: 1,
+      ),
+    ]);
+    expect(fixture.container.read(liveMonitorControlPanelProvider), isFalse);
+
+    initialDetail.complete(earthquake(eventId: 'Q'));
+    await initialization;
+    await fixture.settle();
+    expect(fixture.events, hasLength(2));
+  });
+
+  test('初期一覧失敗を隔離しrawとcanonicalを継続してReadyとforegroundで再同期する', () async {
+    final fixture = createFixture(
+      failFirstPageLoad: true,
+      details: {'Q': earthquake(eventId: 'Q')},
+      shakeSnapshot: snapshot(revision: 0, events: const []),
+    );
+    addTearDown(fixture.container.dispose);
+
+    await expectLater(fixture.start(), completes);
+    fixture.realtime.add(
+      const RealtimeEvent.earthquakeDelete(
+        eventId: 'RAW-AFTER-INITIAL-ERROR',
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    fixture.eews.publish([eew(eventId: 'NEW-EEW', serialNo: 1)]);
+    fixture.shake.publish(
+      snapshot(
+        revision: 1,
+        events: [shakeEvent(eventId: 'NEW-SHAKE', serialNo: 1)],
+      ),
+    );
+    await fixture.settle();
+
+    fixture.detailStore.values['Q'] = earthquake(
+      eventId: 'Q',
+      metadata: [metadata(type: .vxse53, minute: 1)],
+    );
+    fixture.realtime.add(
+      const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+    );
+    await fixture.settle();
+    fixture.detailStore.values['Q'] = earthquake(
+      eventId: 'Q',
+      metadata: [
+        metadata(type: .vxse53, minute: 1),
+        metadata(type: .vxse62, minute: 2),
+      ],
+    );
+    fixture.lifecycle
+      ..publish(AppLifecycleState.paused)
+      ..publish(AppLifecycleState.resumed);
+    await fixture.settle();
+
+    expect(fixture.events.map((envelope) => envelope.event.eventId), [
+      'RAW-AFTER-INITIAL-ERROR',
+      'NEW-EEW',
+      'NEW-SHAKE',
+      'Q',
+      'Q',
+    ]);
+    expect(
+      fixture.events
+          .map((envelope) => envelope.event)
+          .whereType<LiveMonitorEarthquakeUpsertEvent>()
+          .map((event) => event.trigger.kind),
+      [
+        LiveMonitorEarthquakeTriggerKind.vxse53,
+        LiveMonitorEarthquakeTriggerKind.vxse62,
+      ],
+    );
+    expect(fixture.pageStore.loadCount, 3);
+  });
+
   test('初期baseline中のraw eventを到着順に発行する', () async {
     final pageCompleter = Completer<PaginatedResponse<EarthquakePartial>>();
     final fixture = createFixture(pageCompleter: pageCompleter);
@@ -282,6 +416,70 @@ void main() {
     expect(events, hasLength(1));
     final event = events.single.event as LiveMonitorEarthquakeUpsertEvent;
     expect(event.trigger.kind, LiveMonitorEarthquakeTriggerKind.vxse62);
+  });
+
+  test('初期detailをsnapshot境界としてraw fullの差分だけを到着順に発行する', () async {
+    final initialDetail = Completer<Earthquake>();
+    final baselineMetadata = [
+      metadata(type: .vxse51, minute: 1),
+      metadata(type: .vxse52, minute: 2),
+      metadata(type: .vxse53, minute: 3),
+      metadata(type: .vxse61, minute: 4),
+      metadata(type: .vxse62, minute: 5),
+    ];
+    final fixture = createFixture(
+      details: {'Q': earthquake(eventId: 'Q')},
+      firstDetailLoads: {'Q': initialDetail},
+    );
+    addTearDown(fixture.container.dispose);
+    final initialization = fixture.container.read(
+      liveMonitorDetectedEventProvider.future,
+    );
+    await fixture.settle();
+
+    fixture.realtime.add(
+      RealtimeEvent.earthquakeUpsert(
+        record: earthquakeRecord(
+          eventId: 'Q',
+          metadata: [
+            ...baselineMetadata,
+            metadata(type: .vxse62, minute: 6),
+          ],
+          tileUrl: 'https://tiles.eqmonitor.app/estimated/tile-2.pmtiles',
+        ),
+        source: RealtimeSource.eqmonitor,
+      ),
+    );
+    initialDetail.complete(
+      earthquake(
+        eventId: 'Q',
+        metadata: baselineMetadata,
+        tileUrl: 'https://tiles.eqmonitor.app/estimated/tile-1.pmtiles',
+      ),
+    );
+    await initialization;
+    await fixture.settle();
+
+    final events = fixture.events
+        .map((envelope) => envelope.event)
+        .whereType<LiveMonitorEarthquakeUpsertEvent>()
+        .toList(growable: false);
+    expect(events, hasLength(2));
+    expect(
+      events.first.trigger,
+      LiveMonitorEarthquakeTrigger.telegram(
+        kind: .vxse62,
+        reportedAt: _reportedAt.add(const Duration(minutes: 6)),
+      ),
+    );
+    expect(
+      events.last.trigger,
+      const LiveMonitorEarthquakeTrigger.estimatedIntensity(generatedAt: null),
+    );
+    expect(
+      events.last.earthquake.estimatedIntensityTileUrl,
+      'https://tiles.eqmonitor.app/estimated/tile-2.pmtiles',
+    );
   });
 
   test('初期detail待機中に届いた同一推計震度を一度だけ発行する', () async {
@@ -1053,6 +1251,7 @@ _DetectedEventFixture createFixture({
   Map<String, Earthquake> details = const {},
   Completer<PaginatedResponse<EarthquakePartial>>? pageCompleter,
   Map<String, Completer<Earthquake>> firstDetailLoads = const {},
+  bool failFirstPageLoad = false,
 }) {
   final realtime = StreamController<RealtimeEvent>.broadcast(sync: true);
   addTearDown(realtime.close);
@@ -1060,12 +1259,15 @@ _DetectedEventFixture createFixture({
   final mutableShake = _MutableShakeSnapshot(shakeSnapshot);
   final lifecycle = _MutableLifecycle();
   final eventIds = details.keys.toList(growable: false);
-  final pageStore = _PageStore(
-    PaginatedResponse(
-      items: eventIds.map(earthquakePartial).toList(growable: false),
-      nextToken: null,
-    ),
-  )..firstLoad = pageCompleter;
+  final pageStore =
+      _PageStore(
+          PaginatedResponse(
+            items: eventIds.map(earthquakePartial).toList(growable: false),
+            nextToken: null,
+          ),
+        )
+        ..firstLoad = pageCompleter
+        ..failFirstLoad = failFirstPageLoad;
   final detailStore = _DetailStore()
     ..values.addAll(details)
     ..firstLoads.addAll(firstDetailLoads);
@@ -1083,6 +1285,7 @@ _DetectedEventFixture createFixture({
       shakeDetectionAcceptedSnapshotProvider.overrideWith(() => mutableShake),
       appLifecycleProvider.overrideWith(() => lifecycle),
       appClockProvider.overrideWith(_FixedAppClock.new),
+      liveMonitorSettingsProvider.overrideWith(_StaticSettings.new),
       earthquakeHistoryProvider(
         liveMonitorLatestParameter,
       ).overrideWith(() => _StubHistoryNotifier(pageStore)),
@@ -1163,6 +1366,7 @@ ShakeDetectionEvent shakeEvent({
 Earthquake earthquake({
   required String eventId,
   EarthquakeTelegramType? telegramType,
+  List<EarthquakeTelegramMetadata>? metadata,
   String? tileUrl,
 }) => Earthquake(
   eventId: eventId,
@@ -1171,15 +1375,19 @@ Earthquake earthquake({
   originTimePrecision: OriginTimePrecision.second,
   arrivalTime: _reportedAt,
   dataSources: const [EarthquakeDataSource.jmaDisasterInformationXml],
-  telegramTypes: telegramType == null ? const [] : [telegramType],
-  telegramMetadata: telegramType == null
-      ? const []
-      : [
-          EarthquakeTelegramMetadata(
-            type: telegramType,
-            reportedAt: _reportedAt,
-          ),
-        ],
+  telegramTypes:
+      metadata?.map((item) => item.type).toList(growable: false) ??
+      (telegramType == null ? const [] : [telegramType]),
+  telegramMetadata:
+      metadata ??
+      (telegramType == null
+          ? const []
+          : [
+              EarthquakeTelegramMetadata(
+                type: telegramType,
+                reportedAt: _reportedAt,
+              ),
+            ]),
   hypocenter: null,
   intensity: null,
   earthquakeType: EarthquakeType.normal,
@@ -1202,7 +1410,9 @@ EarthquakePartial earthquakePartial(String eventId) => EarthquakePartialNormal(
 
 api.Earthquake earthquakeRecord({
   required String eventId,
-  required EarthquakeTelegramType telegramType,
+  EarthquakeTelegramType? telegramType,
+  List<EarthquakeTelegramMetadata>? metadata,
+  String? tileUrl,
 }) => api.Earthquake(
   eventId: eventId,
   status: api.TelegramStatus.normal,
@@ -1211,35 +1421,56 @@ api.Earthquake earthquakeRecord({
   arrivalTime: _reportedAt,
   originTimePrecision: api.OriginTimePrecision.second,
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
-  telegrams: [
-    api.EarthquakeTelegram(
-      telegram: api.Telegram(
-        id: 'telegram-$eventId',
-        eventId: eventId,
-        type: switch (telegramType) {
-          EarthquakeTelegramType.vxse51 => api.TelegramType.vxse51,
-          EarthquakeTelegramType.vxse52 => api.TelegramType.vxse52,
-          EarthquakeTelegramType.vxse53 => api.TelegramType.vxse53,
-          EarthquakeTelegramType.vxse61 => api.TelegramType.vxse61,
-          EarthquakeTelegramType.vxse62 => api.TelegramType.vxse62,
-          EarthquakeTelegramType.vxse45Forecast => api.TelegramType.vxse45,
-          EarthquakeTelegramType.vxse45Warning => api.TelegramType.vxse45,
-        },
-        title: '地震情報',
-        status: api.TelegramStatus.normal,
-        infoType: api.InfoType.publication,
-        editorialOffice: '気象庁本庁',
-        publishingOffice: const ['気象庁'],
-        pressedAt: _reportedAt,
-        reportedAt: _reportedAt,
-        infoKind: '地震情報',
-        infoKindVersion: '1.0_0',
-        hash: 'hash-$eventId',
-        createdAt: _reportedAt,
-      ),
-      comments: const api.TelegramComments(),
-    ),
-  ],
+  telegrams:
+      (metadata ??
+              [
+                EarthquakeTelegramMetadata(
+                  type: telegramType ?? EarthquakeTelegramType.vxse53,
+                  reportedAt: _reportedAt,
+                ),
+              ])
+          .indexed
+          .map(
+            (entry) => api.EarthquakeTelegram(
+              telegram: api.Telegram(
+                id: 'telegram-$eventId-${entry.$1}',
+                eventId: eventId,
+                type: switch (entry.$2.type) {
+                  EarthquakeTelegramType.vxse51 => api.TelegramType.vxse51,
+                  EarthquakeTelegramType.vxse52 => api.TelegramType.vxse52,
+                  EarthquakeTelegramType.vxse53 => api.TelegramType.vxse53,
+                  EarthquakeTelegramType.vxse61 => api.TelegramType.vxse61,
+                  EarthquakeTelegramType.vxse62 => api.TelegramType.vxse62,
+                  EarthquakeTelegramType.vxse45Forecast =>
+                    api.TelegramType.vxse45,
+                  EarthquakeTelegramType.vxse45Warning =>
+                    api.TelegramType.vxse45,
+                },
+                title: '地震情報',
+                status: api.TelegramStatus.normal,
+                infoType: api.InfoType.publication,
+                editorialOffice: '気象庁本庁',
+                publishingOffice: const ['気象庁'],
+                pressedAt: _reportedAt,
+                reportedAt: entry.$2.reportedAt,
+                infoKind: '地震情報',
+                infoKindVersion: '1.0_0',
+                hash: 'hash-$eventId',
+                createdAt: entry.$2.reportedAt,
+              ),
+              comments: const api.TelegramComments(),
+            ),
+          )
+          .toList(growable: false),
+  estimatedIntensityTile: tileUrl,
+);
+
+EarthquakeTelegramMetadata metadata({
+  required EarthquakeTelegramType type,
+  required int minute,
+}) => EarthquakeTelegramMetadata(
+  type: type,
+  reportedAt: _reportedAt.add(Duration(minutes: minute)),
 );
 
 const _metadata = ParameterMetadata(

@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_event_detector.dart';
+import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_initial_earthquake_boundary.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_latest_earthquake_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
@@ -29,6 +30,7 @@ typedef LiveMonitorPendingEstimatedIntensity = ({
 class LiveMonitorDetectedEventNotifier
     extends _$LiveMonitorDetectedEventNotifier {
   final detector = LiveMonitorEventDetector();
+  final initialEarthquakeBoundary = LiveMonitorInitialEarthquakeBoundary();
   final pendingRealtimeEvents = <RealtimeEvent>[];
   final pendingEstimatedEvents = <LiveMonitorPendingEstimatedIntensity>[];
   var sequence = 0;
@@ -39,11 +41,11 @@ class LiveMonitorDetectedEventNotifier
   @override
   Future<LiveMonitorEventEnvelope?> build() async {
     listenRealtimeEvents();
+    seedAndListenCanonicalSources();
     await initializeBaselines();
     if (!ref.mounted) {
       return null;
     }
-    listenCanonicalSources();
     return state.value;
   }
 
@@ -53,6 +55,9 @@ class LiveMonitorDetectedEventNotifier
       if (event == null) {
         return;
       }
+      if (!initialized) {
+        initialEarthquakeBoundary.record(event);
+      }
       pendingRealtimeEvents.add(event);
       if (initialized) {
         await drainRealtimeEvents();
@@ -60,7 +65,15 @@ class LiveMonitorDetectedEventNotifier
     });
   }
 
-  void listenCanonicalSources() {
+  void seedAndListenCanonicalSources() {
+    final eews = ref.read(eewAliveTelegramProvider);
+    if (eews != null) {
+      detector.detectEews(eews);
+    }
+    final shakeSnapshot = ref.read(shakeDetectionAcceptedSnapshotProvider);
+    if (shakeSnapshot != null) {
+      detector.detectShakeSnapshot(visibleShakeSnapshot(shakeSnapshot));
+    }
     ref
       ..listen(eewAliveTelegramProvider, (_, next) {
         if (next != null) {
@@ -74,39 +87,45 @@ class LiveMonitorDetectedEventNotifier
       })
       ..listen(appLifecycleProvider, (_, next) async {
         if (next == AppLifecycleState.resumed) {
-          await resynchronizeEarthquakes();
+          if (initialized) {
+            await resynchronizeEarthquakes();
+          } else {
+            shouldResynchronize = true;
+          }
         }
       });
   }
 
   Future<void> initializeBaselines() async {
     final earthquakeBaselines = <Earthquake>[];
-    final page = await ref.read(
-      earthquakeHistoryProvider(liveMonitorLatestParameter).future,
-    );
-    if (!ref.mounted) {
-      return;
-    }
-    for (final item in page.items) {
-      final earthquake = await loadEarthquakeDetail(
-        eventId: item.earthquake.eventId,
-        invalidate: false,
+    try {
+      final page = await ref.read(
+        earthquakeHistoryProvider(liveMonitorLatestParameter).future,
       );
       if (!ref.mounted) {
         return;
       }
-      if (earthquake != null) {
-        earthquakeBaselines.add(earthquake);
+      for (final item in page.items) {
+        final earthquake = await loadEarthquakeDetail(
+          eventId: item.earthquake.eventId,
+          invalidate: false,
+        );
+        if (!ref.mounted) {
+          return;
+        }
+        if (earthquake != null) {
+          earthquakeBaselines.add(earthquake);
+        }
       }
+    } catch (error, stackTrace) {
+      talker.error(
+        '[LiveMonitor] failed to initialize earthquake baselines',
+        error,
+        stackTrace,
+      );
     }
-
-    final eews = ref.read(eewAliveTelegramProvider);
-    if (eews != null) {
-      detector.detectEews(eews);
-    }
-    final shakeSnapshot = ref.read(shakeDetectionAcceptedSnapshotProvider);
-    if (shakeSnapshot != null) {
-      detector.detectShakeSnapshot(visibleShakeSnapshot(shakeSnapshot));
+    if (!ref.mounted) {
+      return;
     }
     await drainRealtimeEvents(
       initialEarthquakeBaselines: earthquakeBaselines,
@@ -124,6 +143,15 @@ class LiveMonitorDetectedEventNotifier
     isDrainingRealtimeEvents = true;
     var shouldApplyInitialBaselines = completeInitialization;
     try {
+      if (shouldApplyInitialBaselines) {
+        for (final earthquake in initialEarthquakeBaselines) {
+          detector.seedEarthquake(
+            initialEarthquakeBoundary.baselineSnapshot(earthquake),
+          );
+        }
+        initialized = true;
+        shouldApplyInitialBaselines = false;
+      }
       do {
         while (pendingRealtimeEvents.isNotEmpty && ref.mounted) {
           final event = pendingRealtimeEvents.removeAt(0);
@@ -143,14 +171,6 @@ class LiveMonitorDetectedEventNotifier
             shouldResynchronize = false;
             await resynchronizeEarthquakes();
           }
-        }
-        if (shouldApplyInitialBaselines) {
-          // detail取得中に届いたrawを先に確定し、後着REST baselineへの吸収を防ぐ。
-          for (final earthquake in initialEarthquakeBaselines) {
-            detector.seedEarthquake(earthquake);
-          }
-          initialized = true;
-          shouldApplyInitialBaselines = false;
         }
         if (initialized && shouldResynchronize) {
           shouldResynchronize = false;
