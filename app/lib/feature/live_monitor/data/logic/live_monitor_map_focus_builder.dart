@@ -2,9 +2,10 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_map_focus.dart';
+import 'package:eqmonitor/feature/map/data/logic/seismic_map_focus_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:maplibre/maplibre.dart';
 
-const liveMonitorMapFocusMargin = 0.1;
 const liveMonitorMapSafeSpacing = 8.0;
 
 typedef LiveMonitorGeoCoordinate = ({double latitude, double longitude});
@@ -17,14 +18,27 @@ class LiveMonitorMapFocusBuilder {
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
     required double obscuredBottom,
-  }) => liveMonitorMapFocusForTargets(
-    targets: [
-      ...eews.expand(liveMonitorEewTargetCoordinates),
-      ...shakes.expand(liveMonitorShakeTargetCoordinates),
-    ],
-    fallbackBounds: homeBounds,
-    obscuredBottom: obscuredBottom,
-  );
+  }) {
+    final bounds = const SeismicMapFocusBuilder().forRealtime(
+      fallbackBounds: LngLatBounds(
+        longitudeWest: homeBounds.minLng,
+        longitudeEast: homeBounds.maxLng,
+        latitudeSouth: homeBounds.minLat,
+        latitudeNorth: homeBounds.maxLat,
+      ),
+      eews: eews,
+      shakes: shakes,
+    );
+    return liveMonitorMapFocusForBounds(
+      bounds: LiveMonitorGeoBounds(
+        minLat: bounds.latitudeSouth,
+        maxLat: bounds.latitudeNorth,
+        minLng: bounds.longitudeWest,
+        maxLng: bounds.longitudeEast,
+      ),
+      obscuredBottom: obscuredBottom,
+    );
+  }
 
   LiveMonitorMapFocus forEarthquake({
     required Earthquake earthquake,
@@ -41,11 +55,19 @@ LiveMonitorMapFocus liveMonitorMapFocusForTargets({
   required List<LiveMonitorGeoCoordinate> targets,
   required LiveMonitorGeoBounds fallbackBounds,
   required double obscuredBottom,
-}) => LiveMonitorMapFocus(
+}) => liveMonitorMapFocusForBounds(
   bounds: liveMonitorBoundsForTargets(
     targets: targets,
     fallbackBounds: fallbackBounds,
   ),
+  obscuredBottom: obscuredBottom,
+);
+
+LiveMonitorMapFocus liveMonitorMapFocusForBounds({
+  required LiveMonitorGeoBounds bounds,
+  required double obscuredBottom,
+}) => LiveMonitorMapFocus(
+  bounds: bounds,
   padding: LiveMonitorMapPadding(
     bottom:
         liveMonitorMapSafeSpacing +
@@ -78,49 +100,11 @@ LiveMonitorGeoBounds liveMonitorBoundsForTargets({
     (value, point) => point.longitude > value ? point.longitude : value,
   );
   return LiveMonitorGeoBounds(
-    minLat: (minLat - liveMonitorMapFocusMargin).clamp(-90, 90).toDouble(),
-    maxLat: (maxLat + liveMonitorMapFocusMargin).clamp(-90, 90).toDouble(),
-    minLng: (minLng - liveMonitorMapFocusMargin).clamp(-180, 180).toDouble(),
-    maxLng: (maxLng + liveMonitorMapFocusMargin).clamp(-180, 180).toDouble(),
+    minLat: (minLat - seismicMapFocusMargin).clamp(-90, 90).toDouble(),
+    maxLat: (maxLat + seismicMapFocusMargin).clamp(-90, 90).toDouble(),
+    minLng: (minLng - seismicMapFocusMargin).clamp(-180, 180).toDouble(),
+    maxLng: (maxLng + seismicMapFocusMargin).clamp(-180, 180).toDouble(),
   );
-}
-
-Iterable<LiveMonitorGeoCoordinate> liveMonitorEewTargetCoordinates(
-  EewTelegramItem eew,
-) sync* {
-  final hypocenter = eew.hypocenter;
-  final coordinate = liveMonitorGeoCoordinate(
-    latitude: hypocenter?.latitude,
-    longitude: hypocenter?.longitude,
-  );
-  if (coordinate != null) {
-    yield coordinate;
-  }
-}
-
-Iterable<LiveMonitorGeoCoordinate> liveMonitorShakeTargetCoordinates(
-  ShakeDetectionEvent shake,
-) sync* {
-  if (shake.correlatedEewEventId != null) {
-    return;
-  }
-  final minimum = liveMonitorGeoCoordinate(
-    latitude: shake.minLat,
-    longitude: shake.minLng,
-  );
-  final maximum = liveMonitorGeoCoordinate(
-    latitude: shake.maxLat,
-    longitude: shake.maxLng,
-  );
-  if (minimum == null || maximum == null) {
-    return;
-  }
-  if (minimum.latitude > maximum.latitude ||
-      minimum.longitude > maximum.longitude) {
-    return;
-  }
-  yield minimum;
-  yield maximum;
 }
 
 Iterable<LiveMonitorGeoCoordinate> liveMonitorEarthquakeTargetCoordinates(
