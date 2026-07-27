@@ -228,6 +228,75 @@ void main() {
     );
   });
 
+  test('初期EEWがnullでもslow detail中の最初のEEWを一度発行してパネルを閉じる', () async {
+    final initialDetail = Completer<Earthquake>();
+    final fixture = createFixture(
+      eews: null,
+      shakeSnapshot: snapshot(revision: 0, events: const []),
+      details: {'Q': earthquake(eventId: 'Q')},
+      firstDetailLoads: {'Q': initialDetail},
+    );
+    addTearDown(fixture.container.dispose);
+    final initialization = fixture.container.read(
+      liveMonitorDetectedEventProvider.future,
+    );
+    await fixture.container.read(liveMonitorSettingsProvider.future);
+    fixture.container
+      ..listen(liveMonitorCoordinatorProvider, (_, _) {}, fireImmediately: true)
+      ..read(liveMonitorControlPanelProvider.notifier).open();
+    await fixture.settle();
+
+    final firstEew = [eew(eventId: 'NEW-EEW', serialNo: 1)];
+    fixture.eews.publish(firstEew);
+    await fixture.settle();
+    fixture.eews.publish(firstEew);
+    await fixture.settle();
+
+    expect(fixture.events.map((envelope) => envelope.event), [
+      const LiveMonitorDetectedEvent.eewStarted(
+        eventId: 'NEW-EEW',
+        serialNo: 1,
+      ),
+    ]);
+    expect(fixture.container.read(liveMonitorControlPanelProvider), isFalse);
+
+    initialDetail.complete(earthquake(eventId: 'Q'));
+    await initialization;
+  });
+
+  test('初期揺れ検知がnullでもslow detail中のrevision 0を一度発行する', () async {
+    final initialDetail = Completer<Earthquake>();
+    final fixture = createFixture(
+      shakeSnapshot: null,
+      details: {'Q': earthquake(eventId: 'Q')},
+      firstDetailLoads: {'Q': initialDetail},
+    );
+    addTearDown(fixture.container.dispose);
+    final initialization = fixture.container.read(
+      liveMonitorDetectedEventProvider.future,
+    );
+    await fixture.settle();
+
+    final firstSnapshot = snapshot(
+      revision: 0,
+      events: [shakeEvent(eventId: 'NEW-SHAKE', serialNo: 1)],
+    );
+    fixture.shake.publish(firstSnapshot);
+    await fixture.settle();
+    fixture.shake.publish(firstSnapshot);
+    await fixture.settle();
+
+    expect(fixture.events.map((envelope) => envelope.event), [
+      const LiveMonitorDetectedEvent.shakeDetected(
+        eventId: 'NEW-SHAKE',
+        serialNo: 1,
+      ),
+    ]);
+
+    initialDetail.complete(earthquake(eventId: 'Q'));
+    await initialization;
+  });
+
   test('初期detail待機中も新規EEWと揺れ検知を即時発行しEEWでパネルを閉じる', () async {
     final initialDetail = Completer<Earthquake>();
     final fixture = createFixture(

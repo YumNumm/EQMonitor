@@ -76,13 +76,17 @@ class LiveMonitorDetectedEventNotifier
 
   void seedAndListenCanonicalSources() {
     final eews = ref.read(eewAliveTelegramProvider);
-    if (eews != null) {
-      detector.detectEews(eews);
-    }
+    detector.detectEews(eews ?? const <EewTelegramItem>[]);
     final shakeSnapshot = ref.read(shakeDetectionAcceptedSnapshotProvider);
-    if (shakeSnapshot != null) {
-      detector.detectShakeSnapshot(visibleShakeSnapshot(shakeSnapshot));
-    }
+    final shakeBaseline =
+        shakeSnapshot ??
+        ShakeDetectionSnapshot(
+          // revision 0 は有効な初回値なので、それより小さい空の境界を使う。
+          revision: -1,
+          responseAt: ref.read(appClockProvider.notifier).now().toUtc(),
+          events: const [],
+        );
+    detector.detectShakeSnapshot(visibleShakeSnapshot(shakeBaseline));
     ref
       ..listen(eewAliveTelegramProvider, (_, next) {
         if (next != null) {
