@@ -348,4 +348,49 @@ void main() {
 
     expect(focus.bounds, _homeBounds);
   });
+
+  test('範囲外の地震震源を除外して有効な観測点を維持する', () {
+    final focus = builder.forEarthquake(
+      earthquake: _earthquakeWithHypocenterAndStation(
+        hypocenterCoordinates: const Coordinate.latLng(
+          latitude: 91,
+          longitude: 181,
+        ),
+      ),
+      fallbackBounds: _homeBounds,
+      obscuredBottom: 0,
+    );
+
+    expect(focus.bounds.contains(latitude: 42, longitude: 145), isTrue);
+    expect(focus.bounds.minLat, greaterThan(40));
+  });
+
+  test('NaNとInfinityの観測点を除外して有効な震源を維持する', () {
+    final focus = builder.forEarthquake(
+      earthquake: _earthquakeWithHypocenterAndStation(
+        stationLocation: const LatLng(double.nan, double.infinity),
+      ),
+      fallbackBounds: _homeBounds,
+      obscuredBottom: 0,
+    );
+
+    expect(focus.bounds.contains(latitude: 34, longitude: 131), isTrue);
+    expect(focus.bounds.maxLat, lessThan(40));
+  });
+
+  test('範囲外震源と不正観測点だけではcaller fallbackを使う', () {
+    final focus = builder.forEarthquake(
+      earthquake: _earthquakeWithHypocenterAndStation(
+        hypocenterCoordinates: const Coordinate.latLng(
+          latitude: -91,
+          longitude: 181,
+        ),
+        stationLocation: const LatLng(double.nan, double.infinity),
+      ),
+      fallbackBounds: _homeBounds,
+      obscuredBottom: 0,
+    );
+
+    expect(focus.bounds, _homeBounds);
+  });
 }
