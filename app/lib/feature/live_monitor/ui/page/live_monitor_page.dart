@@ -1,5 +1,7 @@
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_save_queue.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_validator.dart';
+import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_exit_policy.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_tap_tracker.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
@@ -25,21 +27,21 @@ class LiveMonitorPage extends HookConsumerWidget {
     final panelOpen = ref.watch(liveMonitorControlPanelProvider);
     final allowExit = useState(false);
     final confirmingExit = useRef(false);
-    final durationDraft = useRef<String?>(null);
+    final durationDraft = useRef<({String raw, int revision})?>(null);
+    final durationRevision = useRef(0);
     final lastSavedDuration = useRef<int?>(null);
-    final durationSaveInFlight = useRef<({String raw, Future<bool> future})?>(
-      null,
-    );
+    final durationSaveQueue = useMemoized(LiveMonitorDurationSaveQueue.new);
     final tapTracker = useMemoized(
       () => LiveMonitorTapTracker(touchSlop: kTouchSlop),
     );
     if (settings != null &&
         durationDraft.value == null &&
-        durationSaveInFlight.value == null) {
+        !durationSaveQueue.hasInFlight) {
       lastSavedDuration.value = settings.earthquakeDisplaySeconds;
     }
 
-    final Future<bool> Function(String?) saveDuration = (raw) async {
+    final Future<bool> Function({required String? raw, required int? revision})
+    saveDuration = ({required raw, required revision}) async {
       if (raw == null) {
         return true;
       }
@@ -47,69 +49,54 @@ class LiveMonitorPage extends HookConsumerWidget {
       if (seconds == null) {
         return false;
       }
-      final precedingSave = durationSaveInFlight.value;
-      if (precedingSave != null) {
-        if (shouldJoinLiveMonitorDurationSave(
-          inFlightRaw: precedingSave.raw,
-          requestedRaw: raw,
-        )) {
-          return precedingSave.future;
-        }
-        await precedingSave.future;
-        if (!context.mounted) {
-          return false;
-        }
-      }
-      if (seconds == lastSavedDuration.value) {
-        if (shouldClearLiveMonitorDurationDraft(
-          didCommit: true,
-          currentDraft: durationDraft.value,
-          committedRaw: raw,
-        )) {
-          durationDraft.value = null;
-        }
-        return true;
-      }
-      final saveOperation = () async {
-        try {
-          await LiveMonitorSettingsNotifier.saveMutation.run(ref, (tsx) async {
-            await tsx
-                .get(liveMonitorSettingsProvider.notifier)
-                .updateSettings(
-                  transform: (current) =>
-                      current.copyWith(earthquakeDisplaySeconds: seconds),
-                );
-          });
+      final didCommit = await durationSaveQueue.run(
+        raw: raw,
+        operation: () async {
           if (!context.mounted) {
+            return false;
+          }
+          if (seconds == lastSavedDuration.value) {
             return true;
           }
-          lastSavedDuration.value = seconds;
-          if (shouldClearLiveMonitorDurationDraft(
-            didCommit: true,
-            currentDraft: durationDraft.value,
-            committedRaw: raw,
-          )) {
-            durationDraft.value = null;
+          try {
+            await LiveMonitorSettingsNotifier.saveMutation.run(ref, (
+              tsx,
+            ) async {
+              await tsx
+                  .get(liveMonitorSettingsProvider.notifier)
+                  .updateSettings(
+                    transform: (current) =>
+                        current.copyWith(earthquakeDisplaySeconds: seconds),
+                  );
+            });
+            if (context.mounted) {
+              lastSavedDuration.value = seconds;
+            }
+            return true;
+          } on Exception catch (error, stackTrace) {
+            talker.error(
+              '[LiveMonitor] failed to save duration',
+              error,
+              stackTrace,
+            );
+            return false;
           }
-          return true;
-        } on Exception catch (error, stackTrace) {
-          talker.error(
-            '[LiveMonitor] failed to save duration',
-            error,
-            stackTrace,
-          );
-          return false;
-        }
-      }();
-      durationSaveInFlight.value = (raw: raw, future: saveOperation);
-      try {
-        return await saveOperation;
-      } finally {
-        if (context.mounted &&
-            identical(durationSaveInFlight.value?.future, saveOperation)) {
-          durationSaveInFlight.value = null;
-        }
+        },
+      );
+      if (!context.mounted) {
+        return didCommit;
       }
+      final currentDraft = durationDraft.value;
+      if (shouldClearLiveMonitorDurationDraft(
+        didCommit: didCommit,
+        currentRaw: currentDraft?.raw,
+        currentRevision: currentDraft?.revision,
+        committedRaw: raw,
+        committedRevision: revision,
+      )) {
+        durationDraft.value = null;
+      }
+      return didCommit;
     };
 
     ref.listen(liveMonitorControlPanelProvider, (previous, next) async {
@@ -117,47 +104,68 @@ class LiveMonitorPage extends HookConsumerWidget {
         tapTracker.cancelAll();
       }
       if (previous == true && !next) {
-        final closingRaw = durationDraft.value;
-        final didCommit = await saveDuration(closingRaw);
+        final closingDraft = durationDraft.value;
+        final didCommit = await saveDuration(
+          raw: closingDraft?.raw,
+          revision: closingDraft?.revision,
+        );
         if (!context.mounted) {
           return;
         }
-        if (!didCommit && durationDraft.value == closingRaw) {
+        final currentDraft = durationDraft.value;
+        if (!didCommit &&
+            currentDraft?.revision == closingDraft?.revision &&
+            currentDraft?.raw == closingDraft?.raw) {
           durationDraft.value = null;
         }
       }
     });
 
-    final Future<void> Function() requestExit = () async {
-      if (confirmingExit.value) {
-        return;
-      }
-      confirmingExit.value = true;
-      try {
-        final didCommit = await saveDuration(durationDraft.value);
-        if (!context.mounted || !didCommit) {
-          return;
-        }
-        await ref
-            .read(liveMonitorExitActionProvider)
-            .confirm(
-              ref: ref,
-              context: context,
-              onConfirmed: () {
-                allowExit.value = true;
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (context.mounted) {
-                    context.pop();
-                  }
-                });
-              },
+    final Future<void> Function(LiveMonitorExitRequestSource) requestExit =
+        (source) async {
+          if (confirmingExit.value) {
+            return;
+          }
+          confirmingExit.value = true;
+          try {
+            final exitingDraft = durationDraft.value;
+            final didCommit = await saveDuration(
+              raw: exitingDraft?.raw,
+              revision: exitingDraft?.revision,
             );
-      } finally {
-        if (context.mounted) {
-          confirmingExit.value = false;
-        }
-      }
-    };
+            if (!context.mounted || !didCommit) {
+              return;
+            }
+            if (durationDraft.value != null) {
+              return;
+            }
+            if (!shouldContinueLiveMonitorExit(
+              source: source,
+              isPanelOpen: ref.read(liveMonitorControlPanelProvider),
+            )) {
+              return;
+            }
+            await ref
+                .read(liveMonitorExitActionProvider)
+                .confirm(
+                  ref: ref,
+                  context: context,
+                  dismissWhenPanelCloses: source == .panel,
+                  onConfirmed: () {
+                    allowExit.value = true;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (context.mounted) {
+                        context.pop();
+                      }
+                    });
+                  },
+                );
+          } finally {
+            if (context.mounted) {
+              confirmingExit.value = false;
+            }
+          }
+        };
 
     final body = switch (settings) {
       null => const Center(
@@ -183,7 +191,7 @@ class LiveMonitorPage extends HookConsumerWidget {
       canPop: allowExit.value,
       onPopInvokedWithResult: (didPop, _) async {
         if (!didPop) {
-          await requestExit();
+          await requestExit(.systemBack);
         }
       },
       child: Scaffold(
@@ -235,10 +243,15 @@ class LiveMonitorPage extends HookConsumerWidget {
                     child: LiveMonitorControlPanel(
                       settings: settings,
                       onDurationChanged: (raw) {
-                        durationDraft.value = raw;
+                        durationRevision.value++;
+                        durationDraft.value = (
+                          raw: raw,
+                          revision: durationRevision.value,
+                        );
+                        return durationRevision.value;
                       },
                       onDurationCommit: saveDuration,
-                      onExit: requestExit,
+                      onExit: () => requestExit(.panel),
                     ),
                   ),
                 ),

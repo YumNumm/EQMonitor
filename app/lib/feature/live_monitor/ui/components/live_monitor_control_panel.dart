@@ -15,8 +15,9 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
     super.key,
   });
 
-  final ValueChanged<String> onDurationChanged;
-  final Future<bool> Function(String raw) onDurationCommit;
+  final int Function(String raw) onDurationChanged;
+  final Future<bool> Function({required String raw, required int? revision})
+  onDurationCommit;
   final Future<void> Function() onExit;
   final LiveMonitorSettings settings;
 
@@ -27,8 +28,10 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
     );
     final durationFocusNode = useFocusNode();
     final durationError = useState<String?>(null);
+    final durationRevision = useRef<int?>(null);
 
-    final Future<bool> Function(String) saveDuration = (raw) async {
+    final Future<bool> Function({required String raw, required int? revision})
+    saveDuration = ({required raw, required revision}) async {
       final validation = validateLiveMonitorDuration(raw);
       final seconds = validation.seconds;
       if (seconds == null) {
@@ -36,11 +39,17 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
         return false;
       }
       durationError.value = null;
-      final didCommit = await onDurationCommit(raw);
+      final didCommit = await onDurationCommit(raw: raw, revision: revision);
       if (!context.mounted) {
         return false;
       }
-      if (!didCommit && durationController.text == raw) {
+      if (!didCommit &&
+          isCurrentLiveMonitorDurationGeneration(
+            currentRaw: durationController.text,
+            currentRevision: durationRevision.value,
+            committedRaw: raw,
+            committedRevision: revision,
+          )) {
         durationError.value = '表示時間を保存できませんでした';
       }
       return didCommit;
@@ -50,7 +59,11 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
       void handleFocusChanged() async {
         if (!durationFocusNode.hasFocus) {
           final committedRaw = durationController.text;
-          final didCommit = await saveDuration(committedRaw);
+          final committedRevision = durationRevision.value;
+          final didCommit = await saveDuration(
+            raw: committedRaw,
+            revision: committedRevision,
+          );
           if (!context.mounted) {
             return;
           }
@@ -58,7 +71,9 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
             didCommit: didCommit,
             hasFocus: durationFocusNode.hasFocus,
             currentRaw: durationController.text,
+            currentRevision: durationRevision.value,
             committedRaw: committedRaw,
+            committedRevision: committedRevision,
           )) {
             return;
           }
@@ -118,10 +133,20 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                   ),
                   IconButton(
                     onPressed: () async {
+                      final committedRaw = durationController.text;
+                      final committedRevision = durationRevision.value;
                       final didCommit = await saveDuration(
-                        durationController.text,
+                        raw: committedRaw,
+                        revision: committedRevision,
                       );
-                      if (!context.mounted || !didCommit) {
+                      if (!context.mounted ||
+                          !didCommit ||
+                          !isCurrentLiveMonitorDurationGeneration(
+                            currentRaw: durationController.text,
+                            currentRevision: durationRevision.value,
+                            committedRaw: committedRaw,
+                            committedRevision: committedRevision,
+                          )) {
                         return;
                       }
                       ref
@@ -176,14 +201,17 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                   errorText: durationError.value,
                 ),
                 onChanged: (raw) {
-                  onDurationChanged(raw);
+                  durationRevision.value = onDurationChanged(raw);
                   durationError.value =
                       validateLiveMonitorDuration(raw).error == null
                       ? null
                       : '3〜300の整数を入力してください';
                 },
                 onSubmitted: (raw) async {
-                  await saveDuration(raw);
+                  await saveDuration(
+                    raw: raw,
+                    revision: durationRevision.value,
+                  );
                 },
               ),
               const SizedBox(height: 8),
@@ -213,10 +241,20 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                 children: [
                   TextButton(
                     onPressed: () async {
+                      final committedRaw = durationController.text;
+                      final committedRevision = durationRevision.value;
                       final didCommit = await saveDuration(
-                        durationController.text,
+                        raw: committedRaw,
+                        revision: committedRevision,
                       );
-                      if (!context.mounted || !didCommit) {
+                      if (!context.mounted ||
+                          !didCommit ||
+                          !isCurrentLiveMonitorDurationGeneration(
+                            currentRaw: durationController.text,
+                            currentRevision: durationRevision.value,
+                            committedRaw: committedRaw,
+                            committedRevision: committedRevision,
+                          )) {
                         return;
                       }
                       ref
@@ -227,10 +265,20 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                   ),
                   FilledButton.tonalIcon(
                     onPressed: () async {
+                      final committedRaw = durationController.text;
+                      final committedRevision = durationRevision.value;
                       final didCommit = await saveDuration(
-                        durationController.text,
+                        raw: committedRaw,
+                        revision: committedRevision,
                       );
-                      if (!context.mounted || !didCommit) {
+                      if (!context.mounted ||
+                          !didCommit ||
+                          !isCurrentLiveMonitorDurationGeneration(
+                            currentRaw: durationController.text,
+                            currentRevision: durationRevision.value,
+                            committedRaw: committedRaw,
+                            committedRevision: committedRevision,
+                          )) {
                         return;
                       }
                       await onExit();

@@ -15,9 +15,11 @@ class LiveMonitorExitAction {
   Future<void> confirm({
     required WidgetRef ref,
     required BuildContext context,
+    required bool dismissWhenPanelCloses,
     required VoidCallback onConfirmed,
   }) async {
-    final confirmed = await showDialog<bool>(
+    final navigator = Navigator.of(context, rootNavigator: true);
+    final route = DialogRoute<bool>(
       context: context,
       builder: (context) => AlertDialog.adaptive(
         title: const Text('LiveMonitor モードを終了しますか？'),
@@ -33,6 +35,19 @@ class LiveMonitorExitAction {
         ],
       ),
     );
+    final panelSubscription = dismissWhenPanelCloses
+        ? ref.listenManual(liveMonitorControlPanelProvider, (_, next) {
+            if (!next && route.isActive) {
+              route.navigator?.removeRoute(route, false);
+            }
+          })
+        : null;
+    bool? confirmed;
+    try {
+      confirmed = await navigator.push(route);
+    } finally {
+      panelSubscription?.close();
+    }
     if (confirmed != true || !context.mounted) {
       return;
     }

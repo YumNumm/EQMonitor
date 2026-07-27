@@ -23,16 +23,38 @@ bool shouldApplyCommittedLiveMonitorDuration({
   required bool didCommit,
   required bool hasFocus,
   required String currentRaw,
+  required int? currentRevision,
   required String committedRaw,
-}) => didCommit && !hasFocus && currentRaw == committedRaw;
+  required int? committedRevision,
+}) =>
+    didCommit &&
+    !hasFocus &&
+    isCurrentLiveMonitorDurationGeneration(
+      currentRaw: currentRaw,
+      currentRevision: currentRevision,
+      committedRaw: committedRaw,
+      committedRevision: committedRevision,
+    );
 
 bool shouldClearLiveMonitorDurationDraft({
   required bool didCommit,
-  required String? currentDraft,
+  required String? currentRaw,
+  required int? currentRevision,
   required String committedRaw,
-}) => didCommit && currentDraft == committedRaw;
+  required int? committedRevision,
+}) =>
+    didCommit &&
+    committedRevision != null &&
+    isCurrentLiveMonitorDurationGeneration(
+      currentRaw: currentRaw,
+      currentRevision: currentRevision,
+      committedRaw: committedRaw,
+      committedRevision: committedRevision,
+    );
 
-bool shouldJoinLiveMonitorDurationSave({
-  required String inFlightRaw,
-  required String requestedRaw,
-}) => inFlightRaw == requestedRaw;
+bool isCurrentLiveMonitorDurationGeneration({
+  required String? currentRaw,
+  required int? currentRevision,
+  required String committedRaw,
+  required int? committedRevision,
+}) => currentRaw == committedRaw && currentRevision == committedRevision;

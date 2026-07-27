@@ -25,7 +25,9 @@ void main() {
         didCommit: true,
         hasFocus: false,
         currentRaw: '60',
+        currentRevision: 1,
         committedRaw: '60',
+        committedRevision: 1,
       ),
       isTrue,
     );
@@ -34,7 +36,9 @@ void main() {
         didCommit: true,
         hasFocus: true,
         currentRaw: '60',
+        currentRevision: 1,
         committedRaw: '60',
+        committedRevision: 1,
       ),
       isFalse,
     );
@@ -43,7 +47,9 @@ void main() {
         didCommit: true,
         hasFocus: false,
         currentRaw: '90',
+        currentRevision: 2,
         committedRaw: '60',
+        committedRevision: 1,
       ),
       isFalse,
     );
@@ -55,7 +61,9 @@ void main() {
         didCommit: false,
         hasFocus: false,
         currentRaw: '60',
+        currentRevision: 1,
         committedRaw: '60',
+        committedRevision: 1,
       ),
       isFalse,
     );
@@ -65,36 +73,55 @@ void main() {
     expect(
       shouldClearLiveMonitorDurationDraft(
         didCommit: true,
-        currentDraft: '60',
+        currentRaw: '60',
+        currentRevision: 1,
         committedRaw: '60',
+        committedRevision: 1,
       ),
       isTrue,
     );
     expect(
       shouldClearLiveMonitorDurationDraft(
         didCommit: false,
-        currentDraft: '60',
+        currentRaw: '60',
+        currentRevision: 1,
         committedRaw: '60',
+        committedRevision: 1,
       ),
       isFalse,
     );
     expect(
       shouldClearLiveMonitorDurationDraft(
         didCommit: true,
-        currentDraft: '90',
+        currentRaw: '90',
+        currentRevision: 2,
         committedRaw: '60',
+        committedRevision: 1,
       ),
       isFalse,
     );
   });
 
-  test('同じrawの保存が進行中なら新しい保存を始めない', () {
+  test('同じrawに戻っても古い世代の保存でdraftを破棄しない', () {
     expect(
-      shouldJoinLiveMonitorDurationSave(inFlightRaw: '60', requestedRaw: '60'),
-      isTrue,
+      shouldApplyCommittedLiveMonitorDuration(
+        didCommit: true,
+        hasFocus: false,
+        currentRaw: '60',
+        currentRevision: 3,
+        committedRaw: '60',
+        committedRevision: 1,
+      ),
+      isFalse,
     );
     expect(
-      shouldJoinLiveMonitorDurationSave(inFlightRaw: '60', requestedRaw: '90'),
+      shouldClearLiveMonitorDurationDraft(
+        didCommit: true,
+        currentRaw: '60',
+        currentRevision: 3,
+        committedRaw: '60',
+        committedRevision: 1,
+      ),
       isFalse,
     );
   });
