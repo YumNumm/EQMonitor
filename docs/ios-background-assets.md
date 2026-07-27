@@ -13,7 +13,7 @@ guessed from documentation that couldn't be fetched).
 
 | Platform | Identifier | Where it's declared |
 |---|---|---|
-| iOS (Background Assets) | `net.yumnumm.eqmonitor.assets` | `packages/assets_util/lib/assets_util.dart` (`_iosAssetPackIdentifier`), `IOS_BACKGROUND_ASSET_PACK_ID` in `.github/workflows/upload-asset-pack.yaml`, App Store Connect's Background Assets pack, and (once created) the Xcode Background Assets capability's `assetPackID`. |
+| iOS (Background Assets) | `eqmonitor-assets` | `packages/assets_util/lib/assets_util.dart` (`_iosAssetPackIdentifier`), `IOS_BACKGROUND_ASSET_PACK_ID` in `.github/workflows/upload-asset-pack.yaml`, App Store Connect's Background Assets pack, and (once created) the Xcode Background Assets capability's `assetPackID`. |
 | Android (Play Asset Delivery) | `eqmonitor_assets` | `packages/assets_util/lib/assets_util.dart` (`_androidAssetPackName`), `app/android/assetpacks/eqmonitor_assets/build.gradle.kts`'s `packName`, `assetPacks += setOf(":assetpacks:eqmonitor_assets")` in `app/android/app/build.gradle.kts`. |
 
 These are deliberately **different literal strings** — Android Gradle
@@ -30,7 +30,7 @@ existing one so CD / Xcode / App Store Connect stay consistent.
 1. Requires iOS 26.0+ (`AssetPackManager`'s own availability floor; this
    app's `IPHONEOS_DEPLOYMENT_TARGET` is already 26.0).
 2. When iOS 26.4+ is available, first checks
-   `AssetPackManager.shared.assetPackIsAvailableLocally(withID: "net.yumnumm.eqmonitor.assets")`.
+   `AssetPackManager.shared.assetPackIsAvailableLocally(withID: "eqmonitor-assets")`.
 3. Resolves `manifest.json`'s URL via `AssetPackManager.shared.url(for:)`
    (the pack layout — see
    `backend/docs/superpowers/specs/2026-07-18-asset-pack-design.md` —
@@ -57,7 +57,7 @@ first real device / TestFlight run, still complete:
 
 1. Register the **Background Assets** capability in the Apple Developer portal
    for `net.yumnumm.eqmonitor` with asset pack ID
-   `net.yumnumm.eqmonitor.assets` (Xcode Signing & Capabilities should mirror
+   `eqmonitor-assets` (Xcode Signing & Capabilities should mirror
    the plist keys above once profiles are refreshed).
 2. Create the Apple-hosted Background Assets pack in App Store Connect and
    upload an initial `.aar` once (see `docs/asset-pack-cd.md`).

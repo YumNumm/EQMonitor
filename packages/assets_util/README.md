@@ -12,7 +12,7 @@ Platform-managed local assets（FlutterGen の `Assets` とは別物）の絶対
 final path = AssetsUtil.resolveLocalPath(fileName: 'example.bin');
 
 // Asset Pack (manifest.json / map/all.pmtiles / parameters/*.json) のルート。
-// - iOS: Managed Background Assets（`net.yumnumm.eqmonitor.assets`）
+// - iOS: Managed Background Assets（`eqmonitor-assets`）
 // - Android: Play Asset Delivery install-time pack（`eqmonitor_assets`）
 // - macOS: Bundle.main 内の `platform/` フォルダ（常に利用可能）
 // 未取得・存在しない場合は AssetPackNotReadyException を投げる（フォールバックなし）。

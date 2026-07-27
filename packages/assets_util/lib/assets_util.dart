@@ -12,7 +12,7 @@ export 'package:assets_util/src/assets_util_android.dart' show AssetsUtilAndroid
 /// `.github/workflows/upload-asset-pack.yaml`; see `docs/asset-pack-cd.md`
 /// and `docs/ios-background-assets.md`). Must stay in sync with the Xcode
 /// Background Assets capability and the App Store Connect resource.
-const _iosAssetPackIdentifier = 'net.yumnumm.eqmonitor.assets';
+const _iosAssetPackIdentifier = 'eqmonitor-assets';
 
 /// The Play Asset Delivery install-time pack's module name (
 /// `app/android/assetpacks/eqmonitor_assets`, wired via
@@ -50,7 +50,7 @@ abstract final class AssetsUtil {
   /// Returns the absolute path to the Asset Pack root directory.
   ///
   /// - iOS: the on-device directory of the Managed Background Assets pack
-  ///   (`net.yumnumm.eqmonitor.assets`) once fully downloaded.
+  ///   (`eqmonitor-assets`) once fully downloaded.
   /// - Android: the Play Asset Delivery install-time pack
   ///   (`eqmonitor_assets`) location, via `AssetPackManager`.
   /// - macOS: the bundled `platform` directory inside `Bundle.main`

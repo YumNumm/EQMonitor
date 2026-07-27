@@ -84,7 +84,7 @@ it (this is also this workflow's mandatory pre-check #2; see below).
 
 **Manual setup (one-time, per Apple's documented flow):**
 
-1. In Xcode, add the **Background Assets** capability to the Runner target and configure the asset pack ID that will be used. The canonical ID is `net.yumnumm.eqmonitor.assets`, aligned across `IOS_BACKGROUND_ASSET_PACK_ID` in the workflow and `_iosAssetPackIdentifier` in `packages/assets_util/lib/assets_util.dart`. This Xcode-side capability registration (see `docs/ios-background-assets.md`) must exist before the first real `upload-asset-pack` run.
+1. In Xcode, add the **Background Assets** capability to the Runner target and configure the asset pack ID that will be used. The canonical ID is `eqmonitor-assets`, aligned across `IOS_BACKGROUND_ASSET_PACK_ID` in the workflow and `_iosAssetPackIdentifier` in `packages/assets_util/lib/assets_util.dart`. This Xcode-side capability registration (see `docs/ios-background-assets.md`) must exist before the first real `upload-asset-pack` run.
 2. In App Store Connect, under the app's Background Assets management (Account Holder/Admin/App Manager/Developer role required — [App Store Connect Help: Manage Asset Packs](https://developer.apple.com/help/app-store-connect/manage-asset-packs/upload-apple-hosted-asset-packs)), choose **Apple-hosted** so Apple hosts and serves the pack (this workflow assumes Apple-hosted; self-hosted Background Assets would need an entirely different, non-ASC-API upload path).
 3. Upload an initial version once by hand (Transporter drag-and-drop is the simplest — see "Manual fallback" below) to create the `backgroundAssets` resource that this workflow's pre-check looks for. Subsequent versions can then go through the automated `upload-ios` job.
 
@@ -175,7 +175,7 @@ If this happens, the file itself was already uploaded and committed
 successfully (polling only starts after `commit_background_asset_upload`
 succeeds) — only the *processing* status is in question. To check by hand:
 
-1. Open App Store Connect → the app (`ASC_APP_ID` `6447546703`) → **Background Assets** → the pack matching `IOS_BACKGROUND_ASSET_PACK_ID` (`net.yumnumm.eqmonitor.assets`).
+1. Open App Store Connect → the app (`ASC_APP_ID` `6447546703`) → **Background Assets** → the pack matching `IOS_BACKGROUND_ASSET_PACK_ID` (`eqmonitor-assets`).
 2. Find the version the failed job created — the workflow log prints `created backgroundAssetVersion <id>` right before polling starts; match it, or just look at the most recent version's timestamp.
 3. Read its status directly in the UI:
    - If it shows a legitimate success state (e.g. ready for TestFlight/App Store submission) under a name this client doesn't recognize, add that literal state string to `KNOWN_SUCCESS_STATES` in `tool/asset_pack/asc_client.py` so future runs don't need manual checking.
@@ -195,7 +195,7 @@ before anything else in the job; if it ever fails, bump
 
 ## `assetPackID` coordination (`IOS_BACKGROUND_ASSET_PACK_ID`)
 
-The workflow hardcodes `IOS_BACKGROUND_ASSET_PACK_ID: net.yumnumm.eqmonitor.assets`.
+The workflow hardcodes `IOS_BACKGROUND_ASSET_PACK_ID: eqmonitor-assets`.
 This value must be **identical** to:
 
 - the `assetPackID` configured in Xcode's Background Assets capability for the Runner target, and

@@ -97,7 +97,7 @@ The ObjC header doc for the equivalent `URLForPath:error:` is explicit:
 
 So calling `url(for: FilePath(""))` to get "the root" is something Apple's
 own docs tell you not to do. Since this app manages exactly **one** asset
-pack (`net.yumnumm.eqmonitor.assets`), the "merged namespace" is in practice
+pack (`eqmonitor-assets`), the "merged namespace" is in practice
 just that one pack, so the adaptation chosen here is: resolve a **known
 top-level file that the pack layout guarantees exists** (`manifest.json`,
 per `backend/docs/superpowers/specs/2026-07-18-asset-pack-design.md`'s
@@ -147,7 +147,7 @@ upload).
 **Still outstanding before end-to-end works on a real device:**
 
 1. Apple Developer portal / provisioning: Background Assets capability for
-   `net.yumnumm.eqmonitor.assets` (plist keys are in place; entitlements may
+   `eqmonitor-assets` (plist keys are in place; entitlements may
    need refresh after capability is enabled in the portal).
 2. App Store Connect: create the Apple-hosted pack and upload an initial
    `.aar` (see `docs/asset-pack-cd.md`).
