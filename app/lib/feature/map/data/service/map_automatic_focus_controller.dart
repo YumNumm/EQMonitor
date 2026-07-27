@@ -19,6 +19,9 @@ MapAutomaticFocusTarget? mapAutomaticFocusTargetForBounds({
   if (!width.isFinite || !height.isFinite || width <= 0 || height <= 0) {
     return null;
   }
+  if (!bounds.latitudeSouth.isFinite || !bounds.latitudeNorth.isFinite) {
+    return null;
+  }
 
   final south = bounds.latitudeSouth.clamp(
     -mapAutomaticFocusMercatorMaxLatitude,

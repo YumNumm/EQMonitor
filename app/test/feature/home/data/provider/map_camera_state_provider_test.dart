@@ -44,22 +44,23 @@ class _StubHomeConfiguration extends HomeConfigurationNotifier {
       const HomeConfigurationModel();
 }
 
-EewTelegramItem _sampleEew() => EewTelegramItem(
-  eventId: '20250101120000',
-  status: TelegramStatus.normal,
-  infoType: TelegramInfoType.publication,
-  serialNo: 1,
-  isCanceled: false,
-  isLastInfo: false,
-  reportTime: DateTime.utc(2025, 1, 1, 12),
-  isPlum: false,
-  hypocenter: const EewHypocenterInfo(
-    code: '101',
-    name: '東京都',
-    latitude: 35.5,
-    longitude: 139.5,
-  ),
-);
+EewTelegramItem _sampleEew({String eventId = '20250101120000'}) =>
+    EewTelegramItem(
+      eventId: eventId,
+      status: TelegramStatus.normal,
+      infoType: TelegramInfoType.publication,
+      serialNo: 1,
+      isCanceled: false,
+      isLastInfo: false,
+      reportTime: DateTime.utc(2025, 1, 1, 12),
+      isPlum: false,
+      hypocenter: const EewHypocenterInfo(
+        code: '101',
+        name: '東京都',
+        latitude: 35.5,
+        longitude: 139.5,
+      ),
+    );
 
 ProviderContainer _container({required _MutableEewAliveTelegram eews}) {
   final container = ProviderContainer(
@@ -103,6 +104,97 @@ void main() {
   });
 
   group('HomeMapCameraState camera race', () {
+    test('target消滅とcontroller切替が重なっても新controllerをHomeへ戻す', () async {
+      final eews = _MutableEewAliveTelegram([_sampleEew()]);
+      final container = _container(eews: eews);
+      final oldController = MockMapController();
+      final newController = MockMapController();
+      final oldRealtimeAnimation = Completer<void>();
+      final newHomeAnimation = Completer<void>();
+      var oldCameraCallCount = 0;
+      when(
+        oldController.animateCamera(
+          center: anyNamed('center'),
+          zoom: anyNamed('zoom'),
+          bearing: anyNamed('bearing'),
+          pitch: anyNamed('pitch'),
+          nativeDuration: anyNamed('nativeDuration'),
+          webSpeed: anyNamed('webSpeed'),
+          webMaxDuration: anyNamed('webMaxDuration'),
+          padding: anyNamed('padding'),
+        ),
+      ).thenAnswer((_) {
+        oldCameraCallCount += 1;
+        return oldCameraCallCount == 1
+            ? Future<void>.value()
+            : oldRealtimeAnimation.future;
+      });
+      when(
+        newController.animateCamera(
+          center: anyNamed('center'),
+          zoom: anyNamed('zoom'),
+          bearing: anyNamed('bearing'),
+          pitch: anyNamed('pitch'),
+          nativeDuration: anyNamed('nativeDuration'),
+          webSpeed: anyNamed('webSpeed'),
+          webMaxDuration: anyNamed('webMaxDuration'),
+          padding: anyNamed('padding'),
+        ),
+      ).thenAnswer((_) => newHomeAnimation.future);
+      final notifier = container.read(homeMapCameraStateProvider.notifier);
+
+      await notifier.setController(
+        oldController,
+        viewportSize: const Size(375, 667),
+      );
+      expect(container.read(homeMapCameraStateProvider).isAtHome, isFalse);
+
+      eews.replace([_sampleEew(eventId: '20250101120001')]);
+      await container.pump();
+      expect(oldCameraCallCount, 2);
+
+      eews.replace(const []);
+      await container.pump();
+      expect(oldCameraCallCount, 2);
+
+      final newControllerFocus = notifier.setController(
+        newController,
+        viewportSize: const Size(667, 375),
+      );
+      await container.pump();
+
+      final newHomeCenter =
+          verify(
+                newController.animateCamera(
+                  center: captureAnyNamed('center'),
+                  zoom: anyNamed('zoom'),
+                  bearing: 0,
+                  pitch: 0,
+                  nativeDuration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.all(4),
+                ),
+              ).captured.single
+              as Geographic;
+      expect(newHomeCenter.lon, 137);
+
+      newHomeAnimation.complete();
+      await newControllerFocus;
+      expect(container.read(homeMapCameraStateProvider).isAtHome, isTrue);
+
+      oldRealtimeAnimation.complete();
+      await container.pump();
+      verify(
+        oldController.animateCamera(
+          center: anyNamed('center'),
+          zoom: anyNamed('zoom'),
+          bearing: 0,
+          pitch: 0,
+        ),
+      ).called(2);
+      verifyNoMoreInteractions(oldController);
+      verifyNoMoreInteractions(newController);
+    });
+
     test('controller切替後は新controllerへactual viewportでfocusする', () async {
       final eews = _MutableEewAliveTelegram([_sampleEew()]);
       final container = _container(eews: eews);

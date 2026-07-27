@@ -62,7 +62,7 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     _cameraGeneration += 1;
     _controller = controller;
     _viewportSize = viewportSize;
-    _isHomeFocusRequested = true;
+    _isHomeFocusRequested = false;
     _operationQueue = MapAutomaticFocusOperationQueue();
     await _handleRealtimeTransition(
       eews: ref.read(eewAliveTelegramProvider) ?? [],

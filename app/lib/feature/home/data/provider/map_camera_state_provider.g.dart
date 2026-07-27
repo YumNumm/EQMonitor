@@ -44,7 +44,7 @@ final class HomeMapCameraStateProvider
 }
 
 String _$homeMapCameraStateHash() =>
-    r'8c61347903494933ac399d0821252cff9cef588e';
+    r'f8c635baaea5cb756fc230a0e5c160ef68ecef5f';
 
 abstract class _$HomeMapCameraState extends $Notifier<MapCameraState> {
   MapCameraState build();

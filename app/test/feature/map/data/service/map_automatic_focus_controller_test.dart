@@ -91,6 +91,41 @@ void main() {
 
       expect(target, isNull);
     });
+
+    test('緯度にNaNを含むboundsはtargetを作らない', () {
+      final target = mapAutomaticFocusTargetForBounds(
+        bounds: const LngLatBounds(
+          longitudeWest: 139,
+          longitudeEast: 140,
+          latitudeSouth: double.nan,
+          latitudeNorth: 36,
+        ),
+        viewportSize: const Size(375, 667),
+        padding: EdgeInsets.zero,
+      );
+
+      expect(target, isNull);
+    });
+
+    test('緯度に±Infinityを含むboundsはtargetを作らない', () {
+      for (final invalidLatitude in [
+        double.negativeInfinity,
+        double.infinity,
+      ]) {
+        final target = mapAutomaticFocusTargetForBounds(
+          bounds: LngLatBounds(
+            longitudeWest: 139,
+            longitudeEast: 140,
+            latitudeSouth: 35,
+            latitudeNorth: invalidLatitude,
+          ),
+          viewportSize: const Size(375, 667),
+          padding: EdgeInsets.zero,
+        );
+
+        expect(target, isNull);
+      }
+    });
   });
 
   group('MapAutomaticFocusController', () {
@@ -170,6 +205,31 @@ void main() {
       );
 
       expect(result, isFalse);
+      verifyNoMoreInteractions(controller);
+    });
+
+    test('非有限緯度のboundsではcamera命令を出さない', () async {
+      final controller = MockMapController();
+
+      for (final invalidLatitude in [
+        double.nan,
+        double.negativeInfinity,
+        double.infinity,
+      ]) {
+        final result = await const MapAutomaticFocusController().fit(
+          controller: controller,
+          bounds: LngLatBounds(
+            longitudeWest: 139,
+            longitudeEast: 140,
+            latitudeSouth: 35,
+            latitudeNorth: invalidLatitude,
+          ),
+          viewportSize: const Size(375, 667),
+          isCurrent: () => true,
+        );
+
+        expect(result, isFalse);
+      }
       verifyNoMoreInteractions(controller);
     });
 
