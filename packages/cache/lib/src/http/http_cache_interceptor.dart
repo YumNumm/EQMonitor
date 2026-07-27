@@ -43,7 +43,14 @@ class HttpCacheInterceptor extends Interceptor {
     // いる場合に if-none-match を付けると、復元不能な 304 が呼び出し側へ
     // 漏れてしまうため、その時はヘッダを除去してフルレスポンスを取得する。
     // 上流(リポジトリ等)が独自に付与した if-none-match もここで一元管理する。
-    final cached = await store.read(key);
+    final HttpCacheEntry? cached;
+    try {
+      cached = await store.read(key);
+    } catch (_) {
+      options.headers.remove('if-none-match');
+      handler.next(options);
+      return;
+    }
     if (cached?.eTag != null && _isRestorable(options, cached!)) {
       options.headers['if-none-match'] = cached.eTag;
     } else {
@@ -84,7 +91,11 @@ class HttpCacheInterceptor extends Interceptor {
     if (response.statusCode == 200) {
       final entry = _toEntry(key, response);
       if (entry != null) {
-        await store.write(entry);
+        try {
+          await store.write(entry);
+        } catch (_) {
+          // キャッシュ障害で成功したネットワーク応答を失敗にしない。
+        }
       }
     }
     handler.next(response);
