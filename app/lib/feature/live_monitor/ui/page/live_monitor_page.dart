@@ -6,6 +6,7 @@ import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_tap_track
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_coordinator.dart';
+import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_session_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_settings_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/action/live_monitor_exit_action.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_automatic_view.dart';
@@ -23,6 +24,12 @@ class LiveMonitorPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(() {
+      ref.read(liveMonitorSessionProvider.notifier).activate();
+      return () {
+        ref.read(liveMonitorSessionProvider.notifier).deactivate();
+      };
+    }, const []);
     final settings = ref.watch(liveMonitorSettingsProvider).value;
     final panelOpen = ref.watch(liveMonitorControlPanelProvider);
     final allowExit = useState(false);
