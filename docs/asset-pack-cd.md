@@ -15,11 +15,18 @@ workflow can also be run manually via `workflow_dispatch` with the same
 `pack_version` / `artifact_url` / `sha256` (no `manifest_url` input — the
 manifest is read from inside the downloaded zip, not fetched separately).
 
+**Private Release download:** `eqmonitor-backend` is private, so the zip must
+be fetched with authentication. `download-and-verify` issues a GitHub App
+token (`vars.EQMONITOR_GITHUB_APP_ID` / `secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY`,
+`repositories: eqmonitor-backend`, `permission-contents: read` — same App as
+integration tests) and uses `gh release download`. Unauthenticated `curl` of
+`artifact_url` returns 404.
+
 ## What the workflow automates today
 
 | Stage | Automated? | Notes |
 |---|---|---|
-| Download + sha256 verify + structure assert + `pack_version` match | Yes | `tool/asset_pack/verify_zip.sh`, shared by all three downstream jobs via an uploaded artifact |
+| Download + sha256 verify + structure assert + `pack_version` match | Yes | GitHub App token（`eqmonitor-backend` `contents:read`）で private Release を `gh release download`（失敗時は認証付き curl）。`tool/asset_pack/verify_zip.sh` で検証し、3 ジョブ共通 Artifact へ |
 | macOS native bundling sync (`app/assets/platform/`) | Yes, via PR | Replaces the directory's contents with the pack's `manifest.json` / `map/all.pmtiles` / `parameters/*.json` |
 | macOS Xcode folder-reference registration check | Check only, no auto-fix | Fails loudly until a separate task registers `app/assets/platform` as a Bundle Resources folder reference in `app/macos/Runner.xcodeproj` |
 | Android Play Asset Delivery module sync (`app/android/assetpacks/eqmonitor_assets/src/main/assets/`) | Yes, via PR | Requires the module to already exist (a separate task creates `app/android/assetpacks/eqmonitor_assets/`); fails loudly (`test -d` guard) until it does |

@@ -79,6 +79,20 @@ jobs:
         with:
           persist-credentials: false
 
+      # private な YumNumm/eqmonitor-backend Release から zip を取るため。
+      # 無認証 curl は 404 になる（browser_download_url でも private は要認証）。
+      # https://github.com/actions/create-github-app-token
+      - name: Generate GitHub App token (eqmonitor-backend contents:read)
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
+          private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
+          owner: YumNumm
+          repositories: |
+            eqmonitor-backend
+          permission-contents: read
+
       - name: Resolve trigger inputs
         id: resolve-inputs
         env:
@@ -112,8 +126,27 @@ jobs:
 
       - name: Download Asset Pack zip
         env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PACK_VERSION: ${{ steps.resolve-inputs.outputs.pack_version }}
           ARTIFACT_URL: ${{ steps.resolve-inputs.outputs.artifact_url }}
-        run: curl -fL --retry 3 -o asset-pack.zip "$ARTIFACT_URL"
+        run: |
+          set -euo pipefail
+          # Release tag / 資産名は backend の release-asset-pack.yaml と揃える。
+          # artifact_url は検証・フォールバック用に残す（タグ取得が失敗した場合）。
+          if gh release download "asset-pack-v${PACK_VERSION}" \
+            --repo YumNumm/eqmonitor-backend \
+            --pattern "asset-pack-v${PACK_VERSION}.zip" \
+            --output asset-pack.zip; then
+            echo "downloaded via gh release download (asset-pack-v${PACK_VERSION})"
+          else
+            echo "::warning::gh release download failed; falling back to authenticated curl on artifact_url"
+            curl -fL --retry 3 \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/octet-stream" \
+              -o asset-pack.zip \
+              "$ARTIFACT_URL"
+          fi
+          test -s asset-pack.zip
 
       - name: Verify checksum, unpack, and assert layout
         env:
