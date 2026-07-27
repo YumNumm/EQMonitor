@@ -44,6 +44,7 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
     onMeasurementChanged,
   }) : _active = active,
        _environment = environment,
+       _measurementIsCurrent = !active,
        _onMeasurementChanged = onMeasurementChanged;
 
   bool _active;
@@ -51,7 +52,7 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
   ValueChanged<LiveMonitorSplitViewportMeasurement> _onMeasurementChanged;
   LiveMonitorSplitViewportMeasurement? _reportedMeasurement;
   LiveMonitorSplitViewportMeasurement? _pendingMeasurement;
-  bool _measurementIsCurrent = false;
+  bool _measurementIsCurrent;
   bool _reportScheduled = false;
 
   set active(bool value) {
@@ -61,7 +62,11 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
     _active = value;
     _reportedMeasurement = null;
     _pendingMeasurement = null;
-    _measurementIsCurrent = !value;
+    final nextMeasurementIsCurrent = !value;
+    if (_measurementIsCurrent != nextMeasurementIsCurrent) {
+      _measurementIsCurrent = nextMeasurementIsCurrent;
+      markNeedsSemanticsUpdate();
+    }
     markNeedsPaint();
   }
 
@@ -70,6 +75,10 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
       return;
     }
     _environment = value;
+    if (_measurementIsCurrent) {
+      _measurementIsCurrent = false;
+      markNeedsSemanticsUpdate();
+    }
     markNeedsPaint();
   }
 
@@ -82,7 +91,6 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     if (!_active) {
-      _measurementIsCurrent = true;
       super.paint(context, offset);
       return;
     }
@@ -98,7 +106,11 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
       previous: _reportedMeasurement,
       current: measurement,
     );
-    _measurementIsCurrent = !shouldReport;
+    final nextMeasurementIsCurrent = !shouldReport;
+    if (_measurementIsCurrent != nextMeasurementIsCurrent) {
+      _measurementIsCurrent = nextMeasurementIsCurrent;
+      markNeedsSemanticsUpdate();
+    }
     if (!shouldReport) {
       super.paint(context, offset);
       return;
@@ -130,5 +142,24 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
       return false;
     }
     return super.hitTest(result, position: position);
+  }
+
+  @override
+  void visitChildrenForSemantics(RenderObjectVisitor visitor) {
+    if (_active && !_measurementIsCurrent) {
+      return;
+    }
+    super.visitChildrenForSemantics(visitor);
+  }
+
+  @override
+  void detach() {
+    _reportedMeasurement = null;
+    _pendingMeasurement = null;
+    if (_active && _measurementIsCurrent) {
+      _measurementIsCurrent = false;
+      markNeedsSemanticsUpdate();
+    }
+    super.detach();
   }
 }
