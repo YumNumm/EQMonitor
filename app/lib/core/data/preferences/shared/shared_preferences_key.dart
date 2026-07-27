@@ -32,6 +32,7 @@ enum SharedPreferencesKey {
   ),
   widgetRegionSelection('widget_region_selection'),
   httpCacheDisabled('http_cache_disabled'),
+  httpCacheScopeMigrationVersion('http_cache_scope_migration_version'),
   locationPermissionBannerDismissed('location_permission_banner_dismissed'),
   notificationPermissionBannerDismissed(
     'notification_permission_banner_dismissed',

@@ -4,10 +4,10 @@ import 'dart:async';
 
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
-import 'package:eqmonitor/core/provider/dio_provider.dart';
+import 'package:eqmonitor/core/provider/http_cached_dio_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter/widgets.dart';
 import 'package:riverpod/src/internals.dart' show DataKind;
@@ -72,7 +72,7 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
     } on Object catch (e) {
       if (isCacheMiss(e)) {
         return reconcile(
-          await fetch(await ref.read(apiClientProvider.future)),
+          await fetch(await ref.read(httpCachedApiClientProvider.future)),
           operation: currentOperation,
           source: CachedResultSource.fresh,
         );
@@ -99,7 +99,9 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
         : cacheState;
     state = AsyncLoading<T>().copyWithPrevious(previous);
     try {
-      final fresh = await fetch(await ref.read(apiClientProvider.future));
+      final fresh = await fetch(
+        await ref.read(httpCachedApiClientProvider.future),
+      );
       if (ref.mounted && gen == _generation) {
         state = AsyncData(
           reconcile(
@@ -121,10 +123,10 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
   }
 
   Future<T> _fetchForceFresh(CachedOperationToken operation) async {
-    final normalDio = await ref.read(dioProvider.future);
-    final dio = Dio(normalDio.options);
+    final cachedDio = await ref.read(httpCachedDioProvider.future);
+    final dio = Dio(cachedDio.options);
     dio.interceptors.add(ForceFreshInterceptor());
-    dio.interceptors.addAll(normalDio.interceptors);
+    dio.interceptors.addAll(cachedDio.interceptors);
     return reconcile(
       await fetch(ApiClient(dio)),
       operation: operation,

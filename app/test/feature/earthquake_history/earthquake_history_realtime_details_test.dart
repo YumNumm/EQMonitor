@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
@@ -129,7 +129,7 @@ void main() {
           (ref) async => repository,
         ),
         cacheOnlyApiClientProvider.overrideWith((ref) async => cacheClient),
-        apiClientProvider.overrideWith((ref) async => networkClient),
+        httpCachedApiClientProvider.overrideWith((ref) async => networkClient),
       ],
     );
     addTearDown(container.dispose);
@@ -183,7 +183,9 @@ void main() {
           (ref) async => repository,
         ),
         cacheOnlyApiClientProvider.overrideWith((ref) async => cacheClient),
-        apiClientProvider.overrideWith((ref) async => api.ApiClient(Dio())),
+        httpCachedApiClientProvider.overrideWith(
+          (ref) async => api.ApiClient(Dio()),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -272,7 +274,9 @@ void main() {
           (ref) => repositoryResult.future,
         ),
         cacheOnlyApiClientProvider.overrideWith((ref) async => cacheClient),
-        apiClientProvider.overrideWith((ref) async => api.ApiClient(Dio())),
+        httpCachedApiClientProvider.overrideWith(
+          (ref) async => api.ApiClient(Dio()),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -333,7 +337,7 @@ void main() {
           (ref) async => repository,
         ),
         cacheOnlyApiClientProvider.overrideWith((ref) async => cacheClient),
-        apiClientProvider.overrideWith((ref) async => networkClient),
+        httpCachedApiClientProvider.overrideWith((ref) async => networkClient),
       ],
     );
     addTearDown(container.dispose);
@@ -395,7 +399,7 @@ void main() {
           (ref) async => repository,
         ),
         cacheOnlyApiClientProvider.overrideWith((ref) async => cacheClient),
-        apiClientProvider.overrideWith((ref) async => networkClient),
+        httpCachedApiClientProvider.overrideWith((ref) async => networkClient),
       ],
     );
     addTearDown(container.dispose);
@@ -840,7 +844,9 @@ ProviderContainer _detailsContainer({
     ),
     earthquakeHistoryRepositoryProvider.overrideWith((ref) async => repository),
     cacheOnlyApiClientProvider.overrideWith((ref) async => cacheClient),
-    apiClientProvider.overrideWith((ref) async => api.ApiClient(Dio())),
+    httpCachedApiClientProvider.overrideWith(
+      (ref) async => api.ApiClient(Dio()),
+    ),
   ],
 );
 
