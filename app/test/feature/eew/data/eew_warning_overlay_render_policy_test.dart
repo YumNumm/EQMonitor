@@ -37,6 +37,27 @@ void main() {
     );
   });
 
+  test('LiveMonitor active中はfullscreen EEWの戻る操作を奪わない', () {
+    expect(
+      shouldInterceptEewWarningOverlayBack(
+        lifecycle: AppLifecycleState.resumed,
+        mode: EewWarningOverlayMode.fullscreen,
+        hasDisplayModel: true,
+        liveMonitorActive: true,
+      ),
+      isFalse,
+    );
+    expect(
+      shouldInterceptEewWarningOverlayBack(
+        lifecycle: AppLifecycleState.resumed,
+        mode: EewWarningOverlayMode.fullscreen,
+        hasDisplayModel: true,
+        liveMonitorActive: false,
+      ),
+      isTrue,
+    );
+  });
+
   test('既存のlifecycleと表示modelの描画条件を保つ', () {
     expect(
       shouldRenderEewWarningOverlay(

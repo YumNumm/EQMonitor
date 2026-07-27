@@ -3,15 +3,27 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  test('activate/deactivateでsession状態を公開する', () {
+  test('複数leaseの一方をreleaseしてもsessionを維持する', () {
     final container = ProviderContainer();
     addTearDown(container.dispose);
+    final notifier = container.read(liveMonitorSessionProvider.notifier);
 
-    container.read(liveMonitorSessionProvider.notifier).activate();
+    expect(container.read(liveMonitorSessionProvider), isFalse);
+
+    final firstLease = notifier.acquire();
+    final secondLease = notifier.acquire();
 
     expect(container.read(liveMonitorSessionProvider), isTrue);
 
-    container.read(liveMonitorSessionProvider.notifier).deactivate();
+    notifier.release(lease: firstLease);
+
+    expect(container.read(liveMonitorSessionProvider), isTrue);
+
+    notifier.release(lease: secondLease);
+
+    expect(container.read(liveMonitorSessionProvider), isFalse);
+
+    notifier.release(lease: secondLease);
 
     expect(container.read(liveMonitorSessionProvider), isFalse);
   });

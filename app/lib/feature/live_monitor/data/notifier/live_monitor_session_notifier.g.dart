@@ -44,7 +44,7 @@ final class LiveMonitorSessionProvider
 }
 
 String _$liveMonitorSessionHash() =>
-    r'd0aadd200912fb66f41fa23f34e151fab07779c2';
+    r'b72bd2bd83c8e152c42a88ea01549d55f22acaba';
 
 abstract class _$LiveMonitorSession extends $Notifier<bool> {
   bool build();

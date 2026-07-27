@@ -21,6 +21,21 @@ bool shouldRenderEewWarningOverlay({
       !liveMonitorActive;
 }
 
+bool shouldInterceptEewWarningOverlayBack({
+  required AppLifecycleState lifecycle,
+  required EewWarningOverlayMode mode,
+  required bool hasDisplayModel,
+  required bool liveMonitorActive,
+}) {
+  return mode == EewWarningOverlayMode.fullscreen &&
+      shouldRenderEewWarningOverlay(
+        lifecycle: lifecycle,
+        mode: mode,
+        hasDisplayModel: hasDisplayModel,
+        liveMonitorActive: liveMonitorActive,
+      );
+}
+
 class EewWarningOverlayHost extends HookConsumerWidget {
   const EewWarningOverlayHost({
     required this.child,
@@ -37,10 +52,12 @@ class EewWarningOverlayHost extends HookConsumerWidget {
     final state = ref.watch(eewWarningOverlayNotifierProvider);
     final liveMonitorActive = ref.watch(liveMonitorSessionProvider);
     final displayModel = state.displayModel;
-    final shouldInterceptBack =
-        lifecycle == AppLifecycleState.resumed &&
-        state.mode == EewWarningOverlayMode.fullscreen &&
-        displayModel != null;
+    final shouldInterceptBack = shouldInterceptEewWarningOverlayBack(
+      lifecycle: lifecycle,
+      mode: state.mode,
+      hasDisplayModel: displayModel != null,
+      liveMonitorActive: liveMonitorActive,
+    );
     final backDispatcherController = useMemoized(
       () => EewWarningOverlayBackDispatcherController(
         parent: backButtonDispatcher,

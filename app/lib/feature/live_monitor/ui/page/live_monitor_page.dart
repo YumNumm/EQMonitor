@@ -25,9 +25,10 @@ class LiveMonitorPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
-      ref.read(liveMonitorSessionProvider.notifier).activate();
+      final notifier = ref.read(liveMonitorSessionProvider.notifier);
+      final lease = notifier.acquire();
       return () {
-        ref.read(liveMonitorSessionProvider.notifier).deactivate();
+        ref.read(liveMonitorSessionProvider.notifier).release(lease: lease);
       };
     }, const []);
     final settings = ref.watch(liveMonitorSettingsProvider).value;
