@@ -44,6 +44,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/privacy_pol
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug_app_group_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_device_admin_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_card_page.dart';
@@ -386,6 +387,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
+        TypedGoRoute<AssetPackDebugRoute>(path: 'asset-pack'),
         TypedGoRoute<DebugSharedPreferencesRoute>(path: 'shared-preferences'),
         TypedGoRoute<DebugSecureStorageRoute>(path: 'secure-storage'),
         TypedGoRoute<DebugHttpCacheRoute>(path: 'http-cache'),
@@ -712,6 +714,15 @@ class DebugAppGroupRoute extends GoRouteData with $DebugAppGroupRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugAppGroupPage();
+  }
+}
+
+class AssetPackDebugRoute extends GoRouteData with $AssetPackDebugRoute {
+  const AssetPackDebugRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AssetPackDebugPage();
   }
 }
 

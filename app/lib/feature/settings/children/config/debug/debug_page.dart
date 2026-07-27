@@ -135,6 +135,13 @@ class _DebugWidget extends ConsumerWidget {
                 onTap: () => const DebugAppGroupRoute().push<void>(context),
               ),
             ListTile(
+              title: const Text('Asset Pack'),
+              subtitle: const Text('Pack バージョン・アセットの整合性を確認'),
+              leading: const Icon(Icons.inventory_2_outlined),
+              onTap: () async =>
+                  const AssetPackDebugRoute().push<void>(context),
+            ),
+            ListTile(
               title: const Text('SharedPreferences'),
               subtitle: const Text('保存されている Key-Value の一覧・編集'),
               leading: const Icon(Icons.data_object),
