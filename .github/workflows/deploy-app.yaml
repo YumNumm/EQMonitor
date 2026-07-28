@@ -181,15 +181,35 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
+            VERBOSE_SCRIPT_LOGGING=YES \
             2>&1 | tee /tmp/xcodebuild-archive.log | xcbeautify --renderer github-actions; then
-            # xcbeautify drops actool/ibtoold diagnostics, so surface them explicitly.
+            # xcbeautify drops actool/ibtoold and Run Script diagnostics,
+            # so surface them explicitly.
             echo "::group::xcodebuild raw errors"
             grep -n -A 5 -E '^(error:|.*\*\* ARCHIVE FAILED)' /tmp/xcodebuild-archive.log || true
             echo "::endgroup::"
-            echo "::error::xcodebuild archive failed. Tail of raw log:"
-            tail -n 200 /tmp/xcodebuild-archive.log
+            echo "::group::Run Script phase output"
+            # A failing PhaseScriptExecution prints its stdout/stderr right after
+            # the command header; `tail` alone is swallowed by trailing Copy logs.
+            awk '/^PhaseScriptExecution/{start = NR} {line[NR] = $0}
+                 END {if (start) for (i = start; i <= NR && i < start + 500; i++) print line[i]}' \
+              /tmp/xcodebuild-archive.log
+            echo "::endgroup::"
+            echo "::group::Sandbox / script failures"
+            grep -n -E 'Sandbox: |deny\(1\)|Command PhaseScriptExecution failed' \
+              /tmp/xcodebuild-archive.log || true
+            echo "::endgroup::"
+            echo "::error::xcodebuild archive failed. See raw log artifact."
             exit 1
           fi
+
+      - name: Upload xcodebuild raw log
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: xcodebuild-archive-log
+          path: /tmp/xcodebuild-archive.log
+          retention-days: 7
 
       # 埋め込みフレームワークとアプリを ad-hoc 署名。export 時に Distribution 証明書で上書きされる。
       - name: Embed entitlements and ad-hoc sign
