@@ -75,21 +75,14 @@ import BackgroundAssets
     }
     let manager = AssetPackManager.shared
 
-    // `assetPackIsAvailableLocally(withID:)` only exists from iOS 26.4;
-    // treat it as an extra, cheap early-exit readiness signal when
-    // available, but don't require it (this app's own minimum is 26.0).
-    // This alone is NOT sufficient readiness evidence even when available:
-    // per `BADownload.h`, Background Assets tracks download state per
-    // *file*, not per pack — there's no guarantee the pack's files land
-    // atomically as a unit. The manifest-driven completeness check below
-    // (`verifyAllManifestAssetsExist`) is what actually verifies every
-    // asset the pack claims to contain is present, and runs regardless of
-    // OS version (26.0+).
-    if #available(iOS 26.4, *) {
-      guard manager.assetPackIsAvailableLocally(withID: packIdentifier) else {
-        return nil
-      }
-    }
+    // `AssetPackManager.assetPackIsAvailableLocally(withID:)` would be a
+    // cheap early-exit readiness signal, but it only exists in the iOS 26.4
+    // SDK and referencing it would pin every build (CI included) to Xcode
+    // 26.4+. It is also not sufficient on its own: per `BADownload.h`,
+    // Background Assets tracks download state per *file*, not per pack, so
+    // the manifest-driven completeness check below
+    // (`verifyAllManifestAssetsExist`) is what actually establishes
+    // readiness — and it runs on every supported OS version (26.0+).
 
     // There is no "get the pack's root directory" API: `url(for:)` merges
     // *all* downloaded asset packs into a single virtual namespace and
