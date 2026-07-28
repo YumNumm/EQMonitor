@@ -14,26 +14,18 @@ xcodebuild archive ... | xcbeautify ...
 
 GitHub Actions のデフォルト bash は `pipefail` 無し。`xcodebuild` が非ゼロでも
 パイプ右側の `xcbeautify` が 0 ならステップ全体が成功扱いになる。
+真の失敗（例: Flutter `Run Script` / `PhaseScriptExecution`）はログを掘らないと分からない。
 
 ## 対策
 
-`pipefail` を付けるだけでは不十分。GitHub Actions の `run:` は
-`shell: /bin/bash -e {0}` で動くため、パイプが失敗した時点で errexit により
-スクリプトが即終了し、`PIPESTATUS` を見る診断コードに到達しない。
-**パイプ全体を `if !` の中に置く**こと。
-
 ```yaml
 set -o pipefail
-if ! xcodebuild archive ... 2>&1 \
-  | tee /tmp/xcodebuild-archive.log \
-  | xcbeautify --renderer github-actions; then
-  # xcbeautify は actool/ibtoold の診断を捨てるので raw log から拾う
-  echo "::group::xcodebuild raw errors"
-  grep -n -A 5 -E '^(error:|.*\*\* ARCHIVE FAILED)' /tmp/xcodebuild-archive.log || true
-  echo "::endgroup::"
-  echo "::error::xcodebuild archive failed. Tail of raw log:"
-  tail -n 200 /tmp/xcodebuild-archive.log
-  exit 1
+xcodebuild archive ... 2>&1 | tee /tmp/xcodebuild-archive.log | xcbeautify --renderer github-actions
+archive_status=${PIPESTATUS[0]}
+if [ "$archive_status" -ne 0 ]; then
+  echo "::error::xcodebuild archive failed (exit $archive_status). Tail of raw log:"
+  tail -n 120 /tmp/xcodebuild-archive.log
+  exit "$archive_status"
 fi
 ```
 
@@ -48,5 +40,4 @@ Runner 本体に合わせて **26.0** に揃える。
 ## 関連
 
 - jma_code_table 欠落は別件で解消済み（`stage_from_release.sh --target ios-native`）
-- 実際に exit 65 の原因だった actool クラッシュは
-  `docs/knowledge/20260729_icon_composer_actool_crash.md` を参照
+- ローカル Xcode 26.6 では別途 `actool` の nil crash が出ることがある（CI 26.3 とは症状が異なる）
