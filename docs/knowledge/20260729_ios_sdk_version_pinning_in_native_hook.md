@@ -25,7 +25,7 @@ Target dart_build failed: Error: Building native assets failed.
   シンボルが SDK に存在することは保証しない。SDK に無い API を書くと
   ビルドが通らない。
 - ネイティブ hook の Swift が参照してよい API は
-  `.github/workflows/deploy-app.yaml` の `XCODE_VERSION`（現在 `26.3`）に
+  `.github/workflows/deploy-app.yaml` の `XCODE_VERSION`（現在 `26.6`）に
   同梱される SDK までとする。
 - 新しい API を使いたい場合は、任意の最適化なら **使わない**、必須なら
   `XCODE_VERSION` を上げてローカルと揃える。

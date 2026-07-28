@@ -184,7 +184,7 @@ succeeds) — only the *processing* status is in question. To check by hand:
 
 ## Xcode version for `ba-package`
 
-`upload-ios` pins its own `IOS_ASSET_PACK_XCODE_VERSION` (currently `26.3`,
+`upload-ios` pins its own `IOS_ASSET_PACK_XCODE_VERSION` (currently `26.6`,
 matching `deploy-app.yaml`'s `XCODE_VERSION` today) — deliberately **not**
 shared with `deploy-app.yaml`'s env var, so bumping one never accidentally
 changes app-build reproducibility or vice versa. The workflow's mandatory

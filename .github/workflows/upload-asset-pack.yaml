@@ -38,11 +38,10 @@ env:
   # Xcode version for the iOS Managed Background Assets job ONLY. Deliberately
   # independent of deploy-app.yaml's `XCODE_VERSION` (app builds keep their own
   # pin). `ba-package` requires Xcode 26+ / macOS 26 (Tahoe) per
-  # https://developer.apple.com/forums/thread/795796 — 26.3 matches the
-  # macos-26 runner image's bundled default, so no maxim-lobanov/setup-xcode
-  # version bump is expected to be necessary, but the probe step below
-  # verifies this rather than assuming it.
-  IOS_ASSET_PACK_XCODE_VERSION: "26.3"
+  # https://developer.apple.com/forums/thread/795796 — currently aligned with
+  # deploy-app at 26.6 (available on macos-26 runners). The probe step below
+  # verifies ba-package rather than assuming it.
+  IOS_ASSET_PACK_XCODE_VERSION: "26.6"
 
 jobs:
   # ---------------------------------------------------------------------

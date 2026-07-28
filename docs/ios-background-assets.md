@@ -93,8 +93,8 @@ first real device / TestFlight run, still complete:
 Confirmed locally on this machine (Xcode 27.0 beta, build 27A5194q):
 `xcrun ba-package --help` works and exposes `convert`, `download-manifest`,
 `evaluate`, `package` (default), `template` subcommands. `deploy-app.yaml`
-currently pins Xcode `26.3`; `upload-asset-pack.yaml` pins its own
-`IOS_ASSET_PACK_XCODE_VERSION` (currently `26.3` too, per
+currently pins Xcode `26.6`; `upload-asset-pack.yaml` pins its own
+`IOS_ASSET_PACK_XCODE_VERSION` (currently `26.6` too, per
 `docs/asset-pack-cd.md`) deliberately independently of the app-build pin.
 If `ba-package` availability ever changes for the pinned CI Xcode version,
 bump `IOS_ASSET_PACK_XCODE_VERSION`, not `deploy-app.yaml`'s.
