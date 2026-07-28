@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 # Download an Asset Pack from the private YumNumm/eqmonitor-backend GitHub
-# Release and stage its contents into Android / macOS build paths.
+# Release and stage its contents into Android / macOS / iOS-native build paths.
 #
 # pmtiles and parameter JSON are NOT committed to this repo — the canonical
 # source is the backend Release (`asset-pack-vX.Y.Z`). Call this before
-# `flutter build appbundle` (Android PAD install-time module) or a macOS
-# bundle build that expects `app/assets/platform/`.
+# `flutter build appbundle` (Android PAD install-time module), a macOS
+# bundle build that expects `app/assets/platform/`, or an iOS build that
+# needs the AppIntent/Widget slim `jma_code_table.json`.
 #
 # Usage:
 #   GH_TOKEN=... stage_from_release.sh [--version X.Y.Z] --target android|macos|both|ios-native
 #
 # Environment:
-#   GH_TOKEN   Required. GitHub token with contents:read on eqmonitor-backend.
+#   GH_TOKEN                       Required. GitHub token with contents:read on eqmonitor-backend.
 #   ANDROID_ASSET_PACK_ASSETS_DIR  Override (default below).
 #   MACOS_ASSET_DIR                Override (default below).
+#   IOS_NATIVE_JMA_CODE_TABLE      Override slim JSON output path (default below).
 #
 # If --version is omitted, the latest Release whose tag matches
 # `asset-pack-v*` is used.
@@ -65,7 +67,7 @@ if [ -z "${GH_TOKEN:-}" ]; then
   exit 2
 fi
 
-for cmd in gh unzip jq; do
+for cmd in gh unzip jq python3; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
     echo "stage_from_release.sh: required command not found: $cmd" >&2
     exit 2
@@ -152,8 +154,10 @@ stage_ios_native() {
 
   echo "==> Extracting slim jma_code_table for iOS native extensions -> $dest"
   mkdir -p "$dest_dir"
-  # Drop junk / previous artifacts; keep .gitkeep only.
-  find "$dest_dir" -mindepth 1 -maxdepth 1 ! -name '.gitkeep' -exec rm -rf {} +
+  # Only replace the slim output file. Do not wipe the whole directory —
+  # IOS_NATIVE_JMA_CODE_TABLE is overridable and a mis-set dirname must
+  # not delete unrelated tracked assets.
+  rm -f "$dest"
 
   python3 -m tool.asset_pack.extract_ios_native_jma_code_table \
     --source "$source" \
