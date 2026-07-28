@@ -115,6 +115,24 @@ jobs:
         working-directory: app
         run: flutter pub get --enforce-lockfile
 
+      # AppIntent/Widget Bundle Resources need a slim jma_code_table.json.
+      # Full parameters stay on Managed Background Assets at runtime.
+      - name: Generate GitHub App token (eqmonitor-backend contents:read)
+        id: asset-pack-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
+          private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
+          owner: YumNumm
+          repositories: |
+            eqmonitor-backend
+          permission-contents: read
+
+      - name: Stage iOS native jma_code_table from backend Release
+        env:
+          GH_TOKEN: ${{ steps.asset-pack-token.outputs.token }}
+        run: tool/asset_pack/stage_from_release.sh --target ios-native
+
       - name: Extract environment variables
         run: |
           echo "$DART_DEFINE_PRODUCTION" | base64 -d > environment/.env.prod
