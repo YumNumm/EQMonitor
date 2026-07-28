@@ -28,6 +28,7 @@ integration tests) and uses `gh release download`. Unauthenticated `curl` of
 |---|---|---|
 | Download + sha256 verify + structure assert + `pack_version` match | Yes | GitHub App token で private Release を取得し Artifact 化 |
 | iOS Managed Background Assets upload | Yes | `ba-package` → ASC API（パック未作成なら `POST /v1/backgroundAssets` で作成） |
+| iOS AppIntent/Widget `jma_code_table.json` | **Not in this workflow** | `deploy-app.yaml` の `build-ios` が `stage_from_release.sh --target ios-native` で prefecture/city のみ抽出して `app/assets/parameters/jma_code_table.json` に配置（gitignored）。ランタイムの Flutter は Background Assets のフル JSON を読む |
 | Android Play Asset Delivery contents | **Not in this workflow** | `deploy-app.yaml` の `build-android` が `tool/asset_pack/stage_from_release.sh` で最新 Release をビルド直前に展開 |
 | macOS bundled assets | **Not in this workflow** | ローカル / 将来の macOS CI で同じ `stage_from_release.sh --target macos` を使う。git にはコミットしない |
 

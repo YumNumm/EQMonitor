@@ -13,10 +13,11 @@ Release にあるため二重管理になる。
 | プラットフォーム | 取得方法 |
 |---|---|
 | iOS | `upload-asset-pack.yaml` が Release を取得 → `ba-package` → ASC へ直接アップロード（アプリバンドルには入れない） |
+| iOS AppIntent/Widget | `deploy-app.yaml` の `build-ios` が `stage_from_release.sh --target ios-native` で prefecture/city のみ抽出して `app/assets/parameters/jma_code_table.json` に配置（gitignored）。ランタイムの Flutter は Background Assets のフル JSON を読む |
 | Android | `deploy-app.yaml` の `build-android` が `tool/asset_pack/stage_from_release.sh --target android` で AAB ビルド直前に展開（PAD install-time） |
 | macOS | 同スクリプト `--target macos` をローカル / 将来 CI で実行。`app/assets/platform/` は gitignore |
 
-## ローカルで Android / macOS をビルドする場合
+## ローカルで Android / macOS / iOS をビルドする場合
 
 ```bash
 # eqmonitor-backend に contents:read できる GH_TOKEN が必要
@@ -24,6 +25,8 @@ export GH_TOKEN=...
 tool/asset_pack/stage_from_release.sh --target both
 # または特定バージョン
 tool/asset_pack/stage_from_release.sh --version 0.0.0 --target android
+# iOS（AppIntent / Widget 用 slim JSON）
+GH_TOKEN=... tool/asset_pack/stage_from_release.sh --target ios-native
 ```
 
 ## 関連

@@ -1,5 +1,11 @@
 # iOS ビルドが `jma_code_table.json` 欠落で失敗する（既存不具合）
 
+## 解決 (2026-07-28)
+
+Approach B: `stage_from_release.sh --target ios-native` が slim JSON を
+ビルド時配置。詳細は
+`docs/superpowers/specs/2026-07-28-ios-native-jma-code-table-staging-design.md`。
+
 ## 症状
 
 `mise exec -- flutter build ios --no-codesign`（`app/`）が以下で失敗する:

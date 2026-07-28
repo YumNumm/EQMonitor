@@ -12,7 +12,7 @@ guessed from documentation that couldn't be fetched).
 ## Canonical identifiers (must stay consistent everywhere)
 
 | Platform | Identifier | Where it's declared |
-|---|---|---|
+| --- | --- | --- |
 | iOS (Background Assets) | `eqmonitor-assets` | `packages/assets_util/lib/assets_util.dart` (`_iosAssetPackIdentifier`), `IOS_BACKGROUND_ASSET_PACK_ID` in `.github/workflows/upload-asset-pack.yaml` (which CI writes into the `ba-package` manifest's `assetPackID`), and the Background Assets pack record in App Store Connect. |
 | Android (Play Asset Delivery) | `eqmonitor_assets` | `packages/assets_util/lib/assets_util.dart` (`_androidAssetPackName`), `app/android/assetpacks/eqmonitor_assets/build.gradle.kts`'s `packName`, `assetPacks += setOf(":assetpacks:eqmonitor_assets")` in `app/android/app/build.gradle.kts`. |
 
@@ -33,6 +33,19 @@ Gradle module/pack names disallow hyphens, and App Store Connect rejects the
 dots of a reverse-DNS id with ITMS-91133 (see
 `docs/knowledge/20260728_asset_pack_id_charset.md`), so neither string can be
 used on the other platform.
+
+## Local iOS build: stage slim `jma_code_table.json` first
+
+AppIntent / Widget extensions bundle a slim `jma_code_table.json` (prefecture +
+city only) at build time — not the full Asset Pack JSON. Before a local
+`flutter build ios`, run:
+
+```bash
+GH_TOKEN=... tool/asset_pack/stage_from_release.sh --target ios-native
+```
+
+CI does this in `deploy-app.yaml`'s `build-ios` job. See
+`docs/knowledge/20260728_asset_pack_release_staging.md`.
 
 ## What `packages/assets_util` implements today
 
