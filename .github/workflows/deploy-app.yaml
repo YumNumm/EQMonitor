@@ -168,8 +168,10 @@ jobs:
         run: |
           # Without pipefail, xcodebuild failures are swallowed by xcbeautify
           # and the job only fails later when Runner.app is missing.
+          # The pipeline must stay inside `if`, otherwise `bash -e` aborts the
+          # step before the raw log can be dumped.
           set -o pipefail
-          xcodebuild archive \
+          if ! xcodebuild archive \
             -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -configuration Release \
@@ -179,12 +181,14 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            2>&1 | tee /tmp/xcodebuild-archive.log | xcbeautify --renderer github-actions
-          archive_status=${PIPESTATUS[0]}
-          if [ "$archive_status" -ne 0 ]; then
-            echo "::error::xcodebuild archive failed (exit $archive_status). Tail of raw log:"
-            tail -n 120 /tmp/xcodebuild-archive.log
-            exit "$archive_status"
+            2>&1 | tee /tmp/xcodebuild-archive.log | xcbeautify --renderer github-actions; then
+            # xcbeautify drops actool/ibtoold diagnostics, so surface them explicitly.
+            echo "::group::xcodebuild raw errors"
+            grep -n -A 5 -E '^(error:|.*\*\* ARCHIVE FAILED)' /tmp/xcodebuild-archive.log || true
+            echo "::endgroup::"
+            echo "::error::xcodebuild archive failed. Tail of raw log:"
+            tail -n 200 /tmp/xcodebuild-archive.log
+            exit 1
           fi
 
       # 埋め込みフレームワークとアプリを ad-hoc 署名。export 時に Distribution 証明書で上書きされる。

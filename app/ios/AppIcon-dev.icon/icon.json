@@ -1,7 +1,4 @@
 {
-  "features" : [
-    "specular-location"
-  ],
   "fill" : {
     "linear-gradient" : [
       "display-p3:0.09412,0.71765,0.93725,1.00000",
@@ -62,7 +59,7 @@
         "kind" : "layer-color",
         "opacity" : 1.2
       },
-      "specular" : "inside",
+      "specular" : true,
       "translucency" : {
         "enabled" : true,
         "value" : 0.4

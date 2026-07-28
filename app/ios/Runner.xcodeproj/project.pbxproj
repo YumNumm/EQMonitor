@@ -1151,6 +1151,7 @@
 		};
 		27DC6F363017B0340076F559 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1179,7 +1180,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = net.yumnumm.eqmonitor.AssetDownloader;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.yumnumm.eqmonitor${APP_ID_SUFFIX}.AssetDownloader";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1195,6 +1196,7 @@
 		};
 		27DC6F373017B0340076F559 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1221,7 +1223,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = net.yumnumm.eqmonitor.AssetDownloader;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.yumnumm.eqmonitor${APP_ID_SUFFIX}.AssetDownloader";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1235,6 +1237,7 @@
 		};
 		27DC6F383017B0340076F559 /* Profile */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1261,7 +1264,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = net.yumnumm.eqmonitor.AssetDownloader;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.yumnumm.eqmonitor${APP_ID_SUFFIX}.AssetDownloader";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
