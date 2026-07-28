@@ -1,4 +1,7 @@
 {
+  "features" : [
+    "specular-location"
+  ],
   "fill" : {
     "linear-gradient" : [
       "display-p3:0.09412,0.71765,0.93725,1.00000",
@@ -17,11 +20,27 @@
   },
   "groups" : [
     {
-      "blur-material" : null,
+      "blur-material" : 0.11,
       "layers" : [
         {
-          "blend-mode" : "normal",
-          "fill" : "none",
+          "blend-mode-specializations" : [
+            {
+              "value" : "normal"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "hard-light"
+            }
+          ],
+          "fill-specializations" : [
+            {
+              "value" : "none"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "none"
+            }
+          ],
           "image-name" : "SVG Image 4.svg",
           "name" : "SVG Image 4",
           "position" : {
@@ -31,10 +50,31 @@
               287.8572687496228
             ]
           }
-        },
+        }
+      ],
+      "lighting" : "individual",
+      "refractivity" : {
+        "depth" : 0.0102734375,
+        "enabled" : false,
+        "strength" : 0.50140625
+      },
+      "shadow" : {
+        "kind" : "layer-color",
+        "opacity" : 1.2
+      },
+      "specular" : "inside",
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.4
+      }
+    },
+    {
+      "blur-material" : 0.1,
+      "layers" : [
         {
           "fill" : "none",
-          "glass" : false,
+          "glass" : true,
+          "hidden" : false,
           "image-name" : "SVG Image 3.svg",
           "name" : "SVG Image 3",
           "position" : {
@@ -44,15 +84,57 @@
               2.4395000000000664
             ]
           }
-        },
-        {
-          "glass" : false,
-          "hidden" : true,
-          "image-name" : "SVG Image 2.svg",
-          "name" : "SVG Image 2"
         }
       ],
       "lighting" : "individual",
+      "refractivity" : {
+        "depth" : 0.320546875,
+        "enabled" : false,
+        "strength" : 0.301015625
+      },
+      "shadow" : {
+        "kind" : "none",
+        "opacity" : 0.6
+      },
+      "specular" : false,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.2
+      }
+    },
+    {
+      "blend-mode-specializations" : [
+        {
+          "value" : "screen"
+        },
+        {
+          "appearance" : "dark",
+          "value" : "overlay"
+        }
+      ],
+      "blur-material" : 1,
+      "hidden" : false,
+      "layers" : [
+        {
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "SVG Image 5.svg",
+          "name" : "SVG Image 5"
+        },
+        {
+          "blend-mode" : "normal",
+          "glass" : true,
+          "image-name" : "SVG Image.svg",
+          "name" : "SVG Image",
+          "opacity-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : 0.5
+            }
+          ]
+        }
+      ],
+      "lighting" : "combined",
       "refractivity" : {
         "depth" : 0,
         "enabled" : false,
@@ -64,8 +146,8 @@
       },
       "specular" : false,
       "translucency" : {
-        "enabled" : false,
-        "value" : 0.5
+        "enabled" : true,
+        "value" : 0.1
       }
     }
   ],
