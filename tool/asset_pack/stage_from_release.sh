@@ -8,7 +8,7 @@
 # bundle build that expects `app/assets/platform/`.
 #
 # Usage:
-#   GH_TOKEN=... stage_from_release.sh [--version X.Y.Z] --target android|macos|both
+#   GH_TOKEN=... stage_from_release.sh [--version X.Y.Z] --target android|macos|both|ios-native
 #
 # Environment:
 #   GH_TOKEN   Required. GitHub token with contents:read on eqmonitor-backend.
@@ -22,6 +22,7 @@ set -euo pipefail
 REPO="${ASSET_PACK_RELEASE_REPO:-YumNumm/eqmonitor-backend}"
 ANDROID_DIR="${ANDROID_ASSET_PACK_ASSETS_DIR:-app/android/assetpacks/eqmonitor_assets/src/main/assets}"
 MACOS_DIR="${MACOS_ASSET_DIR:-app/assets/platform}"
+IOS_NATIVE_JMA_CODE_TABLE="${IOS_NATIVE_JMA_CODE_TABLE:-app/assets/parameters/jma_code_table.json}"
 
 pack_version=""
 target=""
@@ -48,11 +49,11 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ -z "$target" ]; then
-  echo "stage_from_release.sh: --target android|macos|both is required" >&2
+  echo "stage_from_release.sh: --target android|macos|both|ios-native is required" >&2
   exit 2
 fi
 case "$target" in
-  android|macos|both) ;;
+  android|macos|both|ios-native) ;;
   *)
     echo "stage_from_release.sh: invalid --target '$target'" >&2
     exit 2
@@ -143,6 +144,24 @@ stage_into() {
   rm -f "$dest/.gitkeep"
 }
 
+stage_ios_native() {
+  local source="$workdir/extracted/parameters/jma_code_table.json"
+  local dest="$IOS_NATIVE_JMA_CODE_TABLE"
+  local dest_dir
+  dest_dir=$(dirname "$dest")
+
+  echo "==> Extracting slim jma_code_table for iOS native extensions -> $dest"
+  mkdir -p "$dest_dir"
+  # Drop junk / previous artifacts; keep .gitkeep only.
+  find "$dest_dir" -mindepth 1 -maxdepth 1 ! -name '.gitkeep' -exec rm -rf {} +
+
+  python3 -m tool.asset_pack.extract_ios_native_jma_code_table \
+    --source "$source" \
+    --destination "$dest"
+
+  test -s "$dest"
+}
+
 case "$target" in
   android)
     stage_into "$ANDROID_DIR"
@@ -153,6 +172,9 @@ case "$target" in
   both)
     stage_into "$ANDROID_DIR"
     stage_into "$MACOS_DIR"
+    ;;
+  ios-native)
+    stage_ios_native
     ;;
 esac
 
