@@ -51,6 +51,49 @@ workflowが成功しても、端末上でmanifestと全assetが利用可能と�
   観測できなくなる。
 - 固定値やbundled assetへフォールバックして障害を隠さない。
 
+## 診断JSON schema v1
+
+native層は次のfieldを必ず含むJSONを返す。Dart層は
+`schema_version == 1`を厳密に検証し、未知のschemaや型不正を
+`FormatException`として扱う。
+
+- 共通: `schema_version`, `platform`, `os_version`, `pack_id`, `status`,
+  `system_availability`, `detail`
+- pathとmanifest: `manifest_url`, `pack_root`, `manifest`
+- file診断: `assets[]` の `path`, `status`, `exists`,
+  `expected_size_bytes`, `actual_size_bytes`
+- native error: `native_error` の `domain`, `code`, `description`
+
+top-level `status`は `ready`, `unsupportedOs`,
+`manifestUrlResolutionFailed`, `manifestMissing`, `manifestUnreadable`,
+`manifestInvalid`, `assetMissing`, `assetSizeMismatch`のいずれかとする。
+fileごとの `status`は `ready`, `missing`, `sizeMismatch`のいずれかとする。
+
+`checkForUpdates()`の応答は `schema_version`, `pack_id`, `success`,
+`checked_at`, `updating_ids`, `removed_ids`, `native_error`を含む。
+`success == true`は更新確認APIが成功したことだけを示し、
+assetのdownload完了を示さない。
+
+## 端末上での読み取り手順
+
+1. デバッグ画面を開き、`status`, `system_availability`,
+   `manifest_url`, `pack_root`, `native_error`と全assetのsizeを記録する。
+2. 右上の再読込は診断のみを更新する。この操作で
+   `checkForUpdates()`は呼ばれない。
+3. 初期診断の保存後に「更新を確認」を明示的に押し、
+   `checked_at`, `updating_ids`, `removed_ids`, `native_error`を記録する。
+4. OSによる取得を待ち、右上の再読込で再診断する。
+   `ready`かつ全fileが `ready`で、期待sizeと実sizeが一致した時点を
+   端末上の取得完了と判定する。
+
+## Xcode SDKが無い開発環境
+
+Command Line ToolsのみのMacでは `iphoneos` / `iphonesimulator` SDKを
+取得できない。native hookとbinding生成はその場合にmacOS SDKで
+Objective-C surfaceを生成し、macOS用xcframeworkを直接組み立てる。
+iOS BackgroundAssets自体のcompileと端末確認は、対応iOS SDKを含む
+XcodeまたはCIで必ず行う。
+
 ## 関連コマンド
 
 ```bash
