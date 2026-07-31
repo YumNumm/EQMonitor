@@ -11,19 +11,11 @@ part of 'asset_pack_debug_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Builds [AssetPackDebugInfo] for the Asset Pack debug page.
-///
-/// Errors with [AssetPackNotReadyException] (surfaced as `AsyncError`) when the
-/// pack is unavailable; the debug page renders the exception message in that
-/// case rather than treating it as a fatal error.
 
 @ProviderFor(assetPackDebugInfo)
 final assetPackDebugInfoProvider = AssetPackDebugInfoProvider._();
 
 /// Builds [AssetPackDebugInfo] for the Asset Pack debug page.
-///
-/// Errors with [AssetPackNotReadyException] (surfaced as `AsyncError`) when the
-/// pack is unavailable; the debug page renders the exception message in that
-/// case rather than treating it as a fatal error.
 
 final class AssetPackDebugInfoProvider
     extends
@@ -36,10 +28,6 @@ final class AssetPackDebugInfoProvider
         $FutureModifier<AssetPackDebugInfo>,
         $FutureProvider<AssetPackDebugInfo> {
   /// Builds [AssetPackDebugInfo] for the Asset Pack debug page.
-  ///
-  /// Errors with [AssetPackNotReadyException] (surfaced as `AsyncError`) when the
-  /// pack is unavailable; the debug page renders the exception message in that
-  /// case rather than treating it as a fatal error.
   AssetPackDebugInfoProvider._()
     : super(
         from: null,
@@ -67,4 +55,4 @@ final class AssetPackDebugInfoProvider
 }
 
 String _$assetPackDebugInfoHash() =>
-    r'0f0cb1f10f28cfc414f70b0f11642ca46a2a7b16';
+    r'bc8fc46820fdf790de5ea9392551db4d9b4ec987';
