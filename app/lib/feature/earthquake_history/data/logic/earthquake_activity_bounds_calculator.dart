@@ -30,9 +30,7 @@ class EarthquakeActivityBoundsCalculator {
     final cosine = math.cos(latitudeRadians).abs();
     final longitudeDelta = cosine < 0.000001
         ? 180.0
-        : math.asin(
-                (math.sin(angularDistance) / cosine).clamp(-1.0, 1.0),
-              ) *
+        : math.asin((math.sin(angularDistance) / cosine).clamp(-1.0, 1.0)) *
               180 /
               math.pi;
 
