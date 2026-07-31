@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:assets_util/src/asset_pack_diagnostics.dart';
 import 'package:assets_util/src/assets_util_android.dart';
 import 'package:assets_util/src/assets_util_ios.dart';
 import 'package:flutter/foundation.dart';
 
 export 'package:assets_util/src/asset_pack_not_ready_exception.dart';
-export 'package:assets_util/src/assets_util_android.dart' show AssetsUtilAndroid;
+export 'package:assets_util/src/asset_pack_diagnostics.dart';
+export 'package:assets_util/src/assets_util_android.dart'
+    show AssetsUtilAndroid;
 
 /// The Asset Pack identifier registered in App Store Connect's Background
 /// Assets management (`IOS_BACKGROUND_ASSET_PACK_ID` in
@@ -29,6 +32,35 @@ const _androidAssetPackName = 'eqmonitor_assets';
 /// assets, iOS Managed Background Assets, Android Play Asset Delivery,
 /// macOS native bundling).
 abstract final class AssetsUtil {
+  /// Returns structured iOS Managed Background Assets diagnostics.
+  ///
+  /// This is observational and does not trigger an update check or download.
+  static AssetPackDiagnostics diagnosePack() {
+    if (kIsWeb || !Platform.isIOS) {
+      throw UnsupportedError(
+        'assets_util.diagnosePack is only supported on iOS',
+      );
+    }
+    return AssetsUtilApple.diagnosePack(
+      packIdentifier: _iosAssetPackIdentifier,
+    );
+  }
+
+  /// Explicitly asks Background Assets to check for Asset Pack updates.
+  ///
+  /// A successful response only describes the accepted update operation; it
+  /// does not mean every file has finished downloading.
+  static Future<AssetPackUpdateResult> checkForUpdates() {
+    if (kIsWeb || !Platform.isIOS) {
+      throw UnsupportedError(
+        'assets_util.checkForUpdates is only supported on iOS',
+      );
+    }
+    return AssetsUtilApple.checkForUpdates(
+      packIdentifier: _iosAssetPackIdentifier,
+    );
+  }
+
   /// Returns an absolute path to [fileName] on the local filesystem.
   ///
   /// Throws [UnsupportedError] on platforms other than iOS/Android.
@@ -43,9 +75,7 @@ abstract final class AssetsUtil {
     if (Platform.isAndroid) {
       return AssetsUtilAndroid.resolveLocalPath(fileName: fileName);
     }
-    throw UnsupportedError(
-      'assets_util is only supported on iOS and Android',
-    );
+    throw UnsupportedError('assets_util is only supported on iOS and Android');
   }
 
   /// Returns the absolute path to the Asset Pack root directory.
@@ -70,9 +100,7 @@ abstract final class AssetsUtil {
       );
     }
     if (Platform.isAndroid) {
-      return AssetsUtilAndroid.resolvePackRoot(
-        packName: _androidAssetPackName,
-      );
+      return AssetsUtilAndroid.resolvePackRoot(packName: _androidAssetPackName);
     }
     throw UnsupportedError(
       'assets_util.resolvePackRoot is only supported on iOS, Android and macOS',
