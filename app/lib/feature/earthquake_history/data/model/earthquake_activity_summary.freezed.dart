@@ -223,7 +223,7 @@ return $default(_that.beforeCount,_that.afterCount,_that.maxIntensity,_that.maxM
 
 class _EarthquakeActivitySummary implements EarthquakeActivitySummary {
   const _EarthquakeActivitySummary({required this.beforeCount, required this.afterCount, required this.maxIntensity, required this.maxMagnitude, required this.latestOriginTime});
-  
+
 
 @override final  int beforeCount;
 @override final  int afterCount;

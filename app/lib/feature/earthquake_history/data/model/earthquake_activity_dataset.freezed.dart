@@ -208,7 +208,7 @@ return $default(_that.items,_that.fetchedAt);case _:
 
 class _EarthquakeActivityDataset implements EarthquakeActivityDataset {
   const _EarthquakeActivityDataset({required final  List<EarthquakePartialNormal> items, required this.fetchedAt}): _items = items;
-  
+
 
  final  List<EarthquakePartialNormal> _items;
 @override List<EarthquakePartialNormal> get items {
