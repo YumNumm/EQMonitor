@@ -58,6 +58,10 @@ void main() {
     );
 
     expect(find.textContaining('ファイルなし'), findsOneWidget);
+    expect(
+      find.textContaining('resolved_url: file:///resolved/all.pmtiles'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('refresh only reloads diagnostics and update runs explicitly', (
@@ -133,7 +137,7 @@ AssetPackDebugInfo debugInfo({
 }) {
   final diagnostics = AssetPackDiagnostics.fromJsonString(
     jsonEncode({
-      'schema_version': 1,
+      'schema_version': 2,
       'platform': 'ios',
       'os_version': status == AssetPackDiagnosticStatus.unsupportedOs
           ? 'Version 25.0'
@@ -159,6 +163,8 @@ AssetPackDebugInfo debugInfo({
                 'expected_size_bytes': 10,
                 'actual_size_bytes':
                     status == AssetPackDiagnosticStatus.assetMissing ? null : 7,
+                'resolved_url': 'file:///resolved/all.pmtiles',
+                'native_error': null,
               },
             ],
       'native_error': nativeError == null

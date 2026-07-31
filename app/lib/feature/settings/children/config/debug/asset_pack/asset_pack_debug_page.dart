@@ -228,6 +228,7 @@ class _AssetTile extends StatelessWidget {
     final isReady = diagnostic.status == AssetPackFileDiagnosticStatus.ready;
     final stateLabel = switch (diagnostic.status) {
       AssetPackFileDiagnosticStatus.ready => 'OK',
+      AssetPackFileDiagnosticStatus.resolutionFailed => 'パス解決失敗',
       AssetPackFileDiagnosticStatus.missing => 'ファイルなし',
       AssetPackFileDiagnosticStatus.sizeMismatch => 'サイズ不一致',
     };
@@ -236,6 +237,14 @@ class _AssetTile extends StatelessWidget {
     final sizeEvidence =
         '期待: ${expectedSize == null ? '-' : formatter.format(expectedSize)} / '
         '実際: ${actualSize == null ? '-' : formatter.format(actualSize)}';
+    final resolvedUrl = diagnostic.resolvedUrl;
+    final nativeError = diagnostic.nativeError;
+    final resolutionEvidence = [
+      if (resolvedUrl != null) 'resolved_url: $resolvedUrl',
+      if (nativeError != null)
+        'native_error: ${nativeError.domain} (${nativeError.code}) '
+            '${nativeError.description}',
+    ].join('\n');
 
     return ListTile(
       isThreeLine: true,
@@ -248,7 +257,8 @@ class _AssetTile extends StatelessWidget {
       title: Text(item?.id.name ?? diagnostic.path),
       subtitle: Text(
         'path: ${diagnostic.path}\n[$stateLabel] $sizeEvidence\n'
-        'exists: ${diagnostic.exists}',
+        'exists: ${diagnostic.exists}'
+        '${resolutionEvidence.isEmpty ? '' : '\n$resolutionEvidence'}',
         style: const TextStyle(fontFamily: FontFamily.googleSansCode),
       ),
       onLongPress: () async {
