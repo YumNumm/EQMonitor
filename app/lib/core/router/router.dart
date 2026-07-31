@@ -10,6 +10,8 @@ import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page
 import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
 import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_query.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_activity_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
@@ -241,6 +243,18 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData
   Widget build(BuildContext context, GoRouterState state) {
     return EarthquakeHistoryDetailsPage(eventId: eventId);
   }
+}
+
+@TypedGoRoute<EarthquakeActivityRoute>(path: '/earthquake-activity')
+class EarthquakeActivityRoute extends GoRouteData
+    with $EarthquakeActivityRoute {
+  const EarthquakeActivityRoute({required this.$extra});
+
+  final EarthquakeActivityQuery $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      EarthquakeActivityPage(initialQuery: $extra);
 }
 
 @TypedGoRoute<ShakeDetectionHistoryRoute>(path: '/shake-detection-history')
