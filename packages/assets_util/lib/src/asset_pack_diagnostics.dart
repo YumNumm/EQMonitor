@@ -13,7 +13,12 @@ enum AssetPackDiagnosticStatus {
 
 enum AssetPackSystemAvailability { available, unavailable, apiUnavailable }
 
-enum AssetPackFileDiagnosticStatus { ready, missing, sizeMismatch }
+enum AssetPackFileDiagnosticStatus {
+  ready,
+  resolutionFailed,
+  missing,
+  sizeMismatch,
+}
 
 final class AssetPackNativeError {
   const AssetPackNativeError({
@@ -41,6 +46,8 @@ final class AssetPackFileDiagnostic {
     required this.exists,
     required this.expectedSizeBytes,
     required this.actualSizeBytes,
+    required this.resolvedUrl,
+    required this.nativeError,
   });
 
   factory AssetPackFileDiagnostic.fromJson(Map<String, dynamic> json) =>
@@ -58,6 +65,11 @@ final class AssetPackFileDiagnostic {
           json: json,
           key: 'actual_size_bytes',
         ),
+        resolvedUrl: nullableDiagnosticString(json: json, key: 'resolved_url'),
+        nativeError: nullableDiagnosticNativeError(
+          json: json,
+          key: 'native_error',
+        ),
       );
 
   final String path;
@@ -65,6 +77,8 @@ final class AssetPackFileDiagnostic {
   final bool exists;
   final int? expectedSizeBytes;
   final int? actualSizeBytes;
+  final String? resolvedUrl;
+  final AssetPackNativeError? nativeError;
 }
 
 final class AssetPackDiagnostics {
@@ -89,7 +103,7 @@ final class AssetPackDiagnostics {
       json: json,
       key: 'schema_version',
     );
-    if (schemaVersion != 1) {
+    if (schemaVersion != 1 && schemaVersion != 2) {
       throw FormatException(
         'Unsupported Asset Pack diagnostics schema_version: $schemaVersion',
       );
@@ -101,6 +115,13 @@ final class AssetPackDiagnostics {
     final assets = rawAssets
         .map((value) {
           if (value is Map<String, dynamic>) {
+            if (schemaVersion == 1) {
+              return AssetPackFileDiagnostic.fromJson({
+                ...value,
+                'resolved_url': null,
+                'native_error': null,
+              });
+            }
             return AssetPackFileDiagnostic.fromJson(value);
           }
           throw const FormatException('assets entries must be objects');
@@ -150,6 +171,20 @@ final class AssetPackDiagnostics {
   final Map<String, dynamic>? manifestJson;
   final List<AssetPackFileDiagnostic> assets;
   final AssetPackNativeError? nativeError;
+}
+
+AssetPackNativeError? nullableDiagnosticNativeError({
+  required Map<String, dynamic> json,
+  required String key,
+}) {
+  final value = json[key];
+  if (value == null) {
+    return null;
+  }
+  if (value is Map<String, dynamic>) {
+    return AssetPackNativeError.fromJson(value);
+  }
+  throw const FormatException('native_error must be an object or null');
 }
 
 final class AssetPackUpdateResult {
@@ -304,6 +339,7 @@ AssetPackSystemAvailability decodeAssetPackSystemAvailability(String value) =>
 AssetPackFileDiagnosticStatus decodeAssetPackFileStatus(String value) =>
     switch (value) {
       'ready' => .ready,
+      'resolutionFailed' => .resolutionFailed,
       'missing' => .missing,
       'sizeMismatch' => .sizeMismatch,
       _ => throw FormatException('Unknown Asset Pack file status: $value'),

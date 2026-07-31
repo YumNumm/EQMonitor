@@ -23,6 +23,7 @@ enum AssetPackSystemAvailability: String {
 
 enum AssetPackFileDiagnosticStatus: String {
   case ready
+  case resolutionFailed
   case missing
   case sizeMismatch
 }
@@ -46,6 +47,8 @@ struct AssetPackFileDiagnostic {
   let exists: Bool
   let expectedSizeBytes: Int?
   let actualSizeBytes: Int?
+  let resolvedURL: URL?
+  let nativeError: AssetPackNativeError?
 }
 
 struct AssetPackInspection {
@@ -68,7 +71,11 @@ struct AssetPackDiagnosticsEnvelope {
 }
 
 enum AssetPackDiagnosticsInspector {
-  static func inspect(manifestURL: URL, packRoot: URL) -> AssetPackInspection {
+  static func inspect(
+    manifestURL: URL,
+    packRoot: URL? = nil,
+    resolveAssetURL: (String) throws -> URL
+  ) -> AssetPackInspection {
     let manifestData: Data
     do {
       manifestData = try Data(contentsOf: manifestURL)
@@ -118,7 +125,23 @@ enum AssetPackDiagnosticsInspector {
         )
       }
 
-      let assetURL = packRoot.appendingPathComponent(relativePath)
+      let assetURL: URL
+      do {
+        assetURL = try resolveAssetURL(relativePath)
+      } catch {
+        diagnostics.append(
+          AssetPackFileDiagnostic(
+            path: relativePath,
+            status: .resolutionFailed,
+            exists: false,
+            expectedSizeBytes: expectedSize,
+            actualSizeBytes: nil,
+            resolvedURL: nil,
+            nativeError: AssetPackNativeError(error: error)
+          )
+        )
+        continue
+      }
       let exists = FileManager.default.fileExists(atPath: assetURL.path)
       let actualSize = (try? FileManager.default.attributesOfItem(
         atPath: assetURL.path
@@ -137,13 +160,15 @@ enum AssetPackDiagnosticsInspector {
           status: status,
           exists: exists,
           expectedSizeBytes: expectedSize,
-          actualSizeBytes: actualSize
+          actualSizeBytes: actualSize,
+          resolvedURL: assetURL,
+          nativeError: nil
         )
       )
     }
 
     let status: AssetPackDiagnosticStatus
-    if diagnostics.contains(where: { $0.status == .missing }) {
+    if diagnostics.contains(where: { $0.status == .resolutionFailed || $0.status == .missing }) {
       status = .assetMissing
     } else if diagnostics.contains(where: { $0.status == .sizeMismatch }) {
       status = .assetSizeMismatch
@@ -168,7 +193,7 @@ enum AssetPackDiagnosticsJSONEncoder {
   static func encode(_ envelope: AssetPackDiagnosticsEnvelope) throws -> Data {
     let inspection = envelope.inspection
     var json: [String: Any] = [
-      "schema_version": 1,
+      "schema_version": 2,
       "platform": envelope.platform,
       "os_version": envelope.osVersion,
       "pack_id": envelope.packIdentifier,
@@ -185,6 +210,14 @@ enum AssetPackDiagnosticsJSONEncoder {
           "exists": asset.exists,
           "expected_size_bytes": asset.expectedSizeBytes ?? NSNull(),
           "actual_size_bytes": asset.actualSizeBytes ?? NSNull(),
+          "resolved_url": asset.resolvedURL?.absoluteString ?? NSNull(),
+          "native_error": asset.nativeError.map { error in
+            [
+              "domain": error.domain,
+              "code": error.code,
+              "description": error.description,
+            ]
+          } ?? NSNull(),
         ] as [String: Any]
       },
     ]
@@ -205,7 +238,7 @@ enum AssetPackDiagnosticsJSONEncoder {
     } catch {
       let encodingError = AssetPackNativeError(error: error)
       let json: [String: Any] = [
-        "schema_version": 1,
+        "schema_version": 2,
         "platform": envelope.platform,
         "os_version": envelope.osVersion,
         "pack_id": envelope.packIdentifier,
@@ -263,6 +296,38 @@ enum AssetPackDiagnosticsJSONEncoder {
     #else
     return nil
     #endif
+  }
+
+  /// Resolves one logical Asset Pack path to a verified regular file.
+  public func resolveAssetPackFile(
+    relativePath: String,
+    packIdentifier: String
+  ) -> String? {
+    guard !relativePath.isEmpty, !relativePath.hasPrefix("/") else {
+      return nil
+    }
+    #if os(macOS)
+    guard let root = resolveMacOSBundledPackRoot() else {
+      return nil
+    }
+    let url = URL(fileURLWithPath: root).appendingPathComponent(relativePath)
+    #elseif os(iOS)
+    guard #available(iOS 26.0, *) else {
+      return nil
+    }
+    guard let url = try? AssetPackManager.shared.url(for: FilePath(relativePath)) else {
+      return nil
+    }
+    #else
+    return nil
+    #endif
+    guard
+      let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
+      attributes[.type] as? FileAttributeType == .typeRegular
+    else {
+      return nil
+    }
+    return url.path
   }
 
   public func diagnoseAssetPack(packIdentifier: String) -> String {
@@ -484,7 +549,10 @@ enum AssetPackDiagnosticsJSONEncoder {
       systemAvailability: availability,
       inspection: AssetPackDiagnosticsInspector.inspect(
         manifestURL: manifestURL,
-        packRoot: packRoot
+        packRoot: packRoot,
+        resolveAssetURL: { relativePath in
+          try manager.url(for: FilePath(relativePath))
+        }
       )
     )
   }

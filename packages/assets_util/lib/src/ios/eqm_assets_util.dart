@@ -2407,6 +2407,7 @@ late final _class_EQMAssetsUtil = objc.getClass("EQMAssetsUtil");
 late final _sel_isKindOfClass_ = objc.registerName("isKindOfClass:");
 late final _sel_resolveLocalPathWithFileName_ = objc.registerName("resolveLocalPathWithFileName:");
 late final _sel_resolvePackRootWithPackIdentifier_ = objc.registerName("resolvePackRootWithPackIdentifier:");
+late final _sel_resolveAssetPackFileWithRelativePath_packIdentifier_ = objc.registerName("resolveAssetPackFileWithRelativePath:packIdentifier:");
 late final _sel_diagnoseAssetPackWithPackIdentifier_ = objc.registerName("diagnoseAssetPackWithPackIdentifier:");
 
 /// Construction methods for `objc.ObjCBlock<ffi.Void Function(objc.NSString)>`.
@@ -2593,6 +2594,13 @@ _objc_msgSend_o762yo(object$.ref.pointer, _sel_checkForAssetPackUpdatesWithPackI
   objc.checkOsVersionInternal('EQMAssetsUtil.init', iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
     final $ret = _objc_msgSend_151sglz(object$.ref.retainAndReturnPointer(), _sel_init);
     return EQMAssetsUtil.fromPointer($ret, retain: false, release: true);
+  }
+
+
+  /// Resolves one logical Asset Pack path to a verified regular file.
+  objc.NSString? resolveAssetPackFileWithRelativePath(objc.NSString relativePath, {required objc.NSString packIdentifier}) {
+    final $ret = _objc_msgSend_15qeuct(object$.ref.pointer, _sel_resolveAssetPackFileWithRelativePath_packIdentifier_, relativePath.ref.pointer, packIdentifier.ref.pointer);
+    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
   }
 
 

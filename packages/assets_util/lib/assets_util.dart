@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:assets_util/src/asset_pack_diagnostics.dart';
+import 'package:assets_util/src/asset_pack_not_ready_exception.dart';
 import 'package:assets_util/src/assets_util_android.dart';
 import 'package:assets_util/src/assets_util_ios.dart';
 import 'package:flutter/foundation.dart';
@@ -24,6 +25,8 @@ const _iosAssetPackIdentifier = 'eqmonitor-assets';
 /// different literal than the iOS identifier: Gradle module names disallow
 /// hyphens, and App Store Connect rejects underscores and dots (ITMS-91133).
 const _androidAssetPackName = 'eqmonitor_assets';
+
+typedef ResolveAssetPackFile = Future<String> Function(String relativePath);
 
 /// Platform-managed local assets resolver.
 ///
@@ -104,6 +107,46 @@ abstract final class AssetsUtil {
     }
     throw UnsupportedError(
       'assets_util.resolvePackRoot is only supported on iOS, Android and macOS',
+    );
+  }
+
+  /// Resolves one logical Asset Pack path to a verified regular file.
+  ///
+  /// iOS files are resolved independently through Background Assets. Callers
+  /// must not derive sibling paths from a returned URL because the API exposes
+  /// a shared logical namespace rather than a stable physical pack root.
+  static Future<String> resolvePackFile({required String relativePath}) async {
+    if (kIsWeb) {
+      throw UnsupportedError('assets_util is not supported on web');
+    }
+    final segments = relativePath.split('/');
+    if (relativePath.isEmpty ||
+        File(relativePath).isAbsolute ||
+        segments.contains('..')) {
+      throw AssetPackNotReadyException(
+        'Invalid Asset Pack relative path: $relativePath',
+      );
+    }
+    if (Platform.isIOS || Platform.isMacOS) {
+      return AssetsUtilApple.resolvePackFile(
+        relativePath: relativePath,
+        packIdentifier: _iosAssetPackIdentifier,
+      );
+    }
+    if (Platform.isAndroid) {
+      final root = await AssetsUtilAndroid.resolvePackRoot(
+        packName: _androidAssetPackName,
+      );
+      final file = File('$root/$relativePath');
+      if (FileSystemEntity.typeSync(file.path) != FileSystemEntityType.file) {
+        throw AssetPackNotReadyException(
+          'Asset Pack file is unavailable: $relativePath',
+        );
+      }
+      return file.path;
+    }
+    throw UnsupportedError(
+      'assets_util.resolvePackFile is only supported on iOS, Android and macOS',
     );
   }
 }

@@ -8,7 +8,8 @@ import Testing
 
     let result = AssetPackDiagnosticsInspector.inspect(
       manifestURL: fixture.manifestURL,
-      packRoot: fixture.root
+      packRoot: fixture.root,
+      resolveAssetURL: { fixture.root.appendingPathComponent($0) }
     )
 
     #expect(result.status == .manifestInvalid)
@@ -21,7 +22,8 @@ import Testing
 
     let result = AssetPackDiagnosticsInspector.inspect(
       manifestURL: fixture.manifestURL,
-      packRoot: fixture.root
+      packRoot: fixture.root,
+      resolveAssetURL: { fixture.root.appendingPathComponent($0) }
     )
 
     #expect(result.status == .assetMissing)
@@ -35,7 +37,8 @@ import Testing
 
     let result = AssetPackDiagnosticsInspector.inspect(
       manifestURL: fixture.manifestURL,
-      packRoot: fixture.root
+      packRoot: fixture.root,
+      resolveAssetURL: { fixture.root.appendingPathComponent($0) }
     )
 
     #expect(result.status == .assetSizeMismatch)
@@ -49,7 +52,8 @@ import Testing
     try fixture.writeAsset(path: "map/missing.pmtiles", bytes: [1, 2, 3, 4])
     let inspected = AssetPackDiagnosticsInspector.inspect(
       manifestURL: fixture.manifestURL,
-      packRoot: fixture.root
+      packRoot: fixture.root,
+      resolveAssetURL: { fixture.root.appendingPathComponent($0) }
     )
     let envelope = AssetPackDiagnosticsEnvelope(
       platform: "ios",
@@ -64,7 +68,7 @@ import Testing
     let data = try AssetPackDiagnosticsJSONEncoder.encode(envelope)
     let value = try JSONSerialization.jsonObject(with: data)
     let json = try #require(value as? [String: Any])
-    #expect(json["schema_version"] as? Int == 1)
+    #expect(json["schema_version"] as? Int == 2)
     #expect(json["status"] as? String == "ready")
     #expect(json["pack_id"] as? String == "eqmonitor-assets")
     #expect(json["platform"] != nil)
@@ -74,6 +78,27 @@ import Testing
     #expect(json["pack_root"] != nil)
     #expect(json["manifest"] != nil)
     #expect(json["assets"] != nil)
+  }
+
+  @Test func individuallyResolvedAssetsDoNotRequireManifestSiblingPaths() throws {
+    let manifestFixture = try AssetPackFixture(manifest: manifestData())
+    let assetFixture = try AssetPackFixture(manifest: Data("{}".utf8))
+    try assetFixture.writeAsset(path: "map/present.pmtiles", bytes: [1, 2, 3])
+    try assetFixture.writeAsset(path: "map/missing.pmtiles", bytes: [1, 2, 3, 4])
+
+    let result = AssetPackDiagnosticsInspector.inspect(
+      manifestURL: manifestFixture.manifestURL,
+      resolveAssetURL: { relativePath in
+        assetFixture.root.appendingPathComponent(relativePath)
+      }
+    )
+
+    #expect(result.status == .ready)
+    #expect(
+      result.assets[0].resolvedURL
+        == assetFixture.root.appendingPathComponent("map/present.pmtiles")
+    )
+    #expect(result.assets.map(\.actualSizeBytes) == [3, 4])
   }
 }
 

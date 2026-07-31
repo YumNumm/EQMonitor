@@ -43,6 +43,39 @@ void main() {
       );
       expect(diagnostics.assets.single.expectedSizeBytes, 10);
       expect(diagnostics.assets.single.actualSizeBytes, 7);
+      expect(diagnostics.assets.single.resolvedUrl, isNull);
+      expect(diagnostics.assets.single.nativeError, isNull);
+    });
+
+    test('decodes schema v2 per-file resolution evidence', () {
+      final diagnostics = AssetPackDiagnostics.fromJsonString(
+        diagnosticsJson(
+          status: 'assetMissing',
+          schemaVersion: 2,
+          assets: [
+            {
+              'path': 'parameters/stations.json',
+              'status': 'resolutionFailed',
+              'exists': false,
+              'expected_size_bytes': 10,
+              'actual_size_bytes': null,
+              'resolved_url': null,
+              'native_error': {
+                'domain': 'BAErrorDomain',
+                'code': 4,
+                'description': 'Unavailable',
+              },
+            },
+          ],
+        ),
+      );
+
+      expect(diagnostics.schemaVersion, 2);
+      expect(
+        diagnostics.assets.single.status,
+        AssetPackFileDiagnosticStatus.resolutionFailed,
+      );
+      expect(diagnostics.assets.single.nativeError?.domain, 'BAErrorDomain');
     });
 
     test('preserves native errors and manifest JSON', () {
@@ -67,7 +100,7 @@ void main() {
     test('rejects unknown schema versions', () {
       expect(
         () => AssetPackDiagnostics.fromJsonString(
-          diagnosticsJson(status: 'ready', schemaVersion: 2),
+          diagnosticsJson(status: 'ready', schemaVersion: 3),
         ),
         throwsFormatException,
       );

@@ -68,4 +68,21 @@ abstract final class AssetsUtilApple {
     }
     return path.toDartString();
   }
+
+  static Future<String> resolvePackFile({
+    required String relativePath,
+    required String packIdentifier,
+  }) async {
+    final util = EQMAssetsUtil.alloc();
+    final path = util.resolveAssetPackFileWithRelativePath(
+      relativePath.toNSString(),
+      packIdentifier: packIdentifier.toNSString(),
+    );
+    if (path == null) {
+      throw AssetPackNotReadyException(
+        'Asset Pack ($packIdentifier) file is unavailable: $relativePath',
+      );
+    }
+    return path.toDartString();
+  }
 }
