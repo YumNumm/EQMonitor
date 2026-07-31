@@ -120,7 +120,7 @@
 - [x] Add the final schema-v1 field list, `checkForUpdates()` completion semantics, and on-device reading procedure to the knowledge document.
 - [x] Inspect `git --no-pager diff --check`, generated binding diffs, and `git status`; confirm `backend` is excluded.
 - [x] Commit cohesive changes with the required English prefix and Japanese summary.
-- [ ] Push `develop` to `origin` and verify local HEAD equals `origin/develop`.
+- [x] Push `develop` to `origin` and verify local HEAD equals `origin/develop`.
 
 Verification note: the format check passed for the 15 changed source/test files;
 `hook/build.dart` retains the repository's existing formatter style to avoid an unrelated
