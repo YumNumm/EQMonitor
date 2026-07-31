@@ -9,6 +9,13 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magni
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
+import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
+import 'package:eqmonitor/feature/parameter/data/model/shindo_db/shindo_db_stations_parameter.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:dio/dio.dart';
 
 EarthquakePartialNormal testActivityEarthquake({
   required String eventId,
@@ -44,4 +51,38 @@ EarthquakePartialNormal testActivityEarthquake({
   earthquakeType: earthquakeType,
   telegramTypes: const [],
   estimatedIntensityTileUrl: null,
+);
+
+abstract class TestEarthquakeHistoryRepository
+    extends EarthquakeHistoryRepository {
+  TestEarthquakeHistoryRepository()
+    : super(
+        earthquake: api.ApiClient(Dio()).earthquake,
+        earthquakeParameter: testEarthquakeParameter,
+        shindoDbStations: testShindoDbStations,
+      );
+}
+
+const testEarthquakeParameter = EarthquakeParameter(
+  metadata: ParameterMetadata(
+    type: ParameterType.jmaCodeTable,
+    schemaVersion: 1,
+    sourceVersion: 'test',
+    sourceUpdatedAt: null,
+    sourceUrls: [],
+    sha256: 'test',
+  ),
+  prefectures: [],
+);
+
+const testShindoDbStations = ShindoDbStationsParameter(
+  metadata: ParameterMetadata(
+    type: ParameterType.shindoDbStations,
+    schemaVersion: 1,
+    sourceVersion: 'test',
+    sourceUpdatedAt: null,
+    sourceUrls: [],
+    sha256: 'test',
+  ),
+  stations: [],
 );
