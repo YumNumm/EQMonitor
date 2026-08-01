@@ -21,7 +21,7 @@ void main() {
     var diagnoses = 0;
     var updateChecks = 0;
     final repository = AssetPackDebugRepository(
-      diagnosePack: () {
+      diagnosePack: () async {
         diagnoses += 1;
         return diagnostics();
       },
@@ -48,7 +48,7 @@ void main() {
   ) async {
     var diagnoses = 0;
     final repository = AssetPackDebugRepository(
-      diagnosePack: () {
+      diagnosePack: () async {
         diagnoses += 1;
         return diagnostics();
       },
@@ -69,7 +69,7 @@ void main() {
   ) async {
     var diagnoses = 0;
     final repository = AssetPackDebugRepository(
-      diagnosePack: () {
+      diagnosePack: () async {
         diagnoses += 1;
         return diagnostics();
       },

@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'asset_pack_debug_repository.g.dart';
 
-typedef DiagnoseAssetPack = AssetPackDiagnostics Function();
+typedef DiagnoseAssetPack = Future<AssetPackDiagnostics> Function();
 typedef CheckAssetPackUpdates = Future<AssetPackUpdateResult> Function();
 
 @riverpod
@@ -46,7 +46,7 @@ class AssetPackDebugRepository {
   final CheckAssetPackUpdates checkAssetPackUpdates;
 
   Future<AssetPackDebugInfo> diagnose() async {
-    final diagnostics = diagnosePack();
+    final diagnostics = await diagnosePack();
     AssetPackManifest? manifest;
     String? manifestParseError;
     final manifestJson = diagnostics.manifestJson;
