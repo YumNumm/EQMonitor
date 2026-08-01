@@ -42,7 +42,9 @@ jobs:
       - name: Checkout repository (with backend submodule)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          submodules: recursive
+          # api-stub に必要なトップレベルの backend のみ取得する。
+          # backend 配下の非公開インフラ submodule は結合テストでは不要。
+          submodules: true
           token: ${{ steps.app-token.outputs.token }}
           persist-credentials: false
 
