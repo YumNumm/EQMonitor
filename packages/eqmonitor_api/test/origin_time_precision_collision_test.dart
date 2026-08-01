@@ -7,16 +7,21 @@ import 'package:test/test.dart';
 Map<String, Object?> fixture(String path) =>
     jsonDecode(File(path).readAsStringSync()) as Map<String, Object?>;
 
+Map<String, Object?> earthquakeMillisecondFixture() =>
+    jsonDecode(
+          File(
+            'test/fixtures/contract/get__v2_earthquake_eventId.json',
+          ).readAsStringSync().replaceFirst(
+            '"origin_time_precision": "SECOND"',
+            '"origin_time_precision": "MILLISECOND"',
+          ),
+        )
+        as Map<String, Object?>;
+
 void main() {
   test('地震と震源カタログで異なる時刻精度をパースできる', () {
-    final earthquakeJson = fixture(
-      'test/fixtures/contract/get__v2_earthquake_eventId.json',
-    );
-    final earthquake = earthquakeJson['earthquake']! as Map<String, Object?>;
-    earthquake['origin_time_precision'] = 'MILLISECOND';
-
     final earthquakeResponse = EarthquakeDetailResponse.fromJson(
-      earthquakeJson,
+      earthquakeMillisecondFixture(),
     );
     final hypocenterResponse = HypocenterListResponse.fromJson(
       fixture('test/fixtures/contract/get__v2_hypocenters.json'),

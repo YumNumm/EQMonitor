@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/data_source/parameter_asset_data_source.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
+import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/repository/parameter_json_parser.dart';
 import 'package:eqmonitor/feature/parameter/data/repository/parameter_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -120,7 +121,9 @@ void main() {
       ],
     });
 
-    final parameter = const ParameterJsonParser().parseEarthquake(source);
+    final parameter = EarthquakeParameter.fromJson(
+      jsonDecode(source) as Map<String, dynamic>,
+    );
     final station = parameter.prefectures.single.regions.single.cities.single
         .stations.single;
 

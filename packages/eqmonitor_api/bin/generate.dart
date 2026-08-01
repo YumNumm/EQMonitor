@@ -41,10 +41,6 @@ void main(List<String> args) async {
     _patchConstPropertiesToTyped(openapiFile);
   });
 
-  await _step('震源カタログの時刻精度 enum を分離', () async {
-    _patchHypocenterOriginTimePrecision(openapiFile);
-  });
-
   await _step('swagger_parser でクライアントコードを生成', () async {
     await _run('dart', ['run', 'swagger_parser'], packageDir.path);
   });
@@ -409,44 +405,6 @@ void _generateRealtimeEventEnvelope({
     }
   }
   stdout.writeln('  generated: ${output.path}');
-}
-
-void _patchHypocenterOriginTimePrecision(File openapiFile) {
-  final document = jsonDecode(openapiFile.readAsStringSync());
-  if (document is! Map<String, dynamic>) {
-    throw const FormatException('OpenAPI document must be a JSON object');
-  }
-  final components = document['components'];
-  final schemas = components is Map<String, dynamic>
-      ? components['schemas']
-      : null;
-  if (schemas is! Map<String, dynamic>) {
-    throw const FormatException('OpenAPI components.schemas is missing');
-  }
-  final responseItem = schemas['HypocenterResponseItem'];
-  final properties = responseItem is Map<String, dynamic>
-      ? responseItem['properties']
-      : null;
-  if (properties is! Map<String, dynamic>) {
-    throw const FormatException(
-      'OpenAPI HypocenterResponseItem.properties is missing',
-    );
-  }
-  final precision = properties['origin_time_precision'];
-  if (precision is! Map<String, dynamic>) {
-    throw const FormatException(
-      'OpenAPI HypocenterResponseItem.origin_time_precision is missing',
-    );
-  }
-
-  const componentName = 'HypocenterOriginTimePrecision';
-  schemas[componentName] = Map<String, dynamic>.from(precision);
-  properties['origin_time_precision'] = {
-    r'$ref': '#/components/schemas/$componentName',
-  };
-  openapiFile.writeAsStringSync(
-    const JsonEncoder.withIndent('  ').convert(document),
-  );
 }
 
 String _singleEnumValue(

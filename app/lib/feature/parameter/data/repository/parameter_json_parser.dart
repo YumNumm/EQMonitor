@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
-import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter_converter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -58,10 +57,8 @@ final class ParameterJsonParser {
     String source,
   ) => KyoshinObservationPointsParameter.fromJson(decodeObject(source));
 
-  EarthquakeParameter parseEarthquake(String source) {
-    final json = decodeObject(source);
-    return const EarthquakeParameterJsonDecoder().decode(json);
-  }
+  EarthquakeParameter parseEarthquake(String source) =>
+      EarthquakeParameter.fromJson(decodeObject(source));
 
   TsunamiParameter parseTsunami(String source) =>
       TsunamiParameter.fromJson(decodeObject(source));
