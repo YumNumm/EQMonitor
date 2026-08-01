@@ -1888,7 +1888,7 @@ api.RealtimeShakeDetectionSnapshotPayload rawShakeSnapshot({
   required int revision,
   required List<api.ShakeDetectionState> events,
 }) => api.RealtimeShakeDetectionSnapshotPayload(
-  type: api.Type3.shakeDetection,
+  type: api.RealtimeShakeDetectionSnapshotPayloadType.shakeDetection,
   revision: revision,
   responseAt: _now,
   events: events,
