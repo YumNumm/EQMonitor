@@ -77,11 +77,16 @@ class EewCard extends ConsumerWidget {
         localRegion?.intensity ?? estimate?.jmaIntensity;
     final effectiveRegionName = regionDisplayName ?? estimate?.regionName;
 
+    // PLUM法の地域は到達予想時刻が意味を持たないため、カウントダウンを出さない
+    final isRegionPlum = localRegion?.isPlum ?? false;
+
     // 到達時間: JMA値を優先、なければ推定値
-    final effectiveArrivalTime =
-        localRegion?.arrivalTime ?? estimate?.sWaveArrivalTime;
-    final effectiveIsArrived =
-        localRegion?.isArrived ?? estimate?.isArrived ?? false;
+    final effectiveArrivalTime = isRegionPlum
+        ? null
+        : (localRegion?.arrivalTime ?? estimate?.sWaveArrivalTime);
+    final effectiveIsArrived = isRegionPlum
+        ? false
+        : (localRegion?.isArrived ?? estimate?.isArrived ?? false);
 
     final nowValue = nowOverride ?? now.asData?.value;
     final hasArrived =
