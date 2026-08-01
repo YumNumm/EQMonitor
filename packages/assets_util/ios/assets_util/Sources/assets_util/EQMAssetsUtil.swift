@@ -263,6 +263,25 @@ enum AssetPackDiagnosticsJSONEncoder {
 
 @objc(EQMAssetsUtil)
 @objcMembers public class EQMAssetsUtil: NSObject {
+  /// Every Asset Pack entry point hops onto this queue instead of running on
+  /// the caller's thread.
+  ///
+  /// `AssetPackManager.url(for:)` talks to the Background Assets daemon, and
+  /// Apple's own `BAAssetPackManager` header says "Don't use this method to
+  /// block the main thread". Since Flutter 3.29 the Dart isolate runs *on*
+  /// the iOS main thread (the UI and platform threads were merged), so a
+  /// synchronous binding would do exactly that — iOS 26 logs
+  /// "AssetPackManager.url(for:) was called on the main thread, which could
+  /// cause UI hangs". The manifest reads and `stat`s around it are moved off
+  /// the main thread for the same reason.
+  private static let workQueue = DispatchQueue(
+    label: "net.yumnumm.assets-util.asset-pack",
+    qos: .userInitiated,
+    attributes: .concurrent
+  )
+
+  /// Synchronous by design: this only reads `Bundle.main`'s already-loaded
+  /// resource index and never touches Background Assets.
   public func resolveLocalPath(fileName: String) -> String? {
     let nsName = fileName as NSString
     let base = nsName.deletingPathExtension
@@ -285,21 +304,80 @@ enum AssetPackDiagnosticsJSONEncoder {
   ///   which is always present — macOS has no store-based Asset Pack
   ///   delivery, see `docs/superpowers/specs/2026-07-18-asset-pack-design.md`.
   ///
-  /// Returns `nil` if the pack isn't ready / doesn't exist. The Dart side
-  /// (`AssetsUtilApple.resolvePackRoot`) turns a `nil` result into
+  /// Calls back with `nil` if the pack isn't ready / doesn't exist. The Dart
+  /// side (`AssetsUtilApple.resolvePackRoot`) turns a `nil` result into
   /// `AssetPackNotReadyException` — there is no fallback here by design.
-  public func resolvePackRoot(packIdentifier: String) -> String? {
-    #if os(macOS)
-    return resolveMacOSBundledPackRoot()
-    #elseif os(iOS)
-    return resolveIOSManagedAssetPackRoot(packIdentifier: packIdentifier)
-    #else
-    return nil
-    #endif
+  ///
+  /// Completion-handler based, and never runs its work on the caller's
+  /// thread: see `Self.workQueue`.
+  public func resolvePackRoot(
+    packIdentifier: String,
+    completion: @escaping (NSString?) -> Void
+  ) {
+    Self.workQueue.async {
+      #if os(macOS)
+      completion(self.resolveMacOSBundledPackRoot() as NSString?)
+      #elseif os(iOS)
+      completion(
+        self.resolveIOSManagedAssetPackRoot(packIdentifier: packIdentifier) as NSString?
+      )
+      #else
+      completion(nil)
+      #endif
+    }
   }
 
   /// Resolves one logical Asset Pack path to a verified regular file.
+  ///
+  /// Completion-handler based, and never runs its work on the caller's
+  /// thread: see `Self.workQueue`.
   public func resolveAssetPackFile(
+    relativePath: String,
+    packIdentifier: String,
+    completion: @escaping (NSString?) -> Void
+  ) {
+    Self.workQueue.async {
+      completion(
+        self.resolveAssetPackFilePath(
+          relativePath: relativePath,
+          packIdentifier: packIdentifier
+        ) as NSString?
+      )
+    }
+  }
+
+  /// Completion-handler based, and never runs its work on the caller's
+  /// thread: see `Self.workQueue`.
+  public func diagnoseAssetPack(
+    packIdentifier: String,
+    completion: @escaping (NSString) -> Void
+  ) {
+    Self.workQueue.async {
+      #if os(iOS)
+      completion(
+        self.diagnoseIOSManagedAssetPack(packIdentifier: packIdentifier) as NSString
+      )
+      #else
+      completion(
+        self.diagnosticString(
+          packIdentifier: packIdentifier,
+          systemAvailability: .apiUnavailable,
+          inspection: AssetPackInspection(
+            status: .unsupportedOs,
+            detail: "Managed Background Assets diagnostics are only available on iOS.",
+            manifestURL: nil,
+            packRoot: nil,
+            manifest: nil,
+            assets: [],
+            nativeError: nil
+          )
+        ) as NSString
+      )
+      #endif
+    }
+  }
+
+  private func resolveAssetPackFilePath(
     relativePath: String,
     packIdentifier: String
   ) -> String? {
@@ -328,26 +406,6 @@ enum AssetPackDiagnosticsJSONEncoder {
       return nil
     }
     return url.path
-  }
-
-  public func diagnoseAssetPack(packIdentifier: String) -> String {
-    #if os(iOS)
-    return diagnoseIOSManagedAssetPack(packIdentifier: packIdentifier)
-    #else
-    return diagnosticString(
-      packIdentifier: packIdentifier,
-      systemAvailability: .apiUnavailable,
-      inspection: AssetPackInspection(
-        status: .unsupportedOs,
-        detail: "Managed Background Assets diagnostics are only available on iOS.",
-        manifestURL: nil,
-        packRoot: nil,
-        manifest: nil,
-        assets: [],
-        nativeError: nil
-      )
-    )
-    #endif
   }
 
   public func checkForAssetPackUpdates(

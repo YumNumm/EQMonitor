@@ -69,7 +69,7 @@ void main() {
   ) async {
     var updateChecks = 0;
     final repository = AssetPackDebugRepository(
-      diagnosePack: () => debugInfo(status: .ready).diagnostics,
+      diagnosePack: () async => debugInfo(status: .ready).diagnostics,
       checkForUpdates: () async {
         updateChecks += 1;
         return updateResult(success: true);
@@ -107,7 +107,7 @@ Widget testApp({
   final resolvedRepository =
       repository ??
       AssetPackDebugRepository(
-        diagnosePack: () => resolvedInfo.diagnostics,
+        diagnosePack: () async => resolvedInfo.diagnostics,
         checkForUpdates: () async => updateResult(success: true),
       );
   final theme = ThemeData.light().copyWith(

@@ -1813,10 +1813,125 @@ _objc_msgSend_vij4rw(object$.ref.pointer, _sel_enumerateLinguisticTagsInRange_sc
 late final _class_EQMAssetsUtil = objc.getClass("EQMAssetsUtil");
 late final _sel_isKindOfClass_ = objc.registerName("isKindOfClass:");
 late final _sel_resolveLocalPathWithFileName_ = objc.registerName("resolveLocalPathWithFileName:");
-late final _sel_resolvePackRootWithPackIdentifier_ = objc.registerName("resolvePackRootWithPackIdentifier:");
-late final _sel_resolveAssetPackFileWithRelativePath_packIdentifier_ = objc.registerName("resolveAssetPackFileWithRelativePath:packIdentifier:");
-final _objc_msgSend_15qeuct = objc.msgSendPointer.cast<ffi.NativeFunction<ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCObjectImpl> )>>().asFunction<ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCObjectImpl> )>();
-late final _sel_diagnoseAssetPackWithPackIdentifier_ = objc.registerName("diagnoseAssetPackWithPackIdentifier:");
+
+/// Construction methods for `objc.ObjCBlock<ffi.Void Function(objc.NSString?)>`.
+abstract final class ObjCBlock_ffiVoid_NSString$1 {
+  /// Returns a block that wraps the given raw block pointer.
+  static objc.ObjCBlock<ffi.Void Function(objc.NSString?)> fromPointer(ffi.Pointer<objc.ObjCBlockImpl> pointer,
+      {bool retain = false, bool release = false}) =>
+      objc.ObjCBlock<ffi.Void Function(objc.NSString?)>(pointer, retain: retain, release: release);
+
+  /// Creates a block from a C function pointer.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  static objc.ObjCBlock<ffi.Void Function(objc.NSString?)> fromFunctionPointer(ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> arg0)>> ptr) =>
+      objc.ObjCBlock<ffi.Void Function(objc.NSString?)>(objc.newPointerBlock(_fnPtrCallable, ptr.cast()),
+          retain: false, release: true);
+
+  /// Creates a block from a Dart function.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<ffi.Void Function(objc.NSString?)> fromFunction(void Function(objc.NSString? ) fn,
+          {bool keepIsolateAlive = true}) =>
+      objc.ObjCBlock<ffi.Void Function(objc.NSString?)>(objc.newClosureBlock(_closureCallable, (ffi.Pointer<objc.ObjCObjectImpl> arg0) => fn(arg0.address == 0 ? null : objc.NSString.fromPointer(arg0, retain: true, release: true)), keepIsolateAlive),
+          retain: false, release: true);
+
+  /// Creates a listener block from a Dart function.
+  ///
+  /// This is based on FFI's NativeCallable.listener, and has the same
+  /// capabilities and limitations. This block can be invoked from any thread,
+  /// but only supports void functions, and is not run synchronously. See
+  /// NativeCallable.listener for more details.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<ffi.Void Function(objc.NSString?)> listener(void Function(objc.NSString? ) fn,
+          {bool keepIsolateAlive = true}) {
+    final raw = objc.newClosureBlock(_listenerCallable.nativeFunction.cast(),
+        (ffi.Pointer<objc.ObjCObjectImpl> arg0) => fn(arg0.address == 0 ? null : objc.NSString.fromPointer(arg0, retain: false, release: true)), keepIsolateAlive);
+    final wrapper = _NativeLibrary_wrapListenerBlock_xtuoz7(raw);
+    objc.objectRelease(raw.cast());
+    return objc.ObjCBlock<ffi.Void Function(objc.NSString?)>(wrapper, retain: false, release: true);
+  }
+
+  /// Creates a blocking block from a Dart function.
+  ///
+  /// This callback can be invoked from any native thread, and will block the
+  /// caller until the callback is handled by the Dart isolate that created
+  /// the block. Async functions are not supported.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC. If the owner isolate
+  /// has shut down, and the block is invoked by native code, it may block
+  /// indefinitely, or have other undefined behavior.
+  static objc.ObjCBlock<ffi.Void Function(objc.NSString?)> blocking(void Function(objc.NSString? ) fn,
+          {bool keepIsolateAlive = true}) {
+    final raw = objc.newClosureBlock(_blockingCallable.nativeFunction.cast(),
+        (ffi.Pointer<objc.ObjCObjectImpl> arg0) => fn(arg0.address == 0 ? null : objc.NSString.fromPointer(arg0, retain: false, release: true)), keepIsolateAlive);
+    final rawListener = objc.newClosureBlock(
+        _blockingListenerCallable.nativeFunction.cast(),
+        (ffi.Pointer<objc.ObjCObjectImpl> arg0) => fn(arg0.address == 0 ? null : objc.NSString.fromPointer(arg0, retain: false, release: true)), keepIsolateAlive);
+    final wrapper = _NativeLibrary_wrapBlockingBlock_xtuoz7(raw, rawListener, objc.objCContext);
+    objc.objectRelease(raw.cast());
+    objc.objectRelease(rawListener.cast());
+    return objc.ObjCBlock<ffi.Void Function(objc.NSString?)>(wrapper, retain: false, release: true);
+  }
+
+  static void _listenerTrampoline(
+      ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<objc.ObjCObjectImpl> arg0) {
+    (objc.getBlockClosure(block) as void Function(ffi.Pointer<objc.ObjCObjectImpl> ))(arg0);
+    objc.objectRelease(block.cast());
+  }
+  static ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCObjectImpl> )> _listenerCallable =
+      ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCObjectImpl> )>.listener(_listenerTrampoline )
+          ..keepIsolateAlive = false;
+  static void _blockingTrampoline(
+      ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<ffi.Void> waiter, ffi.Pointer<objc.ObjCObjectImpl> arg0) {
+    try {
+      (objc.getBlockClosure(block) as void Function(ffi.Pointer<objc.ObjCObjectImpl> ))(arg0);
+    } catch (e) {
+    } finally {
+      objc.signalWaiter(waiter);
+      objc.objectRelease(block.cast());
+    }
+  }
+  static ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<ffi.Void> , ffi.Pointer<objc.ObjCObjectImpl> )> _blockingCallable =
+      ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<ffi.Void> , ffi.Pointer<objc.ObjCObjectImpl> )>.isolateLocal(
+          _blockingTrampoline )..keepIsolateAlive = false;
+  static ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<ffi.Void> , ffi.Pointer<objc.ObjCObjectImpl> )> _blockingListenerCallable =
+      ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<ffi.Void> , ffi.Pointer<objc.ObjCObjectImpl> )>.listener(
+          _blockingTrampoline )..keepIsolateAlive = false;
+  static void _fnPtrTrampoline(
+      ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<objc.ObjCObjectImpl> arg0) =>
+          block.ref.target.cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> arg0)>>()
+              .asFunction<void Function(ffi.Pointer<objc.ObjCObjectImpl> )>()(arg0);
+  static ffi.Pointer<ffi.Void> _fnPtrCallable = ffi.Pointer.fromFunction<
+      ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCObjectImpl> )>(_fnPtrTrampoline ).cast();
+  static void _closureTrampoline(
+      ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<objc.ObjCObjectImpl> arg0) =>
+      (objc.getBlockClosure(block) as void Function(ffi.Pointer<objc.ObjCObjectImpl> ))(arg0);
+  static ffi.Pointer<ffi.Void> _closureCallable = ffi.Pointer.fromFunction<
+      ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCObjectImpl> )>(_closureTrampoline ).cast();
+}
+
+/// Call operator for `objc.ObjCBlock<ffi.Void Function(objc.NSString?)>`.
+extension ObjCBlock_ffiVoid_NSString$1$CallExtension on objc.ObjCBlock<ffi.Void Function(objc.NSString?)> {
+  void call(objc.NSString? arg0) =>ref.pointer.ref.invoke.cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<objc.ObjCObjectImpl> arg0)>>()
+  .asFunction<void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCObjectImpl> )>()(
+    ref.pointer, arg0?.ref.pointer ?? ffi.nullptr);
+}
+
+late final _sel_resolvePackRootWithPackIdentifier_completion_ = objc.registerName("resolvePackRootWithPackIdentifier:completion:");
+final _objc_msgSend_o762yo = objc.msgSendPointer.cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCBlockImpl> )>>().asFunction<void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCBlockImpl> )>();
+late final _sel_resolveAssetPackFileWithRelativePath_packIdentifier_completion_ = objc.registerName("resolveAssetPackFileWithRelativePath:packIdentifier:completion:");
+final _objc_msgSend_18qun1e = objc.msgSendPointer.cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCBlockImpl> )>>().asFunction<void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCBlockImpl> )>();
 
 /// Construction methods for `objc.ObjCBlock<ffi.Void Function(objc.NSString)>`.
 abstract final class ObjCBlock_ffiVoid_NSString {
@@ -1932,8 +2047,8 @@ extension ObjCBlock_ffiVoid_NSString$CallExtension on objc.ObjCBlock<ffi.Void Fu
     ref.pointer, arg0.ref.pointer);
 }
 
+late final _sel_diagnoseAssetPackWithPackIdentifier_completion_ = objc.registerName("diagnoseAssetPackWithPackIdentifier:completion:");
 late final _sel_checkForAssetPackUpdatesWithPackIdentifier_completion_ = objc.registerName("checkForAssetPackUpdatesWithPackIdentifier:completion:");
-final _objc_msgSend_o762yo = objc.msgSendPointer.cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCBlockImpl> )>>().asFunction<void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCBlockImpl> )>();
 late final _sel_init = objc.registerName("init");
 late final _sel_new = objc.registerName("new");
 late final _sel_allocWithZone_ = objc.registerName("allocWithZone:");
@@ -1990,10 +2105,11 @@ _objc_msgSend_o762yo(object$.ref.pointer, _sel_checkForAssetPackUpdatesWithPackI
   }
 
 
-  /// diagnoseAssetPackWithPackIdentifier:
-  objc.NSString diagnoseAssetPackWithPackIdentifier(objc.NSString packIdentifier) {
-    final $ret = _objc_msgSend_1sotr3r(object$.ref.pointer, _sel_diagnoseAssetPackWithPackIdentifier_, packIdentifier.ref.pointer);
-    return objc.NSString.fromPointer($ret, retain: true, release: true);
+  /// Completion-handler based, and never runs its work on the caller’s
+/// thread: see <code>Self.workQueue</code>.
+  void diagnoseAssetPackWithPackIdentifier(objc.NSString packIdentifier, {required objc.ObjCBlock<ffi.Void Function(objc.NSString)> completion}) {
+_objc_msgSend_o762yo(object$.ref.pointer, _sel_diagnoseAssetPackWithPackIdentifier_completion_, packIdentifier.ref.pointer, completion.ref.pointer);
+
   }
 
 
@@ -2006,13 +2122,16 @@ _objc_msgSend_o762yo(object$.ref.pointer, _sel_checkForAssetPackUpdatesWithPackI
 
 
   /// Resolves one logical Asset Pack path to a verified regular file.
-  objc.NSString? resolveAssetPackFileWithRelativePath(objc.NSString relativePath, {required objc.NSString packIdentifier}) {
-    final $ret = _objc_msgSend_15qeuct(object$.ref.pointer, _sel_resolveAssetPackFileWithRelativePath_packIdentifier_, relativePath.ref.pointer, packIdentifier.ref.pointer);
-    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
+/// Completion-handler based, and never runs its work on the caller’s
+/// thread: see <code>Self.workQueue</code>.
+  void resolveAssetPackFileWithRelativePath(objc.NSString relativePath, {required objc.NSString packIdentifier,required objc.ObjCBlock<ffi.Void Function(objc.NSString?)> completion}) {
+_objc_msgSend_18qun1e(object$.ref.pointer, _sel_resolveAssetPackFileWithRelativePath_packIdentifier_completion_, relativePath.ref.pointer, packIdentifier.ref.pointer, completion.ref.pointer);
+
   }
 
 
-  /// resolveLocalPathWithFileName:
+  /// Synchronous by design: this only reads <code>Bundle.main</code>’s already-loaded
+/// resource index and never touches Background Assets.
   objc.NSString? resolveLocalPathWithFileName(objc.NSString fileName) {
     final $ret = _objc_msgSend_1sotr3r(object$.ref.pointer, _sel_resolveLocalPathWithFileName_, fileName.ref.pointer);
     return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
@@ -2032,12 +2151,14 @@ _objc_msgSend_o762yo(object$.ref.pointer, _sel_checkForAssetPackUpdatesWithPackI
 /// delivery, see <code>docs/superpowers/specs/2026-07-18-asset-pack-design.md</code>.
 /// </li>
 /// </ul>
-/// Returns <code>nil</code> if the pack isn’t ready / doesn’t exist. The Dart side
-/// (<code>AssetsUtilApple.resolvePackRoot</code>) turns a <code>nil</code> result into
+/// Calls back with <code>nil</code> if the pack isn’t ready / doesn’t exist. The Dart
+/// side (<code>AssetsUtilApple.resolvePackRoot</code>) turns a <code>nil</code> result into
 /// <code>AssetPackNotReadyException</code> — there is no fallback here by design.
-  objc.NSString? resolvePackRootWithPackIdentifier(objc.NSString packIdentifier) {
-    final $ret = _objc_msgSend_1sotr3r(object$.ref.pointer, _sel_resolvePackRootWithPackIdentifier_, packIdentifier.ref.pointer);
-    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
+/// Completion-handler based, and never runs its work on the caller’s
+/// thread: see <code>Self.workQueue</code>.
+  void resolvePackRootWithPackIdentifier(objc.NSString packIdentifier, {required objc.ObjCBlock<ffi.Void Function(objc.NSString?)> completion}) {
+_objc_msgSend_o762yo(object$.ref.pointer, _sel_resolvePackRootWithPackIdentifier_completion_, packIdentifier.ref.pointer, completion.ref.pointer);
+
   }
 
 }

@@ -38,7 +38,7 @@ abstract final class AssetsUtil {
   /// Returns structured iOS Managed Background Assets diagnostics.
   ///
   /// This is observational and does not trigger an update check or download.
-  static AssetPackDiagnostics diagnosePack() {
+  static Future<AssetPackDiagnostics> diagnosePack() {
     if (kIsWeb || !Platform.isIOS) {
       throw UnsupportedError(
         'assets_util.diagnosePack is only supported on iOS',
