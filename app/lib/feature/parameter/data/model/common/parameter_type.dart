@@ -1,5 +1,4 @@
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
@@ -25,12 +24,12 @@ extension ParameterTypeApiExtension on ParameterType {
     .shindoDbStations => 'shindo_db_stations',
   };
 
-  api.ParameterType get toApiParameterType => switch (this) {
-    .jmaCodeTable => .jmaCodeTable,
-    .kyoshinObservationPoints => .kyoshinObservationPoints,
-    .earthquakeStations => .earthquakeStations,
-    .tsunamiStations => .tsunamiStations,
-    .shindoDbStations => .shindoDbStations,
+  String get serializedValue => switch (this) {
+    .jmaCodeTable => 'JMA_CODE_TABLE',
+    .kyoshinObservationPoints => 'KYOSHIN_OBSERVATION_POINTS',
+    .earthquakeStations => 'EARTHQUAKE_STATIONS',
+    .tsunamiStations => 'TSUNAMI_STATIONS',
+    .shindoDbStations => 'SHINDO_DB_STATIONS',
   };
 
   /// Maps to the corresponding Asset Pack asset id (see

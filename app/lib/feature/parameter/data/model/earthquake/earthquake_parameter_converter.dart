@@ -1,164 +1,77 @@
-import 'package:eqmonitor/feature/parameter/data/model/common/parameter_api_converter.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_common.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:lat_lng/lat_lng.dart';
 
-extension EarthquakeStationsParameterApiConverter
-    on api.ParameterDataResponseUnionEarthquakeStationsParameter {
-  EarthquakeParameter toEarthquakeParameter({
-    required EarthquakeStationArv400Index arv400Index,
-  }) => EarthquakeParameter(
-    metadata: metadata.toParameterMetadata(),
-    prefectures: prefectures
-        .map(
-          (prefecture) => prefecture.toEarthquakeParameterPrefectureItem(
-            arv400Index: arv400Index,
-          ),
-        )
+final class EarthquakeParameterJsonDecoder {
+  const EarthquakeParameterJsonDecoder();
+
+  EarthquakeParameter decode(Map<String, dynamic> json) => EarthquakeParameter(
+    metadata: ParameterMetadata.fromJson(
+      json['metadata'] as Map<String, dynamic>,
+    ),
+    prefectures: (json['prefectures'] as List)
+        .cast<Map<String, dynamic>>()
+        .map(decodePrefecture)
         .toList(),
   );
-}
 
-extension EarthquakeStationPrefectureApiConverter
-    on api.EarthquakeStationPrefecture {
-  EarthquakeParameterPrefectureItem toEarthquakeParameterPrefectureItem({
-    required EarthquakeStationArv400Index arv400Index,
-  }) => EarthquakeParameterPrefectureItem(
-    code: code,
-    name: name.toLocalizedName(),
-    regions: regions
-        .map(
-          (region) => region.toEarthquakeParameterRegionItem(
-            arv400Index: arv400Index,
-          ),
-        )
+  EarthquakeParameterPrefectureItem decodePrefecture(
+    Map<String, dynamic> json,
+  ) => EarthquakeParameterPrefectureItem(
+    code: json['code'] as String,
+    name: LocalizedName.fromJson(json['name'] as Map<String, dynamic>),
+    regions: (json['regions'] as List)
+        .cast<Map<String, dynamic>>()
+        .map(decodeRegion)
         .toList(),
   );
-}
 
-extension EarthquakeStationRegionApiConverter on api.EarthquakeStationRegion {
-  EarthquakeParameterRegionItem toEarthquakeParameterRegionItem({
-    required EarthquakeStationArv400Index arv400Index,
-  }) => EarthquakeParameterRegionItem(
-    code: code,
-    name: name.toLocalizedName(),
-    kana: kana,
-    cities: cities
-        .map(
-          (city) => city.toEarthquakeParameterCityItem(
-            arv400Index: arv400Index,
-          ),
-        )
-        .toList(),
-  );
-}
+  EarthquakeParameterRegionItem decodeRegion(Map<String, dynamic> json) =>
+      EarthquakeParameterRegionItem(
+        code: json['code'] as String,
+        name: LocalizedName.fromJson(json['name'] as Map<String, dynamic>),
+        kana: json['kana'] as String?,
+        cities: (json['cities'] as List)
+            .cast<Map<String, dynamic>>()
+            .map(decodeCity)
+            .toList(),
+      );
 
-extension EarthquakeStationCityApiConverter on api.EarthquakeStationCity {
-  EarthquakeParameterCityItem toEarthquakeParameterCityItem({
-    required EarthquakeStationArv400Index arv400Index,
-  }) => EarthquakeParameterCityItem(
-    code: code,
-    name: name.toLocalizedName(),
-    kana: kana,
-    stations: stations
-        .map(
-          (station) => station.toEarthquakeParameterStationItem(
-            arv400: arv400Index[station.code],
-          ),
-        )
-        .toList(),
-  );
-}
+  EarthquakeParameterCityItem decodeCity(Map<String, dynamic> json) =>
+      EarthquakeParameterCityItem(
+        code: json['code'] as String,
+        name: LocalizedName.fromJson(json['name'] as Map<String, dynamic>),
+        kana: json['kana'] as String?,
+        stations: (json['stations'] as List)
+            .cast<Map<String, dynamic>>()
+            .map(decodeStation)
+            .toList(),
+      );
 
-extension EarthquakeStationApiConverter on api.EarthquakeStation {
-  EarthquakeParameterStationItem toEarthquakeParameterStationItem({
-    required double? arv400,
-  }) => EarthquakeParameterStationItem(
-    code: code,
-    noCode: noCode,
-    name: name.toLocalizedName(),
-    kana: kana,
-    status: status.toEarthquakeStationStatus,
-    sourceStatus: sourceStatus,
-    owner: owner,
-    location: location.toLatLng(),
-    arv400: arv400,
-  );
-}
-
-extension EarthquakeStationStatusApiConverter on api.EarthquakeStationStatus {
-  EarthquakeStationStatus get toEarthquakeStationStatus => switch (this) {
-    api.EarthquakeStationStatus.operating => EarthquakeStationStatus.operating,
-    api.EarthquakeStationStatus.changed => EarthquakeStationStatus.changed,
-    api.EarthquakeStationStatus.valueNew => EarthquakeStationStatus.valueNew,
-    api.EarthquakeStationStatus.abolished =>
-      EarthquakeStationStatus.abolished,
-    api.EarthquakeStationStatus.unknown => EarthquakeStationStatus.unknown,
-  };
-}
-
-final class EarthquakeStationArv400Index {
-  const EarthquakeStationArv400Index._(this._values);
-
-  factory EarthquakeStationArv400Index.fromJson(Map<String, dynamic> json) =>
-      EarthquakeStationArv400Index.fromSubtree(json);
-
-  factory EarthquakeStationArv400Index.fromSubtree(Map<String, dynamic> json) {
-    final values = <String, double>{};
-    _Arv400Collector.collect(json: json, values: values);
-    return EarthquakeStationArv400Index._(values);
-  }
-
-  final Map<String, double> _values;
-
-  double? operator [](String stationCode) => _values[stationCode];
-}
-
-final class _Arv400Collector {
-  const _Arv400Collector._();
-
-  static void collect({
-    required Map<String, dynamic> json,
-    required Map<String, double> values,
-  }) {
-    final stations = json['stations'];
-    if (stations is List<Object?>) {
-      for (final station in stations) {
-        if (station is! Map<String, dynamic>) {
-          continue;
-        }
-        final code = station['code'];
-        final arv400 = station['arv_400'];
-        if (code is String && arv400 is num) {
-          values[code] = arv400.toDouble();
-        }
-      }
-    }
-
-    final cities = json['cities'];
-    if (cities is List<Object?>) {
-      for (final city in cities) {
-        if (city is Map<String, dynamic>) {
-          collect(json: city, values: values);
-        }
-      }
-    }
-
-    final regions = json['regions'];
-    if (regions is List<Object?>) {
-      for (final region in regions) {
-        if (region is Map<String, dynamic>) {
-          collect(json: region, values: values);
-        }
-      }
-    }
-
-    final prefectures = json['prefectures'];
-    if (prefectures is List<Object?>) {
-      for (final prefecture in prefectures) {
-        if (prefecture is Map<String, dynamic>) {
-          collect(json: prefecture, values: values);
-        }
-      }
-    }
+  EarthquakeParameterStationItem decodeStation(Map<String, dynamic> json) {
+    final location = json['location'] as Map<String, dynamic>;
+    final status = switch (json['status']) {
+      'OPERATING' => EarthquakeStationStatus.operating,
+      'CHANGED' => EarthquakeStationStatus.changed,
+      'NEW' => EarthquakeStationStatus.valueNew,
+      'ABOLISHED' => EarthquakeStationStatus.abolished,
+      'UNKNOWN' => EarthquakeStationStatus.unknown,
+      final value => throw FormatException('Unknown station status: $value'),
+    };
+    return EarthquakeParameterStationItem(
+      code: json['code'] as String,
+      noCode: json['no_code'] as String,
+      name: LocalizedName.fromJson(json['name'] as Map<String, dynamic>),
+      kana: json['kana'] as String?,
+      status: status,
+      sourceStatus: json['source_status'] as String,
+      owner: json['owner'] as String,
+      location: LatLng(
+        (location['latitude'] as num).toDouble(),
+        (location['longitude'] as num).toDouble(),
+      ),
+      arv400: (json['arv_400'] as num?)?.toDouble(),
+    );
   }
 }
