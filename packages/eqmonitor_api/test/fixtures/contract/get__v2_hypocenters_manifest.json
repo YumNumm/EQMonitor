@@ -1,0 +1,24 @@
+{
+  "data": {
+    "archives": [
+      {
+        "partition": "YEAR",
+        "period": {
+          "from": "2023-12-31T15:00:00.000Z",
+          "to": "2024-12-31T14:59:59.999Z"
+        },
+        "url": "https://tiles.eqmonitor.app/hypocenters/year/2024/1234567890abcdef.pmtiles",
+        "feature_count": 251234,
+        "size_bytes": 18234567
+      }
+    ]
+  },
+  "meta": {
+    "dataset_revision": "1234567890abcdef12345678",
+    "data_updated_at": "2026-07-31T08:00:00.000Z",
+    "coverage": {
+      "from": "1918-12-31T15:00:00.000Z",
+      "to": "2026-07-31T08:00:00.000Z"
+    }
+  }
+}

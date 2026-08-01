@@ -15,10 +15,14 @@ _RealtimeEarthquakeDeletePayload _$RealtimeEarthquakeDeletePayloadFromJson(
   json,
   ($checkedConvert) {
     final val = _RealtimeEarthquakeDeletePayload(
-      type: $checkedConvert('type', (v) => $enumDecode(_$TypeEnumMap, v)),
+      type: $checkedConvert(
+        'type',
+        (v) => $enumDecode(_$RealtimeEarthquakeDeletePayloadTypeEnumMap, v),
+      ),
       operation: $checkedConvert(
         'operation',
-        (v) => $enumDecode(_$Operation2EnumMap, v),
+        (v) =>
+            $enumDecode(_$RealtimeEarthquakeDeletePayloadOperationEnumMap, v),
       ),
       eventId: $checkedConvert('event_id', (v) => v as String),
     );
@@ -35,6 +39,10 @@ Map<String, dynamic> _$RealtimeEarthquakeDeletePayloadToJson(
   'event_id': instance.eventId,
 };
 
-const _$TypeEnumMap = {Type.earthquake: 'earthquake'};
+const _$RealtimeEarthquakeDeletePayloadTypeEnumMap = {
+  RealtimeEarthquakeDeletePayloadType.earthquake: 'earthquake',
+};
 
-const _$Operation2EnumMap = {Operation2.delete: 'delete'};
+const _$RealtimeEarthquakeDeletePayloadOperationEnumMap = {
+  RealtimeEarthquakeDeletePayloadOperation.delete: 'delete',
+};

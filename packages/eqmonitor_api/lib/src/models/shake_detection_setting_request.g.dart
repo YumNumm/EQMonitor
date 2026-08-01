@@ -16,6 +16,8 @@ _ShakeDetectionSettingRequest _$ShakeDetectionSettingRequestFromJson(
   ($checkedConvert) {
     final val = _ShakeDetectionSettingRequest(
       subRegionId: $checkedConvert('sub_region_id', (v) => v as String?),
+      prefectureCode: $checkedConvert('prefecture_code', (v) => v as String?),
+      cityCode: $checkedConvert('city_code', (v) => v as String?),
       minLevel: $checkedConvert(
         'min_level',
         (v) => $enumDecode(_$ShakeDetectionLevelEnumMap, v),
@@ -29,6 +31,8 @@ _ShakeDetectionSettingRequest _$ShakeDetectionSettingRequestFromJson(
   },
   fieldKeyMap: const {
     'subRegionId': 'sub_region_id',
+    'prefectureCode': 'prefecture_code',
+    'cityCode': 'city_code',
     'minLevel': 'min_level',
     'isCurrentLocation': 'is_current_location',
   },
@@ -38,6 +42,8 @@ Map<String, dynamic> _$ShakeDetectionSettingRequestToJson(
   _ShakeDetectionSettingRequest instance,
 ) => <String, dynamic>{
   'sub_region_id': instance.subRegionId,
+  'prefecture_code': instance.prefectureCode,
+  'city_code': instance.cityCode,
   'min_level': instance.minLevel,
   'is_current_location': instance.isCurrentLocation,
 };
