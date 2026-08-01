@@ -24,7 +24,7 @@ void main() {
       // Asset Pack integrity checks pass.
       final contents = <ParameterType, String>{
         for (final type in ParameterType.values)
-          type: jsonEncode(_parameterJson(type.toApiParameterType.toJson())),
+          type: jsonEncode(_parameterJson(type.serializedValue)),
       };
 
       await File(
@@ -81,6 +81,55 @@ void main() {
       );
     },
   );
+
+  test('earthquake_stations を API 生成型に依存せずデコードする', () {
+    final source = jsonEncode({
+      'metadata': _metadataJson('EARTHQUAKE_STATIONS'),
+      'prefectures': [
+        {
+          'code': '13',
+          'name': {'ja': '東京都'},
+          'regions': [
+            {
+              'code': '130000',
+              'name': {'ja': '東京都'},
+              'kana': 'とうきょうと',
+              'cities': [
+                {
+                  'code': '1310100',
+                  'name': {'ja': '千代田区'},
+                  'kana': 'ちよだく',
+                  'stations': [
+                    {
+                      'code': '1310100',
+                      'no_code': '001',
+                      'name': {'ja': '東京千代田区'},
+                      'kana': 'とうきょうちよだく',
+                      'status': 'OPERATING',
+                      'source_status': '現用',
+                      'owner': '気象庁',
+                      'location': {'latitude': 35.68, 'longitude': 139.76},
+                      'arv_400': 123.4,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    final parameter = const ParameterJsonParser().parseEarthquake(source);
+    final station = parameter.prefectures.single.regions.single.cities.single
+        .stations.single;
+
+    expect(station.name.ja, '東京千代田区');
+    expect(station.status.name, 'operating');
+    expect(station.location.lat, 35.68);
+    expect(station.location.lon, 139.76);
+    expect(station.arv400, 123.4);
+  });
 }
 
 Map<String, Object?> _manifestJson(Map<ParameterType, String> contents) => {
@@ -103,7 +152,7 @@ Map<String, Object?> _manifestJson(Map<ParameterType, String> contents) => {
     },
     for (final type in ParameterType.values)
       {
-        'id': type.toApiParameterType.toJson(),
+        'id': type.serializedValue,
         'kind': 'json',
         'path': 'parameters/${type.pathSegment}.json',
         'schema_version': 1,

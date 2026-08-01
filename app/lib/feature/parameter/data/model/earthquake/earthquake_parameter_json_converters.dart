@@ -1,7 +1,6 @@
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_common.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter_converter.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:json_annotation/json_annotation.dart';
 
 class EarthquakeParameterPrefectureItemJsonConverter
@@ -11,11 +10,7 @@ class EarthquakeParameterPrefectureItemJsonConverter
 
   @override
   EarthquakeParameterPrefectureItem fromJson(Map<String, dynamic> json) =>
-      api.EarthquakeStationPrefecture.fromJson(
-        json,
-      ).toEarthquakeParameterPrefectureItem(
-        arv400Index: EarthquakeStationArv400Index.fromSubtree(json),
-      );
+      const EarthquakeParameterJsonDecoder().decodePrefecture(json);
 
   @override
   Map<String, dynamic> toJson(EarthquakeParameterPrefectureItem object) => {
@@ -34,11 +29,7 @@ class EarthquakeParameterRegionItemJsonConverter
 
   @override
   EarthquakeParameterRegionItem fromJson(Map<String, dynamic> json) =>
-      api.EarthquakeStationRegion.fromJson(
-        json,
-      ).toEarthquakeParameterRegionItem(
-        arv400Index: EarthquakeStationArv400Index.fromSubtree(json),
-      );
+      const EarthquakeParameterJsonDecoder().decodeRegion(json);
 
   @override
   Map<String, dynamic> toJson(EarthquakeParameterRegionItem object) => {
@@ -58,9 +49,7 @@ class EarthquakeParameterCityItemJsonConverter
 
   @override
   EarthquakeParameterCityItem fromJson(Map<String, dynamic> json) =>
-      api.EarthquakeStationCity.fromJson(json).toEarthquakeParameterCityItem(
-        arv400Index: EarthquakeStationArv400Index.fromSubtree(json),
-      );
+      const EarthquakeParameterJsonDecoder().decodeCity(json);
 
   @override
   Map<String, dynamic> toJson(EarthquakeParameterCityItem object) => {
@@ -80,9 +69,7 @@ class EarthquakeParameterStationItemJsonConverter
 
   @override
   EarthquakeParameterStationItem fromJson(Map<String, dynamic> json) =>
-      api.EarthquakeStation.fromJson(json).toEarthquakeParameterStationItem(
-        arv400: (json['arv_400'] as num?)?.toDouble(),
-      );
+      const EarthquakeParameterJsonDecoder().decodeStation(json);
 
   @override
   Map<String, dynamic> toJson(EarthquakeParameterStationItem object) => {

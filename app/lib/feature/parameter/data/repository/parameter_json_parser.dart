@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter_converter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'parameter_json_parser.g.dart';
@@ -40,9 +39,7 @@ final class ParameterJsonParser {
     );
     final shindoDbStations = parseShindoDbStations(
       parameterJsonByType[ParameterType.shindoDbStations] ??
-          (throw const FormatException(
-            'Missing shindo_db_stations parameter',
-          )),
+          (throw const FormatException('Missing shindo_db_stations parameter')),
     );
     return ParameterSet(
       manifest: manifest,
@@ -63,24 +60,7 @@ final class ParameterJsonParser {
 
   EarthquakeParameter parseEarthquake(String source) {
     final json = decodeObject(source);
-    final response = api.ParameterDataResponseUnion.fromJson(json);
-    return response.map(
-      jmaCodeTableParameter: (_) => throw const FormatException(
-        'Expected earthquake_stations parameter',
-      ),
-      kyoshinObservationPointsParameter: (_) => throw const FormatException(
-        'Expected earthquake_stations parameter',
-      ),
-      earthquakeStationsParameter: (value) => value.toEarthquakeParameter(
-        arv400Index: EarthquakeStationArv400Index.fromJson(json),
-      ),
-      tsunamiStationsParameter: (_) => throw const FormatException(
-        'Expected earthquake_stations parameter',
-      ),
-      shindoDbStationsParameter: (_) => throw const FormatException(
-        'Expected earthquake_stations parameter',
-      ),
-    );
+    return const EarthquakeParameterJsonDecoder().decode(json);
   }
 
   TsunamiParameter parseTsunami(String source) =>
@@ -89,10 +69,7 @@ final class ParameterJsonParser {
   ShindoDbStationsParameter parseShindoDbStations(String source) =>
       ShindoDbStationsParameter.fromJson(decodeObject(source));
 
-  void parseParameter({
-    required ParameterType type,
-    required String source,
-  }) {
+  void parseParameter({required ParameterType type, required String source}) {
     switch (type) {
       case ParameterType.jmaCodeTable:
         parseJmaCodeTable(source);
