@@ -1,0 +1,52 @@
+{
+  "data": {
+    "items": [
+      {
+        "hypocenter_id": "018f0f4e-7b84-7c00-8000-123456789abc",
+        "origin_time": "2026-07-30T12:34:56.780Z",
+        "origin_time_precision": "CENTISECOND",
+        "latitude": 35.1,
+        "longitude": 139.2,
+        "origin_time_second_stderr": 0.12,
+        "latitude_min_stderr": 0.2,
+        "longitude_min_stderr": 0.3,
+        "depth_km": 12.3,
+        "depth_is_free": false,
+        "depth_stderr_km": 0.5,
+        "magnitude": 5.1,
+        "magnitude_type": "M",
+        "secondary_magnitude": 5,
+        "secondary_magnitude_type": "MJ",
+        "max_intensity": "5-",
+        "determination_flag": "K",
+        "record_type": "J",
+        "travel_time_table": "1",
+        "hypocenter_evaluation": "S",
+        "hypocenter_auxiliary_info": "A",
+        "damage_scale": "1",
+        "tsunami_scale": "0",
+        "station_count": 42,
+        "large_area_code": 3,
+        "small_area_code": 301,
+        "epicenter_name": "茨城県南部",
+        "earthquake_event_id": "20260730123456"
+      },
+      {
+        "hypocenter_id": "018f0f4e-7b84-7c00-8000-123456789abb",
+        "origin_time": "2026-07-30T12:00:00.000Z",
+        "origin_time_precision": "SECOND",
+        "latitude": 34,
+        "longitude": 138
+      }
+    ],
+    "next_token": "stub-next-page"
+  },
+  "meta": {
+    "dataset_revision": "1234567890abcdef12345678",
+    "data_updated_at": "2026-07-31T08:00:00.000Z",
+    "coverage": {
+      "from": "1918-12-31T15:00:00.000Z",
+      "to": "2026-07-31T08:00:00.000Z"
+    }
+  }
+}

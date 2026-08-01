@@ -18,9 +18,6 @@ import 'package:test/test.dart';
 /// `api/api-stub/generated/contract-fixtures/` からコピーする（openapi.json と同じ取り込み経路。
 /// app CI は submodule を checkout しないためメインリポへのコピーが必須）。
 ///
-/// 既知の限界: `GET /v2/parameters/:type` は stub fixture が jma_code_table のみで、
-/// ParameterDataResponseUnion の他 3 variant は drift 対象外（follow-up）。
-
 final _parsers = <String, Object? Function(Map<String, Object?>)>{
   'GET /v1/changelog': ChangelogResponse.fromJson,
   'GET /v1/start': StartResponse.fromJson,
@@ -46,10 +43,8 @@ final _parsers = <String, Object? Function(Map<String, Object?>)>{
   'GET /v2/telegram/type/:type': TelegramListResponse.fromJson,
   'GET /v2/telegram/eventId/:eventId': TelegramListResponse.fromJson,
   'GET /v2/telegram/:id': TelegramDetailResponse.fromJson,
-  'GET /v2/parameters/manifest': ParametersManifestResponse.fromJson,
-  // クライアントは raw Map で受けるが、アプリは metadata.type で union をパースするため
-  // ここでは union モデルでパースして drift を検出する（jma_code_table variant）。
-  'GET /v2/parameters/:type': ParameterDataResponseUnion.fromJson,
+  'GET /v2/hypocenters': HypocenterListResponse.fromJson,
+  'GET /v2/hypocenters/manifest': HypocenterManifestResponse.fromJson,
   // GET /health は専用モデルが無いため SKIP。
 };
 
@@ -74,8 +69,6 @@ const _quarantine = <String>{
   'get__v1_start__force-update.json',
   'get__v1_start__maintenance.json',
   'get__v2_earthquake_eventId__canceled.json',
-  'get__v2_parameters_type.json',
-  'get__v2_parameters_manifest__with-parameters.json',
   'get__v2_telegram_id.json',
   'get__v2_telegram_id__vtse41.json',
   'get__v2_telegram_id__vtse51.json',
@@ -112,8 +105,6 @@ void main() {
       'get__v1_start__force-update.json',
       'get__v1_start__maintenance.json',
       'get__v2_earthquake_eventId__canceled.json',
-      'get__v2_parameters_type.json',
-      'get__v2_parameters_manifest__with-parameters.json',
       'get__v2_telegram_id.json',
       'get__v2_telegram_id__vtse41.json',
       'get__v2_telegram_id__vtse51.json',

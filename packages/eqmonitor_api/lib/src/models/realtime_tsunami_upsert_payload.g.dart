@@ -15,10 +15,13 @@ _RealtimeTsunamiUpsertPayload _$RealtimeTsunamiUpsertPayloadFromJson(
   json,
   ($checkedConvert) {
     final val = _RealtimeTsunamiUpsertPayload(
-      type: $checkedConvert('type', (v) => $enumDecode(_$Type4EnumMap, v)),
+      type: $checkedConvert(
+        'type',
+        (v) => $enumDecode(_$RealtimeTsunamiUpsertPayloadTypeEnumMap, v),
+      ),
       operation: $checkedConvert(
         'operation',
-        (v) => $enumDecode(_$OperationEnumMap, v),
+        (v) => $enumDecode(_$RealtimeTsunamiUpsertPayloadOperationEnumMap, v),
       ),
       eventId: $checkedConvert('event_id', (v) => v as String),
       groupId: $checkedConvert('group_id', (v) => v as String?),
@@ -37,6 +40,10 @@ Map<String, dynamic> _$RealtimeTsunamiUpsertPayloadToJson(
   'group_id': ?instance.groupId,
 };
 
-const _$Type4EnumMap = {Type4.tsunami: 'tsunami'};
+const _$RealtimeTsunamiUpsertPayloadTypeEnumMap = {
+  RealtimeTsunamiUpsertPayloadType.tsunami: 'tsunami',
+};
 
-const _$OperationEnumMap = {Operation.upsert: 'upsert'};
+const _$RealtimeTsunamiUpsertPayloadOperationEnumMap = {
+  RealtimeTsunamiUpsertPayloadOperation.upsert: 'upsert',
+};

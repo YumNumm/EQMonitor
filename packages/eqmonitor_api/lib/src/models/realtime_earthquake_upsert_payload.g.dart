@@ -15,10 +15,14 @@ _RealtimeEarthquakeUpsertPayload _$RealtimeEarthquakeUpsertPayloadFromJson(
   json,
   ($checkedConvert) {
     final val = _RealtimeEarthquakeUpsertPayload(
-      type: $checkedConvert('type', (v) => $enumDecode(_$TypeEnumMap, v)),
+      type: $checkedConvert(
+        'type',
+        (v) => $enumDecode(_$RealtimeEarthquakeUpsertPayloadTypeEnumMap, v),
+      ),
       operation: $checkedConvert(
         'operation',
-        (v) => $enumDecode(_$OperationEnumMap, v),
+        (v) =>
+            $enumDecode(_$RealtimeEarthquakeUpsertPayloadOperationEnumMap, v),
       ),
       eventId: $checkedConvert('event_id', (v) => v as String),
       record: $checkedConvert(
@@ -40,6 +44,10 @@ Map<String, dynamic> _$RealtimeEarthquakeUpsertPayloadToJson(
   'record': instance.record,
 };
 
-const _$TypeEnumMap = {Type.earthquake: 'earthquake'};
+const _$RealtimeEarthquakeUpsertPayloadTypeEnumMap = {
+  RealtimeEarthquakeUpsertPayloadType.earthquake: 'earthquake',
+};
 
-const _$OperationEnumMap = {Operation.upsert: 'upsert'};
+const _$RealtimeEarthquakeUpsertPayloadOperationEnumMap = {
+  RealtimeEarthquakeUpsertPayloadOperation.upsert: 'upsert',
+};
