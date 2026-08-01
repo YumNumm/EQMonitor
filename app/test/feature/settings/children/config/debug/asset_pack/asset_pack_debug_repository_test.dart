@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('returns partial diagnostics when the pack is not ready', () async {
     final repository = AssetPackDebugRepository(
-      diagnosePack: () => diagnostics(status: .assetMissing),
+      diagnosePack: () async => diagnostics(status: .assetMissing),
       checkForUpdates: updateResult,
     );
 
@@ -20,7 +20,8 @@ void main() {
 
   test('parses manifest metadata when native diagnostics include it', () async {
     final repository = AssetPackDebugRepository(
-      diagnosePack: () => diagnostics(status: .ready, manifest: validManifest),
+      diagnosePack: () async =>
+          diagnostics(status: .ready, manifest: validManifest),
       checkForUpdates: updateResult,
     );
 

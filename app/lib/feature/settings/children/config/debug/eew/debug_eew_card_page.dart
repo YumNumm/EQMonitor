@@ -39,6 +39,7 @@ class DebugEewCardPage extends HookConsumerWidget {
     final isLastInfo = useState(false);
     final isPlum = useState(false);
     final isWarning = useState<bool?>(false);
+    final accuracyEpicenter = useState<int?>(null);
 
     final originTime = useState<DateTime?>(
       DateTime.utc(2024, 3, 11, 5, 46, 24),
@@ -122,6 +123,16 @@ class DebugEewCardPage extends HookConsumerWidget {
 
       final h = headline.text.trim();
       final t = originTime.value ?? DateTime.now().toUtc();
+      final epicenterAccuracy = accuracyEpicenter.value;
+      final accuracy = epicenterAccuracy == null
+          ? null
+          : EewAccuracyInfo(
+              epicenter: epicenterAccuracy,
+              hypocenter: epicenterAccuracy,
+              depth: epicenterAccuracy,
+              magnitudeCalculation: epicenterAccuracy == 1 ? 8 : 5,
+              numberOfMagnitudeCalculation: epicenterAccuracy == 1 ? 1 : 5,
+            );
       return EewTelegramItem(
         eventId: eventId.text.trim().isEmpty ? 'debug' : eventId.text.trim(),
         status: status.value,
@@ -138,6 +149,7 @@ class DebugEewCardPage extends HookConsumerWidget {
         editorialOffice: '気象庁',
         hypocenter: hypo,
         forecastIntensity: isCanceled.value ? null : forecast,
+        accuracy: accuracy,
       );
     }
 
@@ -233,6 +245,20 @@ class DebugEewCardPage extends HookConsumerWidget {
                   label: 'isPlum（PLUM法）',
                   value: isPlum.value,
                   onChanged: (v) => isPlum.value = v,
+                ),
+                _LabeledRow(
+                  label:
+                      'accuracy.epicenter（1+origin無し=レベル法 / 1+origin有り=1点）',
+                  child: SegmentedButton<int?>(
+                    showSelectedIcon: false,
+                    segments: const [
+                      ButtonSegment(value: null, label: Text('null')),
+                      ButtonSegment(value: 1, label: Text('1')),
+                      ButtonSegment(value: 4, label: Text('4')),
+                    ],
+                    selected: {accuracyEpicenter.value},
+                    onSelectionChanged: (s) => accuracyEpicenter.value = s.first,
+                  ),
                 ),
                 _LabeledRow(
                   label: 'isWarning（nullは headline 由来にフォールバック）',
@@ -545,10 +571,55 @@ class DebugEewCardPage extends HookConsumerWidget {
             ),
           ),
           ..._kSampleEews.asMap().entries.map(
-            (e) => EewCard(
-              eew: e.value,
-              index: '${e.key + 1}',
-            ),
+            (e) {
+              final eew = e.value;
+              return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    child: Text(
+                      switch ((
+                        eew.isCanceled,
+                        eew.isPlum,
+                        eew.isLevelMethod,
+                        eew.isOnePointDetection,
+                        eew.status,
+                        eew.isLastInfo,
+                        eew.hypocenter?.magnitude,
+                        eew.hypocenter?.depth,
+                      )) {
+                        (true, _, _, _, _, _, _, _) => '取消（最終）',
+                        (_, true, _, _, _, _, _, _) => 'PLUM法',
+                        (_, _, true, _, _, _, _, _) => 'レベル法',
+                        (_, _, _, true, _, _, _, _) => 'IPF法1点検知',
+                        (_, _, _, _, TelegramStatus.test, _, _, _) => 'テスト電文',
+                        (_, _, _, _, TelegramStatus.training, _, _, _) =>
+                          '訓練電文',
+                        (_, _, _, _, _, true, _, _) => '警報・最終報',
+                        (_, _, _, _, _, _, null, null) => 'M/深さなし（非表示）',
+                        (_, _, _, _, _, _, _, 0) => '深さ0km（ごく浅い分岐なし）',
+                        _ => '予報・通常',
+                      },
+                      style: _paramLabelStyle.copyWith(
+                        color:
+                            context.designSystem.colorTheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  EewCard(
+                    eew: eew,
+                    index: '${e.key + 1}',
+                  ),
+                ],
+              ),
+            );
+            },
           ),
         ],
       ),
@@ -557,6 +628,14 @@ class DebugEewCardPage extends HookConsumerWidget {
 }
 
 /// 検証用の固定サンプル（実データではない）
+const _kAccuracyEpicenter1 = EewAccuracyInfo(
+  epicenter: 1,
+  hypocenter: 1,
+  depth: 1,
+  magnitudeCalculation: 8,
+  numberOfMagnitudeCalculation: 1,
+);
+
 final _kSampleEews = <EewTelegramItem>[
   EewTelegramItem(
     eventId: 'sample-1',
@@ -617,10 +696,58 @@ final _kSampleEews = <EewTelegramItem>[
     hypocenter: const EewHypocenterInfo(
       code: 's3',
       name: '青森県東方沖',
+      magnitude: 5,
+      depth: 10,
     ),
     forecastIntensity: const EewForecastIntensityInfo(
       regions: [],
       maxIntensity: JmaIntensity.fiveLower,
+    ),
+  ),
+  EewTelegramItem(
+    eventId: 'sample-level',
+    status: TelegramStatus.normal,
+    infoType: TelegramInfoType.publication,
+    serialNo: 1,
+    isCanceled: false,
+    isLastInfo: false,
+    reportTime: DateTime.utc(2024, 1, 1, 12, 2),
+    isPlum: false,
+    isWarning: false,
+    arrivalTime: DateTime.utc(2024, 1, 1, 12, 1, 50),
+    accuracy: _kAccuracyEpicenter1,
+    hypocenter: const EewHypocenterInfo(
+      code: 's-level',
+      name: '神奈川県東部',
+      magnitude: 3.5,
+      depth: 10,
+    ),
+    forecastIntensity: const EewForecastIntensityInfo(
+      regions: [],
+      maxIntensity: JmaIntensity.four,
+    ),
+  ),
+  EewTelegramItem(
+    eventId: 'sample-one-point',
+    status: TelegramStatus.normal,
+    infoType: TelegramInfoType.publication,
+    serialNo: 1,
+    isCanceled: false,
+    isLastInfo: false,
+    reportTime: DateTime.utc(2024, 1, 1, 12, 3),
+    isPlum: false,
+    isWarning: false,
+    originTime: DateTime.utc(2024, 1, 1, 12, 2, 40),
+    accuracy: _kAccuracyEpicenter1,
+    hypocenter: const EewHypocenterInfo(
+      code: 's-one',
+      name: '茨城県沖',
+      magnitude: 4,
+      depth: 30,
+    ),
+    forecastIntensity: const EewForecastIntensityInfo(
+      regions: [],
+      maxIntensity: JmaIntensity.three,
     ),
   ),
   EewTelegramItem(
@@ -632,7 +759,6 @@ final _kSampleEews = <EewTelegramItem>[
     isLastInfo: true,
     reportTime: DateTime.utc(2024, 1, 1, 12, 10),
     isPlum: false,
-    headline: '先ほどの緊急地震速報は取り消されました',
     isWarning: false,
     originTime: DateTime.utc(2024, 1, 1, 11, 59, 50),
     hypocenter: const EewHypocenterInfo(
@@ -640,6 +766,48 @@ final _kSampleEews = <EewTelegramItem>[
       name: '取消テスト',
       magnitude: 3,
       depth: 10,
+    ),
+  ),
+  EewTelegramItem(
+    eventId: 'sample-null-md',
+    status: TelegramStatus.normal,
+    infoType: TelegramInfoType.publication,
+    serialNo: 1,
+    isCanceled: false,
+    isLastInfo: false,
+    reportTime: DateTime.utc(2024, 1, 1, 12, 4),
+    isPlum: false,
+    isWarning: false,
+    originTime: DateTime.utc(2024, 1, 1, 12, 3, 50),
+    hypocenter: const EewHypocenterInfo(
+      code: 's-null',
+      name: '三重県南東沖',
+    ),
+    forecastIntensity: const EewForecastIntensityInfo(
+      regions: [],
+      maxIntensity: JmaIntensity.two,
+    ),
+  ),
+  EewTelegramItem(
+    eventId: 'sample-depth-0',
+    status: TelegramStatus.normal,
+    infoType: TelegramInfoType.publication,
+    serialNo: 1,
+    isCanceled: false,
+    isLastInfo: false,
+    reportTime: DateTime.utc(2024, 1, 1, 12, 5),
+    isPlum: false,
+    isWarning: false,
+    originTime: DateTime.utc(2024, 1, 1, 12, 4, 50),
+    hypocenter: const EewHypocenterInfo(
+      code: 's-d0',
+      name: '内陸ごく浅い',
+      magnitude: 3.2,
+      depth: 0,
+    ),
+    forecastIntensity: const EewForecastIntensityInfo(
+      regions: [],
+      maxIntensity: JmaIntensity.three,
     ),
   ),
   EewTelegramItem(

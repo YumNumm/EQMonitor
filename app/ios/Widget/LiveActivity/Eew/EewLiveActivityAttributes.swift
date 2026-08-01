@@ -44,7 +44,10 @@ struct EewContentState: Codable, Hashable {
     }
 
     var timeLabel: String {
-        (isOriginTime ?? true) ? "地震発生" : "地震検知"
+        if isPlum == true || isLevel == true {
+            return "地震検知"
+        }
+        return (isOriginTime ?? true) ? "地震発生" : "地震検知"
     }
     
     
@@ -146,7 +149,7 @@ extension EewContentState {
             regionName: "東京都23区",
             forecastIntensity: "4",
             forecastLpgmIntensity: nil,
-            arrivalTime: "2024-01-03T16:10:15+09:00",
+            arrivalTime: nil,
             intensity: nil
         )
     )

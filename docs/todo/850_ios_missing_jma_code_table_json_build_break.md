@@ -1,10 +1,13 @@
 # iOS ビルドが `jma_code_table.json` 欠落で失敗する（既存不具合）
 
-## 解決 (2026-07-28)
+## 解決 (2026-07-28 / 2026-08-01)
 
 Approach B: `stage_from_release.sh --target ios-native` が slim JSON を
 ビルド時配置。詳細は
 `docs/superpowers/specs/2026-07-28-ios-native-jma-code-table-staging-design.md`。
+
+2026-08-01: ローカル DX のため slim `app/assets/parameters/jma_code_table.json`
+をリポジトリへコミット（gitignore 解除）。CI の stage は Release 更新追従用に維持。
 
 ## 症状
 

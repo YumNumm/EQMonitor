@@ -37,15 +37,15 @@ class $AssetsDocsGen {
   List<String> get values => [aboutThisApp, privacyPolicy, termOfService];
 }
 
+class $AssetsFontsGen {
+  const $AssetsFontsGen();
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
   /// File path: assets/images/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/images/icon.png');
-
-  /// File path: assets/images/icon_foreground.png
-  AssetGenImage get iconForeground =>
-      const AssetGenImage('assets/images/icon_foreground.png');
 
   /// Directory path: assets/images/map
   $AssetsImagesMapGen get map => const $AssetsImagesMapGen();
@@ -54,57 +54,7 @@ class $AssetsImagesGen {
   $AssetsImagesThemeGen get theme => const $AssetsImagesThemeGen();
 
   /// List of all assets
-  List<AssetGenImage> get values => [icon, iconForeground];
-}
-
-class $AssetsParameterGen {
-  const $AssetsParameterGen();
-
-  /// File path: assets/parameter/earthquake.bin
-  String get earthquake => 'assets/parameter/earthquake.bin';
-
-  /// File path: assets/parameter/tsunami.bin
-  String get tsunami => 'assets/parameter/tsunami.bin';
-
-  /// List of all assets
-  List<String> get values => [earthquake, tsunami];
-}
-
-class $AssetsParametersGen {
-  const $AssetsParametersGen();
-
-  /// File path: assets/parameters/Untitled
-  String get untitled => 'assets/parameters/Untitled';
-
-  /// File path: assets/parameters/earthquake_stations.json
-  String get earthquakeStations => 'assets/parameters/earthquake_stations.json';
-
-  /// File path: assets/parameters/jma_code_table.json
-  String get jmaCodeTable => 'assets/parameters/jma_code_table.json';
-
-  /// File path: assets/parameters/kyoshin_observation_points.json
-  String get kyoshinObservationPoints =>
-      'assets/parameters/kyoshin_observation_points.json';
-
-  /// File path: assets/parameters/manifest.json
-  String get manifest => 'assets/parameters/manifest.json';
-
-  /// File path: assets/parameters/shindo_db_stations.json
-  String get shindoDbStations => 'assets/parameters/shindo_db_stations.json';
-
-  /// File path: assets/parameters/tsunami_stations.json
-  String get tsunamiStations => 'assets/parameters/tsunami_stations.json';
-
-  /// List of all assets
-  List<String> get values => [
-    untitled,
-    earthquakeStations,
-    jmaCodeTable,
-    kyoshinObservationPoints,
-    manifest,
-    shindoDbStations,
-    tsunamiStations,
-  ];
+  List<AssetGenImage> get values => [icon];
 }
 
 class $AssetsImagesMapGen {
@@ -141,27 +91,13 @@ abstract final class Assets {
       'assets/KyoshinShindoColorMap.json';
   static const $AssetsDebugGen debug = $AssetsDebugGen();
   static const $AssetsDocsGen docs = $AssetsDocsGen();
-  static const AssetGenImage header = AssetGenImage('assets/header.png');
+  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
-  static const String jmaCodeTable = 'assets/jma_code_table.pb';
   static const String jmaMap = 'assets/jma_map.pb';
-  static const String kyoshinMonitorScale = 'assets/kyoshin_monitor_scale.json';
-  static const String kyoshinObservationPoint =
-      'assets/kyoshin_observation_point.pb';
-  static const $AssetsParameterGen parameter = $AssetsParameterGen();
-  static const $AssetsParametersGen parameters = $AssetsParametersGen();
   static const String tjma2001 = 'assets/tjma2001.csv';
 
   /// List of all assets
-  static List<dynamic> get values => [
-    kyoshinShindoColorMap,
-    header,
-    jmaCodeTable,
-    jmaMap,
-    kyoshinMonitorScale,
-    kyoshinObservationPoint,
-    tjma2001,
-  ];
+  static List<String> get values => [kyoshinShindoColorMap, jmaMap, tjma2001];
 }
 
 class AssetGenImage {

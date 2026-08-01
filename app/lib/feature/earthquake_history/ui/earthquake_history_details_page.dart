@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/estimated_int
 import 'package:eqmonitor/feature/earthquake_history/ui/components/collapsible_segmented_control.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/current_location_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_activity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/estimated_intensity_notice_dialog.dart';
@@ -203,6 +204,7 @@ class _LoadedContent extends HookConsumerWidget {
                           DateTime.now().difference(earthquake.originTime!) >
                               const Duration(hours: 24))
                         const AdBanner(),
+                      EarthquakeActivityCard(earthquake: earthquake),
                       NearbyEarthquakeCard(earthquake: earthquake),
                       if (telegramCommentLines.isNotEmpty ||
                           earthquake.dataSources.isNotEmpty)
