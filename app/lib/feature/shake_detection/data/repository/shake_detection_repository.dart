@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level_parser.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_model_converter.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:json_annotation/json_annotation.dart';
@@ -40,36 +39,7 @@ final class ApiShakeDetectionRepository implements ShakeDetectionRepository {
   fetchActive() async {
     try {
       final data = (await _client.getV2ShakeDetectionActive()).data;
-      return Success(
-        ShakeDetectionSnapshot(
-          revision: data.revision,
-          responseAt: data.responseAt,
-          events: data.events
-              .map(
-                (event) => ShakeDetectionEvent(
-                  eventId: event.eventId,
-                  serialNo: event.serialNo,
-                  createdAt: event.createdAt,
-                  updatedAt: event.updatedAt,
-                  expiresAt: event.expiresAt,
-                  level: event.level.toJson().toShakeDetectionLevel(),
-                  pointCount: event.pointCount,
-                  minLat: event.region.bottomRight.latitude.toDouble(),
-                  maxLat: event.region.topLeft.latitude.toDouble(),
-                  minLng: event.region.topLeft.longitude.toDouble(),
-                  maxLng: event.region.bottomRight.longitude.toDouble(),
-                  changeReasons: event.changeReasons
-                      .map((reason) => reason.toJson())
-                      .toList(growable: false),
-                  correlatedEewEventId: event.correlatedEew?.eventId,
-                  mergedEvents: event.mergedEvents,
-                  points: event.points,
-                  correlatedEew: event.correlatedEew,
-                ),
-              )
-              .toList(growable: false),
-        ),
-      );
+      return Success(data.toShakeDetectionSnapshot());
     } on DioException catch (error) {
       return Failure(
         ShakeDetectionApiException(
