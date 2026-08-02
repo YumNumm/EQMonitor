@@ -12,11 +12,13 @@ class EewMapFocus extends _$EewMapFocus {
   EewMapFocusState build() => const EewMapFocusState();
 
   EewMapFocusDecision sync() {
-    final decision = ref.read(eewMapFocusTransitionProvider).evaluate(
-      previous: state,
-      aliveEews: ref.read(eewAliveTelegramProvider) ?? const [],
-      allShakes: ref.read(shakeDetectionProvider),
-    );
+    final decision = ref
+        .read(eewMapFocusTransitionProvider)
+        .evaluate(
+          previous: state,
+          aliveEews: ref.read(eewAliveTelegramProvider) ?? const [],
+          allShakes: ref.read(shakeDetectionProvider),
+        );
     state = decision.state;
     return decision;
   }
@@ -26,12 +28,21 @@ class EewMapFocus extends _$EewMapFocus {
   }
 
   EewMapFocusDecision refocus() {
-    final decision = ref.read(eewMapFocusTransitionProvider).refocus(
-      previous: state,
-      aliveEews: ref.read(eewAliveTelegramProvider) ?? const [],
-      allShakes: ref.read(shakeDetectionProvider),
-    );
+    final decision = ref
+        .read(eewMapFocusTransitionProvider)
+        .refocus(
+          previous: state,
+          aliveEews: ref.read(eewAliveTelegramProvider) ?? const [],
+          allShakes: ref.read(shakeDetectionProvider),
+        );
     state = decision.state;
     return decision;
+  }
+
+  /// カメラ fit が完了した対象を記録する。
+  void markApplied({required EewMapFocusDecision decision}) {
+    state = ref
+        .read(eewMapFocusTransitionProvider)
+        .markApplied(previous: state, decision: decision);
   }
 }

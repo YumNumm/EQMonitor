@@ -37,18 +37,17 @@ void main() {
 
       expect(decision.state.focusedEventId, 'newer');
       expect(decision.state.isFocused, isTrue);
-      expect(decision.state.focusedHypocenter, (
-        latitude: 36.0,
-        longitude: 140.0,
-      ));
+      expect(decision.targetHypocenter, (latitude: 36.0, longitude: 140.0));
       expect(decision.shouldFit, isTrue);
+      expect(decision.state.hasAppliedFocus, isFalse);
     });
 
     test('フォーカス中に震源が変わるとshouldFit=true', () {
-      final previous = const EewMapFocusState(
+      const previous = EewMapFocusState(
         focusedEventId: 'event',
         isFocused: true,
-        focusedHypocenter: (latitude: 35, longitude: 139),
+        appliedEventId: 'event',
+        appliedHypocenter: (latitude: 35, longitude: 139),
       );
 
       final decision = transition.evaluate(
@@ -57,10 +56,7 @@ void main() {
         allShakes: const [],
       );
 
-      expect(decision.state.focusedHypocenter, (
-        latitude: 36.0,
-        longitude: 140.0,
-      ));
+      expect(decision.targetHypocenter, (latitude: 36.0, longitude: 140.0));
       expect(decision.shouldFit, isTrue);
     });
 
@@ -68,7 +64,14 @@ void main() {
       const previous = EewMapFocusState(
         focusedEventId: 'event',
         isFocused: true,
-        focusedHypocenter: (latitude: 35, longitude: 139),
+        appliedEventId: 'event',
+        appliedHypocenter: (latitude: 35, longitude: 139),
+        appliedShakeRect: EewMapFocusGridRect(
+          minLat: 35,
+          maxLat: 35.5,
+          minLng: 139,
+          maxLng: 139.5,
+        ),
         shakeBoundsByEventId: {
           'event': EewMapFocusGridRect(
             minLat: 35,
@@ -109,7 +112,14 @@ void main() {
       const previous = EewMapFocusState(
         focusedEventId: 'event',
         isFocused: true,
-        focusedHypocenter: (latitude: 35, longitude: 139),
+        appliedEventId: 'event',
+        appliedHypocenter: (latitude: 35, longitude: 139),
+        appliedShakeRect: EewMapFocusGridRect(
+          minLat: 35,
+          maxLat: 35.5,
+          minLng: 139,
+          maxLng: 139.5,
+        ),
         shakeBoundsByEventId: {
           'event': EewMapFocusGridRect(
             minLat: 35,
@@ -145,7 +155,8 @@ void main() {
       const previous = EewMapFocusState(
         focusedEventId: 'event',
         isFocused: false,
-        focusedHypocenter: (latitude: 35, longitude: 139),
+        appliedEventId: 'event',
+        appliedHypocenter: (latitude: 35, longitude: 139),
       );
 
       final decision = transition.evaluate(
@@ -155,9 +166,10 @@ void main() {
       );
 
       expect(decision.state.isFocused, isFalse);
-      expect(decision.state.focusedHypocenter, (
-        latitude: 36.0,
-        longitude: 140.0,
+      expect(decision.targetHypocenter, (latitude: 36.0, longitude: 140.0));
+      expect(decision.state.appliedHypocenter, (
+        latitude: 35.0,
+        longitude: 139.0,
       ));
       expect(decision.shouldFit, isFalse);
     });
@@ -166,7 +178,8 @@ void main() {
       const previous = EewMapFocusState(
         focusedEventId: 'old',
         isFocused: false,
-        focusedHypocenter: (latitude: 35, longitude: 139),
+        appliedEventId: 'old',
+        appliedHypocenter: (latitude: 35, longitude: 139),
       );
 
       final decision = transition.evaluate(
@@ -192,7 +205,8 @@ void main() {
       const previous = EewMapFocusState(
         focusedEventId: 'gone',
         isFocused: true,
-        focusedHypocenter: (latitude: 35, longitude: 139),
+        appliedEventId: 'gone',
+        appliedHypocenter: (latitude: 35, longitude: 139),
       );
 
       final decision = transition.evaluate(
@@ -210,7 +224,8 @@ void main() {
       const previous = EewMapFocusState(
         focusedEventId: 'event',
         isFocused: true,
-        focusedHypocenter: (latitude: 35, longitude: 139),
+        appliedEventId: 'event',
+        appliedHypocenter: (latitude: 35, longitude: 139),
         shakeBoundsByEventId: {
           'event': EewMapFocusGridRect(
             minLat: 35,
@@ -229,8 +244,10 @@ void main() {
 
       expect(decision.state.focusedEventId, isNull);
       expect(decision.state.isFocused, isFalse);
-      expect(decision.state.focusedHypocenter, isNull);
+      expect(decision.state.appliedEventId, isNull);
+      expect(decision.state.appliedHypocenter, isNull);
       expect(decision.state.shakeBoundsByEventId, isEmpty);
+      expect(decision.state.hasAppliedFocus, isFalse);
       expect(decision.shouldFit, isFalse);
     });
 
@@ -289,7 +306,8 @@ void main() {
       const previous = EewMapFocusState(
         focusedEventId: 'event',
         isFocused: true,
-        focusedHypocenter: (latitude: 35, longitude: 139),
+        appliedEventId: 'event',
+        appliedHypocenter: (latitude: 35, longitude: 139),
         shakeBoundsByEventId: {
           'event': EewMapFocusGridRect(
             minLat: 35,
@@ -304,7 +322,7 @@ void main() {
 
       expect(state.focusedEventId, previous.focusedEventId);
       expect(state.isFocused, isFalse);
-      expect(state.focusedHypocenter, previous.focusedHypocenter);
+      expect(state.appliedHypocenter, previous.appliedHypocenter);
       expect(state.shakeBoundsByEventId, previous.shakeBoundsByEventId);
     });
 
@@ -329,6 +347,127 @@ void main() {
       expect(decision.state.focusedEventId, 'new');
       expect(decision.state.isFocused, isTrue);
       expect(decision.shouldFit, isTrue);
+    });
+
+    test('震源も相関揺れも無いPLUMではshouldFit=falseかつ未適用のまま', () {
+      final decision = transition.evaluate(
+        previous: const EewMapFocusState(),
+        aliveEews: [
+          _sampleEew(eventId: 'plum', latitude: null, longitude: null),
+        ],
+        allShakes: const [],
+      );
+
+      expect(decision.state.focusedEventId, 'plum');
+      expect(decision.state.isFocused, isTrue);
+      expect(decision.shouldFit, isFalse);
+      expect(decision.targetHypocenter, isNull);
+      expect(decision.targetShakeRect, isNull);
+      // カメラを動かしていないため、ホームボタンは有効のままとなる。
+      expect(decision.state.hasAppliedFocus, isFalse);
+    });
+
+    test('PLUMに相関揺れが届いた時点でshouldFit=trueへ復帰する', () {
+      const previous = EewMapFocusState(
+        focusedEventId: 'plum',
+        isFocused: true,
+      );
+
+      final decision = transition.evaluate(
+        previous: previous,
+        aliveEews: [
+          _sampleEew(eventId: 'plum', latitude: null, longitude: null),
+        ],
+        allShakes: [
+          _sampleShake(
+            correlatedEewEventId: 'plum',
+            minLat: 35.1,
+            maxLat: 35.2,
+            minLng: 139.1,
+            maxLng: 139.2,
+          ),
+        ],
+      );
+
+      expect(decision.shouldFit, isTrue);
+    });
+
+    test('fit未実行ならappliedが進まず次回もshouldFit=trueを維持する', () {
+      const previous = EewMapFocusState(
+        focusedEventId: 'event',
+        isFocused: true,
+      );
+      final aliveEews = [
+        _sampleEew(eventId: 'event', latitude: 36, longitude: 140),
+      ];
+
+      final first = transition.evaluate(
+        previous: previous,
+        aliveEews: aliveEews,
+        allShakes: const [],
+      );
+      expect(first.shouldFit, isTrue);
+
+      // applyEewFocus が実行されなかった（autoZoom 無効など）想定で、
+      // markApplied を呼ばずに再評価する。
+      final second = transition.evaluate(
+        previous: first.state,
+        aliveEews: aliveEews,
+        allShakes: const [],
+      );
+
+      expect(second.shouldFit, isTrue);
+    });
+
+    test('markApplied後は同一対象でshouldFit=falseになる', () {
+      const previous = EewMapFocusState(
+        focusedEventId: 'event',
+        isFocused: true,
+      );
+      final aliveEews = [
+        _sampleEew(eventId: 'event', latitude: 36, longitude: 140),
+      ];
+
+      final first = transition.evaluate(
+        previous: previous,
+        aliveEews: aliveEews,
+        allShakes: const [],
+      );
+      final applied = transition.markApplied(
+        previous: first.state,
+        decision: first,
+      );
+
+      expect(applied.hasAppliedFocus, isTrue);
+      expect(applied.appliedHypocenter, (latitude: 36.0, longitude: 140.0));
+
+      final second = transition.evaluate(
+        previous: applied,
+        aliveEews: aliveEews,
+        allShakes: const [],
+      );
+
+      expect(second.shouldFit, isFalse);
+    });
+
+    test('markAppliedは対象EEWが切り替わっていたら適用しない', () {
+      const previous = EewMapFocusState(
+        focusedEventId: 'event',
+        isFocused: true,
+      );
+      final decision = transition.evaluate(
+        previous: previous,
+        aliveEews: [_sampleEew(eventId: 'event')],
+        allShakes: const [],
+      );
+
+      final applied = transition.markApplied(
+        previous: decision.state.copyWith(focusedEventId: 'other'),
+        decision: decision,
+      );
+
+      expect(applied.appliedEventId, isNull);
+      expect(applied.hasAppliedFocus, isFalse);
     });
   });
 }

@@ -37,6 +37,26 @@ void main() {
     expect(refocusDecision.shouldFit, isTrue);
     expect(container.read(eewMapFocusProvider).isFocused, isTrue);
   });
+
+  test('markAppliedを呼ぶまでhasAppliedFocusはfalseのまま', () {
+    final container = ProviderContainer(
+      overrides: [
+        eewAliveTelegramProvider.overrideWithValue([_sampleEew()]),
+        shakeDetectionProvider.overrideWithValue(const []),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final notifier = container.read(eewMapFocusProvider.notifier);
+    final decision = notifier.sync();
+
+    expect(container.read(eewMapFocusProvider).hasAppliedFocus, isFalse);
+
+    notifier.markApplied(decision: decision);
+
+    expect(container.read(eewMapFocusProvider).hasAppliedFocus, isTrue);
+    expect(notifier.sync().shouldFit, isFalse);
+  });
 }
 
 final _now = DateTime.utc(2025, 1, 1, 12);

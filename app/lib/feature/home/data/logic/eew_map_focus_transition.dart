@@ -36,38 +36,28 @@ class EewMapFocusTransition {
       aliveEews: aliveEews,
       allShakes: allShakes,
     );
-    final latestHypocenter = hypocenterOf(eew: latestEew);
-    final latestShakeBounds = shakeBoundsByEventId[latestEew.eventId];
+    final targetHypocenter = hypocenterOf(eew: latestEew);
+    final targetShakeRect = shakeBoundsByEventId[latestEew.eventId];
+    final isNewTarget = latestEew.eventId != previous.focusedEventId;
     final state = previous.copyWith(
       focusedEventId: latestEew.eventId,
-      isFocused: latestEew.eventId != previous.focusedEventId
-          ? true
-          : previous.isFocused,
-      focusedHypocenter: latestHypocenter,
+      isFocused: isNewTarget ? true : previous.isFocused,
       shakeBoundsByEventId: shakeBoundsByEventId,
     );
-    if (latestEew.eventId != previous.focusedEventId) {
-      return EewMapFocusDecision(
-        state: state,
-        shouldFit: canFit(
-          hypocenter: latestHypocenter,
-          shakeRect: latestShakeBounds,
-        ),
-      );
-    }
-
-    if (!previous.isFocused) {
-      return EewMapFocusDecision(state: state, shouldFit: false);
-    }
-
+    // fit 済みの対象（applied*）と比較する。fit が実行されなかった場合は
+    // applied* が進まないため、次回の変化通知で再試行できる。
     final didTargetChange =
-        previous.focusedHypocenter != latestHypocenter ||
-        previous.shakeBoundsByEventId[latestEew.eventId] != latestShakeBounds;
+        previous.appliedEventId != latestEew.eventId ||
+        previous.appliedHypocenter != targetHypocenter ||
+        previous.appliedShakeRect != targetShakeRect;
     return EewMapFocusDecision(
       state: state,
       shouldFit:
+          state.isFocused &&
           didTargetChange &&
-          canFit(hypocenter: latestHypocenter, shakeRect: latestShakeBounds),
+          canFit(hypocenter: targetHypocenter, shakeRect: targetShakeRect),
+      targetHypocenter: targetHypocenter,
+      targetShakeRect: targetShakeRect,
     );
   }
 
@@ -78,17 +68,28 @@ class EewMapFocusTransition {
     required EewMapFocusState previous,
     required List<EewTelegramItem> aliveEews,
     required List<ShakeDetectionEvent> allShakes,
+  }) => evaluate(
+    previous: previous.copyWith(
+      focusedEventId: null,
+      isFocused: false,
+      appliedEventId: null,
+    ),
+    aliveEews: aliveEews,
+    allShakes: allShakes,
+  );
+
+  /// カメラ fit が実際に完了したときのみ、変化検知のベースラインを進める。
+  EewMapFocusState markApplied({
+    required EewMapFocusState previous,
+    required EewMapFocusDecision decision,
   }) {
-    final decision = evaluate(
-      previous: previous.copyWith(focusedEventId: null, isFocused: false),
-      aliveEews: aliveEews,
-      allShakes: allShakes,
-    );
-    return decision.state.focusedEventId == null
-        ? decision
-        : EewMapFocusDecision(
-            state: decision.state.copyWith(isFocused: true),
-            shouldFit: decision.shouldFit,
+    final appliedEventId = decision.state.focusedEventId;
+    return appliedEventId == null || appliedEventId != previous.focusedEventId
+        ? previous
+        : previous.copyWith(
+            appliedEventId: appliedEventId,
+            appliedHypocenter: decision.targetHypocenter,
+            appliedShakeRect: decision.targetShakeRect,
           );
   }
 
