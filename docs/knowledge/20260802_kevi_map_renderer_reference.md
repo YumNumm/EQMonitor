@@ -12,7 +12,7 @@ KEViはAvaloniaの`CompositionCustomVisual`からSkiaSharpの`SKCanvas`へ順序
 ## 採用するパターン
 
 - `MapControl.cs` / `MapLayer.cs`: UI/render間のstate snapshot、`RefreshRequested`、`NeedPersistentUpdate`をframe schedulingの参考にする。typed dirty reasonはKEViで観測したものではなく、EQMonitor側の強化とする。
-- `MapLayerHost.cs`: 宣言順を描画順、逆順をhit test優先順として同じtreeから導出する。
+- `MapLayerHost.cs`: 同一render phase内の宣言順とその逆順hit testを同じtreeから導出する着想を参考にする。EQMonitorでは全resolved node/specがphaseを明示し、cross-phase orderを含むcanonical `RenderSortKey`だけを描画・hit testの正本とするため、KEViの宣言順をglobal orderとしては採用しない。
 - `PointLayoutCache.cs` / `NormalizedPointSet.cs`: array-backed point dataと投影cacheを参考にする。投影済みpointとflat spatial indexをimmutableに共有することはEQMonitor側のpolicyとする。
 - `HoverTracker.cs`: callerが提供するequalityで更新後の要素を照合する。stable Feature IDでhover/selectionを再束縛することはEQMonitor側のpolicyとする。
 - `MapLayerLabelRenderer.cs`: 実測文字サイズに基づくscreen placement候補とleader lineをrenderer policyの参考にする。alternate geographic anchorをKEViへ帰属させない。
@@ -29,7 +29,7 @@ KEViはAvaloniaの`CompositionCustomVisual`からSkiaSharpの`SKCanvas`へ順序
 
 ## EQMonitorでの適用境界
 
-KEViはframe snapshot、ordered layer、array-backed動的点群、screen上のlabel placementの参考とする。EQMonitorのlabel assetは1つの地理anchorだけを持ち、right/left/up/down候補を実測文字サイズとDPRからrendererで生成する。leader lineもrenderer policyであり、assetへalternate anchorやleader line属性を持たせない。
+KEViはframe snapshot、phase内ordered layer、array-backed動的点群、screen上のlabel placementの参考とする。EQMonitorのlabel assetは1つの地理anchorだけを持ち、right/left/up/down候補を実測文字サイズとDPRからrendererで生成する。採用済みlabelとleader lineは`labelForeground` phaseのcanonical `RenderSortKey`で描画・hit testする。leader lineもrenderer policyであり、assetへalternate anchorやleader line属性を持たせない。
 
 Web Mercator、tile cover、overzoom、world wrap、MVT edge処理、PMTiles range fetchはMapLibreの仕様・実装に従う。KEViの個別EEW P/S波実装を検証済みとは扱わず、本設計のgeodesic P/S波はEQMonitor独自の要件とする。
 
