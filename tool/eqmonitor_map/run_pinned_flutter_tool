@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-expected_revision=de01d5daa62dcb2fd0378d55206c91e4cf008923
+expected_revision=4dacd3fc91d96262a33e5c598e17d816f0b35641
 tool_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 repo_root="$(cd "$tool_dir/../.." && pwd -P)"
 sdk_dir="$repo_root/.flutter-scene-sdk"

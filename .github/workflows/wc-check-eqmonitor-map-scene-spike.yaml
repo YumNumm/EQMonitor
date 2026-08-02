@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: flutter/flutter
-          ref: de01d5daa62dcb2fd0378d55206c91e4cf008923
+          ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
           path: .flutter-scene-sdk
           fetch-depth: 1
           persist-credentials: false
@@ -68,7 +68,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: flutter/flutter
-          ref: de01d5daa62dcb2fd0378d55206c91e4cf008923
+          ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
           path: .flutter-scene-sdk
           fetch-depth: 1
           persist-credentials: false

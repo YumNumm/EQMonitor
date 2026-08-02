@@ -6,11 +6,12 @@
 `.flutter-scene-sdk` checkout だけを使う。
 
 - Flutter source: `https://github.com/flutter/flutter.git`
-- Framework revision: `de01d5daa62dcb2fd0378d55206c91e4cf008923`
-- Flutter version: `3.47.0-1.0.pre-328`
-- Engine source revision: `de01d5daa62dcb2fd0378d55206c91e4cf008923`
-- Engine content hash: `4a2652131daa3558c477de29f83596de6c6f9663`
-- Dart SDK: `3.14.0-82.0.dev`
+- Framework revision: `4dacd3fc91d96262a33e5c598e17d816f0b35641`
+- Flutter version: `3.47.0-1.0.pre-97`
+- Engine source revision: `b1e405a9c311d858bef870c472bb24c015f4bcf9`
+- Engine content hash: `73ac711b34da2a090d79ddb423918de40a7ffbf9`
+- Dart source revision: `d402ff7c9c8442d64aa8148609480aa0e04a24fd`
+- Dart SDK: `3.14.0-29.0.dev`
 - Flutter root: `<repository>/.flutter-scene-sdk`
 
 取得と検証は次で行う。

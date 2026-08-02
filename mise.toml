@@ -4,7 +4,7 @@ min_version = "2026.08.0"
 path = { path = ["tool/eqmonitor_map/bin"], tools = true }
 
 [bootstrap.repos]
-".flutter-scene-sdk" = { url = "https://github.com/flutter/flutter.git", ref = "de01d5daa62dcb2fd0378d55206c91e4cf008923" }
+".flutter-scene-sdk" = { url = "https://github.com/flutter/flutter.git", ref = "4dacd3fc91d96262a33e5c598e17d816f0b35641" }
 
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"

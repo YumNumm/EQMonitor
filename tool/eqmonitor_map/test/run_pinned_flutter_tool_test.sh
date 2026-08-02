@@ -6,7 +6,7 @@ test_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 tool_dir="$(cd "$test_dir/.." && pwd -P)"
 runner_source="$tool_dir/run_pinned_flutter_tool"
 guard_source="$tool_dir/flutter_sdk_guard.sh"
-expected_pinned_revision=de01d5daa62dcb2fd0378d55206c91e4cf008923
+expected_pinned_revision=4dacd3fc91d96262a33e5c598e17d816f0b35641
 
 fail() {
   echo "FAIL: $1" >&2

@@ -6,13 +6,13 @@
 
 **Architecture:** ルートpub workspace全体をリポジトリ内の固定Flutter SDKへ切り替え、Flutter Scene型は`MapSceneRendererAdapter`の実装内に隔離する。GPUに依存しない射影、mesh入力、lifecycle、gate判定を純粋Dartとして先にテストし、実GPUはexample harnessから検証結果をJSONへ書き出す。公開APIで証明できないGPU完了、context loss、resource retirementは成功扱いにせず、foundationを止めるfail-closed gateとして記録する。
 
-**Tech Stack:** Flutter master `de01d5daa62dcb2fd0378d55206c91e4cf008923`、Flutter Scene git `695c954f237fabef65d49fa7199002851d2dcd88`、Flutter GPU/Impeller、Dart、Freezed、json_serializable、flutter_hooks、TextPainter、mise、Melos。
+**Tech Stack:** Flutter master `4dacd3fc91d96262a33e5c598e17d816f0b35641`、Flutter Scene git `695c954f237fabef65d49fa7199002851d2dcd88`、Flutter GPU/Impeller、Dart、Freezed、json_serializable、flutter_hooks、TextPainter、mise、Melos。
 
 ## Global Constraints
 
 - Stack parentは`codex/eqmonitor-map-01-design`、実装branchは`codex/eqmonitor-map-02-scene-spike`とする。PRは作らず、本文だけを`docs/superpowers/pr-drafts/2026-08-02-eqmonitor-map-02-scene-spike.md`へ保存する。
 - 対象platformはiOS/Androidのみ。bearingとpitchは実装せず、north-upの正射影だけを扱う。
-- Flutter frameworkは`de01d5daa62dcb2fd0378d55206c91e4cf008923`、Flutter Sceneは`695c954f237fabef65d49fa7199002851d2dcd88`へ完全固定し、branch名やfloating masterを依存記述に使わない。
+- Flutter frameworkは`4dacd3fc91d96262a33e5c598e17d816f0b35641`、Flutter Sceneは`695c954f237fabef65d49fa7199002851d2dcd88`へ完全固定し、branch名やfloating masterを依存記述に使わない。
 - `packages/*`が単一pub workspaceであるためFlutter Sceneだけをstable workspaceから分離せず、ユーザーが許可したFlutter masterへroot workspace全体を移行する。既存appのunit/analyzeに加えてAndroid/iOS compile gateを必須化する。
 - `mise exec -- flutter`と`mise exec -- dart`は固定SDKだけを実行し、SDK未取得・revision不一致・別SDKへのfallbackを明示的なエラーにする。
 - Flutter/Dart commandは必ず`mise exec --`経由、依存追加は`mise exec -- flutter pub add`、生成は`mise exec -- dart run build_runner build --delete-conflicting-outputs`で行う。
@@ -58,7 +58,7 @@
 ```bash
 output="$($runner flutter --version 2>&1)" && exit 1
 case "$output" in
-  *de01d5daa62dcb2fd0378d55206c91e4cf008923*"mise bootstrap repos apply --yes"*) ;;
+  *4dacd3fc91d96262a33e5c598e17d816f0b35641*"mise bootstrap repos apply --yes"*) ;;
   *) exit 1 ;;
 esac
 ```
@@ -80,13 +80,13 @@ min_version = "2026.08.0"
 path = { path = ["tool/eqmonitor_map/bin"], tools = true }
 
 [bootstrap.repos]
-".flutter-scene-sdk" = { url = "https://github.com/flutter/flutter.git", ref = "de01d5daa62dcb2fd0378d55206c91e4cf008923" }
+".flutter-scene-sdk" = { url = "https://github.com/flutter/flutter.git", ref = "4dacd3fc91d96262a33e5c598e17d816f0b35641" }
 ```
 
 `tools = true`でglobal mise toolより後にproject shimを前置する。共通runnerはtool名をallow-listし、`flutter upgrade`、`flutter downgrade`、`flutter channel`を拒否してからguardを呼ぶ。guardは引数で受けたSDK pathとexpected revisionについて、40桁lowercase hex、git checkout、HEAD完全一致、tracked fileがclean、実行fileの存在を検証する。固定revision引数を渡せるのはrepository内runnerだけであり、caller環境変数では上書きできない。
 
 ```bash
-expected_revision=de01d5daa62dcb2fd0378d55206c91e4cf008923
+expected_revision=4dacd3fc91d96262a33e5c598e17d816f0b35641
 case "$1" in
   flutter|dart) sdk_tool="$1" ;;
   *) echo "unsupported pinned Flutter tool: $1" >&2; exit 64 ;;
@@ -123,7 +123,7 @@ Run: `mise exec -- flutter --version --machine`
 
 Run: `mise exec -- dart --version`
 
-Expected: framework revisionが`de01d5daa62dcb2fd0378d55206c91e4cf008923`で、両commandの実体が`.flutter-scene-sdk/bin`にある。実測したFlutter、Engine、Dart revisionをknowledge documentへ記録する。
+Expected: framework revisionが`4dacd3fc91d96262a33e5c598e17d816f0b35641`で、両commandの実体が`.flutter-scene-sdk/bin`にある。実測したFlutter、Engine、Dart revisionをknowledge documentへ記録する。
 
 固定Flutter Scene sourceも`rg`で監査し、public completion fence、GPU context-loss callback/generation、resource dispose/reset APIがexportされていないことをknowledge documentへfile/symbol付きで記録する。この時点で3 capabilityは`unavailablePublicApi`と確定する。以降のharnessは他capabilityとblocked decisionを再現可能にするために続行し、この監査結果をmanual actionで上書きしない。
 
@@ -136,7 +136,7 @@ Flutterを使うanalyze、test、integration、iOS deploy、Android deploy job�
   uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
   with:
     repository: flutter/flutter
-    ref: de01d5daa62dcb2fd0378d55206c91e4cf008923
+    ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
     path: .flutter-scene-sdk
     fetch-depth: 1
     persist-credentials: false
