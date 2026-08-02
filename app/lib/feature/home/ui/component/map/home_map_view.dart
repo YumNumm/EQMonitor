@@ -260,8 +260,13 @@ class _MapHeader extends ConsumerWidget {
     );
 
     final isDebug = ref.watch(debugProvider).value ?? false;
+    final focus = ref.watch(eewMapFocusProvider);
+    final hasAliveEew =
+        (ref.watch(eewAliveTelegramProvider) ?? []).isNotEmpty;
+    final isLocationButtonEnabled = !hasAliveEew || !focus.isFocused;
 
     final controllerCard = HomeMapControllerCard(
+      isLocationButtonEnabled: isLocationButtonEnabled,
       onLayerButtonTap: () async =>
           const HomeMapLayerRoute().push<void>(context),
       onLocationButtonTap: () =>
