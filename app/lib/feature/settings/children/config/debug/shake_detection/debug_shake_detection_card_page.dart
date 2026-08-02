@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-/// デバッグ用。ホーム画面と同じ [ShakeDetectionCard] の見た目を、
-/// パラメータ操作で検証する。
 class DebugShakeDetectionCardPage extends HookConsumerWidget {
   const DebugShakeDetectionCardPage({super.key});
 

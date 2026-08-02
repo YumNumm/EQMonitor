@@ -163,7 +163,7 @@ class _EewMainCard extends StatelessWidget {
   final int? secondsUntilArrival;
 
   static const _warningHeaderColor = Color.fromRGBO(179, 26, 26, 1);
-  static const _forecastHeaderColor = Color.fromRGBO(204, 102, 13, 1);
+  static const _forecastHeaderColor = Color.fromRGBO(255, 167, 4, 1);
   static const _canceledHeaderColor = Color.fromRGBO(102, 102, 102, 1);
 
   @override
@@ -381,7 +381,10 @@ class _EewCardHeader extends StatelessWidget {
                   ]
                 : isWarning
                 ? const [Colors.red, Colors.black]
-                : const [Color(0xFFFFA500), Color.fromRGBO(128, 64, 0, 1)],
+                : const [
+                    Color.fromARGB(255, 255, 230, 0),
+                    Color.fromRGBO(197, 101, 4, 1),
+                  ],
           ),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -469,9 +472,7 @@ class _EewHypocenterSection extends StatelessWidget {
         if (detectionMethodLabel != null)
           Text(
             detectionMethodLabel,
-            style: typography.titleMedium.copyWith(
-              fontFamily: codeFontFamily,
-            ),
+            style: typography.titleMedium.copyWith(fontFamily: codeFontFamily),
           )
         else if (magnitude != null || depth != null)
           Row(

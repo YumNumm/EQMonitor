@@ -11,7 +11,6 @@ import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_feed_sheet.dart';
-import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_entry_card.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/location/data/notifier/location_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
@@ -173,7 +172,7 @@ class _SheetBody extends ConsumerWidget {
                     ...shakeEvents
                         .map((e) => ShakeDetectionCard(event: e))
                         .toList(),
-                  const LiveMonitorEntryCard(),
+                  // const LiveMonitorEntryCard(), // TODO(YumNumm): 後で戻す
                   const HomeEarthquakeHistorySheet(),
                   const HomeFeedSheet(),
                   actionsCard,
