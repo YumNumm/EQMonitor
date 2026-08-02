@@ -11,15 +11,16 @@ import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_feed_sheet.dart';
+import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_entry_card.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/location/data/notifier/location_permission_banner_dismissed_notifier.dart';
-import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_entry_card.dart';
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
+import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor/feature/start/ui/component/maintenance_banner.dart';
 import 'package:eqmonitor/feature/start/ui/component/whats_new_banner.dart';
 import 'package:flutter/material.dart';
@@ -82,19 +83,17 @@ class _SheetBody extends ConsumerWidget {
     final showNotificationBanner =
         !isNotificationGranted && !isNotificationBannerDismissed;
 
-    final eewCards = Column(
-      children: state.reversed
-          .mapIndexed(
-            (index, element) => Padding(
-              padding: EdgeInsets.only(bottom: spacing.md),
-              child: EewCard(
-                eew: element,
-                index: (state.length > 1) ? '${index + 1}' : null,
-              ),
+    final eewCards = state.reversed
+        .mapIndexed(
+          (index, element) => Padding(
+            padding: EdgeInsets.only(bottom: spacing.md),
+            child: EewCard(
+              eew: element,
+              index: (state.length > 1) ? '${index + 1}' : null,
             ),
-          )
-          .toList(),
-    );
+          ),
+        )
+        .toList();
 
     final actionsCard = Card(
       margin: EdgeInsets.zero,
@@ -144,6 +143,9 @@ class _SheetBody extends ConsumerWidget {
       ),
     );
 
+    final isInMaintenance = ref.watch(
+      startProvider.select((v) => v.value?.flags.maintenance.enabled ?? false),
+    );
     final padding = MediaQuery.paddingOf(context);
     return SingleChildScrollView(
       child: SafeArea(
@@ -158,36 +160,22 @@ class _SheetBody extends ConsumerWidget {
                 padding.bottom,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
+                spacing: spacing.sm,
                 children: [
-                  if (state.isNotEmpty) eewCards,
-                  MaintenanceBanner(bottomSpacing: spacing.md),
-                  WhatsNewBanner(bottomSpacing: spacing.md),
-                  if (showNotificationBanner)
-                    NotificationPermissionBanner(bottomSpacing: spacing.md),
-                  DeviceProvisioningBanner(bottomSpacing: spacing.md),
-                  if (showPermissionBanner) ...[
-                    _LocationPermissionBanner(bottomSpacing: spacing.md),
-                  ],
+                  ...eewCards,
+                  if (isInMaintenance) MaintenanceBanner(),
+                  WhatsNewBanner(),
+                  if (showNotificationBanner) NotificationPermissionBanner(),
+                  const DeviceProvisioningBanner(),
+                  if (showPermissionBanner) _LocationPermissionBanner(),
                   if (shakeEvents.isNotEmpty)
-                    Column(
-                      children: shakeEvents
-                          .map(
-                            (e) => Padding(
-                              padding: EdgeInsets.only(bottom: spacing.md),
-                              child: ShakeDetectionCard(event: e),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: spacing.md),
-                    child: const LiveMonitorEntryCard(),
-                  ),
+                    ...shakeEvents
+                        .map((e) => ShakeDetectionCard(event: e))
+                        .toList(),
+                  const LiveMonitorEntryCard(),
                   const HomeEarthquakeHistorySheet(),
-                  SizedBox(height: spacing.md),
                   const HomeFeedSheet(),
-                  SizedBox(height: spacing.lg),
                   actionsCard,
                 ],
               ),
@@ -201,9 +189,7 @@ class _SheetBody extends ConsumerWidget {
 }
 
 class _LocationPermissionBanner extends ConsumerWidget {
-  const _LocationPermissionBanner({required this.bottomSpacing});
-
-  final double bottomSpacing;
+  const _LocationPermissionBanner();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -225,71 +211,69 @@ class _LocationPermissionBanner extends ConsumerWidget {
       null => throw UnimplementedError('Not determined'),
     };
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: bottomSpacing),
-      child: Material(
-        color: colorTheme.primaryContainer,
-        borderRadius: RoundedSuperellipseBorder(
-          borderRadius: BorderRadius.circular(designSystem.shape.card),
-        ).borderRadius,
-        clipBehavior: .antiAlias,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: spacing.md,
-            vertical: spacing.sm,
-          ),
-          child: Row(
-            spacing: spacing.md,
-            children: [
-              Icon(
-                Icons.info_rounded,
-                color: colorTheme.onPrimaryContainer,
-                size: 24,
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () async {
-                    final result = await Geolocator.requestPermission();
-                    if (result == .deniedForever ||
-                        result == .denied ||
-                        result == .whileInUse) {
-                      await Geolocator.openLocationSettings();
-                    }
-                  },
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    children: [
+    return Material(
+      color: colorTheme.primaryContainer,
+      borderRadius: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(designSystem.shape.card),
+      ).borderRadius,
+      clipBehavior: .antiAlias,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.md,
+          vertical: spacing.sm,
+        ),
+        child: Row(
+          spacing: spacing.md,
+          children: [
+            Icon(
+              Icons.info_rounded,
+              color: colorTheme.onPrimaryContainer,
+              size: 24,
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () async {
+                  final result = await Geolocator.requestPermission();
+                  if (result == .deniedForever ||
+                      result == .denied ||
+                      result == .whileInUse) {
+                    await Geolocator.openLocationSettings();
+                  }
+                },
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text(
+                      message.$1,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: colorTheme.onPrimaryContainer,
+                      ),
+                    ),
+                    if (message.$2.isNotEmpty)
                       Text(
-                        message.$1,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        message.$2,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: colorTheme.onPrimaryContainer,
                         ),
                       ),
-                      if (message.$2.isNotEmpty)
-                        Text(
-                          message.$2,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(color: colorTheme.onPrimaryContainer),
-                        ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: colorTheme.onPrimaryContainer,
-                  size: 20,
-                ),
-                tooltip: '閉じる',
-                onPressed: () => unawaited(
-                  ref
-                      .read(locationPermissionBannerDismissedProvider.notifier)
-                      .dismiss(),
-                ),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.close,
+                color: colorTheme.onPrimaryContainer,
+                size: 20,
               ),
-            ],
-          ),
+              tooltip: '閉じる',
+              onPressed: () => unawaited(
+                ref
+                    .read(locationPermissionBannerDismissedProvider.notifier)
+                    .dismiss(),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -25,7 +25,7 @@ void main() {
             extensions: [DesignSystemThemeExtension.light()],
           ),
           home: const Scaffold(
-            body: DeviceProvisioningBanner(bottomSpacing: 0),
+            body: DeviceProvisioningBanner(),
           ),
         ),
       ),
@@ -60,7 +60,7 @@ void main() {
               extensions: [DesignSystemThemeExtension.light()],
             ),
             home: const Scaffold(
-              body: DeviceProvisioningBanner(bottomSpacing: 0),
+              body: DeviceProvisioningBanner(),
             ),
           ),
         ),

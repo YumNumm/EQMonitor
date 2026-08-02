@@ -40,8 +40,8 @@ Firebase Installations が失敗すると FCM 登録トークンを取得でき�
 3. macOS 版（`app/macos/Runner/GoogleService-Info.plist`）でも同じ事象が起きるか
 
 ```bash
-npx firebase-tools login
-npx firebase-tools apps:list IOS --project eqmonitor-main
+pnpx firebase-tools login
+pnpx firebase-tools apps:list IOS --project eqmonitor-main
 ```
 
 ## 検証方法
