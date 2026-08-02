@@ -12,6 +12,7 @@ part 'eew_map_focus_state.freezed.dart';
 abstract class EewMapFocusState with _$EewMapFocusState {
   const factory EewMapFocusState({
     String? focusedEventId,
+    ({double latitude, double longitude})? focusedHypocenter,
     @Default(false) bool isFocused,
     String? appliedEventId,
     ({double latitude, double longitude})? appliedHypocenter,
@@ -22,8 +23,13 @@ abstract class EewMapFocusState with _$EewMapFocusState {
   const EewMapFocusState._();
 
   /// 現在のフォーカス対象に対してカメラ fit が適用済みかどうか。
-  bool get hasAppliedFocus =>
-      focusedEventId != null && appliedEventId == focusedEventId;
+  bool get hasAppliedFocus {
+    final eventId = focusedEventId;
+    return eventId != null &&
+        appliedEventId == eventId &&
+        appliedHypocenter == focusedHypocenter &&
+        appliedShakeRect == shakeBoundsByEventId[eventId];
+  }
 }
 
 @freezed

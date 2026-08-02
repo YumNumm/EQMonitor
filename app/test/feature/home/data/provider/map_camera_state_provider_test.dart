@@ -442,6 +442,33 @@ void main() {
       expect(container.read(eewMapFocusProvider).hasAppliedFocus, isFalse);
     });
 
+    test('適用済みEEWの震源更新がautoZoomでブロックされたらホームボタンを有効に戻す', () async {
+      final eews = _MutableEewAliveTelegram([
+        _sampleEew(eventId: 'event', latitude: 35.5, longitude: 139.5),
+      ]);
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..realtimeTransitionResult = false;
+      final container = _container(
+        eews: eews,
+        allShakes: _MutableShakeDetection(const []),
+        coordinator: coordinator,
+      );
+      final notifier = container.read(homeMapCameraStateProvider.notifier);
+
+      await notifier.returnToHome();
+      expect(container.read(eewMapFocusProvider).hasAppliedFocus, isTrue);
+
+      coordinator.realtimeTransitionResult = null;
+      eews.replace([
+        _sampleEew(eventId: 'event', latitude: 36, longitude: 140),
+      ]);
+      await container.pump();
+
+      expect(coordinator.eewFocusCallCount, 2);
+      expect(coordinator.receivedIgnoreAutoZoom, isFalse);
+      expect(container.read(eewMapFocusProvider).hasAppliedFocus, isFalse);
+    });
+
     test('fitできる対象が無いEEWではホーム復帰へフォールバックする', () async {
       final coordinator = _RecordingHomeMapCameraCoordinator()
         ..returnToHomeResult = true;

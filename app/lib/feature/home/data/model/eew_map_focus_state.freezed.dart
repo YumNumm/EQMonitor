@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewMapFocusState {
 
- String? get focusedEventId; bool get isFocused; String? get appliedEventId; ({double latitude, double longitude})? get appliedHypocenter; EewMapFocusGridRect? get appliedShakeRect; Map<String, EewMapFocusGridRect> get shakeBoundsByEventId;
+ String? get focusedEventId; ({double latitude, double longitude})? get focusedHypocenter; bool get isFocused; String? get appliedEventId; ({double latitude, double longitude})? get appliedHypocenter; EewMapFocusGridRect? get appliedShakeRect; Map<String, EewMapFocusGridRect> get shakeBoundsByEventId;
 /// Create a copy of EewMapFocusState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $EewMapFocusStateCopyWith<EewMapFocusState> get copyWith => _$EewMapFocusStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewMapFocusState&&(identical(other.focusedEventId, focusedEventId) || other.focusedEventId == focusedEventId)&&(identical(other.isFocused, isFocused) || other.isFocused == isFocused)&&(identical(other.appliedEventId, appliedEventId) || other.appliedEventId == appliedEventId)&&(identical(other.appliedHypocenter, appliedHypocenter) || other.appliedHypocenter == appliedHypocenter)&&(identical(other.appliedShakeRect, appliedShakeRect) || other.appliedShakeRect == appliedShakeRect)&&const DeepCollectionEquality().equals(other.shakeBoundsByEventId, shakeBoundsByEventId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewMapFocusState&&(identical(other.focusedEventId, focusedEventId) || other.focusedEventId == focusedEventId)&&(identical(other.focusedHypocenter, focusedHypocenter) || other.focusedHypocenter == focusedHypocenter)&&(identical(other.isFocused, isFocused) || other.isFocused == isFocused)&&(identical(other.appliedEventId, appliedEventId) || other.appliedEventId == appliedEventId)&&(identical(other.appliedHypocenter, appliedHypocenter) || other.appliedHypocenter == appliedHypocenter)&&(identical(other.appliedShakeRect, appliedShakeRect) || other.appliedShakeRect == appliedShakeRect)&&const DeepCollectionEquality().equals(other.shakeBoundsByEventId, shakeBoundsByEventId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,focusedEventId,isFocused,appliedEventId,appliedHypocenter,appliedShakeRect,const DeepCollectionEquality().hash(shakeBoundsByEventId));
+int get hashCode => Object.hash(runtimeType,focusedEventId,focusedHypocenter,isFocused,appliedEventId,appliedHypocenter,appliedShakeRect,const DeepCollectionEquality().hash(shakeBoundsByEventId));
 
 @override
 String toString() {
-  return 'EewMapFocusState(focusedEventId: $focusedEventId, isFocused: $isFocused, appliedEventId: $appliedEventId, appliedHypocenter: $appliedHypocenter, appliedShakeRect: $appliedShakeRect, shakeBoundsByEventId: $shakeBoundsByEventId)';
+  return 'EewMapFocusState(focusedEventId: $focusedEventId, focusedHypocenter: $focusedHypocenter, isFocused: $isFocused, appliedEventId: $appliedEventId, appliedHypocenter: $appliedHypocenter, appliedShakeRect: $appliedShakeRect, shakeBoundsByEventId: $shakeBoundsByEventId)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $EewMapFocusStateCopyWith<$Res>  {
   factory $EewMapFocusStateCopyWith(EewMapFocusState value, $Res Function(EewMapFocusState) _then) = _$EewMapFocusStateCopyWithImpl;
 @useResult
 $Res call({
- String? focusedEventId, bool isFocused, String? appliedEventId, ({double latitude, double longitude})? appliedHypocenter, EewMapFocusGridRect? appliedShakeRect, Map<String, EewMapFocusGridRect> shakeBoundsByEventId
+ String? focusedEventId, ({double latitude, double longitude})? focusedHypocenter, bool isFocused, String? appliedEventId, ({double latitude, double longitude})? appliedHypocenter, EewMapFocusGridRect? appliedShakeRect, Map<String, EewMapFocusGridRect> shakeBoundsByEventId
 });
 
 
@@ -62,10 +62,11 @@ class _$EewMapFocusStateCopyWithImpl<$Res>
 
 /// Create a copy of EewMapFocusState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? focusedEventId = freezed,Object? isFocused = null,Object? appliedEventId = freezed,Object? appliedHypocenter = freezed,Object? appliedShakeRect = freezed,Object? shakeBoundsByEventId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? focusedEventId = freezed,Object? focusedHypocenter = freezed,Object? isFocused = null,Object? appliedEventId = freezed,Object? appliedHypocenter = freezed,Object? appliedShakeRect = freezed,Object? shakeBoundsByEventId = null,}) {
   return _then(_self.copyWith(
 focusedEventId: freezed == focusedEventId ? _self.focusedEventId : focusedEventId // ignore: cast_nullable_to_non_nullable
-as String?,isFocused: null == isFocused ? _self.isFocused : isFocused // ignore: cast_nullable_to_non_nullable
+as String?,focusedHypocenter: freezed == focusedHypocenter ? _self.focusedHypocenter : focusedHypocenter // ignore: cast_nullable_to_non_nullable
+as ({double latitude, double longitude})?,isFocused: null == isFocused ? _self.isFocused : isFocused // ignore: cast_nullable_to_non_nullable
 as bool,appliedEventId: freezed == appliedEventId ? _self.appliedEventId : appliedEventId // ignore: cast_nullable_to_non_nullable
 as String?,appliedHypocenter: freezed == appliedHypocenter ? _self.appliedHypocenter : appliedHypocenter // ignore: cast_nullable_to_non_nullable
 as ({double latitude, double longitude})?,appliedShakeRect: freezed == appliedShakeRect ? _self.appliedShakeRect : appliedShakeRect // ignore: cast_nullable_to_non_nullable
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? focusedEventId,  bool isFocused,  String? appliedEventId,  ({double latitude, double longitude})? appliedHypocenter,  EewMapFocusGridRect? appliedShakeRect,  Map<String, EewMapFocusGridRect> shakeBoundsByEventId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? focusedEventId,  ({double latitude, double longitude})? focusedHypocenter,  bool isFocused,  String? appliedEventId,  ({double latitude, double longitude})? appliedHypocenter,  EewMapFocusGridRect? appliedShakeRect,  Map<String, EewMapFocusGridRect> shakeBoundsByEventId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewMapFocusState() when $default != null:
-return $default(_that.focusedEventId,_that.isFocused,_that.appliedEventId,_that.appliedHypocenter,_that.appliedShakeRect,_that.shakeBoundsByEventId);case _:
+return $default(_that.focusedEventId,_that.focusedHypocenter,_that.isFocused,_that.appliedEventId,_that.appliedHypocenter,_that.appliedShakeRect,_that.shakeBoundsByEventId);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.focusedEventId,_that.isFocused,_that.appliedEventId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? focusedEventId,  bool isFocused,  String? appliedEventId,  ({double latitude, double longitude})? appliedHypocenter,  EewMapFocusGridRect? appliedShakeRect,  Map<String, EewMapFocusGridRect> shakeBoundsByEventId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? focusedEventId,  ({double latitude, double longitude})? focusedHypocenter,  bool isFocused,  String? appliedEventId,  ({double latitude, double longitude})? appliedHypocenter,  EewMapFocusGridRect? appliedShakeRect,  Map<String, EewMapFocusGridRect> shakeBoundsByEventId)  $default,) {final _that = this;
 switch (_that) {
 case _EewMapFocusState():
-return $default(_that.focusedEventId,_that.isFocused,_that.appliedEventId,_that.appliedHypocenter,_that.appliedShakeRect,_that.shakeBoundsByEventId);case _:
+return $default(_that.focusedEventId,_that.focusedHypocenter,_that.isFocused,_that.appliedEventId,_that.appliedHypocenter,_that.appliedShakeRect,_that.shakeBoundsByEventId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.focusedEventId,_that.isFocused,_that.appliedEventId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? focusedEventId,  bool isFocused,  String? appliedEventId,  ({double latitude, double longitude})? appliedHypocenter,  EewMapFocusGridRect? appliedShakeRect,  Map<String, EewMapFocusGridRect> shakeBoundsByEventId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? focusedEventId,  ({double latitude, double longitude})? focusedHypocenter,  bool isFocused,  String? appliedEventId,  ({double latitude, double longitude})? appliedHypocenter,  EewMapFocusGridRect? appliedShakeRect,  Map<String, EewMapFocusGridRect> shakeBoundsByEventId)?  $default,) {final _that = this;
 switch (_that) {
 case _EewMapFocusState() when $default != null:
-return $default(_that.focusedEventId,_that.isFocused,_that.appliedEventId,_that.appliedHypocenter,_that.appliedShakeRect,_that.shakeBoundsByEventId);case _:
+return $default(_that.focusedEventId,_that.focusedHypocenter,_that.isFocused,_that.appliedEventId,_that.appliedHypocenter,_that.appliedShakeRect,_that.shakeBoundsByEventId);case _:
   return null;
 
 }
@@ -211,10 +212,11 @@ return $default(_that.focusedEventId,_that.isFocused,_that.appliedEventId,_that.
 
 
 class _EewMapFocusState extends EewMapFocusState {
-  const _EewMapFocusState({this.focusedEventId, this.isFocused = false, this.appliedEventId, this.appliedHypocenter, this.appliedShakeRect, final  Map<String, EewMapFocusGridRect> shakeBoundsByEventId = const {}}): _shakeBoundsByEventId = shakeBoundsByEventId,super._();
+  const _EewMapFocusState({this.focusedEventId, this.focusedHypocenter, this.isFocused = false, this.appliedEventId, this.appliedHypocenter, this.appliedShakeRect, final  Map<String, EewMapFocusGridRect> shakeBoundsByEventId = const {}}): _shakeBoundsByEventId = shakeBoundsByEventId,super._();
   
 
 @override final  String? focusedEventId;
+@override final  ({double latitude, double longitude})? focusedHypocenter;
 @override@JsonKey() final  bool isFocused;
 @override final  String? appliedEventId;
 @override final  ({double latitude, double longitude})? appliedHypocenter;
@@ -237,16 +239,16 @@ _$EewMapFocusStateCopyWith<_EewMapFocusState> get copyWith => __$EewMapFocusStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewMapFocusState&&(identical(other.focusedEventId, focusedEventId) || other.focusedEventId == focusedEventId)&&(identical(other.isFocused, isFocused) || other.isFocused == isFocused)&&(identical(other.appliedEventId, appliedEventId) || other.appliedEventId == appliedEventId)&&(identical(other.appliedHypocenter, appliedHypocenter) || other.appliedHypocenter == appliedHypocenter)&&(identical(other.appliedShakeRect, appliedShakeRect) || other.appliedShakeRect == appliedShakeRect)&&const DeepCollectionEquality().equals(other._shakeBoundsByEventId, _shakeBoundsByEventId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewMapFocusState&&(identical(other.focusedEventId, focusedEventId) || other.focusedEventId == focusedEventId)&&(identical(other.focusedHypocenter, focusedHypocenter) || other.focusedHypocenter == focusedHypocenter)&&(identical(other.isFocused, isFocused) || other.isFocused == isFocused)&&(identical(other.appliedEventId, appliedEventId) || other.appliedEventId == appliedEventId)&&(identical(other.appliedHypocenter, appliedHypocenter) || other.appliedHypocenter == appliedHypocenter)&&(identical(other.appliedShakeRect, appliedShakeRect) || other.appliedShakeRect == appliedShakeRect)&&const DeepCollectionEquality().equals(other._shakeBoundsByEventId, _shakeBoundsByEventId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,focusedEventId,isFocused,appliedEventId,appliedHypocenter,appliedShakeRect,const DeepCollectionEquality().hash(_shakeBoundsByEventId));
+int get hashCode => Object.hash(runtimeType,focusedEventId,focusedHypocenter,isFocused,appliedEventId,appliedHypocenter,appliedShakeRect,const DeepCollectionEquality().hash(_shakeBoundsByEventId));
 
 @override
 String toString() {
-  return 'EewMapFocusState(focusedEventId: $focusedEventId, isFocused: $isFocused, appliedEventId: $appliedEventId, appliedHypocenter: $appliedHypocenter, appliedShakeRect: $appliedShakeRect, shakeBoundsByEventId: $shakeBoundsByEventId)';
+  return 'EewMapFocusState(focusedEventId: $focusedEventId, focusedHypocenter: $focusedHypocenter, isFocused: $isFocused, appliedEventId: $appliedEventId, appliedHypocenter: $appliedHypocenter, appliedShakeRect: $appliedShakeRect, shakeBoundsByEventId: $shakeBoundsByEventId)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$EewMapFocusStateCopyWith<$Res> implements $EewMapFocusSta
   factory _$EewMapFocusStateCopyWith(_EewMapFocusState value, $Res Function(_EewMapFocusState) _then) = __$EewMapFocusStateCopyWithImpl;
 @override @useResult
 $Res call({
- String? focusedEventId, bool isFocused, String? appliedEventId, ({double latitude, double longitude})? appliedHypocenter, EewMapFocusGridRect? appliedShakeRect, Map<String, EewMapFocusGridRect> shakeBoundsByEventId
+ String? focusedEventId, ({double latitude, double longitude})? focusedHypocenter, bool isFocused, String? appliedEventId, ({double latitude, double longitude})? appliedHypocenter, EewMapFocusGridRect? appliedShakeRect, Map<String, EewMapFocusGridRect> shakeBoundsByEventId
 });
 
 
@@ -274,10 +276,11 @@ class __$EewMapFocusStateCopyWithImpl<$Res>
 
 /// Create a copy of EewMapFocusState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? focusedEventId = freezed,Object? isFocused = null,Object? appliedEventId = freezed,Object? appliedHypocenter = freezed,Object? appliedShakeRect = freezed,Object? shakeBoundsByEventId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? focusedEventId = freezed,Object? focusedHypocenter = freezed,Object? isFocused = null,Object? appliedEventId = freezed,Object? appliedHypocenter = freezed,Object? appliedShakeRect = freezed,Object? shakeBoundsByEventId = null,}) {
   return _then(_EewMapFocusState(
 focusedEventId: freezed == focusedEventId ? _self.focusedEventId : focusedEventId // ignore: cast_nullable_to_non_nullable
-as String?,isFocused: null == isFocused ? _self.isFocused : isFocused // ignore: cast_nullable_to_non_nullable
+as String?,focusedHypocenter: freezed == focusedHypocenter ? _self.focusedHypocenter : focusedHypocenter // ignore: cast_nullable_to_non_nullable
+as ({double latitude, double longitude})?,isFocused: null == isFocused ? _self.isFocused : isFocused // ignore: cast_nullable_to_non_nullable
 as bool,appliedEventId: freezed == appliedEventId ? _self.appliedEventId : appliedEventId // ignore: cast_nullable_to_non_nullable
 as String?,appliedHypocenter: freezed == appliedHypocenter ? _self.appliedHypocenter : appliedHypocenter // ignore: cast_nullable_to_non_nullable
 as ({double latitude, double longitude})?,appliedShakeRect: freezed == appliedShakeRect ? _self.appliedShakeRect : appliedShakeRect // ignore: cast_nullable_to_non_nullable

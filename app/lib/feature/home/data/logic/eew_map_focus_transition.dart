@@ -41,6 +41,7 @@ class EewMapFocusTransition {
     final isNewTarget = latestEew.eventId != previous.focusedEventId;
     final state = previous.copyWith(
       focusedEventId: latestEew.eventId,
+      focusedHypocenter: targetHypocenter,
       isFocused: isNewTarget ? true : previous.isFocused,
       shakeBoundsByEventId: shakeBoundsByEventId,
     );
@@ -71,8 +72,11 @@ class EewMapFocusTransition {
   }) => evaluate(
     previous: previous.copyWith(
       focusedEventId: null,
+      focusedHypocenter: null,
       isFocused: false,
       appliedEventId: null,
+      appliedHypocenter: null,
+      appliedShakeRect: null,
     ),
     aliveEews: aliveEews,
     allShakes: allShakes,
