@@ -82,7 +82,7 @@ Run:
 
 ```bash
 cd backend
-mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog test -- src/pmtiles/archive-planner.test.ts src/pmtiles/generator.test.ts src/pmtiles/validator.test.ts
+mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog exec vitest run src/pmtiles/archive-planner.test.ts src/pmtiles/generator.test.ts src/pmtiles/validator.test.ts
 ```
 
 Expected: FAIL because `queryRevision` and `query_revision` do not exist.
@@ -145,7 +145,7 @@ Run:
 
 ```bash
 cd backend
-mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog test -- src/pmtiles/archive-planner.test.ts src/pmtiles/generator.test.ts src/pmtiles/validator.test.ts
+mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog exec vitest run src/pmtiles/archive-planner.test.ts src/pmtiles/generator.test.ts src/pmtiles/validator.test.ts
 mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog check-types
 ```
 
@@ -198,8 +198,8 @@ await expect(
 
 ```bash
 cd backend
-mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog test -- src/publication/publisher.test.ts
-mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api test -- test/hypocenter/hypocenter-routes.test.ts test/hypocenter/manifest-datasource.test.ts
+mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog exec vitest run src/publication/publisher.test.ts
+mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api exec vitest run test/hypocenter/hypocenter-routes.test.ts test/hypocenter/manifest-datasource.test.ts
 ```
 
 Expected: FAIL because manifest archive schemas do not contain `query_revision`.
@@ -229,8 +229,8 @@ In `publishArchives`, copy `plan.queryRevision`; include it in canonical descrip
 
 ```bash
 cd backend
-mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog test -- src/publication/publisher.test.ts
-mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api test -- test/hypocenter/hypocenter-routes.test.ts test/hypocenter/manifest-datasource.test.ts
+mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog exec vitest run src/publication/publisher.test.ts
+mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api exec vitest run test/hypocenter/hypocenter-routes.test.ts test/hypocenter/manifest-datasource.test.ts
 mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api-stub test
 ```
 
@@ -285,7 +285,7 @@ Also assert that a cursor revision and a different explicit revision returns 400
 
 ```bash
 cd backend
-mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api test -- test/hypocenter/hypocenter-routes.test.ts
+mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api exec vitest run test/hypocenter/hypocenter-routes.test.ts
 ```
 
 Expected: FAIL because `expected_revision` is ignored.
@@ -330,7 +330,7 @@ Expected: OpenAPI contains archive `query_revision` and query parameter `expecte
 ```bash
 cd backend
 mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog test
-mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api test -- test/hypocenter
+mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api exec vitest run test/hypocenter
 mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api type-check
 mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api-stub type-check
 ```
@@ -808,7 +808,7 @@ Expected: only intentional generated files are changed; after staging them there
 cd backend
 mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog test
 mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/hypocenter-catalog check-types
-mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api test -- test/hypocenter
+mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api exec vitest run test/hypocenter
 mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api type-check
 mise exec --no-deps node@24.18.0 pnpm@11.10.0 -- pnpm --filter @eqmonitor-backend/api-stub type-check
 ```
