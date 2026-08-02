@@ -86,10 +86,11 @@ MapLibre gesture (apiGesture)
 
 ### 揺れ検知累積矩形
 
-1. `correlatedEewEventId == focusedEventId`（または保持対象 EEW）のイベントを抽出
-2. 各イベントの `min/max Lat/Lng` を 0.5° グリッドに **外向きスナップ**（範囲を内包）
+1. 生存 EEW それぞれについて、`correlatedEewEventId` が一致する揺れ検知を抽出（フォーカス外の EEW も累積は更新する）
+2. 各揺れ検知の `min/max Lat/Lng` を 0.5° グリッドに **外向きスナップ**（範囲を内包）
 3. `shakeBoundsByEventId[eewEventId]` と union（各辺は拡大方向のみ）
 4. EEW が生存リストから消えたら、対応 entry を破棄
+5. カメラ fit に使うのは **フォーカス対象 EEW** の累積矩形のみ
 
 表示用グリッド（0.25°）とは独立したカメラ用計算である。
 
