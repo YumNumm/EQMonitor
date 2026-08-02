@@ -1,5 +1,8 @@
 .crashlytics
 
+# SDD の作業ログ・タスクレポート（ローカル作業用）
+/.superpowers/sdd/*.md
+
 .env
 
 ~$*
