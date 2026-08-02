@@ -71,6 +71,7 @@ class _HypocentersApiClient implements HypocentersApiClient {
     String? earthquakeEventId,
     String? cursor,
     String? expectedRevision,
+    CancelToken? cancelToken,
     String? ifNoneMatch,
     String? ifModifiedSince,
   }) async {
@@ -103,6 +104,7 @@ class _HypocentersApiClient implements HypocentersApiClient {
             '/v2/hypocenters',
             queryParameters: queryParameters,
             data: _data,
+            cancelToken: cancelToken,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );

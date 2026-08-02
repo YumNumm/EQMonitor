@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'generated_file_cleanup.dart';
+import 'hypocenter_api_client_patch.dart';
 import 'legacy_generated_contract.dart';
 
 void main(List<String> args) async {
@@ -188,6 +189,10 @@ void main(List<String> args) async {
 
   await _step('残存 dynamic → 正しい型にパッチ', () async {
     _patchRemainingDynamic(libDir);
+  });
+
+  await _step('震源検索へCancelTokenを追加', () async {
+    patchHypocenterApiClientCancelToken(libDir: libDir);
   });
 
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {

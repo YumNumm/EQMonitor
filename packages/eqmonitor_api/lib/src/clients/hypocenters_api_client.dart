@@ -44,6 +44,7 @@ abstract class HypocentersApiClient {
     @Query('earthquake_event_id') String? earthquakeEventId,
     @Query('cursor') String? cursor,
     @Query('expected_revision') String? expectedRevision,
+    @CancelRequest() CancelToken? cancelToken,
     @Header('If-None-Match') String? ifNoneMatch,
     @Header('If-Modified-Since') String? ifModifiedSince,
   });
