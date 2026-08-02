@@ -43,7 +43,7 @@ final class EewMapFocusProvider
   }
 }
 
-String _$eewMapFocusHash() => r'65fae6b0ed2ed10e9de006cb38aa6055b49f0caf';
+String _$eewMapFocusHash() => r'37ac01759cc1c8591363fcd85becdcf3d9794661';
 
 abstract class _$EewMapFocus extends $Notifier<EewMapFocusState> {
   EewMapFocusState build();
