@@ -78,6 +78,8 @@ class _RecordingHomeMapCameraCoordinator extends HomeMapCameraCoordinator {
   List<ShakeDetectionEvent> receivedShakes = const [];
   LngLatBounds? receivedEewBounds;
   bool? receivedIgnoreAutoZoom;
+  bool? receivedApplyInitialFocus;
+  bool? receivedIsAtHome;
 
   @override
   Future<bool?> setController({
@@ -95,6 +97,8 @@ class _RecordingHomeMapCameraCoordinator extends HomeMapCameraCoordinator {
     receivedViewportSize = viewportSize;
     receivedEews = eews;
     receivedShakes = shakes;
+    receivedApplyInitialFocus = applyInitialFocus;
+    receivedIsAtHome = isAtHome;
     return setControllerResult;
   }
 
@@ -261,6 +265,29 @@ void main() {
       expect(coordinator.receivedViewportSize, const Size(375, 667));
       expect(coordinator.receivedEews, isEmpty);
       expect(container.read(homeMapCameraStateProvider).isAtHome, isFalse);
+    });
+
+    test('controller attach時はhome適用のためhome外として再評価する', () async {
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..realtimeTransitionResult = true;
+      final container = _container(
+        eews: _MutableEewAliveTelegram(const []),
+        allShakes: _MutableShakeDetection(const []),
+        coordinator: coordinator,
+      );
+      final controller = MockMapController();
+
+      await container
+          .read(homeMapCameraStateProvider.notifier)
+          .setController(
+            controller: controller,
+            viewportSize: const Size(375, 667),
+          );
+
+      expect(coordinator.receivedApplyInitialFocus, isFalse);
+      expect(coordinator.receivedIsAtHome, isFalse);
+      expect(coordinator.realtimeTransitionCallCount, 1);
+      expect(container.read(homeMapCameraStateProvider).isAtHome, isTrue);
     });
 
     test('EEW更新はfocused EEW boundsだけをcoordinatorへ委譲する', () async {

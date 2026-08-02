@@ -64,7 +64,7 @@ class HomeMapCameraState extends _$HomeMapCameraState {
           eews: const [],
           shakes: const [],
           applyInitialFocus: false,
-          isAtHome: state.isAtHome,
+          isAtHome: false,
         );
     if (isAtHome != null) {
       state = state.copyWith(isAtHome: isAtHome);
