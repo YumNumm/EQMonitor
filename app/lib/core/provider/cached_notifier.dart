@@ -45,6 +45,17 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
   bool isCachedOperationCurrent(CachedOperationToken operation) =>
       operation._authority == _authority;
 
+  Future<T> forceRefreshCachedValue() async {
+    final gen = ++_generation;
+    advanceCachedAuthority();
+    final operation = beginCachedOperation();
+    final fresh = await _fetchForceFresh(operation);
+    if (ref.mounted && gen == _generation) {
+      state = AsyncData(fresh);
+    }
+    return fresh;
+  }
+
   Future<T> cachedBuild({CachedOperationToken? operation}) async {
     final currentOperation = operation ?? beginCachedOperation();
     if (revalidateOnAppResume) {
