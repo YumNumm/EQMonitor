@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+expected_revision=de01d5daa62dcb2fd0378d55206c91e4cf008923
+tool_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+repo_root="$(cd "$tool_dir/../.." && pwd -P)"
+sdk_dir="$repo_root/.flutter-scene-sdk"
+sdk_tool="${1:-}"
+
+case "$sdk_tool" in
+  flutter|dart) ;;
+  *)
+    echo "unsupported pinned Flutter tool: $sdk_tool" >&2
+    exit 64
+    ;;
+esac
+
+if [[ "$sdk_tool" == flutter ]]; then
+  case "${2:-}" in
+    upgrade|downgrade|channel)
+      echo "pinned Flutter runner refuses self-update command: flutter ${2}" >&2
+      exit 64
+      ;;
+  esac
+fi
+
+exec "$tool_dir/flutter_sdk_guard.sh" \
+  "$sdk_dir" \
+  "$expected_revision" \
+  "$sdk_tool" \
+  "${@:2}"

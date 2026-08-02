@@ -74,7 +74,7 @@ Expected: FAIL because runner and guard do not exist.
 `.flutter-scene-sdk/`をignoreし、`mise.toml`からstable Flutter tool entryを外す。固定repoを宣言し、shim directoryをPATHの先頭へ置く。
 
 ```toml
-min_version = "2026.07.07"
+min_version = "2026.08.0"
 
 [env.'_']
 path = { path = ["tool/eqmonitor_map/bin"], tools = true }

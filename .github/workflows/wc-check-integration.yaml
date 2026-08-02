@@ -46,11 +46,25 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           persist-credentials: false
 
-      # https://github.com/jdx/mise-action
-      - name: Install Mise dependencies (flutter + node + pnpm)
-        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+      - name: Checkout pinned Flutter SDK
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          install_args: "flutter node pnpm"
+          repository: flutter/flutter
+          ref: de01d5daa62dcb2fd0378d55206c91e4cf008923
+          path: .flutter-scene-sdk
+          fetch-depth: 1
+          persist-credentials: false
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies (node + pnpm)
+      uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        with:
+          install_args: "node pnpm"
+
+      - name: Verify pinned Flutter SDK
+        run: |
+          mise bootstrap repos status --missing
+          mise exec -- flutter --version --machine
 
       - name: Install libatomic1
         run: sudo apt-get install -y libatomic1
@@ -79,13 +93,13 @@ jobs:
           exit 1
 
       - name: Resolve Flutter/Dart dependencies
-        run: dart pub get --enforce-lockfile
+        run: mise exec -- dart pub get --enforce-lockfile
 
       - name: Run integration tests
         working-directory: packages/eqmonitor_api
         env:
           STUB_BASE_URL: http://localhost:8790
-        run: dart test --run-skipped --tags integration
+        run: mise exec -- dart test --run-skipped --tags integration
 
       - name: Stop api-stub
         if: always()

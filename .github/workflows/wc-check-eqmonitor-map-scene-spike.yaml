@@ -1,0 +1,96 @@
+name: EQMonitor Map Scene Spike
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  android-build:
+    name: Android Profile and Release Build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned Flutter SDK
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: flutter/flutter
+          ref: de01d5daa62dcb2fd0378d55206c91e4cf008923
+          path: .flutter-scene-sdk
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
+        with:
+          install_args: "java"
+
+      - name: Verify pinned Flutter SDK
+        run: |
+          mise bootstrap repos status --missing
+          mise exec -- flutter --version --machine
+
+      - name: Generate dart-define manifest
+        run: printf '%s\n' '{"EQMONITOR_MAP_SCENE_SPIKE_CI":"true"}' > "$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
+
+      - name: Resolve example dependencies
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter pub get --enforce-lockfile
+
+      - name: Build Android profile
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter build apk --profile --dart-define-from-file="$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
+
+      - name: Build Android release
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter build apk --release --dart-define-from-file="$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
+
+  ios-build:
+    name: iOS Profile and Release Build
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned Flutter SDK
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: flutter/flutter
+          ref: de01d5daa62dcb2fd0378d55206c91e4cf008923
+          path: .flutter-scene-sdk
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Activate Mise environment
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
+        with:
+          install: false
+
+      - name: Verify pinned Flutter SDK
+        run: |
+          mise bootstrap repos status --missing
+          mise exec -- flutter --version --machine
+
+      - name: Generate dart-define manifest
+        run: printf '%s\n' '{"EQMONITOR_MAP_SCENE_SPIKE_CI":"true"}' > "$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
+
+      - name: Resolve example dependencies
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter pub get --enforce-lockfile
+
+      - name: Build iOS profile
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter build ios --profile --no-codesign --dart-define-from-file="$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
+
+      - name: Build iOS release
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter build ios --release --no-codesign --dart-define-from-file="$RUNNER_TEMP/eqmonitor-map-scene-spike.json"

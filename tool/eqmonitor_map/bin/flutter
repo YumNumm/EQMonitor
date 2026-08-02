@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+bin_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+exec "$bin_dir/../run_pinned_flutter_tool" flutter "$@"
