@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$HypocenterAnalysisRequest {
 
- List<HypocenterArchive> get archives; SeismicityBounds get bounds;
+ List<HypocenterArchiveId> get archiveIds; SeismicityBounds get bounds;
 /// Create a copy of HypocenterAnalysisRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $HypocenterAnalysisRequestCopyWith<HypocenterAnalysisRequest> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HypocenterAnalysisRequest&&const DeepCollectionEquality().equals(other.archives, archives)&&(identical(other.bounds, bounds) || other.bounds == bounds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HypocenterAnalysisRequest&&const DeepCollectionEquality().equals(other.archiveIds, archiveIds)&&(identical(other.bounds, bounds) || other.bounds == bounds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(archives),bounds);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(archiveIds),bounds);
 
 @override
 String toString() {
-  return 'HypocenterAnalysisRequest(archives: $archives, bounds: $bounds)';
+  return 'HypocenterAnalysisRequest(archiveIds: $archiveIds, bounds: $bounds)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $HypocenterAnalysisRequestCopyWith<$Res>  {
   factory $HypocenterAnalysisRequestCopyWith(HypocenterAnalysisRequest value, $Res Function(HypocenterAnalysisRequest) _then) = _$HypocenterAnalysisRequestCopyWithImpl;
 @useResult
 $Res call({
- List<HypocenterArchive> archives, SeismicityBounds bounds
+ List<HypocenterArchiveId> archiveIds, SeismicityBounds bounds
 });
 
 
@@ -62,10 +62,10 @@ class _$HypocenterAnalysisRequestCopyWithImpl<$Res>
 
 /// Create a copy of HypocenterAnalysisRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? archives = null,Object? bounds = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? archiveIds = null,Object? bounds = null,}) {
   return _then(_self.copyWith(
-archives: null == archives ? _self.archives : archives // ignore: cast_nullable_to_non_nullable
-as List<HypocenterArchive>,bounds: null == bounds ? _self.bounds : bounds // ignore: cast_nullable_to_non_nullable
+archiveIds: null == archiveIds ? _self.archiveIds : archiveIds // ignore: cast_nullable_to_non_nullable
+as List<HypocenterArchiveId>,bounds: null == bounds ? _self.bounds : bounds // ignore: cast_nullable_to_non_nullable
 as SeismicityBounds,
   ));
 }
@@ -160,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<HypocenterArchive> archives,  SeismicityBounds bounds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<HypocenterArchiveId> archiveIds,  SeismicityBounds bounds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HypocenterAnalysisRequest() when $default != null:
-return $default(_that.archives,_that.bounds);case _:
+return $default(_that.archiveIds,_that.bounds);case _:
   return orElse();
 
 }
@@ -181,10 +181,10 @@ return $default(_that.archives,_that.bounds);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<HypocenterArchive> archives,  SeismicityBounds bounds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<HypocenterArchiveId> archiveIds,  SeismicityBounds bounds)  $default,) {final _that = this;
 switch (_that) {
 case _HypocenterAnalysisRequest():
-return $default(_that.archives,_that.bounds);case _:
+return $default(_that.archiveIds,_that.bounds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +201,10 @@ return $default(_that.archives,_that.bounds);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<HypocenterArchive> archives,  SeismicityBounds bounds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<HypocenterArchiveId> archiveIds,  SeismicityBounds bounds)?  $default,) {final _that = this;
 switch (_that) {
 case _HypocenterAnalysisRequest() when $default != null:
-return $default(_that.archives,_that.bounds);case _:
+return $default(_that.archiveIds,_that.bounds);case _:
   return null;
 
 }
@@ -216,14 +216,14 @@ return $default(_that.archives,_that.bounds);case _:
 
 
 class _HypocenterAnalysisRequest implements HypocenterAnalysisRequest {
-  const _HypocenterAnalysisRequest({required final  List<HypocenterArchive> archives, required this.bounds}): _archives = archives;
+  const _HypocenterAnalysisRequest({required final  List<HypocenterArchiveId> archiveIds, required this.bounds}): _archiveIds = archiveIds;
 
 
- final  List<HypocenterArchive> _archives;
-@override List<HypocenterArchive> get archives {
-  if (_archives is EqualUnmodifiableListView) return _archives;
+ final  List<HypocenterArchiveId> _archiveIds;
+@override List<HypocenterArchiveId> get archiveIds {
+  if (_archiveIds is EqualUnmodifiableListView) return _archiveIds;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_archives);
+  return EqualUnmodifiableListView(_archiveIds);
 }
 
 @override final  SeismicityBounds bounds;
@@ -238,16 +238,16 @@ _$HypocenterAnalysisRequestCopyWith<_HypocenterAnalysisRequest> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HypocenterAnalysisRequest&&const DeepCollectionEquality().equals(other._archives, _archives)&&(identical(other.bounds, bounds) || other.bounds == bounds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HypocenterAnalysisRequest&&const DeepCollectionEquality().equals(other._archiveIds, _archiveIds)&&(identical(other.bounds, bounds) || other.bounds == bounds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_archives),bounds);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_archiveIds),bounds);
 
 @override
 String toString() {
-  return 'HypocenterAnalysisRequest(archives: $archives, bounds: $bounds)';
+  return 'HypocenterAnalysisRequest(archiveIds: $archiveIds, bounds: $bounds)';
 }
 
 
@@ -258,7 +258,7 @@ abstract mixin class _$HypocenterAnalysisRequestCopyWith<$Res> implements $Hypoc
   factory _$HypocenterAnalysisRequestCopyWith(_HypocenterAnalysisRequest value, $Res Function(_HypocenterAnalysisRequest) _then) = __$HypocenterAnalysisRequestCopyWithImpl;
 @override @useResult
 $Res call({
- List<HypocenterArchive> archives, SeismicityBounds bounds
+ List<HypocenterArchiveId> archiveIds, SeismicityBounds bounds
 });
 
 
@@ -275,10 +275,10 @@ class __$HypocenterAnalysisRequestCopyWithImpl<$Res>
 
 /// Create a copy of HypocenterAnalysisRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? archives = null,Object? bounds = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? archiveIds = null,Object? bounds = null,}) {
   return _then(_HypocenterAnalysisRequest(
-archives: null == archives ? _self._archives : archives // ignore: cast_nullable_to_non_nullable
-as List<HypocenterArchive>,bounds: null == bounds ? _self.bounds : bounds // ignore: cast_nullable_to_non_nullable
+archiveIds: null == archiveIds ? _self._archiveIds : archiveIds // ignore: cast_nullable_to_non_nullable
+as List<HypocenterArchiveId>,bounds: null == bounds ? _self.bounds : bounds // ignore: cast_nullable_to_non_nullable
 as SeismicityBounds,
   ));
 }

@@ -11,54 +11,60 @@ part of 'hypocenter_catalog_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(hypocenterManifest)
-final hypocenterManifestProvider = HypocenterManifestProvider._();
+@ProviderFor(HypocenterManifestNotifier)
+final hypocenterManifestProvider = HypocenterManifestNotifierProvider._();
 
-final class HypocenterManifestProvider
+final class HypocenterManifestNotifierProvider
     extends
-        $FunctionalProvider<
-          AsyncValue<HypocenterManifest>,
-          HypocenterManifest,
-          FutureOr<HypocenterManifest>
-        >
-    with
-        $FutureModifier<HypocenterManifest>,
-        $FutureProvider<HypocenterManifest> {
-  HypocenterManifestProvider._()
+        $AsyncNotifierProvider<HypocenterManifestNotifier, HypocenterManifest> {
+  HypocenterManifestNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'hypocenterManifestProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$hypocenterManifestHash();
+  String debugGetCreateSourceHash() => _$hypocenterManifestNotifierHash();
 
   @$internal
   @override
-  $FutureProviderElement<HypocenterManifest> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<HypocenterManifest> create(Ref ref) {
-    return hypocenterManifest(ref);
-  }
+  HypocenterManifestNotifier create() => HypocenterManifestNotifier();
 }
 
-String _$hypocenterManifestHash() =>
-    r'd09eef81883501130b6949034dda9c2ed10790a4';
+String _$hypocenterManifestNotifierHash() =>
+    r'7e0bbd8e96046a16ae57cde7066080f94f3f287b';
+
+abstract class _$HypocenterManifestNotifier
+    extends $AsyncNotifier<HypocenterManifest> {
+  FutureOr<HypocenterManifest> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<HypocenterManifest>, HypocenterManifest>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<HypocenterManifest>, HypocenterManifest>,
+              AsyncValue<HypocenterManifest>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
 
 @ProviderFor(hypocenterArchiveAvailable)
 final hypocenterArchiveAvailableProvider = HypocenterArchiveAvailableFamily._();
 
 final class HypocenterArchiveAvailableProvider
-    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
-    with $FutureModifier<bool>, $FutureProvider<bool> {
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
   HypocenterArchiveAvailableProvider._({
     required HypocenterArchiveAvailableFamily super.from,
     required HypocenterArchive super.argument,
@@ -82,11 +88,11 @@ final class HypocenterArchiveAvailableProvider
 
   @$internal
   @override
-  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
       $FutureProviderElement(pointer);
 
   @override
-  FutureOr<bool> create(Ref ref) {
+  FutureOr<void> create(Ref ref) {
     final argument = this.argument as HypocenterArchive;
     return hypocenterArchiveAvailable(ref, argument);
   }
@@ -104,10 +110,10 @@ final class HypocenterArchiveAvailableProvider
 }
 
 String _$hypocenterArchiveAvailableHash() =>
-    r'8d8ae922d458f8035d634a57108ff3f2a8b0779b';
+    r'6f8d5edf15c21f5827f382144ad4dad5e4d387d5';
 
 final class HypocenterArchiveAvailableFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<bool>, HypocenterArchive> {
+    with $FunctionalFamilyOverride<FutureOr<void>, HypocenterArchive> {
   HypocenterArchiveAvailableFamily._()
     : super(
         retry: null,
@@ -124,19 +130,11 @@ final class HypocenterArchiveAvailableFamily extends $Family
   String toString() => r'hypocenterArchiveAvailableProvider';
 }
 
-@ProviderFor(hypocenterAnalysis)
+@ProviderFor(HypocenterAnalysis)
 final hypocenterAnalysisProvider = HypocenterAnalysisFamily._();
 
 final class HypocenterAnalysisProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<SeismicityEvent>>,
-          List<SeismicityEvent>,
-          FutureOr<List<SeismicityEvent>>
-        >
-    with
-        $FutureModifier<List<SeismicityEvent>>,
-        $FutureProvider<List<SeismicityEvent>> {
+    extends $AsyncNotifierProvider<HypocenterAnalysis, List<SeismicityEvent>> {
   HypocenterAnalysisProvider._({
     required HypocenterAnalysisFamily super.from,
     required HypocenterAnalysisRequest super.argument,
@@ -160,15 +158,7 @@ final class HypocenterAnalysisProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<SeismicityEvent>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<SeismicityEvent>> create(Ref ref) {
-    final argument = this.argument as HypocenterAnalysisRequest;
-    return hypocenterAnalysis(ref, argument);
-  }
+  HypocenterAnalysis create() => HypocenterAnalysis();
 
   @override
   bool operator ==(Object other) {
@@ -182,11 +172,14 @@ final class HypocenterAnalysisProvider
 }
 
 String _$hypocenterAnalysisHash() =>
-    r'beaa2f125b9b612264f21f55756ed34a6254babd';
+    r'4ba87feb885ec7254213fac285fd4647667bd825';
 
 final class HypocenterAnalysisFamily extends $Family
     with
-        $FunctionalFamilyOverride<
+        $ClassFamilyOverride<
+          HypocenterAnalysis,
+          AsyncValue<List<SeismicityEvent>>,
+          List<SeismicityEvent>,
           FutureOr<List<SeismicityEvent>>,
           HypocenterAnalysisRequest
         > {
@@ -204,4 +197,147 @@ final class HypocenterAnalysisFamily extends $Family
 
   @override
   String toString() => r'hypocenterAnalysisProvider';
+}
+
+abstract class _$HypocenterAnalysis
+    extends $AsyncNotifier<List<SeismicityEvent>> {
+  late final _$args = ref.$arg as HypocenterAnalysisRequest;
+  HypocenterAnalysisRequest get request => _$args;
+
+  FutureOr<List<SeismicityEvent>> build(HypocenterAnalysisRequest request);
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<List<SeismicityEvent>>, List<SeismicityEvent>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<SeismicityEvent>>,
+                List<SeismicityEvent>
+              >,
+              AsyncValue<List<SeismicityEvent>>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, () => build(_$args));
+  }
+}
+
+@ProviderFor(HypocenterAnalysisProgressNotifier)
+final hypocenterAnalysisProgressProvider =
+    HypocenterAnalysisProgressNotifierFamily._();
+
+final class HypocenterAnalysisProgressNotifierProvider
+    extends
+        $NotifierProvider<
+          HypocenterAnalysisProgressNotifier,
+          HypocenterAnalysisProgress
+        > {
+  HypocenterAnalysisProgressNotifierProvider._({
+    required HypocenterAnalysisProgressNotifierFamily super.from,
+    required HypocenterAnalysisRequest super.argument,
+  }) : super(
+         retry: null,
+         name: r'hypocenterAnalysisProgressProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$hypocenterAnalysisProgressNotifierHash();
+
+  @override
+  String toString() {
+    return r'hypocenterAnalysisProgressProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  HypocenterAnalysisProgressNotifier create() =>
+      HypocenterAnalysisProgressNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(HypocenterAnalysisProgress value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<HypocenterAnalysisProgress>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is HypocenterAnalysisProgressNotifierProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$hypocenterAnalysisProgressNotifierHash() =>
+    r'30367d8662f084139090be82efbc988f95e13ee3';
+
+final class HypocenterAnalysisProgressNotifierFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          HypocenterAnalysisProgressNotifier,
+          HypocenterAnalysisProgress,
+          HypocenterAnalysisProgress,
+          HypocenterAnalysisProgress,
+          HypocenterAnalysisRequest
+        > {
+  HypocenterAnalysisProgressNotifierFamily._()
+    : super(
+        retry: null,
+        name: r'hypocenterAnalysisProgressProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  HypocenterAnalysisProgressNotifierProvider call(
+    HypocenterAnalysisRequest request,
+  ) => HypocenterAnalysisProgressNotifierProvider._(
+    argument: request,
+    from: this,
+  );
+
+  @override
+  String toString() => r'hypocenterAnalysisProgressProvider';
+}
+
+abstract class _$HypocenterAnalysisProgressNotifier
+    extends $Notifier<HypocenterAnalysisProgress> {
+  late final _$args = ref.$arg as HypocenterAnalysisRequest;
+  HypocenterAnalysisRequest get request => _$args;
+
+  HypocenterAnalysisProgress build(HypocenterAnalysisRequest request);
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref
+            as $Ref<HypocenterAnalysisProgress, HypocenterAnalysisProgress>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                HypocenterAnalysisProgress,
+                HypocenterAnalysisProgress
+              >,
+              HypocenterAnalysisProgress,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, () => build(_$args));
+  }
 }

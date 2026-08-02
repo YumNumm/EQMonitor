@@ -61,6 +61,32 @@ void main() {
 
     expect(selected, isEmpty);
   });
+
+  test('完全な再対応付けでは選択が欠けた場合にnullを返す', () {
+    const missing = HypocenterArchiveId(
+      partition: HypocenterArchivePartition.year,
+      jstLabel: '2024',
+    );
+
+    final selected = const HypocenterArchiveSelector().remapComplete(
+      selected: {archives.first.id, missing},
+      archives: archives,
+    );
+
+    expect(selected, isNull);
+  });
+
+  test('完全な再対応付けでは全選択の新しいarchiveを返す', () {
+    final selected = const HypocenterArchiveSelector().remapComplete(
+      selected: {archives.first.id, archives.last.id},
+      archives: archives,
+    );
+
+    expect(selected?.map((archive) => archive.id), {
+      archives.first.id,
+      archives.last.id,
+    });
+  });
 }
 
 HypocenterArchive _archive({

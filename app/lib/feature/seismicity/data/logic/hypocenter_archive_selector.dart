@@ -23,4 +23,12 @@ class HypocenterArchiveSelector {
     required Set<HypocenterArchiveId> selected,
     required List<HypocenterArchive> archives,
   }) => archives.where((archive) => selected.contains(archive.id)).toList();
+
+  List<HypocenterArchive>? remapComplete({
+    required Set<HypocenterArchiveId> selected,
+    required List<HypocenterArchive> archives,
+  }) {
+    final remapped = remap(selected: selected, archives: archives);
+    return remapped.length == selected.length ? remapped : null;
+  }
 }

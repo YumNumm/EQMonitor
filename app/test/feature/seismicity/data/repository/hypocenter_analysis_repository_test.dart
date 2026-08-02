@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_api_exception.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_id.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_partition.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_bounds.dart';
+import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:eqmonitor/feature/seismicity/data/repository/hypocenter_analysis_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
@@ -12,6 +14,8 @@ import 'package:retrofit/retrofit.dart';
 void main() {
   test('next_tokenがなくなるまで同一revisionでページを取得する', () async {
     final client = _HypocenterClient();
+    final cancelToken = CancelToken();
+    final fetchedCounts = <int>[];
     final result = await HypocenterAnalysisRepository(client: client)
         .fetchArchive(
           archive: _archive,
@@ -21,12 +25,21 @@ void main() {
             minLongitude: 139,
             maxLongitude: 140,
           ),
+          cancelToken: cancelToken,
+          onProgress: ({required fetchedEvents}) {
+            fetchedCounts.add(fetchedEvents);
+          },
         );
 
-    expect(result, isA<Success>());
+    expect(
+      result,
+      isA<Success<List<SeismicityEvent>, HypocenterApiException>>(),
+    );
     expect((result as Success).value, hasLength(2));
     expect(client.cursors, [null, 'next']);
     expect(client.revisions, [_revision, _revision]);
+    expect(client.cancelTokens, [cancelToken, cancelToken]);
+    expect(fetchedCounts, [1, 2]);
     expect(
       client.areas,
       everyElement('139.0,35.0;140.0,35.0;140.0,36.0;139.0,36.0'),
@@ -52,6 +65,7 @@ final class _HypocenterClient implements api.HypocentersApiClient {
   final cursors = <String?>[];
   final revisions = <String?>[];
   final areas = <String?>[];
+  final cancelTokens = <CancelToken?>[];
 
   @override
   Future<HttpResponse<api.HypocenterListResponse>> getV2Hypocenters({
@@ -67,12 +81,14 @@ final class _HypocenterClient implements api.HypocentersApiClient {
     String? earthquakeEventId,
     String? cursor,
     String? expectedRevision,
+    CancelToken? cancelToken,
     String? ifNoneMatch,
     String? ifModifiedSince,
   }) async {
     cursors.add(cursor);
     revisions.add(expectedRevision);
     areas.add(area);
+    cancelTokens.add(cancelToken);
     return HttpResponse(
       api.HypocenterListResponse(
         data: api.Data3(

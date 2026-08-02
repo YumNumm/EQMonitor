@@ -1,13 +1,17 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/hypocenter_archive_selector.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_bounds_filter.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_analysis_request.dart';
+import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_api_exception.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_id.dart';
+import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_partition.dart';
+import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_probe_failure.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_manifest.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_bounds.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_color_mode.dart';
@@ -46,13 +50,10 @@ class SeismicityPage extends HookConsumerWidget {
     final hasSynchronizedManifest = useRef(false);
     final mapConfiguration = ref.watch(mapConfigurationProvider);
     final manifestAsync = ref.watch(hypocenterManifestProvider);
-    final datasetAsync = ref.watch(
-      seismicityDatasetNotifierProvider(span.value),
-    );
-    final manifest = switch (manifestAsync) {
-      AsyncData(:final value) => value,
-      _ => null,
-    };
+    final datasetAsync = mode.value == SeismicityDataMode.feltEarthquakes
+        ? ref.watch(seismicityDatasetNotifierProvider(span.value))
+        : const AsyncLoading<SeismicityDataset>();
+    final manifest = manifestAsync.valueOrPrevious;
     useEffect(() {
       if (manifest == null) {
         return null;
@@ -74,31 +75,58 @@ class SeismicityPage extends HookConsumerWidget {
             .toList() ??
         const <HypocenterArchive>[];
     final availableArchives = <HypocenterArchive>[];
-    var hasUnavailableArchive = false;
+    final archiveFailures = <HypocenterArchiveProbeFailure>[];
     var isProbingArchives = false;
     for (final archive in selectedArchives) {
       switch (ref.watch(hypocenterArchiveAvailableProvider(archive))) {
-        case AsyncData(value: true):
+        case AsyncData():
           availableArchives.add(archive);
-        case AsyncData(value: false) || AsyncError():
-          hasUnavailableArchive = true;
+        case AsyncError(:final error):
+          archiveFailures.add(
+            HypocenterArchiveProbeFailure(
+              archive: archive,
+              exception: error is HypocenterApiException
+                  ? error
+                  : const HypocenterApiException(
+                      message: 'PMTilesを確認できませんでした',
+                    ),
+            ),
+          );
         case AsyncLoading():
           isProbingArchives = true;
       }
     }
     final bounds = selectedBounds.value;
-    final analysisAsync =
+    final analysisArchiveIds = selectedArchiveIds.value.toList()
+      ..sort(
+        (a, b) => '${a.partition.name}:${a.jstLabel}'.compareTo(
+          '${b.partition.name}:${b.jstLabel}',
+        ),
+      );
+    final analysisRequest =
         mode.value == SeismicityDataMode.allHypocenters && bounds != null
-        ? ref.watch(
-            hypocenterAnalysisProvider(
-              HypocenterAnalysisRequest(
-                archives: selectedArchives,
-                bounds: bounds,
-              ),
-            ),
+        ? HypocenterAnalysisRequest(
+            archiveIds: analysisArchiveIds,
+            bounds: bounds,
           )
         : null;
-
+    final analysisAsync = analysisRequest == null
+        ? null
+        : ref.watch(hypocenterAnalysisProvider(analysisRequest));
+    final analysisProgress = analysisRequest == null
+        ? null
+        : ref.watch(hypocenterAnalysisProgressProvider(analysisRequest));
+    final selectedYears = selectedArchiveIds.value
+        .where((id) => id.partition == HypocenterArchivePartition.year)
+        .length;
+    final selectedDays = selectedArchiveIds.value
+        .where((id) => id.partition == HypocenterArchivePartition.day)
+        .length;
+    final hasDayArchives =
+        manifest?.archives.any(
+          (archive) => archive.id.partition == HypocenterArchivePartition.day,
+        ) ??
+        false;
     return Scaffold(
       appBar: AppBar(
         title: const Text('地震活動'),
@@ -163,8 +191,12 @@ class SeismicityPage extends HookConsumerWidget {
                                 );
                               },
                         icon: const Icon(Icons.calendar_month),
-                        label: Text('${selectedArchiveIds.value.length}件の期間'),
+                        label: Text('年$selectedYears・日$selectedDays'),
                       ),
+                    if (mode.value == SeismicityDataMode.allHypocenters &&
+                        manifest != null &&
+                        !hasDayArchives)
+                      const Text('日付データがありません。年を選択してください'),
                     SeismicityColorModeSelector(
                       value: colorMode.value,
                       onChanged: (value) => colorMode.value = value,
@@ -179,7 +211,7 @@ class SeismicityPage extends HookConsumerWidget {
                   datasetAsync: datasetAsync,
                   manifestAsync: manifestAsync,
                   availableArchives: availableArchives,
-                  hasUnavailableArchive: hasUnavailableArchive,
+                  archiveFailures: archiveFailures,
                   isProbingArchives: isProbingArchives,
                   colorMode: colorMode.value,
                   isSelecting: isSelecting.value,
@@ -207,9 +239,42 @@ class SeismicityPage extends HookConsumerWidget {
                     SeismicityDataMode.allHypocenters,
                     AsyncError(:final error),
                   ) =>
-                    Center(child: ErrorCard(error: error)),
-                  (SeismicityDataMode.allHypocenters, _) => const Center(
-                    child: CircularProgressIndicator.adaptive(),
+                    Center(
+                      child: ErrorCard(
+                        error: error,
+                        title: '震源分析データを取得できませんでした',
+                        suffixMessage: selectedArchiveIds.value
+                            .map((id) => id.jstLabel)
+                            .join('、'),
+                        onReload: analysisRequest == null
+                            ? null
+                            : () async => ref.invalidate(
+                                hypocenterAnalysisProvider(analysisRequest),
+                              ),
+                      ),
+                    ),
+                  (SeismicityDataMode.allHypocenters, _) => Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator.adaptive(
+                          value: analysisProgress == null
+                              ? null
+                              : analysisProgress.totalArchives == 0
+                              ? null
+                              : analysisProgress.completedArchives /
+                                    analysisProgress.totalArchives,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          switch (analysisProgress) {
+                            final progress? =>
+                              '${progress.completedArchives}/${progress.totalArchives}期間・${progress.fetchedEvents}件取得済み',
+                            null => '震源分析データを取得中',
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                   _ => SeismicityAnalysisPanel(
                     events: const SeismicityBoundsFilter().filter(
@@ -231,14 +296,14 @@ class SeismicityPage extends HookConsumerWidget {
   }
 }
 
-class _MapBody extends HookWidget {
+class _MapBody extends HookConsumerWidget {
   const _MapBody({
     required this.styleString,
     required this.mode,
     required this.datasetAsync,
     required this.manifestAsync,
     required this.availableArchives,
-    required this.hasUnavailableArchive,
+    required this.archiveFailures,
     required this.isProbingArchives,
     required this.colorMode,
     required this.isSelecting,
@@ -250,14 +315,14 @@ class _MapBody extends HookWidget {
   final AsyncValue<SeismicityDataset> datasetAsync;
   final AsyncValue<HypocenterManifest> manifestAsync;
   final List<HypocenterArchive> availableArchives;
-  final bool hasUnavailableArchive;
+  final List<HypocenterArchiveProbeFailure> archiveFailures;
   final bool isProbingArchives;
   final SeismicityColorMode colorMode;
   final bool isSelecting;
   final void Function(SeismicityBounds bounds) onSelectionEnd;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final events = switch ((mode, datasetAsync)) {
       (SeismicityDataMode.feltEarthquakes, AsyncData(:final value)) =>
         value.events,
@@ -306,20 +371,52 @@ class _MapBody extends HookWidget {
               child: CircularProgressIndicator(strokeWidth: 2),
             ),
           ),
-        if (mode == SeismicityDataMode.allHypocenters && hasUnavailableArchive)
-          const Positioned(
+        if (mode == SeismicityDataMode.allHypocenters &&
+            archiveFailures.isNotEmpty)
+          Positioned(
             top: 8,
             left: 8,
             child: Card(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Text('一部の期間を表示できません'),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '表示失敗: ${archiveFailures.map((failure) {
+                        final status = failure.exception.statusCode;
+                        return status == null ? failure.archive.id.jstLabel : '${failure.archive.id.jstLabel} (HTTP $status)';
+                      }).join('、')}',
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        for (final failure in archiveFailures) {
+                          ref.invalidate(
+                            hypocenterArchiveAvailableProvider(failure.archive),
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.refresh, size: 18),
+                      label: const Text('再試行'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         if (manifestAsync case AsyncError(:final error))
           if (mode == SeismicityDataMode.allHypocenters)
-            Positioned(top: 8, left: 8, child: ErrorCard(error: error)),
+            Positioned(
+              top: 8,
+              left: 8,
+              child: ErrorCard(
+                error: error,
+                title: '震源期間一覧を更新できませんでした',
+                onReload: () async =>
+                    ref.invalidate(hypocenterManifestProvider),
+              ),
+            ),
         if (datasetAsync case AsyncData(:final value))
           if (mode == SeismicityDataMode.feltEarthquakes)
             Positioned(
