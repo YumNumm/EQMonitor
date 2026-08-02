@@ -62,6 +62,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/notification/de
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_insert_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_shared_preferences_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/telemetry/debug_telemetry_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_tsunami_details_page.dart';
@@ -391,6 +392,9 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugShakeDetectionCardRoute>(
           path: 'shake-detection-card',
         ),
+        TypedGoRoute<DebugShakeDetectionInsertRoute>(
+          path: 'shake-detection-insert',
+        ),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
         TypedGoRoute<DebugWebSocketRoute>(path: 'websocket'),
@@ -644,6 +648,16 @@ class DebugShakeDetectionCardRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugShakeDetectionCardPage();
+  }
+}
+
+class DebugShakeDetectionInsertRoute extends GoRouteData
+    with $DebugShakeDetectionInsertRoute {
+  const DebugShakeDetectionInsertRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugShakeDetectionInsertPage();
   }
 }
 

@@ -642,6 +642,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugShakeDetectionCardRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'shake-detection-insert',
+          factory: $DebugShakeDetectionInsertRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'jma-map',
           factory: $DebugJmaMapRoute._fromState,
         ),
@@ -1280,6 +1284,28 @@ mixin $DebugShakeDetectionCardRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/shake-detection-card');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugShakeDetectionInsertRoute on GoRouteData {
+  static DebugShakeDetectionInsertRoute _fromState(GoRouterState state) =>
+      const DebugShakeDetectionInsertRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/shake-detection-insert');
 
   @override
   void go(BuildContext context) => context.go(location);
