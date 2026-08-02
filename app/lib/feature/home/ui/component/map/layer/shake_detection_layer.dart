@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
-import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
+import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_grid_cell_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +22,7 @@ class ShakeDetectionLayer extends ConsumerWidget {
   final List<ShakeDetectionEvent> events;
 
   static const sourceId = 'shake-detection';
-  static const _fillLayerId = 'shake-detection-fill';
   static const _lineLayerId = 'shake-detection-line';
-  static const _centerLayerId = 'shake-detection-center';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,53 +75,20 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
           ),
         );
 
-        await (
-          styleController.addLayer(
-            const FillStyleLayer(
-              id: ShakeDetectionLayer._fillLayerId,
-              sourceId: ShakeDetectionLayer.sourceId,
-              paint: {
-                'fill-color': ['get', 'fillColor'],
-                'fill-opacity': 1,
-              },
-            ),
+        await styleController.addLayer(
+          const LineStyleLayer(
+            id: ShakeDetectionLayer._lineLayerId,
+            sourceId: ShakeDetectionLayer.sourceId,
+            layout: {
+              'line-sort-key': ['get', 'sortKey'],
+            },
+            paint: {
+              'line-color': ['get', 'lineColor'],
+              'line-width': 2,
+              'line-opacity': 1,
+            },
           ),
-          styleController.addLayer(
-            const LineStyleLayer(
-              id: ShakeDetectionLayer._lineLayerId,
-              sourceId: ShakeDetectionLayer.sourceId,
-              paint: {
-                'line-color': ['get', 'lineColor'],
-                'line-width': 2,
-                'line-opacity': 1,
-              },
-            ),
-          ),
-          styleController.addLayer(
-            const CircleStyleLayer(
-              id: ShakeDetectionLayer._centerLayerId,
-              sourceId: ShakeDetectionLayer.sourceId,
-              paint: {
-                'circle-radius': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
-                  3,
-                  5,
-                  7,
-                  10,
-                  10,
-                  14,
-                ],
-                'circle-color': ['get', 'centerColor'],
-                'circle-opacity': 1,
-                'circle-stroke-color': ['get', 'strokeColor'],
-                'circle-stroke-width': 2,
-                'circle-stroke-opacity': 1,
-              },
-            ),
-          ),
-        ).wait;
+        );
 
         isInitialized.value = true;
       });
@@ -134,11 +100,7 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
           enqueue(
             () => removeMapStyleResources(
               styleController: styleController,
-              layerIds: const [
-                ShakeDetectionLayer._centerLayerId,
-                ShakeDetectionLayer._fillLayerId,
-                ShakeDetectionLayer._lineLayerId,
-              ],
+              layerIds: const [ShakeDetectionLayer._lineLayerId],
               sourceIds: const [ShakeDetectionLayer.sourceId],
             ),
           ),
@@ -153,6 +115,7 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
     // eventsRef / settingsRef: listener内で常に最新値を参照するためのRef
     final eventsRef = useRef(events);
     final settingsRef = useRef(settings);
+    final gridCellBuilder = ref.watch(shakeDetectionGridCellBuilderProvider);
     useEffect(() {
       eventsRef.value = events;
       settingsRef.value = settings;
@@ -226,8 +189,8 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
           );
           final geoJson = _buildGeoJson(
             eventsRef.value,
-            settingsRef.value.displayMode,
             opacity,
+            gridCellBuilder,
           );
           unawaited(
             _updateGeoJsonIfChanged(
@@ -276,78 +239,33 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
 
   String _buildGeoJson(
     List<ShakeDetectionEvent> events,
-    HomeShakeDetectionDisplayMode displayMode,
     double opacity,
+    ShakeDetectionGridCellBuilder gridCellBuilder,
   ) {
+    final cells = gridCellBuilder.buildFromPointGroups(
+      pointGroups: [for (final event in events) event.points],
+    );
     final features = <Map<String, dynamic>>[];
-    for (final event in events) {
-      final (r, g, b) = _rgbForLevel(event.level);
-      final fillColor =
-          'rgba($r, $g, $b, ${(opacity * 0.3).toStringAsFixed(3)})';
-      final lineColor = 'rgba($r, $g, $b, ${opacity.toStringAsFixed(3)})';
-      final polygons = switch (displayMode) {
-        HomeShakeDetectionDisplayMode.boundingBox => [
-          _boundingBoxPolygon(event),
-        ],
-        HomeShakeDetectionDisplayMode.gridCell => _gridCellPolygons(event),
-      };
-      for (final coords in polygons) {
-        features.add({
-          'type': 'Feature',
-          'geometry': {
-            'type': 'Polygon',
-            'coordinates': [coords],
-          },
-          'properties': {'fillColor': fillColor, 'lineColor': lineColor},
-        });
-      }
-      final centerLat = (event.minLat + event.maxLat) / 2;
-      final centerLng = (event.minLng + event.maxLng) / 2;
+    for (final cell in cells) {
+      final (r, g, b) = _rgbForLevel(cell.level);
       features.add({
         'type': 'Feature',
         'geometry': {
-          'type': 'Point',
-          'coordinates': [centerLng, centerLat],
+          'type': 'Polygon',
+          'coordinates': [cell.polygonCoordinates],
         },
         'properties': {
-          'centerColor':
-              'rgba($r, $g, $b, ${(opacity * 0.8).toStringAsFixed(3)})',
-          'strokeColor': 'rgba(255, 255, 255, ${opacity.toStringAsFixed(3)})',
+          'lineColor': 'rgba($r, $g, $b, ${opacity.toStringAsFixed(3)})',
+          'sortKey': cell.sortKey,
         },
       });
     }
     return jsonEncode({'type': 'FeatureCollection', 'features': features});
   }
 
-  List<List<double>> _boundingBoxPolygon(ShakeDetectionEvent e) {
-    final tl = [e.minLng, e.maxLat];
-    final tr = [e.maxLng, e.maxLat];
-    final br = [e.maxLng, e.minLat];
-    final bl = [e.minLng, e.minLat];
-    return [tl, tr, br, bl, tl];
-  }
-
-  List<List<List<double>>> _gridCellPolygons(ShakeDetectionEvent e) {
-    const step = 0.25;
-    final polygons = <List<List<double>>>[];
-
-    final startLat = (e.minLat / step).floor() * step;
-    final startLng = (e.minLng / step).floor() * step;
-
-    for (var lat = startLat; lat < e.maxLat; lat += step) {
-      for (var lng = startLng; lng < e.maxLng; lng += step) {
-        final tl = [lng, lat + step];
-        final tr = [lng + step, lat + step];
-        final br = [lng + step, lat];
-        final bl = [lng, lat];
-        polygons.add([tl, tr, br, bl, tl]);
-      }
-    }
-    return polygons;
-  }
-
   (int, int, int) _rgbForLevel(ShakeDetectionLevel level) => switch (level) {
-    ShakeDetectionLevel.weaker => (136, 204, 255),
+    // カードと同じグレー（#546E7A）
+    ShakeDetectionLevel.weaker => (84, 110, 122),
     ShakeDetectionLevel.weak => (68, 170, 255),
     ShakeDetectionLevel.medium => (255, 221, 68),
     ShakeDetectionLevel.strong => (255, 136, 0),

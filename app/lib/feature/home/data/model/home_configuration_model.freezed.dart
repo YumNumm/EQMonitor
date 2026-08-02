@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$HomeShakeDetectionSettings {
 
- bool get show; HomeShakeDetectionDisplayMode get displayMode; HomeShakeDetectionAnimationMode get animationMode;
+ bool get show; HomeShakeDetectionAnimationMode get animationMode;
 /// Create a copy of HomeShakeDetectionSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $HomeShakeDetectionSettingsCopyWith<HomeShakeDetectionSettings> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeShakeDetectionSettings&&(identical(other.show, show) || other.show == show)&&(identical(other.displayMode, displayMode) || other.displayMode == displayMode)&&(identical(other.animationMode, animationMode) || other.animationMode == animationMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeShakeDetectionSettings&&(identical(other.show, show) || other.show == show)&&(identical(other.animationMode, animationMode) || other.animationMode == animationMode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,show,displayMode,animationMode);
+int get hashCode => Object.hash(runtimeType,show,animationMode);
 
 @override
 String toString() {
-  return 'HomeShakeDetectionSettings(show: $show, displayMode: $displayMode, animationMode: $animationMode)';
+  return 'HomeShakeDetectionSettings(show: $show, animationMode: $animationMode)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $HomeShakeDetectionSettingsCopyWith<$Res>  {
   factory $HomeShakeDetectionSettingsCopyWith(HomeShakeDetectionSettings value, $Res Function(HomeShakeDetectionSettings) _then) = _$HomeShakeDetectionSettingsCopyWithImpl;
 @useResult
 $Res call({
- bool show, HomeShakeDetectionDisplayMode displayMode, HomeShakeDetectionAnimationMode animationMode
+ bool show, HomeShakeDetectionAnimationMode animationMode
 });
 
 
@@ -65,11 +65,10 @@ class _$HomeShakeDetectionSettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeShakeDetectionSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? show = null,Object? displayMode = null,Object? animationMode = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? show = null,Object? animationMode = null,}) {
   return _then(_self.copyWith(
 show: null == show ? _self.show : show // ignore: cast_nullable_to_non_nullable
-as bool,displayMode: null == displayMode ? _self.displayMode : displayMode // ignore: cast_nullable_to_non_nullable
-as HomeShakeDetectionDisplayMode,animationMode: null == animationMode ? _self.animationMode : animationMode // ignore: cast_nullable_to_non_nullable
+as bool,animationMode: null == animationMode ? _self.animationMode : animationMode // ignore: cast_nullable_to_non_nullable
 as HomeShakeDetectionAnimationMode,
   ));
 }
@@ -155,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool show,  HomeShakeDetectionDisplayMode displayMode,  HomeShakeDetectionAnimationMode animationMode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool show,  HomeShakeDetectionAnimationMode animationMode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeShakeDetectionSettings() when $default != null:
-return $default(_that.show,_that.displayMode,_that.animationMode);case _:
+return $default(_that.show,_that.animationMode);case _:
   return orElse();
 
 }
@@ -176,10 +175,10 @@ return $default(_that.show,_that.displayMode,_that.animationMode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool show,  HomeShakeDetectionDisplayMode displayMode,  HomeShakeDetectionAnimationMode animationMode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool show,  HomeShakeDetectionAnimationMode animationMode)  $default,) {final _that = this;
 switch (_that) {
 case _HomeShakeDetectionSettings():
-return $default(_that.show,_that.displayMode,_that.animationMode);case _:
+return $default(_that.show,_that.animationMode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +195,10 @@ return $default(_that.show,_that.displayMode,_that.animationMode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool show,  HomeShakeDetectionDisplayMode displayMode,  HomeShakeDetectionAnimationMode animationMode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool show,  HomeShakeDetectionAnimationMode animationMode)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeShakeDetectionSettings() when $default != null:
-return $default(_that.show,_that.displayMode,_that.animationMode);case _:
+return $default(_that.show,_that.animationMode);case _:
   return null;
 
 }
@@ -211,11 +210,10 @@ return $default(_that.show,_that.displayMode,_that.animationMode);case _:
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _HomeShakeDetectionSettings implements HomeShakeDetectionSettings {
-  const _HomeShakeDetectionSettings({this.show = true, this.displayMode = HomeShakeDetectionDisplayMode.boundingBox, this.animationMode = HomeShakeDetectionAnimationMode.blink});
+  const _HomeShakeDetectionSettings({this.show = true, this.animationMode = HomeShakeDetectionAnimationMode.blink});
   factory _HomeShakeDetectionSettings.fromJson(Map<String, dynamic> json) => _$HomeShakeDetectionSettingsFromJson(json);
 
 @override@JsonKey() final  bool show;
-@override@JsonKey() final  HomeShakeDetectionDisplayMode displayMode;
 @override@JsonKey() final  HomeShakeDetectionAnimationMode animationMode;
 
 /// Create a copy of HomeShakeDetectionSettings
@@ -231,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeShakeDetectionSettings&&(identical(other.show, show) || other.show == show)&&(identical(other.displayMode, displayMode) || other.displayMode == displayMode)&&(identical(other.animationMode, animationMode) || other.animationMode == animationMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeShakeDetectionSettings&&(identical(other.show, show) || other.show == show)&&(identical(other.animationMode, animationMode) || other.animationMode == animationMode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,show,displayMode,animationMode);
+int get hashCode => Object.hash(runtimeType,show,animationMode);
 
 @override
 String toString() {
-  return 'HomeShakeDetectionSettings(show: $show, displayMode: $displayMode, animationMode: $animationMode)';
+  return 'HomeShakeDetectionSettings(show: $show, animationMode: $animationMode)';
 }
 
 
@@ -251,7 +249,7 @@ abstract mixin class _$HomeShakeDetectionSettingsCopyWith<$Res> implements $Home
   factory _$HomeShakeDetectionSettingsCopyWith(_HomeShakeDetectionSettings value, $Res Function(_HomeShakeDetectionSettings) _then) = __$HomeShakeDetectionSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- bool show, HomeShakeDetectionDisplayMode displayMode, HomeShakeDetectionAnimationMode animationMode
+ bool show, HomeShakeDetectionAnimationMode animationMode
 });
 
 
@@ -268,11 +266,10 @@ class __$HomeShakeDetectionSettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeShakeDetectionSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? show = null,Object? displayMode = null,Object? animationMode = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? show = null,Object? animationMode = null,}) {
   return _then(_HomeShakeDetectionSettings(
 show: null == show ? _self.show : show // ignore: cast_nullable_to_non_nullable
-as bool,displayMode: null == displayMode ? _self.displayMode : displayMode // ignore: cast_nullable_to_non_nullable
-as HomeShakeDetectionDisplayMode,animationMode: null == animationMode ? _self.animationMode : animationMode // ignore: cast_nullable_to_non_nullable
+as bool,animationMode: null == animationMode ? _self.animationMode : animationMode // ignore: cast_nullable_to_non_nullable
 as HomeShakeDetectionAnimationMode,
   ));
 }
