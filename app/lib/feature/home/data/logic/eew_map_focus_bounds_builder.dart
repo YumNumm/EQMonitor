@@ -20,47 +20,63 @@ class EewMapFocusBoundsBuilder {
     required double maxLat,
     required double minLng,
     required double maxLng,
-  }) =>
-      EewMapFocusGridRect(
-        minLat: (minLat / step).floorToDouble() * step,
-        maxLat: (maxLat / step).ceilToDouble() * step,
-        minLng: (minLng / step).floorToDouble() * step,
-        maxLng: (maxLng / step).ceilToDouble() * step,
-      );
+  }) => EewMapFocusGridRect(
+    minLat: (minLat / step).floorToDouble() * step,
+    maxLat: (maxLat / step).ceilToDouble() * step,
+    minLng: (minLng / step).floorToDouble() * step,
+    maxLng: (maxLng / step).ceilToDouble() * step,
+  );
 
   EewMapFocusGridRect union({
     required EewMapFocusGridRect a,
     required EewMapFocusGridRect b,
-  }) =>
-      EewMapFocusGridRect(
-        minLat: a.minLat < b.minLat ? a.minLat : b.minLat,
-        maxLat: a.maxLat > b.maxLat ? a.maxLat : b.maxLat,
-        minLng: a.minLng < b.minLng ? a.minLng : b.minLng,
-        maxLng: a.maxLng > b.maxLng ? a.maxLng : b.maxLng,
-      );
+  }) => EewMapFocusGridRect(
+    minLat: a.minLat < b.minLat ? a.minLat : b.minLat,
+    maxLat: a.maxLat > b.maxLat ? a.maxLat : b.maxLat,
+    minLng: a.minLng < b.minLng ? a.minLng : b.minLng,
+    maxLng: a.maxLng > b.maxLng ? a.maxLng : b.maxLng,
+  );
+
+  /// 揺れ検知1件を 0.5° グリッド矩形へ変換する。
+  ///
+  /// 座標の妥当性検証は [shakeTargetCoordinates] と同じ基準
+  /// （有限値・緯度経度レンジ・min <= max）に揃える。
+  EewMapFocusGridRect? gridRectForShake({required ShakeDetectionEvent shake}) {
+    final minimum = seismicMapGeoCoordinate(
+      latitude: shake.minLat,
+      longitude: shake.minLng,
+    );
+    final maximum = seismicMapGeoCoordinate(
+      latitude: shake.maxLat,
+      longitude: shake.maxLng,
+    );
+    if (minimum == null || maximum == null) {
+      return null;
+    }
+    if (minimum.latitude > maximum.latitude ||
+        minimum.longitude > maximum.longitude) {
+      return null;
+    }
+    return snapOutward(
+      minLat: minimum.latitude,
+      maxLat: maximum.latitude,
+      minLng: minimum.longitude,
+      maxLng: maximum.longitude,
+    );
+  }
 
   EewMapFocusGridRect? mergeShakeEvents({
     required List<ShakeDetectionEvent> shakes,
-  }) {
-    if (shakes.isEmpty) {
-      return null;
-    }
-    return shakes
-        .map(
-          (shake) => snapOutward(
-            minLat: shake.minLat,
-            maxLat: shake.maxLat,
-            minLng: shake.minLng,
-            maxLng: shake.maxLng,
-          ),
-        )
-        .fold<EewMapFocusGridRect?>(
-          null,
-          (accumulated, rect) => accumulated == null
-              ? rect
-              : union(a: accumulated, b: rect),
-        );
-  }
+  }) => shakes
+      .map((shake) => gridRectForShake(shake: shake))
+      .fold<EewMapFocusGridRect?>(
+        null,
+        (accumulated, rect) => switch ((accumulated, rect)) {
+          (null, final rect) => rect,
+          (final accumulated?, null) => accumulated,
+          (final accumulated?, final rect?) => union(a: accumulated, b: rect),
+        },
+      );
 
   LngLatBounds? boundsForFocus({
     required ({double latitude, double longitude})? hypocenter,
@@ -76,22 +92,13 @@ class EewMapFocusBoundsBuilder {
     final targets = <SeismicMapGeoCoordinate>[
       if (hypocenterCoordinate != null) hypocenterCoordinate,
       if (shakeRect != null) ...[
-        (
-          latitude: shakeRect.minLat,
-          longitude: shakeRect.minLng,
-        ),
-        (
-          latitude: shakeRect.maxLat,
-          longitude: shakeRect.maxLng,
-        ),
+        (latitude: shakeRect.minLat, longitude: shakeRect.minLng),
+        (latitude: shakeRect.maxLat, longitude: shakeRect.maxLng),
       ],
     ];
     if (targets.isEmpty) {
       return null;
     }
-    return boundsForTargets(
-      targets: targets,
-      fallbackBounds: fallbackBounds,
-    );
+    return boundsForTargets(targets: targets, fallbackBounds: fallbackBounds);
   }
 }

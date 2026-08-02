@@ -124,4 +124,66 @@ void main() {
     );
     expect(bounds, isNull);
   });
+
+  test('揺れ検知が空ならnull', () {
+    expect(builder.mergeShakeEvents(shakes: const []), isNull);
+  });
+
+  group('不正な座標の揺れ検知はスキップする', () {
+    final invalidShakes = <String, ShakeDetectionEvent>{
+      'NaN': _shake(minLat: double.nan, maxLat: 35.2),
+      '無限大': _shake(maxLng: double.infinity),
+      '緯度レンジ外': _shake(minLat: -91, maxLat: 35.2),
+      '経度レンジ外': _shake(minLng: 139.1, maxLng: 181),
+      'min>max': _shake(minLat: 36, maxLat: 35),
+    };
+
+    for (final entry in invalidShakes.entries) {
+      test(entry.key, () {
+        expect(builder.gridRectForShake(shake: entry.value), isNull);
+        expect(builder.mergeShakeEvents(shakes: [entry.value]), isNull);
+      });
+    }
+
+    test('不正な1件を除いた残りだけをunionする', () {
+      final rect = builder.mergeShakeEvents(
+        shakes: [
+          _shake(minLat: double.nan, maxLat: 35.2),
+          _shake(minLat: 35.1, maxLat: 35.2, minLng: 139.1, maxLng: 139.2),
+        ],
+      );
+      expect(
+        rect,
+        const EewMapFocusGridRect(
+          minLat: 35.0,
+          maxLat: 35.5,
+          minLng: 139.0,
+          maxLng: 139.5,
+        ),
+      );
+    });
+  });
+}
+
+ShakeDetectionEvent _shake({
+  double minLat = 35.1,
+  double maxLat = 35.2,
+  double minLng = 139.1,
+  double maxLng = 139.2,
+}) {
+  final now = DateTime.utc(2026, 8, 2);
+  return ShakeDetectionEvent(
+    eventId: 'invalid',
+    serialNo: 1,
+    createdAt: now,
+    updatedAt: now,
+    expiresAt: now.add(const Duration(hours: 1)),
+    level: ShakeDetectionLevel.medium,
+    pointCount: 1,
+    minLat: minLat,
+    maxLat: maxLat,
+    minLng: minLng,
+    maxLng: maxLng,
+    changeReasons: const [],
+  );
 }
