@@ -26,6 +26,18 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     ref.listen(shakeDetectionProvider, (_, _) async {
       await handleRealtimeTransition();
     });
+    // 表示対象（期限切れ除外・デバッグ挿入込み）の増減もカメラ遷移の契機となる。
+    // 1秒ごとの ticker で再計算されるため、イベント構成が変わったときのみ扱う。
+    ref.listen(shakeDetectionVisibleProvider, (previous, next) async {
+      final isSameEvents = const ListEquality<String>().equals(
+        previous?.map((event) => event.eventId).toList(),
+        next.map((event) => event.eventId).toList(),
+      );
+      if (isSameEvents) {
+        return;
+      }
+      await handleRealtimeTransition();
+    });
 
     return MapCameraState.home();
   }
@@ -33,11 +45,16 @@ class HomeMapCameraState extends _$HomeMapCameraState {
   Future<void> handleRealtimeTransition() async {
     final eews =
         ref.read(eewAliveTelegramProvider) ?? const <EewTelegramItem>[];
+    final focusNotifier = ref.read(eewMapFocusProvider.notifier);
     if (eews.isNotEmpty) {
-      final decision = ref.read(eewMapFocusProvider.notifier).sync();
-      await applyEewFocus(decision: decision, ignoreAutoZoom: false);
+      await applyEewFocus(
+        decision: focusNotifier.sync(),
+        ignoreAutoZoom: false,
+      );
       return;
     }
+    // 生存 EEW が無くなった時点でフォーカス状態を破棄する。
+    focusNotifier.sync();
 
     final isAtHome = await ref
         .read(homeMapCameraCoordinatorProvider)
@@ -69,6 +86,15 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     if (isAtHome != null) {
       state = state.copyWith(isAtHome: isAtHome);
     }
+    // remount では MapController が作り直され、カメラも初期状態に戻るため、
+    // 差分同期ではなく EEW フォーカスを再適用する。
+    final eews =
+        ref.read(eewAliveTelegramProvider) ?? const <EewTelegramItem>[];
+    if (eews.isNotEmpty) {
+      final decision = ref.read(eewMapFocusProvider.notifier).refocus();
+      await applyEewFocus(decision: decision, ignoreAutoZoom: false);
+      return;
+    }
     await handleRealtimeTransition();
   }
 
@@ -84,8 +110,12 @@ class HomeMapCameraState extends _$HomeMapCameraState {
         ref.read(eewAliveTelegramProvider) ?? const <EewTelegramItem>[];
     if (eews.isNotEmpty) {
       final decision = ref.read(eewMapFocusProvider.notifier).refocus();
-      await applyEewFocus(decision: decision, ignoreAutoZoom: true);
-      return;
+      // 震源も相関揺れも無い（PLUM 等）場合はフォーカス対象が作れないため、
+      // 通常のホーム復帰へフォールバックする。
+      if (decision.shouldFit) {
+        await applyEewFocus(decision: decision, ignoreAutoZoom: true);
+        return;
+      }
     }
 
     final isAtHome = await ref
@@ -117,8 +147,8 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     final bounds = ref
         .read(eewMapFocusBoundsBuilderProvider)
         .boundsForFocus(
-          hypocenter: decision.state.focusedHypocenter,
-          shakeRect: decision.state.shakeBoundsByEventId[focused.eventId],
+          hypocenter: decision.targetHypocenter,
+          shakeRect: decision.targetShakeRect,
           fallbackBounds: lngLatBoundsForHomeMapSettings(configuration.map),
         );
     if (bounds == null) {
@@ -132,8 +162,12 @@ class HomeMapCameraState extends _$HomeMapCameraState {
       generation: coordinator.nextCameraGeneration(),
       ignoreAutoZoom: ignoreAutoZoom,
     );
-    if (isAtHome != null) {
-      state = state.copyWith(isAtHome: isAtHome);
+    // autoZoom 無効・世代不一致などで fit が実行されなかった場合は
+    // 変化検知のベースラインを進めない。
+    if (isAtHome == null) {
+      return;
     }
+    ref.read(eewMapFocusProvider.notifier).markApplied(decision: decision);
+    state = state.copyWith(isAtHome: isAtHome);
   }
 }

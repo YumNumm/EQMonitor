@@ -261,9 +261,11 @@ class _MapHeader extends ConsumerWidget {
 
     final isDebug = ref.watch(debugProvider).value ?? false;
     final focus = ref.watch(eewMapFocusProvider);
-    final hasAliveEew =
-        (ref.watch(eewAliveTelegramProvider) ?? []).isNotEmpty;
-    final isLocationButtonEnabled = !hasAliveEew || !focus.isFocused;
+    final hasAliveEew = (ref.watch(eewAliveTelegramProvider) ?? []).isNotEmpty;
+    // カメラが実際に EEW へ寄せられている間だけ無効化する。
+    // autoZoom 無効時や fit 対象が無い場合（PLUM 等）は明示操作を残す。
+    final isLocationButtonEnabled =
+        !hasAliveEew || !focus.isFocused || !focus.hasAppliedFocus;
 
     final controllerCard = HomeMapControllerCard(
       isLocationButtonEnabled: isLocationButtonEnabled,

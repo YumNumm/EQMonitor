@@ -171,6 +171,18 @@ EewTelegramItem _sampleEew({
   ),
 );
 
+/// 震源要素を持たない PLUM 相当の EEW。
+EewTelegramItem _plumEew({String eventId = 'plum'}) => EewTelegramItem(
+  eventId: eventId,
+  status: TelegramStatus.normal,
+  infoType: TelegramInfoType.publication,
+  serialNo: 1,
+  isCanceled: false,
+  isLastInfo: false,
+  reportTime: _now,
+  isPlum: true,
+);
+
 ShakeDetectionEvent _sampleShake({
   String? correlatedEewEventId,
   double minLat = 35,
@@ -343,15 +355,107 @@ void main() {
       container.read(homeMapCameraStateProvider);
 
       final visibleShake = _sampleShake();
-      container.read(_testShakesProvider.notifier).replace([visibleShake]);
-      container.read(shakeDetectionProvider);
       allShakes.replace([visibleShake]);
       await container.pump();
-
+      // 生データと表示対象の双方を監視しているため、それぞれで遷移が走る。
       expect(coordinator.realtimeTransitionCallCount, 1);
+
+      container.read(_testShakesProvider.notifier).replace([visibleShake]);
+      // Dart 単体の ProviderContainer では派生 provider の再計算が遅延するため、
+      // 明示的に読み出して listener へ伝播させる。
+      container.read(shakeDetectionVisibleProvider);
+      await container.pump();
+
+      expect(coordinator.realtimeTransitionCallCount, 2);
       expect(coordinator.eewFocusCallCount, 0);
       expect(coordinator.receivedEews, isEmpty);
       expect(coordinator.receivedShakes, hasLength(1));
+      expect(container.read(homeMapCameraStateProvider).isAtHome, isTrue);
+    });
+
+    test('表示対象の期限切れ（visibleのみ変化）でもrealtime経路が走る', () async {
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..realtimeTransitionResult = true;
+      final container = _container(
+        eews: _MutableEewAliveTelegram(const []),
+        allShakes: _MutableShakeDetection([_sampleShake()]),
+        coordinator: coordinator,
+      );
+      container.read(homeMapCameraStateProvider);
+      container.read(_testShakesProvider.notifier).replace([_sampleShake()]);
+      container.read(shakeDetectionVisibleProvider);
+      await container.pump();
+      final baseline = coordinator.realtimeTransitionCallCount;
+
+      // 期限切れで表示対象から消えるケース（生データは変化しない）
+      container.read(_testShakesProvider.notifier).replace(const []);
+      container.read(shakeDetectionVisibleProvider);
+      await container.pump();
+
+      expect(coordinator.realtimeTransitionCallCount, baseline + 1);
+      expect(coordinator.receivedShakes, isEmpty);
+    });
+
+    test('remount（setController）は生存EEWへ強制的に再フォーカスする', () async {
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..setControllerResult = false
+        ..realtimeTransitionResult = false;
+      final container = _container(
+        eews: _MutableEewAliveTelegram([_sampleEew(eventId: 'event')]),
+        allShakes: _MutableShakeDetection(const []),
+        coordinator: coordinator,
+      );
+      // ユーザー操作でフォーカス解除済みの状態から remount する。
+      container.read(eewMapFocusProvider.notifier)
+        ..sync()
+        ..clearFocus();
+      expect(container.read(eewMapFocusProvider).isFocused, isFalse);
+
+      await container
+          .read(homeMapCameraStateProvider.notifier)
+          .setController(
+            controller: MockMapController(),
+            viewportSize: const Size(375, 667),
+          );
+
+      expect(coordinator.eewFocusCallCount, 1);
+      expect(coordinator.realtimeTransitionCallCount, 0);
+      expect(container.read(eewMapFocusProvider).isFocused, isTrue);
+      expect(container.read(eewMapFocusProvider).hasAppliedFocus, isTrue);
+    });
+
+    test('fitが実行されなければappliedを進めずホームボタンを有効に保つ', () async {
+      final coordinator = _RecordingHomeMapCameraCoordinator();
+      final container = _container(
+        eews: _MutableEewAliveTelegram([_sampleEew(eventId: 'event')]),
+        allShakes: _MutableShakeDetection(const []),
+        coordinator: coordinator,
+      );
+
+      // autoZoom 無効などで fit されなかった場合は null が返る。
+      await container
+          .read(homeMapCameraStateProvider.notifier)
+          .handleRealtimeTransition();
+
+      expect(coordinator.eewFocusCallCount, 1);
+      expect(container.read(eewMapFocusProvider).isFocused, isTrue);
+      expect(container.read(eewMapFocusProvider).hasAppliedFocus, isFalse);
+    });
+
+    test('fitできる対象が無いEEWではホーム復帰へフォールバックする', () async {
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..returnToHomeResult = true;
+      final container = _container(
+        eews: _MutableEewAliveTelegram([_plumEew()]),
+        allShakes: _MutableShakeDetection(const []),
+        coordinator: coordinator,
+      );
+
+      await container.read(homeMapCameraStateProvider.notifier).returnToHome();
+
+      expect(coordinator.eewFocusCallCount, 0);
+      expect(coordinator.returnToHomeCallCount, 1);
+      expect(container.read(eewMapFocusProvider).hasAppliedFocus, isFalse);
       expect(container.read(homeMapCameraStateProvider).isAtHome, isTrue);
     });
 
