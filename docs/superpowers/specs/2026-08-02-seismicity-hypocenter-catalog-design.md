@@ -242,15 +242,17 @@ Backendのarchive plannerは年アーカイブと直近3日の日アーカイブ
 - キャンセル、途中失敗、409再実行、revision不一致
 - API震源から `SeismicityEvent` への変換
 
-### Widget test
+### UI静的検証
+
+新規Widgetテストは作成しない。状態遷移はnotifierのUnit testで検証し、UIは `dart analyze` とコードレビューで次を確認する。
 
 - 既定が全震源かつ最新DAY 1件であること
 - モード切り替えと画面内状態復元
 - Bottom Sheetの年・日複数選択と0件確定防止
 - 空manifest、DAYなし、PMTiles部分失敗の表示
 - 分析のloading、進捗、error、retry
-- 有感地震の1・3・12か月表示と既存分析の回帰
-- textScale拡大時にselector、警告、分析パネルがoverflowしないこと
+- 有感地震の1・3・12か月表示
+- textScale拡大を妨げる固定高さをテキスト要素へ追加していないこと
 
 ### 契約・統合確認
 
