@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
+import 'package:eqmonitor/feature/home/data/notifier/eew_map_focus.dart';
 import 'package:eqmonitor/feature/home/data/provider/map_camera_state_provider.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_controller_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
@@ -212,7 +213,13 @@ class _MapLibreMapHostState extends ConsumerState<_MapLibreMapHost> {
             await controller.enableLocation();
           }
         },
-        onEvent: (event) => MapLibreEventProvider.maybeOf(context)?.emit(event),
+        onEvent: (event) {
+          MapLibreEventProvider.maybeOf(context)?.emit(event);
+          if (event is MapEventStartMoveCamera &&
+              event.reason == CameraChangeReason.apiGesture) {
+            ref.read(eewMapFocusProvider.notifier).clearFocus();
+          }
+        },
         children: widget.children,
       ),
     );
