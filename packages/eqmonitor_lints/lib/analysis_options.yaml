@@ -1,1 +1,2 @@
-include: recommended.yaml
+linter:
+  rules: {}

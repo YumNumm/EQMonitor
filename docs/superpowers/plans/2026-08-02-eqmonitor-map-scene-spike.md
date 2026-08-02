@@ -13,7 +13,7 @@
 - Stack parentは`codex/eqmonitor-map-01-design`、実装branchは`codex/eqmonitor-map-02-scene-spike`とする。PRは作らず、本文だけを`docs/superpowers/pr-drafts/2026-08-02-eqmonitor-map-02-scene-spike.md`へ保存する。
 - 対象platformはiOS/Androidのみ。bearingとpitchは実装せず、north-upの正射影だけを扱う。
 - Flutter frameworkは`4dacd3fc91d96262a33e5c598e17d816f0b35641`、Flutter Sceneは`695c954f237fabef65d49fa7199002851d2dcd88`へ完全固定し、branch名やfloating masterを依存記述に使わない。
-- `packages/*`が単一pub workspaceであるためFlutter Sceneだけをstable workspaceから分離せず、ユーザーが許可したFlutter masterへroot workspace全体を移行する。既存appのunit/analyzeに加えてAndroid/iOS compile gateを必須化する。
+- `packages/*`が単一pub workspaceであるためFlutter Sceneだけをstable workspaceから分離せず、ユーザーが許可したFlutter masterへroot workspace全体を移行する。既存CIの合否契約は変更せず、新規`eqmonitor_map`だけにstrict analyzeとAndroid/iOS compile gateを必須化する。root full scanはstable比較用のdiagnostic evidenceとして実行する。
 - `mise exec -- flutter`と`mise exec -- dart`は固定SDKだけを実行し、SDK未取得・revision不一致・別SDKへのfallbackを明示的なエラーにする。
 - Flutter/Dart commandは必ず`mise exec --`経由、依存追加は`mise exec -- flutter pub add`、生成は`mise exec -- dart run build_runner build --delete-conflicting-outputs`で行う。
 - Flutter Scene型をdomain、evidence model、公開adapter interfaceへ漏らさない。
@@ -39,7 +39,12 @@
 - Modify: `.github/workflows/deploy-app.yaml`
 - Modify: `.github/workflows/wc-changes.yaml`
 - Modify: `.github/workflows/pr-flutter-check.yaml`
+- Modify: `pubspec.lock`
+- Modify: `packages/assets_util/example/analysis_options.yaml`
+- Modify: `packages/assets_util/example/pubspec.yaml`
 - Create: `.github/workflows/wc-check-eqmonitor-map-scene-spike.yaml`
+- Create: `packages/eqmonitor_lints/lib/analysis_options.yaml`
+- Create: `packages/eqmonitor_lints/lib/recommended.yaml`
 - Create: `tool/eqmonitor_map/bin/flutter`
 - Create: `tool/eqmonitor_map/bin/dart`
 - Create: `tool/eqmonitor_map/run_pinned_flutter_tool`
@@ -127,7 +132,46 @@ Expected: framework revisionが`4dacd3fc91d96262a33e5c598e17d816f0b35641`で、�
 
 固定Flutter Scene sourceも`rg`で監査し、public completion fence、GPU context-loss callback/generation、resource dispose/reset APIがexportされていないことをknowledge documentへfile/symbol付きで記録する。この時点で3 capabilityは`unavailablePublicApi`と確定する。以降のharnessは他capabilityとblocked decisionを再現可能にするために続行し、この監査結果をmanual actionで上書きしない。
 
-- [ ] **Step 6: CIも固定SDK checkoutを使うよう更新する**
+- [ ] **Step 6: root analyzeのlint preflightを修復する**
+
+固定SDKでroot analyzeを実行し、既存consumerが参照する
+`package:eqmonitor_lints/recommended.yaml`と`assets_util` exampleのlint includeが
+解決不能になることをREDとして確認する。共有lint packageへ次のentry pointを追加する。
+
+root/appが既にincludeする互換entry pointは、既存codeへ新しいlint setを一括適用
+しないようincludeなしのbaselineを維持する。Flutter masterでの実測ではstrict
+Flutter設定で3,081件、Dart 3.11 recommendedでも1,807件が顕在化したため、
+Task 1でworkspace全体のlint移行を行わない。
+
+`packages/eqmonitor_lints/lib/analysis_options.yaml`:
+
+```yaml
+linter:
+  rules: {}
+```
+
+新規packageが明示的に採用するstrict Flutter契約は別entry pointとする。
+
+`packages/eqmonitor_lints/lib/recommended.yaml`:
+
+```yaml
+include: package:yumemi_lints/flutter/3.41/recommended.yaml
+```
+
+`packages/assets_util/analysis_options.yaml`とexampleは
+`include: package:eqmonitor_lints/recommended.yaml`へ切り替え、dev path dependencyは
+pubspecを直接編集せず次で追加する。`flutter pub add -C`のpathはrepository root基準で
+解決されるため、root-relative pathを渡す。
+
+```bash
+mise exec -- flutter pub add -C packages/assets_util/example \
+  "dev:eqmonitor_lints@{path: packages/eqmonitor_lints}"
+mise exec -- dart pub get --enforce-lockfile
+```
+
+Expected: lockfileの互換依存が再現可能に解決され、lint include warningが消える。
+
+- [ ] **Step 7: CIも固定SDK checkoutを使うよう更新する**
 
 Flutterを使うanalyze、test、integration、iOS deploy、Android deploy jobではrepository checkout直後に次を追加する。
 
@@ -148,27 +192,42 @@ Run: `mise exec -- actionlint .github/workflows/wc-check-dart-analyze.yaml .gith
 
 Expected: no findings.
 
-Run: `mise exec -- dart run melos run analyze`
-
-Expected: root workspace全体が固定masterでanalyzeを完了する。master非互換が見つかった場合はpackageだけを例外化せず、同じstackで修正するかstackをblockedにする。
-
-Run:
+root full scanはCI gateへ追加せず、toolchain移行のdiagnostic evidenceとして実行する。
+stable SDKでも同じ結果になるかを比較し、master固有のfailureだけをTask 1 blockerとする。
 
 ```bash
-mise exec -- dart run melos run test:dart
-mise exec -- dart run melos run test:flutter
+mise exec -- dart run melos run analyze
+mise exec -- dart run melos exec \
+  --no-flutter --depends-on=test --dir-exists=test --concurrency=1 \
+  -- "dart test"
+mise exec -- dart run melos exec \
+  --depends-on=flutter_test --dir-exists=test --concurrency=1 \
+  -- "flutter test"
 ```
 
-Expected: existing Dart/Flutter unit suites pass on the pinned master SDK.
+Expected: dependency/analyzer infrastructureが固定masterで起動し、結果をstable baselineと
+比較できる。2026-08-02の実測ではroot analyzeは既存`eqmonitor` custom lint 1,381件、
+Flutter suiteは既存app 18 failuresで、stableでも同件数・同原因だった。Dart-only
+11 packages、Flutterの`cache`/`telemetry_store`はpassした。これら既存failureを隠す
+CI例外やtest変更はTask 1へ入れない。
 
-`wc-check-dart-analyze.yaml`にはapp reporterとは別に`mise exec -- dart run melos run analyze`を追加し、`eqmonitor_map`を含むworkspace全体を必須化する。さらに`wc-changes.yaml`へ`eqmonitor_map_scene_spike` filterを追加し、package、root SDK pin、lockfile、専用workflow変更時だけ`pr-flutter-check.yaml`から新しいreusable workflowを呼ぶ。
+`wc-check-dart-analyze.yaml`は既存`Report analyze` actionのblocking挙動を維持し、
+root-wide Melos analyze stepを追加しない。`wc-changes.yaml`へ
+`eqmonitor_map_scene_spike` filterを追加し、package、root SDK pin、lockfile、専用workflow
+変更時だけ`pr-flutter-check.yaml`から新しいreusable workflowを呼ぶ。
 
-`wc-check-eqmonitor-map-scene-spike.yaml`はUbuntuでexampleのAndroid profile/release build、macOSでiOS profile/release `--no-codesign` buildを固定SDK・生成済みdart-define manifest付きで実行する。両jobをPR status checkの`needs`へ追加する。これは署名・配布を行わないapp-equivalent compile gateで、deploy workflowの署名処理やsecretへ触れない。
+`wc-check-eqmonitor-map-scene-spike.yaml`はTask 2でpackage/exampleが存在してから、
+`packages/eqmonitor_map`のstrict analyzeと、UbuntuのAndroid profile/release、macOSの
+iOS profile/release `--no-codesign` buildをblockingにする。生成済みdart-define manifestを
+使い、署名、配布、deploy secretは扱わない。
 
-- [ ] **Step 7: commitする**
+- [ ] **Step 8: commitする**
 
 ```bash
-git add .gitignore mise.toml mise.lock .github/workflows tool/eqmonitor_map docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md
+git add .gitignore mise.toml mise.lock pubspec.lock .github/workflows tool/eqmonitor_map \
+  packages/eqmonitor_lints packages/assets_util/example/analysis_options.yaml \
+  packages/assets_util/example/pubspec.yaml \
+  docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md
 git commit -m "Toolchain: Flutter masterを固定"
 ```
 
@@ -179,8 +238,7 @@ git commit -m "Toolchain: Flutter masterを固定"
 **Files:**
 - Modify: `pubspec.yaml`
 - Modify: `pubspec.lock`
-- Create: `packages/eqmonitor_lints/analysis_options.yaml`
-- Create: `packages/eqmonitor_lints/recommended.yaml`
+- Modify: `.github/workflows/wc-check-eqmonitor-map-scene-spike.yaml`
 - Create: `packages/eqmonitor_map/pubspec.yaml`
 - Create: `packages/eqmonitor_map/analysis_options.yaml`
 - Create: `packages/eqmonitor_map/lib/eqmonitor_map.dart`
@@ -194,7 +252,7 @@ git commit -m "Toolchain: Flutter masterを固定"
 
 **Interfaces:**
 - Consumes: Task 1の固定`flutter`/`dart` command。
-- Produces: workspace member `eqmonitor_map`、public barrel、物理iOS/Androidで起動できるexample host、既存`eqmonitor_lints`の解決可能なinclude surface。
+- Produces: workspace member `eqmonitor_map`、public barrel、物理iOS/Androidで起動できるexample host。
 
 - [ ] **Step 1: public library markerのfailing testを書く**
 
@@ -218,25 +276,7 @@ Run: `mise exec -- flutter test packages/eqmonitor_map/test/eqmonitor_map_librar
 
 Expected: FAIL because `eqmonitorMapLibrary` is undefined.
 
-- [ ] **Step 3: 欠落しているlint includeを修復する**
-
-既存consumerが参照している2ファイルを次の内容で作る。
-
-`packages/eqmonitor_lints/analysis_options.yaml`:
-
-```yaml
-include: recommended.yaml
-```
-
-`packages/eqmonitor_lints/recommended.yaml`:
-
-```yaml
-include: package:yumemi_lints/flutter/3.41/recommended.yaml
-```
-
-`packages/eqmonitor_map/analysis_options.yaml`とexampleは`include: package:eqmonitor_lints/recommended.yaml`を使う。別lint設定で検査を回避しない。
-
-- [ ] **Step 4: package markerを最小実装する**
+- [ ] **Step 3: package markerを最小実装する**
 
 ```dart
 const eqmonitorMapLibrary = EqmonitorMapLibrary(
@@ -255,7 +295,7 @@ class EqmonitorMapLibrary {
 }
 ```
 
-- [ ] **Step 5: Flutter Sceneとmodel生成依存を固定追加する**
+- [ ] **Step 4: Flutter Sceneとmodel生成依存を固定追加する**
 
 Run from `packages/eqmonitor_map`:
 
@@ -274,7 +314,7 @@ mise exec -- flutter pub add "flutter_scene@{git:{url: https://github.com/bdero/
 
 Flutter Sceneのgit descriptorはlockfile内でも`resolved-ref`が`695c954f237fabef65d49fa7199002851d2dcd88`であることを確認する。
 
-- [ ] **Step 6: iOS/Android hostを生成してからworkspaceへ登録する**
+- [ ] **Step 5: iOS/Android hostを生成してからworkspaceへ登録する**
 
 Run:
 
@@ -294,24 +334,28 @@ mise exec -- flutter pub get
 
 exampleの依存は`eqmonitor_map: {path: ../}`、platformはAndroid/iOSだけとする。default counter logicとdefault widget testは削除し、`main.dart`はpackage名と固定revision gateを示す静的homeを表示する。
 
-- [ ] **Step 7: test、analyze、revision pinを確認する**
+- [ ] **Step 6: test、analyze、revision pinを確認する**
 
 Run: `mise exec -- flutter test packages/eqmonitor_map/test/eqmonitor_map_library_test.dart`
 
 Expected: PASS.
 
-Run: `mise exec -- dart analyze packages/eqmonitor_map`
+Run: `mise exec -- flutter analyze --fatal-infos packages/eqmonitor_map`
 
 Expected: no issues.
+
+同じcommandを`wc-check-eqmonitor-map-scene-spike.yaml`のblocking stepへ追加する。
+root全体の既存diagnosticをこの新規package gateへ混ぜない。
 
 Run: `rg -n "695c954f237fabef65d49fa7199002851d2dcd88" packages/eqmonitor_map/pubspec.yaml pubspec.lock`
 
 Expected: pubspecとlockfileの双方で固定revisionが確認できる。
 
-- [ ] **Step 8: commitする**
+- [ ] **Step 7: commitする**
 
 ```bash
-git add pubspec.yaml pubspec.lock packages/eqmonitor_lints/analysis_options.yaml packages/eqmonitor_lints/recommended.yaml packages/eqmonitor_map
+git add pubspec.yaml pubspec.lock packages/eqmonitor_map \
+  .github/workflows/wc-check-eqmonitor-map-scene-spike.yaml
 git commit -m "Package: Flutter Sceneスパイクを追加"
 ```
 
@@ -419,7 +463,7 @@ Run: `mise exec -- flutter test packages/eqmonitor_map/test/renderer`
 
 Expected: PASS.
 
-Run: `mise exec -- dart analyze packages/eqmonitor_map`
+Run: `mise exec -- flutter analyze --fatal-infos packages/eqmonitor_map`
 
 Expected: no issues.
 
@@ -545,7 +589,7 @@ Run: `mise exec -- flutter test packages/eqmonitor_map/test/renderer/scene_spike
 
 Expected: PASS.
 
-Run: `mise exec -- dart analyze packages/eqmonitor_map`
+Run: `mise exec -- flutter analyze --fatal-infos packages/eqmonitor_map`
 
 Expected: no issues.
 
@@ -733,7 +777,7 @@ Run: `mise exec -- flutter test packages/eqmonitor_map/test/observability`
 
 Expected: PASS, including `toJson`/`fromJson` round-trip.
 
-Run: `mise exec -- dart analyze packages/eqmonitor_map`
+Run: `mise exec -- flutter analyze --fatal-infos packages/eqmonitor_map`
 
 Expected: no issues.
 
@@ -900,7 +944,7 @@ Expected: PASS.
 
 Run: `mise exec -- dart format packages/eqmonitor_map`
 
-Run: `mise exec -- dart analyze packages/eqmonitor_map`
+Run: `mise exec -- flutter analyze --fatal-infos packages/eqmonitor_map`
 
 Expected: no issues.
 
@@ -1060,7 +1104,7 @@ Run:
 
 ```bash
 mise exec -- dart format --output=none --set-exit-if-changed packages/eqmonitor_map
-mise exec -- dart analyze packages/eqmonitor_map
+mise exec -- flutter analyze --fatal-infos packages/eqmonitor_map
 mise exec -- flutter test packages/eqmonitor_map/test
 mise exec -- dart run packages/eqmonitor_map/tool/validate_scene_spike_evidence.dart
 git diff --check codex/eqmonitor-map-01-design...HEAD
