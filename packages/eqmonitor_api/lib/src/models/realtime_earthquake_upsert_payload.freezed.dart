@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RealtimeEarthquakeUpsertPayload {
 
- Type get type; Operation get operation;@JsonKey(name: 'event_id') String get eventId; Earthquake get record;
+ RealtimeEarthquakeUpsertPayloadType get type; RealtimeEarthquakeUpsertPayloadOperation get operation;@JsonKey(name: 'event_id') String get eventId; Earthquake get record;
 /// Create a copy of RealtimeEarthquakeUpsertPayload
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RealtimeEarthquakeUpsertPayloadCopyWith<$Res>  {
   factory $RealtimeEarthquakeUpsertPayloadCopyWith(RealtimeEarthquakeUpsertPayload value, $Res Function(RealtimeEarthquakeUpsertPayload) _then) = _$RealtimeEarthquakeUpsertPayloadCopyWithImpl;
 @useResult
 $Res call({
- Type type, Operation operation,@JsonKey(name: 'event_id') String eventId, Earthquake record
+ RealtimeEarthquakeUpsertPayloadType type, RealtimeEarthquakeUpsertPayloadOperation operation,@JsonKey(name: 'event_id') String eventId, Earthquake record
 });
 
 
@@ -68,8 +68,8 @@ class _$RealtimeEarthquakeUpsertPayloadCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? operation = null,Object? eventId = null,Object? record = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeEarthquakeUpsertPayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeEarthquakeUpsertPayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
 as Earthquake,
   ));
@@ -165,7 +165,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type type,  Operation operation, @JsonKey(name: 'event_id')  String eventId,  Earthquake record)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RealtimeEarthquakeUpsertPayloadType type,  RealtimeEarthquakeUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId,  Earthquake record)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RealtimeEarthquakeUpsertPayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
@@ -186,7 +186,7 @@ return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type type,  Operation operation, @JsonKey(name: 'event_id')  String eventId,  Earthquake record)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RealtimeEarthquakeUpsertPayloadType type,  RealtimeEarthquakeUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId,  Earthquake record)  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeEarthquakeUpsertPayload():
 return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
@@ -206,7 +206,7 @@ return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type type,  Operation operation, @JsonKey(name: 'event_id')  String eventId,  Earthquake record)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RealtimeEarthquakeUpsertPayloadType type,  RealtimeEarthquakeUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId,  Earthquake record)?  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeEarthquakeUpsertPayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
@@ -224,8 +224,8 @@ class _RealtimeEarthquakeUpsertPayload implements RealtimeEarthquakeUpsertPayloa
   const _RealtimeEarthquakeUpsertPayload({required this.type, required this.operation, @JsonKey(name: 'event_id') required this.eventId, required this.record});
   factory _RealtimeEarthquakeUpsertPayload.fromJson(Map<String, dynamic> json) => _$RealtimeEarthquakeUpsertPayloadFromJson(json);
 
-@override final  Type type;
-@override final  Operation operation;
+@override final  RealtimeEarthquakeUpsertPayloadType type;
+@override final  RealtimeEarthquakeUpsertPayloadOperation operation;
 @override@JsonKey(name: 'event_id') final  String eventId;
 @override final  Earthquake record;
 
@@ -262,7 +262,7 @@ abstract mixin class _$RealtimeEarthquakeUpsertPayloadCopyWith<$Res> implements 
   factory _$RealtimeEarthquakeUpsertPayloadCopyWith(_RealtimeEarthquakeUpsertPayload value, $Res Function(_RealtimeEarthquakeUpsertPayload) _then) = __$RealtimeEarthquakeUpsertPayloadCopyWithImpl;
 @override @useResult
 $Res call({
- Type type, Operation operation,@JsonKey(name: 'event_id') String eventId, Earthquake record
+ RealtimeEarthquakeUpsertPayloadType type, RealtimeEarthquakeUpsertPayloadOperation operation,@JsonKey(name: 'event_id') String eventId, Earthquake record
 });
 
 
@@ -282,8 +282,8 @@ class __$RealtimeEarthquakeUpsertPayloadCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? operation = null,Object? eventId = null,Object? record = null,}) {
   return _then(_RealtimeEarthquakeUpsertPayload(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeEarthquakeUpsertPayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeEarthquakeUpsertPayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
 as Earthquake,
   ));

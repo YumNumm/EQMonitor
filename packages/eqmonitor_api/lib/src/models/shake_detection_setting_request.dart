@@ -14,6 +14,10 @@ abstract class ShakeDetectionSettingRequest with _$ShakeDetectionSettingRequest 
   const factory ShakeDetectionSettingRequest({
     @JsonKey(includeIfNull: true,name: 'sub_region_id')
     required String? subRegionId,
+    @JsonKey(includeIfNull: true,name: 'prefecture_code')
+    required String? prefectureCode,
+    @JsonKey(includeIfNull: true,name: 'city_code')
+    required String? cityCode,
     @JsonKey(name: 'min_level')
     required ShakeDetectionLevel minLevel,
     @JsonKey(name: 'is_current_location')

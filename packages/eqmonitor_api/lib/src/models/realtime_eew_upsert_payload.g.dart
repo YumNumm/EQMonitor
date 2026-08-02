@@ -12,10 +12,13 @@ _RealtimeEewUpsertPayload _$RealtimeEewUpsertPayloadFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_RealtimeEewUpsertPayload', json, ($checkedConvert) {
   final val = _RealtimeEewUpsertPayload(
-    type: $checkedConvert('type', (v) => $enumDecode(_$Type2EnumMap, v)),
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$RealtimeEewUpsertPayloadTypeEnumMap, v),
+    ),
     operation: $checkedConvert(
       'operation',
-      (v) => $enumDecode(_$OperationEnumMap, v),
+      (v) => $enumDecode(_$RealtimeEewUpsertPayloadOperationEnumMap, v),
     ),
     eventId: $checkedConvert('event_id', (v) => v as String),
     record: $checkedConvert(
@@ -35,6 +38,10 @@ Map<String, dynamic> _$RealtimeEewUpsertPayloadToJson(
   'record': instance.record,
 };
 
-const _$Type2EnumMap = {Type2.eew: 'eew'};
+const _$RealtimeEewUpsertPayloadTypeEnumMap = {
+  RealtimeEewUpsertPayloadType.eew: 'eew',
+};
 
-const _$OperationEnumMap = {Operation.upsert: 'upsert'};
+const _$RealtimeEewUpsertPayloadOperationEnumMap = {
+  RealtimeEewUpsertPayloadOperation.upsert: 'upsert',
+};

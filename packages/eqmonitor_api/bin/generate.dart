@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'generated_file_cleanup.dart';
+
 void main(List<String> args) async {
   final packageDir = File.fromUri(Platform.script).parent.parent;
   final externalOpenapiPath = await File(
@@ -192,7 +194,9 @@ void main(List<String> args) async {
   });
 
   await _step('生成ファイルの末尾空白を除去', () async {
-    _stripTrailingWhitespace(libDir);
+    for (final file in stripGeneratedTrailingWhitespace(libDir: libDir)) {
+      stdout.writeln('  stripped: ${file.path}');
+    }
   });
 
   await _step('残存 dynamic の検出', () async {
@@ -498,43 +502,6 @@ Future<void> _patchGeneratedFiles(Directory libDir) async {
     if (patched != original) {
       file.writeAsStringSync(patched);
       stdout.writeln('  Patched: ${file.path}');
-    }
-  }
-}
-
-void _stripTrailingWhitespace(Directory libDir) {
-  const realtimeDependencyFiles = {
-    'bottom_right.dart',
-    'correlated_eew.dart',
-    'location.dart',
-    'merged_events.dart',
-    'points.dart',
-    'region.dart',
-    'test.dart',
-    'top_left.dart',
-  };
-  final dartFiles = libDir.listSync(recursive: true).whereType<File>().where((
-    file,
-  ) {
-    if (!file.path.endsWith('.dart')) {
-      return false;
-    }
-    final name = file.uri.pathSegments.last;
-    return name == 'catalog.dart' ||
-        name.startsWith('catalog_') ||
-        name == 'shake_detection_api_client.dart' ||
-        name.startsWith('realtime_') ||
-        name.startsWith('shake_detection_active_') ||
-        realtimeDependencyFiles.contains(name);
-  });
-
-  for (final file in dartFiles) {
-    final original = file.readAsStringSync();
-    final patched =
-        '${original.replaceAll(RegExp(r'[ \t]+$', multiLine: true), '').trimRight()}\n';
-    if (patched != original) {
-      file.writeAsStringSync(patched);
-      stdout.writeln('  stripped: ${file.path}');
     }
   }
 }
