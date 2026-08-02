@@ -46,9 +46,6 @@ jobs:
       - name: Resolve dependencies
         run: mise exec -- dart pub get --enforce-lockfile
 
-      - name: Analyze workspace
-        run: mise exec -- dart run melos run analyze
-
       # https://github.com/invertase/github-action-dart-analyzer
       - name: Report analyze
         uses: invertase/github-action-dart-analyzer@e981b01a458d0bab71ee5da182e5b26687b7101b # v3.0.0
