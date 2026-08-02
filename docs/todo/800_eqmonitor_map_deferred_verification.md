@@ -11,7 +11,9 @@
 - Light/Darkとtext scale 1.0/1.5/2.0のGolden test
 - iOS/Androidの基準端末と地図fixtureの選定
 - 高速移動、offline復帰、background復帰、memory pressureの実機試験
-- frame、decode、mesh build、GPU upload、cacheの回帰基準策定
+- context loss/rebuildとframes-in-flight resource retirementの反復・長時間実機試験
+- frame、queue待機、decode、mesh build、GPU submission/completion、cacheの回帰基準策定
+- metrics収集自体のCPU/memory overhead上限とevent drop検証
 
 ## 前提
 
