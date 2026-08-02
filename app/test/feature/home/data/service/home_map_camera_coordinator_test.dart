@@ -1,8 +1,5 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
-import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/service/home_map_camera_coordinator.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
@@ -16,28 +13,8 @@ import '../../../map/data/service/map_automatic_focus_controller_test.mocks.dart
 
 final _now = DateTime.utc(2025, 1, 1, 12);
 
-EewTelegramItem _sampleEew({
-  String eventId = '20250101120000',
-  double latitude = 35.5,
-  double longitude = 139.5,
-}) => EewTelegramItem(
-  eventId: eventId,
-  status: TelegramStatus.normal,
-  infoType: TelegramInfoType.publication,
-  serialNo: 1,
-  isCanceled: false,
-  isLastInfo: false,
-  reportTime: _now,
-  isPlum: false,
-  hypocenter: EewHypocenterInfo(
-    code: '101',
-    name: '東京都',
-    latitude: latitude,
-    longitude: longitude,
-  ),
-);
-
 ShakeDetectionEvent _sampleShake({
+  String? correlatedEewEventId,
   double minLat = 33,
   double maxLat = 34,
   double minLng = 130,
@@ -55,6 +32,7 @@ ShakeDetectionEvent _sampleShake({
   minLng: minLng,
   maxLng: maxLng,
   changeReasons: const ['new_event'],
+  correlatedEewEventId: correlatedEewEventId,
 );
 
 void stubCameraAnimations({
@@ -77,17 +55,29 @@ void stubCameraAnimations({
 
 void main() {
   group('HomeMapCameraCoordinator', () {
-    test('EEWと未結合揺れ検知を合わせた範囲へfocusする', () async {
+    test('EEW focus用boundsだけでfocusする', () async {
       final coordinator = HomeMapCameraCoordinator();
       final controller = MockMapController();
       stubCameraAnimations(controller: controller, animate: () async {});
 
-      final result = await coordinator.setController(
+      await coordinator.setController(
         controller: controller,
         viewportSize: const Size(375, 667),
         home: Future.value(const HomeConfigurationModel()),
-        eews: [_sampleEew(latitude: 40, longitude: 142)],
-        shakes: [_sampleShake()],
+        eews: const [],
+        shakes: const [],
+      );
+      clearInteractions(controller);
+      final result = await coordinator.applyEewFocus(
+        home: Future.value(const HomeConfigurationModel()),
+        bounds: const LngLatBounds(
+          longitudeWest: 141,
+          longitudeEast: 143,
+          latitudeSouth: 39,
+          latitudeNorth: 41,
+        ),
+        generation: coordinator.nextCameraGeneration(),
+        ignoreAutoZoom: false,
       );
 
       expect(result, isFalse);
@@ -101,54 +91,77 @@ void main() {
                 ),
               ).captured.single
               as Geographic;
-      expect(center.lon, closeTo(136, 0.0001));
+      expect(center.lon, closeTo(142, 0.0001));
       verifyNoMoreInteractions(controller);
     });
 
-    test('autoZoom無効時はrealtime targetへcamera命令を出さない', () async {
+    test('autoZoom無効時はEEW focusのcamera命令を出さない', () async {
       final coordinator = HomeMapCameraCoordinator();
       final controller = MockMapController();
 
-      final result = await coordinator.setController(
+      await coordinator.setController(
         controller: controller,
         viewportSize: const Size(375, 667),
         home: Future.value(
           const HomeConfigurationModel(eew: HomeEewSettings(autoZoom: false)),
         ),
-        eews: [_sampleEew()],
+        eews: const [],
         shakes: const [],
+      );
+      clearInteractions(controller);
+      final result = await coordinator.applyEewFocus(
+        home: Future.value(
+          const HomeConfigurationModel(eew: HomeEewSettings(autoZoom: false)),
+        ),
+        bounds: const LngLatBounds(
+          longitudeWest: 141,
+          longitudeEast: 143,
+          latitudeSouth: 39,
+          latitudeNorth: 41,
+        ),
+        generation: coordinator.nextCameraGeneration(),
+        ignoreAutoZoom: false,
       );
 
       expect(result, isNull);
       verifyNoMoreInteractions(controller);
     });
 
-    test('autoZoom無効でも明示Home復帰はcamera命令を出す', () async {
+    test('autoZoom無効でも明示EEW refocusはcamera命令を出す', () async {
       final coordinator = HomeMapCameraCoordinator();
       final controller = MockMapController();
       const home = HomeConfigurationModel(
         eew: HomeEewSettings(autoZoom: false),
       );
+      stubCameraAnimations(controller: controller, animate: () async {});
 
       await coordinator.setController(
         controller: controller,
         viewportSize: const Size(375, 667),
         home: Future.value(home),
-        eews: [_sampleEew()],
+        eews: const [],
         shakes: const [],
       );
-      stubCameraAnimations(controller: controller, animate: () async {});
-      final result = await coordinator.returnToHome(home: Future.value(home));
+      clearInteractions(controller);
+      final result = await coordinator.applyEewFocus(
+        home: Future.value(home),
+        bounds: const LngLatBounds(
+          longitudeWest: 141,
+          longitudeEast: 143,
+          latitudeSouth: 39,
+          latitudeNorth: 41,
+        ),
+        generation: coordinator.nextCameraGeneration(),
+        ignoreAutoZoom: true,
+      );
 
-      expect(result, isTrue);
+      expect(result, isFalse);
       verify(
         controller.animateCamera(
           center: anyNamed('center'),
           zoom: anyNamed('zoom'),
           bearing: 0,
           pitch: 0,
-          nativeDuration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(4),
         ),
       ).called(1);
       verifyNoMoreInteractions(controller);
@@ -239,8 +252,10 @@ void main() {
         controller: controller,
         viewportSize: const Size(375, 667),
         home: Future.value(const HomeConfigurationModel()),
-        eews: [_sampleEew()],
-        shakes: const [],
+        eews: const [],
+        shakes: [
+          _sampleShake(minLat: 35, maxLat: 36, minLng: 139, maxLng: 140),
+        ],
       );
       await Future<void>.delayed(Duration.zero);
       expect(cameraCallCount, 1);
@@ -296,8 +311,10 @@ void main() {
         controller: controller,
         viewportSize: const Size(375, 667),
         home: Future.value(const HomeConfigurationModel()),
-        eews: [_sampleEew()],
-        shakes: const [],
+        eews: const [],
+        shakes: [
+          _sampleShake(minLat: 35, maxLat: 36, minLng: 139, maxLng: 140),
+        ],
       );
       await Future<void>.delayed(Duration.zero);
       expect(cameraCallCount, 1);
@@ -357,15 +374,19 @@ void main() {
           controller: oldController,
           viewportSize: const Size(375, 667),
           home: Future.value(const HomeConfigurationModel()),
-          eews: [_sampleEew()],
-          shakes: const [],
+          eews: const [],
+          shakes: [
+            _sampleShake(minLat: 35, maxLat: 36, minLng: 139, maxLng: 140),
+          ],
         ),
         isFalse,
       );
       final oldRealtime = coordinator.handleRealtimeTransition(
         home: Future.value(const HomeConfigurationModel()),
-        eews: [_sampleEew(eventId: '20250101120001')],
-        shakes: const [],
+        eews: const [],
+        shakes: [
+          _sampleShake(minLat: 36, maxLat: 37, minLng: 140, maxLng: 141),
+        ],
       );
       await Future<void>.delayed(Duration.zero);
       expect(oldCameraCallCount, 2);

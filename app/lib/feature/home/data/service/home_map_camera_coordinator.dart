@@ -39,14 +39,21 @@ class HomeMapCameraCoordinator {
     required Future<HomeConfigurationModel> home,
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
+    bool applyInitialFocus = true,
+    bool isAtHome = false,
   }) {
     _cameraGeneration += 1;
     _controller = controller;
     _viewportSize = viewportSize;
-    _isHomeFocusRequested = false;
+    _isHomeFocusRequested = isAtHome;
     _operationQueue = MapAutomaticFocusOperationQueue();
+    if (!applyInitialFocus) {
+      return Future<bool?>.value();
+    }
     return handleRealtimeTransition(home: home, eews: eews, shakes: shakes);
   }
+
+  int nextCameraGeneration() => ++_cameraGeneration;
 
   void clearController({required MapController controller}) {
     if (identical(_controller, controller)) {
@@ -63,7 +70,7 @@ class HomeMapCameraCoordinator {
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
   }) {
-    final generation = ++_cameraGeneration;
+    final generation = nextCameraGeneration();
     final targets = const SeismicMapFocusBuilder().realtimeTargetCoordinates(
       eews: eews,
       shakes: shakes,
@@ -81,6 +88,38 @@ class HomeMapCameraCoordinator {
       .returnToHome => applyHomeFocus(home: home, generation: generation),
       .none => Future<bool?>.value(),
     };
+  }
+
+  Future<bool?> applyEewFocus({
+    required Future<HomeConfigurationModel> home,
+    required LngLatBounds bounds,
+    required int generation,
+    required bool ignoreAutoZoom,
+  }) async {
+    final configuration = await home;
+    final controller = _controller;
+    final viewportSize = _viewportSize;
+    final isCurrent = () =>
+        generation == _cameraGeneration &&
+        identical(controller, _controller) &&
+        viewportSize == _viewportSize;
+    if (controller == null || viewportSize == null || !isCurrent()) {
+      return null;
+    }
+    if (!ignoreAutoZoom && !configuration.eew.autoZoom) {
+      return null;
+    }
+
+    _isHomeFocusRequested = false;
+    final completedCurrent = await _operationQueue.schedule(
+      operation: () => const MapAutomaticFocusController().fit(
+        controller: controller,
+        bounds: bounds,
+        viewportSize: viewportSize,
+        isCurrent: isCurrent,
+      ),
+    );
+    return completedCurrent ? false : null;
   }
 
   Future<bool?> applyRealtimeFocus({
@@ -121,7 +160,7 @@ class HomeMapCameraCoordinator {
   }
 
   Future<bool?> returnToHome({required Future<HomeConfigurationModel> home}) =>
-      applyHomeFocus(home: home, generation: ++_cameraGeneration);
+      applyHomeFocus(home: home, generation: nextCameraGeneration());
 
   Future<bool?> applyHomeFocus({
     required Future<HomeConfigurationModel> home,
