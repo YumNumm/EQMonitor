@@ -20,6 +20,7 @@ void main() {
               'data2.dart',
               'data3.dart',
               'partition.dart',
+              'parameters_manifest_response.freezed.dart',
             ]
             .map(
               (name) =>

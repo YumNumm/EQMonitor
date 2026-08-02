@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'generated_file_cleanup.dart';
+import 'legacy_generated_contract.dart';
 
 void main(List<String> args) async {
   final packageDir = File.fromUri(Platform.script).parent.parent;
@@ -11,6 +12,7 @@ void main(List<String> args) async {
 
   final openapiFile = File('${packageDir.path}/openapi/openapi.json');
   final libDir = Directory('${packageDir.path}/lib/src');
+  final legacyContract = preserveLegacyGeneratedContract(libDir: libDir);
 
   await _step('lib/src/ を削除', () async {
     if (libDir.existsSync()) {
@@ -45,6 +47,10 @@ void main(List<String> args) async {
 
   await _step('swagger_parser でクライアントコードを生成', () async {
     await _run('dart', ['run', 'swagger_parser'], packageDir.path);
+  });
+
+  await _step('廃止済みParameters APIの互換型を復元', () async {
+    restoreLegacyGeneratedContract(libDir: libDir, preserved: legacyContract);
   });
 
   await _step('RealtimeEventEnvelope dispatcher を生成', () async {

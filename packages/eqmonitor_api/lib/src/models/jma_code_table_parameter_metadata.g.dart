@@ -1,0 +1,53 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
+
+part of 'jma_code_table_parameter_metadata.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_JmaCodeTableParameterMetadata _$JmaCodeTableParameterMetadataFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_JmaCodeTableParameterMetadata',
+  json,
+  ($checkedConvert) {
+    final val = _JmaCodeTableParameterMetadata(
+      type: $checkedConvert('type', (v) => v as String),
+      schemaVersion: $checkedConvert(
+        'schema_version',
+        (v) => (v as num).toInt(),
+      ),
+      sourceVersion: $checkedConvert('source_version', (v) => v as String),
+      sourceUpdatedAt: $checkedConvert(
+        'source_updated_at',
+        (v) => v as String?,
+      ),
+      sourceUrls: $checkedConvert(
+        'source_urls',
+        (v) => (v as List<dynamic>).map((e) => e as String).toList(),
+      ),
+      sha256: $checkedConvert('sha256', (v) => v as String),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'schemaVersion': 'schema_version',
+    'sourceVersion': 'source_version',
+    'sourceUpdatedAt': 'source_updated_at',
+    'sourceUrls': 'source_urls',
+  },
+);
+
+Map<String, dynamic> _$JmaCodeTableParameterMetadataToJson(
+  _JmaCodeTableParameterMetadata instance,
+) => <String, dynamic>{
+  'type': instance.type,
+  'schema_version': instance.schemaVersion,
+  'source_version': instance.sourceVersion,
+  'source_updated_at': instance.sourceUpdatedAt,
+  'source_urls': instance.sourceUrls,
+  'sha256': instance.sha256,
+};

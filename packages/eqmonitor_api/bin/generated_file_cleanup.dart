@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'legacy_generated_contract.dart';
+
 const generatedWhitespaceDependencyFiles = {
   'bottom_right.dart',
   'correlated_eew.dart',
@@ -13,6 +15,8 @@ const generatedWhitespaceDependencyFiles = {
 };
 
 bool shouldStripGeneratedWhitespace({required String fileName}) =>
+    isLegacyGeneratedContractPath(relativePath: 'models/$fileName') ||
+    isLegacyGeneratedContractPath(relativePath: 'clients/$fileName') ||
     fileName == 'catalog.dart' ||
     fileName.startsWith('catalog_') ||
     fileName == 'hypocenters_api_client.dart' ||
