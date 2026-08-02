@@ -108,6 +108,9 @@ jobs:
           mise bootstrap repos status --missing
           mise exec -- flutter --version --machine
 
+      - name: Precache Flutter iOS artifacts
+        run: mise exec -- flutter precache --ios
+
       - name: Set environment variables
         run: |
           for line in $(mise env --redacted --dotenv); do
@@ -515,6 +518,9 @@ jobs:
         run: |
           mise bootstrap repos status --missing
           mise exec -- flutter --version --machine
+
+      - name: Precache Flutter Android artifacts
+        run: mise exec -- flutter precache --android
 
       - name: Set environment variables
         run: |

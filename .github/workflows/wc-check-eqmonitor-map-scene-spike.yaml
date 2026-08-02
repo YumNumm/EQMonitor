@@ -36,6 +36,9 @@ jobs:
           mise bootstrap repos status --missing
           mise exec -- flutter --version --machine
 
+      - name: Precache Flutter Android artifacts
+        run: mise exec -- flutter precache --android
+
       - name: Generate dart-define manifest
         run: printf '%s\n' '{"EQMONITOR_MAP_SCENE_SPIKE_CI":"true"}' > "$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
 
@@ -79,6 +82,9 @@ jobs:
         run: |
           mise bootstrap repos status --missing
           mise exec -- flutter --version --machine
+
+      - name: Precache Flutter iOS artifacts
+        run: mise exec -- flutter precache --ios
 
       - name: Generate dart-define manifest
         run: printf '%s\n' '{"EQMONITOR_MAP_SCENE_SPIKE_CI":"true"}' > "$RUNNER_TEMP/eqmonitor-map-scene-spike.json"

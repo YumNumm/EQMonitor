@@ -53,6 +53,9 @@ jobs:
           mise bootstrap repos status --missing
           mise exec -- flutter --version --machine
 
+      - name: Precache Flutter Linux artifacts
+        run: mise exec -- flutter precache --linux
+
       - name: Resolve dependencies
         run: mise exec -- dart pub get --enforce-lockfile
 
