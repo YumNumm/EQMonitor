@@ -32,7 +32,11 @@ Flutter Sceneの`InstancedMesh`は各インスタンスを`List<Matrix4>`で保�
 実ポリゴン球を大量に描画せず、共有四角形を使う球インポスターを採用する。
 遠景は点、近景は球面法線と陰影を持つ球表示とし、投影後のピクセル直径で連続遷移させる。
 
-PMTiles全件を表示する場合は、Dioでアーカイブ全体を検証付きキャッシュへ取得してからローカル解析する。
+PMTilesは共通のrandom-access reader境界を設け、Network、File、Assetを同じ解析器へ渡す。
+NetworkはDioのHTTP Range Requestを使い、`206`、`Content-Range`、取得長、strong ETagを検証する。`200`を全体ダウンロードとして受理しない。
+Fileはrandom access、Flutter Assetは注入loaderから全bytesを読み込む。Asset APIにはファイル内random accessがないため、Assetだけは全体メモリ化を許容する。
+
+全震源を表示する場合、対象データズームのtile payloadは最終的に全て必要になる。Range方式は全体ファイル保存の回避、段階的解析、キャンセル、range単位の再利用に使う。
 PMTilesの固定データズームでは間引きと重複を禁止し、元データ件数との一致を生成時とクライアント側の両方で検証する。
 
 ## 参照

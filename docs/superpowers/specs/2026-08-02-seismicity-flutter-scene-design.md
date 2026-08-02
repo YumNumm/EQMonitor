@@ -16,7 +16,8 @@
 - 色、半径、遷移閾値、地図透明度をDart側の引数として渡す。
 - 1本指で回転、ピンチでズーム、2本指ドラッグで平行移動できる。
 - PMTilesの取得と解析は独立した`seismicity_pmtiles`パッケージに置く。
-- ネットワーク取得にはDioを使う。
+- PMTilesはNetwork、File、Flutter Assetの3種類から読み込める。
+- Network取得にはDioのHTTP Range Requestを使い、アーカイブ全体をファイルとしてダウンロードしない。
 - 公開データ型、状態、結果、例外はFreezedで生成する。
 - Flutter masterを基底PRで導入し、その上にStacked PRを積む。
 
@@ -59,17 +60,19 @@ EQMonitorはforkの内部APIを直接importせず、公開APIだけを使う。
 
 `packages/seismicity_pmtiles/`は次を担当する。
 
-- Dioによるmanifest取得
-- DioによるPMTiles全体のダウンロード
-- 一時ファイル、検証済みキャッシュ、atomic renameの管理
-- SHA-256、スキーマバージョン、件数の検証
-- ローカルPMTilesアーカイブの読み込み
+- Network、File、Assetを共通のrandom-access readerへ変換
+- Dioによるmanifest取得とPMTilesのHTTP Range取得
+- `206 Partial Content`、`Content-Range`、取得長、ETagの検証
+- Fileのrandom accessとAsset bytesの読み込み
+- PMTiles v3のheader、root directory、leaf directory、tile dataの読み込み
+- スキーマバージョン、アーカイブ識別子、件数の検証
+- bounded memory LRUによる取得済みrangeのキャッシュ
 - 固定データズームのMVT Point解析
 - Isolate上でのチャンク変換
 - `TransferableTypedData`による解析結果の転送
 - Freezedによる状態、結果、例外の公開
 
-Flutter、Flutter Scene、Riverpod、EQMonitor UIには依存しない。キャッシュ先は呼び出し側から明示的に渡す。
+Flutter、Flutter Scene、Riverpod、EQMonitor UIには依存しない。AssetはFlutterの`AssetBundle`を直接参照せず、呼び出し側からasset keyをbytesへ解決するloaderを注入する。
 
 ### 構成
 
@@ -78,12 +81,14 @@ packages/seismicity_pmtiles/
 ├── lib/src/data_source/
 ├── lib/src/decoder/
 ├── lib/src/model/
+├── lib/src/reader/
 └── lib/src/repository/
 ```
 
 主要な型は次とする。
 
 - `SeismicityPmTilesManifest`
+- `SeismicityPmTilesSource`
 - `SeismicityPmTilesLayer`
 - `SeismicityPmTilesChunk`
 - `SeismicityPmTilesDataset`
@@ -94,9 +99,33 @@ packages/seismicity_pmtiles/
 200万件を個別のFreezedモデルには変換しない。`SeismicityPmTilesChunk`は緯度、経度、深さ、マグニチュード、発生時刻、震度フラグを列形式のバッファとして保持する。
 巨大バッファを持つFreezed型は`@Freezed(equal: false)`とし、意図しない全要素比較を防ぐ。
 
+### Sourceとrandom access
+
+`SeismicityPmTilesSource`は次のFreezed unionとする。
+
+- `network`: manifest URIを持つ。manifestからversioned archive URIを解決し、DioでRange取得する。
+- `file`: manifest pathとPMTiles pathを持つ。`RandomAccessFile`で必要範囲だけ読む。
+- `asset`: manifest asset keyとPMTiles asset keyを持つ。注入された`SeismicityPmTilesAssetLoader`でbytesを取得する。
+
+`SeismicityPmTilesAssetLoader`は`Future<Uint8List> Function({required String assetKey})`とする。EQMonitor側のadapterが`AssetBundle.load`の結果を`Uint8List`へ変換する。loaderはrepositoryへ依存注入し、JSON変換対象の`SeismicityPmTilesSource`には保持しない。
+
+3経路は最終的に`pmtiles.ReadAt.readAt(int offset, int length)`へ統一し、`pmtiles`パッケージ2.2系の`PmTilesArchive.fromReadAt(..., strict: true)`へ渡す。PMTiles解析ロジックを経路ごとに複製しない。
+
+FlutterのAsset APIはファイル内random accessを提供しないため、Asset経路だけはPMTiles asset全体を一度メモリへ読み込む。Network経路でこのフォールバックを使うことは禁止する。
+
+Network readerは次を保証する。
+
+- `Range: bytes=<offset>-<inclusiveEnd>`と`ResponseType.bytes`を使用する。
+- 初回range応答のstrong ETagをアーカイブ識別子として固定し、後続rangeへ`If-Match`を付ける。
+- `206 Partial Content`以外を拒否し、`200 OK`を全体ファイルとして受理しない。
+- `Content-Range`の開始、終了、全体長と実データ長をmanifestおよび要求範囲と照合する。
+- `412 Precondition Failed`またはETag変更時は、異なる世代のrangeを混在させず読み込み全体を失敗させる。
+- 同じアーカイブ識別子、offset、lengthのrangeはbounded memory LRUから再利用する。
+- Dioの`CancelToken`で未完了requestを停止する。
+
 ### PMTiles生成契約
 
-manifestは少なくともURL、SHA-256、ファイルサイズ、生成日時、スキーマバージョン、データズーム、フィーチャー件数を含む。
+manifestは少なくともversioned archive URI、ファイルサイズ、生成日時、スキーマバージョン、データズーム、地理範囲、フィーチャー件数を含む。FileとAsset用manifestも同じ論理フィールドを持ち、archive URIだけをローカルsource識別子へ置き換える。
 
 PMTiles生成処理は次を保証する。
 
@@ -105,16 +134,20 @@ PMTiles生成処理は次を保証する。
 - 同じ`event_id`を同一データズーム内で重複させない。
 - 元データ件数、ユニークID件数、PMTiles内件数が一致する。
 - 必須プロパティの型と欠損をリリース前に検証する。
+- Network配信先はbyte Rangeをサポートし、正しい`206`、`Content-Range`、strong ETagを返す。
+- 公開後のarchive URIは内容を上書きせず、更新時は新しいversioned URIを発行する。
 
-クライアントは件数やハッシュが一致しないデータを表示しない。
+クライアントはアーカイブ識別子、サイズ、range、件数が一致しないデータを表示しない。全体を取得しないNetwork経路ではアーカイブ全体のSHA-256をクライアント検証要件にしない。FileとAssetではmanifestにSHA-256がある場合だけ全体検証を行う。
 
 ## データフロー
 
 ```text
-manifest取得
-  → PMTilesを*.partialへDio.download
-  → SHA-256とサイズを検証
-  → 検証済みキャッシュへatomic rename
+sourceとmanifestを解決
+  → Network: 先頭16KiBをDio Range取得しETagを固定
+  → File: RandomAccessFileをopen
+  → Asset: 注入loaderでbytesを取得
+  → header/root/leafから対象dataZoomのtile rangeを解決
+  → 必要なtile dataだけをrange単位で取得
   → Worker IsolateでMVTをタイル単位に解析
   → 列形式チャンクをTransferableTypedDataで転送
   → 正距方位図法でkm座標へ変換
@@ -124,6 +157,8 @@ manifest取得
 
 GPUレコードは東西・深さ・南北位置、マグニチュード、発生時刻、震度等のフラグを持ち、1件あたり24バイトを目安とする。
 200万件で約48MBとなる。Dartヒープに200万個のイベントオブジェクトは保持しない。
+
+全震源を個別表示するため、Network経路でも最終的には対象dataZoomに存在する全tile payloadを取得する。Range方式の目的は、PMTiles全体ファイルの保存を避け、directoryや不要領域の転送を抑え、段階的解析、キャンセル、range単位の再利用を可能にすることである。
 
 ## 座標と地図
 
@@ -163,12 +198,11 @@ depthScale = 1.0
 
 ## 状態と障害対応
 
-`SeismicityPmTilesLoadState`は`idle`、`fetchingManifest`、`downloading`、`verifying`、`decoding`、`completed`、`failed`、`cancelled`をFreezed unionで表す。
+`SeismicityPmTilesLoadState`は`idle`、`fetchingManifest`、`openingSource`、`fetchingRanges`、`decoding`、`completed`、`failed`、`cancelled`をFreezed unionで表す。
 
 - 期間変更時はDioの`CancelToken`と解析Isolateを停止する。
-- 不完全な一時ファイルだけを削除し、検証済みキャッシュは保持する。
-- キャッシュ利用は期間、スキーマバージョン、SHA-256が一致する場合だけ許可する。
-- キャッシュ利用時は生成日時と前回データであることを明示する。
+- Network range cacheはアーカイブURIとETagが一致する場合だけ再利用する。
+- FileとAssetはmanifestのsource識別子、サイズ、任意SHA-256が一致する場合だけ受理する。
 - 生の例外文字列をUIへ表示しない。
 - 不明値を固定値やランダム値で補完しない。
 - manifest件数と解析件数が一致しなければ描画しない。
@@ -178,9 +212,13 @@ depthScale = 1.0
 ### 独立パッケージ
 
 - manifestのFreezed JSON変換
-- Dio取得、キャンセル、進捗通知
-- SHA-256不一致時の拒否
-- atomic cache更新と検証済みキャッシュ保持
+- Source Freezed unionのNetwork、File、Asset分岐
+- Dio Range header、キャンセル、進捗通知
+- `206`と`Content-Range`の厳密検証、および`200`応答の拒否
+- ETag固定、`If-Match`送信、`412`と世代変更の拒否
+- bounded range LRUのhit、eviction、アーカイブ識別子分離
+- File random accessと範囲外readの拒否
+- Asset loaderからの読み込みとNetwork経路への全体loadフォールバック禁止
 - MVT Pointとプロパティの解析
 - 不正型、欠損、未知スキーマの拒否
 - manifest件数と解析件数の一致
@@ -195,7 +233,9 @@ depthScale = 1.0
 - 半透明地図越しの地下表示
 - カメラ回転、移動、ズーム、リセット
 - GPUバッファが初回またはデータ変更時だけ転送されること
-- 読み込み、エラー、検証済みキャッシュ表示のWidgetテスト
+- 読み込み状態、キャンセル、エラー変換のunit test
+
+今回の機能追加では新しいWidget testを必須にしない。3D画面の描画確認は実機smoke testと性能ゲートで行う。
 
 ## 性能ゲート
 
