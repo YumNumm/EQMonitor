@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_warning_arrival_classifier.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_warning_representative_selector.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_candidate.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_display_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -47,7 +48,8 @@ class EewWarningDisplayModelBuilder {
 
     final zoneNamesByCode = <String, String>{};
     for (final candidate in sortedCandidates) {
-      for (final zone in candidate.event.warning?.zones ?? const []) {
+      for (final zone
+          in candidate.event.warning?.zones ?? const <EewWarningZoneInfo>[]) {
         if (zone.hadWarning) {
           zoneNamesByCode.putIfAbsent(zone.code, () => zone.name);
         }

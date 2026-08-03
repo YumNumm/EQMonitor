@@ -24,6 +24,6 @@ abstract class TsunamiStationsParameterMetadata with _$TsunamiStationsParameterM
     required List<String> sourceUrls,
     required String sha256,
   }) = _TsunamiStationsParameterMetadata;
-  
+
   factory TsunamiStationsParameterMetadata.fromJson(Map<String, Object?> json) => _$TsunamiStationsParameterMetadataFromJson(json);
 }

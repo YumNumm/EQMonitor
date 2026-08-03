@@ -24,6 +24,6 @@ abstract class ShindoDbStationsParameterMetadata with _$ShindoDbStationsParamete
     required List<String> sourceUrls,
     required String sha256,
   }) = _ShindoDbStationsParameterMetadata;
-  
+
   factory ShindoDbStationsParameterMetadata.fromJson(Map<String, Object?> json) => _$ShindoDbStationsParameterMetadataFromJson(json);
 }

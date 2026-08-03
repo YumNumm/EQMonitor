@@ -11,6 +11,8 @@ abstract class ShakeDetectionEntry with _$ShakeDetectionEntry {
     required String? subRegionName,
     required api.ShakeDetectionLevel minLevel,
     required bool isCurrentLocation,
+    String? prefectureCode,
+    String? cityCode,
   }) = _ShakeDetectionEntry;
 }
 

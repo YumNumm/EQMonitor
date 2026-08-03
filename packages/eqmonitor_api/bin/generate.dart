@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'generated_file_cleanup.dart';
+import 'hypocenter_api_client_patch.dart';
+import 'legacy_generated_contract.dart';
+
 void main(List<String> args) async {
   final packageDir = File.fromUri(Platform.script).parent.parent;
   final externalOpenapiPath = await File(
@@ -9,6 +13,7 @@ void main(List<String> args) async {
 
   final openapiFile = File('${packageDir.path}/openapi/openapi.json');
   final libDir = Directory('${packageDir.path}/lib/src');
+  final legacyContract = preserveLegacyGeneratedContract(libDir: libDir);
 
   await _step('lib/src/ を削除', () async {
     if (libDir.existsSync()) {
@@ -43,6 +48,10 @@ void main(List<String> args) async {
 
   await _step('swagger_parser でクライアントコードを生成', () async {
     await _run('dart', ['run', 'swagger_parser'], packageDir.path);
+  });
+
+  await _step('廃止済みParameters APIの互換型を復元', () async {
+    restoreLegacyGeneratedContract(libDir: libDir, preserved: legacyContract);
   });
 
   await _step('RealtimeEventEnvelope dispatcher を生成', () async {
@@ -182,6 +191,10 @@ void main(List<String> args) async {
     _patchRemainingDynamic(libDir);
   });
 
+  await _step('震源検索へCancelTokenを追加', () async {
+    patchHypocenterApiClientCancelToken(libDir: libDir);
+  });
+
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
     await _run('dart', [
       'run',
@@ -192,7 +205,9 @@ void main(List<String> args) async {
   });
 
   await _step('生成ファイルの末尾空白を除去', () async {
-    _stripTrailingWhitespace(libDir);
+    for (final file in stripGeneratedTrailingWhitespace(libDir: libDir)) {
+      stdout.writeln('  stripped: ${file.path}');
+    }
   });
 
   await _step('残存 dynamic の検出', () async {
@@ -498,43 +513,6 @@ Future<void> _patchGeneratedFiles(Directory libDir) async {
     if (patched != original) {
       file.writeAsStringSync(patched);
       stdout.writeln('  Patched: ${file.path}');
-    }
-  }
-}
-
-void _stripTrailingWhitespace(Directory libDir) {
-  const realtimeDependencyFiles = {
-    'bottom_right.dart',
-    'correlated_eew.dart',
-    'location.dart',
-    'merged_events.dart',
-    'points.dart',
-    'region.dart',
-    'test.dart',
-    'top_left.dart',
-  };
-  final dartFiles = libDir.listSync(recursive: true).whereType<File>().where((
-    file,
-  ) {
-    if (!file.path.endsWith('.dart')) {
-      return false;
-    }
-    final name = file.uri.pathSegments.last;
-    return name == 'catalog.dart' ||
-        name.startsWith('catalog_') ||
-        name == 'shake_detection_api_client.dart' ||
-        name.startsWith('realtime_') ||
-        name.startsWith('shake_detection_active_') ||
-        realtimeDependencyFiles.contains(name);
-  });
-
-  for (final file in dartFiles) {
-    final original = file.readAsStringSync();
-    final patched =
-        '${original.replaceAll(RegExp(r'[ \t]+$', multiLine: true), '').trimRight()}\n';
-    if (patched != original) {
-      file.writeAsStringSync(patched);
-      stdout.writeln('  stripped: ${file.path}');
     }
   }
 }

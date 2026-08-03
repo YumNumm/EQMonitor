@@ -15,6 +15,6 @@ abstract class JmaCodeTableItem with _$JmaCodeTableItem {
     required String code,
     required LocalizedName name,
   }) = _JmaCodeTableItem;
-  
+
   factory JmaCodeTableItem.fromJson(Map<String, Object?> json) => _$JmaCodeTableItemFromJson(json);
 }

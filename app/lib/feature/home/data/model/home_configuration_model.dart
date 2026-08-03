@@ -61,18 +61,6 @@ enum HomeKmoniMarkerSize {
   large,
 }
 
-/// 揺れ検知の表示スタイル
-@JsonEnum(alwaysCreate: true)
-enum HomeShakeDetectionDisplayMode {
-  /// 0.25° グリッドセルで表示
-  @JsonValue('gridCell')
-  gridCell,
-
-  /// バウンディングボックス（矩形）で表示
-  @JsonValue('boundingBox')
-  boundingBox,
-}
-
 /// 揺れ検知のアニメーションモード
 @JsonEnum(alwaysCreate: true)
 enum HomeShakeDetectionAnimationMode {
@@ -110,8 +98,6 @@ abstract class HomeShakeDetectionSettings with _$HomeShakeDetectionSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory HomeShakeDetectionSettings({
     @Default(true) bool show,
-    @Default(HomeShakeDetectionDisplayMode.boundingBox)
-    HomeShakeDetectionDisplayMode displayMode,
     @Default(HomeShakeDetectionAnimationMode.blink)
     HomeShakeDetectionAnimationMode animationMode,
   }) = _HomeShakeDetectionSettings;
@@ -144,6 +130,16 @@ abstract class HomeKyoshinMonitorSettings with _$HomeKyoshinMonitorSettings {
 
   factory HomeKyoshinMonitorSettings.fromJson(Map<String, dynamic> json) =>
       _$HomeKyoshinMonitorSettingsFromJson(json);
+}
+
+@freezed
+abstract class HomeMapGridSettings with _$HomeMapGridSettings {
+  @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+  const factory HomeMapGridSettings({@Default(false) bool enabled}) =
+      _HomeMapGridSettings;
+
+  factory HomeMapGridSettings.fromJson(Map<String, dynamic> json) =>
+      _$HomeMapGridSettingsFromJson(json);
 }
 
 @freezed
@@ -186,6 +182,7 @@ abstract class HomeConfigurationModel with _$HomeConfigurationModel {
     @Default(HomeCommonSettings()) HomeCommonSettings common,
     @Default(HomeShakeDetectionSettings())
     HomeShakeDetectionSettings shakeDetection,
+    @Default(HomeMapGridSettings()) HomeMapGridSettings mapGrid,
   }) = _HomeConfigurationModel;
 
   factory HomeConfigurationModel.fromJson(Map<String, dynamic> json) =>

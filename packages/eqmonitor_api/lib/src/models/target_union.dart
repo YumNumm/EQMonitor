@@ -18,7 +18,7 @@ sealed class TargetUnion with _$TargetUnion {
     required String type,
     required String deviceId,
   }) = TargetUnionVariant1;
-  
+
   @JsonSerializable()
   const factory TargetUnion.variant2({
     /// const: "PUSH_TO_START_TOKEN"
@@ -26,7 +26,7 @@ sealed class TargetUnion with _$TargetUnion {
     required String token,
     required Environment environment,
   }) = TargetUnionVariant2;
-  
+
 
   factory TargetUnion.fromJson(Map<String, Object?> json) =>
       switch (json['type']) {

@@ -77,7 +77,7 @@ as List<EarthquakeStationPrefecture>,
 @override
 @pragma('vm:prefer-inline')
 $ParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $ParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -294,7 +294,7 @@ as List<EarthquakeStationPrefecture>,
 @override
 @pragma('vm:prefer-inline')
 $ParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $ParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });

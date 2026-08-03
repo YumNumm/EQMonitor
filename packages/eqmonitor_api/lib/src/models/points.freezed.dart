@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Points {
 
- String get code; String get name; String get region; String get type; Location get location;@JsonKey(includeIfNull: true) num? get intensity;@JsonKey(includeIfNull: true) num? get intensityDiff;
+ String get code; String get name; String get region; String get type; Location get location;@JsonKey(includeIfNull: true) num? get intensity;@JsonKey(includeIfNull: true, name: 'prefecture_code') String? get prefectureCode;@JsonKey(includeIfNull: true, name: 'region_code') String? get regionCode;@JsonKey(includeIfNull: true, name: 'city_code') String? get cityCode;@JsonKey(includeIfNull: true) num? get intensityDiff;
 /// Create a copy of Points
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PointsCopyWith<Points> get copyWith => _$PointsCopyWithImpl<Points>(this as Poi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Points&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.region, region) || other.region == region)&&(identical(other.type, type) || other.type == type)&&(identical(other.location, location) || other.location == location)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.intensityDiff, intensityDiff) || other.intensityDiff == intensityDiff));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Points&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.region, region) || other.region == region)&&(identical(other.type, type) || other.type == type)&&(identical(other.location, location) || other.location == location)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.intensityDiff, intensityDiff) || other.intensityDiff == intensityDiff));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,name,region,type,location,intensity,intensityDiff);
+int get hashCode => Object.hash(runtimeType,code,name,region,type,location,intensity,prefectureCode,regionCode,cityCode,intensityDiff);
 
 @override
 String toString() {
-  return 'Points(code: $code, name: $name, region: $region, type: $type, location: $location, intensity: $intensity, intensityDiff: $intensityDiff)';
+  return 'Points(code: $code, name: $name, region: $region, type: $type, location: $location, intensity: $intensity, prefectureCode: $prefectureCode, regionCode: $regionCode, cityCode: $cityCode, intensityDiff: $intensityDiff)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PointsCopyWith<$Res>  {
   factory $PointsCopyWith(Points value, $Res Function(Points) _then) = _$PointsCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, String region, String type, Location location,@JsonKey(includeIfNull: true) num? intensity,@JsonKey(includeIfNull: true) num? intensityDiff
+ String code, String name, String region, String type, Location location,@JsonKey(includeIfNull: true) num? intensity,@JsonKey(includeIfNull: true, name: 'prefecture_code') String? prefectureCode,@JsonKey(includeIfNull: true, name: 'region_code') String? regionCode,@JsonKey(includeIfNull: true, name: 'city_code') String? cityCode,@JsonKey(includeIfNull: true) num? intensityDiff
 });
 
 
@@ -65,7 +65,7 @@ class _$PointsCopyWithImpl<$Res>
 
 /// Create a copy of Points
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? region = null,Object? type = null,Object? location = null,Object? intensity = freezed,Object? intensityDiff = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? region = null,Object? type = null,Object? location = null,Object? intensity = freezed,Object? prefectureCode = freezed,Object? regionCode = freezed,Object? cityCode = freezed,Object? intensityDiff = freezed,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,10 @@ as String,region: null == region ? _self.region : region // ignore: cast_nullabl
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as Location,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as num?,intensityDiff: freezed == intensityDiff ? _self.intensityDiff : intensityDiff // ignore: cast_nullable_to_non_nullable
+as num?,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
+as String?,regionCode: freezed == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
+as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
+as String?,intensityDiff: freezed == intensityDiff ? _self.intensityDiff : intensityDiff // ignore: cast_nullable_to_non_nullable
 as num?,
   ));
 }
@@ -168,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  String region,  String type,  Location location, @JsonKey(includeIfNull: true)  num? intensity, @JsonKey(includeIfNull: true)  num? intensityDiff)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  String region,  String type,  Location location, @JsonKey(includeIfNull: true)  num? intensity, @JsonKey(includeIfNull: true, name: 'prefecture_code')  String? prefectureCode, @JsonKey(includeIfNull: true, name: 'region_code')  String? regionCode, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: true)  num? intensityDiff)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Points() when $default != null:
-return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_that.intensity,_that.intensityDiff);case _:
+return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_that.intensity,_that.prefectureCode,_that.regionCode,_that.cityCode,_that.intensityDiff);case _:
   return orElse();
 
 }
@@ -189,10 +192,10 @@ return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  String region,  String type,  Location location, @JsonKey(includeIfNull: true)  num? intensity, @JsonKey(includeIfNull: true)  num? intensityDiff)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  String region,  String type,  Location location, @JsonKey(includeIfNull: true)  num? intensity, @JsonKey(includeIfNull: true, name: 'prefecture_code')  String? prefectureCode, @JsonKey(includeIfNull: true, name: 'region_code')  String? regionCode, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: true)  num? intensityDiff)  $default,) {final _that = this;
 switch (_that) {
 case _Points():
-return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_that.intensity,_that.intensityDiff);case _:
+return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_that.intensity,_that.prefectureCode,_that.regionCode,_that.cityCode,_that.intensityDiff);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +212,10 @@ return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  String region,  String type,  Location location, @JsonKey(includeIfNull: true)  num? intensity, @JsonKey(includeIfNull: true)  num? intensityDiff)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  String region,  String type,  Location location, @JsonKey(includeIfNull: true)  num? intensity, @JsonKey(includeIfNull: true, name: 'prefecture_code')  String? prefectureCode, @JsonKey(includeIfNull: true, name: 'region_code')  String? regionCode, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: true)  num? intensityDiff)?  $default,) {final _that = this;
 switch (_that) {
 case _Points() when $default != null:
-return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_that.intensity,_that.intensityDiff);case _:
+return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_that.intensity,_that.prefectureCode,_that.regionCode,_that.cityCode,_that.intensityDiff);case _:
   return null;
 
 }
@@ -224,7 +227,7 @@ return $default(_that.code,_that.name,_that.region,_that.type,_that.location,_th
 @JsonSerializable()
 
 class _Points implements Points {
-  const _Points({required this.code, required this.name, required this.region, required this.type, required this.location, @JsonKey(includeIfNull: true) required this.intensity, @JsonKey(includeIfNull: true) this.intensityDiff = 0});
+  const _Points({required this.code, required this.name, required this.region, required this.type, required this.location, @JsonKey(includeIfNull: true) required this.intensity, @JsonKey(includeIfNull: true, name: 'prefecture_code') required this.prefectureCode, @JsonKey(includeIfNull: true, name: 'region_code') required this.regionCode, @JsonKey(includeIfNull: true, name: 'city_code') required this.cityCode, @JsonKey(includeIfNull: true) this.intensityDiff = 0});
   factory _Points.fromJson(Map<String, dynamic> json) => _$PointsFromJson(json);
 
 @override final  String code;
@@ -233,6 +236,9 @@ class _Points implements Points {
 @override final  String type;
 @override final  Location location;
 @override@JsonKey(includeIfNull: true) final  num? intensity;
+@override@JsonKey(includeIfNull: true, name: 'prefecture_code') final  String? prefectureCode;
+@override@JsonKey(includeIfNull: true, name: 'region_code') final  String? regionCode;
+@override@JsonKey(includeIfNull: true, name: 'city_code') final  String? cityCode;
 @override@JsonKey(includeIfNull: true) final  num? intensityDiff;
 
 /// Create a copy of Points
@@ -248,16 +254,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Points&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.region, region) || other.region == region)&&(identical(other.type, type) || other.type == type)&&(identical(other.location, location) || other.location == location)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.intensityDiff, intensityDiff) || other.intensityDiff == intensityDiff));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Points&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.region, region) || other.region == region)&&(identical(other.type, type) || other.type == type)&&(identical(other.location, location) || other.location == location)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.intensityDiff, intensityDiff) || other.intensityDiff == intensityDiff));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,name,region,type,location,intensity,intensityDiff);
+int get hashCode => Object.hash(runtimeType,code,name,region,type,location,intensity,prefectureCode,regionCode,cityCode,intensityDiff);
 
 @override
 String toString() {
-  return 'Points(code: $code, name: $name, region: $region, type: $type, location: $location, intensity: $intensity, intensityDiff: $intensityDiff)';
+  return 'Points(code: $code, name: $name, region: $region, type: $type, location: $location, intensity: $intensity, prefectureCode: $prefectureCode, regionCode: $regionCode, cityCode: $cityCode, intensityDiff: $intensityDiff)';
 }
 
 
@@ -268,7 +274,7 @@ abstract mixin class _$PointsCopyWith<$Res> implements $PointsCopyWith<$Res> {
   factory _$PointsCopyWith(_Points value, $Res Function(_Points) _then) = __$PointsCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, String region, String type, Location location,@JsonKey(includeIfNull: true) num? intensity,@JsonKey(includeIfNull: true) num? intensityDiff
+ String code, String name, String region, String type, Location location,@JsonKey(includeIfNull: true) num? intensity,@JsonKey(includeIfNull: true, name: 'prefecture_code') String? prefectureCode,@JsonKey(includeIfNull: true, name: 'region_code') String? regionCode,@JsonKey(includeIfNull: true, name: 'city_code') String? cityCode,@JsonKey(includeIfNull: true) num? intensityDiff
 });
 
 
@@ -285,7 +291,7 @@ class __$PointsCopyWithImpl<$Res>
 
 /// Create a copy of Points
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? region = null,Object? type = null,Object? location = null,Object? intensity = freezed,Object? intensityDiff = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? region = null,Object? type = null,Object? location = null,Object? intensity = freezed,Object? prefectureCode = freezed,Object? regionCode = freezed,Object? cityCode = freezed,Object? intensityDiff = freezed,}) {
   return _then(_Points(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -293,7 +299,10 @@ as String,region: null == region ? _self.region : region // ignore: cast_nullabl
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as Location,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as num?,intensityDiff: freezed == intensityDiff ? _self.intensityDiff : intensityDiff // ignore: cast_nullable_to_non_nullable
+as num?,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
+as String?,regionCode: freezed == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
+as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
+as String?,intensityDiff: freezed == intensityDiff ? _self.intensityDiff : intensityDiff // ignore: cast_nullable_to_non_nullable
 as num?,
   ));
 }

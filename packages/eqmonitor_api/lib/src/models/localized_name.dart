@@ -40,6 +40,6 @@ abstract class LocalizedName with _$LocalizedName {
     @JsonKey(includeIfNull: false)
     String? mn,
   }) = _LocalizedName;
-  
+
   factory LocalizedName.fromJson(Map<String, Object?> json) => _$LocalizedNameFromJson(json);
 }

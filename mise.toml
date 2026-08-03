@@ -1,9 +1,8 @@
-min_version = "2026.04.01"
+min_version = "2026.08.0"
 
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"
-flutter = "latest"
-java = "26"
+java = "17"
 node = "lts"
 python = "latest"
 "pipx:codemagic-cli-tools" = "latest"
@@ -25,8 +24,9 @@ pkl = "latest"
 zizmor = "latest"
 ghalint = "latest"
 gitleaks = "latest"
-claude = "2.1.220"
+claude = "latest"
 swift = "latest"
+flutter = "4dacd3fc91d96262a33e5c598e17d816f0b35641"
 
 [settings]
 lockfile = true

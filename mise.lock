@@ -195,7 +195,7 @@ url = "https://github.com/firebase/firebase-tools/releases/download/v15.24.0/fir
 url_api = "https://api.github.com/repos/firebase/firebase-tools/releases/assets/478480985"
 
 [[tools.flutter]]
-version = "3.44.8-stable"
+version = "4dacd3fc91d96262a33e5c598e17d816f0b35641"
 backend = "asdf:flutter"
 
 [[tools.gcloud]]

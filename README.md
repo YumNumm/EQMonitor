@@ -82,6 +82,17 @@ cd EQMonitor
 
 1. `flutter run` でアプリケーションを起動します。
 
+   > [!NOTE]
+   > **iOS**: AppIntent / Widget 用の slim `app/assets/parameters/jma_code_table.json` はリポジトリに同梱済みです。clone 直後でもビルドできます。
+   > **Android / macOS**: 地図・パラメータ一式は git に含めません。ビルド前に backend Release から配置してください（`GH_TOKEN` が必要）:
+   >
+   > ```bash
+   > export GH_TOKEN=...
+   > tool/asset_pack/stage_from_release.sh --target android   # または macos / both
+   > ```
+   >
+   > 詳細: [`docs/knowledge/20260728_asset_pack_release_staging.md`](./docs/knowledge/20260728_asset_pack_release_staging.md)
+
 ## コントリビューション
 
 [CONTRIBUTING.md](./docs/CONTRIBUTING.md)を参照してください。

@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'operation2.dart';
-import 'type4.dart';
+import 'realtime_tsunami_delete_payload_operation.dart';
+import 'realtime_tsunami_delete_payload_type.dart';
 
 part 'realtime_tsunami_delete_payload.freezed.dart';
 part 'realtime_tsunami_delete_payload.g.dart';
@@ -13,8 +13,8 @@ part 'realtime_tsunami_delete_payload.g.dart';
 @Freezed()
 abstract class RealtimeTsunamiDeletePayload with _$RealtimeTsunamiDeletePayload {
   const factory RealtimeTsunamiDeletePayload({
-    required Type4 type,
-    required Operation2 operation,
+    required RealtimeTsunamiDeletePayloadType type,
+    required RealtimeTsunamiDeletePayloadOperation operation,
     @JsonKey(name: 'event_id')
     required String eventId,
     @JsonKey(includeIfNull: false,name: 'group_id')

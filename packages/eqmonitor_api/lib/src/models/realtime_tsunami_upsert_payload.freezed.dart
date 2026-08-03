@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RealtimeTsunamiUpsertPayload {
 
- Type4 get type; Operation get operation;@JsonKey(name: 'event_id') String get eventId;@JsonKey(includeIfNull: false, name: 'group_id') String? get groupId;
+ RealtimeTsunamiUpsertPayloadType get type; RealtimeTsunamiUpsertPayloadOperation get operation;@JsonKey(name: 'event_id') String get eventId;@JsonKey(includeIfNull: false, name: 'group_id') String? get groupId;
 /// Create a copy of RealtimeTsunamiUpsertPayload
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RealtimeTsunamiUpsertPayloadCopyWith<$Res>  {
   factory $RealtimeTsunamiUpsertPayloadCopyWith(RealtimeTsunamiUpsertPayload value, $Res Function(RealtimeTsunamiUpsertPayload) _then) = _$RealtimeTsunamiUpsertPayloadCopyWithImpl;
 @useResult
 $Res call({
- Type4 type, Operation operation,@JsonKey(name: 'event_id') String eventId,@JsonKey(includeIfNull: false, name: 'group_id') String? groupId
+ RealtimeTsunamiUpsertPayloadType type, RealtimeTsunamiUpsertPayloadOperation operation,@JsonKey(name: 'event_id') String eventId,@JsonKey(includeIfNull: false, name: 'group_id') String? groupId
 });
 
 
@@ -68,8 +68,8 @@ class _$RealtimeTsunamiUpsertPayloadCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? operation = null,Object? eventId = null,Object? groupId = freezed,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type4,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeTsunamiUpsertPayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeTsunamiUpsertPayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,groupId: freezed == groupId ? _self.groupId : groupId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type4 type,  Operation operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RealtimeTsunamiUpsertPayloadType type,  RealtimeTsunamiUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RealtimeTsunamiUpsertPayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId,_that.groupId);case _:
@@ -177,7 +177,7 @@ return $default(_that.type,_that.operation,_that.eventId,_that.groupId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type4 type,  Operation operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RealtimeTsunamiUpsertPayloadType type,  RealtimeTsunamiUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeTsunamiUpsertPayload():
 return $default(_that.type,_that.operation,_that.eventId,_that.groupId);case _:
@@ -197,7 +197,7 @@ return $default(_that.type,_that.operation,_that.eventId,_that.groupId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type4 type,  Operation operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RealtimeTsunamiUpsertPayloadType type,  RealtimeTsunamiUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)?  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeTsunamiUpsertPayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId,_that.groupId);case _:
@@ -215,8 +215,8 @@ class _RealtimeTsunamiUpsertPayload implements RealtimeTsunamiUpsertPayload {
   const _RealtimeTsunamiUpsertPayload({required this.type, required this.operation, @JsonKey(name: 'event_id') required this.eventId, @JsonKey(includeIfNull: false, name: 'group_id') this.groupId});
   factory _RealtimeTsunamiUpsertPayload.fromJson(Map<String, dynamic> json) => _$RealtimeTsunamiUpsertPayloadFromJson(json);
 
-@override final  Type4 type;
-@override final  Operation operation;
+@override final  RealtimeTsunamiUpsertPayloadType type;
+@override final  RealtimeTsunamiUpsertPayloadOperation operation;
 @override@JsonKey(name: 'event_id') final  String eventId;
 @override@JsonKey(includeIfNull: false, name: 'group_id') final  String? groupId;
 
@@ -253,7 +253,7 @@ abstract mixin class _$RealtimeTsunamiUpsertPayloadCopyWith<$Res> implements $Re
   factory _$RealtimeTsunamiUpsertPayloadCopyWith(_RealtimeTsunamiUpsertPayload value, $Res Function(_RealtimeTsunamiUpsertPayload) _then) = __$RealtimeTsunamiUpsertPayloadCopyWithImpl;
 @override @useResult
 $Res call({
- Type4 type, Operation operation,@JsonKey(name: 'event_id') String eventId,@JsonKey(includeIfNull: false, name: 'group_id') String? groupId
+ RealtimeTsunamiUpsertPayloadType type, RealtimeTsunamiUpsertPayloadOperation operation,@JsonKey(name: 'event_id') String eventId,@JsonKey(includeIfNull: false, name: 'group_id') String? groupId
 });
 
 
@@ -273,8 +273,8 @@ class __$RealtimeTsunamiUpsertPayloadCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? operation = null,Object? eventId = null,Object? groupId = freezed,}) {
   return _then(_RealtimeTsunamiUpsertPayload(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type4,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeTsunamiUpsertPayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeTsunamiUpsertPayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,groupId: freezed == groupId ? _self.groupId : groupId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

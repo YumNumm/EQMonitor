@@ -29,7 +29,9 @@ class EewWarningCandidateSelector {
 
       EewForecastRegionInfo? localForecastRegion;
       if (forecastAreaCode != null) {
-        for (final region in event.forecastIntensity?.regions ?? const []) {
+        for (final region
+            in event.forecastIntensity?.regions ??
+                const <EewForecastRegionInfo>[]) {
           if (region.code == forecastAreaCode) {
             localForecastRegion = region;
             break;

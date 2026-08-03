@@ -222,17 +222,22 @@
     "file": "get__v2_eew.json"
   },
   {
-    "key": "GET /v2/parameters/manifest",
-    "file": "get__v2_parameters_manifest__with-parameters.json",
-    "fixture": "with-parameters"
+    "key": "GET /v2/hypocenters",
+    "file": "get__v2_hypocenters__empty.json",
+    "fixture": "empty"
   },
   {
-    "key": "GET /v2/parameters/manifest",
-    "file": "get__v2_parameters_manifest.json"
+    "key": "GET /v2/hypocenters/manifest",
+    "file": "get__v2_hypocenters_manifest__empty.json",
+    "fixture": "empty"
   },
   {
-    "key": "GET /v2/parameters/:type",
-    "file": "get__v2_parameters_type.json"
+    "key": "GET /v2/hypocenters/manifest",
+    "file": "get__v2_hypocenters_manifest.json"
+  },
+  {
+    "key": "GET /v2/hypocenters",
+    "file": "get__v2_hypocenters.json"
   },
   {
     "key": "GET /v2/telegram",

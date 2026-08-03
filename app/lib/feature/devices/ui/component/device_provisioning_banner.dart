@@ -10,12 +10,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-/// デバイスプロビジョニング / トークン同期の進行状況バナー。
-/// 正常完了・アイドル状態では高さゼロの SizedBox.shrink() を返す。
 class DeviceProvisioningBanner extends ConsumerWidget {
-  const DeviceProvisioningBanner({required this.bottomSpacing, super.key});
-
-  final double bottomSpacing;
+  const DeviceProvisioningBanner({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +46,6 @@ class DeviceProvisioningBanner extends ConsumerWidget {
     }
 
     return _DeviceProvisioningBannerContent(
-      bottomSpacing: bottomSpacing,
       activeRetry: activeRetry,
       isLoading: isLoading,
       isProvisioningRequired:
@@ -80,14 +75,12 @@ class DeviceProvisioningBanner extends ConsumerWidget {
 
 class _DeviceProvisioningBannerContent extends StatelessWidget {
   const _DeviceProvisioningBannerContent({
-    required this.bottomSpacing,
     required this.activeRetry,
     required this.isLoading,
     required this.isProvisioningRequired,
     required this.onRetry,
   });
 
-  final double bottomSpacing;
   final RetryControllerState activeRetry;
   final bool isLoading;
   final bool isProvisioningRequired;
@@ -97,7 +90,7 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
 
-    final content = switch (activeRetry) {
+    return switch (activeRetry) {
       RetryExhausted(:final lastError) => _BannerTile(
         icon: Icons.error_outline,
         backgroundColor: colorTheme.errorContainer,
@@ -144,16 +137,8 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
           child: const Text('再試行'),
         ),
       ),
-      _ => null,
+      _ => SizedBox.shrink(),
     };
-
-    if (content == null) {
-      return const SizedBox.shrink();
-    }
-    return Padding(
-      padding: EdgeInsets.only(bottom: bottomSpacing),
-      child: content,
-    );
   }
 }
 
@@ -209,9 +194,18 @@ class _BannerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+
+    final shape = designSystem.shape;
+    final colorTheme = designSystem.colorTheme;
+
     return Material(
       color: backgroundColor,
-      borderRadius: BorderRadius.circular(12),
+      shape: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(shape.card),
+        side: BorderSide(color: colorTheme.outlineVariant),
+      ),
+      clipBehavior: .antiAlias,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(

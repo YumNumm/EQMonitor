@@ -24,6 +24,6 @@ abstract class JmaCodeTableParameterMetadata with _$JmaCodeTableParameterMetadat
     required List<String> sourceUrls,
     required String sha256,
   }) = _JmaCodeTableParameterMetadata;
-  
+
   factory JmaCodeTableParameterMetadata.fromJson(Map<String, Object?> json) => _$JmaCodeTableParameterMetadataFromJson(json);
 }

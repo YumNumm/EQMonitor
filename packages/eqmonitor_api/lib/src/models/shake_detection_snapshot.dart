@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'shake_detection_snapshot_type.dart';
 import 'shake_detection_state.dart';
-import 'type3.dart';
 
 part 'shake_detection_snapshot.freezed.dart';
 part 'shake_detection_snapshot.g.dart';
@@ -13,7 +13,7 @@ part 'shake_detection_snapshot.g.dart';
 @Freezed()
 abstract class ShakeDetectionSnapshot with _$ShakeDetectionSnapshot {
   const factory ShakeDetectionSnapshot({
-    required Type3 type,
+    required ShakeDetectionSnapshotType type,
     required int revision,
     required DateTime responseAt,
     required List<ShakeDetectionState> events,

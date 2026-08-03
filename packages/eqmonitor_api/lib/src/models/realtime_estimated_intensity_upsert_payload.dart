@@ -5,8 +5,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'estimated_intensity_event.dart';
-import 'operation.dart';
-import 'type5.dart';
+import 'realtime_estimated_intensity_upsert_payload_operation.dart';
+import 'realtime_estimated_intensity_upsert_payload_type.dart';
 
 part 'realtime_estimated_intensity_upsert_payload.freezed.dart';
 part 'realtime_estimated_intensity_upsert_payload.g.dart';
@@ -14,8 +14,8 @@ part 'realtime_estimated_intensity_upsert_payload.g.dart';
 @Freezed()
 abstract class RealtimeEstimatedIntensityUpsertPayload with _$RealtimeEstimatedIntensityUpsertPayload {
   const factory RealtimeEstimatedIntensityUpsertPayload({
-    required Type5 type,
-    required Operation operation,
+    required RealtimeEstimatedIntensityUpsertPayloadType type,
+    required RealtimeEstimatedIntensityUpsertPayloadOperation operation,
     @JsonKey(name: 'event_id')
     required String eventId,
     required EstimatedIntensityEvent record,

@@ -31,6 +31,6 @@ abstract class KyoshinObservationPoint with _$KyoshinObservationPoint {
     @JsonKey(includeIfNull: true,name: 'arv_400')
     required num? arv400,
   }) = _KyoshinObservationPoint;
-  
+
   factory KyoshinObservationPoint.fromJson(Map<String, Object?> json) => _$KyoshinObservationPointFromJson(json);
 }

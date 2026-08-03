@@ -77,7 +77,7 @@ as List<KyoshinObservationPoint>,
 @override
 @pragma('vm:prefer-inline')
 $KyoshinObservationPointsParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $KyoshinObservationPointsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -294,7 +294,7 @@ as List<KyoshinObservationPoint>,
 @override
 @pragma('vm:prefer-inline')
 $KyoshinObservationPointsParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $KyoshinObservationPointsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });

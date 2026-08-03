@@ -179,12 +179,17 @@ struct EewExpandedTrailingView: View {
             }
             if let serialNo = state.serialNo, serialNo > 0 {
                 HStack(alignment: .firstTextBaseline, spacing: 0) {
+                    if state.isFinal == true {
+                        Text("最終 ")
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundColor(.eqTextTertiary)
+                    }
                     Text("第")
                         .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.eqTextTertiary)
                     Text("\(serialNo)")
                         .font(.system(size: 14, weight: .bold, design: .monospaced))
-                    Text(state.isFinal == true ? "報(最終)" : "報")
+                    Text("報")
                         .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.eqTextTertiary)
                 }
@@ -225,27 +230,44 @@ struct EewExpandedBottomView: View {
 
     var body: some View {
         HStack {
-            HStack(spacing: 12) {
-                if let magnitude = state.magnitude {
-                    HStack(alignment: .firstTextBaseline, spacing: 1) {
-                        Text("M")
-                            .font(.system(size: 11, weight: .semibold))
-                            .foregroundColor(.eqTextSecondary)
-                        Text(String(format: "%.1f", magnitude))
-                            .font(.system(size: 16, weight: .bold, design: .monospaced))
-                            .tracking(-2)
+            if state.isPlum == true {
+                Text("PLUM法による検知")
+                    .font(.system(size: 13, weight: .bold, design: .monospaced))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+            } else if state.isLevel == true {
+                Text("レベル法による検知")
+                    .font(.system(size: 13, weight: .bold, design: .monospaced))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+            } else if state.isOnePoint == true {
+                Text("低精度の緊急地震速報")
+                    .font(.system(size: 13, weight: .bold, design: .monospaced))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+            } else {
+                HStack(spacing: 12) {
+                    if let magnitude = state.magnitude {
+                        HStack(alignment: .firstTextBaseline, spacing: 1) {
+                            Text("M")
+                                .font(.system(size: 11, weight: .semibold))
+                                .foregroundColor(.eqTextSecondary)
+                            Text(String(format: "%.1f", magnitude))
+                                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                .tracking(-2)
+                        }
                     }
-                }
-                if let depth = state.depth {
-                    HStack(alignment: .firstTextBaseline, spacing: 1) {
-                        Text("深さ")
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.eqTextSecondary)
-                        Text("\(Int(depth))")
-                            .font(.system(size: 16, weight: .bold, design: .monospaced))
-                        Text("km")
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.eqTextSecondary)
+                    if let depth = state.depth {
+                        HStack(alignment: .firstTextBaseline, spacing: 1) {
+                            Text("深さ")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.eqTextSecondary)
+                            Text("\(Int(depth))")
+                                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                            Text("km")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.eqTextSecondary)
+                        }
                     }
                 }
             }
@@ -473,8 +495,13 @@ struct ArrivalInfoView: View {
                 .lineLimit(1)
 
             if let arrivalDate = location.arrivalDate {
-                Text(arrivalDate, style: .relative)
-                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                if arrivalDate > Date() {
+                    Text(arrivalDate, style: .relative)
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                } else {
+                    Text("到達済み")
+                        .font(.system(size: 12, weight: .bold))
+                }
             }
         }
     }

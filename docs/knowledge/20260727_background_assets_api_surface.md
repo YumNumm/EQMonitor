@@ -96,16 +96,13 @@ The ObjC header doc for the equivalent `URLForPath:error:` is explicit:
 > thread."
 
 So calling `url(for: FilePath(""))` to get "the root" is something Apple's
-own docs tell you not to do. Since this app manages exactly **one** asset
-pack (`eqmonitor-assets`), the "merged namespace" is in practice
-just that one pack, so the adaptation chosen here is: resolve a **known
-top-level file that the pack layout guarantees exists** (`manifest.json`,
-per `backend/docs/superpowers/specs/2026-07-18-asset-pack-design.md`'s
-mandated layout) via `url(for:)`, then return
-`url.deletingLastPathComponent().path` as the "pack root". This is a
-deliberate, documented workaround for a real API gap, not a guess — see
-`EQMAssetsUtil.swift`'s `resolveIOSManagedAssetPackRoot` for the
-implementation and inline reasoning.
+own docs tell you not to do. It is also unsafe to resolve `manifest.json`,
+take `deletingLastPathComponent()`, and append sibling paths. A TestFlight
+diagnostic on 2026-08-01 showed that the manifest URL can resolve while every
+such derived asset URL is absent. The supported pattern is to call
+`url(for: FilePath(relativePath))` independently for `manifest.json` and for
+every manifest asset. `resolvePackRoot` remains only for compatibility;
+production reads use `AssetsUtil.resolvePackFile`.
 
 Readiness is additionally (defense-in-depth) checked via
 `assetPackIsAvailableLocally(withID:)` when running on iOS/macOS 26.4+ (this
@@ -194,11 +191,12 @@ $ swiftc -typecheck -sdk "$(xcrun --sdk macosx --show-sdk-path)" \
     -target arm64-apple-macosx15.6 EQMAssetsUtilSpike.swift     # OK
 ```
 
-And with `-emit-objc-header`, the generated selector for the new method is
+And with `-emit-objc-header`, the generated selectors are
 exactly what ffigen picks up:
 
 ```objc
 - (NSString * _Nullable)resolvePackRootWithPackIdentifier:(NSString * _Nonnull)packIdentifier SWIFT_WARN_UNUSED_RESULT;
+- (NSString * _Nullable)resolveAssetPackFileWithRelativePath:(NSString * _Nonnull)relativePath packIdentifier:(NSString * _Nonnull)packIdentifier SWIFT_WARN_UNUSED_RESULT;
 ```
 
 ## Android note (not part of the Xcode spike, but confirmed the same way — via official docs, not memory)

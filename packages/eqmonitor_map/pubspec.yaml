@@ -1,0 +1,39 @@
+name: eqmonitor_map
+description: EQMonitor専用のFlutter地図レンダラー。
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.11.0
+  flutter: ^3.44.0
+
+resolution: workspace
+
+dependencies:
+  device_info_plus: ^13.2.0
+  flutter:
+    sdk: flutter
+  flutter_hooks: ^0.21.3+1
+  flutter_scene:
+    git:
+      url: https://github.com/bdero/flutter_scene.git
+      ref: 7f71993b7e2a0ab1d2f59726a406098709be7291 # 2026.08.03
+      path: packages/flutter_scene
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.12.0
+  vector_math: ^2.4.2
+
+dev_dependencies:
+  build_runner: ^2.16.0
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  flutter_test:
+    sdk: flutter
+  freezed: ^3.2.6-dev.1
+  json_serializable: ^6.14.1
+dependency_overrides:
+  scene:
+    git:
+      url: https://github.com/bdero/flutter_scene.git
+      ref: 7f71993b7e2a0ab1d2f59726a406098709be7291 # 2026.08.03
+      path: packages/scene

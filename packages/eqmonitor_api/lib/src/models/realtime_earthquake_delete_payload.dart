@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'operation2.dart';
-import 'type.dart';
+import 'realtime_earthquake_delete_payload_operation.dart';
+import 'realtime_earthquake_delete_payload_type.dart';
 
 part 'realtime_earthquake_delete_payload.freezed.dart';
 part 'realtime_earthquake_delete_payload.g.dart';
@@ -13,8 +13,8 @@ part 'realtime_earthquake_delete_payload.g.dart';
 @Freezed()
 abstract class RealtimeEarthquakeDeletePayload with _$RealtimeEarthquakeDeletePayload {
   const factory RealtimeEarthquakeDeletePayload({
-    required Type type,
-    required Operation2 operation,
+    required RealtimeEarthquakeDeletePayloadType type,
+    required RealtimeEarthquakeDeletePayloadOperation operation,
     @JsonKey(name: 'event_id')
     required String eventId,
   }) = _RealtimeEarthquakeDeletePayload;

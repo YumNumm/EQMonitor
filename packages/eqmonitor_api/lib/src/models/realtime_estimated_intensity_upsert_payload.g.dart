@@ -15,10 +15,19 @@ _$RealtimeEstimatedIntensityUpsertPayloadFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _RealtimeEstimatedIntensityUpsertPayload(
-          type: $checkedConvert('type', (v) => $enumDecode(_$Type5EnumMap, v)),
+          type: $checkedConvert(
+            'type',
+            (v) => $enumDecode(
+              _$RealtimeEstimatedIntensityUpsertPayloadTypeEnumMap,
+              v,
+            ),
+          ),
           operation: $checkedConvert(
             'operation',
-            (v) => $enumDecode(_$OperationEnumMap, v),
+            (v) => $enumDecode(
+              _$RealtimeEstimatedIntensityUpsertPayloadOperationEnumMap,
+              v,
+            ),
           ),
           eventId: $checkedConvert('event_id', (v) => v as String),
           record: $checkedConvert(
@@ -40,6 +49,11 @@ Map<String, dynamic> _$RealtimeEstimatedIntensityUpsertPayloadToJson(
   'record': instance.record,
 };
 
-const _$Type5EnumMap = {Type5.estimatedIntensity: 'estimated_intensity'};
+const _$RealtimeEstimatedIntensityUpsertPayloadTypeEnumMap = {
+  RealtimeEstimatedIntensityUpsertPayloadType.estimatedIntensity:
+      'estimated_intensity',
+};
 
-const _$OperationEnumMap = {Operation.upsert: 'upsert'};
+const _$RealtimeEstimatedIntensityUpsertPayloadOperationEnumMap = {
+  RealtimeEstimatedIntensityUpsertPayloadOperation.upsert: 'upsert',
+};

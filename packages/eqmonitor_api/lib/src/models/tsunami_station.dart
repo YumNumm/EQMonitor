@@ -20,6 +20,6 @@ abstract class TsunamiStation with _$TsunamiStation {
     required String owner,
     required ParameterLocation location,
   }) = _TsunamiStation;
-  
+
   factory TsunamiStation.fromJson(Map<String, Object?> json) => _$TsunamiStationFromJson(json);
 }

@@ -1,0 +1,29 @@
+name: eqmonitor_map_example
+description: iOS and Android host for the EQMonitor Flutter Scene spike.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.14.0-29.0.dev
+
+resolution: workspace
+
+dependencies:
+  eqmonitor_map:
+    path: ..
+  flutter:
+    sdk: flutter
+  flutter_hooks: ^0.21.3+1
+  flutter_scene:
+    git:
+      url: https://github.com/bdero/flutter_scene.git
+      ref: 7f71993b7e2a0ab1d2f59726a406098709be7291 # 2026.08.03
+      path: packages/flutter_scene
+  hooks: ^2.1.0
+
+dev_dependencies:
+  eqmonitor_lints:
+    path: ../../eqmonitor_lints
+
+flutter:
+  uses-material-design: true

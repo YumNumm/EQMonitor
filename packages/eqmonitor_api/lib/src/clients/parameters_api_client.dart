@@ -36,4 +36,3 @@ abstract class ParametersApiClientUrls {
 	/// /v2/parameters/{type}
 	static const getV2ParametersType = "/v2/parameters/{type}";
 }
-

@@ -15,6 +15,6 @@ abstract class KyoshinObservationPointMapPoint with _$KyoshinObservationPointMap
     required ParameterPoint center,
     required ParameterPoint offset,
   }) = _KyoshinObservationPointMapPoint;
-  
+
   factory KyoshinObservationPointMapPoint.fromJson(Map<String, Object?> json) => _$KyoshinObservationPointMapPointFromJson(json);
 }

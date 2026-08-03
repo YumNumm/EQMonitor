@@ -14,14 +14,15 @@ import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
 import 'package:eqmonitor/core/fcm/channels.dart';
 import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
+import 'package:eqmonitor/core/provider/app_links_interaction.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
-import 'package:eqmonitor/core/provider/app_links_interaction.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/core/startup/startup_profiler.dart';
@@ -32,9 +33,8 @@ import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.d
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
-import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
-import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
+import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_watcher_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
@@ -42,7 +42,6 @@ import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_pro
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:telemetry_store/telemetry_store.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -56,6 +55,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart'
     hide SharedPreferencesAsync;
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:telemetry_store/telemetry_store.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

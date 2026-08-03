@@ -304,6 +304,16 @@ class _DebugWidget extends ConsumerWidget {
                   const DebugShakeDetectionCardRoute().push(context),
             ),
             ListTile(
+              title: const Text('揺れ検知を挿入'),
+              subtitle: Text(
+                'プリセットをホーム地図・カードへマージ表示',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              leading: const Icon(Icons.add_location_alt_outlined),
+              onTap: () async =>
+                  const DebugShakeDetectionInsertRoute().push(context),
+            ),
+            ListTile(
               title: const Text('JmaMap'),
               leading: const Icon(Icons.map),
               onTap: () async => const DebugJmaMapRoute().push(context),

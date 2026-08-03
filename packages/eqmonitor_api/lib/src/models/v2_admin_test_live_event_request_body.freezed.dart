@@ -77,7 +77,7 @@ as TargetUnion,
 @override
 @pragma('vm:prefer-inline')
 $TargetUnionCopyWith<$Res> get target {
-  
+
   return $TargetUnionCopyWith<$Res>(_self.target, (value) {
     return _then(_self.copyWith(target: value));
   });
@@ -288,7 +288,7 @@ as TargetUnion,
 @override
 @pragma('vm:prefer-inline')
 $TargetUnionCopyWith<$Res> get target {
-  
+
   return $TargetUnionCopyWith<$Res>(_self.target, (value) {
     return _then(_self.copyWith(target: value));
   });

@@ -96,6 +96,11 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
     await save(current.copyWith(map: map));
   }
 
+  Future<void> updateMapGrid(HomeMapGridSettings mapGrid) async {
+    final current = await future;
+    await save(current.copyWith(mapGrid: mapGrid));
+  }
+
   Future<void> updateCommon(HomeCommonSettings common) async {
     final current = await future;
     await save(current.copyWith(common: common));
