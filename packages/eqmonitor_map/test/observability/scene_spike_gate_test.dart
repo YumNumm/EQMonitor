@@ -87,7 +87,7 @@ void main() {
               ),
             )
             .copyWith(
-              schemaVersion: 2,
+              schemaVersion: 3,
               flutterFrameworkRevision: 'wrong',
               startedAtUtc: DateTime(2026, 8, 2),
               frameCount: -1,
@@ -99,7 +99,7 @@ void main() {
         expect(
           decision.validationErrors,
           containsAll([
-            'android/profile has unsupported schema version: 2.',
+            'android/profile has unsupported schema version: 3.',
             'android/profile startedAtUtc must be UTC.',
             'android/profile frameCount must be non-negative.',
           ]),
@@ -251,6 +251,81 @@ void main() {
           'android/profile backgroundAndForeground passed without a lifecycle resume runtime signal.',
           'android/profile disposeAndRemount passed without a confirmed remount runtime signal.',
         ]),
+      );
+    });
+
+    test('rejects custom material pass without runtime load proof', () {
+      final evidence = sceneSpikeFixture.evidence(
+        run: const SceneSpikeRunKey(
+          platform: .android,
+          buildMode: .profile,
+        ),
+      );
+      final craftedJson = evidence.toJson()
+        ..remove('customMaterialRuntimeSuccess');
+      final invalid = SceneSpikeEvidence.fromJson(
+        jsonDecode(jsonEncode(craftedJson)) as Map<String, dynamic>,
+      );
+
+      expect(
+        SceneSpikeGate.evaluate([invalid]).validationErrors,
+        contains(
+          'android/profile customMaterial passed without a current-generation '
+          'runtime load proof.',
+        ),
+      );
+    });
+
+    test('rejects custom material proof from stale generations', () {
+      final evidence = sceneSpikeFixture.evidence(
+        run: const SceneSpikeRunKey(
+          platform: .android,
+          buildMode: .release,
+        ),
+      );
+      final staleController = evidence.copyWith(
+        customMaterialRuntimeSuccess: evidence.customMaterialRuntimeSuccess
+            ?.copyWith(controllerGeneration: 1),
+      );
+      final staleResources = evidence.copyWith(
+        customMaterialRuntimeSuccess: evidence.customMaterialRuntimeSuccess
+            ?.copyWith(appResourceGeneration: 0),
+      );
+
+      expect(
+        SceneSpikeGate.evaluate([staleController]).validationErrors,
+        contains(
+          'android/release customMaterial runtime proof controller generation '
+          'does not match evidence.',
+        ),
+      );
+      expect(
+        SceneSpikeGate.evaluate([staleResources]).validationErrors,
+        contains(
+          'android/release customMaterial runtime proof app resource '
+          'generation does not match evidence.',
+        ),
+      );
+    });
+
+    test('rejects custom material attestation older than runtime proof', () {
+      final evidence = sceneSpikeFixture.evidence(
+        run: const SceneSpikeRunKey(
+          platform: .ios,
+          buildMode: .profile,
+        ),
+      );
+      final invalid = evidence.copyWith(
+        customMaterialRuntimeSuccess: evidence.customMaterialRuntimeSuccess
+            ?.copyWith(observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 1, 500)),
+      );
+
+      expect(
+        SceneSpikeGate.evaluate([invalid]).validationErrors,
+        contains(
+          'ios/profile customMaterial attestation must not predate its runtime '
+          'load proof.',
+        ),
       );
     });
 
@@ -701,6 +776,13 @@ void main() {
       final performanceJson =
           fractionalDuration['performance'] as Map<String, dynamic>;
       performanceJson['buildDurationP95Microseconds'] = 1.5;
+      final fractionalControllerGeneration = evidence.toJson()
+        ..['controllerGeneration'] = 1.5;
+      final fractionalProofGeneration = evidence.toJson();
+      final proofJson =
+          fractionalProofGeneration['customMaterialRuntimeSuccess']
+              as Map<String, dynamic>;
+      proofJson['appResourceGeneration'] = 0.5;
 
       expect(
         () => SceneSpikeEvidence.fromJson(fractionalSchema),
@@ -712,6 +794,14 @@ void main() {
       );
       expect(
         () => SceneSpikeEvidence.fromJson(fractionalDuration),
+        throwsFormatException,
+      );
+      expect(
+        () => SceneSpikeEvidence.fromJson(fractionalControllerGeneration),
+        throwsFormatException,
+      );
+      expect(
+        () => SceneSpikeEvidence.fromJson(fractionalProofGeneration),
         throwsFormatException,
       );
     });
@@ -874,7 +964,13 @@ class SceneSpikeFixture {
     partialUpdateCount: 2,
     lifecycleResumeCount: 1,
     disposeAndRemountCount: 1,
+    controllerGeneration: 2,
     appResourceGeneration: 1,
+    customMaterialRuntimeSuccess: SceneSpikeCustomMaterialRuntimeSuccess(
+      controllerGeneration: 2,
+      appResourceGeneration: 1,
+      observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 0, 500),
+    ),
     capabilities:
         capabilities ?? this.capabilities(status: blockedCapabilityStatus),
     performance: performance(),

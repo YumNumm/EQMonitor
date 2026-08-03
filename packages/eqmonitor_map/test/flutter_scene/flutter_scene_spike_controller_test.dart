@@ -221,6 +221,45 @@ void main() {
         }
       },
     );
+
+    test('replacement cannot attest an old controller material load', () async {
+      final adapters = <FakeSceneSpikeControllerAdapter>[];
+      final owner = FlutterSceneSpikeRemountOwner.withDependencies(
+        controllerFactory: (runLog) {
+          final adapter = FakeSceneSpikeControllerAdapter();
+          adapters.add(adapter);
+          return createController(adapter: adapter, runLog: runLog);
+        },
+      );
+      addTearDown(owner.dispose);
+      final previous = owner.controller;
+      await previous.initializeStaticResources();
+      completeChecklist(
+        controller: previous,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+      expect(previous.canAttestCapability(.customMaterial), isTrue);
+
+      owner.requestRemount();
+      final replacement = owner.controller
+        ..attach(
+          logicalSize: const Size(400, 300),
+          devicePixelRatio: 2,
+        );
+      owner.confirmMounted(controller: replacement);
+      completeChecklist(
+        controller: replacement,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+
+      expect(adapters, hasLength(2));
+      expect(adapters.last.initializeCustomMaterialCount, 0);
+      expect(replacement.canAttestCapability(.customMaterial), isFalse);
+      expect(
+        () => replacement.attestCapability(.customMaterial),
+        throwsStateError,
+      );
+    });
   });
 
   group('FlutterSceneSpikeController operator checklist', () {
@@ -278,7 +317,147 @@ void main() {
         isEmpty,
       );
     });
+
+    test('custom material requires current controller load success', () async {
+      final completion = Completer<bool>();
+      final adapter = FakeSceneSpikeControllerAdapter(
+        initializeCompletion: completion.future,
+      );
+      final controller = createController(adapter: adapter);
+      addTearDown(controller.dispose);
+      completeChecklist(
+        controller: controller,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+
+      expect(controller.canAttestCapability(.customMaterial), isFalse);
+      final initialization = controller.initializeStaticResources();
+      await Future<void>.delayed(Duration.zero);
+      expect(controller.canAttestCapability(.customMaterial), isFalse);
+
+      completion.complete(true);
+      await initialization;
+
+      expect(controller.canAttestCapability(.customMaterial), isTrue);
+      controller.attestCapability(.customMaterial);
+      expect(
+        controller.capabilityResult(.customMaterial).status,
+        SceneSpikeCapabilityStatus.passed,
+      );
+    });
+
+    test('failed custom material load cannot be attested', () async {
+      final controller = createController(
+        adapter: FakeSceneSpikeControllerAdapter(
+          initializeCompletion: Future.value(false),
+        ),
+      );
+      addTearDown(controller.dispose);
+      completeChecklist(
+        controller: controller,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+
+      await controller.initializeStaticResources();
+
+      expect(controller.canAttestCapability(.customMaterial), isFalse);
+      expect(
+        () => controller.attestCapability(.customMaterial),
+        throwsStateError,
+      );
+    });
+
+    test('resource generation change requires a successful reload', () async {
+      final rebuild = Completer<void>();
+      final controller = createController(
+        adapter: FakeSceneSpikeControllerAdapter(
+          rebuildCompletion: rebuild.future,
+        ),
+      );
+      addTearDown(controller.dispose);
+      await controller.initializeStaticResources();
+      completeChecklist(
+        controller: controller,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+      expect(controller.canAttestCapability(.customMaterial), isTrue);
+      controller.attestCapability(.customMaterial);
+
+      controller
+        ..attach(
+          logicalSize: const Size(400, 300),
+          devicePixelRatio: 2,
+        )
+        ..requestAppResourceRebuild();
+      final completion = controller.completePendingAppResourceRebuild();
+      expect(
+        controller.capabilityResult(.customMaterial).status,
+        SceneSpikeCapabilityStatus.unobserved,
+      );
+      expect(controller.canAttestCapability(.customMaterial), isFalse);
+
+      rebuild.complete();
+      await completion;
+
+      expect(controller.lifecycle.appResourceGeneration, 1);
+      expect(controller.canAttestCapability(.customMaterial), isFalse);
+      completeChecklist(
+        controller: controller,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+      expect(controller.canAttestCapability(.customMaterial), isTrue);
+    });
+
+    test('reset clears proof unless loaded state is authoritative', () async {
+      final adapter = FakeSceneSpikeControllerAdapter();
+      final controller = createController(adapter: adapter);
+      addTearDown(controller.dispose);
+      await controller.initializeStaticResources();
+      completeChecklist(
+        controller: controller,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+      expect(controller.canAttestCapability(.customMaterial), isTrue);
+
+      adapter.customMaterialAppResourceGeneration = null;
+      controller.resetEvidence();
+      completeChecklist(
+        controller: controller,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+
+      expect(controller.canAttestCapability(.customMaterial), isFalse);
+    });
+
+    test('reset may reobserve authoritative loaded adapter state', () async {
+      final adapter = FakeSceneSpikeControllerAdapter();
+      final controller = createController(adapter: adapter);
+      addTearDown(controller.dispose);
+      await controller.initializeStaticResources();
+
+      controller.resetEvidence();
+      completeChecklist(
+        controller: controller,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+
+      expect(adapter.customMaterialAppResourceGeneration, 0);
+      expect(controller.canAttestCapability(.customMaterial), isTrue);
+    });
   });
+}
+
+void completeChecklist({
+  required FlutterSceneSpikeController controller,
+  required SceneSpikeCapability capability,
+}) {
+  for (final criterion in controller.checklistCriteria(capability)) {
+    controller.setChecklistCriterion(
+      capability: capability,
+      criterionId: criterion.id,
+      isCompleted: true,
+    );
+  }
 }
 
 FlutterSceneSpikeController createController({
@@ -297,15 +476,23 @@ FlutterSceneSpikeController createController({
     runtimeSource: runtimeSource ?? const FakeRuntimeIdentitySource(),
     manifestSource: const FakeBuildManifestSource(),
     initializeSceneStaticResources: () async {},
+    controllerGeneration: currentRunLog.beginControllerGeneration(),
   );
 }
 
 class FakeSceneSpikeControllerAdapter implements SceneSpikeControllerAdapter {
-  FakeSceneSpikeControllerAdapter({Future<void>? rebuildCompletion})
-    : _rebuildCompletion = rebuildCompletion ?? Future<void>.value();
+  FakeSceneSpikeControllerAdapter({
+    Future<void>? rebuildCompletion,
+    Future<bool>? initializeCompletion,
+  }) : _rebuildCompletion = rebuildCompletion ?? Future<void>.value(),
+       _initializeCompletion = initializeCompletion ?? Future.value(true);
 
   final Future<void> _rebuildCompletion;
+  final Future<bool> _initializeCompletion;
   var _initializeCustomMaterialCount = 0;
+
+  @override
+  int? customMaterialAppResourceGeneration;
 
   int get initializeCustomMaterialCount => _initializeCustomMaterialCount;
 
@@ -326,12 +513,18 @@ class FakeSceneSpikeControllerAdapter implements SceneSpikeControllerAdapter {
 
   @override
   Future<bool> initializeCustomMaterial({
+    required int appResourceGeneration,
     required SceneSpikeAsyncGenerationToken token,
   }) async {
     if (!token.isCurrent) {
       return false;
     }
     _initializeCustomMaterialCount += 1;
+    final initialized = await _initializeCompletion;
+    if (!token.isCurrent || !initialized) {
+      return false;
+    }
+    customMaterialAppResourceGeneration = appResourceGeneration;
     return true;
   }
 
@@ -341,7 +534,11 @@ class FakeSceneSpikeControllerAdapter implements SceneSpikeControllerAdapter {
     required SceneSpikeAsyncGenerationToken token,
   }) async {
     await _rebuildCompletion;
-    return token.isCurrent;
+    if (!token.isCurrent) {
+      return false;
+    }
+    customMaterialAppResourceGeneration = appResourceGeneration;
+    return true;
   }
 
   @override

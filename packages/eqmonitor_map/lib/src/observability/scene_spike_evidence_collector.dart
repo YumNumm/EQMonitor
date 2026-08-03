@@ -178,7 +178,10 @@ class SceneSpikeEvidenceCollector {
     required int partialUpdateCount,
     required int lifecycleResumeCount,
     required int disposeAndRemountCount,
+    required int controllerGeneration,
     required int appResourceGeneration,
+    required SceneSpikeCustomMaterialRuntimeSuccess?
+    customMaterialRuntimeSuccess,
     required List<SceneSpikeCapabilityResult> capabilities,
     required SceneSpikePerformanceSnapshot performance,
   }) async {
@@ -200,7 +203,9 @@ class SceneSpikeEvidenceCollector {
       partialUpdateCount: partialUpdateCount,
       lifecycleResumeCount: lifecycleResumeCount,
       disposeAndRemountCount: disposeAndRemountCount,
+      controllerGeneration: controllerGeneration,
       appResourceGeneration: appResourceGeneration,
+      customMaterialRuntimeSuccess: customMaterialRuntimeSuccess,
       capabilities: capabilities,
       performance: performance,
     );
@@ -220,7 +225,10 @@ class SceneSpikeEvidenceFactory {
     required int partialUpdateCount,
     required int lifecycleResumeCount,
     required int disposeAndRemountCount,
+    required int controllerGeneration,
     required int appResourceGeneration,
+    required SceneSpikeCustomMaterialRuntimeSuccess?
+    customMaterialRuntimeSuccess,
     required List<SceneSpikeCapabilityResult> capabilities,
     required SceneSpikePerformanceSnapshot performance,
   }) {
@@ -249,7 +257,9 @@ class SceneSpikeEvidenceFactory {
       partialUpdateCount: partialUpdateCount,
       lifecycleResumeCount: lifecycleResumeCount,
       disposeAndRemountCount: disposeAndRemountCount,
+      controllerGeneration: controllerGeneration,
       appResourceGeneration: appResourceGeneration,
+      customMaterialRuntimeSuccess: customMaterialRuntimeSuccess,
       capabilities: capabilities,
       performance: performance,
     );

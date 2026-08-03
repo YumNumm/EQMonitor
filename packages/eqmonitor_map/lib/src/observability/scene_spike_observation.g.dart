@@ -48,9 +48,17 @@ SceneSpikeEvidence _$SceneSpikeEvidenceFromJson(Map<String, dynamic> json) =>
       disposeAndRemountCount: const SceneSpikeStrictIntConverter().fromJson(
         json['disposeAndRemountCount'] as num,
       ),
+      controllerGeneration: const SceneSpikeStrictIntConverter().fromJson(
+        json['controllerGeneration'] as num,
+      ),
       appResourceGeneration: const SceneSpikeStrictIntConverter().fromJson(
         json['appResourceGeneration'] as num,
       ),
+      customMaterialRuntimeSuccess: json['customMaterialRuntimeSuccess'] == null
+          ? null
+          : SceneSpikeCustomMaterialRuntimeSuccess.fromJson(
+              json['customMaterialRuntimeSuccess'] as Map<String, dynamic>,
+            ),
       capabilities: (json['capabilities'] as List<dynamic>)
           .map(
             (e) =>
@@ -101,9 +109,14 @@ Map<String, dynamic> _$SceneSpikeEvidenceToJson(
   'disposeAndRemountCount': const SceneSpikeStrictIntConverter().toJson(
     instance.disposeAndRemountCount,
   ),
+  'controllerGeneration': const SceneSpikeStrictIntConverter().toJson(
+    instance.controllerGeneration,
+  ),
   'appResourceGeneration': const SceneSpikeStrictIntConverter().toJson(
     instance.appResourceGeneration,
   ),
+  'customMaterialRuntimeSuccess': instance.customMaterialRuntimeSuccess
+      ?.toJson(),
   'capabilities': instance.capabilities.map((e) => e.toJson()).toList(),
   'performance': instance.performance.toJson(),
 };
@@ -180,6 +193,30 @@ const _$SceneSpikeCapabilityStatusEnumMap = {
   SceneSpikeCapabilityStatus.passed: 'passed',
   SceneSpikeCapabilityStatus.failed: 'failed',
   SceneSpikeCapabilityStatus.unobserved: 'unobserved',
+};
+
+_SceneSpikeCustomMaterialRuntimeSuccess
+_$SceneSpikeCustomMaterialRuntimeSuccessFromJson(Map<String, dynamic> json) =>
+    _SceneSpikeCustomMaterialRuntimeSuccess(
+      controllerGeneration: const SceneSpikeStrictIntConverter().fromJson(
+        json['controllerGeneration'] as num,
+      ),
+      appResourceGeneration: const SceneSpikeStrictIntConverter().fromJson(
+        json['appResourceGeneration'] as num,
+      ),
+      observedAtUtc: DateTime.parse(json['observedAtUtc'] as String),
+    );
+
+Map<String, dynamic> _$SceneSpikeCustomMaterialRuntimeSuccessToJson(
+  _SceneSpikeCustomMaterialRuntimeSuccess instance,
+) => <String, dynamic>{
+  'controllerGeneration': const SceneSpikeStrictIntConverter().toJson(
+    instance.controllerGeneration,
+  ),
+  'appResourceGeneration': const SceneSpikeStrictIntConverter().toJson(
+    instance.appResourceGeneration,
+  ),
+  'observedAtUtc': instance.observedAtUtc.toIso8601String(),
 };
 
 _SceneSpikePerformanceSnapshot _$SceneSpikePerformanceSnapshotFromJson(

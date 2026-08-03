@@ -27,7 +27,10 @@ abstract interface class SceneSpikeControllerAdapter
     implements MapSceneRendererAdapter {
   scene.Scene? get sceneGraph;
 
+  int? get customMaterialAppResourceGeneration;
+
   Future<bool> initializeCustomMaterial({
+    required int appResourceGeneration,
     required SceneSpikeAsyncGenerationToken token,
   });
 
@@ -103,9 +106,15 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
   var _isRebuilding = false;
   var _isDisposed = false;
   int? _pendingAppResourceGeneration;
+  int? _customMaterialAppResourceGeneration;
+
+  @override
+  int? get customMaterialAppResourceGeneration =>
+      _isDisposed ? null : _customMaterialAppResourceGeneration;
 
   @override
   Future<bool> initializeCustomMaterial({
+    required int appResourceGeneration,
     required SceneSpikeAsyncGenerationToken token,
   }) async {
     try {
@@ -128,13 +137,7 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
         ..localTransform = scene_math.Matrix4.translationValues(0.6, 0, 0);
       sceneGraph.add(node);
       _customMaterialNode = node;
-      _observationSink.record(
-        const SceneSpikeRuntimeObservation(
-          capability: .customMaterial,
-          status: .passed,
-          detail: 'assets/map_spike.fmat loaded without fallback.',
-        ),
-      );
+      _customMaterialAppResourceGeneration = appResourceGeneration;
       return true;
     } catch (error) {
       if (!token.isCurrent) {
@@ -213,13 +216,7 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
     _geometry = replacement;
     _unlitNode = replacementNode;
     _customMaterialNode = replacementCustomNode;
-    _observationSink.record(
-      const SceneSpikeRuntimeObservation(
-        capability: .customMaterial,
-        status: .passed,
-        detail: 'assets/map_spike.fmat reloaded without fallback.',
-      ),
-    );
+    _customMaterialAppResourceGeneration = appResourceGeneration;
     completeAppResourceRebuild(
       appResourceGeneration: appResourceGeneration,
     );
@@ -334,6 +331,7 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
     _isRebuilding = false;
     _pendingAppResourceGeneration = null;
     _isDisposed = true;
+    _customMaterialAppResourceGeneration = null;
   }
 }
 

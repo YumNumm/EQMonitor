@@ -79,6 +79,23 @@ sealed class SceneSpikeCapabilityResult with _$SceneSpikeCapabilityResult {
 }
 
 @freezed
+sealed class SceneSpikeCustomMaterialRuntimeSuccess
+    with _$SceneSpikeCustomMaterialRuntimeSuccess {
+  // Freezed applies this constructor annotation to the generated class.
+  // ignore: invalid_annotation_target
+  @JsonSerializable(explicitToJson: true)
+  const factory SceneSpikeCustomMaterialRuntimeSuccess({
+    @SceneSpikeStrictIntConverter() required int controllerGeneration,
+    @SceneSpikeStrictIntConverter() required int appResourceGeneration,
+    required DateTime observedAtUtc,
+  }) = _SceneSpikeCustomMaterialRuntimeSuccess;
+
+  factory SceneSpikeCustomMaterialRuntimeSuccess.fromJson(
+    Map<String, dynamic> json,
+  ) => _$SceneSpikeCustomMaterialRuntimeSuccessFromJson(json);
+}
+
+@freezed
 sealed class SceneSpikePerformanceSnapshot
     with _$SceneSpikePerformanceSnapshot {
   // Freezed applies this constructor annotation to the generated class.
@@ -127,7 +144,9 @@ class SceneSpikeEvidence with _$SceneSpikeEvidence {
     required this.partialUpdateCount,
     required this.lifecycleResumeCount,
     required this.disposeAndRemountCount,
+    required this.controllerGeneration,
     required this.appResourceGeneration,
+    required this.customMaterialRuntimeSuccess,
     required List<SceneSpikeCapabilityResult> capabilities,
     required this.performance,
   }) : capabilities = List.unmodifiable(capabilities);
@@ -183,7 +202,12 @@ class SceneSpikeEvidence with _$SceneSpikeEvidence {
   final int disposeAndRemountCount;
   @SceneSpikeStrictIntConverter()
   @override
+  final int controllerGeneration;
+  @SceneSpikeStrictIntConverter()
+  @override
   final int appResourceGeneration;
+  @override
+  final SceneSpikeCustomMaterialRuntimeSuccess? customMaterialRuntimeSuccess;
   @override
   final List<SceneSpikeCapabilityResult> capabilities;
   @override

@@ -21,7 +21,13 @@ void main() {
         partialUpdateCount: 2,
         lifecycleResumeCount: 1,
         disposeAndRemountCount: 1,
+        controllerGeneration: 2,
         appResourceGeneration: 1,
+        customMaterialRuntimeSuccess: SceneSpikeCustomMaterialRuntimeSuccess(
+          controllerGeneration: 2,
+          appResourceGeneration: 1,
+          observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 0, 500),
+        ),
         capabilities: sceneSpikeCollectorFixture.capabilities(),
         performance: sceneSpikeCollectorFixture.performance(),
       );
@@ -154,7 +160,13 @@ class SceneSpikeCollectorFixture {
     partialUpdateCount: 2,
     lifecycleResumeCount: 1,
     disposeAndRemountCount: 1,
+    controllerGeneration: 2,
     appResourceGeneration: 1,
+    customMaterialRuntimeSuccess: SceneSpikeCustomMaterialRuntimeSuccess(
+      controllerGeneration: 2,
+      appResourceGeneration: 1,
+      observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 0, 500),
+    ),
     capabilities: capabilities(),
     performance: performance(),
   );

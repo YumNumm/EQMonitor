@@ -32,12 +32,32 @@ class SceneSpikeRunLog implements SceneSpikeRuntimeObservationSink {
   var _partialUpdateCount = 0;
   var _lifecycleResumeCount = 0;
   var _disposeAndRemountCount = 0;
+  var _latestControllerGeneration = -1;
+
+  SceneSpikeCustomMaterialRuntimeSuccess? customMaterialRuntimeSuccess;
 
   int get disposeAndRemountCount => _disposeAndRemountCount;
 
   int get partialUpdateCount => _partialUpdateCount;
 
   int get lifecycleResumeCount => _lifecycleResumeCount;
+
+  int beginControllerGeneration() => _latestControllerGeneration += 1;
+
+  void recordCustomMaterialRuntimeSuccess({
+    required int controllerGeneration,
+    required int appResourceGeneration,
+  }) {
+    if (controllerGeneration != _latestControllerGeneration ||
+        observations[SceneSpikeCapability.customMaterial]?.status == .failed) {
+      return;
+    }
+    customMaterialRuntimeSuccess = SceneSpikeCustomMaterialRuntimeSuccess(
+      controllerGeneration: controllerGeneration,
+      appResourceGeneration: appResourceGeneration,
+      observedAtUtc: DateTime.now().toUtc(),
+    );
+  }
 
   void recordPartialUpdate() {
     _partialUpdateCount += 1;
@@ -79,6 +99,7 @@ class SceneSpikeRunLog implements SceneSpikeRuntimeObservationSink {
     _partialUpdateCount = 0;
     _lifecycleResumeCount = 0;
     _disposeAndRemountCount = 0;
+    customMaterialRuntimeSuccess = null;
   }
 
   void recordConfirmedDisposeAndRemount() {
@@ -121,6 +142,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       runtimeSource: SceneSpikeProductionRuntimeIdentitySource(),
       manifestSource: const SceneSpikeEnvironmentBuildManifestSource(),
       initializeSceneStaticResources: scene.Scene.initializeStaticResources,
+      controllerGeneration: currentRunLog.beginControllerGeneration(),
     );
   }
 
@@ -132,6 +154,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     required SceneSpikeRuntimeIdentitySource runtimeSource,
     required SceneSpikeBuildManifestSource manifestSource,
     required Future<void> Function() initializeSceneStaticResources,
+    required int controllerGeneration,
     scene.NodeCamera? camera,
   }) : _adapter = adapter,
        _runLog = runLog,
@@ -140,6 +163,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
        _frame = initialFrame,
        _runtimeSource = runtimeSource,
        _manifestSource = manifestSource,
+       _controllerGeneration = controllerGeneration,
        _initializeSceneStaticResources = initializeSceneStaticResources;
 
   final SceneSpikeControllerAdapter _adapter;
@@ -147,6 +171,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
   final EqmonitorOrthographicProjection _projection;
   final SceneSpikeRuntimeIdentitySource _runtimeSource;
   final SceneSpikeBuildManifestSource _manifestSource;
+  final int _controllerGeneration;
   final Future<void> Function() _initializeSceneStaticResources;
   final scene.NodeCamera? _camera;
   final _lifecycleReducer = const SceneSpikeLifecycleReducer();
@@ -252,8 +277,10 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       return;
     }
     late bool materialInitialized;
+    final appResourceGeneration = _lifecycle.appResourceGeneration;
     try {
       materialInitialized = await _adapter.initializeCustomMaterial(
+        appResourceGeneration: appResourceGeneration,
         token: token,
       );
     } catch (_) {
@@ -263,9 +290,17 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       }
       return;
     }
-    if (!token.isCurrent || _isDisposed || !materialInitialized) {
+    if (!token.isCurrent ||
+        _isDisposed ||
+        !materialInitialized ||
+        _lifecycle.appResourceGeneration != appResourceGeneration ||
+        _adapter.customMaterialAppResourceGeneration != appResourceGeneration) {
       return;
     }
+    _runLog.recordCustomMaterialRuntimeSuccess(
+      controllerGeneration: _controllerGeneration,
+      appResourceGeneration: appResourceGeneration,
+    );
     notifyListeners();
   }
 
@@ -308,6 +343,8 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       state: _lifecycle,
       event: const SceneSpikeLifecycleEvent.foregrounded(),
     );
+    _operatorAttestations.remove(SceneSpikeCapability.customMaterial);
+    _completedChecklistCriteria.remove(SceneSpikeCapability.customMaterial);
     _adapter.requestAppResourceRebuild(
       appResourceGeneration: _lifecycle.appResourceGeneration,
     );
@@ -338,6 +375,8 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       state: _lifecycle,
       event: const SceneSpikeLifecycleEvent.surfaceRecreated(),
     );
+    _operatorAttestations.remove(SceneSpikeCapability.customMaterial);
+    _completedChecklistCriteria.remove(SceneSpikeCapability.customMaterial);
     _runLog.record(
       const SceneSpikeRuntimeObservation(
         capability: .dprAndResize,
@@ -359,6 +398,8 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       state: _lifecycle,
       event: const SceneSpikeLifecycleEvent.surfaceRecreated(),
     );
+    _operatorAttestations.remove(SceneSpikeCapability.customMaterial);
+    _completedChecklistCriteria.remove(SceneSpikeCapability.customMaterial);
     notifyListeners();
   }
 
@@ -373,12 +414,19 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         appResourceGeneration: generation,
         token: token,
       );
-      if (!token.isCurrent || _isDisposed || !rebuilt) {
+      if (!token.isCurrent ||
+          _isDisposed ||
+          !rebuilt ||
+          _adapter.customMaterialAppResourceGeneration != generation) {
         return;
       }
       _lifecycle = _lifecycleReducer.reduce(
         state: _lifecycle,
         event: const SceneSpikeLifecycleEvent.rebuildCompleted(),
+      );
+      _runLog.recordCustomMaterialRuntimeSuccess(
+        controllerGeneration: _controllerGeneration,
+        appResourceGeneration: generation,
       );
       _runLog.performance.recordResourceRebuild();
     } catch (_) {
@@ -509,12 +557,21 @@ class FlutterSceneSpikeController extends ChangeNotifier {
   }
 
   bool canAttestCapability(SceneSpikeCapability capability) {
-    if (SceneSpikeEvidenceContract.requiredProvenance(capability) !=
-        .operatorAttestation) {
+    if (_isDisposed ||
+        SceneSpikeEvidenceContract.requiredProvenance(capability) !=
+            .operatorAttestation) {
       return false;
     }
     if (_runLog.observations[capability]?.status == .failed ||
         _operatorAttestations.containsKey(capability)) {
+      return false;
+    }
+    final customMaterialProof = _runLog.customMaterialRuntimeSuccess;
+    if (capability == .customMaterial &&
+        (customMaterialProof == null ||
+            customMaterialProof.controllerGeneration != _controllerGeneration ||
+            customMaterialProof.appResourceGeneration !=
+                _lifecycle.appResourceGeneration)) {
       return false;
     }
     final criteria = checklistCriteria(capability);
@@ -647,7 +704,9 @@ class FlutterSceneSpikeController extends ChangeNotifier {
           partialUpdateCount: _runLog.partialUpdateCount,
           lifecycleResumeCount: _runLog.lifecycleResumeCount,
           disposeAndRemountCount: _runLog.disposeAndRemountCount,
+          controllerGeneration: _controllerGeneration,
           appResourceGeneration: _lifecycle.appResourceGeneration,
+          customMaterialRuntimeSuccess: _runLog.customMaterialRuntimeSuccess,
           capabilities: capabilityResults(),
           performance: _runLog.performance.snapshot(),
         );
@@ -656,6 +715,8 @@ class FlutterSceneSpikeController extends ChangeNotifier {
 
   void resetEvidence() {
     final startedAtUtc = DateTime.now().toUtc();
+    _initializationGeneration.cancel();
+    _rebuildGeneration.cancel();
     _renderingBackend = null;
     _runStartFailure = null;
     _operatorAttestations.clear();
@@ -676,6 +737,13 @@ class FlutterSceneSpikeController extends ChangeNotifier {
           detail: 'Unlit vertex-color material remains mounted.',
         ),
       );
+    if (_adapter.customMaterialAppResourceGeneration ==
+        _lifecycle.appResourceGeneration) {
+      _runLog.recordCustomMaterialRuntimeSuccess(
+        controllerGeneration: _controllerGeneration,
+        appResourceGeneration: _lifecycle.appResourceGeneration,
+      );
+    }
     _isUpdating = false;
     notifyListeners();
   }
