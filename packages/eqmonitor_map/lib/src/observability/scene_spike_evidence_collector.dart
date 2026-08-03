@@ -42,6 +42,7 @@ class SceneSpikeBuildManifest {
   const SceneSpikeBuildManifest({
     required this.flutterFrameworkRevision,
     required this.flutterEngineRevision,
+    required this.dartSourceRevision,
     required this.flutterSceneRevision,
     required this.eqmonitorMapRendererRevision,
     required this.eqmonitorMapRendererCheckoutDirty,
@@ -49,6 +50,7 @@ class SceneSpikeBuildManifest {
 
   final String flutterFrameworkRevision;
   final String flutterEngineRevision;
+  final String dartSourceRevision;
   final String flutterSceneRevision;
   final String eqmonitorMapRendererRevision;
   final bool eqmonitorMapRendererCheckoutDirty;
@@ -61,6 +63,8 @@ class SceneSpikeEnvironmentKeys {
       'EQMONITOR_SCENE_SPIKE_FLUTTER_FRAMEWORK_REVISION';
   static const flutterEngineRevision =
       'EQMONITOR_SCENE_SPIKE_FLUTTER_ENGINE_REVISION';
+  static const dartSourceRevision =
+      'EQMONITOR_SCENE_SPIKE_DART_SOURCE_REVISION';
   static const flutterSceneRevision =
       'EQMONITOR_SCENE_SPIKE_FLUTTER_SCENE_REVISION';
   static const eqmonitorMapRendererRevision =
@@ -92,6 +96,9 @@ class SceneSpikeEnvironmentBuildManifestSource
       ),
       flutterEngineRevision: const String.fromEnvironment(
         SceneSpikeEnvironmentKeys.flutterEngineRevision,
+      ),
+      dartSourceRevision: const String.fromEnvironment(
+        SceneSpikeEnvironmentKeys.dartSourceRevision,
       ),
       flutterSceneRevision: const String.fromEnvironment(
         SceneSpikeEnvironmentKeys.flutterSceneRevision,
@@ -170,6 +177,7 @@ class SceneSpikeEvidenceCollector {
     required int frameCount,
     required int partialUpdateCount,
     required int lifecycleResumeCount,
+    required int disposeAndRemountCount,
     required int appResourceGeneration,
     required List<SceneSpikeCapabilityResult> capabilities,
     required SceneSpikePerformanceSnapshot performance,
@@ -191,6 +199,7 @@ class SceneSpikeEvidenceCollector {
       frameCount: frameCount,
       partialUpdateCount: partialUpdateCount,
       lifecycleResumeCount: lifecycleResumeCount,
+      disposeAndRemountCount: disposeAndRemountCount,
       appResourceGeneration: appResourceGeneration,
       capabilities: capabilities,
       performance: performance,
@@ -210,6 +219,7 @@ class SceneSpikeEvidenceFactory {
     required int frameCount,
     required int partialUpdateCount,
     required int lifecycleResumeCount,
+    required int disposeAndRemountCount,
     required int appResourceGeneration,
     required List<SceneSpikeCapabilityResult> capabilities,
     required SceneSpikePerformanceSnapshot performance,
@@ -225,6 +235,7 @@ class SceneSpikeEvidenceFactory {
       flutterFrameworkRevision: manifest.flutterFrameworkRevision,
       flutterEngineRevision: manifest.flutterEngineRevision,
       dartVersion: identity.dartVersion,
+      dartSourceRevision: manifest.dartSourceRevision,
       flutterSceneRevision: manifest.flutterSceneRevision,
       eqmonitorMapRendererRevision: manifest.eqmonitorMapRendererRevision,
       eqmonitorMapRendererCheckoutDirty:
@@ -237,6 +248,7 @@ class SceneSpikeEvidenceFactory {
       frameCount: frameCount,
       partialUpdateCount: partialUpdateCount,
       lifecycleResumeCount: lifecycleResumeCount,
+      disposeAndRemountCount: disposeAndRemountCount,
       appResourceGeneration: appResourceGeneration,
       capabilities: capabilities,
       performance: performance,
@@ -269,6 +281,10 @@ class SceneSpikeTrustedInputValidator {
       'flutterEngineRevision': (
         actual: manifest.flutterEngineRevision,
         expected: SceneSpikeEvidenceContract.expectedFlutterEngineRevision,
+      ),
+      'dartSourceRevision': (
+        actual: manifest.dartSourceRevision,
+        expected: SceneSpikeEvidenceContract.expectedDartSourceRevision,
       ),
       'flutterSceneRevision': (
         actual: manifest.flutterSceneRevision,

@@ -61,6 +61,8 @@ class SceneSpikeEvidenceContract {
       '4dacd3fc91d96262a33e5c598e17d816f0b35641';
   static const expectedFlutterEngineRevision =
       'b1e405a9c311d858bef870c472bb24c015f4bcf9';
+  static const expectedDartSourceRevision =
+      'd402ff7c9c8442d64aa8148609480aa0e04a24fd';
   static const expectedFlutterSceneRevision =
       '695c954f237fabef65d49fa7199002851d2dcd88';
 
@@ -239,6 +241,7 @@ class SceneSpikeEvidenceValidator {
     final revisions = {
       'flutterFrameworkRevision': evidence.flutterFrameworkRevision,
       'flutterEngineRevision': evidence.flutterEngineRevision,
+      'dartSourceRevision': evidence.dartSourceRevision,
       'flutterSceneRevision': evidence.flutterSceneRevision,
       'eqmonitorMapRendererRevision': evidence.eqmonitorMapRendererRevision,
     };
@@ -269,6 +272,11 @@ class SceneSpikeEvidenceValidator {
         expected: SceneSpikeEvidenceContract.expectedFlutterEngineRevision,
       ),
       (
+        field: 'dartSourceRevision',
+        actual: evidence.dartSourceRevision,
+        expected: SceneSpikeEvidenceContract.expectedDartSourceRevision,
+      ),
+      (
         field: 'flutterSceneRevision',
         actual: evidence.flutterSceneRevision,
         expected: SceneSpikeEvidenceContract.expectedFlutterSceneRevision,
@@ -293,6 +301,7 @@ class SceneSpikeEvidenceValidator {
       'frameCount': evidence.frameCount,
       'partialUpdateCount': evidence.partialUpdateCount,
       'lifecycleResumeCount': evidence.lifecycleResumeCount,
+      'disposeAndRemountCount': evidence.disposeAndRemountCount,
     };
     return [
       for (final counter in counters.entries)
@@ -429,8 +438,8 @@ class SceneSpikeCapabilityValidator {
     final lifecycleError =
         '$prefix backgroundAndForeground passed without a lifecycle resume '
         'runtime signal.';
-    final rebuildError =
-        '$prefix disposeAndRemount passed without a resource rebuild '
+    final remountError =
+        '$prefix disposeAndRemount passed without a confirmed remount '
         'runtime signal.';
     return switch (result.capability) {
       .partialPositionAndColorUpdate when evidence.partialUpdateCount == 0 => [
@@ -439,10 +448,9 @@ class SceneSpikeCapabilityValidator {
       .backgroundAndForeground when evidence.lifecycleResumeCount == 0 => [
         lifecycleError,
       ],
-      .disposeAndRemount when evidence.performance.resourceRebuildCount == 0 =>
-        [
-          rebuildError,
-        ],
+      .disposeAndRemount when evidence.disposeAndRemountCount == 0 => [
+        remountError,
+      ],
       _ => const [],
     };
   }

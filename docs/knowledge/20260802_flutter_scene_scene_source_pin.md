@@ -17,3 +17,27 @@ MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter pub add --no-example \
 hosted `scene` に必要APIが公開され、Flutter Scene側がそのversion/sourceを正しく
 宣言したrevisionへ更新できた時点で、このoverrideを除去して `flutter pub get` を
 実行する。hosted版へのfallbackや異なるrevisionの組み合わせは使わない。
+
+## Scene spike metadata writerの信頼境界
+
+`packages/eqmonitor_map/tool/write_scene_spike_defines.dart` は実行時CWDをrepo判定に
+使わない。`Platform.script` の位置が `packages/eqmonitor_map/tool/` 配下であることを
+確認し、そこから導出したrootと `git rev-parse --show-toplevel` が一致した場合だけ
+manifestを生成する。
+
+dirty判定はtracked diffだけでは不十分なため、untracked fileを含む次のstatusを使う。
+
+```bash
+git status --porcelain=v1 --untracked-files=all
+```
+
+Flutterのmachine JSONに含まれるSDK version文字列とは別に、Dart source revision
+`d402ff7c9c8442d64aa8148609480aa0e04a24fd` をcompile-time manifestへ書き、
+evidence validatorでも固定値と一致することを検証する。writerの実行はexampleから
+次の形に固定する。
+
+```bash
+cd packages/eqmonitor_map/example
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- \
+  dart run ../tool/write_scene_spike_defines.dart
+```

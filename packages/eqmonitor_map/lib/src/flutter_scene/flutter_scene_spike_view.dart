@@ -4,8 +4,10 @@
 import 'dart:async';
 
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_spike_controller.dart';
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_spike_remount_owner.dart';
 import 'package:eqmonitor_map/src/flutter_scene/spike_label_painter.dart';
 import 'package:eqmonitor_map/src/observability/scene_spike_gate.dart';
+import 'package:eqmonitor_map/src/observability/scene_spike_observation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -43,14 +45,16 @@ class SceneSpikeBindingObserver with WidgetsBindingObserver {
 }
 
 class FlutterSceneSpikeView extends HookWidget {
-  const FlutterSceneSpikeView({required this.controller, super.key});
+  const FlutterSceneSpikeView({required this.remountOwner, super.key});
 
-  // The controller exposes its own counters and lifecycle in the harness.
+  // The owner exposes its current controller to the internal spike harness.
   // ignore: diagnostic_describe_all_properties
-  final FlutterSceneSpikeController controller;
+  final FlutterSceneSpikeRemountOwner remountOwner;
 
   @override
   Widget build(BuildContext context) {
+    useListenable(remountOwner);
+    final controller = remountOwner.controller;
     useListenable(controller);
     final metricsEpoch = useState(0);
     final logicalSize = MediaQuery.sizeOf(context);
@@ -63,23 +67,6 @@ class FlutterSceneSpikeView extends HookWidget {
       ),
       [controller],
     );
-    final initialization = useMemoized(
-      controller.initializeStaticResources,
-      [controller],
-    );
-    useFuture(initialization);
-    final rebuild = useMemoized(
-      () => controller.lifecycle.phase == .rebuilding
-          ? controller.completePendingAppResourceRebuild()
-          : Future<void>.value(),
-      [
-        controller,
-        controller.lifecycle.phase,
-        controller.lifecycle.appResourceGeneration,
-      ],
-    );
-    useFuture(rebuild);
-
     useEffect(() {
       final binding = WidgetsBinding.instance;
       binding
@@ -91,15 +78,29 @@ class FlutterSceneSpikeView extends HookWidget {
           devicePixelRatio: devicePixelRatio,
         )
         ..recordTextPainterOverlay();
+      remountOwner.confirmMounted(controller: controller);
+      unawaited(controller.initializeStaticResources());
       return () {
         binding
           ..removeTimingsCallback(controller.recordFrameTimings)
           ..removeObserver(observer);
-        controller
-          ..detach()
-          ..dispose();
+        controller.detach();
       };
-    }, [controller, observer]);
+    }, [controller, observer, remountOwner]);
+
+    useEffect(
+      () {
+        if (controller.lifecycle.phase == .rebuilding) {
+          unawaited(controller.completePendingAppResourceRebuild());
+        }
+        return null;
+      },
+      [
+        controller,
+        controller.lifecycle.phase,
+        controller.lifecycle.appResourceGeneration,
+      ],
+    );
 
     useEffect(() {
       controller.resize(
@@ -157,7 +158,7 @@ class FlutterSceneSpikeView extends HookWidget {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: _SceneSpikeHarnessPanel(controller: controller),
+              child: _SceneSpikeHarnessPanel(remountOwner: remountOwner),
             ),
           ],
         );
@@ -167,14 +168,15 @@ class FlutterSceneSpikeView extends HookWidget {
 }
 
 class _SceneSpikeHarnessPanel extends StatelessWidget {
-  const _SceneSpikeHarnessPanel({required this.controller});
+  const _SceneSpikeHarnessPanel({required this.remountOwner});
 
-  // The controller exposes its own counters and lifecycle in the harness.
+  // The owner exposes its current controller to the internal spike harness.
   // ignore: diagnostic_describe_all_properties
-  final FlutterSceneSpikeController controller;
+  final FlutterSceneSpikeRemountOwner remountOwner;
 
   @override
   Widget build(BuildContext context) {
+    final controller = remountOwner.controller;
     final capabilities = controller.capabilityResults();
     final identity = controller.runtimeIdentity;
     final manifest = controller.buildManifest;
@@ -182,6 +184,7 @@ class _SceneSpikeHarnessPanel extends StatelessWidget {
     final frameworkRevision = manifest?.flutterFrameworkRevision ?? 'missing';
     final engineRevision = manifest?.flutterEngineRevision ?? 'missing';
     final dartVersion = identity?.dartVersion ?? 'unavailable';
+    final dartSourceRevision = manifest?.dartSourceRevision ?? 'missing';
     final operatingSystemVersion =
         identity?.operatingSystemVersion ?? 'OS unavailable';
     final sceneRevision = manifest?.flutterSceneRevision ?? 'missing';
@@ -214,7 +217,7 @@ class _SceneSpikeHarnessPanel extends StatelessWidget {
                       Text(
                         'Flutter $frameworkRevision\n'
                         'Engine $engineRevision\n'
-                        'Dart $dartVersion\n'
+                        'Dart $dartVersion ($dartSourceRevision)\n'
                         'Scene $sceneRevision\n'
                         'Renderer $rendererRevision dirty=$rendererDirty',
                       ),
@@ -262,6 +265,10 @@ class _SceneSpikeHarnessPanel extends StatelessWidget {
                             child: const Text('Rebuild app resources'),
                           ),
                           OutlinedButton(
+                            onPressed: remountOwner.requestRemount,
+                            child: const Text('Dispose and remount'),
+                          ),
+                          OutlinedButton(
                             onPressed: controller.resetEvidence,
                             child: const Text('Reset evidence'),
                           ),
@@ -303,6 +310,7 @@ class _SceneSpikeHarnessPanel extends StatelessWidget {
                         'frames=${controller.frameCount} '
                         'partial=${controller.partialUpdateCount} '
                         'resume=${controller.lifecycleResumeCount} '
+                        'remount=${controller.disposeAndRemountCount} '
                         'appRebuild=${performance.resourceRebuildCount} '
                         'exceptions=${performance.exceptionCount}',
                       ),
@@ -316,22 +324,106 @@ class _SceneSpikeHarnessPanel extends StatelessWidget {
                     result.capability,
                   ) ==
                   .operatorAttestation;
-              return CheckboxListTile(
-                dense: true,
-                value: result.status == .passed,
-                onChanged: mayAttest && result.status != .failed
-                    ? (_) => controller.attestCapability(result.capability)
-                    : null,
-                title: Text(result.capability.name),
-                subtitle: Text(
-                  '${result.status.name} · ${result.provenance.name}\n'
-                  '${result.detail}',
-                ),
+              if (!mayAttest) {
+                return _SceneSpikeCapabilityStatusRow(result: result);
+              }
+              return _SceneSpikeOperatorChecklistTile(
+                controller: controller,
+                result: result,
               );
             },
           ),
         ),
       ),
+    );
+  }
+}
+
+class _SceneSpikeCapabilityStatusRow extends StatelessWidget {
+  const _SceneSpikeCapabilityStatusRow({required this.result});
+
+  // The result is rendered directly in the internal spike harness.
+  // ignore: diagnostic_describe_all_properties
+  final SceneSpikeCapabilityResult result;
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+    dense: true,
+    leading: Icon(
+      switch (result.status) {
+        .passed => Icons.check_circle,
+        .failed => Icons.error,
+        .unobserved => Icons.radio_button_unchecked,
+      },
+    ),
+    title: Text(result.capability.name),
+    subtitle: Text(
+      '${result.status.name} · ${result.provenance.name}\n${result.detail}',
+    ),
+  );
+}
+
+class _SceneSpikeOperatorChecklistTile extends StatelessWidget {
+  const _SceneSpikeOperatorChecklistTile({
+    required this.controller,
+    required this.result,
+  });
+
+  // The controller is scoped to the internal spike harness.
+  // ignore: diagnostic_describe_all_properties
+  final FlutterSceneSpikeController controller;
+  // The result is rendered directly in the internal spike harness.
+  // ignore: diagnostic_describe_all_properties
+  final SceneSpikeCapabilityResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    final capability = result.capability;
+    final criteria = controller.checklistCriteria(capability);
+    final checklistLocked =
+        result.status == .passed || result.status == .failed;
+    return ExpansionTile(
+      leading: Icon(
+        switch (result.status) {
+          .passed => Icons.check_circle,
+          .failed => Icons.error,
+          .unobserved => Icons.fact_check_outlined,
+        },
+      ),
+      title: Text(capability.name),
+      subtitle: Text(
+        '${result.status.name} · ${result.provenance.name}\n${result.detail}',
+      ),
+      children: [
+        for (final criterion in criteria)
+          CheckboxListTile(
+            dense: true,
+            value: controller.isChecklistCriterionCompleted(
+              capability: capability,
+              criterionId: criterion.id,
+            ),
+            onChanged: checklistLocked
+                ? null
+                : (isCompleted) => controller.setChecklistCriterion(
+                    capability: capability,
+                    criterionId: criterion.id,
+                    isCompleted: isCompleted ?? false,
+                  ),
+            title: Text(criterion.label),
+          ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: FilledButton.tonal(
+              onPressed: controller.canAttestCapability(capability)
+                  ? () => controller.attestCapability(capability)
+                  : null,
+              child: const Text('Attest completed checklist'),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

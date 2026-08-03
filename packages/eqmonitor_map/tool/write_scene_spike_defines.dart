@@ -3,35 +3,22 @@ import 'dart:io';
 
 const flutterSceneRevision = '695c954f237fabef65d49fa7199002851d2dcd88';
 const dartVersionEnvironmentKey = 'EQMONITOR_SCENE_SPIKE_DART_VERSION';
+const dartSourceRevisionEnvironmentKey =
+    'EQMONITOR_SCENE_SPIKE_DART_SOURCE_REVISION';
+const dartSourceRevision = 'd402ff7c9c8442d64aa8148609480aa0e04a24fd';
 
 Future<void> main() async {
-  final repositoryRoot = await runTextProcess(
-    executable: 'git',
-    arguments: const ['rev-parse', '--show-toplevel'],
+  final repositoryRoot = await resolveRepositoryRoot(
+    scriptUri: Platform.script,
   );
   final flutterMachineJson = await runTextProcess(
     executable: 'mise',
     arguments: const ['exec', '--', 'flutter', '--version', '--machine'],
   );
   final flutterMetadata = decodeFlutterMetadata(flutterMachineJson);
-  final rendererRevision = await runTextProcess(
-    executable: 'git',
-    arguments: const ['rev-parse', 'HEAD'],
-    workingDirectory: repositoryRoot,
+  final rendererMetadata = await readRendererCheckoutMetadata(
+    repositoryRoot: repositoryRoot,
   );
-  final dirtyResult = await Process.run(
-    'git',
-    const ['diff', '--quiet', 'HEAD', '--'],
-    workingDirectory: repositoryRoot,
-  );
-  if (dirtyResult.exitCode != 0 && dirtyResult.exitCode != 1) {
-    throw ProcessException(
-      'git',
-      const ['diff', '--quiet', 'HEAD', '--'],
-      '${dirtyResult.stderr}',
-      dirtyResult.exitCode,
-    );
-  }
   final packageRoot = File.fromUri(Platform.script).parent.parent;
   final outputDirectory = Directory(
     '${packageRoot.path}/example/.dart_tool',
@@ -41,19 +28,90 @@ Future<void> main() async {
     '${outputDirectory.path}/scene_spike_defines.json',
   );
   await outputFile.writeAsString(
-    const JsonEncoder.withIndent('  ').convert({
-      'EQMONITOR_SCENE_SPIKE_FLUTTER_FRAMEWORK_REVISION':
-          flutterMetadata.frameworkRevision,
-      'EQMONITOR_SCENE_SPIKE_FLUTTER_ENGINE_REVISION':
-          flutterMetadata.engineRevision,
-      dartVersionEnvironmentKey: flutterMetadata.dartSdkVersion,
-      'EQMONITOR_SCENE_SPIKE_FLUTTER_SCENE_REVISION': flutterSceneRevision,
-      'EQMONITOR_SCENE_SPIKE_RENDERER_REVISION': rendererRevision,
-      'EQMONITOR_SCENE_SPIKE_RENDERER_CHECKOUT_DIRTY':
-          dirtyResult.exitCode == 1,
-    }),
+    const JsonEncoder.withIndent('  ').convert(
+      buildSceneSpikeDefines(
+        flutterMetadata: flutterMetadata,
+        rendererMetadata: rendererMetadata,
+      ),
+    ),
   );
 }
+
+Future<Directory> resolveRepositoryRoot({required Uri scriptUri}) async {
+  final packageRoot = File.fromUri(scriptUri).parent.parent.absolute;
+  final packageName = packageRoot.uri.pathSegments
+      .where((segment) => segment.isNotEmpty)
+      .last;
+  final packagesDirectory = packageRoot.parent;
+  final packagesName = packagesDirectory.uri.pathSegments
+      .where((segment) => segment.isNotEmpty)
+      .last;
+  if (packageName != 'eqmonitor_map' || packagesName != 'packages') {
+    throw StateError(
+      'Scene spike writer must run from packages/eqmonitor_map/tool.',
+    );
+  }
+  final candidate = packagesDirectory.parent;
+  final gitRootPath = await runTextProcess(
+    executable: 'git',
+    arguments: const ['rev-parse', '--show-toplevel'],
+    workingDirectory: candidate.path,
+  );
+  final gitRoot = Directory(gitRootPath);
+  if (candidate.resolveSymbolicLinksSync() !=
+      gitRoot.resolveSymbolicLinksSync()) {
+    throw StateError('Platform.script repository root does not match Git.');
+  }
+  return gitRoot;
+}
+
+class RendererCheckoutMetadata {
+  const RendererCheckoutMetadata({
+    required this.revision,
+    required this.isDirty,
+  });
+
+  final String revision;
+  final bool isDirty;
+}
+
+Future<RendererCheckoutMetadata> readRendererCheckoutMetadata({
+  required Directory repositoryRoot,
+}) async {
+  final revision = await runTextProcess(
+    executable: 'git',
+    arguments: const ['rev-parse', 'HEAD'],
+    workingDirectory: repositoryRoot.path,
+  );
+  final status = await runTextProcess(
+    executable: 'git',
+    arguments: const [
+      'status',
+      '--porcelain=v1',
+      '--untracked-files=all',
+    ],
+    workingDirectory: repositoryRoot.path,
+  );
+  return RendererCheckoutMetadata(
+    revision: revision,
+    isDirty: status.isNotEmpty,
+  );
+}
+
+Map<String, dynamic> buildSceneSpikeDefines({
+  required FlutterMachineMetadata flutterMetadata,
+  required RendererCheckoutMetadata rendererMetadata,
+}) => {
+  'EQMONITOR_SCENE_SPIKE_FLUTTER_FRAMEWORK_REVISION':
+      flutterMetadata.frameworkRevision,
+  'EQMONITOR_SCENE_SPIKE_FLUTTER_ENGINE_REVISION':
+      flutterMetadata.engineRevision,
+  dartVersionEnvironmentKey: flutterMetadata.dartSdkVersion,
+  dartSourceRevisionEnvironmentKey: dartSourceRevision,
+  'EQMONITOR_SCENE_SPIKE_FLUTTER_SCENE_REVISION': flutterSceneRevision,
+  'EQMONITOR_SCENE_SPIKE_RENDERER_REVISION': rendererMetadata.revision,
+  'EQMONITOR_SCENE_SPIKE_RENDERER_CHECKOUT_DIRTY': rendererMetadata.isDirty,
+};
 
 class FlutterMachineMetadata {
   const FlutterMachineMetadata({

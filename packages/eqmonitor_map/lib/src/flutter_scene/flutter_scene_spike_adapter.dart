@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_async_generation.dart';
 import 'package:eqmonitor_map/src/observability/scene_spike_observation.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_renderer_adapter.dart';
 import 'package:eqmonitor_map/src/renderer/spike_mesh_frame.dart';
@@ -22,7 +23,21 @@ abstract interface class SceneSpikeRuntimeObservationSink {
   void record(SceneSpikeRuntimeObservation observation);
 }
 
-class FlutterSceneSpikeAdapter implements MapSceneRendererAdapter {
+abstract interface class SceneSpikeControllerAdapter
+    implements MapSceneRendererAdapter {
+  scene.Scene? get sceneGraph;
+
+  Future<bool> initializeCustomMaterial({
+    required SceneSpikeAsyncGenerationToken token,
+  });
+
+  Future<bool> rebuildApplicationResources({
+    required int appResourceGeneration,
+    required SceneSpikeAsyncGenerationToken token,
+  });
+}
+
+class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
   factory FlutterSceneSpikeAdapter({
     required SpikeMeshFrame initialFrame,
     required SceneSpikeRuntimeObservationSink observationSink,
@@ -75,6 +90,7 @@ class FlutterSceneSpikeAdapter implements MapSceneRendererAdapter {
        _observationSink = observationSink,
        _vertexCount = initialFrame.positions.length ~/ 3;
 
+  @override
   final scene.Scene sceneGraph;
   final SceneSpikeRuntimeObservationSink _observationSink;
   final int _vertexCount;
@@ -88,13 +104,22 @@ class FlutterSceneSpikeAdapter implements MapSceneRendererAdapter {
   var _isDisposed = false;
   int? _pendingAppResourceGeneration;
 
-  Future<void> initializeCustomMaterial() async {
+  @override
+  Future<bool> initializeCustomMaterial({
+    required SceneSpikeAsyncGenerationToken token,
+  }) async {
     try {
       final material = await scene.loadFmatMaterial('assets/map_spike.fmat');
+      if (!token.isCurrent) {
+        return false;
+      }
       material.parameters.setVec4(
         'tint',
         scene_math.Vector4(1, 1, 1, 1),
       );
+      if (!token.isCurrent) {
+        return false;
+      }
       final previousNode = _customMaterialNode;
       if (previousNode != null) {
         sceneGraph.remove(previousNode);
@@ -110,7 +135,11 @@ class FlutterSceneSpikeAdapter implements MapSceneRendererAdapter {
           detail: 'assets/map_spike.fmat loaded without fallback.',
         ),
       );
+      return true;
     } catch (error) {
+      if (!token.isCurrent) {
+        return false;
+      }
       _observationSink.record(
         SceneSpikeRuntimeObservation(
           capability: .customMaterial,
@@ -122,8 +151,10 @@ class FlutterSceneSpikeAdapter implements MapSceneRendererAdapter {
     }
   }
 
-  Future<void> rebuildApplicationResources({
+  @override
+  Future<bool> rebuildApplicationResources({
     required int appResourceGeneration,
+    required SceneSpikeAsyncGenerationToken token,
   }) async {
     if (_pendingAppResourceGeneration != appResourceGeneration) {
       throw StateError('App resource rebuild was not requested.');
@@ -140,20 +171,59 @@ class FlutterSceneSpikeAdapter implements MapSceneRendererAdapter {
     final replacementNode = scene.Node(
       mesh: scene.Mesh(replacement, replacementMaterial),
     )..localTransform = scene_math.Matrix4.translationValues(-0.6, 0, 0);
-    sceneGraph
-      ..remove(_unlitNode)
-      ..add(replacementNode);
+    late scene.PreprocessedMaterial customMaterial;
+    try {
+      customMaterial = await scene.loadFmatMaterial(
+        'assets/map_spike.fmat',
+      );
+    } catch (error) {
+      if (!token.isCurrent) {
+        return false;
+      }
+      _observationSink.record(
+        SceneSpikeRuntimeObservation(
+          capability: .customMaterial,
+          status: .failed,
+          detail: 'Custom material reload failed: $error',
+        ),
+      );
+      rethrow;
+    }
+    if (!token.isCurrent) {
+      return false;
+    }
+    customMaterial.parameters.setVec4(
+      'tint',
+      scene_math.Vector4(1, 1, 1, 1),
+    );
+    final replacementCustomNode = scene.Node(
+      mesh: scene.Mesh(replacement, customMaterial),
+    )..localTransform = scene_math.Matrix4.translationValues(0.6, 0, 0);
+    if (!token.isCurrent) {
+      return false;
+    }
     final customNode = _customMaterialNode;
+    sceneGraph.remove(_unlitNode);
     if (customNode != null) {
       sceneGraph.remove(customNode);
-      _customMaterialNode = null;
     }
+    sceneGraph
+      ..add(replacementNode)
+      ..add(replacementCustomNode);
     _geometry = replacement;
     _unlitNode = replacementNode;
-    await initializeCustomMaterial();
+    _customMaterialNode = replacementCustomNode;
+    _observationSink.record(
+      const SceneSpikeRuntimeObservation(
+        capability: .customMaterial,
+        status: .passed,
+        detail: 'assets/map_spike.fmat reloaded without fallback.',
+      ),
+    );
     completeAppResourceRebuild(
       appResourceGeneration: appResourceGeneration,
     );
+    return true;
   }
 
   @override

@@ -114,6 +114,7 @@ class SceneSpikeEvidence with _$SceneSpikeEvidence {
     required this.flutterFrameworkRevision,
     required this.flutterEngineRevision,
     required this.dartVersion,
+    required this.dartSourceRevision,
     required this.flutterSceneRevision,
     required this.eqmonitorMapRendererRevision,
     required this.eqmonitorMapRendererCheckoutDirty,
@@ -125,6 +126,7 @@ class SceneSpikeEvidence with _$SceneSpikeEvidence {
     required this.frameCount,
     required this.partialUpdateCount,
     required this.lifecycleResumeCount,
+    required this.disposeAndRemountCount,
     required this.appResourceGeneration,
     required List<SceneSpikeCapabilityResult> capabilities,
     required this.performance,
@@ -148,6 +150,8 @@ class SceneSpikeEvidence with _$SceneSpikeEvidence {
   final String flutterEngineRevision;
   @override
   final String dartVersion;
+  @override
+  final String dartSourceRevision;
   @override
   final String flutterSceneRevision;
   @override
@@ -174,6 +178,9 @@ class SceneSpikeEvidence with _$SceneSpikeEvidence {
   @SceneSpikeStrictIntConverter()
   @override
   final int lifecycleResumeCount;
+  @SceneSpikeStrictIntConverter()
+  @override
+  final int disposeAndRemountCount;
   @SceneSpikeStrictIntConverter()
   @override
   final int appResourceGeneration;

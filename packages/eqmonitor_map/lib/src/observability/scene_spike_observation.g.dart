@@ -17,6 +17,7 @@ SceneSpikeEvidence _$SceneSpikeEvidenceFromJson(Map<String, dynamic> json) =>
       flutterFrameworkRevision: json['flutterFrameworkRevision'] as String,
       flutterEngineRevision: json['flutterEngineRevision'] as String,
       dartVersion: json['dartVersion'] as String,
+      dartSourceRevision: json['dartSourceRevision'] as String,
       flutterSceneRevision: json['flutterSceneRevision'] as String,
       eqmonitorMapRendererRevision:
           json['eqmonitorMapRendererRevision'] as String,
@@ -44,6 +45,9 @@ SceneSpikeEvidence _$SceneSpikeEvidenceFromJson(Map<String, dynamic> json) =>
       lifecycleResumeCount: const SceneSpikeStrictIntConverter().fromJson(
         json['lifecycleResumeCount'] as num,
       ),
+      disposeAndRemountCount: const SceneSpikeStrictIntConverter().fromJson(
+        json['disposeAndRemountCount'] as num,
+      ),
       appResourceGeneration: const SceneSpikeStrictIntConverter().fromJson(
         json['appResourceGeneration'] as num,
       ),
@@ -70,6 +74,7 @@ Map<String, dynamic> _$SceneSpikeEvidenceToJson(
   'flutterFrameworkRevision': instance.flutterFrameworkRevision,
   'flutterEngineRevision': instance.flutterEngineRevision,
   'dartVersion': instance.dartVersion,
+  'dartSourceRevision': instance.dartSourceRevision,
   'flutterSceneRevision': instance.flutterSceneRevision,
   'eqmonitorMapRendererRevision': instance.eqmonitorMapRendererRevision,
   'eqmonitorMapRendererCheckoutDirty':
@@ -92,6 +97,9 @@ Map<String, dynamic> _$SceneSpikeEvidenceToJson(
   ),
   'lifecycleResumeCount': const SceneSpikeStrictIntConverter().toJson(
     instance.lifecycleResumeCount,
+  ),
+  'disposeAndRemountCount': const SceneSpikeStrictIntConverter().toJson(
+    instance.disposeAndRemountCount,
   ),
   'appResourceGeneration': const SceneSpikeStrictIntConverter().toJson(
     instance.appResourceGeneration,

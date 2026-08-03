@@ -237,6 +237,7 @@ void main() {
           .copyWith(
             partialUpdateCount: 0,
             lifecycleResumeCount: 0,
+            disposeAndRemountCount: 0,
             performance: sceneSpikeFixture.performance().copyWith(
               partialUpdateCount: 0,
               resourceRebuildCount: 0,
@@ -248,8 +249,34 @@ void main() {
         containsAll([
           'android/profile partialPositionAndColorUpdate passed without a partial update runtime signal.',
           'android/profile backgroundAndForeground passed without a lifecycle resume runtime signal.',
-          'android/profile disposeAndRemount passed without a resource rebuild runtime signal.',
+          'android/profile disposeAndRemount passed without a confirmed remount runtime signal.',
         ]),
+      );
+    });
+
+    test('accepts remount signal without treating it as resource rebuild', () {
+      final evidence = sceneSpikeFixture
+          .evidence(
+            run: const SceneSpikeRunKey(
+              platform: .android,
+              buildMode: .profile,
+            ),
+          )
+          .copyWith(
+            disposeAndRemountCount: 1,
+            performance: sceneSpikeFixture.performance().copyWith(
+              resourceRebuildCount: 0,
+            ),
+          );
+
+      expect(
+        SceneSpikeGate.evaluate([evidence]).validationErrors,
+        isNot(
+          contains(
+            'android/profile disposeAndRemount passed without a confirmed '
+            'remount runtime signal.',
+          ),
+        ),
       );
     });
 
@@ -293,6 +320,7 @@ void main() {
           )
           .copyWith(
             flutterEngineRevision: 'ABCDEF0123456789ABCDEF0123456789ABCDEF01',
+            dartSourceRevision: '0123456789abcdef0123456789abcdef01234567',
             eqmonitorMapRendererRevision: 'renderer-main',
             eqmonitorMapRendererCheckoutDirty: true,
             revisionProvenance: .runtimeSignal,
@@ -300,6 +328,14 @@ void main() {
           );
 
       final decision = SceneSpikeGate.evaluate([invalid]);
+      const expectedEngineMismatch =
+          'android/profile flutterEngineRevision expected '
+          '${SceneSpikeEvidenceContract.expectedFlutterEngineRevision}, got '
+          'ABCDEF0123456789ABCDEF0123456789ABCDEF01.';
+      const expectedDartMismatch =
+          'android/profile dartSourceRevision expected '
+          '${SceneSpikeEvidenceContract.expectedDartSourceRevision}, got '
+          '0123456789abcdef0123456789abcdef01234567.';
 
       expect(
         decision.validationErrors,
@@ -313,11 +349,10 @@ void main() {
       );
       expect(
         decision.revisionMismatches,
-        contains(
-          'android/profile flutterEngineRevision expected '
-          '${SceneSpikeEvidenceContract.expectedFlutterEngineRevision}, got '
-          'ABCDEF0123456789ABCDEF0123456789ABCDEF01.',
-        ),
+        containsAll([
+          expectedEngineMismatch,
+          expectedDartMismatch,
+        ]),
       );
     });
 
@@ -333,7 +368,8 @@ void main() {
             elapsedMicroseconds: -1,
             partialUpdateCount: -2,
             lifecycleResumeCount: -3,
-            appResourceGeneration: -4,
+            disposeAndRemountCount: -4,
+            appResourceGeneration: -5,
             performance: sceneSpikeFixture.performance().copyWith(
               buildDurationCount: -1,
               buildDurationMaxMicroseconds: -2,
@@ -354,7 +390,7 @@ void main() {
 
       expect(
         errors.where((error) => error.contains('non-negative')),
-        hasLength(15),
+        hasLength(16),
       );
     });
 
@@ -824,6 +860,7 @@ class SceneSpikeFixture {
     flutterEngineRevision:
         SceneSpikeEvidenceContract.expectedFlutterEngineRevision,
     dartVersion: '3.14.0-29.0.dev',
+    dartSourceRevision: SceneSpikeEvidenceContract.expectedDartSourceRevision,
     flutterSceneRevision:
         SceneSpikeEvidenceContract.expectedFlutterSceneRevision,
     eqmonitorMapRendererRevision: '0123456789abcdef0123456789abcdef01234567',
@@ -836,6 +873,7 @@ class SceneSpikeFixture {
     frameCount: 2,
     partialUpdateCount: 2,
     lifecycleResumeCount: 1,
+    disposeAndRemountCount: 1,
     appResourceGeneration: 1,
     capabilities:
         capabilities ?? this.capabilities(status: blockedCapabilityStatus),

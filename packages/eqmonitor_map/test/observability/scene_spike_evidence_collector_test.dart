@@ -20,6 +20,7 @@ void main() {
         frameCount: 2,
         partialUpdateCount: 2,
         lifecycleResumeCount: 1,
+        disposeAndRemountCount: 1,
         appResourceGeneration: 1,
         capabilities: sceneSpikeCollectorFixture.capabilities(),
         performance: sceneSpikeCollectorFixture.performance(),
@@ -32,6 +33,10 @@ void main() {
       expect(evidence.deviceModel, 'Pixel Test');
       expect(evidence.operatingSystemVersion, 'Android Test');
       expect(evidence.dartVersion, 'Dart Test');
+      expect(
+        evidence.dartSourceRevision,
+        SceneSpikeEvidenceContract.expectedDartSourceRevision,
+      );
       expect(
         evidence.revisionProvenance,
         SceneSpikeObservationProvenance.compileTimeManifest,
@@ -148,6 +153,7 @@ class SceneSpikeCollectorFixture {
     frameCount: 2,
     partialUpdateCount: 2,
     lifecycleResumeCount: 1,
+    disposeAndRemountCount: 1,
     appResourceGeneration: 1,
     capabilities: capabilities(),
     performance: performance(),
@@ -160,6 +166,8 @@ class SceneSpikeCollectorFixture {
         SceneSpikeEvidenceContract.expectedFlutterEngineRevision,
     String flutterSceneRevision =
         SceneSpikeEvidenceContract.expectedFlutterSceneRevision,
+    String dartSourceRevision =
+        SceneSpikeEvidenceContract.expectedDartSourceRevision,
     String eqmonitorMapRendererRevision =
         '0123456789abcdef0123456789abcdef01234567',
     bool eqmonitorMapRendererCheckoutDirty = false,
@@ -167,6 +175,7 @@ class SceneSpikeCollectorFixture {
     flutterFrameworkRevision: flutterFrameworkRevision,
     flutterEngineRevision: flutterEngineRevision,
     flutterSceneRevision: flutterSceneRevision,
+    dartSourceRevision: dartSourceRevision,
     eqmonitorMapRendererRevision: eqmonitorMapRendererRevision,
     eqmonitorMapRendererCheckoutDirty: eqmonitorMapRendererCheckoutDirty,
   );

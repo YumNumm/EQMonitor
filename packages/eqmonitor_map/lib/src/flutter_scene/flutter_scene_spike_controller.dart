@@ -4,8 +4,10 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_async_generation.dart';
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_orthographic_projection.dart';
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_spike_adapter.dart';
+import 'package:eqmonitor_map/src/flutter_scene/scene_spike_operator_checklist.dart';
 import 'package:eqmonitor_map/src/flutter_scene/spike_frame_timing_collector.dart';
 import 'package:eqmonitor_map/src/observability/scene_spike_evidence_collector.dart';
 import 'package:eqmonitor_map/src/observability/scene_spike_gate.dart';
@@ -18,12 +20,40 @@ import 'package:flutter_scene/scene.dart' as scene;
 import 'package:vector_math/vector_math.dart' as scene_math;
 import 'package:vector_math/vector_math_64.dart' as model_math;
 
-class SceneSpikeRuntimeObservationLog
-    implements SceneSpikeRuntimeObservationSink {
+class SceneSpikeRunLog implements SceneSpikeRuntimeObservationSink {
+  SceneSpikeRunLog({required this.startedAtUtc})
+    : timingCollector = SpikeFrameTimingCollector(capacity: 120),
+      performance = SceneSpikePerformanceAccumulator(sampleCapacity: 120);
+
   final Map<SceneSpikeCapability, SceneSpikeCapabilityResult> observations = {};
+  SpikeFrameTimingCollector timingCollector;
+  SceneSpikePerformanceAccumulator performance;
+  DateTime startedAtUtc;
+  var _partialUpdateCount = 0;
+  var _lifecycleResumeCount = 0;
+  var _disposeAndRemountCount = 0;
+
+  int get disposeAndRemountCount => _disposeAndRemountCount;
+
+  int get partialUpdateCount => _partialUpdateCount;
+
+  int get lifecycleResumeCount => _lifecycleResumeCount;
+
+  void recordPartialUpdate() {
+    _partialUpdateCount += 1;
+    performance.recordPartialUpdate();
+  }
+
+  void recordLifecycleResume() {
+    _lifecycleResumeCount += 1;
+  }
 
   @override
   void record(SceneSpikeRuntimeObservation observation) {
+    final existing = observations[observation.capability];
+    if (existing?.status == .failed) {
+      return;
+    }
     observations[observation.capability] = SceneSpikeCapabilityResult(
       capability: observation.capability,
       status: observation.status,
@@ -33,64 +63,100 @@ class SceneSpikeRuntimeObservationLog
     );
   }
 
-  void clear() {
-    observations.clear();
+  void reset({required DateTime startedAtUtc}) {
+    final terminalFailures = observations.map(
+      (capability, result) => MapEntry(
+        capability,
+        result.copyWith(observedAtUtc: startedAtUtc),
+      ),
+    )..removeWhere((_, result) => result.status != .failed);
+    observations
+      ..clear()
+      ..addAll(terminalFailures);
+    this.startedAtUtc = startedAtUtc;
+    timingCollector = SpikeFrameTimingCollector(capacity: 120);
+    performance = SceneSpikePerformanceAccumulator(sampleCapacity: 120);
+    _partialUpdateCount = 0;
+    _lifecycleResumeCount = 0;
+    _disposeAndRemountCount = 0;
+  }
+
+  void recordConfirmedDisposeAndRemount() {
+    _disposeAndRemountCount += 1;
+    record(
+      const SceneSpikeRuntimeObservation(
+        capability: .disposeAndRemount,
+        status: .passed,
+        detail: 'Previous controller disposed and replacement mounted.',
+      ),
+    );
   }
 }
 
 class FlutterSceneSpikeController extends ChangeNotifier {
-  factory FlutterSceneSpikeController.create() {
+  factory FlutterSceneSpikeController.create({
+    SceneSpikeRunLog? runLog,
+  }) {
     final startedAtUtc = DateTime.now().toUtc();
-    final observationLog = SceneSpikeRuntimeObservationLog();
+    final currentRunLog =
+        runLog ?? SceneSpikeRunLog(startedAtUtc: startedAtUtc);
     final initialFrame = SpikeMeshFrame.initial();
     final adapter = FlutterSceneSpikeAdapter(
       initialFrame: initialFrame,
-      observationSink: observationLog,
+      observationSink: currentRunLog,
     );
     final projection = EqmonitorOrthographicProjection(worldHalfHeight: 1.2);
     final cameraNode = scene.Node(
       localTransform: scene_math.Matrix4.translationValues(0, 0, -2),
     );
-    return FlutterSceneSpikeController._(
+    return FlutterSceneSpikeController.withDependencies(
       adapter: adapter,
-      observationLog: observationLog,
+      runLog: currentRunLog,
       projection: projection,
       camera: scene.NodeCamera(
         cameraNode,
         FlutterSceneOrthographicProjection(projection: projection),
       ),
       initialFrame: initialFrame,
-      startedAtUtc: startedAtUtc,
+      runtimeSource: SceneSpikeProductionRuntimeIdentitySource(),
+      manifestSource: const SceneSpikeEnvironmentBuildManifestSource(),
+      initializeSceneStaticResources: scene.Scene.initializeStaticResources,
     );
   }
 
-  FlutterSceneSpikeController._({
-    required FlutterSceneSpikeAdapter adapter,
-    required SceneSpikeRuntimeObservationLog observationLog,
+  FlutterSceneSpikeController.withDependencies({
+    required SceneSpikeControllerAdapter adapter,
+    required SceneSpikeRunLog runLog,
     required EqmonitorOrthographicProjection projection,
-    required this.camera,
     required SpikeMeshFrame initialFrame,
-    required DateTime startedAtUtc,
+    required SceneSpikeRuntimeIdentitySource runtimeSource,
+    required SceneSpikeBuildManifestSource manifestSource,
+    required Future<void> Function() initializeSceneStaticResources,
+    scene.NodeCamera? camera,
   }) : _adapter = adapter,
-       _observationLog = observationLog,
+       _runLog = runLog,
        _projection = projection,
+       _camera = camera,
        _frame = initialFrame,
-       _startedAtUtc = startedAtUtc;
+       _runtimeSource = runtimeSource,
+       _manifestSource = manifestSource,
+       _initializeSceneStaticResources = initializeSceneStaticResources;
 
-  final FlutterSceneSpikeAdapter _adapter;
-  final SceneSpikeRuntimeObservationLog _observationLog;
+  final SceneSpikeControllerAdapter _adapter;
+  final SceneSpikeRunLog _runLog;
   final EqmonitorOrthographicProjection _projection;
-  final scene.NodeCamera camera;
+  final SceneSpikeRuntimeIdentitySource _runtimeSource;
+  final SceneSpikeBuildManifestSource _manifestSource;
+  final Future<void> Function() _initializeSceneStaticResources;
+  final scene.NodeCamera? _camera;
   final _lifecycleReducer = const SceneSpikeLifecycleReducer();
+  final _initializationGeneration = SceneSpikeAsyncGenerationOwner();
+  final _rebuildGeneration = SceneSpikeAsyncGenerationOwner();
   final Map<SceneSpikeCapability, SceneSpikeCapabilityResult>
   _operatorAttestations = {};
+  final Map<SceneSpikeCapability, Set<String>> _completedChecklistCriteria = {};
   SpikeMeshFrame _frame;
   var _lifecycle = SceneSpikeLifecycleState.initial();
-  var _timingCollector = SpikeFrameTimingCollector(
-    capacity: 120,
-  );
-  var _performance = SceneSpikePerformanceAccumulator(sampleCapacity: 120);
-  DateTime _startedAtUtc;
   Size? _logicalSize;
   double? _devicePixelRatio;
   String? _renderingBackend;
@@ -98,12 +164,16 @@ class FlutterSceneSpikeController extends ChangeNotifier {
   SceneSpikeRuntimeIdentity? _runtimeIdentity;
   SceneSpikeBuildManifest? _buildManifest;
   String? _metadataFailure;
-  var _partialUpdateCount = 0;
-  var _lifecycleResumeCount = 0;
   var _isUpdating = false;
   var _isDisposed = false;
 
-  scene.Scene get sceneGraph => _adapter.sceneGraph;
+  scene.Scene get sceneGraph =>
+      _adapter.sceneGraph ??
+      (throw StateError('Scene graph is unavailable for this controller.'));
+
+  scene.NodeCamera get camera =>
+      _camera ??
+      (throw StateError('Scene camera is unavailable for this controller.'));
 
   SceneSpikeLifecycleState get lifecycle => _lifecycle;
 
@@ -119,37 +189,83 @@ class FlutterSceneSpikeController extends ChangeNotifier {
 
   String? get metadataFailure => _metadataFailure;
 
-  int get frameCount => _timingCollector.sampleCount;
+  int get frameCount => _runLog.timingCollector.sampleCount;
 
-  int get partialUpdateCount => _partialUpdateCount;
+  int get partialUpdateCount => _runLog.partialUpdateCount;
 
-  int get lifecycleResumeCount => _lifecycleResumeCount;
+  int get lifecycleResumeCount => _runLog.lifecycleResumeCount;
 
-  SceneSpikePerformanceSnapshot get performance => _performance.snapshot();
+  int get disposeAndRemountCount => _runLog.disposeAndRemountCount;
+
+  SceneSpikePerformanceSnapshot get performance =>
+      _runLog.performance.snapshot();
 
   model_math.Matrix4 projectionMatrixFor(Size logicalSize) => _projection
       .matrixFor(aspectRatio: logicalSize.width / logicalSize.height);
 
   Future<void> initializeStaticResources() async {
+    if (_isDisposed) {
+      return;
+    }
+    final token = _initializationGeneration.begin();
+    SceneSpikeRuntimeIdentity? runtimeIdentity;
+    SceneSpikeBuildManifest? buildManifest;
+    String? metadataFailure;
     try {
-      final runtimeSource = SceneSpikeProductionRuntimeIdentitySource();
-      final platform = runtimeSource.readPlatform();
-      _runtimeIdentity = SceneSpikeRuntimeIdentity(
+      final platform = _runtimeSource.readPlatform();
+      final deviceModel = await _runtimeSource.readDeviceModel(platform);
+      if (!token.isCurrent || _isDisposed) {
+        return;
+      }
+      runtimeIdentity = SceneSpikeRuntimeIdentity(
         run: SceneSpikeRunKey(
           platform: platform,
-          buildMode: runtimeSource.readBuildMode(),
+          buildMode: _runtimeSource.readBuildMode(),
         ),
-        deviceModel: await runtimeSource.readDeviceModel(platform),
-        operatingSystemVersion: runtimeSource.readOperatingSystemVersion(),
-        dartVersion: runtimeSource.readDartVersion(),
+        deviceModel: deviceModel,
+        operatingSystemVersion: _runtimeSource.readOperatingSystemVersion(),
+        dartVersion: _runtimeSource.readDartVersion(),
       );
-      _buildManifest = const SceneSpikeEnvironmentBuildManifestSource().read();
-      _metadataFailure = null;
+      buildManifest = _manifestSource.read();
     } catch (error) {
-      _metadataFailure = '$error';
+      if (!token.isCurrent || _isDisposed) {
+        return;
+      }
+      metadataFailure = '$error';
     }
-    await scene.Scene.initializeStaticResources();
-    await _adapter.initializeCustomMaterial();
+    if (!token.isCurrent || _isDisposed) {
+      return;
+    }
+    _runtimeIdentity = runtimeIdentity;
+    _buildManifest = buildManifest;
+    _metadataFailure = metadataFailure;
+    try {
+      await _initializeSceneStaticResources();
+    } catch (_) {
+      if (token.isCurrent && !_isDisposed) {
+        _runLog.performance.recordException();
+        notifyListeners();
+      }
+      return;
+    }
+    if (!token.isCurrent || _isDisposed) {
+      return;
+    }
+    late bool materialInitialized;
+    try {
+      materialInitialized = await _adapter.initializeCustomMaterial(
+        token: token,
+      );
+    } catch (_) {
+      if (token.isCurrent && !_isDisposed) {
+        _runLog.performance.recordException();
+        notifyListeners();
+      }
+      return;
+    }
+    if (!token.isCurrent || _isDisposed || !materialInitialized) {
+      return;
+    }
     notifyListeners();
   }
 
@@ -195,8 +311,8 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     _adapter.requestAppResourceRebuild(
       appResourceGeneration: _lifecycle.appResourceGeneration,
     );
-    _lifecycleResumeCount += 1;
-    _observationLog.record(
+    _runLog.recordLifecycleResume();
+    _runLog.record(
       const SceneSpikeRuntimeObservation(
         capability: .backgroundAndForeground,
         status: .passed,
@@ -222,7 +338,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       state: _lifecycle,
       event: const SceneSpikeLifecycleEvent.surfaceRecreated(),
     );
-    _observationLog.record(
+    _runLog.record(
       const SceneSpikeRuntimeObservation(
         capability: .dprAndResize,
         status: .passed,
@@ -247,33 +363,41 @@ class FlutterSceneSpikeController extends ChangeNotifier {
   }
 
   Future<void> completePendingAppResourceRebuild() async {
-    if (_lifecycle.phase != .rebuilding) {
+    if (_lifecycle.phase != .rebuilding || _isDisposed) {
       return;
     }
     final generation = _lifecycle.appResourceGeneration;
+    final token = _rebuildGeneration.begin();
     try {
-      await _adapter.rebuildApplicationResources(
+      final rebuilt = await _adapter.rebuildApplicationResources(
         appResourceGeneration: generation,
+        token: token,
       );
+      if (!token.isCurrent || _isDisposed || !rebuilt) {
+        return;
+      }
       _lifecycle = _lifecycleReducer.reduce(
         state: _lifecycle,
         event: const SceneSpikeLifecycleEvent.rebuildCompleted(),
       );
-      _performance.recordResourceRebuild();
+      _runLog.performance.recordResourceRebuild();
     } catch (_) {
-      _performance.recordException();
-      rethrow;
-    } finally {
+      if (!token.isCurrent || _isDisposed) {
+        return;
+      }
+      _runLog.performance.recordException();
       notifyListeners();
+      return;
     }
+    notifyListeners();
   }
 
   void updatePartialMesh() {
     if (!_isUpdating || !_lifecycle.mayUpload) {
       return;
     }
-    final vertexIndex = _partialUpdateCount % 6;
-    final phase = _partialUpdateCount.isEven ? 1.0 : -1.0;
+    final vertexIndex = _runLog.partialUpdateCount % 6;
+    final phase = _runLog.partialUpdateCount.isEven ? 1.0 : -1.0;
     final nextFrame = _frame.updateVertex(
       vertexIndex: vertexIndex,
       position: model_math.Vector3(
@@ -282,8 +406,8 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         0,
       ),
       color: model_math.Vector4(
-        _partialUpdateCount.isEven ? 1 : 0.2,
-        _partialUpdateCount.isEven ? 0.2 : 1,
+        _runLog.partialUpdateCount.isEven ? 1 : 0.2,
+        _runLog.partialUpdateCount.isEven ? 0.2 : 1,
         0.4,
         1,
       ),
@@ -291,10 +415,9 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     try {
       _adapter.updateMesh(frame: nextFrame);
       _frame = nextFrame;
-      _partialUpdateCount += 1;
-      _performance.recordPartialUpdate();
+      _runLog.recordPartialUpdate();
     } catch (_) {
-      _performance.recordException();
+      _runLog.performance.recordException();
       _isUpdating = false;
     }
     notifyListeners();
@@ -302,11 +425,11 @@ class FlutterSceneSpikeController extends ChangeNotifier {
 
   void recordFrameTimings(List<FrameTiming> timings) {
     for (final timing in timings) {
-      _timingCollector.add(
+      _runLog.timingCollector.add(
         buildDuration: timing.buildDuration,
         rasterDuration: timing.rasterDuration,
       );
-      _performance.recordFrameTiming(
+      _runLog.performance.recordFrameTiming(
         buildDurationMicroseconds: timing.buildDuration.inMicroseconds,
         rasterDurationMicroseconds: timing.rasterDuration.inMicroseconds,
         wasDropped: timing.totalSpan > const Duration(microseconds: 16667),
@@ -316,13 +439,21 @@ class FlutterSceneSpikeController extends ChangeNotifier {
   }
 
   void recordTextPainterOverlay() {
-    _observationLog.record(
+    _runLog.record(
       const SceneSpikeRuntimeObservation(
         capability: .textPainterOverlay,
         status: .passed,
         detail: 'TextPainter overlay was composed above SceneView.',
       ),
     );
+  }
+
+  void recordConfirmedDisposeAndRemount() {
+    if (_isDisposed || _lifecycle.phase != .active) {
+      return;
+    }
+    _runLog.recordConfirmedDisposeAndRemount();
+    notifyListeners();
   }
 
   void attestRenderingBackend(String backend) {
@@ -340,14 +471,69 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         null => const [],
       };
 
+  List<SceneSpikeOperatorCriterion> checklistCriteria(
+    SceneSpikeCapability capability,
+  ) => SceneSpikeOperatorChecklistContract.criteriaFor(capability);
+
+  bool isChecklistCriterionCompleted({
+    required SceneSpikeCapability capability,
+    required String criterionId,
+  }) => _completedChecklistCriteria[capability]?.contains(criterionId) ?? false;
+
+  void setChecklistCriterion({
+    required SceneSpikeCapability capability,
+    required String criterionId,
+    required bool isCompleted,
+  }) {
+    if (SceneSpikeEvidenceContract.requiredProvenance(capability) !=
+        .operatorAttestation) {
+      throw StateError('Capability does not have an operator checklist.');
+    }
+    if (_operatorAttestations.containsKey(capability)) {
+      throw StateError('An attested checklist is immutable.');
+    }
+    final criteria = checklistCriteria(capability);
+    if (!criteria.any((criterion) => criterion.id == criterionId)) {
+      throw ArgumentError.value(criterionId, 'criterionId');
+    }
+    final completed = _completedChecklistCriteria.putIfAbsent(
+      capability,
+      () => <String>{},
+    );
+    if (isCompleted) {
+      completed.add(criterionId);
+    } else {
+      completed.remove(criterionId);
+    }
+    notifyListeners();
+  }
+
+  bool canAttestCapability(SceneSpikeCapability capability) {
+    if (SceneSpikeEvidenceContract.requiredProvenance(capability) !=
+        .operatorAttestation) {
+      return false;
+    }
+    if (_runLog.observations[capability]?.status == .failed ||
+        _operatorAttestations.containsKey(capability)) {
+      return false;
+    }
+    final criteria = checklistCriteria(capability);
+    final completed = _completedChecklistCriteria[capability] ?? const {};
+    return criteria.isNotEmpty &&
+        criteria.every((criterion) => completed.contains(criterion.id));
+  }
+
   void attestCapability(SceneSpikeCapability capability) {
     if (SceneSpikeEvidenceContract.requiredProvenance(capability) !=
         .operatorAttestation) {
       throw StateError('Capability does not allow operator attestation.');
     }
-    final runtimeObservation = _observationLog.observations[capability];
+    final runtimeObservation = _runLog.observations[capability];
     if (runtimeObservation?.status == .failed) {
       throw StateError('A failed runtime observation cannot be attested.');
+    }
+    if (!canAttestCapability(capability)) {
+      throw StateError('Every fixed checklist criterion must be completed.');
     }
     _operatorAttestations[capability] = SceneSpikeCapabilityResult(
       capability: capability,
@@ -408,27 +594,27 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         status: .unobserved,
         provenance: .unavailablePublicApi,
         detail: 'Flutter Scene public API is unavailable.',
-        observedAtUtc: _startedAtUtc,
+        observedAtUtc: _runLog.startedAtUtc,
       );
     }
     if (requiredProvenance == .runtimeSignal) {
-      return _observationLog.observations[capability] ??
+      return _runLog.observations[capability] ??
           SceneSpikeCapabilityResult(
             capability: capability,
             status: .unobserved,
             provenance: .runtimeSignal,
             detail: 'Runtime event has not been observed.',
-            observedAtUtc: _startedAtUtc,
+            observedAtUtc: _runLog.startedAtUtc,
           );
     }
-    final runtimeFailure = _observationLog.observations[capability];
+    final runtimeFailure = _runLog.observations[capability];
     if (runtimeFailure?.status == .failed) {
       return SceneSpikeCapabilityResult(
         capability: capability,
         status: .failed,
         provenance: .operatorAttestation,
         detail: runtimeFailure?.detail ?? 'Runtime capability failed.',
-        observedAtUtc: runtimeFailure?.observedAtUtc ?? _startedAtUtc,
+        observedAtUtc: runtimeFailure?.observedAtUtc ?? _runLog.startedAtUtc,
       );
     }
     return _operatorAttestations[capability] ??
@@ -437,7 +623,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
           status: .unobserved,
           provenance: .operatorAttestation,
           detail: 'Fixed operator checklist has not been completed.',
-          observedAtUtc: _startedAtUtc,
+          observedAtUtc: _runLog.startedAtUtc,
         );
   }
 
@@ -452,32 +638,30 @@ class FlutterSceneSpikeController extends ChangeNotifier {
           manifestSource: const SceneSpikeEnvironmentBuildManifestSource(),
         ).collect(
           renderingBackend: backend,
-          startedAtUtc: _startedAtUtc,
+          startedAtUtc: _runLog.startedAtUtc,
           elapsedMicroseconds: DateTime.now()
               .toUtc()
-              .difference(_startedAtUtc)
+              .difference(_runLog.startedAtUtc)
               .inMicroseconds,
           frameCount: frameCount,
-          partialUpdateCount: _partialUpdateCount,
-          lifecycleResumeCount: _lifecycleResumeCount,
+          partialUpdateCount: _runLog.partialUpdateCount,
+          lifecycleResumeCount: _runLog.lifecycleResumeCount,
+          disposeAndRemountCount: _runLog.disposeAndRemountCount,
           appResourceGeneration: _lifecycle.appResourceGeneration,
           capabilities: capabilityResults(),
-          performance: _performance.snapshot(),
+          performance: _runLog.performance.snapshot(),
         );
     return jsonEncode(evidence.toJson());
   }
 
   void resetEvidence() {
-    _startedAtUtc = DateTime.now().toUtc();
-    _timingCollector = SpikeFrameTimingCollector(capacity: 120);
-    _performance = SceneSpikePerformanceAccumulator(sampleCapacity: 120);
-    _partialUpdateCount = 0;
-    _lifecycleResumeCount = 0;
+    final startedAtUtc = DateTime.now().toUtc();
     _renderingBackend = null;
     _runStartFailure = null;
     _operatorAttestations.clear();
-    _observationLog.clear();
-    _observationLog
+    _completedChecklistCriteria.clear();
+    _runLog.reset(startedAtUtc: startedAtUtc);
+    _runLog
       ..record(
         const SceneSpikeRuntimeObservation(
           capability: .proceduralOrthographicMesh,
@@ -500,6 +684,8 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     if (_lifecycle.phase == .detached || _lifecycle.phase == .disposed) {
       return;
     }
+    _initializationGeneration.cancel();
+    _rebuildGeneration.cancel();
     _adapter.detach();
     _lifecycle = _lifecycleReducer.reduce(
       state: _lifecycle,
@@ -513,12 +699,14 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     if (_isDisposed) {
       return;
     }
+    _isDisposed = true;
+    _initializationGeneration.dispose();
+    _rebuildGeneration.dispose();
     _adapter.dispose();
     _lifecycle = _lifecycleReducer.reduce(
       state: _lifecycle,
       event: const SceneSpikeLifecycleEvent.disposed(),
     );
-    _isDisposed = true;
     super.dispose();
   }
 }
