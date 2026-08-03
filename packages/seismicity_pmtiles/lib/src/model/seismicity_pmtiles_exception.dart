@@ -33,4 +33,8 @@ sealed class SeismicityPmTilesException
     required SeismicityPmTilesSource source,
     required String reason,
   }) = SeismicityPmTilesSourceReadFailedException;
+
+  const factory SeismicityPmTilesException.tileNotFound({
+    required int tileId,
+  }) = SeismicityPmTilesTileNotFoundException;
 }
