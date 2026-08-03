@@ -100,8 +100,7 @@ Future<void> main(List<String> args) => build(
               {'NSString', 'NSObject'}.contains(declaration.originalName),
         ),
         protocols: Protocols(
-          include: (declaration) =>
-              declaration.originalName == 'EQMAssetsUtil',
+          include: (declaration) => declaration.originalName == 'EQMAssetsUtil',
           module: (declaration) => <String, String>{}[declaration.originalName],
           includeMember: (declaration, member) => true,
         ),
@@ -167,8 +166,12 @@ Future<void> _buildIosXcframework({
   if (!frameworksOutDir.existsSync()) {
     frameworksOutDir.createSync(recursive: true);
   }
-  _removeIfExists(Directory('${frameworksOutDir.path}/$frameworkName.framework'));
-  _removeIfExists(Directory('${frameworksOutDir.path}/$frameworkName.xcframework'));
+  _removeIfExists(
+    Directory('${frameworksOutDir.path}/$frameworkName.framework'),
+  );
+  _removeIfExists(
+    Directory('${frameworksOutDir.path}/$frameworkName.xcframework'),
+  );
 
   final dylibDevicePath = buildDirectory.resolve(
     'lib${frameworkName}_device.dylib',
@@ -258,7 +261,9 @@ Future<void> _buildIosXcframework({
     armResult: swiftcSimArm,
     x86Path: dylibSimX86Path,
     x86Result: swiftcSimX86,
-    outputPath: buildDirectory.resolve('lib${frameworkName}_sim_universal.dylib'),
+    outputPath: buildDirectory.resolve(
+      'lib${frameworkName}_sim_universal.dylib',
+    ),
     label: 'simulator',
   );
 
@@ -273,13 +278,19 @@ Future<void> _buildIosXcframework({
 
   final infoPlistContents = _frameworkInfoPlist(minimumOSVersion: '16.0');
 
-  await File(dylibDevicePath.toFilePath()).copy('${deviceFwDir.path}/$frameworkName');
+  await File(
+    dylibDevicePath.toFilePath(),
+  ).copy('${deviceFwDir.path}/$frameworkName');
   File('${deviceFwDir.path}/Info.plist').writeAsStringSync(infoPlistContents);
 
-  await File(dylibSimFinalPath.toFilePath()).copy('${simFwDir.path}/$frameworkName');
+  await File(
+    dylibSimFinalPath.toFilePath(),
+  ).copy('${simFwDir.path}/$frameworkName');
   File('${simFwDir.path}/Info.plist').writeAsStringSync(infoPlistContents);
 
-  final xcframeworkOut = Directory('${frameworksOutDir.path}/$frameworkName.xcframework');
+  final xcframeworkOut = Directory(
+    '${frameworksOutDir.path}/$frameworkName.xcframework',
+  );
   final createXc = await Process.run('xcodebuild', [
     '-create-xcframework',
     '-framework',
@@ -315,13 +326,19 @@ Future<void> _buildMacosXcframework({
   if (!frameworksOutDir.existsSync()) {
     frameworksOutDir.createSync(recursive: true);
   }
-  _removeIfExists(Directory('${frameworksOutDir.path}/$frameworkName.framework'));
-  _removeIfExists(Directory('${frameworksOutDir.path}/$frameworkName.xcframework'));
+  _removeIfExists(
+    Directory('${frameworksOutDir.path}/$frameworkName.framework'),
+  );
+  _removeIfExists(
+    Directory('${frameworksOutDir.path}/$frameworkName.xcframework'),
+  );
 
   // Runner's actual MACOSX_DEPLOYMENT_TARGET (app/macos/Runner.xcodeproj).
   const macosTarget = 'macosx15.6';
 
-  final dylibArmPath = buildDirectory.resolve('lib${frameworkName}_macos_arm64.dylib');
+  final dylibArmPath = buildDirectory.resolve(
+    'lib${frameworkName}_macos_arm64.dylib',
+  );
   final swiftcArm = await Process.run(
     'swiftc',
     [
@@ -349,9 +366,13 @@ Future<void> _buildMacosXcframework({
     logger.error('swiftc (macosx, arm64) failed: ${swiftcArm.stderr}');
     throw Exception('Failed to compile Swift for macOS (arm64)');
   }
-  logger.info('Generated Objective-C header: ${generatedHeaderPath.toFilePath()}');
+  logger.info(
+    'Generated Objective-C header: ${generatedHeaderPath.toFilePath()}',
+  );
 
-  final dylibX86Path = buildDirectory.resolve('lib${frameworkName}_macos_x86.dylib');
+  final dylibX86Path = buildDirectory.resolve(
+    'lib${frameworkName}_macos_x86.dylib',
+  );
   final swiftcX86 = await Process.run(
     'swiftc',
     [
@@ -378,7 +399,9 @@ Future<void> _buildMacosXcframework({
     armResult: swiftcArm,
     x86Path: dylibX86Path,
     x86Result: swiftcX86,
-    outputPath: buildDirectory.resolve('lib${frameworkName}_macos_universal.dylib'),
+    outputPath: buildDirectory.resolve(
+      'lib${frameworkName}_macos_universal.dylib',
+    ),
     label: 'macOS',
   );
 
@@ -386,12 +409,16 @@ Future<void> _buildMacosXcframework({
     buildDirectory.resolve('xc_tmp/macos/$frameworkName.framework/'),
   );
   macFwDir.createSync(recursive: true);
-  await File(dylibFinalPath.toFilePath()).copy('${macFwDir.path}/$frameworkName');
+  await File(
+    dylibFinalPath.toFilePath(),
+  ).copy('${macFwDir.path}/$frameworkName');
   File('${macFwDir.path}/Info.plist').writeAsStringSync(
     _frameworkInfoPlist(minimumOSVersion: '15.6'),
   );
 
-  final xcframeworkOut = Directory('${frameworksOutDir.path}/$frameworkName.xcframework');
+  final xcframeworkOut = Directory(
+    '${frameworksOutDir.path}/$frameworkName.xcframework',
+  );
   final createXc = await Process.run('xcodebuild', [
     '-create-xcframework',
     '-framework',
@@ -498,7 +525,8 @@ Future<Uri> _lipoOrFallback({
     return x86Path;
   } else {
     logger.error(
-      'swiftc ($label) failed. arm64: ${armResult.stderr} x86: ${x86Result.stderr}',
+      'swiftc ($label) failed. '
+      'arm64: ${armResult.stderr} x86: ${x86Result.stderr}',
     );
     throw Exception('Failed to compile Swift for $label');
   }
@@ -510,7 +538,8 @@ void _removeIfExists(FileSystemEntity entity) {
   }
 }
 
-String _frameworkInfoPlist({required String minimumOSVersion}) => '''
+String _frameworkInfoPlist({required String minimumOSVersion}) =>
+    '''
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">

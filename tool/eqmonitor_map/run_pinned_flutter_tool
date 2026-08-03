@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+expected_revision=4dacd3fc91d96262a33e5c598e17d816f0b35641
+tool_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+repo_root="$(cd "$tool_dir/../.." && pwd -P)"
+sdk_dir="$repo_root/.flutter-scene-sdk"
+sdk_tool="${1:-}"
+
+flutter_top_level_command() {
+  while (($# > 0)); do
+    case "$1" in
+      --)
+        shift
+        if (($# > 0)); then
+          printf '%s\n' "$1"
+        fi
+        return
+        ;;
+      -d|--device-id|--wrap-column|--packages|--local-engine-src-path|--local-engine|--local-engine-host|--local-web-sdk|--debug-logs-dir)
+        if (($# < 2)); then
+          return
+        fi
+        shift 2
+        ;;
+      -d?*|--device-id=*|--wrap-column=*|--packages=*|--local-engine-src-path=*|--local-engine=*|--local-engine-host=*|--local-web-sdk=*|--debug-logs-dir=*)
+        shift
+        ;;
+      -*)
+        shift
+        ;;
+      *)
+        printf '%s\n' "$1"
+        return
+        ;;
+    esac
+  done
+}
+
+case "$sdk_tool" in
+  flutter|dart) ;;
+  *)
+    echo "unsupported pinned Flutter tool: $sdk_tool" >&2
+    exit 64
+    ;;
+esac
+
+if [[ "$sdk_tool" == flutter ]]; then
+  top_level_command="$(flutter_top_level_command "${@:2}")"
+  case "$top_level_command" in
+    upgrade|downgrade|channel)
+      echo "pinned Flutter runner refuses self-update command: flutter $top_level_command" >&2
+      exit 64
+      ;;
+  esac
+fi
+
+exec "$tool_dir/flutter_sdk_guard.sh" \
+  "$sdk_dir" \
+  "$expected_revision" \
+  "$sdk_tool" \
+  "${@:2}"

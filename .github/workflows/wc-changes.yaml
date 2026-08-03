@@ -5,6 +5,8 @@ on:
     outputs:
       flutter:
         value: ${{ jobs.changes.outputs.flutter }}
+      eqmonitor_map_scene_spike:
+        value: ${{ jobs.changes.outputs.eqmonitor_map_scene_spike }}
       typescript:
         value: ${{ jobs.changes.outputs.typescript }}
       terraform:
@@ -23,6 +25,7 @@ jobs:
       pull-requests: read
     outputs:
       flutter: ${{ steps.filter.outputs.flutter }}
+      eqmonitor_map_scene_spike: ${{ steps.filter.outputs.eqmonitor_map_scene_spike }}
       typescript: ${{ steps.filter.outputs.typescript }}
       terraform: ${{ steps.filter.outputs.terraform }}
     steps:
@@ -47,6 +50,16 @@ jobs:
               - 'analysis_options.yaml'
               - '.github/workflows/flutter.yaml'
               - '.github/workflows/wc-check-dart-*.yaml'
+              - '.github/workflows/pr-flutter-check.yaml'
+              - '.github/workflows/wc-changes.yaml'
+            eqmonitor_map_scene_spike:
+              - 'packages/eqmonitor_map/**'
+              - 'tool/eqmonitor_map/**'
+              - '.gitignore'
+              - 'mise.toml'
+              - 'mise.lock'
+              - 'pubspec.lock'
+              - '.github/workflows/wc-check-eqmonitor-map-scene-spike.yaml'
               - '.github/workflows/pr-flutter-check.yaml'
               - '.github/workflows/wc-changes.yaml'
             terraform:

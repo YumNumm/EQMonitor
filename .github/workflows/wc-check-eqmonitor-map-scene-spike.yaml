@@ -1,0 +1,109 @@
+name: EQMonitor Map Scene Spike
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  android-build:
+    name: Android Profile and Release Build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned Flutter SDK
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: flutter/flutter
+          ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
+          path: .flutter-scene-sdk
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        with:
+          install_args: "java"
+
+      - name: Verify pinned Flutter SDK
+        run: |
+          mise bootstrap repos status --missing
+          mise exec -- flutter --version --machine
+
+      - name: Precache Flutter Android artifacts
+        run: mise exec -- flutter precache --android
+
+      - name: Resolve example dependencies
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter pub get --enforce-lockfile
+
+      - name: Analyze eqmonitor_map package
+        run: mise exec -- flutter analyze --no-pub --fatal-infos packages/eqmonitor_map
+
+      - name: Generate and validate canonical dart-define manifest
+        run: |
+          mise exec -- dart run packages/eqmonitor_map/tool/write_scene_spike_defines.dart
+          test -s packages/eqmonitor_map/example/.dart_tool/scene_spike_defines.json
+
+      - name: Build Android profile
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter build apk --profile --dart-define-from-file=.dart_tool/scene_spike_defines.json
+
+      - name: Build Android release
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter build apk --release --dart-define-from-file=.dart_tool/scene_spike_defines.json
+
+  ios-build:
+    name: iOS Profile and Release Build
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned Flutter SDK
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: flutter/flutter
+          ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
+          path: .flutter-scene-sdk
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Activate Mise environment
+        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        with:
+          install: false
+
+      - name: Verify pinned Flutter SDK
+        run: |
+          mise bootstrap repos status --missing
+          mise exec -- flutter --version --machine
+
+      - name: Precache Flutter iOS artifacts
+        run: mise exec -- flutter precache --ios
+
+      - name: Resolve example dependencies
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter pub get --enforce-lockfile
+
+      - name: Generate and validate canonical dart-define manifest
+        run: |
+          mise exec -- dart run packages/eqmonitor_map/tool/write_scene_spike_defines.dart
+          test -s packages/eqmonitor_map/example/.dart_tool/scene_spike_defines.json
+
+      - name: Build iOS profile
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter build ios --profile --no-codesign --dart-define-from-file=.dart_tool/scene_spike_defines.json
+
+      - name: Build iOS release
+        working-directory: packages/eqmonitor_map/example
+        run: mise exec -- flutter build ios --release --no-codesign --dart-define-from-file=.dart_tool/scene_spike_defines.json
