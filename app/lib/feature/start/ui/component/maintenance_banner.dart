@@ -7,9 +7,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 /// ホームシートに表示するメンテナンス通知バナー。
 /// メンテナンス中の場合のみ表示する。
 class MaintenanceBanner extends ConsumerWidget {
-  const MaintenanceBanner({required this.bottomSpacing, super.key});
-
-  final double bottomSpacing;
+  const MaintenanceBanner({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,46 +22,43 @@ class MaintenanceBanner extends ConsumerWidget {
     final message = maintenance.message ?? 'メンテナンス中です。しばらくお待ちください。';
     final url = maintenance.url;
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: bottomSpacing),
-      child: Material(
-        color: colorTheme.tertiaryContainer,
+    return Material(
+      color: colorTheme.tertiaryContainer,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: url != null
-              ? () => launchUrlString(
-                  url,
-                  mode: LaunchMode.externalApplication,
-                )
-              : null,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.build_outlined,
-                  color: colorTheme.onTertiaryContainer,
-                  size: 20,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    message,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorTheme.onTertiaryContainer,
-                    ),
-                  ),
-                ),
-                if (url != null) ...[
-                  Icon(
-                    Icons.open_in_new,
+        onTap: url != null
+            ? () => launchUrlString(
+                url,
+                mode: LaunchMode.externalApplication,
+              )
+            : null,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Icon(
+                Icons.build_outlined,
+                color: colorTheme.onTertiaryContainer,
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  message,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: colorTheme.onTertiaryContainer,
-                    size: 16,
                   ),
-                ],
+                ),
+              ),
+              if (url != null) ...[
+                Icon(
+                  Icons.open_in_new,
+                  color: colorTheme.onTertiaryContainer,
+                  size: 16,
+                ),
               ],
-            ),
+            ],
           ),
         ),
       ),

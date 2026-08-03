@@ -112,6 +112,12 @@ Future<void> main(List<String> args) => build(
     );
 
     generator.generate();
+    final generatedBinding = File.fromUri(ffiOutputDartFile);
+    final normalizedBinding = generatedBinding
+        .readAsLinesSync()
+        .map((line) => line.trimRight())
+        .join('\n');
+    generatedBinding.writeAsStringSync('$normalizedBinding\n');
     logger.info(
       'Generated Dart bindings: ${generator.output.dartFile.toFilePath()}',
     );
@@ -394,10 +400,70 @@ Future<void> _buildMacosXcframework({
     xcframeworkOut.path,
   ]);
   if (createXc.exitCode != 0) {
-    logger.error('xcodebuild -create-xcframework failed: ${createXc.stderr}');
-    throw Exception('Failed to create AssetsUtil.xcframework (macOS)');
+    logger.warn(
+      'xcodebuild -create-xcframework unavailable; '
+      'assembling the deterministic macOS wrapper directly.',
+    );
+    await _assembleMacOSXCFramework(
+      framework: macFwDir,
+      output: xcframeworkOut,
+      architectures: [
+        if (swiftcArm.exitCode == 0) 'arm64',
+        if (swiftcX86.exitCode == 0) 'x86_64',
+      ],
+    );
   }
   logger.info('Created ${xcframeworkOut.path}');
+}
+
+Future<void> _assembleMacOSXCFramework({
+  required Directory framework,
+  required Directory output,
+  required List<String> architectures,
+}) async {
+  final identifier = 'macos-${architectures.join('_')}';
+  final destination = Directory(
+    '${output.path}/$identifier/AssetsUtil.framework',
+  );
+  destination.createSync(recursive: true);
+  await File(
+    '${framework.path}/AssetsUtil',
+  ).copy('${destination.path}/AssetsUtil');
+  await File(
+    '${framework.path}/Info.plist',
+  ).copy('${destination.path}/Info.plist');
+  final architectureEntries = architectures
+      .map((architecture) => '        <string>$architecture</string>')
+      .join('\n');
+  File('${output.path}/Info.plist').writeAsStringSync('''
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>AvailableLibraries</key>
+  <array>
+    <dict>
+      <key>BinaryPath</key>
+      <string>AssetsUtil.framework/AssetsUtil</string>
+      <key>LibraryIdentifier</key>
+      <string>$identifier</string>
+      <key>LibraryPath</key>
+      <string>AssetsUtil.framework</string>
+      <key>SupportedArchitectures</key>
+      <array>
+$architectureEntries
+      </array>
+      <key>SupportedPlatform</key>
+      <string>macos</string>
+    </dict>
+  </array>
+  <key>CFBundlePackageType</key>
+  <string>XFWK</string>
+  <key>XCFrameworkFormatVersion</key>
+  <string>1.0</string>
+</dict>
+</plist>
+''');
 }
 
 /// Lipo's the arm64/x86_64 dylibs together if both compiled; otherwise

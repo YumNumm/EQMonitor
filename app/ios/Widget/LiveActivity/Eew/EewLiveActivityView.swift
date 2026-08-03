@@ -42,7 +42,7 @@ struct HeaderContainer: View {
 
             HStack(alignment: .center, spacing: 8) {
                 VStack(alignment: .leading, spacing: 2) {
-                    // 「緊急地震速報(警報|予報) 第N報」または「緊急地震速報(xx) 第N報(最終)」
+                // 「緊急地震速報(警報|予報|取消) 第N報」または「… 最終 第N報」
                     Text(eewTypeLabelWithSerial)
                         .font(
                             .system(
@@ -64,33 +64,40 @@ struct HeaderContainer: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                // 主要動到達までのカウントダウン
-                if let arrivalDate = arrivalDate, arrivalDate > Date()  {
-                    VStack(alignment: .trailing, spacing: 0) {
-                        Text("主要動到達まで")
-                            .eewLabelStyle(.header)
-                        // Workaround: countsDownの時に、横いっぱいに広がろうとするのを防ぐ
-                        // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
-                        Text("00:00")
-                            .font(
-                                .system(
-                                    size: 18,
-                                    weight: .black,
-                                    design: .monospaced
+                // 主要動到達までのカウントダウン / 到達済み
+                if let arrivalDate = arrivalDate {
+                    if arrivalDate > Date() {
+                        VStack(alignment: .trailing, spacing: 0) {
+                            Text("主要動到達まで")
+                                .eewLabelStyle(.header)
+                            // Workaround: countsDownの時に、横いっぱいに広がろうとするのを防ぐ
+                            // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
+                            Text("00:00")
+                                .font(
+                                    .system(
+                                        size: 18,
+                                        weight: .black,
+                                        design: .monospaced
+                                    )
                                 )
-                            )
-                            .tracking(-0.5)
-                            .hidden()
-                            .overlay(alignment: .trailing) {
-                                Text(
-                                    timerInterval: Date()...arrivalDate,
-                                    countsDown: true
-                                )
-                                .contentTransition(.numericText(countsDown: true))
-                                .font(.system(size: 18, weight: .black))
-                                .foregroundColor(.white)
-                                .monospacedDigit()
-                                .tracking(-0.5)                            }
+                                .tracking(-0.5)
+                                .hidden()
+                                .overlay(alignment: .trailing) {
+                                    Text(
+                                        timerInterval: Date()...arrivalDate,
+                                        countsDown: true
+                                    )
+                                    .contentTransition(.numericText(countsDown: true))
+                                    .font(.system(size: 18, weight: .black))
+                                    .foregroundColor(.white)
+                                    .monospacedDigit()
+                                    .tracking(-0.5)
+                                }
+                        }
+                    } else {
+                        Text("主要動到達済み")
+                            .font(.system(size: 14, weight: .heavy))
+                            .foregroundColor(.white)
                     }
                 }
             }
@@ -120,7 +127,7 @@ struct HeaderContainer: View {
         }
         if let serialNo = serialNo, serialNo > 0 {
             if isFinal {
-                return "\(typeLabel) 第\(serialNo)報(最終)"
+                return "\(typeLabel) 最終 第\(serialNo)報"
             } else {
                 return "\(typeLabel) 第\(serialNo)報"
             }
@@ -300,31 +307,13 @@ struct EewLockScreenView: View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text("深さ")
                 .eewLabelStyle()
-
-            if depth == 0 {
-                // ごく浅い
-                Text("ごく浅い")
-                    .font(.system(size: 17, weight: .bold))
-                    .foregroundColor(.primary)
-            } else if depth >= 700 {
-                // 700km以上
-                Text("\(depth)")
-                    .font(.system(size: 18, weight: .bold, design: .monospaced))
-                    .tracking(-1)
-                    .foregroundColor(.primary)
-                Text(" km以上")
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(eewSecondaryTextColor)
-            } else {
-                // 通常
-                Text("\(depth)")
-                    .font(.system(size: 18, weight: .bold, design: .monospaced))
-                    .tracking(-1)
-                    .foregroundColor(.primary)
-                Text(" km")
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(eewSecondaryTextColor)
-            }
+            Text("\(depth)")
+                .font(.system(size: 18, weight: .bold, design: .monospaced))
+                .tracking(-1)
+                .foregroundColor(.primary)
+            Text(" km")
+                .font(.system(size: 10, weight: .medium))
+                .foregroundColor(eewSecondaryTextColor)
         }
     }
 

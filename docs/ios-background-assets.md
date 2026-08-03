@@ -34,18 +34,22 @@ dots of a reverse-DNS id with ITMS-91133 (see
 `docs/knowledge/20260728_asset_pack_id_charset.md`), so neither string can be
 used on the other platform.
 
-## Local iOS build: stage slim `jma_code_table.json` first
+## Local iOS build: slim `jma_code_table.json`
 
 AppIntent / Widget extensions bundle a slim `jma_code_table.json` (prefecture +
-city only) at build time — not the full Asset Pack JSON. Before a local
-`flutter build ios`, run:
+city only) — not the full Asset Pack JSON. The slim file is **committed** at
+`app/assets/parameters/jma_code_table.json`, so a clean clone can build iOS
+without `GH_TOKEN`.
+
+CI still runs `stage_from_release.sh --target ios-native` in
+`deploy-app.yaml`'s `build-ios` so Release 更新後の差分を拾える。ローカルで
+最新に揃えるときも同じコマンドを使う:
 
 ```bash
 GH_TOKEN=... tool/asset_pack/stage_from_release.sh --target ios-native
 ```
 
-CI does this in `deploy-app.yaml`'s `build-ios` job. See
-`docs/knowledge/20260728_asset_pack_release_staging.md`.
+See `docs/knowledge/20260728_asset_pack_release_staging.md`.
 
 ## What `packages/assets_util` implements today
 

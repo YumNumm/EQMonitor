@@ -18,6 +18,7 @@ List<RouteBase> get $appRoutes => [
   $seismicityRoute,
   $intensityHistoryRoute,
   $earthquakeHistoryDetailsRoute,
+  $earthquakeActivityRoute,
   $shakeDetectionHistoryRoute,
   $shakeDetectionHistoryDetailsRoute,
   $liveMonitorRoute,
@@ -292,6 +293,36 @@ mixin $EarthquakeHistoryDetailsRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $earthquakeActivityRoute => GoRouteData.$route(
+  path: '/earthquake-activity',
+  factory: $EarthquakeActivityRoute._fromState,
+);
+
+mixin $EarthquakeActivityRoute on GoRouteData {
+  static EarthquakeActivityRoute _fromState(GoRouterState state) =>
+      EarthquakeActivityRoute($extra: state.extra as EarthquakeActivityQuery);
+
+  EarthquakeActivityRoute get _self => this as EarthquakeActivityRoute;
+
+  @override
+  String get location => GoRouteData.$location('/earthquake-activity');
+
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+
+  @override
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: _self.$extra);
+
+  @override
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
 }
 
 RouteBase get $shakeDetectionHistoryRoute => GoRouteData.$route(
@@ -609,6 +640,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
         GoRouteData.$route(
           path: 'shake-detection-card',
           factory: $DebugShakeDetectionCardRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'shake-detection-insert',
+          factory: $DebugShakeDetectionInsertRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'jma-map',
@@ -1249,6 +1284,28 @@ mixin $DebugShakeDetectionCardRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/shake-detection-card');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugShakeDetectionInsertRoute on GoRouteData {
+  static DebugShakeDetectionInsertRoute _fromState(GoRouterState state) =>
+      const DebugShakeDetectionInsertRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/shake-detection-insert');
 
   @override
   void go(BuildContext context) => context.go(location);
