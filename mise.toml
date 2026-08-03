@@ -2,8 +2,8 @@ min_version = "2026.04.01"
 
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"
-flutter = "3.44.4-stable"
-java = "17"
+flutter = "latest"
+java = "26"
 node = "lts"
 python = "latest"
 "pipx:codemagic-cli-tools" = "latest"
@@ -25,7 +25,7 @@ pkl = "latest"
 zizmor = "latest"
 ghalint = "latest"
 gitleaks = "latest"
-claude = "2.1.201"
+claude = "2.1.220"
 swift = "latest"
 
 [settings]
