@@ -4,8 +4,10 @@ EQMonitor専用のFlutter地図レンダラーです。
 
 Flutter SceneをGPU描画基盤としてPMTiles/MVTの地物を描画し、ラベルはasset内の1つの地理anchorから、実測文字サイズとDPRに応じたscreen placement候補を生成してFlutterの`TextPainter`で描画します。MapLibre Style JSON互換ではなく、型付きの宣言的`MapNode`ツリーを利用します。
 
-> [!NOTE]
-> 現在は設計段階です。実装はstacked PRで段階的に追加します。
+> [!WARNING]
+> 現在はFlutter Sceneのscaffoldと実機spike harnessまでです。Linux環境には
+> 物理iOS/Android端末とplatform build環境がないため、実機gateは
+> `NOT RUN / BLOCKED`です。`03-foundation`へは進みません。
 
 ## 初期スコープ
 
@@ -40,6 +42,59 @@ remote PMTilesのidentity encoding/strong validator付きrange合成、appがsig
 - MapLibre版と共有`lockBearing`設定は残存surfaceの移行完了まで削除しない。新Home rendererだけが回転を明示的に無効化する。
 - Flutter Sceneはadapter内へ隔離し、固定revisionのiOS/Android実機spikeを実装gateにする。
 
+## 固定toolchain
+
+- Flutter framework: `4dacd3fc91d96262a33e5c598e17d816f0b35641`
+- Flutter engine source: `b1e405a9c311d858bef870c472bb24c015f4bcf9`
+- Flutter engine artifact: `73ac711b34da2a090d79ddb423918de40a7ffbf9`
+- Dart source: `d402ff7c9c8442d64aa8148609480aa0e04a24fd`
+- Flutter Scene: `695c954f237fabef65d49fa7199002851d2dcd88`
+
+```bash
+mise bootstrap repos apply --yes
+mise bootstrap repos status --missing
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter --version --machine
+```
+
+Flutter Scene型は`flutter_scene/` adapter内に隔離します。通常のdomain/runtime
+modelは不変かつFreezedを原則としますが、frameごとのsnapshot/delta、packed buffer、
+generation tokenはallocationとdeep equalityを避けるためversion付きhot-path型を使います。
+この例外を公開DTOやJSON境界へ広げません。
+
+## Scene spike device gate
+
+物理端末での採取手順とファイル名は
+[`example/evidence/README.md`](example/evidence/README.md)、実施計画は
+[`docs/superpowers/plans/2026-08-02-eqmonitor-map-scene-physical-verification.md`](../../docs/superpowers/plans/2026-08-02-eqmonitor-map-scene-physical-verification.md)
+を参照してください。各runの前にcompile-time manifestを作り、profile/releaseの
+canonical JSONを採取してからvalidatorを実行します。
+
+```bash
+cd packages/eqmonitor_map/example
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- \
+  dart run ../tool/write_scene_spike_defines.dart
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter run --profile \
+  -d "$physical_device_id" \
+  --dart-define-from-file=.dart_tool/scene_spike_defines.json
+
+cd ../../..
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- \
+  dart run packages/eqmonitor_map/tool/validate_scene_spike_evidence.dart
+```
+
+現時点のvalidatorはexit 1でiOS/Androidのprofile/release 4 run欠落を返します。
+さらにFlutter Sceneのpublic APIだけでは次を観測できず、各runで
+`unavailablePublicApi/unobserved`となるためgateはpass不能です。
+
+- `gpuCompletionOrSafeRetirement`
+- `contextResourceRebuild`
+- `explicitResourceDisposal`
+
+`03-foundation`へ進むには、clean checkoutと上記固定revisionで4 runを物理端末から
+採取し、全required capabilityをpublic APIに基づいて観測し、validatorがexit 0を返す
+必要があります。3 APIが未提供の間はfoundationを止め、架空・手編集・固定値のpass
+evidenceは作りません。
+
 ## Delivery graph
 
 `eqmonitor-backend`のB1でmanifest/item schema v1と既存asset IDを維持した`BASE_MAP_PMTILES`へ後方互換なlabel Point layer、global validator、version付きsigned sidecarの生成・署名/mutation fixture、releaseを先行して独立に完了します。backend branchはEQMonitor branchを祖先にしません。
@@ -59,16 +114,16 @@ EQMonitor repositoryのstackは次の順です。
 ## TODO
 
 - Performance HUD
-- Widget test
-- Golden test
-- iOS / Android実機性能試験と基準端末の選定
-- bearing / pitch
-- 透視投影と3D camera
-- 3D地形・地物
+- Widget / Golden / performance testとbenchmark
+- iOS / Android実機性能試験、基準端末、memory/frame timing基準の選定
+- PMTiles / MVTのtrusted tile pipeline
+- 宣言的`MapNode` / `MapElement` treeとreconciler
+- label placement / collision / semantics
+- 将来の3D camera・3D地形・地物
 - 地下震源要素
 - 断層面・断層モデル
-- Web / macOS / Windows / Linux
-- 線上ラベル
-- 汎用パッケージ化
+
+bearing / pitch、Web / desktop、汎用package化は初期scopeに含めません。このpackageは
+iOS / Android向けのEQMonitor専用rendererとして維持します。
 
 プロジェクトTODOは`docs/todo/`にも登録します。

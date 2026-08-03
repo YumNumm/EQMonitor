@@ -14,6 +14,18 @@
 - context loss/rebuildとframes-in-flight resource retirementの反復・長時間実機試験
 - frame、queue待機、decode、mesh build、GPU submission/completion、cacheの回帰基準策定
 - metrics収集自体のCPU/memory overhead上限とevent drop検証
+- performance benchmarkと回帰閾値をCIで追跡し、Performance HUDとの計測差を検証
+- 物理iOS/Androidのprofile/release各runで60秒partial update、回転/DPR、3回以上の
+  lifecycle復帰・dispose/remountを採取
+- AndroidはVulkanをprimary backendとし、support対象ではGLES fallbackと
+  `Don't keep activities`によるActivity recreationも別途検証
+- Flutter Scene upstreamにGPU completion、context generation、GPU resource disposalの
+  public APIが追加された時点でAPI監査とschema/gateを更新し、4 runを再採取
+
+実機手順、owner、受入条件、失敗時の扱いは
+[`2026-08-02-eqmonitor-map-scene-physical-verification.md`](../superpowers/plans/2026-08-02-eqmonitor-map-scene-physical-verification.md)
+を正本とする。現Linux環境ではplatform build、物理端末、実GPU/lifecycle/memory検証は
+`NOT RUN / BLOCKED`であり、このTODOの完了扱いにしない。
 
 ## 前提
 
