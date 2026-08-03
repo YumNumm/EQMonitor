@@ -6,7 +6,8 @@
 
 ## Stack
 
-- Base: `codex/eqmonitor-map-01-design`
+- Base: `develop`
+- Merged parent: [#1565](https://github.com/YumNumm/EQMonitor/pull/1565) `codex/eqmonitor-map-01-design`
 - Head: `codex/eqmonitor-map-02-scene-spike`
 - Next: `03-foundation`（device gateがexit 0になった場合だけ着手）
 
