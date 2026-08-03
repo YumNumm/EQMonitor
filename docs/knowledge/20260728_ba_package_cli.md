@@ -31,7 +31,7 @@ xcrun ba-package package Manifest.json -o /path/to/output.aar
 ## EQMonitor での利用箇所
 
 - `.github/workflows/upload-asset-pack.yaml` の `Package archive with ba-package` ステップ
-- 生成物は App Store Connect API（`tool/asset_pack/upload_ios_background_assets.py`）でアップロード
+- 生成物は App Store Connect API（`.asc/workflow.json` の `asset_pack_upload`、実体は `asc` CLI）でアップロード
 
 ## よくある間違い
 
@@ -50,9 +50,9 @@ moves the `backgroundAssetVersion` through:
 1. `PROCESSING`
 2. `COMPLETE` ← **success** (this is what the live API returned)
 
-`tool/asset_pack/asc_client.py`'s `KNOWN_SUCCESS_STATES` therefore includes
-`COMPLETE`. Older guessed names (`READY_FOR_TESTING`, `PROCESSING_COMPLETE`)
-remain as additional allow-list entries.
+`scripts/ci/asset_pack_wait_version.sh`'s success-state allow-list therefore
+includes `COMPLETE`. Older guessed names (`READY_FOR_TESTING`,
+`PROCESSING_COMPLETE`) remain as additional allow-list entries.
 
 ## 手動フォールバック
 

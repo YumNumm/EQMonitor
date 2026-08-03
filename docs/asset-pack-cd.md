@@ -135,21 +135,20 @@ fetches). The following is what could actually be confirmed, and how:
   entries' shape, `sourceFileChecksums` (MD5 via the Checksums type; the
   deprecated `sourceFileChecksum` attribute must not be used on ASC API 4.1+),
   the terminal processing state
-  name). `tool/asset_pack/asc_client.py`'s module docstring has the full
-  "UNVERIFIED SURFACE WARNING" and cites why this shape was chosen (it
-  mirrors the reservation/upload/commit pattern used by every other ASC API
-  asset-upload family — appScreenshots, appPreviews, buildIcons — which has
-  been stable for years).
+  name). This is no longer this repo's concern: the `asc` CLI itself (driven
+  via `.asc/workflow.json`'s `asset_pack_ensure`/`asset_pack_upload`
+  workflows) issues the reservation/upload/commit requests, mirroring the
+  pattern used by every other ASC API asset-upload family — appScreenshots,
+  appPreviews, buildIcons — which has been stable for years.
 - The exact filename/extension `ba-package` writes its output archive as.
   Confirmed locally (Xcode 27 / `ba-package` CLI): use the `package`
   subcommand with `--output-path` / `-o`, and the path **must** end with
   `.aar` — see `docs/knowledge/20260728_ba_package_cli.md`.
 - The attribute name App Store Connect uses to store a `backgroundAssets`
   resource's asset pack identifier (needed by the pre-check to find "our"
-  pack among possibly several). `find_background_asset_id` in
-  `tool/asset_pack/asc_client.py` tries a few plausible attribute names and,
-  if none match but the app has *some* Background Assets pack(s), logs the
-  raw API response so a human can confirm the right key and fix the code.
+  pack among possibly several). `scripts/ci/asset_pack_ensure.sh` filters on
+  `.attributes.assetPackIdentifier`; if App Store Connect ever renames this
+  attribute, the `jq` filter there needs to be updated to match.
 
 **Every one of the unverified points above degrades to a loud, actionable
 failure** (an `AscApiError` with the raw API response body, or an
@@ -162,14 +161,13 @@ bypassed for a release.
 
 ### Manual verification if polling fails or times out
 
-`AscClient.poll_background_asset_version_state` (in `tool/asset_pack/asc_client.py`)
-only returns normally when the observed state is in its `KNOWN_SUCCESS_STATES`
-allow-list (`READY_FOR_TESTING`, `PROCESSING_COMPLETE`). Any explicitly-known
-failure state (`FAILED_PROCESSING`, `REJECTED`, `INVALID`) **or** a 20-minute
-timeout on an unrecognized state both raise `AscApiError` and fail the
-`upload-ios` job — on purpose, because the terminal state name is unverified
-(see above) and this job must never report green for an upload that's
-actually stuck or failed.
+`scripts/ci/asset_pack_wait_version.sh` only exits successfully when the
+observed state matches its allow-list (`COMPLETE`, `READY_FOR_TESTING`,
+`PROCESSING_COMPLETE`). Any explicitly-known failure state
+(`FAILED_PROCESSING`, `REJECTED`, `INVALID`) **or** a 20-minute timeout on an
+unrecognized state both exit non-zero and fail the `upload-ios` job — on
+purpose, because the terminal state name is unverified (see above) and this
+job must never report green for an upload that's actually stuck or failed.
 
 If this happens, the file itself was already uploaded and committed
 successfully (polling only starts after `commit_background_asset_upload`
@@ -178,9 +176,9 @@ succeeds) — only the *processing* status is in question. To check by hand:
 1. Open App Store Connect → the app (`ASC_APP_ID` `6447546703`) → **Background Assets** → the pack matching `IOS_BACKGROUND_ASSET_PACK_ID` (`eqmonitor-assets`).
 2. Find the version the failed job created — the workflow log prints `created backgroundAssetVersion <id>` right before polling starts; match it, or just look at the most recent version's timestamp.
 3. Read its status directly in the UI:
-   - If it shows a legitimate success state (e.g. ready for TestFlight/App Store submission) under a name this client doesn't recognize, add that literal state string to `KNOWN_SUCCESS_STATES` in `tool/asset_pack/asc_client.py` so future runs don't need manual checking.
+   - If it shows a legitimate success state (e.g. ready for TestFlight/App Store submission) under a name this client doesn't recognize, add that literal state string to the `case` allow-list in `scripts/ci/asset_pack_wait_version.sh` so future runs don't need manual checking.
    - If it shows a genuine failure/rejection, treat the Asset Pack version as failed: re-run `upload-ios` (it creates a fresh `backgroundAssetVersion` each time, so a failed one doesn't block retrying) after investigating the cause in the UI's error detail, if shown.
-   - If it's still legitimately processing beyond 20 minutes, either re-run the poll manually (`python3 -m tool.asset_pack.upload_ios_background_assets ... check-exists` won't re-poll a specific version; use the ASC UI, or `curl`/the App Store Connect API directly against `GET /v1/backgroundAssetVersions/<id>`) or raise `timeout_seconds` in the workflow if this turns out to be normal/expected latency.
+   - If it's still legitimately processing beyond 20 minutes, either re-run the poll manually (`asc background-assets versions view --version-id <id> --output json`, or the ASC UI) or raise the timeout in `scripts/ci/asset_pack_wait_version.sh` if this turns out to be normal/expected latency.
 
 ## Xcode version for `ba-package`
 
@@ -227,15 +225,19 @@ exists somewhere in the project.
   matching the mandated layout: success case, wrong-sha256 case,
   missing-required-file case, and `pack_version`-mismatch case all produced
   the correct exit code and error message.
-- `tool/asset_pack/asc_client.py`'s ES256 JWT builder was cross-verified two
-  ways: (1) decoded and validated with Python's `cryptography`/`PyJWT`
-  against a generated P-256 test key, and (2) round-tripped its raw r||s
-  signature back into DER and verified with `openssl dgst -verify` against
-  the same key's public half. It was also smoke-tested against the **real**
-  `https://api.appstoreconnect.apple.com` with intentionally-fake
-  credentials, which correctly returned a structured `401 NOT_AUTHORIZED`
-  JSON:API error (proving the JWT/request are well-formed enough to reach
-  Apple's real auth layer) rather than a malformed-request/routing error.
+- (Superseded by the asc CLI migration — see below.) The repo's former
+  hand-rolled ES256 JWT builder (`tool/asset_pack/asc_client.py`, since
+  removed) was cross-verified two ways: (1) decoded and validated with
+  Python's `cryptography`/`PyJWT` against a generated P-256 test key, and (2)
+  round-tripped its raw r||s signature back into DER and verified with
+  `openssl dgst -verify` against the same key's public half. It was also
+  smoke-tested against the **real** `https://api.appstoreconnect.apple.com`
+  with intentionally-fake credentials, which correctly returned a
+  structured `401 NOT_AUTHORIZED` JSON:API error (proving the JWT/request
+  are well-formed enough to reach Apple's real auth layer) rather than a
+  malformed-request/routing error. Authentication is now delegated entirely
+  to the `asc` CLI (`ASC_KEY_ID` / `ASC_ISSUER_ID` / `ASC_PRIVATE_KEY_B64`),
+  so this repo no longer implements its own JWT signing.
 - `mise exec -- actionlint`, `mise exec -- zizmor`, `mise exec -- pinact run
   --check`, and `mise exec -- shellcheck -S error` all pass with zero
   findings for `upload-asset-pack.yaml` / `verify_zip.sh`, both individually
