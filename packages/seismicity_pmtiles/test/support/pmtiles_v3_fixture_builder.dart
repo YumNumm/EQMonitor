@@ -17,10 +17,12 @@ final class PmTilesV3FixtureTile extends PmTilesV3FixtureNode {
     required super.tileId,
     required this.bytes,
     this.runLength = 1,
+    this.contentOffset,
   });
 
   final List<int> bytes;
   final int runLength;
+  final int? contentOffset;
 }
 
 final class PmTilesV3FixtureLeaf extends PmTilesV3FixtureNode {
@@ -47,10 +49,12 @@ final class PmTilesV3FixtureBuilder {
     int tileCompression = PmTilesV3CompressionDecoder.none,
     int minZoom = 0,
     int maxZoom = 2,
+    bool clustered = true,
   }) {
     final assembly = PmTilesV3FixtureAssembly(
       internalCompression: internalCompression,
       tileCompression: tileCompression,
+      clustered: clustered,
     );
     final rootDirectory = assembly.assembleDirectory(nodes: rootEntries);
     final metadata = assembly.compressInternal(
@@ -85,10 +89,12 @@ final class PmTilesV3FixtureAssembly {
   PmTilesV3FixtureAssembly({
     required this.internalCompression,
     required this.tileCompression,
+    required this.clustered,
   });
 
   final int internalCompression;
   final int tileCompression;
+  final bool clustered;
   final leafBytes = BytesBuilder(copy: false);
   final tileBytes = BytesBuilder(copy: false);
   var _addressedTilesCount = 0;
@@ -103,8 +109,8 @@ final class PmTilesV3FixtureAssembly {
       switch (node) {
         case PmTilesV3FixtureTile():
           final content = compressTile(bytes: Uint8List.fromList(node.bytes));
-          final offset = tileBytes.length;
-          tileBytes.add(content);
+          final offset = node.contentOffset ?? tileBytes.length;
+          appendTileContent(offset: offset, content: content);
           entries.add(
             PmTilesV3DirectoryEntry(
               tileId: node.tileId,
@@ -115,7 +121,6 @@ final class PmTilesV3FixtureAssembly {
           );
           _addressedTilesCount += node.runLength;
           _tileEntriesCount++;
-          _tileContentsCount++;
         case PmTilesV3FixtureLeaf():
           final directory = assembleDirectory(nodes: node.entries);
           final offset = leafBytes.length;
@@ -131,6 +136,23 @@ final class PmTilesV3FixtureAssembly {
       }
     }
     return compressInternal(bytes: encodeDirectory(entries: entries));
+  }
+
+  void appendTileContent({required int offset, required Uint8List content}) {
+    if (offset < 0) {
+      throw StateError('Fixture content offset must not be negative.');
+    }
+    if (offset > tileBytes.length) {
+      tileBytes.add(Uint8List(offset - tileBytes.length));
+    }
+    if (offset == tileBytes.length) {
+      tileBytes.add(content);
+      _tileContentsCount++;
+      return;
+    }
+    if (offset + content.length > tileBytes.length) {
+      throw StateError('Shared fixture content exceeds existing tile bytes.');
+    }
   }
 
   Uint8List encodeDirectory({
@@ -220,7 +242,7 @@ final class PmTilesV3FixtureAssembly {
       ..setUint64(72, _addressedTilesCount, Endian.little)
       ..setUint64(80, _tileEntriesCount, Endian.little)
       ..setUint64(88, _tileContentsCount, Endian.little)
-      ..setUint8(96, 1)
+      ..setUint8(96, clustered ? 1 : 0)
       ..setUint8(97, internalCompression)
       ..setUint8(98, tileCompression)
       ..setUint8(99, PmTilesV3HeaderDecoder.mvtTileType)

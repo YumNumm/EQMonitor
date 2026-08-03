@@ -109,6 +109,12 @@ void main() {
         source: source,
         reason: 'closed',
       ),
+      SeismicityPmTilesException.tileNotFound(tileId: 5),
+      SeismicityPmTilesException.invalidTileId(
+        tileId: -1,
+        minTileId: 0,
+        maxTileId: 10,
+      ),
     ];
     const states = <SeismicityPmTilesLoadState>[
       SeismicityPmTilesLoadState.idle(),

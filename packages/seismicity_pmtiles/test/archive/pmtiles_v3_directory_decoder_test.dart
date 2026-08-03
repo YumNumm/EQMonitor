@@ -3,11 +3,23 @@ import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_compression_decoder.dart';
 import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_directory_decoder.dart';
+import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_tile_id.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:test/test.dart';
 
+import '../support/pmtiles_v3_fixture_builder.dart';
+
 void main() {
   const decoder = PmTilesV3DirectoryDecoder();
+
+  test('fixes the z0 and z31 tile ID interval endpoints', () {
+    const tileId = PmTilesV3TileId();
+
+    expect(tileId.rangeForZoom(zoom: 0), (start: 0, endExclusive: 1));
+    final z31 = tileId.rangeForZoom(zoom: 31);
+    expect(z31.start, (1 << 62) ~/ 3);
+    expect(z31.endExclusive - 1, PmTilesV3TileId.maxValue);
+  });
 
   test('decodes spec delta IDs, runs, lengths, and offset sentinel', () {
     final bytes = Uint8List.fromList([
@@ -143,5 +155,51 @@ void main() {
       ),
       throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
     );
+  });
+
+  test('rejects ten-byte varints and field-specific addition overflow', () {
+    final assembly = PmTilesV3FixtureAssembly(
+      internalCompression: PmTilesV3CompressionDecoder.none,
+      tileCompression: PmTilesV3CompressionDecoder.none,
+      clustered: true,
+    );
+    final invalidCases = <Uint8List>[
+      Uint8List.fromList(List<int>.filled(10, 0x81)),
+      Uint8List.fromList([
+        2,
+        ...assembly.encodeVarint(PmTilesV3TileId.maxValue),
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+      ]),
+      Uint8List.fromList([
+        1,
+        ...assembly.encodeVarint(PmTilesV3TileId.maxValue),
+        2,
+        1,
+        1,
+      ]),
+      Uint8List.fromList([
+        1,
+        0,
+        1,
+        ...assembly.encodeVarint(PmTilesV3DirectoryDecoder.maxSignedInteger),
+        2,
+      ]),
+    ];
+
+    for (final bytes in invalidCases) {
+      expect(
+        () => decoder.decode(
+          bytes: bytes,
+          compression: PmTilesV3CompressionDecoder.none,
+        ),
+        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+      );
+    }
   });
 }

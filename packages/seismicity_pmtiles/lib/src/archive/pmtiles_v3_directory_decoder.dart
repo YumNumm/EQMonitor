@@ -64,7 +64,7 @@ final class PmTilesV3DirectoryDecoder {
         right: result.value,
         field: 'tile ID',
       );
-      tileId.validate(tileId: previousTileId);
+      tileId.validateDecoded(tileId: previousTileId);
       tileIds[index] = previousTileId;
     }
     final runResult = decodeValues(

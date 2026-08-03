@@ -15,10 +15,20 @@ final class PmTilesV3TileId {
     return (start: start, endExclusive: start + tileCount);
   }
 
-  void validate({required int tileId}) {
+  void validateDecoded({required int tileId}) {
     if (tileId < 0 || tileId > maxValue) {
       throw SeismicityPmTilesException.corruptArchive(
         reason: 'Tile ID $tileId is outside the PMTiles v3 zoom 0-31 range.',
+      );
+    }
+  }
+
+  void validateArgument({required int tileId}) {
+    if (tileId < 0 || tileId > maxValue) {
+      throw SeismicityPmTilesException.invalidTileId(
+        tileId: tileId,
+        minTileId: 0,
+        maxTileId: maxValue,
       );
     }
   }

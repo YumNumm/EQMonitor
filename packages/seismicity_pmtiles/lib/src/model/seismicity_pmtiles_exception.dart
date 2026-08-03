@@ -37,4 +37,10 @@ sealed class SeismicityPmTilesException
   const factory SeismicityPmTilesException.tileNotFound({
     required int tileId,
   }) = SeismicityPmTilesTileNotFoundException;
+
+  const factory SeismicityPmTilesException.invalidTileId({
+    required int tileId,
+    required int minTileId,
+    required int maxTileId,
+  }) = SeismicityPmTilesInvalidTileIdException;
 }

@@ -1,6 +1,7 @@
 export 'src/archive/pmtiles_v3_directory_entry.dart';
 export 'src/archive/pmtiles_v3_header.dart';
-export 'src/archive/seismicity_pmtiles_archive.dart';
+export 'src/archive/seismicity_pmtiles_archive.dart'
+    show SeismicityPmTilesArchive;
 export 'src/model/seismicity_pmtiles_archive_descriptor.dart';
 export 'src/model/seismicity_pmtiles_bounds.dart';
 export 'src/model/seismicity_pmtiles_exception.dart';

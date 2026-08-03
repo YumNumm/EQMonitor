@@ -55,7 +55,7 @@ extension SeismicityPmTilesExceptionPatterns on SeismicityPmTilesException {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SeismicityPmTilesInvalidDescriptorException value)?  invalidDescriptor,TResult Function( SeismicityPmTilesInvalidRangeException value)?  invalidRange,TResult Function( SeismicityPmTilesCorruptArchiveException value)?  corruptArchive,TResult Function( SeismicityPmTilesUnsupportedCompressionException value)?  unsupportedCompression,TResult Function( SeismicityPmTilesUnsupportedSourceException value)?  unsupportedSource,TResult Function( SeismicityPmTilesSourceReadFailedException value)?  sourceReadFailed,TResult Function( SeismicityPmTilesTileNotFoundException value)?  tileNotFound,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SeismicityPmTilesInvalidDescriptorException value)?  invalidDescriptor,TResult Function( SeismicityPmTilesInvalidRangeException value)?  invalidRange,TResult Function( SeismicityPmTilesCorruptArchiveException value)?  corruptArchive,TResult Function( SeismicityPmTilesUnsupportedCompressionException value)?  unsupportedCompression,TResult Function( SeismicityPmTilesUnsupportedSourceException value)?  unsupportedSource,TResult Function( SeismicityPmTilesSourceReadFailedException value)?  sourceReadFailed,TResult Function( SeismicityPmTilesTileNotFoundException value)?  tileNotFound,TResult Function( SeismicityPmTilesInvalidTileIdException value)?  invalidTileId,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException() when invalidDescriptor != null:
@@ -65,7 +65,8 @@ return corruptArchive(_that);case SeismicityPmTilesUnsupportedCompressionExcepti
 return unsupportedCompression(_that);case SeismicityPmTilesUnsupportedSourceException() when unsupportedSource != null:
 return unsupportedSource(_that);case SeismicityPmTilesSourceReadFailedException() when sourceReadFailed != null:
 return sourceReadFailed(_that);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
-return tileNotFound(_that);case _:
+return tileNotFound(_that);case SeismicityPmTilesInvalidTileIdException() when invalidTileId != null:
+return invalidTileId(_that);case _:
   return orElse();
 
 }
@@ -83,7 +84,7 @@ return tileNotFound(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SeismicityPmTilesInvalidDescriptorException value)  invalidDescriptor,required TResult Function( SeismicityPmTilesInvalidRangeException value)  invalidRange,required TResult Function( SeismicityPmTilesCorruptArchiveException value)  corruptArchive,required TResult Function( SeismicityPmTilesUnsupportedCompressionException value)  unsupportedCompression,required TResult Function( SeismicityPmTilesUnsupportedSourceException value)  unsupportedSource,required TResult Function( SeismicityPmTilesSourceReadFailedException value)  sourceReadFailed,required TResult Function( SeismicityPmTilesTileNotFoundException value)  tileNotFound,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SeismicityPmTilesInvalidDescriptorException value)  invalidDescriptor,required TResult Function( SeismicityPmTilesInvalidRangeException value)  invalidRange,required TResult Function( SeismicityPmTilesCorruptArchiveException value)  corruptArchive,required TResult Function( SeismicityPmTilesUnsupportedCompressionException value)  unsupportedCompression,required TResult Function( SeismicityPmTilesUnsupportedSourceException value)  unsupportedSource,required TResult Function( SeismicityPmTilesSourceReadFailedException value)  sourceReadFailed,required TResult Function( SeismicityPmTilesTileNotFoundException value)  tileNotFound,required TResult Function( SeismicityPmTilesInvalidTileIdException value)  invalidTileId,}){
 final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException():
@@ -93,7 +94,8 @@ return corruptArchive(_that);case SeismicityPmTilesUnsupportedCompressionExcepti
 return unsupportedCompression(_that);case SeismicityPmTilesUnsupportedSourceException():
 return unsupportedSource(_that);case SeismicityPmTilesSourceReadFailedException():
 return sourceReadFailed(_that);case SeismicityPmTilesTileNotFoundException():
-return tileNotFound(_that);}
+return tileNotFound(_that);case SeismicityPmTilesInvalidTileIdException():
+return invalidTileId(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -107,7 +109,7 @@ return tileNotFound(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SeismicityPmTilesInvalidDescriptorException value)?  invalidDescriptor,TResult? Function( SeismicityPmTilesInvalidRangeException value)?  invalidRange,TResult? Function( SeismicityPmTilesCorruptArchiveException value)?  corruptArchive,TResult? Function( SeismicityPmTilesUnsupportedCompressionException value)?  unsupportedCompression,TResult? Function( SeismicityPmTilesUnsupportedSourceException value)?  unsupportedSource,TResult? Function( SeismicityPmTilesSourceReadFailedException value)?  sourceReadFailed,TResult? Function( SeismicityPmTilesTileNotFoundException value)?  tileNotFound,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SeismicityPmTilesInvalidDescriptorException value)?  invalidDescriptor,TResult? Function( SeismicityPmTilesInvalidRangeException value)?  invalidRange,TResult? Function( SeismicityPmTilesCorruptArchiveException value)?  corruptArchive,TResult? Function( SeismicityPmTilesUnsupportedCompressionException value)?  unsupportedCompression,TResult? Function( SeismicityPmTilesUnsupportedSourceException value)?  unsupportedSource,TResult? Function( SeismicityPmTilesSourceReadFailedException value)?  sourceReadFailed,TResult? Function( SeismicityPmTilesTileNotFoundException value)?  tileNotFound,TResult? Function( SeismicityPmTilesInvalidTileIdException value)?  invalidTileId,}){
 final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException() when invalidDescriptor != null:
@@ -117,7 +119,8 @@ return corruptArchive(_that);case SeismicityPmTilesUnsupportedCompressionExcepti
 return unsupportedCompression(_that);case SeismicityPmTilesUnsupportedSourceException() when unsupportedSource != null:
 return unsupportedSource(_that);case SeismicityPmTilesSourceReadFailedException() when sourceReadFailed != null:
 return sourceReadFailed(_that);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
-return tileNotFound(_that);case _:
+return tileNotFound(_that);case SeismicityPmTilesInvalidTileIdException() when invalidTileId != null:
+return invalidTileId(_that);case _:
   return null;
 
 }
@@ -134,7 +137,7 @@ return tileNotFound(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String reason)?  invalidDescriptor,TResult Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult Function( String reason)?  corruptArchive,TResult Function( int compression)?  unsupportedCompression,TResult Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult Function( int tileId)?  tileNotFound,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String reason)?  invalidDescriptor,TResult Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult Function( String reason)?  corruptArchive,TResult Function( int compression)?  unsupportedCompression,TResult Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult Function( int tileId)?  tileNotFound,TResult Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException() when invalidDescriptor != null:
 return invalidDescriptor(_that.reason);case SeismicityPmTilesInvalidRangeException() when invalidRange != null:
@@ -143,7 +146,8 @@ return corruptArchive(_that.reason);case SeismicityPmTilesUnsupportedCompression
 return unsupportedCompression(_that.compression);case SeismicityPmTilesUnsupportedSourceException() when unsupportedSource != null:
 return unsupportedSource(_that.source);case SeismicityPmTilesSourceReadFailedException() when sourceReadFailed != null:
 return sourceReadFailed(_that.source,_that.reason);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
-return tileNotFound(_that.tileId);case _:
+return tileNotFound(_that.tileId);case SeismicityPmTilesInvalidTileIdException() when invalidTileId != null:
+return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case _:
   return orElse();
 
 }
@@ -161,7 +165,7 @@ return tileNotFound(_that.tileId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String reason)  invalidDescriptor,required TResult Function( int offset,  int length,  int sizeBytes)  invalidRange,required TResult Function( String reason)  corruptArchive,required TResult Function( int compression)  unsupportedCompression,required TResult Function( SeismicityPmTilesSource source)  unsupportedSource,required TResult Function( SeismicityPmTilesSource source,  String reason)  sourceReadFailed,required TResult Function( int tileId)  tileNotFound,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String reason)  invalidDescriptor,required TResult Function( int offset,  int length,  int sizeBytes)  invalidRange,required TResult Function( String reason)  corruptArchive,required TResult Function( int compression)  unsupportedCompression,required TResult Function( SeismicityPmTilesSource source)  unsupportedSource,required TResult Function( SeismicityPmTilesSource source,  String reason)  sourceReadFailed,required TResult Function( int tileId)  tileNotFound,required TResult Function( int tileId,  int minTileId,  int maxTileId)  invalidTileId,}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException():
 return invalidDescriptor(_that.reason);case SeismicityPmTilesInvalidRangeException():
@@ -170,7 +174,8 @@ return corruptArchive(_that.reason);case SeismicityPmTilesUnsupportedCompression
 return unsupportedCompression(_that.compression);case SeismicityPmTilesUnsupportedSourceException():
 return unsupportedSource(_that.source);case SeismicityPmTilesSourceReadFailedException():
 return sourceReadFailed(_that.source,_that.reason);case SeismicityPmTilesTileNotFoundException():
-return tileNotFound(_that.tileId);}
+return tileNotFound(_that.tileId);case SeismicityPmTilesInvalidTileIdException():
+return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -184,7 +189,7 @@ return tileNotFound(_that.tileId);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String reason)?  invalidDescriptor,TResult? Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult? Function( String reason)?  corruptArchive,TResult? Function( int compression)?  unsupportedCompression,TResult? Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult? Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult? Function( int tileId)?  tileNotFound,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String reason)?  invalidDescriptor,TResult? Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult? Function( String reason)?  corruptArchive,TResult? Function( int compression)?  unsupportedCompression,TResult? Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult? Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult? Function( int tileId)?  tileNotFound,TResult? Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException() when invalidDescriptor != null:
 return invalidDescriptor(_that.reason);case SeismicityPmTilesInvalidRangeException() when invalidRange != null:
@@ -193,7 +198,8 @@ return corruptArchive(_that.reason);case SeismicityPmTilesUnsupportedCompression
 return unsupportedCompression(_that.compression);case SeismicityPmTilesUnsupportedSourceException() when unsupportedSource != null:
 return unsupportedSource(_that.source);case SeismicityPmTilesSourceReadFailedException() when sourceReadFailed != null:
 return sourceReadFailed(_that.source,_that.reason);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
-return tileNotFound(_that.tileId);case _:
+return tileNotFound(_that.tileId);case SeismicityPmTilesInvalidTileIdException() when invalidTileId != null:
+return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case _:
   return null;
 
 }
@@ -680,6 +686,76 @@ class _$SeismicityPmTilesTileNotFoundExceptionCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? tileId = null,}) {
   return _then(SeismicityPmTilesTileNotFoundException(
 tileId: null == tileId ? _self.tileId : tileId // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class SeismicityPmTilesInvalidTileIdException implements SeismicityPmTilesException {
+  const SeismicityPmTilesInvalidTileIdException({required this.tileId, required this.minTileId, required this.maxTileId});
+
+
+ final  int tileId;
+ final  int minTileId;
+ final  int maxTileId;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SeismicityPmTilesInvalidTileIdExceptionCopyWith<SeismicityPmTilesInvalidTileIdException> get copyWith => _$SeismicityPmTilesInvalidTileIdExceptionCopyWithImpl<SeismicityPmTilesInvalidTileIdException>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeismicityPmTilesInvalidTileIdException&&(identical(other.tileId, tileId) || other.tileId == tileId)&&(identical(other.minTileId, minTileId) || other.minTileId == minTileId)&&(identical(other.maxTileId, maxTileId) || other.maxTileId == maxTileId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,tileId,minTileId,maxTileId);
+
+@override
+String toString() {
+  return 'SeismicityPmTilesException.invalidTileId(tileId: $tileId, minTileId: $minTileId, maxTileId: $maxTileId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SeismicityPmTilesInvalidTileIdExceptionCopyWith<$Res> implements $SeismicityPmTilesExceptionCopyWith<$Res> {
+  factory $SeismicityPmTilesInvalidTileIdExceptionCopyWith(SeismicityPmTilesInvalidTileIdException value, $Res Function(SeismicityPmTilesInvalidTileIdException) _then) = _$SeismicityPmTilesInvalidTileIdExceptionCopyWithImpl;
+@useResult
+$Res call({
+ int tileId, int minTileId, int maxTileId
+});
+
+
+
+
+}
+/// @nodoc
+class _$SeismicityPmTilesInvalidTileIdExceptionCopyWithImpl<$Res>
+    implements $SeismicityPmTilesInvalidTileIdExceptionCopyWith<$Res> {
+  _$SeismicityPmTilesInvalidTileIdExceptionCopyWithImpl(this._self, this._then);
+
+  final SeismicityPmTilesInvalidTileIdException _self;
+  final $Res Function(SeismicityPmTilesInvalidTileIdException) _then;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? tileId = null,Object? minTileId = null,Object? maxTileId = null,}) {
+  return _then(SeismicityPmTilesInvalidTileIdException(
+tileId: null == tileId ? _self.tileId : tileId // ignore: cast_nullable_to_non_nullable
+as int,minTileId: null == minTileId ? _self.minTileId : minTileId // ignore: cast_nullable_to_non_nullable
+as int,maxTileId: null == maxTileId ? _self.maxTileId : maxTileId // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

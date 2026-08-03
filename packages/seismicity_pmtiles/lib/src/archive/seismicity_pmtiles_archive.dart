@@ -68,29 +68,42 @@ final class SeismicityPmTilesArchiveOpener {
         bytes: rootBytes,
         compression: header.internalCompression,
       );
+      const tileId = PmTilesV3TileId();
+      final lowerRange = tileId.rangeForZoom(zoom: header.minZoom);
+      final upperRange = tileId.rangeForZoom(zoom: header.maxZoom);
+      final archiveLowerTileId = lowerRange.start;
+      final archiveUpperTileIdExclusive = upperRange.endExclusive;
       final validator = PmTilesV3DirectoryValidator(header: header);
       validator.validate(
         entries: rootEntries,
-        lowerTileId: 0,
-        upperTileIdExclusive: PmTilesV3TileId.maxValue + 1,
+        lowerTileId: archiveLowerTileId,
+        upperTileIdExclusive: archiveUpperTileIdExclusive,
         requireFirstTileId: false,
+      );
+      final traversal = PmTilesV3DirectoryTraversal(
+        reader: reader,
+        header: header,
+        directoryDecoder: directoryDecoder,
+        validator: validator,
+      );
+      await traversal.validateArchive(
+        entries: rootEntries,
+        upperTileIdExclusive: archiveUpperTileIdExclusive,
+        clustered: header.clustered,
       );
       return PmTilesV3Archive(
         reader: reader,
         descriptorSource: descriptor.source,
         header: header,
         rootEntries: rootEntries,
-        traversal: PmTilesV3DirectoryTraversal(
-          reader: reader,
-          header: header,
-          directoryDecoder: directoryDecoder,
-          validator: validator,
-        ),
+        archiveLowerTileId: archiveLowerTileId,
+        archiveUpperTileIdExclusive: archiveUpperTileIdExclusive,
+        traversal: traversal,
         compressionDecoder: compressionDecoder,
       );
-    } on SeismicityPmTilesException {
+    } catch (error, stackTrace) {
       await closeAfterOpenFailure(reader: reader);
-      rethrow;
+      Error.throwWithStackTrace(error, stackTrace);
     }
   }
 
@@ -133,8 +146,11 @@ final class SeismicityPmTilesArchiveOpener {
   }) async {
     try {
       await reader.close();
-    } on SeismicityPmTilesException {
-      // Preserve the parse or descriptor failure that caused open to abort.
+      // Reader implementations may throw any error while closing; cleanup must
+      // preserve the original open failure regardless of its type.
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      // The original open failure and stack are the authoritative failure.
     }
   }
 }
@@ -145,6 +161,8 @@ final class PmTilesV3Archive implements SeismicityPmTilesArchive {
     required this.descriptorSource,
     required this.header,
     required this.rootEntries,
+    required this.archiveLowerTileId,
+    required this.archiveUpperTileIdExclusive,
     required this.traversal,
     required this.compressionDecoder,
   });
@@ -154,6 +172,8 @@ final class PmTilesV3Archive implements SeismicityPmTilesArchive {
   @override
   final PmTilesV3Header header;
   final List<PmTilesV3DirectoryEntry> rootEntries;
+  final int archiveLowerTileId;
+  final int archiveUpperTileIdExclusive;
   final PmTilesV3DirectoryTraversal traversal;
   final PmTilesV3CompressionDecoder compressionDecoder;
   var _isClosed = false;
@@ -167,8 +187,8 @@ final class PmTilesV3Archive implements SeismicityPmTilesArchive {
       entries: rootEntries,
       requestedStart: range.start,
       requestedEndExclusive: range.endExclusive,
-      lowerTileId: 0,
-      upperTileIdExclusive: PmTilesV3TileId.maxValue + 1,
+      lowerTileId: archiveLowerTileId,
+      upperTileIdExclusive: archiveUpperTileIdExclusive,
       depth: 1,
     );
   }
@@ -176,12 +196,12 @@ final class PmTilesV3Archive implements SeismicityPmTilesArchive {
   @override
   Future<Uint8List> readTile({required int tileId}) async {
     ensureOpen();
-    const PmTilesV3TileId().validate(tileId: tileId);
+    const PmTilesV3TileId().validateArgument(tileId: tileId);
     final entry = await traversal.resolveTile(
       tileId: tileId,
       entries: rootEntries,
-      lowerTileId: 0,
-      upperTileIdExclusive: PmTilesV3TileId.maxValue + 1,
+      lowerTileId: archiveLowerTileId,
+      upperTileIdExclusive: archiveUpperTileIdExclusive,
       depth: 1,
     );
     if (entry == null) {
@@ -296,7 +316,7 @@ final class PmTilesV3DirectoryValidator {
 }
 
 final class PmTilesV3DirectoryTraversal {
-  const PmTilesV3DirectoryTraversal({
+  PmTilesV3DirectoryTraversal({
     required this.reader,
     required this.header,
     required this.directoryDecoder,
@@ -309,6 +329,52 @@ final class PmTilesV3DirectoryTraversal {
   final PmTilesV3Header header;
   final PmTilesV3DirectoryDecoder directoryDecoder;
   final PmTilesV3DirectoryValidator validator;
+  final Map<({int offset, int length}), List<PmTilesV3DirectoryEntry>>
+  _leafCache = {};
+
+  Future<void> validateArchive({
+    required List<PmTilesV3DirectoryEntry> entries,
+    required int upperTileIdExclusive,
+    required bool clustered,
+  }) async {
+    final ordering = clustered ? PmTilesV3ClusteredOrdering() : null;
+    await validateDirectoryTree(
+      entries: entries,
+      upperTileIdExclusive: upperTileIdExclusive,
+      depth: 1,
+      ordering: ordering,
+    );
+  }
+
+  Future<void> validateDirectoryTree({
+    required List<PmTilesV3DirectoryEntry> entries,
+    required int upperTileIdExclusive,
+    required int depth,
+    required PmTilesV3ClusteredOrdering? ordering,
+  }) async {
+    for (var index = 0; index < entries.length; index++) {
+      final entry = entries[index];
+      if (entry.runLength > 0) {
+        ordering?.validate(entry: entry);
+        continue;
+      }
+      validateLeafDepth(depth: depth);
+      final childUpper = index + 1 < entries.length
+          ? entries[index + 1].tileId
+          : upperTileIdExclusive;
+      final children = await readLeaf(
+        entry: entry,
+        lowerTileId: entry.tileId,
+        upperTileIdExclusive: childUpper,
+      );
+      await validateDirectoryTree(
+        entries: children,
+        upperTileIdExclusive: childUpper,
+        depth: depth + 1,
+        ordering: ordering,
+      );
+    }
+  }
 
   Future<PmTilesV3DirectoryEntry?> resolveTile({
     required int tileId,
@@ -398,14 +464,10 @@ final class PmTilesV3DirectoryTraversal {
     required int lowerTileId,
     required int upperTileIdExclusive,
   }) async {
-    final bytes = await reader.readAt(
-      offset: header.leafDirectoriesOffset + entry.offset,
-      length: entry.length,
-    );
-    final entries = directoryDecoder.decode(
-      bytes: bytes,
-      compression: header.internalCompression,
-    );
+    final key = (offset: entry.offset, length: entry.length);
+    final cached = _leafCache[key];
+    final entries = cached ?? await decodeLeaf(entry: entry);
+    _leafCache[key] = entries;
     validator.validate(
       entries: entries,
       lowerTileId: lowerTileId,
@@ -413,6 +475,19 @@ final class PmTilesV3DirectoryTraversal {
       requireFirstTileId: true,
     );
     return entries;
+  }
+
+  Future<List<PmTilesV3DirectoryEntry>> decodeLeaf({
+    required PmTilesV3DirectoryEntry entry,
+  }) async {
+    final bytes = await reader.readAt(
+      offset: header.leafDirectoriesOffset + entry.offset,
+      length: entry.length,
+    );
+    return directoryDecoder.decode(
+      bytes: bytes,
+      compression: header.internalCompression,
+    );
   }
 
   int candidateIndex({
@@ -442,5 +517,38 @@ final class PmTilesV3DirectoryTraversal {
             'are not supported.',
       );
     }
+  }
+}
+
+final class PmTilesV3ClusteredOrdering {
+  final Map<int, int> _contentLengths = {};
+  var _nextContentOffset = 0;
+  int? _previousContentOffset;
+
+  void validate({required PmTilesV3DirectoryEntry entry}) {
+    final previousLength = _contentLengths[entry.offset];
+    if (previousLength != null) {
+      final previousOffset = _previousContentOffset;
+      if (previousLength != entry.length ||
+          (previousOffset != null && entry.offset > previousOffset)) {
+        throw const SeismicityPmTilesException.corruptArchive(
+          reason:
+              'Clustered shared content must reuse the same length at '
+              'the same or a smaller prior offset.',
+        );
+      }
+      _previousContentOffset = entry.offset;
+      return;
+    }
+    if (entry.offset != _nextContentOffset) {
+      throw const SeismicityPmTilesException.corruptArchive(
+        reason:
+            'Clustered tile content must start at zero and remain '
+            'forward-contiguous unless it shares prior content.',
+      );
+    }
+    _contentLengths[entry.offset] = entry.length;
+    _nextContentOffset += entry.length;
+    _previousContentOffset = entry.offset;
   }
 }
