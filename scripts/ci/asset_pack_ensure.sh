@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # App Store Connect に Managed Background Assets のレコードが存在することを
 # 保証し、asc workflow の outputs 用に {"assetId":"..."} を stdout へ出力する。
-# 旧 tool/asset_pack/upload_ios_background_assets.py の ensure-exists 相当。
 set -euo pipefail
 
 app_id="$1"

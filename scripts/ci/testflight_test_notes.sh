@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 # TestFlight の What to Test を直近タグ以降のコミット件名から生成する。
-# 旧 scripts/testflight/distribute-external.ts の buildWhatsNewFromGit と同挙動:
-# 空なら "- (no changes)"、4000 文字(Unicode 文字数)超過時は末尾を "..." にする。
 set -euo pipefail
 
 last_tag=$(git describe --tags --abbrev=0)

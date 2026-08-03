@@ -337,8 +337,6 @@ jobs:
           export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
           export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
           export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
-          # ビルド番号は asc が IPA の Info.plist から自動抽出するため、
-          # 旧実装のような unzip / PlistBuddy での照会は不要。
           args=(--app "$ASC_APP_ID" --ipa build/EQMonitor.ipa --output json)
           if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
             TEST_NOTES="$(scripts/ci/testflight_test_notes.sh)"

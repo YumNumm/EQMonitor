@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # backgroundAssetVersion が既知の終端 state に到達するまでポーリングする。
-# state 集合と「不明な state のままの期限切れは失敗扱い」という方針は
-# 旧 tool/asset_pack/asc_client.py の poll_background_asset_version_state を踏襲
-# (終端 state 名は Apple のドキュメントで未確認のため、寛容に成功扱いしない)。
+# 終端 state 名は Apple のドキュメントで確認できていないため、未知の state は
+# 成功扱いせず、期限切れ時は失敗として扱う。
 set -euo pipefail
 
 version_id="$1"
