@@ -1181,6 +1181,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.yumnumm.eqmonitor${APP_ID_SUFFIX}.AssetDownloader";
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = net.yumnumm.eqmonitor.AssetDownloader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1224,6 +1225,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.yumnumm.eqmonitor${APP_ID_SUFFIX}.AssetDownloader";
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = net.yumnumm.eqmonitor.AssetDownloader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1265,6 +1267,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.yumnumm.eqmonitor${APP_ID_SUFFIX}.AssetDownloader";
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = net.yumnumm.eqmonitor.AssetDownloader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
