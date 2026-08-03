@@ -17,7 +17,7 @@ dependencies:
   flutter_scene:
     git:
       url: https://github.com/bdero/flutter_scene.git
-      ref: 695c954f237fabef65d49fa7199002851d2dcd88
+      ref: 7f71993b7e2a0ab1d2f59726a406098709be7291 # 2026.08.03
       path: packages/flutter_scene
   hooks: ^2.1.0
 

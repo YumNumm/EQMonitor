@@ -48,6 +48,14 @@
 			"cwd": "app",
 			"flutterMode": "release",
 			"args": ["--dart-define-from-file=environment/.env.prod"]
+		},
+		{
+			"name": "[EQMonitor Map] Debug",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib/main.dart",
+			"cwd": "packages/eqmonitor_map/example",
+			"args": []
 		}
 	]
 }

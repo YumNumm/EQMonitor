@@ -184,6 +184,10 @@ checksum = "sha256:50e01c681a895eae10f2c08e57aabea6a27fd17976785925e602bd6b7c916
 url = "https://github.com/firebase/firebase-tools/releases/download/v15.22.4/firebase-tools-win.exe"
 url_api = "https://api.github.com/repos/firebase/firebase-tools/releases/assets/462649593"
 
+[[tools.flutter]]
+version = "4dacd3fc91d96262a33e5c598e17d816f0b35641"
+backend = "asdf:flutter"
+
 [[tools.gcloud]]
 version = "570.0.0"
 backend = "asdf:gcloud"

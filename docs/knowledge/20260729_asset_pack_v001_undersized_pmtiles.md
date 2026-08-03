@@ -16,9 +16,9 @@
 
 ## 原因（backend `f49af2c9`）
 
-1. `tools/base-map-pmtiles/build_pmtiles.py` の `max_zoom` が **z10 → z8** に変更された  
+1. `tools/base-map-pmtiles/build_pmtiles.py` の `max_zoom` が **z10 → z8** に変更された
    tippecanoe `--drop-densest-as-needed` と組み合わさり、市区町村ポリゴンが大量ドロップされた
-2. `COORDINATE_PRECISION=7` を CI の **GDAL 3.8.4** で使うと、一部ポリゴンが `GeometryCollection` になり tippecanoe が読み捨てる  
+2. `COORDINATE_PRECISION=7` を CI の **GDAL 3.8.4** で使うと、一部ポリゴンが `GeometryCollection` になり tippecanoe が読み捨てる
    （ローカル GDAL 3.13 では再現しない。Docker `ghcr.io/osgeo/gdal:ubuntu-small-3.8.4` で再現）
 
 ## 対応方針

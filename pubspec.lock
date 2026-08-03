@@ -925,11 +925,11 @@ packages:
     dependency: transitive
     description:
       path: "packages/flutter_scene"
-      ref: "695c954f237fabef65d49fa7199002851d2dcd88"
-      resolved-ref: "695c954f237fabef65d49fa7199002851d2dcd88"
+      ref: "7f71993b7e2a0ab1d2f59726a406098709be7291"
+      resolved-ref: "7f71993b7e2a0ab1d2f59726a406098709be7291"
       url: "https://github.com/bdero/flutter_scene.git"
     source: git
-    version: "0.20.0"
+    version: "0.21.0"
   flutter_secure_storage:
     dependency: transitive
     description:
@@ -1999,11 +1999,11 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/scene"
-      ref: "695c954f237fabef65d49fa7199002851d2dcd88"
-      resolved-ref: "695c954f237fabef65d49fa7199002851d2dcd88"
+      ref: "7f71993b7e2a0ab1d2f59726a406098709be7291"
+      resolved-ref: "7f71993b7e2a0ab1d2f59726a406098709be7291"
       url: "https://github.com/bdero/flutter_scene.git"
     source: git
-    version: "0.1.0"
+    version: "0.1.1"
   screenshot:
     dependency: transitive
     description:
