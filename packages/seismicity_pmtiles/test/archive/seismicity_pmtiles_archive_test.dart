@@ -351,6 +351,19 @@ void main() {
   test(
     'enforces clustered ordering and permits shared prior content',
     () async {
+      final contiguous = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureTile(tileId: 5, bytes: [5, 5]),
+          PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
+        ],
+        minZoom: 2,
+      );
+      final contiguousArchive = await openFixture(
+        reader: TrackingRandomAccessReader(bytes: contiguous.bytes),
+        dataZoom: 2,
+      );
+      await contiguousArchive.close();
+
       final firstGap = builder.build(
         rootEntries: const [
           PmTilesV3FixtureTile(tileId: 5, bytes: [1], contentOffset: 2),
@@ -360,6 +373,48 @@ void main() {
       await expectLater(
         openFixture(
           reader: TrackingRandomAccessReader(bytes: firstGap.bytes),
+          dataZoom: 2,
+        ),
+        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+      );
+
+      final equalOffset = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2]),
+          PmTilesV3FixtureTile(
+            tileId: 6,
+            bytes: [1, 2],
+            contentOffset: 0,
+          ),
+        ],
+        minZoom: 2,
+      );
+      await expectLater(
+        openFixture(
+          reader: TrackingRandomAccessReader(bytes: equalOffset.bytes),
+          dataZoom: 2,
+        ),
+        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+      );
+
+      final frontierAfterBackReference = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2]),
+          PmTilesV3FixtureTile(tileId: 6, bytes: [3]),
+          PmTilesV3FixtureTile(
+            tileId: 7,
+            bytes: [1, 2],
+            contentOffset: 0,
+          ),
+          PmTilesV3FixtureTile(tileId: 8, bytes: [4]),
+        ],
+        minZoom: 2,
+      );
+      await expectLater(
+        openFixture(
+          reader: TrackingRandomAccessReader(
+            bytes: frontierAfterBackReference.bytes,
+          ),
           dataZoom: 2,
         ),
         throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
@@ -443,6 +498,121 @@ void main() {
       await unclusteredArchive.close();
     },
   );
+
+  test('preserves clustered previous-entry ordering across leaves', () async {
+    final contiguous = builder.build(
+      rootEntries: const [
+        PmTilesV3FixtureLeaf(
+          tileId: 5,
+          entries: [
+            PmTilesV3FixtureTile(tileId: 5, bytes: [5, 5]),
+          ],
+        ),
+        PmTilesV3FixtureLeaf(
+          tileId: 6,
+          entries: [
+            PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
+          ],
+        ),
+      ],
+      minZoom: 2,
+    );
+    final contiguousArchive = await openFixture(
+      reader: TrackingRandomAccessReader(bytes: contiguous.bytes),
+      dataZoom: 2,
+    );
+    await contiguousArchive.close();
+
+    final lesserBackReference = builder.build(
+      rootEntries: const [
+        PmTilesV3FixtureLeaf(
+          tileId: 5,
+          entries: [
+            PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2]),
+            PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
+          ],
+        ),
+        PmTilesV3FixtureLeaf(
+          tileId: 7,
+          entries: [
+            PmTilesV3FixtureTile(
+              tileId: 7,
+              bytes: [1, 2],
+              contentOffset: 0,
+            ),
+          ],
+        ),
+      ],
+      minZoom: 2,
+    );
+    final backReferenceArchive = await openFixture(
+      reader: TrackingRandomAccessReader(bytes: lesserBackReference.bytes),
+      dataZoom: 2,
+    );
+    await backReferenceArchive.close();
+
+    final equalOffset = builder.build(
+      rootEntries: const [
+        PmTilesV3FixtureLeaf(
+          tileId: 5,
+          entries: [
+            PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2]),
+          ],
+        ),
+        PmTilesV3FixtureLeaf(
+          tileId: 6,
+          entries: [
+            PmTilesV3FixtureTile(
+              tileId: 6,
+              bytes: [1, 2],
+              contentOffset: 0,
+            ),
+          ],
+        ),
+      ],
+      minZoom: 2,
+    );
+    await expectLater(
+      openFixture(
+        reader: TrackingRandomAccessReader(bytes: equalOffset.bytes),
+        dataZoom: 2,
+      ),
+      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+    );
+
+    final frontierAfterBackReference = builder.build(
+      rootEntries: const [
+        PmTilesV3FixtureLeaf(
+          tileId: 5,
+          entries: [
+            PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2]),
+            PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
+            PmTilesV3FixtureTile(
+              tileId: 7,
+              bytes: [1, 2],
+              contentOffset: 0,
+            ),
+          ],
+        ),
+        PmTilesV3FixtureLeaf(
+          tileId: 8,
+          entries: [
+            PmTilesV3FixtureTile(tileId: 8, bytes: [8]),
+          ],
+        ),
+      ],
+      minZoom: 2,
+    );
+    await expectLater(
+      openFixture(
+        reader: TrackingRandomAccessReader(
+          bytes: frontierAfterBackReference.bytes,
+        ),
+        dataZoom: 2,
+      ),
+      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+    );
+  });
 
   test('closes once and preserves any original open error and stack', () async {
     final fixture = builder.build(

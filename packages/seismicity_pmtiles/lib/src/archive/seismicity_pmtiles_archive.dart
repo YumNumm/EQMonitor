@@ -522,33 +522,62 @@ final class PmTilesV3DirectoryTraversal {
 
 final class PmTilesV3ClusteredOrdering {
   final Map<int, int> _contentLengths = {};
-  var _nextContentOffset = 0;
   int? _previousContentOffset;
+  int? _previousContentEnd;
 
   void validate({required PmTilesV3DirectoryEntry entry}) {
-    final previousLength = _contentLengths[entry.offset];
-    if (previousLength != null) {
-      final previousOffset = _previousContentOffset;
-      if (previousLength != entry.length ||
-          (previousOffset != null && entry.offset > previousOffset)) {
-        throw const SeismicityPmTilesException.corruptArchive(
-          reason:
-              'Clustered shared content must reuse the same length at '
-              'the same or a smaller prior offset.',
-        );
-      }
-      _previousContentOffset = entry.offset;
+    final previousOffset = _previousContentOffset;
+    final previousEnd = _previousContentEnd;
+    if (previousOffset == null || previousEnd == null) {
+      validateFirst(entry: entry);
       return;
     }
-    if (entry.offset != _nextContentOffset) {
+    final knownLength = _contentLengths[entry.offset];
+    final isContiguous = entry.offset == previousEnd;
+    final isKnownBackReference =
+        entry.offset < previousOffset &&
+        knownLength != null &&
+        knownLength == entry.length;
+    if (isContiguous) {
+      validateKnownLength(entry: entry, knownLength: knownLength);
+      _contentLengths[entry.offset] = entry.length;
+      updatePrevious(entry: entry);
+      return;
+    }
+    if (isKnownBackReference) {
+      updatePrevious(entry: entry);
+      return;
+    }
+    throw const SeismicityPmTilesException.corruptArchive(
+      reason:
+          'Clustered content must follow the previous entry or reference '
+          'known content at a strictly smaller offset.',
+    );
+  }
+
+  void validateKnownLength({
+    required PmTilesV3DirectoryEntry entry,
+    required int? knownLength,
+  }) {
+    if (knownLength != null && knownLength != entry.length) {
       throw const SeismicityPmTilesException.corruptArchive(
-        reason:
-            'Clustered tile content must start at zero and remain '
-            'forward-contiguous unless it shares prior content.',
+        reason: 'A clustered content offset changed its known length.',
+      );
+    }
+  }
+
+  void validateFirst({required PmTilesV3DirectoryEntry entry}) {
+    if (entry.offset != 0) {
+      throw const SeismicityPmTilesException.corruptArchive(
+        reason: 'The first clustered tile content offset must be zero.',
       );
     }
     _contentLengths[entry.offset] = entry.length;
-    _nextContentOffset += entry.length;
+    updatePrevious(entry: entry);
+  }
+
+  void updatePrevious({required PmTilesV3DirectoryEntry entry}) {
     _previousContentOffset = entry.offset;
+    _previousContentEnd = entry.offset + entry.length;
   }
 }
