@@ -1,0 +1,13 @@
+analyzer:
+  exclude:
+    - build/**
+    - lib/**/*.freezed.dart
+    - lib/**/*.g.dart
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+
+include: package:eqmonitor_lints/recommended.yaml
