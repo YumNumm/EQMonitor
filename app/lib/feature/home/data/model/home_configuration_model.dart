@@ -147,6 +147,16 @@ abstract class HomeKyoshinMonitorSettings with _$HomeKyoshinMonitorSettings {
 }
 
 @freezed
+abstract class HomeMapGridSettings with _$HomeMapGridSettings {
+  @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+  const factory HomeMapGridSettings({@Default(false) bool enabled}) =
+      _HomeMapGridSettings;
+
+  factory HomeMapGridSettings.fromJson(Map<String, dynamic> json) =>
+      _$HomeMapGridSettingsFromJson(json);
+}
+
+@freezed
 abstract class HomeMapSettings with _$HomeMapSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory HomeMapSettings({
@@ -186,6 +196,7 @@ abstract class HomeConfigurationModel with _$HomeConfigurationModel {
     @Default(HomeCommonSettings()) HomeCommonSettings common,
     @Default(HomeShakeDetectionSettings())
     HomeShakeDetectionSettings shakeDetection,
+    @Default(HomeMapGridSettings()) HomeMapGridSettings mapGrid,
   }) = _HomeConfigurationModel;
 
   factory HomeConfigurationModel.fromJson(Map<String, dynamic> json) =>
