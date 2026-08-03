@@ -35,18 +35,13 @@ jobs:
       - name: Analyze eqmonitor_map package
         run: mise exec -- flutter analyze --no-pub --fatal-infos packages/eqmonitor_map
 
-      - name: Generate and validate canonical dart-define manifest
-        run: |
-          mise exec -- dart run packages/eqmonitor_map/tool/write_scene_spike_defines.dart
-          test -s packages/eqmonitor_map/example/.dart_tool/scene_spike_defines.json
-
       - name: Build Android profile
         working-directory: packages/eqmonitor_map/example
-        run: mise exec -- flutter build apk --profile --dart-define-from-file=.dart_tool/scene_spike_defines.json
+        run: mise exec -- flutter build apk --profile
 
       - name: Build Android release
         working-directory: packages/eqmonitor_map/example
-        run: mise exec -- flutter build apk --release --dart-define-from-file=.dart_tool/scene_spike_defines.json
+        run: mise exec -- flutter build apk --release
 
   ios-build:
     name: iOS Profile and Release Build
@@ -73,15 +68,10 @@ jobs:
         working-directory: packages/eqmonitor_map/example
         run: mise exec -- flutter pub get --enforce-lockfile
 
-      - name: Generate and validate canonical dart-define manifest
-        run: |
-          mise exec -- dart run packages/eqmonitor_map/tool/write_scene_spike_defines.dart
-          test -s packages/eqmonitor_map/example/.dart_tool/scene_spike_defines.json
-
       - name: Build iOS profile
         working-directory: packages/eqmonitor_map/example
-        run: mise exec -- flutter build ios --profile --no-codesign --dart-define-from-file=.dart_tool/scene_spike_defines.json
+        run: mise exec -- flutter build ios --profile --no-codesign
 
       - name: Build iOS release
         working-directory: packages/eqmonitor_map/example
-        run: mise exec -- flutter build ios --release --no-codesign --dart-define-from-file=.dart_tool/scene_spike_defines.json
+        run: mise exec -- flutter build ios --release --no-codesign
