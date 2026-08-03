@@ -417,6 +417,51 @@ void main() {
       );
     });
 
+    test('rejects capability timestamps outside the observation interval', () {
+      final evidence = sceneSpikeFixture.evidence(
+        run: const SceneSpikeRunKey(
+          platform: .android,
+          buildMode: .release,
+        ),
+      );
+      final startedAt = evidence.startedAtUtc;
+      final endedAt = DateTime.fromMicrosecondsSinceEpoch(
+        startedAt.microsecondsSinceEpoch + evidence.elapsedMicroseconds,
+        isUtc: true,
+      );
+      final stale = evidence.copyWith(
+        capabilities: [
+          evidence.capabilities.first.copyWith(
+            observedAtUtc: startedAt.subtract(const Duration(microseconds: 1)),
+          ),
+          ...evidence.capabilities.skip(1),
+        ],
+      );
+      final future = evidence.copyWith(
+        capabilities: [
+          evidence.capabilities.first.copyWith(
+            observedAtUtc: endedAt.add(const Duration(microseconds: 1)),
+          ),
+          ...evidence.capabilities.skip(1),
+        ],
+      );
+
+      expect(
+        SceneSpikeGate.evaluate([stale]).validationErrors,
+        contains(
+          'android/release proceduralOrthographicMesh observedAtUtc must be '
+          'within the observation interval.',
+        ),
+      );
+      expect(
+        SceneSpikeGate.evaluate([future]).validationErrors,
+        contains(
+          'android/release proceduralOrthographicMesh observedAtUtc must be '
+          'within the observation interval.',
+        ),
+      );
+    });
+
     test('reports missing required capabilities without throwing', () {
       final evidence = sceneSpikeFixture
           .evidence(
@@ -488,6 +533,150 @@ void main() {
       expect(
         () => decision.validationErrors.add('mutated'),
         throwsUnsupportedError,
+      );
+    });
+
+    test('copies evidence lists at constructor and copyWith boundaries', () {
+      final constructorCapabilities = sceneSpikeFixture.capabilities();
+      final evidence = sceneSpikeFixture.evidence(
+        run: const SceneSpikeRunKey(
+          platform: .ios,
+          buildMode: .profile,
+        ),
+        capabilities: constructorCapabilities,
+      );
+      constructorCapabilities.clear();
+      final copyWithCapabilities = sceneSpikeFixture.capabilities();
+      final copied = evidence.copyWith(capabilities: copyWithCapabilities);
+      copyWithCapabilities.clear();
+
+      expect(evidence.capabilities, hasLength(11));
+      expect(copied.capabilities, hasLength(11));
+    });
+
+    test('copies every gate decision list at public boundaries', () {
+      final missingRuns = <SceneSpikeRunKey>[
+        const SceneSpikeRunKey(platform: .ios, buildMode: .profile),
+      ];
+      final failedCapabilities = <SceneSpikeCapabilityFinding>[];
+      final unobservedCapabilities = <SceneSpikeCapabilityFinding>[];
+      final validationErrors = <String>['original validation'];
+      final revisionMismatches = <String>['original revision'];
+      final decision = SceneSpikeGateDecision(
+        isPass: false,
+        missingRuns: missingRuns,
+        failedCapabilities: failedCapabilities,
+        unobservedCapabilities: unobservedCapabilities,
+        validationErrors: validationErrors,
+        revisionMismatches: revisionMismatches,
+      );
+      missingRuns.clear();
+      failedCapabilities.add(
+        SceneSpikeCapabilityFinding(
+          run: const SceneSpikeRunKey(
+            platform: .ios,
+            buildMode: .profile,
+          ),
+          result: sceneSpikeFixture.capabilities().first,
+        ),
+      );
+      unobservedCapabilities.add(failedCapabilities.single);
+      validationErrors.clear();
+      revisionMismatches.clear();
+
+      expect(decision.missingRuns, hasLength(1));
+      expect(decision.failedCapabilities, isEmpty);
+      expect(decision.unobservedCapabilities, isEmpty);
+      expect(decision.validationErrors, ['original validation']);
+      expect(decision.revisionMismatches, ['original revision']);
+
+      final copiedMissingRuns = <SceneSpikeRunKey>[];
+      final copiedFailedCapabilities = <SceneSpikeCapabilityFinding>[];
+      final copiedUnobservedCapabilities = <SceneSpikeCapabilityFinding>[];
+      final copiedValidationErrors = <String>['copied validation'];
+      final copiedRevisionMismatches = <String>['copied revision'];
+      final copied = decision.copyWith(
+        missingRuns: copiedMissingRuns,
+        failedCapabilities: copiedFailedCapabilities,
+        unobservedCapabilities: copiedUnobservedCapabilities,
+        validationErrors: copiedValidationErrors,
+        revisionMismatches: copiedRevisionMismatches,
+      );
+      copiedMissingRuns.add(
+        const SceneSpikeRunKey(platform: .android, buildMode: .release),
+      );
+      copiedFailedCapabilities.add(failedCapabilities.single);
+      copiedUnobservedCapabilities.add(failedCapabilities.single);
+      copiedValidationErrors.clear();
+      copiedRevisionMismatches.clear();
+
+      expect(copied.missingRuns, isEmpty);
+      expect(copied.failedCapabilities, isEmpty);
+      expect(copied.unobservedCapabilities, isEmpty);
+      expect(copied.validationErrors, ['copied validation']);
+      expect(copied.revisionMismatches, ['copied revision']);
+    });
+
+    test('fromJson does not retain caller-owned JSON lists', () {
+      final evidence = sceneSpikeFixture.evidence(
+        run: const SceneSpikeRunKey(
+          platform: .android,
+          buildMode: .profile,
+        ),
+      );
+      final evidenceJson = evidence.toJson();
+      final restoredEvidence = SceneSpikeEvidence.fromJson(evidenceJson);
+      final capabilityJson =
+          evidenceJson['capabilities'] as List<Map<String, dynamic>>;
+      capabilityJson.clear();
+
+      final decision = SceneSpikeGate.evaluate(sceneSpikeFixture.fourRuns());
+      final decisionJson = decision.toJson();
+      decisionJson['validationErrors'] = <String>[];
+      final restoredDecision = SceneSpikeGateDecision.fromJson(decisionJson);
+      final missingRunJson =
+          decisionJson['missingRuns'] as List<Map<String, dynamic>>;
+      final validationJson = decisionJson['validationErrors'] as List<String>;
+      missingRunJson.add(
+        const SceneSpikeRunKey(
+          platform: .android,
+          buildMode: .release,
+        ).toJson(),
+      );
+      validationJson.add('caller mutation');
+
+      expect(restoredEvidence.capabilities, hasLength(11));
+      expect(restoredDecision.missingRuns, isEmpty);
+      expect(restoredDecision.validationErrors, isEmpty);
+    });
+  });
+
+  group('SceneSpike JSON integer contract', () {
+    test('rejects fractional schema counters and duration statistics', () {
+      final evidence = sceneSpikeFixture.evidence(
+        run: const SceneSpikeRunKey(
+          platform: .android,
+          buildMode: .profile,
+        ),
+      );
+      final fractionalSchema = evidence.toJson()..['schemaVersion'] = 1.5;
+      final fractionalCounter = evidence.toJson()..['frameCount'] = -0.5;
+      final fractionalDuration = evidence.toJson();
+      final performanceJson =
+          fractionalDuration['performance'] as Map<String, dynamic>;
+      performanceJson['buildDurationP95Microseconds'] = 1.5;
+
+      expect(
+        () => SceneSpikeEvidence.fromJson(fractionalSchema),
+        throwsFormatException,
+      );
+      expect(
+        () => SceneSpikeEvidence.fromJson(fractionalCounter),
+        throwsFormatException,
+      );
+      expect(
+        () => SceneSpikeEvidence.fromJson(fractionalDuration),
+        throwsFormatException,
       );
     });
   });
@@ -624,6 +813,7 @@ class SceneSpikeFixture {
     required SceneSpikeRunKey run,
     SceneSpikeCapabilityStatus blockedCapabilityStatus =
         SceneSpikeCapabilityStatus.unobserved,
+    List<SceneSpikeCapabilityResult>? capabilities,
   }) => SceneSpikeEvidence(
     schemaVersion: SceneSpikeEvidenceContract.schemaVersion,
     run: run,
@@ -647,16 +837,21 @@ class SceneSpikeFixture {
     partialUpdateCount: 2,
     lifecycleResumeCount: 1,
     appResourceGeneration: 1,
-    capabilities: SceneSpikeCapability.values
-        .map(
-          (capability) => capabilityResult(
-            capability: capability,
-            blockedCapabilityStatus: blockedCapabilityStatus,
-          ),
-        )
-        .toList(),
+    capabilities:
+        capabilities ?? this.capabilities(status: blockedCapabilityStatus),
     performance: performance(),
   );
+
+  List<SceneSpikeCapabilityResult> capabilities({
+    SceneSpikeCapabilityStatus status = SceneSpikeCapabilityStatus.unobserved,
+  }) => SceneSpikeCapability.values
+      .map(
+        (capability) => capabilityResult(
+          capability: capability,
+          blockedCapabilityStatus: status,
+        ),
+      )
+      .toList();
 
   SceneSpikeCapabilityResult capabilityResult({
     required SceneSpikeCapability capability,
@@ -685,7 +880,7 @@ class SceneSpikeFixture {
       detail: isBlocked
           ? 'Flutter Scene has no required public API.'
           : 'Observed with the required evidence source.',
-      observedAtUtc: DateTime.utc(2026, 8, 2, 1),
+      observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 1),
     );
   }
 

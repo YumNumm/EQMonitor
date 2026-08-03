@@ -32,6 +32,21 @@ enum SceneSpikeCapability {
   gpuCompletionOrSafeRetirement,
 }
 
+class SceneSpikeStrictIntConverter implements JsonConverter<int, num> {
+  const SceneSpikeStrictIntConverter();
+
+  @override
+  int fromJson(num value) {
+    if (value is! int) {
+      throw FormatException('Expected an integer, got $value.');
+    }
+    return value;
+  }
+
+  @override
+  int toJson(int value) => value;
+}
+
 @freezed
 sealed class SceneSpikeRunKey with _$SceneSpikeRunKey {
   // Freezed applies this constructor annotation to the generated class.
@@ -70,18 +85,18 @@ sealed class SceneSpikePerformanceSnapshot
   // ignore: invalid_annotation_target
   @JsonSerializable(explicitToJson: true)
   const factory SceneSpikePerformanceSnapshot({
-    required int buildDurationCount,
-    required int buildDurationMaxMicroseconds,
-    required int buildDurationP50Microseconds,
-    required int buildDurationP95Microseconds,
-    required int rasterDurationCount,
-    required int rasterDurationMaxMicroseconds,
-    required int rasterDurationP50Microseconds,
-    required int rasterDurationP95Microseconds,
-    required int droppedFrameCount,
-    required int partialUpdateCount,
-    required int resourceRebuildCount,
-    required int exceptionCount,
+    @SceneSpikeStrictIntConverter() required int buildDurationCount,
+    @SceneSpikeStrictIntConverter() required int buildDurationMaxMicroseconds,
+    @SceneSpikeStrictIntConverter() required int buildDurationP50Microseconds,
+    @SceneSpikeStrictIntConverter() required int buildDurationP95Microseconds,
+    @SceneSpikeStrictIntConverter() required int rasterDurationCount,
+    @SceneSpikeStrictIntConverter() required int rasterDurationMaxMicroseconds,
+    @SceneSpikeStrictIntConverter() required int rasterDurationP50Microseconds,
+    @SceneSpikeStrictIntConverter() required int rasterDurationP95Microseconds,
+    @SceneSpikeStrictIntConverter() required int droppedFrameCount,
+    @SceneSpikeStrictIntConverter() required int partialUpdateCount,
+    @SceneSpikeStrictIntConverter() required int resourceRebuildCount,
+    @SceneSpikeStrictIntConverter() required int exceptionCount,
   }) = _SceneSpikePerformanceSnapshot;
 
   factory SceneSpikePerformanceSnapshot.fromJson(Map<String, dynamic> json) =>
@@ -89,36 +104,85 @@ sealed class SceneSpikePerformanceSnapshot
 }
 
 @freezed
-sealed class SceneSpikeEvidence with _$SceneSpikeEvidence {
-  // Freezed applies this constructor annotation to the generated class.
-  // ignore: invalid_annotation_target
-  @JsonSerializable(explicitToJson: true)
-  const factory SceneSpikeEvidence({
-    required int schemaVersion,
-    required SceneSpikeRunKey run,
-    required String deviceModel,
-    required String operatingSystemVersion,
-    required String flutterFrameworkRevision,
-    required String flutterEngineRevision,
-    required String dartVersion,
-    required String flutterSceneRevision,
-    required String eqmonitorMapRendererRevision,
-    required bool eqmonitorMapRendererCheckoutDirty,
-    required SceneSpikeObservationProvenance revisionProvenance,
-    required String renderingBackend,
-    required SceneSpikeObservationProvenance renderingBackendProvenance,
-    required DateTime startedAtUtc,
-    required int elapsedMicroseconds,
-    required int frameCount,
-    required int partialUpdateCount,
-    required int lifecycleResumeCount,
-    required int appResourceGeneration,
+@JsonSerializable(explicitToJson: true)
+class SceneSpikeEvidence with _$SceneSpikeEvidence {
+  SceneSpikeEvidence({
+    required this.schemaVersion,
+    required this.run,
+    required this.deviceModel,
+    required this.operatingSystemVersion,
+    required this.flutterFrameworkRevision,
+    required this.flutterEngineRevision,
+    required this.dartVersion,
+    required this.flutterSceneRevision,
+    required this.eqmonitorMapRendererRevision,
+    required this.eqmonitorMapRendererCheckoutDirty,
+    required this.revisionProvenance,
+    required this.renderingBackend,
+    required this.renderingBackendProvenance,
+    required this.startedAtUtc,
+    required this.elapsedMicroseconds,
+    required this.frameCount,
+    required this.partialUpdateCount,
+    required this.lifecycleResumeCount,
+    required this.appResourceGeneration,
     required List<SceneSpikeCapabilityResult> capabilities,
-    required SceneSpikePerformanceSnapshot performance,
-  }) = _SceneSpikeEvidence;
+    required this.performance,
+  }) : capabilities = List.unmodifiable(capabilities);
 
   factory SceneSpikeEvidence.fromJson(Map<String, dynamic> json) =>
       _$SceneSpikeEvidenceFromJson(json);
+
+  @SceneSpikeStrictIntConverter()
+  @override
+  final int schemaVersion;
+  @override
+  final SceneSpikeRunKey run;
+  @override
+  final String deviceModel;
+  @override
+  final String operatingSystemVersion;
+  @override
+  final String flutterFrameworkRevision;
+  @override
+  final String flutterEngineRevision;
+  @override
+  final String dartVersion;
+  @override
+  final String flutterSceneRevision;
+  @override
+  final String eqmonitorMapRendererRevision;
+  @override
+  final bool eqmonitorMapRendererCheckoutDirty;
+  @override
+  final SceneSpikeObservationProvenance revisionProvenance;
+  @override
+  final String renderingBackend;
+  @override
+  final SceneSpikeObservationProvenance renderingBackendProvenance;
+  @override
+  final DateTime startedAtUtc;
+  @SceneSpikeStrictIntConverter()
+  @override
+  final int elapsedMicroseconds;
+  @SceneSpikeStrictIntConverter()
+  @override
+  final int frameCount;
+  @SceneSpikeStrictIntConverter()
+  @override
+  final int partialUpdateCount;
+  @SceneSpikeStrictIntConverter()
+  @override
+  final int lifecycleResumeCount;
+  @SceneSpikeStrictIntConverter()
+  @override
+  final int appResourceGeneration;
+  @override
+  final List<SceneSpikeCapabilityResult> capabilities;
+  @override
+  final SceneSpikePerformanceSnapshot performance;
+
+  Map<String, dynamic> toJson() => _$SceneSpikeEvidenceToJson(this);
 }
 
 abstract interface class SceneSpikePerformanceSink {

@@ -6,25 +6,9 @@ part of 'scene_spike_gate.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_SceneSpikeCapabilityFinding _$SceneSpikeCapabilityFindingFromJson(
+SceneSpikeGateDecision _$SceneSpikeGateDecisionFromJson(
   Map<String, dynamic> json,
-) => _SceneSpikeCapabilityFinding(
-  run: SceneSpikeRunKey.fromJson(json['run'] as Map<String, dynamic>),
-  result: SceneSpikeCapabilityResult.fromJson(
-    json['result'] as Map<String, dynamic>,
-  ),
-);
-
-Map<String, dynamic> _$SceneSpikeCapabilityFindingToJson(
-  _SceneSpikeCapabilityFinding instance,
-) => <String, dynamic>{
-  'run': instance.run.toJson(),
-  'result': instance.result.toJson(),
-};
-
-_SceneSpikeGateDecision _$SceneSpikeGateDecisionFromJson(
-  Map<String, dynamic> json,
-) => _SceneSpikeGateDecision(
+) => SceneSpikeGateDecision(
   isPass: json['isPass'] as bool,
   missingRuns: (json['missingRuns'] as List<dynamic>)
       .map((e) => SceneSpikeRunKey.fromJson(e as Map<String, dynamic>))
@@ -48,7 +32,7 @@ _SceneSpikeGateDecision _$SceneSpikeGateDecisionFromJson(
 );
 
 Map<String, dynamic> _$SceneSpikeGateDecisionToJson(
-  _SceneSpikeGateDecision instance,
+  SceneSpikeGateDecision instance,
 ) => <String, dynamic>{
   'isPass': instance.isPass,
   'missingRuns': instance.missingRuns.map((e) => e.toJson()).toList(),
@@ -60,4 +44,20 @@ Map<String, dynamic> _$SceneSpikeGateDecisionToJson(
       .toList(),
   'validationErrors': instance.validationErrors,
   'revisionMismatches': instance.revisionMismatches,
+};
+
+_SceneSpikeCapabilityFinding _$SceneSpikeCapabilityFindingFromJson(
+  Map<String, dynamic> json,
+) => _SceneSpikeCapabilityFinding(
+  run: SceneSpikeRunKey.fromJson(json['run'] as Map<String, dynamic>),
+  result: SceneSpikeCapabilityResult.fromJson(
+    json['result'] as Map<String, dynamic>,
+  ),
+);
+
+Map<String, dynamic> _$SceneSpikeCapabilityFindingToJson(
+  _SceneSpikeCapabilityFinding instance,
+) => <String, dynamic>{
+  'run': instance.run.toJson(),
+  'result': instance.result.toJson(),
 };

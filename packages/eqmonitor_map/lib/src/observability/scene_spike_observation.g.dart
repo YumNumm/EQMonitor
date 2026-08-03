@@ -6,6 +6,107 @@ part of 'scene_spike_observation.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+SceneSpikeEvidence _$SceneSpikeEvidenceFromJson(Map<String, dynamic> json) =>
+    SceneSpikeEvidence(
+      schemaVersion: const SceneSpikeStrictIntConverter().fromJson(
+        json['schemaVersion'] as num,
+      ),
+      run: SceneSpikeRunKey.fromJson(json['run'] as Map<String, dynamic>),
+      deviceModel: json['deviceModel'] as String,
+      operatingSystemVersion: json['operatingSystemVersion'] as String,
+      flutterFrameworkRevision: json['flutterFrameworkRevision'] as String,
+      flutterEngineRevision: json['flutterEngineRevision'] as String,
+      dartVersion: json['dartVersion'] as String,
+      flutterSceneRevision: json['flutterSceneRevision'] as String,
+      eqmonitorMapRendererRevision:
+          json['eqmonitorMapRendererRevision'] as String,
+      eqmonitorMapRendererCheckoutDirty:
+          json['eqmonitorMapRendererCheckoutDirty'] as bool,
+      revisionProvenance: $enumDecode(
+        _$SceneSpikeObservationProvenanceEnumMap,
+        json['revisionProvenance'],
+      ),
+      renderingBackend: json['renderingBackend'] as String,
+      renderingBackendProvenance: $enumDecode(
+        _$SceneSpikeObservationProvenanceEnumMap,
+        json['renderingBackendProvenance'],
+      ),
+      startedAtUtc: DateTime.parse(json['startedAtUtc'] as String),
+      elapsedMicroseconds: const SceneSpikeStrictIntConverter().fromJson(
+        json['elapsedMicroseconds'] as num,
+      ),
+      frameCount: const SceneSpikeStrictIntConverter().fromJson(
+        json['frameCount'] as num,
+      ),
+      partialUpdateCount: const SceneSpikeStrictIntConverter().fromJson(
+        json['partialUpdateCount'] as num,
+      ),
+      lifecycleResumeCount: const SceneSpikeStrictIntConverter().fromJson(
+        json['lifecycleResumeCount'] as num,
+      ),
+      appResourceGeneration: const SceneSpikeStrictIntConverter().fromJson(
+        json['appResourceGeneration'] as num,
+      ),
+      capabilities: (json['capabilities'] as List<dynamic>)
+          .map(
+            (e) =>
+                SceneSpikeCapabilityResult.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+      performance: SceneSpikePerformanceSnapshot.fromJson(
+        json['performance'] as Map<String, dynamic>,
+      ),
+    );
+
+Map<String, dynamic> _$SceneSpikeEvidenceToJson(
+  SceneSpikeEvidence instance,
+) => <String, dynamic>{
+  'schemaVersion': const SceneSpikeStrictIntConverter().toJson(
+    instance.schemaVersion,
+  ),
+  'run': instance.run.toJson(),
+  'deviceModel': instance.deviceModel,
+  'operatingSystemVersion': instance.operatingSystemVersion,
+  'flutterFrameworkRevision': instance.flutterFrameworkRevision,
+  'flutterEngineRevision': instance.flutterEngineRevision,
+  'dartVersion': instance.dartVersion,
+  'flutterSceneRevision': instance.flutterSceneRevision,
+  'eqmonitorMapRendererRevision': instance.eqmonitorMapRendererRevision,
+  'eqmonitorMapRendererCheckoutDirty':
+      instance.eqmonitorMapRendererCheckoutDirty,
+  'revisionProvenance':
+      _$SceneSpikeObservationProvenanceEnumMap[instance.revisionProvenance]!,
+  'renderingBackend': instance.renderingBackend,
+  'renderingBackendProvenance':
+      _$SceneSpikeObservationProvenanceEnumMap[instance
+          .renderingBackendProvenance]!,
+  'startedAtUtc': instance.startedAtUtc.toIso8601String(),
+  'elapsedMicroseconds': const SceneSpikeStrictIntConverter().toJson(
+    instance.elapsedMicroseconds,
+  ),
+  'frameCount': const SceneSpikeStrictIntConverter().toJson(
+    instance.frameCount,
+  ),
+  'partialUpdateCount': const SceneSpikeStrictIntConverter().toJson(
+    instance.partialUpdateCount,
+  ),
+  'lifecycleResumeCount': const SceneSpikeStrictIntConverter().toJson(
+    instance.lifecycleResumeCount,
+  ),
+  'appResourceGeneration': const SceneSpikeStrictIntConverter().toJson(
+    instance.appResourceGeneration,
+  ),
+  'capabilities': instance.capabilities.map((e) => e.toJson()).toList(),
+  'performance': instance.performance.toJson(),
+};
+
+const _$SceneSpikeObservationProvenanceEnumMap = {
+  SceneSpikeObservationProvenance.runtimeSignal: 'runtimeSignal',
+  SceneSpikeObservationProvenance.compileTimeManifest: 'compileTimeManifest',
+  SceneSpikeObservationProvenance.operatorAttestation: 'operatorAttestation',
+  SceneSpikeObservationProvenance.unavailablePublicApi: 'unavailablePublicApi',
+};
+
 _SceneSpikeRunKey _$SceneSpikeRunKeyFromJson(Map<String, dynamic> json) =>
     _SceneSpikeRunKey(
       platform: $enumDecode(_$SceneSpikePlatformEnumMap, json['platform']),
@@ -73,119 +174,84 @@ const _$SceneSpikeCapabilityStatusEnumMap = {
   SceneSpikeCapabilityStatus.unobserved: 'unobserved',
 };
 
-const _$SceneSpikeObservationProvenanceEnumMap = {
-  SceneSpikeObservationProvenance.runtimeSignal: 'runtimeSignal',
-  SceneSpikeObservationProvenance.compileTimeManifest: 'compileTimeManifest',
-  SceneSpikeObservationProvenance.operatorAttestation: 'operatorAttestation',
-  SceneSpikeObservationProvenance.unavailablePublicApi: 'unavailablePublicApi',
-};
-
 _SceneSpikePerformanceSnapshot _$SceneSpikePerformanceSnapshotFromJson(
   Map<String, dynamic> json,
 ) => _SceneSpikePerformanceSnapshot(
-  buildDurationCount: (json['buildDurationCount'] as num).toInt(),
-  buildDurationMaxMicroseconds: (json['buildDurationMaxMicroseconds'] as num)
-      .toInt(),
-  buildDurationP50Microseconds: (json['buildDurationP50Microseconds'] as num)
-      .toInt(),
-  buildDurationP95Microseconds: (json['buildDurationP95Microseconds'] as num)
-      .toInt(),
-  rasterDurationCount: (json['rasterDurationCount'] as num).toInt(),
-  rasterDurationMaxMicroseconds: (json['rasterDurationMaxMicroseconds'] as num)
-      .toInt(),
-  rasterDurationP50Microseconds: (json['rasterDurationP50Microseconds'] as num)
-      .toInt(),
-  rasterDurationP95Microseconds: (json['rasterDurationP95Microseconds'] as num)
-      .toInt(),
-  droppedFrameCount: (json['droppedFrameCount'] as num).toInt(),
-  partialUpdateCount: (json['partialUpdateCount'] as num).toInt(),
-  resourceRebuildCount: (json['resourceRebuildCount'] as num).toInt(),
-  exceptionCount: (json['exceptionCount'] as num).toInt(),
+  buildDurationCount: const SceneSpikeStrictIntConverter().fromJson(
+    json['buildDurationCount'] as num,
+  ),
+  buildDurationMaxMicroseconds: const SceneSpikeStrictIntConverter().fromJson(
+    json['buildDurationMaxMicroseconds'] as num,
+  ),
+  buildDurationP50Microseconds: const SceneSpikeStrictIntConverter().fromJson(
+    json['buildDurationP50Microseconds'] as num,
+  ),
+  buildDurationP95Microseconds: const SceneSpikeStrictIntConverter().fromJson(
+    json['buildDurationP95Microseconds'] as num,
+  ),
+  rasterDurationCount: const SceneSpikeStrictIntConverter().fromJson(
+    json['rasterDurationCount'] as num,
+  ),
+  rasterDurationMaxMicroseconds: const SceneSpikeStrictIntConverter().fromJson(
+    json['rasterDurationMaxMicroseconds'] as num,
+  ),
+  rasterDurationP50Microseconds: const SceneSpikeStrictIntConverter().fromJson(
+    json['rasterDurationP50Microseconds'] as num,
+  ),
+  rasterDurationP95Microseconds: const SceneSpikeStrictIntConverter().fromJson(
+    json['rasterDurationP95Microseconds'] as num,
+  ),
+  droppedFrameCount: const SceneSpikeStrictIntConverter().fromJson(
+    json['droppedFrameCount'] as num,
+  ),
+  partialUpdateCount: const SceneSpikeStrictIntConverter().fromJson(
+    json['partialUpdateCount'] as num,
+  ),
+  resourceRebuildCount: const SceneSpikeStrictIntConverter().fromJson(
+    json['resourceRebuildCount'] as num,
+  ),
+  exceptionCount: const SceneSpikeStrictIntConverter().fromJson(
+    json['exceptionCount'] as num,
+  ),
 );
 
 Map<String, dynamic> _$SceneSpikePerformanceSnapshotToJson(
   _SceneSpikePerformanceSnapshot instance,
 ) => <String, dynamic>{
-  'buildDurationCount': instance.buildDurationCount,
-  'buildDurationMaxMicroseconds': instance.buildDurationMaxMicroseconds,
-  'buildDurationP50Microseconds': instance.buildDurationP50Microseconds,
-  'buildDurationP95Microseconds': instance.buildDurationP95Microseconds,
-  'rasterDurationCount': instance.rasterDurationCount,
-  'rasterDurationMaxMicroseconds': instance.rasterDurationMaxMicroseconds,
-  'rasterDurationP50Microseconds': instance.rasterDurationP50Microseconds,
-  'rasterDurationP95Microseconds': instance.rasterDurationP95Microseconds,
-  'droppedFrameCount': instance.droppedFrameCount,
-  'partialUpdateCount': instance.partialUpdateCount,
-  'resourceRebuildCount': instance.resourceRebuildCount,
-  'exceptionCount': instance.exceptionCount,
-};
-
-_SceneSpikeEvidence _$SceneSpikeEvidenceFromJson(Map<String, dynamic> json) =>
-    _SceneSpikeEvidence(
-      schemaVersion: (json['schemaVersion'] as num).toInt(),
-      run: SceneSpikeRunKey.fromJson(json['run'] as Map<String, dynamic>),
-      deviceModel: json['deviceModel'] as String,
-      operatingSystemVersion: json['operatingSystemVersion'] as String,
-      flutterFrameworkRevision: json['flutterFrameworkRevision'] as String,
-      flutterEngineRevision: json['flutterEngineRevision'] as String,
-      dartVersion: json['dartVersion'] as String,
-      flutterSceneRevision: json['flutterSceneRevision'] as String,
-      eqmonitorMapRendererRevision:
-          json['eqmonitorMapRendererRevision'] as String,
-      eqmonitorMapRendererCheckoutDirty:
-          json['eqmonitorMapRendererCheckoutDirty'] as bool,
-      revisionProvenance: $enumDecode(
-        _$SceneSpikeObservationProvenanceEnumMap,
-        json['revisionProvenance'],
-      ),
-      renderingBackend: json['renderingBackend'] as String,
-      renderingBackendProvenance: $enumDecode(
-        _$SceneSpikeObservationProvenanceEnumMap,
-        json['renderingBackendProvenance'],
-      ),
-      startedAtUtc: DateTime.parse(json['startedAtUtc'] as String),
-      elapsedMicroseconds: (json['elapsedMicroseconds'] as num).toInt(),
-      frameCount: (json['frameCount'] as num).toInt(),
-      partialUpdateCount: (json['partialUpdateCount'] as num).toInt(),
-      lifecycleResumeCount: (json['lifecycleResumeCount'] as num).toInt(),
-      appResourceGeneration: (json['appResourceGeneration'] as num).toInt(),
-      capabilities: (json['capabilities'] as List<dynamic>)
-          .map(
-            (e) =>
-                SceneSpikeCapabilityResult.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
-      performance: SceneSpikePerformanceSnapshot.fromJson(
-        json['performance'] as Map<String, dynamic>,
-      ),
-    );
-
-Map<String, dynamic> _$SceneSpikeEvidenceToJson(
-  _SceneSpikeEvidence instance,
-) => <String, dynamic>{
-  'schemaVersion': instance.schemaVersion,
-  'run': instance.run.toJson(),
-  'deviceModel': instance.deviceModel,
-  'operatingSystemVersion': instance.operatingSystemVersion,
-  'flutterFrameworkRevision': instance.flutterFrameworkRevision,
-  'flutterEngineRevision': instance.flutterEngineRevision,
-  'dartVersion': instance.dartVersion,
-  'flutterSceneRevision': instance.flutterSceneRevision,
-  'eqmonitorMapRendererRevision': instance.eqmonitorMapRendererRevision,
-  'eqmonitorMapRendererCheckoutDirty':
-      instance.eqmonitorMapRendererCheckoutDirty,
-  'revisionProvenance':
-      _$SceneSpikeObservationProvenanceEnumMap[instance.revisionProvenance]!,
-  'renderingBackend': instance.renderingBackend,
-  'renderingBackendProvenance':
-      _$SceneSpikeObservationProvenanceEnumMap[instance
-          .renderingBackendProvenance]!,
-  'startedAtUtc': instance.startedAtUtc.toIso8601String(),
-  'elapsedMicroseconds': instance.elapsedMicroseconds,
-  'frameCount': instance.frameCount,
-  'partialUpdateCount': instance.partialUpdateCount,
-  'lifecycleResumeCount': instance.lifecycleResumeCount,
-  'appResourceGeneration': instance.appResourceGeneration,
-  'capabilities': instance.capabilities.map((e) => e.toJson()).toList(),
-  'performance': instance.performance.toJson(),
+  'buildDurationCount': const SceneSpikeStrictIntConverter().toJson(
+    instance.buildDurationCount,
+  ),
+  'buildDurationMaxMicroseconds': const SceneSpikeStrictIntConverter().toJson(
+    instance.buildDurationMaxMicroseconds,
+  ),
+  'buildDurationP50Microseconds': const SceneSpikeStrictIntConverter().toJson(
+    instance.buildDurationP50Microseconds,
+  ),
+  'buildDurationP95Microseconds': const SceneSpikeStrictIntConverter().toJson(
+    instance.buildDurationP95Microseconds,
+  ),
+  'rasterDurationCount': const SceneSpikeStrictIntConverter().toJson(
+    instance.rasterDurationCount,
+  ),
+  'rasterDurationMaxMicroseconds': const SceneSpikeStrictIntConverter().toJson(
+    instance.rasterDurationMaxMicroseconds,
+  ),
+  'rasterDurationP50Microseconds': const SceneSpikeStrictIntConverter().toJson(
+    instance.rasterDurationP50Microseconds,
+  ),
+  'rasterDurationP95Microseconds': const SceneSpikeStrictIntConverter().toJson(
+    instance.rasterDurationP95Microseconds,
+  ),
+  'droppedFrameCount': const SceneSpikeStrictIntConverter().toJson(
+    instance.droppedFrameCount,
+  ),
+  'partialUpdateCount': const SceneSpikeStrictIntConverter().toJson(
+    instance.partialUpdateCount,
+  ),
+  'resourceRebuildCount': const SceneSpikeStrictIntConverter().toJson(
+    instance.resourceRebuildCount,
+  ),
+  'exceptionCount': const SceneSpikeStrictIntConverter().toJson(
+    instance.exceptionCount,
+  ),
 };

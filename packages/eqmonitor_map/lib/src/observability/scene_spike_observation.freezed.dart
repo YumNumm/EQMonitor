@@ -544,7 +544,7 @@ as DateTime,
 /// @nodoc
 mixin _$SceneSpikePerformanceSnapshot {
 
- int get buildDurationCount; int get buildDurationMaxMicroseconds; int get buildDurationP50Microseconds; int get buildDurationP95Microseconds; int get rasterDurationCount; int get rasterDurationMaxMicroseconds; int get rasterDurationP50Microseconds; int get rasterDurationP95Microseconds; int get droppedFrameCount; int get partialUpdateCount; int get resourceRebuildCount; int get exceptionCount;
+@SceneSpikeStrictIntConverter() int get buildDurationCount;@SceneSpikeStrictIntConverter() int get buildDurationMaxMicroseconds;@SceneSpikeStrictIntConverter() int get buildDurationP50Microseconds;@SceneSpikeStrictIntConverter() int get buildDurationP95Microseconds;@SceneSpikeStrictIntConverter() int get rasterDurationCount;@SceneSpikeStrictIntConverter() int get rasterDurationMaxMicroseconds;@SceneSpikeStrictIntConverter() int get rasterDurationP50Microseconds;@SceneSpikeStrictIntConverter() int get rasterDurationP95Microseconds;@SceneSpikeStrictIntConverter() int get droppedFrameCount;@SceneSpikeStrictIntConverter() int get partialUpdateCount;@SceneSpikeStrictIntConverter() int get resourceRebuildCount;@SceneSpikeStrictIntConverter() int get exceptionCount;
 /// Create a copy of SceneSpikePerformanceSnapshot
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -577,7 +577,7 @@ abstract mixin class $SceneSpikePerformanceSnapshotCopyWith<$Res>  {
   factory $SceneSpikePerformanceSnapshotCopyWith(SceneSpikePerformanceSnapshot value, $Res Function(SceneSpikePerformanceSnapshot) _then) = _$SceneSpikePerformanceSnapshotCopyWithImpl;
 @useResult
 $Res call({
- int buildDurationCount, int buildDurationMaxMicroseconds, int buildDurationP50Microseconds, int buildDurationP95Microseconds, int rasterDurationCount, int rasterDurationMaxMicroseconds, int rasterDurationP50Microseconds, int rasterDurationP95Microseconds, int droppedFrameCount, int partialUpdateCount, int resourceRebuildCount, int exceptionCount
+@SceneSpikeStrictIntConverter() int buildDurationCount,@SceneSpikeStrictIntConverter() int buildDurationMaxMicroseconds,@SceneSpikeStrictIntConverter() int buildDurationP50Microseconds,@SceneSpikeStrictIntConverter() int buildDurationP95Microseconds,@SceneSpikeStrictIntConverter() int rasterDurationCount,@SceneSpikeStrictIntConverter() int rasterDurationMaxMicroseconds,@SceneSpikeStrictIntConverter() int rasterDurationP50Microseconds,@SceneSpikeStrictIntConverter() int rasterDurationP95Microseconds,@SceneSpikeStrictIntConverter() int droppedFrameCount,@SceneSpikeStrictIntConverter() int partialUpdateCount,@SceneSpikeStrictIntConverter() int resourceRebuildCount,@SceneSpikeStrictIntConverter() int exceptionCount
 });
 
 
@@ -690,7 +690,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int buildDurationCount,  int buildDurationMaxMicroseconds,  int buildDurationP50Microseconds,  int buildDurationP95Microseconds,  int rasterDurationCount,  int rasterDurationMaxMicroseconds,  int rasterDurationP50Microseconds,  int rasterDurationP95Microseconds,  int droppedFrameCount,  int partialUpdateCount,  int resourceRebuildCount,  int exceptionCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@SceneSpikeStrictIntConverter()  int buildDurationCount, @SceneSpikeStrictIntConverter()  int buildDurationMaxMicroseconds, @SceneSpikeStrictIntConverter()  int buildDurationP50Microseconds, @SceneSpikeStrictIntConverter()  int buildDurationP95Microseconds, @SceneSpikeStrictIntConverter()  int rasterDurationCount, @SceneSpikeStrictIntConverter()  int rasterDurationMaxMicroseconds, @SceneSpikeStrictIntConverter()  int rasterDurationP50Microseconds, @SceneSpikeStrictIntConverter()  int rasterDurationP95Microseconds, @SceneSpikeStrictIntConverter()  int droppedFrameCount, @SceneSpikeStrictIntConverter()  int partialUpdateCount, @SceneSpikeStrictIntConverter()  int resourceRebuildCount, @SceneSpikeStrictIntConverter()  int exceptionCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SceneSpikePerformanceSnapshot() when $default != null:
 return $default(_that.buildDurationCount,_that.buildDurationMaxMicroseconds,_that.buildDurationP50Microseconds,_that.buildDurationP95Microseconds,_that.rasterDurationCount,_that.rasterDurationMaxMicroseconds,_that.rasterDurationP50Microseconds,_that.rasterDurationP95Microseconds,_that.droppedFrameCount,_that.partialUpdateCount,_that.resourceRebuildCount,_that.exceptionCount);case _:
@@ -711,7 +711,7 @@ return $default(_that.buildDurationCount,_that.buildDurationMaxMicroseconds,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int buildDurationCount,  int buildDurationMaxMicroseconds,  int buildDurationP50Microseconds,  int buildDurationP95Microseconds,  int rasterDurationCount,  int rasterDurationMaxMicroseconds,  int rasterDurationP50Microseconds,  int rasterDurationP95Microseconds,  int droppedFrameCount,  int partialUpdateCount,  int resourceRebuildCount,  int exceptionCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@SceneSpikeStrictIntConverter()  int buildDurationCount, @SceneSpikeStrictIntConverter()  int buildDurationMaxMicroseconds, @SceneSpikeStrictIntConverter()  int buildDurationP50Microseconds, @SceneSpikeStrictIntConverter()  int buildDurationP95Microseconds, @SceneSpikeStrictIntConverter()  int rasterDurationCount, @SceneSpikeStrictIntConverter()  int rasterDurationMaxMicroseconds, @SceneSpikeStrictIntConverter()  int rasterDurationP50Microseconds, @SceneSpikeStrictIntConverter()  int rasterDurationP95Microseconds, @SceneSpikeStrictIntConverter()  int droppedFrameCount, @SceneSpikeStrictIntConverter()  int partialUpdateCount, @SceneSpikeStrictIntConverter()  int resourceRebuildCount, @SceneSpikeStrictIntConverter()  int exceptionCount)  $default,) {final _that = this;
 switch (_that) {
 case _SceneSpikePerformanceSnapshot():
 return $default(_that.buildDurationCount,_that.buildDurationMaxMicroseconds,_that.buildDurationP50Microseconds,_that.buildDurationP95Microseconds,_that.rasterDurationCount,_that.rasterDurationMaxMicroseconds,_that.rasterDurationP50Microseconds,_that.rasterDurationP95Microseconds,_that.droppedFrameCount,_that.partialUpdateCount,_that.resourceRebuildCount,_that.exceptionCount);}
@@ -728,7 +728,7 @@ return $default(_that.buildDurationCount,_that.buildDurationMaxMicroseconds,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int buildDurationCount,  int buildDurationMaxMicroseconds,  int buildDurationP50Microseconds,  int buildDurationP95Microseconds,  int rasterDurationCount,  int rasterDurationMaxMicroseconds,  int rasterDurationP50Microseconds,  int rasterDurationP95Microseconds,  int droppedFrameCount,  int partialUpdateCount,  int resourceRebuildCount,  int exceptionCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@SceneSpikeStrictIntConverter()  int buildDurationCount, @SceneSpikeStrictIntConverter()  int buildDurationMaxMicroseconds, @SceneSpikeStrictIntConverter()  int buildDurationP50Microseconds, @SceneSpikeStrictIntConverter()  int buildDurationP95Microseconds, @SceneSpikeStrictIntConverter()  int rasterDurationCount, @SceneSpikeStrictIntConverter()  int rasterDurationMaxMicroseconds, @SceneSpikeStrictIntConverter()  int rasterDurationP50Microseconds, @SceneSpikeStrictIntConverter()  int rasterDurationP95Microseconds, @SceneSpikeStrictIntConverter()  int droppedFrameCount, @SceneSpikeStrictIntConverter()  int partialUpdateCount, @SceneSpikeStrictIntConverter()  int resourceRebuildCount, @SceneSpikeStrictIntConverter()  int exceptionCount)?  $default,) {final _that = this;
 switch (_that) {
 case _SceneSpikePerformanceSnapshot() when $default != null:
 return $default(_that.buildDurationCount,_that.buildDurationMaxMicroseconds,_that.buildDurationP50Microseconds,_that.buildDurationP95Microseconds,_that.rasterDurationCount,_that.rasterDurationMaxMicroseconds,_that.rasterDurationP50Microseconds,_that.rasterDurationP95Microseconds,_that.droppedFrameCount,_that.partialUpdateCount,_that.resourceRebuildCount,_that.exceptionCount);case _:
@@ -743,21 +743,21 @@ return $default(_that.buildDurationCount,_that.buildDurationMaxMicroseconds,_tha
 
 @JsonSerializable(explicitToJson: true)
 class _SceneSpikePerformanceSnapshot implements SceneSpikePerformanceSnapshot {
-  const _SceneSpikePerformanceSnapshot({required this.buildDurationCount, required this.buildDurationMaxMicroseconds, required this.buildDurationP50Microseconds, required this.buildDurationP95Microseconds, required this.rasterDurationCount, required this.rasterDurationMaxMicroseconds, required this.rasterDurationP50Microseconds, required this.rasterDurationP95Microseconds, required this.droppedFrameCount, required this.partialUpdateCount, required this.resourceRebuildCount, required this.exceptionCount});
+  const _SceneSpikePerformanceSnapshot({@SceneSpikeStrictIntConverter() required this.buildDurationCount, @SceneSpikeStrictIntConverter() required this.buildDurationMaxMicroseconds, @SceneSpikeStrictIntConverter() required this.buildDurationP50Microseconds, @SceneSpikeStrictIntConverter() required this.buildDurationP95Microseconds, @SceneSpikeStrictIntConverter() required this.rasterDurationCount, @SceneSpikeStrictIntConverter() required this.rasterDurationMaxMicroseconds, @SceneSpikeStrictIntConverter() required this.rasterDurationP50Microseconds, @SceneSpikeStrictIntConverter() required this.rasterDurationP95Microseconds, @SceneSpikeStrictIntConverter() required this.droppedFrameCount, @SceneSpikeStrictIntConverter() required this.partialUpdateCount, @SceneSpikeStrictIntConverter() required this.resourceRebuildCount, @SceneSpikeStrictIntConverter() required this.exceptionCount});
   factory _SceneSpikePerformanceSnapshot.fromJson(Map<String, dynamic> json) => _$SceneSpikePerformanceSnapshotFromJson(json);
 
-@override final  int buildDurationCount;
-@override final  int buildDurationMaxMicroseconds;
-@override final  int buildDurationP50Microseconds;
-@override final  int buildDurationP95Microseconds;
-@override final  int rasterDurationCount;
-@override final  int rasterDurationMaxMicroseconds;
-@override final  int rasterDurationP50Microseconds;
-@override final  int rasterDurationP95Microseconds;
-@override final  int droppedFrameCount;
-@override final  int partialUpdateCount;
-@override final  int resourceRebuildCount;
-@override final  int exceptionCount;
+@override@SceneSpikeStrictIntConverter() final  int buildDurationCount;
+@override@SceneSpikeStrictIntConverter() final  int buildDurationMaxMicroseconds;
+@override@SceneSpikeStrictIntConverter() final  int buildDurationP50Microseconds;
+@override@SceneSpikeStrictIntConverter() final  int buildDurationP95Microseconds;
+@override@SceneSpikeStrictIntConverter() final  int rasterDurationCount;
+@override@SceneSpikeStrictIntConverter() final  int rasterDurationMaxMicroseconds;
+@override@SceneSpikeStrictIntConverter() final  int rasterDurationP50Microseconds;
+@override@SceneSpikeStrictIntConverter() final  int rasterDurationP95Microseconds;
+@override@SceneSpikeStrictIntConverter() final  int droppedFrameCount;
+@override@SceneSpikeStrictIntConverter() final  int partialUpdateCount;
+@override@SceneSpikeStrictIntConverter() final  int resourceRebuildCount;
+@override@SceneSpikeStrictIntConverter() final  int exceptionCount;
 
 /// Create a copy of SceneSpikePerformanceSnapshot
 /// with the given fields replaced by the non-null parameter values.
@@ -792,7 +792,7 @@ abstract mixin class _$SceneSpikePerformanceSnapshotCopyWith<$Res> implements $S
   factory _$SceneSpikePerformanceSnapshotCopyWith(_SceneSpikePerformanceSnapshot value, $Res Function(_SceneSpikePerformanceSnapshot) _then) = __$SceneSpikePerformanceSnapshotCopyWithImpl;
 @override @useResult
 $Res call({
- int buildDurationCount, int buildDurationMaxMicroseconds, int buildDurationP50Microseconds, int buildDurationP95Microseconds, int rasterDurationCount, int rasterDurationMaxMicroseconds, int rasterDurationP50Microseconds, int rasterDurationP95Microseconds, int droppedFrameCount, int partialUpdateCount, int resourceRebuildCount, int exceptionCount
+@SceneSpikeStrictIntConverter() int buildDurationCount,@SceneSpikeStrictIntConverter() int buildDurationMaxMicroseconds,@SceneSpikeStrictIntConverter() int buildDurationP50Microseconds,@SceneSpikeStrictIntConverter() int buildDurationP95Microseconds,@SceneSpikeStrictIntConverter() int rasterDurationCount,@SceneSpikeStrictIntConverter() int rasterDurationMaxMicroseconds,@SceneSpikeStrictIntConverter() int rasterDurationP50Microseconds,@SceneSpikeStrictIntConverter() int rasterDurationP95Microseconds,@SceneSpikeStrictIntConverter() int droppedFrameCount,@SceneSpikeStrictIntConverter() int partialUpdateCount,@SceneSpikeStrictIntConverter() int resourceRebuildCount,@SceneSpikeStrictIntConverter() int exceptionCount
 });
 
 
@@ -841,8 +841,6 @@ mixin _$SceneSpikeEvidence {
 @pragma('vm:prefer-inline')
 $SceneSpikeEvidenceCopyWith<SceneSpikeEvidence> get copyWith => _$SceneSpikeEvidenceCopyWithImpl<SceneSpikeEvidence>(this as SceneSpikeEvidence, _$identity);
 
-  /// Serializes this SceneSpikeEvidence to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -871,7 +869,7 @@ $Res call({
 });
 
 
-$SceneSpikeRunKeyCopyWith<$Res> get run;$SceneSpikePerformanceSnapshotCopyWith<$Res> get performance;
+
 
 }
 /// @nodoc
@@ -885,7 +883,7 @@ class _$SceneSpikeEvidenceCopyWithImpl<$Res>
 /// Create a copy of SceneSpikeEvidence
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? schemaVersion = null,Object? run = null,Object? deviceModel = null,Object? operatingSystemVersion = null,Object? flutterFrameworkRevision = null,Object? flutterEngineRevision = null,Object? dartVersion = null,Object? flutterSceneRevision = null,Object? eqmonitorMapRendererRevision = null,Object? eqmonitorMapRendererCheckoutDirty = null,Object? revisionProvenance = null,Object? renderingBackend = null,Object? renderingBackendProvenance = null,Object? startedAtUtc = null,Object? elapsedMicroseconds = null,Object? frameCount = null,Object? partialUpdateCount = null,Object? lifecycleResumeCount = null,Object? appResourceGeneration = null,Object? capabilities = null,Object? performance = null,}) {
-  return _then(_self.copyWith(
+  return _then(SceneSpikeEvidence(
 schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
 as int,run: null == run ? _self.run : run // ignore: cast_nullable_to_non_nullable
 as SceneSpikeRunKey,deviceModel: null == deviceModel ? _self.deviceModel : deviceModel // ignore: cast_nullable_to_non_nullable
@@ -910,25 +908,7 @@ as List<SceneSpikeCapabilityResult>,performance: null == performance ? _self.per
 as SceneSpikePerformanceSnapshot,
   ));
 }
-/// Create a copy of SceneSpikeEvidence
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$SceneSpikeRunKeyCopyWith<$Res> get run {
-  
-  return $SceneSpikeRunKeyCopyWith<$Res>(_self.run, (value) {
-    return _then(_self.copyWith(run: value));
-  });
-}/// Create a copy of SceneSpikeEvidence
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$SceneSpikePerformanceSnapshotCopyWith<$Res> get performance {
-  
-  return $SceneSpikePerformanceSnapshotCopyWith<$Res>(_self.performance, (value) {
-    return _then(_self.copyWith(performance: value));
-  });
-}
+
 }
 
 
@@ -946,11 +926,10 @@ extension SceneSpikeEvidencePatterns on SceneSpikeEvidence {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SceneSpikeEvidence value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _SceneSpikeEvidence() when $default != null:
-return $default(_that);case _:
+case _:
   return orElse();
 
 }
@@ -968,11 +947,13 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SceneSpikeEvidence value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(){
 final _that = this;
 switch (_that) {
-case _SceneSpikeEvidence():
-return $default(_that);}
+case _:
+  throw StateError('Unexpected subclass');
+
+}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -986,11 +967,10 @@ return $default(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SceneSpikeEvidence value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(){
 final _that = this;
 switch (_that) {
-case _SceneSpikeEvidence() when $default != null:
-return $default(_that);case _:
+case _:
   return null;
 
 }
@@ -1007,10 +987,9 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int schemaVersion,  SceneSpikeRunKey run,  String deviceModel,  String operatingSystemVersion,  String flutterFrameworkRevision,  String flutterEngineRevision,  String dartVersion,  String flutterSceneRevision,  String eqmonitorMapRendererRevision,  bool eqmonitorMapRendererCheckoutDirty,  SceneSpikeObservationProvenance revisionProvenance,  String renderingBackend,  SceneSpikeObservationProvenance renderingBackendProvenance,  DateTime startedAtUtc,  int elapsedMicroseconds,  int frameCount,  int partialUpdateCount,  int lifecycleResumeCount,  int appResourceGeneration,  List<SceneSpikeCapabilityResult> capabilities,  SceneSpikePerformanceSnapshot performance)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _SceneSpikeEvidence() when $default != null:
-return $default(_that.schemaVersion,_that.run,_that.deviceModel,_that.operatingSystemVersion,_that.flutterFrameworkRevision,_that.flutterEngineRevision,_that.dartVersion,_that.flutterSceneRevision,_that.eqmonitorMapRendererRevision,_that.eqmonitorMapRendererCheckoutDirty,_that.revisionProvenance,_that.renderingBackend,_that.renderingBackendProvenance,_that.startedAtUtc,_that.elapsedMicroseconds,_that.frameCount,_that.partialUpdateCount,_that.lifecycleResumeCount,_that.appResourceGeneration,_that.capabilities,_that.performance);case _:
+case _:
   return orElse();
 
 }
@@ -1028,10 +1007,12 @@ return $default(_that.schemaVersion,_that.run,_that.deviceModel,_that.operatingS
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int schemaVersion,  SceneSpikeRunKey run,  String deviceModel,  String operatingSystemVersion,  String flutterFrameworkRevision,  String flutterEngineRevision,  String dartVersion,  String flutterSceneRevision,  String eqmonitorMapRendererRevision,  bool eqmonitorMapRendererCheckoutDirty,  SceneSpikeObservationProvenance revisionProvenance,  String renderingBackend,  SceneSpikeObservationProvenance renderingBackendProvenance,  DateTime startedAtUtc,  int elapsedMicroseconds,  int frameCount,  int partialUpdateCount,  int lifecycleResumeCount,  int appResourceGeneration,  List<SceneSpikeCapabilityResult> capabilities,  SceneSpikePerformanceSnapshot performance)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>() {final _that = this;
 switch (_that) {
-case _SceneSpikeEvidence():
-return $default(_that.schemaVersion,_that.run,_that.deviceModel,_that.operatingSystemVersion,_that.flutterFrameworkRevision,_that.flutterEngineRevision,_that.dartVersion,_that.flutterSceneRevision,_that.eqmonitorMapRendererRevision,_that.eqmonitorMapRendererCheckoutDirty,_that.revisionProvenance,_that.renderingBackend,_that.renderingBackendProvenance,_that.startedAtUtc,_that.elapsedMicroseconds,_that.frameCount,_that.partialUpdateCount,_that.lifecycleResumeCount,_that.appResourceGeneration,_that.capabilities,_that.performance);}
+case _:
+  throw StateError('Unexpected subclass');
+
+}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -1045,148 +1026,14 @@ return $default(_that.schemaVersion,_that.run,_that.deviceModel,_that.operatingS
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int schemaVersion,  SceneSpikeRunKey run,  String deviceModel,  String operatingSystemVersion,  String flutterFrameworkRevision,  String flutterEngineRevision,  String dartVersion,  String flutterSceneRevision,  String eqmonitorMapRendererRevision,  bool eqmonitorMapRendererCheckoutDirty,  SceneSpikeObservationProvenance revisionProvenance,  String renderingBackend,  SceneSpikeObservationProvenance renderingBackendProvenance,  DateTime startedAtUtc,  int elapsedMicroseconds,  int frameCount,  int partialUpdateCount,  int lifecycleResumeCount,  int appResourceGeneration,  List<SceneSpikeCapabilityResult> capabilities,  SceneSpikePerformanceSnapshot performance)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>() {final _that = this;
 switch (_that) {
-case _SceneSpikeEvidence() when $default != null:
-return $default(_that.schemaVersion,_that.run,_that.deviceModel,_that.operatingSystemVersion,_that.flutterFrameworkRevision,_that.flutterEngineRevision,_that.dartVersion,_that.flutterSceneRevision,_that.eqmonitorMapRendererRevision,_that.eqmonitorMapRendererCheckoutDirty,_that.revisionProvenance,_that.renderingBackend,_that.renderingBackendProvenance,_that.startedAtUtc,_that.elapsedMicroseconds,_that.frameCount,_that.partialUpdateCount,_that.lifecycleResumeCount,_that.appResourceGeneration,_that.capabilities,_that.performance);case _:
+case _:
   return null;
 
 }
 }
 
-}
-
-/// @nodoc
-
-@JsonSerializable(explicitToJson: true)
-class _SceneSpikeEvidence implements SceneSpikeEvidence {
-  const _SceneSpikeEvidence({required this.schemaVersion, required this.run, required this.deviceModel, required this.operatingSystemVersion, required this.flutterFrameworkRevision, required this.flutterEngineRevision, required this.dartVersion, required this.flutterSceneRevision, required this.eqmonitorMapRendererRevision, required this.eqmonitorMapRendererCheckoutDirty, required this.revisionProvenance, required this.renderingBackend, required this.renderingBackendProvenance, required this.startedAtUtc, required this.elapsedMicroseconds, required this.frameCount, required this.partialUpdateCount, required this.lifecycleResumeCount, required this.appResourceGeneration, required final  List<SceneSpikeCapabilityResult> capabilities, required this.performance}): _capabilities = capabilities;
-  factory _SceneSpikeEvidence.fromJson(Map<String, dynamic> json) => _$SceneSpikeEvidenceFromJson(json);
-
-@override final  int schemaVersion;
-@override final  SceneSpikeRunKey run;
-@override final  String deviceModel;
-@override final  String operatingSystemVersion;
-@override final  String flutterFrameworkRevision;
-@override final  String flutterEngineRevision;
-@override final  String dartVersion;
-@override final  String flutterSceneRevision;
-@override final  String eqmonitorMapRendererRevision;
-@override final  bool eqmonitorMapRendererCheckoutDirty;
-@override final  SceneSpikeObservationProvenance revisionProvenance;
-@override final  String renderingBackend;
-@override final  SceneSpikeObservationProvenance renderingBackendProvenance;
-@override final  DateTime startedAtUtc;
-@override final  int elapsedMicroseconds;
-@override final  int frameCount;
-@override final  int partialUpdateCount;
-@override final  int lifecycleResumeCount;
-@override final  int appResourceGeneration;
- final  List<SceneSpikeCapabilityResult> _capabilities;
-@override List<SceneSpikeCapabilityResult> get capabilities {
-  if (_capabilities is EqualUnmodifiableListView) return _capabilities;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_capabilities);
-}
-
-@override final  SceneSpikePerformanceSnapshot performance;
-
-/// Create a copy of SceneSpikeEvidence
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$SceneSpikeEvidenceCopyWith<_SceneSpikeEvidence> get copyWith => __$SceneSpikeEvidenceCopyWithImpl<_SceneSpikeEvidence>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$SceneSpikeEvidenceToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SceneSpikeEvidence&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.run, run) || other.run == run)&&(identical(other.deviceModel, deviceModel) || other.deviceModel == deviceModel)&&(identical(other.operatingSystemVersion, operatingSystemVersion) || other.operatingSystemVersion == operatingSystemVersion)&&(identical(other.flutterFrameworkRevision, flutterFrameworkRevision) || other.flutterFrameworkRevision == flutterFrameworkRevision)&&(identical(other.flutterEngineRevision, flutterEngineRevision) || other.flutterEngineRevision == flutterEngineRevision)&&(identical(other.dartVersion, dartVersion) || other.dartVersion == dartVersion)&&(identical(other.flutterSceneRevision, flutterSceneRevision) || other.flutterSceneRevision == flutterSceneRevision)&&(identical(other.eqmonitorMapRendererRevision, eqmonitorMapRendererRevision) || other.eqmonitorMapRendererRevision == eqmonitorMapRendererRevision)&&(identical(other.eqmonitorMapRendererCheckoutDirty, eqmonitorMapRendererCheckoutDirty) || other.eqmonitorMapRendererCheckoutDirty == eqmonitorMapRendererCheckoutDirty)&&(identical(other.revisionProvenance, revisionProvenance) || other.revisionProvenance == revisionProvenance)&&(identical(other.renderingBackend, renderingBackend) || other.renderingBackend == renderingBackend)&&(identical(other.renderingBackendProvenance, renderingBackendProvenance) || other.renderingBackendProvenance == renderingBackendProvenance)&&(identical(other.startedAtUtc, startedAtUtc) || other.startedAtUtc == startedAtUtc)&&(identical(other.elapsedMicroseconds, elapsedMicroseconds) || other.elapsedMicroseconds == elapsedMicroseconds)&&(identical(other.frameCount, frameCount) || other.frameCount == frameCount)&&(identical(other.partialUpdateCount, partialUpdateCount) || other.partialUpdateCount == partialUpdateCount)&&(identical(other.lifecycleResumeCount, lifecycleResumeCount) || other.lifecycleResumeCount == lifecycleResumeCount)&&(identical(other.appResourceGeneration, appResourceGeneration) || other.appResourceGeneration == appResourceGeneration)&&const DeepCollectionEquality().equals(other._capabilities, _capabilities)&&(identical(other.performance, performance) || other.performance == performance));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hashAll([runtimeType,schemaVersion,run,deviceModel,operatingSystemVersion,flutterFrameworkRevision,flutterEngineRevision,dartVersion,flutterSceneRevision,eqmonitorMapRendererRevision,eqmonitorMapRendererCheckoutDirty,revisionProvenance,renderingBackend,renderingBackendProvenance,startedAtUtc,elapsedMicroseconds,frameCount,partialUpdateCount,lifecycleResumeCount,appResourceGeneration,const DeepCollectionEquality().hash(_capabilities),performance]);
-
-@override
-String toString() {
-  return 'SceneSpikeEvidence(schemaVersion: $schemaVersion, run: $run, deviceModel: $deviceModel, operatingSystemVersion: $operatingSystemVersion, flutterFrameworkRevision: $flutterFrameworkRevision, flutterEngineRevision: $flutterEngineRevision, dartVersion: $dartVersion, flutterSceneRevision: $flutterSceneRevision, eqmonitorMapRendererRevision: $eqmonitorMapRendererRevision, eqmonitorMapRendererCheckoutDirty: $eqmonitorMapRendererCheckoutDirty, revisionProvenance: $revisionProvenance, renderingBackend: $renderingBackend, renderingBackendProvenance: $renderingBackendProvenance, startedAtUtc: $startedAtUtc, elapsedMicroseconds: $elapsedMicroseconds, frameCount: $frameCount, partialUpdateCount: $partialUpdateCount, lifecycleResumeCount: $lifecycleResumeCount, appResourceGeneration: $appResourceGeneration, capabilities: $capabilities, performance: $performance)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$SceneSpikeEvidenceCopyWith<$Res> implements $SceneSpikeEvidenceCopyWith<$Res> {
-  factory _$SceneSpikeEvidenceCopyWith(_SceneSpikeEvidence value, $Res Function(_SceneSpikeEvidence) _then) = __$SceneSpikeEvidenceCopyWithImpl;
-@override @useResult
-$Res call({
- int schemaVersion, SceneSpikeRunKey run, String deviceModel, String operatingSystemVersion, String flutterFrameworkRevision, String flutterEngineRevision, String dartVersion, String flutterSceneRevision, String eqmonitorMapRendererRevision, bool eqmonitorMapRendererCheckoutDirty, SceneSpikeObservationProvenance revisionProvenance, String renderingBackend, SceneSpikeObservationProvenance renderingBackendProvenance, DateTime startedAtUtc, int elapsedMicroseconds, int frameCount, int partialUpdateCount, int lifecycleResumeCount, int appResourceGeneration, List<SceneSpikeCapabilityResult> capabilities, SceneSpikePerformanceSnapshot performance
-});
-
-
-@override $SceneSpikeRunKeyCopyWith<$Res> get run;@override $SceneSpikePerformanceSnapshotCopyWith<$Res> get performance;
-
-}
-/// @nodoc
-class __$SceneSpikeEvidenceCopyWithImpl<$Res>
-    implements _$SceneSpikeEvidenceCopyWith<$Res> {
-  __$SceneSpikeEvidenceCopyWithImpl(this._self, this._then);
-
-  final _SceneSpikeEvidence _self;
-  final $Res Function(_SceneSpikeEvidence) _then;
-
-/// Create a copy of SceneSpikeEvidence
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? schemaVersion = null,Object? run = null,Object? deviceModel = null,Object? operatingSystemVersion = null,Object? flutterFrameworkRevision = null,Object? flutterEngineRevision = null,Object? dartVersion = null,Object? flutterSceneRevision = null,Object? eqmonitorMapRendererRevision = null,Object? eqmonitorMapRendererCheckoutDirty = null,Object? revisionProvenance = null,Object? renderingBackend = null,Object? renderingBackendProvenance = null,Object? startedAtUtc = null,Object? elapsedMicroseconds = null,Object? frameCount = null,Object? partialUpdateCount = null,Object? lifecycleResumeCount = null,Object? appResourceGeneration = null,Object? capabilities = null,Object? performance = null,}) {
-  return _then(_SceneSpikeEvidence(
-schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
-as int,run: null == run ? _self.run : run // ignore: cast_nullable_to_non_nullable
-as SceneSpikeRunKey,deviceModel: null == deviceModel ? _self.deviceModel : deviceModel // ignore: cast_nullable_to_non_nullable
-as String,operatingSystemVersion: null == operatingSystemVersion ? _self.operatingSystemVersion : operatingSystemVersion // ignore: cast_nullable_to_non_nullable
-as String,flutterFrameworkRevision: null == flutterFrameworkRevision ? _self.flutterFrameworkRevision : flutterFrameworkRevision // ignore: cast_nullable_to_non_nullable
-as String,flutterEngineRevision: null == flutterEngineRevision ? _self.flutterEngineRevision : flutterEngineRevision // ignore: cast_nullable_to_non_nullable
-as String,dartVersion: null == dartVersion ? _self.dartVersion : dartVersion // ignore: cast_nullable_to_non_nullable
-as String,flutterSceneRevision: null == flutterSceneRevision ? _self.flutterSceneRevision : flutterSceneRevision // ignore: cast_nullable_to_non_nullable
-as String,eqmonitorMapRendererRevision: null == eqmonitorMapRendererRevision ? _self.eqmonitorMapRendererRevision : eqmonitorMapRendererRevision // ignore: cast_nullable_to_non_nullable
-as String,eqmonitorMapRendererCheckoutDirty: null == eqmonitorMapRendererCheckoutDirty ? _self.eqmonitorMapRendererCheckoutDirty : eqmonitorMapRendererCheckoutDirty // ignore: cast_nullable_to_non_nullable
-as bool,revisionProvenance: null == revisionProvenance ? _self.revisionProvenance : revisionProvenance // ignore: cast_nullable_to_non_nullable
-as SceneSpikeObservationProvenance,renderingBackend: null == renderingBackend ? _self.renderingBackend : renderingBackend // ignore: cast_nullable_to_non_nullable
-as String,renderingBackendProvenance: null == renderingBackendProvenance ? _self.renderingBackendProvenance : renderingBackendProvenance // ignore: cast_nullable_to_non_nullable
-as SceneSpikeObservationProvenance,startedAtUtc: null == startedAtUtc ? _self.startedAtUtc : startedAtUtc // ignore: cast_nullable_to_non_nullable
-as DateTime,elapsedMicroseconds: null == elapsedMicroseconds ? _self.elapsedMicroseconds : elapsedMicroseconds // ignore: cast_nullable_to_non_nullable
-as int,frameCount: null == frameCount ? _self.frameCount : frameCount // ignore: cast_nullable_to_non_nullable
-as int,partialUpdateCount: null == partialUpdateCount ? _self.partialUpdateCount : partialUpdateCount // ignore: cast_nullable_to_non_nullable
-as int,lifecycleResumeCount: null == lifecycleResumeCount ? _self.lifecycleResumeCount : lifecycleResumeCount // ignore: cast_nullable_to_non_nullable
-as int,appResourceGeneration: null == appResourceGeneration ? _self.appResourceGeneration : appResourceGeneration // ignore: cast_nullable_to_non_nullable
-as int,capabilities: null == capabilities ? _self._capabilities : capabilities // ignore: cast_nullable_to_non_nullable
-as List<SceneSpikeCapabilityResult>,performance: null == performance ? _self.performance : performance // ignore: cast_nullable_to_non_nullable
-as SceneSpikePerformanceSnapshot,
-  ));
-}
-
-/// Create a copy of SceneSpikeEvidence
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$SceneSpikeRunKeyCopyWith<$Res> get run {
-  
-  return $SceneSpikeRunKeyCopyWith<$Res>(_self.run, (value) {
-    return _then(_self.copyWith(run: value));
-  });
-}/// Create a copy of SceneSpikeEvidence
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$SceneSpikePerformanceSnapshotCopyWith<$Res> get performance {
-  
-  return $SceneSpikePerformanceSnapshotCopyWith<$Res>(_self.performance, (value) {
-    return _then(_self.copyWith(performance: value));
-  });
-}
 }
 
 // dart format on

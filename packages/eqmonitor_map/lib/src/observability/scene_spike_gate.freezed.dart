@@ -318,8 +318,6 @@ mixin _$SceneSpikeGateDecision {
 @pragma('vm:prefer-inline')
 $SceneSpikeGateDecisionCopyWith<SceneSpikeGateDecision> get copyWith => _$SceneSpikeGateDecisionCopyWithImpl<SceneSpikeGateDecision>(this as SceneSpikeGateDecision, _$identity);
 
-  /// Serializes this SceneSpikeGateDecision to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -362,7 +360,7 @@ class _$SceneSpikeGateDecisionCopyWithImpl<$Res>
 /// Create a copy of SceneSpikeGateDecision
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? isPass = null,Object? missingRuns = null,Object? failedCapabilities = null,Object? unobservedCapabilities = null,Object? validationErrors = null,Object? revisionMismatches = null,}) {
-  return _then(_self.copyWith(
+  return _then(SceneSpikeGateDecision(
 isPass: null == isPass ? _self.isPass : isPass // ignore: cast_nullable_to_non_nullable
 as bool,missingRuns: null == missingRuns ? _self.missingRuns : missingRuns // ignore: cast_nullable_to_non_nullable
 as List<SceneSpikeRunKey>,failedCapabilities: null == failedCapabilities ? _self.failedCapabilities : failedCapabilities // ignore: cast_nullable_to_non_nullable
@@ -390,11 +388,10 @@ extension SceneSpikeGateDecisionPatterns on SceneSpikeGateDecision {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SceneSpikeGateDecision value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _SceneSpikeGateDecision() when $default != null:
-return $default(_that);case _:
+case _:
   return orElse();
 
 }
@@ -412,11 +409,13 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SceneSpikeGateDecision value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(){
 final _that = this;
 switch (_that) {
-case _SceneSpikeGateDecision():
-return $default(_that);}
+case _:
+  throw StateError('Unexpected subclass');
+
+}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -430,11 +429,10 @@ return $default(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SceneSpikeGateDecision value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(){
 final _that = this;
 switch (_that) {
-case _SceneSpikeGateDecision() when $default != null:
-return $default(_that);case _:
+case _:
   return null;
 
 }
@@ -451,10 +449,9 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isPass,  List<SceneSpikeRunKey> missingRuns,  List<SceneSpikeCapabilityFinding> failedCapabilities,  List<SceneSpikeCapabilityFinding> unobservedCapabilities,  List<String> validationErrors,  List<String> revisionMismatches)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _SceneSpikeGateDecision() when $default != null:
-return $default(_that.isPass,_that.missingRuns,_that.failedCapabilities,_that.unobservedCapabilities,_that.validationErrors,_that.revisionMismatches);case _:
+case _:
   return orElse();
 
 }
@@ -472,10 +469,12 @@ return $default(_that.isPass,_that.missingRuns,_that.failedCapabilities,_that.un
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isPass,  List<SceneSpikeRunKey> missingRuns,  List<SceneSpikeCapabilityFinding> failedCapabilities,  List<SceneSpikeCapabilityFinding> unobservedCapabilities,  List<String> validationErrors,  List<String> revisionMismatches)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>() {final _that = this;
 switch (_that) {
-case _SceneSpikeGateDecision():
-return $default(_that.isPass,_that.missingRuns,_that.failedCapabilities,_that.unobservedCapabilities,_that.validationErrors,_that.revisionMismatches);}
+case _:
+  throw StateError('Unexpected subclass');
+
+}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -489,123 +488,13 @@ return $default(_that.isPass,_that.missingRuns,_that.failedCapabilities,_that.un
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isPass,  List<SceneSpikeRunKey> missingRuns,  List<SceneSpikeCapabilityFinding> failedCapabilities,  List<SceneSpikeCapabilityFinding> unobservedCapabilities,  List<String> validationErrors,  List<String> revisionMismatches)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>() {final _that = this;
 switch (_that) {
-case _SceneSpikeGateDecision() when $default != null:
-return $default(_that.isPass,_that.missingRuns,_that.failedCapabilities,_that.unobservedCapabilities,_that.validationErrors,_that.revisionMismatches);case _:
+case _:
   return null;
 
 }
 }
-
-}
-
-/// @nodoc
-
-@JsonSerializable(explicitToJson: true)
-class _SceneSpikeGateDecision implements SceneSpikeGateDecision {
-  const _SceneSpikeGateDecision({required this.isPass, required final  List<SceneSpikeRunKey> missingRuns, required final  List<SceneSpikeCapabilityFinding> failedCapabilities, required final  List<SceneSpikeCapabilityFinding> unobservedCapabilities, required final  List<String> validationErrors, required final  List<String> revisionMismatches}): _missingRuns = missingRuns,_failedCapabilities = failedCapabilities,_unobservedCapabilities = unobservedCapabilities,_validationErrors = validationErrors,_revisionMismatches = revisionMismatches;
-  factory _SceneSpikeGateDecision.fromJson(Map<String, dynamic> json) => _$SceneSpikeGateDecisionFromJson(json);
-
-@override final  bool isPass;
- final  List<SceneSpikeRunKey> _missingRuns;
-@override List<SceneSpikeRunKey> get missingRuns {
-  if (_missingRuns is EqualUnmodifiableListView) return _missingRuns;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_missingRuns);
-}
-
- final  List<SceneSpikeCapabilityFinding> _failedCapabilities;
-@override List<SceneSpikeCapabilityFinding> get failedCapabilities {
-  if (_failedCapabilities is EqualUnmodifiableListView) return _failedCapabilities;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_failedCapabilities);
-}
-
- final  List<SceneSpikeCapabilityFinding> _unobservedCapabilities;
-@override List<SceneSpikeCapabilityFinding> get unobservedCapabilities {
-  if (_unobservedCapabilities is EqualUnmodifiableListView) return _unobservedCapabilities;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_unobservedCapabilities);
-}
-
- final  List<String> _validationErrors;
-@override List<String> get validationErrors {
-  if (_validationErrors is EqualUnmodifiableListView) return _validationErrors;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_validationErrors);
-}
-
- final  List<String> _revisionMismatches;
-@override List<String> get revisionMismatches {
-  if (_revisionMismatches is EqualUnmodifiableListView) return _revisionMismatches;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_revisionMismatches);
-}
-
-
-/// Create a copy of SceneSpikeGateDecision
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$SceneSpikeGateDecisionCopyWith<_SceneSpikeGateDecision> get copyWith => __$SceneSpikeGateDecisionCopyWithImpl<_SceneSpikeGateDecision>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$SceneSpikeGateDecisionToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SceneSpikeGateDecision&&(identical(other.isPass, isPass) || other.isPass == isPass)&&const DeepCollectionEquality().equals(other._missingRuns, _missingRuns)&&const DeepCollectionEquality().equals(other._failedCapabilities, _failedCapabilities)&&const DeepCollectionEquality().equals(other._unobservedCapabilities, _unobservedCapabilities)&&const DeepCollectionEquality().equals(other._validationErrors, _validationErrors)&&const DeepCollectionEquality().equals(other._revisionMismatches, _revisionMismatches));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,isPass,const DeepCollectionEquality().hash(_missingRuns),const DeepCollectionEquality().hash(_failedCapabilities),const DeepCollectionEquality().hash(_unobservedCapabilities),const DeepCollectionEquality().hash(_validationErrors),const DeepCollectionEquality().hash(_revisionMismatches));
-
-@override
-String toString() {
-  return 'SceneSpikeGateDecision(isPass: $isPass, missingRuns: $missingRuns, failedCapabilities: $failedCapabilities, unobservedCapabilities: $unobservedCapabilities, validationErrors: $validationErrors, revisionMismatches: $revisionMismatches)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$SceneSpikeGateDecisionCopyWith<$Res> implements $SceneSpikeGateDecisionCopyWith<$Res> {
-  factory _$SceneSpikeGateDecisionCopyWith(_SceneSpikeGateDecision value, $Res Function(_SceneSpikeGateDecision) _then) = __$SceneSpikeGateDecisionCopyWithImpl;
-@override @useResult
-$Res call({
- bool isPass, List<SceneSpikeRunKey> missingRuns, List<SceneSpikeCapabilityFinding> failedCapabilities, List<SceneSpikeCapabilityFinding> unobservedCapabilities, List<String> validationErrors, List<String> revisionMismatches
-});
-
-
-
-
-}
-/// @nodoc
-class __$SceneSpikeGateDecisionCopyWithImpl<$Res>
-    implements _$SceneSpikeGateDecisionCopyWith<$Res> {
-  __$SceneSpikeGateDecisionCopyWithImpl(this._self, this._then);
-
-  final _SceneSpikeGateDecision _self;
-  final $Res Function(_SceneSpikeGateDecision) _then;
-
-/// Create a copy of SceneSpikeGateDecision
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isPass = null,Object? missingRuns = null,Object? failedCapabilities = null,Object? unobservedCapabilities = null,Object? validationErrors = null,Object? revisionMismatches = null,}) {
-  return _then(_SceneSpikeGateDecision(
-isPass: null == isPass ? _self.isPass : isPass // ignore: cast_nullable_to_non_nullable
-as bool,missingRuns: null == missingRuns ? _self._missingRuns : missingRuns // ignore: cast_nullable_to_non_nullable
-as List<SceneSpikeRunKey>,failedCapabilities: null == failedCapabilities ? _self._failedCapabilities : failedCapabilities // ignore: cast_nullable_to_non_nullable
-as List<SceneSpikeCapabilityFinding>,unobservedCapabilities: null == unobservedCapabilities ? _self._unobservedCapabilities : unobservedCapabilities // ignore: cast_nullable_to_non_nullable
-as List<SceneSpikeCapabilityFinding>,validationErrors: null == validationErrors ? _self._validationErrors : validationErrors // ignore: cast_nullable_to_non_nullable
-as List<String>,revisionMismatches: null == revisionMismatches ? _self._revisionMismatches : revisionMismatches // ignore: cast_nullable_to_non_nullable
-as List<String>,
-  ));
-}
-
 
 }
 

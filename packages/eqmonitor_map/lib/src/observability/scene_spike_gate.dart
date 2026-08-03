@@ -19,21 +19,38 @@ sealed class SceneSpikeCapabilityFinding with _$SceneSpikeCapabilityFinding {
 }
 
 @freezed
-sealed class SceneSpikeGateDecision with _$SceneSpikeGateDecision {
-  // Freezed applies this constructor annotation to the generated class.
-  // ignore: invalid_annotation_target
-  @JsonSerializable(explicitToJson: true)
-  const factory SceneSpikeGateDecision({
-    required bool isPass,
+@JsonSerializable(explicitToJson: true)
+class SceneSpikeGateDecision with _$SceneSpikeGateDecision {
+  SceneSpikeGateDecision({
+    required this.isPass,
     required List<SceneSpikeRunKey> missingRuns,
     required List<SceneSpikeCapabilityFinding> failedCapabilities,
     required List<SceneSpikeCapabilityFinding> unobservedCapabilities,
     required List<String> validationErrors,
     required List<String> revisionMismatches,
-  }) = _SceneSpikeGateDecision;
+  }) : missingRuns = List.unmodifiable(missingRuns),
+       failedCapabilities = List.unmodifiable(failedCapabilities),
+       unobservedCapabilities = List.unmodifiable(unobservedCapabilities),
+       validationErrors = List.unmodifiable(validationErrors),
+       revisionMismatches = List.unmodifiable(revisionMismatches);
 
   factory SceneSpikeGateDecision.fromJson(Map<String, dynamic> json) =>
       _$SceneSpikeGateDecisionFromJson(json);
+
+  @override
+  final bool isPass;
+  @override
+  final List<SceneSpikeRunKey> missingRuns;
+  @override
+  final List<SceneSpikeCapabilityFinding> failedCapabilities;
+  @override
+  final List<SceneSpikeCapabilityFinding> unobservedCapabilities;
+  @override
+  final List<String> validationErrors;
+  @override
+  final List<String> revisionMismatches;
+
+  Map<String, dynamic> toJson() => _$SceneSpikeGateDecisionToJson(this);
 }
 
 class SceneSpikeEvidenceContract {
@@ -370,11 +387,20 @@ class SceneSpikeCapabilityValidator {
     final unavailableApiPass =
         '$prefix ${capability.name} cannot pass because the required Flutter '
         'Scene public API is unavailable.';
+    final outsideInterval =
+        '$prefix ${capability.name} observedAtUtc must be within the '
+        'observation interval.';
     return [
       if (result.detail.trim().isEmpty)
         '$prefix ${capability.name} detail must not be blank.',
       if (!result.observedAtUtc.isUtc)
         '$prefix ${capability.name} observedAtUtc must be UTC.',
+      if (!isWithinObservationInterval(
+        observedAtUtc: result.observedAtUtc,
+        startedAtUtc: evidence.startedAtUtc,
+        elapsedMicroseconds: evidence.elapsedMicroseconds,
+      ))
+        outsideInterval,
       if (result.provenance != requiredProvenance) invalidProvenance,
       if (SceneSpikeEvidenceContract.unavailablePublicApiCapabilities.contains(
             capability,
@@ -419,6 +445,19 @@ class SceneSpikeCapabilityValidator {
         ],
       _ => const [],
     };
+  }
+
+  static bool isWithinObservationInterval({
+    required DateTime observedAtUtc,
+    required DateTime startedAtUtc,
+    required int elapsedMicroseconds,
+  }) {
+    if (elapsedMicroseconds < 0) {
+      return true;
+    }
+    final observed = observedAtUtc.microsecondsSinceEpoch;
+    final started = startedAtUtc.microsecondsSinceEpoch;
+    return observed >= started && observed <= started + elapsedMicroseconds;
   }
 }
 
