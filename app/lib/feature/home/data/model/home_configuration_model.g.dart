@@ -134,6 +134,18 @@ const _$HomeKmoniMarkerSizeEnumMap = {
   HomeKmoniMarkerSize.large: 'large',
 };
 
+_HomeMapGridSettings _$HomeMapGridSettingsFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_HomeMapGridSettings', json, ($checkedConvert) {
+      final val = _HomeMapGridSettings(
+        enabled: $checkedConvert('enabled', (v) => v as bool? ?? false),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$HomeMapGridSettingsToJson(
+  _HomeMapGridSettings instance,
+) => <String, dynamic>{'enabled': instance.enabled};
+
 _HomeMapSettings _$HomeMapSettingsFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
       '_HomeMapSettings',
@@ -285,12 +297,19 @@ _HomeConfigurationModel _$HomeConfigurationModelFromJson(
             ? const HomeShakeDetectionSettings()
             : HomeShakeDetectionSettings.fromJson(v as Map<String, dynamic>),
       ),
+      mapGrid: $checkedConvert(
+        'map_grid',
+        (v) => v == null
+            ? const HomeMapGridSettings()
+            : HomeMapGridSettings.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
   fieldKeyMap: const {
     'kyoshinMonitor': 'kyoshin_monitor',
     'shakeDetection': 'shake_detection',
+    'mapGrid': 'map_grid',
   },
 );
 
@@ -302,4 +321,5 @@ Map<String, dynamic> _$HomeConfigurationModelToJson(
   'map': instance.map.toJson(),
   'common': instance.common.toJson(),
   'shake_detection': instance.shakeDetection.toJson(),
+  'map_grid': instance.mapGrid.toJson(),
 };
