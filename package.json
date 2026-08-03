@@ -1,0 +1,13 @@
+{
+  "name": "eqmonitor",
+  "private": true,
+  "description": "Repository root tooling (textlint etc.). Flutter app lives in app/, backend is a separate submodule.",
+  "scripts": {
+    "lint:md": "textlint \"**/*.md\"",
+    "lint:md:fix": "textlint --fix \"**/*.md\""
+  },
+  "devDependencies": {
+    "@textlint-ja/textlint-rule-preset-ai-writing": "^1.7.0",
+    "textlint": "^15.8.0"
+  }
+}
