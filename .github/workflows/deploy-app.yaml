@@ -337,19 +337,25 @@ jobs:
           export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
           export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
           export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
-          args=(--app "$ASC_APP_ID" --ipa build/EQMonitor.ipa --output json)
           if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
             TEST_NOTES="$(scripts/ci/testflight_test_notes.sh)"
-            args+=(
-              --group "$ASC_BETA_GROUP_ID"
-              --test-notes "$TEST_NOTES"
-              --locale ja
-              --wait
-              --submit --confirm
-              --timeout 30m
-            )
+            asc publish testflight \
+              --app "$ASC_APP_ID" \
+              --ipa build/EQMonitor.ipa \
+              --group "$ASC_BETA_GROUP_ID" \
+              --test-notes "$TEST_NOTES" \
+              --locale ja \
+              --wait \
+              --submit --confirm \
+              --timeout 30m \
+              --output json
+          else
+            # asc 3.4.1 の publish testflight は --group 必須のため、アップロードのみの経路では builds upload を使う
+            asc builds upload \
+              --app "$ASC_APP_ID" \
+              --ipa build/EQMonitor.ipa \
+              --output json
           fi
-          asc publish testflight "${args[@]}"
 
   deploy-ios-firebase-app-distribution:
     name: Deploy iOS (Firebase App Distribution)

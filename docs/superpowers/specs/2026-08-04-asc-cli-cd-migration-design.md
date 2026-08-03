@@ -57,29 +57,27 @@ CI 側の注意:
 
 ## 2. deploy-app.yaml / deploy-ios ジョブ
 
-現行の 2 ステップ（altool アップロード + 条件付き外部配布）を、`asc publish
-testflight` 1 ステップに統合する。フラグをシェルで組み立てる:
+現行の 2 ステップ（altool アップロード + 条件付き外部配布）を 1 ステップに統合する。
+asc 3.4.1 の `publish testflight` は `--group` が必須のため、通常時（develop
+push、内部グループのみ）と外部配布時でコマンドを分岐する:
 
 ```bash
-args=(--app "$ASC_APP_ID" --ipa build/EQMonitor.ipa)
 if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
-  args+=(
-    --group "$ASC_BETA_GROUP_ID"
-    --test-notes "$TEST_NOTES"
-    --locale ja
-    --wait
-    --submit --confirm
-    --timeout 30m
-  )
+  TEST_NOTES="$(scripts/ci/testflight_test_notes.sh)"
+  asc publish testflight \
+    --app "$ASC_APP_ID" --ipa build/EQMonitor.ipa \
+    --group "$ASC_BETA_GROUP_ID" --test-notes "$TEST_NOTES" \
+    --locale ja --wait --submit --confirm --timeout 30m --output json
+else
+  asc builds upload --app "$ASC_APP_ID" --ipa build/EQMonitor.ipa --output json
 fi
-asc publish testflight "${args[@]}"
 ```
 
-- 通常時（develop push）: アップロードのみ。現行 altool と同等
-  （内部グループは自動配布のため後続処理は不要）。
-- 外部配布時（`[external]` コミット / workflow_dispatch）: アップロード →
-  処理完了待ち → What to Test 設定 → 外部グループ追加 → Beta レビュー申請までを
-  asc が実施。
+- 通常時（develop push）: `asc builds upload` でアップロードのみ。現行 altool と
+  同等（内部グループは自動配布のため後続処理は不要）。
+- 外部配布時（`[external]` コミット / workflow_dispatch）: `asc publish
+  testflight` でアップロード → 処理完了待ち → What to Test 設定 → 外部グループ
+  追加 → Beta レビュー申請までを asc が実施。
 - What to Test（`TEST_NOTES`）は現行ロジックを踏襲し、直前のステップで
   `git log <最終タグ>..HEAD --pretty='- %s'` を 4000 文字上限で丸めて生成する
   （数行のシェル）。
