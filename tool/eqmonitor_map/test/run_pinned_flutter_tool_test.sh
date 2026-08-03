@@ -45,6 +45,8 @@ esac
 for command in upgrade downgrade channel; do
   assert_failed_with "refuses self-update command: flutter $command" \
     "$runner" flutter "$command"
+  assert_failed_with "refuses self-update command: flutter $command" \
+    "$runner" flutter --verbose "$command"
 done
 
 missing_checkout="$temporary_dir/missing"
@@ -73,6 +75,28 @@ wrong_revision=0000000000000000000000000000000000000000
 
 assert_failed_with "must be $wrong_revision" \
   "$guard" "$sdk_checkout" "$wrong_revision" flutter
+
+short_revision=
+for ((length = 1; length <= 38; length += 1)); do
+  short_revision="${short_revision}a"
+  assert_failed_with "40-character lowercase hexadecimal" \
+    "$guard" "$sdk_checkout" "$short_revision" flutter
+done
+
+revision_39="${short_revision}a"
+revision_41="${revision_39}aa"
+revision_80="${valid_revision}${valid_revision}"
+nonhex_revision=gggggggggggggggggggggggggggggggggggggggg
+
+for invalid_revision in \
+  "$revision_39" \
+  "$revision_41" \
+  "$revision_80" \
+  "$nonhex_revision"; do
+  assert_failed_with "40-character lowercase hexadecimal" \
+    "$guard" "$sdk_checkout" "$invalid_revision" flutter
+done
+
 assert_failed_with "40-character lowercase hexadecimal" \
   "$guard" "$sdk_checkout" INVALID flutter
 

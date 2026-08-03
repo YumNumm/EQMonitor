@@ -17,12 +17,14 @@ case "$sdk_tool" in
 esac
 
 if [[ "$sdk_tool" == flutter ]]; then
-  case "${2:-}" in
-    upgrade|downgrade|channel)
-      echo "pinned Flutter runner refuses self-update command: flutter ${2}" >&2
-      exit 64
-      ;;
-  esac
+  for argument in "${@:2}"; do
+    case "$argument" in
+      upgrade|downgrade|channel)
+        echo "pinned Flutter runner refuses self-update command: flutter $argument" >&2
+        exit 64
+        ;;
+    esac
+  done
 fi
 
 exec "$tool_dir/flutter_sdk_guard.sh" \

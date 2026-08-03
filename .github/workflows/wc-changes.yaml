@@ -58,6 +58,7 @@ jobs:
               - '.gitignore'
               - 'mise.toml'
               - 'mise.lock'
+              - 'pubspec.lock'
               - '.github/workflows/wc-check-eqmonitor-map-scene-spike.yaml'
               - '.github/workflows/pr-flutter-check.yaml'
               - '.github/workflows/wc-changes.yaml'
