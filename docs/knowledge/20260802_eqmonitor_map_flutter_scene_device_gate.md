@@ -20,6 +20,12 @@ toolchainの取得とFlutter Scene public APIの根拠は
 を参照する。固定revisionやpublic APIの代わりにmanual attestation、時間経過、固定値を
 使ってpassへ変換しない。
 
+Flutter machine JSONの`engineRevision`と`engineContentHash`は同じ値ではない。前者は
+engine source revision、後者はprecache済みengine artifact identityであり、schema v4
+evidenceへ`flutterEngineRevision`と`flutterEngineContentHash`として別々に保存する。
+compile-time manifestでcontent hashが欠落/blank、40文字lowercase SHAでない、または
+`73ac711b34da2a090d79ddb423918de40a7ffbf9`と不一致なら採取前またはgateでfail closedにする。
+
 ## Gateの実行
 
 物理端末runではclean checkoutからcompile-time manifestを作り、example UIで60秒以上
@@ -40,7 +46,8 @@ MISE_EXEC_AUTO_INSTALL=0 mise exec -- \
   dart run packages/eqmonitor_map/tool/validate_scene_spike_evidence.dart
 ```
 
-validatorはTask 5の`SceneSpikeGate`を正本とし、stdoutに単一のcanonical JSONだけを
+validatorはTask 5の`SceneSpikeGate`を正本とし、stdoutに単一のschema v4 canonical
+JSONだけを
 出す。現在は4 required runが欠落するためexit 1が正しい。実機runを採取しても次の3
 capabilityはFlutter Scene public APIがなく、`unavailablePublicApi/unobserved`のため
 global gateをblockする。

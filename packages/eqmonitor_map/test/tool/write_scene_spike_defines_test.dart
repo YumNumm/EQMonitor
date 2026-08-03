@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -53,6 +54,7 @@ void main() {
         flutterMetadata: const FlutterMachineMetadata(
           frameworkRevision: 'framework',
           engineRevision: 'engine',
+          engineContentHash: 'engine artifact',
           dartSdkVersion: 'sdk version',
         ),
         rendererMetadata: const RendererCheckoutMetadata(
@@ -64,6 +66,42 @@ void main() {
       expect(
         defines[dartSourceRevisionEnvironmentKey],
         'd402ff7c9c8442d64aa8148609480aa0e04a24fd',
+      );
+      expect(
+        defines[flutterEngineContentHashEnvironmentKey],
+        'engine artifact',
+      );
+    });
+
+    test('decodes a non-blank engine content hash from machine JSON', () {
+      final metadata = decodeFlutterMetadata(
+        jsonEncode({
+          'frameworkRevision': 'framework',
+          'engineRevision': 'engine',
+          'engineContentHash': 'engine artifact',
+          'dartSdkVersion': 'sdk version',
+        }),
+      );
+
+      expect(metadata.engineContentHash, 'engine artifact');
+    });
+
+    test('rejects missing or blank engine content hash', () {
+      final base = {
+        'frameworkRevision': 'framework',
+        'engineRevision': 'engine',
+        'dartSdkVersion': 'sdk version',
+      };
+
+      expect(
+        () => decodeFlutterMetadata(jsonEncode(base)),
+        throwsFormatException,
+      );
+      expect(
+        () => decodeFlutterMetadata(
+          jsonEncode({...base, 'engineContentHash': ' '}),
+        ),
+        throwsFormatException,
       );
     });
   });

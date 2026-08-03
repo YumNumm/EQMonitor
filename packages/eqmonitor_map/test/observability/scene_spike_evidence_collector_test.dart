@@ -53,6 +53,10 @@ void main() {
         SceneSpikeEvidenceContract.expectedDartSourceRevision,
       );
       expect(
+        evidence.flutterEngineContentHash,
+        SceneSpikeEvidenceContract.expectedFlutterEngineContentHash,
+      );
+      expect(
         evidence.revisionProvenance,
         SceneSpikeObservationProvenance.compileTimeManifest,
       );
@@ -103,11 +107,14 @@ void main() {
       final invalid = sceneSpikeCollectorFixture.manifest(
         eqmonitorMapRendererRevision: 'renderer-main',
       );
+      final wrongEngineArtifact = sceneSpikeCollectorFixture.manifest(
+        flutterEngineContentHash: '0123456789abcdef0123456789abcdef01234567',
+      );
       final dirty = sceneSpikeCollectorFixture.manifest(
         eqmonitorMapRendererCheckoutDirty: true,
       );
 
-      for (final manifest in [missing, invalid, dirty]) {
+      for (final manifest in [missing, invalid, wrongEngineArtifact, dirty]) {
         final collector = SceneSpikeEvidenceCollector(
           runtimeSource: const FakeSceneSpikeRuntimeIdentitySource(),
           manifestSource: FakeSceneSpikeBuildManifestSource(
@@ -188,6 +195,8 @@ class SceneSpikeCollectorFixture {
         SceneSpikeEvidenceContract.expectedFlutterFrameworkRevision,
     String flutterEngineRevision =
         SceneSpikeEvidenceContract.expectedFlutterEngineRevision,
+    String flutterEngineContentHash =
+        SceneSpikeEvidenceContract.expectedFlutterEngineContentHash,
     String flutterSceneRevision =
         SceneSpikeEvidenceContract.expectedFlutterSceneRevision,
     String dartSourceRevision =
@@ -198,6 +207,7 @@ class SceneSpikeCollectorFixture {
   }) => SceneSpikeBuildManifest(
     flutterFrameworkRevision: flutterFrameworkRevision,
     flutterEngineRevision: flutterEngineRevision,
+    flutterEngineContentHash: flutterEngineContentHash,
     flutterSceneRevision: flutterSceneRevision,
     dartSourceRevision: dartSourceRevision,
     eqmonitorMapRendererRevision: eqmonitorMapRendererRevision,

@@ -87,7 +87,7 @@ void main() {
               ),
             )
             .copyWith(
-              schemaVersion: 4,
+              schemaVersion: 5,
               flutterFrameworkRevision: 'wrong',
               startedAtUtc: DateTime(2026, 8, 2),
               frameCount: -1,
@@ -99,7 +99,7 @@ void main() {
         expect(
           decision.validationErrors,
           containsAll([
-            'android/profile has unsupported schema version: 4.',
+            'android/profile has unsupported schema version: 5.',
             'android/profile startedAtUtc must be UTC.',
             'android/profile frameCount must be non-negative.',
           ]),
@@ -114,6 +114,30 @@ void main() {
         );
       },
     );
+
+    test('rejects legacy schema versions 1 through 3', () {
+      final evidence = sceneSpikeFixture.evidence(
+        run: const SceneSpikeRunKey(
+          platform: .android,
+          buildMode: .profile,
+        ),
+      );
+
+      for (final schemaVersion in [1, 2, 3]) {
+        final decision = SceneSpikeGate.evaluate([
+          evidence.copyWith(schemaVersion: schemaVersion),
+        ]);
+
+        expect(decision.isPass, isFalse);
+        expect(
+          decision.validationErrors,
+          contains(
+            'android/profile has unsupported schema version: '
+            '$schemaVersion.',
+          ),
+        );
+      }
+    });
 
     test(
       'complete four-run fixture remains blocked by unavailable public APIs',
@@ -488,6 +512,32 @@ void main() {
           expectedEngineMismatch,
           expectedDartMismatch,
         ]),
+      );
+    });
+
+    test('rejects a mismatched Flutter engine artifact content hash', () {
+      final invalid = sceneSpikeFixture
+          .evidence(
+            run: const SceneSpikeRunKey(
+              platform: .android,
+              buildMode: .release,
+            ),
+          )
+          .copyWith(
+            flutterEngineContentHash:
+                '0123456789abcdef0123456789abcdef01234567',
+          );
+
+      final decision = SceneSpikeGate.evaluate([invalid]);
+
+      expect(decision.isPass, isFalse);
+      expect(
+        decision.revisionMismatches,
+        contains(
+          'android/release flutterEngineContentHash expected '
+          '${SceneSpikeEvidenceContract.expectedFlutterEngineContentHash}, '
+          'got 0123456789abcdef0123456789abcdef01234567.',
+        ),
       );
     });
 
@@ -1030,6 +1080,8 @@ class SceneSpikeFixture {
         SceneSpikeEvidenceContract.expectedFlutterFrameworkRevision,
     flutterEngineRevision:
         SceneSpikeEvidenceContract.expectedFlutterEngineRevision,
+    flutterEngineContentHash:
+        SceneSpikeEvidenceContract.expectedFlutterEngineContentHash,
     dartVersion: '3.14.0-29.0.dev',
     dartSourceRevision: SceneSpikeEvidenceContract.expectedDartSourceRevision,
     flutterSceneRevision:

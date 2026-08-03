@@ -99,7 +99,7 @@ void main() {
     expect(result.processExitCode, 1);
     expect(
       result.decision.validationErrors,
-      contains('ios/profile has unsupported schema version: 4.'),
+      contains('ios/profile has unsupported schema version: 5.'),
     );
   });
 
@@ -151,6 +151,29 @@ void main() {
     );
   });
 
+  test('engine artifact content hash mismatch fails closed', () async {
+    final json = sceneSpikeValidatorFixture
+        .evidence(
+          run: const SceneSpikeRunKey(platform: .ios, buildMode: .release),
+        )
+        .toJson();
+    json['flutterEngineContentHash'] =
+        '0123456789abcdef0123456789abcdef01234567';
+    await sceneSpikeValidatorFixture.writeJson(
+      directory: evidenceDirectory,
+      filename: 'engine_artifact_mismatch.json',
+      json: json,
+    );
+
+    final result = validateSceneSpikeEvidence(directory: evidenceDirectory);
+
+    expect(result.processExitCode, 1);
+    expect(
+      result.decision.revisionMismatches,
+      contains(contains('flutterEngineContentHash')),
+    );
+  });
+
   test('failed and unavailable capabilities both fail closed', () async {
     final evidence = sceneSpikeValidatorFixture.evidence(
       run: const SceneSpikeRunKey(platform: .ios, buildMode: .profile),
@@ -199,6 +222,8 @@ class SceneSpikeValidatorFixture {
         SceneSpikeEvidenceContract.expectedFlutterFrameworkRevision,
     flutterEngineRevision:
         SceneSpikeEvidenceContract.expectedFlutterEngineRevision,
+    flutterEngineContentHash:
+        SceneSpikeEvidenceContract.expectedFlutterEngineContentHash,
     dartVersion: '3.14.0-29.0.dev',
     dartSourceRevision: SceneSpikeEvidenceContract.expectedDartSourceRevision,
     flutterSceneRevision:

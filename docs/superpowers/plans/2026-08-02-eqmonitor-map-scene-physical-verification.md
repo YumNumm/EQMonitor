@@ -2,7 +2,7 @@
 
 ## Purpose and current status
 
-Flutter Scene spikeを物理iOS/Android端末のprofile/releaseで再現可能に検証し、schema v3
+Flutter Scene spikeを物理iOS/Android端末のprofile/releaseで再現可能に検証し、schema v4
 canonical evidenceを採取する計画である。2026-08-02のLinux hostでは以下の全項目を
 実行できないため、現在状態は`NOT RUN / BLOCKED`である。pass表現や代替evidenceを
 使用しない。
@@ -39,6 +39,9 @@ canonical evidenceを採取する計画である。2026-08-02のLinux hostでは
 | physical lifecycle/activity recreation | NOT RUN / BLOCKED | deviceなし |
 | portrait/landscape、DPR変化 | NOT RUN / BLOCKED | deviceなし |
 | physical memory/frame timing | NOT RUN / BLOCKED | deviceなし |
+| Widget interaction matrix | NOT RUN / DEFERRED | foundation UI未実装 |
+| deterministic golden matrix | NOT RUN / DEFERRED | Fill/Line/label renderer未実装 |
+| physical profile performance/HUD overhead | NOT RUN / DEFERRED | renderer、基準端末、承認済み閾値なし |
 
 ## Preflight and clean-runner compile
 
@@ -133,8 +136,9 @@ MISE_EXEC_AUTO_INSTALL=0 mise exec -- \
   dart run packages/eqmonitor_map/tool/validate_scene_spike_evidence.dart
 ```
 
-stdoutが単一のcanonical JSONであること、4 runにmissing/duplicateがないこと、schema v3、
-固定revision、provenance、counter/performance/runtime proofが一致することを確認する。
+stdoutが単一のcanonical JSONであること、4 runにmissing/duplicateがないこと、schema v4、
+固定revision、engine artifact content hash、provenance、counter/performance/runtime proofが
+一致することを確認する。
 missing、duplicate、malformed、unknown schema、invalid field、revision mismatch、failedまたは
 unobserved capabilityが1つでもあればexit 1としてrejectする。
 
@@ -158,12 +162,93 @@ Flutter Scene更新候補でpublic APIが追加された場合、固定commitで
 
 既存evidenceのstatus変更やmanual attestationだけではpassさせない。
 
+## Deferred Widget verification
+
+ownerはFlutter UI担当、review ownerはEQMonitor map maintainerとする。foundationのcamera、
+loading/degraded state、gesture actionを公開後、network、wall/monotonic clock、viewport、DPRを
+注入可能なfakeへ固定する。テストは実通信、現在時刻、乱数、platform channelへ依存させない。
+
+最低matrixは次とする。
+
+- pan: pointer deltaと期待camera centerを固定する。
+- pinch zoom: 2 pointerの開始/終了座標と期待zoomを固定する。
+- loading: 初回snapshot未着時のprogress semanticsと可変text scaleでoverflowがないこと。
+- degraded: stale/expired/error fixtureごとの表示、操作可否、semanticsを検査する。
+- logical viewport `390x844` / `800x1280`、DPR `1.0` / `2.0` / `3.0`を上記へ適用する。
+
+実装時にtest fileを作成し、repository rootから次を実行する。
+
+```bash
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter test --no-pub \
+  packages/eqmonitor_map/test/widget
+```
+
+全matrixがexit 0、例外/overflow/pending timerがなく、同じfixtureから同じcamera/state/semanticsを
+得ることを受入条件とする。失敗時はfixture、入力sequence、viewport/DPR、failure logを保存し、
+期待値を実出力へ合わせるだけの変更は行わない。現状態は`NOT RUN / DEFERRED`である。
+
+## Deferred golden verification
+
+ownerはrenderer担当、baseline review ownerはEQMonitor map maintainerとdesign担当とする。
+固定PMTiles/MVT fixture、固定viewport/camera、bundled font、注入clockを使用し、networkと
+host fontへ依存させない。最低matrixはFill、Line、labelそれぞれについてLight/Dark、
+text scale `1.0` / `1.5` / `2.0`、DPR `1.0` / `2.0` / `3.0`を組み合わせる。north-upの
+真上視点だけを対象とし、bearing/pitch baselineは作成しない。
+
+review済みbaselineの検査は次で実行する。baseline更新は差分画像をreviewする専用changeでのみ
+行い、通常検証では`--update-goldens`を付けない。
+
+```bash
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter test --no-pub \
+  packages/eqmonitor_map/test/golden
+```
+
+全matrixがexit 0で、未承認のpixel diff、overflow、missing glyphがないことを受入条件とする。
+失敗時はactual/expected/diff image、fixture revision、viewport/DPR/theme/text scaleをartifactへ
+保存する。許容差は測定とreviewなしに設定せず、失敗を隠すbaseline更新を禁止する。現状態は
+`NOT RUN / DEFERRED`である。
+
+## Deferred physical performance and HUD-overhead verification
+
+ownerはmobile renderer担当、review ownerはperformance担当とEQMonitor map maintainerとする。
+foundation renderer、固定地図fixture、計測event、HUD on/off切替、hostへcanonical resultを返す
+integration driver、物理iOS/Android基準端末が揃った後にprofile modeだけで測定する。端末model、
+OS、backend、thermal state、電源状態、固定revisionを各artifactへ記録する。
+
+各platform/backendで同一操作scriptをHUD off/onそれぞれ5回実行する。各runは同じviewportと
+fixtureでpan、pinch zoom、高速移動、background復帰を行い、frame build/raster、dropped frame、
+queue待機、decode、mesh build、GPU submission/completion、cache、CPU/memory、計測event dropを
+収集する。実装後の実行形は次とし、`physical_device_id`と出力先を空のまま実行しない。
+
+```bash
+test -n "$physical_device_id"
+test -n "$performance_artifact_directory"
+for hud_mode in off on; do
+  for repetition in 1 2 3 4 5; do
+    EQMONITOR_PERFORMANCE_ARTIFACT_DIRECTORY="$performance_artifact_directory" \
+      MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter drive --profile \
+      -d "$physical_device_id" \
+      --driver=test_driver/integration_test.dart \
+      --target=integration_test/eqmonitor_map_performance_test.dart \
+      --dart-define=EQMONITOR_PERFORMANCE_HUD="$hud_mode" \
+      --dart-define=EQMONITOR_PERFORMANCE_REPETITION="$repetition"
+  done
+done
+```
+
+artifactにはraw sample、集計値、device/build metadata、操作script version、HUD mode、repetition、
+exceptions/event drop、device logを含める。5回すべてが完走しraw artifactを読めること、例外と
+event dropがないこと、HUD off/on差を同一metricで算出できることを測定完了条件とする。
+frame/memory/HUD overheadのpass閾値は実測baselineとreviewで別途承認するまで設定しない。
+閾値未承認、thermal throttling、欠測、途中失敗はpassにせず`NOT RUN / DEFERRED`またはfailed
+としてartifactと再現commandを残す。現状態は`NOT RUN / DEFERRED`である。
+
 ## Failure handling and deferred verification
 
 failure時はcanonical JSON、build/device log、backend、操作回数、memory/frame timingを保存し、
 原因と再現手順をknowledge/TODOへ追記する。壊れたJSONを修復してpassさせず、修正後にrunを
 最初から再採取する。
 
-Widget/golden/performance benchmark、Performance HUDと回帰閾値は
+Widget/golden/performance benchmark、Performance HUDと回帰閾値の追跡先は
 [`docs/todo/800_eqmonitor_map_deferred_verification.md`](../../todo/800_eqmonitor_map_deferred_verification.md)
-へdeferする。このphysical gate作業では実行済み扱いにしない。
+とする。上記sectionを実行するまで、このphysical gate作業では実行済み扱いにしない。

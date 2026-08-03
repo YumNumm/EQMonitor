@@ -61,6 +61,11 @@ modelは不変かつFreezedを原則としますが、frameごとのsnapshot/del
 generation tokenはallocationとdeep equalityを避けるためversion付きhot-path型を使います。
 この例外を公開DTOやJSON境界へ広げません。
 
+`flutter --version --machine`の`engineRevision`はengine source、`engineContentHash`は
+precache済みartifactのidentityとして別々にcompile-time manifestへ保存します。schema
+v4 evidenceとgateは両方を上記固定値と照合し、欠落、blank、形式不正、不一致を
+fail closedにします。
+
 ## Scene spike device gate
 
 物理端末での採取手順とファイル名は

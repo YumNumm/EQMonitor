@@ -1,6 +1,6 @@
 # Flutter Scene physical evidence
 
-このdirectoryには物理端末のspike harnessが生成したschema v3 canonical JSONだけを
+このdirectoryには物理端末のspike harnessが生成したschema v4 canonical JSONだけを
 保存します。2026-08-02時点のLinux環境ではplatform buildと物理端末操作を実施できず、
 4 runはすべて`NOT RUN / BLOCKED`です。空・架空・手編集したevidenceは追加しません。
 
@@ -24,6 +24,10 @@ fallbackも必要な場合は、必須4 runとduplicateにならないよう別d
 - Dart source: `d402ff7c9c8442d64aa8148609480aa0e04a24fd`
 - Flutter engine source: `b1e405a9c311d858bef870c472bb24c015f4bcf9`
 - Flutter engine artifact: `73ac711b34da2a090d79ddb423918de40a7ffbf9`
+
+`flutterEngineRevision`と`flutterEngineContentHash`は別fieldです。writerは
+`flutter --version --machine`から両方をcompile-time manifestへ書き、collectorとgateは
+source revisionとartifact content hashの欠落・blank・不一致をそれぞれ拒否します。
 
 ## 採取
 

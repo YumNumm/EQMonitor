@@ -148,6 +148,7 @@ class SceneSpikeEvidence with _$SceneSpikeEvidence {
     required this.operatingSystemVersion,
     required this.flutterFrameworkRevision,
     required this.flutterEngineRevision,
+    required this.flutterEngineContentHash,
     required this.dartVersion,
     required this.dartSourceRevision,
     required this.flutterSceneRevision,
@@ -190,6 +191,8 @@ class SceneSpikeEvidence with _$SceneSpikeEvidence {
   final String flutterFrameworkRevision;
   @override
   final String flutterEngineRevision;
+  @override
+  final String flutterEngineContentHash;
   @override
   final String dartVersion;
   @override

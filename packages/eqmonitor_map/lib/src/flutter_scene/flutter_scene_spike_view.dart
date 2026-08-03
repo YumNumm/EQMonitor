@@ -183,6 +183,7 @@ class _SceneSpikeHarnessPanel extends StatelessWidget {
     final performance = controller.performance;
     final frameworkRevision = manifest?.flutterFrameworkRevision ?? 'missing';
     final engineRevision = manifest?.flutterEngineRevision ?? 'missing';
+    final engineContentHash = manifest?.flutterEngineContentHash ?? 'missing';
     final dartVersion = identity?.dartVersion ?? 'unavailable';
     final dartSourceRevision = manifest?.dartSourceRevision ?? 'missing';
     final operatingSystemVersion =
@@ -217,6 +218,7 @@ class _SceneSpikeHarnessPanel extends StatelessWidget {
                       Text(
                         'Flutter $frameworkRevision\n'
                         'Engine $engineRevision\n'
+                        'Engine artifact $engineContentHash\n'
                         'Dart $dartVersion ($dartSourceRevision)\n'
                         'Scene $sceneRevision\n'
                         'Renderer $rendererRevision dirty=$rendererDirty',

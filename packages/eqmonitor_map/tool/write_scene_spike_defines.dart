@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 const flutterSceneRevision = '695c954f237fabef65d49fa7199002851d2dcd88';
+const flutterEngineContentHashEnvironmentKey =
+    'EQMONITOR_SCENE_SPIKE_FLUTTER_ENGINE_CONTENT_HASH';
 const dartVersionEnvironmentKey = 'EQMONITOR_SCENE_SPIKE_DART_VERSION';
 const dartSourceRevisionEnvironmentKey =
     'EQMONITOR_SCENE_SPIKE_DART_SOURCE_REVISION';
@@ -106,6 +108,7 @@ Map<String, dynamic> buildSceneSpikeDefines({
       flutterMetadata.frameworkRevision,
   'EQMONITOR_SCENE_SPIKE_FLUTTER_ENGINE_REVISION':
       flutterMetadata.engineRevision,
+  flutterEngineContentHashEnvironmentKey: flutterMetadata.engineContentHash,
   dartVersionEnvironmentKey: flutterMetadata.dartSdkVersion,
   dartSourceRevisionEnvironmentKey: dartSourceRevision,
   'EQMONITOR_SCENE_SPIKE_FLUTTER_SCENE_REVISION': flutterSceneRevision,
@@ -117,11 +120,13 @@ class FlutterMachineMetadata {
   const FlutterMachineMetadata({
     required this.frameworkRevision,
     required this.engineRevision,
+    required this.engineContentHash,
     required this.dartSdkVersion,
   });
 
   final String frameworkRevision;
   final String engineRevision;
+  final String engineContentHash;
   final String dartSdkVersion;
 }
 
@@ -132,15 +137,19 @@ FlutterMachineMetadata decodeFlutterMetadata(String source) {
   }
   final frameworkRevision = decoded['frameworkRevision'];
   final engineRevision = decoded['engineRevision'];
+  final engineContentHash = decoded['engineContentHash'];
   final dartSdkVersion = decoded['dartSdkVersion'];
   if (frameworkRevision is! String ||
       engineRevision is! String ||
+      engineContentHash is! String ||
+      engineContentHash.trim().isEmpty ||
       dartSdkVersion is! String) {
     throw const FormatException('Flutter machine revisions are missing.');
   }
   return FlutterMachineMetadata(
     frameworkRevision: frameworkRevision,
     engineRevision: engineRevision,
+    engineContentHash: engineContentHash,
     dartSdkVersion: dartSdkVersion,
   );
 }

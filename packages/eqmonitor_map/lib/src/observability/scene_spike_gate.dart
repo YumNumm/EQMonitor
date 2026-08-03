@@ -56,11 +56,13 @@ class SceneSpikeGateDecision with _$SceneSpikeGateDecision {
 class SceneSpikeEvidenceContract {
   const SceneSpikeEvidenceContract._();
 
-  static const schemaVersion = 3;
+  static const schemaVersion = 4;
   static const expectedFlutterFrameworkRevision =
       '4dacd3fc91d96262a33e5c598e17d816f0b35641';
   static const expectedFlutterEngineRevision =
       'b1e405a9c311d858bef870c472bb24c015f4bcf9';
+  static const expectedFlutterEngineContentHash =
+      '73ac711b34da2a090d79ddb423918de40a7ffbf9';
   static const expectedDartSourceRevision =
       'd402ff7c9c8442d64aa8148609480aa0e04a24fd';
   static const expectedFlutterSceneRevision =
@@ -243,6 +245,7 @@ class SceneSpikeEvidenceValidator {
     final revisions = {
       'flutterFrameworkRevision': evidence.flutterFrameworkRevision,
       'flutterEngineRevision': evidence.flutterEngineRevision,
+      'flutterEngineContentHash': evidence.flutterEngineContentHash,
       'dartSourceRevision': evidence.dartSourceRevision,
       'flutterSceneRevision': evidence.flutterSceneRevision,
       'eqmonitorMapRendererRevision': evidence.eqmonitorMapRendererRevision,
@@ -272,6 +275,11 @@ class SceneSpikeEvidenceValidator {
         field: 'flutterEngineRevision',
         actual: evidence.flutterEngineRevision,
         expected: SceneSpikeEvidenceContract.expectedFlutterEngineRevision,
+      ),
+      (
+        field: 'flutterEngineContentHash',
+        actual: evidence.flutterEngineContentHash,
+        expected: SceneSpikeEvidenceContract.expectedFlutterEngineContentHash,
       ),
       (
         field: 'dartSourceRevision',

@@ -42,6 +42,7 @@ class SceneSpikeBuildManifest {
   const SceneSpikeBuildManifest({
     required this.flutterFrameworkRevision,
     required this.flutterEngineRevision,
+    required this.flutterEngineContentHash,
     required this.dartSourceRevision,
     required this.flutterSceneRevision,
     required this.eqmonitorMapRendererRevision,
@@ -50,6 +51,7 @@ class SceneSpikeBuildManifest {
 
   final String flutterFrameworkRevision;
   final String flutterEngineRevision;
+  final String flutterEngineContentHash;
   final String dartSourceRevision;
   final String flutterSceneRevision;
   final String eqmonitorMapRendererRevision;
@@ -63,6 +65,8 @@ class SceneSpikeEnvironmentKeys {
       'EQMONITOR_SCENE_SPIKE_FLUTTER_FRAMEWORK_REVISION';
   static const flutterEngineRevision =
       'EQMONITOR_SCENE_SPIKE_FLUTTER_ENGINE_REVISION';
+  static const flutterEngineContentHash =
+      'EQMONITOR_SCENE_SPIKE_FLUTTER_ENGINE_CONTENT_HASH';
   static const dartSourceRevision =
       'EQMONITOR_SCENE_SPIKE_DART_SOURCE_REVISION';
   static const flutterSceneRevision =
@@ -96,6 +100,9 @@ class SceneSpikeEnvironmentBuildManifestSource
       ),
       flutterEngineRevision: const String.fromEnvironment(
         SceneSpikeEnvironmentKeys.flutterEngineRevision,
+      ),
+      flutterEngineContentHash: const String.fromEnvironment(
+        SceneSpikeEnvironmentKeys.flutterEngineContentHash,
       ),
       dartSourceRevision: const String.fromEnvironment(
         SceneSpikeEnvironmentKeys.dartSourceRevision,
@@ -247,6 +254,7 @@ class SceneSpikeEvidenceFactory {
       operatingSystemVersion: identity.operatingSystemVersion,
       flutterFrameworkRevision: manifest.flutterFrameworkRevision,
       flutterEngineRevision: manifest.flutterEngineRevision,
+      flutterEngineContentHash: manifest.flutterEngineContentHash,
       dartVersion: identity.dartVersion,
       dartSourceRevision: manifest.dartSourceRevision,
       flutterSceneRevision: manifest.flutterSceneRevision,
@@ -297,6 +305,10 @@ class SceneSpikeTrustedInputValidator {
       'flutterEngineRevision': (
         actual: manifest.flutterEngineRevision,
         expected: SceneSpikeEvidenceContract.expectedFlutterEngineRevision,
+      ),
+      'flutterEngineContentHash': (
+        actual: manifest.flutterEngineContentHash,
+        expected: SceneSpikeEvidenceContract.expectedFlutterEngineContentHash,
       ),
       'dartSourceRevision': (
         actual: manifest.dartSourceRevision,

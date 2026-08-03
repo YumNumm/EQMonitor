@@ -733,6 +733,8 @@ class FakeBuildManifestSource implements SceneSpikeBuildManifestSource {
         SceneSpikeEvidenceContract.expectedFlutterFrameworkRevision,
     flutterEngineRevision:
         SceneSpikeEvidenceContract.expectedFlutterEngineRevision,
+    flutterEngineContentHash:
+        SceneSpikeEvidenceContract.expectedFlutterEngineContentHash,
     dartSourceRevision: SceneSpikeEvidenceContract.expectedDartSourceRevision,
     flutterSceneRevision:
         SceneSpikeEvidenceContract.expectedFlutterSceneRevision,

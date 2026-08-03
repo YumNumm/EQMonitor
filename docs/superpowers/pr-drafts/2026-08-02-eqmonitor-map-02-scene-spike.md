@@ -1,7 +1,7 @@
 ## Summary
 
 - EQMonitor専用のminimal Flutter package/exampleとFlutter Scene adapter spikeを追加します。
-- schema v3の再現可能なobservability/evidence gateとfail-closed validatorを追加します。
+- schema v4の再現可能なobservability/evidence gateとfail-closed validatorを追加します。
 - 物理端末gateはこのLinux環境では`NOT RUN / BLOCKED`で、evidence JSONは作成していません。
 
 ## Stack
@@ -33,6 +33,7 @@ rotation/DPR、memory/frame timingを実行・観測していません。4 evide
 
 - Flutter Scene型をadapter境界へ隔離し、generation/source/resource authorityを分離します。
 - compile-time manifestは固定SDK/Scene/Dart/renderer revisionとdirty checkoutを検証します。
+- Flutter engine source revisionとartifact content hashを別fieldとして固定値と照合します。
 - validatorはTask 5 gateを再利用し、missing/duplicate/malformed/unknown schema/invalid field、
   revision mismatch、failed/unobserved capabilityをすべてexit 1にします。
 - stdoutは単一canonical JSONだけで、parse stackを出しません。
@@ -56,7 +57,7 @@ git diff --check codex/eqmonitor-map-01-design...HEAD
 
 ## Known Flutter Scene API gaps
 
-固定Flutter Sceneのpublic APIでは次を観測できず、schema v3 evidenceでは
+固定Flutter Sceneのpublic APIでは次を観測できず、schema v4 evidenceでは
 `unavailablePublicApi/unobserved`です。この3項目がrequiredである間、4 run採取後も
 global gateはpassしません。
 
