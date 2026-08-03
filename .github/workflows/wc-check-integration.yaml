@@ -4,9 +4,8 @@ name: Integration Test
 # private backend submodule を GitHub App トークンで checkout し、api-stub を node で起動して
 # eqmonitor_api の integration タグ付きテストを実行する。
 #
-# 前提: GitHub App (vars.EQMONITOR_GITHUB_APP_ID) が YumNumm/eqmonitor-backend と
-#       YumNumm/home8s に contents:read で install 済みであること。
-#       未 install の場合は recursive submodule checkout が失敗する。
+# 前提: GitHub App (vars.EQMONITOR_GITHUB_APP_ID) が YumNumm/eqmonitor-backend に
+#       contents:read で install 済みであること。nested submoduleは取得しない。
 
 on:
   workflow_call:
@@ -36,7 +35,6 @@ jobs:
           repositories: |
             EQMonitor
             eqmonitor-backend
-            home8s
           # 最小権限: submodule checkout に必要な contents:read のみ
           permission-contents: read
 
@@ -44,7 +42,7 @@ jobs:
       - name: Checkout repository (with backend submodule)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          submodules: recursive
+          submodules: true
           token: ${{ steps.app-token.outputs.token }}
           persist-credentials: false
 
