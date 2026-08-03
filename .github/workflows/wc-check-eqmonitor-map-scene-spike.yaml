@@ -39,23 +39,25 @@ jobs:
       - name: Precache Flutter Android artifacts
         run: mise exec -- flutter precache --android
 
-      - name: Generate dart-define manifest
-        run: printf '%s\n' '{"EQMONITOR_MAP_SCENE_SPIKE_CI":"true"}' > "$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
-
       - name: Resolve example dependencies
         working-directory: packages/eqmonitor_map/example
         run: mise exec -- flutter pub get --enforce-lockfile
 
       - name: Analyze eqmonitor_map package
-        run: mise exec -- flutter analyze --fatal-infos packages/eqmonitor_map
+        run: mise exec -- flutter analyze --no-pub --fatal-infos packages/eqmonitor_map
+
+      - name: Generate and validate canonical dart-define manifest
+        run: |
+          mise exec -- dart run packages/eqmonitor_map/tool/write_scene_spike_defines.dart
+          test -s packages/eqmonitor_map/example/.dart_tool/scene_spike_defines.json
 
       - name: Build Android profile
         working-directory: packages/eqmonitor_map/example
-        run: mise exec -- flutter build apk --profile --dart-define-from-file="$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
+        run: mise exec -- flutter build apk --profile --dart-define-from-file=.dart_tool/scene_spike_defines.json
 
       - name: Build Android release
         working-directory: packages/eqmonitor_map/example
-        run: mise exec -- flutter build apk --release --dart-define-from-file="$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
+        run: mise exec -- flutter build apk --release --dart-define-from-file=.dart_tool/scene_spike_defines.json
 
   ios-build:
     name: iOS Profile and Release Build
@@ -89,17 +91,19 @@ jobs:
       - name: Precache Flutter iOS artifacts
         run: mise exec -- flutter precache --ios
 
-      - name: Generate dart-define manifest
-        run: printf '%s\n' '{"EQMONITOR_MAP_SCENE_SPIKE_CI":"true"}' > "$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
-
       - name: Resolve example dependencies
         working-directory: packages/eqmonitor_map/example
         run: mise exec -- flutter pub get --enforce-lockfile
 
+      - name: Generate and validate canonical dart-define manifest
+        run: |
+          mise exec -- dart run packages/eqmonitor_map/tool/write_scene_spike_defines.dart
+          test -s packages/eqmonitor_map/example/.dart_tool/scene_spike_defines.json
+
       - name: Build iOS profile
         working-directory: packages/eqmonitor_map/example
-        run: mise exec -- flutter build ios --profile --no-codesign --dart-define-from-file="$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
+        run: mise exec -- flutter build ios --profile --no-codesign --dart-define-from-file=.dart_tool/scene_spike_defines.json
 
       - name: Build iOS release
         working-directory: packages/eqmonitor_map/example
-        run: mise exec -- flutter build ios --release --no-codesign --dart-define-from-file="$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
+        run: mise exec -- flutter build ios --release --no-codesign --dart-define-from-file=.dart_tool/scene_spike_defines.json

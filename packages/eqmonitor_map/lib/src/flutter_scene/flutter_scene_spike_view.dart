@@ -289,10 +289,15 @@ class _SceneSpikeHarnessPanel extends StatelessWidget {
                                     ),
                                   );
                                 }
-                              } catch (error) {
+                              } catch (_) {
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('$error')),
+                                    const SnackBar(
+                                      content: Text(
+                                        'Evidence could not be copied. '
+                                        'Review the capability status.',
+                                      ),
+                                    ),
                                   );
                                 }
                               }

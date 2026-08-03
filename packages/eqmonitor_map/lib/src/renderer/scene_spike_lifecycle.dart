@@ -49,24 +49,29 @@ class SceneSpikeLifecycleReducer {
     required SceneSpikeLifecycleEvent event,
   }) {
     final hasValidPermissions = switch (state.phase) {
-      .detached || .background || .disposed =>
+      .detached || .background => !state.mayTick && !state.mayUpload,
+      .disposed =>
         !state.mayTick && !state.mayUpload && !state.requiresResourceRebuild,
       .active =>
         state.mayTick && state.mayUpload && !state.requiresResourceRebuild,
       .rebuilding =>
         !state.mayTick && !state.mayUpload && state.requiresResourceRebuild,
     };
-    if (state.appResourceGeneration < 0 || !hasValidPermissions) {
+    final hasValidResourceGeneration =
+        !state.requiresResourceRebuild || state.appResourceGeneration > 0;
+    if (state.appResourceGeneration < 0 ||
+        !hasValidPermissions ||
+        !hasValidResourceGeneration) {
       throw StateError('Invalid scene spike lifecycle state: $state.');
     }
 
     return switch ((state.phase, event)) {
       (.detached, _Attached()) => SceneSpikeLifecycleState.internal(
-        phase: .active,
+        phase: state.requiresResourceRebuild ? .rebuilding : .active,
         appResourceGeneration: state.appResourceGeneration,
-        mayTick: true,
-        mayUpload: true,
-        requiresResourceRebuild: false,
+        mayTick: !state.requiresResourceRebuild,
+        mayUpload: !state.requiresResourceRebuild,
+        requiresResourceRebuild: state.requiresResourceRebuild,
       ),
       (.active, _Backgrounded()) => SceneSpikeLifecycleState.internal(
         phase: .background,
@@ -75,7 +80,22 @@ class SceneSpikeLifecycleReducer {
         mayUpload: false,
         requiresResourceRebuild: false,
       ),
-      (.background, _Foregrounded()) ||
+      (.rebuilding, _Backgrounded()) => SceneSpikeLifecycleState.internal(
+        phase: .background,
+        appResourceGeneration: state.appResourceGeneration,
+        mayTick: false,
+        mayUpload: false,
+        requiresResourceRebuild: true,
+      ),
+      (.background, _Foregrounded()) => SceneSpikeLifecycleState.internal(
+        phase: .rebuilding,
+        appResourceGeneration: state.requiresResourceRebuild
+            ? state.appResourceGeneration
+            : state.appResourceGeneration + 1,
+        mayTick: false,
+        mayUpload: false,
+        requiresResourceRebuild: true,
+      ),
       (.active, _SurfaceRecreated()) => SceneSpikeLifecycleState.internal(
         phase: .rebuilding,
         appResourceGeneration: state.appResourceGeneration + 1,
@@ -99,7 +119,7 @@ class SceneSpikeLifecycleReducer {
           appResourceGeneration: state.appResourceGeneration,
           mayTick: false,
           mayUpload: false,
-          requiresResourceRebuild: false,
+          requiresResourceRebuild: state.requiresResourceRebuild,
         ),
       (
         .detached || .active || .background || .rebuilding,

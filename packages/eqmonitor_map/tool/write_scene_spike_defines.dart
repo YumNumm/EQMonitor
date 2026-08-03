@@ -1,12 +1,25 @@
 import 'dart:convert';
 import 'dart:io';
 
+const flutterFrameworkRevision = '4dacd3fc91d96262a33e5c598e17d816f0b35641';
+const flutterEngineRevision = 'b1e405a9c311d858bef870c472bb24c015f4bcf9';
+const flutterEngineContentHash = '73ac711b34da2a090d79ddb423918de40a7ffbf9';
 const flutterSceneRevision = '695c954f237fabef65d49fa7199002851d2dcd88';
+const flutterFrameworkRevisionEnvironmentKey =
+    'EQMONITOR_SCENE_SPIKE_FLUTTER_FRAMEWORK_REVISION';
+const flutterEngineRevisionEnvironmentKey =
+    'EQMONITOR_SCENE_SPIKE_FLUTTER_ENGINE_REVISION';
 const flutterEngineContentHashEnvironmentKey =
     'EQMONITOR_SCENE_SPIKE_FLUTTER_ENGINE_CONTENT_HASH';
 const dartVersionEnvironmentKey = 'EQMONITOR_SCENE_SPIKE_DART_VERSION';
 const dartSourceRevisionEnvironmentKey =
     'EQMONITOR_SCENE_SPIKE_DART_SOURCE_REVISION';
+const flutterSceneRevisionEnvironmentKey =
+    'EQMONITOR_SCENE_SPIKE_FLUTTER_SCENE_REVISION';
+const rendererRevisionEnvironmentKey =
+    'EQMONITOR_SCENE_SPIKE_RENDERER_REVISION';
+const rendererCheckoutDirtyEnvironmentKey =
+    'EQMONITOR_SCENE_SPIKE_RENDERER_CHECKOUT_DIRTY';
 const dartSourceRevision = 'd402ff7c9c8442d64aa8148609480aa0e04a24fd';
 
 Future<void> main() async {
@@ -29,13 +42,24 @@ Future<void> main() async {
   final outputFile = File(
     '${outputDirectory.path}/scene_spike_defines.json',
   );
+  final defines = buildSceneSpikeDefines(
+    flutterMetadata: flutterMetadata,
+    rendererMetadata: rendererMetadata,
+  );
+  SceneSpikeDefineValidator.validate(
+    defines: defines,
+    expectedRendererRevision: rendererMetadata.revision,
+  );
   await outputFile.writeAsString(
-    const JsonEncoder.withIndent('  ').convert(
-      buildSceneSpikeDefines(
-        flutterMetadata: flutterMetadata,
-        rendererMetadata: rendererMetadata,
-      ),
-    ),
+    const JsonEncoder.withIndent('  ').convert(defines),
+  );
+  final persisted = jsonDecode(await outputFile.readAsString());
+  if (persisted is! Map<String, dynamic>) {
+    throw const FormatException('Scene spike defines must be a JSON map.');
+  }
+  SceneSpikeDefineValidator.validate(
+    defines: persisted,
+    expectedRendererRevision: rendererMetadata.revision,
   );
 }
 
@@ -104,17 +128,48 @@ Map<String, dynamic> buildSceneSpikeDefines({
   required FlutterMachineMetadata flutterMetadata,
   required RendererCheckoutMetadata rendererMetadata,
 }) => {
-  'EQMONITOR_SCENE_SPIKE_FLUTTER_FRAMEWORK_REVISION':
-      flutterMetadata.frameworkRevision,
-  'EQMONITOR_SCENE_SPIKE_FLUTTER_ENGINE_REVISION':
-      flutterMetadata.engineRevision,
+  flutterFrameworkRevisionEnvironmentKey: flutterMetadata.frameworkRevision,
+  flutterEngineRevisionEnvironmentKey: flutterMetadata.engineRevision,
   flutterEngineContentHashEnvironmentKey: flutterMetadata.engineContentHash,
   dartVersionEnvironmentKey: flutterMetadata.dartSdkVersion,
   dartSourceRevisionEnvironmentKey: dartSourceRevision,
-  'EQMONITOR_SCENE_SPIKE_FLUTTER_SCENE_REVISION': flutterSceneRevision,
-  'EQMONITOR_SCENE_SPIKE_RENDERER_REVISION': rendererMetadata.revision,
-  'EQMONITOR_SCENE_SPIKE_RENDERER_CHECKOUT_DIRTY': rendererMetadata.isDirty,
+  flutterSceneRevisionEnvironmentKey: flutterSceneRevision,
+  rendererRevisionEnvironmentKey: rendererMetadata.revision,
+  rendererCheckoutDirtyEnvironmentKey: rendererMetadata.isDirty,
 };
+
+class SceneSpikeDefineValidator {
+  const SceneSpikeDefineValidator._();
+
+  static void validate({
+    required Map<String, dynamic> defines,
+    required String expectedRendererRevision,
+  }) {
+    final expectedRevisions = {
+      flutterFrameworkRevisionEnvironmentKey: flutterFrameworkRevision,
+      flutterEngineRevisionEnvironmentKey: flutterEngineRevision,
+      flutterEngineContentHashEnvironmentKey: flutterEngineContentHash,
+      dartSourceRevisionEnvironmentKey: dartSourceRevision,
+      flutterSceneRevisionEnvironmentKey: flutterSceneRevision,
+      rendererRevisionEnvironmentKey: expectedRendererRevision,
+    };
+    for (final revision in expectedRevisions.entries) {
+      final actual = defines[revision.key];
+      if (actual is! String ||
+          !RegExp(r'^[0-9a-f]{40}$').hasMatch(actual) ||
+          actual != revision.value) {
+        throw FormatException('${revision.key} is missing or invalid.');
+      }
+    }
+    final dartVersion = defines[dartVersionEnvironmentKey];
+    if (dartVersion is! String || dartVersion.trim().isEmpty) {
+      throw const FormatException('Dart SDK version is missing or invalid.');
+    }
+    if (defines[rendererCheckoutDirtyEnvironmentKey] != false) {
+      throw const FormatException('Renderer checkout must be clean.');
+    }
+  }
+}
 
 class FlutterMachineMetadata {
   const FlutterMachineMetadata({

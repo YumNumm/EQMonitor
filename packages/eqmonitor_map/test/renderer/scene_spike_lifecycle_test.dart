@@ -37,6 +37,66 @@ void main() {
     );
   });
 
+  test('background during rebuild preserves the pending generation', () {
+    final active = reducer.reduce(
+      state: SceneSpikeLifecycleState.initial(),
+      event: const SceneSpikeLifecycleEvent.attached(),
+    );
+    final rebuilding = reducer.reduce(
+      state: active,
+      event: const SceneSpikeLifecycleEvent.surfaceRecreated(),
+    );
+
+    final background = reducer.reduce(
+      state: rebuilding,
+      event: const SceneSpikeLifecycleEvent.backgrounded(),
+    );
+    final resumed = reducer.reduce(
+      state: background,
+      event: const SceneSpikeLifecycleEvent.foregrounded(),
+    );
+
+    expect(background.phase, SceneSpikeLifecyclePhase.background);
+    expect(background.requiresResourceRebuild, isTrue);
+    expect(background.mayTick, isFalse);
+    expect(background.mayUpload, isFalse);
+    expect(resumed.phase, SceneSpikeLifecyclePhase.rebuilding);
+    expect(
+      resumed.appResourceGeneration,
+      rebuilding.appResourceGeneration,
+    );
+  });
+
+  test('detach and reattach preserves the pending rebuild generation', () {
+    final active = reducer.reduce(
+      state: SceneSpikeLifecycleState.initial(),
+      event: const SceneSpikeLifecycleEvent.attached(),
+    );
+    final rebuilding = reducer.reduce(
+      state: active,
+      event: const SceneSpikeLifecycleEvent.surfaceRecreated(),
+    );
+
+    final detached = reducer.reduce(
+      state: rebuilding,
+      event: const SceneSpikeLifecycleEvent.detached(),
+    );
+    final reattached = reducer.reduce(
+      state: detached,
+      event: const SceneSpikeLifecycleEvent.attached(),
+    );
+
+    expect(detached.phase, SceneSpikeLifecyclePhase.detached);
+    expect(detached.requiresResourceRebuild, isTrue);
+    expect(detached.mayTick, isFalse);
+    expect(detached.mayUpload, isFalse);
+    expect(reattached.phase, SceneSpikeLifecyclePhase.rebuilding);
+    expect(
+      reattached.appResourceGeneration,
+      rebuilding.appResourceGeneration,
+    );
+  });
+
   test('disposed is terminal', () {
     final disposed = reducer.reduce(
       state: SceneSpikeLifecycleState.initial(),
@@ -123,6 +183,16 @@ void main() {
         requiresRebuild: true,
       ),
       (
+        name: 'rebuilding + backgrounded',
+        state: rebuilding,
+        event: const SceneSpikeLifecycleEvent.backgrounded(),
+        phase: SceneSpikeLifecyclePhase.background,
+        generation: 1,
+        mayTick: false,
+        mayUpload: false,
+        requiresRebuild: true,
+      ),
+      (
         name: 'rebuilding + rebuildCompleted',
         state: rebuilding,
         event: const SceneSpikeLifecycleEvent.rebuildCompleted(),
@@ -141,7 +211,7 @@ void main() {
           generation: state.appResourceGeneration,
           mayTick: false,
           mayUpload: false,
-          requiresRebuild: false,
+          requiresRebuild: state.requiresResourceRebuild,
         ),
       for (final state in [detached, active, background, rebuilding])
         (
@@ -267,7 +337,6 @@ void main() {
         (state: background, event: event),
       for (final event in const [
         SceneSpikeLifecycleEvent.attached(),
-        SceneSpikeLifecycleEvent.backgrounded(),
         SceneSpikeLifecycleEvent.surfaceRecreated(),
       ])
         (state: rebuilding, event: event),
@@ -282,7 +351,7 @@ void main() {
         (state: disposed, event: event),
     ];
 
-    expect(transitions, hasLength(19));
+    expect(transitions, hasLength(18));
     for (final transition in transitions) {
       expect(
         () => reducer.reduce(
@@ -335,6 +404,13 @@ void main() {
         mayTick: false,
         mayUpload: true,
         requiresResourceRebuild: false,
+      ),
+      const SceneSpikeLifecycleState.internal(
+        phase: .detached,
+        appResourceGeneration: 0,
+        mayTick: false,
+        mayUpload: false,
+        requiresResourceRebuild: true,
       ),
     ];
 

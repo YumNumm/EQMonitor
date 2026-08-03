@@ -104,6 +104,69 @@ void main() {
         throwsFormatException,
       );
     });
+
+    test('validates every fixed revision and a clean renderer checkout', () {
+      const rendererRevision = '0123456789abcdef0123456789abcdef01234567';
+      final defines = buildSceneSpikeDefines(
+        flutterMetadata: const FlutterMachineMetadata(
+          frameworkRevision: flutterFrameworkRevision,
+          engineRevision: flutterEngineRevision,
+          engineContentHash: flutterEngineContentHash,
+          dartSdkVersion: '3.14.0-29.0.dev',
+        ),
+        rendererMetadata: const RendererCheckoutMetadata(
+          revision: rendererRevision,
+          isDirty: false,
+        ),
+      );
+
+      expect(
+        () => SceneSpikeDefineValidator.validate(
+          defines: defines,
+          expectedRendererRevision: rendererRevision,
+        ),
+        returnsNormally,
+      );
+    });
+
+    test('rejects missing mismatched blank or dirty define values', () {
+      const rendererRevision = '0123456789abcdef0123456789abcdef01234567';
+      final defines = buildSceneSpikeDefines(
+        flutterMetadata: const FlutterMachineMetadata(
+          frameworkRevision: flutterFrameworkRevision,
+          engineRevision: flutterEngineRevision,
+          engineContentHash: flutterEngineContentHash,
+          dartSdkVersion: '3.14.0-29.0.dev',
+        ),
+        rendererMetadata: const RendererCheckoutMetadata(
+          revision: rendererRevision,
+          isDirty: false,
+        ),
+      );
+      final invalidDefines = [
+        Map<String, dynamic>.of(defines)
+          ..remove(flutterFrameworkRevisionEnvironmentKey),
+        Map<String, dynamic>.of(defines)
+          ..[flutterEngineRevisionEnvironmentKey] = ' ',
+        Map<String, dynamic>.of(defines)
+          ..[flutterEngineContentHashEnvironmentKey] =
+              '0123456789abcdef0123456789abcdef01234567',
+        Map<String, dynamic>.of(defines)
+          ..[rendererRevisionEnvironmentKey] = 'renderer-main',
+        Map<String, dynamic>.of(defines)
+          ..[rendererCheckoutDirtyEnvironmentKey] = true,
+      ];
+
+      for (final invalid in invalidDefines) {
+        expect(
+          () => SceneSpikeDefineValidator.validate(
+            defines: invalid,
+            expectedRendererRevision: rendererRevision,
+          ),
+          throwsFormatException,
+        );
+      }
+    });
   });
 }
 

@@ -3,9 +3,10 @@
 ## Purpose and current status
 
 Flutter Scene spikeを物理iOS/Android端末のprofile/releaseで再現可能に検証し、schema v4
-canonical evidenceを採取する計画である。2026-08-02のLinux hostでは以下の全項目を
-実行できないため、現在状態は`NOT RUN / BLOCKED`である。pass表現や代替evidenceを
-使用しない。
+canonical evidenceを採取する計画である。2026-08-02のLinux hostではphysical/mobile
+build、DataAssets/native asset/fmat、real GPU/device検証は`NOT RUN / BLOCKED`である。
+未実装のWidget/golden/performance検証は`NOT RUN / DEFERRED`であり、どちらもpass表現や
+代替evidenceを使用しない。
 
 ## Owners and prerequisites
 
@@ -27,7 +28,8 @@ canonical evidenceを採取する計画である。2026-08-02のLinux hostでは
 
 ## Linux host limitations
 
-このhostでは次を実行していない。すべて`NOT RUN / BLOCKED`である。
+このhostでは次を実行していない。platform/device依存項目は`NOT RUN / BLOCKED`、後続実装
+依存項目は`NOT RUN / DEFERRED`である。
 
 | Verification | Status | Blocker |
 | --- | --- | --- |

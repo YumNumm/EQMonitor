@@ -364,23 +364,32 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     if (_lifecycle.phase != .detached) {
       return;
     }
+    final attachedLifecycle = _lifecycleReducer.reduce(
+      state: _lifecycle,
+      event: const SceneSpikeLifecycleEvent.attached(),
+    );
     _adapter.attach(
       logicalSize: logicalSize,
       devicePixelRatio: devicePixelRatio,
     );
-    _lifecycle = _lifecycleReducer.reduce(
-      state: _lifecycle,
-      event: const SceneSpikeLifecycleEvent.attached(),
-    );
+    if (attachedLifecycle.requiresResourceRebuild) {
+      _adapter.requestAppResourceRebuild(
+        appResourceGeneration: attachedLifecycle.appResourceGeneration,
+      );
+    }
+    _lifecycle = attachedLifecycle;
     _logicalSize = logicalSize;
     _devicePixelRatio = devicePixelRatio;
     notifyListeners();
   }
 
   void background() {
-    if (_lifecycle.phase != .active && _lifecycle.phase != .background) {
+    if (_lifecycle.phase != .active &&
+        _lifecycle.phase != .background &&
+        _lifecycle.phase != .rebuilding) {
       return;
     }
+    _materialOperationGeneration.cancel();
     _adapter.setForeground(isForeground: false);
     _lifecycle = _lifecycleReducer.reduce(
       state: _lifecycle,
@@ -476,6 +485,9 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       if (!token.isCurrent ||
           _isDisposed ||
           !rebuilt ||
+          _lifecycle.phase != .rebuilding ||
+          !_lifecycle.requiresResourceRebuild ||
+          _lifecycle.appResourceGeneration != generation ||
           _adapter.customMaterialAppResourceGeneration != generation) {
         return;
       }

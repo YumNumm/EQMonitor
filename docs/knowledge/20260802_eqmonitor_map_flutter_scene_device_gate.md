@@ -26,6 +26,23 @@ evidenceへ`flutterEngineRevision`と`flutterEngineContentHash`として別々�
 compile-time manifestでcontent hashが欠落/blank、40文字lowercase SHAでない、または
 `73ac711b34da2a090d79ddb423918de40a7ffbf9`と不一致なら採取前またはgateでfail closedにする。
 
+CIのprofile/release buildもdummy defineを使用しない。dependency解決とanalyzeなどcheckoutを
+変更し得るstepの後にcanonical writerをrepository rootから実行し、writerがrenderer HEADと
+clean checkoutをreadback検証した次のfileだけを両build modeへ渡す。
+
+```bash
+mise exec -- dart run packages/eqmonitor_map/tool/write_scene_spike_defines.dart
+test -s packages/eqmonitor_map/example/.dart_tool/scene_spike_defines.json
+cd packages/eqmonitor_map/example
+mise exec -- flutter build apk --profile \
+  --dart-define-from-file=.dart_tool/scene_spike_defines.json
+```
+
+app-resource rebuild中のbackground/detachはrebuild成功として扱わない。operation tokenを無効化し、
+同じapp-resource generationの再構築義務をbackground/detached stateへ保持する。foregroundまたは
+同一controllerのreattach時にadapterへ同generationを再要求し、完了するまでtick/uploadと
+custom-material proofを禁止する。
+
 ## Gateの実行
 
 物理端末runではclean checkoutからcompile-time manifestを作り、example UIで60秒以上

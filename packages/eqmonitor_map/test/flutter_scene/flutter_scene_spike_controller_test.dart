@@ -132,29 +132,94 @@ void main() {
     );
 
     test(
-      'detach during rebuild prevents completion state mutation',
+      'background during rebuild rejects stale completion until resumed',
       () async {
         final rebuild = Completer<void>();
-        final controller =
-            createController(
-                adapter: FakeSceneSpikeControllerAdapter(
-                  rebuildCompletion: rebuild.future,
-                ),
-              )
-              ..attach(
-                logicalSize: const Size(400, 300),
-                devicePixelRatio: 2,
-              )
-              ..requestAppResourceRebuild();
+        final adapter = FakeSceneSpikeControllerAdapter(
+          rebuildCompletion: rebuild.future,
+        );
+        final controller = createController(adapter: adapter)
+          ..attach(
+            logicalSize: const Size(400, 300),
+            devicePixelRatio: 2,
+          )
+          ..requestAppResourceRebuild();
         addTearDown(controller.dispose);
 
         final completion = controller.completePendingAppResourceRebuild();
-        controller.detach();
+        controller.background();
+
+        expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.background);
+        expect(controller.lifecycle.requiresResourceRebuild, isTrue);
+        expect(controller.lifecycle.mayTick, isFalse);
+        expect(controller.lifecycle.mayUpload, isFalse);
+        expect(adapter.isForeground, isFalse);
+
         rebuild.complete();
         await completion;
 
-        expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.detached);
+        expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.background);
         expect(controller.performance.resourceRebuildCount, 0);
+        expect(adapter.customMaterialAppResourceGeneration, isNull);
+
+        controller.foreground();
+        expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.rebuilding);
+        expect(controller.lifecycle.appResourceGeneration, 1);
+        expect(adapter.requestedAppResourceGenerations, [1, 1]);
+
+        await controller.completePendingAppResourceRebuild();
+
+        expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.active);
+        expect(controller.performance.resourceRebuildCount, 1);
+        expect(adapter.customMaterialAppResourceGeneration, 1);
+      },
+    );
+
+    test(
+      'detach and reattach during rebuild preserves the rebuild obligation',
+      () async {
+        final rebuild = Completer<void>();
+        final adapter = FakeSceneSpikeControllerAdapter(
+          rebuildCompletion: rebuild.future,
+        );
+        final controller = createController(adapter: adapter)
+          ..attach(
+            logicalSize: const Size(400, 300),
+            devicePixelRatio: 2,
+          )
+          ..requestAppResourceRebuild();
+        addTearDown(controller.dispose);
+
+        final staleCompletion = controller.completePendingAppResourceRebuild();
+        controller
+          ..detach()
+          ..attach(
+            logicalSize: const Size(400, 300),
+            devicePixelRatio: 2,
+          );
+
+        expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.rebuilding);
+        expect(controller.lifecycle.requiresResourceRebuild, isTrue);
+        expect(controller.lifecycle.mayTick, isFalse);
+        expect(controller.lifecycle.mayUpload, isFalse);
+        expect(adapter.customMaterialAppResourceGeneration, isNull);
+        expect(adapter.requestedAppResourceGenerations, [1, 1]);
+        completeChecklist(
+          controller: controller,
+          capability: SceneSpikeCapability.customMaterial,
+        );
+        expect(controller.canAttestCapability(.customMaterial), isFalse);
+
+        final resumedCompletion = controller
+            .completePendingAppResourceRebuild();
+        rebuild.complete();
+        await Future.wait([staleCompletion, resumedCompletion]);
+
+        expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.active);
+        expect(controller.lifecycle.requiresResourceRebuild, isFalse);
+        expect(controller.performance.resourceRebuildCount, 1);
+        expect(adapter.customMaterialAppResourceGeneration, 1);
+        expect(controller.canAttestCapability(.customMaterial), isTrue);
       },
     );
   });
@@ -640,7 +705,11 @@ class FakeSceneSpikeControllerAdapter implements SceneSpikeControllerAdapter {
 
   final Future<void> _rebuildCompletion;
   final Future<bool> _initializeCompletion;
+  final List<int> requestedAppResourceGenerations = [];
   var _initializeCustomMaterialCount = 0;
+  var _isForeground = false;
+
+  bool get isForeground => _isForeground;
 
   @override
   int? customMaterialAppResourceGeneration;
@@ -651,13 +720,17 @@ class FakeSceneSpikeControllerAdapter implements SceneSpikeControllerAdapter {
   scene.Scene? get sceneGraph => null;
 
   @override
-  void attach({required Size logicalSize, required double devicePixelRatio}) {}
+  void attach({required Size logicalSize, required double devicePixelRatio}) {
+    _isForeground = true;
+  }
 
   @override
   void completeAppResourceRebuild({required int appResourceGeneration}) {}
 
   @override
-  void detach() {}
+  void detach() {
+    _isForeground = false;
+  }
 
   @override
   void dispose() {}
@@ -693,10 +766,14 @@ class FakeSceneSpikeControllerAdapter implements SceneSpikeControllerAdapter {
   }
 
   @override
-  void requestAppResourceRebuild({required int appResourceGeneration}) {}
+  void requestAppResourceRebuild({required int appResourceGeneration}) {
+    requestedAppResourceGenerations.add(appResourceGeneration);
+  }
 
   @override
-  void setForeground({required bool isForeground}) {}
+  void setForeground({required bool isForeground}) {
+    _isForeground = isForeground;
+  }
 
   @override
   void updateMesh({required SpikeMeshFrame frame}) {}
