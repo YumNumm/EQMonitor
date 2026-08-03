@@ -6,8 +6,8 @@ import 'package:assets_util/src/assets_util_android.dart';
 import 'package:assets_util/src/assets_util_ios.dart';
 import 'package:flutter/foundation.dart';
 
-export 'package:assets_util/src/asset_pack_not_ready_exception.dart';
 export 'package:assets_util/src/asset_pack_diagnostics.dart';
+export 'package:assets_util/src/asset_pack_not_ready_exception.dart';
 export 'package:assets_util/src/assets_util_android.dart'
     show AssetsUtilAndroid;
 
@@ -93,9 +93,11 @@ abstract final class AssetsUtil {
   /// Throws [AssetPackNotReadyException] if the pack isn't available yet
   /// (or is missing/corrupt). Never falls back to fake/bundled data.
   /// Throws [UnsupportedError] on web and any other platform.
-  static Future<String> resolvePackRoot() async {
+  static Future<String> resolvePackRoot() {
     if (kIsWeb) {
-      throw UnsupportedError('assets_util is not supported on web');
+      return Future<String>.error(
+        UnsupportedError('assets_util is not supported on web'),
+      );
     }
     if (Platform.isIOS || Platform.isMacOS) {
       return AssetsUtilApple.resolvePackRoot(
@@ -105,8 +107,11 @@ abstract final class AssetsUtil {
     if (Platform.isAndroid) {
       return AssetsUtilAndroid.resolvePackRoot(packName: _androidAssetPackName);
     }
-    throw UnsupportedError(
-      'assets_util.resolvePackRoot is only supported on iOS, Android and macOS',
+    return Future<String>.error(
+      UnsupportedError(
+        'assets_util.resolvePackRoot is only supported on '
+        'iOS, Android and macOS',
+      ),
     );
   }
 

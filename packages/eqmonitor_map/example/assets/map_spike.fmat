@@ -1,0 +1,25 @@
+material {
+  name: "EqmonitorMapSpike",
+  shading_model: unlit,
+  blending: opaque,
+  culling: none,
+  parameters: [
+    { type: vec4, name: tint, hint: source_color, default: [1.0, 1.0, 1.0, 1.0] },
+  ],
+  varyings: [
+    { type: vec4, name: spike_color },
+  ],
+}
+
+vertex {
+  void Vertex(inout VertexInputs vertex) {
+    spike_color = vertex.color;
+  }
+}
+
+fragment {
+  void Surface(inout MaterialInputs material) {
+    material.base_color = spike_color * material_params.tint;
+    PrepareMaterial(material);
+  }
+}
