@@ -103,11 +103,6 @@ jobs:
           cache: false
           install_args: "xcbeautify"
 
-      - name: Verify pinned Flutter SDK
-        run: |
-          mise bootstrap repos status --missing
-          mise exec -- flutter --version --machine
-
       - name: Precache Flutter iOS artifacts
         run: mise exec -- flutter precache --ios
 
@@ -216,17 +211,9 @@ jobs:
             grep -n -E 'Sandbox: |deny\(1\)|Command PhaseScriptExecution failed' \
               /tmp/xcodebuild-archive.log || true
             echo "::endgroup::"
-            echo "::error::xcodebuild archive failed. See raw log artifact."
+            echo "::error::xcodebuild archive failed. See the extracted error sections above."
             exit 1
           fi
-
-      - name: Upload xcodebuild raw log
-        if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: xcodebuild-archive-log
-          path: /tmp/xcodebuild-archive.log
-          retention-days: 7
 
       # 埋め込みフレームワークとアプリを ad-hoc 署名。export 時に Distribution 証明書で上書きされる。
       - name: Embed entitlements and ad-hoc sign
@@ -497,11 +484,6 @@ jobs:
         with:
           cache: false
           install_args: "java uv python pipx:codemagic-cli-tools"
-
-      - name: Verify pinned Flutter SDK
-        run: |
-          mise bootstrap repos status --missing
-          mise exec -- flutter --version --machine
 
       - name: Precache Flutter Android artifacts
         run: mise exec -- flutter precache --android
