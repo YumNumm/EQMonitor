@@ -46,6 +46,7 @@ jobs:
               - 'tools/**'
               - 'pubspec.yaml'
               - 'pubspec.lock'
+              - 'mise.toml'
               - 'mise.lock'
               - 'analysis_options.yaml'
               - '.github/workflows/flutter.yaml'
@@ -54,7 +55,6 @@ jobs:
               - '.github/workflows/wc-changes.yaml'
             eqmonitor_map_scene_spike:
               - 'packages/eqmonitor_map/**'
-              - 'tool/eqmonitor_map/**'
               - '.gitignore'
               - 'mise.toml'
               - 'mise.lock'

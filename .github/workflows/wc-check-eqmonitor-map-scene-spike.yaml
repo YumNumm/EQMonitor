@@ -17,24 +17,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Checkout pinned Flutter SDK
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: flutter/flutter
-          ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
-          path: .flutter-scene-sdk
-          fetch-depth: 1
-          persist-credentials: false
-
       - name: Install Mise dependencies
         uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
         with:
-          install_args: "java"
+          install_args: "flutter java"
 
       - name: Verify pinned Flutter SDK
-        run: |
-          mise bootstrap repos status --missing
-          mise exec -- flutter --version --machine
+        run: mise exec -- flutter --version --machine
 
       - name: Precache Flutter Android artifacts
         run: mise exec -- flutter precache --android
@@ -69,24 +58,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Checkout pinned Flutter SDK
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: flutter/flutter
-          ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
-          path: .flutter-scene-sdk
-          fetch-depth: 1
-          persist-credentials: false
-
-      - name: Activate Mise environment
+      - name: Install Mise dependencies
         uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
         with:
-          install: false
+          install_args: "flutter"
 
       - name: Verify pinned Flutter SDK
-        run: |
-          mise bootstrap repos status --missing
-          mise exec -- flutter --version --machine
+        run: mise exec -- flutter --version --machine
 
       - name: Precache Flutter iOS artifacts
         run: mise exec -- flutter precache --ios

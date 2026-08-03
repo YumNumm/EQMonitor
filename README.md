@@ -55,32 +55,39 @@ cd EQMonitor
 
 1. [mise-en-place](https://mise.jdx.dev/)をインストールしてください
 
-1. flutterなどの依存関係をダウンロードします
+1. Flutter pluginを登録します。`mise.toml`にも同じURLを宣言しているため、通常は省略できます。
 
-  ```bash
-  mise install
-  ```
+   ```bash
+   mise plugin install flutter https://github.com/YumNumm/mise-flutter.git
+   ```
+
+1. Flutterなどの依存関係をダウンロードします。
+
+   ```bash
+   mise install
+   mise exec -- flutter --version --machine
+   ```
 
 1. Swift Package Managerを利用するために、以下のコマンドを実行してください
 
     - [Swift Package Manager for app developers](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers)
 
     ```bash
-    flutter config --enable-swift-package-manager
+    mise exec -- flutter config --enable-swift-package-manager
     ```
 
-1. Dartプロジェクトを管理するためのツールである[melos](https://melos.invertase.dev/)をインストールします。
+1. Dart workspaceの依存関係を解決し、[melos](https://melos.invertase.dev/)で各packageをbootstrapします。
 
-   - `dart pub global activate melos` を実行してください。
-   - 詳細は、[Get Started](https://melos.invertase.dev/~melos-latest/getting-started)を参照してください。
-
-1. `melos bootstrap` を実行してください。
+   ```bash
+   mise exec -- dart pub get --enforce-lockfile
+   mise exec -- dart run melos bootstrap
+   ```
 
    - これにより、各パッケージの依存関係が解決されます。
 
 1. `mv environment/.env.example environment/.env.dev` を実行してください。
 
-1. `flutter run` でアプリケーションを起動します。
+1. `mise exec -- flutter run` でアプリケーションを起動します。
 
    > [!NOTE]
    > **iOS**: AppIntent / Widget 用の slim `app/assets/parameters/jma_code_table.json` はリポジトリに同梱済みです。clone 直後でもビルドできます。
