@@ -11,9 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// 通知権限が未許可の場合にホームシートへ表示するバナー。
 /// タップで許可要求 → まだ未許可なら OS 設定を開く。閉じるボタンで dismiss。
 class NotificationPermissionBanner extends ConsumerWidget {
-  const NotificationPermissionBanner({required this.bottomSpacing, super.key});
-
-  final double bottomSpacing;
+  const NotificationPermissionBanner({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,76 +27,73 @@ class NotificationPermissionBanner extends ConsumerWidget {
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: bottomSpacing),
-      child: Material(
-        color: colorTheme.primaryContainer,
-        shape: RoundedSuperellipseBorder(
-          borderRadius: BorderRadius.circular(designSystem.shape.card),
+    return Material(
+      color: colorTheme.primaryContainer,
+      shape: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(designSystem.shape.card),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.md,
+          vertical: spacing.sm,
         ),
-        clipBehavior: Clip.antiAlias,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: spacing.md,
-            vertical: spacing.sm,
-          ),
-          child: Row(
-            spacing: spacing.md,
-            children: [
-              Icon(
-                Icons.notifications_off_rounded,
+        child: Row(
+          spacing: spacing.md,
+          children: [
+            Icon(
+              Icons.notifications_off_rounded,
+              color: colorTheme.onPrimaryContainer,
+              size: 24,
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () async {
+                  final ok = await ref
+                      .read(permissionRepositoryProvider)
+                      .requestNotificationPermission();
+                  ref.invalidate(isNotificationPermissionGrantedProvider);
+                  if (!ok) {
+                    await AppSettings.openAppSettings(
+                      type: AppSettingsType.notification,
+                    );
+                  }
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '通知が許可されていません',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: colorTheme.onPrimaryContainer,
+                      ),
+                    ),
+                    Text(
+                      '緊急地震速報などの通知を受け取るには通知を許可してください',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorTheme.onPrimaryContainer,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.close,
                 color: colorTheme.onPrimaryContainer,
-                size: 24,
+                size: 20,
               ),
-              Expanded(
-                child: InkWell(
-                  onTap: () async {
-                    final ok = await ref
-                        .read(permissionRepositoryProvider)
-                        .requestNotificationPermission();
-                    ref.invalidate(isNotificationPermissionGrantedProvider);
-                    if (!ok) {
-                      await AppSettings.openAppSettings(
-                        type: AppSettingsType.notification,
-                      );
-                    }
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '通知が許可されていません',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: colorTheme.onPrimaryContainer,
-                        ),
-                      ),
-                      Text(
-                        '緊急地震速報などの通知を受け取るには通知を許可してください',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorTheme.onPrimaryContainer,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              tooltip: '閉じる',
+              onPressed: () => unawaited(
+                ref
+                    .read(
+                      notificationPermissionBannerDismissedProvider.notifier,
+                    )
+                    .dismiss(),
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: colorTheme.onPrimaryContainer,
-                  size: 20,
-                ),
-                tooltip: '閉じる',
-                onPressed: () => unawaited(
-                  ref
-                      .read(
-                        notificationPermissionBannerDismissedProvider.notifier,
-                      )
-                      .dismiss(),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

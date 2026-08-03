@@ -16,6 +16,6 @@ abstract class V2AdminTestLiveEventRequestBody with _$V2AdminTestLiveEventReques
     required EventType eventType,
     required TargetUnion target,
   }) = _V2AdminTestLiveEventRequestBody;
-  
+
   factory V2AdminTestLiveEventRequestBody.fromJson(Map<String, Object?> json) => _$V2AdminTestLiveEventRequestBodyFromJson(json);
 }

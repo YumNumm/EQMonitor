@@ -13,6 +13,6 @@ abstract class ParameterLocation with _$ParameterLocation {
     required num latitude,
     required num longitude,
   }) = _ParameterLocation;
-  
+
   factory ParameterLocation.fromJson(Map<String, Object?> json) => _$ParameterLocationFromJson(json);
 }

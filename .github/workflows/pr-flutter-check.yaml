@@ -47,6 +47,13 @@ jobs:
       EQMONITOR_GITHUB_APP_PRIVATE_KEY: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
     uses: ./.github/workflows/wc-check-integration.yaml
 
+  eqmonitor-map-scene-spike:
+    needs: changes
+    if: needs.changes.outputs.eqmonitor_map_scene_spike == 'true'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/wc-check-eqmonitor-map-scene-spike.yaml
+
   status-check:
     name: Flutter Status Check
     runs-on: ubuntu-slim
@@ -55,6 +62,7 @@ jobs:
       - flutter-analyze
       - flutter-test
       - integration-test
+      - eqmonitor-map-scene-spike
     permissions: {}
     if: always()
     steps:

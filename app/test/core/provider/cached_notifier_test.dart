@@ -22,6 +22,7 @@ var _freshValue = 'fresh';
 Object? _cacheError;
 Object? _networkError;
 Completer<String>? _networkCompleter;
+Completer<String>? _forceFreshCompleter;
 
 class _TestNotifier extends AsyncNotifier<String> with CachedNotifier<String> {
   @override
@@ -37,6 +38,9 @@ class _TestNotifier extends AsyncNotifier<String> with CachedNotifier<String> {
         requestOptions: RequestOptions(),
         error: const CacheMissException(),
       );
+    }
+    if (!identical(client, _httpCachedClient) && _forceFreshCompleter != null) {
+      return _forceFreshCompleter!.future;
     }
     if (_networkCompleter != null) {
       return _networkCompleter!.future;
@@ -74,6 +78,7 @@ void main() {
     _cacheError = null;
     _networkError = null;
     _networkCompleter = null;
+    _forceFreshCompleter = null;
 
     container = ProviderContainer(
       overrides: [
@@ -263,6 +268,30 @@ void main() {
   });
 
   group('generation counter', () {
+    test(
+      'force refresh prevents older revalidation from overwriting',
+      () async {
+        _shouldCacheHit = true;
+        _cachedValue = 'stale';
+        _networkCompleter = Completer<String>();
+        _forceFreshCompleter = Completer<String>();
+
+        await container.read(_testProvider.future);
+        await Future<void>.delayed(Duration.zero);
+
+        final forced = container
+            .read(_testProvider.notifier)
+            .forceRefreshCachedValue();
+        _forceFreshCompleter!.complete('forced');
+        expect(await forced, 'forced');
+
+        _networkCompleter!.complete('obsolete');
+        await _pumpMicrotasks();
+
+        expect(container.read(_testProvider).value, 'forced');
+      },
+    );
+
     test('prevents stale microtask from updating state', () async {
       _shouldCacheHit = true;
       _cachedValue = 'stale-v1';

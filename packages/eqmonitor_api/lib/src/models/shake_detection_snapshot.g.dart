@@ -12,7 +12,10 @@ _ShakeDetectionSnapshot _$ShakeDetectionSnapshotFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_ShakeDetectionSnapshot', json, ($checkedConvert) {
   final val = _ShakeDetectionSnapshot(
-    type: $checkedConvert('type', (v) => $enumDecode(_$Type3EnumMap, v)),
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$ShakeDetectionSnapshotTypeEnumMap, v),
+    ),
     revision: $checkedConvert('revision', (v) => (v as num).toInt()),
     responseAt: $checkedConvert(
       'responseAt',
@@ -37,4 +40,6 @@ Map<String, dynamic> _$ShakeDetectionSnapshotToJson(
   'events': instance.events,
 };
 
-const _$Type3EnumMap = {Type3.shakeDetection: 'shake_detection'};
+const _$ShakeDetectionSnapshotTypeEnumMap = {
+  ShakeDetectionSnapshotType.shakeDetection: 'shake_detection',
+};

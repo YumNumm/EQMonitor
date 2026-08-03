@@ -27,31 +27,31 @@ sealed class ParameterDataResponseUnion with _$ParameterDataResponseUnion {
     @JsonKey(name: 'code_tables')
     required JmaCodeTableParameterCodeTables codeTables,
   }) = ParameterDataResponseUnionJmaCodeTableParameter;
-  
+
   @JsonSerializable()
   const factory ParameterDataResponseUnion.kyoshinObservationPointsParameter({
     required KyoshinObservationPointsParameterMetadata metadata,
     required List<KyoshinObservationPoint> points,
   }) = ParameterDataResponseUnionKyoshinObservationPointsParameter;
-  
+
   @JsonSerializable()
   const factory ParameterDataResponseUnion.earthquakeStationsParameter({
     required ParameterMetadata metadata,
     required List<EarthquakeStationPrefecture> prefectures,
   }) = ParameterDataResponseUnionEarthquakeStationsParameter;
-  
+
   @JsonSerializable()
   const factory ParameterDataResponseUnion.tsunamiStationsParameter({
     required TsunamiStationsParameterMetadata metadata,
     required List<TsunamiStationPrefecture> prefectures,
   }) = ParameterDataResponseUnionTsunamiStationsParameter;
-  
+
   @JsonSerializable()
   const factory ParameterDataResponseUnion.shindoDbStationsParameter({
     required ShindoDbStationsParameterMetadata metadata,
     required List<ShindoDbStation> stations,
   }) = ParameterDataResponseUnionShindoDbStationsParameter;
-  
+
 
   factory ParameterDataResponseUnion.fromJson(Map<String, Object?> json) =>
       switch ((json['metadata'] as Map<String, Object?>?)?['type']) {

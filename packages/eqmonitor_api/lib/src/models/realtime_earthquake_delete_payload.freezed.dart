@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RealtimeEarthquakeDeletePayload {
 
- Type get type; Operation2 get operation;@JsonKey(name: 'event_id') String get eventId;
+ RealtimeEarthquakeDeletePayloadType get type; RealtimeEarthquakeDeletePayloadOperation get operation;@JsonKey(name: 'event_id') String get eventId;
 /// Create a copy of RealtimeEarthquakeDeletePayload
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RealtimeEarthquakeDeletePayloadCopyWith<$Res>  {
   factory $RealtimeEarthquakeDeletePayloadCopyWith(RealtimeEarthquakeDeletePayload value, $Res Function(RealtimeEarthquakeDeletePayload) _then) = _$RealtimeEarthquakeDeletePayloadCopyWithImpl;
 @useResult
 $Res call({
- Type type, Operation2 operation,@JsonKey(name: 'event_id') String eventId
+ RealtimeEarthquakeDeletePayloadType type, RealtimeEarthquakeDeletePayloadOperation operation,@JsonKey(name: 'event_id') String eventId
 });
 
 
@@ -68,8 +68,8 @@ class _$RealtimeEarthquakeDeletePayloadCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? operation = null,Object? eventId = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation2,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeEarthquakeDeletePayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeEarthquakeDeletePayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type type,  Operation2 operation, @JsonKey(name: 'event_id')  String eventId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RealtimeEarthquakeDeletePayloadType type,  RealtimeEarthquakeDeletePayloadOperation operation, @JsonKey(name: 'event_id')  String eventId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RealtimeEarthquakeDeletePayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId);case _:
@@ -176,7 +176,7 @@ return $default(_that.type,_that.operation,_that.eventId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type type,  Operation2 operation, @JsonKey(name: 'event_id')  String eventId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RealtimeEarthquakeDeletePayloadType type,  RealtimeEarthquakeDeletePayloadOperation operation, @JsonKey(name: 'event_id')  String eventId)  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeEarthquakeDeletePayload():
 return $default(_that.type,_that.operation,_that.eventId);case _:
@@ -196,7 +196,7 @@ return $default(_that.type,_that.operation,_that.eventId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type type,  Operation2 operation, @JsonKey(name: 'event_id')  String eventId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RealtimeEarthquakeDeletePayloadType type,  RealtimeEarthquakeDeletePayloadOperation operation, @JsonKey(name: 'event_id')  String eventId)?  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeEarthquakeDeletePayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId);case _:
@@ -214,8 +214,8 @@ class _RealtimeEarthquakeDeletePayload implements RealtimeEarthquakeDeletePayloa
   const _RealtimeEarthquakeDeletePayload({required this.type, required this.operation, @JsonKey(name: 'event_id') required this.eventId});
   factory _RealtimeEarthquakeDeletePayload.fromJson(Map<String, dynamic> json) => _$RealtimeEarthquakeDeletePayloadFromJson(json);
 
-@override final  Type type;
-@override final  Operation2 operation;
+@override final  RealtimeEarthquakeDeletePayloadType type;
+@override final  RealtimeEarthquakeDeletePayloadOperation operation;
 @override@JsonKey(name: 'event_id') final  String eventId;
 
 /// Create a copy of RealtimeEarthquakeDeletePayload
@@ -251,7 +251,7 @@ abstract mixin class _$RealtimeEarthquakeDeletePayloadCopyWith<$Res> implements 
   factory _$RealtimeEarthquakeDeletePayloadCopyWith(_RealtimeEarthquakeDeletePayload value, $Res Function(_RealtimeEarthquakeDeletePayload) _then) = __$RealtimeEarthquakeDeletePayloadCopyWithImpl;
 @override @useResult
 $Res call({
- Type type, Operation2 operation,@JsonKey(name: 'event_id') String eventId
+ RealtimeEarthquakeDeletePayloadType type, RealtimeEarthquakeDeletePayloadOperation operation,@JsonKey(name: 'event_id') String eventId
 });
 
 
@@ -271,8 +271,8 @@ class __$RealtimeEarthquakeDeletePayloadCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? operation = null,Object? eventId = null,}) {
   return _then(_RealtimeEarthquakeDeletePayload(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation2,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeEarthquakeDeletePayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeEarthquakeDeletePayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

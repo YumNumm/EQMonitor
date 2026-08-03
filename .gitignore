@@ -37,7 +37,6 @@ obfuscate
 .classpath
 .project
 .settings/
-.vscode/
 
 # packages file containing multi-root paths
 .packages.generated
@@ -52,6 +51,7 @@ obfuscate
 .pub-cache/
 .pub/
 build/
+.flutter-scene-sdk/
 flutter_*.png
 linked_*.ds
 unlinked.ds
@@ -196,6 +196,3 @@ app/assets/platform/map/
 app/assets/platform/parameters/
 app/assets/platform/manifest.json
 app/assets/platform/**/*.pmtiles
-
-# iOS AppIntent/Widget slim jma_code_table (staged from backend Release)
-app/assets/parameters/jma_code_table.json

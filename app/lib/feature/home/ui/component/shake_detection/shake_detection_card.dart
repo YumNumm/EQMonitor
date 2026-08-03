@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 class ShakeDetectionCard extends ConsumerWidget {
   const ShakeDetectionCard({
     required this.event,
-    this.outerPadding = const EdgeInsets.symmetric(horizontal: 16),
+    this.outerPadding = const EdgeInsets.symmetric(horizontal: 4),
     super.key,
   });
 
@@ -29,7 +29,7 @@ class ShakeDetectionCard extends ConsumerWidget {
       padding: outerPadding,
       child: Card(
         elevation: 0,
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         margin: EdgeInsets.zero,
         color: colorTheme.surfaceContainerHigh,
         shape: RoundedSuperellipseBorder(

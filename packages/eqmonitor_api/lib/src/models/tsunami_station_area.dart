@@ -17,6 +17,6 @@ abstract class TsunamiStationArea with _$TsunamiStationArea {
     required LocalizedName? name,
     required List<TsunamiStation> stations,
   }) = _TsunamiStationArea;
-  
+
   factory TsunamiStationArea.fromJson(Map<String, Object?> json) => _$TsunamiStationAreaFromJson(json);
 }

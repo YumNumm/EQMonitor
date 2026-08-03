@@ -1,5 +1,5 @@
-/// Thrown by [AssetsUtil.resolvePackRoot] when the platform-managed Asset
-/// Pack isn't available on-device yet (or no longer exists).
+/// Thrown when the platform-managed Asset Pack isn't available on-device yet
+/// (or no longer exists).
 ///
 /// This is deliberately the *only* failure signal for `resolvePackRoot`:
 /// callers must not fall back to bundled/fake data when this is thrown. See

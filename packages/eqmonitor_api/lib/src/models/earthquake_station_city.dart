@@ -19,6 +19,6 @@ abstract class EarthquakeStationCity with _$EarthquakeStationCity {
     required String? kana,
     required List<EarthquakeStation> stations,
   }) = _EarthquakeStationCity;
-  
+
   factory EarthquakeStationCity.fromJson(Map<String, Object?> json) => _$EarthquakeStationCityFromJson(json);
 }

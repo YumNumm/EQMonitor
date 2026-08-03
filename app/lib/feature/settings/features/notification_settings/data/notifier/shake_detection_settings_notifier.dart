@@ -177,6 +177,8 @@ ShakeDetectionEntry _shakeEntryFromResponse(
   id: r.id,
   subRegionId: r.subRegionId,
   subRegionName: null,
+  prefectureCode: r.prefectureCode,
+  cityCode: r.cityCode,
   minLevel: r.minLevel,
   isCurrentLocation: r.isCurrentLocation,
 );
@@ -184,6 +186,8 @@ ShakeDetectionEntry _shakeEntryFromResponse(
 api.ShakeDetectionSettingRequest _toApiRequest(ShakeDetectionEntry e) =>
     api.ShakeDetectionSettingRequest(
       subRegionId: e.subRegionId,
+      prefectureCode: e.prefectureCode,
+      cityCode: e.cityCode,
       minLevel: e.minLevel,
       isCurrentLocation: e.isCurrentLocation,
     );

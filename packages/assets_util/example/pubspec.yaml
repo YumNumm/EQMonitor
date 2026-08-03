@@ -15,3 +15,6 @@ dependencies:
 
 flutter:
   uses-material-design: true
+dev_dependencies:
+  eqmonitor_lints:
+    path: ../../eqmonitor_lints

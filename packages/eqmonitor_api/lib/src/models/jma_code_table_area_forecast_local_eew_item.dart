@@ -19,6 +19,6 @@ abstract class JmaCodeTableAreaForecastLocalEewItem with _$JmaCodeTableAreaForec
     @JsonKey(includeIfNull: true)
     required String? description,
   }) = _JmaCodeTableAreaForecastLocalEewItem;
-  
+
   factory JmaCodeTableAreaForecastLocalEewItem.fromJson(Map<String, Object?> json) => _$JmaCodeTableAreaForecastLocalEewItemFromJson(json);
 }

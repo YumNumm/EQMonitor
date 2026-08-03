@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RealtimeEewUpsertPayload {
 
- Type2 get type; Operation get operation;@JsonKey(name: 'event_id') String get eventId; EewItemWithRelations get record;
+ RealtimeEewUpsertPayloadType get type; RealtimeEewUpsertPayloadOperation get operation;@JsonKey(name: 'event_id') String get eventId; EewItemWithRelations get record;
 /// Create a copy of RealtimeEewUpsertPayload
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RealtimeEewUpsertPayloadCopyWith<$Res>  {
   factory $RealtimeEewUpsertPayloadCopyWith(RealtimeEewUpsertPayload value, $Res Function(RealtimeEewUpsertPayload) _then) = _$RealtimeEewUpsertPayloadCopyWithImpl;
 @useResult
 $Res call({
- Type2 type, Operation operation,@JsonKey(name: 'event_id') String eventId, EewItemWithRelations record
+ RealtimeEewUpsertPayloadType type, RealtimeEewUpsertPayloadOperation operation,@JsonKey(name: 'event_id') String eventId, EewItemWithRelations record
 });
 
 
@@ -68,8 +68,8 @@ class _$RealtimeEewUpsertPayloadCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? operation = null,Object? eventId = null,Object? record = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type2,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeEewUpsertPayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeEewUpsertPayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
 as EewItemWithRelations,
   ));
@@ -165,7 +165,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type2 type,  Operation operation, @JsonKey(name: 'event_id')  String eventId,  EewItemWithRelations record)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RealtimeEewUpsertPayloadType type,  RealtimeEewUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId,  EewItemWithRelations record)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RealtimeEewUpsertPayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
@@ -186,7 +186,7 @@ return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type2 type,  Operation operation, @JsonKey(name: 'event_id')  String eventId,  EewItemWithRelations record)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RealtimeEewUpsertPayloadType type,  RealtimeEewUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId,  EewItemWithRelations record)  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeEewUpsertPayload():
 return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
@@ -206,7 +206,7 @@ return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type2 type,  Operation operation, @JsonKey(name: 'event_id')  String eventId,  EewItemWithRelations record)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RealtimeEewUpsertPayloadType type,  RealtimeEewUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId,  EewItemWithRelations record)?  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeEewUpsertPayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
@@ -224,8 +224,8 @@ class _RealtimeEewUpsertPayload implements RealtimeEewUpsertPayload {
   const _RealtimeEewUpsertPayload({required this.type, required this.operation, @JsonKey(name: 'event_id') required this.eventId, required this.record});
   factory _RealtimeEewUpsertPayload.fromJson(Map<String, dynamic> json) => _$RealtimeEewUpsertPayloadFromJson(json);
 
-@override final  Type2 type;
-@override final  Operation operation;
+@override final  RealtimeEewUpsertPayloadType type;
+@override final  RealtimeEewUpsertPayloadOperation operation;
 @override@JsonKey(name: 'event_id') final  String eventId;
 @override final  EewItemWithRelations record;
 
@@ -262,7 +262,7 @@ abstract mixin class _$RealtimeEewUpsertPayloadCopyWith<$Res> implements $Realti
   factory _$RealtimeEewUpsertPayloadCopyWith(_RealtimeEewUpsertPayload value, $Res Function(_RealtimeEewUpsertPayload) _then) = __$RealtimeEewUpsertPayloadCopyWithImpl;
 @override @useResult
 $Res call({
- Type2 type, Operation operation,@JsonKey(name: 'event_id') String eventId, EewItemWithRelations record
+ RealtimeEewUpsertPayloadType type, RealtimeEewUpsertPayloadOperation operation,@JsonKey(name: 'event_id') String eventId, EewItemWithRelations record
 });
 
 
@@ -282,8 +282,8 @@ class __$RealtimeEewUpsertPayloadCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? operation = null,Object? eventId = null,Object? record = null,}) {
   return _then(_RealtimeEewUpsertPayload(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type2,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeEewUpsertPayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeEewUpsertPayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
 as EewItemWithRelations,
   ));

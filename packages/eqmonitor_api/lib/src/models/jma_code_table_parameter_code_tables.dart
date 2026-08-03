@@ -27,6 +27,6 @@ abstract class JmaCodeTableParameterCodeTables with _$JmaCodeTableParameterCodeT
     @JsonKey(name: 'area_epicenter_detail')
     required List<JmaCodeTableItem> areaEpicenterDetail,
   }) = _JmaCodeTableParameterCodeTables;
-  
+
   factory JmaCodeTableParameterCodeTables.fromJson(Map<String, Object?> json) => _$JmaCodeTableParameterCodeTablesFromJson(json);
 }

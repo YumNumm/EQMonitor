@@ -13,6 +13,7 @@ import 'clients/telemetry_api_client.dart';
 import 'clients/earthquake_api_client.dart';
 import 'clients/eew_api_client.dart';
 import 'clients/feed_api_client.dart';
+import 'clients/hypocenters_api_client.dart';
 import 'clients/parameters_api_client.dart';
 import 'clients/seismicity_api_client.dart';
 import 'clients/shake_detection_api_client.dart';
@@ -47,6 +48,7 @@ class ApiClient {
   EarthquakeApiClient? _earthquake;
   EewApiClient? _eew;
   FeedApiClient? _feed;
+  HypocentersApiClient? _hypocenters;
   ParametersApiClient? _parameters;
   SeismicityApiClient? _seismicity;
   ShakeDetectionApiClient? _shakeDetection;
@@ -75,6 +77,7 @@ class ApiClient {
 
   FeedApiClient get feed => _feed ??= FeedApiClient(_dio, baseUrl: _baseUrl);
 
+  HypocentersApiClient get hypocenters => _hypocenters ??= HypocentersApiClient(_dio, baseUrl: _baseUrl);
   ParametersApiClient get parameters => _parameters ??= ParametersApiClient(_dio, baseUrl: _baseUrl);
 
   SeismicityApiClient get seismicity => _seismicity ??= SeismicityApiClient(_dio, baseUrl: _baseUrl);

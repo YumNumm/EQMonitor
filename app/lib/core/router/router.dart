@@ -10,6 +10,8 @@ import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page
 import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
 import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_query.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_activity_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
@@ -60,6 +62,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/notification/de
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_insert_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_shared_preferences_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/telemetry/debug_telemetry_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_tsunami_details_page.dart';
@@ -243,6 +246,18 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData
   }
 }
 
+@TypedGoRoute<EarthquakeActivityRoute>(path: '/earthquake-activity')
+class EarthquakeActivityRoute extends GoRouteData
+    with $EarthquakeActivityRoute {
+  const EarthquakeActivityRoute({required this.$extra});
+
+  final EarthquakeActivityQuery $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      EarthquakeActivityPage(initialQuery: $extra);
+}
+
 @TypedGoRoute<ShakeDetectionHistoryRoute>(path: '/shake-detection-history')
 class ShakeDetectionHistoryRoute extends GoRouteData
     with $ShakeDetectionHistoryRoute {
@@ -376,6 +391,9 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         ),
         TypedGoRoute<DebugShakeDetectionCardRoute>(
           path: 'shake-detection-card',
+        ),
+        TypedGoRoute<DebugShakeDetectionInsertRoute>(
+          path: 'shake-detection-insert',
         ),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
@@ -630,6 +648,16 @@ class DebugShakeDetectionCardRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugShakeDetectionCardPage();
+  }
+}
+
+class DebugShakeDetectionInsertRoute extends GoRouteData
+    with $DebugShakeDetectionInsertRoute {
+  const DebugShakeDetectionInsertRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugShakeDetectionInsertPage();
   }
 }
 

@@ -16,6 +16,6 @@ abstract class ShindoDbStationsParameter with _$ShindoDbStationsParameter {
     required ShindoDbStationsParameterMetadata metadata,
     required List<ShindoDbStation> stations,
   }) = _ShindoDbStationsParameter;
-  
+
   factory ShindoDbStationsParameter.fromJson(Map<String, Object?> json) => _$ShindoDbStationsParameterFromJson(json);
 }

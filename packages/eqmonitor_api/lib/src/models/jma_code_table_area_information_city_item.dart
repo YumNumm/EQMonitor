@@ -19,6 +19,6 @@ abstract class JmaCodeTableAreaInformationCityItem with _$JmaCodeTableAreaInform
     @JsonKey(name: 'parent_area_information_prefecture_earthquake_code')
     required String parentAreaInformationPrefectureEarthquakeCode,
   }) = _JmaCodeTableAreaInformationCityItem;
-  
+
   factory JmaCodeTableAreaInformationCityItem.fromJson(Map<String, Object?> json) => _$JmaCodeTableAreaInformationCityItemFromJson(json);
 }

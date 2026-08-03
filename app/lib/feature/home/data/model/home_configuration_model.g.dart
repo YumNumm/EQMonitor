@@ -16,12 +16,6 @@ _HomeShakeDetectionSettings _$HomeShakeDetectionSettingsFromJson(
   ($checkedConvert) {
     final val = _HomeShakeDetectionSettings(
       show: $checkedConvert('show', (v) => v as bool? ?? true),
-      displayMode: $checkedConvert(
-        'display_mode',
-        (v) =>
-            $enumDecodeNullable(_$HomeShakeDetectionDisplayModeEnumMap, v) ??
-            HomeShakeDetectionDisplayMode.boundingBox,
-      ),
       animationMode: $checkedConvert(
         'animation_mode',
         (v) =>
@@ -31,24 +25,15 @@ _HomeShakeDetectionSettings _$HomeShakeDetectionSettingsFromJson(
     );
     return val;
   },
-  fieldKeyMap: const {
-    'displayMode': 'display_mode',
-    'animationMode': 'animation_mode',
-  },
+  fieldKeyMap: const {'animationMode': 'animation_mode'},
 );
 
 Map<String, dynamic> _$HomeShakeDetectionSettingsToJson(
   _HomeShakeDetectionSettings instance,
 ) => <String, dynamic>{
   'show': instance.show,
-  'display_mode': _$HomeShakeDetectionDisplayModeEnumMap[instance.displayMode]!,
   'animation_mode':
       _$HomeShakeDetectionAnimationModeEnumMap[instance.animationMode]!,
-};
-
-const _$HomeShakeDetectionDisplayModeEnumMap = {
-  HomeShakeDetectionDisplayMode.gridCell: 'gridCell',
-  HomeShakeDetectionDisplayMode.boundingBox: 'boundingBox',
 };
 
 const _$HomeShakeDetectionAnimationModeEnumMap = {
@@ -148,6 +133,18 @@ const _$HomeKmoniMarkerSizeEnumMap = {
   HomeKmoniMarkerSize.medium: 'medium',
   HomeKmoniMarkerSize.large: 'large',
 };
+
+_HomeMapGridSettings _$HomeMapGridSettingsFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_HomeMapGridSettings', json, ($checkedConvert) {
+      final val = _HomeMapGridSettings(
+        enabled: $checkedConvert('enabled', (v) => v as bool? ?? false),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$HomeMapGridSettingsToJson(
+  _HomeMapGridSettings instance,
+) => <String, dynamic>{'enabled': instance.enabled};
 
 _HomeMapSettings _$HomeMapSettingsFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
@@ -300,12 +297,19 @@ _HomeConfigurationModel _$HomeConfigurationModelFromJson(
             ? const HomeShakeDetectionSettings()
             : HomeShakeDetectionSettings.fromJson(v as Map<String, dynamic>),
       ),
+      mapGrid: $checkedConvert(
+        'map_grid',
+        (v) => v == null
+            ? const HomeMapGridSettings()
+            : HomeMapGridSettings.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
   fieldKeyMap: const {
     'kyoshinMonitor': 'kyoshin_monitor',
     'shakeDetection': 'shake_detection',
+    'mapGrid': 'map_grid',
   },
 );
 
@@ -317,4 +321,5 @@ Map<String, dynamic> _$HomeConfigurationModelToJson(
   'map': instance.map.toJson(),
   'common': instance.common.toJson(),
   'shake_detection': instance.shakeDetection.toJson(),
+  'map_grid': instance.mapGrid.toJson(),
 };

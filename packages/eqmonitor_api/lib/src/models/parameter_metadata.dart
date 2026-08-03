@@ -25,6 +25,6 @@ abstract class ParameterMetadata with _$ParameterMetadata {
     required List<String> sourceUrls,
     required String sha256,
   }) = _ParameterMetadata;
-  
+
   factory ParameterMetadata.fromJson(Map<String, Object?> json) => _$ParameterMetadataFromJson(json);
 }

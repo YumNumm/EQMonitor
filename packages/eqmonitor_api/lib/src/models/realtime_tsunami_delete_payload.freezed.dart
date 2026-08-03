@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RealtimeTsunamiDeletePayload {
 
- Type4 get type; Operation2 get operation;@JsonKey(name: 'event_id') String get eventId;@JsonKey(includeIfNull: false, name: 'group_id') String? get groupId;
+ RealtimeTsunamiDeletePayloadType get type; RealtimeTsunamiDeletePayloadOperation get operation;@JsonKey(name: 'event_id') String get eventId;@JsonKey(includeIfNull: false, name: 'group_id') String? get groupId;
 /// Create a copy of RealtimeTsunamiDeletePayload
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RealtimeTsunamiDeletePayloadCopyWith<$Res>  {
   factory $RealtimeTsunamiDeletePayloadCopyWith(RealtimeTsunamiDeletePayload value, $Res Function(RealtimeTsunamiDeletePayload) _then) = _$RealtimeTsunamiDeletePayloadCopyWithImpl;
 @useResult
 $Res call({
- Type4 type, Operation2 operation,@JsonKey(name: 'event_id') String eventId,@JsonKey(includeIfNull: false, name: 'group_id') String? groupId
+ RealtimeTsunamiDeletePayloadType type, RealtimeTsunamiDeletePayloadOperation operation,@JsonKey(name: 'event_id') String eventId,@JsonKey(includeIfNull: false, name: 'group_id') String? groupId
 });
 
 
@@ -68,8 +68,8 @@ class _$RealtimeTsunamiDeletePayloadCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? operation = null,Object? eventId = null,Object? groupId = freezed,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type4,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation2,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeTsunamiDeletePayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeTsunamiDeletePayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,groupId: freezed == groupId ? _self.groupId : groupId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type4 type,  Operation2 operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RealtimeTsunamiDeletePayloadType type,  RealtimeTsunamiDeletePayloadOperation operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RealtimeTsunamiDeletePayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId,_that.groupId);case _:
@@ -177,7 +177,7 @@ return $default(_that.type,_that.operation,_that.eventId,_that.groupId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type4 type,  Operation2 operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RealtimeTsunamiDeletePayloadType type,  RealtimeTsunamiDeletePayloadOperation operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeTsunamiDeletePayload():
 return $default(_that.type,_that.operation,_that.eventId,_that.groupId);case _:
@@ -197,7 +197,7 @@ return $default(_that.type,_that.operation,_that.eventId,_that.groupId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type4 type,  Operation2 operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RealtimeTsunamiDeletePayloadType type,  RealtimeTsunamiDeletePayloadOperation operation, @JsonKey(name: 'event_id')  String eventId, @JsonKey(includeIfNull: false, name: 'group_id')  String? groupId)?  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeTsunamiDeletePayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId,_that.groupId);case _:
@@ -215,8 +215,8 @@ class _RealtimeTsunamiDeletePayload implements RealtimeTsunamiDeletePayload {
   const _RealtimeTsunamiDeletePayload({required this.type, required this.operation, @JsonKey(name: 'event_id') required this.eventId, @JsonKey(includeIfNull: false, name: 'group_id') this.groupId});
   factory _RealtimeTsunamiDeletePayload.fromJson(Map<String, dynamic> json) => _$RealtimeTsunamiDeletePayloadFromJson(json);
 
-@override final  Type4 type;
-@override final  Operation2 operation;
+@override final  RealtimeTsunamiDeletePayloadType type;
+@override final  RealtimeTsunamiDeletePayloadOperation operation;
 @override@JsonKey(name: 'event_id') final  String eventId;
 @override@JsonKey(includeIfNull: false, name: 'group_id') final  String? groupId;
 
@@ -253,7 +253,7 @@ abstract mixin class _$RealtimeTsunamiDeletePayloadCopyWith<$Res> implements $Re
   factory _$RealtimeTsunamiDeletePayloadCopyWith(_RealtimeTsunamiDeletePayload value, $Res Function(_RealtimeTsunamiDeletePayload) _then) = __$RealtimeTsunamiDeletePayloadCopyWithImpl;
 @override @useResult
 $Res call({
- Type4 type, Operation2 operation,@JsonKey(name: 'event_id') String eventId,@JsonKey(includeIfNull: false, name: 'group_id') String? groupId
+ RealtimeTsunamiDeletePayloadType type, RealtimeTsunamiDeletePayloadOperation operation,@JsonKey(name: 'event_id') String eventId,@JsonKey(includeIfNull: false, name: 'group_id') String? groupId
 });
 
 
@@ -273,8 +273,8 @@ class __$RealtimeTsunamiDeletePayloadCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? operation = null,Object? eventId = null,Object? groupId = freezed,}) {
   return _then(_RealtimeTsunamiDeletePayload(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type4,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation2,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeTsunamiDeletePayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeTsunamiDeletePayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,groupId: freezed == groupId ? _self.groupId : groupId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

@@ -76,7 +76,7 @@ class HomeMapLayerPage extends HookConsumerWidget {
                   _SettingsSection(
                     icon: Icons.vibration_rounded,
                     title: '揺れ検知',
-                    description: '揺れ検知イベントの表示スタイルとアニメーションを調整します。',
+                    description: '揺れ検知イベントの表示とアニメーションを調整します。',
                     isExpanded:
                         expandedSection.value ==
                         _MapLayerSection.shakeDetection,
@@ -89,7 +89,6 @@ class HomeMapLayerPage extends HookConsumerWidget {
                     },
                     children: const [
                       _ShakeDetectionShowTile(),
-                      _ShakeDetectionDisplayModeTile(),
                       _ShakeDetectionAnimationModeTile(),
                     ],
                   ),
@@ -1216,7 +1215,9 @@ class _ShakeDetectionShowTile extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: '揺れ検知を地図上に表示',
-      subtitle: cfg.shakeDetection.show ? '検知イベントを枠で表示します。' : '揺れ検知を表示しません。',
+      subtitle: cfg.shakeDetection.show
+          ? '検知イベントを 0.25° グリッドで表示します。'
+          : '揺れ検知を表示しません。',
       value: cfg.shakeDetection.show,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -1224,45 +1225,6 @@ class _ShakeDetectionShowTile extends ConsumerWidget {
           (tsx) async => tsx
               .get(homeConfigurationProvider.notifier)
               .updateShakeDetection(cfg.shakeDetection.copyWith(show: next)),
-        );
-      },
-    );
-  }
-}
-
-class _ShakeDetectionDisplayModeTile extends ConsumerWidget {
-  const _ShakeDetectionDisplayModeTile();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final cfg = ref.watch(homeConfigurationProvider).value;
-    if (cfg == null || !cfg.shakeDetection.show) {
-      return const SizedBox.shrink();
-    }
-    final mode = cfg.shakeDetection.displayMode;
-
-    return _SettingSegmentedField<HomeShakeDetectionDisplayMode>(
-      title: '表示スタイル',
-      subtitle: '0.25° グリッドセルまたはバウンディングボックスで表示します。',
-      segments: const [
-        ButtonSegment(
-          value: HomeShakeDetectionDisplayMode.boundingBox,
-          label: Text('矩形'),
-        ),
-        ButtonSegment(
-          value: HomeShakeDetectionDisplayMode.gridCell,
-          label: Text('グリッド'),
-        ),
-      ],
-      selected: {mode},
-      onSelectionChanged: (next) async {
-        await HomeConfigurationNotifier.saveMutation.run(
-          ref,
-          (tsx) async => tsx
-              .get(homeConfigurationProvider.notifier)
-              .updateShakeDetection(
-                cfg.shakeDetection.copyWith(displayMode: next.first),
-              ),
         );
       },
     );

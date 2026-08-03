@@ -79,6 +79,15 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Checkout pinned Flutter SDK
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: flutter/flutter
+          ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
+          path: .flutter-scene-sdk
+          fetch-depth: 1
+          persist-credentials: false
+
       - name: Extract SOPS Age Key File
         run: |
           echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
@@ -89,10 +98,18 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
+        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
         with:
           cache: false
-          install_args: "flutter xcbeautify"
+          install_args: "xcbeautify"
+
+      - name: Verify pinned Flutter SDK
+        run: |
+          mise bootstrap repos status --missing
+          mise exec -- flutter --version --machine
+
+      - name: Precache Flutter iOS artifacts
+        run: mise exec -- flutter precache --ios
 
       - name: Set environment variables
         run: |
@@ -109,11 +126,11 @@ jobs:
 
       - name: Enable Swift Package Manager
         run: |
-          flutter config --enable-swift-package-manager
+          mise exec -- flutter config --enable-swift-package-manager
 
       - name: Resolve dependencies
         working-directory: app
-        run: flutter pub get --enforce-lockfile
+        run: mise exec -- flutter pub get --enforce-lockfile
 
       # AppIntent/Widget Bundle Resources need a slim jma_code_table.json.
       # Full parameters stay on Managed Background Assets at runtime.
@@ -144,7 +161,7 @@ jobs:
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
-          flutter build ios --config-only \
+          mise exec -- flutter build ios --config-only \
             --no-codesign \
             --no-pub \
             --build-number=${{ github.run_number }} \
@@ -316,7 +333,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
+        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
         with:
           cache: false
           install_args: "xcbeautify yq node pnpm"
@@ -395,7 +412,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
+        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
         with:
           cache: false
           install_args: "firebase yq"
@@ -473,6 +490,15 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Checkout pinned Flutter SDK
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: flutter/flutter
+          ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
+          path: .flutter-scene-sdk
+          fetch-depth: 1
+          persist-credentials: false
+
       - name: Extract SOPS Age Key File
         run: |
           echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
@@ -483,10 +509,18 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
+        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
         with:
           cache: false
-          install_args: "flutter java uv python pipx:codemagic-cli-tools"
+          install_args: "java uv python pipx:codemagic-cli-tools"
+
+      - name: Verify pinned Flutter SDK
+        run: |
+          mise bootstrap repos status --missing
+          mise exec -- flutter --version --machine
+
+      - name: Precache Flutter Android artifacts
+        run: mise exec -- flutter precache --android
 
       - name: Set environment variables
         run: |
@@ -497,11 +531,11 @@ jobs:
           done
 
       - name: Accept Android License
-        run: yes | flutter doctor --android-licenses
+        run: yes | mise exec -- flutter doctor --android-licenses
 
       - name: Resolve dependencies
         working-directory: app
-        run: flutter pub get --enforce-lockfile
+        run: mise exec -- flutter pub get --enforce-lockfile
 
       # Play Asset Delivery install-time pack contents are not committed.
       # Stage the latest asset-pack-v* Release from eqmonitor-backend into the
@@ -548,7 +582,7 @@ jobs:
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
-          flutter build appbundle \
+          mise exec -- flutter build appbundle \
             --release \
             --no-pub \
             --build-number="${BUILD_NUMBER}" \
@@ -600,7 +634,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
+        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
         with:
           cache: false
           install_args: "firebase yq"
@@ -708,7 +742,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea # v4.2.1
+        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
         with:
           cache: false
           install_args: "github:YumNumm/google-play-cli yq"

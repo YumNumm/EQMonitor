@@ -20,6 +20,10 @@ let package = Package(
   targets: [
     .target(
       name: "assets_util"
+    ),
+    .testTarget(
+      name: "assets_utilTests",
+      dependencies: ["assets_util"]
     )
   ]
 )

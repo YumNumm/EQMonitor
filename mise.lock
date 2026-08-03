@@ -184,10 +184,6 @@ checksum = "sha256:50e01c681a895eae10f2c08e57aabea6a27fd17976785925e602bd6b7c916
 url = "https://github.com/firebase/firebase-tools/releases/download/v15.22.4/firebase-tools-win.exe"
 url_api = "https://api.github.com/repos/firebase/firebase-tools/releases/assets/462649593"
 
-[[tools.flutter]]
-version = "3.44.4-stable"
-backend = "asdf:flutter"
-
 [[tools.gcloud]]
 version = "570.0.0"
 backend = "asdf:gcloud"
@@ -327,6 +323,11 @@ url = "https://github.com/YumNumm/google-play-cli/releases/download/v1.0.1/googl
 url_api = "https://api.github.com/repos/YumNumm/google-play-cli/releases/assets/377097265"
 
 [tools."github:YumNumm/google-play-cli"."platforms.macos-x64"]
+checksum = "sha256:6c2bf714856ddd644531d17f46827e73ff6b4f31cdea71764fe1f64852b3c28e"
+url = "https://github.com/YumNumm/google-play-cli/releases/download/v1.0.1/google-play-cli_darwin_amd64"
+url_api = "https://api.github.com/repos/YumNumm/google-play-cli/releases/assets/377097267"
+
+[tools."github:YumNumm/google-play-cli"."platforms.macos-x64-baseline"]
 checksum = "sha256:6c2bf714856ddd644531d17f46827e73ff6b4f31cdea71764fe1f64852b3c28e"
 url = "https://github.com/YumNumm/google-play-cli/releases/download/v1.0.1/google-play-cli_darwin_amd64"
 url_api = "https://api.github.com/repos/YumNumm/google-play-cli/releases/assets/377097267"

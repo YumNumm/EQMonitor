@@ -29,7 +29,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [packageInfoProvider.overrideWithValue(_packageInfo)],
-        child: _app(const WhatsNewBanner(bottomSpacing: 0)),
+        child: _app(const WhatsNewBanner()),
       ),
     );
     await tester.pumpAndSettle();
@@ -42,7 +42,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [packageInfoProvider.overrideWithValue(_packageInfo)],
-        child: _app(const WhatsNewBanner(bottomSpacing: 0)),
+        child: _app(const WhatsNewBanner()),
       ),
     );
     await tester.pumpAndSettle();
@@ -55,7 +55,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [packageInfoProvider.overrideWithValue(_packageInfo)],
-        child: _app(const WhatsNewBanner(bottomSpacing: 0)),
+        child: _app(const WhatsNewBanner()),
       ),
     );
     await tester.pumpAndSettle();

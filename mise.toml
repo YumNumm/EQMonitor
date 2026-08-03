@@ -1,8 +1,13 @@
-min_version = "2026.04.01"
+min_version = "2026.08.0"
+
+[env.'_']
+path = { path = ["tool/eqmonitor_map/bin"], tools = true }
+
+[bootstrap.repos]
+".flutter-scene-sdk" = { url = "https://github.com/flutter/flutter.git", ref = "4dacd3fc91d96262a33e5c598e17d816f0b35641" }
 
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"
-flutter = "3.44.4-stable"
 java = "17"
 node = "lts"
 python = "latest"
@@ -25,7 +30,7 @@ pkl = "latest"
 zizmor = "latest"
 ghalint = "latest"
 gitleaks = "latest"
-claude = "2.1.201"
+claude = "latest"
 swift = "latest"
 
 [settings]

@@ -21,6 +21,6 @@ abstract class TsunamiStationForecastFirstHeight with _$TsunamiStationForecastFi
     @JsonKey(includeIfNull: false)
     Revise? revise,
   }) = _TsunamiStationForecastFirstHeight;
-  
+
   factory TsunamiStationForecastFirstHeight.fromJson(Map<String, Object?> json) => _$TsunamiStationForecastFirstHeightFromJson(json);
 }

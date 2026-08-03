@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RealtimeEstimatedIntensityUpsertPayload {
 
- Type5 get type; Operation get operation;@JsonKey(name: 'event_id') String get eventId; EstimatedIntensityEvent get record;
+ RealtimeEstimatedIntensityUpsertPayloadType get type; RealtimeEstimatedIntensityUpsertPayloadOperation get operation;@JsonKey(name: 'event_id') String get eventId; EstimatedIntensityEvent get record;
 /// Create a copy of RealtimeEstimatedIntensityUpsertPayload
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RealtimeEstimatedIntensityUpsertPayloadCopyWith<$Res>  {
   factory $RealtimeEstimatedIntensityUpsertPayloadCopyWith(RealtimeEstimatedIntensityUpsertPayload value, $Res Function(RealtimeEstimatedIntensityUpsertPayload) _then) = _$RealtimeEstimatedIntensityUpsertPayloadCopyWithImpl;
 @useResult
 $Res call({
- Type5 type, Operation operation,@JsonKey(name: 'event_id') String eventId, EstimatedIntensityEvent record
+ RealtimeEstimatedIntensityUpsertPayloadType type, RealtimeEstimatedIntensityUpsertPayloadOperation operation,@JsonKey(name: 'event_id') String eventId, EstimatedIntensityEvent record
 });
 
 
@@ -68,8 +68,8 @@ class _$RealtimeEstimatedIntensityUpsertPayloadCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? operation = null,Object? eventId = null,Object? record = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type5,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeEstimatedIntensityUpsertPayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeEstimatedIntensityUpsertPayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
 as EstimatedIntensityEvent,
   ));
@@ -165,7 +165,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type5 type,  Operation operation, @JsonKey(name: 'event_id')  String eventId,  EstimatedIntensityEvent record)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RealtimeEstimatedIntensityUpsertPayloadType type,  RealtimeEstimatedIntensityUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId,  EstimatedIntensityEvent record)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RealtimeEstimatedIntensityUpsertPayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
@@ -186,7 +186,7 @@ return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type5 type,  Operation operation, @JsonKey(name: 'event_id')  String eventId,  EstimatedIntensityEvent record)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RealtimeEstimatedIntensityUpsertPayloadType type,  RealtimeEstimatedIntensityUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId,  EstimatedIntensityEvent record)  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeEstimatedIntensityUpsertPayload():
 return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
@@ -206,7 +206,7 @@ return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type5 type,  Operation operation, @JsonKey(name: 'event_id')  String eventId,  EstimatedIntensityEvent record)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RealtimeEstimatedIntensityUpsertPayloadType type,  RealtimeEstimatedIntensityUpsertPayloadOperation operation, @JsonKey(name: 'event_id')  String eventId,  EstimatedIntensityEvent record)?  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeEstimatedIntensityUpsertPayload() when $default != null:
 return $default(_that.type,_that.operation,_that.eventId,_that.record);case _:
@@ -224,8 +224,8 @@ class _RealtimeEstimatedIntensityUpsertPayload implements RealtimeEstimatedInten
   const _RealtimeEstimatedIntensityUpsertPayload({required this.type, required this.operation, @JsonKey(name: 'event_id') required this.eventId, required this.record});
   factory _RealtimeEstimatedIntensityUpsertPayload.fromJson(Map<String, dynamic> json) => _$RealtimeEstimatedIntensityUpsertPayloadFromJson(json);
 
-@override final  Type5 type;
-@override final  Operation operation;
+@override final  RealtimeEstimatedIntensityUpsertPayloadType type;
+@override final  RealtimeEstimatedIntensityUpsertPayloadOperation operation;
 @override@JsonKey(name: 'event_id') final  String eventId;
 @override final  EstimatedIntensityEvent record;
 
@@ -262,7 +262,7 @@ abstract mixin class _$RealtimeEstimatedIntensityUpsertPayloadCopyWith<$Res> imp
   factory _$RealtimeEstimatedIntensityUpsertPayloadCopyWith(_RealtimeEstimatedIntensityUpsertPayload value, $Res Function(_RealtimeEstimatedIntensityUpsertPayload) _then) = __$RealtimeEstimatedIntensityUpsertPayloadCopyWithImpl;
 @override @useResult
 $Res call({
- Type5 type, Operation operation,@JsonKey(name: 'event_id') String eventId, EstimatedIntensityEvent record
+ RealtimeEstimatedIntensityUpsertPayloadType type, RealtimeEstimatedIntensityUpsertPayloadOperation operation,@JsonKey(name: 'event_id') String eventId, EstimatedIntensityEvent record
 });
 
 
@@ -282,8 +282,8 @@ class __$RealtimeEstimatedIntensityUpsertPayloadCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? operation = null,Object? eventId = null,Object? record = null,}) {
   return _then(_RealtimeEstimatedIntensityUpsertPayload(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type5,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
-as Operation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as RealtimeEstimatedIntensityUpsertPayloadType,operation: null == operation ? _self.operation : operation // ignore: cast_nullable_to_non_nullable
+as RealtimeEstimatedIntensityUpsertPayloadOperation,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
 as EstimatedIntensityEvent,
   ));

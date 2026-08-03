@@ -80,7 +80,7 @@ as ParameterLocation,
 @override
 @pragma('vm:prefer-inline')
 $LocalizedNameCopyWith<$Res> get name {
-  
+
   return $LocalizedNameCopyWith<$Res>(_self.name, (value) {
     return _then(_self.copyWith(name: value));
   });
@@ -89,7 +89,7 @@ $LocalizedNameCopyWith<$Res> get name {
 @override
 @pragma('vm:prefer-inline')
 $ParameterLocationCopyWith<$Res> get location {
-  
+
   return $ParameterLocationCopyWith<$Res>(_self.location, (value) {
     return _then(_self.copyWith(location: value));
   });
@@ -306,7 +306,7 @@ as ParameterLocation,
 @override
 @pragma('vm:prefer-inline')
 $LocalizedNameCopyWith<$Res> get name {
-  
+
   return $LocalizedNameCopyWith<$Res>(_self.name, (value) {
     return _then(_self.copyWith(name: value));
   });
@@ -315,7 +315,7 @@ $LocalizedNameCopyWith<$Res> get name {
 @override
 @pragma('vm:prefer-inline')
 $ParameterLocationCopyWith<$Res> get location {
-  
+
   return $ParameterLocationCopyWith<$Res>(_self.location, (value) {
     return _then(_self.copyWith(location: value));
   });
