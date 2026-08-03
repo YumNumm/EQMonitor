@@ -57,6 +57,9 @@ class ShakeDetectionDebugPresetFactory {
           type: 'K',
           location: Location(latitude: spec.lat, longitude: spec.lng),
           intensity: spec.intensity,
+          prefectureCode: '13',
+          regionCode: '350',
+          cityCode: null,
         ),
     ];
 

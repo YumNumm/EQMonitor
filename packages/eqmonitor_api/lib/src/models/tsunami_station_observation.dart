@@ -22,6 +22,6 @@ abstract class TsunamiStationObservation with _$TsunamiStationObservation {
     @JsonKey(includeIfNull: false,name: 'max_height')
     TsunamiStationObservationMaxHeight? maxHeight,
   }) = _TsunamiStationObservation;
-  
+
   factory TsunamiStationObservation.fromJson(Map<String, Object?> json) => _$TsunamiStationObservationFromJson(json);
 }
