@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
+import 'package:seismicity_pmtiles/src/reader/file_random_access_reader.dart';
 import 'package:test/fake.dart';
 import 'package:test/test.dart';
 
