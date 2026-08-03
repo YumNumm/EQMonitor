@@ -59,6 +59,14 @@ SceneSpikeEvidence _$SceneSpikeEvidenceFromJson(Map<String, dynamic> json) =>
           : SceneSpikeCustomMaterialRuntimeSuccess.fromJson(
               json['customMaterialRuntimeSuccess'] as Map<String, dynamic>,
             ),
+      customMaterialRuntimeFailures:
+          (json['customMaterialRuntimeFailures'] as List<dynamic>)
+              .map(
+                (e) => SceneSpikeCustomMaterialRuntimeFailure.fromJson(
+                  e as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
       capabilities: (json['capabilities'] as List<dynamic>)
           .map(
             (e) =>
@@ -117,6 +125,9 @@ Map<String, dynamic> _$SceneSpikeEvidenceToJson(
   ),
   'customMaterialRuntimeSuccess': instance.customMaterialRuntimeSuccess
       ?.toJson(),
+  'customMaterialRuntimeFailures': instance.customMaterialRuntimeFailures
+      .map((e) => e.toJson())
+      .toList(),
   'capabilities': instance.capabilities.map((e) => e.toJson()).toList(),
   'performance': instance.performance.toJson(),
 };
@@ -216,6 +227,32 @@ Map<String, dynamic> _$SceneSpikeCustomMaterialRuntimeSuccessToJson(
   'appResourceGeneration': const SceneSpikeStrictIntConverter().toJson(
     instance.appResourceGeneration,
   ),
+  'observedAtUtc': instance.observedAtUtc.toIso8601String(),
+};
+
+_SceneSpikeCustomMaterialRuntimeFailure
+_$SceneSpikeCustomMaterialRuntimeFailureFromJson(Map<String, dynamic> json) =>
+    _SceneSpikeCustomMaterialRuntimeFailure(
+      controllerGeneration: const SceneSpikeStrictIntConverter().fromJson(
+        json['controllerGeneration'] as num,
+      ),
+      appResourceGeneration: const SceneSpikeStrictIntConverter().fromJson(
+        json['appResourceGeneration'] as num,
+      ),
+      detail: json['detail'] as String,
+      observedAtUtc: DateTime.parse(json['observedAtUtc'] as String),
+    );
+
+Map<String, dynamic> _$SceneSpikeCustomMaterialRuntimeFailureToJson(
+  _SceneSpikeCustomMaterialRuntimeFailure instance,
+) => <String, dynamic>{
+  'controllerGeneration': const SceneSpikeStrictIntConverter().toJson(
+    instance.controllerGeneration,
+  ),
+  'appResourceGeneration': const SceneSpikeStrictIntConverter().toJson(
+    instance.appResourceGeneration,
+  ),
+  'detail': instance.detail,
   'observedAtUtc': instance.observedAtUtc.toIso8601String(),
 };
 

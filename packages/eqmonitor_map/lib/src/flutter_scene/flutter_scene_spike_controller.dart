@@ -35,6 +35,12 @@ class SceneSpikeRunLog implements SceneSpikeRuntimeObservationSink {
   var _latestControllerGeneration = -1;
 
   SceneSpikeCustomMaterialRuntimeSuccess? customMaterialRuntimeSuccess;
+  final List<SceneSpikeCustomMaterialRuntimeFailure>
+  _customMaterialRuntimeFailures = [];
+
+  List<SceneSpikeCustomMaterialRuntimeFailure>
+  get customMaterialRuntimeFailures =>
+      List.unmodifiable(_customMaterialRuntimeFailures);
 
   int get disposeAndRemountCount => _disposeAndRemountCount;
 
@@ -48,8 +54,7 @@ class SceneSpikeRunLog implements SceneSpikeRuntimeObservationSink {
     required int controllerGeneration,
     required int appResourceGeneration,
   }) {
-    if (controllerGeneration != _latestControllerGeneration ||
-        observations[SceneSpikeCapability.customMaterial]?.status == .failed) {
+    if (controllerGeneration != _latestControllerGeneration) {
       return;
     }
     customMaterialRuntimeSuccess = SceneSpikeCustomMaterialRuntimeSuccess(
@@ -57,6 +62,47 @@ class SceneSpikeRunLog implements SceneSpikeRuntimeObservationSink {
       appResourceGeneration: appResourceGeneration,
       observedAtUtc: DateTime.now().toUtc(),
     );
+  }
+
+  void recordCustomMaterialRuntimeFailure({
+    required int controllerGeneration,
+    required int appResourceGeneration,
+    required String detail,
+  }) {
+    if (controllerGeneration != _latestControllerGeneration) {
+      return;
+    }
+    _customMaterialRuntimeFailures.add(
+      SceneSpikeCustomMaterialRuntimeFailure(
+        controllerGeneration: controllerGeneration,
+        appResourceGeneration: appResourceGeneration,
+        detail: detail,
+        observedAtUtc: DateTime.now().toUtc(),
+      ),
+    );
+  }
+
+  SceneSpikeCustomMaterialRuntimeFailure? currentCustomMaterialRuntimeFailure({
+    required int controllerGeneration,
+    required int appResourceGeneration,
+  }) {
+    final matchingFailures = _customMaterialRuntimeFailures.where(
+      (failure) =>
+          failure.controllerGeneration == controllerGeneration &&
+          failure.appResourceGeneration == appResourceGeneration,
+    );
+    if (matchingFailures.isEmpty) {
+      return null;
+    }
+    final latestFailure = matchingFailures.last;
+    final success = customMaterialRuntimeSuccess;
+    if (success != null &&
+        success.controllerGeneration == controllerGeneration &&
+        success.appResourceGeneration == appResourceGeneration &&
+        success.observedAtUtc.isAfter(latestFailure.observedAtUtc)) {
+      return null;
+    }
+    return latestFailure;
   }
 
   void recordPartialUpdate() {
@@ -100,6 +146,12 @@ class SceneSpikeRunLog implements SceneSpikeRuntimeObservationSink {
     _lifecycleResumeCount = 0;
     _disposeAndRemountCount = 0;
     customMaterialRuntimeSuccess = null;
+    final preservedFailures = _customMaterialRuntimeFailures
+        .map((failure) => failure.copyWith(observedAtUtc: startedAtUtc))
+        .toList();
+    _customMaterialRuntimeFailures
+      ..clear()
+      ..addAll(preservedFailures);
   }
 
   void recordConfirmedDisposeAndRemount() {
@@ -175,8 +227,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
   final Future<void> Function() _initializeSceneStaticResources;
   final scene.NodeCamera? _camera;
   final _lifecycleReducer = const SceneSpikeLifecycleReducer();
-  final _initializationGeneration = SceneSpikeAsyncGenerationOwner();
-  final _rebuildGeneration = SceneSpikeAsyncGenerationOwner();
+  final _materialOperationGeneration = SceneSpikeAsyncGenerationOwner();
   final Map<SceneSpikeCapability, SceneSpikeCapabilityResult>
   _operatorAttestations = {};
   final Map<SceneSpikeCapability, Set<String>> _completedChecklistCriteria = {};
@@ -232,7 +283,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     if (_isDisposed) {
       return;
     }
-    final token = _initializationGeneration.begin();
+    final token = _materialOperationGeneration.begin();
     SceneSpikeRuntimeIdentity? runtimeIdentity;
     SceneSpikeBuildManifest? buildManifest;
     String? metadataFailure;
@@ -283,8 +334,13 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         appResourceGeneration: appResourceGeneration,
         token: token,
       );
-    } catch (_) {
+    } catch (error) {
       if (token.isCurrent && !_isDisposed) {
+        _runLog.recordCustomMaterialRuntimeFailure(
+          controllerGeneration: _controllerGeneration,
+          appResourceGeneration: appResourceGeneration,
+          detail: 'Custom material load failed: $error',
+        );
         _runLog.performance.recordException();
         notifyListeners();
       }
@@ -338,6 +394,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     if (_lifecycle.phase != .background) {
       return;
     }
+    _materialOperationGeneration.cancel();
     _adapter.setForeground(isForeground: true);
     _lifecycle = _lifecycleReducer.reduce(
       state: _lifecycle,
@@ -368,6 +425,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         (previousSize == logicalSize && previousRatio == devicePixelRatio)) {
       return;
     }
+    _materialOperationGeneration.cancel();
     _adapter.requestAppResourceRebuild(
       appResourceGeneration: _lifecycle.appResourceGeneration + 1,
     );
@@ -391,6 +449,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     if (_lifecycle.phase != .active) {
       return;
     }
+    _materialOperationGeneration.cancel();
     _adapter.requestAppResourceRebuild(
       appResourceGeneration: _lifecycle.appResourceGeneration + 1,
     );
@@ -408,7 +467,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       return;
     }
     final generation = _lifecycle.appResourceGeneration;
-    final token = _rebuildGeneration.begin();
+    final token = _materialOperationGeneration.begin();
     try {
       final rebuilt = await _adapter.rebuildApplicationResources(
         appResourceGeneration: generation,
@@ -429,10 +488,15 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         appResourceGeneration: generation,
       );
       _runLog.performance.recordResourceRebuild();
-    } catch (_) {
+    } catch (error) {
       if (!token.isCurrent || _isDisposed) {
         return;
       }
+      _runLog.recordCustomMaterialRuntimeFailure(
+        controllerGeneration: _controllerGeneration,
+        appResourceGeneration: generation,
+        detail: 'Custom material reload failed: $error',
+      );
       _runLog.performance.recordException();
       notifyListeners();
       return;
@@ -562,7 +626,12 @@ class FlutterSceneSpikeController extends ChangeNotifier {
             .operatorAttestation) {
       return false;
     }
-    if (_runLog.observations[capability]?.status == .failed ||
+    final customMaterialFailure = _runLog.currentCustomMaterialRuntimeFailure(
+      controllerGeneration: _controllerGeneration,
+      appResourceGeneration: _lifecycle.appResourceGeneration,
+    );
+    if ((capability == .customMaterial && customMaterialFailure != null) ||
+        _runLog.observations[capability]?.status == .failed ||
         _operatorAttestations.containsKey(capability)) {
       return false;
     }
@@ -571,6 +640,8 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         (customMaterialProof == null ||
             customMaterialProof.controllerGeneration != _controllerGeneration ||
             customMaterialProof.appResourceGeneration !=
+                _lifecycle.appResourceGeneration ||
+            _adapter.customMaterialAppResourceGeneration !=
                 _lifecycle.appResourceGeneration)) {
       return false;
     }
@@ -586,7 +657,12 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       throw StateError('Capability does not allow operator attestation.');
     }
     final runtimeObservation = _runLog.observations[capability];
-    if (runtimeObservation?.status == .failed) {
+    final customMaterialFailure = _runLog.currentCustomMaterialRuntimeFailure(
+      controllerGeneration: _controllerGeneration,
+      appResourceGeneration: _lifecycle.appResourceGeneration,
+    );
+    if (runtimeObservation?.status == .failed ||
+        (capability == .customMaterial && customMaterialFailure != null)) {
       throw StateError('A failed runtime observation cannot be attested.');
     }
     if (!canAttestCapability(capability)) {
@@ -664,6 +740,19 @@ class FlutterSceneSpikeController extends ChangeNotifier {
             observedAtUtc: _runLog.startedAtUtc,
           );
     }
+    final customMaterialFailure = _runLog.currentCustomMaterialRuntimeFailure(
+      controllerGeneration: _controllerGeneration,
+      appResourceGeneration: _lifecycle.appResourceGeneration,
+    );
+    if (capability == .customMaterial && customMaterialFailure != null) {
+      return SceneSpikeCapabilityResult(
+        capability: capability,
+        status: .failed,
+        provenance: .operatorAttestation,
+        detail: customMaterialFailure.detail,
+        observedAtUtc: customMaterialFailure.observedAtUtc,
+      );
+    }
     final runtimeFailure = _runLog.observations[capability];
     if (runtimeFailure?.status == .failed) {
       return SceneSpikeCapabilityResult(
@@ -674,7 +763,20 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         observedAtUtc: runtimeFailure?.observedAtUtc ?? _runLog.startedAtUtc,
       );
     }
-    return _operatorAttestations[capability] ??
+    final operatorAttestation = _operatorAttestations[capability];
+    if (capability == .customMaterial &&
+        operatorAttestation != null &&
+        _adapter.customMaterialAppResourceGeneration !=
+            _lifecycle.appResourceGeneration) {
+      return SceneSpikeCapabilityResult(
+        capability: capability,
+        status: .unobserved,
+        provenance: .operatorAttestation,
+        detail: 'Current adapter material generation is not authoritative.',
+        observedAtUtc: _runLog.startedAtUtc,
+      );
+    }
+    return operatorAttestation ??
         SceneSpikeCapabilityResult(
           capability: capability,
           status: .unobserved,
@@ -689,6 +791,11 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     if (backend == null) {
       throw StateError('Renderer backend attestation is required.');
     }
+    final authoritativeCustomMaterialSuccess =
+        _adapter.customMaterialAppResourceGeneration ==
+            _lifecycle.appResourceGeneration
+        ? _runLog.customMaterialRuntimeSuccess
+        : null;
     final evidence =
         await SceneSpikeEvidenceCollector(
           runtimeSource: SceneSpikeProductionRuntimeIdentitySource(),
@@ -706,7 +813,8 @@ class FlutterSceneSpikeController extends ChangeNotifier {
           disposeAndRemountCount: _runLog.disposeAndRemountCount,
           controllerGeneration: _controllerGeneration,
           appResourceGeneration: _lifecycle.appResourceGeneration,
-          customMaterialRuntimeSuccess: _runLog.customMaterialRuntimeSuccess,
+          customMaterialRuntimeSuccess: authoritativeCustomMaterialSuccess,
+          customMaterialRuntimeFailures: _runLog.customMaterialRuntimeFailures,
           capabilities: capabilityResults(),
           performance: _runLog.performance.snapshot(),
         );
@@ -715,8 +823,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
 
   void resetEvidence() {
     final startedAtUtc = DateTime.now().toUtc();
-    _initializationGeneration.cancel();
-    _rebuildGeneration.cancel();
+    _materialOperationGeneration.cancel();
     _renderingBackend = null;
     _runStartFailure = null;
     _operatorAttestations.clear();
@@ -752,8 +859,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     if (_lifecycle.phase == .detached || _lifecycle.phase == .disposed) {
       return;
     }
-    _initializationGeneration.cancel();
-    _rebuildGeneration.cancel();
+    _materialOperationGeneration.cancel();
     _adapter.detach();
     _lifecycle = _lifecycleReducer.reduce(
       state: _lifecycle,
@@ -768,8 +874,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       return;
     }
     _isDisposed = true;
-    _initializationGeneration.dispose();
-    _rebuildGeneration.dispose();
+    _materialOperationGeneration.dispose();
     _adapter.dispose();
     _lifecycle = _lifecycleReducer.reduce(
       state: _lifecycle,

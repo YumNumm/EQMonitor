@@ -87,7 +87,7 @@ void main() {
               ),
             )
             .copyWith(
-              schemaVersion: 3,
+              schemaVersion: 4,
               flutterFrameworkRevision: 'wrong',
               startedAtUtc: DateTime(2026, 8, 2),
               frameCount: -1,
@@ -99,7 +99,7 @@ void main() {
         expect(
           decision.validationErrors,
           containsAll([
-            'android/profile has unsupported schema version: 3.',
+            'android/profile has unsupported schema version: 4.',
             'android/profile startedAtUtc must be UTC.',
             'android/profile frameCount must be non-negative.',
           ]),
@@ -328,6 +328,66 @@ void main() {
         ),
       );
     });
+
+    test('rejects pass after a newer same-generation runtime failure', () {
+      final evidence = sceneSpikeFixture.evidence(
+        run: const SceneSpikeRunKey(
+          platform: .android,
+          buildMode: .profile,
+        ),
+      );
+      final invalid = evidence.copyWith(
+        customMaterialRuntimeFailures: [
+          SceneSpikeCustomMaterialRuntimeFailure(
+            controllerGeneration: 2,
+            appResourceGeneration: 1,
+            detail: 'Reload failed.',
+            observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 0, 750),
+          ),
+        ],
+      );
+
+      expect(
+        SceneSpikeGate.evaluate([invalid]).validationErrors,
+        contains(
+          'android/profile customMaterial passed despite a newer '
+          'same-generation runtime failure.',
+        ),
+      );
+    });
+
+    test(
+      'validates custom material failure history and exception coverage',
+      () {
+        final evidence = sceneSpikeFixture.evidence(
+          run: const SceneSpikeRunKey(
+            platform: .ios,
+            buildMode: .release,
+          ),
+        );
+        final invalid = evidence.copyWith(
+          customMaterialRuntimeFailures: [
+            SceneSpikeCustomMaterialRuntimeFailure(
+              controllerGeneration: -1,
+              appResourceGeneration: -2,
+              detail: ' ',
+              observedAtUtc: DateTime(2026, 8, 2),
+            ),
+          ],
+        );
+
+        expect(
+          SceneSpikeGate.evaluate([invalid]).validationErrors,
+          containsAll([
+            'ios/release customMaterial failure controllerGeneration must be zero or greater.',
+            'ios/release customMaterial failure appResourceGeneration must be zero or greater.',
+            'ios/release customMaterial failure detail must not be blank.',
+            'ios/release customMaterial failure observedAtUtc must be UTC.',
+            'ios/release exceptionCount must cover custom material failure history.',
+          ]),
+        );
+      },
+    );
 
     test('accepts remount signal without treating it as resource rebuild', () {
       final evidence = sceneSpikeFixture
@@ -783,6 +843,23 @@ void main() {
           fractionalProofGeneration['customMaterialRuntimeSuccess']
               as Map<String, dynamic>;
       proofJson['appResourceGeneration'] = 0.5;
+      final fractionalFailureGeneration = evidence
+          .copyWith(
+            customMaterialRuntimeFailures: [
+              SceneSpikeCustomMaterialRuntimeFailure(
+                controllerGeneration: 2,
+                appResourceGeneration: 0,
+                detail: 'Old failure.',
+                observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 0, 250),
+              ),
+            ],
+          )
+          .toJson();
+      final failureJson =
+          (fractionalFailureGeneration['customMaterialRuntimeFailures']
+                  as List<Map<String, dynamic>>)
+              .single;
+      failureJson['controllerGeneration'] = 2.5;
 
       expect(
         () => SceneSpikeEvidence.fromJson(fractionalSchema),
@@ -802,6 +879,10 @@ void main() {
       );
       expect(
         () => SceneSpikeEvidence.fromJson(fractionalProofGeneration),
+        throwsFormatException,
+      );
+      expect(
+        () => SceneSpikeEvidence.fromJson(fractionalFailureGeneration),
         throwsFormatException,
       );
     });
@@ -971,6 +1052,7 @@ class SceneSpikeFixture {
       appResourceGeneration: 1,
       observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 0, 500),
     ),
+    customMaterialRuntimeFailures: const [],
     capabilities:
         capabilities ?? this.capabilities(status: blockedCapabilityStatus),
     performance: performance(),

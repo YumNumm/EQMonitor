@@ -17,6 +17,40 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('FlutterSceneSpikeController async lifecycle', () {
     test(
+      'older initialization cannot overwrite a newer resource rebuild',
+      () async {
+        final initializationResult = Completer<bool>();
+        final adapter = FakeSceneSpikeControllerAdapter(
+          initializeCompletion: initializationResult.future,
+        );
+        final controller = createController(adapter: adapter)
+          ..attach(
+            logicalSize: const Size(400, 300),
+            devicePixelRatio: 2,
+          );
+        addTearDown(controller.dispose);
+        final initialization = controller.initializeStaticResources();
+        await Future<void>.delayed(Duration.zero);
+        expect(adapter.initializeCustomMaterialCount, 1);
+
+        controller.requestAppResourceRebuild();
+        await controller.completePendingAppResourceRebuild();
+        expect(adapter.customMaterialAppResourceGeneration, 1);
+
+        initializationResult.complete(true);
+        await initialization;
+        completeChecklist(
+          controller: controller,
+          capability: SceneSpikeCapability.customMaterial,
+        );
+
+        expect(adapter.customMaterialAppResourceGeneration, 1);
+        expect(controller.lifecycle.appResourceGeneration, 1);
+        expect(controller.canAttestCapability(.customMaterial), isTrue);
+      },
+    );
+
+    test(
       'dispose during initialization prevents post-await mutation',
       () async {
         final deviceModel = Completer<String>();
@@ -127,17 +161,17 @@ void main() {
 
   group('FlutterSceneSpikeController terminal failures', () {
     test('reset preserves a custom material runtime failure', () {
-      final runLog = SceneSpikeRunLog(startedAtUtc: DateTime.utc(2026, 8, 2))
-        ..record(
-          const SceneSpikeRuntimeObservation(
-            capability: .customMaterial,
-            status: .failed,
-            detail: 'Shader compilation failed.',
-          ),
-        );
+      final runLog = SceneSpikeRunLog(startedAtUtc: DateTime.utc(2026, 8, 2));
+      final controllerGeneration = runLog.beginControllerGeneration();
+      runLog.recordCustomMaterialRuntimeFailure(
+        controllerGeneration: controllerGeneration,
+        appResourceGeneration: 0,
+        detail: 'Shader compilation failed.',
+      );
       final controller = createController(
         adapter: FakeSceneSpikeControllerAdapter(),
         runLog: runLog,
+        controllerGeneration: controllerGeneration,
       );
 
       controller.resetEvidence();
@@ -152,6 +186,99 @@ void main() {
         throwsStateError,
       );
       controller.dispose();
+    });
+
+    test(
+      'new generation reload supersedes failure without erasing history',
+      () async {
+        final initializationResult = Completer<bool>();
+        final runLog = SceneSpikeRunLog(
+          startedAtUtc: DateTime.now().toUtc(),
+        );
+        final controller =
+            createController(
+              adapter: FakeSceneSpikeControllerAdapter(
+                initializeCompletion: initializationResult.future,
+              ),
+              runLog: runLog,
+            )..attach(
+              logicalSize: const Size(400, 300),
+              devicePixelRatio: 2,
+            );
+        addTearDown(controller.dispose);
+        final initialization = controller.initializeStaticResources();
+        await Future<void>.delayed(Duration.zero);
+        initializationResult.completeError(StateError('compile failed'));
+        await initialization;
+        expect(
+          controller.capabilityResult(.customMaterial).status,
+          SceneSpikeCapabilityStatus.failed,
+        );
+
+        controller.requestAppResourceRebuild();
+        await controller.completePendingAppResourceRebuild();
+        completeChecklist(
+          controller: controller,
+          capability: SceneSpikeCapability.customMaterial,
+        );
+
+        expect(runLog.customMaterialRuntimeFailures, hasLength(1));
+        expect(controller.performance.exceptionCount, 1);
+        expect(controller.canAttestCapability(.customMaterial), isTrue);
+        controller.attestCapability(.customMaterial);
+        expect(
+          controller.capabilityResult(.customMaterial).status,
+          SceneSpikeCapabilityStatus.passed,
+        );
+      },
+    );
+
+    test('unsubstantiated and stale success proofs cannot recover failure', () {
+      final runLog = SceneSpikeRunLog(
+        startedAtUtc: DateTime.now().toUtc(),
+      );
+      final controllerGeneration = runLog.beginControllerGeneration();
+      final controller = createController(
+        adapter: FakeSceneSpikeControllerAdapter(),
+        runLog: runLog,
+        controllerGeneration: controllerGeneration,
+      );
+      addTearDown(controller.dispose);
+      runLog
+        ..recordCustomMaterialRuntimeFailure(
+          controllerGeneration: controllerGeneration,
+          appResourceGeneration: 0,
+          detail: 'compile failed',
+        )
+        ..recordCustomMaterialRuntimeSuccess(
+          controllerGeneration: controllerGeneration,
+          appResourceGeneration: 0,
+        );
+      completeChecklist(
+        controller: controller,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+
+      expect(controller.canAttestCapability(.customMaterial), isFalse);
+
+      runLog.reset(startedAtUtc: DateTime.now().toUtc());
+      final replacement = createController(
+        adapter: FakeSceneSpikeControllerAdapter()
+          ..customMaterialAppResourceGeneration = 0,
+        runLog: runLog,
+      );
+      addTearDown(replacement.dispose);
+      runLog.recordCustomMaterialRuntimeSuccess(
+        controllerGeneration: controllerGeneration,
+        appResourceGeneration: 0,
+      );
+      expect(runLog.customMaterialRuntimeSuccess, isNull);
+      completeChecklist(
+        controller: replacement,
+        capability: SceneSpikeCapability.customMaterial,
+      );
+
+      expect(replacement.canAttestCapability(.customMaterial), isFalse);
     });
   });
 
@@ -444,6 +571,28 @@ void main() {
       expect(adapter.customMaterialAppResourceGeneration, 0);
       expect(controller.canAttestCapability(.customMaterial), isTrue);
     });
+
+    test(
+      'adapter authority loss invalidates an existing attestation',
+      () async {
+        final adapter = FakeSceneSpikeControllerAdapter();
+        final controller = createController(adapter: adapter);
+        addTearDown(controller.dispose);
+        await controller.initializeStaticResources();
+        completeChecklist(
+          controller: controller,
+          capability: SceneSpikeCapability.customMaterial,
+        );
+        controller.attestCapability(.customMaterial);
+
+        adapter.customMaterialAppResourceGeneration = null;
+
+        expect(
+          controller.capabilityResult(.customMaterial).status,
+          SceneSpikeCapabilityStatus.unobserved,
+        );
+      },
+    );
   });
 }
 
@@ -464,6 +613,7 @@ FlutterSceneSpikeController createController({
   required FakeSceneSpikeControllerAdapter adapter,
   SceneSpikeRuntimeIdentitySource? runtimeSource,
   SceneSpikeRunLog? runLog,
+  int? controllerGeneration,
 }) {
   final projection = EqmonitorOrthographicProjection(worldHalfHeight: 1.2);
   final currentRunLog =
@@ -476,7 +626,8 @@ FlutterSceneSpikeController createController({
     runtimeSource: runtimeSource ?? const FakeRuntimeIdentitySource(),
     manifestSource: const FakeBuildManifestSource(),
     initializeSceneStaticResources: () async {},
-    controllerGeneration: currentRunLog.beginControllerGeneration(),
+    controllerGeneration:
+        controllerGeneration ?? currentRunLog.beginControllerGeneration(),
   );
 }
 

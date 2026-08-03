@@ -6,6 +6,12 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('SceneSpikeEvidenceCollector trusted identity', () {
     test('fixes runtime manifest and attestation provenance', () async {
+      final materialFailure = SceneSpikeCustomMaterialRuntimeFailure(
+        controllerGeneration: 2,
+        appResourceGeneration: 0,
+        detail: 'Initial load failed.',
+        observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 0, 250),
+      );
       final collector = SceneSpikeEvidenceCollector(
         runtimeSource: const FakeSceneSpikeRuntimeIdentitySource(),
         manifestSource: FakeSceneSpikeBuildManifestSource(
@@ -28,8 +34,11 @@ void main() {
           appResourceGeneration: 1,
           observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 0, 500),
         ),
+        customMaterialRuntimeFailures: [materialFailure],
         capabilities: sceneSpikeCollectorFixture.capabilities(),
-        performance: sceneSpikeCollectorFixture.performance(),
+        performance: sceneSpikeCollectorFixture.performance().copyWith(
+          exceptionCount: 1,
+        ),
       );
 
       expect(
@@ -55,6 +64,8 @@ void main() {
         evidence.renderingBackend,
         'Impeller Vulkan from verbose device log',
       );
+      expect(evidence.customMaterialRuntimeFailures, [materialFailure]);
+      expect(evidence.performance.exceptionCount, 1);
     });
 
     test('propagates unsupported platform and build mode failures', () {
@@ -167,6 +178,7 @@ class SceneSpikeCollectorFixture {
       appResourceGeneration: 1,
       observedAtUtc: DateTime.utc(2026, 8, 2, 0, 0, 0, 500),
     ),
+    customMaterialRuntimeFailures: const [],
     capabilities: capabilities(),
     performance: performance(),
   );

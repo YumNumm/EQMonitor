@@ -139,17 +139,10 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
       _customMaterialNode = node;
       _customMaterialAppResourceGeneration = appResourceGeneration;
       return true;
-    } catch (error) {
+    } catch (_) {
       if (!token.isCurrent) {
         return false;
       }
-      _observationSink.record(
-        SceneSpikeRuntimeObservation(
-          capability: .customMaterial,
-          status: .failed,
-          detail: 'Custom material load failed: $error',
-        ),
-      );
       rethrow;
     }
   }
@@ -179,17 +172,10 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
       customMaterial = await scene.loadFmatMaterial(
         'assets/map_spike.fmat',
       );
-    } catch (error) {
+    } catch (_) {
       if (!token.isCurrent) {
         return false;
       }
-      _observationSink.record(
-        SceneSpikeRuntimeObservation(
-          capability: .customMaterial,
-          status: .failed,
-          detail: 'Custom material reload failed: $error',
-        ),
-      );
       rethrow;
     }
     if (!token.isCurrent) {

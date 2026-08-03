@@ -56,7 +56,7 @@ class SceneSpikeGateDecision with _$SceneSpikeGateDecision {
 class SceneSpikeEvidenceContract {
   const SceneSpikeEvidenceContract._();
 
-  static const schemaVersion = 2;
+  static const schemaVersion = 3;
   static const expectedFlutterFrameworkRevision =
       '4dacd3fc91d96262a33e5c598e17d816f0b35641';
   static const expectedFlutterEngineRevision =
@@ -210,6 +210,7 @@ class SceneSpikeEvidenceValidator {
     ...revisionValidationErrors(evidence),
     ...counterErrors(evidence),
     ...customMaterialRuntimeProofErrors(evidence),
+    ...customMaterialRuntimeFailureErrors(evidence),
     ...performanceErrors(evidence),
     ...capabilityErrors(evidence),
   ];
@@ -345,6 +346,37 @@ class SceneSpikeEvidenceValidator {
     ];
   }
 
+  static List<String> customMaterialRuntimeFailureErrors(
+    SceneSpikeEvidence evidence,
+  ) {
+    final prefix = SceneSpikeLabels.run(evidence.run);
+    final negativeControllerGeneration =
+        '$prefix customMaterial failure controllerGeneration must be zero or '
+        'greater.';
+    final negativeAppResourceGeneration =
+        '$prefix customMaterial failure appResourceGeneration must be zero or '
+        'greater.';
+    final outsideInterval =
+        '$prefix customMaterial failure observedAtUtc must be within the '
+        'observation interval.';
+    return [
+      for (final failure in evidence.customMaterialRuntimeFailures) ...[
+        if (failure.controllerGeneration < 0) negativeControllerGeneration,
+        if (failure.appResourceGeneration < 0) negativeAppResourceGeneration,
+        if (failure.detail.trim().isEmpty)
+          '$prefix customMaterial failure detail must not be blank.',
+        if (!failure.observedAtUtc.isUtc)
+          '$prefix customMaterial failure observedAtUtc must be UTC.',
+        if (!SceneSpikeCapabilityValidator.isWithinObservationInterval(
+          observedAtUtc: failure.observedAtUtc,
+          startedAtUtc: evidence.startedAtUtc,
+          elapsedMicroseconds: evidence.elapsedMicroseconds,
+        ))
+          outsideInterval,
+      ],
+    ];
+  }
+
   static List<String> performanceErrors(SceneSpikeEvidence evidence) {
     final prefix = SceneSpikeLabels.run(evidence.run);
     final performance = evidence.performance;
@@ -381,6 +413,9 @@ class SceneSpikeEvidenceValidator {
         partialUpdateMismatch,
       if (performance.exceptionCount != 0)
         '$prefix exceptionCount must be zero.',
+      if (performance.exceptionCount <
+          evidence.customMaterialRuntimeFailures.length)
+        '$prefix exceptionCount must cover custom material failure history.',
     ];
   }
 
@@ -487,6 +522,15 @@ class SceneSpikeCapabilityValidator {
     final attestationPredatesProof =
         '$prefix customMaterial attestation must not predate its runtime load '
         'proof.';
+    final newerFailure = evidence.customMaterialRuntimeFailures.any(
+      (failure) =>
+          failure.controllerGeneration == proof.controllerGeneration &&
+          failure.appResourceGeneration == proof.appResourceGeneration &&
+          !failure.observedAtUtc.isBefore(proof.observedAtUtc),
+    );
+    final newerFailureError =
+        '$prefix customMaterial passed despite a newer same-generation '
+        'runtime failure.';
     return [
       if (proof.controllerGeneration != evidence.controllerGeneration)
         controllerGenerationMismatch,
@@ -494,6 +538,7 @@ class SceneSpikeCapabilityValidator {
         appResourceGenerationMismatch,
       if (result.observedAtUtc.isBefore(proof.observedAtUtc))
         attestationPredatesProof,
+      if (newerFailure) newerFailureError,
     ];
   }
 

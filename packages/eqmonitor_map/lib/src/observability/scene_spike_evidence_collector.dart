@@ -182,6 +182,8 @@ class SceneSpikeEvidenceCollector {
     required int appResourceGeneration,
     required SceneSpikeCustomMaterialRuntimeSuccess?
     customMaterialRuntimeSuccess,
+    required List<SceneSpikeCustomMaterialRuntimeFailure>
+    customMaterialRuntimeFailures,
     required List<SceneSpikeCapabilityResult> capabilities,
     required SceneSpikePerformanceSnapshot performance,
   }) async {
@@ -206,6 +208,7 @@ class SceneSpikeEvidenceCollector {
       controllerGeneration: controllerGeneration,
       appResourceGeneration: appResourceGeneration,
       customMaterialRuntimeSuccess: customMaterialRuntimeSuccess,
+      customMaterialRuntimeFailures: customMaterialRuntimeFailures,
       capabilities: capabilities,
       performance: performance,
     );
@@ -229,6 +232,8 @@ class SceneSpikeEvidenceFactory {
     required int appResourceGeneration,
     required SceneSpikeCustomMaterialRuntimeSuccess?
     customMaterialRuntimeSuccess,
+    required List<SceneSpikeCustomMaterialRuntimeFailure>
+    customMaterialRuntimeFailures,
     required List<SceneSpikeCapabilityResult> capabilities,
     required SceneSpikePerformanceSnapshot performance,
   }) {
@@ -260,6 +265,7 @@ class SceneSpikeEvidenceFactory {
       controllerGeneration: controllerGeneration,
       appResourceGeneration: appResourceGeneration,
       customMaterialRuntimeSuccess: customMaterialRuntimeSuccess,
+      customMaterialRuntimeFailures: customMaterialRuntimeFailures,
       capabilities: capabilities,
       performance: performance,
     );

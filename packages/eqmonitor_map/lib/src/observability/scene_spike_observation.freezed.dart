@@ -805,6 +805,272 @@ as DateTime,
 
 
 /// @nodoc
+mixin _$SceneSpikeCustomMaterialRuntimeFailure {
+
+@SceneSpikeStrictIntConverter() int get controllerGeneration;@SceneSpikeStrictIntConverter() int get appResourceGeneration; String get detail; DateTime get observedAtUtc;
+/// Create a copy of SceneSpikeCustomMaterialRuntimeFailure
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SceneSpikeCustomMaterialRuntimeFailureCopyWith<SceneSpikeCustomMaterialRuntimeFailure> get copyWith => _$SceneSpikeCustomMaterialRuntimeFailureCopyWithImpl<SceneSpikeCustomMaterialRuntimeFailure>(this as SceneSpikeCustomMaterialRuntimeFailure, _$identity);
+
+  /// Serializes this SceneSpikeCustomMaterialRuntimeFailure to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SceneSpikeCustomMaterialRuntimeFailure&&(identical(other.controllerGeneration, controllerGeneration) || other.controllerGeneration == controllerGeneration)&&(identical(other.appResourceGeneration, appResourceGeneration) || other.appResourceGeneration == appResourceGeneration)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.observedAtUtc, observedAtUtc) || other.observedAtUtc == observedAtUtc));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,controllerGeneration,appResourceGeneration,detail,observedAtUtc);
+
+@override
+String toString() {
+  return 'SceneSpikeCustomMaterialRuntimeFailure(controllerGeneration: $controllerGeneration, appResourceGeneration: $appResourceGeneration, detail: $detail, observedAtUtc: $observedAtUtc)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SceneSpikeCustomMaterialRuntimeFailureCopyWith<$Res>  {
+  factory $SceneSpikeCustomMaterialRuntimeFailureCopyWith(SceneSpikeCustomMaterialRuntimeFailure value, $Res Function(SceneSpikeCustomMaterialRuntimeFailure) _then) = _$SceneSpikeCustomMaterialRuntimeFailureCopyWithImpl;
+@useResult
+$Res call({
+@SceneSpikeStrictIntConverter() int controllerGeneration,@SceneSpikeStrictIntConverter() int appResourceGeneration, String detail, DateTime observedAtUtc
+});
+
+
+
+
+}
+/// @nodoc
+class _$SceneSpikeCustomMaterialRuntimeFailureCopyWithImpl<$Res>
+    implements $SceneSpikeCustomMaterialRuntimeFailureCopyWith<$Res> {
+  _$SceneSpikeCustomMaterialRuntimeFailureCopyWithImpl(this._self, this._then);
+
+  final SceneSpikeCustomMaterialRuntimeFailure _self;
+  final $Res Function(SceneSpikeCustomMaterialRuntimeFailure) _then;
+
+/// Create a copy of SceneSpikeCustomMaterialRuntimeFailure
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? controllerGeneration = null,Object? appResourceGeneration = null,Object? detail = null,Object? observedAtUtc = null,}) {
+  return _then(_self.copyWith(
+controllerGeneration: null == controllerGeneration ? _self.controllerGeneration : controllerGeneration // ignore: cast_nullable_to_non_nullable
+as int,appResourceGeneration: null == appResourceGeneration ? _self.appResourceGeneration : appResourceGeneration // ignore: cast_nullable_to_non_nullable
+as int,detail: null == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
+as String,observedAtUtc: null == observedAtUtc ? _self.observedAtUtc : observedAtUtc // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [SceneSpikeCustomMaterialRuntimeFailure].
+extension SceneSpikeCustomMaterialRuntimeFailurePatterns on SceneSpikeCustomMaterialRuntimeFailure {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SceneSpikeCustomMaterialRuntimeFailure value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SceneSpikeCustomMaterialRuntimeFailure() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SceneSpikeCustomMaterialRuntimeFailure value)  $default,){
+final _that = this;
+switch (_that) {
+case _SceneSpikeCustomMaterialRuntimeFailure():
+return $default(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SceneSpikeCustomMaterialRuntimeFailure value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SceneSpikeCustomMaterialRuntimeFailure() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@SceneSpikeStrictIntConverter()  int controllerGeneration, @SceneSpikeStrictIntConverter()  int appResourceGeneration,  String detail,  DateTime observedAtUtc)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SceneSpikeCustomMaterialRuntimeFailure() when $default != null:
+return $default(_that.controllerGeneration,_that.appResourceGeneration,_that.detail,_that.observedAtUtc);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@SceneSpikeStrictIntConverter()  int controllerGeneration, @SceneSpikeStrictIntConverter()  int appResourceGeneration,  String detail,  DateTime observedAtUtc)  $default,) {final _that = this;
+switch (_that) {
+case _SceneSpikeCustomMaterialRuntimeFailure():
+return $default(_that.controllerGeneration,_that.appResourceGeneration,_that.detail,_that.observedAtUtc);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@SceneSpikeStrictIntConverter()  int controllerGeneration, @SceneSpikeStrictIntConverter()  int appResourceGeneration,  String detail,  DateTime observedAtUtc)?  $default,) {final _that = this;
+switch (_that) {
+case _SceneSpikeCustomMaterialRuntimeFailure() when $default != null:
+return $default(_that.controllerGeneration,_that.appResourceGeneration,_that.detail,_that.observedAtUtc);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+@JsonSerializable(explicitToJson: true)
+class _SceneSpikeCustomMaterialRuntimeFailure implements SceneSpikeCustomMaterialRuntimeFailure {
+  const _SceneSpikeCustomMaterialRuntimeFailure({@SceneSpikeStrictIntConverter() required this.controllerGeneration, @SceneSpikeStrictIntConverter() required this.appResourceGeneration, required this.detail, required this.observedAtUtc});
+  factory _SceneSpikeCustomMaterialRuntimeFailure.fromJson(Map<String, dynamic> json) => _$SceneSpikeCustomMaterialRuntimeFailureFromJson(json);
+
+@override@SceneSpikeStrictIntConverter() final  int controllerGeneration;
+@override@SceneSpikeStrictIntConverter() final  int appResourceGeneration;
+@override final  String detail;
+@override final  DateTime observedAtUtc;
+
+/// Create a copy of SceneSpikeCustomMaterialRuntimeFailure
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SceneSpikeCustomMaterialRuntimeFailureCopyWith<_SceneSpikeCustomMaterialRuntimeFailure> get copyWith => __$SceneSpikeCustomMaterialRuntimeFailureCopyWithImpl<_SceneSpikeCustomMaterialRuntimeFailure>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$SceneSpikeCustomMaterialRuntimeFailureToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SceneSpikeCustomMaterialRuntimeFailure&&(identical(other.controllerGeneration, controllerGeneration) || other.controllerGeneration == controllerGeneration)&&(identical(other.appResourceGeneration, appResourceGeneration) || other.appResourceGeneration == appResourceGeneration)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.observedAtUtc, observedAtUtc) || other.observedAtUtc == observedAtUtc));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,controllerGeneration,appResourceGeneration,detail,observedAtUtc);
+
+@override
+String toString() {
+  return 'SceneSpikeCustomMaterialRuntimeFailure(controllerGeneration: $controllerGeneration, appResourceGeneration: $appResourceGeneration, detail: $detail, observedAtUtc: $observedAtUtc)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SceneSpikeCustomMaterialRuntimeFailureCopyWith<$Res> implements $SceneSpikeCustomMaterialRuntimeFailureCopyWith<$Res> {
+  factory _$SceneSpikeCustomMaterialRuntimeFailureCopyWith(_SceneSpikeCustomMaterialRuntimeFailure value, $Res Function(_SceneSpikeCustomMaterialRuntimeFailure) _then) = __$SceneSpikeCustomMaterialRuntimeFailureCopyWithImpl;
+@override @useResult
+$Res call({
+@SceneSpikeStrictIntConverter() int controllerGeneration,@SceneSpikeStrictIntConverter() int appResourceGeneration, String detail, DateTime observedAtUtc
+});
+
+
+
+
+}
+/// @nodoc
+class __$SceneSpikeCustomMaterialRuntimeFailureCopyWithImpl<$Res>
+    implements _$SceneSpikeCustomMaterialRuntimeFailureCopyWith<$Res> {
+  __$SceneSpikeCustomMaterialRuntimeFailureCopyWithImpl(this._self, this._then);
+
+  final _SceneSpikeCustomMaterialRuntimeFailure _self;
+  final $Res Function(_SceneSpikeCustomMaterialRuntimeFailure) _then;
+
+/// Create a copy of SceneSpikeCustomMaterialRuntimeFailure
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? controllerGeneration = null,Object? appResourceGeneration = null,Object? detail = null,Object? observedAtUtc = null,}) {
+  return _then(_SceneSpikeCustomMaterialRuntimeFailure(
+controllerGeneration: null == controllerGeneration ? _self.controllerGeneration : controllerGeneration // ignore: cast_nullable_to_non_nullable
+as int,appResourceGeneration: null == appResourceGeneration ? _self.appResourceGeneration : appResourceGeneration // ignore: cast_nullable_to_non_nullable
+as int,detail: null == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
+as String,observedAtUtc: null == observedAtUtc ? _self.observedAtUtc : observedAtUtc // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$SceneSpikePerformanceSnapshot {
 
 @SceneSpikeStrictIntConverter() int get buildDurationCount;@SceneSpikeStrictIntConverter() int get buildDurationMaxMicroseconds;@SceneSpikeStrictIntConverter() int get buildDurationP50Microseconds;@SceneSpikeStrictIntConverter() int get buildDurationP95Microseconds;@SceneSpikeStrictIntConverter() int get rasterDurationCount;@SceneSpikeStrictIntConverter() int get rasterDurationMaxMicroseconds;@SceneSpikeStrictIntConverter() int get rasterDurationP50Microseconds;@SceneSpikeStrictIntConverter() int get rasterDurationP95Microseconds;@SceneSpikeStrictIntConverter() int get droppedFrameCount;@SceneSpikeStrictIntConverter() int get partialUpdateCount;@SceneSpikeStrictIntConverter() int get resourceRebuildCount;@SceneSpikeStrictIntConverter() int get exceptionCount;
@@ -1097,7 +1363,7 @@ as int,
 /// @nodoc
 mixin _$SceneSpikeEvidence {
 
- int get schemaVersion; SceneSpikeRunKey get run; String get deviceModel; String get operatingSystemVersion; String get flutterFrameworkRevision; String get flutterEngineRevision; String get dartVersion; String get dartSourceRevision; String get flutterSceneRevision; String get eqmonitorMapRendererRevision; bool get eqmonitorMapRendererCheckoutDirty; SceneSpikeObservationProvenance get revisionProvenance; String get renderingBackend; SceneSpikeObservationProvenance get renderingBackendProvenance; DateTime get startedAtUtc; int get elapsedMicroseconds; int get frameCount; int get partialUpdateCount; int get lifecycleResumeCount; int get disposeAndRemountCount; int get controllerGeneration; int get appResourceGeneration; SceneSpikeCustomMaterialRuntimeSuccess? get customMaterialRuntimeSuccess; List<SceneSpikeCapabilityResult> get capabilities; SceneSpikePerformanceSnapshot get performance;
+ int get schemaVersion; SceneSpikeRunKey get run; String get deviceModel; String get operatingSystemVersion; String get flutterFrameworkRevision; String get flutterEngineRevision; String get dartVersion; String get dartSourceRevision; String get flutterSceneRevision; String get eqmonitorMapRendererRevision; bool get eqmonitorMapRendererCheckoutDirty; SceneSpikeObservationProvenance get revisionProvenance; String get renderingBackend; SceneSpikeObservationProvenance get renderingBackendProvenance; DateTime get startedAtUtc; int get elapsedMicroseconds; int get frameCount; int get partialUpdateCount; int get lifecycleResumeCount; int get disposeAndRemountCount; int get controllerGeneration; int get appResourceGeneration; SceneSpikeCustomMaterialRuntimeSuccess? get customMaterialRuntimeSuccess; List<SceneSpikeCustomMaterialRuntimeFailure> get customMaterialRuntimeFailures; List<SceneSpikeCapabilityResult> get capabilities; SceneSpikePerformanceSnapshot get performance;
 /// Create a copy of SceneSpikeEvidence
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1108,16 +1374,16 @@ $SceneSpikeEvidenceCopyWith<SceneSpikeEvidence> get copyWith => _$SceneSpikeEvid
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SceneSpikeEvidence&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.run, run) || other.run == run)&&(identical(other.deviceModel, deviceModel) || other.deviceModel == deviceModel)&&(identical(other.operatingSystemVersion, operatingSystemVersion) || other.operatingSystemVersion == operatingSystemVersion)&&(identical(other.flutterFrameworkRevision, flutterFrameworkRevision) || other.flutterFrameworkRevision == flutterFrameworkRevision)&&(identical(other.flutterEngineRevision, flutterEngineRevision) || other.flutterEngineRevision == flutterEngineRevision)&&(identical(other.dartVersion, dartVersion) || other.dartVersion == dartVersion)&&(identical(other.dartSourceRevision, dartSourceRevision) || other.dartSourceRevision == dartSourceRevision)&&(identical(other.flutterSceneRevision, flutterSceneRevision) || other.flutterSceneRevision == flutterSceneRevision)&&(identical(other.eqmonitorMapRendererRevision, eqmonitorMapRendererRevision) || other.eqmonitorMapRendererRevision == eqmonitorMapRendererRevision)&&(identical(other.eqmonitorMapRendererCheckoutDirty, eqmonitorMapRendererCheckoutDirty) || other.eqmonitorMapRendererCheckoutDirty == eqmonitorMapRendererCheckoutDirty)&&(identical(other.revisionProvenance, revisionProvenance) || other.revisionProvenance == revisionProvenance)&&(identical(other.renderingBackend, renderingBackend) || other.renderingBackend == renderingBackend)&&(identical(other.renderingBackendProvenance, renderingBackendProvenance) || other.renderingBackendProvenance == renderingBackendProvenance)&&(identical(other.startedAtUtc, startedAtUtc) || other.startedAtUtc == startedAtUtc)&&(identical(other.elapsedMicroseconds, elapsedMicroseconds) || other.elapsedMicroseconds == elapsedMicroseconds)&&(identical(other.frameCount, frameCount) || other.frameCount == frameCount)&&(identical(other.partialUpdateCount, partialUpdateCount) || other.partialUpdateCount == partialUpdateCount)&&(identical(other.lifecycleResumeCount, lifecycleResumeCount) || other.lifecycleResumeCount == lifecycleResumeCount)&&(identical(other.disposeAndRemountCount, disposeAndRemountCount) || other.disposeAndRemountCount == disposeAndRemountCount)&&(identical(other.controllerGeneration, controllerGeneration) || other.controllerGeneration == controllerGeneration)&&(identical(other.appResourceGeneration, appResourceGeneration) || other.appResourceGeneration == appResourceGeneration)&&(identical(other.customMaterialRuntimeSuccess, customMaterialRuntimeSuccess) || other.customMaterialRuntimeSuccess == customMaterialRuntimeSuccess)&&const DeepCollectionEquality().equals(other.capabilities, capabilities)&&(identical(other.performance, performance) || other.performance == performance));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SceneSpikeEvidence&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.run, run) || other.run == run)&&(identical(other.deviceModel, deviceModel) || other.deviceModel == deviceModel)&&(identical(other.operatingSystemVersion, operatingSystemVersion) || other.operatingSystemVersion == operatingSystemVersion)&&(identical(other.flutterFrameworkRevision, flutterFrameworkRevision) || other.flutterFrameworkRevision == flutterFrameworkRevision)&&(identical(other.flutterEngineRevision, flutterEngineRevision) || other.flutterEngineRevision == flutterEngineRevision)&&(identical(other.dartVersion, dartVersion) || other.dartVersion == dartVersion)&&(identical(other.dartSourceRevision, dartSourceRevision) || other.dartSourceRevision == dartSourceRevision)&&(identical(other.flutterSceneRevision, flutterSceneRevision) || other.flutterSceneRevision == flutterSceneRevision)&&(identical(other.eqmonitorMapRendererRevision, eqmonitorMapRendererRevision) || other.eqmonitorMapRendererRevision == eqmonitorMapRendererRevision)&&(identical(other.eqmonitorMapRendererCheckoutDirty, eqmonitorMapRendererCheckoutDirty) || other.eqmonitorMapRendererCheckoutDirty == eqmonitorMapRendererCheckoutDirty)&&(identical(other.revisionProvenance, revisionProvenance) || other.revisionProvenance == revisionProvenance)&&(identical(other.renderingBackend, renderingBackend) || other.renderingBackend == renderingBackend)&&(identical(other.renderingBackendProvenance, renderingBackendProvenance) || other.renderingBackendProvenance == renderingBackendProvenance)&&(identical(other.startedAtUtc, startedAtUtc) || other.startedAtUtc == startedAtUtc)&&(identical(other.elapsedMicroseconds, elapsedMicroseconds) || other.elapsedMicroseconds == elapsedMicroseconds)&&(identical(other.frameCount, frameCount) || other.frameCount == frameCount)&&(identical(other.partialUpdateCount, partialUpdateCount) || other.partialUpdateCount == partialUpdateCount)&&(identical(other.lifecycleResumeCount, lifecycleResumeCount) || other.lifecycleResumeCount == lifecycleResumeCount)&&(identical(other.disposeAndRemountCount, disposeAndRemountCount) || other.disposeAndRemountCount == disposeAndRemountCount)&&(identical(other.controllerGeneration, controllerGeneration) || other.controllerGeneration == controllerGeneration)&&(identical(other.appResourceGeneration, appResourceGeneration) || other.appResourceGeneration == appResourceGeneration)&&(identical(other.customMaterialRuntimeSuccess, customMaterialRuntimeSuccess) || other.customMaterialRuntimeSuccess == customMaterialRuntimeSuccess)&&const DeepCollectionEquality().equals(other.customMaterialRuntimeFailures, customMaterialRuntimeFailures)&&const DeepCollectionEquality().equals(other.capabilities, capabilities)&&(identical(other.performance, performance) || other.performance == performance));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,schemaVersion,run,deviceModel,operatingSystemVersion,flutterFrameworkRevision,flutterEngineRevision,dartVersion,dartSourceRevision,flutterSceneRevision,eqmonitorMapRendererRevision,eqmonitorMapRendererCheckoutDirty,revisionProvenance,renderingBackend,renderingBackendProvenance,startedAtUtc,elapsedMicroseconds,frameCount,partialUpdateCount,lifecycleResumeCount,disposeAndRemountCount,controllerGeneration,appResourceGeneration,customMaterialRuntimeSuccess,const DeepCollectionEquality().hash(capabilities),performance]);
+int get hashCode => Object.hashAll([runtimeType,schemaVersion,run,deviceModel,operatingSystemVersion,flutterFrameworkRevision,flutterEngineRevision,dartVersion,dartSourceRevision,flutterSceneRevision,eqmonitorMapRendererRevision,eqmonitorMapRendererCheckoutDirty,revisionProvenance,renderingBackend,renderingBackendProvenance,startedAtUtc,elapsedMicroseconds,frameCount,partialUpdateCount,lifecycleResumeCount,disposeAndRemountCount,controllerGeneration,appResourceGeneration,customMaterialRuntimeSuccess,const DeepCollectionEquality().hash(customMaterialRuntimeFailures),const DeepCollectionEquality().hash(capabilities),performance]);
 
 @override
 String toString() {
-  return 'SceneSpikeEvidence(schemaVersion: $schemaVersion, run: $run, deviceModel: $deviceModel, operatingSystemVersion: $operatingSystemVersion, flutterFrameworkRevision: $flutterFrameworkRevision, flutterEngineRevision: $flutterEngineRevision, dartVersion: $dartVersion, dartSourceRevision: $dartSourceRevision, flutterSceneRevision: $flutterSceneRevision, eqmonitorMapRendererRevision: $eqmonitorMapRendererRevision, eqmonitorMapRendererCheckoutDirty: $eqmonitorMapRendererCheckoutDirty, revisionProvenance: $revisionProvenance, renderingBackend: $renderingBackend, renderingBackendProvenance: $renderingBackendProvenance, startedAtUtc: $startedAtUtc, elapsedMicroseconds: $elapsedMicroseconds, frameCount: $frameCount, partialUpdateCount: $partialUpdateCount, lifecycleResumeCount: $lifecycleResumeCount, disposeAndRemountCount: $disposeAndRemountCount, controllerGeneration: $controllerGeneration, appResourceGeneration: $appResourceGeneration, customMaterialRuntimeSuccess: $customMaterialRuntimeSuccess, capabilities: $capabilities, performance: $performance)';
+  return 'SceneSpikeEvidence(schemaVersion: $schemaVersion, run: $run, deviceModel: $deviceModel, operatingSystemVersion: $operatingSystemVersion, flutterFrameworkRevision: $flutterFrameworkRevision, flutterEngineRevision: $flutterEngineRevision, dartVersion: $dartVersion, dartSourceRevision: $dartSourceRevision, flutterSceneRevision: $flutterSceneRevision, eqmonitorMapRendererRevision: $eqmonitorMapRendererRevision, eqmonitorMapRendererCheckoutDirty: $eqmonitorMapRendererCheckoutDirty, revisionProvenance: $revisionProvenance, renderingBackend: $renderingBackend, renderingBackendProvenance: $renderingBackendProvenance, startedAtUtc: $startedAtUtc, elapsedMicroseconds: $elapsedMicroseconds, frameCount: $frameCount, partialUpdateCount: $partialUpdateCount, lifecycleResumeCount: $lifecycleResumeCount, disposeAndRemountCount: $disposeAndRemountCount, controllerGeneration: $controllerGeneration, appResourceGeneration: $appResourceGeneration, customMaterialRuntimeSuccess: $customMaterialRuntimeSuccess, customMaterialRuntimeFailures: $customMaterialRuntimeFailures, capabilities: $capabilities, performance: $performance)';
 }
 
 
@@ -1128,7 +1394,7 @@ abstract mixin class $SceneSpikeEvidenceCopyWith<$Res>  {
   factory $SceneSpikeEvidenceCopyWith(SceneSpikeEvidence value, $Res Function(SceneSpikeEvidence) _then) = _$SceneSpikeEvidenceCopyWithImpl;
 @useResult
 $Res call({
- int schemaVersion, SceneSpikeRunKey run, String deviceModel, String operatingSystemVersion, String flutterFrameworkRevision, String flutterEngineRevision, String dartVersion, String dartSourceRevision, String flutterSceneRevision, String eqmonitorMapRendererRevision, bool eqmonitorMapRendererCheckoutDirty, SceneSpikeObservationProvenance revisionProvenance, String renderingBackend, SceneSpikeObservationProvenance renderingBackendProvenance, DateTime startedAtUtc, int elapsedMicroseconds, int frameCount, int partialUpdateCount, int lifecycleResumeCount, int disposeAndRemountCount, int controllerGeneration, int appResourceGeneration, SceneSpikeCustomMaterialRuntimeSuccess? customMaterialRuntimeSuccess, List<SceneSpikeCapabilityResult> capabilities, SceneSpikePerformanceSnapshot performance
+ int schemaVersion, SceneSpikeRunKey run, String deviceModel, String operatingSystemVersion, String flutterFrameworkRevision, String flutterEngineRevision, String dartVersion, String dartSourceRevision, String flutterSceneRevision, String eqmonitorMapRendererRevision, bool eqmonitorMapRendererCheckoutDirty, SceneSpikeObservationProvenance revisionProvenance, String renderingBackend, SceneSpikeObservationProvenance renderingBackendProvenance, DateTime startedAtUtc, int elapsedMicroseconds, int frameCount, int partialUpdateCount, int lifecycleResumeCount, int disposeAndRemountCount, int controllerGeneration, int appResourceGeneration, SceneSpikeCustomMaterialRuntimeSuccess? customMaterialRuntimeSuccess, List<SceneSpikeCustomMaterialRuntimeFailure> customMaterialRuntimeFailures, List<SceneSpikeCapabilityResult> capabilities, SceneSpikePerformanceSnapshot performance
 });
 
 
@@ -1145,7 +1411,7 @@ class _$SceneSpikeEvidenceCopyWithImpl<$Res>
 
 /// Create a copy of SceneSpikeEvidence
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? schemaVersion = null,Object? run = null,Object? deviceModel = null,Object? operatingSystemVersion = null,Object? flutterFrameworkRevision = null,Object? flutterEngineRevision = null,Object? dartVersion = null,Object? dartSourceRevision = null,Object? flutterSceneRevision = null,Object? eqmonitorMapRendererRevision = null,Object? eqmonitorMapRendererCheckoutDirty = null,Object? revisionProvenance = null,Object? renderingBackend = null,Object? renderingBackendProvenance = null,Object? startedAtUtc = null,Object? elapsedMicroseconds = null,Object? frameCount = null,Object? partialUpdateCount = null,Object? lifecycleResumeCount = null,Object? disposeAndRemountCount = null,Object? controllerGeneration = null,Object? appResourceGeneration = null,Object? customMaterialRuntimeSuccess = freezed,Object? capabilities = null,Object? performance = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? schemaVersion = null,Object? run = null,Object? deviceModel = null,Object? operatingSystemVersion = null,Object? flutterFrameworkRevision = null,Object? flutterEngineRevision = null,Object? dartVersion = null,Object? dartSourceRevision = null,Object? flutterSceneRevision = null,Object? eqmonitorMapRendererRevision = null,Object? eqmonitorMapRendererCheckoutDirty = null,Object? revisionProvenance = null,Object? renderingBackend = null,Object? renderingBackendProvenance = null,Object? startedAtUtc = null,Object? elapsedMicroseconds = null,Object? frameCount = null,Object? partialUpdateCount = null,Object? lifecycleResumeCount = null,Object? disposeAndRemountCount = null,Object? controllerGeneration = null,Object? appResourceGeneration = null,Object? customMaterialRuntimeSuccess = freezed,Object? customMaterialRuntimeFailures = null,Object? capabilities = null,Object? performance = null,}) {
   return _then(SceneSpikeEvidence(
 schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
 as int,run: null == run ? _self.run : run // ignore: cast_nullable_to_non_nullable
@@ -1170,7 +1436,8 @@ as int,disposeAndRemountCount: null == disposeAndRemountCount ? _self.disposeAnd
 as int,controllerGeneration: null == controllerGeneration ? _self.controllerGeneration : controllerGeneration // ignore: cast_nullable_to_non_nullable
 as int,appResourceGeneration: null == appResourceGeneration ? _self.appResourceGeneration : appResourceGeneration // ignore: cast_nullable_to_non_nullable
 as int,customMaterialRuntimeSuccess: freezed == customMaterialRuntimeSuccess ? _self.customMaterialRuntimeSuccess : customMaterialRuntimeSuccess // ignore: cast_nullable_to_non_nullable
-as SceneSpikeCustomMaterialRuntimeSuccess?,capabilities: null == capabilities ? _self.capabilities : capabilities // ignore: cast_nullable_to_non_nullable
+as SceneSpikeCustomMaterialRuntimeSuccess?,customMaterialRuntimeFailures: null == customMaterialRuntimeFailures ? _self.customMaterialRuntimeFailures : customMaterialRuntimeFailures // ignore: cast_nullable_to_non_nullable
+as List<SceneSpikeCustomMaterialRuntimeFailure>,capabilities: null == capabilities ? _self.capabilities : capabilities // ignore: cast_nullable_to_non_nullable
 as List<SceneSpikeCapabilityResult>,performance: null == performance ? _self.performance : performance // ignore: cast_nullable_to_non_nullable
 as SceneSpikePerformanceSnapshot,
   ));

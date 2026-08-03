@@ -96,6 +96,24 @@ sealed class SceneSpikeCustomMaterialRuntimeSuccess
 }
 
 @freezed
+sealed class SceneSpikeCustomMaterialRuntimeFailure
+    with _$SceneSpikeCustomMaterialRuntimeFailure {
+  // Freezed applies this constructor annotation to the generated class.
+  // ignore: invalid_annotation_target
+  @JsonSerializable(explicitToJson: true)
+  const factory SceneSpikeCustomMaterialRuntimeFailure({
+    @SceneSpikeStrictIntConverter() required int controllerGeneration,
+    @SceneSpikeStrictIntConverter() required int appResourceGeneration,
+    required String detail,
+    required DateTime observedAtUtc,
+  }) = _SceneSpikeCustomMaterialRuntimeFailure;
+
+  factory SceneSpikeCustomMaterialRuntimeFailure.fromJson(
+    Map<String, dynamic> json,
+  ) => _$SceneSpikeCustomMaterialRuntimeFailureFromJson(json);
+}
+
+@freezed
 sealed class SceneSpikePerformanceSnapshot
     with _$SceneSpikePerformanceSnapshot {
   // Freezed applies this constructor annotation to the generated class.
@@ -147,9 +165,14 @@ class SceneSpikeEvidence with _$SceneSpikeEvidence {
     required this.controllerGeneration,
     required this.appResourceGeneration,
     required this.customMaterialRuntimeSuccess,
+    required List<SceneSpikeCustomMaterialRuntimeFailure>
+    customMaterialRuntimeFailures,
     required List<SceneSpikeCapabilityResult> capabilities,
     required this.performance,
-  }) : capabilities = List.unmodifiable(capabilities);
+  }) : customMaterialRuntimeFailures = List.unmodifiable(
+         customMaterialRuntimeFailures,
+       ),
+       capabilities = List.unmodifiable(capabilities);
 
   factory SceneSpikeEvidence.fromJson(Map<String, dynamic> json) =>
       _$SceneSpikeEvidenceFromJson(json);
@@ -208,6 +231,9 @@ class SceneSpikeEvidence with _$SceneSpikeEvidence {
   final int appResourceGeneration;
   @override
   final SceneSpikeCustomMaterialRuntimeSuccess? customMaterialRuntimeSuccess;
+  @override
+  final List<SceneSpikeCustomMaterialRuntimeFailure>
+  customMaterialRuntimeFailures;
   @override
   final List<SceneSpikeCapabilityResult> capabilities;
   @override
