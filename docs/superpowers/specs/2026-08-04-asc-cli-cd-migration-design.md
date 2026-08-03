@@ -44,7 +44,7 @@ mise.toml には `"github:rorkai/App-Store-Connect-CLI" = "latest"` が追加済
 ```
 
 検証済み: mise 2026.8.0 で上記により `asc` として実行可能（SLSA provenance 検証付き、
-バージョン 3.5.0 / commit cafc04f で確認）。
+バージョン 3.4.1 / commit a5cbf6e で確認）。
 
 CI 側の注意:
 
