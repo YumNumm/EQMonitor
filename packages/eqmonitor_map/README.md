@@ -56,6 +56,17 @@ mise bootstrap repos status --missing
 MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter --version --machine
 ```
 
+Flutter Sceneのbase shader bundleと`assets/map_spike.fmat`はbuild hookが生成する
+Dart Data Assetです。machineごとに1度だけ次を実行してからbuildします。未設定の場合
+`Scene.initializeStaticResources()`が失敗し、`Flutter Scene is not ready to render.`が
+毎frame出力されます。詳細は
+[`docs/knowledge/20260803_flutter_scene_dart_data_assets.md`](../../docs/knowledge/20260803_flutter_scene_dart_data_assets.md)
+を参照してください。
+
+```bash
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter config --enable-dart-data-assets
+```
+
 Flutter Scene型は`flutter_scene/` adapter内に隔離します。通常のdomain/runtime
 modelは不変かつFreezedを原則としますが、frameごとのsnapshot/delta、packed buffer、
 generation tokenはallocationとdeep equalityを避けるためversion付きhot-path型を使います。
