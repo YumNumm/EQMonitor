@@ -46,6 +46,9 @@ jobs:
         working-directory: packages/eqmonitor_map/example
         run: mise exec -- flutter pub get --enforce-lockfile
 
+      - name: Analyze eqmonitor_map package
+        run: mise exec -- flutter analyze --fatal-infos packages/eqmonitor_map
+
       - name: Build Android profile
         working-directory: packages/eqmonitor_map/example
         run: mise exec -- flutter build apk --profile --dart-define-from-file="$RUNNER_TEMP/eqmonitor-map-scene-spike.json"
