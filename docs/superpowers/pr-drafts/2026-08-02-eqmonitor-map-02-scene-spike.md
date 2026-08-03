@@ -1,15 +1,16 @@
 ## Summary
 
-- EQMonitor専用のminimal Flutter package/exampleとFlutter Scene adapter spikeを追加します。
-- Flutter SDKはYumNumm版`mise-flutter`、Flutter Sceneはpackage/lockfileの固定revisionで再現します。
-- exampleは証跡を生成しないprofile/release manual smoke harnessです。
+- Flutter SDK導入をYumNumm版`mise-flutter`へ一本化します。
+- Scene spikeからevidence、validator、Dart define manifest、operator checklistを削除します。
+- exampleを3操作と6 counterだけのprofile/release manual smoke harnessへ簡素化します。
 - iOS/Android実機確認は未実施ですが、foundation実装を停止する条件にはしません。
 
 ## Stack
 
 - Base: `develop`
-- Merged parent: [#1565](https://github.com/YumNumm/EQMonitor/pull/1565) `codex/eqmonitor-map-01-design`
-- Head: `codex/eqmonitor-map-02-scene-spike`
+- Merged predecessors: [#1565](https://github.com/YumNumm/EQMonitor/pull/1565)
+  design、[#1566](https://github.com/YumNumm/EQMonitor/pull/1566) Scene spike
+- Head: `codex/eqmonitor-map-mise-simplification`
 - Next: `03-foundation`
 
 ## Fixed revisions
@@ -30,6 +31,14 @@ root `pubspec.lock`を正本にします。Flutter/Dart commandは`mise exec --`
 - frame、partial update、resume、remount、resource rebuild、exceptionの6 counterだけを
   remount間で維持します。
 - Scene lifecycleとresource generationを非同期処理で検証し、stale completionを適用しません。
+- background中はpartial updateを停止し、foreground後のresource rebuild成功時だけ再開します。
+
+## Removed infrastructure
+
+- checkout clean状態やSDK revisionをruntimeのDart defineへ複製するmanifest writer
+- canonical evidence JSON、collector、gate、validator、clipboard UI
+- operator attestation checklist、evidence専用frame timing、4-run判定
+- evidence専用のsource、生成コード、tool、unit test、運用文書
 
 ## Toolchain and CI
 
@@ -55,8 +64,19 @@ mise exec -- dart pub get --enforce-lockfile
 mise exec -- dart format --output=none --set-exit-if-changed \
   packages/eqmonitor_map/lib packages/eqmonitor_map/test packages/eqmonitor_map/example/lib
 mise exec -- flutter analyze --no-pub --fatal-infos packages/eqmonitor_map
+mise exec -- actionlint \
+  .github/workflows/wc-check-eqmonitor-map-scene-spike.yaml \
+  .github/workflows/wc-check-dart-analyze.yaml \
+  .github/workflows/wc-check-dart-test.yaml \
+  .github/workflows/wc-check-integration.yaml \
+  .github/workflows/deploy-app.yaml \
+  .github/workflows/wc-changes.yaml
 cd packages/eqmonitor_map && mise exec -- flutter test
 ```
+
+- package unit test: 47件pass
+- strict analyze: issue 0
+- format、actionlint、`git diff --check`: pass
 
 ## Deferred work
 
