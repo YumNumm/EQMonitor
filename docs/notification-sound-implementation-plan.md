@@ -253,7 +253,7 @@ abstract class EarthquakeNotificationSettings with _$EarthquakeNotificationSetti
 
 **担当**: app / 優先度: High
 
-`device_notification_settings_repository.dart` の変換ロジックを複数ティア対応に：
+`device_notification_settings_repository.dart` の変換ロジックを、次のように複数ティア対応にする。
 
 ```dart
 // EEW レスポンス → アプリモデル
@@ -455,8 +455,8 @@ class NotificationSoundRepository {
 └────────────────────────────────────┘
 ```
 
-- **通常ティア**: 地域設定で登録した全地域で使用
-- **現在地ティア** (`current_location_tiers`): 現在地が対象地域に含まれ、かつ警報の場合に優先使用
+- 通常ティア: 地域設定で登録した全地域で使用
+- 現在地ティア (`current_location_tiers`): 現在地が対象地域に含まれ、かつ警報の場合に優先使用
 
 例：現在地ティアに `{震度1以上, critical, eqmonitor_eew_warning.wav, volume:1.0}` を設定 → 現在地への EEW 警報は常に DND 突破の最大音量で通知
 
