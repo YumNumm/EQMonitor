@@ -47,6 +47,8 @@ for command in upgrade downgrade channel; do
     "$runner" flutter "$command"
   assert_failed_with "refuses self-update command: flutter $command" \
     "$runner" flutter --verbose "$command"
+  assert_failed_with "refuses self-update command: flutter $command" \
+    "$runner" flutter -- "$command"
 done
 
 missing_checkout="$temporary_dir/missing"
@@ -60,7 +62,7 @@ chmod +x "$non_git_checkout/bin/flutter"
 assert_failed_with "not a git checkout" \
   "$guard" "$non_git_checkout" "$expected_pinned_revision" flutter
 
-sdk_checkout="$temporary_dir/flutter"
+sdk_checkout="$temporary_dir/project/.flutter-scene-sdk"
 git init -q "$sdk_checkout"
 git -C "$sdk_checkout" config user.email test@example.com
 git -C "$sdk_checkout" config user.name "Pinned Flutter Test"
@@ -72,6 +74,10 @@ git -C "$sdk_checkout" add bin/flutter
 git -C "$sdk_checkout" commit -qm "test SDK"
 valid_revision="$(git -C "$sdk_checkout" rev-parse HEAD)"
 wrong_revision=0000000000000000000000000000000000000000
+
+sed -i \
+  "s/expected_revision=$expected_pinned_revision/expected_revision=$valid_revision/" \
+  "$runner"
 
 assert_failed_with "must be $wrong_revision" \
   "$guard" "$sdk_checkout" "$wrong_revision" flutter
@@ -108,6 +114,21 @@ git -C "$sdk_checkout" restore bin/flutter
 valid_output="$($guard "$sdk_checkout" "$valid_revision" flutter alpha beta)"
 [[ "$valid_output" == "fake flutter: alpha beta" ]] || \
   fail "valid checkout did not execute its SDK tool: $valid_output"
+
+pub_upgrade_output="$($runner flutter pub upgrade 2>&1)" || \
+  fail "flutter pub upgrade did not reach the SDK tool: $pub_upgrade_output"
+[[ "$pub_upgrade_output" == "fake flutter: pub upgrade" ]] || \
+  fail "flutter pub upgrade arguments changed: $pub_upgrade_output"
+
+device_value_output="$($runner flutter --device-id upgrade pub get 2>&1)" || \
+  fail "global option value was treated as a command: $device_value_output"
+[[ "$device_value_output" == "fake flutter: --device-id upgrade pub get" ]] || \
+  fail "global option arguments changed: $device_value_output"
+
+pub_separator_output="$($runner flutter pub -- upgrade 2>&1)" || \
+  fail "nested separator argument was treated as a command: $pub_separator_output"
+[[ "$pub_separator_output" == "fake flutter: pub -- upgrade" ]] || \
+  fail "nested separator arguments changed: $pub_separator_output"
 
 assert_failed_with "unsupported pinned Flutter tool" \
   "$guard" "$sdk_checkout" "$valid_revision" pub
