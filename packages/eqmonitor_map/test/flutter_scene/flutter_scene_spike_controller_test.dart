@@ -336,6 +336,23 @@ void main() {
       expect(controller.isUpdating, isFalse);
     });
 
+    test('dispose stops active partial updates', () {
+      final controller =
+          createController(
+              adapter: FakeSceneSpikeControllerAdapter(),
+            )
+            ..attach(
+              logicalSize: const Size(400, 300),
+              devicePixelRatio: 2,
+            )
+            ..startUpdates();
+
+      controller.dispose();
+
+      expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.disposed);
+      expect(controller.isUpdating, isFalse);
+    });
+
     test('successful partial update increments counter', () {
       final adapter = FakeSceneSpikeControllerAdapter();
       final controller = createController(adapter: adapter)
@@ -351,6 +368,62 @@ void main() {
       expect(controller.partialUpdateCount, 1);
       expect(controller.exceptionCount, 0);
       expect(controller.isUpdating, isTrue);
+    });
+
+    test(
+      'background update resumes only after foreground rebuild succeeds',
+      () async {
+        final rebuild = Completer<void>();
+        final controller =
+            createController(
+                adapter: FakeSceneSpikeControllerAdapter(
+                  rebuildCompletion: rebuild.future,
+                ),
+              )
+              ..attach(
+                logicalSize: const Size(400, 300),
+                devicePixelRatio: 2,
+              )
+              ..startUpdates()
+              ..background()
+              ..background()
+              ..foreground();
+        addTearDown(controller.dispose);
+
+        expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.rebuilding);
+        expect(controller.isUpdating, isFalse);
+
+        final completion = controller.completePendingAppResourceRebuild();
+        await Future<void>.delayed(Duration.zero);
+        expect(controller.isUpdating, isFalse);
+
+        rebuild.complete();
+        await completion;
+
+        expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.active);
+        expect(controller.isUpdating, isTrue);
+      },
+    );
+
+    test('explicit stop prevents restart after foreground rebuild', () async {
+      final controller =
+          createController(
+              adapter: FakeSceneSpikeControllerAdapter(),
+            )
+            ..attach(
+              logicalSize: const Size(400, 300),
+              devicePixelRatio: 2,
+            )
+            ..startUpdates()
+            ..background()
+            ..foreground();
+      addTearDown(controller.dispose);
+
+      controller.stopUpdates();
+      await controller.completePendingAppResourceRebuild();
+
+      expect(controller.lifecycle.phase, SceneSpikeLifecyclePhase.active);
+      expect(controller.isUpdating, isFalse);
     });
 
     test('partial update exception increments counter and stops updates', () {

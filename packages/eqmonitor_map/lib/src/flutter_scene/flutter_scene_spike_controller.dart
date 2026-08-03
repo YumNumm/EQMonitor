@@ -74,6 +74,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
   Size? _logicalSize;
   double? _devicePixelRatio;
   var _isUpdating = false;
+  var _resumeUpdatesAfterRebuild = false;
   var _isDisposed = false;
 
   scene.Scene get sceneGraph =>
@@ -165,6 +166,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         _lifecycle.phase != .rebuilding) {
       return;
     }
+    _resumeUpdatesAfterRebuild = _resumeUpdatesAfterRebuild || _isUpdating;
     _materialOperationGeneration.cancel();
     _adapter.setForeground(isForeground: false);
     _lifecycle = _lifecycleReducer.reduce(
@@ -252,6 +254,10 @@ class FlutterSceneSpikeController extends ChangeNotifier {
         event: const SceneSpikeLifecycleEvent.rebuildCompleted(),
       );
       _metrics.recordResourceRebuild();
+      if (_resumeUpdatesAfterRebuild) {
+        _resumeUpdatesAfterRebuild = false;
+        _isUpdating = true;
+      }
     } catch (_) {
       if (!token.isCurrent || _isDisposed) {
         return;
@@ -290,6 +296,7 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     } catch (_) {
       _metrics.recordException();
       _isUpdating = false;
+      _resumeUpdatesAfterRebuild = false;
     }
     notifyListeners();
   }
@@ -315,12 +322,14 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       notifyListeners();
       return;
     }
+    _resumeUpdatesAfterRebuild = false;
     _isUpdating = true;
     notifyListeners();
   }
 
   void stopUpdates() {
     _isUpdating = false;
+    _resumeUpdatesAfterRebuild = false;
     notifyListeners();
   }
 
@@ -344,6 +353,8 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       return;
     }
     _isDisposed = true;
+    _isUpdating = false;
+    _resumeUpdatesAfterRebuild = false;
     _materialOperationGeneration.dispose();
     _adapter.dispose();
     _lifecycle = _lifecycleReducer.reduce(
