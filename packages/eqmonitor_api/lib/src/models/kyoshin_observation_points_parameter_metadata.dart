@@ -24,6 +24,6 @@ abstract class KyoshinObservationPointsParameterMetadata with _$KyoshinObservati
     required List<String> sourceUrls,
     required String sha256,
   }) = _KyoshinObservationPointsParameterMetadata;
-  
+
   factory KyoshinObservationPointsParameterMetadata.fromJson(Map<String, Object?> json) => _$KyoshinObservationPointsParameterMetadataFromJson(json);
 }

@@ -16,6 +16,6 @@ abstract class KyoshinObservationPointsParameter with _$KyoshinObservationPoints
     required KyoshinObservationPointsParameterMetadata metadata,
     required List<KyoshinObservationPoint> points,
   }) = _KyoshinObservationPointsParameter;
-  
+
   factory KyoshinObservationPointsParameter.fromJson(Map<String, Object?> json) => _$KyoshinObservationPointsParameterFromJson(json);
 }

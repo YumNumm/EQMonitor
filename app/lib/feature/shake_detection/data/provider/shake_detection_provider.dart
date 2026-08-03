@@ -100,6 +100,9 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
                                 longitude: point.location.longitude,
                               ),
                               intensity: point.intensity,
+                              prefectureCode: point.prefectureCode,
+                              regionCode: point.regionCode,
+                              cityCode: point.cityCode,
                               intensityDiff: point.intensityDiff,
                             ),
                           )

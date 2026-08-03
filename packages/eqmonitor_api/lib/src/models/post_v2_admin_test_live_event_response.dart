@@ -13,6 +13,6 @@ abstract class PostV2AdminTestLiveEventResponse with _$PostV2AdminTestLiveEventR
     /// const: true
     required bool ok,
   }) = _PostV2AdminTestLiveEventResponse;
-  
+
   factory PostV2AdminTestLiveEventResponse.fromJson(Map<String, Object?> json) => _$PostV2AdminTestLiveEventResponseFromJson(json);
 }

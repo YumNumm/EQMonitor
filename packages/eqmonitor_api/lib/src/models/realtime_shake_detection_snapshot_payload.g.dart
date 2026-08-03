@@ -9,28 +9,30 @@ part of 'realtime_shake_detection_snapshot_payload.dart';
 // **************************************************************************
 
 _RealtimeShakeDetectionSnapshotPayload
-_$RealtimeShakeDetectionSnapshotPayloadFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('_RealtimeShakeDetectionSnapshotPayload', json, (
-      $checkedConvert,
-    ) {
-      final val = _RealtimeShakeDetectionSnapshotPayload(
-        type: $checkedConvert('type', (v) => $enumDecode(_$Type3EnumMap, v)),
-        revision: $checkedConvert('revision', (v) => (v as num).toInt()),
-        responseAt: $checkedConvert(
-          'responseAt',
-          (v) => DateTime.parse(v as String),
-        ),
-        events: $checkedConvert(
-          'events',
-          (v) => (v as List<dynamic>)
-              .map(
-                (e) => ShakeDetectionState.fromJson(e as Map<String, dynamic>),
-              )
-              .toList(),
-        ),
-      );
-      return val;
-    });
+_$RealtimeShakeDetectionSnapshotPayloadFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_RealtimeShakeDetectionSnapshotPayload', json, (
+  $checkedConvert,
+) {
+  final val = _RealtimeShakeDetectionSnapshotPayload(
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$RealtimeShakeDetectionSnapshotPayloadTypeEnumMap, v),
+    ),
+    revision: $checkedConvert('revision', (v) => (v as num).toInt()),
+    responseAt: $checkedConvert(
+      'responseAt',
+      (v) => DateTime.parse(v as String),
+    ),
+    events: $checkedConvert(
+      'events',
+      (v) => (v as List<dynamic>)
+          .map((e) => ShakeDetectionState.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$RealtimeShakeDetectionSnapshotPayloadToJson(
   _RealtimeShakeDetectionSnapshotPayload instance,
@@ -41,4 +43,6 @@ Map<String, dynamic> _$RealtimeShakeDetectionSnapshotPayloadToJson(
   'events': instance.events,
 };
 
-const _$Type3EnumMap = {Type3.shakeDetection: 'shake_detection'};
+const _$RealtimeShakeDetectionSnapshotPayloadTypeEnumMap = {
+  RealtimeShakeDetectionSnapshotPayloadType.shakeDetection: 'shake_detection',
+};

@@ -28,6 +28,6 @@ abstract class ParameterManifestItem with _$ParameterManifestItem {
     required num sizeBytes,
     required String url,
   }) = _ParameterManifestItem;
-  
+
   factory ParameterManifestItem.fromJson(Map<String, Object?> json) => _$ParameterManifestItemFromJson(json);
 }

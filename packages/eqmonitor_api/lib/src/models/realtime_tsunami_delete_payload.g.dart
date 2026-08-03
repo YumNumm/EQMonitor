@@ -15,10 +15,13 @@ _RealtimeTsunamiDeletePayload _$RealtimeTsunamiDeletePayloadFromJson(
   json,
   ($checkedConvert) {
     final val = _RealtimeTsunamiDeletePayload(
-      type: $checkedConvert('type', (v) => $enumDecode(_$Type4EnumMap, v)),
+      type: $checkedConvert(
+        'type',
+        (v) => $enumDecode(_$RealtimeTsunamiDeletePayloadTypeEnumMap, v),
+      ),
       operation: $checkedConvert(
         'operation',
-        (v) => $enumDecode(_$Operation2EnumMap, v),
+        (v) => $enumDecode(_$RealtimeTsunamiDeletePayloadOperationEnumMap, v),
       ),
       eventId: $checkedConvert('event_id', (v) => v as String),
       groupId: $checkedConvert('group_id', (v) => v as String?),
@@ -37,6 +40,10 @@ Map<String, dynamic> _$RealtimeTsunamiDeletePayloadToJson(
   'group_id': ?instance.groupId,
 };
 
-const _$Type4EnumMap = {Type4.tsunami: 'tsunami'};
+const _$RealtimeTsunamiDeletePayloadTypeEnumMap = {
+  RealtimeTsunamiDeletePayloadType.tsunami: 'tsunami',
+};
 
-const _$Operation2EnumMap = {Operation2.delete: 'delete'};
+const _$RealtimeTsunamiDeletePayloadOperationEnumMap = {
+  RealtimeTsunamiDeletePayloadOperation.delete: 'delete',
+};

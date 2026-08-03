@@ -5,7 +5,7 @@ name: Integration Test
 # eqmonitor_api の integration タグ付きテストを実行する。
 #
 # 前提: GitHub App (vars.EQMONITOR_GITHUB_APP_ID) が YumNumm/eqmonitor-backend に
-#       contents:read で install 済みであること。未 install の場合は submodule checkout が失敗する。
+#       contents:read で install 済みであること。nested submoduleは取得しない。
 
 on:
   workflow_call:
@@ -42,7 +42,7 @@ jobs:
       - name: Checkout repository (with backend submodule)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          submodules: recursive
+          submodules: true
           token: ${{ steps.app-token.outputs.token }}
           persist-credentials: false
 

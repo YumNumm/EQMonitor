@@ -1,0 +1,1 @@
+enum HypocenterArchivePartition { year, day }

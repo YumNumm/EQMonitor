@@ -77,7 +77,7 @@ as List<TsunamiStationPrefecture>,
 @override
 @pragma('vm:prefer-inline')
 $TsunamiStationsParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $TsunamiStationsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -294,7 +294,7 @@ as List<TsunamiStationPrefecture>,
 @override
 @pragma('vm:prefer-inline')
 $TsunamiStationsParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $TsunamiStationsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });

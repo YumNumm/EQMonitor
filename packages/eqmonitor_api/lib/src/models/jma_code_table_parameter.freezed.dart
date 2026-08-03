@@ -77,7 +77,7 @@ as JmaCodeTableParameterCodeTables,
 @override
 @pragma('vm:prefer-inline')
 $JmaCodeTableParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $JmaCodeTableParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -86,7 +86,7 @@ $JmaCodeTableParameterMetadataCopyWith<$Res> get metadata {
 @override
 @pragma('vm:prefer-inline')
 $JmaCodeTableParameterCodeTablesCopyWith<$Res> get codeTables {
-  
+
   return $JmaCodeTableParameterCodeTablesCopyWith<$Res>(_self.codeTables, (value) {
     return _then(_self.copyWith(codeTables: value));
   });
@@ -297,7 +297,7 @@ as JmaCodeTableParameterCodeTables,
 @override
 @pragma('vm:prefer-inline')
 $JmaCodeTableParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $JmaCodeTableParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -306,7 +306,7 @@ $JmaCodeTableParameterMetadataCopyWith<$Res> get metadata {
 @override
 @pragma('vm:prefer-inline')
 $JmaCodeTableParameterCodeTablesCopyWith<$Res> get codeTables {
-  
+
   return $JmaCodeTableParameterCodeTablesCopyWith<$Res>(_self.codeTables, (value) {
     return _then(_self.copyWith(codeTables: value));
   });

@@ -5,8 +5,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'earthquake.dart';
-import 'operation.dart';
-import 'type.dart';
+import 'realtime_earthquake_upsert_payload_operation.dart';
+import 'realtime_earthquake_upsert_payload_type.dart';
 
 part 'realtime_earthquake_upsert_payload.freezed.dart';
 part 'realtime_earthquake_upsert_payload.g.dart';
@@ -14,8 +14,8 @@ part 'realtime_earthquake_upsert_payload.g.dart';
 @Freezed()
 abstract class RealtimeEarthquakeUpsertPayload with _$RealtimeEarthquakeUpsertPayload {
   const factory RealtimeEarthquakeUpsertPayload({
-    required Type type,
-    required Operation operation,
+    required RealtimeEarthquakeUpsertPayloadType type,
+    required RealtimeEarthquakeUpsertPayloadOperation operation,
     @JsonKey(name: 'event_id')
     required String eventId,
     required Earthquake record,
