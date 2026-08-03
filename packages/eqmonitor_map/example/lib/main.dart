@@ -1,43 +1,34 @@
-import 'package:eqmonitor_map/eqmonitor_map.dart';
-import 'package:flutter/material.dart';
+// The Scene spike stays internal until its global evidence gate passes.
+// ignore_for_file: implementation_imports
 
-const _flutterSceneRevision = '695c954f237fabef65d49fa7199002851d2dcd88';
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_spike_controller.dart';
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_spike_view.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 void main() => runApp(const EqmonitorMapExampleApp());
 
-class EqmonitorMapExampleApp extends StatelessWidget {
+class EqmonitorMapExampleApp extends HookWidget {
   const EqmonitorMapExampleApp({super.key});
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    title: 'EQMonitor Map Scene Spike',
-    theme: ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
-    ),
-    darkTheme: ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.deepOrange,
-        brightness: Brightness.dark,
+  Widget build(BuildContext context) {
+    final controller = useMemoized(FlutterSceneSpikeController.create);
+    return MaterialApp(
+      title: 'EQMonitor Map Scene Spike',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
       ),
-    ),
-    home: Scaffold(
-      appBar: AppBar(title: const Text('EQMonitor Map Scene Spike')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Package: ${eqmonitorMapLibrary.packageName}'),
-              const SizedBox(height: 16),
-              const SelectableText(
-                'Flutter Scene revision\n$_flutterSceneRevision',
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepOrange,
+          brightness: Brightness.dark,
         ),
       ),
-    ),
-  );
+      home: Scaffold(
+        appBar: AppBar(title: const Text('EQMonitor Map Scene Spike')),
+        body: FlutterSceneSpikeView(controller: controller),
+      ),
+    );
+  }
 }

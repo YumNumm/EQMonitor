@@ -1996,12 +1996,13 @@ packages:
     source: hosted
     version: "0.28.0"
   scene:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: scene
-      sha256: df82b238b19e40a9cd3053dc613b03ff63e1a3826ca2d4ac9fcc2cb178631930
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/scene"
+      ref: "695c954f237fabef65d49fa7199002851d2dcd88"
+      resolved-ref: "695c954f237fabef65d49fa7199002851d2dcd88"
+      url: "https://github.com/bdero/flutter_scene.git"
+    source: git
     version: "0.1.0"
   screenshot:
     dependency: transitive
