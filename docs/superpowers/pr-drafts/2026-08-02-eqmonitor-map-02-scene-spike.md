@@ -74,7 +74,7 @@ mise exec -- actionlint \
 cd packages/eqmonitor_map && mise exec -- flutter test
 ```
 
-- package unit test: 47件pass
+- package unit test: 50件pass
 - strict analyze: issue 0
 - format、actionlint、`git diff --check`: pass
 
