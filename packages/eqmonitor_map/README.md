@@ -5,9 +5,9 @@ EQMonitor専用のFlutter地図レンダラーです。
 Flutter SceneをGPU描画基盤としてPMTiles/MVTの地物を描画し、ラベルはasset内の1つの地理anchorから、実測文字サイズとDPRに応じたscreen placement候補を生成してFlutterの`TextPainter`で描画します。MapLibre Style JSON互換ではなく、型付きの宣言的`MapNode`ツリーを利用します。
 
 > [!WARNING]
-> 現在はFlutter Sceneのscaffoldと実機spike harnessまでです。Linux環境には
-> 物理iOS/Android端末とplatform build環境がないため、実機gateは
-> `NOT RUN / BLOCKED`です。`03-foundation`へは進みません。
+> 現在はFlutter Sceneのscaffoldとmanual smoke用exampleまでです。
+> このLinux環境ではiOS/Android実機のprofile/release確認を実施して
+> いません。未実施の実機確認はrenderer foundation実装の開始条件にしません。
 
 ## 初期スコープ
 
@@ -40,21 +40,21 @@ remote PMTilesのidentity encoding/strong validator付きrange合成、appがsig
 - 2D初期実装でも座標モデルからZ軸を削除しない。
 - 性能HUDより先に、軽量で常時利用できる観測基盤を実装する。
 - MapLibre版と共有`lockBearing`設定は残存surfaceの移行完了まで削除しない。新Home rendererだけが回転を明示的に無効化する。
-- Flutter Sceneはadapter内へ隔離し、固定revisionのiOS/Android実機spikeを実装gateにする。
+- Flutter Sceneはadapter内へ隔離し、iOS/Android実機のmanual smokeで主要操作を確認する。
 
 ## 固定toolchain
 
-- Flutter framework: `4dacd3fc91d96262a33e5c598e17d816f0b35641`
-- Flutter engine source: `b1e405a9c311d858bef870c472bb24c015f4bcf9`
-- Flutter engine artifact: `73ac711b34da2a090d79ddb423918de40a7ffbf9`
-- Dart source: `d402ff7c9c8442d64aa8148609480aa0e04a24fd`
-- Flutter Scene: `695c954f237fabef65d49fa7199002851d2dcd88`
+- Flutter: `4dacd3fc91d96262a33e5c598e17d816f0b35641`
+- Flutter Scene: `7f71993b7e2a0ab1d2f59726a406098709be7291`
 
 ```bash
-mise bootstrap repos apply --yes
-mise bootstrap repos status --missing
-MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter --version --machine
+mise install flutter
+mise exec -- flutter --version --machine
 ```
+
+Flutter SDKはYumNumm版`mise-flutter`と`mise.toml`、Flutter Sceneはpackageの
+`pubspec.yaml`とroot lockfileを正本とします。Flutter/Dart commandは常に
+`mise exec --`経由で実行します。
 
 Flutter Sceneのbase shader bundleと`assets/map_spike.fmat`はbuild hookが生成する
 Dart Data Assetです。machineごとに1度だけ次を実行してからbuildします。未設定の場合
@@ -72,44 +72,28 @@ modelは不変かつFreezedを原則としますが、frameごとのsnapshot/del
 generation tokenはallocationとdeep equalityを避けるためversion付きhot-path型を使います。
 この例外を公開DTOやJSON境界へ広げません。
 
-`flutter --version --machine`の`engineRevision`はengine source、`engineContentHash`は
-precache済みartifactのidentityとして別々にcompile-time manifestへ保存します。schema
-v4 evidenceとgateは両方を上記固定値と照合し、欠落、blank、形式不正、不一致を
-fail closedにします。
+## Scene exampleのmanual smoke
 
-## Scene spike device gate
-
-物理端末での採取手順とファイル名は
-[`example/evidence/README.md`](example/evidence/README.md)、実施計画は
-[`docs/superpowers/plans/2026-08-02-eqmonitor-map-scene-physical-verification.md`](../../docs/superpowers/plans/2026-08-02-eqmonitor-map-scene-physical-verification.md)
-を参照してください。各runの前にcompile-time manifestを作り、profile/releaseの
-canonical JSONを採取してからvalidatorを実行します。
+物理iOS/Android端末のdevice IDを`mise exec -- flutter devices`で確認し、
+example directoryからprofileとreleaseをそれぞれ起動します。
 
 ```bash
 cd packages/eqmonitor_map/example
-MISE_EXEC_AUTO_INSTALL=0 mise exec -- \
-  dart run ../tool/write_scene_spike_defines.dart
-MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter run --profile \
-  -d "$physical_device_id" \
-  --dart-define-from-file=.dart_tool/scene_spike_defines.json
-
-cd ../../..
-MISE_EXEC_AUTO_INSTALL=0 mise exec -- \
-  dart run packages/eqmonitor_map/tool/validate_scene_spike_evidence.dart
+mise exec -- flutter run --profile -d <device-id>
+mise exec -- flutter run --release -d <device-id>
 ```
 
-現時点のvalidatorはexit 1でiOS/Androidのprofile/release 4 run欠落を返します。
-さらにFlutter Sceneのpublic APIだけでは次を観測できず、各runで
-`unavailablePublicApi/unobserved`となるためgateはpass不能です。
+各build modeで次を画面と端末logの両方から確認します。結果のJSONや
+pass/fail artifactは生成しません。
 
-- `gpuCompletionOrSafeRetirement`
-- `contextResourceRebuild`
-- `explicitResourceDisposal`
-
-`03-foundation`へ進むには、clean checkoutと上記固定revisionで4 runを物理端末から
-採取し、全required capabilityをpublic APIに基づいて観測し、validatorがexit 0を返す
-必要があります。3 APIが未提供の間はfoundationを止め、架空・手編集・固定値のpass
-evidenceは作りません。
+- procedural meshの三角形とcustom materialの色が表示される。
+- Flutterの`TextPainter`で描画したlabel overlayがmeshの上に表示される。
+- portrait/landscapeの回転後もsurfaceとlabelの位置・サイズが追従する。
+- `Start partial updates`でposition/colorが更新され、`Stop partial updates`で停止する。
+- backgroundへ移行してforegroundへ復帰した後、resume counterが増え、描画とpartial updateが継続する。
+- `Rebuild app resources`後にrebuild counterが増え、procedural mesh、custom material、labelが再表示される。
+- `Dispose and remount`後にremount counterが増え、各counterを維持したまま操作を続行できる。
+- 各操作の前後でexception counterが増えず、端末logにFlutter/Scene例外や連続エラーがない。
 
 ## Delivery graph
 

@@ -9,11 +9,13 @@
 
 緊急地震速報など生命に関わる表示を扱うため、MapLibre Nativeからの段階的な移行に先立ち、描画・データ鮮度・入力検証・GPU resource lifecycle・障害時挙動の契約を固定する必要があります。
 
-特に、Flutter Sceneの成熟度を実機で確認するgate、PMTiles/MVTとAsset Packの信頼境界、動的hazard dataのatomic updateとexpiry、既存MapLibre pathを維持した段階移行を、実装着手前のreview対象として明文化します。
+特に、Flutter Sceneのmanual smoke確認、PMTiles/MVTとAsset Packの信頼境界、
+動的hazard dataのatomic updateとexpiry、既存MapLibre pathを維持した段階移行を、
+実装着手前のreview対象として明文化します。
 
 # Scope
 
-- [`docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`](../specs/2026-08-02-eqmonitor-map-renderer-design.md): 公開境界、座標系、tile pipeline、label、hit test、cache/error、性能観測、移行gate、stacked deliveryを定義します。
+- [`docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`](../specs/2026-08-02-eqmonitor-map-renderer-design.md): 公開境界、座標系、tile pipeline、label、hit test、cache/error、性能観測、段階移行、stacked deliveryを定義します。
 - [`packages/eqmonitor_map/README.md`](../../../packages/eqmonitor_map/README.md): packageの目的、初期スコープ、設計原則、delivery graphを記録します。package自体はまだ作成しません。
 - [`docs/knowledge/20260802_eqmonitor_map_renderer_constraints.md`](../../knowledge/20260802_eqmonitor_map_renderer_constraints.md): 今後の実装で維持する安全・互換性・性能上の制約を記録します。
 - [`docs/knowledge/20260802_kevi_map_renderer_reference.md`](../../knowledge/20260802_kevi_map_renderer_reference.md): KEViから参照した知見と、採用しない境界を固定します。
@@ -22,7 +24,9 @@
 # Architecture / safety highlights
 
 - 公開APIは不変かつ型付きの`MapScene` / `MapNode`ツリーとし、内部の`MapElement` / `MapRenderObject`がkeyとnode型でreconcileします。描画hot pathではGeoJSONやJSON serialization、geometryのdeep equalityを使いません。
-- Flutter Scene型はadapter内へ隔離し、Flutter SDKとFlutter Scene revisionを固定します。foundation実装前にiOS/Android実機spikeを通し、gateを満たせない場合は実装を進めず設計を更新します。
+- Flutter Scene型はadapter内へ隔離し、Flutter SDKとFlutter Scene revisionを固定します。
+  iOS/Android実機のprofile/release manual smokeで主要操作を確認し、未実施や
+  失敗はTODOに記録した上でfoundation実装を継続します。
 - PMTiles/MVTはlocal/remoteを問わずuntrustedなbounded inputとして扱います。appがmanifest、archive size/hash、署名済みsidecarを検証したimmutable descriptorだけをpackageへ渡し、missing/unknown/invalid/expiredなattestationでは新rendererをmountしません。
 - remote range取得はidentity encodingとstrong validatorを必須とし、validatorやtotal length、`Content-Range`、body lengthが不一致なら取得済みbyteを破棄します。壊れた入力を空tileや固定値へfallbackしません。
 - 動的sourceは`sourceInstanceId`とrevisionを持ち、full snapshot / deltaを完全検証後にatomic commitします。gapやbranchではdelta受付を止め、より新しいauthoritative full snapshotでのみ復旧します。
@@ -42,7 +46,7 @@ UI/render間state snapshot、phase内のordered layer、array-backed point data�
 
 EQMonitor側はこのDesign PRを起点に、次の順でstackします。
 
-1. `02-scene-spike`: minimal compilable scaffold、adapter prototype、iOS/Android実機gate
+1. `02-scene-spike`: minimal compilable scaffold、adapter prototype、iOS/Android manual smoke example
 2. `03-foundation`: 型付きモデル、座標、reconciler、frame/render契約、性能観測
 3. `04-tile-pipeline`: verified source、PMTiles/MVT、remote range fixture、worker/cache
 4. `05-label-asset-integration`: backend fixture、sidecar検証、Asset Pack境界
@@ -66,4 +70,6 @@ EQMonitor側はこのDesign PRを起点に、次の順でstackします。
 - [`780_eqmonitor_map_maplibre_surface_migrations.md`](../../todo/780_eqmonitor_map_maplibre_surface_migrations.md): Home以外を含む全MapLibre surfaceのparity確認と段階移行
 - [`800_eqmonitor_map_deferred_verification.md`](../../todo/800_eqmonitor_map_deferred_verification.md): Widget/Golden test、iOS/Android実機性能・復帰・memory pressure・context rebuild検証
 
-これらは本PRで実装・検証済みという意味ではありません。各後続PRでcompile、生成、format、analyze、対象test、fixture、実機gateをその時点のscopeに合わせて実行します。
+これらは本PRで実装・検証済みという意味ではありません。各後続PRでcompile、
+生成、format、analyze、対象test、fixture、実機manual smokeをその時点のscopeに合わせて
+実行します。

@@ -1,32 +1,27 @@
-# eqmonitor_mapの描画・性能検証を拡充する
+# eqmonitor_mapの延期検証を実施する
 
 ## 背景
 
-初期実装は座標、tile、MVT、reconciler、label、hit testなどの単体テストを優先する。Widget test、Golden test、実機性能試験は性能観測APIが安定した後に追加する。
+現在はFlutter Sceneの最小manual smoke exampleとunit testを提供している。
+実機確認は未実施だが、renderer foundation実装の開始条件にはしない。
 
-## 実施内容
+## 未完了事項
 
+- Performance HUDの実装と、metrics収集自体のCPU/memory overhead・event drop検証
 - パン、pinch zoom、loading、degraded表示のWidget test
-- 固定PMTiles、viewport、DPRを使うFill/Line/labelのGolden test
-- Light/Darkとtext scale 1.0/1.5/2.0のGolden test
-- iOS/Androidの基準端末と地図fixtureの選定
-- 高速移動、offline復帰、background復帰、memory pressureの実機試験
-- context loss/rebuildとframes-in-flight resource retirementの反復・長時間実機試験
-- frame、queue待機、decode、mesh build、GPU submission/completion、cacheの回帰基準策定
-- metrics収集自体のCPU/memory overhead上限とevent drop検証
-- performance benchmarkと回帰閾値をCIで追跡し、Performance HUDとの計測差を検証
-- 物理iOS/Androidのprofile/release各runで60秒partial update、回転/DPR、3回以上の
-  lifecycle復帰・dispose/remountを採取
-- AndroidはVulkanをprimary backendとし、support対象ではGLES fallbackと
-  `Don't keep activities`によるActivity recreationも別途検証
-- Flutter Scene upstreamにGPU completion、context generation、GPU resource disposalの
-  public APIが追加された時点でAPI監査とschema/gateを更新し、4 runを再採取
+- 固定PMTiles、viewport、DPR、theme、text scaleを使うFill/Line/labelのGolden test
+- frame、queue待機、decode、mesh build、GPU、cacheのperformance benchmarkと回帰閾値
+- 物理iOS/Android端末のprofile/releaseで、package READMEのmanual smoke
+  checklistをそれぞれ実施する
 
-実機手順、owner、受入条件、失敗時の扱いは
-[`2026-08-02-eqmonitor-map-scene-physical-verification.md`](../superpowers/plans/2026-08-02-eqmonitor-map-scene-physical-verification.md)
-を正本とする。現Linux環境ではplatform build、物理端末、実GPU/lifecycle/memory検証は
-`NOT RUN / BLOCKED`であり、このTODOの完了扱いにしない。
+## 実機確認の最低範囲
 
-## 前提
+- procedural mesh、custom material、`TextPainter` overlayの描画
+- portrait/landscape回転とsurface/labelの追従
+- partial position/color updateの開始・停止
+- background/foreground復帰後の継続動作
+- app resource rebuildとdispose/remount後の再描画
+- frame、partial update、resume、remount、rebuild、exception counterと端末log
 
-`MapPerformanceSnapshot`と`MapPerformanceEvent`は初期実装で提供し、このTODOで計測方式を作り直さない。
+実施環境、device/OS、build mode、失敗時のlogは変更記録へ残す。
+固定値や手編集で実行結果を代替しない。

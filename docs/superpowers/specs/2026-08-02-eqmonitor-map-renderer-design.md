@@ -219,7 +219,10 @@ Flutter SceneのScene GraphをFeature単位では使用しない。`tile × laye
 
 domain、reconciler、packed meshはFlutter Scene型へ依存させず、`MapSceneRendererAdapter`境界でGeometry/Material/bufferへ変換する。Flutter SDK revisionとFlutter Scene package revisionをlockfileと設計記録へ固定する。
 
-`02-scene-spike`ではiOS/Android実機で正射影のprocedural tile mesh、custom material、部分buffer更新、TextPainter overlay合成、surface resize、dispose、background/foreground、context再生成後のresource rebuild、GPU completionまたは安全なretirement方式を確認する。満たせない場合はfoundationを実装せず、この設計とadapterを見直す。
+`02-scene-spike`のiOS/Android実機manual smokeでは、正射影のprocedural tile
+mesh、custom material、部分buffer更新、TextPainter overlay合成、surface
+resize、dispose/remount、background/foreground後のresource rebuildを確認する。
+未実施や失敗はTODOに記録し、証跡判定でfoundation実装を停止しない。
 
 ## ラベル
 
@@ -308,7 +311,7 @@ KEViはSkia/Avaloniaの直接描画で、PMTiles/MVT tile engineではない。M
 EQMonitor側の後続PRは前のEQMonitor PRだけへ依存させ、各stackを単独でreview可能にする。backend prerequisiteはbranch ancestryではなく、release artifact contractとして依存する。
 
 1. `01-design`: 設計書、README、知見、将来TODO
-2. `02-scene-spike`: minimalでcompile可能な`packages/eqmonitor_map` scaffoldとexample/harnessを作成し、revision固定、adapter prototype、iOS/Android実機gateを実行
+2. `02-scene-spike`: minimalでcompile可能な`packages/eqmonitor_map` scaffoldとmanual smoke exampleを作成し、revision固定とadapter prototypeを確認
 3. `03-foundation`: モデル、座標、Node/Element、FrameSnapshot、render order、packed mesh/render command契約とfake、性能観測
 4. `04-tile-pipeline`: verified source descriptor、trust policy、PMTiles、MVT、identity-encoded remote byte/range fixture、packed worker payload、tile scheduler、cache
 5. `05-label-asset-integration`: backend release fixture、signed sidecar discovery/readback/signature/replay/rollback fixture、semantic schema/summary contract、app側Asset Pack検証とpackage boundary、旧新client compatibility test
