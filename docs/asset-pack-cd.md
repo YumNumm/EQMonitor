@@ -135,7 +135,12 @@ fetches). The following is what could actually be confirmed, and how:
   entries' shape, `sourceFileChecksums` (MD5 via the Checksums type; the
   deprecated `sourceFileChecksum` attribute must not be used on ASC API 4.1+),
   the terminal processing state
-  name). This is no longer this repo's concern: the `asc` CLI itself (driven
+  name). This ambiguity is why the `upload_archive` step's `asc
+  background-assets upload-files create` call omits `--checksum`: the former
+  hand-rolled client's live-verified 2026-07-27 run hit a `409
+  ENTITY_ERROR.ATTRIBUTE.INVALID` when sending a checksum, so uploads
+  deliberately go without one. Beyond that, this is no longer this repo's
+  concern: the `asc` CLI itself (driven
   via `.asc/workflow.json`'s `asset_pack_ensure`/`asset_pack_upload`
   workflows) issues the reservation/upload/commit requests, mirroring the
   pattern used by every other ASC API asset-upload family — appScreenshots,
@@ -151,7 +156,8 @@ fetches). The following is what could actually be confirmed, and how:
   attribute, the `jq` filter there needs to be updated to match.
 
 **Every one of the unverified points above degrades to a loud, actionable
-failure** (an `AscApiError` with the raw API response body, or an
+failure** (the `asc` CLI / workflow step exits non-zero with the API error
+JSON on stderr/stdout, or an
 `::error::` annotation pointing at this document) rather than silently
 uploading something wrong. The manual fallback — Transporter drag-and-drop,
 or `xcrun altool --upload-asset-pack ... -u <apple-id> -p <app-specific
@@ -170,11 +176,12 @@ purpose, because the terminal state name is unverified (see above) and this
 job must never report green for an upload that's actually stuck or failed.
 
 If this happens, the file itself was already uploaded and committed
-successfully (polling only starts after `commit_background_asset_upload`
-succeeds) — only the *processing* status is in question. To check by hand:
+successfully (polling only starts after the `upload_archive` step —
+`asc background-assets upload-files create` — succeeds) — only the
+*processing* status is in question. To check by hand:
 
 1. Open App Store Connect → the app (`ASC_APP_ID` `6447546703`) → **Background Assets** → the pack matching `IOS_BACKGROUND_ASSET_PACK_ID` (`eqmonitor-assets`).
-2. Find the version the failed job created — the workflow log prints `created backgroundAssetVersion <id>` right before polling starts; match it, or just look at the most recent version's timestamp.
+2. Find the version the failed job created — the version id appears in the `create_version` step's JSON output, and the `wait_processing` step (`scripts/ci/asset_pack_wait_version.sh`) logs `backgroundAssetVersion <id> state=...` lines to stderr right before polling starts; match it, or just look at the most recent version's timestamp.
 3. Read its status directly in the UI:
    - If it shows a legitimate success state (e.g. ready for TestFlight/App Store submission) under a name this client doesn't recognize, add that literal state string to the `case` allow-list in `scripts/ci/asset_pack_wait_version.sh` so future runs don't need manual checking.
    - If it shows a genuine failure/rejection, treat the Asset Pack version as failed: re-run `upload-ios` (it creates a fresh `backgroundAssetVersion` each time, so a failed one doesn't block retrying) after investigating the cause in the UI's error detail, if shown.

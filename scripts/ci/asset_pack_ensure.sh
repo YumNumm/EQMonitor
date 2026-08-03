@@ -13,9 +13,15 @@ id=$(asc background-assets list --app "$app_id" --paginate --output json \
 if [ -z "$id" ]; then
   id=$(asc background-assets create --app "$app_id" \
         --asset-pack-identifier "$asset_pack_id" --output json \
-    | jq -r '.data.id')
+    | jq -r '.data.id // empty')
   echo "created background asset ${id}" >&2
 else
   echo "found background asset ${id}" >&2
 fi
+
+if [ -z "$id" ]; then
+  echo "::error::background asset create returned no id" >&2
+  exit 1
+fi
+
 printf '{"assetId":"%s"}' "$id"

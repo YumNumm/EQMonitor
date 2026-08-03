@@ -37,7 +37,7 @@
         },
         {
           "name": "upload_archive",
-          "run": "asc background-assets upload-files create --version-id ${steps.create_version.VERSION_ID} --file \"$ARCHIVE_PATH\" --asset-type ASSET --checksum --output json"
+          "run": "asc background-assets upload-files create --version-id ${steps.create_version.VERSION_ID} --file \"$ARCHIVE_PATH\" --asset-type ASSET --output json"
         },
         {
           "name": "wait_processing",

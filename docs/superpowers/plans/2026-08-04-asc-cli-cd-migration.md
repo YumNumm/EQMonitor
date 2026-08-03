@@ -6,7 +6,7 @@
 
 **Architecture:** TestFlight 配布は `asc publish testflight` を deploy-app.yaml から直接呼ぶ。Background Assets の多段フローは `.asc/workflow.json` に定義し `asc workflow run` で実行する。asc は mise の github バックエンド（`rename_exe = "asc"`）で導入する。
 
-**Tech Stack:** asc CLI 3.5.x (rorkai/App-Store-Connect-CLI)、mise github バックエンド、GitHub Actions、bash + jq
+**Tech Stack:** asc CLI 3.4.x (rorkai/App-Store-Connect-CLI)、mise github バックエンド、GitHub Actions、bash + jq
 
 **Spec:** `docs/superpowers/specs/2026-08-04-asc-cli-cd-migration-design.md`（未コミット。Task 1 でコミットする）
 
@@ -58,7 +58,7 @@ GITHUB_TOKEN=$(gh auth token) mise install "github:rorkai/App-Store-Connect-CLI"
 mise exec -- asc --version
 ```
 
-Expected: `3.5.0 (commit: ...)` 形式のバージョン出力。
+Expected: `3.4.1 (commit: ...)` 形式のバージョン出力（mise の minimum_release_age により latest は 3.4.1 に解決）。
 
 - [ ] **Step 3: mise.lock を確認**
 
