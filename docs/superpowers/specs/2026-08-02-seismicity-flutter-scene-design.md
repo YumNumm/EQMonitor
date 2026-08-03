@@ -19,7 +19,7 @@
 - PMTilesはNetwork、File、Flutter Assetの3種類から読み込める。
 - Network取得にはDioのHTTP Range Requestを使い、アーカイブ全体をファイルとしてダウンロードしない。
 - 公開データ型、状態、結果、例外はFreezedで生成する。
-- Flutter masterを基底PRで導入し、その上にStacked PRを積む。
+- `develop`で導入済みのFlutter masterと`eqmonitor_map` Scene spikeを基盤にし、震源3D専用のStacked PRを積む。
 
 ## 対象外
 
@@ -109,7 +109,9 @@ packages/seismicity_pmtiles/
 
 `SeismicityPmTilesAssetLoader`は`Future<Uint8List> Function({required String assetKey})`とする。EQMonitor側のadapterが`AssetBundle.load`の結果を`Uint8List`へ変換する。loaderはrepositoryへ依存注入し、JSON変換対象の`SeismicityPmTilesSource`には保持しない。
 
-3経路は最終的に`pmtiles.ReadAt.readAt(int offset, int length)`へ統一し、`pmtiles`パッケージ2.2系の`PmTilesArchive.fromReadAt(..., strict: true)`へ渡す。PMTiles解析ロジックを経路ごとに複製しない。
+3経路は最終的にパッケージ公開の`SeismicityRandomAccessReader.readAt`へ統一する。`pmtiles` 2.2系は`ReadAt`、directory、全非空tile列挙を公開しておらず、EQMonitorのlintで禁止される`src/` importが必要になる。このため、`seismicity_pmtiles`内にPMTiles v3のheader、directory、leaf、tile rangeを扱う必要最小限のreaderを実装し、公式仕様fixtureで厳密に検証する。解析ロジックを経路ごとに複製しない。
+
+Network sourceは既存の`GET /v2/hypocenters/manifest`をアプリ側で取得し、URL、サイズ、feature count、query revision、期間をパッケージのarchive descriptorへ変換する。独立パッケージからEQMonitor API型へ依存したり、同じmanifestを再取得したりしない。FileとAssetも同じdescriptor JSONを呼び出し側から渡せる。
 
 FlutterのAsset APIはファイル内random accessを提供しないため、Asset経路だけはPMTiles asset全体を一度メモリへ読み込む。Network経路でこのフォールバックを使うことは禁止する。
 
@@ -146,7 +148,7 @@ sourceとmanifestを解決
   → Network: 先頭16KiBをDio Range取得しETagを固定
   → File: RandomAccessFileをopen
   → Asset: 注入loaderでbytesを取得
-  → header/root/leafから対象dataZoomのtile rangeを解決
+  → 独自PMTiles v3 readerでheader/root/leafから対象dataZoomの非空tile rangeを列挙
   → 必要なtile dataだけをrange単位で取得
   → Worker IsolateでMVTをタイル単位に解析
   → 列形式チャンクをTransferableTypedDataで転送
@@ -173,6 +175,8 @@ depthScale = 1.0
 
 日本地図は同じ投影法で生成した半透明のGLBメッシュとする。地表はY=0、両面描画とし、地下から見上げた場合も輪郭を確認できる。
 地図は半透明パスで深度書き込みを行わず、地下の震源を隠さない。震源は円形外を破棄する不透明パスで描画し、震源同士の深度判定を行う。
+
+`depth_km`が欠損する震源は値を0km等へ補完しない。validity bitを保持したまま、実深度volumeとは分離した「深さ不明」専用平面へ専用styleで個別表示する。専用平面の位置とstyleはDart引数とし、凡例で実深度ではないことを明示する。
 
 ## アプリ側コンポーネント
 
@@ -250,13 +254,15 @@ depthScale = 1.0
 
 ## Stacked PR
 
-1. Flutter master移行と必要なプラグイン更新
-2. `seismicity_pmtiles`独立パッケージ
-3. Flutter Scene導入、fork固定、空Sceneとカメラ操作
-4. 静的GPUバッファ、点・球Shader、200万件実機ベンチマーク
-5. PMTiles実データ、日本地図、`Seismicity3dPage`統合
+1. 最新`develop`との設計整合、Backend震源catalog contractのgitlink復旧
+2. `seismicity_pmtiles`のFreezed契約、File/Asset reader、PMTiles v3 core
+3. Dio Range reader、strong ETag、LRU、キャンセル
+4. zoom 14非空tile列挙、MVT列形式decode、Isolate転送
+5. Flutter Scene forkの永続static instance bufferとresource lifecycle公開API
+6. `eqmonitor_map`のperspective/orbit camera、震源Shader、200万件実機ベンチマーク
+7. PMTiles実データ、日本地図、`Seismicity3dPage`統合
 
-各PRは直前のPRをbaseとし、順番にレビュー・マージする。Flutter Scene fork側の変更は汎用APIとして別PRにし、EQMonitor側では固定コミットを参照する。
+各EQMonitor PRは直前のPRをbaseとし、順番にレビュー・マージする。Flutter masterと空Scene spikeはすでに`develop`へ入っているため再導入しない。Flutter Scene fork側の変更は汎用APIとして別PRにし、EQMonitor側では固定コミットを参照する。現在のFlutter Scene依存SHAとScene evidenceの期待SHAが不一致なので、Scene実装前にAPI再監査とprovenance同期を行う。
 
 ## 参照
 
