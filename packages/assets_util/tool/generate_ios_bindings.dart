@@ -3,13 +3,25 @@ import 'dart:io';
 import 'package:ffigen/ffigen.dart';
 
 void main() {
-  final packageRoot = Directory.current.uri;
-  final iosSdk = Process.runSync('xcrun', [
+  final packageRoot = Platform.script.resolve('../');
+  final iosSdkResult = Process.runSync('xcrun', [
     '--sdk',
     'iphoneos',
     '--show-sdk-path',
-  ]).stdout.toString().trim();
-  Directory.fromUri(packageRoot.resolve('lib/src/ios')).createSync(recursive: true);
+  ]);
+  final sdk = iosSdkResult.exitCode == 0
+      ? iosSdkResult.stdout.toString().trim()
+      : Process.runSync('xcrun', [
+          '--sdk',
+          'macosx',
+          '--show-sdk-path',
+        ]).stdout.toString().trim();
+  final target = iosSdkResult.exitCode == 0
+      ? 'arm64-apple-ios16.0'
+      : 'arm64-apple-macosx15.6';
+  Directory.fromUri(
+    packageRoot.resolve('lib/src/ios'),
+  ).createSync(recursive: true);
   final generator = FfiGenerator(
     output: Output(
       dartFile: packageRoot.resolve('lib/src/ios/eqm_assets_util.dart'),
@@ -20,12 +32,7 @@ void main() {
     ),
     headers: Headers(
       entryPoints: [packageRoot.resolve('build/lib/AssetsUtil.h')],
-      compilerOptions: [
-        '-isysroot',
-        iosSdk,
-        '-target',
-        'arm64-apple-ios16.0',
-      ],
+      compilerOptions: ['-isysroot', sdk, '-target', target],
     ),
     objectiveC: ObjectiveC(
       interfaces: Interfaces(
@@ -45,5 +52,11 @@ void main() {
     ),
   );
   generator.generate();
+  final generatedBinding = File.fromUri(generator.output.dartFile);
+  final normalizedBinding = generatedBinding
+      .readAsLinesSync()
+      .map((line) => line.trimRight())
+      .join('\n');
+  generatedBinding.writeAsStringSync('$normalizedBinding\n');
   stdout.writeln('Generated ${generator.output.dartFile.toFilePath()}');
 }

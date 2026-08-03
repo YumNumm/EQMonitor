@@ -77,11 +77,16 @@ class EewCard extends ConsumerWidget {
         localRegion?.intensity ?? estimate?.jmaIntensity;
     final effectiveRegionName = regionDisplayName ?? estimate?.regionName;
 
+    // PLUM法の地域は到達予想時刻が意味を持たないため、カウントダウンを出さない
+    final isRegionPlum = localRegion?.isPlum ?? false;
+
     // 到達時間: JMA値を優先、なければ推定値
-    final effectiveArrivalTime =
-        localRegion?.arrivalTime ?? estimate?.sWaveArrivalTime;
-    final effectiveIsArrived =
-        localRegion?.isArrived ?? estimate?.isArrived ?? false;
+    final effectiveArrivalTime = isRegionPlum
+        ? null
+        : (localRegion?.arrivalTime ?? estimate?.sWaveArrivalTime);
+    final effectiveIsArrived = isRegionPlum
+        ? false
+        : (localRegion?.isArrived ?? estimate?.isArrived ?? false);
 
     final nowValue = nowOverride ?? now.asData?.value;
     final hasArrived =
@@ -158,7 +163,8 @@ class _EewMainCard extends StatelessWidget {
   final int? secondsUntilArrival;
 
   static const _warningHeaderColor = Color.fromRGBO(179, 26, 26, 1);
-  static const _forecastHeaderColor = Color.fromRGBO(204, 102, 13, 1);
+  static const _forecastHeaderColor = Color.fromRGBO(255, 167, 4, 1);
+  static const _canceledHeaderColor = Color.fromRGBO(102, 102, 102, 1);
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +178,7 @@ class _EewMainCard extends StatelessWidget {
     final maxLpgmIntensity = forecastIntensity?.maxLpgmIntensity;
 
     final headerBackgroundColor = eew.isCanceled
-        ? colorTheme.surfaceContainerLow
+        ? _canceledHeaderColor
         : isWarning
         ? _warningHeaderColor
         : _forecastHeaderColor;
@@ -214,35 +220,44 @@ class _EewMainCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  spacing: spacing.sm,
-                  children: [
-                    _EewMaxIntensitySection(
-                      maxIntensity: maxIntensity,
-                      depth: eew.hypocenter?.depth ?? 0,
-                    ),
-                    Expanded(
-                      child: _EewHypocenterSection(
-                        eew: eew,
-                        happenedTime: happenedTime,
-                      ),
-                    ),
-                    if (showLocalForecast)
-                      _EewLocalForecastSection(
-                        intensity: localForecastIntensity,
-                        regionDisplayName: regionDisplayName!,
-                      ),
-                  ],
-                ),
-                if (maxLpgmIntensity != null &&
-                    maxLpgmIntensity != JmaLpgmIntensity.zero)
-                  _EewLpgmSection(intensity: maxLpgmIntensity),
-                if (eew.hypocenter?.depth case final depth?
-                    when depth < 150 && maxIntensity == .unknown)
+                if (eew.isCanceled)
                   Text(
-                    '震源の深さが150km以上のため、予想震度は発表されていません',
-                    style: designSystem.typography.labelMedium,
+                    '緊急地震速報は取り消されました',
+                    style: designSystem.typography.titleMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  )
+                else ...[
+                  Row(
+                    spacing: spacing.sm,
+                    children: [
+                      _EewMaxIntensitySection(
+                        maxIntensity: maxIntensity,
+                        depth: eew.hypocenter?.depth ?? 0,
+                      ),
+                      Expanded(
+                        child: _EewHypocenterSection(
+                          eew: eew,
+                          happenedTime: happenedTime,
+                        ),
+                      ),
+                      if (showLocalForecast)
+                        _EewLocalForecastSection(
+                          intensity: localForecastIntensity,
+                          regionDisplayName: regionDisplayName!,
+                        ),
+                    ],
                   ),
+                  if (maxLpgmIntensity != null &&
+                      maxLpgmIntensity != JmaLpgmIntensity.zero)
+                    _EewLpgmSection(intensity: maxLpgmIntensity),
+                  if (eew.hypocenter?.depth case final depth?
+                      when depth < 150 && maxIntensity == .unknown)
+                    Text(
+                      '震源の深さが150km以上のため、予想震度は発表されていません',
+                      style: designSystem.typography.labelMedium,
+                    ),
+                ],
               ],
             ),
           ),
@@ -275,7 +290,11 @@ class _EewCardHeader extends StatelessWidget {
     final typography = designSystem.typography;
     final spacing = designSystem.spacing;
 
-    final typeLabel = isWarning ? '緊急地震速報(警報)' : '緊急地震速報(予報)';
+    final typeLabel = eew.isCanceled
+        ? '緊急地震速報(取消)'
+        : isWarning
+        ? '緊急地震速報(警報)'
+        : '緊急地震速報(予報)';
     final serialLabel = eew.isLastInfo
         ? '最終 第${eew.serialNo}報'
         : '第${eew.serialNo}報';
@@ -285,7 +304,9 @@ class _EewCardHeader extends StatelessWidget {
     final secs = secondsUntilArrival;
     final countdownText = (secs != null && secs > 0) ? '$secs秒' : null;
     final hypocenterName = eew.hypocenter?.name;
-    final headlineText = (headline != null && headline.isNotEmpty)
+    final String? headlineText = eew.isCanceled
+        ? null
+        : (headline != null && headline.isNotEmpty)
         ? headline.replaceAll('　', ' ').replaceAll('で地震 ', 'で地震\n')
         : hypocenterName != null
         ? '$hypocenterNameで地震発生'
@@ -302,14 +323,15 @@ class _EewCardHeader extends StatelessWidget {
               letterSpacing: 0,
             ),
           ),
-          Text(
-            headlineText,
-            style: typography.titleSmall.copyWith(
-              fontWeight: .w700,
-              color: Colors.white,
+          if (headlineText != null)
+            Text(
+              headlineText,
+              style: typography.titleSmall.copyWith(
+                fontWeight: .w700,
+                color: Colors.white,
+              ),
+              overflow: TextOverflow.visible,
             ),
-            overflow: TextOverflow.visible,
-          ),
         ],
       ),
     );
@@ -335,21 +357,12 @@ class _EewCardHeader extends StatelessWidget {
         ],
       );
     } else if (showArrived) {
-      rightColumn = Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            '主要動',
-            style: typography.labelSmall.copyWith(color: _secondaryTextColor),
-          ),
-          Text(
-            '到達済み',
-            style: typography.titleSmall.copyWith(
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
-          ),
-        ],
+      rightColumn = Text(
+        '主要動到達済み',
+        style: typography.titleSmall.copyWith(
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
       );
     } else {
       rightColumn = null;
@@ -361,9 +374,17 @@ class _EewCardHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           WarningStripeDecoration(
-            colors: isWarning
+            colors: eew.isCanceled
+                ? const [
+                    Color.fromRGBO(128, 128, 128, 1),
+                    Color.fromRGBO(64, 64, 64, 1),
+                  ]
+                : isWarning
                 ? const [Colors.red, Colors.black]
-                : const [Color(0xFFFFA500), Color.fromRGBO(128, 64, 0, 1)],
+                : const [
+                    Color.fromARGB(255, 255, 230, 0),
+                    Color.fromRGBO(197, 101, 4, 1),
+                  ],
           ),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -426,34 +447,41 @@ class _EewHypocenterSection extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final hypocenter = eew.hypocenter;
-    final timeLabel = (eew.originTime == null || eew.isPlum) ? '地震検知' : '地震発生';
+    final timeLabel =
+        (eew.originTime == null || eew.isPlum || eew.isLevelMethod)
+        ? '地震検知'
+        : '地震発生';
     final localHappened = happenedTime.toLocal();
+    final detectionMethodLabel = switch ((
+      eew.isPlum,
+      eew.isLevelMethod,
+      eew.isOnePointDetection,
+    )) {
+      (true, _, _) => 'PLUM法による検知',
+      (_, true, _) => 'レベル法による検知',
+      (_, _, true) => '低精度の緊急地震速報',
+      _ => null,
+    };
+    final magnitude = hypocenter?.magnitude;
+    final depth = hypocenter?.depth;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: spacing.xs,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.ideographic,
-          children: [
-            if (eew.isPlum)
-              Text(
-                'PLUM法による検知',
-                style: typography.titleMedium.copyWith(
-                  fontFamily: codeFontFamily,
-                ),
-              )
-            else
-              Row(
-                spacing: spacing.md,
-                children: [
-                  _MagnitudeRow(magnitude: hypocenter?.magnitude),
-                  _DepthRow(depth: hypocenter?.depth),
-                ],
-              ),
-          ],
-        ),
+        if (detectionMethodLabel != null)
+          Text(
+            detectionMethodLabel,
+            style: typography.titleMedium.copyWith(fontFamily: codeFontFamily),
+          )
+        else if (magnitude != null || depth != null)
+          Row(
+            spacing: spacing.md,
+            children: [
+              if (magnitude != null) _MagnitudeRow(magnitude: magnitude),
+              if (depth != null) _DepthRow(depth: depth),
+            ],
+          ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
@@ -602,7 +630,7 @@ class _SecondaryLabel extends StatelessWidget {
 class _MagnitudeRow extends StatelessWidget {
   const _MagnitudeRow({required this.magnitude});
 
-  final double? magnitude;
+  final double magnitude;
 
   @override
   Widget build(BuildContext context) {
@@ -621,16 +649,13 @@ class _MagnitudeRow extends StatelessWidget {
             color: colorTheme.onSurfaceVariant,
           ),
         ),
-        if (magnitude != null)
-          Text(
-            magnitude!.toStringAsFixed(1),
-            style: typography.titleLarge.copyWith(
-              fontFamily: codeFontFamily,
-              letterSpacing: -2,
-            ),
-          )
-        else
-          Text('不明', style: typography.titleLarge),
+        Text(
+          magnitude.toStringAsFixed(1),
+          style: typography.titleLarge.copyWith(
+            fontFamily: codeFontFamily,
+            letterSpacing: -2,
+          ),
+        ),
       ],
     );
   }
@@ -639,7 +664,7 @@ class _MagnitudeRow extends StatelessWidget {
 class _DepthRow extends StatelessWidget {
   const _DepthRow({required this.depth});
 
-  final int? depth;
+  final int depth;
 
   @override
   Widget build(BuildContext context) {
@@ -658,39 +683,19 @@ class _DepthRow extends StatelessWidget {
             color: colorTheme.onSurfaceVariant,
           ),
         ),
-        if (depth == null)
-          Text('不明', style: typography.titleLarge)
-        else if (depth == 0)
-          Text('ごく浅い', style: typography.titleLarge)
-        else if (depth! >= 700) ...[
-          Text(
-            '$depth',
-            style: typography.titleLarge.copyWith(
-              fontFamily: codeFontFamily,
-              letterSpacing: -0.5,
-            ),
+        Text(
+          '$depth',
+          style: typography.titleLarge.copyWith(
+            fontFamily: codeFontFamily,
+            letterSpacing: -0.5,
           ),
-          Text(
-            'km以上',
-            style: typography.labelSmall.copyWith(
-              color: colorTheme.onSurfaceVariant,
-            ),
+        ),
+        Text(
+          ' km',
+          style: typography.labelSmall.copyWith(
+            color: colorTheme.onSurfaceVariant,
           ),
-        ] else ...[
-          Text(
-            '$depth',
-            style: typography.titleLarge.copyWith(
-              fontFamily: codeFontFamily,
-              letterSpacing: -0.5,
-            ),
-          ),
-          Text(
-            ' km',
-            style: typography.labelSmall.copyWith(
-              color: colorTheme.onSurfaceVariant,
-            ),
-          ),
-        ],
+        ),
       ],
     );
   }

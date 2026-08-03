@@ -16,12 +16,6 @@ _HomeShakeDetectionSettings _$HomeShakeDetectionSettingsFromJson(
   ($checkedConvert) {
     final val = _HomeShakeDetectionSettings(
       show: $checkedConvert('show', (v) => v as bool? ?? true),
-      displayMode: $checkedConvert(
-        'display_mode',
-        (v) =>
-            $enumDecodeNullable(_$HomeShakeDetectionDisplayModeEnumMap, v) ??
-            HomeShakeDetectionDisplayMode.boundingBox,
-      ),
       animationMode: $checkedConvert(
         'animation_mode',
         (v) =>
@@ -31,24 +25,15 @@ _HomeShakeDetectionSettings _$HomeShakeDetectionSettingsFromJson(
     );
     return val;
   },
-  fieldKeyMap: const {
-    'displayMode': 'display_mode',
-    'animationMode': 'animation_mode',
-  },
+  fieldKeyMap: const {'animationMode': 'animation_mode'},
 );
 
 Map<String, dynamic> _$HomeShakeDetectionSettingsToJson(
   _HomeShakeDetectionSettings instance,
 ) => <String, dynamic>{
   'show': instance.show,
-  'display_mode': _$HomeShakeDetectionDisplayModeEnumMap[instance.displayMode]!,
   'animation_mode':
       _$HomeShakeDetectionAnimationModeEnumMap[instance.animationMode]!,
-};
-
-const _$HomeShakeDetectionDisplayModeEnumMap = {
-  HomeShakeDetectionDisplayMode.gridCell: 'gridCell',
-  HomeShakeDetectionDisplayMode.boundingBox: 'boundingBox',
 };
 
 const _$HomeShakeDetectionAnimationModeEnumMap = {

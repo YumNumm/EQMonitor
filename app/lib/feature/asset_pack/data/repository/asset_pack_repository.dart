@@ -13,8 +13,7 @@ part 'asset_pack_repository.g.dart';
 @Riverpod(keepAlive: true)
 AssetPackRepository assetPackRepository(Ref ref) => AssetPackRepository();
 
-/// Reads `manifest.json` and individual assets from the platform-managed
-/// Asset Pack root (see [AssetsUtil.resolvePackRoot]).
+/// Reads `manifest.json` and individual assets from platform-managed storage.
 ///
 /// This is the **sole** source of parameter/map data: there is no
 /// fake-data or bundled-asset fallback. If the pack isn't downloaded yet,
@@ -23,13 +22,17 @@ AssetPackRepository assetPackRepository(Ref ref) => AssetPackRepository();
 /// so callers surface it (typically as `AsyncError`) instead of silently
 /// substituting stale/fake content.
 class AssetPackRepository {
-  AssetPackRepository({Future<String> Function()? resolvePackRoot})
-    : _resolvePackRoot = resolvePackRoot ?? AssetsUtil.resolvePackRoot;
+  AssetPackRepository({
+    ResolveAssetPackFile? resolvePackFile,
+    Future<String> Function()? resolvePackRoot,
+  }) : _resolvePackFile =
+           resolvePackFile ??
+           (resolvePackRoot == null
+               ? resolveAssetPackFile
+               : (relativePath) async =>
+                     '${await resolvePackRoot()}/$relativePath');
 
-  /// DI seam so tests can simulate pack-ready (return a temp dir path) or
-  /// pack-not-ready (throw [AssetPackNotReadyException]) without touching
-  /// platform channels.
-  final Future<String> Function() _resolvePackRoot;
+  final ResolveAssetPackFile _resolvePackFile;
 
   /// Ids whose SHA-256 has already been verified against the manifest during
   /// this repository instance's lifetime, keyed by
@@ -41,15 +44,7 @@ class AssetPackRepository {
   /// The cheap length check still runs on *every* [resolveAsset] call.
   final Set<String> _verifiedSha256Keys = <String>{};
 
-  Future<Directory> _packRootDirectory() async {
-    final root = await _resolvePackRoot();
-    return Directory(root);
-  }
-
-  File _manifestFile(Directory root) => File('${root.path}/manifest.json');
-
-  Future<AssetPackManifest> _readManifestFrom(Directory root) async {
-    final file = _manifestFile(root);
+  Future<AssetPackManifest> _readManifestFrom(File file) async {
     if (!file.existsSync()) {
       throw AssetPackNotReadyException(
         'Asset Pack manifest.json not found at ${file.path}',
@@ -80,8 +75,8 @@ class AssetPackRepository {
 
   /// Reads and parses `manifest.json` from the Asset Pack root.
   Future<AssetPackManifest> readManifest() async {
-    final root = await _packRootDirectory();
-    return _readManifestFrom(root);
+    final path = await _resolvePackFile('manifest.json');
+    return _readManifestFrom(File(path));
   }
 
   /// Resolves the absolute [File] for [id], as listed in `manifest.json`,
@@ -99,15 +94,14 @@ class AssetPackRepository {
   /// (`packVersion`, `id`) per repository instance (see
   /// [_verifiedSha256Keys]).
   Future<File> resolveAsset(AssetPackAssetId id) async {
-    final root = await _packRootDirectory();
-    final manifest = await _readManifestFrom(root);
+    final manifest = await readManifest();
     final item = manifest.findAsset(id);
     if (item == null) {
       throw AssetPackNotReadyException(
         'Asset Pack manifest does not contain required asset: $id',
       );
     }
-    final file = File('${root.path}/${item.path}');
+    final file = File(await _resolvePackFile(item.path));
     if (!file.existsSync()) {
       throw AssetPackNotReadyException('Asset file not found: ${file.path}');
     }
@@ -138,3 +132,6 @@ class AssetPackRepository {
     return file;
   }
 }
+
+Future<String> resolveAssetPackFile(String relativePath) =>
+    AssetsUtil.resolvePackFile(relativePath: relativePath);

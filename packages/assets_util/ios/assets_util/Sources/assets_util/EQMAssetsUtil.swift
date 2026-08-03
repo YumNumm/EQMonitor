@@ -4,8 +4,284 @@ import System
 import BackgroundAssets
 #endif
 
+enum AssetPackDiagnosticStatus: String {
+  case ready
+  case unsupportedOs
+  case manifestUrlResolutionFailed
+  case manifestMissing
+  case manifestUnreadable
+  case manifestInvalid
+  case assetMissing
+  case assetSizeMismatch
+}
+
+enum AssetPackSystemAvailability: String {
+  case available
+  case unavailable
+  case apiUnavailable
+}
+
+enum AssetPackFileDiagnosticStatus: String {
+  case ready
+  case resolutionFailed
+  case missing
+  case sizeMismatch
+}
+
+struct AssetPackNativeError {
+  let domain: String
+  let code: Int
+  let description: String
+
+  init(error: Error) {
+    let nsError = error as NSError
+    domain = nsError.domain
+    code = nsError.code
+    description = nsError.localizedDescription
+  }
+}
+
+struct AssetPackFileDiagnostic {
+  let path: String
+  let status: AssetPackFileDiagnosticStatus
+  let exists: Bool
+  let expectedSizeBytes: Int?
+  let actualSizeBytes: Int?
+  let resolvedURL: URL?
+  let nativeError: AssetPackNativeError?
+}
+
+struct AssetPackInspection {
+  let status: AssetPackDiagnosticStatus
+  let detail: String
+  let manifestURL: URL?
+  let packRoot: URL?
+  let manifest: [String: Any]?
+  let assets: [AssetPackFileDiagnostic]
+  let nativeError: AssetPackNativeError?
+}
+
+struct AssetPackDiagnosticsEnvelope {
+  let platform: String
+  let osVersion: String
+  let packIdentifier: String
+  let systemAvailability: AssetPackSystemAvailability
+  let inspection: AssetPackInspection
+  let nativeError: AssetPackNativeError?
+}
+
+enum AssetPackDiagnosticsInspector {
+  static func inspect(
+    manifestURL: URL,
+    packRoot: URL? = nil,
+    resolveAssetURL: (String) throws -> URL
+  ) -> AssetPackInspection {
+    let manifestData: Data
+    do {
+      manifestData = try Data(contentsOf: manifestURL)
+    } catch {
+      return AssetPackInspection(
+        status: .manifestUnreadable,
+        detail: "manifest.json could not be read.",
+        manifestURL: manifestURL,
+        packRoot: packRoot,
+        manifest: nil,
+        assets: [],
+        nativeError: AssetPackNativeError(error: error)
+      )
+    }
+
+    guard
+      let manifest = try? JSONSerialization.jsonObject(with: manifestData) as? [String: Any],
+      let rawAssets = manifest["assets"] as? [[String: Any]],
+      !rawAssets.isEmpty
+    else {
+      return AssetPackInspection(
+        status: .manifestInvalid,
+        detail: "manifest.json is not a supported non-empty asset manifest.",
+        manifestURL: manifestURL,
+        packRoot: packRoot,
+        manifest: nil,
+        assets: [],
+        nativeError: nil
+      )
+    }
+
+    var diagnostics: [AssetPackFileDiagnostic] = []
+    for rawAsset in rawAssets {
+      guard
+        let relativePath = rawAsset["path"] as? String,
+        !relativePath.isEmpty,
+        let expectedSize = rawAsset["size_bytes"] as? Int
+      else {
+        return AssetPackInspection(
+          status: .manifestInvalid,
+          detail: "An asset entry has an invalid path or size_bytes value.",
+          manifestURL: manifestURL,
+          packRoot: packRoot,
+          manifest: manifest,
+          assets: diagnostics,
+          nativeError: nil
+        )
+      }
+
+      let assetURL: URL
+      do {
+        assetURL = try resolveAssetURL(relativePath)
+      } catch {
+        diagnostics.append(
+          AssetPackFileDiagnostic(
+            path: relativePath,
+            status: .resolutionFailed,
+            exists: false,
+            expectedSizeBytes: expectedSize,
+            actualSizeBytes: nil,
+            resolvedURL: nil,
+            nativeError: AssetPackNativeError(error: error)
+          )
+        )
+        continue
+      }
+      let exists = FileManager.default.fileExists(atPath: assetURL.path)
+      let actualSize = (try? FileManager.default.attributesOfItem(
+        atPath: assetURL.path
+      )[.size] as? NSNumber)?.intValue
+      let status: AssetPackFileDiagnosticStatus
+      if !exists {
+        status = .missing
+      } else if actualSize != expectedSize {
+        status = .sizeMismatch
+      } else {
+        status = .ready
+      }
+      diagnostics.append(
+        AssetPackFileDiagnostic(
+          path: relativePath,
+          status: status,
+          exists: exists,
+          expectedSizeBytes: expectedSize,
+          actualSizeBytes: actualSize,
+          resolvedURL: assetURL,
+          nativeError: nil
+        )
+      )
+    }
+
+    let status: AssetPackDiagnosticStatus
+    if diagnostics.contains(where: { $0.status == .resolutionFailed || $0.status == .missing }) {
+      status = .assetMissing
+    } else if diagnostics.contains(where: { $0.status == .sizeMismatch }) {
+      status = .assetSizeMismatch
+    } else {
+      status = .ready
+    }
+    return AssetPackInspection(
+      status: status,
+      detail: status == .ready
+        ? "Every manifest asset exists and matches its expected size."
+        : "One or more manifest assets are unavailable or invalid.",
+      manifestURL: manifestURL,
+      packRoot: packRoot,
+      manifest: manifest,
+      assets: diagnostics,
+      nativeError: nil
+    )
+  }
+}
+
+enum AssetPackDiagnosticsJSONEncoder {
+  static func encode(_ envelope: AssetPackDiagnosticsEnvelope) throws -> Data {
+    let inspection = envelope.inspection
+    var json: [String: Any] = [
+      "schema_version": 2,
+      "platform": envelope.platform,
+      "os_version": envelope.osVersion,
+      "pack_id": envelope.packIdentifier,
+      "status": inspection.status.rawValue,
+      "system_availability": envelope.systemAvailability.rawValue,
+      "detail": inspection.detail,
+      "manifest_url": inspection.manifestURL?.absoluteString ?? NSNull(),
+      "pack_root": inspection.packRoot?.path ?? NSNull(),
+      "manifest": inspection.manifest ?? NSNull(),
+      "assets": inspection.assets.map { asset in
+        [
+          "path": asset.path,
+          "status": asset.status.rawValue,
+          "exists": asset.exists,
+          "expected_size_bytes": asset.expectedSizeBytes ?? NSNull(),
+          "actual_size_bytes": asset.actualSizeBytes ?? NSNull(),
+          "resolved_url": asset.resolvedURL?.absoluteString ?? NSNull(),
+          "native_error": asset.nativeError.map { error in
+            [
+              "domain": error.domain,
+              "code": error.code,
+              "description": error.description,
+            ]
+          } ?? NSNull(),
+        ] as [String: Any]
+      },
+    ]
+    let nativeError = inspection.nativeError ?? envelope.nativeError
+    json["native_error"] = nativeError.map { error in
+      [
+        "domain": error.domain,
+        "code": error.code,
+        "description": error.description,
+      ]
+    } ?? NSNull()
+    return try JSONSerialization.data(withJSONObject: json, options: [.sortedKeys])
+  }
+
+  static func string(_ envelope: AssetPackDiagnosticsEnvelope) -> String {
+    do {
+      return String(decoding: try encode(envelope), as: UTF8.self)
+    } catch {
+      let encodingError = AssetPackNativeError(error: error)
+      let json: [String: Any] = [
+        "schema_version": 2,
+        "platform": envelope.platform,
+        "os_version": envelope.osVersion,
+        "pack_id": envelope.packIdentifier,
+        "status": AssetPackDiagnosticStatus.manifestInvalid.rawValue,
+        "system_availability": envelope.systemAvailability.rawValue,
+        "detail": "The native diagnostics payload could not be encoded.",
+        "manifest_url": NSNull(),
+        "pack_root": NSNull(),
+        "manifest": NSNull(),
+        "assets": [],
+        "native_error": [
+          "domain": encodingError.domain,
+          "code": encodingError.code,
+          "description": encodingError.description,
+        ],
+      ]
+      let data = try? JSONSerialization.data(withJSONObject: json, options: [.sortedKeys])
+      return data.map { String(decoding: $0, as: UTF8.self) } ?? ""
+    }
+  }
+}
+
 @objc(EQMAssetsUtil)
 @objcMembers public class EQMAssetsUtil: NSObject {
+  /// Every Asset Pack entry point hops onto this queue instead of running on
+  /// the caller's thread.
+  ///
+  /// `AssetPackManager.url(for:)` talks to the Background Assets daemon, and
+  /// Apple's own `BAAssetPackManager` header says "Don't use this method to
+  /// block the main thread". Since Flutter 3.29 the Dart isolate runs *on*
+  /// the iOS main thread (the UI and platform threads were merged), so a
+  /// synchronous binding would do exactly that — iOS 26 logs
+  /// "AssetPackManager.url(for:) was called on the main thread, which could
+  /// cause UI hangs". The manifest reads and `stat`s around it are moved off
+  /// the main thread for the same reason.
+  private static let workQueue = DispatchQueue(
+    label: "net.yumnumm.assets-util.asset-pack",
+    qos: .userInitiated,
+    attributes: .concurrent
+  )
+
+  /// Synchronous by design: this only reads `Bundle.main`'s already-loaded
+  /// resource index and never touches Background Assets.
   public func resolveLocalPath(fileName: String) -> String? {
     let nsName = fileName as NSString
     let base = nsName.deletingPathExtension
@@ -28,17 +304,220 @@ import BackgroundAssets
   ///   which is always present — macOS has no store-based Asset Pack
   ///   delivery, see `docs/superpowers/specs/2026-07-18-asset-pack-design.md`.
   ///
-  /// Returns `nil` if the pack isn't ready / doesn't exist. The Dart side
-  /// (`AssetsUtilApple.resolvePackRoot`) turns a `nil` result into
+  /// Calls back with `nil` if the pack isn't ready / doesn't exist. The Dart
+  /// side (`AssetsUtilApple.resolvePackRoot`) turns a `nil` result into
   /// `AssetPackNotReadyException` — there is no fallback here by design.
-  public func resolvePackRoot(packIdentifier: String) -> String? {
+  ///
+  /// Completion-handler based, and never runs its work on the caller's
+  /// thread: see `Self.workQueue`.
+  public func resolvePackRoot(
+    packIdentifier: String,
+    completion: @escaping (NSString?) -> Void
+  ) {
+    Self.workQueue.async {
+      #if os(macOS)
+      completion(self.resolveMacOSBundledPackRoot() as NSString?)
+      #elseif os(iOS)
+      completion(
+        self.resolveIOSManagedAssetPackRoot(packIdentifier: packIdentifier) as NSString?
+      )
+      #else
+      completion(nil)
+      #endif
+    }
+  }
+
+  /// Resolves one logical Asset Pack path to a verified regular file.
+  ///
+  /// Completion-handler based, and never runs its work on the caller's
+  /// thread: see `Self.workQueue`.
+  public func resolveAssetPackFile(
+    relativePath: String,
+    packIdentifier: String,
+    completion: @escaping (NSString?) -> Void
+  ) {
+    Self.workQueue.async {
+      completion(
+        self.resolveAssetPackFilePath(
+          relativePath: relativePath,
+          packIdentifier: packIdentifier
+        ) as NSString?
+      )
+    }
+  }
+
+  /// Completion-handler based, and never runs its work on the caller's
+  /// thread: see `Self.workQueue`.
+  public func diagnoseAssetPack(
+    packIdentifier: String,
+    completion: @escaping (NSString) -> Void
+  ) {
+    Self.workQueue.async {
+      #if os(iOS)
+      completion(
+        self.diagnoseIOSManagedAssetPack(packIdentifier: packIdentifier) as NSString
+      )
+      #else
+      completion(
+        self.diagnosticString(
+          packIdentifier: packIdentifier,
+          systemAvailability: .apiUnavailable,
+          inspection: AssetPackInspection(
+            status: .unsupportedOs,
+            detail: "Managed Background Assets diagnostics are only available on iOS.",
+            manifestURL: nil,
+            packRoot: nil,
+            manifest: nil,
+            assets: [],
+            nativeError: nil
+          )
+        ) as NSString
+      )
+      #endif
+    }
+  }
+
+  private func resolveAssetPackFilePath(
+    relativePath: String,
+    packIdentifier: String
+  ) -> String? {
+    guard !relativePath.isEmpty, !relativePath.hasPrefix("/") else {
+      return nil
+    }
     #if os(macOS)
-    return resolveMacOSBundledPackRoot()
+    guard let root = resolveMacOSBundledPackRoot() else {
+      return nil
+    }
+    let url = URL(fileURLWithPath: root).appendingPathComponent(relativePath)
     #elseif os(iOS)
-    return resolveIOSManagedAssetPackRoot(packIdentifier: packIdentifier)
+    guard #available(iOS 26.0, *) else {
+      return nil
+    }
+    guard let url = try? AssetPackManager.shared.url(for: FilePath(relativePath)) else {
+      return nil
+    }
     #else
     return nil
     #endif
+    guard
+      let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
+      attributes[.type] as? FileAttributeType == .typeRegular
+    else {
+      return nil
+    }
+    return url.path
+  }
+
+  public func checkForAssetPackUpdates(
+    packIdentifier: String,
+    completion: @escaping (NSString) -> Void
+  ) {
+    #if os(iOS)
+    guard #available(iOS 26.0, *) else {
+      completion(
+        updateResultString(
+          packIdentifier: packIdentifier,
+          updatingIDs: [],
+          removedIDs: [],
+          error: NSError(
+            domain: "EQMAssetsUtil.AssetPack",
+            code: 1,
+            userInfo: [NSLocalizedDescriptionKey: "iOS 26.0 or later is required."]
+          )
+        ) as NSString
+      )
+      return
+    }
+    Task { @MainActor in
+      do {
+        let result = try await AssetPackManager.shared.checkForUpdates()
+        completion(
+          updateResultString(
+            packIdentifier: packIdentifier,
+            updatingIDs: result.updatingIDs.sorted(),
+            removedIDs: result.removedIDs.sorted(),
+            error: nil
+          ) as NSString
+        )
+      } catch {
+        completion(
+          updateResultString(
+            packIdentifier: packIdentifier,
+            updatingIDs: [],
+            removedIDs: [],
+            error: error
+          ) as NSString
+        )
+      }
+    }
+    #else
+    completion(
+      updateResultString(
+        packIdentifier: packIdentifier,
+        updatingIDs: [],
+        removedIDs: [],
+        error: NSError(
+          domain: "EQMAssetsUtil.AssetPack",
+          code: 2,
+          userInfo: [NSLocalizedDescriptionKey: "Asset Pack updates are only available on iOS."]
+        )
+      ) as NSString
+    )
+    #endif
+  }
+
+  func diagnosticString(
+    packIdentifier: String,
+    systemAvailability: AssetPackSystemAvailability,
+    inspection: AssetPackInspection,
+    nativeError: AssetPackNativeError? = nil
+  ) -> String {
+    AssetPackDiagnosticsJSONEncoder.string(
+      AssetPackDiagnosticsEnvelope(
+        platform: platformName,
+        osVersion: ProcessInfo.processInfo.operatingSystemVersionString,
+        packIdentifier: packIdentifier,
+        systemAvailability: systemAvailability,
+        inspection: inspection,
+        nativeError: nativeError
+      )
+    )
+  }
+
+  var platformName: String {
+    #if os(iOS)
+    return "ios"
+    #elseif os(macOS)
+    return "macos"
+    #else
+    return "unknown"
+    #endif
+  }
+
+  func updateResultString(
+    packIdentifier: String,
+    updatingIDs: [String],
+    removedIDs: [String],
+    error: Error?
+  ) -> String {
+    let nativeError = error.map(AssetPackNativeError.init(error:))
+    let json: [String: Any] = [
+      "schema_version": 1,
+      "pack_id": packIdentifier,
+      "success": error == nil,
+      "checked_at": ISO8601DateFormatter().string(from: Date()),
+      "updating_ids": updatingIDs,
+      "removed_ids": removedIDs,
+      "native_error": nativeError.map { value in
+        [
+          "domain": value.domain,
+          "code": value.code,
+          "description": value.description,
+        ]
+      } ?? NSNull(),
+    ]
+    let data = try? JSONSerialization.data(withJSONObject: json, options: [.sortedKeys])
+    return data.map { String(decoding: $0, as: UTF8.self) } ?? ""
   }
 
   #if os(macOS)
@@ -63,6 +542,79 @@ import BackgroundAssets
   #endif
 
   #if os(iOS)
+  private func diagnoseIOSManagedAssetPack(packIdentifier: String) -> String {
+    guard #available(iOS 26.0, *) else {
+      return diagnosticString(
+        packIdentifier: packIdentifier,
+        systemAvailability: .apiUnavailable,
+        inspection: AssetPackInspection(
+          status: .unsupportedOs,
+          detail: "iOS 26.0 or later is required.",
+          manifestURL: nil,
+          packRoot: nil,
+          manifest: nil,
+          assets: [],
+          nativeError: nil
+        )
+      )
+    }
+    let manager = AssetPackManager.shared
+    let availability: AssetPackSystemAvailability
+    if #available(iOS 26.4, *) {
+      availability = manager.assetPackIsAvailableLocally(withID: packIdentifier)
+        ? .available
+        : .unavailable
+    } else {
+      availability = .apiUnavailable
+    }
+
+    let manifestURL: URL
+    do {
+      manifestURL = try manager.url(for: FilePath("manifest.json"))
+    } catch {
+      return diagnosticString(
+        packIdentifier: packIdentifier,
+        systemAvailability: availability,
+        inspection: AssetPackInspection(
+          status: .manifestUrlResolutionFailed,
+          detail: "Background Assets could not resolve manifest.json.",
+          manifestURL: nil,
+          packRoot: nil,
+          manifest: nil,
+          assets: [],
+          nativeError: AssetPackNativeError(error: error)
+        )
+      )
+    }
+    let packRoot = manifestURL.deletingLastPathComponent()
+    guard FileManager.default.fileExists(atPath: manifestURL.path) else {
+      return diagnosticString(
+        packIdentifier: packIdentifier,
+        systemAvailability: availability,
+        inspection: AssetPackInspection(
+          status: .manifestMissing,
+          detail: "manifest.json does not exist at the resolved URL.",
+          manifestURL: manifestURL,
+          packRoot: packRoot,
+          manifest: nil,
+          assets: [],
+          nativeError: nil
+        )
+      )
+    }
+    return diagnosticString(
+      packIdentifier: packIdentifier,
+      systemAvailability: availability,
+      inspection: AssetPackDiagnosticsInspector.inspect(
+        manifestURL: manifestURL,
+        packRoot: packRoot,
+        resolveAssetURL: { relativePath in
+          try manager.url(for: FilePath(relativePath))
+        }
+      )
+    )
+  }
+
   private func resolveIOSManagedAssetPackRoot(packIdentifier: String) -> String? {
     // `AssetPackManager` (the Swift-refined API for the ObjC
     // `BAAssetPackManager`; see docs/knowledge/20260727_background_assets_api_surface.md)

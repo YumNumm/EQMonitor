@@ -24,7 +24,7 @@ void main() {
             (ref) async => false,
           ),
         ],
-        child: _app(const NotificationPermissionBanner(bottomSpacing: 0)),
+        child: _app(const NotificationPermissionBanner()),
       ),
     );
     await tester.pumpAndSettle();
@@ -39,7 +39,7 @@ void main() {
             (ref) async => true,
           ),
         ],
-        child: _app(const NotificationPermissionBanner(bottomSpacing: 0)),
+        child: _app(const NotificationPermissionBanner()),
       ),
     );
     await tester.pumpAndSettle();
@@ -57,7 +57,7 @@ void main() {
             () => _AlwaysDismissed(),
           ),
         ],
-        child: _app(const NotificationPermissionBanner(bottomSpacing: 0)),
+        child: _app(const NotificationPermissionBanner()),
       ),
     );
     await tester.pumpAndSettle();

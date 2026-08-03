@@ -223,7 +223,6 @@ flutter:
     - assets/images/map/
     - assets/fonts/
     - assets/docs/
-    - assets/parameter/
     - assets/debug/
 
   fonts:

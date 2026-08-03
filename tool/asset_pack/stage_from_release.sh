@@ -2,11 +2,13 @@
 # Download an Asset Pack from the private YumNumm/eqmonitor-backend GitHub
 # Release and stage its contents into Android / macOS / iOS-native build paths.
 #
-# pmtiles and parameter JSON are NOT committed to this repo — the canonical
-# source is the backend Release (`asset-pack-vX.Y.Z`). Call this before
-# `flutter build appbundle` (Android PAD install-time module), a macOS
-# bundle build that expects `app/assets/platform/`, or an iOS build that
-# needs the AppIntent/Widget slim `jma_code_table.json`.
+# pmtiles and most parameter JSON are NOT committed to this repo — the
+# canonical source is the backend Release (`asset-pack-vX.Y.Z`). Call this
+# before `flutter build appbundle` (Android PAD install-time module) or a
+# macOS bundle build that expects `app/assets/platform/`.
+#
+# iOS AppIntent/Widget slim `jma_code_table.json` is committed for local DX;
+# `--target ios-native` still refreshes it from Release (CI / when updating).
 #
 # Usage:
 #   GH_TOKEN=... stage_from_release.sh [--version X.Y.Z] --target android|macos|both|ios-native
