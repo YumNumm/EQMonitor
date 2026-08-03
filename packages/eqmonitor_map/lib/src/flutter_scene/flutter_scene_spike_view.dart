@@ -33,12 +33,9 @@ class SceneSpikeBindingObserver with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
-      case AppLifecycleState.resumed:
+      case .resumed:
         onForeground();
-      case AppLifecycleState.inactive ||
-          AppLifecycleState.paused ||
-          AppLifecycleState.detached ||
-          AppLifecycleState.hidden:
+      case .inactive || .paused || .detached || .hidden:
         onBackground();
     }
   }
