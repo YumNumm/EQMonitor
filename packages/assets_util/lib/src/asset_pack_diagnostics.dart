@@ -128,12 +128,8 @@ final class AssetPackDiagnostics {
         })
         .toList(growable: false);
     final manifestValue = json['manifest'];
-    final nativeErrorValue = json['native_error'];
     if (manifestValue != null && manifestValue is! Map<String, dynamic>) {
       throw const FormatException('manifest must be an object or null');
-    }
-    if (nativeErrorValue != null && nativeErrorValue is! Map<String, dynamic>) {
-      throw const FormatException('native_error must be an object or null');
     }
     return AssetPackDiagnostics(
       schemaVersion: schemaVersion,
@@ -153,9 +149,10 @@ final class AssetPackDiagnostics {
           ? null
           : manifestValue as Map<String, dynamic>,
       assets: assets,
-      nativeError: nativeErrorValue == null
-          ? null
-          : AssetPackNativeError.fromJson(nativeErrorValue),
+      nativeError: nullableDiagnosticNativeError(
+        json: json,
+        key: 'native_error',
+      ),
     );
   }
 
@@ -209,10 +206,6 @@ final class AssetPackUpdateResult {
         'Unsupported Asset Pack update schema_version: $schemaVersion',
       );
     }
-    final nativeErrorValue = json['native_error'];
-    if (nativeErrorValue != null && nativeErrorValue is! Map<String, dynamic>) {
-      throw const FormatException('native_error must be an object or null');
-    }
     return AssetPackUpdateResult(
       schemaVersion: schemaVersion,
       packIdentifier: requireDiagnosticString(json: json, key: 'pack_id'),
@@ -226,9 +219,10 @@ final class AssetPackUpdateResult {
         json: json,
         key: 'removed_ids',
       ),
-      nativeError: nativeErrorValue == null
-          ? null
-          : AssetPackNativeError.fromJson(nativeErrorValue),
+      nativeError: nullableDiagnosticNativeError(
+        json: json,
+        key: 'native_error',
+      ),
     );
   }
 

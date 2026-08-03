@@ -6,8 +6,8 @@ import 'package:assets_util/src/assets_util_android.dart';
 import 'package:assets_util/src/assets_util_ios.dart';
 import 'package:flutter/foundation.dart';
 
-export 'package:assets_util/src/asset_pack_not_ready_exception.dart';
 export 'package:assets_util/src/asset_pack_diagnostics.dart';
+export 'package:assets_util/src/asset_pack_not_ready_exception.dart';
 export 'package:assets_util/src/assets_util_android.dart'
     show AssetsUtilAndroid;
 
