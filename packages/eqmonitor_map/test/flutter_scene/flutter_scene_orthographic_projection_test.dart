@@ -4,7 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('delegates projection matrix creation to the pure projection', () {
-    final pure = EqmonitorOrthographicProjection(worldHalfHeight: 2);
+    final pure = EqmonitorOrthographicProjection(
+      worldHalfHeight: 2,
+      depthHalfExtent: 3,
+    );
     final projection = FlutterSceneOrthographicProjection(projection: pure);
 
     final actual = projection.getProjectionMatrix(1.5).storage;

@@ -178,9 +178,20 @@ class FlutterSceneSpikeController extends ChangeNotifier {
       initialFrame: initialFrame,
       observationSink: currentRunLog,
     );
-    final projection = EqmonitorOrthographicProjection(worldHalfHeight: 1.2);
+    const worldHalfHeight = 1.2;
+    // The camera stands off the drawn plane, so the depth range has to reach
+    // past that standoff or every quad is clipped before rasterization.
+    const cameraStandoff = 2.0;
+    final projection = EqmonitorOrthographicProjection(
+      worldHalfHeight: worldHalfHeight,
+      depthHalfExtent: cameraStandoff + worldHalfHeight,
+    );
     final cameraNode = scene.Node(
-      localTransform: scene_math.Matrix4.translationValues(0, 0, -2),
+      localTransform: scene_math.Matrix4.translationValues(
+        0,
+        0,
+        -cameraStandoff,
+      ),
     );
     return FlutterSceneSpikeController.withDependencies(
       adapter: adapter,

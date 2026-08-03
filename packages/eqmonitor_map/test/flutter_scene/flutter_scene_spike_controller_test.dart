@@ -680,7 +680,10 @@ FlutterSceneSpikeController createController({
   SceneSpikeRunLog? runLog,
   int? controllerGeneration,
 }) {
-  final projection = EqmonitorOrthographicProjection(worldHalfHeight: 1.2);
+  final projection = EqmonitorOrthographicProjection(
+    worldHalfHeight: 1.2,
+    depthHalfExtent: 3.2,
+  );
   final currentRunLog =
       runLog ?? SceneSpikeRunLog(startedAtUtc: DateTime.utc(2026, 8, 2));
   return FlutterSceneSpikeController.withDependencies(
