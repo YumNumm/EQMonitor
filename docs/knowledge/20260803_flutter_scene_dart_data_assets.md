@@ -25,26 +25,46 @@ machineごとに1度だけ実行する。global設定なので、clean checkout�
 MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter config --enable-dart-data-assets
 ```
 
-設定後は既存のbuild artifactを再生成する（設定変更だけではhot restartもincremental
-buildも反映されない）。
+## 有効化直後は `AssetManifest.bin` が古いまま残る
+
+`flutter config` を変えた直後のincremental buildでは、hookが生成したData Assetの
+**ファイルはflutter_assetsへコピーされるのに、`AssetManifest.bin` が前回の内容の
+まま更新されない**ことがある。
+
+`flutter_scene` はData Assetのキーを `AssetManifest` の登録有無で判定し、未登録なら
+legacy pathへfallbackする（`resolveBaseShaderBundleKey`）。そのためこの中途半端な
+状態では、ファイルが実在しているのに次のエラーになる。
+
+```text
+Exception: Failed to initialize ShaderLibrary:
+Asset 'packages/flutter_scene/build/shaderbundles/base.shaderbundle' not found.
+```
+
+パスが `flutter_gpu_shaders/shaderbundles/` ではなく `build/shaderbundles/` に
+なっていたら、必ずこのmanifest staleを疑う。build artifactを作り直せば解消する。
 
 ```bash
 cd packages/eqmonitor_map/example
 MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter build ios --debug --no-codesign
+# 解消しない場合
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter clean
 ```
+
+hot restartでは反映されないため、必ずアプリを再起動する。
 
 ## 確認方法
 
-`flutter config --list` の `enable-dart-data-assets` が `true` であることに加えて、
-build後のflutter_assetsへ次が含まれることを確認する。含まれない場合はhookが動いて
-いない。
+ファイルの存在確認だけでは不十分で、`AssetManifest.bin` に登録されているかまで
+確認する。
 
 ```bash
 cd packages/eqmonitor_map/example
-find build/ios/iphoneos/Runner.app/Frameworks/App.framework/flutter_assets \
-  -name '*.shaderbundle'
-# packages/flutter_scene/flutter_gpu_shaders/shaderbundles/base.shaderbundle
-# packages/eqmonitor_map_example/flutter_scene/fmat/materials/materials.shaderbundle
+manifest=build/ios/iphoneos/Runner.app/Frameworks/App.framework/flutter_assets/AssetManifest.bin
+python3 -c "
+d = open('$manifest', 'rb').read().decode('utf-8', 'ignore')
+print('base.shaderbundle' in d, 'materials.shaderbundle' in d)
+"
+# True True なら正常
 ```
 
 `NativeAssetsManifest.json` の `native-assets` は空のままで正常。Data Assetは
