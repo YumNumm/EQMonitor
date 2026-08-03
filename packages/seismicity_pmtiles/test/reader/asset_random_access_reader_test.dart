@@ -79,4 +79,37 @@ void main() {
       ),
     );
   });
+
+  test('converts asset loader errors to typed source failures', () async {
+    await expectLater(
+      AssetRandomAccessReader.open(
+        source: source,
+        assetLoader: ({required assetKey}) =>
+            Future<Uint8List>.error(StateError('asset unavailable')),
+      ),
+      throwsA(
+        isA<SeismicityPmTilesSourceReadFailedException>()
+            .having((exception) => exception.source, 'source', source)
+            .having(
+              (exception) => exception.reason,
+              'reason',
+              contains('asset unavailable'),
+            ),
+      ),
+    );
+  });
+
+  test('preserves typed loader failures', () async {
+    const expected = SeismicityPmTilesException.invalidDescriptor(
+      reason: 'unsupported schema',
+    );
+
+    await expectLater(
+      AssetRandomAccessReader.open(
+        source: source,
+        assetLoader: ({required assetKey}) => Future<Uint8List>.error(expected),
+      ),
+      throwsA(equals(expected)),
+    );
+  });
 }

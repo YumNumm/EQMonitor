@@ -91,4 +91,32 @@ void main() {
     }
     expect(assetLoadCount, 0);
   });
+
+  test('returns typed failure when the asset loader throws an Error', () async {
+    const source = SeismicityPmTilesSource.asset(
+      assetKey: 'missing.pmtiles',
+    );
+    final errorFactory = SeismicityRandomAccessReaderFactory(
+      assetLoader: ({required assetKey}) =>
+          Future<Uint8List>.error(StateError('asset unavailable')),
+    );
+
+    final result = await errorFactory.create(source: source);
+
+    switch (result) {
+      case SeismicityPmTilesSuccess():
+        fail('Expected source read failure');
+      case SeismicityPmTilesFailure(:final exception):
+        expect(
+          exception,
+          isA<SeismicityPmTilesSourceReadFailedException>()
+              .having((failure) => failure.source, 'source', source)
+              .having(
+                (failure) => failure.reason,
+                'reason',
+                contains('asset unavailable'),
+              ),
+        );
+    }
+  });
 }

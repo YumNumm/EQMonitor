@@ -29,6 +29,13 @@ final class AssetRandomAccessReader implements SeismicityRandomAccessReader {
         source: source,
         reason: error.toString(),
       );
+      // Flutter asset loaders can report missing assets as FlutterError.
+      // ignore: avoid_catching_errors
+    } on Error catch (error) {
+      throw SeismicityPmTilesException.sourceReadFailed(
+        source: source,
+        reason: error.toString(),
+      );
     }
   }
 

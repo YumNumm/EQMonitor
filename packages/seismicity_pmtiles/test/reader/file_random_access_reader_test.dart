@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
+import 'package:test/fake.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -93,4 +96,52 @@ void main() {
       throwsA(isA<SeismicityPmTilesSourceReadFailedException>()),
     );
   });
+
+  test('finishes an accepted read before close under contention', () async {
+    const source = SeismicityPmTilesFileSource(path: 'controlled.pmtiles');
+    final controlledFile = _ControllableRandomAccessFile();
+    final controlledReader = FileRandomAccessReader(
+      file: controlledFile,
+      sizeBytes: 4,
+      source: source,
+    );
+
+    final acceptedRead = controlledReader.readAt(offset: 0, length: 4);
+    await controlledFile._readStarted.future;
+    final closeFuture = controlledReader.close();
+
+    await expectLater(
+      controlledReader.readAt(offset: 0, length: 1),
+      throwsA(isA<SeismicityPmTilesSourceReadFailedException>()),
+    );
+    expect(controlledFile._closeCalled, isFalse);
+
+    controlledFile._allowRead.complete();
+
+    expect(await acceptedRead, orderedEquals([10, 11, 12, 13]));
+    await closeFuture;
+    expect(controlledFile._closeCalled, isTrue);
+  });
+}
+
+final class _ControllableRandomAccessFile extends Fake
+    implements RandomAccessFile {
+  final _readStarted = Completer<void>();
+  final _allowRead = Completer<void>();
+  var _closeCalled = false;
+
+  @override
+  Future<RandomAccessFile> setPosition(int position) async => this;
+
+  @override
+  Future<Uint8List> read(int bytes) async {
+    _readStarted.complete();
+    await _allowRead.future;
+    return Uint8List.fromList([10, 11, 12, 13]);
+  }
+
+  @override
+  Future<void> close() async {
+    _closeCalled = true;
+  }
 }
