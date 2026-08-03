@@ -215,7 +215,7 @@ Flutter SceneのScene GraphをFeature単位では使用しない。`tile × laye
 
 動的点群はWGS84からnormalized projectionへの結果をFeature ID単位でcacheし、zoom変更時はscaleとscreen transformだけを更新する。投影済み点とflat grid spatial indexを描画候補、label collision、hit testでimmutableに共有する。少数点は線形探索、多数点はgridを使う閾値をpolicyで設定する。hover/selectionはcollection objectではなく安定Feature IDで更新後のfeatureへ再束縛する。
 
-### Flutter Scene adapterと実装gate
+### Flutter Scene adapterとmanual smoke
 
 domain、reconciler、packed meshはFlutter Scene型へ依存させず、`MapSceneRendererAdapter`境界でGeometry/Material/bufferへ変換する。Flutter SDK revisionとFlutter Scene package revisionをlockfileと設計記録へ固定する。
 

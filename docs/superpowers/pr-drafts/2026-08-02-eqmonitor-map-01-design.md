@@ -68,7 +68,7 @@ EQMonitor側はこのDesign PRを起点に、次の順でstackします。
 - [`450_eqmonitor_map_future_surface.md`](../../todo/450_eqmonitor_map_future_surface.md): Performance HUD、desktop/Web、線上ラベル、汎用package化
 - [`650_eqmonitor_map_3d_camera.md`](../../todo/650_eqmonitor_map_3d_camera.md): bearing/pitch、透視投影、3D地形、地下震源、断層
 - [`780_eqmonitor_map_maplibre_surface_migrations.md`](../../todo/780_eqmonitor_map_maplibre_surface_migrations.md): Home以外を含む全MapLibre surfaceのparity確認と段階移行
-- [`800_eqmonitor_map_deferred_verification.md`](../../todo/800_eqmonitor_map_deferred_verification.md): Widget/Golden test、iOS/Android実機性能・復帰・memory pressure・context rebuild検証
+- [`800_eqmonitor_map_deferred_verification.md`](../../todo/800_eqmonitor_map_deferred_verification.md): Performance HUD、Widget/Golden test、performance benchmark、iOS/Android実機profile/release manual smoke
 
 これらは本PRで実装・検証済みという意味ではありません。各後続PRでcompile、
 生成、format、analyze、対象test、fixture、実機manual smokeをその時点のscopeに合わせて
