@@ -41,18 +41,30 @@ rotation/DPR、memory/frame timingを実行・観測していません。4 evide
 
 ## Validation
 
-実装完了時のfresh command結果をTask 7 reportに記録します。物理platform関連はすべて
-`NOT RUN / BLOCKED`であり、validator非0は想定されるblocking resultです。
+2026-08-03に現在HEADで再実行した結果は次のとおりです。物理platform関連はすべて
+`NOT RUN / BLOCKED`であり、validatorのexit 1は4 run未採取を示す想定どおりの
+blocking resultです。
+
+- package test: `104/104` passed
+- format: `43 files`, `0 changed`
+- strict analyze: `No issues found!`
+- dedicated workflow: `actionlint` passed
+- validator: exit 1、単一canonical JSON、4 missing runs
+- final fix range `34207fefd..HEAD`: `git diff --check` passed
+- stack全体: Freezed生成物に既知の末尾空白があるため`git diff --check`は非0
 
 ```bash
 MISE_EXEC_AUTO_INSTALL=0 mise exec -- dart format --output=none \
   --set-exit-if-changed packages/eqmonitor_map
-MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter analyze --fatal-infos \
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter analyze --no-pub \
+  --fatal-infos --fatal-warnings \
   packages/eqmonitor_map
-MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter test packages/eqmonitor_map/test
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- flutter test --no-pub packages/eqmonitor_map
 MISE_EXEC_AUTO_INSTALL=0 mise exec -- \
   dart run packages/eqmonitor_map/tool/validate_scene_spike_evidence.dart
-git diff --check codex/eqmonitor-map-01-design...HEAD
+MISE_EXEC_AUTO_INSTALL=0 mise exec -- \
+  actionlint .github/workflows/wc-check-eqmonitor-map-scene-spike.yaml
+git diff --check 34207fefd..HEAD
 ```
 
 ## Known Flutter Scene API gaps
