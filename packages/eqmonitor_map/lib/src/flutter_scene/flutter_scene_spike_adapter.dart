@@ -1,27 +1,10 @@
 import 'dart:ui';
 
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_async_generation.dart';
-import 'package:eqmonitor_map/src/observability/scene_spike_observation.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_renderer_adapter.dart';
 import 'package:eqmonitor_map/src/renderer/spike_mesh_frame.dart';
 import 'package:flutter_scene/scene.dart' as scene;
 import 'package:vector_math/vector_math.dart' as scene_math;
-
-class SceneSpikeRuntimeObservation {
-  const SceneSpikeRuntimeObservation({
-    required this.capability,
-    required this.status,
-    required this.detail,
-  });
-
-  final SceneSpikeCapability capability;
-  final SceneSpikeCapabilityStatus status;
-  final String detail;
-}
-
-abstract interface class SceneSpikeRuntimeObservationSink {
-  void record(SceneSpikeRuntimeObservation observation);
-}
 
 abstract interface class SceneSpikeControllerAdapter
     implements MapSceneRendererAdapter {
@@ -43,7 +26,6 @@ abstract interface class SceneSpikeControllerAdapter
 class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
   factory FlutterSceneSpikeAdapter({
     required SpikeMeshFrame initialFrame,
-    required SceneSpikeRuntimeObservationSink observationSink,
   }) {
     final sceneGraph = scene.Scene();
     final geometry = scene.MeshGeometry.fromArrays(
@@ -58,26 +40,11 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
     final node = scene.Node(mesh: scene.Mesh(geometry, material))
       ..localTransform = scene_math.Matrix4.translationValues(-0.6, 0, 0);
     sceneGraph.add(node);
-    observationSink.record(
-      const SceneSpikeRuntimeObservation(
-        capability: .proceduralOrthographicMesh,
-        status: .passed,
-        detail: 'Procedural updatable quad was created.',
-      ),
-    );
-    observationSink.record(
-      const SceneSpikeRuntimeObservation(
-        capability: .unlitMaterial,
-        status: .passed,
-        detail: 'Unlit vertex-color material was created.',
-      ),
-    );
     return FlutterSceneSpikeAdapter._(
       sceneGraph: sceneGraph,
       geometry: geometry,
       unlitNode: node,
       initialFrame: initialFrame,
-      observationSink: observationSink,
     );
   }
 
@@ -86,16 +53,13 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
     required scene.MeshGeometry geometry,
     required scene.Node unlitNode,
     required SpikeMeshFrame initialFrame,
-    required SceneSpikeRuntimeObservationSink observationSink,
   }) : _geometry = geometry,
        _unlitNode = unlitNode,
        _currentFrame = initialFrame,
-       _observationSink = observationSink,
        _vertexCount = initialFrame.positions.length ~/ 3;
 
   @override
   final scene.Scene sceneGraph;
-  final SceneSpikeRuntimeObservationSink _observationSink;
   final int _vertexCount;
   scene.MeshGeometry _geometry;
   scene.Node _unlitNode;
@@ -239,13 +203,6 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
             _isAttached && _isForeground && !_isRebuilding && !_isDisposed,
       );
     } on SceneSpikeMeshUpdateException catch (error) {
-      _observationSink.record(
-        SceneSpikeRuntimeObservation(
-          capability: .partialPositionAndColorUpdate,
-          status: .failed,
-          detail: error.detail,
-        ),
-      );
       throw StateError(error.detail);
     }
     if (positionRange != null) {
@@ -263,13 +220,6 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
       );
     }
     _currentFrame = frame;
-    _observationSink.record(
-      const SceneSpikeRuntimeObservation(
-        capability: .partialPositionAndColorUpdate,
-        status: .passed,
-        detail: 'Dirty vertex ranges were uploaded in place.',
-      ),
-    );
   }
 
   @override

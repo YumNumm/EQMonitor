@@ -1,5 +1,10 @@
 # EQMonitor Flutter Scene Spike Implementation Plan
 
+> [!IMPORTANT]
+> このplanは履歴資料であり、2026-08-03に廃止されました。現行の導入・実機確認手順は
+> [`2026-08-03-eqmonitor-map-mise-and-spike-simplification.md`](2026-08-03-eqmonitor-map-mise-and-spike-simplification.md)
+> を参照してください。以下の旧toolchain、evidence、device gate手順は実行しません。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** 固定revisionのFlutter masterとFlutter Sceneで、iOS/Android実機上の正射影mesh、部分更新、TextPainter overlay、lifecycle復帰を観測し、foundationへ進めるかblockedかを判定できる最小の`eqmonitor_map` package/exampleを作る。

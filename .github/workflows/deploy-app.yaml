@@ -79,15 +79,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Checkout pinned Flutter SDK
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: flutter/flutter
-          ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
-          path: .flutter-scene-sdk
-          fetch-depth: 1
-          persist-credentials: false
-
       - name: Extract SOPS Age Key File
         run: |
           echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
@@ -463,15 +454,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          persist-credentials: false
-
-      - name: Checkout pinned Flutter SDK
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: flutter/flutter
-          ref: 4dacd3fc91d96262a33e5c598e17d816f0b35641
-          path: .flutter-scene-sdk
-          fetch-depth: 1
           persist-credentials: false
 
       - name: Extract SOPS Age Key File

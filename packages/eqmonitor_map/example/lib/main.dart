@@ -1,4 +1,5 @@
-// The Scene spike stays internal until its global evidence gate passes.
+// The Scene spike stays internal and is exercised through this manual smoke
+// harness.
 // ignore_for_file: implementation_imports
 
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_spike_remount_owner.dart';
