@@ -140,6 +140,20 @@ WGS84 Geographic
 
 参考: https://maplibre.org/maplibre-native/docs/book/design/coordinate-system.html
 
+実装レベルの正本は`docs/knowledge/20260805_maplibre_native_renderer_reference.md`に固定commitで
+記録する。そこから確定した数値と行列合成は次のとおりである。
+
+- `scale = 2^zoom`、`worldSize = scale * 512`とする。zoomのpixel基準は512であり、既存MapLibre
+  実装と同じ見た目を保つためこの値を変えない。
+- MVT extentは固定値ではなくtileごとにlayer宣言値を読む。tippecanoe既定の4096を前提にした
+  定数を埋め込まない。
+- tile配置は`translate((x + wrap * 2^z) * s, y * s, 0)`のあと`scale(s/extent, s/extent, 1)`の2段と
+  し、`s = worldSize / 2^z`とする。頂点bufferはtile-local座標のまま保持し、world座標へCPUで
+  展開しない。最終形は`clip = projection * tileMatrix * vec4(tileLocalPos, 0, 1)`である。
+- 初期実装のprojectionは正射影の2D行列とする。pitch/bearing/perspectiveを含む
+  camera-to-clip行列は`docs/todo/650_eqmonitor_map_3d_camera.md`の対象であり、この行列を
+  差し替えるだけで移行できる形に保つ。
+
 地理座標は経度、緯度、`altitudeMeters`を保持する。地表は0、地下は負、地上は正とする。初期描画は正射影でも頂点を常にXYZで扱い、将来の投影変更でfeatureモデルを変更しない。
 
 高zoomや将来の3DでGPU float精度を失わないよう、カメラ中心を原点とするorigin rebasingをrenderer境界で行う。高度からworld Zへの変換はprojection層へ集約し、メートルとMercator単位を混在させない。
@@ -166,6 +180,15 @@ camera change
 ```
 
 cacheとrender entryの`TileKey`は`sourceInstanceId`、`sourceRevision`またはcontent digest、canonical Z/X/Y、world wrapを持つ。source交換時は新しいidentityを発行し、異なるrevisionのtileを引き継がない。source zoomは連続camera zoomからMapLibreと同じ規則で決定し、sourceのmin/max zoomで制限する。max zoom超過時は親タイルからoverscaled childへの座標変換とclipを明示して描画する。
+
+tile IDは`CanonicalTileID`（データとして一意なZ/X/Y）、`OverscaledTileID`（取得・parseするzoomと
+表示上要求されるzoomの分離）、`UnwrappedTileID`（world copyを含む描画位置）の3層で扱う。tile行列の
+入力は`UnwrappedTileID`であり、`TileKey`のcanonical成分は`CanonicalTileID`である。
+
+未ロードtileのfallbackはMapLibreの`updateRenderables`と同じ順序とする。まず子tile 4枚を見て4枚
+揃えば子で埋め、揃わなければ表示zoomを1段ずつ下げて親を探し、最初に見つかった描画可能な親で
+打ち切る。親探索には上限を設ける。この置き換えはbasemapに限り、event固有・hazard sourceでは
+`Cacheとエラー`のfail closed規則を優先する。
 
 中心に近いタイルを優先し、同じtile identityの重複取得を抑止する。カメラ移動で不要になった処理はキャンセルし、frame generationまたはincarnation tokenが古いworker結果をGPUへアップロードしない。workerは上限付きpersistent poolとし、queue backpressure、priority変更、decode/geometry構築中のcancellation checkpointを持つ。
 
@@ -212,6 +235,37 @@ Flutter SceneのScene GraphをFeature単位では使用しない。`tile × laye
 - 震源や震度アイコンはtexture付きquadを利用する。
 - P/S波は中心とgeodesic半径からsegmentを更新し、instance/update bufferだけを差し替える。
 - 区域状態変更はFeature IDに対応するindex rangeを再構成する。
+
+### Fill/Lineの頂点仕様
+
+MapLibre Nativeの頂点生成とshaderを実装の正本とする。詳細と引用は
+`docs/knowledge/20260805_maplibre_native_renderer_reference.md`にある。
+
+Fillはtile-local座標だけを持つ頂点と、穴込みearcutの三角形indexで構成する。法線とUVを持たせない。
+外形と穴の分類、穴数上限、index bufferのbit幅による頂点数上限とsegment分割規則を明示する。
+fillのshaderは行列積だけであり、複雑さはすべて頂点生成側に置く。
+
+Lineは中心線の各頂点に押し出し法線を持たせ、shaderで押し出す。押し出しは変換前の座標へ足さず、
+押し出しベクトルを同じtile行列で変換して**変換後に加算**する。正射影かつpitch 0ではこれがworld
+空間の押し出しと等価になるため、半線幅をworld単位で与えればscreen上で一定幅になる。半線幅の
+world単位換算はCPUで毎frame確定し、uniformとして渡す。
+
+初期実装の頂点属性はfloat32とする。MapLibreの6 byte packing（座標を2倍して最下位bitへフラグを
+同居させ、押し出し法線を±63へ量子化しoffset 128でuint8化し、線に沿った距離を14bitで分割する
+方式）は、`gpu.VertexFormat`のint16/uint8正規化対応を実機で検証できるまで採用しない。packing方式
+自体は後段の最適化候補として残し、頂点生成器の出力型を差し替えられる境界を保つ。
+
+zoom依存propertyはCPUで現zoomの値を確定してuniform定数として渡す。shader内でzoom stop間を
+補間しない。
+
+joinはmiter、capはbuttから始める。miter limit超過時のbevel、round join/cap、`linesofar`とdashは
+基本形の描画が出た後に足す。この段階差は`docs/todo/800_eqmonitor_map_deferred_verification.md`へ
+記録する。
+
+ジオメトリcacheは整数zoom単位で持ち、非整数zoomはtile行列のscaleで吸収する。zoomが小数だけ
+変わったときに頂点bufferを作り直さない。線幅はこのscaleで逆補正し、frame内の微小zoomで太さが
+変動しないようにする。この戦略はKEViで実証されたものであり、帰属は
+`docs/knowledge/20260802_kevi_map_renderer_reference.md`に記録する。
 
 動的点群はWGS84からnormalized projectionへの結果をFeature ID単位でcacheし、zoom変更時はscaleとscreen transformだけを更新する。投影済み点とflat grid spatial indexを描画候補、label collision、hit testでimmutableに共有する。少数点は線形探索、多数点はgridを使う閾値をpolicyで設定する。hover/selectionはcollection objectではなく安定Feature IDで更新後のfeatureへ再束縛する。
 
@@ -270,6 +324,22 @@ Controllerはversion付き`ValueListenable<MapPerformanceSnapshot>`と`Stream<Ma
 
 HUD、Widget/Golden test、実機性能試験は後続TODOとするが、後から計測方式を変更しない。
 
+## MapLibre Nativeから採用する具体仕様
+
+BSD-2-Clauseの[maplibre/maplibre-native](https://github.com/maplibre/maplibre-native/tree/f1905c521577f009c70179fac53e3f4f67a3fa53)
+commit `f1905c521577f009c70179fac53e3f4f67a3fa53`を、Web Mercator、tile cover、overzoom、world wrap、
+Fill/Line頂点生成、line押し出しshader、tileライフサイクルの実装正本として参照した。ファイル単位の
+記録と引用は`docs/knowledge/20260805_maplibre_native_renderer_reference.md`にある。
+
+採用するのは座標変換の式と2段のtile行列、tile ID 3層の役割分担、earcutによる穴込み三角形化、
+押し出しを変換後に加算するline shader、子→親の順のtile fallback、worker parseとmain thread
+uploadの分離である。
+
+採用しないのはpitch/bearing前提のcamera-to-clip行列、frustum-AABB四分木tile cover、shader内の
+zoom依存property補間、6 byte packingの正規化整数頂点属性、Actor/Mailboxのthreadingモデルである。
+tile coverは同repositoryに併存するscanline方式相当の粒度で開始し、threadingはIsolatesと
+incarnation tokenで再現する。
+
 ## KEViから採用する知見
 
 先行実装として、MIT Licenseの[ingen084/KyoshinEewViewerIngen](https://github.com/ingen084/KyoshinEewViewerIngen/tree/5a2bf513b6b9c93ee06473f70b6d27ee96070b3f) commit `5a2bf513b6b9c93ee06473f70b6d27ee96070b3f`を参照した。
@@ -279,6 +349,13 @@ HUD、Widget/Golden test、実機性能試験は後続TODOとするが、後か�
 - [`PointLayoutCache.cs`](https://github.com/ingen084/KyoshinEewViewerIngen/blob/5a2bf513b6b9c93ee06473f70b6d27ee96070b3f/src/KyoshinEewViewer.Map/Layers/PointLayoutCache.cs)と[`NormalizedPointSet.cs`](https://github.com/ingen084/KyoshinEewViewerIngen/blob/5a2bf513b6b9c93ee06473f70b6d27ee96070b3f/src/KyoshinEewViewer.Map/Layers/NormalizedPointSet.cs)で観測したarray-backed point dataとprojection cacheを参考にする。projection結果とflat spatial indexをimmutableに共有することはEQMonitor側のpolicyである。
 - `HoverTracker`で観測したのはcaller提供のequalityによる再照合である。安定Feature IDによるhover/selection再束縛はEQMonitor側のpolicyとする。
 - [`MapLayerLabelRenderer.cs`](https://github.com/ingen084/KyoshinEewViewerIngen/blob/5a2bf513b6b9c93ee06473f70b6d27ee96070b3f/src/KyoshinEewViewer.CustomControl/MapLayerLabelRenderer.cs)の実測文字サイズに基づくscreen placementとleader lineをrenderer policyの参考にする。alternate geographic anchorをKEViへ帰属させず、assetには1つの地理anchorだけを格納する。
+
+- `PolygonFeature.cs` / `PolylineFeature.cs` / `MapData.cs` / `LandBorderLayer.cs`で観測した整数zoom
+  単位のジオメトリcacheと、非整数zoomをcanvas変換で吸収する戦略、線幅の`1/scale`逆補正、
+  非同期三角形化中に`zoom±1`のcacheを代用表示するfallback、直近使用zoom±1だけを保持するcache
+  eviction、間引きしてから三角形化する順序を、GPU mesh cacheの設計へ反映する。行列で吸収する
+  対象がcanvas変換ではなくtile行列になる点だけが異なる。詳細は
+  `docs/knowledge/20260802_kevi_map_renderer_reference.md`に記録する。
 
 KEViはSkia/Avaloniaの直接描画で、PMTiles/MVT tile engineではない。Miller projection、1回だけのlongitude wrap、全体`SKPicture` invalidation、host lock中のrender、次frameでのresource dispose、毎frame全再描画は採用しない。tile selection、overzoom、wrap、Web MercatorはMapLibreの仕様・実装を正とする。
 
@@ -312,6 +389,7 @@ EQMonitor側の後続PRは前のEQMonitor PRだけへ依存させ、各stackを�
 
 1. `01-design`: 設計書、README、知見、将来TODO
 2. `02-scene-spike`: minimalでcompile可能な`packages/eqmonitor_map` scaffoldとmanual smoke exampleを作成し、revision固定とadapter prototypeを確認
+2b. `03-base-layer-slice`: `03`/`04`/`06`をベースレイヤーのFill/Lineだけへ絞った縦切り。デバッグページでPMTilesのベースレイヤーをpan/zoom付きで描画し、座標・tile cover・PMTiles・MVT・頂点生成・shader・Flutter Scene adapterを一本の動く経路として実証する。計画は`docs/superpowers/plans/2026-08-05-eqmonitor-map-base-layer-pmtiles.md`。ラベル、動的レイヤー、remote source、attestation、Home統合はこの縦切りに含めない
 3. `03-foundation`: モデル、座標、Node/Element、FrameSnapshot、render order、packed mesh/render command契約とfake、性能観測
 4. `04-tile-pipeline`: verified source descriptor、trust policy、PMTiles、MVT、identity-encoded remote byte/range fixture、packed worker payload、tile scheduler、cache
 5. `05-label-asset-integration`: backend release fixture、signed sidecar discovery/readback/signature/replay/rollback fixture、semantic schema/summary contract、app側Asset Pack検証とpackage boundary、旧新client compatibility test
