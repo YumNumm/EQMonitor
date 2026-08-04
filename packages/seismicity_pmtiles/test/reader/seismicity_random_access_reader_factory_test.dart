@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
-import 'package:seismicity_pmtiles/src/reader/asset_random_access_reader.dart';
-import 'package:seismicity_pmtiles/src/reader/file_random_access_reader.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -37,7 +36,7 @@ void main() {
     switch (result) {
       case SeismicityPmTilesSuccess(:final value):
         addTearDown(value.close);
-        expect(value, isA<FileRandomAccessReader>());
+        expect(value, isA<PmTilesV3FileRandomAccessReader>());
         expect(await value.readAt(offset: 1, length: 2), orderedEquals([2, 3]));
       case SeismicityPmTilesFailure(:final exception):
         fail('Expected file reader, got $exception');
@@ -53,7 +52,7 @@ void main() {
     switch (result) {
       case SeismicityPmTilesSuccess(:final value):
         addTearDown(value.close);
-        expect(value, isA<AssetRandomAccessReader>());
+        expect(value, isA<PmTilesV3AssetRandomAccessReader>());
         expect(await value.readAt(offset: 0, length: 2), orderedEquals([5, 6]));
         expect(await value.readAt(offset: 2, length: 2), orderedEquals([7, 8]));
       case SeismicityPmTilesFailure(:final exception):
@@ -71,7 +70,7 @@ void main() {
 
     expect(
       result,
-      SeismicityPmTilesResult<SeismicityRandomAccessReader>.failure(
+      SeismicityPmTilesResult<PmTilesRandomAccessReader>.failure(
         exception: SeismicityPmTilesException.unsupportedSource(source: source),
       ),
     );

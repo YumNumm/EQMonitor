@@ -210,7 +210,7 @@ return $default(_that.tileId,_that.offset,_that.length,_that.runLength);case _:
 
 class _PmTilesV3DirectoryEntry implements PmTilesV3DirectoryEntry {
   const _PmTilesV3DirectoryEntry({required this.tileId, required this.offset, required this.length, required this.runLength});
-
+  
 
 @override final  int tileId;
 @override final  int offset;

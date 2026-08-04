@@ -230,7 +230,7 @@ return $default(_that.rootDirectoryOffset,_that.rootDirectoryLength,_that.metada
 
 class _PmTilesV3Header implements PmTilesV3Header {
   const _PmTilesV3Header({required this.rootDirectoryOffset, required this.rootDirectoryLength, required this.metadataOffset, required this.metadataLength, required this.leafDirectoriesOffset, required this.leafDirectoriesLength, required this.tileDataOffset, required this.tileDataLength, required this.addressedTilesCount, required this.tileEntriesCount, required this.tileContentsCount, required this.clustered, required this.internalCompression, required this.tileCompression, required this.tileType, required this.minZoom, required this.maxZoom, required this.minLongitude, required this.minLatitude, required this.maxLongitude, required this.maxLatitude, required this.centerZoom, required this.centerLongitude, required this.centerLatitude});
-
+  
 
 @override final  int rootDirectoryOffset;
 @override final  int rootDirectoryLength;

@@ -2,24 +2,23 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
-import 'package:seismicity_pmtiles/src/reader/file_random_access_reader.dart';
+import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:test/fake.dart';
 import 'package:test/test.dart';
 
 void main() {
   late Directory tempDirectory;
   late File archiveFile;
-  late FileRandomAccessReader reader;
+  late PmTilesV3FileRandomAccessReader reader;
 
   setUp(() async {
     tempDirectory = await Directory.systemTemp.createTemp(
-      'seismicity_pmtiles_file_reader_',
+      'pmtiles_v3_file_reader_',
     );
     archiveFile = File('${tempDirectory.path}/archive.pmtiles');
     await archiveFile.writeAsBytes(List<int>.generate(64, (index) => index));
-    reader = await FileRandomAccessReader.open(
-      source: SeismicityPmTilesFileSource(path: archiveFile.path),
+    reader = await PmTilesV3FileRandomAccessReader.open(
+      path: archiveFile.path,
     );
   });
 
@@ -65,7 +64,7 @@ void main() {
       await expectLater(
         reader.readAt(offset: range.offset, length: range.length),
         throwsA(
-          isA<SeismicityPmTilesInvalidRangeException>()
+          isA<PmTilesV3InvalidRangeException>()
               .having((exception) => exception.offset, 'offset', range.offset)
               .having((exception) => exception.length, 'length', range.length)
               .having((exception) => exception.sizeBytes, 'sizeBytes', 64),
@@ -80,7 +79,7 @@ void main() {
     await expectLater(
       reader.readAt(offset: 4, length: 4),
       throwsA(
-        isA<SeismicityPmTilesSourceReadFailedException>().having(
+        isA<PmTilesV3SourceReadFailedException>().having(
           (exception) => exception.reason,
           'reason',
           contains('Expected 4 bytes'),
@@ -94,17 +93,15 @@ void main() {
 
     await expectLater(
       reader.readAt(offset: 0, length: 1),
-      throwsA(isA<SeismicityPmTilesSourceReadFailedException>()),
+      throwsA(isA<PmTilesV3SourceReadFailedException>()),
     );
   });
 
   test('finishes an accepted read before close under contention', () async {
-    const source = SeismicityPmTilesFileSource(path: 'controlled.pmtiles');
     final controlledFile = _ControllableRandomAccessFile();
-    final controlledReader = FileRandomAccessReader(
+    final controlledReader = PmTilesV3FileRandomAccessReader(
       file: controlledFile,
       sizeBytes: 4,
-      source: source,
     );
 
     final acceptedRead = controlledReader.readAt(offset: 0, length: 4);
@@ -113,7 +110,7 @@ void main() {
 
     await expectLater(
       controlledReader.readAt(offset: 0, length: 1),
-      throwsA(isA<SeismicityPmTilesSourceReadFailedException>()),
+      throwsA(isA<PmTilesV3SourceReadFailedException>()),
     );
     expect(controlledFile._closeCalled, isFalse);
 

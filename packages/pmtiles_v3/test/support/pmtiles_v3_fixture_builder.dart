@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_compression_decoder.dart';
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_directory_entry.dart';
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_header_decoder.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_compression_decoder.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_directory_entry.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_header_decoder.dart';
 
 sealed class PmTilesV3FixtureNode {
   const PmTilesV3FixtureNode({required this.tileId});

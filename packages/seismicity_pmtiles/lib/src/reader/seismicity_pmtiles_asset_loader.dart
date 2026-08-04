@@ -1,4 +1,3 @@
-import 'dart:typed_data';
+import 'package:pmtiles_v3/pmtiles_v3.dart';
 
-typedef SeismicityPmTilesAssetLoader =
-    Future<Uint8List> Function({required String assetKey});
+typedef SeismicityPmTilesAssetLoader = PmTilesV3AssetLoader;

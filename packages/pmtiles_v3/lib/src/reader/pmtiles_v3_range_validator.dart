@@ -1,7 +1,7 @@
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
+import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
-final class SeismicityRangeValidator {
-  const SeismicityRangeValidator();
+final class PmTilesV3RangeValidator {
+  const PmTilesV3RangeValidator();
 
   void validate({
     required int offset,
@@ -15,7 +15,7 @@ final class SeismicityRangeValidator {
         length > sizeBytes ||
         offset > sizeBytes - length;
     if (isInvalid) {
-      throw SeismicityPmTilesException.invalidRange(
+      throw PmTilesV3Exception.invalidRange(
         offset: offset,
         length: length,
         sizeBytes: sizeBytes,

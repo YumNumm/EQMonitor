@@ -212,7 +212,7 @@ return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case _:
 
 class SeismicityPmTilesInvalidDescriptorException implements SeismicityPmTilesException {
   const SeismicityPmTilesInvalidDescriptorException({required this.reason});
-
+  
 
  final  String reason;
 
@@ -632,7 +632,7 @@ $SeismicityPmTilesSourceCopyWith<$Res> get source {
 
 class SeismicityPmTilesTileNotFoundException implements SeismicityPmTilesException {
   const SeismicityPmTilesTileNotFoundException({required this.tileId});
-
+  
 
  final  int tileId;
 
@@ -698,7 +698,7 @@ as int,
 
 class SeismicityPmTilesInvalidTileIdException implements SeismicityPmTilesException {
   const SeismicityPmTilesInvalidTileIdException({required this.tileId, required this.minTileId, required this.maxTileId});
-
+  
 
  final  int tileId;
  final  int minTileId;

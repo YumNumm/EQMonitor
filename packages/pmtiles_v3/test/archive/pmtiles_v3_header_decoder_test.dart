@@ -1,10 +1,16 @@
 import 'dart:typed_data';
 
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_header_decoder.dart';
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_header_decoder.dart';
+import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
+import 'package:pmtiles_v3/src/model/pmtiles_v3_limits.dart';
 import 'package:test/test.dart';
 
 import '../support/pmtiles_v3_fixture_builder.dart';
+
+const _limits = PmTilesV3Limits(
+  maxDirectoryDepth: 3,
+  rootDirectoryWindowLength: 16384,
+);
 
 void main() {
   const builder = PmTilesV3FixtureBuilder();
@@ -25,6 +31,7 @@ void main() {
         PmTilesV3HeaderDecoder.headerLength,
       ),
       archiveSizeBytes: fixture.bytes.length,
+      limits: _limits,
     );
 
     expect(header.rootDirectoryOffset, PmTilesV3HeaderDecoder.headerLength);
@@ -67,8 +74,9 @@ void main() {
           () => decoder.decode(
             bytes: bytes,
             archiveSizeBytes: fixture.bytes.length,
+            limits: _limits,
           ),
-          throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+          throwsA(isA<PmTilesV3CorruptArchiveException>()),
         );
       }
     },
@@ -89,15 +97,17 @@ void main() {
       () => decoder.decode(
         bytes: truncated,
         archiveSizeBytes: fixture.bytes.length,
+        limits: _limits,
       ),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+      throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
     expect(
       () => decoder.decode(
         bytes: oversized,
         archiveSizeBytes: fixture.bytes.length,
+        limits: _limits,
       ),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+      throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
   });
 
@@ -125,19 +135,21 @@ void main() {
       () => decoder.decode(
         bytes: outside,
         archiveSizeBytes: fixture.bytes.length,
+        limits: _limits,
       ),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+      throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
     expect(
       () => decoder.decode(
         bytes: overlap,
         archiveSizeBytes: fixture.bytes.length,
+        limits: _limits,
       ),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+      throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
   });
 
-  test('rejects a root directory extending beyond the first 16 KiB', () {
+  test('rejects a root directory extending beyond the configured window', () {
     final fixture = builder.build(
       rootEntries: const [
         PmTilesV3FixtureTile(tileId: 0, bytes: [1]),
@@ -150,8 +162,33 @@ void main() {
     expect(data.getUint64(8, Endian.little), 16380);
 
     expect(
-      () => decoder.decode(bytes: header, archiveSizeBytes: 20000),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+      () => decoder.decode(
+        bytes: header,
+        archiveSizeBytes: 20000,
+        limits: _limits,
+      ),
+      throwsA(isA<PmTilesV3CorruptArchiveException>()),
+    );
+  });
+
+  test('honors a caller-supplied root directory window limit', () {
+    final fixture = builder.build(
+      rootEntries: const [
+        PmTilesV3FixtureTile(tileId: 0, bytes: [1]),
+      ],
+    );
+    final header = fixtureHeader(fixture);
+
+    expect(
+      () => decoder.decode(
+        bytes: header,
+        archiveSizeBytes: fixture.bytes.length,
+        limits: const PmTilesV3Limits(
+          maxDirectoryDepth: 3,
+          rootDirectoryWindowLength: PmTilesV3HeaderDecoder.headerLength,
+        ),
+      ),
+      throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
   });
 }

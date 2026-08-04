@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
+import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
 final class PmTilesV3CompressionDecoder {
   const PmTilesV3CompressionDecoder();
@@ -11,7 +11,7 @@ final class PmTilesV3CompressionDecoder {
 
   void validateSupported({required int compression}) {
     if (compression != none && compression != gzipCompression) {
-      throw SeismicityPmTilesException.unsupportedCompression(
+      throw PmTilesV3Exception.unsupportedCompression(
         compression: compression,
       );
     }
@@ -25,7 +25,7 @@ final class PmTilesV3CompressionDecoder {
     try {
       return Uint8List.fromList(gzip.decode(bytes));
     } on FormatException catch (error) {
-      throw SeismicityPmTilesException.corruptArchive(
+      throw PmTilesV3Exception.corruptArchive(
         reason: 'Invalid gzip-compressed PMTiles content: ${error.message}',
       );
     }

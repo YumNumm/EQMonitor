@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_compression_decoder.dart';
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_directory_entry.dart';
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_tile_id.dart';
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_compression_decoder.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_directory_entry.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
+import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
 final class PmTilesV3DirectoryDecoder {
   const PmTilesV3DirectoryDecoder({
@@ -27,12 +27,12 @@ final class PmTilesV3DirectoryDecoder {
     final countResult = decodeVarintAt(bytes: decoded, offset: 0);
     final count = countResult.value;
     if (count <= 0) {
-      throw const SeismicityPmTilesException.corruptArchive(
+      throw const PmTilesV3Exception.corruptArchive(
         reason: 'A PMTiles directory must contain at least one entry.',
       );
     }
     if (count > (decoded.length - countResult.nextOffset) ~/ 4) {
-      throw const SeismicityPmTilesException.corruptArchive(
+      throw const PmTilesV3Exception.corruptArchive(
         reason: 'PMTiles directory entry count exceeds the encoded data.',
       );
     }
@@ -55,7 +55,7 @@ final class PmTilesV3DirectoryDecoder {
       final result = decodeVarintAt(bytes: bytes, offset: cursor);
       cursor = result.nextOffset;
       if (index > 0 && result.value == 0) {
-        throw const SeismicityPmTilesException.corruptArchive(
+        throw const PmTilesV3Exception.corruptArchive(
           reason: 'PMTiles directory tile IDs must be strictly increasing.',
         );
       }
@@ -83,7 +83,7 @@ final class PmTilesV3DirectoryDecoder {
       initialOffset: lengthResult.nextOffset,
     );
     if (offsetResult.nextOffset != bytes.length) {
-      throw const SeismicityPmTilesException.corruptArchive(
+      throw const PmTilesV3Exception.corruptArchive(
         reason: 'PMTiles directory contains trailing bytes.',
       );
     }
@@ -122,12 +122,12 @@ final class PmTilesV3DirectoryDecoder {
       final result = decodeVarintAt(bytes: bytes, offset: cursor);
       cursor = result.nextOffset;
       if (lengths[index] <= 0) {
-        throw const SeismicityPmTilesException.corruptArchive(
+        throw const PmTilesV3Exception.corruptArchive(
           reason: 'PMTiles directory entry length must be greater than zero.',
         );
       }
       if (index == 0 && result.value == 0) {
-        throw const SeismicityPmTilesException.corruptArchive(
+        throw const PmTilesV3Exception.corruptArchive(
           reason: 'The first PMTiles directory offset cannot use a sentinel.',
         );
       }
@@ -176,12 +176,12 @@ final class PmTilesV3DirectoryDecoder {
         field: 'tile run',
       );
       if (runEnd > PmTilesV3TileId.maxValue + 1) {
-        throw const SeismicityPmTilesException.corruptArchive(
+        throw const PmTilesV3Exception.corruptArchive(
           reason: 'A PMTiles tile run exceeds the zoom 0-31 tile ID range.',
         );
       }
       if (index + 1 < entries.length && runEnd > entries[index + 1].tileId) {
-        throw const SeismicityPmTilesException.corruptArchive(
+        throw const PmTilesV3Exception.corruptArchive(
           reason: 'PMTiles directory tile runs must not overlap.',
         );
       }
@@ -196,7 +196,7 @@ final class PmTilesV3DirectoryDecoder {
     var cursor = offset;
     for (var byteIndex = 0; byteIndex < 9; byteIndex++) {
       if (cursor >= bytes.length) {
-        throw const SeismicityPmTilesException.corruptArchive(
+        throw const PmTilesV3Exception.corruptArchive(
           reason: 'Truncated PMTiles directory varint.',
         );
       }
@@ -206,14 +206,14 @@ final class PmTilesV3DirectoryDecoder {
       cursor++;
       if ((byte & 0x80) == 0) {
         if (byteIndex > 0 && payload == 0) {
-          throw const SeismicityPmTilesException.corruptArchive(
+          throw const PmTilesV3Exception.corruptArchive(
             reason: 'Non-canonical PMTiles directory varint.',
           );
         }
         return (value: value, nextOffset: cursor);
       }
     }
-    throw const SeismicityPmTilesException.corruptArchive(
+    throw const PmTilesV3Exception.corruptArchive(
       reason: 'PMTiles directory varint exceeds the signed 63-bit range.',
     );
   }
@@ -224,7 +224,7 @@ final class PmTilesV3DirectoryDecoder {
     required String field,
   }) {
     if (left < 0 || right < 0 || right > maxSignedInteger - left) {
-      throw SeismicityPmTilesException.corruptArchive(
+      throw PmTilesV3Exception.corruptArchive(
         reason: 'PMTiles $field overflows the supported integer range.',
       );
     }

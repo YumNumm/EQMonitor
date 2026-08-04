@@ -1,21 +1,17 @@
 import 'dart:typed_data';
 
-import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
-import 'package:seismicity_pmtiles/src/reader/asset_random_access_reader.dart';
+import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:test/test.dart';
 
 void main() {
-  const source = SeismicityPmTilesAssetSource(
-    assetKey: 'assets/seismicity/archive.pmtiles',
-  );
+  const assetKey = 'assets/archive.pmtiles';
 
   test('loads the asset once and serves independent slices', () async {
     var loadCount = 0;
     final loadedBytes = Uint8List.fromList([0, 1, 2, 3, 4, 5]);
-    final reader = await AssetRandomAccessReader.open(
-      source: source,
+    final reader = await PmTilesV3AssetRandomAccessReader.open(
+      assetKey: assetKey,
       assetLoader: ({required assetKey}) async {
-        expect(assetKey, source.assetKey);
         loadCount++;
         return loadedBytes;
       },
@@ -32,25 +28,25 @@ void main() {
   });
 
   test('rejects invalid ranges', () async {
-    final reader = await AssetRandomAccessReader.open(
-      source: source,
+    final reader = await PmTilesV3AssetRandomAccessReader.open(
+      assetKey: assetKey,
       assetLoader: ({required assetKey}) async => Uint8List(4),
     );
     addTearDown(reader.close);
 
     await expectLater(
       reader.readAt(offset: 3, length: 2),
-      throwsA(isA<SeismicityPmTilesInvalidRangeException>()),
+      throwsA(isA<PmTilesV3InvalidRangeException>()),
     );
     await expectLater(
       reader.readAt(offset: 0, length: 0),
-      throwsA(isA<SeismicityPmTilesInvalidRangeException>()),
+      throwsA(isA<PmTilesV3InvalidRangeException>()),
     );
   });
 
   test('rejects reads after close', () async {
-    final reader = await AssetRandomAccessReader.open(
-      source: source,
+    final reader = await PmTilesV3AssetRandomAccessReader.open(
+      assetKey: assetKey,
       assetLoader: ({required assetKey}) async => Uint8List(4),
     );
 
@@ -58,56 +54,52 @@ void main() {
 
     await expectLater(
       reader.readAt(offset: 0, length: 1),
-      throwsA(isA<SeismicityPmTilesSourceReadFailedException>()),
+      throwsA(isA<PmTilesV3SourceReadFailedException>()),
     );
   });
 
   test('converts asset loader exceptions to typed source failures', () async {
     await expectLater(
-      AssetRandomAccessReader.open(
-        source: source,
+      PmTilesV3AssetRandomAccessReader.open(
+        assetKey: assetKey,
         assetLoader: ({required assetKey}) =>
             Future<Uint8List>.error(Exception('asset unavailable')),
       ),
       throwsA(
-        isA<SeismicityPmTilesSourceReadFailedException>()
-            .having((exception) => exception.source, 'source', source)
-            .having(
-              (exception) => exception.reason,
-              'reason',
-              contains('asset unavailable'),
-            ),
+        isA<PmTilesV3SourceReadFailedException>().having(
+          (exception) => exception.reason,
+          'reason',
+          contains('asset unavailable'),
+        ),
       ),
     );
   });
 
   test('converts asset loader errors to typed source failures', () async {
     await expectLater(
-      AssetRandomAccessReader.open(
-        source: source,
+      PmTilesV3AssetRandomAccessReader.open(
+        assetKey: assetKey,
         assetLoader: ({required assetKey}) =>
             Future<Uint8List>.error(StateError('asset unavailable')),
       ),
       throwsA(
-        isA<SeismicityPmTilesSourceReadFailedException>()
-            .having((exception) => exception.source, 'source', source)
-            .having(
-              (exception) => exception.reason,
-              'reason',
-              contains('asset unavailable'),
-            ),
+        isA<PmTilesV3SourceReadFailedException>().having(
+          (exception) => exception.reason,
+          'reason',
+          contains('asset unavailable'),
+        ),
       ),
     );
   });
 
   test('preserves typed loader failures', () async {
-    const expected = SeismicityPmTilesException.invalidDescriptor(
+    const expected = PmTilesV3Exception.corruptArchive(
       reason: 'unsupported schema',
     );
 
     await expectLater(
-      AssetRandomAccessReader.open(
-        source: source,
+      PmTilesV3AssetRandomAccessReader.open(
+        assetKey: assetKey,
         assetLoader: ({required assetKey}) => Future<Uint8List>.error(expected),
       ),
       throwsA(equals(expected)),

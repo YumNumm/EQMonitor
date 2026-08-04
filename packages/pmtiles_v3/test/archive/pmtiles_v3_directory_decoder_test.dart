@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_compression_decoder.dart';
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_directory_decoder.dart';
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_tile_id.dart';
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_compression_decoder.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_directory_decoder.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
+import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 import 'package:test/test.dart';
 
 import '../support/pmtiles_v3_fixture_builder.dart';
@@ -88,7 +88,7 @@ void main() {
           bytes: Uint8List.fromList(bytes),
           compression: PmTilesV3CompressionDecoder.none,
         ),
-        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+        throwsA(isA<PmTilesV3CorruptArchiveException>()),
       );
     }
   });
@@ -109,7 +109,7 @@ void main() {
             bytes: Uint8List.fromList(bytes),
             compression: PmTilesV3CompressionDecoder.none,
           ),
-          throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+          throwsA(isA<PmTilesV3CorruptArchiveException>()),
         );
       }
     },
@@ -134,7 +134,7 @@ void main() {
         bytes: overlapping,
         compression: PmTilesV3CompressionDecoder.none,
       ),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+      throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
     for (final compression in [0, 3, 4, 255]) {
       expect(
@@ -142,7 +142,7 @@ void main() {
           bytes: Uint8List(1),
           compression: compression,
         ),
-        throwsA(isA<SeismicityPmTilesUnsupportedCompressionException>()),
+        throwsA(isA<PmTilesV3UnsupportedCompressionException>()),
       );
     }
   });
@@ -153,7 +153,7 @@ void main() {
         bytes: Uint8List.fromList([1, 2, 3]),
         compression: PmTilesV3CompressionDecoder.gzipCompression,
       ),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+      throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
   });
 
@@ -198,7 +198,7 @@ void main() {
           bytes: bytes,
           compression: PmTilesV3CompressionDecoder.none,
         ),
-        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
+        throwsA(isA<PmTilesV3CorruptArchiveException>()),
       );
     }
   });

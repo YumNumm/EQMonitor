@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
-import 'package:seismicity_pmtiles/src/reader/seismicity_random_access_reader.dart';
-import 'package:seismicity_pmtiles/src/reader/seismicity_range_validator.dart';
+import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
+import 'package:pmtiles_v3/src/reader/pmtiles_random_access_reader.dart';
+import 'package:pmtiles_v3/src/reader/pmtiles_v3_range_validator.dart';
 
-final class SeismicityReaderMutex {
+final class PmTilesV3ReaderMutex {
   var _tail = Future<void>.value();
 
   Future<T> protect<T>({required Future<T> Function() action}) async {
@@ -23,27 +22,25 @@ final class SeismicityReaderMutex {
   }
 }
 
-final class FileRandomAccessReader implements SeismicityRandomAccessReader {
-  FileRandomAccessReader({
+final class PmTilesV3FileRandomAccessReader
+    implements PmTilesRandomAccessReader {
+  PmTilesV3FileRandomAccessReader({
     required RandomAccessFile file,
     required this.sizeBytes,
-    required SeismicityPmTilesFileSource source,
-    SeismicityRangeValidator rangeValidator = const SeismicityRangeValidator(),
+    PmTilesV3RangeValidator rangeValidator = const PmTilesV3RangeValidator(),
   }) : _file = file,
-       _source = source,
        _rangeValidator = rangeValidator;
 
-  static Future<FileRandomAccessReader> open({
-    required SeismicityPmTilesFileSource source,
+  static Future<PmTilesV3FileRandomAccessReader> open({
+    required String path,
   }) async {
     try {
-      final file = await File(source.path).open();
+      final file = await File(path).open();
       try {
         final sizeBytes = await file.length();
-        return FileRandomAccessReader(
+        return PmTilesV3FileRandomAccessReader(
           file: file,
           sizeBytes: sizeBytes,
-          source: source,
         );
       } on FileSystemException catch (error) {
         try {
@@ -51,23 +48,16 @@ final class FileRandomAccessReader implements SeismicityRandomAccessReader {
         } on FileSystemException {
           // Preserve the source failure that prevented reader construction.
         }
-        throw SeismicityPmTilesException.sourceReadFailed(
-          source: source,
-          reason: error.message,
-        );
+        throw PmTilesV3Exception.sourceReadFailed(reason: error.message);
       }
     } on FileSystemException catch (error) {
-      throw SeismicityPmTilesException.sourceReadFailed(
-        source: source,
-        reason: error.message,
-      );
+      throw PmTilesV3Exception.sourceReadFailed(reason: error.message);
     }
   }
 
   final RandomAccessFile _file;
-  final SeismicityPmTilesFileSource _source;
-  final SeismicityRangeValidator _rangeValidator;
-  final _mutex = SeismicityReaderMutex();
+  final PmTilesV3RangeValidator _rangeValidator;
+  final _mutex = PmTilesV3ReaderMutex();
 
   @override
   final int sizeBytes;
@@ -84,8 +74,7 @@ final class FileRandomAccessReader implements SeismicityRandomAccessReader {
         sizeBytes: sizeBytes,
       );
       if (_isCloseRequested) {
-        throw SeismicityPmTilesException.sourceReadFailed(
-          source: _source,
+        throw const PmTilesV3Exception.sourceReadFailed(
           reason: 'The file reader is closed.',
         );
       }
@@ -96,17 +85,13 @@ final class FileRandomAccessReader implements SeismicityRandomAccessReader {
             await _file.setPosition(offset);
             final bytes = await _file.read(length);
             if (bytes.length != length) {
-              throw SeismicityPmTilesException.sourceReadFailed(
-                source: _source,
+              throw PmTilesV3Exception.sourceReadFailed(
                 reason: 'Expected $length bytes but read ${bytes.length}.',
               );
             }
             return bytes;
           } on FileSystemException catch (error) {
-            throw SeismicityPmTilesException.sourceReadFailed(
-              source: _source,
-              reason: error.message,
-            );
+            throw PmTilesV3Exception.sourceReadFailed(reason: error.message);
           }
         },
       );
@@ -126,10 +111,7 @@ final class FileRandomAccessReader implements SeismicityRandomAccessReader {
         try {
           await _file.close();
         } on FileSystemException catch (error) {
-          throw SeismicityPmTilesException.sourceReadFailed(
-            source: _source,
-            reason: error.message,
-          );
+          throw PmTilesV3Exception.sourceReadFailed(reason: error.message);
         }
       },
     );
