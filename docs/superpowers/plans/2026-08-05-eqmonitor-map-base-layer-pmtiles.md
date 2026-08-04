@@ -130,13 +130,21 @@ Flutter Scene初期化がappのビルドで動くことを最初に確定させ�
         });
         PmTilesV3Header get header;
         Future<Uint8List?> readTile({required int z, required int x, required int y});
+        Future<Uint8List?> readTileById({required int tileId});
         Stream<int> occupiedTileIdsAtZoom({required int zoom});
         Future<void> close();
       }
       ```
 
+- [ ] `readTileById`は`occupiedTileIdsAtZoom`の対として残す。`seismicity_pmtiles`は生のtileIdだけを
+      扱いz/x/y変換を持たないため、これを`readTile`へ寄せると既存経路へ未検証のinverse Hilbert変換が
+      入る。inverse変換は必要になるまで実装しない。
+- [ ] z/x/y → tileIdのforward Hilbert変換を新規実装する。z=0の`(0,0)`、z=1の4タイル、z=2の4隅を
+      PMTiles v3 specまたは`protomaps/PMTiles`実装から取った固定値でtestする。参照値の出典をtestの
+      doc commentへ書く。出典を書けない値を期待値にしない。
 - [ ] `readTile`はsparse archiveでentryが存在しないtileへ`null`を返す。header不整合、directory破損、
-      offset/length算術異常、`limits`超過はtyped exceptionにする。両者を同じ戻り値へ丸めない。
+      offset/length算術異常、`limits`超過、zがheaderのmin/max zoom外、x/yが`0 <= x,y < 1 << z`外は
+      typed exceptionにする。欠損と不正を同じ戻り値へ丸めない。
 - [ ] `PmTilesV3Limits`は`seismicity_pmtiles`が現在内部で使っている上限値をそのまま引数化する。
       新しい上限を発明せず、既存の値を移すだけにする。既存に上限がない項目を追加しない。
 - [ ] `seismicity_pmtiles`を`pmtiles_v3`へ依存させ、`SeismicityPmTilesArchiveDescriptor`と
