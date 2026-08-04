@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShakeDetectionEntry {
 
- String get id; String? get subRegionId; String? get subRegionName; String? get prefectureCode; String? get cityCode; api.ShakeDetectionLevel get minLevel; bool get isCurrentLocation;
+ String get id; String? get subRegionId; String? get subRegionName; api.ShakeDetectionLevel get minLevel; bool get isCurrentLocation; String? get prefectureCode; String? get cityCode;
 /// Create a copy of ShakeDetectionEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ShakeDetectionEntryCopyWith<ShakeDetectionEntry> get copyWith => _$ShakeDetecti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.subRegionId, subRegionId) || other.subRegionId == subRegionId)&&(identical(other.subRegionName, subRegionName) || other.subRegionName == subRegionName)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.subRegionId, subRegionId) || other.subRegionId == subRegionId)&&(identical(other.subRegionName, subRegionName) || other.subRegionName == subRegionName)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,subRegionId,subRegionName,prefectureCode,cityCode,minLevel,isCurrentLocation);
+int get hashCode => Object.hash(runtimeType,id,subRegionId,subRegionName,minLevel,isCurrentLocation,prefectureCode,cityCode);
 
 @override
 String toString() {
-  return 'ShakeDetectionEntry(id: $id, subRegionId: $subRegionId, subRegionName: $subRegionName, prefectureCode: $prefectureCode, cityCode: $cityCode, minLevel: $minLevel, isCurrentLocation: $isCurrentLocation)';
+  return 'ShakeDetectionEntry(id: $id, subRegionId: $subRegionId, subRegionName: $subRegionName, minLevel: $minLevel, isCurrentLocation: $isCurrentLocation, prefectureCode: $prefectureCode, cityCode: $cityCode)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ShakeDetectionEntryCopyWith<$Res>  {
   factory $ShakeDetectionEntryCopyWith(ShakeDetectionEntry value, $Res Function(ShakeDetectionEntry) _then) = _$ShakeDetectionEntryCopyWithImpl;
 @useResult
 $Res call({
- String id, String? subRegionId, String? subRegionName, String? prefectureCode, String? cityCode, api.ShakeDetectionLevel minLevel, bool isCurrentLocation
+ String id, String? subRegionId, String? subRegionName, api.ShakeDetectionLevel minLevel, bool isCurrentLocation, String? prefectureCode, String? cityCode
 });
 
 
@@ -62,16 +62,16 @@ class _$ShakeDetectionEntryCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? subRegionId = freezed,Object? subRegionName = freezed,Object? prefectureCode = freezed,Object? cityCode = freezed,Object? minLevel = null,Object? isCurrentLocation = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? subRegionId = freezed,Object? subRegionName = freezed,Object? minLevel = null,Object? isCurrentLocation = null,Object? prefectureCode = freezed,Object? cityCode = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,subRegionId: freezed == subRegionId ? _self.subRegionId : subRegionId // ignore: cast_nullable_to_non_nullable
 as String?,subRegionName: freezed == subRegionName ? _self.subRegionName : subRegionName // ignore: cast_nullable_to_non_nullable
-as String?,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
-as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
 as String?,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
 as api.ShakeDetectionLevel,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
+as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -156,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? subRegionId,  String? subRegionName,  String? prefectureCode,  String? cityCode,  api.ShakeDetectionLevel minLevel,  bool isCurrentLocation)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? subRegionId,  String? subRegionName,  api.ShakeDetectionLevel minLevel,  bool isCurrentLocation,  String? prefectureCode,  String? cityCode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShakeDetectionEntry() when $default != null:
-return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.prefectureCode,_that.cityCode,_that.minLevel,_that.isCurrentLocation);case _:
+return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.minLevel,_that.isCurrentLocation,_that.prefectureCode,_that.cityCode);case _:
   return orElse();
 
 }
@@ -177,10 +177,10 @@ return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.prefectureC
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? subRegionId,  String? subRegionName,  String? prefectureCode,  String? cityCode,  api.ShakeDetectionLevel minLevel,  bool isCurrentLocation)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? subRegionId,  String? subRegionName,  api.ShakeDetectionLevel minLevel,  bool isCurrentLocation,  String? prefectureCode,  String? cityCode)  $default,) {final _that = this;
 switch (_that) {
 case _ShakeDetectionEntry():
-return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.prefectureCode,_that.cityCode,_that.minLevel,_that.isCurrentLocation);case _:
+return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.minLevel,_that.isCurrentLocation,_that.prefectureCode,_that.cityCode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +197,10 @@ return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.prefectureC
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? subRegionId,  String? subRegionName,  String? prefectureCode,  String? cityCode,  api.ShakeDetectionLevel minLevel,  bool isCurrentLocation)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? subRegionId,  String? subRegionName,  api.ShakeDetectionLevel minLevel,  bool isCurrentLocation,  String? prefectureCode,  String? cityCode)?  $default,) {final _that = this;
 switch (_that) {
 case _ShakeDetectionEntry() when $default != null:
-return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.prefectureCode,_that.cityCode,_that.minLevel,_that.isCurrentLocation);case _:
+return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.minLevel,_that.isCurrentLocation,_that.prefectureCode,_that.cityCode);case _:
   return null;
 
 }
@@ -212,16 +212,16 @@ return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.prefectureC
 
 
 class _ShakeDetectionEntry implements ShakeDetectionEntry {
-  const _ShakeDetectionEntry({required this.id, required this.subRegionId, required this.subRegionName, this.prefectureCode, this.cityCode, required this.minLevel, required this.isCurrentLocation});
-
+  const _ShakeDetectionEntry({required this.id, required this.subRegionId, required this.subRegionName, required this.minLevel, required this.isCurrentLocation, this.prefectureCode, this.cityCode});
+  
 
 @override final  String id;
 @override final  String? subRegionId;
 @override final  String? subRegionName;
-@override final  String? prefectureCode;
-@override final  String? cityCode;
 @override final  api.ShakeDetectionLevel minLevel;
 @override final  bool isCurrentLocation;
+@override final  String? prefectureCode;
+@override final  String? cityCode;
 
 /// Create a copy of ShakeDetectionEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +233,16 @@ _$ShakeDetectionEntryCopyWith<_ShakeDetectionEntry> get copyWith => __$ShakeDete
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.subRegionId, subRegionId) || other.subRegionId == subRegionId)&&(identical(other.subRegionName, subRegionName) || other.subRegionName == subRegionName)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.subRegionId, subRegionId) || other.subRegionId == subRegionId)&&(identical(other.subRegionName, subRegionName) || other.subRegionName == subRegionName)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,subRegionId,subRegionName,prefectureCode,cityCode,minLevel,isCurrentLocation);
+int get hashCode => Object.hash(runtimeType,id,subRegionId,subRegionName,minLevel,isCurrentLocation,prefectureCode,cityCode);
 
 @override
 String toString() {
-  return 'ShakeDetectionEntry(id: $id, subRegionId: $subRegionId, subRegionName: $subRegionName, prefectureCode: $prefectureCode, cityCode: $cityCode, minLevel: $minLevel, isCurrentLocation: $isCurrentLocation)';
+  return 'ShakeDetectionEntry(id: $id, subRegionId: $subRegionId, subRegionName: $subRegionName, minLevel: $minLevel, isCurrentLocation: $isCurrentLocation, prefectureCode: $prefectureCode, cityCode: $cityCode)';
 }
 
 
@@ -253,7 +253,7 @@ abstract mixin class _$ShakeDetectionEntryCopyWith<$Res> implements $ShakeDetect
   factory _$ShakeDetectionEntryCopyWith(_ShakeDetectionEntry value, $Res Function(_ShakeDetectionEntry) _then) = __$ShakeDetectionEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String? subRegionId, String? subRegionName, String? prefectureCode, String? cityCode, api.ShakeDetectionLevel minLevel, bool isCurrentLocation
+ String id, String? subRegionId, String? subRegionName, api.ShakeDetectionLevel minLevel, bool isCurrentLocation, String? prefectureCode, String? cityCode
 });
 
 
@@ -270,16 +270,16 @@ class __$ShakeDetectionEntryCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? subRegionId = freezed,Object? subRegionName = freezed,Object? prefectureCode = freezed,Object? cityCode = freezed,Object? minLevel = null,Object? isCurrentLocation = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? subRegionId = freezed,Object? subRegionName = freezed,Object? minLevel = null,Object? isCurrentLocation = null,Object? prefectureCode = freezed,Object? cityCode = freezed,}) {
   return _then(_ShakeDetectionEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,subRegionId: freezed == subRegionId ? _self.subRegionId : subRegionId // ignore: cast_nullable_to_non_nullable
 as String?,subRegionName: freezed == subRegionName ? _self.subRegionName : subRegionName // ignore: cast_nullable_to_non_nullable
-as String?,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
-as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
 as String?,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
 as api.ShakeDetectionLevel,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
+as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -484,7 +484,7 @@ return $default(_that.id,_that.code,_that.name);case _:
 
 class _ShakeDetectionSubRegion implements ShakeDetectionSubRegion {
   const _ShakeDetectionSubRegion({required this.id, required this.code, required this.name});
-
+  
 
 @override final  String id;
 @override final  String code;

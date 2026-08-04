@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
+import 'package:eqmonitor/feature/map/data/model/base_map_tile_spec.dart';
 
 enum EarthquakeHistoryMapLayerMode { none, region, city, station, auto }
 
@@ -45,6 +48,14 @@ class EarthquakeHistoryMapLayerModeResolver {
     return _resolveJmaAvailability(intensity);
   }
 
+  /// auto モードで細分区域 → 市区町村に切り替わる実効ズーム。
+  ///
+  /// [BaseMapTileSpec.cityMinZoom] 未満に切り替え点を置くと、市区町村ポリゴンが
+  /// タイルに存在しないため細分区域も市区町村も塗られない帯ができる。
+  /// 永続化済みの古い設定値（下限より小さい値）も同様に潰れるので切り上げる。
+  double effectiveRegionToCityZoom(double regionToCity) =>
+      max(regionToCity, BaseMapTileSpec.cityMinZoom);
+
   Object regionFillOpacity({
     required EarthquakeHistoryMapLayerMode mode,
     required double regionToCity,
@@ -57,7 +68,7 @@ class EarthquakeHistoryMapLayerModeResolver {
       'step',
       ['zoom'],
       visibleOpacity,
-      regionToCity,
+      effectiveRegionToCityZoom(regionToCity),
       0.0,
     ];
   }
@@ -74,7 +85,7 @@ class EarthquakeHistoryMapLayerModeResolver {
       'step',
       ['zoom'],
       0.0,
-      regionToCity,
+      effectiveRegionToCityZoom(regionToCity),
       visibleOpacity,
     ];
   }
@@ -90,9 +101,7 @@ class EarthquakeHistoryMapLayerModeResolver {
   ) {
     return (
       region: intensity.regions.values.any(
-        (regions) => regions.any(
-          (region) => region.maxIntensity != null,
-        ),
+        (regions) => regions.any((region) => region.maxIntensity != null),
       ),
       city: intensity.intensityTree.values.any(
         (regions) => regions.any(
@@ -116,15 +125,12 @@ class EarthquakeHistoryMapLayerModeResolver {
   ) {
     return (
       region: intensity.lpgmIntensityTree.values.any(
-        (regions) => regions.any(
-          (region) => region.maxLpgmIntensity != null,
-        ),
+        (regions) => regions.any((region) => region.maxLpgmIntensity != null),
       ),
       city: intensity.lpgmIntensityTree.values.any(
         (regions) => regions.any(
-          (region) => region.cities.any(
-            (city) => city.maxLpgmIntensity != null,
-          ),
+          (region) =>
+              region.cities.any((city) => city.maxLpgmIntensity != null),
         ),
       ),
       station: intensity.lpgmIntensityTree.values.any(

@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_p
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_expression.dart';
+import 'package:eqmonitor/feature/map/data/model/base_map_tile_spec.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:flutter/material.dart';
@@ -163,7 +164,18 @@ class IntensityFillLayer extends HookConsumerWidget {
                     id: _lv2FillLayerId,
                     sourceId: 'eqmonitor_map',
                     sourceLayerId: 'areaInformationCityQuake',
-                    paint: {'fill-color': fillColor, 'fill-opacity': 0.8},
+                    paint: {
+                      'fill-color': fillColor,
+                      // 市区町村ポリゴンは cityMinZoom 未満のタイルに存在しないため、
+                      // その帯では Lv1 (細分区域) の塗りつぶしが可視表現になる。
+                      'fill-opacity': <Object>[
+                        'step',
+                        <Object>['zoom'],
+                        0.0,
+                        BaseMapTileSpec.cityMinZoom,
+                        0.8,
+                      ],
+                    },
                   ),
                   belowLayerId: BaseLayer.areaForecastLocalELine.name,
                   aboveLayerId: null,

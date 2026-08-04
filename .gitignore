@@ -192,6 +192,9 @@ secret/
 # (tool/asset_pack/stage_from_release.sh). Do not commit these binaries.
 app/android/assetpacks/eqmonitor_assets/src/main/assets/**
 !app/android/assetpacks/eqmonitor_assets/src/main/assets/.gitkeep
+# Debug-only staging (`--target android-debug`): PAD packs never reach an APK
+# build, so `flutter run` reads the pack from the debug source set instead.
+app/android/app/src/debug/assets/
 app/assets/platform/map/
 app/assets/platform/parameters/
 app/assets/platform/manifest.json

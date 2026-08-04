@@ -74,7 +74,7 @@ as SeismicityBounds,
 @override
 @pragma('vm:prefer-inline')
 $SeismicityBoundsCopyWith<$Res> get bounds {
-
+  
   return $SeismicityBoundsCopyWith<$Res>(_self.bounds, (value) {
     return _then(_self.copyWith(bounds: value));
   });
@@ -217,7 +217,7 @@ return $default(_that.archiveIds,_that.bounds);case _:
 
 class _HypocenterAnalysisRequest implements HypocenterAnalysisRequest {
   const _HypocenterAnalysisRequest({required final  List<HypocenterArchiveId> archiveIds, required this.bounds}): _archiveIds = archiveIds;
-
+  
 
  final  List<HypocenterArchiveId> _archiveIds;
 @override List<HypocenterArchiveId> get archiveIds {
@@ -288,7 +288,7 @@ as SeismicityBounds,
 @override
 @pragma('vm:prefer-inline')
 $SeismicityBoundsCopyWith<$Res> get bounds {
-
+  
   return $SeismicityBoundsCopyWith<$Res>(_self.bounds, (value) {
     return _then(_self.copyWith(bounds: value));
   });

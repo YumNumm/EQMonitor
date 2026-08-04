@@ -48,4 +48,4 @@ final class HttpCacheStoreProvider
   }
 }
 
-String _$httpCacheStoreHash() => r'51b807addb23122081470f10bfba8e137c0129f0';
+String _$httpCacheStoreHash() => r'f0f302817a88ec97568ac7cc32b654eb99981d07';

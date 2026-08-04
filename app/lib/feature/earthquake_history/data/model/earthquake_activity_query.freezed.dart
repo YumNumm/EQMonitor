@@ -215,7 +215,7 @@ return $default(_that.baseEventId,_that.baseOriginTime,_that.latitude,_that.long
 
 class _EarthquakeActivityQuery extends EarthquakeActivityQuery {
   const _EarthquakeActivityQuery({required this.baseEventId, required this.baseOriginTime, required this.latitude, required this.longitude, required this.depth, required this.beforeDays, required this.afterDays, required this.radiusKm, required this.depthOffsetKm}): super._();
-
+  
 
 @override final  String baseEventId;
 @override final  DateTime baseOriginTime;

@@ -209,7 +209,7 @@ return $default(_that.start,_that.end,_that.counts);case _:
 
 class _EarthquakeActivityBin extends EarthquakeActivityBin {
   const _EarthquakeActivityBin({required this.start, required this.end, required final  Map<EarthquakeActivityIntensityCategory, int> counts}): _counts = counts,super._();
-
+  
 
 @override final  DateTime start;
 @override final  DateTime end;

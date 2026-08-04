@@ -42,4 +42,4 @@ final class HttpCachedDioProvider
   }
 }
 
-String _$httpCachedDioHash() => r'd2b9ea272ea94984506a1de29ae672ca3592647a';
+String _$httpCachedDioHash() => r'7c54f32478c405ad596d7e19e5ec382ca831b966';

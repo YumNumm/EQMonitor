@@ -225,7 +225,7 @@ return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoo
 @JsonSerializable()
 
 class _EarthquakeHistoryMapLayerParameter implements EarthquakeHistoryMapLayerParameter {
-  const _EarthquakeHistoryMapLayerParameter({this.regionToCity = 0, this.stationMinZoom = 8, this.stationLabelMinZoom = 9, this.stationTextZoom = 9, this.hypocenterFadeZoom = 8, this.hypocenterErrorMinZoom = 8, this.regionFillOpacity = 0.6, this.regionLineOpacity = 0.8, this.cityFillOpacity = 0.6, this.stationCircleRadiusMin = 2, this.stationCircleRadiusMax = 8, this.stationIconSizeMin = 0.025, this.stationIconSizeMid = 0.18, this.stationIconSizeMax = 0.6, this.hypocenterIconSizeMin = 0.15, this.hypocenterIconSizeMax = 0.4, this.hypocenterFadeOpacity = 0.6});
+  const _EarthquakeHistoryMapLayerParameter({this.regionToCity = 6, this.stationMinZoom = 8, this.stationLabelMinZoom = 9, this.stationTextZoom = 9, this.hypocenterFadeZoom = 8, this.hypocenterErrorMinZoom = 8, this.regionFillOpacity = 0.6, this.regionLineOpacity = 0.8, this.cityFillOpacity = 0.6, this.stationCircleRadiusMin = 2, this.stationCircleRadiusMax = 8, this.stationIconSizeMin = 0.025, this.stationIconSizeMid = 0.18, this.stationIconSizeMax = 0.6, this.hypocenterIconSizeMin = 0.15, this.hypocenterIconSizeMax = 0.4, this.hypocenterFadeOpacity = 0.6});
   factory _EarthquakeHistoryMapLayerParameter.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryMapLayerParameterFromJson(json);
 
 @override@JsonKey() final  double regionToCity;

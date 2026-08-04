@@ -79,7 +79,7 @@ as String,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterArchiveIdCopyWith<$Res> get id {
-
+  
   return $HypocenterArchiveIdCopyWith<$Res>(_self.id, (value) {
     return _then(_self.copyWith(id: value));
   });
@@ -222,7 +222,7 @@ return $default(_that.id,_that.periodFrom,_that.periodTo,_that.url,_that.feature
 
 class _HypocenterArchive implements HypocenterArchive {
   const _HypocenterArchive({required this.id, required this.periodFrom, required this.periodTo, required this.url, required this.featureCount, required this.sizeBytes, required this.queryRevision});
-
+  
 
 @override final  HypocenterArchiveId id;
 @override final  DateTime periodFrom;
@@ -297,7 +297,7 @@ as String,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterArchiveIdCopyWith<$Res> get id {
-
+  
   return $HypocenterArchiveIdCopyWith<$Res>(_self.id, (value) {
     return _then(_self.copyWith(id: value));
   });

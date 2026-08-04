@@ -351,6 +351,60 @@ checksum = "sha256:ce788dc7aa828e7cfec57e433c846895b8be54bca09a7624a414801089d75
 url = "https://github.com/YumNumm/google-play-cli/releases/download/v1.0.1/google-play-cli_windows_amd64.exe"
 url_api = "https://api.github.com/repos/YumNumm/google-play-cli/releases/assets/377097273"
 
+[[tools."github:rorkai/App-Store-Connect-CLI"]]
+version = "3.4.1"
+backend = "github:rorkai/App-Store-Connect-CLI"
+
+[tools."github:rorkai/App-Store-Connect-CLI"."platforms.linux-arm64"]
+checksum = "sha256:40559abcd09f8ca6d11b221295963efa8b2796a6f9a18ad8beb1f4304b6e0799"
+url = "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/3.4.1/asc_3.4.1_linux_arm64"
+url_api = "https://api.github.com/repos/rorkai/App-Store-Connect-CLI/releases/assets/498085836"
+
+[tools."github:rorkai/App-Store-Connect-CLI"."platforms.linux-arm64-musl"]
+checksum = "sha256:40559abcd09f8ca6d11b221295963efa8b2796a6f9a18ad8beb1f4304b6e0799"
+url = "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/3.4.1/asc_3.4.1_linux_arm64"
+url_api = "https://api.github.com/repos/rorkai/App-Store-Connect-CLI/releases/assets/498085836"
+
+[tools."github:rorkai/App-Store-Connect-CLI"."platforms.linux-x64"]
+checksum = "sha256:73783179889218a0c9203f285756ff80b6877ea70e3b8e9ad7aef80638068cbe"
+url = "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/3.4.1/asc_3.4.1_linux_amd64"
+url_api = "https://api.github.com/repos/rorkai/App-Store-Connect-CLI/releases/assets/498085837"
+
+[tools."github:rorkai/App-Store-Connect-CLI"."platforms.linux-x64-baseline"]
+checksum = "sha256:73783179889218a0c9203f285756ff80b6877ea70e3b8e9ad7aef80638068cbe"
+url = "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/3.4.1/asc_3.4.1_linux_amd64"
+url_api = "https://api.github.com/repos/rorkai/App-Store-Connect-CLI/releases/assets/498085837"
+
+[tools."github:rorkai/App-Store-Connect-CLI"."platforms.linux-x64-musl"]
+checksum = "sha256:73783179889218a0c9203f285756ff80b6877ea70e3b8e9ad7aef80638068cbe"
+url = "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/3.4.1/asc_3.4.1_linux_amd64"
+url_api = "https://api.github.com/repos/rorkai/App-Store-Connect-CLI/releases/assets/498085837"
+
+[tools."github:rorkai/App-Store-Connect-CLI"."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:73783179889218a0c9203f285756ff80b6877ea70e3b8e9ad7aef80638068cbe"
+url = "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/3.4.1/asc_3.4.1_linux_amd64"
+url_api = "https://api.github.com/repos/rorkai/App-Store-Connect-CLI/releases/assets/498085837"
+
+[tools."github:rorkai/App-Store-Connect-CLI"."platforms.macos-arm64"]
+checksum = "sha256:88381683964945c0e2c74b65500725edf463a3c65725a21be2324ef1c4742a2d"
+url = "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/3.4.1/asc_3.4.1_macOS_arm64"
+url_api = "https://api.github.com/repos/rorkai/App-Store-Connect-CLI/releases/assets/498085830"
+
+[tools."github:rorkai/App-Store-Connect-CLI"."platforms.macos-x64"]
+checksum = "sha256:b6cf30fb2e2274031d7573712fde3543c76eeffdd1be2c2dd5636fcea9b3a486"
+url = "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/3.4.1/asc_3.4.1_macOS_amd64"
+url_api = "https://api.github.com/repos/rorkai/App-Store-Connect-CLI/releases/assets/498085834"
+
+[tools."github:rorkai/App-Store-Connect-CLI"."platforms.macos-x64-baseline"]
+checksum = "sha256:b6cf30fb2e2274031d7573712fde3543c76eeffdd1be2c2dd5636fcea9b3a486"
+url = "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/3.4.1/asc_3.4.1_macOS_amd64"
+url_api = "https://api.github.com/repos/rorkai/App-Store-Connect-CLI/releases/assets/498085834"
+
+[tools."github:rorkai/App-Store-Connect-CLI"."platforms.windows-x64"]
+checksum = "sha256:be9e5bf8d51818f01ddf6e22e6c2872dad4ee33bea737d29b6d322d14df6d749"
+url = "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/3.4.1/asc_3.4.1_windows_amd64.exe"
+url_api = "https://api.github.com/repos/rorkai/App-Store-Connect-CLI/releases/assets/498085851"
+
 [[tools.gitleaks]]
 version = "8.30.1"
 backend = "aqua:gitleaks/gitleaks"

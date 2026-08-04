@@ -81,9 +81,7 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('ビルド時刻'),
               leading: const Icon(Icons.schedule),
               subtitle: Text(
-                buildCfg.buildTimestamp.isEmpty
-                    ? '(not set)'
-                    : buildCfg.buildTimestamp,
+                buildCfg.buildTimestamp.toString(),
                 style: const TextStyle(fontFamily: FontFamily.googleSansCode),
               ),
             ),

@@ -107,7 +107,7 @@ final class ActiveColorSetProvider
   }
 }
 
-String _$activeColorSetHash() => r'9388f22a10d6b1c1bfed8848ce79bb355323bcd1';
+String _$activeColorSetHash() => r'96a2df8081657ffe1b38d60397ff2e758e497846';
 
 @ProviderFor(colorSetForBrightness)
 final colorSetForBrightnessProvider = ColorSetForBrightnessFamily._();
@@ -167,7 +167,7 @@ final class ColorSetForBrightnessProvider
 }
 
 String _$colorSetForBrightnessHash() =>
-    r'4ad5aa3f021fd1a17a6a15ca8fb5bd11ddcbad6c';
+    r'faf5a882aca1e8a1f3f9d3503a99a0b2ed323ea2';
 
 final class ColorSetForBrightnessFamily extends $Family
     with $FunctionalFamilyOverride<ThemeColorSet, Brightness> {

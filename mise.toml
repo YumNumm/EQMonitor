@@ -30,6 +30,7 @@ gitleaks = "latest"
 claude = "latest"
 swift = "latest"
 flutter = "4dacd3fc91d96262a33e5c598e17d816f0b35641"
+"github:rorkai/App-Store-Connect-CLI" = "latest"
 
 [settings]
 lockfile = true

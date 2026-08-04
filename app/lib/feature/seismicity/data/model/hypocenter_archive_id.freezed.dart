@@ -208,7 +208,7 @@ return $default(_that.partition,_that.jstLabel);case _:
 
 class _HypocenterArchiveId implements HypocenterArchiveId {
   const _HypocenterArchiveId({required this.partition, required this.jstLabel});
-
+  
 
 @override final  HypocenterArchivePartition partition;
 @override final  String jstLabel;

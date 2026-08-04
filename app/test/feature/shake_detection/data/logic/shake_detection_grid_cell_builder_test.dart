@@ -47,9 +47,7 @@ void main() {
     });
 
     test('intensity が null の観測点は Weaker として扱う', () {
-      final cells = builder.build(
-        points: [_point(lat: 35.1, lng: 139.1)],
-      );
+      final cells = builder.build(points: [_point(lat: 35.1, lng: 139.1)]);
 
       expect(cells, hasLength(1));
       expect(cells.single.level, ShakeDetectionLevel.weaker);
@@ -103,15 +101,15 @@ void main() {
   });
 }
 
-Points _point({
-  required double lat,
-  required double lng,
-  num? intensity,
-}) => Points(
-  code: 'code',
-  name: 'name',
-  region: 'region',
-  type: 'type',
-  location: Location(latitude: lat, longitude: lng),
-  intensity: intensity,
-);
+Points _point({required double lat, required double lng, num? intensity}) =>
+    Points(
+      code: 'code',
+      name: 'name',
+      region: 'region',
+      type: 'type',
+      location: Location(latitude: lat, longitude: lng),
+      intensity:fix intensity,
+      cityCode: null,
+      prefectureCode: null,
+      regionCode: null,
+    );

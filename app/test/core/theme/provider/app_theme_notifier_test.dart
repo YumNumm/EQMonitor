@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,8 +27,70 @@ Future<ProviderContainer> _container({
 AppThemeNotifier _notifier(ProviderContainer container) =>
     container.read(appThemeProvider.notifier);
 
+/// SharedPreferences 読み込み完了前の起動フレームを再現する。
+class _NeverCompletingAppThemeNotifier extends AppThemeNotifier {
+  @override
+  Future<({AppTheme lightTheme, AppTheme darkTheme})> build() =>
+      Completer<({AppTheme lightTheme, AppTheme darkTheme})>().future;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  group('colorSetForBrightness / activeColorSet', () {
+    test(
+      'appTheme が Loading 中でも colorSetForBrightness は例外を投げず default を返す',
+      () {
+        final container = ProviderContainer(
+          overrides: [
+            appThemeProvider.overrideWith(_NeverCompletingAppThemeNotifier.new),
+          ],
+        );
+        addTearDown(container.dispose);
+
+        expect(container.read(appThemeProvider).isLoading, isTrue);
+
+        final colorSet = container.read(
+          colorSetForBrightnessProvider(Brightness.light),
+        );
+        expect(
+          colorSet,
+          AppTheme.eqmonitorDefault().colorSetFor(Brightness.light),
+        );
+      },
+    );
+
+    test('appTheme が Loading 中でも activeColorSet は例外を投げず default を返す', () {
+      final container = ProviderContainer(
+        overrides: [
+          appThemeProvider.overrideWith(_NeverCompletingAppThemeNotifier.new),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      expect(container.read(appThemeProvider).isLoading, isTrue);
+
+      final colorSet = container.read(activeColorSetProvider);
+      expect(
+        colorSet,
+        AppTheme.eqmonitorDefault().colorSetFor(Brightness.light),
+      );
+    });
+
+    test('appTheme 完了後は保存済みテーマの colorSet を返す', () async {
+      final container = await _container();
+      addTearDown(container.dispose);
+      await container.read(appThemeProvider.future);
+
+      final colorSet = container.read(
+        colorSetForBrightnessProvider(Brightness.dark),
+      );
+      expect(
+        colorSet,
+        AppTheme.eqmonitorDefault().colorSetFor(Brightness.dark),
+      );
+    });
+  });
 
   group('AppThemeNotifier.importFromJson', () {
     test('正常なJSON (eqmonitorDefault) を Success で返す', () async {

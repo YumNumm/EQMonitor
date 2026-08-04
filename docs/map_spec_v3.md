@@ -9,7 +9,7 @@
 ### マップエンジン
 
 | 項目 | 値 |
-|------|-----|
+| ------ | ----- |
 | ライブラリ | MapLibre GL (flutter-maplibre 0.3.x) |
 | タイルソース | iOS/Android: Asset Pack（iOS Background Assets / Android Play Asset Delivery）で配布された `all.pmtiles` を、`pmtiles://file://...`（`assets_util` で解決した絶対パス）で参照。macOS: 同内容をネイティブ同梱（アプリバンドル内）し、同じく `pmtiles://file://...` で参照。Web: 地図機能は廃止（未サポート）。旧 `https://v2.map.eqmonitor.app/all.pmtiles` によるベース地図配信は停止済み |
 | スタイル | ローカルファイルに書き出して参照 (ダーク/ライト別) |
@@ -18,7 +18,7 @@
 ### ベースレイヤー構成 (下から上の順)
 
 | ID (`BaseLayer`) | ソースレイヤー | タイプ | 備考 |
-|------------------|----------------|--------|------|
+| ------------------ | ---------------- | -------- | ------ |
 | `background` | — | background | テーマ背景色 |
 | `countriesFill` | `countries` | fill | 世界の陸地 |
 | `countriesLine` | `countries` | line | 国境線。zoom 3→0.5px, zoom 5.5→1px |
@@ -30,6 +30,18 @@
 同梱 PMTiles のメタデータには、上記で参照する `countries`、
 `areaForecastLocalE`、`areaForecastLocalEew`、`areaInformationCityQuake` が
 同じ大文字・小文字で含まれていなければならない。
+
+### タイル側のズーム制約
+
+`areaInformationCityQuake` は生成時に全 feature へ `tippecanoe: {minzoom: 6}` を
+付与しているため、**z6 未満のタイルには市区町村ポリゴンが 1 件も存在しない**
+（metadata の `vector_layers[].minzoom` は 0 のままなので当てにならない）。
+このズーム未満で市区町村を参照するレイヤーは、フィルタが一致せず例外もログも
+出ないまま「何も描画されない」状態になる。
+
+アプリ側の閾値は `BaseMapTileSpec.cityMinZoom`
+(`app/lib/feature/map/data/model/base_map_tile_spec.dart`) に集約し、
+backend の `CITY_QUAKE_FEATURE_MINZOOM` と同じ値を保つこと。
 
 ### カラーテーマ
 
@@ -63,7 +75,7 @@ MapLibreMap
 ### 2-2. 設定モデル (`EarthquakeHistoryDetailConfig`)
 
 | フィールド | 型 | デフォルト | 説明 |
-|-----------|-----|----------|------|
+| ----------- | ----- | ---------- | ------ |
 | `fillMode` | `EarthquakeHistoryFillMode` | `auto` | 塗りつぶしモード |
 | `stationDisplayMode` | `StationDisplayMode` | `maxFocused` | 観測点の表示方法 |
 | `hypocenterDisplayMode` | `HypocenterDisplayMode` | `zoomFade` | 震央マーカーの表示方法 |
@@ -79,7 +91,7 @@ MapLibreMap
 ### 2-3. 塗りつぶしモード (`EarthquakeHistoryFillMode`)
 
 | 値 | 動作 |
-|----|------|
+| ---- | ------ |
 | `none` | 塗りつぶしなし |
 | `auto` | 広域表示 (zoom < `regionToCity`) では細分化地域、ズームイン (zoom ≥ `regionToCity`) では市区町村を塗りつぶし。市区町村データがなければ細分化地域にフォールバック。**市区町村は最大ズームまで維持される。** |
 | `region` | 全ズームレベルで細分化地域のみ塗りつぶし |
@@ -89,28 +101,39 @@ MapLibreMap
 
 | パラメータ | デフォルト値 | 説明 |
 |-----------|-------------|------|
-| `regionToCity` | 8.0 | auto モードで細分化地域 → 市区町村に切り替わるズームレベル |
+| `regionToCity` | 6.0 (`BaseMapTileSpec.cityMinZoom`) | auto モードで細分化地域 → 市区町村に切り替わるズームレベル |
+
+デバッグモーダルや永続化済みの設定で `BaseMapTileSpec.cityMinZoom` 未満の値が
+指定された場合は、`effectiveRegionToCityZoom` が下限まで切り上げる。
+切り上げないと、市区町村ポリゴンが存在しないズーム帯で細分化地域も
+市区町村も塗られない「無地の帯」ができてしまう。
 
 #### opacity 制御 (auto モード)
 
+以下の `switchZoom` は `max(regionToCity, BaseMapTileSpec.cityMinZoom)`。
+
 **regionFillOpacity:**
+
 ```
-[step, [zoom], visibleOpacity(0.6), regionToCity, 0.0]
+[step, [zoom], visibleOpacity(0.6), switchZoom, 0.0]
 ```
-→ zoom < 8: 0.6, zoom ≥ 8: 0.0
+
+→ zoom < 6: 0.6, zoom ≥ 6: 0.0
 
 **cityFillOpacity:**
+
 ```
-[step, [zoom], 0.0, regionToCity, visibleOpacity(0.6)]
+[step, [zoom], 0.0, switchZoom, visibleOpacity(0.6)]
 ```
-→ zoom < 8: 0.0, zoom ≥ 8: 0.6（最大ズームまで維持）
+
+→ zoom < 6: 0.0, zoom ≥ 6: 0.6（最大ズームまで維持）
 
 #### モード解決 (`resolveFillLayerMode`)
 
 `EarthquakeHistoryFillMode` × データ可用性 → `EarthquakeHistoryMapLayerMode`:
 
 | fillMode | region ✓ city ✓ | region ✓ city ✗ | region ✗ city ✓ | region ✗ city ✗ |
-|----------|-----------------|-----------------|-----------------|-----------------|
+| ---------- | ----------------- | ----------------- | ----------------- | ----------------- |
 | `auto` | `auto` | `region` | `city` | `none` |
 | `region` | `region` | `region` | `none` | `none` |
 | `city` | `city` | `region` (FB) | `city` | `none` |
@@ -123,7 +146,7 @@ FB = フォールバック
 #### region レイヤー
 
 | 項目 | 値 |
-|------|-----|
+| ------ | ----- |
 | レイヤータイプ | FillStyleLayer + LineStyleLayer (震度レベルごと) |
 | ソース | `eqmonitor_map` ベクタータイル |
 | ソースレイヤー | `areaForecastLocalE` |
@@ -136,7 +159,7 @@ FB = フォールバック
 #### city レイヤー
 
 | 項目 | 値 |
-|------|-----|
+| ------ | ----- |
 | レイヤータイプ | FillStyleLayer (震度レベルごと) |
 | ソース | `eqmonitor_map` ベクタータイル |
 | ソースレイヤー | `areaInformationCityQuake` |
@@ -156,7 +179,7 @@ region / city と同構成。レイヤー ID プレフィックスは `eq-histor
 #### サブレイヤー構成
 
 | レイヤー ID | タイプ | minZoom | 条件 |
-|------------|--------|---------|------|
+| ------------ | -------- | --------- | ------ |
 | `eq-history-station-intensity-circle` | Circle | 8 | 常時 |
 | `eq-history-station-intensity-icon` | Symbol | 8 | `iconData != null` |
 | `eq-history-station-intensity-label` | Symbol | 9 | `showStationLabel == true` |
@@ -166,7 +189,7 @@ region / city と同構成。レイヤー ID プレフィックスは `eq-histor
 **`stationDisplayMode` ごとのサイズ:**
 
 | モード | zoom 4 | zoom 10 | 備考 |
-|--------|--------|---------|------|
+| -------- | -------- | --------- | ------ |
 | `allMinimized` | 4 | 10 | 全観測点同サイズ (大きめ) |
 | `normal` | 2 | 8 | 全観測点同サイズ |
 | `maxFocused` | 1〜3 | 7〜10 | `isFocused` (最大震度) を強調 |
@@ -193,7 +216,7 @@ region / city と同構成。レイヤー ID プレフィックスは `eq-histor
 ### 2-6. 震央マーカーレイヤー (`EarthquakeHistoryHypocenterLayer`)
 
 | 項目 | 値 |
-|------|-----|
+| ------ | ----- |
 | ソースタイプ | GeoJSON |
 | レイヤータイプ | SymbolLayer |
 | アイコン | `Assets.images.map.normalHypocenter` |
@@ -202,7 +225,7 @@ region / city と同構成。レイヤー ID プレフィックスは `eq-histor
 **`HypocenterDisplayMode`:**
 
 | モード | opacity | z 順 |
-|--------|---------|------|
+| -------- | --------- | ------ |
 | `zoomFade` | zoom < 8: 1.0, zoom ≥ 8: 0.6 | 観測点の上 |
 | `alwaysOpaque` | 1.0 | 観測点の上 |
 | `belowStations` | 1.0 | 観測点の下 |
@@ -210,7 +233,7 @@ region / city と同構成。レイヤー ID プレフィックスは `eq-histor
 ### 2-7. 震央誤差矩形レイヤー (`EarthquakeHistoryHypocenterErrorLayer`)
 
 | 項目 | 値 |
-|------|-----|
+| ------ | ----- |
 | レイヤータイプ | LineLayer |
 | 表示条件 | `showHypocenterError == true` |
 | スタイル | 白/黒の破線 (dash array [4, 2]) |
@@ -219,7 +242,7 @@ region / city と同構成。レイヤー ID プレフィックスは `eq-histor
 ### 2-8. 推計震度レイヤー (`EarthquakeHistoryDetailsEstimatedIntensityLayer`)
 
 | 項目 | 値 |
-|------|-----|
+| ------ | ----- |
 | 表示条件 | `estimatedIntensityTileUrl != null` |
 | ソース | VectorSource (PMTiles URL) |
 | ソースレイヤー | `seismic_intensity` |
@@ -231,20 +254,21 @@ region / city と同構成。レイヤー ID プレフィックスは `eq-histor
 ### 2-9. カメラ
 
 | 定数 | 値 |
-|------|-----|
+| ------ | ----- |
 | デフォルト中心 | `Geographic(lon: 138, lat: 36.5)` |
 | デフォルト zoom | 5.0 |
 | 震央 zoom | 6.5 |
 | フォーカス zoom | 8.0 |
 
 **初期カメラ:**
+
 - 震央座標あり → center: 震央, zoom: 6.5
 - 震央座標なし → center: デフォルト, zoom: 5.0
 
 ### 2-10. タップ操作
 
 | タップ対象 | レイヤー/ソースレイヤー判定 | ポップアップ内容 |
-|-----------|--------------------------|----------------|
+| ----------- | -------------------------- | ---------------- |
 | 観測点 (circle) | `eq-history-station-intensity-circle` | 観測点名, 震度, 長周期震度 |
 | 市区町村 (fill) | ソースレイヤー `areaInformationCityQuake` | 地域名, 最大震度 |
 | 細分化地域 (fill) | ソースレイヤー `areaForecastLocalE` | 地域名, 最大震度 |
@@ -254,7 +278,7 @@ region / city と同構成。レイヤー ID プレフィックスは `eq-histor
 ## ホーム画面 vs 地震履歴詳細 比較
 
 | 機能 | ホーム画面マップ | 地震履歴詳細マップ |
-|------|---------------|-----------------|
+| ------ | --------------- | ----------------- |
 | リアルタイム更新 | あり (Kmoni / EEW) | なし (静的表示) |
 | 強震モニタ | あり | なし |
 | PS 波圏 | あり | なし |

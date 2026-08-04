@@ -209,7 +209,7 @@ return $default(_that.archives,_that.datasetRevision,_that.dataUpdatedAt);case _
 
 class _HypocenterManifest implements HypocenterManifest {
   const _HypocenterManifest({required final  List<HypocenterArchive> archives, required this.datasetRevision, required this.dataUpdatedAt}): _archives = archives;
-
+  
 
  final  List<HypocenterArchive> _archives;
 @override List<HypocenterArchive> get archives {

@@ -7,15 +7,27 @@
 # before `flutter build appbundle` (Android PAD install-time module) or a
 # macOS bundle build that expects `app/assets/platform/`.
 #
+# `--target android` stages the Play Asset Delivery install-time module, which
+# AGP only wires into the *bundle* pipeline (`:app:bundle<Variant>`). An APK
+# build (`flutter run`, `flutter build apk`) runs zero asset-pack tasks, so the
+# pack can never be delivered that way. `--target android-debug` therefore
+# stages the same contents into the base module's `debug` source set instead,
+# under an `eqmonitor_assets/` subdirectory: those land in the debug APK's own
+# `assets/` tree, where `AssetsUtil.resolvePackRoot`'s APK_ASSETS fallback finds
+# `eqmonitor_assets/manifest.json` and extracts the pack into `filesDir`. Debug
+# only — it cannot affect release builds.
+#
 # iOS AppIntent/Widget slim `jma_code_table.json` is committed for local DX;
 # `--target ios-native` still refreshes it from Release (CI / when updating).
 #
 # Usage:
-#   GH_TOKEN=... stage_from_release.sh [--version X.Y.Z] --target android|macos|both|ios-native
+#   GH_TOKEN=... stage_from_release.sh [--version X.Y.Z] \
+#     --target android|android-debug|macos|both|ios-native
 #
 # Environment:
 #   GH_TOKEN                       Required. GitHub token with contents:read on eqmonitor-backend.
 #   ANDROID_ASSET_PACK_ASSETS_DIR  Override (default below).
+#   ANDROID_DEBUG_ASSET_PACK_DIR   Override (default below).
 #   MACOS_ASSET_DIR                Override (default below).
 #   IOS_NATIVE_JMA_CODE_TABLE      Override slim JSON output path (default below).
 #
@@ -25,6 +37,7 @@ set -euo pipefail
 
 REPO="${ASSET_PACK_RELEASE_REPO:-YumNumm/eqmonitor-backend}"
 ANDROID_DIR="${ANDROID_ASSET_PACK_ASSETS_DIR:-app/android/assetpacks/eqmonitor_assets/src/main/assets}"
+ANDROID_DEBUG_DIR="${ANDROID_DEBUG_ASSET_PACK_DIR:-app/android/app/src/debug/assets/eqmonitor_assets}"
 MACOS_DIR="${MACOS_ASSET_DIR:-app/assets/platform}"
 IOS_NATIVE_JMA_CODE_TABLE="${IOS_NATIVE_JMA_CODE_TABLE:-app/assets/parameters/jma_code_table.json}"
 
@@ -42,7 +55,7 @@ while [ "$#" -gt 0 ]; do
       shift 2
       ;;
     -h|--help)
-      sed -n '2,20p' "$0"
+      sed -n '2,35p' "$0"
       exit 0
       ;;
     *)
@@ -53,11 +66,11 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ -z "$target" ]; then
-  echo "stage_from_release.sh: --target android|macos|both|ios-native is required" >&2
+  echo "stage_from_release.sh: --target android|android-debug|macos|both|ios-native is required" >&2
   exit 2
 fi
 case "$target" in
-  android|macos|both|ios-native) ;;
+  android|android-debug|macos|both|ios-native) ;;
   *)
     echo "stage_from_release.sh: invalid --target '$target'" >&2
     exit 2
@@ -171,6 +184,9 @@ stage_ios_native() {
 case "$target" in
   android)
     stage_into "$ANDROID_DIR"
+    ;;
+  android-debug)
+    stage_into "$ANDROID_DEBUG_DIR"
     ;;
   macos)
     stage_into "$MACOS_DIR"

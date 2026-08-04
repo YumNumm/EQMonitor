@@ -92,14 +92,11 @@ class _ErrorDetailsSheet extends ConsumerWidget {
                 Expanded(
                   child: FilledButton.tonalIcon(
                     onPressed: () async {
-                      await Clipboard.setData(
-                        ClipboardData(text: diagnostics),
-                      );
+                      await HapticFeedback.errorNotification();
+                      await Clipboard.setData(ClipboardData(text: diagnostics));
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('エラー詳細をコピーしました'),
-                          ),
+                          const SnackBar(content: Text('エラー詳細をコピーしました')),
                         );
                       }
                     },

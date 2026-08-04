@@ -4,12 +4,14 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
+import 'package:eqmonitor/feature/map/data/model/base_map_tile_spec.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:lat_lng/lat_lng.dart';
 import 'package:test/test.dart';
@@ -146,6 +148,51 @@ void main() {
           0.6,
         ],
       );
+    });
+
+    test('切り替え点はタイルに市区町村が存在する最小ズームで切り上げる', () {
+      // 市区町村ポリゴンが無いズームに切り替え点を置くと、
+      // 細分区域も市区町村も塗られない帯ができてしまう。
+      expect(
+        resolver.effectiveRegionToCityZoom(3),
+        BaseMapTileSpec.cityMinZoom,
+      );
+      expect(
+        resolver.effectiveRegionToCityZoom(0),
+        BaseMapTileSpec.cityMinZoom,
+      );
+      expect(resolver.effectiveRegionToCityZoom(9), 9);
+    });
+
+    test('切り上げられた閾値で region / city の opacity が隙間なく入れ替わる', () {
+      const belowMinZoom = 0.0;
+      final regionOpacity =
+          resolver.regionFillOpacity(
+                mode: EarthquakeHistoryMapLayerMode.auto,
+                regionToCity: belowMinZoom,
+                visibleOpacity: 0.6,
+              )
+              as List<Object>;
+      final cityOpacity =
+          resolver.cityFillOpacity(
+                mode: EarthquakeHistoryMapLayerMode.auto,
+                regionToCity: belowMinZoom,
+                visibleOpacity: 0.6,
+              )
+              as List<Object>;
+
+      expect(regionOpacity[3], BaseMapTileSpec.cityMinZoom);
+      expect(cityOpacity[3], BaseMapTileSpec.cityMinZoom);
+      // 閾値未満は region が可視 / city は不可視、閾値以上はその逆。
+      expect(regionOpacity[2], 0.6);
+      expect(regionOpacity[4], 0.0);
+      expect(cityOpacity[2], 0.0);
+      expect(cityOpacity[4], 0.6);
+    });
+
+    test('既定の regionToCity はタイルの市区町村最小ズームと一致する', () {
+      const parameter = EarthquakeHistoryMapLayerParameter();
+      expect(parameter.regionToCity, BaseMapTileSpec.cityMinZoom);
     });
 
     test('region モードの regionFillOpacity は固定値を返す', () {
