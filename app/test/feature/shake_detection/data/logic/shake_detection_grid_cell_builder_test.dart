@@ -108,7 +108,7 @@ Points _point({required double lat, required double lng, num? intensity}) =>
       region: 'region',
       type: 'type',
       location: Location(latitude: lat, longitude: lng),
-      intensity:fix intensity,
+      intensity: intensity,
       cityCode: null,
       prefectureCode: null,
       regionCode: null,
