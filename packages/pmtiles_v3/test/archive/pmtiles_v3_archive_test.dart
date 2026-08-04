@@ -733,6 +733,38 @@ void main() {
       await archive.close();
     },
   );
+
+  test(
+    'distinguishes a sparse-archive gap from an invalid tile coordinate',
+    () async {
+      final fixture = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureTile(tileId: 1, bytes: [1, 2]),
+        ],
+        minZoom: 1,
+        maxZoom: 1,
+      );
+      final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+      final archive = await openFixture(reader: reader);
+
+      // (1, 1)はz=1のtile grid(0<=x,y<2)内の有効な座標だが、archiveに
+      // entryが無いsparseな欠損なのでnullを返す。
+      expect(await archive.readTile(z: 1, x: 1, y: 1), isNull);
+
+      // x=2はz=1のtile grid(0<=x,y<2)の外なので、欠損ではなく
+      // 不正な座標としてtyped exceptionにする。nullへ丸めない。
+      await expectLater(
+        archive.readTile(z: 1, x: 2, y: 0),
+        throwsA(isA<PmTilesV3InvalidTileCoordinateException>()),
+      );
+      await expectLater(
+        archive.readTile(z: 1, x: 0, y: -1),
+        throwsA(isA<PmTilesV3InvalidTileCoordinateException>()),
+      );
+
+      await archive.close();
+    },
+  );
 }
 
 Future<PmTilesV3Archive> openFixture({
