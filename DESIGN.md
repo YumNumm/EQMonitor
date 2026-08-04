@@ -234,7 +234,7 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 ## Cards and grouped surfaces
 
 - 設定、情報グループ、オンボーディング下部アカウント面などは、面ごとに独立したカードとして見せる。
-- カード背景は `surface.card`、必要に応じて `surface.emphasis` で選択状態を見せる。
+- カード背景は `surface.card` とし、選択状態は `surface.emphasis` で示す。
 - カード境界は濃すぎない 1px 相当の `outline.soft` を使う。
 - 影は最小限。ダークテーマでは elevation より面の色差で階層を出す。
 
@@ -244,7 +244,7 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 - タイトルは `titleSmall`、補助文は `bodySmall` を基本とする。
 - 行全体をタップ可能にしつつ、スイッチやナビゲーションアイコンも明確に見せる。
 - 1 行に情報を詰め込みすぎない。2 行説明は許容する。
-- ブール設定のトグル行は、統一見た目の `AppSwitchListTile`（末尾に `AppSwitch`）を標準とする。必要に応じて `ListTile` + `AppSwitch` の組み合わせでもよい。
+- ブール設定のトグル行は、統一見た目の `AppSwitchListTile`（末尾に `AppSwitch`）を標準とする。`ListTile` + `AppSwitch` の組み合わせも許容する。
 
 ## Toggles (AppSwitch)
 
@@ -279,7 +279,7 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 
 ## Dialogs, feedback, and inputs
 
-- 確認ダイアログは Material 3 の `AlertDialog`（必要に応じて `showDialog`）を素直に用いる。iOS スタイルの `CupertinoAlertDialog` をプラットフォーム別に出し分けることはしない。
+- 確認ダイアログは Material 3 の `AlertDialog`（`showDialog` 経由）を素直に用いる。iOS スタイルの `CupertinoAlertDialog` をプラットフォーム別に出し分けることはしない。
 - 一時的な通知は `SnackBar` を `ScaffoldMessenger` 経由で表示する。重要なフィードバックはダイアログや画面内表示に格上げし、`SnackBar` に依存しすぎない。
 - 長押しメニューや文脈依存アクションは Material の `MenuAnchor` / `PopupMenuButton` を基本とする。
 - 日付選択は `showDatePicker`、時刻選択は `showTimePicker` を標準とする。
@@ -308,7 +308,7 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 - カード、設定行、リスト、情報ブロックは、可能な限り実 UI をそのまま skeletonize する。
 - 画面全体を単一の `CircularProgressIndicator` だけで済ませるのは、初期起動や極めて短い待機を除き避ける。
 - 空状態とローディング状態を混同しない。データが未取得なのか、取得結果が空なのかを UI で明確に分ける。
-- 画像、地図、ネットワークリソースなど fake data で崩れやすい要素は、必要に応じて `Skeleton.replace` などの annotation を使って安全に置き換える。
+- 画像、地図、ネットワークリソースなど fake data で崩れやすい要素は、`Skeleton.replace` などの annotation を使って安全に置き換える。
 - Skeleton の色と shimmer はダークテーマの階層を壊さないよう控えめにし、情報色や警告色と競合させない。
 
 ## Empty, passive, and informational states

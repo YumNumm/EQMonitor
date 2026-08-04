@@ -55,9 +55,7 @@
 			"request": "launch",
 			"program": "lib/main.dart",
 			"cwd": "packages/eqmonitor_map/example",
-			"args": [
-				"--dart-define-from-file=.dart_tool/scene_spike_defines.json"
-			]
+			"args": []
 		},
 		{
 			"name": "[EQMonitor Map] Profile",
@@ -66,9 +64,7 @@
 			"program": "lib/main.dart",
 			"cwd": "packages/eqmonitor_map/example",
 			"flutterMode": "profile",
-			"args": [
-				"--dart-define-from-file=.dart_tool/scene_spike_defines.json"
-			]
+			"args": []
 		}
 	]
 }

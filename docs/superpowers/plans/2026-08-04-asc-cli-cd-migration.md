@@ -27,10 +27,12 @@
 mise.toml には `"github:rorkai/App-Store-Connect-CLI" = "latest"` が既に追加済み（未コミット）だが、リリースアセットのバイナリ名が `asc_<version>_macOS_arm64` 形式のため、`rename_exe` なしでは `asc` コマンドとして解決されない（検証済みの事実）。
 
 **Files:**
+
 - Modify: `mise.toml:33`
 - Commit: `docs/superpowers/specs/2026-08-04-asc-cli-cd-migration-design.md`（brainstorming の成果物）
 
 **Interfaces:**
+
 - Produces: 以降の全タスクが前提とする `asc` コマンド（mise 経由、リポジトリ内で `mise exec -- asc` または PATH 解決で実行可能）
 
 - [ ] **Step 1: mise.toml を修正**
@@ -58,7 +60,7 @@ GITHUB_TOKEN=$(gh auth token) mise install "github:rorkai/App-Store-Connect-CLI"
 mise exec -- asc --version
 ```
 
-Expected: `3.5.0 (commit: ...)` 形式のバージョン出力。
+Expected: `3.5.0 (commit: ...)` 形式のバージョン出力
 
 - [ ] **Step 3: mise.lock を確認**
 
@@ -86,9 +88,11 @@ git commit -m "chore: asc CLI を mise の github バックエンドで導入"
 `scripts/testflight/distribute-external.ts` の `buildWhatsNewFromGit` / `capText` を数行のシェルに移植する。挙動は同一: 直近タグ以降のコミット件名を `- <subject>` 形式で列挙、空なら `- (no changes)`、4000 文字（Unicode 文字数。バイトではない）超過時は末尾を `...` に置換。
 
 **Files:**
+
 - Create: `scripts/ci/testflight_test_notes.sh`
 
 **Interfaces:**
+
 - Produces: `scripts/ci/testflight_test_notes.sh` — 引数なし、stdout に What to Test 本文を出力（末尾改行なし）。Task 3 の deploy-app.yaml が呼ぶ。
 
 - [ ] **Step 1: スクリプトを作成**
@@ -165,10 +169,12 @@ git commit -m "feat: TestFlight What to Test 生成スクリプトを追加"
 altool アップロードと TS 製外部配布スクリプトの 2 ステップを、`asc publish testflight` 1 ステップに統合する。外部配布時のみグループ追加・レビュー申請フラグを足す。
 
 **Files:**
+
 - Modify: `.github/workflows/deploy-app.yaml:292-383`（deploy-ios ジョブ）
 - Delete: `scripts/testflight/` ディレクトリ一式
 
 **Interfaces:**
+
 - Consumes: `scripts/ci/testflight_test_notes.sh`（Task 2）、mise の asc ツール（Task 1）、既存の `needs.define-matrix.outputs.deploy-ios-external`（'true' / 'false' 文字列）
 
 - [ ] **Step 1: deploy-ios ジョブのステップを置換**
@@ -269,11 +275,13 @@ git commit -m "ci: iOS の ASC アップロードと TestFlight 外部配布を 
 Python 製 REST クライアントの ensure-exists / upload / poll を、asc コマンド + 小さなシェルヘルパー + `asc workflow` 定義に移植する。
 
 **Files:**
+
 - Create: `scripts/ci/asset_pack_ensure.sh`
 - Create: `scripts/ci/asset_pack_wait_version.sh`
 - Create: `.asc/workflow.json`
 
 **Interfaces:**
+
 - Consumes: `asc background-assets list/create/versions create/upload-files create/versions view`（asc 3.5.0 で存在確認済み）
 - Produces:
   - `scripts/ci/asset_pack_ensure.sh <app_id> <asset_pack_id>` — stdout に `{"assetId":"<id>"}` を出力（asc workflow の outputs 用。ログは stderr）
@@ -435,6 +443,7 @@ git commit -m "feat: Background Assets アップロード用の asc workflow を
 ### Task 5: upload-asset-pack.yaml の置換と Python クライアント削除
 
 **Files:**
+
 - Modify: `.github/workflows/upload-asset-pack.yaml`（iOS アップロードジョブ: mise-action、`Extract App Store Connect API Key`、`Ensure ... exists`、`Upload to App Store Connect ...`、`Remove ... private key` の各ステップ）
 - Delete: `tool/asset_pack/upload_ios_background_assets.py`
 - Delete: `tool/asset_pack/asc_client.py`
@@ -442,6 +451,7 @@ git commit -m "feat: Background Assets アップロード用の asc workflow を
 - Modify: `docs/asset-pack-cd.md`、`docs/knowledge/20260728_ba_package_cli.md`（削除ファイルへの言及を更新）
 
 **Interfaces:**
+
 - Consumes: Task 4 の asc workflow `asset_pack_ensure` / `asset_pack_upload`、Task 1 の mise asc ツール
 
 - [ ] **Step 1: mise-action を asc インストールに変更**
@@ -552,13 +562,14 @@ git commit -m "ci: Background Assets アップロードを asc workflow に置�
 ### Task 6: 最終検証と PR 作成
 
 **Files:**
+
 - Create: PR（`--repo YumNumm/EQMonitor` / base `develop`）
 
 - [ ] **Step 1: 全体の残参照スキャン**
 
 ```bash
 grep -rn "distribute-external\|scripts/testflight\|upload_ios_background_assets\|asc_client\|altool" \
-  --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=docs . 
+  --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=docs .
 ```
 
 Expected: ヒットなし（docs/ 除外時）。

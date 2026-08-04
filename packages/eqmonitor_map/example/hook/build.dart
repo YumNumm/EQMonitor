@@ -7,7 +7,6 @@ Future<void> main(List<String> args) async {
       buildInput: config,
       buildOutput: output,
       materials: ['assets/map_spike.fmat'],
-      assetMode: MaterialAssetMode.dataAssetsIfAvailable,
     );
   });
 }

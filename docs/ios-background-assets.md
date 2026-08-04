@@ -43,7 +43,7 @@ without `GH_TOKEN`.
 
 CI still runs `stage_from_release.sh --target ios-native` in
 `deploy-app.yaml`'s `build-ios` so Release 更新後の差分を拾える。ローカルで
-最新に揃えるときも同じコマンドを使う:
+最新に揃えるときも、次のように同じコマンドを使う。
 
 ```bash
 GH_TOKEN=... tool/asset_pack/stage_from_release.sh --target ios-native

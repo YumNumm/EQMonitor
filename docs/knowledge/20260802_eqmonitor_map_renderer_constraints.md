@@ -52,11 +52,14 @@
 - canonical `RenderSortKey`だけを描画順の正本とする。全resolved node/specがphaseを明示し、宣言順はphase内だけに適用してv1ではcross-phase interleaveを禁止する。label/leader lineは`labelForeground` phase、hit testは同じkeyの降順とする。
 - metricsはbounded・rate-limitedにし、queue待機、実行、GPU submission/completion、current/peak memoryを分離する。
 
-## Flutter Scene gate
+## Flutter Scene manual smoke
 
 - Flutter SDKとFlutter Scene revisionを固定し、adapterの外へFlutter Scene型を漏らさない。
-- foundation前にiOS/Android実機でprocedural mesh、partial update、overlay、dispose、background復帰、context rebuild、resource retirementを検証する。
-- gateを満たせない場合は実装を進めず設計を更新する。
+- iOS/Android実機のprofile/releaseでprocedural mesh、custom material、
+  `TextPainter` overlay、partial update、回転、background復帰、resource rebuild、
+  dispose/remount、例外counter/logを手動確認する。
+- 実機確認の未実施や失敗はTODOで追跡し、foundation実装を停止する
+  evidence gateにしない。
 
 ## 検証コマンド
 

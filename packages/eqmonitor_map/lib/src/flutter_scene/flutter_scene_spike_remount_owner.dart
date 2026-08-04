@@ -1,28 +1,29 @@
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_spike_controller.dart';
+import 'package:eqmonitor_map/src/flutter_scene/scene_spike_metrics.dart';
 import 'package:flutter/foundation.dart';
 
 typedef FlutterSceneSpikeControllerFactory =
     FlutterSceneSpikeController Function(
-      SceneSpikeRunLog runLog,
+      SceneSpikeMetrics metrics,
     );
 
 class FlutterSceneSpikeRemountOwner extends ChangeNotifier {
   factory FlutterSceneSpikeRemountOwner.create() =>
       FlutterSceneSpikeRemountOwner.withDependencies(
-        controllerFactory: (runLog) => FlutterSceneSpikeController.create(
-          runLog: runLog,
+        controllerFactory: (metrics) => FlutterSceneSpikeController.create(
+          metrics: metrics,
         ),
       );
 
   FlutterSceneSpikeRemountOwner.withDependencies({
     required FlutterSceneSpikeControllerFactory controllerFactory,
   }) : _controllerFactory = controllerFactory,
-       _runLog = SceneSpikeRunLog(startedAtUtc: DateTime.now().toUtc()) {
-    _controller = _controllerFactory(_runLog);
+       _metrics = SceneSpikeMetrics() {
+    _controller = _controllerFactory(_metrics);
   }
 
   final FlutterSceneSpikeControllerFactory _controllerFactory;
-  final SceneSpikeRunLog _runLog;
+  final SceneSpikeMetrics _metrics;
   late FlutterSceneSpikeController _controller;
   var _awaitingReplacementMount = false;
   var _isDisposed = false;
@@ -39,7 +40,7 @@ class FlutterSceneSpikeRemountOwner extends ChangeNotifier {
       throw StateError('Previous Scene controller did not dispose.');
     }
     _awaitingReplacementMount = true;
-    _controller = _controllerFactory(_runLog);
+    _controller = _controllerFactory(_metrics);
     notifyListeners();
   }
 

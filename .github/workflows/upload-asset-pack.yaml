@@ -189,11 +189,13 @@ jobs:
       # https://github.com/jdx/mise-action
       - name: Install Mise
         uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
           cache: false
-          # Only need `mise env` to decrypt .env.json — skip installing the
-          # full tool chain (flutter etc.) that deploy-app.yaml needs.
-          install: false
+          # `mise env` での .env.json 復号に加え、ASC 通信用の asc CLI を入れる。
+          # flutter 等のフルツールチェーンは不要。
+          install_args: '"github:rorkai/App-Store-Connect-CLI"'
 
       - name: Set environment variables
         run: |
@@ -214,16 +216,13 @@ jobs:
           name: asset-pack-extracted
           path: extracted
 
-      - name: Extract App Store Connect API Key
+      - name: Verify App Store Connect credentials
         run: |
           set -euo pipefail
           if [ -z "${APP_STORE_CONNECT_API_KEY_BASE64:-}" ] || [ -z "${APP_STORE_CONNECT_API_KEY_ID:-}" ]; then
             echo "::error::APP_STORE_CONNECT_API_KEY_BASE64 / APP_STORE_CONNECT_API_KEY_ID missing after mise env decrypt. Check .env.json + secrets.AGE_KEY."
             exit 1
           fi
-          mkdir -p "$HOME/.private_keys"
-          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
-            > "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
 
       # Mandatory pre-check #1 (per task brief): confirm this runner's Xcode
       # actually ships `ba-package` before relying on it. Known to require
@@ -244,16 +243,17 @@ jobs:
       # (creates via POST /v1/backgroundAssets when missing — Apple's
       # documented first step before version upload).
       - name: "Ensure App Store Connect asset pack exists"
+        env:
+          ASC_BYPASS_KEYCHAIN: "1"
         run: |
           set -euo pipefail
-          KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
-          python3 -m tool.asset_pack.upload_ios_background_assets \
-            --key-id "$APP_STORE_CONNECT_API_KEY_ID" \
-            --issuer-id "$APP_STORE_CONNECT_API_ISSUER_ID" \
-            --key-path "$KEY_PATH" \
-            --app-id "$ASC_APP_ID" \
-            --asset-pack-id "$IOS_BACKGROUND_ASSET_PACK_ID" \
-            ensure-exists
+          export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
+          export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
+          export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
+          asc workflow validate
+          asc workflow run asset_pack_ensure \
+            APP_ID:"$ASC_APP_ID" \
+            ASSET_PACK_ID:"$IOS_BACKGROUND_ASSET_PACK_ID"
 
       - name: Build ba-package manifest
         run: |
@@ -298,21 +298,14 @@ jobs:
           echo "archive_path=$archive_path" >> "$GITHUB_ENV"
 
       - name: Upload to App Store Connect (Managed Background Assets)
+        env:
+          ASC_BYPASS_KEYCHAIN: "1"
         run: |
           set -euo pipefail
-          KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
-          python3 -m tool.asset_pack.upload_ios_background_assets \
-            --key-id "$APP_STORE_CONNECT_API_KEY_ID" \
-            --issuer-id "$APP_STORE_CONNECT_API_ISSUER_ID" \
-            --key-path "$KEY_PATH" \
-            --app-id "$ASC_APP_ID" \
-            --asset-pack-id "$IOS_BACKGROUND_ASSET_PACK_ID" \
-            upload --archive-path "$archive_path"
-
-      # This is a new workflow (unlike deploy-app.yaml's equivalent steps, which
-      # rely on the runner being torn down at job end), so clean up the private
-      # key material explicitly rather than assuming that's enough. Runs even if
-      # an earlier step in this job failed/exited early.
-      - name: Remove App Store Connect API private key
-        if: always()
-        run: rm -f "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
+          export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
+          export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
+          export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
+          asc workflow run asset_pack_upload \
+            APP_ID:"$ASC_APP_ID" \
+            ASSET_PACK_ID:"$IOS_BACKGROUND_ASSET_PACK_ID" \
+            ARCHIVE_PATH:"$archive_path"
