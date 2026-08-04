@@ -115,6 +115,51 @@ void main() {
       expect(tile.overscaleFactor, 8);
     });
 
+    test('camera.zoomがminZoom未満なら overscaledZ/canonical.z は minZoomへ '
+        'clampされる(overscaleFactorは1のまま)', () {
+      // 東京(139.767, 35.681)、camera.zoom=1、minZoom=3、maxZoom=10。
+      // normalized center: x=0.8882416666..., y=0.3937788146...(前testと同じ)。
+      // floor(1)=1 < minZoom(3)なので、overscaledZはminZoomの3へ引き上がる。
+      // 3 <= maxZoom(10)なのでcanonicalZも3のまま(overscaleFactor=1、
+      // overscale状態にはならない)。tileGridSize=8。
+      // worldSize=2^1*512=1024。viewport 128x128 -> half=64px
+      //   -> halfNormalized=64/1024=0.0625
+      // corner x範囲=[0.8257416..,0.9507416..] -> x*8=[6.6059..,7.6059..]
+      //   -> floor(x*8)は6,7の2列。
+      // corner y範囲=[0.3312788..,0.4562788..] -> y*8=[2.6502..,3.6502..]
+      //   -> floor(y*8)は2,3の2行。
+      // -> (z=3, x∈{6,7}, y∈{2,3})の4枚、いずれもoverscaledZ=3。
+      const camera = MapCamera(
+        centerLongitude: 139.767,
+        centerLatitude: 35.681,
+        zoom: 1,
+      );
+      final viewport = MapViewport(
+        logicalSize: const Size(128, 128),
+        devicePixelRatio: 1,
+      );
+
+      final tiles = TileCoverCalculator.cover(
+        camera: camera,
+        viewport: viewport,
+        minZoom: 3,
+        maxZoom: 10,
+      );
+
+      expect(
+        tiles.toSet(),
+        {
+          for (final x in [6, 7])
+            for (final y in [2, 3])
+              _overscaledTileId(z: 3, overscaledZ: 3, wrap: 0, x: x, y: y),
+        },
+      );
+      // clampされた結果、overscaleは発生していないことを明示的に確認する。
+      for (final tile in tiles) {
+        expect(tile.overscaleFactor, 1);
+      }
+    });
+
     test('viewportのaspect比が違うと覆うtile矩形の向きも変わる', () {
       // camera: (lng=10, lat=5)、zoom=2(整数)。
       // normalized center: x=(10+180)/360=0.52777777..、
@@ -223,6 +268,96 @@ void main() {
       );
       // wrapを0で決め打ちしていないことを明示的に確認する。
       expect(tiles.any((tile) => tile.wrap == 1), isTrue);
+    });
+
+    test('date lineを西向きに跨ぐ場合はwrapが負になる(東向きtestと対称)', () {
+      // 前testを東西反転したもの。camera: (lng=-179, lat=0)、zoom=2(整数)。
+      // normalized center: x=(-179+180)/360=0.00277777.., y=0.5(緯度0)。
+      // worldSize=2048。tileGridSize=4。viewport 1024x200:
+      //   half=(512,100)px -> halfNormalized=(0.25, 0.048828125)
+      //   x範囲=[-0.247222..,0.252777..] -> x*4の範囲=[-0.9888..,1.0111..]
+      //     -> floor(x*4): -1,0,1。rawX=-1は負なので、Dartの`%`
+      //     (Euclidean modulo)により canonicalX = -1 % 4 = 3、
+      //     wrap = (-1 - 3) / 4 = -1へ畳み込まれる。
+      //   y範囲=[0.451171..,0.548828..] -> y*4の範囲=[1.8046..,2.1953..]
+      //     -> floor(y*4)は1..2の2行。
+      //   -> (wrap=-1,x=3,y=1..2)の2枚 + (wrap=0,x∈{0,1},y=1..2)の4枚。
+      const camera = MapCamera(
+        centerLongitude: -179,
+        centerLatitude: 0,
+        zoom: 2,
+      );
+      final viewport = MapViewport(
+        logicalSize: const Size(1024, 200),
+        devicePixelRatio: 1,
+      );
+
+      final tiles = TileCoverCalculator.cover(
+        camera: camera,
+        viewport: viewport,
+        minZoom: 0,
+        maxZoom: 10,
+      );
+
+      expect(
+        tiles.toSet(),
+        {
+          for (final y in [1, 2])
+            _overscaledTileId(z: 2, overscaledZ: 2, wrap: -1, x: 3, y: y),
+          for (final x in [0, 1])
+            for (final y in [1, 2])
+              _overscaledTileId(z: 2, overscaledZ: 2, wrap: 0, x: x, y: y),
+        },
+      );
+      // wrapが負にもなり得ることを明示的に確認する
+      // (`%`を`.remainder()`へ書き換える回帰を検知する)。
+      expect(tiles.any((tile) => tile.wrap == -1), isTrue);
+    });
+
+    test('camera中心から距離の異なる複数tileを距離昇順で返す(タイブレークなし)', () {
+      // camera: (lng=-40.5, lat=-17.71101441658224)、zoom=3(整数)。
+      // このlat/lngは、normalized座標がちょうど(cx,cy)=(0.3875,0.55)になる
+      // よう、Mercatorのy式を逆算(latRad=2*atan(exp(pi*(1-2y)))-pi/2)して
+      // 求めたもの。
+      // worldSize=2^3*512=4096。viewport 1024x1024(正方形) -> half=512px
+      //   -> halfNormalized=512/4096=0.125
+      // corner x範囲=[0.2625,0.5125]、corner y範囲=[0.425,0.675]。
+      // tileGridSize=2^3=8。x*8=[2.1,4.1]->floor(x*8)は2,3,4。
+      // y*8=[3.4,5.4]->floor(y*8)は3,4,5。-> 3x3=9枚。
+      // cameraGrid=(cx*8,cy*8)=(3.1,4.4)。各tile中心(x+0.5,y+0.5)との
+      // 距離の2乗を計算すると、9枚とも異なる値になる(tie無し)。近い順:
+      //   (3,4):0.17 < (2,4):0.37 < (3,3):0.97 < (2,3):1.17 < (3,5):1.37
+      //   < (2,5):1.57 < (4,4):1.97 < (4,3):2.77 < (4,5):3.17
+      // (計算はPython scriptで独立に検証済み。実装のloop/sortを test側へ
+      // 書き写したものではない)。
+      const camera = MapCamera(
+        centerLongitude: -40.5,
+        centerLatitude: -17.71101441658224,
+        zoom: 3,
+      );
+      final viewport = MapViewport(
+        logicalSize: const Size(1024, 1024),
+        devicePixelRatio: 1,
+      );
+
+      final tiles = TileCoverCalculator.cover(
+        camera: camera,
+        viewport: viewport,
+        minZoom: 0,
+        maxZoom: 10,
+      );
+
+      expect(tiles, [
+        _overscaledTileId(z: 3, overscaledZ: 3, wrap: 0, x: 3, y: 4),
+        _overscaledTileId(z: 3, overscaledZ: 3, wrap: 0, x: 2, y: 4),
+        _overscaledTileId(z: 3, overscaledZ: 3, wrap: 0, x: 3, y: 3),
+        _overscaledTileId(z: 3, overscaledZ: 3, wrap: 0, x: 2, y: 3),
+        _overscaledTileId(z: 3, overscaledZ: 3, wrap: 0, x: 3, y: 5),
+        _overscaledTileId(z: 3, overscaledZ: 3, wrap: 0, x: 2, y: 5),
+        _overscaledTileId(z: 3, overscaledZ: 3, wrap: 0, x: 4, y: 4),
+        _overscaledTileId(z: 3, overscaledZ: 3, wrap: 0, x: 4, y: 3),
+        _overscaledTileId(z: 3, overscaledZ: 3, wrap: 0, x: 4, y: 5),
+      ]);
     });
 
     test('camera中心からの距離昇順にsortし、同距離はwrap/x/yの昇順で安定させる', () {
