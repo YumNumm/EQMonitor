@@ -94,11 +94,8 @@ jobs:
           cache: false
           install_args: "flutter xcbeautify"
 
-      - name: Verify pinned Flutter SDK
-        run: mise exec -- flutter --version --machine
-
       - name: Precache Flutter iOS artifacts
-        run: mise exec -- flutter precache --ios
+        run: flutter precache --ios
 
       - name: Set environment variables
         run: |
@@ -115,11 +112,11 @@ jobs:
 
       - name: Enable Swift Package Manager
         run: |
-          mise exec -- flutter config --enable-swift-package-manager
+          flutter config --enable-swift-package-manager
 
       - name: Resolve dependencies
         working-directory: app
-        run: mise exec -- flutter pub get --enforce-lockfile
+        run: flutter pub get --enforce-lockfile
 
       # AppIntent/Widget Bundle Resources need a slim jma_code_table.json.
       # Full parameters stay on Managed Background Assets at runtime.
@@ -150,7 +147,7 @@ jobs:
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
-          mise exec -- flutter build ios --config-only \
+          flutter build ios --config-only \
             --no-codesign \
             --no-pub \
             --build-number=${{ github.run_number }} \
@@ -205,17 +202,9 @@ jobs:
             grep -n -E 'Sandbox: |deny\(1\)|Command PhaseScriptExecution failed' \
               /tmp/xcodebuild-archive.log || true
             echo "::endgroup::"
-            echo "::error::xcodebuild archive failed. See raw log artifact."
+            echo "::error::xcodebuild archive failed. See the extracted error sections above."
             exit 1
           fi
-
-      - name: Upload xcodebuild raw log
-        if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: xcodebuild-archive-log
-          path: /tmp/xcodebuild-archive.log
-          retention-days: 7
 
       # 埋め込みフレームワークとアプリを ad-hoc 署名。export 時に Distribution 証明書で上書きされる。
       - name: Embed entitlements and ad-hoc sign
@@ -297,14 +286,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      # https://github.com/maxim-lobanov/setup-xcode
-      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
-        with:
-          xcode-version: ${{ env.XCODE_VERSION }}
-
-      - name: Show Xcode version
-        run: xcodebuild -version
-
       # https://github.com/actions/download-artifact
       - name: Download ipa
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
@@ -323,9 +304,11 @@ jobs:
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
         uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
           cache: false
-          install_args: "xcbeautify yq node pnpm"
+          install_args: '"github:rorkai/App-Store-Connect-CLI"'
 
       - name: Set environment variables
         run: |
@@ -335,41 +318,35 @@ jobs:
             echo "::add-mask::${mask_value}"
           done
 
-      - name: Extract App Store Connect API Key
+      - name: Publish to TestFlight
+        env:
+          ASC_APP_ID: "6447546703"
+          ASC_BETA_GROUP_ID: bd75f066-fd92-4175-b2d6-f34952737557
+          ASC_BYPASS_KEYCHAIN: "1"
+          DEPLOY_IOS_EXTERNAL: ${{ needs.define-matrix.outputs.deploy-ios-external }}
         run: |
-          mkdir -p "$HOME/.private_keys"
-          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
-            > "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
-
-      - name: Upload Ipa to App Store Connect
-        run: |
-          xcrun altool \
-            --upload-app \
-            -f build/EQMonitor.ipa \
-            --type ios \
-            --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID" \
-            --apiKey "$APP_STORE_CONNECT_API_KEY_ID"
-
-      - name: Distribute to TestFlight external group
-        if: ${{ needs.define-matrix.outputs.deploy-ios-external == 'true' }}
-        run: |
-          # アップロードした IPA の実際の CFBundleVersion を取得して照会する。
-          # 最終的なビルド番号は github.run_number ではなくプロジェクト側の
-          # 採番（連番）に従うため、run_number で filter すると見つからない。
-          UNZIP_DIR=$(mktemp -d)
-          unzip -q build/EQMonitor.ipa -d "$UNZIP_DIR"
-          INFO_PLIST=$(ls "$UNZIP_DIR"/Payload/*.app/Info.plist)
-          BUILD_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$INFO_PLIST")
-          echo "CFBundleVersion=${BUILD_VERSION}"
           export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
           export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
-          export ASC_KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
-          export ASC_APP_ID="6447546703"
-          export ASC_BUILD_VERSION="${BUILD_VERSION}"
-          export ASC_BETA_GROUP_ID="bd75f066-fd92-4175-b2d6-f34952737557"
-          export ASC_LOCALE="ja"
-          pnpm -C scripts/testflight install --frozen-lockfile
-          pnpm -C scripts/testflight run distribute
+          export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
+          if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
+            TEST_NOTES="$(scripts/ci/testflight_test_notes.sh)"
+            asc publish testflight \
+              --app "$ASC_APP_ID" \
+              --ipa build/EQMonitor.ipa \
+              --group "$ASC_BETA_GROUP_ID" \
+              --test-notes "$TEST_NOTES" \
+              --locale ja \
+              --wait \
+              --submit --confirm \
+              --timeout 30m \
+              --output json
+          else
+            # asc 3.4.1 の publish testflight は --group 必須のため、アップロードのみの経路では builds upload を使う
+            asc builds upload \
+              --app "$ASC_APP_ID" \
+              --ipa build/EQMonitor.ipa \
+              --output json
+          fi
 
   deploy-ios-firebase-app-distribution:
     name: Deploy iOS (Firebase App Distribution)
@@ -494,11 +471,8 @@ jobs:
           cache: false
           install_args: "flutter java uv python pipx:codemagic-cli-tools"
 
-      - name: Verify pinned Flutter SDK
-        run: mise exec -- flutter --version --machine
-
       - name: Precache Flutter Android artifacts
-        run: mise exec -- flutter precache --android
+        run: flutter precache --android
 
       - name: Set environment variables
         run: |
@@ -509,11 +483,11 @@ jobs:
           done
 
       - name: Accept Android License
-        run: yes | mise exec -- flutter doctor --android-licenses
+        run: yes | flutter doctor --android-licenses
 
       - name: Resolve dependencies
         working-directory: app
-        run: mise exec -- flutter pub get --enforce-lockfile
+        run: flutter pub get --enforce-lockfile
 
       # Play Asset Delivery install-time pack contents are not committed.
       # Stage the latest asset-pack-v* Release from eqmonitor-backend into the
@@ -560,7 +534,7 @@ jobs:
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
-          mise exec -- flutter build appbundle \
+          flutter build appbundle \
             --release \
             --no-pub \
             --build-number="${BUILD_NUMBER}" \

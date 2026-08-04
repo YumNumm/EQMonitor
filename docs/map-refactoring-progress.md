@@ -85,15 +85,15 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 
 ### maplibre 0.3.0 API の重要なポイント
 
-1. **Geographic クラス**
+1. Geographic クラス
    - パラメータ名: `lon` (longitude), `lat` (latitude)
    - 例: `Geographic(lon: 139.0, lat: 35.0)`
 
-2. **LngLatBounds クラス**
+2. LngLatBounds クラス
    - パラメータ名: `longitudeWest`, `longitudeEast`, `latitudeSouth`, `latitudeNorth`
    - `fromPoints()` ファクトリメソッドも利用可能
 
-3. **Feature<Point> クラス**
+3. Feature<Point> クラス
    - `geometry`: `Point(Geographic(...))`
    - `properties`: Map<String, dynamic> で任意のプロパティを付加
 
@@ -202,14 +202,14 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 - 警告: 他ファイルのunused importのみ（本機能には影響なし）
 - HookConsumerWidget ベースで実装
 - dynamic 型の使用なし
-- 適切な型付けと null safety
+- 明示的な型注釈と null safety の徹底
 - 宣言的APIの最大限活用
 
 ## 今後の改善点
 
 - EEW震源アイコンの追加（現在は赤い円で表示）
 - 震源の点滅アニメーション追加
-- パフォーマンス最適化（必要に応じて）
+- パフォーマンス最適化
 - エラーハンドリングの強化
 
 ## コミット履歴
@@ -247,7 +247,7 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 ### 2025-10-28 (Commit 5): コード品質改善とdynamic排除
 
 - unused import/variableを削除
-- dynamic型を適切な型に置き換え
+- dynamic型を明示的な型に置き換え
 - IntensityColorModelの型を明示
 - EewV1の型を明示
 - ファイル末尾の改行を追加

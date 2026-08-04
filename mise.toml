@@ -2,6 +2,7 @@ min_version = "2026.08.0"
 
 [plugins]
 flutter = "https://github.com/YumNumm/mise-flutter.git"
+gcloud = "https://github.com/jthegedus/asdf-gcloud"
 
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"
@@ -30,6 +31,8 @@ gitleaks = "latest"
 claude = "latest"
 swift = "latest"
 flutter = "4dacd3fc91d96262a33e5c598e17d816f0b35641"
+# リリースアセットが asc_<version>_<os>_<arch> という素のバイナリ名のため rename が必要
+"github:rorkai/App-Store-Connect-CLI" = { version = "latest", rename_exe = "asc" }
 
 [settings]
 lockfile = true

@@ -167,7 +167,7 @@ async deleteLiveActivityUpdateToken(eventId, deviceId, liveActivityId): Promise<
 
 **変更**: `backend/api/api/src/features/device/routes/live-activity.ts`
 
-`PUT /:liveActivityId/token` handler — PostgreSQL 更新後に:
+`PUT /:liveActivityId/token` handler は、PostgreSQL 更新後に次を実行する。
 ```
 HSET la:update:{eventId} {deviceId}:{liveActivityId} {token}
 EXPIRE la:update:{eventId} 1800
@@ -234,10 +234,10 @@ export class LiveActivityEndScheduler {
 
 ## 検証方法
 
-1. **update token 収集**: 実機 iOS で pushToStart で Live Activity が起動されたあと、`[Debug] LA Token Updated` 通知が出ることを確認（debugMode 有効時）
-2. **サーバ同期**: `PUT /v2/device/{id}/live-activity/{laId}/token` が呼ばれ、サーバログに update token が記録されることを確認
-3. **Valkey 確認**: `redis-cli hgetall "la:update:{eventId}"` でトークンが格納されていることを確認
-4. **EEW 終了遅延**: EEW 最終報受信から 3 分後に Live Activity が自動終了することを確認
-5. **揺れ検知 Live Activity**: 揺れ検知イベント受信で Live Activity が起動・更新・終了することを確認
-6. **App Groups**: Widget Extension が App Groups UserDefaults から API URL を読み取って正しいエンドポイントに接続することを確認
-7. **型ミラーの動作検証**: 実機で `Activity<EewLiveActivityAttributes>.activityUpdates` に pushToStart で起動した activity が流れることを確認（失敗時は SPM 共有パッケージ方式に切り替え）
+1. update token 収集: 実機 iOS で pushToStart で Live Activity が起動されたあと、`[Debug] LA Token Updated` 通知が出ることを確認（debugMode 有効時）
+2. サーバ同期: `PUT /v2/device/{id}/live-activity/{laId}/token` が呼ばれ、サーバログに update token が記録されることを確認
+3. Valkey 確認: `redis-cli hgetall "la:update:{eventId}"` でトークンが格納されていることを確認
+4. EEW 終了遅延: EEW 最終報受信から 3 分後に Live Activity が自動終了することを確認
+5. 揺れ検知 Live Activity: 揺れ検知イベント受信で Live Activity が起動・更新・終了することを確認
+6. App Groups: Widget Extension が App Groups UserDefaults から API URL を読み取って正しいエンドポイントに接続することを確認
+7. 型ミラーの動作検証: 実機で `Activity<EewLiveActivityAttributes>.activityUpdates` に pushToStart で起動した activity が流れることを確認（失敗時は SPM 共有パッケージ方式に切り替え）

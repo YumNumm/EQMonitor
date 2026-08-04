@@ -84,7 +84,7 @@ prominent disclosureを要求する。
   - 上部の「2. 位置情報権限」セクション見出し直下にも
     `EQMonitorにおける位置情報の扱い方` という詳細リンクがある
     (`permissions_step_page.dart:82-101`)。
-- **問題点**: この詳細リンク(`位置情報の扱い方`)と各カードの`詳しい情報`リンクは、
+- 問題点: この詳細リンク(`位置情報の扱い方`)と各カードの`詳しい情報`リンクは、
   `OnboardingWebViewRoute` で **`https://example.com` を開く仮実装** になっている
   (`permissions_step_page.dart:6,18-22,94-97,112-113`。設計意図は
   `docs/superpowers/specs/2026-07-08-onboarding-permissions-redesign.md:20,25,100-152`

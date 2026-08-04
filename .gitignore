@@ -195,3 +195,6 @@ app/assets/platform/map/
 app/assets/platform/parameters/
 app/assets/platform/manifest.json
 app/assets/platform/**/*.pmtiles
+
+# asc workflow run state
+.asc/runs/
