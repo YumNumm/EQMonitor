@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_orthographic_projection.dart';
-import 'package:eqmonitor_map/src/renderer/eqmonitor_orthographic_projection.dart';
+import 'package:eqmonitor_map/src/flutter_scene/scene_spike_camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -19,7 +18,7 @@ class BaseMapMaterialPreflightView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final sceneGraph = useMemoized(scene.Scene.new);
-    final camera = useMemoized(_createCamera);
+    final camera = useMemoized(() => createSceneSpikeCameraSetup().camera);
     final failure = useState<Object?>(null);
     final isMaterialReady = useState(false);
 
@@ -98,28 +97,6 @@ class _PreflightStatusCard extends StatelessWidget {
       ..add(DiagnosticsProperty<Object?>('failure', failure))
       ..add(DiagnosticsProperty<bool>('isMaterialReady', isMaterialReady));
   }
-}
-
-scene.NodeCamera _createCamera() {
-  const worldHalfHeight = 1.2;
-  // cameraは描画面から離れて立つため、depth範囲がその距離を超えないと
-  // 三角形がラスタライズ前にクリップされる。
-  const cameraStandoff = 2.0;
-  return scene.NodeCamera(
-    scene.Node(
-      localTransform: scene_math.Matrix4.translationValues(
-        0,
-        0,
-        -cameraStandoff,
-      ),
-    ),
-    FlutterSceneOrthographicProjection(
-      projection: EqmonitorOrthographicProjection(
-        worldHalfHeight: worldHalfHeight,
-        depthHalfExtent: cameraStandoff + worldHalfHeight,
-      ),
-    ),
-  );
 }
 
 Future<void> _initialize({required scene.Scene sceneGraph}) async {
