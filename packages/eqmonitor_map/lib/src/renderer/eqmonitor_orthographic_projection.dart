@@ -1,5 +1,10 @@
 import 'package:vector_math/vector_math_64.dart';
 
+/// bearing/pitch非対応の正射影行列を組み立てる。spikeのプレビュー描画
+/// (`createSceneSpikeCameraSetup`)と、地図cameraの`View * Projection`合成
+/// (`viewProjectionMatrixFor`、`geo/tile_matrix.dart`)の両方がこのクラスを
+/// 共有する。responsibilityが同じ(worldHalfHeightとdepthHalfExtentから
+/// 正射影行列を作る)ため、地図用に別の投影実装を新設していない。
 class EqmonitorOrthographicProjection {
   factory EqmonitorOrthographicProjection({
     required double worldHalfHeight,
