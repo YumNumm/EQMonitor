@@ -1,0 +1,25 @@
+node_modules/**
+backend/**
+.claude/**
+.git/**
+CHANGELOG.md
+**/CHANGELOG.md
+
+# TODO(textlint): 大量の指摘が残る内部向け成果物。段階的に対応する。
+# https://github.com/YumNumm/EQMonitor/pull/ に記載の導入PR参照。
+docs/superpowers/**
+docs/todo/**
+docs/knowledge/**
+docs/deferred/**
+docs/design/**
+.agents/**
+.cursor/**
+.codex/**
+.config/**
+.superpowers/**
+.github/copilot-instructions.md
+packages/**/README.md
+packages/**/benchmarks.md
+app/android/fastlane/README.md
+app/lib/**/README.md
+utils/**/README.md

@@ -16,7 +16,7 @@ EQMonitorの開発に興味を持って頂きありがとうございます!
   - バグやtypoの修正やコードのリファクタリングを行う
 - EQMonitorアプリから寄付する
   - サーバの運用経費や開発に関わる諸経費に利用させて頂きます
-- **EQMonitorを利用する**
+- EQMonitorを利用する
   - 最大の励みになります
 
 > [!NOTE]
@@ -42,7 +42,7 @@ You are welcome to create an Issue or Pull Request for any reason🤗
   - To fix bugs or typos or refactor code
 - Donate to EQMonitor app
   - To cover the costs of running the server and development
-- **Use EQMonitor**
+- Use EQMonitor
   - To be the biggest motivation
 
 > [!NOTE]

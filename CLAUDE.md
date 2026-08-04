@@ -80,14 +80,14 @@ scripts/               # Utility scripts
 
 ### Flutter App Stack
 
-- **State Management**: Riverpod + Flutter Hooks
-- **HTTP**: Dio + Retrofit (code-generated)
-- **Serialization**: Freezed + json_serializable
-- **Maps**: MapLibre (flutter-maplibre)
-- **Push Notifications**: Firebase Cloud Messaging + Local Notifications
-- **Auth**: Google Sign-In + Firebase
-- **Monitoring**: Firebase Analytics + Crashlytics
-- **Updates**: Shorebird (OTA), Upgrader
+- State management: Riverpod + Flutter Hooks
+- HTTP: Dio + Retrofit (code-generated)
+- Serialization: Freezed + json_serializable
+- Maps: MapLibre (flutter-maplibre)
+- Push notifications: Firebase Cloud Messaging + Local Notifications
+- Auth: Google Sign-In + Firebase
+- Monitoring: Firebase Analytics + Crashlytics
+- Updates: Shorebird (OTA), Upgrader
 
 ### Code Generation
 
@@ -95,16 +95,16 @@ Generated files (`*.g.dart`, `*.freezed.dart`) are committed. Run `melos run gen
 
 ## Code Style
 
-- **Dart**: `dart analyze` must pass (no warnings). Follow existing Riverpod patterns.
-- **Formatting**: `dart format` (enforced by CI).
-- **Imports**: Use package imports (not relative) for cross-package dependencies.
+- Dart: `dart analyze` must pass (no warnings). Follow existing Riverpod patterns.
+- Formatting: `dart format` (enforced by CI).
+- Imports: Use package imports (not relative) for cross-package dependencies.
 
 ## CI/CD
 
-- **flutter.yaml** — `dart analyze` + unit tests on PR and merge_group
-- **deploy-app.yaml** — iOS/Android builds on push to `develop` (macos-26, Xcode 26.6)
-- **flutter-auto-fix.yaml** — Auto-format on PR
-- **actionlint.yaml** — GitHub Actions syntax validation
+- `flutter.yaml` — `dart analyze` + unit tests on PR and merge_group
+- `deploy-app.yaml` — iOS/Android builds on push to `develop` (macos-26, Xcode 26.6)
+- `flutter-auto-fix.yaml` — Auto-format on PR
+- `actionlint.yaml` — GitHub Actions syntax validation
 
 ## Pre-commit Hooks (hk)
 

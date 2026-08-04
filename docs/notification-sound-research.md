@@ -40,7 +40,7 @@ Apple Push Notification Service の `aps.sound` は 2 形式をサポートす�
 
 ### 1.3 バックエンド (Push Server) の処理
 
-`NotificationParserLegacy.swift` より：
+`NotificationParserLegacy.swift` の該当箇所は以下のとおりである。
 
 ```swift
 if let sound = data["sound"] {
@@ -67,14 +67,14 @@ HA iOS の Service Extension は特別な処理を行っていない。サウン
 
 ### 2.1 通知の種類
 
-- **EEW（緊急地震速報）**: `eew_warning` / `eew_forecast` チャンネル
-- **地震情報**: `VXSE51` 〜 `VYSE52` の複数チャンネル
-- **揺れ検知**: Shake Detection
-- **一般**: 津波、訓練報
+- EEW（緊急地震速報）: `eew_warning` / `eew_forecast` チャンネル
+- 地震情報: `VXSE51` 〜 `VYSE52` の複数チャンネル
+- 揺れ検知: Shake Detection
+- 一般: 津波、訓練報
 
 ### 2.2 バックエンド API（既存）
 
-`NotificationTiers2` / `NotificationTiers3` / `NotificationTiers4` にすでに `sound` フィールドが存在する：
+`NotificationTiers2` / `NotificationTiers3` / `NotificationTiers4` には、すでに `sound` フィールドが次のように存在する。
 
 ```dart
 // 例: EewSettingsRequest の notification_tiers[]
@@ -110,7 +110,7 @@ iOS/Android ともに独自の通知音ファイルは**存在しない**。`'de
   → 音声再生
 ```
 
-UI 側は：
+UI 側は次の手順で処理する。
 1. ユーザーが利用可能なサウンドの一覧を表示（bundled / imported / system）
 2. 選択したファイル名を通知設定としてバックエンドに送信
 3. バックエンドが APNs ペイロードの `aps.sound` に埋め込む

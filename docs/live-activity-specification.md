@@ -82,7 +82,7 @@ type ShakeDetectionLevel =
 
 #### 検知方法フラグ
 
-緊急地震速報には複数の検知方法があり、それぞれ以下のフラグで判定します：
+緊急地震速報には複数の検知方法があり、それぞれ以下のフラグで判定する。
 
 | フラグ | 説明 | 判定条件 |
 |--------|------|----------|
@@ -111,13 +111,13 @@ type ShakeDetectionLevel =
 
 #### headline生成ルール
 
-`headline`フィールドはサーバ側で以下のルールに従って生成します：
+`headline`フィールドはサーバ側で以下のルールに従って生成する。
 
-1. **基本文言の決定**
+1. 基本文言の決定
    - `hypocenterReduceName`（短縮震源名）がある場合：「{hypocenterReduceName}で地震」
    - ない場合：「地震発生」
 
-2. **強い揺れの追記（警報時のみ）**
+2. 強い揺れの追記（警報時のみ）
    - `zones`（警報対象地域）が1件以上ある場合：基本文言 + 「 で強い揺れ」
    - `zones`が0件または存在しない場合：基本文言のみ
 
@@ -732,7 +732,7 @@ Widget Extension内でLive Activity用のAttributesを定義します。**EEWと
 
 #### attributes-typeの指定
 
-APNsペイロードの`attributes-type`フィールドで、使用するAttributesを指定します：
+APNsペイロードの`attributes-type`フィールドで、使用するAttributesを次のように指定する。
 
 | Live Activityの種類 | attributes-type |
 |---------------------|-----------------|

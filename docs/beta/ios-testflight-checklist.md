@@ -166,7 +166,7 @@ Runner本体が `16.0`、`Widget` / `AppIntentExtension` は `26.0`(**今回変�
 
 ### 5.1 iOS 16 / 17 / 18 端末 — 本体アプリ確認
 
-各バージョンの実機(またはApple Developer PortalのTestFlightで対象端末を用意)で:
+各バージョンの実機(またはApple Developer PortalのTestFlightで対象端末を用意)で、次を確認する。
 
 - [ ] TestFlightからインストールでき、初回起動でクラッシュしない
 - [ ] Push通知の許可ダイアログが表示され、許可後に通知が届く(Critical Alert / Time Sensitiveを含む通知がある場合は種別も確認)

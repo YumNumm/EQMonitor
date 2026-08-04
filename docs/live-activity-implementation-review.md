@@ -73,7 +73,7 @@
 | 3 | Flutter 側 `notificationTokenStreamProvider` がトークンを収集 | `app/lib/feature/settings/features/notification/data/provider/notification_token_stream.dart` |
 | 4 | `DeviceRepository.syncPushTokens()` が `PATCH /v2/device/{id}/apns/liveActivityStart` を呼び出し | `app/lib/feature/devices/data/repository/device_repository.dart:182` |
 
-> **注意**: `EQMLiveActivityUtil` は `Activity<MockLiveActivityAttributes>` からトークンを取得しているが、APNs Push-to-Start トークンは App 単位で共通なためこれで正しく動作する。
+> 注意: `EQMLiveActivityUtil` は `Activity<MockLiveActivityAttributes>` からトークンを取得しているが、APNs Push-to-Start トークンは App 単位で共通なためこれで正しく動作する。
 
 ### 2.2 EEW serialNo==1 受信時（バックエンド）
 
@@ -146,7 +146,7 @@ API 側 (`backend/api/api/src/features/device/routes/live-activity.ts`) の処�
 
 ### 3.2 サーバ側での更新報処理（update token は未使用）
 
-**重要**: serialNo > 1 のEEW更新・揺れ検知更新では、update token は使わず APNs Broadcast チャンネルを使用する。
+重要: serialNo > 1 のEEW更新・揺れ検知更新では、update token は使わず APNs Broadcast チャンネルを使用する。
 
 ```text
 DB の live_activity_update_token テーブル
@@ -263,7 +263,7 @@ broadcast update/end も同様に `apnsChannelId: 'shake.all'` としており�
 `live_activity_update_token` テーブルおよび Valkey の `la:update:*` キーは、
 Broadcast 方式移行後に廃止予定とドキュメントには書かれているが、実際には書き込みのみが残っている状態。
 
-Broadcast 方式が正式に採用されているなら、以下を整理すべき:
+Broadcast 方式が正式に採用されているなら、以下を整理する。
 
 1. `PUT .../live-activity/{laId}/token` API エンドポイントを廃止
 2. `live_activity_update_token` テーブルを廃止
