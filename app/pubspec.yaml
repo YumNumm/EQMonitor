@@ -77,6 +77,8 @@ dependencies:
     path: ../packages/earthquake_replay
   eqmonitor_api:
     path: ../packages/eqmonitor_api
+  eqmonitor_map:
+    path: ../packages/eqmonitor_map
   eqmonitor_websocket:
     path: ../packages/eqmonitor_websocket
   extensions:

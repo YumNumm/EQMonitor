@@ -650,6 +650,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugJmaMapRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'eqmonitor-map',
+          factory: $EqmonitorMapDebugRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'playground',
           factory: $PlaygroundRoute._fromState,
         ),
@@ -1327,6 +1331,27 @@ mixin $DebugJmaMapRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/jma-map');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $EqmonitorMapDebugRoute on GoRouteData {
+  static EqmonitorMapDebugRoute _fromState(GoRouterState state) =>
+      const EqmonitorMapDebugRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/eqmonitor-map');
 
   @override
   void go(BuildContext context) => context.go(location);

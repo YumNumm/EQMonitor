@@ -5,9 +5,24 @@ EQMonitor専用のFlutter地図レンダラーです。
 Flutter SceneをGPU描画基盤としてPMTiles/MVTの地物を描画し、ラベルはasset内の1つの地理anchorから、実測文字サイズとDPRに応じたscreen placement候補を生成してFlutterの`TextPainter`で描画します。MapLibre Style JSON互換ではなく、型付きの宣言的`MapNode`ツリーを利用します。
 
 > [!WARNING]
-> 現在はFlutter Sceneのscaffoldとmanual smoke用exampleまでです。
-> このLinux環境ではiOS/Android実機のprofile/release確認を実施して
-> いません。未実施の実機確認はrenderer foundation実装の開始条件にしません。
+> 現在はFlutter Sceneのscaffold、manual smoke用example、そしてappのデバッグページから
+> package同梱`.fmat`のdata assetが解決できることを確認するpreflight描画までです。
+> ベースレイヤーのFill/Line描画、tile pipeline、camera操作はまだ実装していません。
+> iOS/Android実機のprofile/release確認は実施していません。未実施の実機確認は
+> renderer foundation実装の開始条件にしません。
+
+## appからの利用
+
+`app`は`eqmonitor_map`へ依存し、デバッグページ「EQMonitor Map (Flutter Scene)」から
+`BaseMapMaterialPreflightView`を表示します。この画面はFlutter Sceneのstatic resource初期化と
+`assets/base_map_fill.fmat`のdata asset解決だけを確認するもので、地図を描画しません。
+ベースレイヤー描画は[`docs/superpowers/plans/2026-08-05-eqmonitor-map-base-layer-pmtiles.md`](../../docs/superpowers/plans/2026-08-05-eqmonitor-map-base-layer-pmtiles.md)
+のTask 8とTask 10で実装します。
+
+`.fmat`はpackage rootの`hook/build.dart`がDart Data Assetとして生成します。実行前に
+マシンごとに一度`mise exec -- flutter config --enable-dart-data-assets`が必要です。未設定だと
+`Scene.initializeStaticResources()`が失敗し`Flutter Scene is not ready to render.`が出続けます。
+詳細は[`docs/knowledge/20260803_flutter_scene_dart_data_assets.md`](../../docs/knowledge/20260803_flutter_scene_dart_data_assets.md)を参照してください。
 
 ## 初期スコープ
 
