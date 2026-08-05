@@ -11,6 +11,9 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 const _limits = PmTilesV3Limits(
   maxDirectoryDepth: 3,
   rootDirectoryWindowLength: 16384,
+  // seismicityデータのproducer契約はclustered orderingとtile件数の一致を
+  // 保証しているため、archive全体のeager検証を明示的に有効化し続ける。
+  validateEntireArchiveEagerly: true,
 );
 
 abstract interface class SeismicityPmTilesArchive {

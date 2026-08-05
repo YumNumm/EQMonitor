@@ -89,11 +89,18 @@ final class PmTilesV3ArchiveOpener {
         validator: validator,
         maxDirectoryDepth: limits.maxDirectoryDepth,
       );
-      await traversal.validateArchive(
-        entries: rootEntries,
-        upperTileIdExclusive: archiveUpperTileIdExclusive,
-        clustered: header.clustered,
-      );
+      // 設計正本(docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md
+      // :210)は、runtimeがarchive全体をscanしてglobal coverageや件数を
+      // 再検証するとはしないと定めている。archive全体のeagerな検証は
+      // producer契約がclustered orderingと件数一致を保証する呼び出し側
+      // (`limits.validateEntireArchiveEagerly`)だけが明示的に有効化する。
+      if (limits.validateEntireArchiveEagerly) {
+        await traversal.validateArchive(
+          entries: rootEntries,
+          upperTileIdExclusive: archiveUpperTileIdExclusive,
+          clustered: header.clustered,
+        );
+      }
       return _PmTilesV3ArchiveImpl(
         reader: reader,
         header: header,

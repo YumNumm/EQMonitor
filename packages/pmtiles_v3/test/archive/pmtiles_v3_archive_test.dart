@@ -6,9 +6,14 @@ import 'package:test/test.dart';
 
 import '../support/pmtiles_v3_fixture_builder.dart';
 
+// このファイルの大半のテストは、archive全体をeagerに走査したときの
+// directory木・clustered orderingの検証を確かめるものなので、
+// `openFixture`はeager検証を明示的に有効化する。既定(無効)側の挙動は
+// 別途「既定ではarchive全体を検証しない」テストで固定する。
 const _limits = PmTilesV3Limits(
   maxDirectoryDepth: 3,
   rootDirectoryWindowLength: 16384,
+  validateEntireArchiveEagerly: true,
 );
 
 void main() {
@@ -172,31 +177,72 @@ void main() {
     expect(invalidReader._closeCalls, 1);
   });
 
-  test('honors a caller-supplied directory depth limit', () async {
-    final fixture = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureLeaf(
-          tileId: 5,
-          entries: [
-            PmTilesV3FixtureTile(tileId: 5, bytes: [3]),
-          ],
-        ),
-      ],
-      minZoom: 2,
-    );
-    final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+  test(
+    'honors a caller-supplied directory depth limit when eagerly '
+    'validated',
+    () async {
+      final fixture = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureLeaf(
+            tileId: 5,
+            entries: [
+              PmTilesV3FixtureTile(tileId: 5, bytes: [3]),
+            ],
+          ),
+        ],
+        minZoom: 2,
+      );
+      final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
 
-    await expectLater(
-      PmTilesV3Archive.open(
+      await expectLater(
+        PmTilesV3Archive.open(
+          reader: reader,
+          limits: const PmTilesV3Limits(
+            maxDirectoryDepth: 1,
+            rootDirectoryWindowLength: 16384,
+            validateEntireArchiveEagerly: true,
+          ),
+        ),
+        throwsA(isA<PmTilesV3CorruptArchiveException>()),
+      );
+    },
+  );
+
+  test(
+    'honors a caller-supplied directory depth limit when a leaf is '
+    'actually read, even without eager validation',
+    () async {
+      // 既定(validateEntireArchiveEagerly: false)ではarchive全体を
+      // eagerに走査しないため、depth超過はopen時ではなく、実際にその
+      // leafへ到達するtile読み取り時に検出される(per-tile bounded検証)。
+      final fixture = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureLeaf(
+            tileId: 5,
+            entries: [
+              PmTilesV3FixtureTile(tileId: 5, bytes: [3]),
+            ],
+          ),
+        ],
+        minZoom: 2,
+      );
+      final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+      final archive = await PmTilesV3Archive.open(
         reader: reader,
         limits: const PmTilesV3Limits(
           maxDirectoryDepth: 1,
           rootDirectoryWindowLength: 16384,
         ),
-      ),
-      throwsA(isA<PmTilesV3CorruptArchiveException>()),
-    );
-  });
+      );
+
+      await expectLater(
+        archive.readTileById(tileId: 5),
+        throwsA(isA<PmTilesV3CorruptArchiveException>()),
+      );
+
+      await archive.close();
+    },
+  );
 
   test('rejects unsupported internal and tile compression at open', () async {
     final fixture = builder.build(
@@ -501,6 +547,37 @@ void main() {
         orderedEquals([6]),
       );
       await unclusteredArchive.close();
+    },
+  );
+
+  test(
+    'does not scan the archive for clustered ordering violations by '
+    'default (validateEntireArchiveEagerly: false)',
+    () async {
+      // 本番相当のbase mapアーカイブのように、直前と同一offsetへの重複排除
+      // 参照や前方ジャンプを含むclustered archiveでも、既定の限定
+      // (eager検証なし)ではopenが成功し、実際に読んだtileも正しく
+      // 復号できることを固定する。
+      final forwardGap = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureTile(tileId: 5, bytes: [1]),
+          PmTilesV3FixtureTile(tileId: 6, bytes: [2], contentOffset: 3),
+        ],
+        minZoom: 2,
+      );
+      final reader = TrackingRandomAccessReader(bytes: forwardGap.bytes);
+      final archive = await PmTilesV3Archive.open(
+        reader: reader,
+        limits: const PmTilesV3Limits(
+          maxDirectoryDepth: 3,
+          rootDirectoryWindowLength: 16384,
+        ),
+      );
+
+      expect(await archive.readTileById(tileId: 5), orderedEquals([1]));
+      expect(await archive.readTileById(tileId: 6), orderedEquals([2]));
+
+      await archive.close();
     },
   );
 
