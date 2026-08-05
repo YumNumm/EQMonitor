@@ -54,46 +54,41 @@
   `BaseMapView`のスコープ外。
 - `BaseMapTileGeometry`はdecodeに使ったMVT `extent`を保持しないため、
   `BaseMapView`はtile行列へ`mvtDefaultExtent`(4096)を固定値として渡している。
-  同梱PMTilesが4096以外の`extent`を宣言するsource layerを持つ場合、
+  実archive(z0/0/0、z4/14/6、z6/57/25で実測)は全layerが`extent=4096`
+  だったため現状は破綻しないが、これは計画の漏れであり、4096以外の`extent`を
+  宣言するsource layerを持つarchiveでは壊れる潜在的な脆さが残っている。
   layerごとの実際の`extent`を`BaseMapTileGeometry`まで伝播する必要がある。
-- `BaseMapMaterialLibrary`が`fillMaterial`/`lineMaterial`の2つだけを共有する
-  設計のため、`BaseMapView`は`docs/map_spec_v3.md`が定義するlayerごとの
-  カラーテーマを再現せず、`baseMapLayerSpecs`の`countries`行の色を代表値
-  として全fill/line層に一律適用している。実配色の反映にはlayerごとの
-  material分離かper-instance color override機構が要る。
 - tile coverの複数tileが同じ祖先へfallbackした場合の重複描画排除
   (`_BaseMapController._rebuildSceneNodes`)。現状は同じtileが複数回
   描画されても`baseMapLayerSpecs`の色が全て不透明なため見た目には現れないが、
   半透明色を導入する場合は排除が必要になる。
 
-## 既知の不具合(Task 10の実機確認で発見、未修正)
+## 既知の不具合(Task 10の実機確認で発見、flood発生元のlayerを特定・未修正)
 
-`countriesLine`(source layer: `countries`)のLine meshに、他のline layer
-(`areaForecastLocalEewLine`/`areaForecastLocalELine`/`areaInformationCityQuakeLine`)
-と比べて桁違いに大きい縮退三角形が2枚混入している。本番相当archive
-(`app/android/app/src/debug/assets/eqmonitor_assets/map/all.pmtiles`,
-zoom 0..8)のz0/0/0タイルを`decodeBaseMapTileSync`で直接decodeし、押し出し後の
-三角形面積を計測して確認した:
+**海(land以外の領域)が`areaForecastLocalEwLine`(source layer:
+`areaForecastLocalEew`, 名目色`0xFFFF7043`のオレンジ)の色で塗られたように
+見える不具合がある。**
 
-```
-LINE countriesLine: maxTriArea=16384.0, bigTriCount(>5000)=2
-LINE areaForecastLocalEewLine: maxTriArea=141.9  bigTriCount=0
-LINE areaForecastLocalELine:   maxTriArea=125.5  bigTriCount=0
-LINE areaInformationCityQuakeLine(z7): maxTriArea=209.9 bigTriCount=0
-```
+当初「`countriesLine`のLine meshに縮退した巨大三角形が2枚混入している」
+という仮説を報告したが、**この仮説は別agentの検証により反証された。**
+問題の三角形の座標は`(4096,4176)→(0,4176)`であり、`y=4176 = extent(4096) +
+buffer(80)`と一致する、MVT tile bufferのclip辺という正当な地物だった
+(南極付近のWeb Mercator clip辺)。独立実装によるring分離の再検証でも
+`crossRingViolations=0`、`bigTriCount=0`が確認されており、
+**`LineMeshBuilder`と`_polygonFeatureAsClosedLines`は正常と確定した。**
 
-extrude長自体はmiter limit(4)以内で正常なため、押し出しの暴走ではなく
-centerline側のpositionが離れた2点を繋ぐ縮退三角形になっていると考えられる。
-`countries`層は日本・周辺国など複数ringを持つ数少ないlayerであり、ringの
-継ぎ目(`lib/src/tile/base_map_tile_decoder.dart`の`_polygonFeatureAsClosedLines`
-によるring closure、または`lib/src/mesh/line_mesh_builder.dart`のring遷移処理)
-で1本余計な三角形が生成されている可能性が高い。他の(単一国内の行政区分のみを
-持つ)source layerではこの症状が出ていない。
+`BaseMapMaterialLibrary`をlayerごとに独立したmaterial instanceを持つ設計へ
+変更し(`spec.color`が実際に反映されるようにした)、zoom=4のデバッグページを
+screenshot確認したところ、**画面の海に見える領域全体が`areaForecastLocalEwLine`
+の名目色(オレンジ`0xFFFF7043`)そのもので塗りつぶされていた。** land部分は
+正しい`countriesFill`/`areaForecastLocalEFill`のベージュ系色で、他のLine layer
+(`countriesLine`のグレー、`areaForecastLocalELine`のグレー等)の色は画面上に
+確認できなかった。
 
-`countries`はこのarchiveのz0にしか存在しないため、zoom 0..8を許すarchiveでは
-高いzoomほどoverscale倍率が大きくなり(z8で256倍)、tile-local空間ではごく
-小さい欠陥(全体4096²の約0.1%)が画面の大部分を覆って見える
-(iOS simulatorでの実機確認で、海に見える領域全体がline色で塗られたように
-見える現象として観測)。
-
-`lib/src/mesh/`・`lib/src/tile/`はTask 10の変更対象外のため未修正。
+以上より、flood(画面のほぼ全域を単一のLine layerの色が覆う現象)の原因は
+`areaForecastLocalEwLine`(source layer `areaForecastLocalEew`)のLine mesh
+生成、またはその元になるMVT座標に何らかの異常がある可能性が高いと推測される
+が、**具体的な原因(ring境界か、座標スケールか、tile座標の解釈かなど)は
+未特定であり、これ以上の追跡は行っていない。** 該当layerを扱うコードが
+`lib/src/mesh/`・`lib/src/tile/`(Task 10の変更対象外)にあるため、修正は
+別途担当agent/taskへ引き継ぐ。

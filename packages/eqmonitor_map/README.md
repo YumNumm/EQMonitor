@@ -7,13 +7,15 @@ Flutter SceneをGPU描画基盤としてPMTiles/MVTの地物を描画し、ラ�
 > [!WARNING]
 > `BaseMapView`でベースレイヤー(Fill/Line)のpan/pinch zoom付き描画を実装し、
 > iOS simulatorで実際に描画されることとpanでtileが差し替わることを確認済みです
-> (下記「実機/simulatorでの確認結果」参照)。ただし、`countriesLine`のLine mesh
-> に2枚の縮退三角形が混入しており、archiveがoverscaleされるzoomでは海(land以外)
-> の広い範囲がline色で塗られたように見える既知の不具合があります(未修正、
-> `docs/todo/800_eqmonitor_map_deferred_verification.md`参照)。pinch-zoomの
-> 実機/simulator確認、線幅・tile境界の目視確認、background色が実際に画面へ
-> 出ることの確認はできていません。iOS/Android実機(simulatorではない物理端末)の
-> profile/release確認は実施していません。
+> (下記「実機/simulatorでの確認結果」参照)。ただし、海(land以外)の広い範囲が
+> `areaForecastLocalEwLine`(名目色オレンジ`0xFFFF7043`)の色で塗られたように
+> 見える既知の不具合があります(発生元layerを特定済み・原因/修正は未着手、
+> `docs/todo/800_eqmonitor_map_deferred_verification.md`参照)。当初の
+> `countriesLine`のLine meshに縮退三角形が混入しているという仮説は別agentの
+> 検証により反証されており、mesh生成コード自体は正常と確認されています。
+> pinch-zoomの実機/simulator確認、線幅・tile境界の目視確認、background色が
+> 実際に画面へ出ることの確認はできていません。iOS/Android実機(simulatorでは
+> ない物理端末)のprofile/release確認は実施していません。
 
 ## appからの利用
 
@@ -24,10 +26,13 @@ Flutter SceneをGPU描画基盤としてPMTiles/MVTの地物を描画し、ラ�
 流す。デバッグページ専用のmanual override経路も持つ)、そのarchiveのPMTiles headerから
 実際の`minZoom`/`maxZoom`を読んで`MapBaseLayerLimits`を組み立てます。
 
-`.fmat`はpackage rootの`hook/build.dart`がDart Data Assetとして生成します。実行前に
-マシンごとに一度`mise exec -- flutter config --enable-dart-data-assets`が必要です。未設定だと
-`Scene.initializeStaticResources()`が失敗し`Flutter Scene is not ready to render.`が出続けます。
-詳細は[`docs/knowledge/20260803_flutter_scene_dart_data_assets.md`](../../docs/knowledge/20260803_flutter_scene_dart_data_assets.md)を参照してください。
+`.fmat`はpackage rootの`hook/build.dart`がDart Data Assetとして生成します。`app`は
+`pubspec.yaml`の`flutter: config: enable-dart-data-assets: true`で有効化済みのため、
+マシンごとの`flutter config --enable-dart-data-assets`は**不要**です(CD配布バイナリで
+`.fmat`が見つからない不具合の修正として追加されました。pubspecの`flutter: config:`は
+マシンごとのglobal設定より優先されます)。未設定/未反映だと`Scene.initializeStaticResources()`
+が失敗し`Flutter Scene is not ready to render.`が出続けます。詳細は
+[`docs/knowledge/20260803_flutter_scene_dart_data_assets.md`](../../docs/knowledge/20260803_flutter_scene_dart_data_assets.md)を参照してください。
 
 ## 初期スコープ
 
@@ -77,9 +82,11 @@ Flutter SDKはYumNumm版`mise-flutter`と`mise.toml`、Flutter Sceneはpackage�
 `mise exec --`経由で実行します。
 
 Flutter Sceneのbase shader bundleと`assets/map_spike.fmat`はbuild hookが生成する
-Dart Data Assetです。machineごとに1度だけ次を実行してからbuildします。未設定の場合
-`Scene.initializeStaticResources()`が失敗し、`Flutter Scene is not ready to render.`が
-毎frame出力されます。詳細は
+Dart Data Assetです。**`packages/eqmonitor_map/example`は独自の`pubspec.yaml`を持ち、
+`app`のような`flutter: config: enable-dart-data-assets: true`をまだ持たないため**、
+example配下でbuildする場合は引き続きmachineごとに1度だけ次を実行してからbuildします。
+未設定の場合`Scene.initializeStaticResources()`が失敗し、
+`Flutter Scene is not ready to render.`が毎frame出力されます。詳細は
 [`docs/knowledge/20260803_flutter_scene_dart_data_assets.md`](../../docs/knowledge/20260803_flutter_scene_dart_data_assets.md)
 を参照してください。
 
@@ -151,20 +158,41 @@ Task 10で、iPhone 17 Pro simulator (iOS 27.0)を使い、appのデバッグペ
   確認してはいません(以前の版のこのREADMEには、これをoverscale確認済みと
   誤って記載していました。team-leadの指摘により訂正しています)。
 
-### 既知の不具合(未修正)
+### 既知の不具合(flood発生元のlayerを特定・未修正)
 
-`countriesLine`(source layer: `countries`)のLine meshに、他のline layerと
-比べて桁違いに大きい縮退三角形が2枚混入しています。本番相当archiveのz0/0/0
-タイルを直接decodeし、押し出し後の三角形面積を計測して確認しました
-(`countriesLine`のmax三角形面積が16384、他のline layerは125〜210程度)。
-`countries`はこのarchiveのz0にしか存在しないため、zoom 0..8を許すarchiveでは
-高いzoomほどoverscale倍率が大きくなり(z8で256倍)、tile-local空間ではごく
-小さい欠陥(全体の約0.1%)が画面の大部分を覆って見えます。原因は
-`lib/src/mesh/line_mesh_builder.dart`または`lib/src/tile/base_map_tile_decoder.dart`
-の`_polygonFeatureAsClosedLines`(ring継ぎ目の処理)にあると推測されますが、
-どちらもTask 10の変更対象外のため未修正です。詳細は
+海(land以外の領域)が`areaForecastLocalEwLine`(source layer:
+`areaForecastLocalEew`, 名目色`0xFFFF7043`のオレンジ)の色で塗られたように
+見える不具合があります。
+
+当初「`countriesLine`のLine meshに縮退した巨大三角形が2枚混入している」と
+報告しましたが、**この仮説は別agentの検証により反証されました。** 問題の
+三角形の座標は`(4096,4176)→(0,4176)`で、`y=4176 = extent(4096) + buffer(80)`
+と一致する、MVT tile bufferのclip辺という正当な地物でした。独立実装による
+ring分離の再検証でも`crossRingViolations=0`・`bigTriCount=0`が確認されており、
+**`LineMeshBuilder`と`_polygonFeatureAsClosedLines`は正常と確定しています。**
+
+`BaseMapMaterialLibrary`をlayerごとに独立したmaterial instanceを持つ設計へ
+変更し(`spec.color`を実際に反映させ)、zoom=4のデバッグページをscreenshot
+確認したところ、画面の海に見える領域全体が`areaForecastLocalEwLine`の名目色
+そのもので塗りつぶされていました。原因(ring境界か、座標スケールか、tile
+座標の解釈かなど)は未特定で、これ以上の追跡は行っていません。詳細と最新
+状況は
 [`docs/todo/800_eqmonitor_map_deferred_verification.md`](../../docs/todo/800_eqmonitor_map_deferred_verification.md)
 を参照してください。
+
+### 未解決の疑問点: `countriesLine`以外のLine layerが画面上で見えない
+
+`areaForecastLocalELine`/`areaForecastLocalEewLine`/`areaInformationCityQuakeLine`
+が、screenshot上のどの位置でも視覚的に確認できませんでした。実際に画面へ
+表示されていたはずのtileを座標から逆算して直接decodeしたところ、これらの
+layerには非空・十分な量の頂点データが実在していました(例:
+`areaInformationCityQuakeLine`が1 tileあたり84780頂点)。データの欠如では
+なく、`countriesLine`は(bugはあるが)実際に画面へ出ている以上Line用
+material/shader自体は機能しているにもかかわらず、他のLine specだけが
+不可視という状態の原因は特定できていません。`lib/src/tile/base_map_tile_decoder.dart`・
+`lib/src/mesh/line_mesh_builder.dart`は別agentが並行して書き換え中のため、
+自分のcode(`base_map_view.dart`)由来か並行作業中の一時的な状態由来かを
+切り分けられていません。
 
 ### 修正済み: decode中は上位zoomのtileを表示し続ける(zoom窓の非対称化)
 

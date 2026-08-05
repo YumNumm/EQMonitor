@@ -2,64 +2,56 @@ import 'dart:ui';
 
 import 'package:flutter_scene/scene.dart' as scene;
 
-/// `base_map_fill.fmat`/`base_map_line.fmat`を読み込み、色と線幅を設定する
-/// 公開methodを持つ。
+/// `base_map_fill.fmat`/`base_map_line.fmat`から、layerごとに独立した
+/// `scene.PreprocessedMaterial`を1つずつ作る静的factory。
 ///
-/// [load]は2つのmaterialを1回だけ読み、以後は同じ`PreprocessedMaterial`
-/// インスタンスを返す。ベースレイヤーの描画はtileごと・layerごとに新しい
-/// meshを作るが、そのすべてが`fillMaterial`/`lineMaterial`という同じ2つの
-/// materialインスタンスを共有する(`tile × layer × material`単位でbatchを
-/// 分けるとしても、materialの実体は`tile`や`layer`の数によらず2つのまま)。
-/// tileやlayerが増えるたびに`loadFmatMaterial`を呼び直さないこと。
+/// # 設計変更の経緯
+///
+/// 以前は`load()`がfill/line用に1つずつしかmaterialを作らず、全fill layer・
+/// 全line layerがその2つのinstanceを共有していた。`docs/map_spec_v3.md`が
+/// layerごとに定義する色(`baseMapLayerSpecs`の`color`)は、共有materialの
+/// 1色にしか反映できず、結果として全fill layerが同じ色・全line layerが
+/// 同じ色で描かれ、`spec.color`は事実上使われていなかった
+/// (実機確認でこれが判明した。team-lead指摘)。
+///
+/// `tile × layer × material`単位でbatchするという設計原則(Global
+/// Constraints)は、「1つのmaterial instanceを複数のtileのnodeで使い回す」
+/// ことを求めているのであって、「1つのmaterial instanceを複数のlayerでも
+/// 使い回す」ことまでは求めていない。layerごとに1つのmaterial instanceを
+/// 持たせても、tileの数やnodeの数には依存しないため原則には反しない。
+///
+/// このため、[loadFillMaterial]/[loadLineMaterial]は呼ばれるたびに新しい
+/// `PreprocessedMaterial`を1つ読み込み、指定された色(と線幅)をその場で
+/// 焼き込んで返す。呼び出し側(`_BaseMapController`)が
+/// `baseMapLayerSpecs`の非background行ごとに1回ずつ呼び、
+/// `styleLayerId`をkeyにして結果を保持する。
 class BaseMapMaterialLibrary {
-  const BaseMapMaterialLibrary._({
-    required this.fillMaterial,
-    required this.lineMaterial,
-  });
+  const BaseMapMaterialLibrary._();
 
-  /// `assets/base_map_fill.fmat`と`assets/base_map_line.fmat`を読み込む。
-  static Future<BaseMapMaterialLibrary> load() async {
-    final fillMaterial = await scene.loadFmatMaterial(
-      'assets/base_map_fill.fmat',
-    );
-    final lineMaterial = await scene.loadFmatMaterial(
-      'assets/base_map_line.fmat',
-    );
-    return BaseMapMaterialLibrary._(
-      fillMaterial: fillMaterial,
-      lineMaterial: lineMaterial,
-    );
+  /// `assets/base_map_fill.fmat`を新しく1つ読み込み、[color]を設定する。
+  static Future<scene.PreprocessedMaterial> loadFillMaterial({
+    required Color color,
+  }) async {
+    final material = await scene.loadFmatMaterial('assets/base_map_fill.fmat');
+    material.parameters.setColor('fill_color', color);
+    return material;
   }
 
-  /// Fillレイヤーに使うmaterial。`fill_color`のみを持つ
-  /// (`assets/base_map_fill.fmat`参照)。
-  final scene.PreprocessedMaterial fillMaterial;
-
-  /// Lineレイヤーに使うmaterial。`line_color`と`half_width_world`を持つ
-  /// (`assets/base_map_line.fmat`参照)。
-  final scene.PreprocessedMaterial lineMaterial;
-
-  /// Fillレイヤーの色を設定する。
-  void setFillColor(Color color) {
-    fillMaterial.parameters.setColor('fill_color', color);
-  }
-
-  /// Lineレイヤーの色を設定する。
-  void setLineColor(Color color) {
-    lineMaterial.parameters.setColor('line_color', color);
-  }
-
-  /// Lineレイヤーの半線幅を設定する。[halfWidthLogicalPixels]はlogical pixel
-  /// 単位の半線幅で、[halfLineWidthWorldFor]でworld単位へ換算してから
-  /// materialへ渡す。呼び出し側(cameraやstyleが変わり得るdraw loop)が毎
-  /// frame呼ぶことを想定しており、shader側では換算しない
-  /// (`assets/base_map_line.fmat`のdoc comment、[halfLineWidthWorldFor]の
-  /// doc comment参照)。
-  void setLineHalfWidth({required double halfWidthLogicalPixels}) {
-    lineMaterial.parameters.setFloat(
-      'half_width_world',
-      halfLineWidthWorldFor(halfWidthLogicalPixels: halfWidthLogicalPixels),
-    );
+  /// `assets/base_map_line.fmat`を新しく1つ読み込み、[color]と
+  /// [halfWidthLogicalPixels]を設定する。[halfWidthLogicalPixels]の単位・
+  /// 換算方法は[halfLineWidthWorldFor]のdoc comment参照。
+  static Future<scene.PreprocessedMaterial> loadLineMaterial({
+    required Color color,
+    required double halfWidthLogicalPixels,
+  }) async {
+    final material = await scene.loadFmatMaterial('assets/base_map_line.fmat');
+    material.parameters
+      ..setColor('line_color', color)
+      ..setFloat(
+        'half_width_world',
+        halfLineWidthWorldFor(halfWidthLogicalPixels: halfWidthLogicalPixels),
+      );
+    return material;
   }
 }
 

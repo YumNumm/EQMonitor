@@ -274,24 +274,19 @@ class _BaseMapController extends ChangeNotifier {
   static const _decoder = BaseMapTileDecoder();
   static const _geometryFactory = BaseMapGeometryFactory();
 
-  // debug描画専用の単色。`BaseMapMaterialLibrary`はtile×layerで新しい
-  // materialを作らず`fillMaterial`/`lineMaterial`の2つだけを共有するため
-  // (`base_map_material_library.dart`のdoc comment)、layerごとに
-  // `docs/map_spec_v3.md`が定義する色を出し分けることはできない。
-  // `baseMapLayerSpecs`が定義する色のうち、最下段の`countries`行の色を
-  // 代表として使う。
-  static final Color _debugFillColor = baseMapLayerSpecs
-      .firstWhere((spec) => spec.styleLayerId == 'countriesFill')
-      .color;
-  static final Color _debugLineColor = baseMapLayerSpecs
-      .firstWhere((spec) => spec.styleLayerId == 'countriesLine')
-      .color;
+  // Line layerの半線幅(全layer共通)。`docs/map_spec_v3.md`は線幅もzoomで
+  // 変化させるが、Task 10のスコープでは固定値のdebug描画とする。
   static const _debugLineHalfWidthLogicalPixels = 1.0;
 
   MapCamera _camera;
   MapViewport? _viewport;
   BaseMapTileRepository? _repository;
-  BaseMapMaterialLibrary? _materials;
+
+  /// `styleLayerId`ごとに独立した`scene.PreprocessedMaterial`。
+  /// `baseMapLayerSpecs`の`color`をlayerごとに反映するため、fill/line
+  /// それぞれ1つを全layerで共有していた旧実装から変更した
+  /// (`base_map_material_library.dart`のdoc comment参照)。
+  Map<String, scene.PreprocessedMaterial>? _materialsByStyleLayerId;
   Object? _initError;
   var _isReady = false;
   var _isDisposed = false;
@@ -318,13 +313,25 @@ class _BaseMapController extends ChangeNotifier {
   Future<void> initialize() async {
     try {
       await scene.Scene.initializeStaticResources();
-      final materials = await BaseMapMaterialLibrary.load();
-      materials
-        ..setFillColor(_debugFillColor)
-        ..setLineColor(_debugLineColor)
-        ..setLineHalfWidth(
-          halfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
-        );
+      final materialsByStyleLayerId = <String, scene.PreprocessedMaterial>{};
+      for (final spec in baseMapLayerSpecs) {
+        switch (spec.kind) {
+          case BaseMapLayerKind.background:
+            // backgroundはtileのmaterialを持たない(`ColoredBox`側で描く)。
+            continue;
+          case BaseMapLayerKind.fill:
+            materialsByStyleLayerId[spec.styleLayerId] =
+                await BaseMapMaterialLibrary.loadFillMaterial(
+                  color: spec.color,
+                );
+          case BaseMapLayerKind.line:
+            materialsByStyleLayerId[spec.styleLayerId] =
+                await BaseMapMaterialLibrary.loadLineMaterial(
+                  color: spec.color,
+                  halfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
+                );
+        }
+      }
       final repository = await BaseMapTileRepository.open(
         source: source,
         limits: limits.pmTilesLimits,
@@ -333,7 +340,7 @@ class _BaseMapController extends ChangeNotifier {
         await repository.close();
         return;
       }
-      _materials = materials;
+      _materialsByStyleLayerId = materialsByStyleLayerId;
       _repository = repository;
       _isReady = true;
       _refresh();
@@ -414,8 +421,8 @@ class _BaseMapController extends ChangeNotifier {
     required List<OverscaledTileId> cover,
     required MapViewport viewport,
   }) {
-    final materials = _materials;
-    if (materials == null) {
+    final materialsByStyleLayerId = _materialsByStyleLayerId;
+    if (materialsByStyleLayerId == null) {
       return;
     }
     final resolved = [
@@ -459,7 +466,7 @@ class _BaseMapController extends ChangeNotifier {
                 wrap: entry.tile.wrap,
                 tileId: entry.tile.canonical,
                 geometry: geometry,
-                materials: materials,
+                materialsByStyleLayerId: materialsByStyleLayerId,
                 transform: transformFor(entry.tile.wrap, entry.tile.canonical),
               ),
             );
@@ -470,7 +477,7 @@ class _BaseMapController extends ChangeNotifier {
                 wrap: entry.tile.wrap,
                 tileId: tileId,
                 geometry: geometry,
-                materials: materials,
+                materialsByStyleLayerId: materialsByStyleLayerId,
                 transform: transformFor(entry.tile.wrap, tileId),
               ),
             );
@@ -483,7 +490,7 @@ class _BaseMapController extends ChangeNotifier {
                   wrap: entry.tile.wrap,
                   tileId: childIds[i],
                   geometry: children[i],
-                  materials: materials,
+                  materialsByStyleLayerId: materialsByStyleLayerId,
                   transform: transformFor(entry.tile.wrap, childIds[i]),
                 ),
               );
@@ -501,7 +508,7 @@ class _BaseMapController extends ChangeNotifier {
     required int wrap,
     required CanonicalTileId tileId,
     required BaseMapTileGeometry geometry,
-    required BaseMapMaterialLibrary materials,
+    required Map<String, scene.PreprocessedMaterial> materialsByStyleLayerId,
     required scene_math.Matrix4 transform,
   }) {
     final meshesByLayer = _sceneMeshCache.getOrBuild(
@@ -509,7 +516,7 @@ class _BaseMapController extends ChangeNotifier {
       tileId: tileId,
       geometry: geometry,
       geometryFactory: _geometryFactory,
-      materials: materials,
+      materialsByStyleLayerId: materialsByStyleLayerId,
     );
     final meshes = meshesByLayer[spec.styleLayerId];
     if (meshes == null || meshes.isEmpty) {
@@ -652,7 +659,7 @@ class _TileSceneMeshCache {
     required CanonicalTileId tileId,
     required BaseMapTileGeometry geometry,
     required BaseMapGeometryFactory geometryFactory,
-    required BaseMapMaterialLibrary materials,
+    required Map<String, scene.PreprocessedMaterial> materialsByStyleLayerId,
   }) {
     final key = (sourceInstanceId, tileId);
     final cached = _entries[key];
@@ -666,14 +673,14 @@ class _TileSceneMeshCache {
             for (final mesh in meshes)
               scene.Mesh(
                 geometryFactory.fillGeometry(mesh),
-                materials.fillMaterial,
+                materialsByStyleLayerId[layer.styleLayerId]!,
               ),
           ],
           BaseMapTileLineLayerGeometry(:final meshes) => [
             for (final mesh in meshes)
               scene.Mesh(
                 geometryFactory.lineGeometry(mesh),
-                materials.lineMaterial,
+                materialsByStyleLayerId[layer.styleLayerId]!,
               ),
           ],
         },
