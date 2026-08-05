@@ -1,181 +1,25 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_header_decoder.dart';
-import 'package:seismicity_pmtiles/src/archive/pmtiles_v3_tile_id.dart';
 import 'package:test/test.dart';
 
-import '../support/pmtiles_v3_fixture_builder.dart';
+// PMTiles v3仕様の検証・directory走査そのものはpmtiles_v3側で網羅済みのため、
+// ここでは descriptor 固有の検証（サイズ/dataZoom一致、tileNotFound、
+// invalidTileId、open失敗時のreader close）だけを対象にする。単一tile entry
+// の最小構成archiveだけを組み立てれば十分。
 
 void main() {
-  const builder = PmTilesV3FixtureBuilder();
-
-  test(
-    'enumerates run intersections without enumerating unrelated zooms',
-    () async {
-      final fixture = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(
-            tileId: 0,
-            bytes: [10, 20],
-            runLength: 6,
-          ),
-        ],
-      );
-      final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
-      final archive = await openFixture(reader: reader, dataZoom: 2);
-
-      expect(await archive.occupiedTileIdsAtZoom(zoom: 0).toList(), [0]);
-      expect(await archive.occupiedTileIdsAtZoom(zoom: 1).toList(), [
-        1,
-        2,
-        3,
-        4,
-      ]);
-      expect(await archive.occupiedTileIdsAtZoom(zoom: 2).toList(), [5]);
-      expect(await archive.readTile(tileId: 4), orderedEquals([10, 20]));
-
-      await archive.close();
-    },
-  );
-
-  test('reads only exact root, leaf, and tile section ranges', () async {
-    final fixture = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureLeaf(
-          tileId: 5,
-          entries: [
-            PmTilesV3FixtureTile(tileId: 5, bytes: [5, 5]),
-            PmTilesV3FixtureTile(tileId: 9, bytes: [9, 9, 9]),
-          ],
-        ),
-      ],
-      minZoom: 2,
-    );
-    final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
-    final archive = await openFixture(reader: reader, dataZoom: 2);
-    final header = archive.header;
-
-    expect(await archive.occupiedTileIdsAtZoom(zoom: 2).toList(), [5, 9]);
-    expect(await archive.readTile(tileId: 9), orderedEquals([9, 9, 9]));
-    expect(
-      reader.reads.first,
-      (offset: 0, length: PmTilesV3HeaderDecoder.headerLength),
-    );
-    expect(
-      reader.reads[1],
-      (
-        offset: header.rootDirectoryOffset,
-        length: header.rootDirectoryLength,
-      ),
-    );
-    expect(
-      reader.reads.where(
-        (range) =>
-            range.offset >= header.leafDirectoriesOffset &&
-            range.offset < header.tileDataOffset,
-      ),
-      hasLength(1),
-    );
-    expect(
-      reader.reads.last,
-      (offset: header.tileDataOffset + 2, length: 3),
-    );
-
-    await archive.close();
-  });
-
-  test('decodes gzip directories and tile payloads', () async {
-    final fixture = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureLeaf(
-          tileId: 5,
-          entries: [
-            PmTilesV3FixtureTile(tileId: 5, bytes: [1, 3, 3, 7]),
-          ],
-        ),
-      ],
-      internalCompression: 2,
-      tileCompression: 2,
-      minZoom: 2,
-    );
-    final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
-    final archive = await openFixture(reader: reader, dataZoom: 2);
-
-    expect(await archive.occupiedTileIdsAtZoom(zoom: 2).toList(), [5]);
-    expect(await archive.readTile(tileId: 5), orderedEquals([1, 3, 3, 7]));
-
-    await archive.close();
-  });
-
-  test('supports three directory levels and rejects a fourth', () async {
-    final validFixture = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureLeaf(
-          tileId: 5,
-          entries: [
-            PmTilesV3FixtureLeaf(
-              tileId: 5,
-              entries: [
-                PmTilesV3FixtureTile(tileId: 5, bytes: [3]),
-              ],
-            ),
-          ],
-        ),
-      ],
-      minZoom: 2,
-    );
-    final validReader = TrackingRandomAccessReader(bytes: validFixture.bytes);
-    final validArchive = await openFixture(reader: validReader, dataZoom: 2);
-
-    expect(await validArchive.readTile(tileId: 5), orderedEquals([3]));
-    await validArchive.close();
-
-    final invalidFixture = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureLeaf(
-          tileId: 5,
-          entries: [
-            PmTilesV3FixtureLeaf(
-              tileId: 5,
-              entries: [
-                PmTilesV3FixtureLeaf(
-                  tileId: 5,
-                  entries: [
-                    PmTilesV3FixtureTile(tileId: 5, bytes: [4]),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-      minZoom: 2,
-    );
-    final invalidReader = TrackingRandomAccessReader(
-      bytes: invalidFixture.bytes,
-    );
-    await expectLater(
-      openFixture(reader: invalidReader, dataZoom: 2),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-    );
-    expect(invalidReader._closeCalls, 1);
-  });
-
   test('rejects descriptor size and data zoom and closes reader', () async {
-    final fixture = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureTile(tileId: 5, bytes: [1]),
-      ],
-      minZoom: 2,
-    );
-    final sizeReader = TrackingRandomAccessReader(bytes: fixture.bytes);
+    final bytes = _buildFixtureBytes(tileId: 5, tileBytes: [1]);
+    final sizeReader = TrackingRandomAccessReader(bytes: bytes);
 
     await expectLater(
       SeismicityPmTilesArchive.open(
         reader: sizeReader,
-        descriptor: fixtureDescriptor(
-          sizeBytes: fixture.bytes.length + 1,
+        descriptor: _fixtureDescriptor(
+          sizeBytes: bytes.length + 1,
           dataZoom: 2,
         ),
       ),
@@ -183,446 +27,19 @@ void main() {
     );
     expect(sizeReader._closeCalls, 1);
 
-    final zoomReader = TrackingRandomAccessReader(bytes: fixture.bytes);
+    final zoomReader = TrackingRandomAccessReader(bytes: bytes);
     await expectLater(
-      openFixture(reader: zoomReader, dataZoom: 1),
+      _openFixture(reader: zoomReader, dataZoom: 1),
       throwsA(isA<SeismicityPmTilesInvalidDescriptorException>()),
     );
     expect(zoomReader._closeCalls, 1);
   });
 
-  test('rejects unsupported internal and tile compression at open', () async {
-    final fixture = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureTile(tileId: 5, bytes: [1]),
-      ],
-      minZoom: 2,
-    );
-
-    for (final offset in [97, 98]) {
-      final bytes = Uint8List.fromList(fixture.bytes)..[offset] = 3;
-      final reader = TrackingRandomAccessReader(bytes: bytes);
-      await expectLater(
-        openFixture(reader: reader, dataZoom: 2),
-        throwsA(isA<SeismicityPmTilesUnsupportedCompressionException>()),
-      );
-      expect(reader._closeCalls, 1);
-    }
-  });
-
-  test(
-    'rejects entry ranges outside sections and empty leaf directories',
-    () async {
-      final boundsFixture = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2, 3]),
-        ],
-        minZoom: 2,
-      );
-      final boundsBytes = Uint8List.fromList(boundsFixture.bytes);
-      boundsBytes.buffer.asByteData().setUint64(64, 1, Endian.little);
-      final boundsReader = TrackingRandomAccessReader(bytes: boundsBytes);
-
-      await expectLater(
-        openFixture(reader: boundsReader, dataZoom: 2),
-        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-      );
-      expect(boundsReader._closeCalls, 1);
-
-      final emptyLeafFixture = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureLeaf(tileId: 5, entries: []),
-        ],
-        minZoom: 2,
-      );
-      final emptyLeafReader = TrackingRandomAccessReader(
-        bytes: emptyLeafFixture.bytes,
-      );
-      await expectLater(
-        openFixture(reader: emptyLeafReader, dataZoom: 2),
-        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-      );
-      expect(emptyLeafReader._closeCalls, 1);
-    },
-  );
-
-  test(
-    'rejects leaf entries that do not start at the parent tile ID',
-    () async {
-      final fixture = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureLeaf(
-            tileId: 5,
-            entries: [
-              PmTilesV3FixtureTile(tileId: 6, bytes: [1]),
-            ],
-          ),
-        ],
-        minZoom: 2,
-      );
-      final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
-      await expectLater(
-        openFixture(reader: reader, dataZoom: 2),
-        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-      );
-      expect(reader._closeCalls, 1);
-    },
-  );
-
-  test('enforces header zoom bounds for root and leaf tile runs', () async {
-    final belowMinimum = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureTile(tileId: 0, bytes: [1]),
-      ],
-      minZoom: 2,
-    );
-    final belowReader = TrackingRandomAccessReader(bytes: belowMinimum.bytes);
-    await expectLater(
-      openFixture(reader: belowReader, dataZoom: 2),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-    );
-
-    final exactBoundary = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureTile(tileId: 5, bytes: [2], runLength: 16),
-      ],
-      minZoom: 2,
-    );
-    final exactReader = TrackingRandomAccessReader(bytes: exactBoundary.bytes);
-    final exactArchive = await openFixture(reader: exactReader, dataZoom: 2);
-    expect(await exactArchive.occupiedTileIdsAtZoom(zoom: 2).length, 16);
-    await exactArchive.close();
-
-    final rootOverflow = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureTile(tileId: 5, bytes: [3], runLength: 17),
-      ],
-      minZoom: 2,
-    );
-    await expectLater(
-      openFixture(
-        reader: TrackingRandomAccessReader(bytes: rootOverflow.bytes),
-        dataZoom: 2,
-      ),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-    );
-
-    final leafOverflow = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureLeaf(
-          tileId: 5,
-          entries: [
-            PmTilesV3FixtureTile(tileId: 5, bytes: [4], runLength: 17),
-          ],
-        ),
-      ],
-      minZoom: 2,
-    );
-    await expectLater(
-      openFixture(
-        reader: TrackingRandomAccessReader(bytes: leafOverflow.bytes),
-        dataZoom: 2,
-      ),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-    );
-  });
-
-  test('accepts the final z31 tile ID boundary', () async {
-    final fixture = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureTile(
-          tileId: PmTilesV3TileId.maxValue,
-          bytes: [31],
-        ),
-      ],
-      minZoom: 31,
-      maxZoom: 31,
-    );
-    final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
-    final archive = await openFixture(reader: reader, dataZoom: 31);
-
-    expect(
-      await archive.readTile(tileId: PmTilesV3TileId.maxValue),
-      orderedEquals([31]),
-    );
-    await archive.close();
-  });
-
-  test(
-    'enforces clustered ordering and permits shared prior content',
-    () async {
-      final contiguous = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(tileId: 5, bytes: [5, 5]),
-          PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
-        ],
-        minZoom: 2,
-      );
-      final contiguousArchive = await openFixture(
-        reader: TrackingRandomAccessReader(bytes: contiguous.bytes),
-        dataZoom: 2,
-      );
-      await contiguousArchive.close();
-
-      final firstGap = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(tileId: 5, bytes: [1], contentOffset: 2),
-        ],
-        minZoom: 2,
-      );
-      await expectLater(
-        openFixture(
-          reader: TrackingRandomAccessReader(bytes: firstGap.bytes),
-          dataZoom: 2,
-        ),
-        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-      );
-
-      final equalOffset = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2]),
-          PmTilesV3FixtureTile(
-            tileId: 6,
-            bytes: [1, 2],
-            contentOffset: 0,
-          ),
-        ],
-        minZoom: 2,
-      );
-      await expectLater(
-        openFixture(
-          reader: TrackingRandomAccessReader(bytes: equalOffset.bytes),
-          dataZoom: 2,
-        ),
-        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-      );
-
-      final frontierAfterBackReference = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2]),
-          PmTilesV3FixtureTile(tileId: 6, bytes: [3]),
-          PmTilesV3FixtureTile(
-            tileId: 7,
-            bytes: [1, 2],
-            contentOffset: 0,
-          ),
-          PmTilesV3FixtureTile(tileId: 8, bytes: [4]),
-        ],
-        minZoom: 2,
-      );
-      await expectLater(
-        openFixture(
-          reader: TrackingRandomAccessReader(
-            bytes: frontierAfterBackReference.bytes,
-          ),
-          dataZoom: 2,
-        ),
-        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-      );
-
-      final forwardGap = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(tileId: 5, bytes: [1]),
-          PmTilesV3FixtureTile(tileId: 6, bytes: [2], contentOffset: 3),
-        ],
-        minZoom: 2,
-      );
-      await expectLater(
-        openFixture(
-          reader: TrackingRandomAccessReader(bytes: forwardGap.bytes),
-          dataZoom: 2,
-        ),
-        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-      );
-
-      final crossLeafGap = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureLeaf(
-            tileId: 5,
-            entries: [
-              PmTilesV3FixtureTile(tileId: 5, bytes: [1]),
-            ],
-          ),
-          PmTilesV3FixtureLeaf(
-            tileId: 6,
-            entries: [
-              PmTilesV3FixtureTile(tileId: 6, bytes: [2], contentOffset: 3),
-            ],
-          ),
-        ],
-        minZoom: 2,
-      );
-      await expectLater(
-        openFixture(
-          reader: TrackingRandomAccessReader(bytes: crossLeafGap.bytes),
-          dataZoom: 2,
-        ),
-        throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-      );
-
-      final shared = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(tileId: 5, bytes: [7, 8]),
-          PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
-          PmTilesV3FixtureTile(tileId: 7, bytes: [7, 8], contentOffset: 0),
-        ],
-        minZoom: 2,
-      );
-      final sharedReader = TrackingRandomAccessReader(bytes: shared.bytes);
-      final sharedArchive = await openFixture(
-        reader: sharedReader,
-        dataZoom: 2,
-      );
-      expect(await sharedArchive.readTile(tileId: 5), orderedEquals([7, 8]));
-      expect(await sharedArchive.readTile(tileId: 6), orderedEquals([6]));
-      expect(await sharedArchive.readTile(tileId: 7), orderedEquals([7, 8]));
-      await sharedArchive.close();
-
-      final unclustered = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(tileId: 5, bytes: [5], contentOffset: 2),
-          PmTilesV3FixtureTile(tileId: 6, bytes: [6], contentOffset: 5),
-        ],
-        minZoom: 2,
-        clustered: false,
-      );
-      final unclusteredReader = TrackingRandomAccessReader(
-        bytes: unclustered.bytes,
-      );
-      final unclusteredArchive = await openFixture(
-        reader: unclusteredReader,
-        dataZoom: 2,
-      );
-      expect(await unclusteredArchive.readTile(tileId: 5), orderedEquals([5]));
-      expect(await unclusteredArchive.readTile(tileId: 6), orderedEquals([6]));
-      await unclusteredArchive.close();
-    },
-  );
-
-  test('preserves clustered previous-entry ordering across leaves', () async {
-    final contiguous = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureLeaf(
-          tileId: 5,
-          entries: [
-            PmTilesV3FixtureTile(tileId: 5, bytes: [5, 5]),
-          ],
-        ),
-        PmTilesV3FixtureLeaf(
-          tileId: 6,
-          entries: [
-            PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
-          ],
-        ),
-      ],
-      minZoom: 2,
-    );
-    final contiguousArchive = await openFixture(
-      reader: TrackingRandomAccessReader(bytes: contiguous.bytes),
-      dataZoom: 2,
-    );
-    await contiguousArchive.close();
-
-    final lesserBackReference = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureLeaf(
-          tileId: 5,
-          entries: [
-            PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2]),
-            PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
-          ],
-        ),
-        PmTilesV3FixtureLeaf(
-          tileId: 7,
-          entries: [
-            PmTilesV3FixtureTile(
-              tileId: 7,
-              bytes: [1, 2],
-              contentOffset: 0,
-            ),
-          ],
-        ),
-      ],
-      minZoom: 2,
-    );
-    final backReferenceArchive = await openFixture(
-      reader: TrackingRandomAccessReader(bytes: lesserBackReference.bytes),
-      dataZoom: 2,
-    );
-    await backReferenceArchive.close();
-
-    final equalOffset = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureLeaf(
-          tileId: 5,
-          entries: [
-            PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2]),
-          ],
-        ),
-        PmTilesV3FixtureLeaf(
-          tileId: 6,
-          entries: [
-            PmTilesV3FixtureTile(
-              tileId: 6,
-              bytes: [1, 2],
-              contentOffset: 0,
-            ),
-          ],
-        ),
-      ],
-      minZoom: 2,
-    );
-    await expectLater(
-      openFixture(
-        reader: TrackingRandomAccessReader(bytes: equalOffset.bytes),
-        dataZoom: 2,
-      ),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-    );
-
-    final frontierAfterBackReference = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureLeaf(
-          tileId: 5,
-          entries: [
-            PmTilesV3FixtureTile(tileId: 5, bytes: [1, 2]),
-            PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
-            PmTilesV3FixtureTile(
-              tileId: 7,
-              bytes: [1, 2],
-              contentOffset: 0,
-            ),
-          ],
-        ),
-        PmTilesV3FixtureLeaf(
-          tileId: 8,
-          entries: [
-            PmTilesV3FixtureTile(tileId: 8, bytes: [8]),
-          ],
-        ),
-      ],
-      minZoom: 2,
-    );
-    await expectLater(
-      openFixture(
-        reader: TrackingRandomAccessReader(
-          bytes: frontierAfterBackReference.bytes,
-        ),
-        dataZoom: 2,
-      ),
-      throwsA(isA<SeismicityPmTilesCorruptArchiveException>()),
-    );
-  });
-
   test('closes once and preserves any original open error and stack', () async {
-    final fixture = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureTile(tileId: 0, bytes: [1]),
-      ],
-    );
+    final bytes = _buildFixtureBytes(tileId: 0, tileBytes: [1], minZoom: 0);
     final readFailure = StateError('read failed');
     final reader = FailingOpenReader(
-      bytes: fixture.bytes,
+      bytes: bytes,
       readFailure: readFailure,
       readFailureStack: StackTrace.fromString('original-read-stack'),
     );
@@ -630,10 +47,7 @@ void main() {
     try {
       await SeismicityPmTilesArchive.open(
         reader: reader,
-        descriptor: fixtureDescriptor(
-          sizeBytes: fixture.bytes.length,
-          dataZoom: 0,
-        ),
+        descriptor: _fixtureDescriptor(sizeBytes: bytes.length, dataZoom: 0),
       );
       fail('open must fail');
       // The ownership contract must preserve an arbitrary reader error and its
@@ -643,35 +57,36 @@ void main() {
       expect(error, same(readFailure));
       expect(stackTrace.toString(), contains('original-read-stack'));
     }
-    expect(reader.closeCalls, 1);
+    expect(reader._closeCalls, 1);
 
     final closeReader = FailingOpenReader(
-      bytes: fixture.bytes,
+      bytes: bytes,
       closeFailure: StateError('close failed'),
     );
     await expectLater(
       SeismicityPmTilesArchive.open(
         reader: closeReader,
-        descriptor: fixtureDescriptor(
-          sizeBytes: fixture.bytes.length + 1,
+        descriptor: _fixtureDescriptor(
+          sizeBytes: bytes.length + 1,
           dataZoom: 0,
         ),
       ),
       throwsA(isA<SeismicityPmTilesInvalidDescriptorException>()),
     );
-    expect(closeReader.closeCalls, 1);
+    expect(closeReader._closeCalls, 1);
   });
 
   test(
     'classifies invalid public tile IDs separately from archive data',
     () async {
-      final fixture = builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(tileId: 0, bytes: [1]),
-        ],
+      final bytes = _buildFixtureBytes(
+        tileId: 0,
+        tileBytes: [1],
+        minZoom: 0,
+        maxZoom: 0,
       );
-      final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
-      final archive = await openFixture(reader: reader, dataZoom: 0);
+      final reader = TrackingRandomAccessReader(bytes: bytes);
+      final archive = await _openFixture(reader: reader, dataZoom: 0);
 
       for (final tileId in [-1, PmTilesV3TileId.maxValue + 1]) {
         await expectLater(
@@ -690,14 +105,9 @@ void main() {
   );
 
   test('reports missing tiles and closes its reader exactly once', () async {
-    final fixture = builder.build(
-      rootEntries: const [
-        PmTilesV3FixtureTile(tileId: 5, bytes: [1]),
-      ],
-      minZoom: 2,
-    );
-    final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
-    final archive = await openFixture(reader: reader, dataZoom: 2);
+    final bytes = _buildFixtureBytes(tileId: 5, tileBytes: [1]);
+    final reader = TrackingRandomAccessReader(bytes: bytes);
+    final archive = await _openFixture(reader: reader, dataZoom: 2);
 
     await expectLater(
       archive.readTile(tileId: 6),
@@ -710,27 +120,55 @@ void main() {
       throwsA(isA<SeismicityPmTilesSourceReadFailedException>()),
     );
   });
+
+  test(
+    'rejects an archive that violates producer clustered ordering '
+    '(regression guard for validateEntireArchiveEagerly: true)',
+    () async {
+      // seismicity_pmtiles はproducer契約としてclustered orderingとtile
+      // 件数の一致を保証しており、SeismicityPmTilesArchiveOpenerは
+      // pmtiles_v3へ `validateEntireArchiveEagerly: true` を明示的に渡す
+      // ことでそれをruntimeでも検証している
+      // (seismicity_pmtiles_archive.dart)。この1行が失われたり
+      // `false` に変わったりすると、pmtiles_v3は既定でarchive全体を
+      // eagerに走査しなくなるため、このテストは落ちなくなる。
+      final bytes = _buildClusteredOrderingViolationFixtureBytes();
+      final reader = TrackingRandomAccessReader(bytes: bytes);
+
+      await expectLater(
+        _openFixture(reader: reader, dataZoom: 2),
+        throwsA(
+          isA<SeismicityPmTilesCorruptArchiveException>().having(
+            (exception) => exception.reason,
+            'reason',
+            'Clustered content must follow the previous entry or reference '
+                'known content at a strictly smaller offset.',
+          ),
+        ),
+      );
+    },
+  );
 }
 
-Future<SeismicityPmTilesArchive> openFixture({
+Future<SeismicityPmTilesArchive> _openFixture({
   required TrackingRandomAccessReader reader,
   required int dataZoom,
 }) {
   return SeismicityPmTilesArchive.open(
     reader: reader,
-    descriptor: fixtureDescriptor(
+    descriptor: _fixtureDescriptor(
       sizeBytes: reader.sizeBytes,
       dataZoom: dataZoom,
     ),
   );
 }
 
-SeismicityPmTilesArchiveDescriptor fixtureDescriptor({
+SeismicityPmTilesArchiveDescriptor _fixtureDescriptor({
   required int sizeBytes,
   required int dataZoom,
 }) {
   return SeismicityPmTilesArchiveDescriptor(
-    source: const SeismicityPmTilesAssetSource(assetKey: 'fixture.pmtiles'),
+    source: const SeismicityPmTilesSource.asset(assetKey: 'fixture.pmtiles'),
     schemaVersion: 1,
     dataZoom: dataZoom,
     expectedSizeBytes: sizeBytes,
@@ -741,11 +179,161 @@ SeismicityPmTilesArchiveDescriptor fixtureDescriptor({
   );
 }
 
-final class TrackingRandomAccessReader implements SeismicityRandomAccessReader {
+/// leaf directoryもgzipも使わない、単一tile entryだけのPMTiles v3 archive
+/// byte列を組み立てる。PMTiles v3仕様の検証やdirectory走査自体は
+/// pmtiles_v3側で網羅済みのため、この packageのtestに必要な最小限で足りる。
+Uint8List _buildFixtureBytes({
+  required int tileId,
+  required List<int> tileBytes,
+  int minZoom = 2,
+  int maxZoom = 2,
+}) {
+  const headerLength = 127;
+  final directory = _encodeDirectory(tileId: tileId, length: tileBytes.length);
+  final metadata = Uint8List.fromList(utf8.encode('{}'));
+  const rootOffset = headerLength;
+  final metadataOffset = rootOffset + directory.length;
+  final leafOffset = metadataOffset + metadata.length;
+  final tileDataOffset = leafOffset;
+
+  final header = Uint8List(headerLength);
+  header.setRange(0, 7, [0x50, 0x4D, 0x54, 0x69, 0x6C, 0x65, 0x73]);
+  header[7] = 3;
+  ByteData.sublistView(header)
+    ..setUint64(8, rootOffset, Endian.little)
+    ..setUint64(16, directory.length, Endian.little)
+    ..setUint64(24, metadataOffset, Endian.little)
+    ..setUint64(32, metadata.length, Endian.little)
+    ..setUint64(40, leafOffset, Endian.little)
+    ..setUint64(48, 0, Endian.little)
+    ..setUint64(56, tileDataOffset, Endian.little)
+    ..setUint64(64, tileBytes.length, Endian.little)
+    ..setUint64(72, 1, Endian.little)
+    ..setUint64(80, 1, Endian.little)
+    ..setUint64(88, 1, Endian.little)
+    ..setUint8(96, 1)
+    ..setUint8(97, 1)
+    ..setUint8(98, 1)
+    ..setUint8(99, 1)
+    ..setUint8(100, minZoom)
+    ..setUint8(101, maxZoom)
+    ..setInt32(102, 1220000000, Endian.little)
+    ..setInt32(106, 200000000, Endian.little)
+    ..setInt32(110, 1540000000, Endian.little)
+    ..setInt32(114, 460000000, Endian.little)
+    ..setUint8(118, minZoom)
+    ..setInt32(119, 1380000000, Endian.little)
+    ..setInt32(123, 350000000, Endian.little);
+
+  return Uint8List.fromList([
+    ...header,
+    ...directory,
+    ...metadata,
+    ...tileBytes,
+  ]);
+}
+
+/// clustered orderingに違反する最小archiveのbyte列を組み立てる。leafも
+/// gzipも使わない2つのroot tile entryだけで構成する: tile 5はoffset 0・
+/// length 1、tile 6は直後(offset 1)ではなくoffset 3を主張するため、
+/// offset [1, 3) が未参照のまま残る前方ギャップになる。
+///
+/// pmtiles_v3側にも同種のclustered ordering違反fixtureを組み立てる仕組み
+/// (`packages/pmtiles_v3/test/support/pmtiles_v3_fixture_builder.dart`)が
+/// あるが、その`test/`配下のファイルはpackageの`lib/`外にあるため
+/// `package:pmtiles_v3/...`importで参照できず、パッケージを跨いだ相対
+/// importはこのリポジトリの規約(CLAUDE.md: cross-package importは
+/// package importを使う)に反する。そのため、この packageのtestが必要と
+/// する最小限のarchiveだけをここで自前に組み立てている。
+Uint8List _buildClusteredOrderingViolationFixtureBytes() {
+  const headerLength = 127;
+  const minZoom = 2;
+  const maxZoom = 2;
+
+  final directory = Uint8List.fromList([
+    ..._varint(2), // entry count
+    ..._varint(5), // tileId delta: tile 5 (5 - 0)
+    ..._varint(1), // tileId delta: tile 6 (6 - 5)
+    ..._varint(1), // runLength: tile 5
+    ..._varint(1), // runLength: tile 6
+    ..._varint(1), // content length: tile 5 ([1])
+    ..._varint(1), // content length: tile 6 ([2])
+    ..._varint(1), // offset: tile 5 -> 0 + 1 (first entry is never "0")
+    ..._varint(4), // offset: tile 6 -> 3 + 1 (not contiguous with tile 5)
+  ]);
+  final metadata = Uint8List.fromList(utf8.encode('{}'));
+  const rootOffset = headerLength;
+  final metadataOffset = rootOffset + directory.length;
+  final leafOffset = metadataOffset + metadata.length;
+  // tile 5 occupies offset 0..1, then a 2-byte unreferenced gap, then tile 6
+  // at offset 3..4.
+  final tileBytes = Uint8List.fromList([1, 0, 0, 2]);
+
+  final header = Uint8List(headerLength);
+  header.setRange(0, 7, [0x50, 0x4D, 0x54, 0x69, 0x6C, 0x65, 0x73]);
+  header[7] = 3;
+  ByteData.sublistView(header)
+    ..setUint64(8, rootOffset, Endian.little)
+    ..setUint64(16, directory.length, Endian.little)
+    ..setUint64(24, metadataOffset, Endian.little)
+    ..setUint64(32, metadata.length, Endian.little)
+    ..setUint64(40, leafOffset, Endian.little)
+    ..setUint64(48, 0, Endian.little)
+    ..setUint64(56, leafOffset, Endian.little)
+    ..setUint64(64, tileBytes.length, Endian.little)
+    ..setUint64(72, 2, Endian.little) // addressedTilesCount
+    ..setUint64(80, 2, Endian.little) // tileEntriesCount
+    ..setUint64(88, 2, Endian.little) // tileContentsCount
+    ..setUint8(96, 1) // clustered
+    ..setUint8(97, 1)
+    ..setUint8(98, 1)
+    ..setUint8(99, 1)
+    ..setUint8(100, minZoom)
+    ..setUint8(101, maxZoom)
+    ..setInt32(102, 1220000000, Endian.little)
+    ..setInt32(106, 200000000, Endian.little)
+    ..setInt32(110, 1540000000, Endian.little)
+    ..setInt32(114, 460000000, Endian.little)
+    ..setUint8(118, minZoom)
+    ..setInt32(119, 1380000000, Endian.little)
+    ..setInt32(123, 350000000, Endian.little);
+
+  return Uint8List.fromList([
+    ...header,
+    ...directory,
+    ...metadata,
+    ...tileBytes,
+  ]);
+}
+
+Uint8List _encodeDirectory({required int tileId, required int length}) {
+  return Uint8List.fromList([
+    ..._varint(1),
+    ..._varint(tileId),
+    ..._varint(1),
+    ..._varint(length),
+    ..._varint(1),
+  ]);
+}
+
+List<int> _varint(int value) {
+  final output = <int>[];
+  var remaining = value;
+  do {
+    var byte = remaining & 0x7F;
+    remaining >>= 7;
+    if (remaining > 0) {
+      byte |= 0x80;
+    }
+    output.add(byte);
+  } while (remaining > 0);
+  return output;
+}
+
+final class TrackingRandomAccessReader implements PmTilesRandomAccessReader {
   TrackingRandomAccessReader({required this.bytes});
 
   final Uint8List bytes;
-  final List<({int offset, int length})> reads = [];
   var _closeCalls = 0;
   var _isClosed = false;
 
@@ -759,13 +347,12 @@ final class TrackingRandomAccessReader implements SeismicityRandomAccessReader {
         length <= 0 ||
         offset > bytes.length ||
         length > bytes.length - offset) {
-      throw SeismicityPmTilesException.invalidRange(
+      throw PmTilesV3Exception.invalidRange(
         offset: offset,
         length: length,
         sizeBytes: bytes.length,
       );
     }
-    reads.add((offset: offset, length: length));
     return Uint8List.sublistView(bytes, offset, offset + length);
   }
 
@@ -778,7 +365,7 @@ final class TrackingRandomAccessReader implements SeismicityRandomAccessReader {
   }
 }
 
-final class FailingOpenReader implements SeismicityRandomAccessReader {
+final class FailingOpenReader implements PmTilesRandomAccessReader {
   FailingOpenReader({
     required this.bytes,
     this.readFailure,
@@ -791,8 +378,6 @@ final class FailingOpenReader implements SeismicityRandomAccessReader {
   final StackTrace? readFailureStack;
   final StateError? closeFailure;
   var _closeCalls = 0;
-
-  int get closeCalls => _closeCalls;
 
   @override
   int get sizeBytes => bytes.length;

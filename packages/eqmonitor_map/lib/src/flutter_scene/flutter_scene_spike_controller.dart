@@ -4,15 +4,14 @@
 import 'dart:ui';
 
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_async_generation.dart';
-import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_orthographic_projection.dart';
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_spike_adapter.dart';
+import 'package:eqmonitor_map/src/flutter_scene/scene_spike_camera.dart';
 import 'package:eqmonitor_map/src/flutter_scene/scene_spike_metrics.dart';
 import 'package:eqmonitor_map/src/renderer/eqmonitor_orthographic_projection.dart';
 import 'package:eqmonitor_map/src/renderer/scene_spike_lifecycle.dart';
 import 'package:eqmonitor_map/src/renderer/spike_mesh_frame.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_scene/scene.dart' as scene;
-import 'package:vector_math/vector_math.dart' as scene_math;
 import 'package:vector_math/vector_math_64.dart' as model_math;
 
 class FlutterSceneSpikeController extends ChangeNotifier {
@@ -20,29 +19,12 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     final currentMetrics = metrics ?? SceneSpikeMetrics();
     final initialFrame = SpikeMeshFrame.initial();
     final adapter = FlutterSceneSpikeAdapter(initialFrame: initialFrame);
-    const worldHalfHeight = 1.2;
-    // The camera stands off the drawn plane, so the depth range has to reach
-    // past that standoff or every quad is clipped before rasterization.
-    const cameraStandoff = 2.0;
-    final projection = EqmonitorOrthographicProjection(
-      worldHalfHeight: worldHalfHeight,
-      depthHalfExtent: cameraStandoff + worldHalfHeight,
-    );
-    final cameraNode = scene.Node(
-      localTransform: scene_math.Matrix4.translationValues(
-        0,
-        0,
-        -cameraStandoff,
-      ),
-    );
+    final cameraSetup = createSceneSpikeCameraSetup();
     return FlutterSceneSpikeController.withDependencies(
       adapter: adapter,
       metrics: currentMetrics,
-      projection: projection,
-      camera: scene.NodeCamera(
-        cameraNode,
-        FlutterSceneOrthographicProjection(projection: projection),
-      ),
+      projection: cameraSetup.projection,
+      camera: cameraSetup.camera,
       initialFrame: initialFrame,
       initializeSceneStaticResources: scene.Scene.initializeStaticResources,
     );

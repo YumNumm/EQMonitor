@@ -55,6 +55,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_c
 import 'package:eqmonitor/feature/settings/children/config/debug/hinet_seismicity/ui/hinet_seismicity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navigation_debug_page.dart';
@@ -396,6 +397,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
           path: 'shake-detection-insert',
         ),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
+        TypedGoRoute<EqmonitorMapDebugRoute>(path: 'eqmonitor-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
         TypedGoRoute<DebugWebSocketRoute>(path: 'websocket'),
         TypedGoRoute<DebugNotificationDeliveryLogRoute>(
@@ -667,6 +669,15 @@ class DebugJmaMapRoute extends GoRouteData with $DebugJmaMapRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugJmaMapPage();
+  }
+}
+
+class EqmonitorMapDebugRoute extends GoRouteData with $EqmonitorMapDebugRoute {
+  const EqmonitorMapDebugRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const EqmonitorMapDebugPage();
   }
 }
 

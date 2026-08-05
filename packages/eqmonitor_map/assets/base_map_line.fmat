@@ -1,0 +1,48 @@
+// Lineレイヤーの押し出し描画material。
+//
+// `extrude`はLineMeshBuilderが頂点ごとに詰める押し出し法線(tile-localの
+// 座標系とは独立な、方向のみを持つ単位ベクトル。直線部分・capでは長さ1、
+// miter joinでは`joinNormal * miterLength`。lib/src/mesh/line_mesh.dartの
+// doc comment参照)。`half_width_world`はCPU側で毎frame確定するworld単位の
+// 半線幅で、shader内でzoomから再計算しない
+// (lib/src/flutter_scene/base_map_material_library.dartのdoc comment参照)。
+//
+// 押し出しはvertex.world_position(モデル変換=tileMatrixFor適用後、まだ
+// camera/projection適用前のworld座標)へ直接加算する。これがMapLibreの
+// `gl_Position = u_matrix*vec4(pos,0,1) + u_matrix*vec4(extrude,0,0)`
+// (変換後に加算)と等価になる根拠は
+// docs/knowledge/20260805_maplibre_native_renderer_reference.md
+// 「Line shader」節に記録されている:
+// 正射影・pitch 0の2D行列はaffine(線形部+平行移動)であり、affine変換は
+// ベクトル加算に分配する(M*(pos+ext) == M*pos + M*ext、ただしextの
+// homogeneous wは0で平行移動を受けない)。camera/projection行列もaffineな
+// ので、world_positionへ加算してからcamera/projectionを掛けた結果は、
+// 「tile-local空間でextrudeを加算してからcamera/projection*tileMatrixForを
+// 掛けた」結果と一致する。したがってworld_position側で押し出す本実装は、
+// MapLibreの「変換後に加算」と数学的に同じ効果を持つ。
+material {
+  name: "BaseMapLine",
+  shading_model: unlit,
+  blending: opaque,
+  culling: none,
+  attributes: [
+    { type: vec2, name: extrude },
+  ],
+  parameters: [
+    { type: vec4, name: line_color, hint: source_color, default: [1.0, 1.0, 1.0, 1.0] },
+    { type: float, name: half_width_world, default: 1.0 },
+  ],
+}
+
+vertex {
+  void Vertex(inout VertexInputs vertex) {
+    vertex.world_position.xy += extrude * material_params.half_width_world;
+  }
+}
+
+fragment {
+  void Surface(inout MaterialInputs material) {
+    material.base_color = material_params.line_color;
+    PrepareMaterial(material);
+  }
+}

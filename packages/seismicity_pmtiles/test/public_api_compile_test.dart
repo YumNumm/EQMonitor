@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:test/test.dart';
 
-final class PublicApiReader implements SeismicityRandomAccessReader {
+final class PublicApiReader implements PmTilesRandomAccessReader {
   @override
   int get sizeBytes => 1;
 
@@ -21,7 +21,7 @@ Future<Uint8List> loadPublicApiAsset({required String assetKey}) {
 }
 
 Future<SeismicityPmTilesArchive> openPublicApiArchive({
-  required SeismicityRandomAccessReader reader,
+  required PmTilesRandomAccessReader reader,
   required SeismicityPmTilesArchiveDescriptor descriptor,
 }) {
   return SeismicityPmTilesArchive.open(
