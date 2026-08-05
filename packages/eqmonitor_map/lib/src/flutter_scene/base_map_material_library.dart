@@ -1,6 +1,8 @@
 import 'dart:ui';
 
+import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:flutter_scene/scene.dart' as scene;
+import 'package:vector_math/vector_math.dart' show Vector2;
 
 /// `base_map_fill.fmat`/`base_map_line.fmat`から、layerごとに独立した
 /// `scene.PreprocessedMaterial`を1つずつ作る静的factory。
@@ -37,71 +39,107 @@ class BaseMapMaterialLibrary {
     return material;
   }
 
-  /// `assets/base_map_line.fmat`を新しく1つ読み込み、[color]と
-  /// [halfWidthLogicalPixels]を設定する。[halfWidthLogicalPixels]の単位・
-  /// 換算方法は[halfLineWidthWorldFor]のdoc comment参照。
+  /// `assets/base_map_line.fmat`を新しく1つ読み込み、[color]を設定し、
+  /// [setLineHalfWidth]で[halfWidthLogicalPixels]と[viewport]から求めた
+  /// NDC単位の半線幅を焼き込む。[viewport]が変わったら[setLineHalfWidth]を
+  /// 呼び直す必要がある(このメソッドは初期値を設定するだけ)。
   static Future<scene.PreprocessedMaterial> loadLineMaterial({
     required Color color,
     required double halfWidthLogicalPixels,
+    required MapViewport viewport,
   }) async {
     final material = await scene.loadFmatMaterial('assets/base_map_line.fmat');
-    material.parameters
-      ..setColor('line_color', color)
-      ..setFloat(
-        'half_width_world',
-        halfLineWidthWorldFor(halfWidthLogicalPixels: halfWidthLogicalPixels),
-      );
+    material.parameters.setColor('line_color', color);
+    setLineHalfWidth(
+      material: material,
+      halfWidthLogicalPixels: halfWidthLogicalPixels,
+      viewport: viewport,
+    );
     return material;
+  }
+
+  /// 既存の[material]の`half_width_ndc`パラメータを、[halfWidthLogicalPixels]
+  /// と[viewport]から[halfLineWidthNdcFor]で求め直して上書きする。
+  ///
+  /// NDC単位の換算は[viewport]の`logicalSize`(width/height)に依存するため、
+  /// viewportが変わる度(resize・画面回転)に呼び直す必要がある
+  /// (`lib/src/widget/base_map_view.dart`の`updateViewport`参照)。
+  static void setLineHalfWidth({
+    required scene.PreprocessedMaterial material,
+    required double halfWidthLogicalPixels,
+    required MapViewport viewport,
+  }) {
+    material.parameters.setVec2(
+      'half_width_ndc',
+      halfLineWidthNdcFor(
+        halfWidthLogicalPixels: halfWidthLogicalPixels,
+        viewport: viewport,
+      ),
+    );
   }
 }
 
 /// logical pixel単位の半線幅を、`base_map_line.fmat`の`vertex{}`が
-/// `vertex.world_position`へ加算するworld単位の半線幅へ換算する。
+/// `vertex.world_position`(実質NDC相当。下記「訂正」節参照)へ加算する
+/// NDC単位のvec2半線幅へ換算する。
 ///
 /// # 換算式
 ///
-/// 換算係数は1、つまり`half_width_world == halfWidthLogicalPixels`である。
-/// zoomに依存する項は存在しない。
+/// ```dart
+/// half_width_ndc = (
+///   2 * halfWidthLogicalPixels / viewport.logicalSize.width,
+///   2 * halfWidthLogicalPixels / viewport.logicalSize.height,
+/// )
+/// ```
 ///
-/// # 導出根拠
+/// NDCは`viewport.logicalSize`の`width × height`(logical px)に対して
+/// `[-1, 1]`(全幅/全高2)を張る座標系なので、1 logical pxはNDCでx軸
+/// `2/width`、y軸`2/height`に相当する。world空間では1 world px=1
+/// logical pxで等方(x/yで同じ換算係数)だが、NDCは軸ごとに正規化されて
+/// いるため、xとyで異なる係数を掛けて初めて画面上で等方な線幅になる
+/// (`viewProjectionMatrixFor`が組み立てる正射影はY反転と平行移動を含む
+/// affine変換だが回転を含まない対角scaleであるため、押し出しベクトルの
+/// x/y成分をこの係数で独立に掛けるだけで正しいNDCオフセットが求まる)。
 ///
-/// `assets/base_map_line.fmat`の`Vertex()`は`extrude`(方向のみを持つ
-/// 単位ベクトル。tile-local座標のscaleを持たない。`lib/src/mesh/line_mesh.dart`
-/// のdoc comment参照)を、tileMatrixFor適用後・camera/projection適用前の
-/// `vertex.world_position`へ直接加算する。この`world_position`が使う
-/// world座標系は、次の2つの理由から常に「1 world単位 == 1 logical pixel」
-/// になるよう設計されている(zoomや`tileMatrixFor`のscaleは無関係)。
+/// # 訂正: このdoc commentは以前「1 world単位=1 logical pixel」という
+/// 誤った前提の恒等関数を導出していた
 ///
-/// 1. `geo/tile_matrix.dart`の`viewProjectionMatrixFor`が組み立てる正射影
-///    (`EqmonitorOrthographicProjection`)は、`worldHalfHeight`に
-///    `viewport.logicalSize.height / 2`──画面のlogical pixel高さの半分
-///    ──を渡す。zoomや`MapCamera.zoom`はここに一切現れない。
-/// 2. `geo/tile_matrix.dart`の`tileMatrixFor`はtile-local座標を
-///    `MapMercatorProjection.worldSizeForZoom(zoom)`基準のworld pixel座標へ
-///    配置し、`geo/map_camera.dart`の`MapCamera.worldCenter`も同じ
-///    `worldSizeForZoom(zoom)`でcamera中心をworld座標へ投影する。つまり
-///    zoomが変わっても、tileとcamera中心は「同じzoom基準のworld pixel
-///    座標系」の中で一貫して動くだけで、(1)の正射影のworldHalfHeightは
-///    変化しない。
+/// 以前のバージョンは、`extrude`が「tileMatrixFor適用後・camera/projection
+/// 適用**前**のworld_positionへ加算される」という前提のもとで
+/// `half_width_world == halfWidthLogicalPixels`という換算式(実質恒等関数)
+/// を導出し、それをレビューで「world空間の縮尺だけを検証して正しい」と
+/// 確認していた。**しかしこの確認はworld空間の縮尺だけを見ており、
+/// 押し出しの加算がパイプラインの実際どの時点で起きるかを見落として
+/// いた。**
 ///
-/// (1)(2)を合わせると、正射影が「world高さ`viewport.logicalSize.height`を
-/// 画面いっぱい(`viewport.logicalSize.height` logical pixel)へ写す」写像
-/// である以上、1 world単位は常に1 logical pixelに写る。zoomはtileや
-/// cameraをworld座標系の中でどれだけ広げるか(=画面上でどれだけ大きく
-/// 見えるか)だけを変え、world座標系そのものとscreen座標系の縮尺関係は
-/// 変えない。
+/// 実際には`lib/src/widget/base_map_view.dart`の`_combinedTransformFor`が
+/// 各tileのnodeへ`viewProjectionMatrixFor(camera, viewport) * tileMatrixFor`
+/// を丸ごと`localTransform`(flutter_sceneのmodel transform)として焼き込み、
+/// Scene側camera(`_IdentityCameraProjection`)は何も変換しない。flutter_scene
+/// の生成頂点シェーダー(`flutter_scene_unskinned_body.glsl`)は
+/// `vertex.world_position = model_transform * position`を`Vertex()`
+/// 呼び出し**前**に計算し、`Vertex()`が`world_position`を書き換えた後で
+/// `gl_Position = camera_transform * vec4(world_position, 1.0)`
+/// (`camera_transform`はIdentity)を計算する。つまり`extrude`の加算は
+/// tileMatrixForとviewProjectionForの**両方を通し終えた後**、実質NDCに
+/// 近い空間に対して行われており、「camera/projection適用前」という
+/// 旧doc commentの前提はこの camera 配線では成り立たない。
 ///
-/// この設計は、`extrude`をtile-local座標(zoom依存のscaleを持つ座標系)へ
-/// 加算してから変換するMapLibreの実装(`u_ratio`でzoom依存のtile座標scaleを
-/// 補正する。
-/// docs/knowledge/20260805_maplibre_native_renderer_reference.md
-/// 「Line頂点生成」「Line shader」節参照)とは異なる。EQMonitorの`extrude`
-/// はtile-local座標のscaleを最初から持たない方向ベクトルであり、
-/// world座標(zoom非依存のscreen pixel scale)へ直接加算するため、
-/// zoom依存の補正が要らない。**shader内で`half_width_world`をzoomから
-/// 再計算する実装(例: `scaleForZoom(zoom)`を掛ける)は上記の等価性を壊す
-/// ので行わないこと。**
-double halfLineWidthWorldFor({required double halfWidthLogicalPixels}) {
+/// この結果、旧換算式の`half_width_world=1.0`はNDCで1.0(可視範囲±1の
+/// 半分)もの押し出しとなり、画面全体を線色で塗り潰す不具合を生んで
+/// いた(harness実験・実機確認で再現。詳細は
+/// `.superpowers/sdd/2026-08-05-eqmonitor-map-base-layer-pmtiles/
+/// extrude-fix-report.md`参照)。この事実に基づき、換算をworld単位の
+/// 恒等関数からNDC単位のvec2へ変更した。
+///
+/// **shader内で`half_width_ndc`をzoomから再計算する実装(例:
+/// `scaleForZoom(zoom)`を掛ける)は行わないこと。** `viewProjectionMatrixFor`
+/// のY反転・平行移動はzoomに依存せず、`half_width_ndc`はviewportの
+/// logical sizeだけに依存する(導出根拠は上記の換算式参照)。
+Vector2 halfLineWidthNdcFor({
+  required double halfWidthLogicalPixels,
+  required MapViewport viewport,
+}) {
   if (!halfWidthLogicalPixels.isFinite || halfWidthLogicalPixels < 0) {
     throw ArgumentError.value(
       halfWidthLogicalPixels,
@@ -109,5 +147,8 @@ double halfLineWidthWorldFor({required double halfWidthLogicalPixels}) {
       'must be finite and non-negative',
     );
   }
-  return halfWidthLogicalPixels;
+  return Vector2(
+    2 * halfWidthLogicalPixels / viewport.logicalSize.width,
+    2 * halfWidthLogicalPixels / viewport.logicalSize.height,
+  );
 }

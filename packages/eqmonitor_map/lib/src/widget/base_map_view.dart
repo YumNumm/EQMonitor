@@ -310,10 +310,23 @@ class _BaseMapController extends ChangeNotifier {
       .firstWhere((spec) => spec.kind == BaseMapLayerKind.background)
       .color;
 
+  /// [_viewport]がまだ設定されていない場合に[initialize]がmaterial生成時
+  /// だけ使う暫定値。`_refresh`は`viewport == null`の間nodeを一切追加しない
+  /// (`_refresh`の早期returnを参照)ため、この値で計算された
+  /// `half_width_ndc`が実際に画面へ出ることはなく、最初の`updateViewport`
+  /// 呼び出しで(`initialize`完了時の再適用、または以後の`updateViewport`
+  /// 自体が持つ再適用ロジックにより)即座に正しい値へ上書きされる。
+  static final _placeholderViewportBeforeFirstUpdate = MapViewport(
+    logicalSize: const Size(1, 1),
+    devicePixelRatio: 1,
+  );
+
   Future<void> initialize() async {
     try {
       await scene.Scene.initializeStaticResources();
       final materialsByStyleLayerId = <String, scene.PreprocessedMaterial>{};
+      final viewportForInitialLoad =
+          _viewport ?? _placeholderViewportBeforeFirstUpdate;
       for (final spec in baseMapLayerSpecs) {
         switch (spec.kind) {
           case BaseMapLayerKind.background:
@@ -329,6 +342,7 @@ class _BaseMapController extends ChangeNotifier {
                 await BaseMapMaterialLibrary.loadLineMaterial(
                   color: spec.color,
                   halfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
+                  viewport: viewportForInitialLoad,
                 );
         }
       }
@@ -343,6 +357,14 @@ class _BaseMapController extends ChangeNotifier {
       _materialsByStyleLayerId = materialsByStyleLayerId;
       _repository = repository;
       _isReady = true;
+      // `_viewport`がここまでの間(loadLineMaterialの非同期処理中)に
+      // 判明していれば、暫定値で焼き込んだ`half_width_ndc`を正しい値へ
+      // 上書きする。`_refresh`はこの後に呼ぶため、上書き前にnodeが
+      // 構築されることはない。
+      final viewport = _viewport;
+      if (viewport != null) {
+        _applyLineHalfWidthToAllMaterials(viewport);
+      }
       _refresh();
       // 初期化失敗の原因はGPU初期化・material読み込み・archive openなど
       // 多岐にわたり、握り潰さずそのまま`_initError`へ入れてUIへ出すために
@@ -362,8 +384,37 @@ class _BaseMapController extends ChangeNotifier {
       return;
     }
     _viewport = viewport;
+    // NDC単位の半線幅はviewportのlogical sizeに依存するため、resizeや
+    // 画面回転でviewportが変わる度に再計算して既存materialへ反映する
+    // (`base_map_material_library.dart`の`halfLineWidthNdcFor`doc comment
+    // 参照)。
+    _applyLineHalfWidthToAllMaterials(viewport);
     _refresh();
     notifyListeners();
+  }
+
+  /// 全line layerのmaterialへ、[viewport]から求め直した`half_width_ndc`を
+  /// 再適用する。materialがまだ`initialize`で構築されていなければ何もしない
+  /// (`initialize`側がその後で改めて呼ぶ)。
+  void _applyLineHalfWidthToAllMaterials(MapViewport viewport) {
+    final materialsByStyleLayerId = _materialsByStyleLayerId;
+    if (materialsByStyleLayerId == null) {
+      return;
+    }
+    for (final spec in baseMapLayerSpecs) {
+      if (spec.kind != BaseMapLayerKind.line) {
+        continue;
+      }
+      final material = materialsByStyleLayerId[spec.styleLayerId];
+      if (material == null) {
+        continue;
+      }
+      BaseMapMaterialLibrary.setLineHalfWidth(
+        material: material,
+        halfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
+        viewport: viewport,
+      );
+    }
   }
 
   void beginGesture() {
