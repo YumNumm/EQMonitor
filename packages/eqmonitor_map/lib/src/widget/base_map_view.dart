@@ -68,6 +68,14 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
     required int maxCachedTileGeometries,
 
     /// [BaseMapTileCache.lookupWithFallback]が祖先を遡る最大段数。
+    ///
+    /// [BaseMapTileCache]のzoom窓(低zoom側)の深さにも同じ値を渡す
+    /// (`base_map_tile_cache.dart`の「LRU容量evictionと低zoom祖先の保持の
+    /// 相互作用」節参照)。祖先を`lookupWithFallback`が実際に遡れる段数と、
+    /// その祖先がcacheの窓から破棄されずに残る段数を分けて設定できても
+    /// 意味がない(遡れる段数より深く保持しても使われず、遡れる段数より
+    /// 浅くしか保持しなければ遡っても見つからない)ため、1つの値を両方へ
+    /// 渡す。
     required int maxParentFallbackSteps,
   }) = _MapBaseLayerLimits;
 }
@@ -258,6 +266,7 @@ class _BaseMapController extends ChangeNotifier {
 
   late final _cache = BaseMapTileCache(
     maxEntries: limits.maxCachedTileGeometries,
+    maxParentFallbackSteps: limits.maxParentFallbackSteps,
   );
   late final _sceneMeshCache = _TileSceneMeshCache(
     maxEntries: limits.maxCachedTileGeometries,

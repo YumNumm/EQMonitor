@@ -19,11 +19,27 @@ import 'package:flutter/foundation.dart';
 /// # eviction
 ///
 /// [noteActiveZoom]で通知された「直近使用zoom」(`CanonicalTileId.z`と同じ
-/// 整数)を基準に、`|entry.z - activeZoom| > 1`のentryを都度破棄する
-/// (`docs/knowledge/20260802_kevi_map_renderer_reference.md`
-/// 「ジオメトリcache戦略」節: 「直近使用zoom±1以外を破棄」)。件数上限
-/// [maxEntries]は呼び出し側が渡す固定値(Global Constraints「上限値は
-/// 呼び出し側が渡す`limits`引数で明示する」)で、この上限を超えた分は
+/// 整数)を基準にentryを破棄するが、**上方向(高zoom側)と下方向(低zoom側)で
+/// 窓の深さが非対称**になっている(fix round 2)。
+///
+/// - 上方向: `entry.z > activeZoom + 1`を破棄する(元の
+///   `docs/knowledge/20260802_kevi_map_renderer_reference.md`
+///   「ジオメトリcache戦略」節の「直近使用zoom+1」をそのまま踏襲)。
+/// - 下方向: `entry.z < activeZoom - maxParentFallbackSteps`を破棄する。
+///
+/// 対称な`±1`窓だったfix round 1の実装は、`lookupWithFallback`の祖先
+/// fallback(下記「子→親fallback」節)と両立しなかった。zoomが2段以上一気に
+/// 上がるpinch(例: z4→z6)では、要求tileの祖先(z4)がまだ子孫(z6)より
+/// decodeが終わっているにもかかわらず、窓が`activeZoom(z6)±1`= `[5,7]`
+/// しか許さないためz4は即座に破棄され、`maxParentFallbackSteps`を
+/// どれだけ大きく設定しても遡る先が存在しなくなっていた(祖先を`±1`windowと
+/// `maxParentSteps`引数の両方で保持しなければならないのに、片方(`±1`)しか
+/// 実装していなかった)。低zoomのtileは1つのarchiveあたりの総数が
+/// 指数的に少ない(zoom `z`の全世界tile数は`4^z`)ため、深く保持しても
+/// メモリ増分は小さい。
+///
+/// 件数上限[maxEntries]は呼び出し側が渡す固定値(Global Constraints「上限値は
+/// 呼び出し側が渡すlimits引数で明示する」)で、この上限を超えた分は
 /// **最も長く参照されていないentry(LRU)**から破棄する。ズーム窓とは独立な
 /// 安全弁であり、ズーム窓を通過したentryが極端に多いarchiveでもメモリを
 /// 無制限に使わないためのもの。
@@ -36,6 +52,15 @@ import 'package:flutter/foundation.dart';
 /// 見ておらずx/y方向のpanには反応しない)、直近まで表示していたtileが
 /// 単純なFIFOで先に捨てられてpan往復のたびに再decodeが起きる、という
 /// 実測された不具合をLRU化で塞ぐ(fix round 1)。
+///
+/// **LRU容量evictionと低zoom祖先の保持の相互作用**: 低zoomの祖先を
+/// `lookupWithFallback`が実際にfallback先として使うたびに[get]を呼ぶため、
+/// fallbackとして現役の間はLRUの「最近使った」扱いを受け続け、容量evictionの
+/// 対象になりにくい。祖先を明示的にpinする機構は追加していない
+/// (fallbackが不要になった祖先まで無条件に保持し続ける理由がなく、
+/// 必要性を論証できない複雑化を避けるため)。祖先が実際にfallbackとして
+/// 使われなくなった後は、通常のLRU順序に従って他のentryと同様に
+/// 破棄され得る。
 ///
 /// # incarnation token
 ///
@@ -60,11 +85,24 @@ import 'package:flutter/foundation.dart';
 /// 見つかった祖先で打ち切る。遡る段数の上限`maxParentSteps`は呼び出し側が
 /// 渡す(Global Constraints)。
 final class BaseMapTileCache {
-  BaseMapTileCache({required this.maxEntries})
-    : assert(maxEntries > 0, 'maxEntries must be positive');
+  BaseMapTileCache({
+    required this.maxEntries,
+    required this.maxParentFallbackSteps,
+  }) : assert(maxEntries > 0, 'maxEntries must be positive'),
+       assert(
+         maxParentFallbackSteps >= 0,
+         'maxParentFallbackSteps must be non-negative',
+       );
 
   /// cacheへ保持できるentryの最大件数。
   final int maxEntries;
+
+  /// zoom窓の下方向(低zoom側)の深さ。[lookupWithFallback]へ渡す
+  /// `maxParentSteps`と同じ値を呼び出し側が渡すことを想定している
+  /// (呼び出し側=`BaseMapView`が`MapBaseLayerLimits.maxParentFallbackSteps`
+  /// を両方へ渡す)。cache自身が`lookupWithFallback`の引数を検査して
+  /// 一致を強制することはしない(cacheとlookupは疎結合なままにする)。
+  final int maxParentFallbackSteps;
 
   final _generationOwner = SceneSpikeAsyncGenerationOwner();
 
@@ -114,7 +152,8 @@ final class BaseMapTileCache {
   }
 
   /// 現在activeなzoom(整数、例えば`camera.zoom.floor()`)を通知する。
-  /// 呼ぶたびに窓の外(`|z - zoom| > 1`)のentryを破棄する。
+  /// 呼ぶたびに窓の外(`z > activeZoom + 1`または
+  /// `z < activeZoom - maxParentFallbackSteps`)のentryを破棄する。
   void noteActiveZoom(int zoom) {
     _activeZoom = zoom;
     _evictOutsideActiveZoomWindow();
@@ -125,9 +164,10 @@ final class BaseMapTileCache {
     if (activeZoom == null) {
       return;
     }
-    _entries.removeWhere(
-      (key, value) => (key.$2.z - activeZoom).abs() > 1,
-    );
+    _entries.removeWhere((key, value) {
+      final z = key.$2.z;
+      return z > activeZoom + 1 || z < activeZoom - maxParentFallbackSteps;
+    });
   }
 
   /// `_entries`の先頭(挿入順で最古、かつ[get]がhitするたびに末尾へ
