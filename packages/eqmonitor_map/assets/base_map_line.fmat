@@ -20,14 +20,41 @@
 // 「tile-local空間でextrudeを加算してからcamera/projection*tileMatrixForを
 // 掛けた」結果と一致する。したがってworld_position側で押し出す本実装は、
 // MapLibreの「変換後に加算」と数学的に同じ効果を持つ。
+//
+// # なぜ`vertex.uv`(texture coordinates)に押し出し法線を積んでいるか
+//
+// `vertex.uv`は本来テクスチャサンプリング用のUV座標(`vec2`)を運ぶための
+// フィールドだが、このmaterialは意図的にその意味論を外れ、押し出し法線
+// (同じく`vec2`)を運ばせている。理由は、以前使っていた
+// `attributes: [ { type: vec2, name: extrude } ]` + Dart側
+// `Geometry.setCustomAttribute('extrude', ...)`という custom vertex
+// attribute経由の受け渡しが、この環境ではGPUへ値を届けないバグを持って
+// いたため:
+//
+// GPUレベルの実験
+// (`.superpowers/sdd/2026-08-05-eqmonitor-map-base-layer-pmtiles/
+// extrude-gpu-probe-report.md`)で、fragment shaderを
+// `base_color = vec4(abs(extrude.x), abs(extrude.y), 0, 1)`にして描画した
+// ところ、本来`(0, ±1)`の単位ベクトルが出すはずの緑一色の帯ではなく、画面
+// 中央でぴったり0(黒)・上下端へ向かって単調増加するV字グラデーションが
+// 画面全高に出た。これは`extrude`という名前のcustom attributeではなく、
+// 同じ頂点の`position`(origin rebasing後のworld pixel座標。zoom 5で数万
+// オーダー)がshaderへ渡っていたことと完全に一致する。つまりcustom
+// attributeのslot/stride対応が壊れており、`setCustomAttribute`経由では
+// 正しい値がshaderに渡らない。
+//
+// `vertex.uv`(`MeshGeometry.fromArrays`の`texCoords:`引数がGPUへ渡る先。
+// `lib/src/flutter_scene/base_map_geometry_factory.dart`の`lineGeometry`
+// doc comment参照)は型が`vec2`で押し出し法線と完全に一致し、custom
+// attributeを経由しない組み込み属性のためproduction実績のある経路であり、
+// このバグを回避できる。このmaterialはtextureを一切サンプリングしない
+// ため、UVとして解釈されるはずの値を押し出し法線として使っても副作用は
+// ない。
 material {
   name: "BaseMapLine",
   shading_model: unlit,
   blending: opaque,
   culling: none,
-  attributes: [
-    { type: vec2, name: extrude },
-  ],
   parameters: [
     { type: vec4, name: line_color, hint: source_color, default: [1.0, 1.0, 1.0, 1.0] },
     { type: float, name: half_width_world, default: 1.0 },
@@ -36,7 +63,9 @@ material {
 
 vertex {
   void Vertex(inout VertexInputs vertex) {
-    vertex.world_position.xy += extrude * material_params.half_width_world;
+    // vertex.uvはUV座標ではなく押し出し法線(vec2)を運ぶ
+    // (このファイル冒頭のdoc comment参照)。
+    vertex.world_position.xy += vertex.uv * material_params.half_width_world;
   }
 }
 

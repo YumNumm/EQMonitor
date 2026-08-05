@@ -8,8 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 // このtestはGPU初期化を必要としない範囲だけを検証する。
 // `BaseMapGeometryFactory.fillGeometry`/`lineGeometry`自体は
-// `scene.MeshGeometry.fromArrays`/`setCustomAttribute`というGPUへの
-// buffer作成・アップロードを呼ぶため、`test/flutter_scene`の既存test
+// `scene.MeshGeometry.fromArrays`というGPUへのbuffer作成・アップロードを
+// 呼ぶため、`test/flutter_scene`の既存test
 // (`flutter_scene_spike_controller_test.dart`)が実際のGPU呼び出しをすべて
 // fakeで避けているのと同じ理由で、ここでは呼ばない。代わりに、それら2
 // methodがGPU呼び出しの直前に組み立てる引数(`buildFillGeometryArgs`/
@@ -98,8 +98,8 @@ void main() {
 
       expect(args.extrudes, Float32List.fromList(const [0.6, 0.8, -0.6, -0.8]));
       // zパディングは`positions`だけの事情(`MeshGeometry.fromArrays`が
-      // 3成分を要求する)であり、`extrude`は`setCustomAttribute`へ
-      // `components: 2`で渡すvec2属性なので触ってはいけない。触っていない
+      // 3成分を要求する)であり、`extrudes`は`MeshGeometry.fromArrays`の
+      // `texCoords:`引数へ渡すvec2属性なので触ってはいけない。触っていない
       // ことを同一インスタンスであることで確認する。
       expect(identical(args.extrudes, extrudes), isTrue);
     });

@@ -32,6 +32,10 @@ final class LineMesh {
   /// (`LineMeshBuilder`のdoc comment参照)。shaderはこの値をそのまま線幅の
   /// 半分に掛けて`position + extrude * halfWidth`のように中心線から押し出す
   /// 想定であり、miter joinの伸長分もこの1本の値で表現される。
+  ///
+  /// GPUへは`BaseMapGeometryFactory.lineGeometry`が`MeshGeometry.fromArrays`
+  /// の`texCoords`引数として渡す(custom attributeの不具合回避。詳細は
+  /// `base_map_geometry_factory.dart`のdoc comment参照)。
   final Float32List extrudes;
 
   /// 3個1組でtriangleを表すindex buffer。[positions]内の頂点index
