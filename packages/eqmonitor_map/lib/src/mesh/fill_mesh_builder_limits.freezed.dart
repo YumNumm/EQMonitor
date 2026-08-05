@@ -19,7 +19,7 @@ mixin _$FillMeshBuilderLimits {
 /// 行っている制限と同じ位置付け。
  int get maxHolesPerPolygon;/// 1つのfeatureが持つ全ring(外形+穴、複数polygon分の合算)の頂点数の
 /// 上限。三角形化前の頂点バッファ確保量を抑える早期チェックとして働く。
- int get maxVerticesPerFeature;/// 1つの[FillMesh] segmentに積める頂点数の上限。index bufferが
+ int get maxVerticesPerFeature;/// 1つの`FillMesh` segmentに積める頂点数の上限。index bufferが
 /// `Uint16List`であるため、呼び出し側がこの値を65536以下に設定しない
 /// 場合`FillMeshBuilder`はArgumentErrorを投げる(index値がuint16の範囲を
 /// 静かに超えて壊れたmeshを生成することを避けるための防御)。
@@ -227,7 +227,7 @@ class _FillMeshBuilderLimits implements FillMeshBuilderLimits {
 /// 1つのfeatureが持つ全ring(外形+穴、複数polygon分の合算)の頂点数の
 /// 上限。三角形化前の頂点バッファ確保量を抑える早期チェックとして働く。
 @override final  int maxVerticesPerFeature;
-/// 1つの[FillMesh] segmentに積める頂点数の上限。index bufferが
+/// 1つの`FillMesh` segmentに積める頂点数の上限。index bufferが
 /// `Uint16List`であるため、呼び出し側がこの値を65536以下に設定しない
 /// 場合`FillMeshBuilder`はArgumentErrorを投げる(index値がuint16の範囲を
 /// 静かに超えて壊れたmeshを生成することを避けるための防御)。
