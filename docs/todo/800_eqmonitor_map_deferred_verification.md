@@ -63,32 +63,81 @@
   描画されても`baseMapLayerSpecs`の色が全て不透明なため見た目には現れないが、
   半透明色を導入する場合は排除が必要になる。
 
-## 既知の不具合(Task 10の実機確認で発見、flood発生元のlayerを特定・未修正)
+## Task 10で観測したfloodの真因(特定済み、修正は別コミット)
 
-**海(land以外の領域)が`areaForecastLocalEwLine`(source layer:
-`areaForecastLocalEew`, 名目色`0xFFFF7043`のオレンジ)の色で塗られたように
-見える不具合がある。**
+Task 10の実機確認で「海(land以外の領域)が単一のLine layerの色で塗り潰される」
+現象が観測された。当初は`areaForecastLocalEewLine`のLine mesh生成、または
+ring境界処理の不具合と推測していたが、**いずれも反証され、真因はGPUへの
+頂点属性の受け渡しにあった。**
 
-当初「`countriesLine`のLine meshに縮退した巨大三角形が2枚混入している」
-という仮説を報告したが、**この仮説は別agentの検証により反証された。**
-問題の三角形の座標は`(4096,4176)→(0,4176)`であり、`y=4176 = extent(4096) +
-buffer(80)`と一致する、MVT tile bufferのclip辺という正当な地物だった
-(南極付近のWeb Mercator clip辺)。独立実装によるring分離の再検証でも
-`crossRingViolations=0`、`bigTriCount=0`が確認されており、
-**`LineMeshBuilder`と`_polygonFeatureAsClosedLines`は正常と確定した。**
+### 反証された仮説(記録として残す)
 
-`BaseMapMaterialLibrary`をlayerごとに独立したmaterial instanceを持つ設計へ
-変更し(`spec.color`が実際に反映されるようにした)、zoom=4のデバッグページを
-screenshot確認したところ、**画面の海に見える領域全体が`areaForecastLocalEwLine`
-の名目色(オレンジ`0xFFFF7043`)そのもので塗りつぶされていた。** land部分は
-正しい`countriesFill`/`areaForecastLocalEFill`のベージュ系色で、他のLine layer
-(`countriesLine`のグレー、`areaForecastLocalELine`のグレー等)の色は画面上に
-確認できなかった。
+以下はすべて測定によって否定された。同じ仮説が再燃したときの参照用に残す。
 
-以上より、flood(画面のほぼ全域を単一のLine layerの色が覆う現象)の原因は
-`areaForecastLocalEwLine`(source layer `areaForecastLocalEew`)のLine mesh
-生成、またはその元になるMVT座標に何らかの異常がある可能性が高いと推測される
-が、**具体的な原因(ring境界か、座標スケールか、tile座標の解釈かなど)は
-未特定であり、これ以上の追跡は行っていない。** 該当layerを扱うコードが
-`lib/src/mesh/`・`lib/src/tile/`(Task 10の変更対象外)にあるため、修正は
-別途担当agent/taskへ引き継ぐ。
+- **ring境界を越えた頂点接続**: production非依存の独立実装で可視6タイル全数を
+  照合し、`crossRingViolations=0`。`LineMeshBuilder.build`は`localOffset`で
+  ringを正しく分離している。当初「巨大三角形2枚」と見えたものは、tile buffer
+  のclip辺(`y = extent 4096 + buffer 80`)という正当な地物であり、報告値
+  16384と4096の差はhalfWidth 4と1の違いで完全に説明できた。
+- **MVT extentのハードコード**: `base_map_view.dart`がtile行列へ
+  `mvtDefaultExtent`(4096)を固定で渡しているが、実archiveの全layerが
+  `extent=4096`であり縮尺の破綻はない(後述の潜在的脆さは別項)。
+- **miter limit clampの漏れ**: 可視6タイル全layerの全頂点で押し出し長は
+  `[1.0, 4.0000002]`に収まり、上限超過は0件。
+- **world空間での過大三角形**: `tileMatrixFor`適用後のworld座標で測っても
+  最大534px^2(viewport面積の0.15%以下)であり、画面を覆う規模の三角形は
+  1件も存在しない。
+
+### 真因: `setCustomAttribute`の値がshaderへ届かない
+
+`Geometry.setCustomAttribute('extrude', ...)`で渡した押し出し法線がshaderへ
+届かず、**代わりに同じ頂点の`position`データが読まれていた**(slot/stride
+不整合)。
+
+GPUレベルの実験で確認した。`base_map_line.fmat`のfragment shaderを
+`base_color = vec4(abs(extrude.x), abs(extrude.y), 0, 1)`へ差し替えて描画した
+ところ、本来`extrude`は`(0, ±1)`の単位ベクトルなので緑一色の帯になるはずが、
+**画面中央でぴったり0(黒)、上下端へ向かって単調増加するV字グラデーション**が
+画面全高に出た。これはorigin rebasing後の`position`の振る舞い(camera中心で0、
+外側へ増加)と完全に一致し、値も数万オーダー(zoom 5のworld pixel座標)で
+ランダムノイズではなかった。
+
+これで全症状が説明できる。
+
+- 押し出しが巨大化したlayerは画面を塗り潰す(`areaForecastLocalEewLine`)
+- 別のlayerは画面外へ飛んで見えない(`countriesLine`、`areaForecastLocalELine`)
+- **Fillはcustom attributeを使わないため正常に描画される**
+
+実験の詳細とevidence画像は
+`.superpowers/sdd/2026-08-05-eqmonitor-map-base-layer-pmtiles/extrude-gpu-probe-report.md`
+にある(このディレクトリはgit管理外)。
+
+## spike用camera配線が描画されない(未修正)
+
+上記の実験中に別の不具合が判明した。**`scene_spike_camera.dart`と同型の
+camera配線(`scene.NodeCamera` + `EqmonitorOrthographicProjection`)は、この
+環境で可視レンダリングを一切生成しない。** production実績のある
+`base_map_fill.fmat`を使っても何も描画されず、`BaseMapMaterialPreflightView`
+をそのままマウントしても同様だった。段階的なsanity checkで、組み込み
+geometry/material + `PerspectiveCamera`は正常に描画され、custom `.fmat` +
+`MeshGeometry.fromArrays` + `PerspectiveCamera`も正常に描画されるが、camera
+だけを`NodeCamera` + 正射影へ替えた瞬間に黒へ戻ることを確認している。
+
+つまり **Task 1の`BaseMapMaterialPreflightView`は、実際に画面へ何かが出ることを
+一度も目視確認されていない。** Task 1では`.fmat`がimpellercでコンパイルされ
+shaderbundleに`in vec2 extrude;`が入ることまでは確認したが、描画そのものは
+確認していなかった。`BaseMapView`は別のcamera配線
+(`_IdentityCameraProjection` + `viewProjectionMatrixFor`をnodeへ焼き込む方式)を
+使っており、そちらでは描画される。
+
+`FlutterSceneSpikeView`と`BaseMapMaterialPreflightView`が実際に描画されるかは
+別途確認が必要である。
+
+## `BaseMapTileGeometry`がMVT extentを運んでいない(潜在的な脆さ)
+
+`base_map_view.dart`はtile行列へ`mvtDefaultExtent`(4096)を固定で渡している。
+`BaseMapTileGeometry`がどの`extent`でdecodeしたかを保持していないためである。
+実archiveの全layerが`extent=4096`なので現時点で実害はないが、異なる`extent`を
+持つarchiveでは縮尺が壊れる。設計正本は「MVT extentは固定値ではなくtileごとに
+layer宣言値を読む」と定めており、この固定化はそれに反する。計画側でextentの
+伝搬を指定しなかった漏れである。
