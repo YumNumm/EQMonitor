@@ -218,6 +218,18 @@ flutter:
     # package:sqlite3 v3 はビルドフック(native assets)で libsqlite3 を同梱する。
     # 無効だと .so が同梱されず drift が起動時にクラッシュするため必須。
     enable-native-assets: true
+    # eqmonitor_map の hook/build.dart が `.fmat` を Dart Data Asset として
+    # 生成する。このfeatureは master で `available` だが `enabledByDefault`
+    # ではないため(flutter_tools の features.dart の `dartDataAssets` 参照)、
+    # 明示的に有効化しないと同梱されず、実行時に
+    # `base_map_fill.fmat was not found` になる。
+    #
+    # `flutter config --enable-dart-data-assets` はマシンごとのglobal設定で
+    # repositoryへコミットされないためCI/CDには効かない。pubspecの
+    # `flutter: config:` はglobal設定より優先される
+    # (flutter_tools の flutter_features_config.dart の
+    # `_isEnabledAtProjectLevel`)ので、ここへ書くことでCDでも有効になる。
+    enable-dart-data-assets: true
   uses-material-design: true
   assets:
     - assets/
