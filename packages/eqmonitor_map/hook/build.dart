@@ -6,7 +6,10 @@ Future<void> main(List<String> args) async {
     await buildMaterials(
       buildInput: config,
       buildOutput: output,
-      materials: ['assets/base_map_fill.fmat'],
+      materials: [
+        'assets/base_map_fill.fmat',
+        'assets/base_map_line.fmat',
+      ],
     );
   });
 }
