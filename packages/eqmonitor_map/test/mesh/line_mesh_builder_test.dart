@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
+import 'package:eqmonitor_map/src/mesh/line_mesh.dart';
 import 'package:eqmonitor_map/src/mesh/line_mesh_build_exception.dart';
 import 'package:eqmonitor_map/src/mesh/line_mesh_builder.dart';
 import 'package:eqmonitor_map/src/mesh/line_mesh_builder_limits.dart';
@@ -379,6 +380,149 @@ void main() {
           6,
           reason: '縮退したringの頂点が混ざらず、有効なringの3点×2だけになる',
         );
+      },
+    );
+  });
+
+  group('multiple rings in a single feature', () {
+    // 1 featureが複数ringを持つケース(`countries`のようなPolygon由来の
+    // Line layerが典型例。多数の国・島を1 featureの複数ringとして持つ)を
+    // 直接検証する。三角形の3頂点がすべて同一ring由来であることを
+    // 不変条件として固定する(特定のindex配列と比較する形にはしない)。
+    //
+    // ring境界を検出する方法: 各ringはdedup後の頂点数nに対し、常に
+    // 2n個の頂点(各点のplus/minus)を生成し、feature内ではring登場順に
+    // 連続したindex区間を占める(`LineMeshBuilder.build`のlocalOffset
+    // 累積)。よってringごとの頂点数さえ分かれば、区間境界は
+    // このtestの入力から導出できる(実装のindex配列そのものを直接
+    // 比較するわけではない)。
+    void expectNoCrossRingTriangle(
+      LineMesh mesh,
+      List<int> vertexCountPerRing,
+    ) {
+      final ringStart = <int>[];
+      var offset = 0;
+      for (final count in vertexCountPerRing) {
+        ringStart.add(offset);
+        offset += count;
+      }
+      int ringIndexOf(int vertexIndex) {
+        for (var r = ringStart.length - 1; r >= 0; r--) {
+          if (vertexIndex >= ringStart[r]) {
+            return r;
+          }
+        }
+        throw StateError('vertexIndex $vertexIndex is out of range');
+      }
+
+      for (var i = 0; i + 2 < mesh.indices.length; i += 3) {
+        final ring0 = ringIndexOf(mesh.indices[i]);
+        final ring1 = ringIndexOf(mesh.indices[i + 1]);
+        final ring2 = ringIndexOf(mesh.indices[i + 2]);
+        expect(
+          {ring0, ring1, ring2},
+          hasLength(1),
+          reason:
+              'triangle at indices[$i..${i + 2}] mixes vertices from '
+              'different rings (ring0=$ring0, ring1=$ring1, ring2=$ring2), '
+              'which means a ring boundary was bridged.',
+        );
+      }
+    }
+
+    double triArea(
+      LineMesh mesh,
+      int ia,
+      int ib,
+      int ic, {
+      double halfWidth = 1,
+    }) {
+      double px(int idx) =>
+          mesh.positions[idx * 2] + mesh.extrudes[idx * 2] * halfWidth;
+      double py(int idx) =>
+          mesh.positions[idx * 2 + 1] + mesh.extrudes[idx * 2 + 1] * halfWidth;
+      final ax = px(ia);
+      final ay = py(ia);
+      final bx = px(ib);
+      final by = py(ib);
+      final cx = px(ic);
+      final cy = py(ic);
+      return ((bx - ax) * (cy - ay) - (cx - ax) * (by - ay)).abs() / 2;
+    }
+
+    test(
+      'a feature with two widely separated closed rings never produces a '
+      'triangle whose vertices span both rings, and the extruded '
+      "triangle areas stay within each ring's own small bounding box "
+      '(no bridge across the ~4000-unit gap between the rings)',
+      () {
+        // ringA: tile-local (0,0)を中心とした10x10の小さな正方形。
+        // ringB: ringAから4000単位離れた(4000,4000)を中心とした同じ大きさの
+        // 正方形。もしring遷移でindexが分離されず橋渡しされていれば、
+        // 2つのringの頂点(距離約4000)を結ぶ巨大な三角形が生成されるはずで
+        // あり、その面積は数千のオーダーになる(ring単独の押し出し後
+        // 三角形の面積はたかだか数十のオーダー)。
+        final ringA = _ring([(0, 0), (10, 0), (10, 10), (0, 10), (0, 0)]);
+        final ringB = _ring([
+          (4000, 4000),
+          (4010, 4000),
+          (4010, 4010),
+          (4000, 4010),
+          (4000, 4000),
+        ]);
+        final feature = _lineFeature([ringA, ringB]);
+
+        final meshes = _builder().build([feature]);
+
+        expect(meshes, hasLength(1));
+        final mesh = meshes.single;
+        // 各ringは4点(dedup+closing後)なので、plus/minusで8頂点ずつ。
+        expect(mesh.vertexCount, 16);
+        expectNoCrossRingTriangle(mesh, [8, 8]);
+
+        var maxArea = 0.0;
+        for (var i = 0; i + 2 < mesh.indices.length; i += 3) {
+          final area = triArea(
+            mesh,
+            mesh.indices[i],
+            mesh.indices[i + 1],
+            mesh.indices[i + 2],
+          );
+          if (area > maxArea) {
+            maxArea = area;
+          }
+        }
+        // ringAの1辺は10、押し出しはmiter joinを含めても最大miterLimit
+        // (既定4)倍。単独ringの三角形面積は明らかに1000を超えない
+        // (10 * 4 = 40程度が上限のオーダー)。一方、橋渡しが起きた場合の
+        // 面積は距離差(約4000)に比例するため、1000という閾値は
+        // 「橋渡しがあれば必ず検出でき、橋渡しがなければ絶対に超えない」
+        // 安全なマージンを持つ。
+        expect(
+          maxArea,
+          lessThan(1000),
+          reason:
+              'a triangle this large can only be explained by a vertex from '
+              'ringA being connected to a vertex from ringB',
+        );
+      },
+    );
+
+    test(
+      'a feature with two widely separated open line rings also keeps '
+      'triangles within their own ring',
+      () {
+        final ringA = _ring([(0, 0), (10, 0), (10, 10)]);
+        final ringB = _ring([(4000, 4000), (4010, 4000), (4010, 4010)]);
+        final feature = _lineFeature([ringA, ringB]);
+
+        final meshes = _builder().build([feature]);
+
+        expect(meshes, hasLength(1));
+        final mesh = meshes.single;
+        // 開いたlineはring1本につき3点×2(plus/minus) = 6頂点。
+        expect(mesh.vertexCount, 12);
+        expectNoCrossRingTriangle(mesh, [6, 6]);
       },
     );
   });
