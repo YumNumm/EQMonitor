@@ -65,3 +65,35 @@
   (`_BaseMapController._rebuildSceneNodes`)。現状は同じtileが複数回
   描画されても`baseMapLayerSpecs`の色が全て不透明なため見た目には現れないが、
   半透明色を導入する場合は排除が必要になる。
+
+## 既知の不具合(Task 10の実機確認で発見、未修正)
+
+`countriesLine`(source layer: `countries`)のLine meshに、他のline layer
+(`areaForecastLocalEewLine`/`areaForecastLocalELine`/`areaInformationCityQuakeLine`)
+と比べて桁違いに大きい縮退三角形が2枚混入している。本番相当archive
+(`app/android/app/src/debug/assets/eqmonitor_assets/map/all.pmtiles`,
+zoom 0..8)のz0/0/0タイルを`decodeBaseMapTileSync`で直接decodeし、押し出し後の
+三角形面積を計測して確認した:
+
+```
+LINE countriesLine: maxTriArea=16384.0, bigTriCount(>5000)=2
+LINE areaForecastLocalEewLine: maxTriArea=141.9  bigTriCount=0
+LINE areaForecastLocalELine:   maxTriArea=125.5  bigTriCount=0
+LINE areaInformationCityQuakeLine(z7): maxTriArea=209.9 bigTriCount=0
+```
+
+extrude長自体はmiter limit(4)以内で正常なため、押し出しの暴走ではなく
+centerline側のpositionが離れた2点を繋ぐ縮退三角形になっていると考えられる。
+`countries`層は日本・周辺国など複数ringを持つ数少ないlayerであり、ringの
+継ぎ目(`lib/src/tile/base_map_tile_decoder.dart`の`_polygonFeatureAsClosedLines`
+によるring closure、または`lib/src/mesh/line_mesh_builder.dart`のring遷移処理)
+で1本余計な三角形が生成されている可能性が高い。他の(単一国内の行政区分のみを
+持つ)source layerではこの症状が出ていない。
+
+`countries`はこのarchiveのz0にしか存在しないため、zoom 0..8を許すarchiveでは
+高いzoomほどoverscale倍率が大きくなり(z8で256倍)、tile-local空間ではごく
+小さい欠陥(全体4096²の約0.1%)が画面の大部分を覆って見える
+(iOS simulatorでの実機確認で、海に見える領域全体がline色で塗られたように
+見える現象として観測)。
+
+`lib/src/mesh/`・`lib/src/tile/`はTask 10の変更対象外のため未修正。

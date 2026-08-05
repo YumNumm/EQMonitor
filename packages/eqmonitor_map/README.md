@@ -5,19 +5,24 @@ EQMonitor専用のFlutter地図レンダラーです。
 Flutter SceneをGPU描画基盤としてPMTiles/MVTの地物を描画し、ラベルはasset内の1つの地理anchorから、実測文字サイズとDPRに応じたscreen placement候補を生成してFlutterの`TextPainter`で描画します。MapLibre Style JSON互換ではなく、型付きの宣言的`MapNode`ツリーを利用します。
 
 > [!WARNING]
-> 現在はFlutter Sceneのscaffold、manual smoke用example、そしてappのデバッグページから
-> package同梱`.fmat`のdata assetが解決できることを確認するpreflight描画までです。
-> ベースレイヤーのFill/Line描画、tile pipeline、camera操作はまだ実装していません。
-> iOS/Android実機のprofile/release確認は実施していません。未実施の実機確認は
-> renderer foundation実装の開始条件にしません。
+> `BaseMapView`でベースレイヤー(Fill/Line)のpan/pinch zoom付き描画を実装し、
+> iOS simulatorで実際に描画されることとpanでtileが差し替わることを確認済みです
+> (下記「実機/simulatorでの確認結果」参照)。ただし、`countriesLine`のLine mesh
+> に2枚の縮退三角形が混入しており、archiveがoverscaleされるzoomでは海(land以外)
+> の広い範囲がline色で塗られたように見える既知の不具合があります(未修正、
+> `docs/todo/800_eqmonitor_map_deferred_verification.md`参照)。pinch-zoomの
+> 実機/simulator確認、線幅・tile境界の目視確認、background色が実際に画面へ
+> 出ることの確認はできていません。iOS/Android実機(simulatorではない物理端末)の
+> profile/release確認は実施していません。
 
 ## appからの利用
 
 `app`は`eqmonitor_map`へ依存し、デバッグページ「EQMonitor Map (Flutter Scene)」から
-`BaseMapMaterialPreflightView`を表示します。この画面はFlutter Sceneのstatic resource初期化と
-`assets/base_map_fill.fmat`のdata asset解決だけを確認するもので、地図を描画しません。
-ベースレイヤー描画は[`docs/superpowers/plans/2026-08-05-eqmonitor-map-base-layer-pmtiles.md`](../../docs/superpowers/plans/2026-08-05-eqmonitor-map-base-layer-pmtiles.md)
-のTask 8とTask 10で実装します。
+`BaseMapView`を表示します。`app/lib/feature/settings/children/config/debug/eqmonitor_map/`
+配下の`eqmonitor_map_debug_source_provider.dart`が、`AssetPackRepository.resolveAsset`で
+検証済みのbase map PMTilesを解決し(未準備なら`AssetPackNotReadyException`をエラー表示へ
+流す。デバッグページ専用のmanual override経路も持つ)、そのarchiveのPMTiles headerから
+実際の`minZoom`/`maxZoom`を読んで`MapBaseLayerLimits`を組み立てます。
 
 `.fmat`はpackage rootの`hook/build.dart`がDart Data Assetとして生成します。実行前に
 マシンごとに一度`mise exec -- flutter config --enable-dart-data-assets`が必要です。未設定だと
@@ -109,6 +114,52 @@ pass/fail artifactは生成しません。
 - `Rebuild app resources`後にrebuild counterが増え、procedural mesh、custom material、labelが再表示される。
 - `Dispose and remount`後にremount counterが増え、各counterを維持したまま操作を続行できる。
 - 各操作の前後でexception counterが増えず、端末logにFlutter/Scene例外や連続エラーがない。
+
+## `BaseMapView`の実機/simulatorでの確認結果
+
+Task 10で、iPhone 17 Pro simulator (iOS 27.0)を使い、appのデバッグページ
+「EQMonitor Map (Flutter Scene)」から`BaseMapView`を実際に開いて確認しました。
+使ったPMTilesはAsset Pack未準備時のデバッグ専用override経路
+(`eqmonitor_map_debug_source_provider.dart`)で読み込んだ、本番相当の
+`app/android/app/src/debug/assets/eqmonitor_assets/map/all.pmtiles`
+(11,640,567 byte、zoom 0..8)です。
+
+### 確認できたこと
+
+- デバッグページを開くと、日本の海岸線が正確な形状でFillレイヤーとして描画される
+  (screenshotで本州・四国・九州の実際の地形と一致することを目視確認)。
+- 1本指ドラッグ(pan)でcamera中心が実際に動き、表示される地物も追従して変化する。
+  HUDの`visibleTiles`/`decoding`もtile読み込みに応じて変化し、0へ収束する。
+- zoomはarchiveのheaderから実測した範囲(このarchiveでは`[0, 8]`)でclampされる。
+- archiveの`countries`データが存在しないzoom(このarchiveではz0にしか実データが
+  無い)でも、tileの祖先fallback(`BaseMapTileCache.lookupWithFallback`)により
+  陸地の形状が正しい位置に表示され続ける(overscaleが機能している)。
+
+### 確認できなかったこと
+
+- pinch-zoom(2本指)の実機/simulator確認。simulator操作に使ったmouseベースの
+  自動操作は単一pointerしか扱えず、2本指のscale gestureを合成できませんでした。
+- `ColoredBox`のbackground色(layer仕様の`background`行の色)が実際に画面へ出る
+  ことの視覚的確認。下記の既知の不具合が画面のほぼ全域を覆ってしまうため、真の
+  背景色が出る場所をscreenshot上で見つけられませんでした。
+- 線幅(`half_width_world`)や色の見た目の確認、tile境界の隙間・重複の確認。
+  上記不具合の影響で判別できませんでした。
+- iOS/Android物理端末での確認(simulatorのみ実施)。
+
+### 既知の不具合(未修正)
+
+`countriesLine`(source layer: `countries`)のLine meshに、他のline layerと
+比べて桁違いに大きい縮退三角形が2枚混入しています。本番相当archiveのz0/0/0
+タイルを直接decodeし、押し出し後の三角形面積を計測して確認しました
+(`countriesLine`のmax三角形面積が16384、他のline layerは125〜210程度)。
+`countries`はこのarchiveのz0にしか存在しないため、zoom 0..8を許すarchiveでは
+高いzoomほどoverscale倍率が大きくなり(z8で256倍)、tile-local空間ではごく
+小さい欠陥(全体の約0.1%)が画面の大部分を覆って見えます。原因は
+`lib/src/mesh/line_mesh_builder.dart`または`lib/src/tile/base_map_tile_decoder.dart`
+の`_polygonFeatureAsClosedLines`(ring継ぎ目の処理)にあると推測されますが、
+どちらもTask 10の変更対象外のため未修正です。詳細は
+[`docs/todo/800_eqmonitor_map_deferred_verification.md`](../../docs/todo/800_eqmonitor_map_deferred_verification.md)
+を参照してください。
 
 ## Delivery graph
 
