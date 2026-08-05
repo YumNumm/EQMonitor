@@ -15,7 +15,20 @@ part 'eqmonitor_map_debug_source_provider.g.dart';
 /// を書き換えたり迂回したりはしない([_resolveDebugOverride]参照)。
 const _debugOverrideRelativePath = 'eqmonitor_map_debug/base_map_debug.pmtiles';
 
-/// デバッグページが`BaseMapView`へ渡す[VerifiedPmTilesSource]を組み立てる。
+/// [eqmonitorMapDebugSourceProvider]の結果。[minZoom]/[maxZoom]は
+/// [source]が指すarchiveの`PmTilesV3Header`をそのまま読んだ実測値であり、
+/// 生成scriptの既定値などを転記した固定値ではない([_readHeader]参照)。
+/// `BaseMapView`の公開引数(`source`/`initialCamera`/`limits`のみ)は
+/// 変更しないため、`MapBaseLayerLimits`はデバッグページ側でこの結果から
+/// 組み立てる。
+typedef EqmonitorMapDebugSource = ({
+  VerifiedPmTilesSource source,
+  int minZoom,
+  int maxZoom,
+});
+
+/// デバッグページが`BaseMapView`へ渡す[VerifiedPmTilesSource]と、その
+/// archiveの実際のzoom範囲を組み立てる。
 ///
 /// 通常は`AssetPackRepository.resolveAsset(AssetPackAssetId.baseMapPmtiles)`
 /// が返す検証済み`File`をそのまま使う。Asset Packが未準備
@@ -24,8 +37,16 @@ const _debugOverrideRelativePath = 'eqmonitor_map_debug/base_map_debug.pmtiles';
 /// 再送出する(brief要求「AssetPackNotReadyExceptionはエラー表示へ流し、
 /// 地図を空で描かない」)。
 @riverpod
-Future<VerifiedPmTilesSource> eqmonitorMapDebugSource(Ref ref) async {
+Future<EqmonitorMapDebugSource> eqmonitorMapDebugSource(Ref ref) async {
   final repository = ref.watch(assetPackRepositoryProvider);
+  final source = await _resolveSource(repository);
+  final header = await _readHeader(source);
+  return (source: source, minZoom: header.minZoom, maxZoom: header.maxZoom);
+}
+
+Future<VerifiedPmTilesSource> _resolveSource(
+  AssetPackRepository repository,
+) async {
   try {
     final file = await repository.resolveAsset(AssetPackAssetId.baseMapPmtiles);
     final manifest = await repository.readManifest();
@@ -75,4 +96,29 @@ Future<VerifiedPmTilesSource?> _resolveDebugOverride() async {
     sizeBytes: sizeBytes,
     sha256: digest.toString(),
   );
+}
+
+/// [source]が指すarchiveを開いて`PmTilesV3Header`を読み、すぐ閉じる。
+///
+/// `BaseMapView`は内部で`BaseMapTileRepository`が同じarchiveを別途開くため、
+/// このpeekと合わせて同じファイルを2回開くことになるが、読み取り専用の
+/// random accessであり競合しない。zoom範囲をtippecanoeの生成条件など
+/// 別ファイルの既定値から転記して実際のarchiveと食い違わせるより、実測の
+/// header値を都度読む方を優先する。
+Future<PmTilesV3Header> _readHeader(VerifiedPmTilesSource source) async {
+  final reader = await PmTilesV3FileRandomAccessReader.open(
+    path: source.absolutePath,
+  );
+  final archive = await PmTilesV3Archive.open(
+    reader: reader,
+    limits: const PmTilesV3Limits(
+      maxDirectoryDepth: 3,
+      rootDirectoryWindowLength: 16384,
+    ),
+  );
+  try {
+    return archive.header;
+  } finally {
+    await archive.close();
+  }
 }

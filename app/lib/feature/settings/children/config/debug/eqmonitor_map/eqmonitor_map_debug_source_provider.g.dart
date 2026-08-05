@@ -10,7 +10,8 @@ part of 'eqmonitor_map_debug_source_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// デバッグページが`BaseMapView`へ渡す[VerifiedPmTilesSource]を組み立てる。
+/// デバッグページが`BaseMapView`へ渡す[VerifiedPmTilesSource]と、その
+/// archiveの実際のzoom範囲を組み立てる。
 ///
 /// 通常は`AssetPackRepository.resolveAsset(AssetPackAssetId.baseMapPmtiles)`
 /// が返す検証済み`File`をそのまま使う。Asset Packが未準備
@@ -22,7 +23,8 @@ part of 'eqmonitor_map_debug_source_provider.dart';
 @ProviderFor(eqmonitorMapDebugSource)
 final eqmonitorMapDebugSourceProvider = EqmonitorMapDebugSourceProvider._();
 
-/// デバッグページが`BaseMapView`へ渡す[VerifiedPmTilesSource]を組み立てる。
+/// デバッグページが`BaseMapView`へ渡す[VerifiedPmTilesSource]と、その
+/// archiveの実際のzoom範囲を組み立てる。
 ///
 /// 通常は`AssetPackRepository.resolveAsset(AssetPackAssetId.baseMapPmtiles)`
 /// が返す検証済み`File`をそのまま使う。Asset Packが未準備
@@ -34,14 +36,15 @@ final eqmonitorMapDebugSourceProvider = EqmonitorMapDebugSourceProvider._();
 final class EqmonitorMapDebugSourceProvider
     extends
         $FunctionalProvider<
-          AsyncValue<VerifiedPmTilesSource>,
-          VerifiedPmTilesSource,
-          FutureOr<VerifiedPmTilesSource>
+          AsyncValue<EqmonitorMapDebugSource>,
+          EqmonitorMapDebugSource,
+          FutureOr<EqmonitorMapDebugSource>
         >
     with
-        $FutureModifier<VerifiedPmTilesSource>,
-        $FutureProvider<VerifiedPmTilesSource> {
-  /// デバッグページが`BaseMapView`へ渡す[VerifiedPmTilesSource]を組み立てる。
+        $FutureModifier<EqmonitorMapDebugSource>,
+        $FutureProvider<EqmonitorMapDebugSource> {
+  /// デバッグページが`BaseMapView`へ渡す[VerifiedPmTilesSource]と、その
+  /// archiveの実際のzoom範囲を組み立てる。
   ///
   /// 通常は`AssetPackRepository.resolveAsset(AssetPackAssetId.baseMapPmtiles)`
   /// が返す検証済み`File`をそのまま使う。Asset Packが未準備
@@ -65,15 +68,15 @@ final class EqmonitorMapDebugSourceProvider
 
   @$internal
   @override
-  $FutureProviderElement<VerifiedPmTilesSource> $createElement(
+  $FutureProviderElement<EqmonitorMapDebugSource> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<VerifiedPmTilesSource> create(Ref ref) {
+  FutureOr<EqmonitorMapDebugSource> create(Ref ref) {
     return eqmonitorMapDebugSource(ref);
   }
 }
 
 String _$eqmonitorMapDebugSourceHash() =>
-    r'80ca4a37528748e31f8bf0757bebde1386f32da5';
+    r'f9d3575b50b3cd15de1e8fffbbc37cb436ca4a36';

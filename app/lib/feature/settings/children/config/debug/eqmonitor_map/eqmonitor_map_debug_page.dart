@@ -5,11 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// `docs/superpowers/plans/2026-08-05-eqmonitor-map-base-layer-pmtiles.md`
 /// のTask 1〜9が組んだtile pipelineを`BaseMapView`で実際に描画するデバッグ
-/// ページ。zoom範囲は同梱ベースマップPMTilesの実際の生成範囲
-/// (`utils/map_converter/convert_to_pbf_tiles.py`のMIN_ZOOM/MAX_ZOOM、
-/// `-Z1 -z7`)と一致させている。これより広い範囲を指定すると、archiveが
-/// 持たないzoomのtileを要求して`PmTilesV3Exception`を招く
-/// (`MapBaseLayerLimits.maxZoom`のdoc comment参照)。
+/// ページ。zoom範囲(`minZoom`/`maxZoom`)は`eqmonitorMapDebugSourceProvider`
+/// が実際のarchiveの`PmTilesV3Header`から読んだ値をそのまま使う。固定値を
+/// 転記しない理由は`eqmonitor_map_debug_source_provider.dart`の
+/// `_readHeader`のdoc comment参照。
 class EqmonitorMapDebugPage extends ConsumerWidget {
   const EqmonitorMapDebugPage({super.key});
 
@@ -19,14 +18,17 @@ class EqmonitorMapDebugPage extends ConsumerWidget {
     zoom: 4,
   );
 
-  static const _limits = MapBaseLayerLimits(
-    minZoom: 1,
-    maxZoom: 7,
-    pmTilesLimits: PmTilesV3Limits(
+  static MapBaseLayerLimits _limitsFor({
+    required int minZoom,
+    required int maxZoom,
+  }) => MapBaseLayerLimits(
+    minZoom: minZoom,
+    maxZoom: maxZoom,
+    pmTilesLimits: const PmTilesV3Limits(
       maxDirectoryDepth: 3,
       rootDirectoryWindowLength: 16384,
     ),
-    decodeLimits: BaseMapTileDecodeLimits(
+    decodeLimits: const BaseMapTileDecodeLimits(
       mvtLimits: MvtDecodeLimits(
         maxLayers: 16,
         maxFeaturesPerLayer: 20000,
@@ -53,10 +55,10 @@ class EqmonitorMapDebugPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('EQMonitor Map (Flutter Scene)')),
       body: source.when(
-        data: (source) => BaseMapView(
-          source: source,
+        data: (result) => BaseMapView(
+          source: result.source,
           initialCamera: _initialCamera,
-          limits: _limits,
+          limits: _limitsFor(minZoom: result.minZoom, maxZoom: result.maxZoom),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) =>

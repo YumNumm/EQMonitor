@@ -1,4 +1,13 @@
-export 'package:pmtiles_v3/pmtiles_v3.dart' show PmTilesV3Limits;
+// `PmTilesV3Archive`/`PmTilesV3Header`/`PmTilesV3FileRandomAccessReader`は、
+// appが`VerifiedPmTilesSource`を組み立てる前にarchiveの実際のzoom範囲
+// (`header.minZoom`/`maxZoom`)を読むために公開している。`BaseMapView`自身は
+// これらを使わない(`tile/base_map_tile_repository.dart`が内部で使う)。
+export 'package:pmtiles_v3/pmtiles_v3.dart'
+    show
+        PmTilesV3Archive,
+        PmTilesV3FileRandomAccessReader,
+        PmTilesV3Header,
+        PmTilesV3Limits;
 
 export 'src/eqmonitor_map_library.dart';
 export 'src/flutter_scene/base_map_material_preflight_view.dart';
