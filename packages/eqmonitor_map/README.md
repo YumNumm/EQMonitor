@@ -131,9 +131,6 @@ Task 10で、iPhone 17 Pro simulator (iOS 27.0)を使い、appのデバッグペ
 - 1本指ドラッグ(pan)でcamera中心が実際に動き、表示される地物も追従して変化する。
   HUDの`visibleTiles`/`decoding`もtile読み込みに応じて変化し、0へ収束する。
 - zoomはarchiveのheaderから実測した範囲(このarchiveでは`[0, 8]`)でclampされる。
-- archiveの`countries`データが存在しないzoom(このarchiveではz0にしか実データが
-  無い)でも、tileの祖先fallback(`BaseMapTileCache.lookupWithFallback`)により
-  陸地の形状が正しい位置に表示され続ける(overscaleが機能している)。
 
 ### 確認できなかったこと
 
@@ -145,6 +142,14 @@ Task 10で、iPhone 17 Pro simulator (iOS 27.0)を使い、appのデバッグペ
 - 線幅(`half_width_world`)や色の見た目の確認、tile境界の隙間・重複の確認。
   上記不具合の影響で判別できませんでした。
 - iOS/Android物理端末での確認(simulatorのみ実施)。
+- `BaseMapTileCache.lookupWithFallback`の祖先fallback(overscale)が実際に
+  画面上で発動する様子。z4のtileには`countriesFill`/`countriesLine`が空の
+  layerとして含まれており(=exact hitで、fallbackは発動していない)、その
+  zoomで見えている陸地は`areaForecastLocalEFill`が描いています。祖先
+  fallback自体はunit test(`base_map_tile_cache_test.dart`)で検証済みですが、
+  実機のscreenshot上でfallbackが実際に効いている場面を具体的に特定・
+  確認してはいません(以前の版のこのREADMEには、これをoverscale確認済みと
+  誤って記載していました。team-leadの指摘により訂正しています)。
 
 ### 既知の不具合(未修正)
 
@@ -160,6 +165,30 @@ Task 10で、iPhone 17 Pro simulator (iOS 27.0)を使い、appのデバッグペ
 どちらもTask 10の変更対象外のため未修正です。詳細は
 [`docs/todo/800_eqmonitor_map_deferred_verification.md`](../../docs/todo/800_eqmonitor_map_deferred_verification.md)
 を参照してください。
+
+### 修正済み: decode中は上位zoomのtileを表示し続ける(zoom窓の非対称化)
+
+`BaseMapTileCache`のzoom窓は元々`|entry.z - activeZoom| > 1`という対称な
+±1窓だった。pinchでzoomが2段以上一気に動く(例: z4→z6)と、要求tileの
+祖先(z4)がまだdecode済みであっても即座に窓の外へ出て破棄され、
+`lookupWithFallback`の`maxParentSteps`引数をどれだけ大きくしても遡る先が
+無くなる、という計画上の矛盾があった(decode中に粗いtileを表示し続けたい
+というユーザー要求を満たせない)。
+
+`BaseMapTileCache`のconstructorに`maxParentFallbackSteps`を追加し、窓を
+非対称にした: 上方向は`activeZoom + 1`のまま、下方向は
+`activeZoom - maxParentFallbackSteps`まで保持する(低zoomのtileは1archive
+あたりの総数が指数的に少ないため、深く保持してもメモリ増分は小さい)。
+`test/tile/base_map_tile_cache_test.dart`にzoom跳躍後も祖先が残り
+`lookupWithFallback`が祖先を返すこと、`maxParentFallbackSteps`を超えた
+祖先はそれでも破棄されることのunit testを追加し、対称±1へ戻すbug
+injectionで新規testが落ちることも確認した。
+
+**この修正の効果(decode中に粗いtileが表示され続けること)は、
+unit testでは検証済みだが、実機/simulatorのscreenshotでは確認していない。**
+pinch-zoomがこのセッションのtooling(mouseベースの`cliclick`、
+`device-interaction` skillの実ツール未提供)では再現できず、zoomの
+瞬間的な遷移を伴う実機確認ができなかったため。
 
 ## Delivery graph
 
