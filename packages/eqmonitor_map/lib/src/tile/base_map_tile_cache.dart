@@ -24,9 +24,18 @@ import 'package:flutter/foundation.dart';
 /// 「ジオメトリcache戦略」節: 「直近使用zoom±1以外を破棄」)。件数上限
 /// [maxEntries]は呼び出し側が渡す固定値(Global Constraints「上限値は
 /// 呼び出し側が渡す`limits`引数で明示する」)で、この上限を超えた分は
-/// 挿入が古い順(FIFO)に破棄する。ズーム窓とは独立な安全弁であり、
-/// ズーム窓を通過したentryが極端に多いarchiveでもメモリを無制限に
-/// 使わないためのもの。
+/// **最も長く参照されていないentry(LRU)**から破棄する。ズーム窓とは独立な
+/// 安全弁であり、ズーム窓を通過したentryが極端に多いarchiveでもメモリを
+/// 無制限に使わないためのもの。
+///
+/// `_entries`は挿入順を保つ`Map`(Dartの既定`Map`は`LinkedHashMap`)であり、
+/// [get]がhitするたびにそのentryを一度取り除いて入れ直すことで最新位置へ
+/// 移動させる。これにより`_entries.keys.first`は常に「最も長く未参照の
+/// entry」になり、そこから破棄すればLRUになる。zoomを変えないままの
+/// pan操作では`noteActiveZoom`のzoom窓evictionが一切効かないため(`z`しか
+/// 見ておらずx/y方向のpanには反応しない)、直近まで表示していたtileが
+/// 単純なFIFOで先に捨てられてpan往復のたびに再decodeが起きる、という
+/// 実測された不具合をLRU化で塞ぐ(fix round 1)。
 ///
 /// # incarnation token
 ///
@@ -72,10 +81,20 @@ final class BaseMapTileCache {
   /// 進行中のdecodeを無効化する。camera変更時などに呼ぶ。
   void cancelInFlight() => _generationOwner.cancel();
 
+  /// hitした場合、`_entries`内でのそのentryの位置を最新(最もLRUから遠い)
+  /// へ移動させる副作用を持つ([_evictOverCapacity]のdoc comment参照)。
   BaseMapTileGeometry? get({
     required String sourceInstanceId,
     required CanonicalTileId tileId,
-  }) => _entries[(sourceInstanceId, tileId)];
+  }) {
+    final key = (sourceInstanceId, tileId);
+    final hit = _entries.remove(key);
+    if (hit == null) {
+      return null;
+    }
+    _entries[key] = hit;
+    return hit;
+  }
 
   /// [token]が[beginDecode]発行時点から見て最新のままなら[geometry]を
   /// cacheへ格納する。[cancelInFlight]により[token]が古くなっていた場合は
@@ -111,6 +130,8 @@ final class BaseMapTileCache {
     );
   }
 
+  /// `_entries`の先頭(挿入順で最古、かつ[get]がhitするたびに末尾へ
+  /// 移動させているため実質「最も長く未参照のentry」)から破棄する。
   void _evictOverCapacity() {
     while (_entries.length > maxEntries) {
       _entries.remove(_entries.keys.first);

@@ -170,8 +170,9 @@ void main() {
     });
   });
 
-  group('eviction (capacity)', () {
-    test('evicts the oldest entry (FIFO) once maxEntries is exceeded', () {
+  group('eviction (capacity, LRU)', () {
+    test('without an intervening get(), evicts in pure insertion order '
+        '(baseline contrast for the LRU tests below)', () {
       final cache = BaseMapTileCache(maxEntries: 2);
       cache
         ..put(
@@ -217,6 +218,115 @@ void main() {
         isNotNull,
       );
     });
+
+    test(
+      'a get() hit protects an entry from eviction even though it was '
+      'inserted first (the regression scenario found in review: '
+      'maxEntries=3, put A,B -> get A(hit) -> put C,D)',
+      () {
+        final cache = BaseMapTileCache(maxEntries: 3);
+        const tileA = CanonicalTileId(z: 5, x: 0, y: 0);
+        const tileB = CanonicalTileId(z: 5, x: 1, y: 0);
+        const tileC = CanonicalTileId(z: 5, x: 2, y: 0);
+        const tileD = CanonicalTileId(z: 5, x: 3, y: 0);
+
+        cache
+          ..put(
+            sourceInstanceId: 'a',
+            tileId: tileA,
+            geometry: _geometry(1),
+            token: cache.beginDecode(),
+          )
+          ..put(
+            sourceInstanceId: 'a',
+            tileId: tileB,
+            geometry: _geometry(2),
+            token: cache.beginDecode(),
+          );
+
+        // Aを直近使用にする(1回もgetされていないBより新しく触れる)。
+        final hit = cache.get(sourceInstanceId: 'a', tileId: tileA);
+        expect(hit, isNotNull);
+
+        cache
+          ..put(
+            sourceInstanceId: 'a',
+            tileId: tileC,
+            geometry: _geometry(3),
+            token: cache.beginDecode(),
+          )
+          ..put(
+            sourceInstanceId: 'a',
+            tileId: tileD,
+            geometry: _geometry(4),
+            token: cache.beginDecode(),
+          );
+
+        // maxEntries=3で4件目(D)を入れたので1件evictされる。get()で
+        // recencyが更新されていれば、直近使用したAではなく一度も
+        // getされていないBが破棄される。
+        expect(
+          cache.get(sourceInstanceId: 'a', tileId: tileA),
+          isNotNull,
+          reason: 'A was touched by get() and must survive',
+        );
+        expect(
+          cache.get(sourceInstanceId: 'a', tileId: tileB),
+          isNull,
+          reason: 'B was never touched and must be the one evicted',
+        );
+        expect(cache.get(sourceInstanceId: 'a', tileId: tileC), isNotNull);
+        expect(cache.get(sourceInstanceId: 'a', tileId: tileD), isNotNull);
+      },
+    );
+
+    test(
+      'without a get() in between, the same put sequence evicts the '
+      'first-inserted entry instead (contrast with the test above)',
+      () {
+        final cache = BaseMapTileCache(maxEntries: 3);
+        const tileA = CanonicalTileId(z: 5, x: 0, y: 0);
+        const tileB = CanonicalTileId(z: 5, x: 1, y: 0);
+        const tileC = CanonicalTileId(z: 5, x: 2, y: 0);
+        const tileD = CanonicalTileId(z: 5, x: 3, y: 0);
+
+        cache
+          ..put(
+            sourceInstanceId: 'a',
+            tileId: tileA,
+            geometry: _geometry(1),
+            token: cache.beginDecode(),
+          )
+          ..put(
+            sourceInstanceId: 'a',
+            tileId: tileB,
+            geometry: _geometry(2),
+            token: cache.beginDecode(),
+          )
+          // ここでAをgetしない(上のtestとの唯一の違い)。
+          ..put(
+            sourceInstanceId: 'a',
+            tileId: tileC,
+            geometry: _geometry(3),
+            token: cache.beginDecode(),
+          )
+          ..put(
+            sourceInstanceId: 'a',
+            tileId: tileD,
+            geometry: _geometry(4),
+            token: cache.beginDecode(),
+          );
+
+        expect(
+          cache.get(sourceInstanceId: 'a', tileId: tileA),
+          isNull,
+          reason: 'without a get() touch, A is the oldest and is evicted',
+        );
+        expect(cache.get(sourceInstanceId: 'a', tileId: tileB), isNotNull);
+        expect(cache.get(sourceInstanceId: 'a', tileId: tileC), isNotNull);
+        expect(cache.get(sourceInstanceId: 'a', tileId: tileD), isNotNull);
+      },
+    );
   });
 
   group('incarnation token', () {
