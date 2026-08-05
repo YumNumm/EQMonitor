@@ -21,6 +21,8 @@ dependencies:
       path: packages/flutter_scene
   freezed_annotation: ^3.1.0
   hooks: ^2.1.0
+  pmtiles_v3:
+    path: ../pmtiles_v3
   vector_math: ^2.4.2
 
 dev_dependencies:
