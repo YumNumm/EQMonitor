@@ -54,46 +54,90 @@
   `BaseMapView`のスコープ外。
 - `BaseMapTileGeometry`はdecodeに使ったMVT `extent`を保持しないため、
   `BaseMapView`はtile行列へ`mvtDefaultExtent`(4096)を固定値として渡している。
-  同梱PMTilesが4096以外の`extent`を宣言するsource layerを持つ場合、
+  実archive(z0/0/0、z4/14/6、z6/57/25で実測)は全layerが`extent=4096`
+  だったため現状は破綻しないが、これは計画の漏れであり、4096以外の`extent`を
+  宣言するsource layerを持つarchiveでは壊れる潜在的な脆さが残っている。
   layerごとの実際の`extent`を`BaseMapTileGeometry`まで伝播する必要がある。
-- `BaseMapMaterialLibrary`が`fillMaterial`/`lineMaterial`の2つだけを共有する
-  設計のため、`BaseMapView`は`docs/map_spec_v3.md`が定義するlayerごとの
-  カラーテーマを再現せず、`baseMapLayerSpecs`の`countries`行の色を代表値
-  として全fill/line層に一律適用している。実配色の反映にはlayerごとの
-  material分離かper-instance color override機構が要る。
 - tile coverの複数tileが同じ祖先へfallbackした場合の重複描画排除
   (`_BaseMapController._rebuildSceneNodes`)。現状は同じtileが複数回
   描画されても`baseMapLayerSpecs`の色が全て不透明なため見た目には現れないが、
   半透明色を導入する場合は排除が必要になる。
 
-## 既知の不具合(Task 10の実機確認で発見、未修正)
+## Task 10で観測したfloodの真因(特定済み、修正は別コミット)
 
-`countriesLine`(source layer: `countries`)のLine meshに、他のline layer
-(`areaForecastLocalEewLine`/`areaForecastLocalELine`/`areaInformationCityQuakeLine`)
-と比べて桁違いに大きい縮退三角形が2枚混入している。本番相当archive
-(`app/android/app/src/debug/assets/eqmonitor_assets/map/all.pmtiles`,
-zoom 0..8)のz0/0/0タイルを`decodeBaseMapTileSync`で直接decodeし、押し出し後の
-三角形面積を計測して確認した:
+Task 10の実機確認で「海(land以外の領域)が単一のLine layerの色で塗り潰される」
+現象が観測された。当初は`areaForecastLocalEewLine`のLine mesh生成、または
+ring境界処理の不具合と推測していたが、**いずれも反証され、真因はGPUへの
+頂点属性の受け渡しにあった。**
 
-```
-LINE countriesLine: maxTriArea=16384.0, bigTriCount(>5000)=2
-LINE areaForecastLocalEewLine: maxTriArea=141.9  bigTriCount=0
-LINE areaForecastLocalELine:   maxTriArea=125.5  bigTriCount=0
-LINE areaInformationCityQuakeLine(z7): maxTriArea=209.9 bigTriCount=0
-```
+### 反証された仮説(記録として残す)
 
-extrude長自体はmiter limit(4)以内で正常なため、押し出しの暴走ではなく
-centerline側のpositionが離れた2点を繋ぐ縮退三角形になっていると考えられる。
-`countries`層は日本・周辺国など複数ringを持つ数少ないlayerであり、ringの
-継ぎ目(`lib/src/tile/base_map_tile_decoder.dart`の`_polygonFeatureAsClosedLines`
-によるring closure、または`lib/src/mesh/line_mesh_builder.dart`のring遷移処理)
-で1本余計な三角形が生成されている可能性が高い。他の(単一国内の行政区分のみを
-持つ)source layerではこの症状が出ていない。
+以下はすべて測定によって否定された。同じ仮説が再燃したときの参照用に残す。
 
-`countries`はこのarchiveのz0にしか存在しないため、zoom 0..8を許すarchiveでは
-高いzoomほどoverscale倍率が大きくなり(z8で256倍)、tile-local空間ではごく
-小さい欠陥(全体4096²の約0.1%)が画面の大部分を覆って見える
-(iOS simulatorでの実機確認で、海に見える領域全体がline色で塗られたように
-見える現象として観測)。
+- **ring境界を越えた頂点接続**: production非依存の独立実装で可視6タイル全数を
+  照合し、`crossRingViolations=0`。`LineMeshBuilder.build`は`localOffset`で
+  ringを正しく分離している。当初「巨大三角形2枚」と見えたものは、tile buffer
+  のclip辺(`y = extent 4096 + buffer 80`)という正当な地物であり、報告値
+  16384と4096の差はhalfWidth 4と1の違いで完全に説明できた。
+- **MVT extentのハードコード**: `base_map_view.dart`がtile行列へ
+  `mvtDefaultExtent`(4096)を固定で渡しているが、実archiveの全layerが
+  `extent=4096`であり縮尺の破綻はない(後述の潜在的脆さは別項)。
+- **miter limit clampの漏れ**: 可視6タイル全layerの全頂点で押し出し長は
+  `[1.0, 4.0000002]`に収まり、上限超過は0件。
+- **world空間での過大三角形**: `tileMatrixFor`適用後のworld座標で測っても
+  最大534px^2(viewport面積の0.15%以下)であり、画面を覆う規模の三角形は
+  1件も存在しない。
 
-`lib/src/mesh/`・`lib/src/tile/`はTask 10の変更対象外のため未修正。
+### 真因: `setCustomAttribute`の値がshaderへ届かない
+
+`Geometry.setCustomAttribute('extrude', ...)`で渡した押し出し法線がshaderへ
+届かず、**代わりに同じ頂点の`position`データが読まれていた**(slot/stride
+不整合)。
+
+GPUレベルの実験で確認した。`base_map_line.fmat`のfragment shaderを
+`base_color = vec4(abs(extrude.x), abs(extrude.y), 0, 1)`へ差し替えて描画した
+ところ、本来`extrude`は`(0, ±1)`の単位ベクトルなので緑一色の帯になるはずが、
+**画面中央でぴったり0(黒)、上下端へ向かって単調増加するV字グラデーション**が
+画面全高に出た。これはorigin rebasing後の`position`の振る舞い(camera中心で0、
+外側へ増加)と完全に一致し、値も数万オーダー(zoom 5のworld pixel座標)で
+ランダムノイズではなかった。
+
+これで全症状が説明できる。
+
+- 押し出しが巨大化したlayerは画面を塗り潰す(`areaForecastLocalEewLine`)
+- 別のlayerは画面外へ飛んで見えない(`countriesLine`、`areaForecastLocalELine`)
+- **Fillはcustom attributeを使わないため正常に描画される**
+
+実験の詳細とevidence画像は
+`.superpowers/sdd/2026-08-05-eqmonitor-map-base-layer-pmtiles/extrude-gpu-probe-report.md`
+にある(このディレクトリはgit管理外)。
+
+## spike用camera配線が描画されない(未修正)
+
+上記の実験中に別の不具合が判明した。**`scene_spike_camera.dart`と同型の
+camera配線(`scene.NodeCamera` + `EqmonitorOrthographicProjection`)は、この
+環境で可視レンダリングを一切生成しない。** production実績のある
+`base_map_fill.fmat`を使っても何も描画されず、`BaseMapMaterialPreflightView`
+をそのままマウントしても同様だった。段階的なsanity checkで、組み込み
+geometry/material + `PerspectiveCamera`は正常に描画され、custom `.fmat` +
+`MeshGeometry.fromArrays` + `PerspectiveCamera`も正常に描画されるが、camera
+だけを`NodeCamera` + 正射影へ替えた瞬間に黒へ戻ることを確認している。
+
+つまり **Task 1の`BaseMapMaterialPreflightView`は、実際に画面へ何かが出ることを
+一度も目視確認されていない。** Task 1では`.fmat`がimpellercでコンパイルされ
+shaderbundleに`in vec2 extrude;`が入ることまでは確認したが、描画そのものは
+確認していなかった。`BaseMapView`は別のcamera配線
+(`_IdentityCameraProjection` + `viewProjectionMatrixFor`をnodeへ焼き込む方式)を
+使っており、そちらでは描画される。
+
+`FlutterSceneSpikeView`と`BaseMapMaterialPreflightView`が実際に描画されるかは
+別途確認が必要である。
+
+## `BaseMapTileGeometry`がMVT extentを運んでいない(潜在的な脆さ)
+
+`base_map_view.dart`はtile行列へ`mvtDefaultExtent`(4096)を固定で渡している。
+`BaseMapTileGeometry`がどの`extent`でdecodeしたかを保持していないためである。
+実archiveの全layerが`extent=4096`なので現時点で実害はないが、異なる`extent`を
+持つarchiveでは縮尺が壊れる。設計正本は「MVT extentは固定値ではなくtileごとに
+layer宣言値を読む」と定めており、この固定化はそれに反する。計画側でextentの
+伝搬を指定しなかった漏れである。

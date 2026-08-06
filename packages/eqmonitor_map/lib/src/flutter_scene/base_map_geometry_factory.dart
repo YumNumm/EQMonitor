@@ -37,20 +37,24 @@ class BaseMapGeometryFactory {
 
   /// [mesh]から線描画用の`scene.Geometry`を作る。
   ///
-  /// [LineMesh.extrudes]は`setCustomAttribute`で`extrude`という名前の頂点
-  /// 属性として渡す。この名前は`base_map_line.fmat`の
-  /// `attributes: [ { type: vec2, name: extrude } ]`宣言と対応しており、
-  /// 名前が一致しない限りshaderの`in vec2 extrude`は値を受け取れない。
-  /// storageの選び方は[fillGeometry]と同じ理由で`fixed`。
+  /// [LineMesh.extrudes]は`MeshGeometry.fromArrays`の組み込み`texCoords`
+  /// 引数(`vec2`)へ渡す。以前は`setCustomAttribute('extrude', ...)`で
+  /// custom vertex attributeとして渡していたが、この環境ではGPUへ値が
+  /// 届かず、代わりに同じ頂点の`position`(origin rebasing後の座標)が
+  /// shaderで読まれてしまうバグがあることをGPUレベルの実験で確認した
+  /// (`.superpowers/sdd/2026-08-05-eqmonitor-map-base-layer-pmtiles/
+  /// extrude-gpu-probe-report.md`参照)。custom attributeを経由しない
+  /// `texCoords`は型が`vec2`で押し出し法線と完全に一致し、production実績の
+  /// ある経路のためこのバグを回避できる。`base_map_line.fmat`側はこの値を
+  /// `vertex.uv`として読む(同ファイル冒頭のdoc comment参照。UVではなく
+  /// 押し出し法線を運んでいるという意味論の逸脱がある)。storageの選び方は
+  /// [fillGeometry]と同じ理由で`fixed`。
   scene.MeshGeometry lineGeometry(LineMesh mesh) {
     final args = buildLineGeometryArgs(mesh);
     return scene.MeshGeometry.fromArrays(
       positions: args.positions,
+      texCoords: args.extrudes,
       indices: args.indices,
-    )..setCustomAttribute(
-      'extrude',
-      args.extrudes,
-      components: 2,
     );
   }
 }
@@ -71,9 +75,9 @@ class FillGeometryArgs {
   final Uint16List indices;
 }
 
-/// [BaseMapGeometryFactory.lineGeometry]が`MeshGeometry.fromArrays`と
-/// `setCustomAttribute`へ渡す引数そのもの。[FillGeometryArgs]と同じ理由で
-/// pure関数として切り出している。
+/// [BaseMapGeometryFactory.lineGeometry]が`MeshGeometry.fromArrays`へ渡す
+/// 引数そのもの。[FillGeometryArgs]と同じ理由でpure関数として切り出して
+/// いる。
 @immutable
 class LineGeometryArgs {
   const LineGeometryArgs({
@@ -88,9 +92,12 @@ class LineGeometryArgs {
   /// [LineMesh.indices]をそのまま渡す。
   final Uint16List indices;
 
-  /// [LineMesh.extrudes]をそのまま渡す(2成分、z拡張は不要。`extrude`は
-  /// 座標ではなく`vec2`の押し出し方向属性であり、`MeshGeometry.fromArrays`
-  /// の`positions`のような3成分要求を持たない)。
+  /// [LineMesh.extrudes]をそのまま渡す(2成分、z拡張は不要。押し出し方向は
+  /// 座標ではなく`vec2`の方向ベクトルであり、`MeshGeometry.fromArrays`の
+  /// `positions`のような3成分要求を持たない)。`lineGeometry`が
+  /// `MeshGeometry.fromArrays`の`texCoords:`引数へそのまま渡す
+  /// (`lineGeometry`のdoc comment参照。custom attributeの不具合を避ける
+  /// ため、組み込みのtexCoordsへ押し出し法線を積んでいる)。
   final Float32List extrudes;
 }
 

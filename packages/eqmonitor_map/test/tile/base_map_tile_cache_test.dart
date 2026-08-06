@@ -34,7 +34,7 @@ int _markerOf(BaseMapTileGeometry geometry) {
 void main() {
   group('cache key', () {
     test('the same sourceInstanceId+tileId retrieves the same entry', () {
-      final cache = BaseMapTileCache(maxEntries: 10);
+      final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
       const tileId = CanonicalTileId(z: 5, x: 3, y: 4);
       cache.put(
         sourceInstanceId: 'a',
@@ -49,7 +49,7 @@ void main() {
     });
 
     test('a different sourceInstanceId is a different entry', () {
-      final cache = BaseMapTileCache(maxEntries: 10);
+      final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
       const tileId = CanonicalTileId(z: 5, x: 3, y: 4);
       cache.put(
         sourceInstanceId: 'a',
@@ -65,7 +65,10 @@ void main() {
       'the integer zoom is part of the key: tiles with the same x/y but '
       'different z do not collide',
       () {
-        final cache = BaseMapTileCache(maxEntries: 10);
+        final cache = BaseMapTileCache(
+          maxEntries: 10,
+          maxParentFallbackSteps: 1,
+        );
         const tileIdZ5 = CanonicalTileId(z: 5, x: 1, y: 1);
         const tileIdZ6 = CanonicalTileId(z: 6, x: 1, y: 1);
         cache
@@ -95,7 +98,10 @@ void main() {
       'repeated noteActiveZoom calls with the same floor (simulating a '
       'fractional camera zoom change) do not invalidate the entry',
       () {
-        final cache = BaseMapTileCache(maxEntries: 10);
+        final cache = BaseMapTileCache(
+          maxEntries: 10,
+          maxParentFallbackSteps: 1,
+        );
         const tileId = CanonicalTileId(z: 5, x: 0, y: 0);
         cache.put(
           sourceInstanceId: 'a',
@@ -116,64 +122,180 @@ void main() {
   });
 
   group('eviction (zoom window)', () {
-    test('keeps entries within activeZoom ± 1 and evicts the rest', () {
-      final cache = BaseMapTileCache(maxEntries: 100);
-      for (final z in [3, 4, 5, 6, 7]) {
+    test(
+      'with maxParentFallbackSteps=1, keeps entries within activeZoom ± 1 '
+      'and evicts the rest (the symmetric ±1 special case)',
+      () {
+        final cache = BaseMapTileCache(
+          maxEntries: 100,
+          maxParentFallbackSteps: 1,
+        );
+        for (final z in [3, 4, 5, 6, 7]) {
+          cache.put(
+            sourceInstanceId: 'a',
+            tileId: CanonicalTileId(z: z, x: 0, y: 0),
+            geometry: _geometry(z),
+            token: cache.beginDecode(),
+          );
+        }
+
+        cache.noteActiveZoom(5);
+
+        expect(
+          cache.get(
+            sourceInstanceId: 'a',
+            tileId: const CanonicalTileId(z: 3, x: 0, y: 0),
+          ),
+          isNull,
+          reason: 'z=3 is outside [4, 6]',
+        );
+        expect(
+          cache.get(
+            sourceInstanceId: 'a',
+            tileId: const CanonicalTileId(z: 4, x: 0, y: 0),
+          ),
+          isNotNull,
+        );
+        expect(
+          cache.get(
+            sourceInstanceId: 'a',
+            tileId: const CanonicalTileId(z: 5, x: 0, y: 0),
+          ),
+          isNotNull,
+        );
+        expect(
+          cache.get(
+            sourceInstanceId: 'a',
+            tileId: const CanonicalTileId(z: 6, x: 0, y: 0),
+          ),
+          isNotNull,
+        );
+        expect(
+          cache.get(
+            sourceInstanceId: 'a',
+            tileId: const CanonicalTileId(z: 7, x: 0, y: 0),
+          ),
+          isNull,
+          reason: 'z=7 is outside [4, 6]',
+        );
+        expect(cache.length, 3);
+      },
+    );
+
+    test(
+      'the upper bound stays activeZoom + 1 regardless of '
+      'maxParentFallbackSteps (only the lower bound goes deeper)',
+      () {
+        final cache = BaseMapTileCache(
+          maxEntries: 100,
+          maxParentFallbackSteps: 4,
+        );
+        for (final z in [5, 6, 7]) {
+          cache.put(
+            sourceInstanceId: 'a',
+            tileId: CanonicalTileId(z: z, x: 0, y: 0),
+            geometry: _geometry(z),
+            token: cache.beginDecode(),
+          );
+        }
+
+        cache.noteActiveZoom(5);
+
+        expect(
+          cache.get(
+            sourceInstanceId: 'a',
+            tileId: const CanonicalTileId(z: 6, x: 0, y: 0),
+          ),
+          isNotNull,
+          reason: 'z=6 is activeZoom + 1',
+        );
+        expect(
+          cache.get(
+            sourceInstanceId: 'a',
+            tileId: const CanonicalTileId(z: 7, x: 0, y: 0),
+          ),
+          isNull,
+          reason:
+              'z=7 is activeZoom + 2; a large maxParentFallbackSteps must '
+              'not loosen the upper bound',
+        );
+      },
+    );
+
+    test(
+      'a zoom jump that skips levels (e.g. z4 -> z6, as a pinch can '
+      'produce) keeps the ancestor that lookupWithFallback needs, unlike '
+      'the old symmetric ±1 window',
+      () {
+        final cache = BaseMapTileCache(
+          maxEntries: 100,
+          maxParentFallbackSteps: 4,
+        );
+        const ancestorId = CanonicalTileId(z: 4, x: 0, y: 0);
         cache.put(
           sourceInstanceId: 'a',
-          tileId: CanonicalTileId(z: z, x: 0, y: 0),
-          geometry: _geometry(z),
+          tileId: ancestorId,
+          geometry: _geometry(4),
           token: cache.beginDecode(),
         );
-      }
 
-      cache.noteActiveZoom(5);
+        // ピンチでz4からz6へ一気に動いた想定。z5を経由しない。
+        cache.noteActiveZoom(6);
 
-      expect(
-        cache.get(
+        // z4はactiveZoom(6)から見て2段下だが、maxParentFallbackSteps=4の
+        // 範囲内なので生き残っているはず。
+        expect(
+          cache.get(sourceInstanceId: 'a', tileId: ancestorId),
+          isNotNull,
+          reason: 'z=4 is within activeZoom(6) - maxParentFallbackSteps(4) = 2',
+        );
+
+        final requestedTileId = ancestorId.scaledTo(6);
+        final result = cache.lookupWithFallback(
           sourceInstanceId: 'a',
-          tileId: const CanonicalTileId(z: 3, x: 0, y: 0),
-        ),
-        isNull,
-        reason: 'z=3 is outside [4, 6]',
-      );
-      expect(
-        cache.get(
+          tileId: requestedTileId,
+          maxParentSteps: 4,
+        );
+
+        expect(result, isA<BaseMapTileFallbackParent>());
+        final parent = result as BaseMapTileFallbackParent;
+        expect(_markerOf(parent.geometry), 4);
+        expect(parent.tileId, ancestorId);
+        expect(parent.stepsUp, 2);
+      },
+    );
+
+    test(
+      'an ancestor beyond maxParentFallbackSteps is still evicted (the '
+      'lower bound does not turn into unlimited retention)',
+      () {
+        final cache = BaseMapTileCache(
+          maxEntries: 100,
+          maxParentFallbackSteps: 2,
+        );
+        const tooDeepAncestorId = CanonicalTileId(z: 1, x: 0, y: 0);
+        cache.put(
           sourceInstanceId: 'a',
-          tileId: const CanonicalTileId(z: 4, x: 0, y: 0),
-        ),
-        isNotNull,
-      );
-      expect(
-        cache.get(
-          sourceInstanceId: 'a',
-          tileId: const CanonicalTileId(z: 5, x: 0, y: 0),
-        ),
-        isNotNull,
-      );
-      expect(
-        cache.get(
-          sourceInstanceId: 'a',
-          tileId: const CanonicalTileId(z: 6, x: 0, y: 0),
-        ),
-        isNotNull,
-      );
-      expect(
-        cache.get(
-          sourceInstanceId: 'a',
-          tileId: const CanonicalTileId(z: 7, x: 0, y: 0),
-        ),
-        isNull,
-        reason: 'z=7 is outside [4, 6]',
-      );
-      expect(cache.length, 3);
-    });
+          tileId: tooDeepAncestorId,
+          geometry: _geometry(1),
+          token: cache.beginDecode(),
+        );
+
+        cache.noteActiveZoom(6);
+
+        expect(
+          cache.get(sourceInstanceId: 'a', tileId: tooDeepAncestorId),
+          isNull,
+          reason: 'z=1 is below activeZoom(6) - maxParentFallbackSteps(2) = 4',
+        );
+      },
+    );
   });
 
   group('eviction (capacity, LRU)', () {
     test('without an intervening get(), evicts in pure insertion order '
         '(baseline contrast for the LRU tests below)', () {
-      final cache = BaseMapTileCache(maxEntries: 2);
+      final cache = BaseMapTileCache(maxEntries: 2, maxParentFallbackSteps: 1);
       cache
         ..put(
           sourceInstanceId: 'a',
@@ -224,7 +346,10 @@ void main() {
       'inserted first (the regression scenario found in review: '
       'maxEntries=3, put A,B -> get A(hit) -> put C,D)',
       () {
-        final cache = BaseMapTileCache(maxEntries: 3);
+        final cache = BaseMapTileCache(
+          maxEntries: 3,
+          maxParentFallbackSteps: 1,
+        );
         const tileA = CanonicalTileId(z: 5, x: 0, y: 0);
         const tileB = CanonicalTileId(z: 5, x: 1, y: 0);
         const tileC = CanonicalTileId(z: 5, x: 2, y: 0);
@@ -284,7 +409,10 @@ void main() {
       'without a get() in between, the same put sequence evicts the '
       'first-inserted entry instead (contrast with the test above)',
       () {
-        final cache = BaseMapTileCache(maxEntries: 3);
+        final cache = BaseMapTileCache(
+          maxEntries: 3,
+          maxParentFallbackSteps: 1,
+        );
         const tileA = CanonicalTileId(z: 5, x: 0, y: 0);
         const tileB = CanonicalTileId(z: 5, x: 1, y: 0);
         const tileC = CanonicalTileId(z: 5, x: 2, y: 0);
@@ -331,7 +459,7 @@ void main() {
 
   group('incarnation token', () {
     test('put is dropped once the token has been cancelled', () {
-      final cache = BaseMapTileCache(maxEntries: 10);
+      final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
       const tileId = CanonicalTileId(z: 5, x: 0, y: 0);
 
       final token = cache.beginDecode();
@@ -351,7 +479,7 @@ void main() {
     });
 
     test('a token issued after cancellation still writes normally', () {
-      final cache = BaseMapTileCache(maxEntries: 10);
+      final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
       const tileId = CanonicalTileId(z: 5, x: 0, y: 0);
 
       cache.cancelInFlight();
@@ -369,7 +497,7 @@ void main() {
 
   group('lookupWithFallback', () {
     test('returns an exact hit when the tile itself is cached', () {
-      final cache = BaseMapTileCache(maxEntries: 10);
+      final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
       const tileId = CanonicalTileId(z: 5, x: 2, y: 2);
       cache.put(
         sourceInstanceId: 'a',
@@ -392,7 +520,10 @@ void main() {
       'falls back to the 4 children when all 4 are cached and the tile '
       'itself is not',
       () {
-        final cache = BaseMapTileCache(maxEntries: 10);
+        final cache = BaseMapTileCache(
+          maxEntries: 10,
+          maxParentFallbackSteps: 1,
+        );
         const tileId = CanonicalTileId(z: 5, x: 2, y: 2);
         final childIds = tileId.children();
         for (var i = 0; i < childIds.length; i++) {
@@ -419,7 +550,10 @@ void main() {
     test(
       'does not use a partial set of 3 children as a children-fallback',
       () {
-        final cache = BaseMapTileCache(maxEntries: 10);
+        final cache = BaseMapTileCache(
+          maxEntries: 10,
+          maxParentFallbackSteps: 1,
+        );
         const tileId = CanonicalTileId(z: 5, x: 2, y: 2);
         final childIds = tileId.children();
         for (var i = 0; i < 3; i++) {
@@ -442,7 +576,7 @@ void main() {
     );
 
     test('falls back to the nearest cached ancestor within maxParentSteps', () {
-      final cache = BaseMapTileCache(maxEntries: 10);
+      final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
       const tileId = CanonicalTileId(z: 5, x: 4, y: 4);
       // z=3の祖先だけをcacheする(z=4の親はcacheしない)。
       final grandparentId = tileId.scaledTo(3);
@@ -467,7 +601,7 @@ void main() {
     });
 
     test('gives up once maxParentSteps is exceeded', () {
-      final cache = BaseMapTileCache(maxEntries: 10);
+      final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
       const tileId = CanonicalTileId(z: 5, x: 4, y: 4);
       final grandparentId = tileId.scaledTo(3);
       cache.put(
@@ -490,7 +624,10 @@ void main() {
       'prefers the 4 children over an available parent (children→parent '
       'order, not parent→children)',
       () {
-        final cache = BaseMapTileCache(maxEntries: 10);
+        final cache = BaseMapTileCache(
+          maxEntries: 10,
+          maxParentFallbackSteps: 1,
+        );
         const tileId = CanonicalTileId(z: 5, x: 2, y: 2);
         final childIds = tileId.children();
         for (var i = 0; i < childIds.length; i++) {
@@ -526,7 +663,7 @@ void main() {
     );
 
     test('returns a miss when nothing is cached', () {
-      final cache = BaseMapTileCache(maxEntries: 10);
+      final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
       final result = cache.lookupWithFallback(
         sourceInstanceId: 'a',
         tileId: const CanonicalTileId(z: 5, x: 2, y: 2),

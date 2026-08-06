@@ -1,15 +1,18 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:eqmonitor_map/src/flutter_scene/base_map_geometry_factory.dart';
 import 'package:eqmonitor_map/src/flutter_scene/base_map_material_library.dart';
+import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh.dart';
 import 'package:eqmonitor_map/src/mesh/line_mesh.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vector_math/vector_math.dart' show Vector2;
 
 // このtestはGPU初期化を必要としない範囲だけを検証する。
 // `BaseMapGeometryFactory.fillGeometry`/`lineGeometry`自体は
-// `scene.MeshGeometry.fromArrays`/`setCustomAttribute`というGPUへの
-// buffer作成・アップロードを呼ぶため、`test/flutter_scene`の既存test
+// `scene.MeshGeometry.fromArrays`というGPUへのbuffer作成・アップロードを
+// 呼ぶため、`test/flutter_scene`の既存test
 // (`flutter_scene_spike_controller_test.dart`)が実際のGPU呼び出しをすべて
 // fakeで避けているのと同じ理由で、ここでは呼ばない。代わりに、それら2
 // methodがGPU呼び出しの直前に組み立てる引数(`buildFillGeometryArgs`/
@@ -98,8 +101,8 @@ void main() {
 
       expect(args.extrudes, Float32List.fromList(const [0.6, 0.8, -0.6, -0.8]));
       // zパディングは`positions`だけの事情(`MeshGeometry.fromArrays`が
-      // 3成分を要求する)であり、`extrude`は`setCustomAttribute`へ
-      // `components: 2`で渡すvec2属性なので触ってはいけない。触っていない
+      // 3成分を要求する)であり、`extrudes`は`MeshGeometry.fromArrays`の
+      // `texCoords:`引数へ渡すvec2属性なので触ってはいけない。触っていない
       // ことを同一インスタンスであることで確認する。
       expect(identical(args.extrudes, extrudes), isTrue);
     });
@@ -120,39 +123,72 @@ void main() {
     });
   });
 
-  group('halfLineWidthWorldFor', () {
+  group('halfLineWidthNdcFor', () {
     // 換算式のtestは実装を呼んで得た値ではなく、doc commentに書いた導出
-    // (1 world単位 == 1 logical pixel、zoom非依存)から手計算で独立に
-    // 求めた固定値で検証する。
-    test('logical pixelの半線幅をそのままworld単位として返す', () {
-      // 手計算: 換算係数は1なので、half_width_world == halfWidthLogicalPixels。
-      // 2.5という半端な値を選び、「2倍にする」「四捨五入する」といった
-      // バグを検出できるようにしている。
+    // (NDCはviewportのwidth/heightに対して[-1,1]を張るので1 logical px
+    // == (2/width, 2/height))から手計算で独立に求めた固定値で検証する。
+    test('logical pixelの半線幅をNDC単位のvec2へ換算する', () {
+      // 手計算: halfPx=1, width=400, height=800 のとき
+      // (2*1/400, 2*1/800) = (0.005, 0.0025)。
+      // width/heightをわざと非正方形にして、x/yで異なる係数が掛かる
+      // (成分ごとの独立換算)ことを検出できるようにしている。
+      final viewport = MapViewport(
+        logicalSize: const Size(400, 800),
+        devicePixelRatio: 1,
+      );
+
+      final result = halfLineWidthNdcFor(
+        halfWidthLogicalPixels: 1,
+        viewport: viewport,
+      );
+
+      expect(result, Vector2(0.005, 0.0025));
+    });
+
+    test('0を渡すと(0, 0)を返す', () {
+      final viewport = MapViewport(
+        logicalSize: const Size(400, 800),
+        devicePixelRatio: 1,
+      );
+
       expect(
-        halfLineWidthWorldFor(halfWidthLogicalPixels: 2.5),
-        2.5,
+        halfLineWidthNdcFor(halfWidthLogicalPixels: 0, viewport: viewport),
+        Vector2.zero(),
       );
     });
 
-    test('0を渡すと0を返す', () {
-      expect(halfLineWidthWorldFor(halfWidthLogicalPixels: 0), 0);
-    });
-
     test('負値はArgumentErrorを投げる', () {
+      final viewport = MapViewport(
+        logicalSize: const Size(400, 800),
+        devicePixelRatio: 1,
+      );
+
       expect(
-        () => halfLineWidthWorldFor(halfWidthLogicalPixels: -0.1),
+        () => halfLineWidthNdcFor(
+          halfWidthLogicalPixels: -0.1,
+          viewport: viewport,
+        ),
         throwsArgumentError,
       );
     });
 
     test('非finite値はArgumentErrorを投げる', () {
+      final viewport = MapViewport(
+        logicalSize: const Size(400, 800),
+        devicePixelRatio: 1,
+      );
+
       expect(
-        () => halfLineWidthWorldFor(halfWidthLogicalPixels: double.nan),
+        () => halfLineWidthNdcFor(
+          halfWidthLogicalPixels: double.nan,
+          viewport: viewport,
+        ),
         throwsArgumentError,
       );
       expect(
-        () => halfLineWidthWorldFor(
+        () => halfLineWidthNdcFor(
           halfWidthLogicalPixels: double.infinity,
+          viewport: viewport,
         ),
         throwsArgumentError,
       );

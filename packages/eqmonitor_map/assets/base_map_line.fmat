@@ -3,40 +3,81 @@
 // `extrude`はLineMeshBuilderが頂点ごとに詰める押し出し法線(tile-localの
 // 座標系とは独立な、方向のみを持つ単位ベクトル。直線部分・capでは長さ1、
 // miter joinでは`joinNormal * miterLength`。lib/src/mesh/line_mesh.dartの
-// doc comment参照)。`half_width_world`はCPU側で毎frame確定するworld単位の
-// 半線幅で、shader内でzoomから再計算しない
+// doc comment参照)。`half_width_ndc`はCPU側で毎frame確定するNDC単位の
+// 半線幅(`vec2`。x/yで異なる値を持つ)で、shader内でzoomから再計算しない
 // (lib/src/flutter_scene/base_map_material_library.dartのdoc comment参照)。
 //
-// 押し出しはvertex.world_position(モデル変換=tileMatrixFor適用後、まだ
-// camera/projection適用前のworld座標)へ直接加算する。これがMapLibreの
-// `gl_Position = u_matrix*vec4(pos,0,1) + u_matrix*vec4(extrude,0,0)`
-// (変換後に加算)と等価になる根拠は
-// docs/knowledge/20260805_maplibre_native_renderer_reference.md
-// 「Line shader」節に記録されている:
-// 正射影・pitch 0の2D行列はaffine(線形部+平行移動)であり、affine変換は
-// ベクトル加算に分配する(M*(pos+ext) == M*pos + M*ext、ただしextの
-// homogeneous wは0で平行移動を受けない)。camera/projection行列もaffineな
-// ので、world_positionへ加算してからcamera/projectionを掛けた結果は、
-// 「tile-local空間でextrudeを加算してからcamera/projection*tileMatrixForを
-// 掛けた」結果と一致する。したがってworld_position側で押し出す本実装は、
-// MapLibreの「変換後に加算」と数学的に同じ効果を持つ。
+// # なぜworld単位ではなくNDC単位のvec2か(訂正の経緯)
+//
+// 以前の版はここで「vertex.world_positionはtileMatrixFor適用後・
+// camera/projection適用**前**のworld座標であり、affine変換はベクトル
+// 加算に分配するのでMapLibreの`u_matrix*(pos+extrude)`と数学的に同じ
+// 効果を持つ」と説明していたが、**この前提は誤りだった。**
+// `lib/src/widget/base_map_view.dart`の`_combinedTransformFor`が
+// `viewProjectionMatrixFor * tileMatrixFor`を丸ごとnodeの`localTransform`
+// (flutter_sceneのmodel transform)として焼き込み、Scene側camera
+// (`_IdentityCameraProjection`)は何も変換しないため、`Vertex()`が
+// 受け取る`vertex.world_position`は実際には**tileMatrixForとview
+// projectionの両方を通し終えた後**の値であり、実質NDCに近い空間に
+// なっている。ここへ`extrude`を素の値のまま加算すると、加算量は
+// world pixel単位ではなくNDC単位として効くため、world単位で導出した
+// 半線幅(旧`half_width_world`)を使うと画面全体を塗り潰す不具合になる
+// (詳細は`base_map_material_library.dart`の`halfLineWidthNdcFor`
+// doc commentと
+// `.superpowers/sdd/2026-08-05-eqmonitor-map-base-layer-pmtiles/
+// extrude-fix-report.md`参照)。このため半線幅はCPU側でNDC単位の`vec2`
+// へ変換してから渡す。
+//
+// # なぜ`vertex.uv`(texture coordinates)に押し出し法線を積んでいるか
+//
+// `vertex.uv`は本来テクスチャサンプリング用のUV座標(`vec2`)を運ぶための
+// フィールドだが、このmaterialは意図的にその意味論を外れ、押し出し法線
+// (同じく`vec2`)を運ばせている。理由は、以前使っていた
+// `attributes: [ { type: vec2, name: extrude } ]` + Dart側
+// `Geometry.setCustomAttribute('extrude', ...)`という custom vertex
+// attribute経由の受け渡しが、この環境ではGPUへ値を届けないバグを持って
+// いたため:
+//
+// GPUレベルの実験
+// (`.superpowers/sdd/2026-08-05-eqmonitor-map-base-layer-pmtiles/
+// extrude-gpu-probe-report.md`)で、fragment shaderを
+// `base_color = vec4(abs(extrude.x), abs(extrude.y), 0, 1)`にして描画した
+// ところ、本来`(0, ±1)`の単位ベクトルが出すはずの緑一色の帯ではなく、画面
+// 中央でぴったり0(黒)・上下端へ向かって単調増加するV字グラデーションが
+// 画面全高に出た。これは`extrude`という名前のcustom attributeではなく、
+// 同じ頂点の`position`(origin rebasing後のworld pixel座標。zoom 5で数万
+// オーダー)がshaderへ渡っていたことと完全に一致する。つまりcustom
+// attributeのslot/stride対応が壊れており、`setCustomAttribute`経由では
+// 正しい値がshaderに渡らない。
+//
+// `vertex.uv`(`MeshGeometry.fromArrays`の`texCoords:`引数がGPUへ渡る先。
+// `lib/src/flutter_scene/base_map_geometry_factory.dart`の`lineGeometry`
+// doc comment参照)は型が`vec2`で押し出し法線と完全に一致し、custom
+// attributeを経由しない組み込み属性のためproduction実績のある経路であり、
+// このバグを回避できる。このmaterialはtextureを一切サンプリングしない
+// ため、UVとして解釈されるはずの値を押し出し法線として使っても副作用は
+// ない。
 material {
   name: "BaseMapLine",
   shading_model: unlit,
   blending: opaque,
   culling: none,
-  attributes: [
-    { type: vec2, name: extrude },
-  ],
   parameters: [
     { type: vec4, name: line_color, hint: source_color, default: [1.0, 1.0, 1.0, 1.0] },
-    { type: float, name: half_width_world, default: 1.0 },
+    { type: vec2, name: half_width_ndc, default: [0.0, 0.0] },
   ],
 }
 
 vertex {
   void Vertex(inout VertexInputs vertex) {
-    vertex.world_position.xy += extrude * material_params.half_width_world;
+    // vertex.uvはUV座標ではなく押し出し法線(vec2)を運ぶ
+    // (このファイル冒頭のdoc comment参照)。
+    // half_width_ndcはx/y成分ごとに独立な係数を持つNDC単位の半線幅
+    // (base_map_material_library.dartのhalfLineWidthNdcFor doc comment
+    // 参照)。vertex.world_positionはこの時点で実質NDC相当の空間にいる
+    // ため、成分ごとの掛け算(vec2 * vec2)がそのまま正しいNDCオフセット
+    // になる。
+    vertex.world_position.xy += vertex.uv * material_params.half_width_ndc;
   }
 }
 

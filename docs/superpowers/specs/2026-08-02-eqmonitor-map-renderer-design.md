@@ -246,11 +246,30 @@ Fillはtile-local座標だけを持つ頂点と、穴込みearcutの三角形ind
 fillのshaderは行列積だけであり、複雑さはすべて頂点生成側に置く。
 
 Lineは中心線の各頂点に押し出し法線を持たせ、shaderで押し出す。押し出しは変換前の座標へ足さず、
-押し出しベクトルを同じtile行列で変換して**変換後に加算**する。正射影かつpitch 0ではこれがworld
-空間の押し出しと等価になるため、半線幅をworld単位で与えればscreen上で一定幅になる。半線幅の
-world単位換算はCPUで毎frame確定し、uniformとして渡す。
+押し出しベクトルを変換後の空間で加算する。正射影かつpitch 0では変換がaffineな対角スケールと
+平行移動だけになるため、この加算はworld空間の押し出しと等価である。
 
-初期実装の頂点属性はfloat32とする。MapLibreの6 byte packing（座標を2倍して最下位bitへフラグを
+**押し出しをどの空間で行うかは、cameraをどう配線したかで決まる。両者を一致させること。**
+Flutter Sceneの生成shaderは`world_position = model_transform * position`を求めてから
+material側の`Vertex()`を呼び、その後で`camera_transform`を掛ける。したがってmodel transformへ
+view/projectionまで焼き込む配線（`_IdentityCameraProjection`を使い
+`viewProjectionMatrixFor * tileMatrixFor`をnodeのlocalTransformへ入れる方式）では、`Vertex()`が
+受け取る`world_position`は既にclip/NDC空間であり、**半線幅もNDC単位で渡さなければならない**。
+NDCはviewportの`width × height` logical pixelに対して`[-1, 1]`を張るので、1 logical pixelは
+x軸で`2/width`、y軸で`2/height`になる。正射影は回転を含まない対角スケールなので、押し出し
+ベクトルへ成分ごとにこの係数を掛ければscreen上では等方な線幅になる。半線幅の換算はCPUで
+viewportから毎frame確定し、`vec2`のuniformとして渡す。viewport変更時は再計算する。
+
+この不一致は実際に不具合として発現した。doc commentが「`world_position`はtile行列適用後・
+camera/projection適用前」と仮定したまま半線幅をlogical pixelの生値で渡していたため、NDC空間で
+`1.0`（可視範囲±1の半分）の押し出しとなり画面が塗り潰された。経緯は
+`docs/todo/800_eqmonitor_map_deferred_verification.md`に記録する。
+
+初期実装の頂点属性はfloat32とする。押し出し法線は`MeshGeometry.fromArrays`の組み込み
+`texCoords`（`vec2`）で渡す。`Geometry.setCustomAttribute`経由のcustom vertex attributeは、
+値がshaderへ届かず同じ頂点の`position`が読まれる不具合を実機で確認したため使わない。UVでは
+なく押し出し法線を運ぶという意味論の逸脱になるので、materialとgeometry factoryの両方へ根拠を
+doc commentで残す。MapLibreの6 byte packing（座標を2倍して最下位bitへフラグを
 同居させ、押し出し法線を±63へ量子化しoffset 128でuint8化し、線に沿った距離を14bitで分割する
 方式）は、`gpu.VertexFormat`のint16/uint8正規化対応を実機で検証できるまで採用しない。packing方式
 自体は後段の最適化候補として残し、頂点生成器の出力型を差し替えられる境界を保つ。

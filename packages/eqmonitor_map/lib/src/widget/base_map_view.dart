@@ -68,6 +68,14 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
     required int maxCachedTileGeometries,
 
     /// [BaseMapTileCache.lookupWithFallback]が祖先を遡る最大段数。
+    ///
+    /// [BaseMapTileCache]のzoom窓(低zoom側)の深さにも同じ値を渡す
+    /// (`base_map_tile_cache.dart`の「LRU容量evictionと低zoom祖先の保持の
+    /// 相互作用」節参照)。祖先を`lookupWithFallback`が実際に遡れる段数と、
+    /// その祖先がcacheの窓から破棄されずに残る段数を分けて設定できても
+    /// 意味がない(遡れる段数より深く保持しても使われず、遡れる段数より
+    /// 浅くしか保持しなければ遡っても見つからない)ため、1つの値を両方へ
+    /// 渡す。
     required int maxParentFallbackSteps,
   }) = _MapBaseLayerLimits;
 }
@@ -258,6 +266,7 @@ class _BaseMapController extends ChangeNotifier {
 
   late final _cache = BaseMapTileCache(
     maxEntries: limits.maxCachedTileGeometries,
+    maxParentFallbackSteps: limits.maxParentFallbackSteps,
   );
   late final _sceneMeshCache = _TileSceneMeshCache(
     maxEntries: limits.maxCachedTileGeometries,
@@ -265,24 +274,19 @@ class _BaseMapController extends ChangeNotifier {
   static const _decoder = BaseMapTileDecoder();
   static const _geometryFactory = BaseMapGeometryFactory();
 
-  // debug描画専用の単色。`BaseMapMaterialLibrary`はtile×layerで新しい
-  // materialを作らず`fillMaterial`/`lineMaterial`の2つだけを共有するため
-  // (`base_map_material_library.dart`のdoc comment)、layerごとに
-  // `docs/map_spec_v3.md`が定義する色を出し分けることはできない。
-  // `baseMapLayerSpecs`が定義する色のうち、最下段の`countries`行の色を
-  // 代表として使う。
-  static final Color _debugFillColor = baseMapLayerSpecs
-      .firstWhere((spec) => spec.styleLayerId == 'countriesFill')
-      .color;
-  static final Color _debugLineColor = baseMapLayerSpecs
-      .firstWhere((spec) => spec.styleLayerId == 'countriesLine')
-      .color;
+  // Line layerの半線幅(全layer共通)。`docs/map_spec_v3.md`は線幅もzoomで
+  // 変化させるが、Task 10のスコープでは固定値のdebug描画とする。
   static const _debugLineHalfWidthLogicalPixels = 1.0;
 
   MapCamera _camera;
   MapViewport? _viewport;
   BaseMapTileRepository? _repository;
-  BaseMapMaterialLibrary? _materials;
+
+  /// `styleLayerId`ごとに独立した`scene.PreprocessedMaterial`。
+  /// `baseMapLayerSpecs`の`color`をlayerごとに反映するため、fill/line
+  /// それぞれ1つを全layerで共有していた旧実装から変更した
+  /// (`base_map_material_library.dart`のdoc comment参照)。
+  Map<String, scene.PreprocessedMaterial>? _materialsByStyleLayerId;
   Object? _initError;
   var _isReady = false;
   var _isDisposed = false;
@@ -306,16 +310,42 @@ class _BaseMapController extends ChangeNotifier {
       .firstWhere((spec) => spec.kind == BaseMapLayerKind.background)
       .color;
 
+  /// [_viewport]がまだ設定されていない場合に[initialize]がmaterial生成時
+  /// だけ使う暫定値。`_refresh`は`viewport == null`の間nodeを一切追加しない
+  /// (`_refresh`の早期returnを参照)ため、この値で計算された
+  /// `half_width_ndc`が実際に画面へ出ることはなく、最初の`updateViewport`
+  /// 呼び出しで(`initialize`完了時の再適用、または以後の`updateViewport`
+  /// 自体が持つ再適用ロジックにより)即座に正しい値へ上書きされる。
+  static final _placeholderViewportBeforeFirstUpdate = MapViewport(
+    logicalSize: const Size(1, 1),
+    devicePixelRatio: 1,
+  );
+
   Future<void> initialize() async {
     try {
       await scene.Scene.initializeStaticResources();
-      final materials = await BaseMapMaterialLibrary.load();
-      materials
-        ..setFillColor(_debugFillColor)
-        ..setLineColor(_debugLineColor)
-        ..setLineHalfWidth(
-          halfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
-        );
+      final materialsByStyleLayerId = <String, scene.PreprocessedMaterial>{};
+      final viewportForInitialLoad =
+          _viewport ?? _placeholderViewportBeforeFirstUpdate;
+      for (final spec in baseMapLayerSpecs) {
+        switch (spec.kind) {
+          case BaseMapLayerKind.background:
+            // backgroundはtileのmaterialを持たない(`ColoredBox`側で描く)。
+            continue;
+          case BaseMapLayerKind.fill:
+            materialsByStyleLayerId[spec.styleLayerId] =
+                await BaseMapMaterialLibrary.loadFillMaterial(
+                  color: spec.color,
+                );
+          case BaseMapLayerKind.line:
+            materialsByStyleLayerId[spec.styleLayerId] =
+                await BaseMapMaterialLibrary.loadLineMaterial(
+                  color: spec.color,
+                  halfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
+                  viewport: viewportForInitialLoad,
+                );
+        }
+      }
       final repository = await BaseMapTileRepository.open(
         source: source,
         limits: limits.pmTilesLimits,
@@ -324,9 +354,17 @@ class _BaseMapController extends ChangeNotifier {
         await repository.close();
         return;
       }
-      _materials = materials;
+      _materialsByStyleLayerId = materialsByStyleLayerId;
       _repository = repository;
       _isReady = true;
+      // `_viewport`がここまでの間(loadLineMaterialの非同期処理中)に
+      // 判明していれば、暫定値で焼き込んだ`half_width_ndc`を正しい値へ
+      // 上書きする。`_refresh`はこの後に呼ぶため、上書き前にnodeが
+      // 構築されることはない。
+      final viewport = _viewport;
+      if (viewport != null) {
+        _applyLineHalfWidthToAllMaterials(viewport);
+      }
       _refresh();
       // 初期化失敗の原因はGPU初期化・material読み込み・archive openなど
       // 多岐にわたり、握り潰さずそのまま`_initError`へ入れてUIへ出すために
@@ -346,8 +384,37 @@ class _BaseMapController extends ChangeNotifier {
       return;
     }
     _viewport = viewport;
+    // NDC単位の半線幅はviewportのlogical sizeに依存するため、resizeや
+    // 画面回転でviewportが変わる度に再計算して既存materialへ反映する
+    // (`base_map_material_library.dart`の`halfLineWidthNdcFor`doc comment
+    // 参照)。
+    _applyLineHalfWidthToAllMaterials(viewport);
     _refresh();
     notifyListeners();
+  }
+
+  /// 全line layerのmaterialへ、[viewport]から求め直した`half_width_ndc`を
+  /// 再適用する。materialがまだ`initialize`で構築されていなければ何もしない
+  /// (`initialize`側がその後で改めて呼ぶ)。
+  void _applyLineHalfWidthToAllMaterials(MapViewport viewport) {
+    final materialsByStyleLayerId = _materialsByStyleLayerId;
+    if (materialsByStyleLayerId == null) {
+      return;
+    }
+    for (final spec in baseMapLayerSpecs) {
+      if (spec.kind != BaseMapLayerKind.line) {
+        continue;
+      }
+      final material = materialsByStyleLayerId[spec.styleLayerId];
+      if (material == null) {
+        continue;
+      }
+      BaseMapMaterialLibrary.setLineHalfWidth(
+        material: material,
+        halfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
+        viewport: viewport,
+      );
+    }
   }
 
   void beginGesture() {
@@ -405,8 +472,8 @@ class _BaseMapController extends ChangeNotifier {
     required List<OverscaledTileId> cover,
     required MapViewport viewport,
   }) {
-    final materials = _materials;
-    if (materials == null) {
+    final materialsByStyleLayerId = _materialsByStyleLayerId;
+    if (materialsByStyleLayerId == null) {
       return;
     }
     final resolved = [
@@ -450,7 +517,7 @@ class _BaseMapController extends ChangeNotifier {
                 wrap: entry.tile.wrap,
                 tileId: entry.tile.canonical,
                 geometry: geometry,
-                materials: materials,
+                materialsByStyleLayerId: materialsByStyleLayerId,
                 transform: transformFor(entry.tile.wrap, entry.tile.canonical),
               ),
             );
@@ -461,7 +528,7 @@ class _BaseMapController extends ChangeNotifier {
                 wrap: entry.tile.wrap,
                 tileId: tileId,
                 geometry: geometry,
-                materials: materials,
+                materialsByStyleLayerId: materialsByStyleLayerId,
                 transform: transformFor(entry.tile.wrap, tileId),
               ),
             );
@@ -474,7 +541,7 @@ class _BaseMapController extends ChangeNotifier {
                   wrap: entry.tile.wrap,
                   tileId: childIds[i],
                   geometry: children[i],
-                  materials: materials,
+                  materialsByStyleLayerId: materialsByStyleLayerId,
                   transform: transformFor(entry.tile.wrap, childIds[i]),
                 ),
               );
@@ -492,7 +559,7 @@ class _BaseMapController extends ChangeNotifier {
     required int wrap,
     required CanonicalTileId tileId,
     required BaseMapTileGeometry geometry,
-    required BaseMapMaterialLibrary materials,
+    required Map<String, scene.PreprocessedMaterial> materialsByStyleLayerId,
     required scene_math.Matrix4 transform,
   }) {
     final meshesByLayer = _sceneMeshCache.getOrBuild(
@@ -500,7 +567,7 @@ class _BaseMapController extends ChangeNotifier {
       tileId: tileId,
       geometry: geometry,
       geometryFactory: _geometryFactory,
-      materials: materials,
+      materialsByStyleLayerId: materialsByStyleLayerId,
     );
     final meshes = meshesByLayer[spec.styleLayerId];
     if (meshes == null || meshes.isEmpty) {
@@ -643,7 +710,7 @@ class _TileSceneMeshCache {
     required CanonicalTileId tileId,
     required BaseMapTileGeometry geometry,
     required BaseMapGeometryFactory geometryFactory,
-    required BaseMapMaterialLibrary materials,
+    required Map<String, scene.PreprocessedMaterial> materialsByStyleLayerId,
   }) {
     final key = (sourceInstanceId, tileId);
     final cached = _entries[key];
@@ -657,14 +724,14 @@ class _TileSceneMeshCache {
             for (final mesh in meshes)
               scene.Mesh(
                 geometryFactory.fillGeometry(mesh),
-                materials.fillMaterial,
+                materialsByStyleLayerId[layer.styleLayerId]!,
               ),
           ],
           BaseMapTileLineLayerGeometry(:final meshes) => [
             for (final mesh in meshes)
               scene.Mesh(
                 geometryFactory.lineGeometry(mesh),
-                materials.lineMaterial,
+                materialsByStyleLayerId[layer.styleLayerId]!,
               ),
           ],
         },
