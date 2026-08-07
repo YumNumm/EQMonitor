@@ -69,13 +69,10 @@ class _ModeSection extends ConsumerWidget {
           const SizedBox(height: 8),
           RadioGroup<AppTheme>(
             groupValue: currentTheme,
-            onChanged: (themeName) async {
-              if (themeName == null) {
+            onChanged: (preset) async {
+              if (preset == null) {
                 return;
               }
-              final preset = presets.firstWhere(
-                (preset) => preset.name == themeName,
-              );
               await ref
                   .read(appThemeProvider.notifier)
                   .setThemeForMode(mode, preset);
