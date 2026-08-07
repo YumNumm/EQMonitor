@@ -35,9 +35,17 @@ struct EewLiveActivityWidget: Widget {
             } minimal: {
                 EewMinimalView(state: context.state)
             }
-            .keylineTint(context.state.isWarning == true ? .red : .orange)
+            .keylineTint(eewKeylineTint(for: context.state))
         }
     }
+}
+
+@available(iOS 16.1, *)
+private func eewKeylineTint(for state: EewContentState) -> Color {
+    if state.isCanceled == true {
+        return .gray
+    }
+    return state.isWarning == true ? .red : .orange
 }
 
 // MARK: - Shake Detection Live Activity Widget
@@ -81,15 +89,15 @@ struct EewCompactLeadingView: View {
 
     var body: some View {
         if let location = state.location, let intensity = location.forecastIntensityValue {
-            CompactIntensityBadge(intensity: intensity)
+            DynamicIslandIntensityBadge(intensity: intensity, size: 24)
         } else if let intensity = state.intensityValue {
-            CompactIntensityBadge(intensity: intensity)
+            DynamicIslandIntensityBadge(intensity: intensity, size: 24)
         } else {
             Image("AppIconForeground")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 20, height: 20)
-                .clipShape(RoundedRectangle(cornerRadius: 4))
+                .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
         }
     }
 }
@@ -99,15 +107,11 @@ struct EewCompactTrailingView: View {
     let state: EewContentState
 
     var body: some View {
-        let isWarning = state.isWarning ?? false
-        let isCanceled = state.isCanceled == true
-        Text(isCanceled ? "取消" : isWarning ? "警報" : "予報")
-            .font(.system(size: 10, weight: .heavy))
-            .foregroundColor(.white)
-            .padding(.horizontal, 5)
-            .padding(.vertical, 2)
-            .background(isCanceled ? Color.gray : isWarning ? Color.red : Color.orange)
-            .clipShape(Capsule())
+        EewStatusPill(
+            isWarning: state.isWarning ?? false,
+            isCanceled: state.isCanceled == true,
+            compact: true
+        )
     }
 }
 
@@ -117,14 +121,15 @@ struct EewMinimalView: View {
 
     var body: some View {
         if let location = state.location, let intensity = location.forecastIntensityValue {
-            MinimalIntensityBadge(intensity: intensity)
+            DynamicIslandIntensityBadge(intensity: intensity, size: 22)
         } else if let intensity = state.intensityValue {
-            MinimalIntensityBadge(intensity: intensity)
+            DynamicIslandIntensityBadge(intensity: intensity, size: 22)
         } else {
             Image("AppIconForeground")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 18, height: 18)
+                .clipShape(RoundedRectangle(cornerRadius: 4.5, style: .continuous))
         }
     }
 }
@@ -135,19 +140,19 @@ struct EewExpandedLeadingView: View {
 
     var body: some View {
         if let location = state.location, let intensity = location.forecastIntensityValue {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("予想震度")
-                    .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(.eqTextSecondary)
-                ExpandedIntensityBadge(intensity: intensity)
+                    .font(AppFonts.flex(size: 9, weight: .medium))
+                    .foregroundStyle(Color.eqTextSecondary)
+                DynamicIslandIntensityBadge(intensity: intensity, size: 36)
             }
             .padding(.leading, 4)
         } else if let intensity = state.intensityValue {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("最大震度")
-                    .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(.eqTextSecondary)
-                ExpandedIntensityBadge(intensity: intensity)
+                    .font(AppFonts.flex(size: 9, weight: .medium))
+                    .foregroundStyle(Color.eqTextSecondary)
+                DynamicIslandIntensityBadge(intensity: intensity, size: 36)
             }
             .padding(.leading, 4)
         }
@@ -159,39 +164,28 @@ struct EewExpandedTrailingView: View {
     let state: EewContentState
 
     var body: some View {
-        VStack(alignment: .trailing, spacing: 4) {
+        VStack(alignment: .trailing, spacing: 6) {
             if state.isCanceled == true {
-                Text("取消")
-                    .font(.system(size: 11, weight: .heavy))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 3)
-                    .background(Color.gray)
-                    .clipShape(Capsule())
+                EewStatusPill(isWarning: false, isCanceled: true)
             } else if let isWarning = state.isWarning {
-                Text(isWarning ? "警報" : "予報")
-                    .font(.system(size: 11, weight: .heavy))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 3)
-                    .background(isWarning ? Color.red : Color.orange)
-                    .clipShape(Capsule())
+                EewStatusPill(isWarning: isWarning, isCanceled: false)
             }
             if let serialNo = state.serialNo, serialNo > 0 {
                 HStack(alignment: .firstTextBaseline, spacing: 0) {
                     if state.isFinal == true {
                         Text("最終 ")
-                            .font(.system(size: 9, weight: .medium))
-                            .foregroundColor(.eqTextTertiary)
+                            .font(AppFonts.flex(size: 9, weight: .medium))
+                            .foregroundStyle(Color.eqTextTertiary)
                     }
                     Text("第")
-                        .font(.system(size: 9, weight: .medium))
-                        .foregroundColor(.eqTextTertiary)
+                        .font(AppFonts.flex(size: 9, weight: .medium))
+                        .foregroundStyle(Color.eqTextTertiary)
                     Text("\(serialNo)")
-                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .font(AppFonts.code(size: 14, weight: .bold))
+                        .monospacedDigit()
                     Text("報")
-                        .font(.system(size: 9, weight: .medium))
-                        .foregroundColor(.eqTextTertiary)
+                        .font(AppFonts.flex(size: 9, weight: .medium))
+                        .foregroundStyle(Color.eqTextTertiary)
                 }
             }
         }
@@ -205,17 +199,19 @@ struct EewExpandedCenterView: View {
     var body: some View {
         if state.isCanceled == true {
             Text("緊急地震速報は取り消されました")
-                .font(.system(size: 13, weight: .bold))
+                .font(AppFonts.flex(size: 13, weight: .bold))
+                .foregroundStyle(Color.eqTextPrimary)
                 .lineLimit(2)
                 .minimumScaleFactor(0.75)
         } else {
-            VStack(alignment: .leading, spacing: 1) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(state.isPlum == true || state.isLevel == true ? "検知観測点" : "震源地")
-                    .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(.eqTextSecondary)
+                    .font(AppFonts.flex(size: 9, weight: .medium))
+                    .foregroundStyle(Color.eqTextSecondary)
                 if let hypocenterName = state.hypocenterName {
                     Text(hypocenterName)
-                        .font(.system(size: 16, weight: .bold))
+                        .font(AppFonts.flex(size: 16, weight: .bold))
+                        .foregroundStyle(Color.eqTextPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.75)
                 }
@@ -229,54 +225,55 @@ struct EewExpandedBottomView: View {
     let state: EewContentState
 
     var body: some View {
-        HStack {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
             if state.isPlum == true {
-                Text("PLUM法による検知")
-                    .font(.system(size: 13, weight: .bold, design: .monospaced))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
+                detectionMethodLabel("PLUM法による検知")
             } else if state.isLevel == true {
-                Text("レベル法による検知")
-                    .font(.system(size: 13, weight: .bold, design: .monospaced))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
+                detectionMethodLabel("レベル法による検知")
             } else if state.isOnePoint == true {
-                Text("低精度の緊急地震速報")
-                    .font(.system(size: 13, weight: .bold, design: .monospaced))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
+                detectionMethodLabel("低精度の緊急地震速報")
             } else {
                 HStack(spacing: 12) {
                     if let magnitude = state.magnitude {
                         HStack(alignment: .firstTextBaseline, spacing: 1) {
                             Text("M")
-                                .font(.system(size: 11, weight: .semibold))
-                                .foregroundColor(.eqTextSecondary)
+                                .font(AppFonts.flex(size: 11, weight: .semibold))
+                                .foregroundStyle(Color.eqTextSecondary)
                             Text(String(format: "%.1f", magnitude))
-                                .font(.system(size: 16, weight: .bold, design: .monospaced))
-                                .tracking(-2)
+                                .font(AppFonts.code(size: 16, weight: .bold))
+                                .monospacedDigit()
+                                .tracking(-1)
                         }
                     }
                     if let depth = state.depth {
                         HStack(alignment: .firstTextBaseline, spacing: 1) {
                             Text("深さ")
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundColor(.eqTextSecondary)
+                                .font(AppFonts.flex(size: 11, weight: .medium))
+                                .foregroundStyle(Color.eqTextSecondary)
                             Text("\(Int(depth))")
-                                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                .font(AppFonts.code(size: 16, weight: .bold))
+                                .monospacedDigit()
                             Text("km")
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundColor(.eqTextSecondary)
+                                .font(AppFonts.flex(size: 11, weight: .medium))
+                                .foregroundStyle(Color.eqTextSecondary)
                         }
                     }
                 }
             }
-            Spacer()
+            Spacer(minLength: 4)
             if let location = state.location {
                 ArrivalInfoView(location: location)
             }
         }
         .padding(.leading, 4)
+    }
+
+    private func detectionMethodLabel(_ text: String) -> some View {
+        Text(text)
+            .font(AppFonts.flex(size: 13, weight: .bold))
+            .foregroundStyle(Color.eqTextPrimary)
+            .lineLimit(1)
+            .minimumScaleFactor(0.75)
     }
 }
 
@@ -289,11 +286,13 @@ struct ShakeCompactLeadingView: View {
     var body: some View {
         if let level = state.shakeLevel {
             Text(level.shortDisplayString)
-                .font(.system(size: 16, weight: .black, design: .monospaced))
-                .foregroundColor(level.textColor)
+                .font(AppFonts.code(size: 14, weight: .bold))
+                .foregroundStyle(level.textColor)
                 .frame(width: 24, height: 24)
-                .background(level.backgroundColor)
-                .clipShape(RoundedRectangle(cornerRadius: 6))
+                .background(
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(level.backgroundColor)
+                )
         }
     }
 }
@@ -305,7 +304,9 @@ struct ShakeCompactTrailingView: View {
     var body: some View {
         if let date = state.detectedDate {
             Text(date, style: .time)
-                .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                .font(AppFonts.code(size: 11, weight: .semibold))
+                .monospacedDigit()
+                .foregroundStyle(Color.eqTextPrimary)
         }
     }
 }
@@ -317,8 +318,13 @@ struct ShakeMinimalView: View {
     var body: some View {
         if let level = state.shakeLevel {
             Text(level.shortDisplayString)
-                .font(.system(size: 14, weight: .black, design: .monospaced))
-                .foregroundColor(level.textColor)
+                .font(AppFonts.code(size: 13, weight: .bold))
+                .foregroundStyle(level.textColor)
+                .frame(width: 22, height: 22)
+                .background(
+                    RoundedRectangle(cornerRadius: 5.5, style: .continuous)
+                        .fill(level.backgroundColor)
+                )
         }
     }
 }
@@ -329,17 +335,20 @@ struct ShakeExpandedLeadingView: View {
 
     var body: some View {
         if let level = state.shakeLevel {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("揺れ")
-                    .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(.eqTextSecondary)
+                    .font(AppFonts.flex(size: 9, weight: .medium))
+                    .foregroundStyle(Color.eqTextSecondary)
                 Text(level.shortDisplayString)
-                    .font(.system(size: 24, weight: .black, design: .monospaced))
-                    .foregroundColor(level.textColor)
+                    .font(AppFonts.code(size: 22, weight: .bold))
+                    .foregroundStyle(level.textColor)
                     .frame(width: 36, height: 36)
-                    .background(level.backgroundColor)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .background(
+                        RoundedRectangle(cornerRadius: 9, style: .continuous)
+                            .fill(level.backgroundColor)
+                    )
             }
+            .padding(.leading, 4)
         }
     }
 }
@@ -352,10 +361,12 @@ struct ShakeExpandedTrailingView: View {
         if let date = state.detectedDate {
             VStack(alignment: .trailing, spacing: 2) {
                 Text("検知")
-                    .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(.eqTextSecondary)
+                    .font(AppFonts.flex(size: 9, weight: .medium))
+                    .foregroundStyle(Color.eqTextSecondary)
                 Text(date, style: .time)
-                    .font(.system(size: 13, weight: .bold, design: .monospaced))
+                    .font(AppFonts.code(size: 13, weight: .bold))
+                    .monospacedDigit()
+                    .foregroundStyle(Color.eqTextPrimary)
             }
         }
     }
@@ -366,12 +377,13 @@ struct ShakeExpandedCenterView: View {
     let state: ShakeDetectionContentState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 1) {
+        VStack(alignment: .leading, spacing: 2) {
             Text("観測地点")
-                .font(.system(size: 9, weight: .medium))
-                .foregroundColor(.eqTextSecondary)
+                .font(AppFonts.flex(size: 9, weight: .medium))
+                .foregroundStyle(Color.eqTextSecondary)
             Text(locationText)
-                .font(.system(size: 15, weight: .bold))
+                .font(AppFonts.flex(size: 15, weight: .bold))
+                .foregroundStyle(Color.eqTextPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
         }
@@ -393,93 +405,79 @@ struct ShakeExpandedBottomView: View {
         HStack(alignment: .firstTextBaseline) {
             if let level = state.shakeLevel {
                 Text(level.displayString)
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundColor(.primary)
+                    .font(AppFonts.flex(size: 13, weight: .bold))
+                    .foregroundStyle(Color.eqTextPrimary)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
 
-            Spacer()
+            Spacer(minLength: 4)
 
             if let intensity = state.location?.intensity {
                 HStack(alignment: .firstTextBaseline, spacing: 2) {
                     Text("計測震度")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.eqTextSecondary)
+                        .font(AppFonts.flex(size: 11, weight: .medium))
+                        .foregroundStyle(Color.eqTextSecondary)
                     Text(String(format: "%.1f", intensity))
-                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .font(AppFonts.code(size: 14, weight: .bold))
                         .monospacedDigit()
+                        .foregroundStyle(Color.eqTextPrimary)
                 }
             } else if let date = state.detectedDate {
                 Text(date, style: .time)
-                    .font(.system(size: 13, weight: .bold, design: .monospaced))
+                    .font(AppFonts.code(size: 13, weight: .bold))
+                    .monospacedDigit()
+                    .foregroundStyle(Color.eqTextPrimary)
             }
         }
+        .padding(.leading, 4)
     }
 }
 
 // MARK: - Common Views
 
 @available(iOS 16.1, *)
-struct CompactIntensityBadge: View {
+struct DynamicIslandIntensityBadge: View {
     let intensity: IntensityValue
+    var size: CGFloat = 24
 
     var body: some View {
-        let parts = intensity.formattedParts
-        HStack(alignment: .firstTextBaseline, spacing: 0) {
-            Text(parts.main)
-                .font(.system(size: 16, weight: .black, design: .monospaced))
-            if let sub = parts.sub {
-                Text(sub)
-                    .font(.system(size: 8, weight: .bold, design: .monospaced))
-            }
-        }
-        .foregroundColor(intensity.textColor)
-        .frame(minWidth: 24, minHeight: 24)
-        .padding(.horizontal, 2)
-        .background(intensity.backgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: 6))
+        IntensityBadge(
+            intensity: intensity.formattedParts,
+            backgroundColor: intensity.backgroundColor,
+            textColor: intensity.textColor,
+            size: size
+        )
     }
 }
 
 @available(iOS 16.1, *)
-struct MinimalIntensityBadge: View {
-    let intensity: IntensityValue
+struct EewStatusPill: View {
+    let isWarning: Bool
+    let isCanceled: Bool
+    var compact: Bool = false
 
     var body: some View {
-        let parts = intensity.formattedParts
-        HStack(alignment: .firstTextBaseline, spacing: 0) {
-            Text(parts.main)
-                .font(.system(size: 14, weight: .black, design: .monospaced))
-            if let sub = parts.sub {
-                Text(sub)
-                    .font(.system(size: 6, weight: .bold, design: .monospaced))
-            }
-        }
-        .foregroundColor(intensity.textColor)
-        .frame(minWidth: 22, minHeight: 22)
-        .background(intensity.backgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: 6))
+        Text(label)
+            .font(AppFonts.flex(size: compact ? 10 : 11, weight: .bold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, compact ? 6 : 8)
+            .padding(.vertical, compact ? 2 : 3)
+            .background(Capsule().fill(backgroundColor))
     }
-}
 
-@available(iOS 16.1, *)
-struct ExpandedIntensityBadge: View {
-    let intensity: IntensityValue
-
-    var body: some View {
-        let parts = intensity.formattedParts
-        HStack(alignment: .firstTextBaseline, spacing: 0) {
-            Text(parts.main)
-                .font(.system(size: 28, weight: .heavy, design: .monospaced))
-            if let sub = parts.sub {
-                Text(sub)
-                    .font(.system(size: 12, weight: .bold, design: .monospaced))
-            }
+    private var label: String {
+        if isCanceled {
+            return "取消"
         }
-        .foregroundColor(intensity.textColor)
-        .frame(width: 38, height: 38)
-        .background(intensity.backgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        return isWarning ? "警報" : "予報"
+    }
+
+    private var backgroundColor: Color {
+        if isCanceled {
+            return Color.gray
+        }
+        return isWarning ? Color.red : Color.orange
     }
 }
 
@@ -488,19 +486,32 @@ struct ArrivalInfoView: View {
     let location: LocationInfo
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
             Text(location.regionName)
-                .font(.system(size: 11, weight: .medium))
-                .foregroundColor(.eqTextSecondary)
+                .font(AppFonts.flex(size: 11, weight: .medium))
+                .foregroundStyle(Color.eqTextSecondary)
                 .lineLimit(1)
+                .minimumScaleFactor(0.75)
 
             if let arrivalDate = location.arrivalDate {
                 if arrivalDate > Date() {
-                    Text(arrivalDate, style: .relative)
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    // Workaround: timerInterval が横方向に広がるのを防ぐ
+                    Text("00:00")
+                        .font(AppFonts.code(size: 12, weight: .bold))
+                        .hidden()
+                        .overlay(alignment: .trailing) {
+                            Text(timerInterval: Date()...arrivalDate, countsDown: true)
+                                .font(AppFonts.code(size: 12, weight: .bold))
+                                .monospacedDigit()
+                                .foregroundStyle(Color.eqTextPrimary)
+                                .contentTransition(.numericText(countsDown: true))
+                        }
                 } else {
-                    Text("到達済み")
-                        .font(.system(size: 12, weight: .bold))
+                    Text("主要動到達済み")
+                        .font(AppFonts.flex(size: 12, weight: .bold))
+                        .foregroundStyle(Color.eqTextPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                 }
             }
         }
