@@ -75,13 +75,17 @@ class IntensityHistoryMapAction {
         jmaMapAreaInformationCityInsideProvider(latLng).future,
       );
       final property = city?.property;
-      if (property != null && context.mounted) {
+      // 所属都道府県を解決できない市区町村は細分区域として解釈し直す。
+      final cityPrefecture = property == null
+          ? null
+          : prefectureOf(cityCode: property.code, prefectures: prefectures);
+      if (property != null && cityPrefecture != null && context.mounted) {
         await handleCityTap(
           ref: ref,
           context: context,
           controller: controller,
-          prefectures: prefectures,
           focusedPrefectureCode: state.prefectureCode,
+          prefecture: cityPrefecture,
           cityCode: property.code,
           cityName: property.name,
         );
@@ -114,34 +118,36 @@ class IntensityHistoryMapAction {
     );
   }
 
+  /// 市区町村コードから所属都道府県を解決する。
+  EarthquakeParameterPrefectureItem? prefectureOf({
+    required String cityCode,
+    required List<EarthquakeParameterPrefectureItem> prefectures,
+  }) {
+    final prefectureCode = prefectureCodeOfCity(cityCode, prefectures);
+    if (prefectureCode == null) {
+      return null;
+    }
+    return prefectures
+        .where((prefecture) => prefecture.code == prefectureCode)
+        .firstOrNull;
+  }
+
   Future<void> handleCityTap({
     required WidgetRef ref,
     required BuildContext context,
     required MapController controller,
-    required List<EarthquakeParameterPrefectureItem> prefectures,
     required String focusedPrefectureCode,
+    required EarthquakeParameterPrefectureItem prefecture,
     required String cityCode,
     required String cityName,
   }) async {
-    final prefectureCode = prefectureCodeOfCity(cityCode, prefectures);
-    if (prefectureCode == null) {
-      return;
-    }
-
-    final prefecture = prefectures
-        .where((prefecture) => prefecture.code == prefectureCode)
-        .firstOrNull;
-    if (prefecture == null) {
-      return;
-    }
-
-    if (prefectureCode != focusedPrefectureCode) {
+    if (prefecture.code != focusedPrefectureCode) {
       // 別の都道府県の市区町村 → まずその都道府県へフォーカスを移す。
       await focusPrefecture(
         ref: ref,
         context: context,
         controller: controller,
-        prefectureCode: prefectureCode,
+        prefectureCode: prefecture.code,
         prefectureName: prefecture.name.ja,
         selectedCityCode: cityCode,
         selectedCityName: cityName,
@@ -163,7 +169,7 @@ class IntensityHistoryMapAction {
       regionName: prefecture.name.ja,
       summary: cityHighestEntry(
         ref: ref,
-        prefectureCode: prefectureCode,
+        prefectureCode: prefecture.code,
         cityCode: cityCode,
       ),
     );
