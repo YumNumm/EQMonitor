@@ -27,13 +27,17 @@ class _TestApp extends StatelessWidget {
 Future<ProviderContainer> _container() async {
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
-  return ProviderContainer(
+  final container = ProviderContainer(
     overrides: [
       app_prefs.sharedPreferencesProvider.overrideWithValue(
         app_prefs.SharedPreferencesAsync(prefs),
       ),
     ],
   );
+  // 本番では起動時に解決済みの appThemeProvider を各 Widget が requireValue で
+  // 読むため、build 前に ready にしておく。
+  await container.read(appThemeProvider.future);
+  return container;
 }
 
 void main() {

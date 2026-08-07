@@ -77,7 +77,7 @@ void main() {
         equals(
           const EarthquakeHistoryParameter.all(
             sortBy: EarthquakeSortBy.eventId,
-            sortOrder: SortOrder.asc,
+            sortOrder: SortOrder.desc,
           ),
         ),
       );
@@ -121,7 +121,7 @@ void main() {
         result,
         const EarthquakeHistoryParameter.city(
           sortBy: EarthquakeSortBy.eventId,
-          sortOrder: SortOrder.asc,
+          sortOrder: SortOrder.desc,
           cityCode: '13101',
         ),
       );
