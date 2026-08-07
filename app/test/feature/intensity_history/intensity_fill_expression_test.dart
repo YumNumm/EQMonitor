@@ -109,6 +109,32 @@ void main() {
       expect(result[1], equals(<Object>['get', 'code']));
     });
 
+    test('同一 code が重複しても match ラベルは一意になり最大震度が採用される', () {
+      const pairs = [
+        (code: '010', intensity: JmaIntensity.three),
+        (code: '010', intensity: JmaIntensity.fiveUpper),
+        (code: '010', intensity: JmaIntensity.four),
+        (code: '020', intensity: JmaIntensity.one),
+      ];
+
+      final result = buildIntensityMatchExpression(pairs, colorModel);
+
+      // ['match', ['get','code'], '010', c(5+), '020', c(1), 'rgba(0,0,0,0)']
+      expect(result, hasLength(7));
+      expect(result[2], equals('010'));
+      expect(
+        result[3],
+        equals(
+          colorModel
+              .fromJmaIntensity(JmaIntensity.fiveUpper)
+              .background
+              .toHexStringRGB(),
+        ),
+      );
+      expect(result[4], equals('020'));
+      expect(result.last, equals('rgba(0,0,0,0)'));
+    });
+
     test('propertyKey に regioncode を指定すると get 式に反映される', () {
       const pairs = [
         (code: '0110100', intensity: JmaIntensity.four),
