@@ -3,7 +3,36 @@
 配信中の `asset-pack-v0.0.2` の `map/all.pmtiles` に市区町村ポリゴンがほぼ入っておらず、
 市区町村単位の塗りつぶしが描画されない。
 
-backend 側の修正 PR: <https://github.com/YumNumm/eqmonitor-backend/pull/980>
+backend 側の修正 PR: <https://github.com/YumNumm/eqmonitor-backend/pull/980>（2026-08-03 マージ済み）
+
+## 現状（2026-08-06）: 修正はマージ済みだが配信されていない
+
+PR #980 はマージ済みだが、**backend の Asset Pack CD が 2026-07-31 以降ずっと
+失敗しており、v0.0.2 (2026-07-29) から新しい pack が 1 つも publish されていない**。
+そのため #980 の tippecanoe 2.79.0 固定は**まだ配信物に反映されていない**。
+「#980 マージ後の pack を待つ」だけでは永久に解消しないので注意。
+
+CD が落ちているのは `generate-parameters` ジョブで、本 Issue とは別原因:
+強震モニタ観測点への JMA コード PIP 付与が gitignore された中間物
+`tools/base-map-pmtiles/data/lookup/*.json` に依存しており、CI のクリーンな
+checkout には存在しないため `ENOENT` で落ちる。
+
+CD 復旧 PR: <https://github.com/YumNumm/eqmonitor-backend/pull/992>
+
+なお、この 992 では GDAL も固定している。CI の GDAL 3.8.4 が一部ポリゴンを
+`GeometryCollection` に変換する問題（後述の「兵庫県北部・兵庫が塗れない」）も
+同時に解消する見込み。
+
+配信中の v0.0.2 を実測した結果（全ズームのタイルをデコードして得た distinct
+`regioncode`）:
+
+| zoom | distinct `regioncode` |
+| --- | --- |
+| z6 | 15 |
+| z7 | 31 |
+| z8 | **69** |
+
+期待値は 1894。`tilestats.count` は v0.0.2 でも 1914 を返すため検知できない（後述）。
 
 ## 影響
 
@@ -67,6 +96,10 @@ CI の GDAL 3.8.4 と `COORDINATE_PRECISION=7` の組み合わせにより、
 | `areaForecastLocalEew` | `9280` | 兵庫 |
 
 backend 側 todo: `docs/todo/600_base_map_gdal_geometrycollection_loss.md`
+→ CD 復旧 PR <https://github.com/YumNumm/eqmonitor-backend/pull/992> で
+GDAL を `ghcr.io/osgeo/gdal:ubuntu-small-3.11.3` に固定し、変換段で
+`GeometryCollection` を検出したらビルドを落とすようにして対応済み
+（同 PR で backend の todo 600 は削除）。
 
 ## 暫定対応（ローカル / 検証）
 
@@ -117,7 +150,16 @@ adb install -r build/app/outputs/flutter-apk/app-debug.apk
 adb shell pm clear net.yumnumm.eqmonitor
 ```
 
-恒久対応は PR #980 マージ後にリリースされる新しい pack を使うこと。
+恒久対応は backend PR #992（CD 復旧）マージ後にリリースされる pack
+（v0.0.3 以降）を使うこと。#980 だけでは pack が publish されない。
+
+pack が出たら以下を実測してから本 todo を閉じる:
+
+```bash
+# 期待値: z8 の distinct regioncode = 1894, GeometryCollection 由来の
+# areaForecastLocalE 530 / areaForecastLocalEew 9280 も存在すること
+GH_TOKEN=... tool/asset_pack/stage_from_release.sh --target android-debug
+```
 
 ## 低ズームで塗られない件は別問題（対応済み）
 
