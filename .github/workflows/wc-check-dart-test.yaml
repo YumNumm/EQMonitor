@@ -48,18 +48,20 @@ jobs:
       - name: Resolve dependencies
         run: mise exec -- dart pub get --enforce-lockfile
 
-      - name: Install melos
-        run: |
-          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
-          mise exec -- dart pub global activate melos
-
+      # melos は workspace の pubspec.lock に解決済みのバージョンを使う。
+      # `dart pub global activate melos` はバージョン非固定のため、
+      # melos 8 が公開された時点で CI が壊れた。
+      #
+      # また melos exec に渡すコマンドは 1 つの文字列として渡す。
+      # 引数として分けて渡すと melos が `--` を落とし、
+      # `mise exec` が `--dart-define` を自身の引数として解釈して失敗する。
       - name: Run tests
         id: flutter-test
         run: |
-          melos exec \
+          mise exec -- dart run melos exec \
             --dir-exists=test \
             --concurrency=4 \
-            -- mise exec -- flutter test --dart-define=CI=true --file-reporter="json:test_report.log"
+            -- 'mise exec -- flutter test --dart-define=CI=true --file-reporter="json:test_report.log"'
 
       # https://github.com/dorny/test-reporter
       - name: Report test
