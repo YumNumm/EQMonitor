@@ -4,8 +4,13 @@ part 'asset_pack_manifest.g.dart';
 
 /// Stable identifiers for assets shipped inside the platform Asset Pack.
 ///
-/// Must stay in sync with the backend Valibot `AssetId` picklist
-/// (`backend/packages/types/src/asset-pack.ts`).
+/// A *subset* of the backend Valibot `AssetId` picklist
+/// (`backend/packages/types/src/asset-pack.ts`): the ids this app build knows
+/// how to consume. The backend may ship ids that are absent here — those
+/// entries are skipped by [AssetPackManifest.fromJson] (see the
+/// forward-compatibility note there), so this enum never needs to be updated
+/// in lockstep with the backend. Add an id here only when this app actually
+/// starts reading that asset.
 @JsonEnum()
 enum AssetPackAssetId {
   @JsonValue('BASE_MAP_PMTILES')
@@ -58,6 +63,9 @@ final _sha256Pattern = RegExp(r'^[0-9a-f]{64}$');
 /// `json_annotation`'s `CheckedFromJsonException` — on any mismatch. There
 /// is no fake-data fallback: an invalid manifest must fail loudly rather
 /// than producing a partially-valid object.
+///
+/// The one deliberate exception is asset ids unknown to this build, which are
+/// skipped rather than rejected — see [fromJson].
 @JsonSerializable(createFactory: false)
 class AssetPackManifest {
   AssetPackManifest({
@@ -67,6 +75,22 @@ class AssetPackManifest {
     required this.assets,
   });
 
+  /// Parses a manifest, **skipping entries whose `id` this build doesn't
+  /// know** while still validating everything else strictly.
+  ///
+  /// Skipping unknown ids is required for forward compatibility, not a
+  /// convenience: Managed Background Assets (iOS) and Play Asset Delivery
+  /// (Android) hand the *latest* Pack to *every* installed app build, so the
+  /// backend adding an asset id must not make older builds reject the
+  /// manifest. Rejecting one entry means rejecting the whole file — and
+  /// `AssetPackRepository.readManifest` gates every asset lookup, so the base
+  /// map and all parameters would become unreachable at once. That is exactly
+  /// what happened when Pack v0.0.3 introduced `KYOSHIN_STATIONS` to app
+  /// 3.0.0.
+  ///
+  /// Only the `id` is treated as an open set. `schema_version` is the
+  /// compatibility gate for everything else, so any other mismatch (bad
+  /// `sha256`, unknown `kind` for a known id, missing field) still throws.
   factory AssetPackManifest.fromJson(Map<String, dynamic> json) {
     final packVersion = _requireString(json, 'pack_version');
     final schemaVersion = _requireInt(json, 'schema_version');
@@ -75,10 +99,10 @@ class AssetPackManifest {
     if (assetsJson is! List) {
       throw const FormatException('assets must be a list');
     }
-    final assets = assetsJson
-        .map((e) => AssetPackManifestItem.fromJson(_requireObject(e, 'assets[]')))
-        .toList();
 
+    // Validated before the per-item parse so that a bumped schema_version is
+    // reported as such, rather than as whatever the new schema's items happen
+    // to violate.
     if (schemaVersion != 1) {
       throw FormatException(
         'Unsupported manifest schema_version: $schemaVersion (expected 1)',
@@ -87,8 +111,23 @@ class AssetPackManifest {
     if (!_packVersionPattern.hasMatch(packVersion)) {
       throw FormatException('Invalid pack_version: $packVersion');
     }
-    if (assets.isEmpty) {
+    if (assetsJson.isEmpty) {
       throw const FormatException('assets must not be empty');
+    }
+
+    final assets = <AssetPackManifestItem>[];
+    for (var i = 0; i < assetsJson.length; i++) {
+      final itemJson = _requireObject(assetsJson[i], 'assets[$i]');
+      if (!_assetIdByJsonValue.containsKey(itemJson['id'])) {
+        continue;
+      }
+      assets.add(AssetPackManifestItem.fromJson(itemJson));
+    }
+    if (assets.isEmpty) {
+      throw FormatException(
+        'Asset Pack manifest lists no asset id known to this app build: '
+        '${assetsJson.map((e) => e is Map ? e['id'] : e).toList()}',
+      );
     }
 
     return AssetPackManifest(
@@ -131,7 +170,10 @@ class AssetPackManifest {
 ///
 /// [fromJson] is hand-written for the same reason as
 /// [AssetPackManifest.fromJson]: a plain, unwrapped [FormatException] on
-/// any validation failure.
+/// any validation failure — including an `id` this build doesn't know.
+/// [AssetPackManifest.fromJson] filters those entries out before delegating
+/// here, so an unknown id only reaches this constructor when it is called
+/// directly.
 @JsonSerializable(createFactory: false)
 class AssetPackManifestItem {
   AssetPackManifestItem({
