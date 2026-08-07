@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -147,6 +148,7 @@ class _SheetBody extends ConsumerWidget {
     );
     final padding = MediaQuery.paddingOf(context);
     return SingleChildScrollView(
+      physics: const BottomBouncingScrollPhysics(),
       child: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
