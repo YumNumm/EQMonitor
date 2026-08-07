@@ -8,7 +8,7 @@
 
 **Tech Stack:** Blender 5.2 LTS (`bpy`)、glTF/GLB、Flutter master / Impeller / Flutter GPU、`flutter_scene`、HookWidget、go_router、`sips`（macOS アイコンリサイズ）
 
-**Worktree:** `.worktrees/eqmonitor-logo-3d` on branch `feat/eqmonitor-logo-3d`  
+**Worktree:** `.worktrees/eqmonitor-logo-3d` on branch `feat/eqmonitor-logo-3d`
 **Spec:** `docs/superpowers/specs/2026-08-07-eqmonitor-logo-3d-flutter-scene-design.md`
 
 ## Global Constraints
@@ -59,6 +59,7 @@ tools/branding/eqmonitor_logo_3d/out/  # 生成中間物（git 管理しない /
 ### Task 1: Blender パイプラインで GLB を生成する
 
 **Files:**
+
 - Create: `tools/branding/eqmonitor_logo_3d/build_logo.py`
 - Create: `tools/branding/eqmonitor_logo_3d/export_icon.py`
 - Create: `tools/branding/eqmonitor_logo_3d/README.md`
@@ -68,6 +69,7 @@ tools/branding/eqmonitor_logo_3d/out/  # 生成中間物（git 管理しない /
 - Create: `app/assets/3d/eqmonitor_logo_fallback.png`
 
 **Interfaces:**
+
 - Consumes: `source/eqmonitor_logo.svg`
 - Produces:
   - GLB with animation name `logo_draw`
@@ -212,6 +214,7 @@ EOF
 ### Task 2: アプリに Flutter Scene 依存と branding 表示基盤を追加する
 
 **Files:**
+
 - Modify: `app/pubspec.yaml`（`flutter pub add` 経由）
 - Modify: root `pubspec.lock`（resolve 結果）
 - Create: `app/lib/feature/branding/data/logo_scene_asset.dart`
@@ -221,6 +224,7 @@ EOF
 - Modify: `app/pubspec.yaml` assets（`assets/` 配下なら既存 `- assets/` で足りる。足りない場合のみ `assets/3d/` を追加）
 
 **Interfaces:**
+
 - Consumes: `app/assets/3d/eqmonitor_logo.glb`, `eqmonitor_logo_fallback.png`
 - Produces:
   - `class LogoSceneAsset` with `static const glb = 'assets/3d/eqmonitor_logo.glb';` and `static const fallback = 'assets/3d/eqmonitor_logo_fallback.png';`
@@ -345,6 +349,7 @@ EOF
 ### Task 3: About / Debug に埋め込み、macOS で手動確認する
 
 **Files:**
+
 - Modify: `app/lib/feature/settings/children/application_info/about_this_app.dart`
 - Create: `app/lib/feature/branding/ui/page/logo_scene_debug_page.dart`
 - Modify: `app/lib/core/router/router.dart`（debug route 追加）
@@ -352,6 +357,7 @@ EOF
 - Test: `app/test/feature/settings/children/application_info/about_this_app_test.dart`（無ければ新規。Scene は pump せず fallback 経路か find する）
 
 **Interfaces:**
+
 - Consumes: `EqMonitorLogoSceneView(playbackMode: LogoScenePlaybackMode.loop)`
 - Produces: About 先頭に高さ約 180 のロゴ表示。Debug に「EQMonitor Logo (Flutter Scene)」
 
@@ -376,8 +382,8 @@ const Padding(
 
 - [ ] **Step 2: Debug ページと route を追加する**
 
-`LogoSceneDebugPage`: 全画面 `EqMonitorLogoSceneView(playbackMode: once)`。  
-`router.dart` に `TypedGoRoute`（既存 Debug 配下のパターンに合わせる）。  
+`LogoSceneDebugPage`: 全画面 `EqMonitorLogoSceneView(playbackMode: once)`。
+`router.dart` に `TypedGoRoute`（既存 Debug 配下のパターンに合わせる）。
 `debug_page.dart` に ListTile を追加（`Eqmonitor Map` の近く）。
 
 - [ ] **Step 3: analyze**
@@ -418,11 +424,13 @@ EOF
 ### Task 4: macOS AppIcon を静止レンダーで差し替える
 
 **Files:**
+
 - Modify: `app/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_*.png`
 - Modify: `app/macos/Assets.xcassets/AppIcon.appiconset/`（重複セットがあれば同様）
 - Optional Create: `tools/branding/eqmonitor_logo_3d/resize_macos_icons.sh`
 
 **Interfaces:**
+
 - Consumes: `app/assets/3d/eqmonitor_logo_icon_1024.png`
 - Produces: Contents.json が参照する全サイズ PNG
 
@@ -481,7 +489,7 @@ git push -u origin HEAD
 ## Spec Coverage Check
 
 | Spec 要件 | Task |
-|-----------|------|
+| ----------- | ------ |
 | Blender bpy で GLB + 静止レンダー | Task 1 |
 | 角丸プレート + 立体ロゴ + draw/glow アニメ | Task 1 |
 | Flutter Scene 表示（設定/About） | Task 2, 3 |
