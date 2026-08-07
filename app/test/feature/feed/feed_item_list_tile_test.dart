@@ -39,7 +39,7 @@ void main() {
     await _pump(tester, FeedItemListTile(item: _item()));
     expect(find.text('タイトル'), findsOneWidget);
     expect(find.text('概要'), findsOneWidget);
-    expect(find.text('2026/07/01 12:34'), findsOneWidget);
+    expect(find.text('2026/07/01 12:34頃発表'), findsOneWidget);
   });
 
   testWidgets('title が無い場合は summary をタイトルとして表示する', (tester) async {

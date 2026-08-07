@@ -112,7 +112,11 @@ final class _FakeShakeApiAdapter implements HttpClientAdapter {
     }
 
     if (path.endsWith('/shake-detection') && method == 'PUT') {
-      final list = (options.data as List).cast<Map<String, dynamic>>();
+      // `options.data` は Dio の transformer を通す前の値で、enum が
+      // instance のまま残る。実際に送信される wire JSON へ round-trip して
+      // から decode する。
+      final list = (jsonDecode(jsonEncode(options.data)) as List)
+          .cast<Map<String, dynamic>>();
       final requests = list
           .map(
             (e) => api.ShakeDetectionSettingRequest.fromJson(
@@ -279,6 +283,8 @@ void main() {
       final putEntries = adapter.putShakeDetectionCalls.first;
       expect(putEntries.first.subRegionId, 'sr-1');
       expect(putEntries.first.isCurrentLocation, isTrue);
+      // wire JSON では `min_level: "Medium"` として送られる。
+      expect(putEntries.first.minLevel, api.ShakeDetectionLevel.medium);
     });
 
     test('現在地エントリがない場合は更新せず false を返す', () async {

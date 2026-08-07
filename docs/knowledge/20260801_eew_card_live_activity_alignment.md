@@ -20,6 +20,7 @@
 
 - Live Activity の ContentState は backend APNs が組み立てる。アプリはトークン登録のみ。
 - Dynamic Island の Expanded Bottom でも仮定震源フラグを見て M/深さを隠すこと。
+- Dynamic Island の到達表示も Lock Screen と同じく `主要動到達済み` / `timerInterval` カウントダウンを使う。
 - headline 生成のアプリ/backend 差分は今回未対応。
 - 深発注釈・LPGM は `eew_card` のみ（Live Activity には載せない）。
 

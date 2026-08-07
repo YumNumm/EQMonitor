@@ -22,6 +22,19 @@ mise exec -- dart run melos run analyze
 - 23 packages: success
 - `eqmonitor`: 1,381 issues
 
+## CI への影響
+
+この debt により `PR Flutter Check / flutter-analyze` が blocking で落ち続けている。
+2026-08-03 以降、`flutter-analyze` が実行されたすべての run が failure。
+
+2026-08-07 時点の内訳（`app` 配下、warning 1,414件 / error 0件）:
+
+- `app/lib/`: 648件
+- `app/test/`: 765件
+
+`app/test/` 側が過半を占めるが、todo の方針どおり一括 ignore や
+非blocking化ではなく rule別・directory別に解消すること。
+
 ## 実施内容
 
 - rule別・directory別に件数を固定し、小さい単位で既存違反を解消する
