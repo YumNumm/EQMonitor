@@ -157,35 +157,43 @@ class _CityPanel extends ConsumerWidget {
                     ),
                     const SizedBox(width: 10),
                   ],
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (selectedCity != null)
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (selectedCity != null)
+                          Text(
+                            prefectureName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: context
+                                  .designSystem
+                                  .colorTheme
+                                  .onSurfaceVariant,
+                            ),
+                          ),
                         Text(
-                          prefectureName,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: context
-                                .designSystem
-                                .colorTheme
-                                .onSurfaceVariant,
+                          displayName,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      Text(
-                        displayName,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (entry != null)
-                        Text(
-                          '${entry.count}件',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: context.designSystem.colorTheme.onSurface
-                                .withValues(alpha: 0.7),
+                        if (entry != null)
+                          Text(
+                            '${entry.count}件',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: context.designSystem.colorTheme.onSurface
+                                  .withValues(alpha: 0.7),
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
