@@ -662,7 +662,7 @@ $SeismicityPmTilesSourceCopyWith<$Res> get source {
 
 class SeismicityPmTilesNetworkRequestFailedException implements SeismicityPmTilesException {
   const SeismicityPmTilesNetworkRequestFailedException({required this.source, required this.statusCode});
-  
+
 
  final  SeismicityPmTilesSource source;
  final  int? statusCode;
@@ -727,7 +727,7 @@ as int?,
 @override
 @pragma('vm:prefer-inline')
 $SeismicityPmTilesSourceCopyWith<$Res> get source {
-  
+
   return $SeismicityPmTilesSourceCopyWith<$Res>(_self.source, (value) {
     return _then(_self.copyWith(source: value));
   });
@@ -739,7 +739,7 @@ $SeismicityPmTilesSourceCopyWith<$Res> get source {
 
 class SeismicityPmTilesInvalidNetworkResponseException implements SeismicityPmTilesException {
   const SeismicityPmTilesInvalidNetworkResponseException({required this.source, required this.statusCode, required this.reason});
-  
+
 
  final  SeismicityPmTilesSource source;
  final  int statusCode;
@@ -806,7 +806,7 @@ as String,
 @override
 @pragma('vm:prefer-inline')
 $SeismicityPmTilesSourceCopyWith<$Res> get source {
-  
+
   return $SeismicityPmTilesSourceCopyWith<$Res>(_self.source, (value) {
     return _then(_self.copyWith(source: value));
   });
@@ -818,7 +818,7 @@ $SeismicityPmTilesSourceCopyWith<$Res> get source {
 
 class SeismicityPmTilesArchiveChangedException implements SeismicityPmTilesException {
   const SeismicityPmTilesArchiveChangedException({required this.source, required this.expectedEtag, required this.receivedEtag, required this.statusCode});
-  
+
 
  final  SeismicityPmTilesSource source;
  final  String? expectedEtag;
@@ -887,7 +887,7 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $SeismicityPmTilesSourceCopyWith<$Res> get source {
-  
+
   return $SeismicityPmTilesSourceCopyWith<$Res>(_self.source, (value) {
     return _then(_self.copyWith(source: value));
   });
@@ -899,7 +899,7 @@ $SeismicityPmTilesSourceCopyWith<$Res> get source {
 
 class SeismicityPmTilesCancelledException implements SeismicityPmTilesException {
   const SeismicityPmTilesCancelledException({required this.source});
-  
+
 
  final  SeismicityPmTilesSource source;
 
@@ -962,7 +962,7 @@ as SeismicityPmTilesSource,
 @override
 @pragma('vm:prefer-inline')
 $SeismicityPmTilesSourceCopyWith<$Res> get source {
-  
+
   return $SeismicityPmTilesSourceCopyWith<$Res>(_self.source, (value) {
     return _then(_self.copyWith(source: value));
   });
@@ -974,7 +974,7 @@ $SeismicityPmTilesSourceCopyWith<$Res> get source {
 
 class SeismicityPmTilesClosedException implements SeismicityPmTilesException {
   const SeismicityPmTilesClosedException({required this.source});
-  
+
 
  final  SeismicityPmTilesSource source;
 
@@ -1037,7 +1037,7 @@ as SeismicityPmTilesSource,
 @override
 @pragma('vm:prefer-inline')
 $SeismicityPmTilesSourceCopyWith<$Res> get source {
-  
+
   return $SeismicityPmTilesSourceCopyWith<$Res>(_self.source, (value) {
     return _then(_self.copyWith(source: value));
   });
