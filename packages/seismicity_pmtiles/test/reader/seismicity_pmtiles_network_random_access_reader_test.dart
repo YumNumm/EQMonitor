@@ -437,4 +437,94 @@ void main() {
       );
     },
   );
+
+  test(
+    'read started after caller cancellation uses the next generation',
+    () async {
+      final callerToken = CancelToken();
+      adapter.enqueueResponse(
+        statusCode: 206,
+        body: const [0, 1],
+        etag: '"v1"',
+        contentRange: 'bytes 0-1/16',
+      );
+      final reader = await createReader(
+        adapter: adapter,
+        callerToken: callerToken,
+      );
+      addTearDown(reader.close);
+
+      callerToken.cancel('period changed');
+
+      expect(
+        await reader.readAt(offset: 0, length: 2),
+        orderedEquals(<int>[0, 1]),
+      );
+      expect(adapter.requests, hasLength(1));
+    },
+  );
+
+  test(
+    'post-cancel read does not inherit the cancelled initial identity future',
+    () async {
+      final callerToken = CancelToken();
+      final pending = adapter.enqueuePending206(
+        offset: 0,
+        total: 16,
+        etag: '"v1"',
+      );
+      adapter.enqueueResponse(
+        statusCode: 206,
+        body: const [3, 4],
+        etag: '"v1"',
+        contentRange: 'bytes 3-4/16',
+      );
+      final reader = await createReader(
+        adapter: adapter,
+        callerToken: callerToken,
+      );
+      addTearDown(reader.close);
+
+      final cancelledRead = reader.readAt(offset: 0, length: 2);
+      await pending.requestStarted;
+      callerToken.cancel('period changed');
+      final nextGenerationRead = reader.readAt(offset: 3, length: 2);
+
+      await expectLater(
+        cancelledRead,
+        throwsA(isA<SeismicityPmTilesCancelledException>()),
+      );
+      expect(
+        await nextGenerationRead,
+        orderedEquals(<int>[3, 4]),
+      );
+      expect(adapter.requests, hasLength(2));
+    },
+  );
+
+  test(
+    'reader created with a cancelled caller token stays fail closed',
+    () async {
+      final callerToken = CancelToken()..cancel('period changed');
+      final reader = await createReader(
+        adapter: adapter,
+        callerToken: callerToken,
+      );
+      addTearDown(reader.close);
+
+      for (final offset in <int>[0, 2]) {
+        await expectLater(
+          reader.readAt(offset: offset, length: 2),
+          throwsA(
+            isA<SeismicityPmTilesCancelledException>().having(
+              (failure) => failure.source,
+              'source',
+              networkDescriptor(sizeBytes: 16).source,
+            ),
+          ),
+        );
+      }
+      expect(adapter.requests, isEmpty);
+    },
+  );
 }
