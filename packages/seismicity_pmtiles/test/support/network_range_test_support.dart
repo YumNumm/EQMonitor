@@ -19,13 +19,14 @@ final class NetworkRangeTestAdapter implements HttpClientAdapter {
     required int statusCode,
     required List<int> body,
     String? etag,
+    List<String>? etagValues,
     String? contentRange,
   }) {
     _responses.add(
       StaticNetworkRangeReply(
         statusCode: statusCode,
         body: body,
-        etag: etag,
+        etagValues: etagValues ?? (etag == null ? null : <String>[etag]),
         contentRange: contentRange,
       ),
     );
@@ -108,13 +109,13 @@ final class StaticNetworkRangeReply implements NetworkRangeReply {
   const StaticNetworkRangeReply({
     required this.statusCode,
     required this.body,
-    required this.etag,
+    required this.etagValues,
     required this.contentRange,
   });
 
   final int statusCode;
   final List<int> body;
-  final String? etag;
+  final List<String>? etagValues;
   final String? contentRange;
 
   @override
@@ -126,7 +127,7 @@ final class StaticNetworkRangeReply implements NetworkRangeReply {
       body,
       statusCode,
       headers: <String, List<String>>{
-        if (etag case final value?) 'etag': <String>[value],
+        'etag': ?etagValues,
         if (contentRange case final value?) 'content-range': <String>[value],
       },
     );
@@ -189,7 +190,10 @@ final class PendingRangeResponse implements NetworkRangeReply {
       (bytes) => StaticNetworkRangeReply(
         statusCode: 206,
         body: bytes,
-        etag: etag,
+        etagValues: switch (etag) {
+          final value? => <String>[value],
+          null => null,
+        },
         contentRange: 'bytes $offset-${offset + bytes.length - 1}/$total',
       ).resolve(options: options, cancelFuture: cancelFuture),
     );

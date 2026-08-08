@@ -13,9 +13,10 @@ final class SeismicityPmTilesHttpIdentityValidator {
     required String? expectedEtag,
   }) {
     final etagValues = headers['etag'];
-    final receivedEtag = etagValues == null || etagValues.isEmpty
-        ? null
-        : etagValues.first;
+    final receivedEtag = switch (etagValues) {
+      [final value] => value,
+      _ => null,
+    };
     if (statusCode == 412) {
       throw SeismicityPmTilesException.archiveChanged(
         source: source,

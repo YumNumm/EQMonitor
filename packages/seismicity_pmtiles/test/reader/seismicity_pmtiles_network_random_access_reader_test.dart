@@ -168,6 +168,94 @@ void main() {
     );
   }
 
+  for (final fixture in <({String description, List<String> values})>[
+    (description: 'zero', values: const <String>[]),
+    (
+      description: 'conflicting multiple',
+      values: const <String>['"v1"', '"v2"'],
+    ),
+    (
+      description: 'repeated multiple',
+      values: const <String>['"v1"', '"v1"'],
+    ),
+  ]) {
+    test('initial ${fixture.description} ETags poison the reader', () async {
+      adapter.enqueueResponse(
+        statusCode: 206,
+        body: const [0, 1],
+        etagValues: fixture.values,
+        contentRange: 'bytes 0-1/16',
+      );
+      final reader = await createReader(
+        adapter: adapter,
+        callerToken: CancelToken(),
+      );
+      addTearDown(reader.close);
+
+      final poisonedFailure = await archiveChangedFailureOf(
+        read: reader.readAt(offset: 0, length: 2),
+      );
+      final requestCountAfterPoison = adapter.requests.length;
+      final laterFailure = await archiveChangedFailureOf(
+        read: reader.readAt(offset: 0, length: 2),
+      );
+
+      expect(poisonedFailure.expectedEtag, isNull);
+      expect(poisonedFailure.receivedEtag, isNull);
+      expect(poisonedFailure.statusCode, 206);
+      expect(identical(laterFailure, poisonedFailure), isTrue);
+      expect(adapter.requests, hasLength(requestCountAfterPoison));
+    });
+  }
+
+  for (final fixture in <({String description, List<String> values})>[
+    (description: 'zero', values: const <String>[]),
+    (
+      description: 'conflicting multiple',
+      values: const <String>['"v1"', '"v2"'],
+    ),
+    (
+      description: 'repeated multiple',
+      values: const <String>['"v1"', '"v1"'],
+    ),
+  ]) {
+    test('later ${fixture.description} ETags clear cache and poison', () async {
+      adapter
+        ..enqueueResponse(
+          statusCode: 206,
+          body: const [0, 1],
+          etag: '"v1"',
+          contentRange: 'bytes 0-1/16',
+        )
+        ..enqueueResponse(
+          statusCode: 206,
+          body: const [2, 3],
+          etagValues: fixture.values,
+          contentRange: 'bytes 2-3/16',
+        );
+      final reader = await createReader(
+        adapter: adapter,
+        callerToken: CancelToken(),
+      );
+      addTearDown(reader.close);
+      await reader.readAt(offset: 0, length: 2);
+
+      final poisonedFailure = await archiveChangedFailureOf(
+        read: reader.readAt(offset: 2, length: 2),
+      );
+      final requestCountAfterPoison = adapter.requests.length;
+      final laterFailure = await archiveChangedFailureOf(
+        read: reader.readAt(offset: 0, length: 2),
+      );
+
+      expect(poisonedFailure.expectedEtag, '"v1"');
+      expect(poisonedFailure.receivedEtag, isNull);
+      expect(poisonedFailure.statusCode, 206);
+      expect(identical(laterFailure, poisonedFailure), isTrue);
+      expect(adapter.requests, hasLength(requestCountAfterPoison));
+    });
+  }
+
   for (final statusCode in <int?>[null, 503]) {
     test(
       'maps transport failure $statusCode without leaking DioException',
