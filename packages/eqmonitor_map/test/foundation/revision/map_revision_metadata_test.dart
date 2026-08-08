@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:eqmonitor_map/src/foundation/revision/map_revision.dart';
 import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,6 +33,32 @@ void main() {
       expect(metadata.source, source);
       expect(metadata.baseRevision, 4);
       expect(metadata.targetRevision, 7);
+      expect(metadata.targetDigest, targetDigest);
+    });
+
+    test('accepts zero as the initial full revision', () {
+      final metadata = createMapFullRevision(
+        source: source,
+        revision: 0,
+        digest: fullDigest,
+      );
+
+      expect(metadata.source, source);
+      expect(metadata.revision, 0);
+      expect(metadata.digest, fullDigest);
+    });
+
+    test('accepts the first delta from zero and preserves its fields', () {
+      final metadata = createMapDeltaRevision(
+        source: source,
+        baseRevision: 0,
+        targetRevision: 1,
+        targetDigest: targetDigest,
+      );
+
+      expect(metadata.source, source);
+      expect(metadata.baseRevision, 0);
+      expect(metadata.targetRevision, 1);
       expect(metadata.targetDigest, targetDigest);
     });
 
@@ -81,6 +109,17 @@ void main() {
           targetDigest: targetDigest,
         ),
         throwsArgumentError,
+      );
+    });
+
+    test('does not generate an unchecked copyWith API', () {
+      final generatedSource = File(
+        'lib/src/foundation/revision/map_revision.freezed.dart',
+      ).readAsStringSync();
+
+      expect(
+        RegExp(r'\b(?:copyWith|CopyWith)\b').hasMatch(generatedSource),
+        isFalse,
       );
     });
   });
