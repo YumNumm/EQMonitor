@@ -101,7 +101,13 @@ void main() {
     expect(adapter.requests, isEmpty);
   });
 
-  test('returns unsupportedSource for network without fallback', () async {
+  test('routes valid Network source to the random access reader', () async {
+    adapter.enqueueResponse(
+      statusCode: 206,
+      body: const [1, 2],
+      etag: '"v1"',
+      contentRange: 'bytes 0-1/16',
+    );
     final source = SeismicityPmTilesSource.network(
       archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
     );
@@ -112,14 +118,23 @@ void main() {
       sizeBytes: 16,
     );
 
-    expect(
-      result,
-      SeismicityPmTilesResult<PmTilesRandomAccessReader>.failure(
-        exception: SeismicityPmTilesException.unsupportedSource(source: source),
-      ),
-    );
+    switch (result) {
+      case SeismicityPmTilesSuccess(:final value):
+        addTearDown(value.close);
+        expect(value.sizeBytes, 16);
+        expect(
+          await value.readAt(offset: 0, length: 2),
+          orderedEquals(<int>[1, 2]),
+        );
+      case SeismicityPmTilesFailure(:final exception):
+        fail('Expected Network reader, got $exception');
+    }
     expect(assetLoadCount, 0);
-    expect(adapter.requests, isEmpty);
+    expect(adapter.requests, hasLength(1));
+    final request = adapter.requests.single;
+    expect(request.method, 'GET');
+    expect(request.headers['Range'], 'bytes=0-1');
+    expect(request.headers.containsKey('If-Match'), isFalse);
   });
 
   for (final fixture in <({int sizeBytes, int cacheBytes, String reason})>[

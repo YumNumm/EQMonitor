@@ -5,6 +5,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_result.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_asset_loader.dart';
+import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_network_random_access_reader.dart';
 
 final class SeismicityRandomAccessReaderFactory {
   const SeismicityRandomAccessReaderFactory({
@@ -42,9 +43,12 @@ final class SeismicityRandomAccessReaderFactory {
             ),
           );
         }
-        return SeismicityPmTilesResult<PmTilesRandomAccessReader>.failure(
-          exception: SeismicityPmTilesException.unsupportedSource(
+        return SeismicityPmTilesResult<PmTilesRandomAccessReader>.success(
+          value: SeismicityPmTilesNetworkRandomAccessReader(
             source: source,
+            dio: dio,
+            sizeBytes: descriptor.expectedSizeBytes,
+            cancelToken: cancelToken,
           ),
         );
       case SeismicityPmTilesFileSource():
