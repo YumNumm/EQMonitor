@@ -643,4 +643,51 @@ void main() {
       expect(adapter.requests, hasLength(requestCountBeforeCachedRead));
     });
   }
+
+  for (final fixture in <({int status, String etag})>[
+    (status: 412, etag: '"v2"'),
+    (status: 206, etag: '"v2"'),
+  ]) {
+    test('pending peer is cancelled by terminal ${fixture.status}', () async {
+      adapter.enqueueResponse(
+        statusCode: 206,
+        body: const [0, 1],
+        etag: '"v1"',
+        contentRange: 'bytes 0-1/16',
+      );
+      final reader = await createReader(
+        adapter: adapter,
+        callerToken: CancelToken(),
+      );
+      addTearDown(reader.close);
+      await reader.readAt(offset: 0, length: 2);
+      final peer = adapter.enqueuePending206(
+        offset: 4,
+        total: 16,
+        etag: '"v1"',
+      );
+      final peerFailure = archiveChangedFailureOf(
+        read: reader.readAt(offset: 4, length: 2),
+      );
+      await peer.requestStarted;
+      adapter.enqueueResponse(
+        statusCode: fixture.status,
+        body: fixture.status == 206 ? const [2, 3] : const [],
+        etag: fixture.etag,
+        contentRange: fixture.status == 206 ? 'bytes 2-3/16' : null,
+      );
+      final poisonedFailure = await archiveChangedFailureOf(
+        read: reader.readAt(offset: 2, length: 2),
+      );
+      peer.complete(<int>[4, 5]);
+      final pendingPeerFailure = await peerFailure;
+      final laterFailure = await archiveChangedFailureOf(
+        read: reader.readAt(offset: 0, length: 2),
+      );
+
+      expect(peer.cancelled, isTrue);
+      expect(identical(pendingPeerFailure, poisonedFailure), isTrue);
+      expect(identical(laterFailure, poisonedFailure), isTrue);
+    });
+  }
 }
