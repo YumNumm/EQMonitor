@@ -151,4 +151,31 @@ void main() {
       ],
     );
   });
+
+  test('network exception cases are public Exception types', () {
+    final source = SeismicityPmTilesSource.network(
+      archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
+    );
+    final failures = <SeismicityPmTilesException>[
+      SeismicityPmTilesException.networkRequestFailed(
+        source: source,
+        statusCode: 503,
+      ),
+      SeismicityPmTilesException.invalidNetworkResponse(
+        source: source,
+        statusCode: 200,
+        reason: 'Expected HTTP 206 Partial Content.',
+      ),
+      SeismicityPmTilesException.archiveChanged(
+        source: source,
+        expectedEtag: '"v1"',
+        receivedEtag: '"v2"',
+        statusCode: 206,
+      ),
+      SeismicityPmTilesException.cancelled(source: source),
+      SeismicityPmTilesException.closed(source: source),
+    ];
+
+    expect(failures, everyElement(isA<Exception>()));
+  });
 }
