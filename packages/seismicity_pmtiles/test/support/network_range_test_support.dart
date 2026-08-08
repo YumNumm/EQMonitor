@@ -131,8 +131,10 @@ final class PendingRangeResponse implements NetworkRangeReply {
   final int offset;
   final int total;
   final String? etag;
-  final Completer<List<int>> _bytes = Completer<List<int>>();
-  bool cancelled = false;
+  final _bytes = Completer<List<int>>();
+  var _cancelled = false;
+
+  bool get cancelled => _cancelled;
 
   void complete(List<int> bytes) {
     _bytes.complete(bytes);
@@ -153,7 +155,7 @@ final class PendingRangeResponse implements NetworkRangeReply {
     );
     final cancellation = switch (cancelFuture) {
       final future? => future.then<ResponseBody>((_) {
-        cancelled = true;
+        _cancelled = true;
         throw DioException(
           requestOptions: options,
           type: DioExceptionType.cancel,
@@ -164,7 +166,7 @@ final class PendingRangeResponse implements NetworkRangeReply {
 
     return Future.any(<Future<ResponseBody>>[
       response,
-      if (cancellation case final value?) value,
+      ?cancellation,
     ]);
   }
 }
