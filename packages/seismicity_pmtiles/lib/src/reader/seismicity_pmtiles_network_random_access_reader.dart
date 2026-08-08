@@ -63,6 +63,7 @@ final class SeismicityPmTilesNetworkRandomAccessReader
   final bool _callerCancellationWasPreexisting;
 
   String? _strongEtag;
+  SeismicityPmTilesArchiveChangedException? _terminalArchiveFailure;
   Future<Uint8List>? _initialIdentityFuture;
   final _inFlight =
       <
@@ -90,6 +91,10 @@ final class SeismicityPmTilesNetworkRandomAccessReader
       return _callerCancellationBarrier.future.then(
         (_) => readAt(offset: offset, length: length),
       );
+    }
+    final terminalArchiveFailure = _terminalArchiveFailure;
+    if (terminalArchiveFailure != null) {
+      return Future<Uint8List>.error(terminalArchiveFailure);
     }
     final strongEtag = _strongEtag;
     final cached = switch (strongEtag) {
@@ -160,12 +165,24 @@ final class SeismicityPmTilesNetworkRandomAccessReader
           statusCode: null,
         );
       }
-      final receivedEtag = _identityValidator.validate(
-        statusCode: statusCode,
-        headers: response.headers,
-        source: source,
-        expectedEtag: strongEtag,
-      );
+      late final String receivedEtag;
+      try {
+        receivedEtag = _identityValidator.validate(
+          statusCode: statusCode,
+          headers: response.headers,
+          source: source,
+          expectedEtag: strongEtag,
+        );
+      } on SeismicityPmTilesArchiveChangedException catch (exception) {
+        final terminalArchiveFailure = _terminalArchiveFailure;
+        if (terminalArchiveFailure != null) {
+          throw terminalArchiveFailure;
+        }
+        _terminalArchiveFailure = exception;
+        _cache.clear();
+        final failureToThrow = _terminalArchiveFailure ?? exception;
+        throw failureToThrow;
+      }
       final bytes = response.data;
       if (bytes == null) {
         throw SeismicityPmTilesException.invalidNetworkResponse(
@@ -272,5 +289,10 @@ final class SeismicityPmTilesNetworkRangeLruCache {
       _entries.remove(oldest.key);
       _aggregateBytes -= oldest.value.length;
     }
+  }
+
+  void clear() {
+    _entries.clear();
+    _aggregateBytes = 0;
   }
 }

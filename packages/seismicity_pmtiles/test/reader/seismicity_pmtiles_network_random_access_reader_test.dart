@@ -109,6 +109,49 @@ void main() {
     expect(adapter.requests, hasLength(1));
   });
 
+  for (final receivedEtag in <String?>[null, '*']) {
+    test(
+      'initial ETag $receivedEtag poisons without another request',
+      () async {
+        adapter.enqueueResponse(
+          statusCode: 206,
+          body: const [0, 1],
+          etag: receivedEtag,
+          contentRange: 'bytes 0-1/16',
+        );
+        final reader = await createReader(
+          adapter: adapter,
+          callerToken: CancelToken(),
+        );
+        addTearDown(reader.close);
+        final failureMatcher = isA<SeismicityPmTilesArchiveChangedException>()
+            .having(
+              (failure) => failure.source,
+              'source',
+              networkDescriptor(sizeBytes: 16).source,
+            )
+            .having((failure) => failure.expectedEtag, 'expectedEtag', null)
+            .having(
+              (failure) => failure.receivedEtag,
+              'receivedEtag',
+              receivedEtag,
+            )
+            .having((failure) => failure.statusCode, 'statusCode', 206);
+
+        await expectLater(
+          reader.readAt(offset: 0, length: 2),
+          throwsA(failureMatcher),
+        );
+        final requestCountAfterFirstFailure = adapter.requests.length;
+        await expectLater(
+          reader.readAt(offset: 2, length: 2),
+          throwsA(failureMatcher),
+        );
+        expect(adapter.requests, hasLength(requestCountAfterFirstFailure));
+      },
+    );
+  }
+
   for (final statusCode in <int?>[null, 503]) {
     test(
       'maps transport failure $statusCode without leaking DioException',
