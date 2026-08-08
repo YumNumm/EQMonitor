@@ -129,11 +129,17 @@ void main() {
         await expectLater(
           reader.readAt(offset: 0, length: 2),
           throwsA(
-            isA<SeismicityPmTilesNetworkRequestFailedException>().having(
-              (failure) => failure.statusCode,
-              'statusCode',
-              statusCode,
-            ),
+            isA<SeismicityPmTilesNetworkRequestFailedException>()
+                .having(
+                  (failure) => failure.source,
+                  'source',
+                  networkDescriptor(sizeBytes: 16).source,
+                )
+                .having(
+                  (failure) => failure.statusCode,
+                  'statusCode',
+                  statusCode,
+                ),
           ),
         );
       },
