@@ -58,6 +58,7 @@ final class SeismicityPmTilesNetworkRandomAccessReader
   final SeismicityPmTilesHttpIdentityValidator _identityValidator;
   final SeismicityPmTilesContentRangeValidator _contentRangeValidator;
   final SeismicityPmTilesNetworkRangeLruCache _cache;
+  final _activeReads = SeismicityPmTilesNetworkActiveReadTracker();
   final _activeRequestTokens = <CancelToken>{};
   final _callerCancellationBarrier = Completer<void>();
   final bool _callerCancellationWasPreexisting;
@@ -86,21 +87,29 @@ final class SeismicityPmTilesNetworkRandomAccessReader
         sizeBytes: sizeBytes,
       );
     } on PmTilesV3InvalidRangeException catch (exception, stackTrace) {
-      return Future<Uint8List>.error(exception, stackTrace);
+      return _activeReads.track(
+        read: Future<Uint8List>.error(exception, stackTrace),
+      );
     }
     if (_callerCancellationWasPreexisting) {
-      return Future<Uint8List>.error(
-        SeismicityPmTilesException.cancelled(source: source),
+      return _activeReads.track(
+        read: Future<Uint8List>.error(
+          SeismicityPmTilesException.cancelled(source: source),
+        ),
       );
     }
     if (cancelToken.isCancelled && !_callerCancellationBarrier.isCompleted) {
-      return _callerCancellationBarrier.future.then(
-        (_) => readAt(offset: offset, length: length),
+      return _activeReads.track(
+        read: _callerCancellationBarrier.future.then(
+          (_) => readAt(offset: offset, length: length),
+        ),
       );
     }
     final terminalArchiveFailure = _terminalArchiveFailure;
     if (terminalArchiveFailure != null) {
-      return Future<Uint8List>.error(terminalArchiveFailure);
+      return _activeReads.track(
+        read: Future<Uint8List>.error(terminalArchiveFailure),
+      );
     }
     final strongEtag = _strongEtag;
     final cached = switch (strongEtag) {
@@ -113,7 +122,7 @@ final class SeismicityPmTilesNetworkRandomAccessReader
       null => null,
     };
     if (cached != null) {
-      return Future<Uint8List>.value(cached);
+      return _activeReads.track(read: Future<Uint8List>.value(cached));
     }
     final key = (
       archiveUri: source.archiveUri,
@@ -123,7 +132,7 @@ final class SeismicityPmTilesNetworkRandomAccessReader
     );
     final inFlight = _inFlight[key];
     if (inFlight != null) {
-      return inFlight;
+      return _activeReads.track(read: inFlight);
     }
     final initialIdentityFuture = _initialIdentityFuture;
     if (strongEtag == null && initialIdentityFuture != null) {
@@ -137,7 +146,7 @@ final class SeismicityPmTilesNetworkRandomAccessReader
           completedRequest?.ignore();
         }
       }).ignore();
-      return waitingRequest;
+      return _activeReads.track(read: waitingRequest);
     }
 
     final ownedCancelToken = CancelToken();
@@ -253,7 +262,7 @@ final class SeismicityPmTilesNetworkRandomAccessReader
         _initialIdentityFuture = null;
       }
     }).ignore();
-    return request;
+    return _activeReads.track(read: request);
   }
 
   @override
@@ -268,7 +277,7 @@ final class SeismicityPmTilesNetworkRandomAccessReader
       );
     }
     _cache.clear();
-    final activeRequests = _inFlight.values.toSet().toList();
+    final activeRequests = _activeReads.snapshot();
     final closeFuture =
         Future.wait(
           activeRequests.map(
@@ -283,6 +292,21 @@ final class SeismicityPmTilesNetworkRandomAccessReader
     }
     return closeFuture;
   }
+}
+
+final class SeismicityPmTilesNetworkActiveReadTracker {
+  final _reads = Set<Future<Uint8List>>.identity();
+
+  Future<Uint8List> track({required Future<Uint8List> read}) {
+    if (_reads.add(read)) {
+      read.whenComplete(() {
+        _reads.remove(read);
+      }).ignore();
+    }
+    return read;
+  }
+
+  List<Future<Uint8List>> snapshot() => _reads.toList();
 }
 
 final class SeismicityPmTilesNetworkRangeLruCache {

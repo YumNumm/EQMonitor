@@ -620,6 +620,32 @@ void main() {
     );
   });
 
+  test('close waits for a read behind caller cancellation', () async {
+    final callerToken = CancelToken();
+    final reader = await createReader(
+      adapter: adapter,
+      callerToken: callerToken,
+    );
+
+    callerToken.cancel('period changed');
+    final read = reader.readAt(offset: 0, length: 2);
+    var readCompleted = false;
+    read.whenComplete(() {
+      readCompleted = true;
+    }).ignore();
+    expect(readCompleted, isFalse);
+    final close = reader.close();
+    expect(readCompleted, isFalse);
+
+    await expectLater(close, completes);
+    expect(readCompleted, isTrue);
+    await expectLater(
+      read,
+      throwsA(isA<SeismicityPmTilesClosedException>()),
+    );
+    expect(adapter.requests, isEmpty);
+  });
+
   for (final fixture in <({int status, String etag})>[
     (status: 412, etag: '"v2"'),
     (status: 206, etag: '"v2"'),
