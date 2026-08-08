@@ -1,14 +1,45 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:test/test.dart';
+
+import '../support/network_range_test_support.dart';
+
+SeismicityPmTilesArchiveDescriptor descriptorFor({
+  required SeismicityPmTilesSource source,
+  required int sizeBytes,
+}) {
+  return SeismicityPmTilesArchiveDescriptor(
+    source: source,
+    schemaVersion: 1,
+    dataZoom: 8,
+    expectedSizeBytes: sizeBytes,
+    expectedFeatureCount: 1,
+    archiveRevision: 'fixture-v1',
+    periodFrom: DateTime.utc(2025),
+    periodTo: DateTime.utc(2026),
+  );
+}
+
+Future<SeismicityPmTilesResult<PmTilesRandomAccessReader>> createFor({
+  required SeismicityRandomAccessReaderFactory factory,
+  required SeismicityPmTilesSource source,
+  required int sizeBytes,
+}) {
+  return factory.create(
+    descriptor: descriptorFor(source: source, sizeBytes: sizeBytes),
+    cancelToken: CancelToken(),
+  );
+}
 
 void main() {
   late Directory tempDirectory;
   late File archiveFile;
   late int assetLoadCount;
+  late NetworkRangeTestAdapter adapter;
   late SeismicityRandomAccessReaderFactory factory;
 
   setUp(() async {
@@ -18,19 +49,24 @@ void main() {
     archiveFile = File('${tempDirectory.path}/archive.pmtiles');
     await archiveFile.writeAsBytes([1, 2, 3, 4]);
     assetLoadCount = 0;
+    adapter = NetworkRangeTestAdapter();
     factory = SeismicityRandomAccessReaderFactory(
       assetLoader: ({required assetKey}) async {
         assetLoadCount++;
         return Uint8List.fromList([5, 6, 7, 8]);
       },
+      dio: Dio()..httpClientAdapter = adapter,
+      networkMaxCacheBytes: 8,
     );
   });
 
   tearDown(() => tempDirectory.delete(recursive: true));
 
   test('routes file sources to the file reader', () async {
-    final result = await factory.create(
+    final result = await createFor(
+      factory: factory,
       source: SeismicityPmTilesSource.file(path: archiveFile.path),
+      sizeBytes: 4,
     );
 
     switch (result) {
@@ -42,11 +78,14 @@ void main() {
         fail('Expected file reader, got $exception');
     }
     expect(assetLoadCount, 0);
+    expect(adapter.requests, isEmpty);
   });
 
   test('routes asset sources through the injected loader once', () async {
-    final result = await factory.create(
+    final result = await createFor(
+      factory: factory,
       source: const SeismicityPmTilesSource.asset(assetKey: 'archive.pmtiles'),
+      sizeBytes: 4,
     );
 
     switch (result) {
@@ -59,6 +98,7 @@ void main() {
         fail('Expected asset reader, got $exception');
     }
     expect(assetLoadCount, 1);
+    expect(adapter.requests, isEmpty);
   });
 
   test('returns unsupportedSource for network without fallback', () async {
@@ -66,7 +106,11 @@ void main() {
       archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
     );
 
-    final result = await factory.create(source: source);
+    final result = await createFor(
+      factory: factory,
+      source: source,
+      sizeBytes: 16,
+    );
 
     expect(
       result,
@@ -75,6 +119,7 @@ void main() {
       ),
     );
     expect(assetLoadCount, 0);
+    expect(adapter.requests, isEmpty);
   });
 
   test('returns typed failure when a selected file cannot be opened', () async {
@@ -82,7 +127,11 @@ void main() {
       path: '${tempDirectory.path}/missing.pmtiles',
     );
 
-    final result = await factory.create(source: source);
+    final result = await createFor(
+      factory: factory,
+      source: source,
+      sizeBytes: 4,
+    );
 
     switch (result) {
       case SeismicityPmTilesSuccess():
@@ -91,6 +140,7 @@ void main() {
         expect(exception, isA<SeismicityPmTilesSourceReadFailedException>());
     }
     expect(assetLoadCount, 0);
+    expect(adapter.requests, isEmpty);
   });
 
   test('returns typed failure when the asset loader throws an Error', () async {
@@ -100,9 +150,15 @@ void main() {
     final errorFactory = SeismicityRandomAccessReaderFactory(
       assetLoader: ({required assetKey}) =>
           Future<Uint8List>.error(StateError('asset unavailable')),
+      dio: Dio()..httpClientAdapter = adapter,
+      networkMaxCacheBytes: 8,
     );
 
-    final result = await errorFactory.create(source: source);
+    final result = await createFor(
+      factory: errorFactory,
+      source: source,
+      sizeBytes: 4,
+    );
 
     switch (result) {
       case SeismicityPmTilesSuccess():
@@ -119,5 +175,6 @@ void main() {
               ),
         );
     }
+    expect(adapter.requests, isEmpty);
   });
 }

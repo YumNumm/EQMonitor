@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:test/test.dart';
 
@@ -32,8 +33,10 @@ Future<SeismicityPmTilesArchive> openPublicApiArchive({
 
 void main() {
   test('stable reader and archive contracts compile through the barrel', () {
-    const factory = SeismicityRandomAccessReaderFactory(
+    final factory = SeismicityRandomAccessReaderFactory(
       assetLoader: loadPublicApiAsset,
+      dio: Dio(),
+      networkMaxCacheBytes: 1024,
     );
     final reader = PublicApiReader();
     const entry = PmTilesV3DirectoryEntry(

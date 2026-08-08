@@ -1,17 +1,27 @@
+import 'package:dio/dio.dart';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
+import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descriptor.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_result.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_asset_loader.dart';
 
 final class SeismicityRandomAccessReaderFactory {
-  const SeismicityRandomAccessReaderFactory({required this.assetLoader});
+  const SeismicityRandomAccessReaderFactory({
+    required this.assetLoader,
+    required this.dio,
+    required this.networkMaxCacheBytes,
+  });
 
   final SeismicityPmTilesAssetLoader assetLoader;
+  final Dio dio;
+  final int networkMaxCacheBytes;
 
   Future<SeismicityPmTilesResult<PmTilesRandomAccessReader>> create({
-    required SeismicityPmTilesSource source,
+    required SeismicityPmTilesArchiveDescriptor descriptor,
+    required CancelToken cancelToken,
   }) async {
+    final source = descriptor.source;
     switch (source) {
       case SeismicityPmTilesNetworkSource():
         return SeismicityPmTilesResult<PmTilesRandomAccessReader>.failure(
