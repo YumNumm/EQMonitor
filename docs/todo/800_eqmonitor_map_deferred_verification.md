@@ -69,9 +69,10 @@ ring境界処理の不具合と推測していたが、**いずれも反証さ�
   ringを正しく分離している。当初「巨大三角形2枚」と見えたものは、tile buffer
   のclip辺(`y = extent 4096 + buffer 80`)という正当な地物であり、報告値
   16384と4096の差はhalfWidth 4と1の違いで完全に説明できた。
-- **MVT extentのハードコード**: `base_map_view.dart`がtile行列へ
-  `mvtDefaultExtent`(4096)を固定で渡しているが、実archiveの全layerが
-  `extent=4096`であり縮尺の破綻はない(後述の潜在的脆さは別項)。
+- **MVT extentのハードコード(Task 10当時)**: 観測時の`base_map_view.dart`は
+  tile行列へ`mvtDefaultExtent`(4096)を固定で渡していたが、実archiveの全layerも
+  `extent=4096`だったため、floodの原因ではなかった。#1589ではdecode済みのlayer
+  extentをrender planからtile行列へ渡す経路へ変更済みであり、この固定値経路は残っていない。
 - **miter limit clampの漏れ**: 可視6タイル全layerの全頂点で押し出し長は
   `[1.0, 4.0000002]`に収まり、上限超過は0件。
 - **world空間での過大三角形**: `tileMatrixFor`適用後のworld座標で測っても
