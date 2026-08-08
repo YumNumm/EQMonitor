@@ -102,32 +102,85 @@ enum MapRevisionRejectReason {
   revisionBranch,
 }
 
-@Freezed(copyWith: false)
+@Freezed(
+  copyWith: false,
+  map: FreezedMapOptions.none,
+  when: FreezedWhenOptions.none,
+)
 sealed class MapRevisionApplyResult<TState>
     with _$MapRevisionApplyResult<TState> {
-  // Task 14 exposes this only through the validated public factory.
-  // ignore: unused_element
+  factory MapRevisionApplyResult.committed({
+    required MapCommittedRevision<TState> current,
+  }) => MapRevisionApplyResult._committed(current: current);
+
+  factory MapRevisionApplyResult.idempotentNoOp({
+    required MapCommittedRevision<TState> current,
+    MapFullResyncRequest? fullResyncRequest,
+  }) {
+    if (fullResyncRequest != null &&
+        (fullResyncRequest.source != current.source ||
+            fullResyncRequest.afterRevision != current.revision)) {
+      throw ArgumentError.value(
+        fullResyncRequest,
+        'fullResyncRequest',
+        'must match the current source and revision',
+      );
+    }
+
+    return MapRevisionApplyResult._idempotentNoOp(
+      current: current,
+      fullResyncRequest: fullResyncRequest,
+    );
+  }
+
+  factory MapRevisionApplyResult.rejected({
+    required MapCommittedRevision<TState>? current,
+    required MapRevisionRejectReason reason,
+    MapFullResyncRequest? fullResyncRequest,
+  }) {
+    final requestDoesNotMatchCurrent =
+        fullResyncRequest != null &&
+        ((current == null && fullResyncRequest.afterRevision != null) ||
+            (current != null &&
+                (fullResyncRequest.source != current.source ||
+                    fullResyncRequest.afterRevision != current.revision)));
+    if (requestDoesNotMatchCurrent) {
+      throw ArgumentError.value(
+        fullResyncRequest,
+        'fullResyncRequest',
+        'must match the current source and revision',
+      );
+    }
+
+    return MapRevisionApplyResult._rejected(
+      current: current,
+      reason: reason,
+      fullResyncRequest: fullResyncRequest,
+    );
+  }
+
   const factory MapRevisionApplyResult._committed({
     required MapCommittedRevision<TState> current,
     MapRevisionRejectReason? reason,
     MapFullResyncRequest? fullResyncRequest,
   }) = _MapRevisionApplyResultCommitted<TState>;
 
-  // Task 14 exposes this only through the validated public factory.
-  // ignore: unused_element
   const factory MapRevisionApplyResult._idempotentNoOp({
     required MapCommittedRevision<TState> current,
     MapRevisionRejectReason? reason,
     MapFullResyncRequest? fullResyncRequest,
   }) = _MapRevisionApplyResultIdempotentNoOp<TState>;
 
-  // Task 14 exposes this only through the validated public factory.
-  // ignore: unused_element
   const factory MapRevisionApplyResult._rejected({
     required MapCommittedRevision<TState>? current,
     required MapRevisionRejectReason reason,
     MapFullResyncRequest? fullResyncRequest,
   }) = _MapRevisionApplyResultRejected<TState>;
+}
+
+extension MapRevisionApplyResultResync<TState>
+    on MapRevisionApplyResult<TState> {
+  bool get requiresFullResync => fullResyncRequest != null;
 }
 
 MapCommittedRevision<TState> createMapCommittedRevision<TState>({
