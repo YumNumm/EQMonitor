@@ -50,3 +50,51 @@ MapFrameRevisionStamp createMapFrameLayerRevisionStamp({
     ownerKey: ownerKey,
   );
 }
+
+List<MapFrameRevisionStamp> canonicalizeMapFrameRevisions({
+  required List<MapFrameRevisionStamp> revisions,
+}) {
+  final canonical = List<MapFrameRevisionStamp>.of(revisions)
+    ..sort((left, right) {
+      final scopeComparison = left.scope.index.compareTo(right.scope.index);
+      if (scopeComparison != 0) {
+        return scopeComparison;
+      }
+
+      final sourceComparison = left.sourceInstanceId.value.compareTo(
+        right.sourceInstanceId.value,
+      );
+      if (sourceComparison != 0) {
+        return sourceComparison;
+      }
+
+      final leftOwnerKey = left.ownerKey;
+      final rightOwnerKey = right.ownerKey;
+      return switch ((leftOwnerKey, rightOwnerKey)) {
+        (null, null) => 0,
+        (null, _) => -1,
+        (_, null) => 1,
+        (final MapNodeKey leftOwnerKey, final MapNodeKey rightOwnerKey) =>
+          leftOwnerKey.value.compareTo(rightOwnerKey.value),
+      };
+    });
+
+  MapFrameRevisionStamp? previous;
+  for (final revision in canonical) {
+    final duplicate =
+        previous != null &&
+        previous.scope == revision.scope &&
+        previous.sourceInstanceId == revision.sourceInstanceId &&
+        previous.ownerKey == revision.ownerKey;
+    if (duplicate) {
+      throw ArgumentError.value(
+        revisions,
+        'revisions',
+        'contains duplicate identity',
+      );
+    }
+    previous = revision;
+  }
+
+  return List<MapFrameRevisionStamp>.unmodifiable(canonical);
+}
