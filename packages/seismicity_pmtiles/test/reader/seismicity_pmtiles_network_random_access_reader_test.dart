@@ -224,4 +224,58 @@ void main() {
 
     expect(adapter.requests, hasLength(2));
   });
+
+  test('same pending range shares one request', () async {
+    final pending = adapter.enqueuePending206(
+      offset: 0,
+      total: 16,
+      etag: '"v1"',
+    );
+    final reader = await createReader(
+      adapter: adapter,
+      callerToken: CancelToken(),
+    );
+    addTearDown(reader.close);
+
+    final first = reader.readAt(offset: 0, length: 3);
+    final second = reader.readAt(offset: 0, length: 3);
+
+    expect(identical(first, second), isTrue);
+    await Future<void>.delayed(const Duration(milliseconds: 1));
+    expect(adapter.requests, hasLength(1));
+    pending.complete(<int>[0, 1, 2]);
+    expect(
+      await Future.wait(<Future<Uint8List>>[first, second]),
+      everyElement(orderedEquals(<int>[0, 1, 2])),
+    );
+  });
+
+  test('different range waits for initial identity', () async {
+    final pending = adapter.enqueuePending206(
+      offset: 0,
+      total: 16,
+      etag: '"v1"',
+    );
+    adapter.enqueueResponse(
+      statusCode: 206,
+      body: const [3, 4],
+      etag: '"v1"',
+      contentRange: 'bytes 3-4/16',
+    );
+    final reader = await createReader(
+      adapter: adapter,
+      callerToken: CancelToken(),
+    );
+    addTearDown(reader.close);
+
+    final first = reader.readAt(offset: 0, length: 3);
+    final second = reader.readAt(offset: 3, length: 2);
+
+    await Future<void>.delayed(const Duration(milliseconds: 1));
+    expect(adapter.requests, hasLength(1));
+    pending.complete(<int>[0, 1, 2]);
+    await first;
+    await second;
+    expect(adapter.requests[1].headers['If-Match'], '"v1"');
+  });
 }
