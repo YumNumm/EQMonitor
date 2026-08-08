@@ -16,6 +16,7 @@
 - Follow RED/GREEN TDD for every production behavior change. A later integration/regression task may begin GREEN when it only proves an already-implemented contract; in that case, do not manufacture a production diff. Every task is one independently reviewable logical commit, targeting 30–100 handwritten changed lines; generated Freezed files and deterministic fixtures are committed with their source task.
 - Use only named parameters for functions or constructors with two or more arguments. Do not add `dynamic`, `any`, explicit `Object`/`Object?`, null assertions, `print`, or private class methods.
 - Do not retain one Freezed/Dart object per hypocenter. Per-feature transient values inside one worker callback are allowed; the returned 2M-scale representation is typed columns split into bounded chunks.
+- Canonical/dictionary string paths must not use a `Map` whose key type is `String`, retain Dart `String` keys, or retain one string object per event. Encode accepted values immediately to UTF-8 and use typed byte arenas, entry offsets, row indexes, and typed open-address tables. The existing `Map<String, dynamic>` JSON boundary remains the only string-key-map exception.
 - Missing `depth_km` and `magnitude` use `double.nan` plus a validity bitmap. A numeric zero is valid only when the source property explicitly contains zero; no missing value is replaced by zero.
 - `SeismicityPmTilesArchiveDescriptor.schemaVersion` and `.dataZoom` are required caller inputs. Accept exactly schema version 1 and enumerate exactly `descriptor.dataZoom`; never substitute 1 or 14 when metadata is absent.
 - The current public `/v2/hypocenters/manifest` contract lacks `schema_version`, `data_zoom`, and `archive_revision`. That is a separate backend stacked dependency before app integration. This branch consumes a caller-complete descriptor and must not infer those fields from URL, PMTiles header, or producer constants.
@@ -31,6 +32,7 @@
 - Adopt `bdero/dashmap` at `a6ff92edd999e922f81d26d209d8f589faee3fd0` as evidence for typed-data-only CPU worker jobs and keeping GPU/UI work outside the worker. Do not copy its per-job `Isolate.run`, web synchronous fallback, terrain streaming, tile selection, network cache, or Flutter Scene code; this issue requires one long-lived decoder isolate and has no renderer.
 - Adopt `ingen084/KyoshinEewViewerIngen` at `3e9d6a01f62e754c9c6da4a413330c4cfcb4afab` only for the invariant that a complete point cache is built before replacing the visible dataset. Do not adopt its Avalonia/Skia renderer, zoom-dependent point layout, hover cache, Mercator UI layer, or earthquake presentation types as PMTiles/decode contracts.
 - The backend producer at gitlink `8bdda33cd0ae0860a395d9b8465b5d226e422de5` defines layer `hypocenters`; required properties `hypocenter_id` and `origin_time_unix_ms`; optional `magnitude`, `depth_km`, `max_intensity`, `determination_flag`, `earthquake_event_id`, and `geometry_clamped`. Schema v1 rejects every other property name; internal-only properties are still typed and retained through duplicate classification.
+- The producer validator accepts nullable arbitrary strings for `max_intensity` and `determination_flag`, but applies `nonEmpty` to a present `earthquake_event_id`. Preserve the first two byte-for-byte including empty and reject the third when present empty.
 
 ## Locked Data Contract
 
@@ -61,11 +63,11 @@ Boundary-copy classification retains no per-event objects or UUID/string keys. E
 |---|---|
 | normalized point | `Int64List globalXs`, `Int64List globalYs` |
 | magnitude/depth | pre-Float32 `Float64List` plus validity bitmaps; finite value bits are compared after canonicalizing `-0.0` to `0.0` |
-| determination flag | exact UTF-8 dictionary, `Uint32List` indexes, validity bitmap |
-| earthquake event ID | exact UTF-8 dictionary, `Uint32List` indexes, validity bitmap |
+| determination flag | UTF-8 byte arena, `Uint32List` entry offsets + row dictionary indexes, typed hash slots, validity bitmap |
+| earthquake event ID | UTF-8 byte arena, `Uint32List` entry offsets + row dictionary indexes, typed hash slots, validity bitmap |
 | geometry clamped | value bitmap plus separate validity bitmap |
 
-The public UUID/origin-time/max-intensity columns and this sidecar together cover every schema-v1 property. Duplicate comparison uses the canonical sidecar before lossy Float32 output conversion, so two finite inputs such as `5.1` and a distinct nearby double that round to the same Float32 remain a conflict. Missing matches only missing; present empty string, `false`, and numeric zero remain present values. The three internal-only producer properties are discarded only after all tiles and the final count gate have passed.
+The public UUID/origin-time/max-intensity columns and this sidecar together cover every schema-v1 property. Every accepted MVT string is encoded immediately to a transient `Uint8List`; builders retain only arena bytes and typed indexes/offsets. Duplicate comparison uses arena slices and the canonical numeric sidecar before lossy Float32 output conversion, so two finite inputs such as `5.1` and a distinct nearby double that round to the same Float32 remain a conflict. Missing matches only missing; present empty `max_intensity`/`determination_flag`, `false`, and numeric zero remain present values. Empty `earthquake_event_id` is rejected before accumulation. The three internal-only producer properties are discarded only after all tiles and the final count gate have passed.
 
 ## Locked MVT Schema v1
 
@@ -73,7 +75,7 @@ The public UUID/origin-time/max-intensity columns and this sidecar together cove
 - Every feature has type `POINT` and exactly one canonical `MoveTo(count=1)` point. MultiPoint, LineString, Polygon, unknown commands, truncated parameters, extra commands, odd tags, invalid key/value indexes, or repeated property keys are failures.
 - Required: `hypocenter_id` is one canonical dashed UUID string; `origin_time_unix_ms` is an exact safe integer representable by `Int64List`.
 - Optional decoded: `magnitude` and `depth_km` accept any single MVT numeric scalar only when the original double and its Float32 output conversion are both finite; `max_intensity` accepts a string.
-- Optional internal-only: `determination_flag` and `earthquake_event_id` are exact strings; `geometry_clamped` is bool. They remain in typed canonical sidecars through cross-tile dedupe and are not exposed in the published dataset.
+- Optional internal-only: `determination_flag` accepts an exact string including empty, `earthquake_event_id` accepts only a non-empty exact string, and `geometry_clamped` is bool. Accepted strings are retained only as UTF-8 arenas/typed indexes through cross-tile dedupe and are not exposed in the published dataset.
 - A raw MVT value must set exactly one of string/float/double/int/uint/sint/bool. Missing, multiple, or wrong scalar variants are failures.
 - Point coordinates are transformed from local MVT integers to normalized global Web Mercator integers with tile X wrapping, then to finite longitude/latitude. Global Y outside `[0, extent * 2^zoom]` is rejected; it is never clamped.
 - Same UUID plus identical normalized global point and all schema-v1 property values is a boundary copy and is emitted once. Same UUID with any different geometry or property is `duplicateConflict` and invalidates the whole dataset.
@@ -86,25 +88,42 @@ The public UUID/origin-time/max-intensity columns and this sidecar together cove
 | `packages/seismicity_pmtiles/lib/src/model/seismicity_pmtiles_chunk.dart` | Public typed column chunk. |
 | `packages/seismicity_pmtiles/lib/src/model/seismicity_pmtiles_dataset.dart` | Public completed dataset. |
 | `packages/seismicity_pmtiles/lib/src/model/seismicity_pmtiles_decode_progress.dart` | Public raw/unique/tile progress. |
+| `packages/seismicity_pmtiles/lib/src/model/seismicity_validity_bitmap.dart` | Packed typed-column presence bits. |
+| `packages/seismicity_pmtiles/lib/src/model/seismicity_pmtiles_chunk_validator.dart` | Public chunk length, offset, and validity invariants. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_schema_v1_validator.dart` | Descriptor and property-name contract. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_mvt_value_decoder.dart` | Exactly-one scalar conversion. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_mvt_point_decoder.dart` | Strict Point command and Web Mercator coordinate conversion. |
+| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoded_hypocenter.dart` | Callback-local typed row with transient UTF-8 values. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_mvt_tile_decoder.dart` | Raw protobuf/layer/tag/feature streaming decode. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_uuid_index.dart` | Typed open-address UUID-to-row index. |
+| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_utf8_arena.dart` | Growable bounded UTF-8 byte arena and entry offsets. |
+| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_utf8_dictionary.dart` | Typed open-address byte-slice dictionary with no String-key map. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_canonical_property_chunk.dart` | Typed canonical sidecar for geometry, pre-round numerics, and internal-only schema properties. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_chunk_builder.dart` | Bounded column/dictionary/validity construction. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_dataset_accumulator.dart` | Cross-tile exact dedupe and chunk finalization. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decode_transfer.dart` | Typed columns to/from TTD messages. |
-| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart` | Long-lived isolate protocol and lifecycle. |
-| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker_factory.dart` | Non-export worker handle/factory seam, controlled fake contract, and real default. |
+| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker_factory.dart` | Non-export worker handle/factory interfaces. |
+| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker_protocol.dart` | Sealed isolate request/response protocol. |
+| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_isolate_launcher.dart` | Typed launcher and external isolate endpoint seam. |
+| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_worker_terminal_probe.dart` | Observable typed terminal transitions. |
+| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_worker_terminal_coordinator.dart` | Pure first-terminal decision and cleanup actions. |
+| `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart` | Real long-lived worker routing and external handle lifecycle. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_pmtiles_decode_operation.dart` | Public result/state/cancel boundary. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_pmtiles_decoder_runner.dart` | Non-export injectable archive traversal/lifecycle runner. |
 | `packages/seismicity_pmtiles/lib/src/decoder/seismicity_pmtiles_decoder.dart` | Public facade using the real worker factory by default. |
 | `packages/seismicity_pmtiles/test/support/seismicity_mvt_fixture_builder.dart` | Deterministic raw MVT schema fixtures. |
+| `packages/seismicity_pmtiles/test/support/seismicity_mvt_mutation.dart` | Immutable typed raw-MVT mutation primitives. |
 | `packages/seismicity_pmtiles/test/support/seismicity_mvt_fixture_mutator.dart` | Single-invariant corrupt MVT fixtures. |
+| `packages/seismicity_pmtiles/test/support/controlled_seismicity_decoder_worker_factory.dart` | Pausable/failable high-level worker fake. |
+| `packages/seismicity_pmtiles/test/support/controlled_seismicity_isolate_launcher.dart` | Deterministic response/error/exit/kill endpoint controls. |
+| `packages/seismicity_pmtiles/test/support/controlled_seismicity_archive.dart` | Pausable/failable archive lifecycle seam. |
+| `packages/seismicity_pmtiles/test/support/seismicity_pmtiles_archive_writer.dart` | Exact test-only PMTiles v3 byte writer. |
 | `packages/seismicity_pmtiles/test/support/seismicity_archive_fixture_builder.dart` | Deterministic gzip PMTiles archive fixtures. |
+| `packages/seismicity_pmtiles/benchmark/support/seismicity_benchmark_feature_source.dart` | Stateless deterministic feature primitives and expected bytes. |
 | `packages/seismicity_pmtiles/benchmark/support/seismicity_benchmark_archive.dart` | On-demand deterministic occupied tiles and expected byte counts. |
+| `packages/seismicity_pmtiles/benchmark/support/counting_decoder_worker_factory.dart` | Real-worker spawn-count delegate. |
 | `packages/seismicity_pmtiles/benchmark/seismicity_pmtiles_decode_benchmark_runner.dart` | Correctness/timing/RSS runner with counted real worker. |
+| `packages/seismicity_pmtiles/benchmark/seismicity_benchmark_arguments.dart` | Strict typed CLI argument parser. |
 | `packages/seismicity_pmtiles/benchmark/seismicity_pmtiles_decode_benchmark.dart` | Deterministic 2M correctness/timing harness. |
 
 ---
@@ -462,7 +481,7 @@ Expected: compile failure for missing validator.
 
 - [ ] **Step 3: Implement without metadata inference**
 
-Use `supportedSchemaVersion = 1` only as an equality gate. Bound `expectedFeatureCount` to `0x3fffffff`, so Task 12 can maintain a maximum 0.5 load factor in a power-of-two `Uint32List` whose largest representable capacity is `0x80000000`. Convert allocation failure to a typed descriptor failure. Do not expose `defaultSchemaVersion`, `defaultDataZoom`, or a descriptor-copying fallback. The accepted property set is:
+Use `supportedSchemaVersion = 1` only as an equality gate. Bound `expectedFeatureCount` to `0x3fffffff`, so Task 13 can maintain a maximum 0.5 load factor in a power-of-two `Uint32List` whose largest representable capacity is `0x80000000`. Convert allocation failure to a typed descriptor failure. Do not expose `defaultSchemaVersion`, `defaultDataZoom`, or a descriptor-copying fallback. The accepted property set is:
 
 ```dart
 const schemaV1Properties = <String>{
@@ -643,46 +662,85 @@ git commit -m "Test: 震源MVT fixture基盤を追加"
 git push
 ```
 
-### Task 9: Add deterministic MVT corruption support
+### Task 9: Define typed raw-MVT mutation primitives
+
+**Files:**
+- Create: `packages/seismicity_pmtiles/test/support/seismicity_mvt_mutation.dart`
+- Create: `packages/seismicity_pmtiles/test/support/seismicity_mvt_mutation_test.dart`
+
+**Interfaces:**
+- Consumes: Task 8 raw fixture messages.
+- Produces: test-only immutable layer/feature/value/byte mutation primitives.
+
+- [ ] **Step 1: Write failing primitive tests**
+
+Prove replace/remove/append layer, replace feature tags/geometry/type, replace one raw value, and truncate bytes each return a new fixture while the baseline remains byte-identical. Inputs are typed constructors, not a string selector.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/seismicity_mvt_mutation_test.dart`
+
+Expected: compile failure for missing mutation primitives.
+
+- [ ] **Step 3: Implement immutable mutations only**
+
+Copy the minimum raw protobuf collection and serialize deterministically. Do not import production decoder code or embed expected exception types.
+
+- [ ] **Step 4: Run GREEN and inspect size**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/seismicity_mvt_mutation_test.dart`
+
+Expected: baseline isolation passes and handwritten diff is 30–100 lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/test/support/seismicity_mvt_mutation.dart \
+  packages/seismicity_pmtiles/test/support/seismicity_mvt_mutation_test.dart
+git commit -m "Test: raw MVT変異primitiveを追加"
+git push
+```
+
+### Task 10: Build the corrupt-MVT fixture catalog
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/test/support/seismicity_mvt_fixture_mutator.dart`
 - Create: `packages/seismicity_pmtiles/test/support/seismicity_mvt_fixture_mutator_test.dart`
 
 **Interfaces:**
-- Consumes: Task 8 fixture bytes/raw messages.
-- Produces: test-only named mutations for layer count/fields, tags, geometry, scalar cardinality, property keys, and truncated protobuf.
+- Consumes: Tasks 8–9.
+- Produces: named single-invariant fixtures for layers, tags, geometry, scalar/property, and protobuf corruption.
 
-- [ ] **Step 1: Write failing mutation self-tests**
+- [ ] **Step 1: Write the failing catalog self-test**
 
-Assert each named mutation changes exactly one intended raw invariant and leaves the remaining baseline fields equal. Include missing/duplicate layer, missing version/extent, odd/out-of-range/repeated tags, wrong geometry type/command, missing required property, unknown key, wrong/multi-set scalar, and byte truncation.
+Table-test missing/duplicate layer, missing version/extent, odd/out-of-range/repeated tags, wrong geometry, missing required property, unknown key, wrong/multi-set scalar, empty earthquake event ID, and truncation. Assert exactly one intended invariant changes.
 
 - [ ] **Step 2: Run RED**
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/seismicity_mvt_fixture_mutator_test.dart`
 
-Expected: compile failure for the missing mutator.
+Expected: compile failure for the missing catalog.
 
-- [ ] **Step 3: Implement typed single-invariant mutations**
+- [ ] **Step 3: Compose named corruption fixtures**
 
-Return new raw messages/bytes rather than mutating a fixture reused by another test. Each helper has a named constructor or named arguments; no stringly mutation selector and no production import. Keep invalid UUID and numeric-overflow values as explicit fixture scalars.
+Build each fixture from Task 9 primitives with named arguments. Invalid UUID and Float32-overflow values are explicit scalar fixtures. Do not duplicate raw copy/serialization logic.
 
 - [ ] **Step 4: Run GREEN and inspect size**
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/seismicity_mvt_fixture_mutator_test.dart`
 
-Expected: every mutation is deterministic and isolated; handwritten diff remains 30–100 lines.
+Expected: catalog cases are deterministic and handwritten diff is 30–100 lines.
 
 - [ ] **Step 5: Commit and push**
 
 ```bash
 git add packages/seismicity_pmtiles/test/support/seismicity_mvt_fixture_mutator.dart \
   packages/seismicity_pmtiles/test/support/seismicity_mvt_fixture_mutator_test.dart
-git commit -m "Test: MVT破損fixtureを追加"
+git commit -m "Test: MVT破損fixture catalogを追加"
 git push
 ```
 
-### Task 10: Decode one valid schema-v1 MVT tile
+### Task 11: Decode one valid schema-v1 MVT tile
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoded_hypocenter.dart`
@@ -695,7 +753,7 @@ git push
 
 - [ ] **Step 1: Write the failing all-property happy test**
 
-Build one feature with canonical UUID, time, magnitude/depth, max intensity, determination flag, earthquake event ID, and geometry clamped. Assert source tile/feature identity, UUID bytes/text, global point, output Float32 values, pre-round canonical Float64 values, and all optional typed values. Add a second feature proving explicit zero/false/empty string differ from absence.
+Build one feature with canonical UUID, time, magnitude/depth, max intensity, determination flag, non-empty earthquake event ID, and geometry clamped. Assert source tile/feature identity, UUID bytes, global point, output Float32 values, pre-round canonical Float64 values, and exact UTF-8 bytes for all string properties. Add a second feature proving explicit zero/false and empty max-intensity/determination flag differ from absence; leave earthquake event ID absent because present empty is invalid.
 
 - [ ] **Step 2: Run RED**
 
@@ -705,13 +763,13 @@ Expected: compile failure for the missing record/decoder.
 
 - [ ] **Step 3: Implement the narrow happy streaming path**
 
-Parse with `raw.VectorTile.fromBuffer`, use Tasks 5–7, parse UUID with strict RFC9562 validation plus canonical dashed-string equality, and invoke the callback without retaining a feature list. The transient record includes `tileId`, `featureIndex`, `magnitudeCanonical`, `magnitude`, `depthKmCanonical`, `depthKm`, `determinationFlag`, `earthquakeEventId`, and `geometryClamped`; it remains worker-local and is never returned in the dataset.
+Parse with `raw.VectorTile.fromBuffer`, use Tasks 5–7, parse UUID with strict RFC9562 validation plus canonical dashed-string equality, and invoke the callback without retaining a feature list. Encode accepted string values immediately; the transient record includes `tileId`, `featureIndex`, canonical/storage numerics, `maxIntensityUtf8`, `determinationFlagUtf8`, `earthquakeEventIdUtf8`, and `geometryClamped`, but no retained `String` or UUID text. Reject an empty earthquake event ID at this typed feature boundary. The record remains callback-local and is never returned in the dataset.
 
 - [ ] **Step 4: Run GREEN and inspect size**
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_mvt_tile_decoder_happy_test.dart`
 
-Expected: two records decode in source order and all schema properties remain typed; handwritten diff is 30–100 lines. Leave corruption branches for Task 11.
+Expected: two records decode in source order and all schema properties remain typed; handwritten diff is 30–100 lines. Leave corruption branches for Task 12.
 
 - [ ] **Step 5: Commit and push**
 
@@ -723,25 +781,25 @@ git commit -m "Feat: 震源MVT tileを列解析"
 git push
 ```
 
-### Task 11: Reject corrupt schema-v1 MVT tiles
+### Task 12: Reject corrupt schema-v1 MVT tiles
 
 **Files:**
 - Modify: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_mvt_tile_decoder.dart`
 - Create: `packages/seismicity_pmtiles/test/decoder/seismicity_mvt_tile_decoder_corruption_test.dart`
 
 **Interfaces:**
-- Consumes: Task 9 single-invariant corruptions and Task 10 callback boundary.
+- Consumes: Task 10 single-invariant corruptions and Task 11 callback boundary.
 - Produces: source-aware tile/feature failures with no callback after first corruption.
 
 - [ ] **Step 1: Write failing table-driven corruption tests**
 
-Reject invalid protobuf, zero/duplicate/unexpected layers, absent/wrong version or extent, non-Point/MultiPoint, odd/out-of-range/repeated tags, absent required fields, non-canonical UUID, every wrong scalar type, unknown property, Float32-overflowing `1e100`, and tile ID zoom different from `dataZoom`. Assert exact exception variant, tile ID, feature index/field/reason, and callback count zero after failure.
+Reject invalid protobuf, zero/duplicate/unexpected layers, absent/wrong version or extent, non-Point/MultiPoint, odd/out-of-range/repeated tags, absent required fields, non-canonical UUID, empty earthquake event ID, every wrong scalar type, unknown property, Float32-overflowing `1e100`, and tile ID zoom different from `dataZoom`. Assert exact exception variant, tile ID, feature index/field/reason, and callback count zero after failure. Keep empty max-intensity/determination flag valid in the happy suite.
 
 - [ ] **Step 2: Run RED**
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_mvt_tile_decoder_corruption_test.dart`
 
-Expected: the Task 10 happy-only decoder accepts at least the first malformed case.
+Expected: the Task 11 happy-only decoder accepts at least the first malformed case.
 
 - [ ] **Step 3: Add strict guards without fallback**
 
@@ -762,7 +820,7 @@ git commit -m "Fix: 破損震源MVTを拒否"
 git push
 ```
 
-### Task 12: Build a typed UUID index without per-event keys
+### Task 13: Build a typed UUID index without per-event keys
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_uuid_index.dart`
@@ -810,92 +868,170 @@ git commit -m "Feat: 震源UUIDをtyped index化"
 git push
 ```
 
-### Task 13: Encode strings as lossless chunk dictionaries
+### Task 14: Build a bounded UTF-8 byte arena
 
 **Files:**
-- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_string_dictionary_builder.dart`
-- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_string_dictionary_builder_test.dart`
+- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_utf8_arena.dart`
+- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_utf8_arena_test.dart`
 
 **Interfaces:**
-- Consumes: exact schema-v1 `max_intensity`, `determination_flag`, and `earthquake_event_id` strings.
-- Produces: `indexFor({required value})`, `valueAt({required index})`, and `build()` returning `({Uint8List utf8, Uint32List offsets})`.
+- Consumes: transient `Uint8List` values and injected byte/entry limits.
+- Produces: append-only arena, `Uint32List` entry offsets, byte-slice equality, and exact-size build output.
 
-- [ ] **Step 1: Write failing dictionary tests**
+- [ ] **Step 1: Write failing arena tests**
 
-Verify repeated `4` shares one index, `5-`, `5+`, `!5-`, empty determination/event strings, and Japanese/UTF-8 strings round-trip exactly; offsets start at 0 and end at byte length. Reject dictionary byte size or index count above uint32 representation limits using an injected small test limit.
+Append empty, ASCII, repeated bytes as separate entries, and multibyte UTF-8. Assert monotonic offsets, exact slices/equality, growth without aliasing, and typed rejection before injected byte/entry overflow.
 
 - [ ] **Step 2: Run RED**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_string_dictionary_builder_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_utf8_arena_test.dart`
 
-Expected: compile failure for missing builder.
+Expected: compile failure for missing arena.
 
-- [ ] **Step 3: Implement per-chunk lossless encoding**
+- [ ] **Step 3: Implement typed arena storage**
 
-Use one small `Map<String, int>` per chunk, retain each distinct string once, append exact UTF-8 bytes, and produce monotonically increasing uint32 offsets. Do not convert strings to a guessed JMA intensity enum and do not coerce unknown values.
+Grow a `Uint8List` geometrically with checked limits and preallocate/grow `Uint32List` offsets. Copy candidate bytes immediately; retain no `String`, list-of-strings, or string-key map. Expose equality by entry index plus candidate bytes.
 
-- [ ] **Step 4: Run GREEN**
+- [ ] **Step 4: Run GREEN and inspect size**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_string_dictionary_builder_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_utf8_arena_test.dart`
 
-Expected: all dictionary cases pass.
+Expected: byte/offset invariants pass and handwritten diff is 30–100 lines.
 
 - [ ] **Step 5: Commit and push**
 
 ```bash
-git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_string_dictionary_builder.dart \
-  packages/seismicity_pmtiles/test/decoder/seismicity_string_dictionary_builder_test.dart
-git commit -m "Feat: 震源文字列を辞書符号化"
+git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_utf8_arena.dart \
+  packages/seismicity_pmtiles/test/decoder/seismicity_utf8_arena_test.dart
+git commit -m "Feat: UTF-8 byte arenaを追加"
 git push
 ```
 
-### Task 14: Retain canonical all-property dedupe sidecars
+### Task 15: Intern UTF-8 strings with a typed hash index
 
 **Files:**
-- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_canonical_property_chunk.dart`
-- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_test.dart`
+- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_utf8_dictionary.dart`
+- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_utf8_dictionary_test.dart`
 
 **Interfaces:**
-- Consumes: all-property `SeismicityDecodedHypocenter`, Task 4 bitmaps, Task 13 dictionaries.
-- Produces: bounded `SeismicityCanonicalPropertyChunkBuilder.add/matches/build` and immutable internal typed sidecar.
+- Consumes: Task 14 arena and transient UTF-8 candidate bytes.
+- Produces: `indexFor({required valueUtf8})`, `equalsAt({required index, required candidateUtf8})`, and arena bytes/entry offsets.
 
-- [ ] **Step 1: Write failing canonical comparison tests**
+- [ ] **Step 1: Write failing dictionary/index tests**
 
-Add a complete row and assert exact match. Vary one field at a time across global X/Y, pre-round magnitude/depth, presence, determination flag, earthquake event ID, and geometry-clamped presence/value. Include two finite doubles that produce the same Float32 output but must conflict, `-0.0` versus `0.0` which canonicalize equal, and absent versus explicit zero/false/empty string which conflict.
+Verify repeated exact bytes share one entry, empty/ASCII/multibyte bytes round-trip, forced FNV collisions compare arena slices, and full capacity/uint32 bounds fail typed. Assert retained fields are typed lists/arena only.
 
 - [ ] **Step 2: Run RED**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_utf8_dictionary_test.dart`
+
+Expected: compile failure for missing dictionary.
+
+- [ ] **Step 3: Implement typed open addressing**
+
+Use a power-of-two `Uint32List` slot table storing entry index + 1, FNV-1a over candidate bytes, and Task 14 slice equality on collision. Append only a new value. Never create or retain `Map<String, int>`, a Dart String key, or one key object per row.
+
+- [ ] **Step 4: Run GREEN and audit retained types**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_utf8_dictionary_test.dart`
+
+Expected: lossless/collision cases pass and handwritten diff is 30–100 lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_utf8_dictionary.dart \
+  packages/seismicity_pmtiles/test/decoder/seismicity_utf8_dictionary_test.dart
+git commit -m "Feat: UTF-8 typed dictionaryを追加"
+git push
+```
+
+### Task 16: Store canonical all-property sidecars
+
+**Files:**
+- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_canonical_property_chunk.dart`
+- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_storage_test.dart`
+
+**Interfaces:**
+- Consumes: all-property decoded rows, Task 4 bitmaps, Task 15 dictionaries.
+- Produces: bounded canonical builder/add/build and immutable internal typed sidecar layout.
+
+- [ ] **Step 1: Write failing canonical storage tests**
+
+Add complete/missing rows. Assert typed global X/Y, negative-zero-normalized Float64 canonical numerics/validity, determination/event row dictionary indexes/validity, geometry value/validity bitmaps, exact arena bytes/entry offsets, and trimming. Present empty determination is retained; earthquake event IDs are non-empty because Task 11 rejected empty.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_storage_test.dart`
 
 Expected: compile failure for the missing sidecar.
 
 - [ ] **Step 3: Implement bounded typed canonical storage**
 
-Preallocate `Int64List` coordinates, Float64 canonical numeric columns/validity, two string dictionaries/indexes/validity bitmaps, and bool value/validity bitmaps. Compare Float64 bit patterns after negative-zero canonicalization. Retain no record, UUID string, or per-event map. `build` trims to exact typed lengths but stays internal and transferable data is not created for this sidecar.
+Preallocate `Int64List` coordinates, Float64 canonical numerics/validity, two Task 15 dictionaries with `Uint32List` row indexes/validity, and bool value/validity bitmaps. Retain no record, String, string-key map, or per-event key object. `build` trims typed arrays/arenas but stays worker-internal.
 
 - [ ] **Step 4: Run GREEN and inspect size**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_storage_test.dart`
 
-Expected: every schema-v1 internal property participates in matching and handwritten diff is 30–100 lines.
+Expected: every canonical column has exact typed layout and handwritten diff is 30–100 lines. Matching is Task 17.
 
 - [ ] **Step 5: Commit and push**
 
 ```bash
 git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_canonical_property_chunk.dart \
-  packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_test.dart
-git commit -m "Feat: 重複判定用canonical列を追加"
+  packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_storage_test.dart
+git commit -m "Feat: canonical property列を保持"
 git push
 ```
 
-### Task 15: Build bounded public typed column chunks
+### Task 17: Compare canonical sidecars without String keys
+
+**Files:**
+- Modify: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_canonical_property_chunk.dart`
+- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_match_test.dart`
+
+**Interfaces:**
+- Consumes: Task 16 sidecar and transient UTF-8 candidate bytes.
+- Produces: `matches({required localIndex, required record})` covering geometry and internal schema properties.
+
+- [ ] **Step 1: Write failing mismatch matrix**
+
+Vary global X/Y, pre-round magnitude/depth/presence, determination/event UTF-8 bytes/presence, and geometry-clamped presence/value. Include same-Float32/different-canonical doubles, negative-zero equality, absent versus zero/false/empty determination, and exact multibyte equality. Do not construct an empty event ID record.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_match_test.dart`
+
+Expected: compile failure for missing `matches`.
+
+- [ ] **Step 3: Implement byte-slice canonical comparison**
+
+Compare normalized numeric bits/validity and Task 15 arena bytes selected by typed row indexes. Never decode retained bytes back to String and never allocate a string-key map during lookup.
+
+- [ ] **Step 4: Run GREEN and allocation-contract audit**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_match_test.dart`
+
+Expected: every single-field mismatch conflicts and handwritten diff is 30–100 lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_canonical_property_chunk.dart \
+  packages/seismicity_pmtiles/test/decoder/seismicity_canonical_property_chunk_match_test.dart
+git commit -m "Feat: canonical propertyをbyte比較"
+git push
+```
+
+### Task 18: Build bounded public typed column chunks
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_chunk_builder.dart`
 - Create: `packages/seismicity_pmtiles/test/decoder/seismicity_chunk_builder_test.dart`
 
 **Interfaces:**
-- Consumes: `SeismicityDecodedHypocenter`, Task 4 validity helpers, Task 13 dictionary, Task 14 canonical sidecar.
+- Consumes: decoded row, Task 4 validity helpers, Task 15 UTF-8 dictionary, Tasks 16–17 canonical sidecar.
 - Produces: `add({required record})`, `matches({required localIndex, required record})`, `uuidEquals({required localIndex, required candidate})`, `isFull`, `length`, and `build()` returning a validated `SeismicityPmTilesChunk`.
 
 - [ ] **Step 1: Write failing add/match/build tests**
@@ -925,7 +1061,7 @@ Expected: compile failure for missing chunk builder.
 
 - [ ] **Step 3: Implement preallocated typed storage**
 
-Require a positive capacity. Preallocate all public fixed columns and bitmaps once. On every add, copy 16 UUID bytes, write required columns, write the Task 6 verified finite Float32 storage value or NaN with a clear bit, dictionary-encode present max intensity, and append the same row to Task 14. `matches` compares UUID/origin/max-intensity plus the canonical sidecar, covering every schema-v1 property before any Float32 roundoff.
+Require a positive capacity. Preallocate all public fixed columns and bitmaps once. On every add, copy 16 UUID bytes, write required columns, write the Task 6 verified finite Float32 storage value or NaN with a clear bit, dictionary-encode transient max-intensity UTF-8 through Task 15, and append the same row to Task 16. `matches` compares UUID/origin/max-intensity arena bytes plus Task 17, covering every schema-v1 property before Float32 roundoff without retaining String keys.
 
 `build` returns exact-length typed lists and calls `SeismicityPmTilesChunkValidator`; it must not expose unused capacity.
 
@@ -944,14 +1080,14 @@ git commit -m "Feat: 震源typed chunkを構築"
 git push
 ```
 
-### Task 16: Accumulate unique rows across chunk boundaries
+### Task 19: Accumulate unique rows across chunk boundaries
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_dataset_accumulator.dart`
 - Create: `packages/seismicity_pmtiles/test/decoder/seismicity_dataset_accumulator_test.dart`
 
 **Interfaces:**
-- Consumes: Tasks 12, 14, and 15.
+- Consumes: Tasks 13, 17, and 18.
 - Produces: `SeismicityDatasetAccumulator(expectedUniqueCount:, chunkCapacity:)`, `bool add({required record})`, raw/unique counters, and `List<SeismicityPmTilesChunk> buildChunks()`.
 
 - [ ] **Step 1: Write failing cross-chunk dedupe tests**
@@ -983,7 +1119,7 @@ git commit -m "Feat: 境界震源をUUIDで重複排除"
 git push
 ```
 
-### Task 17: Lock boundary copies and all-property conflicts
+### Task 20: Lock boundary copies and all-property conflicts
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/test/decoder/seismicity_pmtiles_boundary_dedupe_test.dart`
@@ -996,7 +1132,7 @@ git push
 
 - [ ] **Step 1: Write adjacent-boundary contract tests**
 
-Place one UUID in adjacent z2 tiles as local `(4092, 100)` and `(-4, 100)` so both resolve to one global point. Identical all-property rows yield raw count 2/unique count 1. Vary each geometry/property independently, including determination/event/geometry-clamped presence, explicit zero/false/empty, and doubles that collapse to one Float32; every variant must be `duplicateConflict`. Add an antimeridian copy separated by one world width.
+Place one UUID in adjacent z2 tiles as local `(4092, 100)` and `(-4, 100)` so both resolve to one global point. Identical all-property rows yield raw count 2/unique count 1. Vary each geometry/property independently, including determination/event/geometry-clamped presence, explicit numeric zero, explicit false, present empty max-intensity/determination flag, and doubles that collapse to one Float32; every variant must be `duplicateConflict`. Every present earthquake event ID in this matrix remains non-empty. Add an antimeridian copy separated by one world width.
 
 - [ ] **Step 2: Run the focused test**
 
@@ -1028,7 +1164,7 @@ git push
 
 The `git add -u` line stages only already-modified named files and is a no-op when the regression is GREEN.
 
-### Task 18: Transfer chunks without copying object graphs
+### Task 21: Transfer chunks without copying object graphs
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decode_transfer.dart`
@@ -1067,130 +1203,323 @@ git commit -m "Feat: 震源列bufferをTTD転送"
 git push
 ```
 
-### Task 19: Define a non-export worker factory seam
+### Task 22: Define non-export worker interfaces
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker_factory.dart`
-- Create: `packages/seismicity_pmtiles/test/support/controlled_seismicity_decoder_worker_factory.dart`
-- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_factory_test.dart`
+- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_interface_test.dart`
 
 **Interfaces:**
-- Consumes: Task 18 transfer types and public progress/result models.
-- Produces: non-barrel `SeismicityDecoderWorkerFactory.spawn`, `SeismicityDecoderWorkerHandle.decodeTile/finish/cancel/close/retired`, and a controlled test fake.
+- Consumes: Task 21 transfer and public progress/result models.
+- Produces: non-barrel worker factory/handle interfaces with decode, finish, cancel, close, and retired.
 
-- [ ] **Step 1: Write the failing seam/fake test**
+- [ ] **Step 1: Write the failing interface contract test**
 
-The controlled factory records spawn count/arguments and can pause or fail spawn. Its handle records tile calls, finish, cancel, close, and one terminal `retired` completion. Assert exactly one spawn, typed acknowledgements, idempotent cancel/close, controllable finish, and preserved first terminal result.
+Implement a minimal typed test double and prove exact spawn arguments, tile TTD/progress, finish transfer, idempotent cancel/close, and one `retired` future. Public barrel compile coverage must not expose either interface.
 
 - [ ] **Step 2: Run RED**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_factory_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_interface_test.dart`
 
-Expected: compile failure for the missing non-export interfaces.
+Expected: compile failure for missing interfaces.
 
-- [ ] **Step 3: Implement interfaces and controlled fake only**
+- [ ] **Step 3: Add interfaces only**
 
-Keep both interfaces under `lib/src` and omit them from `seismicity_pmtiles.dart`. All methods use named arguments and typed values. The fake owns typed completers for spawn/decode/finish/retirement and exposes counters through test support; it does not create an isolate or emulate ports.
+Keep interfaces in `lib/src`; use named arguments and typed protocol-independent values. Do not implement fake or isolate behavior.
 
-- [ ] **Step 4: Run GREEN and public-boundary audit**
+- [ ] **Step 4: Run GREEN and barrel audit**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_factory_test.dart packages/seismicity_pmtiles/test/public_api_compile_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_interface_test.dart packages/seismicity_pmtiles/test/public_api_compile_test.dart`
 
-Expected: controlled scheduling is deterministic, interfaces are absent from the public barrel, and handwritten diff is 30–100 lines.
+Expected: interface contract passes, barrel remains narrow, and handwritten diff is 30–100 lines.
 
 - [ ] **Step 5: Commit and push**
 
 ```bash
 git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker_factory.dart \
-  packages/seismicity_pmtiles/test/support/controlled_seismicity_decoder_worker_factory.dart \
-  packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_factory_test.dart
-git commit -m "Test: decoder workerの制御seamを追加"
+  packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_interface_test.dart
+git commit -m "Feat: decoder worker interfaceを追加"
 git push
 ```
 
-### Task 20: Route requests through one real isolate worker
+### Task 23: Build a controlled worker factory fake
 
 **Files:**
-- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker_protocol.dart`
-- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart`
-- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_routing_test.dart`
+- Create: `packages/seismicity_pmtiles/test/support/controlled_seismicity_decoder_worker_factory.dart`
+- Create: `packages/seismicity_pmtiles/test/support/controlled_seismicity_decoder_worker_factory_test.dart`
 
 **Interfaces:**
-- Consumes: Tasks 10–18 and Task 19 factory/handle.
-- Produces: non-export `IsolateSeismicityDecoderWorkerFactory`, one long-lived worker entry, typed request/response routing.
+- Consumes: Task 22 interfaces.
+- Produces: test-only pausable/failable factory and handle counters.
 
-- [ ] **Step 1: Write a failing real routing test**
+- [ ] **Step 1: Write the failing fake self-test**
 
-Spawn once, send two valid MVT tiles as TTD, await one acknowledgement after each, and finish. Assert two cumulative progress values, stable rows from both requests, one final dataset transfer, one isolate spawn, and `retired` completion after close.
+Pause/fail spawn, decode, finish, cancel, close, and retirement independently. Assert spawn/finish/cancel/close counts, ordered tile calls, sticky configured failure, and concurrent idempotent methods.
 
 - [ ] **Step 2: Run RED**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_routing_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/controlled_seismicity_decoder_worker_factory_test.dart`
 
-Expected: compile failure for the missing real factory/protocol.
+Expected: compile failure for missing fake.
 
-- [ ] **Step 3: Implement typed protocol and happy routing**
+- [ ] **Step 3: Implement typed completer controls**
 
-Use immutable requests/responses under sealed protocol bases with ints, strings, SendPort, typed exceptions, and TTD only. Cast each `ReceivePort` once to its sealed protocol stream, exhaustively switch, serialize requests on one future chain, and materialize each input once. The main handle stores routing future, typed completers, ports, and isolate. No authored `dynamic`, `Object`, or private class method.
+The fake owns typed completers/counters only; it does not emulate isolate ports. Retain tile bytes only when the test explicitly requests capture.
 
-- [ ] **Step 4: Run GREEN and inspect resources**
+- [ ] **Step 4: Run GREEN and inspect size**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_routing_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/controlled_seismicity_decoder_worker_factory_test.dart`
 
-Expected: both tiles use one isolate; close completes routing and retirement; handwritten diff is 30–100 lines. Terminal corruption belongs to Task 21.
+Expected: all schedules are deterministic and handwritten diff is 30–100 lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/test/support/controlled_seismicity_decoder_worker_factory.dart \
+  packages/seismicity_pmtiles/test/support/controlled_seismicity_decoder_worker_factory_test.dart
+git commit -m "Test: worker factory fakeを追加"
+git push
+```
+
+### Task 24: Define the sealed worker protocol
+
+**Files:**
+- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker_protocol.dart`
+- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_protocol_test.dart`
+
+**Interfaces:**
+- Consumes: Tasks 11–21.
+- Produces: typed initialize/decode/finish/cancel requests and ready/progress/finished/failure responses.
+
+- [ ] **Step 1: Write failing protocol sendability tests**
+
+Round-trip every request/response through an actual isolate, including TTD, descriptor scalars, progress, dataset transfer, and typed failure. Assert request IDs and terminal variants remain exact.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_protocol_test.dart`
+
+Expected: compile failure for missing sealed messages.
+
+- [ ] **Step 3: Implement immutable typed messages**
+
+Messages contain only sendable typed values, SendPort, TTD, and typed exceptions. No `dynamic`, `Object`, String-key map, callback, or per-event object collection.
+
+- [ ] **Step 4: Run GREEN and exhaustiveness check**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_protocol_test.dart`
+
+Expected: all messages cross an isolate and exhaustive switches compile; handwritten diff is 30–100 lines.
 
 - [ ] **Step 5: Commit and push**
 
 ```bash
 git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker_protocol.dart \
-  packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart \
-  packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_routing_test.dart
-git commit -m "Feat: 常駐decoder workerの経路を追加"
+  packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_protocol_test.dart
+git commit -m "Feat: decoder worker protocolを追加"
 git push
 ```
 
-### Task 21: Gate finish and retire worker resources
+### Task 25: Define isolate launcher and terminal probe seams
 
 **Files:**
-- Modify: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_dataset_accumulator.dart`
-- Modify: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart`
-- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_terminal_test.dart`
+- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_isolate_launcher.dart`
+- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_worker_terminal_probe.dart`
+- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_decoder_isolate_seam_test.dart`
 
 **Interfaces:**
-- Consumes: caller-complete descriptor and cumulative worker state.
-- Produces: final transfer only when all gates pass, one sticky terminal response, and deterministic finish/port/isolate retirement.
+- Consumes: Task 24 protocol.
+- Produces: non-export launcher/endpoint and terminal-probe interfaces; no fake/default yet.
 
-- [ ] **Step 1: Add failing finish-gate tests**
+- [ ] **Step 1: Write failing interface tests**
 
-Test expected counts smaller/larger than unique count, zero with no rows, raw count greater only due to exact copies, schema mismatch at finish, invalid chunk injection, malformed request order, worker decode failure, worker crash, finish twice, close during finish, and send after terminal. Assert no transfer on failure, one sticky typed result, every pending future completed, receive/send ports closed, isolate killed only when needed, and `retired` completed once.
+Implement minimal doubles proving typed request/response/error/exit streams, send, closeReceivePort, kill, exited, and probe transition counters. No method accepts an untyped payload.
 
 - [ ] **Step 2: Run RED**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_terminal_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_isolate_seam_test.dart`
 
-Expected: the Task 20 happy router misses at least one count, terminal-order, or retirement case.
+Expected: compile failure for missing seams.
 
-- [ ] **Step 3: Put all gates before TTD creation**
+- [ ] **Step 3: Add non-export interfaces only**
 
-Run Task 5 descriptor validation inside initialization, compare unique count, validate chunks, and compare checked chunk sum to accumulator/descriptor before constructing TTD. Add one terminal coordinator to protocol/router: first result is sticky, pending requests complete, ports close, routing finishes, isolate exits or is killed, and `retired` completes exactly once. Preserve the authoritative decode failure over cleanup failure.
+Model exact endpoint ownership and a typed terminal transition enum/record. Omit both from the package barrel and avoid private class methods.
 
-- [ ] **Step 4: Run GREEN**
+- [ ] **Step 4: Run GREEN and boundary audit**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_routing_test.dart packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_terminal_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_isolate_seam_test.dart packages/seismicity_pmtiles/test/public_api_compile_test.dart`
 
-Expected: only complete exact-count datasets transfer and every terminal path retires deterministically; handwritten diff is 30–100 lines.
+Expected: seams are typed/non-exported and handwritten diff is 30–100 lines.
 
 - [ ] **Step 5: Commit and push**
 
 ```bash
-git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_dataset_accumulator.dart \
-  packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart \
-  packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_terminal_test.dart
-git commit -m "Fix: worker finishと破棄を固定"
+git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_isolate_launcher.dart \
+  packages/seismicity_pmtiles/lib/src/decoder/seismicity_worker_terminal_probe.dart \
+  packages/seismicity_pmtiles/test/decoder/seismicity_decoder_isolate_seam_test.dart
+git commit -m "Feat: worker isolate seamを追加"
 git push
 ```
 
-### Task 22: Build a controlled archive test seam
+### Task 26: Build a controlled isolate endpoint
+
+**Files:**
+- Create: `packages/seismicity_pmtiles/test/support/controlled_seismicity_isolate_launcher.dart`
+- Create: `packages/seismicity_pmtiles/test/support/controlled_seismicity_isolate_launcher_test.dart`
+
+**Interfaces:**
+- Consumes: Tasks 24–25.
+- Produces: test-only endpoint that injects response, invalid transfer, crash, port close, exit, and records kill/close/probe.
+
+- [ ] **Step 1: Write the failing endpoint self-test**
+
+Drive each typed response, error, unexpected response-port close, graceful exit, and kill. Assert exact event order, close/kill counts, exited completion, and probe transitions.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/controlled_seismicity_isolate_launcher_test.dart`
+
+Expected: compile failure for missing controlled endpoint.
+
+- [ ] **Step 3: Implement deterministic endpoint controls**
+
+Use typed stream controllers/completers only. Invalid transfer means structurally sendable typed lists with a validator violation, not an untyped message.
+
+- [ ] **Step 4: Run GREEN and inspect size**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/controlled_seismicity_isolate_launcher_test.dart`
+
+Expected: every terminal signal is independently controllable and handwritten diff is 30–100 lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/test/support/controlled_seismicity_isolate_launcher.dart \
+  packages/seismicity_pmtiles/test/support/controlled_seismicity_isolate_launcher_test.dart
+git commit -m "Test: worker isolate endpointを制御"
+git push
+```
+
+### Task 27: Route happy requests through one real isolate
+
+**Files:**
+- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart`
+- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_routing_test.dart`
+
+**Interfaces:**
+- Consumes: Tasks 11–25.
+- Produces: real Dart isolate launcher, worker entry, and `IsolateSeismicityDecoderWorkerFactory` happy routing.
+
+- [ ] **Step 1: Write a failing real routing test**
+
+Spawn once, decode two valid tiles, acknowledge each, finish, and close. Assert cumulative progress, stable public rows, one dataset transfer, one isolate, receive-port close, graceful exit, and retired completion.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_routing_test.dart`
+
+Expected: compile failure for missing real worker/default launcher.
+
+- [ ] **Step 3: Implement happy typed routing**
+
+Create one accumulator/decoder in the worker, serialize requests, cast ports once to sealed streams, exhaustively switch, and materialize input once. Default probe is no-op. Leave abnormal terminal policy to Tasks 28–29.
+
+- [ ] **Step 4: Run GREEN and inspect size**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_routing_test.dart`
+
+Expected: two tiles share one isolate and handwritten diff is 30–100 lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart \
+  packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_routing_test.dart
+git commit -m "Feat: 常駐decoder workerを接続"
+git push
+```
+
+### Task 28: Make worker terminal decisions observable
+
+**Files:**
+- Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_worker_terminal_coordinator.dart`
+- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_worker_terminal_coordinator_test.dart`
+
+**Interfaces:**
+- Consumes: typed protocol/error/exit/cancel/close signals.
+- Produces: pure first-terminal decision with complete-pending, close-port, kill-isolate, and preserve-failure actions.
+
+- [ ] **Step 1: Write the failing transition table**
+
+Cover finished-valid, finished-invalid-chunk, typed failure, crash, unexpected port close, graceful exit before/after terminal, cancel, close, and repeated terminal signals. Assert exact chosen result, probe transition, pending completion, port-close action, kill decision, and one retired decision.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_worker_terminal_coordinator_test.dart`
+
+Expected: compile failure for missing coordinator.
+
+- [ ] **Step 3: Implement a pure exhaustive coordinator**
+
+Validate finished transfer/chunks before success. First authoritative result is sticky; later cleanup cannot replace it. Return typed actions instead of touching ports/isolate directly, and emit each action to Task 25 probe.
+
+- [ ] **Step 4: Run GREEN and transition audit**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_worker_terminal_coordinator_test.dart`
+
+Expected: invalid chunk/crash/port-close/kill decisions are deterministic and handwritten diff is 30–100 lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_worker_terminal_coordinator.dart \
+  packages/seismicity_pmtiles/test/decoder/seismicity_worker_terminal_coordinator_test.dart
+git commit -m "Feat: worker terminal遷移を分離"
+git push
+```
+
+### Task 29: Retire external worker handles deterministically
+
+**Files:**
+- Modify: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart`
+- Modify: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_dataset_accumulator.dart`
+- Create: `packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_lifecycle_test.dart`
+
+**Interfaces:**
+- Consumes: Tasks 26–28 and caller-complete descriptor.
+- Produces: finish/count gates plus exact pending/port/isolate/retired external lifecycle.
+
+- [ ] **Step 1: Write failing controlled lifecycle tests**
+
+Using Task 26, inject count mismatch, invalid chunk transfer, crash, response-port close, graceful/late exit, cancel during finish, finish twice, and send after terminal. Assert pending futures, first failure, closeReceivePort count, kill count, probe sequence, and retired once. Add real-worker expected zero/nonzero count gates.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_lifecycle_test.dart`
+
+Expected: Task 27 happy handle misses at least one observable terminal action.
+
+- [ ] **Step 3: Apply coordinator actions and count gates**
+
+Validate descriptor, unique count, chunks, and checked chunk sum before TTD. Route all terminal signals through Task 28, complete pending typed completers, close port, await exit or kill exactly as directed, and complete `retired` once.
+
+- [ ] **Step 4: Run GREEN with real routing**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_routing_test.dart packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_lifecycle_test.dart`
+
+Expected: controlled and real lifecycle cases pass with 30–100 handwritten changed lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart \
+  packages/seismicity_pmtiles/lib/src/decoder/seismicity_dataset_accumulator.dart \
+  packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_lifecycle_test.dart
+git commit -m "Fix: worker handle破棄を固定"
+git push
+```
+
+### Task 30: Build a controlled archive test seam
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/test/support/controlled_seismicity_archive.dart`
@@ -1229,7 +1558,7 @@ git commit -m "Test: archive制御fixtureを追加"
 git push
 ```
 
-### Task 23: Define public decode operation and progress states
+### Task 31: Define public decode operation and progress states
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_pmtiles_decode_operation.dart`
@@ -1299,7 +1628,7 @@ git commit -m "Feat: PMTiles decode operationを公開"
 git push
 ```
 
-### Task 24: Traverse an archive through the injected worker
+### Task 32: Traverse an archive through the injected worker
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_pmtiles_decoder_runner.dart`
@@ -1309,8 +1638,8 @@ git push
 - Modify: `packages/seismicity_pmtiles/test/public_api_compile_test.dart`
 
 **Interfaces:**
-- Consumes: controlled archive Task 22, controlled worker Task 19, operation Task 23.
-- Produces: non-export runner with required factory and public `SeismicityPmTilesDecoder.start` facade using the real Task 20 factory.
+- Consumes: controlled archive Task 30, controlled worker Task 23, operation Task 31.
+- Produces: non-export runner with required factory and public `SeismicityPmTilesDecoder.start` facade using the real Task 27 factory.
 
 - [ ] **Step 1: Write a failing injected happy-path test**
 
@@ -1330,7 +1659,7 @@ The public `start` has required archive/descriptor/chunk capacity and no worker 
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_pmtiles_decoder_happy_test.dart packages/seismicity_pmtiles/test/public_api_compile_test.dart`
 
-Expected: fake counters prove one spawn/finish/close/retirement and explicit zoom propagation; handwritten diff is 30–100 lines. Failure/cancel branches remain Tasks 25/27.
+Expected: fake counters prove one spawn/finish/close/retirement and explicit zoom propagation; handwritten diff is 30–100 lines. Failure/cancel branches remain Tasks 33/36.
 
 - [ ] **Step 5: Commit and push**
 
@@ -1344,14 +1673,14 @@ git commit -m "Feat: archive decoderの成功経路を統合"
 git push
 ```
 
-### Task 25: Reject decoder pipeline corruption without publication
+### Task 33: Reject decoder pipeline corruption without publication
 
 **Files:**
 - Modify: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_pmtiles_decoder_runner.dart`
 - Create: `packages/seismicity_pmtiles/test/decoder/seismicity_pmtiles_decoder_corruption_test.dart`
 
 **Interfaces:**
-- Consumes: Task 24 runner and both controlled seams.
+- Consumes: Task 32 runner and both controlled seams.
 - Produces: typed first-failure/no-partial-dataset behavior before cancellation races.
 
 - [ ] **Step 1: Write failing corruption-path tests**
@@ -1362,7 +1691,7 @@ Cover invalid descriptor before spawn, enumeration failure, read failure after o
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_pmtiles_decoder_corruption_test.dart`
 
-Expected: Task 24 happy-only runner leaks a later error, publishes partial state, or misses cleanup in at least one case.
+Expected: Task 32 happy-only runner leaks a later error, publishes partial state, or misses cleanup in at least one case.
 
 - [ ] **Step 3: Add one authoritative failure path**
 
@@ -1383,35 +1712,74 @@ git commit -m "Fix: decoder破損時の公開を防止"
 git push
 ```
 
-### Task 26: Build deterministic gzip archive fixtures
+### Task 34: Write deterministic PMTiles v3 archive bytes
+
+**Files:**
+- Create: `packages/seismicity_pmtiles/test/support/seismicity_pmtiles_archive_writer.dart`
+- Create: `packages/seismicity_pmtiles/test/support/seismicity_pmtiles_archive_writer_test.dart`
+
+**Interfaces:**
+- Consumes: typed tile IDs/payloads and explicit none/gzip codes.
+- Produces: test-only exact header/root-directory/metadata/tile-data bytes.
+
+- [ ] **Step 1: Write the failing writer byte test**
+
+Assert exact 127-byte header fields, delta-varint entries, metadata `{}`, offsets/counts, min/max zoom, MVT type, clustered flag, and deterministic none/gzip output for two payloads.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/seismicity_pmtiles_archive_writer_test.dart`
+
+Expected: compile failure for missing writer.
+
+- [ ] **Step 3: Implement only byte assembly**
+
+Use top-level checked varint/header functions and `gzip.encode`; accept all contract values explicitly. Do not open an archive, create a descriptor, or add corruption cases.
+
+- [ ] **Step 4: Run GREEN and inspect size**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/seismicity_pmtiles_archive_writer_test.dart`
+
+Expected: exact bytes are stable and handwritten diff is 30–100 lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/test/support/seismicity_pmtiles_archive_writer.dart \
+  packages/seismicity_pmtiles/test/support/seismicity_pmtiles_archive_writer_test.dart
+git commit -m "Test: PMTiles fixture writerを追加"
+git push
+```
+
+### Task 35: Build gzip archive fixtures and corrupt variants
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/test/support/seismicity_archive_fixture_builder.dart`
 - Create: `packages/seismicity_pmtiles/test/support/seismicity_archive_fixture_builder_test.dart`
 
 **Interfaces:**
-- Consumes: schema-v1 MVT bytes, PMTiles v3 root entries, none/gzip compression.
-- Produces: deterministic in-memory archive bytes plus exact caller-supplied descriptor fields.
+- Consumes: Task 34 writer and schema-v1 MVT bytes.
+- Produces: in-memory archive bytes, exact caller descriptor, and isolated truncation variants.
 
 - [ ] **Step 1: Write the failing fixture self-test**
 
-Build a root-only archive with two occupied IDs at zoom 2, two distinct schema-v1 MVT payloads, gzip internal compression, and gzip tile compression. Open through `SeismicityRandomAccessReaderFactory` Asset source and `SeismicityPmTilesArchive`, assert occupied IDs and exact decompressed MVT bytes, then close once. Also build corrupt truncated-header/directory/tile variants.
+Compose two z2 MVT payloads with gzip directory/tile compression. Open through Asset reader/archive, assert occupied IDs/decompressed bytes/descriptor, close once, and reject truncated header/directory/tile variants.
 
 - [ ] **Step 2: Run RED**
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/seismicity_archive_fixture_builder_test.dart`
 
-Expected: compile failure for missing fixture builder.
+Expected: compile failure for missing composed fixture.
 
-- [ ] **Step 3: Implement the minimal PMTiles v3 fixture writer**
+- [ ] **Step 3: Implement fixture composition**
 
-Write the exact 127-byte header, delta-varint root directory, metadata `{}`, and tile-data offsets. Set tile type MVT, requested min/max zoom, clustered flag, and none/gzip codes explicitly. Reuse one deterministic top-level varint encoder and `gzip.encode`; do not read external files or network data. Return descriptor values from bytes and caller-supplied schema/data zoom/count/revision rather than defaulting them.
+Delegate all bytes to Task 34. Supply schema/data zoom/count/revision explicitly and produce one-copy corrupt variants; no URL/header-derived fallback.
 
-- [ ] **Step 4: Run GREEN**
+- [ ] **Step 4: Run GREEN and inspect size**
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/support/seismicity_archive_fixture_builder_test.dart`
 
-Expected: strict archive core reads both gzip payloads and rejects each isolated truncation; handwritten fixture diff is 30–100 lines.
+Expected: gzip/corruption cases pass and handwritten diff is 30–100 lines.
 
 - [ ] **Step 5: Commit and push**
 
@@ -1422,7 +1790,7 @@ git commit -m "Test: gzip PMTiles fixtureを追加"
 git push
 ```
 
-### Task 27: Make decoder cancellation race-safe
+### Task 36: Make decoder cancellation race-safe
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/test/decoder/seismicity_pmtiles_decoder_lifecycle_test.dart`
@@ -1434,7 +1802,7 @@ git push
 
 - [ ] **Step 1: Write failing controlled-race tests**
 
-Use Tasks 19/22 controls to cover cancellation before spawn completes, during enumeration, during tile read, after acknowledgement, during finish, and after completed result. Call `cancel()` twice concurrently. Assert result/state is cancelled only for pre-terminal cancel, factory spawn is at most one, archive close/handle cancel/close/retirement occur once, pending futures complete, and no later completed state appears.
+Use Tasks 23/30 controls to cover cancellation before spawn completes, during enumeration, during tile read, after acknowledgement, during finish, and after completed result. Call `cancel()` twice concurrently. Assert result/state is cancelled only for pre-terminal cancel, factory spawn is at most one, archive close/handle cancel/close/retirement occur once, pending futures complete, and no later completed state appears.
 
 - [ ] **Step 2: Run RED**
 
@@ -1463,7 +1831,7 @@ git commit -m "Fix: decoder取消とarchive終了を直列化"
 git push
 ```
 
-### Task 28: Decode a gzip archive through the real default worker
+### Task 37: Decode a gzip archive through the real default worker
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/test/decoder/seismicity_pmtiles_decoder_archive_test.dart`
@@ -1471,7 +1839,7 @@ git push
 - Modify only if RED identifies ownership: `packages/seismicity_pmtiles/lib/src/decoder/seismicity_decoder_worker.dart`
 
 **Interfaces:**
-- Consumes: real Asset reader/archive, Task 26 gzip fixture, public decoder facade and real worker default.
+- Consumes: real Asset reader/archive, Task 35 gzip fixture, public decoder facade and Task 27 real worker default.
 - Produces: archive-to-public-column integration evidence at explicit non-14 zoom.
 
 - [ ] **Step 1: Write the full-pipeline integration test**
@@ -1490,7 +1858,7 @@ Preserve data zoom 2 through enumeration/TileID/point/worker/dataset. Gzip remai
 
 - [ ] **Step 4: Run GREEN and retirement check**
 
-Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_pmtiles_decoder_archive_test.dart packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_terminal_test.dart`
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/decoder/seismicity_pmtiles_decoder_archive_test.dart packages/seismicity_pmtiles/test/decoder/seismicity_decoder_worker_lifecycle_test.dart`
 
 Expected: real default spawns one worker, completes one dataset only after all gates, then retires its ports/isolate and closes archive once.
 
@@ -1506,54 +1874,131 @@ git push
 
 The `git add -u` line stages only tracked decoder fixes demonstrated by RED; omit it for a GREEN test-only task.
 
-### Task 29: Build an on-demand benchmark archive
+### Task 38: Generate deterministic benchmark feature primitives
+
+**Files:**
+- Create: `packages/seismicity_pmtiles/benchmark/support/seismicity_benchmark_feature_source.dart`
+- Create: `packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_feature_source_test.dart`
+
+**Interfaces:**
+- Consumes: non-negative global row index.
+- Produces: deterministic UUID bytes, geometry, scalar/UTF-8 properties, and expected public byte contribution.
+
+- [ ] **Step 1: Write failing first/middle/last feature tests**
+
+Assert canonical v4 UUID bytes/text only for fixture encoding, fixed data zoom 6 coordinates, deterministic presence pattern including empty allowed strings/non-empty event IDs, exact UTF-8 bytes, and checked public byte contribution. No random/clock input.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_feature_source_test.dart`
+
+Expected: compile failure for missing feature source.
+
+- [ ] **Step 3: Implement stateless index derivation**
+
+Derive one transient fixture feature at a time, encode strings immediately, and retain no collection/map. Keep expected byte arithmetic independent of the decoder result.
+
+- [ ] **Step 4: Run GREEN and inspect size**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_feature_source_test.dart`
+
+Expected: repeatable primitives/bytes and 30–100 handwritten lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/benchmark/support/seismicity_benchmark_feature_source.dart \
+  packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_feature_source_test.dart
+git commit -m "Perf: benchmark震源primitiveを追加"
+git push
+```
+
+### Task 39: Build an on-demand benchmark archive
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/benchmark/support/seismicity_benchmark_archive.dart`
 - Create: `packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_archive_test.dart`
 
 **Interfaces:**
-- Consumes: public archive interface and Task 8 MVT fixture encoder.
-- Produces: deterministic on-demand `SeismicityBenchmarkArchive` plus expected first/last UUID and typed-column byte counts.
+- Consumes: Task 38 feature source and public archive interface.
+- Produces: occupied IDs, one on-demand MVT tile, expected first/last UUID and total bytes.
 
 - [ ] **Step 1: Write a failing 10,000-row archive test**
 
-Use fixed data zoom 6 and 1,000 features per tile. Generate canonical UUIDs from global index (`00000000-0000-4000-8000-` plus twelve lowercase hex digits), coordinates/all properties, and no random/time input. Assert occupied IDs only, deterministic first/last tile bytes, repeatable expected UUID/byte-size metadata, one live tile payload at a time, and close once.
+Use 1,000 rows/tile. Assert occupied IDs, deterministic first/last tile bytes, expected UUID/byte metadata, one live payload at a time, read count, and close once.
 
 - [ ] **Step 2: Run RED**
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_archive_test.dart`
 
-Expected: compile failure for the missing benchmark archive.
+Expected: compile failure for missing archive.
 
-- [ ] **Step 3: Implement on-demand tiles only**
+- [ ] **Step 3: Implement streaming tile construction**
 
-Yield only occupied TileIDs and construct one raw MVT payload in `readTile`; never retain all payloads or event objects. Checked arithmetic computes expected fixed-column/bitmap/dictionary bytes from deterministic property pattern. Expose read/close/live-payload counters for runner correctness, not performance timing.
+Generate one raw tile during `readTile` from Task 38 and release it before the next. Never retain all payloads or 2M rows.
 
 - [ ] **Step 4: Run GREEN and inspect size**
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_archive_test.dart`
 
-Expected: all bytes/metadata repeat exactly and handwritten diff is 30–100 lines.
+Expected: archive counters/bytes pass and handwritten diff is 30–100 lines.
 
 - [ ] **Step 5: Commit and push**
 
 ```bash
 git add packages/seismicity_pmtiles/benchmark/support/seismicity_benchmark_archive.dart \
   packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_archive_test.dart
-git commit -m "Perf: 決定的震源benchmark archiveを追加"
+git commit -m "Perf: 決定的benchmark archiveを追加"
 git push
 ```
 
-### Task 30: Run benchmark correctness through one counted worker
+### Task 40: Count real worker spawns in benchmarks
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/benchmark/support/counting_decoder_worker_factory.dart`
+- Create: `packages/seismicity_pmtiles/test/benchmark/counting_decoder_worker_factory_test.dart`
+
+**Interfaces:**
+- Consumes: Task 22 factory and Task 27 real delegate.
+- Produces: non-export counting delegate preserving exact handle behavior.
+
+- [ ] **Step 1: Write a failing delegate test**
+
+Wrap controlled and real factories, assert spawn arguments/handle identity, count exactly one per delegation, and preserve spawn failure without increment ambiguity.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/counting_decoder_worker_factory_test.dart`
+
+Expected: compile failure for missing delegate.
+
+- [ ] **Step 3: Implement the counter wrapper only**
+
+Increment at one documented point before delegation, expose read-only count, and add no timing/archive/runner behavior.
+
+- [ ] **Step 4: Run GREEN and inspect size**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/counting_decoder_worker_factory_test.dart`
+
+Expected: success/failure counts are deterministic and handwritten diff is 30–100 lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/benchmark/support/counting_decoder_worker_factory.dart \
+  packages/seismicity_pmtiles/test/benchmark/counting_decoder_worker_factory_test.dart
+git commit -m "Perf: benchmark worker数を計測"
+git push
+```
+
+### Task 41: Run benchmark correctness through one worker
+
+**Files:**
 - Create: `packages/seismicity_pmtiles/benchmark/seismicity_pmtiles_decode_benchmark_runner.dart`
 - Create: `packages/seismicity_pmtiles/test/benchmark/seismicity_pmtiles_decode_benchmark_runner_test.dart`
 
 **Interfaces:**
-- Consumes: Task 29 archive, non-export runner/factory seam, real worker delegate.
+- Consumes: Task 39 archive, Task 40 counting factory, non-export decoder runner.
 - Produces: benchmark result with counts, bytes, worker spawns, close count, elapsed/RSS, optional threshold, and nullable `withinTarget`.
 
 - [ ] **Step 1: Write a failing 10,000-row runner test**
@@ -1564,11 +2009,11 @@ Run the internal decoder runner with a counting factory that delegates to the re
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/seismicity_pmtiles_decode_benchmark_runner_test.dart`
 
-Expected: compile failure for missing counting delegate/runner.
+Expected: compile failure for missing benchmark runner.
 
 - [ ] **Step 3: Implement correctness-first runner**
 
-`runSeismicityDecodeBenchmark` requires feature/tile/chunk counts and accepts nullable `Duration informationalTimeThreshold`. Wrap the real factory only to count spawn calls, use Stopwatch/`ProcessInfo.currentRss`, validate every chunk and expected byte total, then return a typed benchmark result. A threshold comparison never changes success/failure.
+`runSeismicityDecodeBenchmark` requires feature/tile/chunk counts and accepts nullable `Duration informationalTimeThreshold`. Use Task 40, Stopwatch/`ProcessInfo.currentRss`, validate every chunk and independent expected byte total, then return a typed result. A threshold comparison never changes success/failure.
 
 - [ ] **Step 4: Run GREEN and inspect size**
 
@@ -1579,44 +2024,82 @@ Expected: correctness/OOM-crash propagation/worker-count/count/byte-size/close i
 - [ ] **Step 5: Commit and push**
 
 ```bash
-git add packages/seismicity_pmtiles/benchmark/support/counting_decoder_worker_factory.dart \
-  packages/seismicity_pmtiles/benchmark/seismicity_pmtiles_decode_benchmark_runner.dart \
+git add packages/seismicity_pmtiles/benchmark/seismicity_pmtiles_decode_benchmark_runner.dart \
   packages/seismicity_pmtiles/test/benchmark/seismicity_pmtiles_decode_benchmark_runner_test.dart
 git commit -m "Perf: decoder benchmarkの正しさを検証"
 git push
 ```
 
-### Task 31: Add the deterministic 2,000,000-row CLI
+### Task 42: Parse benchmark CLI arguments
+
+**Files:**
+- Create: `packages/seismicity_pmtiles/benchmark/seismicity_benchmark_arguments.dart`
+- Create: `packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_arguments_test.dart`
+
+**Interfaces:**
+- Consumes: CLI string list.
+- Produces: typed feature/tile/chunk counts and optional informational threshold.
+
+- [ ] **Step 1: Write failing parser tests**
+
+Assert defaults include exactly 2,000,000 rows and no threshold. Parse all positive integer flags. Reject missing values, unknown/duplicate flags, zero, negative, fraction, overflow, and positional input with typed usage failure.
+
+- [ ] **Step 2: Run RED**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_arguments_test.dart`
+
+Expected: compile failure for missing parser.
+
+- [ ] **Step 3: Implement parsing only**
+
+Return one immutable typed arguments value. Do not run benchmark, read environment defaults, or invent an SLO.
+
+- [ ] **Step 4: Run GREEN and inspect size**
+
+Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_arguments_test.dart`
+
+Expected: parser table passes and handwritten diff is 30–100 lines.
+
+- [ ] **Step 5: Commit and push**
+
+```bash
+git add packages/seismicity_pmtiles/benchmark/seismicity_benchmark_arguments.dart \
+  packages/seismicity_pmtiles/test/benchmark/seismicity_benchmark_arguments_test.dart
+git commit -m "Perf: benchmark CLI引数を解析"
+git push
+```
+
+### Task 43: Add the deterministic 2,000,000-row CLI
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/benchmark/seismicity_pmtiles_decode_benchmark.dart`
 - Create: `packages/seismicity_pmtiles/test/benchmark/seismicity_pmtiles_decode_benchmark_cli_test.dart`
 
 **Interfaces:**
-- Consumes: Task 30 runner.
-- Produces: CLI defaulting to exactly 2,000,000 rows with optional caller threshold and one JSON result line.
+- Consumes: Tasks 41–42.
+- Produces: one JSON line and correctness-only exit semantics.
 
-- [ ] **Step 1: Write failing CLI parse/exit tests**
+- [ ] **Step 1: Write failing output/exit tests**
 
-Test defaults and positive integer flags `--features`, `--features-per-tile`, `--chunk-capacity`, optional `--informational-time-threshold-ms`. Reject missing values, unknown flags, zero/negative/noninteger values. Inject a small runner for tests and assert JSON keys `feature_count`, `unique_count`, `typed_byte_size`, `worker_spawn_count`, `elapsed_ms`, `rss_bytes`, threshold, and nullable `within_target`.
+Inject a small runner. Assert JSON keys/counts/bytes/worker/elapsed/RSS/threshold/nullable `within_target`. Assert correctness/worker/count/byte/close failures exit nonzero, while threshold miss exits zero.
 
 - [ ] **Step 2: Run RED**
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/seismicity_pmtiles_decode_benchmark_cli_test.dart`
 
-Expected: compile failure for missing CLI parser/entry.
+Expected: compile failure for missing entry/output adapter.
 
-- [ ] **Step 3: Implement non-gating reporting and exit semantics**
+- [ ] **Step 3: Implement reporting and exit mapping**
 
-Write one JSON line with `stdout.writeln`. Correctness failure, OOM/crash, worker count other than one, row/chunk count mismatch, typed-byte mismatch, invalid columns, or close count changes the exit code. Crossing the optional threshold and RSS observations never do. Issue #1601 defines no SLO, so omit a default threshold and report null `within_target` when absent.
+Write fixed-key JSON with `stdout.writeln` without a retained string-key result map. OOM/crash naturally exit nonzero; correctness/worker/count/typed-byte/column/close failures map nonzero. Threshold/RSS never gate.
 
-- [ ] **Step 4: Run GREEN and the full 2M harness**
+- [ ] **Step 4: Run GREEN and full 2M harness**
 
 Run: `mise exec -- dart test packages/seismicity_pmtiles/test/benchmark/seismicity_pmtiles_decode_benchmark_cli_test.dart`
 
 Run: `mise exec -- dart run packages/seismicity_pmtiles/benchmark/seismicity_pmtiles_decode_benchmark.dart --features 2000000 --features-per-tile 1000 --chunk-capacity 65536 --informational-time-threshold-ms 60000`
 
-Expected: exit 0 with exactly 2,000,000 rows, one worker, exact byte size, elapsed/RSS, and observational `within_target`; handwritten CLI/test diff is 30–100 lines.
+Expected: exactly 2M, one worker, exact bytes and observational timing; handwritten diff is 30–100 lines.
 
 - [ ] **Step 5: Commit and push**
 
@@ -1627,7 +2110,7 @@ git commit -m "Perf: 200万震源CLI harnessを追加"
 git push
 ```
 
-### Task 32: Document the decoder contract
+### Task 44: Document the decoder contract
 
 **Files:**
 - Modify: `packages/seismicity_pmtiles/README.md`
@@ -1646,6 +2129,7 @@ Define required phrases/links for caller-complete descriptor, data zoom, schema 
 Run:
 
 ```bash
+set -eu
 test -f docs/knowledge/20260809_seismicity_pmtiles_decoder.md
 for required in schemaVersion dataZoom duplicateConflict TransferableTypedData 2000000; do
   rg -q "$required" packages/seismicity_pmtiles/README.md \
@@ -1683,7 +2167,7 @@ git commit -m "Docs: 震源PMTiles decoder契約を記録"
 git push
 ```
 
-### Task 33: Record backend dependency and run the final gate
+### Task 45: Record backend dependency and run the final gate
 
 **Files:**
 - Create: `docs/todo/950_seismicity_manifest_descriptor_fields.md`
@@ -1702,6 +2186,7 @@ Confirm the checked-out backend manifest still lacks public `schema_version`, `d
 Run:
 
 ```bash
+set -eu
 test -f docs/todo/950_seismicity_manifest_descriptor_fields.md
 for required in schema_version data_zoom archive_revision OpenAPI; do
   rg -q "$required" docs/todo/950_seismicity_manifest_descriptor_fields.md
@@ -1712,7 +2197,7 @@ Expected: nonzero because the todo does not exist.
 
 - [ ] **Step 3: Add only the backend stacked dependency record**
 
-Write 30–100 lines with current producer/API evidence, required backend manifest/OpenAPI fields, app adapter follow-up, validation/rollout order, and no decoder fallback. Do not implement backend or app integration in #1601.
+Write 30–100 lines with current producer/API evidence, required backend manifest/OpenAPI fields, app adapter follow-up, validation/rollout order, and no decoder fallback. Start every multi-command shell block in the todo with `set -eu`. Do not implement backend or app integration in #1601.
 
 - [ ] **Step 4: Regenerate, normalize, audit, and verify fresh**
 
@@ -1733,7 +2218,7 @@ First prove generation is reproducible with the tracked limited normalizer:
 )
 ```
 
-Any model diff stops this task and must be committed by amending the originating Task 2, 3, or 23 commit. Then run from repository root:
+Any model diff stops this task and must be committed by amending the originating Task 2, 3, or 31 commit. Then run from repository root:
 
 ```bash
 mise exec -- dart format --output=none --set-exit-if-changed packages/pmtiles_v3 packages/seismicity_pmtiles
@@ -1763,7 +2248,7 @@ while IFS= read -r source; do
   case "$source" in
     *.freezed.dart|*.g.dart) continue ;;
   esac
-  if rg -n --pcre2 '(?<!Map<String, )\bdynamic\b|\bany\b|\bObject(?:\?)?(?=[^A-Za-z0-9_]|$)|print\s*\(|\.\./src/|defaultDataZoom|defaultSchemaVersion' "$source"; then
+  if rg -n --pcre2 'Map<String,(?! dynamic>)|(?<!Map<String, )\bdynamic\b|\bany\b|\bObject(?:\?)?(?=[^A-Za-z0-9_]|$)|print\s*\(|\.\./src/|defaultDataZoom|defaultSchemaVersion' "$source"; then
     exit 1
   fi
 done < "$changed_sources"
@@ -1797,10 +2282,12 @@ Review every commit's handwritten line count against 30–100 using `git log --n
 - [ ] Raw MVT protobuf, layer, Point command, tags, scalar types, UUID, and properties are strict.
 - [ ] Missing depth/magnitude are NaN plus clear validity, explicit zero remains valid, Float32 overflow such as `1e100` is a typed feature failure, and every valid numeric output slot is finite.
 - [ ] Identical boundary/wrap copies dedupe only when geometry and all eight schema-v1 properties match in canonical typed form before Float32 roundoff; determination/event/geometry-clamped internal sidecars are covered.
+- [ ] Canonical strings are retained as UTF-8 arena bytes, typed offsets/indexes/validity, and typed open-address slots; no per-event String/key object or string-key map survives decoding.
+- [ ] Present empty `earthquake_event_id` is a typed feature failure; present empty `max_intensity` and `determination_flag` remain distinct from absence.
 - [ ] Returned data is bounded typed chunks, not 2M Freezed/event objects.
 - [ ] One long-lived worker receives and returns TTD; a non-export injectable factory/handle controls tests while the public facade uses the real default.
 - [ ] Unique count and descriptor count match before any dataset is published.
-- [ ] Spawn/finish/cancel/success/failure close archive, ports, and worker exactly once and complete retirement deterministically.
+- [ ] Typed launcher/probe seams and the pure terminal coordinator make invalid chunks, crashes, port closure, exit, cancellation, and kill observable; external handles close ports and retire workers exactly once.
 - [ ] Gzip archive fixture and malformed schema/archive fixtures pass/fail as specified.
 - [ ] Deterministic 2M harness exits 0 only for correct worker/count/byte-size/resource results; caller threshold, `within_target`, elapsed, and RSS remain observations.
 - [ ] Every build_runner invocation is immediately normalized/proved and generated output is committed with its originating task.
