@@ -14,6 +14,7 @@ BaseMapTileGeometry _geometry(int marker) {
     layers: [
       BaseMapTileFillLayerGeometry(
         styleLayerId: 'countriesFill',
+        extent: 4096,
         meshes: [
           FillMesh(
             positions: Float32List.fromList([marker.toDouble(), 0]),
@@ -44,8 +45,12 @@ void main() {
       );
 
       final result = cache.get(sourceInstanceId: 'a', tileId: tileId);
-      expect(result, isNotNull);
-      expect(_markerOf(result!), 1);
+      if (result == null) {
+        fail('expected the cached geometry');
+      }
+      final layer = result.layers.single as BaseMapTileFillLayerGeometry;
+      expect(layer.extent, 4096);
+      expect(_markerOf(result), 1);
     });
 
     test('a different sourceInstanceId is a different entry', () {
