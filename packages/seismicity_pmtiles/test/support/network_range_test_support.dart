@@ -12,8 +12,8 @@ sealed class NetworkRangeReply {
 }
 
 final class NetworkRangeTestAdapter implements HttpClientAdapter {
-  final Queue<NetworkRangeReply> _responses = Queue<NetworkRangeReply>();
-  final List<RequestOptions> requests = <RequestOptions>[];
+  final _responses = Queue<NetworkRangeReply>();
+  final requests = <RequestOptions>[];
 
   void enqueueResponse({
     required int statusCode,
@@ -107,16 +107,18 @@ final class FailingNetworkRangeReply implements NetworkRangeReply {
   Future<ResponseBody> resolve({
     required RequestOptions options,
     required Future<void>? cancelFuture,
-  }) async {
-    throw DioException(
-      requestOptions: options,
-      response: switch (statusCode) {
-        final value? => Response<void>(
-          requestOptions: options,
-          statusCode: value,
-        ),
-        null => null,
-      },
+  }) {
+    return Future<ResponseBody>.error(
+      DioException(
+        requestOptions: options,
+        response: switch (statusCode) {
+          final value? => Response<void>(
+            requestOptions: options,
+            statusCode: value,
+          ),
+          null => null,
+        },
+      ),
     );
   }
 }
