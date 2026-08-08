@@ -203,7 +203,7 @@ git push origin HEAD
 
 Expected GREEN: PASS with exhaustive switches。Generated output may exceed 100 lines; hand-written contract remains one logical change。
 
-### Task 3: Create the typed mock adapter support
+### Task 3: Create the static typed mock adapter
 
 **Files:**
 
@@ -213,22 +213,31 @@ Expected GREEN: PASS with exhaustive switches。Generated output may exceed 100 
 **Interfaces:**
 
 ```dart
+sealed class NetworkRangeReply {
+  Future<ResponseBody> resolve({
+    required RequestOptions options,
+    required Future<void>? cancelFuture,
+  });
+}
+
 final class NetworkRangeTestAdapter implements HttpClientAdapter {
   final List<RequestOptions> requests = <RequestOptions>[];
   void enqueueResponse({required int statusCode, required List<int> body, String? etag, String? contentRange});
-  PendingRangeResponse enqueuePending206({required int offset, required int total, required String? etag});
-  void enqueueDioFailure({required int? statusCode});
 }
 
-final class PendingRangeResponse {
-  bool cancelled = false;
-  void complete(List<int> bytes);
+final class StaticNetworkRangeReply implements NetworkRangeReply {
+  const StaticNetworkRangeReply({
+    required this.statusCode,
+    required this.body,
+    required this.etag,
+    required this.contentRange,
+  });
 }
 ```
 
-The adapter uses a typed `Queue<NetworkRangeReply>`, records `RequestOptions`, returns `ResponseBody.fromBytes`, stores header names as literal `'etag'` and `'content-range'`, and races pending completers against Dio's `cancelFuture`. Empty queue throws `StateError('No queued mock response.')`。
+The adapter uses a typed `Queue<NetworkRangeReply>`, records `RequestOptions`, returns `ResponseBody.fromBytes`, and stores header names as literal `'etag'` and `'content-range'`。Empty queue throws `StateError('No queued mock response.')`。
 
-- [ ] **Step 1: Write RED fixture tests**
+- [ ] **Step 1: Write the static-response RED fixture test**
 
 ```dart
 test('static response records request and literal headers', () async {
@@ -246,9 +255,123 @@ test('static response records request and literal headers', () async {
   expect(adapter.requests, <RequestOptions>[options]);
 });
 
+```
+
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart`
+
+Expected RED: compile FAIL because `network_range_test_support.dart` and its static adapter types do not exist。
+
+- [ ] **Step 2: Implement fixture, verify, commit, push**
+
+Implement the exact interfaces above; `StaticNetworkRangeReply.resolve` returns a literal-header `ResponseBody.fromBytes` and ignores the nullable cancellation Future。
+
+```bash
+mise exec -- flutter test packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart
+git add packages/seismicity_pmtiles/test/support/network_range_test_support.dart \
+  packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart
+git commit -m "Test: PMTiles通信の固定mock応答を追加"
+git push origin HEAD
+```
+
+Expected GREEN: PASS without opening a socket。
+
+### Task 4: Add the failing mock reply
+
+**Files:**
+
+- Modify: `packages/seismicity_pmtiles/test/support/network_range_test_support.dart`
+- Modify: `packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart`
+
+**Interfaces:** Extends Task 3 without changing its static reply contract。
+
+```dart
+final class NetworkRangeTestAdapter implements HttpClientAdapter {
+  void enqueueDioFailure({required int? statusCode});
+}
+
+final class FailingNetworkRangeReply implements NetworkRangeReply {
+  const FailingNetworkRangeReply({required this.statusCode});
+  final int? statusCode;
+}
+
+```
+
+- [ ] **Step 1: Write the RED Dio-failure fixture test**
+
+```dart
+test('failing reply preserves the nullable response status', () async {
+  final adapter = NetworkRangeTestAdapter()
+    ..enqueueDioFailure(statusCode: 503);
+  final fetch = adapter.fetch(
+    RequestOptions(path: 'https://example.com/archive.pmtiles'),
+    null,
+    null,
+  );
+  await expectLater(
+    fetch,
+    throwsA(
+      isA<DioException>().having(
+        (failure) => failure.response?.statusCode,
+        'statusCode',
+        503,
+      ),
+    ),
+  );
+});
+```
+
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart`
+
+Expected RED: compile FAIL because `enqueueDioFailure` and `FailingNetworkRangeReply` do not exist。
+
+- [ ] **Step 2: Implement replies, verify, commit, push**
+
+`FailingNetworkRangeReply.resolve` throws a typed `DioException`, attaching `Response<void>(statusCode: statusCode)` only when status is non-null。
+
+```bash
+mise exec -- flutter test packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart
+git add packages/seismicity_pmtiles/test/support/network_range_test_support.dart \
+  packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart
+git commit -m "Test: PMTiles通信mockの失敗応答を追加"
+git push origin HEAD
+```
+
+Expected GREEN: PASS without a socket。
+
+### Task 5: Add the pending cancellable mock reply
+
+**Files:**
+
+- Modify: `packages/seismicity_pmtiles/test/support/network_range_test_support.dart`
+- Modify: `packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart`
+
+**Interfaces:** Extends the Task 3 adapter with one cancellable reply。
+
+```dart
+final class NetworkRangeTestAdapter implements HttpClientAdapter {
+  PendingRangeResponse enqueuePending206({
+    required int offset,
+    required int total,
+    required String? etag,
+  });
+}
+
+final class PendingRangeResponse implements NetworkRangeReply {
+  bool cancelled = false;
+  void complete(List<int> bytes);
+}
+```
+
+- [ ] **Step 1: Write the RED pending-cancellation fixture test**
+
+```dart
 test('pending response observes Dio cancellation', () async {
   final adapter = NetworkRangeTestAdapter();
-  final pending = adapter.enqueuePending206(offset: 0, total: 16, etag: '"v1"');
+  final pending = adapter.enqueuePending206(
+    offset: 0,
+    total: 16,
+    etag: '"v1"',
+  );
   final cancelled = Completer<void>();
   final fetch = adapter.fetch(
     RequestOptions(path: 'https://example.com/archive.pmtiles'),
@@ -263,23 +386,23 @@ test('pending response observes Dio cancellation', () async {
 
 Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart`
 
-Expected RED: compile FAIL because `network_range_test_support.dart` and its adapter types do not exist。
+Expected RED: compile FAIL because `enqueuePending206` and `PendingRangeResponse` do not exist。
 
-- [ ] **Step 2: Implement fixture, verify, commit, push**
+- [ ] **Step 2: Implement pending reply, verify, commit, push**
 
-Implement the exact interfaces above with `NetworkRangeReply`, `StaticNetworkRangeReply`, `PendingRangeResponse`, and `FailingNetworkRangeReply` classes; each has a typed `resolve({required RequestOptions options, required Future<void>? cancelFuture})`。
+Race its byte completer against `cancelFuture`; cancellation sets `cancelled = true` and throws `DioExceptionType.cancel`。Successful completion builds an exact `206`/ETag/Content-Range response through the Task 3 response helper。
 
 ```bash
 mise exec -- flutter test packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart
 git add packages/seismicity_pmtiles/test/support/network_range_test_support.dart \
   packages/seismicity_pmtiles/test/support/network_range_test_support_test.dart
-git commit -m "Test: PMTiles通信のmock adapterを追加"
+git commit -m "Test: PMTiles通信mockのpending応答を追加"
 git push origin HEAD
 ```
 
-Expected GREEN: PASS without opening a socket。
+Expected GREEN: PASS; the cancellation branch wins without opening a socket。
 
-### Task 4: Build byte Range Options and strong ETag grammar
+### Task 6: Build byte Range Options and strong ETag grammar
 
 **Files:**
 
@@ -370,7 +493,7 @@ git push origin HEAD
 
 Expected GREEN: PASS, including `412 == true` at Dio Options level。
 
-### Task 5: Validate HTTP status and archive identity
+### Task 7: Validate HTTP status and archive identity
 
 **Files:**
 
@@ -488,7 +611,7 @@ git push origin HEAD
 
 Expected GREEN: PASS。
 
-### Task 6: Validate Content-Range and body length
+### Task 8: Validate Content-Range and body length
 
 **Files:**
 
@@ -600,20 +723,174 @@ git push origin HEAD
 
 Expected GREEN: PASS。
 
-### Task 7: Add the private reader behind the public Factory
+### Task 9: Migrate the public Factory contract
+
+**Files:**
+
+- Modify: `packages/seismicity_pmtiles/lib/src/reader/seismicity_random_access_reader_factory.dart`
+- Modify: `packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart`
+- Modify: `packages/seismicity_pmtiles/test/public_api_compile_test.dart`
+
+**Interfaces:** Produces the final public Factory constructor/create signature。Valid Network remains the existing `unsupportedSource` result until Task 11; File/Asset behavior is unchanged。
+
+- [ ] **Step 1: Write the RED Factory contract migration**
+
+Add this helper to the existing Factory test and route every existing source test through it:
+
+```dart
+import 'package:dio/dio.dart';
+import '../support/network_range_test_support.dart';
+
+SeismicityPmTilesArchiveDescriptor descriptorFor({
+  required SeismicityPmTilesSource source,
+  required int sizeBytes,
+}) {
+  return SeismicityPmTilesArchiveDescriptor(
+    source: source,
+    schemaVersion: 1,
+    dataZoom: 8,
+    expectedSizeBytes: sizeBytes,
+    expectedFeatureCount: 1,
+    archiveRevision: 'fixture-v1',
+    periodFrom: DateTime.utc(2025),
+    periodTo: DateTime.utc(2026),
+  );
+}
+
+Future<SeismicityPmTilesResult<PmTilesRandomAccessReader>> createFor({
+  required SeismicityRandomAccessReaderFactory factory,
+  required SeismicityPmTilesSource source,
+  required int sizeBytes,
+}) {
+  return factory.create(
+    descriptor: descriptorFor(source: source, sizeBytes: sizeBytes),
+    cancelToken: CancelToken(),
+  );
+}
+```
+
+Replace the existing Factory-test setup with the final injected transport:
+
+```dart
+late NetworkRangeTestAdapter adapter;
+
+setUp(() async {
+  tempDirectory = await Directory.systemTemp.createTemp(
+    'seismicity_pmtiles_reader_factory_',
+  );
+  archiveFile = File('${tempDirectory.path}/archive.pmtiles');
+  await archiveFile.writeAsBytes(<int>[1, 2, 3, 4]);
+  assetLoadCount = 0;
+  adapter = NetworkRangeTestAdapter();
+  factory = SeismicityRandomAccessReaderFactory(
+    assetLoader: ({required assetKey}) async {
+      assetLoadCount++;
+      return Uint8List.fromList(<int>[5, 6, 7, 8]);
+    },
+    dio: Dio()..httpClientAdapter = adapter,
+    networkMaxCacheBytes: 8,
+  );
+});
+```
+
+In `public_api_compile_test.dart`, import Dio and replace the old const fixture with:
+
+```dart
+final factory = SeismicityRandomAccessReaderFactory(
+  assetLoader: loadPublicApiAsset,
+  dio: Dio(),
+  networkMaxCacheBytes: 1024,
+);
+```
+
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart packages/seismicity_pmtiles/test/public_api_compile_test.dart`
+
+Expected RED: compile FAIL because the Factory does not accept Dio/cache, descriptor, or caller token yet。
+
+- [ ] **Step 2: Migrate Factory, verify, commit, push**
+
+Switch on `descriptor.source` and preserve the existing valid-Network unsupported result。Update the five existing Factory tests with `createFor`, using size `4` for File/Asset and `16` for Network。
+
+```bash
+mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart packages/seismicity_pmtiles/test/public_api_compile_test.dart
+git add packages/seismicity_pmtiles/lib/src/reader/seismicity_random_access_reader_factory.dart \
+  packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart \
+  packages/seismicity_pmtiles/test/public_api_compile_test.dart
+git commit -m "Refactor: PMTiles Reader Factory契約を更新"
+git push origin HEAD
+```
+
+Expected GREEN: PASS, with zero adapter requests。
+
+### Task 10: Reject invalid Network Factory inputs
+
+**Files:**
+
+- Modify: `packages/seismicity_pmtiles/lib/src/reader/seismicity_random_access_reader_factory.dart`
+- Modify: `packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart`
+
+**Interfaces:** Network `expectedSizeBytes <= 0` or `networkMaxCacheBytes <= 0` returns exact `invalidDescriptor` before any reader/request construction。
+
+- [ ] **Step 1: Write the exact RED preflight table**
+
+```dart
+for (final fixture in <({int sizeBytes, int cacheBytes, String reason})>[
+  (sizeBytes: 0, cacheBytes: 8, reason: 'Network expectedSizeBytes must be positive.'),
+  (sizeBytes: 16, cacheBytes: 0, reason: 'networkMaxCacheBytes must be positive.'),
+]) {
+  test('rejects invalid Network input ${fixture.reason}', () async {
+    final invalidFactory = SeismicityRandomAccessReaderFactory(
+      assetLoader: ({required assetKey}) async => Uint8List(0),
+      dio: Dio()..httpClientAdapter = adapter,
+      networkMaxCacheBytes: fixture.cacheBytes,
+    );
+    final result = await createFor(
+      factory: invalidFactory,
+      source: SeismicityPmTilesSource.network(
+        archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
+      ),
+      sizeBytes: fixture.sizeBytes,
+    );
+    expect(
+      result,
+      SeismicityPmTilesResult<PmTilesRandomAccessReader>.failure(
+        exception: SeismicityPmTilesException.invalidDescriptor(
+          reason: fixture.reason,
+        ),
+      ),
+    );
+    expect(adapter.requests, isEmpty);
+  });
+}
+```
+
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart`
+
+Expected RED: FAIL because valid and invalid Network descriptors still return the same `unsupportedSource` failure。
+
+- [ ] **Step 2: Implement preflight, verify, commit, push**
+
+Validate both positive integers only inside the Network switch branch and return the literal reasons above before constructing any Network reader。
+
+```bash
+mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart
+git add packages/seismicity_pmtiles/lib/src/reader/seismicity_random_access_reader_factory.dart \
+  packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart
+git commit -m "Feat: PMTiles通信Reader設定を事前検証"
+git push origin HEAD
+```
+
+### Task 11: Connect the sequential Network reader
 
 **Files:**
 
 - Create: `packages/seismicity_pmtiles/lib/src/reader/seismicity_pmtiles_network_random_access_reader.dart`
 - Modify: `packages/seismicity_pmtiles/lib/src/reader/seismicity_random_access_reader_factory.dart`
 - Create: `packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
-- Modify: `packages/seismicity_pmtiles/test/public_api_compile_test.dart`
 
-**Interfaces:** Produces final public Factory signature; private reader composes Tasks 4–6 and implements sequential `readAt` plus minimal close。
+**Interfaces:** A private concrete reader composes Tasks 6–8 and is returned only as `PmTilesRandomAccessReader` by the Task 9 Factory。
 
-- [ ] **Step 1: Write RED Factory/basic request tests**
-
-Define in the reader test:
+- [ ] **Step 1: Write the RED happy-path reader test**
 
 ```dart
 late NetworkRangeTestAdapter adapter;
@@ -641,10 +918,9 @@ Future<PmTilesRandomAccessReader> createReader({
   required CancelToken callerToken,
   int cacheBytes = 8,
 }) async {
-  final dio = Dio()..httpClientAdapter = adapter;
   final factory = SeismicityRandomAccessReaderFactory(
     assetLoader: ({required assetKey}) async => Uint8List(0),
-    dio: dio,
+    dio: Dio()..httpClientAdapter = adapter,
     networkMaxCacheBytes: cacheBytes,
   );
   return switch (await factory.create(
@@ -655,9 +931,7 @@ Future<PmTilesRandomAccessReader> createReader({
     SeismicityPmTilesFailure(:final exception) => throw exception,
   };
 }
-```
 
-```dart
 test('pins first identity and sends If-Match next', () async {
   adapter
     ..enqueueResponse(statusCode: 206, body: const [0, 1], etag: '"v1"', contentRange: 'bytes 0-1/16')
@@ -671,63 +945,44 @@ test('pins first identity and sends If-Match next', () async {
 });
 ```
 
-```dart
-for (final fixture in <({int sizeBytes, int cacheBytes, String reason})>[
-  (
-    sizeBytes: 0,
-    cacheBytes: 8,
-    reason: 'Network expectedSizeBytes must be positive.',
-  ),
-  (
-    sizeBytes: 16,
-    cacheBytes: 0,
-    reason: 'networkMaxCacheBytes must be positive.',
-  ),
-]) {
-  test('rejects invalid Network input ${fixture.reason}', () async {
-    final invalidFactory = SeismicityRandomAccessReaderFactory(
-      assetLoader: ({required assetKey}) async => Uint8List(0),
-      dio: Dio()..httpClientAdapter = adapter,
-      networkMaxCacheBytes: fixture.cacheBytes,
-    );
-    final result = await invalidFactory.create(
-      descriptor: networkDescriptor(sizeBytes: fixture.sizeBytes),
-      cancelToken: CancelToken(),
-    );
-    expect(
-      result,
-      SeismicityPmTilesResult<PmTilesRandomAccessReader>.failure(
-        exception: SeismicityPmTilesException.invalidDescriptor(
-          reason: fixture.reason,
-        ),
-      ),
-    );
-    expect(adapter.requests, isEmpty);
-  });
-}
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
 
+Expected RED: FAIL because valid Network still returns `unsupportedSource` and no private reader exists。
+
+- [ ] **Step 2: Implement sequential reader, verify, commit, push**
+
+The reader validates ranges before I/O, sends Dio GET with Task 6 Options, applies Tasks 7–8 validators, and fixes the first identity。It initially passes the Factory caller token directly to Dio; Task 15 introduces owned request tokens。Basic close becomes final in Task 18。
+
+```bash
+mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
+git add packages/seismicity_pmtiles/lib/src/reader/seismicity_pmtiles_network_random_access_reader.dart \
+  packages/seismicity_pmtiles/lib/src/reader/seismicity_random_access_reader_factory.dart \
+  packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
+git commit -m "Feat: PMTiles通信ReaderをFactoryへ接続"
+git push origin HEAD
+```
+
+Expected GREEN: PASS; no concrete Network class is barrel-exported。
+
+### Task 12: Map unsafe responses and transport failures
+
+**Files:** Modify the private reader and its test。
+
+**Interfaces:** Non-206 admitted responses use Task 7 protocol failures; Dio/500+ failures become `SeismicityPmTilesNetworkRequestFailedException` without raw body/exception leakage。
+
+- [ ] **Step 1: Write RED failure-mapping tests**
+
+```dart
 test('rejects unsafe 200 without returning its body', () async {
-  adapter.enqueueResponse(
-    statusCode: 200,
-    body: const [0, 1],
-    etag: '"v1"',
-    contentRange: null,
-  );
-  final reader = await createReader(
-    adapter: adapter,
-    callerToken: CancelToken(),
-  );
+  adapter.enqueueResponse(statusCode: 200, body: const [0, 1], etag: '"v1"', contentRange: null);
+  final reader = await createReader(adapter: adapter, callerToken: CancelToken());
   addTearDown(reader.close);
   await expectLater(
     reader.readAt(offset: 0, length: 2),
     throwsA(
       isA<SeismicityPmTilesInvalidNetworkResponseException>()
           .having((failure) => failure.statusCode, 'statusCode', 200)
-          .having(
-            (failure) => failure.reason,
-            'reason',
-            'Expected HTTP 206 Partial Content.',
-          ),
+          .having((failure) => failure.reason, 'reason', 'Expected HTTP 206 Partial Content.'),
     ),
   );
   expect(adapter.requests, hasLength(1));
@@ -738,64 +993,38 @@ for (final statusCode in <int?>[null, 503]) {
     if (statusCode == null) {
       adapter.enqueueDioFailure(statusCode: null);
     } else {
-      adapter.enqueueResponse(
-        statusCode: statusCode,
-        body: const [],
-        etag: null,
-        contentRange: null,
-      );
+      adapter.enqueueResponse(statusCode: 503, body: const [], etag: null, contentRange: null);
     }
-    final reader = await createReader(
-      adapter: adapter,
-      callerToken: CancelToken(),
-    );
+    final reader = await createReader(adapter: adapter, callerToken: CancelToken());
     addTearDown(reader.close);
     await expectLater(
       reader.readAt(offset: 0, length: 2),
       throwsA(
-        isA<SeismicityPmTilesNetworkRequestFailedException>().having(
-          (failure) => failure.statusCode,
-          'statusCode',
-          statusCode,
-        ),
+        isA<SeismicityPmTilesNetworkRequestFailedException>()
+            .having((failure) => failure.statusCode, 'statusCode', statusCode),
       ),
     );
   });
 }
 ```
 
-In `public_api_compile_test.dart`, import Dio and replace the old const Factory construction with:
-
-```dart
-final factory = SeismicityRandomAccessReaderFactory(
-  assetLoader: loadPublicApiAsset,
-  dio: Dio(),
-  networkMaxCacheBytes: 1024,
-);
-```
-
 Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
 
-Expected RED: compile FAIL because private reader file and descriptor-aware Factory API are not created yet。
+Expected RED: FAIL because a Dio failure escapes as `DioException`; the unsafe 200 assertion already passes through the protocol validator。
 
-- [ ] **Step 2: Implement sequential reader/minimal close, verify, commit, push**
+- [ ] **Step 2: Map Dio failures, verify, commit, push**
 
-The sequential reader initially passes the Factory caller token to Dio. Basic `close()` stores `closed`, cancels that token, and returns a memoized completed Future; Task 10 replaces this temporary wiring with owned per-request tokens, and Task 11 adds waiting across concurrent Futures。No concrete Network type is barrel-exported。
+Catch non-cancel Dio failures at the private reader boundary and throw only `networkRequestFailed(source, response?.statusCode)`。
 
 ```bash
 mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
-mise exec -- flutter test packages/seismicity_pmtiles/test/public_api_compile_test.dart
 git add packages/seismicity_pmtiles/lib/src/reader/seismicity_pmtiles_network_random_access_reader.dart \
-  packages/seismicity_pmtiles/lib/src/reader/seismicity_random_access_reader_factory.dart \
-  packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart \
-  packages/seismicity_pmtiles/test/public_api_compile_test.dart
-git commit -m "Feat: PMTiles通信ReaderをFactoryへ接続"
+  packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
+git commit -m "Feat: PMTiles通信失敗を型へ変換"
 git push origin HEAD
 ```
 
-Expected GREEN: PASS。
-
-### Task 8: Add aggregate-byte LRU
+### Task 13: Add aggregate-byte LRU
 
 **Files:** Modify private reader and its test。
 
@@ -869,7 +1098,9 @@ test('value larger than budget is returned but not cached', () async {
 });
 ```
 
-Run reader test. Expected RED: repeated same range issues another request。
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
+
+Expected RED: FAIL because the repeated same range issues another request。
 
 - [ ] **Step 2: Implement, verify, commit, push**
 
@@ -883,7 +1114,7 @@ git commit -m "Feat: PMTiles通信RangeをLRU保持"
 git push origin HEAD
 ```
 
-### Task 9: Add identity gate and in-flight dedupe
+### Task 14: Add identity gate and in-flight dedupe
 
 **Files:** Modify private reader and its test。
 
@@ -918,7 +1149,9 @@ test('different range waits for initial identity', () async {
 });
 ```
 
-Run reader test. Expected RED: two requests start for same range or second range starts before identity exists。
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
+
+Expected RED: FAIL because two requests start for the same range or the second range starts before identity exists。
 
 - [ ] **Step 2: Implement, verify, commit, push**
 
@@ -932,9 +1165,9 @@ git commit -m "Feat: PMTiles通信Readerの同時取得を共有"
 git push origin HEAD
 ```
 
-### Task 10: Make caller cancellation non-terminal
+### Task 15: Make caller cancellation non-terminal
 
-**Files:** Modify private reader, mock support, and reader test。
+**Files:** Modify the private reader and its test; consume the Task 5 pending fixture unchanged。
 
 **Interfaces:** A request coordinator creates owned tokens, watches the one-shot caller token, cancels active owned tokens at that moment, and does not store terminal failure。
 
@@ -971,7 +1204,9 @@ test('caller cancellation stops pending request and reader remains usable', () a
 });
 ```
 
-Run reader test. Expected RED: caller token is passed directly to Dio and its cancelled state incorrectly rejects the second read, or pending fixture is not cancelled。
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
+
+Expected RED: FAIL because the caller token is passed directly to Dio and its cancelled state rejects the second read, or the pending fixture is not cancelled。
 
 - [ ] **Step 2: Implement coordinator, verify, commit, push**
 
@@ -980,32 +1215,91 @@ Each HTTP fetch gets a fresh owned token. `callerToken.whenCancel` cancels only 
 ```bash
 mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
 git add packages/seismicity_pmtiles/lib/src/reader/seismicity_pmtiles_network_random_access_reader.dart \
-  packages/seismicity_pmtiles/test/support/network_range_test_support.dart \
   packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
 git commit -m "Feat: PMTiles通信要求の取消を分離"
 git push origin HEAD
 ```
 
-### Task 11: Make generation poison and close terminal
+### Task 16: Poison on an invalid initial ETag
 
-**Files:** Modify private reader and its test。
+**Files:** Modify the private reader and its test。
 
-**Interfaces:** Stored terminal failure beats cancellation translation; close memoizes a Future that awaits all active reads and completes successfully。
+**Interfaces:** A missing or malformed ETag on the first `206` stores the exact first `ArchiveChanged` failure before any archive identity or cache entry exists。
 
-- [ ] **Step 1: Write table-driven poison and close tests**
+- [ ] **Step 1: Write the literal initial-identity poison table**
 
 ```dart
-for (final fixture in <({int status, String? etag})>[
+for (final receivedEtag in <String?>[null, '*']) {
+  test('initial ETag $receivedEtag poisons without another request', () async {
+    adapter.enqueueResponse(
+      statusCode: 206,
+      body: const [0, 1],
+      etag: receivedEtag,
+      contentRange: 'bytes 0-1/16',
+    );
+    final reader = await createReader(
+      adapter: adapter,
+      callerToken: CancelToken(),
+    );
+    addTearDown(reader.close);
+    final failureMatcher = isA<SeismicityPmTilesArchiveChangedException>()
+        .having(
+          (failure) => failure.source,
+          'source',
+          networkDescriptor(sizeBytes: 16).source,
+        )
+        .having((failure) => failure.expectedEtag, 'expectedEtag', null)
+        .having((failure) => failure.receivedEtag, 'receivedEtag', receivedEtag)
+        .having((failure) => failure.statusCode, 'statusCode', 206);
+
+    await expectLater(
+      reader.readAt(offset: 0, length: 2),
+      throwsA(failureMatcher),
+    );
+    final requestCountAfterFirstFailure = adapter.requests.length;
+    await expectLater(
+      reader.readAt(offset: 2, length: 2),
+      throwsA(failureMatcher),
+    );
+    expect(adapter.requests, hasLength(requestCountAfterFirstFailure));
+  });
+}
+```
+
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
+
+Expected RED: FAIL because the first typed failure is not stored, so the second read attempts an unqueued request instead of throwing the same fields。
+
+- [ ] **Step 2: Store the first identity failure, verify, commit, push**
+
+Catch only `SeismicityPmTilesArchiveChangedException` from identity validation, store the first instance, clear LRU, and check stored terminal failure before cache/request lookup。Peer cancellation is added in Task 17。
+
+```bash
+mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
+git add packages/seismicity_pmtiles/lib/src/reader/seismicity_pmtiles_network_random_access_reader.dart \
+  packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
+git commit -m "Feat: PMTiles通信Readerの初回世代失敗を固定"
+git push origin HEAD
+```
+
+### Task 17: Propagate a pinned generation change
+
+**Files:** Modify the private reader and its test。
+
+**Interfaces:** After a valid `"v1"` pin, `412` or a valid different ETag stores one `ArchiveChanged`, clears cached `"v1"` bytes, cancels peers, and rethrows that same failure。
+
+- [ ] **Step 1: Write the pinned-generation poison table**
+
+```dart
+for (final fixture in <({int status, String etag})>[
   (status: 412, etag: '"v2"'),
-  (status: 206, etag: null),
   (status: 206, etag: '"v2"'),
-  (status: 206, etag: '*'),
 ]) {
-  test('identity failure ${fixture.status}/${fixture.etag} is terminal', () async {
+  test('pinned generation failure ${fixture.status} is terminal', () async {
     adapter.enqueueResponse(statusCode: 206, body: const [0, 1], etag: '"v1"', contentRange: 'bytes 0-1/16');
     final reader = await createReader(adapter: adapter, callerToken: CancelToken());
     addTearDown(reader.close);
-    await reader.readAt(offset: 0, length: 2); // cached
+    await reader.readAt(offset: 0, length: 2);
     final peer = adapter.enqueuePending206(offset: 4, total: 16, etag: '"v1"');
     final peerRead = reader.readAt(offset: 4, length: 2);
     adapter.enqueueResponse(
@@ -1022,15 +1316,38 @@ for (final fixture in <({int status, String? etag})>[
     await expectLater(poisonedRead, throwsA(failureMatcher));
     await expectLater(peerRead, throwsA(failureMatcher));
     final requestCountBeforeCachedRead = adapter.requests.length;
-    await expectLater(
-      reader.readAt(offset: 0, length: 2),
-      throwsA(failureMatcher),
-    );
+    await expectLater(reader.readAt(offset: 0, length: 2), throwsA(failureMatcher));
     expect(adapter.requests, hasLength(requestCountBeforeCachedRead));
     expect(peer.cancelled, isTrue);
   });
 }
+```
 
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
+
+Expected RED: FAIL because Task 16 stores the failure but does not yet cancel the pending peer or translate its Dio cancellation into the stored generation failure。
+
+- [ ] **Step 2: Cancel peers with the stored generation, verify, commit, push**
+
+On poison, cancel every other active owned token。A cancel catch rethrows the stored terminal failure when present; it returns caller `Cancelled` only when no terminal failure exists。
+
+```bash
+mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
+git add packages/seismicity_pmtiles/lib/src/reader/seismicity_pmtiles_network_random_access_reader.dart \
+  packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
+git commit -m "Feat: PMTiles通信Readerの世代変更を伝播"
+git push origin HEAD
+```
+
+### Task 18: Make close terminal and await active reads
+
+**Files:** Modify the private reader and its test。
+
+**Interfaces:** Close memoizes one Future, cancels active owned tokens, rejects future reads before cache lookup, awaits all active reads, and completes successfully。
+
+- [ ] **Step 1: Write the RED close lifecycle test**
+
+```dart
 test('close waits for failed inflight and future reads are closed', () async {
   adapter.enqueuePending206(offset: 0, total: 16, etag: '"v1"');
   final reader = await createReader(adapter: adapter, callerToken: CancelToken());
@@ -1040,138 +1357,49 @@ test('close waits for failed inflight and future reads are closed', () async {
   expect(identical(firstClose, secondClose), isTrue);
   await expectLater(read, throwsA(isA<SeismicityPmTilesClosedException>()));
   await expectLater(firstClose, completes);
-  await expectLater(reader.readAt(offset: 0, length: 2), throwsA(isA<SeismicityPmTilesClosedException>()));
+  await expectLater(
+    reader.readAt(offset: 0, length: 2),
+    throwsA(isA<SeismicityPmTilesClosedException>()),
+  );
 });
 ```
 
-Run reader test. Expected RED: peer/cache/future reads do not share terminal failure or close propagates the cancelled read error。
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
 
-- [ ] **Step 2: Implement terminal transitions, verify, commit, push**
+Expected RED: FAIL because close does not yet await concurrent Futures or consistently translate the cancelled read to the stored closed failure。
 
-Poison stores first `ArchiveChanged`, clears LRU, cancels active owned tokens, and cancellation catches rethrow stored failure。Close stores `Closed` only if no previous terminal failure, snapshots active Futures, maps success/error to `Future<void>`, waits all, clears state, returns memoized Future without propagating read errors。
+- [ ] **Step 2: Implement final close semantics, verify, commit, push**
+
+Store `Closed` only when no earlier generation failure exists。Snapshot active Futures, map both success/error to `Future<void>`, wait all, clear state, and return the memoized close Future without propagating read errors。
 
 ```bash
 mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
 git add packages/seismicity_pmtiles/lib/src/reader/seismicity_pmtiles_network_random_access_reader.dart \
   packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
-git commit -m "Feat: PMTiles通信Readerの世代と終了を管理"
+git commit -m "Feat: PMTiles通信Readerの終了を管理"
 git push origin HEAD
 ```
 
-### Task 12: Preserve File/Asset behavior and run final gates
+### Task 19: Preserve routing behavior and run final gates
 
 **Files:**
 
 - Modify: `packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart`
 - Verify: all changed package production/tests。
 
-**Interfaces:** All sources still return `SeismicityPmTilesResult<PmTilesRandomAccessReader>`; Network never invokes asset loader。
+**Interfaces:** Task 9 File/Asset tests remain green; a valid Network source never invokes the injected Asset loader, including an unsafe `200` response。
 
-- [ ] **Step 1: Add executable routing regression tests**
-
-```dart
-import 'package:dio/dio.dart';
-import '../support/network_range_test_support.dart';
-
-late NetworkRangeTestAdapter adapter;
-
-setUp(() async {
-  tempDirectory = await Directory.systemTemp.createTemp(
-    'seismicity_pmtiles_reader_factory_',
-  );
-  archiveFile = File('${tempDirectory.path}/archive.pmtiles');
-  await archiveFile.writeAsBytes(<int>[1, 2, 3, 4]);
-  assetLoadCount = 0;
-  adapter = NetworkRangeTestAdapter();
-  factory = SeismicityRandomAccessReaderFactory(
-    assetLoader: ({required assetKey}) async {
-      assetLoadCount++;
-      return Uint8List.fromList(<int>[5, 6, 7, 8]);
-    },
-    dio: Dio()..httpClientAdapter = adapter,
-    networkMaxCacheBytes: 8,
-  );
-});
-
-SeismicityPmTilesArchiveDescriptor descriptorFor({
-  required SeismicityPmTilesSource source,
-  required int sizeBytes,
-}) {
-  return SeismicityPmTilesArchiveDescriptor(
-    source: source,
-    schemaVersion: 1,
-    dataZoom: 8,
-    expectedSizeBytes: sizeBytes,
-    expectedFeatureCount: 1,
-    archiveRevision: 'fixture-v1',
-    periodFrom: DateTime.utc(2025),
-    periodTo: DateTime.utc(2026),
-  );
-}
-
-PmTilesRandomAccessReader valueOf(
-  SeismicityPmTilesResult<PmTilesRandomAccessReader> result,
-) {
-  return switch (result) {
-    SeismicityPmTilesSuccess(:final value) => value,
-    SeismicityPmTilesFailure(:final exception) => throw exception,
-  };
-}
-
-test('File and Asset stay independent from Network transport', () async {
-  final fileResult = await factory.create(
-    descriptor: descriptorFor(source: SeismicityPmTilesSource.file(path: archiveFile.path), sizeBytes: 4),
-    cancelToken: CancelToken(),
-  );
-  final fileReader = valueOf(fileResult);
-  addTearDown(fileReader.close);
-  expect(fileReader, isA<PmTilesV3FileRandomAccessReader>());
-  expect(await fileReader.readAt(offset: 1, length: 2), orderedEquals(<int>[2, 3]));
-
-  final assetResult = await factory.create(
-    descriptor: descriptorFor(source: const SeismicityPmTilesSource.asset(assetKey: 'archive.pmtiles'), sizeBytes: 4),
-    cancelToken: CancelToken(),
-  );
-  addTearDown(valueOf(assetResult).close);
-  expect(assetLoadCount, 1);
-  expect(adapter.requests, isEmpty);
-});
-```
+- [ ] **Step 1: Strengthen source identity and no-fallback regressions**
 
 ```dart
 test('missing File keeps exact typed source failure', () async {
   final source = SeismicityPmTilesSource.file(
     path: '${tempDirectory.path}/missing.pmtiles',
   );
-  final result = await factory.create(
-    descriptor: descriptorFor(source: source, sizeBytes: 4),
-    cancelToken: CancelToken(),
-  );
-  expect(
-    result,
-    isA<SeismicityPmTilesFailure<PmTilesRandomAccessReader>>().having(
-      (failure) => failure.exception,
-      'exception',
-      isA<SeismicityPmTilesSourceReadFailedException>().having(
-        (failure) => failure.source,
-        'source',
-        source,
-      ),
-    ),
-  );
-});
-
-test('throwing Asset loader keeps exact typed source failure', () async {
-  const source = SeismicityPmTilesSource.asset(assetKey: 'missing.pmtiles');
-  final errorFactory = SeismicityRandomAccessReaderFactory(
-    assetLoader: ({required assetKey}) =>
-        Future<Uint8List>.error(StateError('asset unavailable')),
-    dio: Dio()..httpClientAdapter = adapter,
-    networkMaxCacheBytes: 8,
-  );
-  final result = await errorFactory.create(
-    descriptor: descriptorFor(source: source, sizeBytes: 4),
-    cancelToken: CancelToken(),
+  final result = await createFor(
+    factory: factory,
+    source: source,
+    sizeBytes: 4,
   );
   expect(
     result,
@@ -1188,31 +1416,61 @@ test('throwing Asset loader keeps exact typed source failure', () async {
 });
 
 test('unsafe Network 200 never falls back to Asset', () async {
-  adapter.enqueueResponse(
-    statusCode: 200,
-    body: const [0, 1],
-    etag: '"v1"',
-    contentRange: null,
+  var networkAssetLoadCount = 0;
+  final networkAdapter = NetworkRangeTestAdapter()
+    ..enqueueResponse(
+      statusCode: 200,
+      body: const [0, 1],
+      etag: '"v1"',
+      contentRange: null,
+    );
+  final networkFactory = SeismicityRandomAccessReaderFactory(
+    assetLoader: ({required assetKey}) async {
+      networkAssetLoadCount++;
+      return Uint8List(0);
+    },
+    dio: Dio()..httpClientAdapter = networkAdapter,
+    networkMaxCacheBytes: 8,
   );
-  final reader = valueOf(
-    await factory.create(
-      descriptor: descriptorFor(
-        source: SeismicityPmTilesSource.network(
-          archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
-        ),
-        sizeBytes: 16,
+  final result = await networkFactory.create(
+    descriptor: descriptorFor(
+      source: SeismicityPmTilesSource.network(
+        archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
       ),
-      cancelToken: CancelToken(),
+      sizeBytes: 16,
     ),
+    cancelToken: CancelToken(),
   );
+  final reader = switch (result) {
+    SeismicityPmTilesSuccess(:final value) => value,
+    SeismicityPmTilesFailure(:final exception) => throw exception,
+  };
   addTearDown(reader.close);
   await expectLater(
     reader.readAt(offset: 0, length: 2),
-    throwsA(isA<SeismicityPmTilesInvalidNetworkResponseException>()),
+    throwsA(
+      isA<SeismicityPmTilesInvalidNetworkResponseException>()
+          .having((failure) => failure.statusCode, 'statusCode', 200)
+          .having(
+            (failure) => failure.reason,
+            'reason',
+            'Expected HTTP 206 Partial Content.',
+          ),
+    ),
   );
-  expect(assetLoadCount, 0);
-  expect(adapter.requests, hasLength(1));
+  expect(networkAssetLoadCount, 0);
+  expect(networkAdapter.requests, hasLength(1));
 });
+```
+
+Replace the throwing-Asset-loader assertion with this exact nested matcher after its Task 9 call migration:
+
+```dart
+isA<SeismicityPmTilesSourceReadFailedException>().having(
+  (failure) => failure.source,
+  'source',
+  source,
+)
 ```
 
 - [ ] **Step 2: Run complete gates**
@@ -1234,17 +1492,18 @@ Expected: all commands exit 0; final `rg` has no matches; no real network/device
 
 ```bash
 git add packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart
-git commit -m "Test: PMTiles FileとAsset経路を回帰確認"
+git commit -m "Test: PMTiles通信のAsset fallbackを防止"
 git push origin HEAD
 ```
 
 ## Plan Self-Review
 
-- Spec coverage: Task 4 covers Range/bytes/validateStatus including 412 admission; Task 5 covers 206/412/ETag; Task 6 covers exact Content-Range/body; Task 8 LRU; Task 9 identity/in-flight; Task 10 non-terminal caller cancel; Task 11 terminal generation/close; Task 12 File/Asset/no fallback。
-- Cancellation decision: non-terminal caller cancel is grounded in Issue #1600 requirement 7 and design lines 120–126; only 412/ETag generation change is specified as whole-reader failure。Task 10 proves pending cancellation plus successful reuse。
+- Spec coverage: Task 6 covers Range/bytes/validateStatus including 412 admission; Task 7 covers 206/412/ETag; Task 8 covers exact Content-Range/body; Task 13 covers LRU; Task 14 covers identity/in-flight; Task 15 covers non-terminal caller cancel; Tasks 16–17 cover initial and pinned generation poison separately; Task 18 covers close; Tasks 9 and 19 preserve File/Asset/no fallback。
+- Cancellation decision: non-terminal caller cancel is grounded in Issue #1600 requirement 7 and design lines 120–126; only 412/ETag generation change is specified as whole-reader failure。Task 15 proves pending cancellation plus successful reuse。
+- Initial-generation coverage: Task 16 sends missing and malformed `*` ETags as the first mocked `206`, asserts the first exact typed failure, rethrows the same fields on the second read, and proves no second request。Task 17 separately starts from a valid `"v1"` pin before testing `412`/`"v2"` propagation。
 - Literal correctness: header key is `'etag'`; every `Uri.parse` source is `final`; every RED reason names a not-yet-created file/API or an expected runtime mismatch in the current task order。
 - Type consistency: Factory returns `Result<reader>`; concrete Network reader stays private; response identity failures use `ArchiveChanged`; caller cancellation uses `Cancelled` without terminal storage; close uses `Closed`。
-- Granularity: 12 task/commit boundaries isolate public export, contracts, mock support, Options/ETag grammar, identity protocol, content/body, basic Factory, LRU, in-flight, caller cancellation, poison/close, and route regression。Every commit is followed by push command。
+- Granularity: 19 task/commit boundaries split mock support into static/failing/pending replies; split the former oversized Reader task into Factory migration, Network preflight, sequential Reader, and failure mapping; and split initial poison, pinned-generation propagation, and close。Each boundary has its own focused test cycle and push command。
 - Placeholder scan: no deferred implementation marker or undefined production interface remains; table-driven tests specify literal status/header/body/failure fields。
 
 ## Execution Handoff
