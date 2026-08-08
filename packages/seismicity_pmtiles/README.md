@@ -28,11 +28,12 @@ layer には含みません。
 
 ## 公開 API
 
-利用側は `package:seismicity_pmtiles/seismicity_pmtiles.dart` だけを import
-します。公開 barrel は Freezed 契約、header / directory entry の immutable
-value、random-access reader 境界、reader factory、archive 境界だけを公開し、
-File / Asset の具象 reader、header decoder、directory traversal などの実装
-helper は公開しません。
+seismicity package の API は
+`package:seismicity_pmtiles/seismicity_pmtiles.dart` の公開 barrel 経由で利用します。
+HTTP client 型の `Dio` / `CancelToken` は `package:dio/dio.dart` から別途 import
+します。公開 barrel は Freezed 契約、header / directory entry の immutable value、
+random-access reader 境界、reader factory、archive 境界だけを公開し、File / Asset
+の具象 reader、header decoder、directory traversal などの実装 helper は公開しません。
 
 ```dart
 import 'package:dio/dio.dart';
