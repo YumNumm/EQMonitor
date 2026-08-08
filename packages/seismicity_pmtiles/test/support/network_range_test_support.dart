@@ -30,6 +30,10 @@ final class NetworkRangeTestAdapter implements HttpClientAdapter {
     );
   }
 
+  void enqueueDioFailure({required int? statusCode}) {
+    _responses.add(FailingNetworkRangeReply(statusCode: statusCode));
+  }
+
   @override
   Future<ResponseBody> fetch(
     RequestOptions options,
@@ -74,6 +78,29 @@ final class StaticNetworkRangeReply implements NetworkRangeReply {
       headers: <String, List<String>>{
         if (etag case final value?) 'etag': <String>[value],
         if (contentRange case final value?) 'content-range': <String>[value],
+      },
+    );
+  }
+}
+
+final class FailingNetworkRangeReply implements NetworkRangeReply {
+  const FailingNetworkRangeReply({required this.statusCode});
+
+  final int? statusCode;
+
+  @override
+  Future<ResponseBody> resolve({
+    required RequestOptions options,
+    required Future<void>? cancelFuture,
+  }) async {
+    throw DioException(
+      requestOptions: options,
+      response: switch (statusCode) {
+        final value? => Response<void>(
+          requestOptions: options,
+          statusCode: value,
+        ),
+        null => null,
       },
     );
   }

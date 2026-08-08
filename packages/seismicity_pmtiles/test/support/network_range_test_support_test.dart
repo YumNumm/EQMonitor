@@ -21,4 +21,46 @@ void main() {
     expect(body.headers['etag'], <String>['"v1"']);
     expect(adapter.requests, <RequestOptions>[options]);
   });
+
+  test('failing reply preserves the nullable response status', () async {
+    final adapter = NetworkRangeTestAdapter()
+      ..enqueueDioFailure(statusCode: 503);
+    final fetch = adapter.fetch(
+      RequestOptions(path: 'https://example.com/archive.pmtiles'),
+      null,
+      null,
+    );
+
+    await expectLater(
+      fetch,
+      throwsA(
+        isA<DioException>().having(
+          (failure) => failure.response?.statusCode,
+          'statusCode',
+          503,
+        ),
+      ),
+    );
+  });
+
+  test('failing reply omits the response without a status', () async {
+    final adapter = NetworkRangeTestAdapter()
+      ..enqueueDioFailure(statusCode: null);
+    final fetch = adapter.fetch(
+      RequestOptions(path: 'https://example.com/archive.pmtiles'),
+      null,
+      null,
+    );
+
+    await expectLater(
+      fetch,
+      throwsA(
+        isA<DioException>().having(
+          (failure) => failure.response,
+          'response',
+          isNull,
+        ),
+      ),
+    );
+  });
 }
