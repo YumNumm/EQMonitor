@@ -80,4 +80,63 @@ void main() {
     expect(adapter.requests[0].headers.containsKey('If-Match'), isFalse);
     expect(adapter.requests[1].headers['If-Match'], '"v1"');
   });
+
+  test('rejects unsafe 200 without returning its body', () async {
+    adapter.enqueueResponse(
+      statusCode: 200,
+      body: const [0, 1],
+      etag: '"v1"',
+    );
+    final reader = await createReader(
+      adapter: adapter,
+      callerToken: CancelToken(),
+    );
+    addTearDown(reader.close);
+
+    await expectLater(
+      reader.readAt(offset: 0, length: 2),
+      throwsA(
+        isA<SeismicityPmTilesInvalidNetworkResponseException>()
+            .having((failure) => failure.statusCode, 'statusCode', 200)
+            .having(
+              (failure) => failure.reason,
+              'reason',
+              'Expected HTTP 206 Partial Content.',
+            ),
+      ),
+    );
+    expect(adapter.requests, hasLength(1));
+  });
+
+  for (final statusCode in <int?>[null, 503]) {
+    test(
+      'maps transport failure $statusCode without leaking DioException',
+      () async {
+        if (statusCode == null) {
+          adapter.enqueueDioFailure(statusCode: null);
+        } else {
+          adapter.enqueueResponse(
+            statusCode: 503,
+            body: const [],
+          );
+        }
+        final reader = await createReader(
+          adapter: adapter,
+          callerToken: CancelToken(),
+        );
+        addTearDown(reader.close);
+
+        await expectLater(
+          reader.readAt(offset: 0, length: 2),
+          throwsA(
+            isA<SeismicityPmTilesNetworkRequestFailedException>().having(
+              (failure) => failure.statusCode,
+              'statusCode',
+              statusCode,
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

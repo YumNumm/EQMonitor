@@ -38,16 +38,27 @@ final class SeismicityPmTilesNetworkRandomAccessReader
 
   @override
   Future<Uint8List> readAt({required int offset, required int length}) async {
-    final response = await dio.getUri<Uint8List>(
-      source.archiveUri,
-      options: _requestBuilder.build(
-        offset: offset,
-        length: length,
-        sizeBytes: sizeBytes,
-        strongEtag: _strongEtag,
-      ),
-      cancelToken: cancelToken,
-    );
+    late final Response<Uint8List> response;
+    try {
+      response = await dio.getUri<Uint8List>(
+        source.archiveUri,
+        options: _requestBuilder.build(
+          offset: offset,
+          length: length,
+          sizeBytes: sizeBytes,
+          strongEtag: _strongEtag,
+        ),
+        cancelToken: cancelToken,
+      );
+    } on DioException catch (exception) {
+      if (exception.type == DioExceptionType.cancel) {
+        rethrow;
+      }
+      throw SeismicityPmTilesException.networkRequestFailed(
+        source: source,
+        statusCode: exception.response?.statusCode,
+      );
+    }
     final statusCode = response.statusCode;
     if (statusCode == null) {
       throw SeismicityPmTilesException.networkRequestFailed(
