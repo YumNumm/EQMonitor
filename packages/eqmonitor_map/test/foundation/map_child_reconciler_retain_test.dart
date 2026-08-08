@@ -37,8 +37,11 @@ void main() {
       nodes: [firstNode, secondNode],
       factory: factory,
     );
-    final firstElement = reconciler.elements.first;
-    final secondElement = reconciler.elements.last;
+    final firstElement = reconciler.elements.first as RetainTrackingElement;
+    final secondElement = reconciler.elements.last as RetainTrackingElement;
+
+    expect(firstElement.calls, ['mount']);
+    expect(secondElement.calls, ['mount']);
 
     reconciler.reconcile(
       nodes: [reorderedSecondNode, reorderedFirstNode],
@@ -47,14 +50,10 @@ void main() {
 
     expect(reconciler.elements, [secondElement, firstElement]);
     expect(factory.createdNodes, [firstNode, secondNode]);
-    expect(
-      (firstElement as RetainTrackingElement).updatedNodes,
-      [reorderedFirstNode],
-    );
-    expect(
-      (secondElement as RetainTrackingElement).updatedNodes,
-      [reorderedSecondNode],
-    );
+    expect(firstElement.updatedNodes, [reorderedFirstNode]);
+    expect(secondElement.updatedNodes, [reorderedSecondNode]);
+    expect(firstElement.calls, ['mount', 'update']);
+    expect(secondElement.calls, ['mount', 'update']);
   });
 }
 
@@ -65,16 +64,22 @@ final class RetainTrackingElement implements MapElement {
   final MapNodeIdentity identity;
 
   final List<MapNode> updatedNodes = [];
+  final List<String> calls = [];
 
   @override
-  void mount() {}
+  void mount() {
+    calls.add('mount');
+  }
 
   @override
-  void unmount() {}
+  void unmount() {
+    calls.add('unmount');
+  }
 
   @override
   void update({required MapNode node}) {
     updatedNodes.add(node);
+    calls.add('update');
   }
 }
 
