@@ -69,6 +69,41 @@ final class NetworkRangeTestAdapter implements HttpClientAdapter {
   void close({bool force = false}) {}
 }
 
+final class PoisonFirstResponseCoordinator {
+  PoisonFirstResponseCoordinator({
+    required this.peerRange,
+    required this.poisonRange,
+  });
+
+  final String peerRange;
+  final String poisonRange;
+  final _peerReady = Completer<void>();
+  void Function()? _releasePeer;
+
+  Future<void> get peerReady => _peerReady.future;
+
+  Interceptor get interceptor => InterceptorsWrapper(
+    onResponse: (response, handler) {
+      final range = response.requestOptions.headers['Range'];
+      if (range == peerRange) {
+        _releasePeer = () => handler.next(response);
+        _peerReady.complete();
+        return;
+      }
+      if (range == poisonRange) {
+        final releasePeer = _releasePeer;
+        if (releasePeer == null) {
+          throw StateError('Peer response is not ready.');
+        }
+        handler.next(response);
+        releasePeer();
+        return;
+      }
+      handler.next(response);
+    },
+  );
+}
+
 final class StaticNetworkRangeReply implements NetworkRangeReply {
   const StaticNetworkRangeReply({
     required this.statusCode,

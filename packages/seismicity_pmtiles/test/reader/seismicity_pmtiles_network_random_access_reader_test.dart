@@ -27,11 +27,16 @@ SeismicityPmTilesArchiveDescriptor networkDescriptor({
 Future<PmTilesRandomAccessReader> createReader({
   required NetworkRangeTestAdapter adapter,
   required CancelToken callerToken,
+  Interceptor? responseInterceptor,
   int cacheBytes = 8,
 }) async {
+  final dio = Dio()..httpClientAdapter = adapter;
+  if (responseInterceptor != null) {
+    dio.interceptors.add(responseInterceptor);
+  }
   final factory = SeismicityRandomAccessReaderFactory(
     assetLoader: ({required assetKey}) async => Uint8List(0),
-    dio: Dio()..httpClientAdapter = adapter,
+    dio: dio,
     networkMaxCacheBytes: cacheBytes,
   );
   return switch (await factory.create(
@@ -41,6 +46,17 @@ Future<PmTilesRandomAccessReader> createReader({
     SeismicityPmTilesSuccess(:final value) => value,
     SeismicityPmTilesFailure(:final exception) => throw exception,
   };
+}
+
+Future<SeismicityPmTilesArchiveChangedException> archiveChangedFailureOf({
+  required Future<Uint8List> read,
+}) async {
+  try {
+    await read;
+  } on SeismicityPmTilesArchiveChangedException catch (failure) {
+    return failure;
+  }
+  fail('Expected SeismicityPmTilesArchiveChangedException.');
 }
 
 void main() {
@@ -575,55 +591,56 @@ void main() {
     (status: 412, etag: '"v2"'),
     (status: 206, etag: '"v2"'),
   ]) {
-    test('pinned generation failure ${fixture.status} is terminal', () async {
-      adapter.enqueueResponse(
-        statusCode: 206,
-        body: const [0, 1],
-        etag: '"v1"',
-        contentRange: 'bytes 0-1/16',
+    test('completed peer gets terminal ${fixture.status} instance', () async {
+      final coordinator = PoisonFirstResponseCoordinator(
+        peerRange: 'bytes=4-5',
+        poisonRange: 'bytes=2-3',
       );
+      adapter
+        ..enqueueResponse(
+          statusCode: 206,
+          body: const [0, 1],
+          etag: '"v1"',
+          contentRange: 'bytes 0-1/16',
+        )
+        ..enqueueResponse(
+          statusCode: 206,
+          body: const [4, 5],
+          etag: '"v1"',
+          contentRange: 'bytes 4-5/16',
+        )
+        ..enqueueResponse(
+          statusCode: fixture.status,
+          body: fixture.status == 206 ? const [2, 3] : const [],
+          etag: fixture.etag,
+          contentRange: fixture.status == 206 ? 'bytes 2-3/16' : null,
+        );
       final reader = await createReader(
         adapter: adapter,
         callerToken: CancelToken(),
+        responseInterceptor: coordinator.interceptor,
       );
       addTearDown(reader.close);
       await reader.readAt(offset: 0, length: 2);
-      final peer = adapter.enqueuePending206(
-        offset: 4,
-        total: 16,
-        etag: '"v1"',
-      );
       final peerRead = reader.readAt(offset: 4, length: 2);
-      await peer.requestStarted;
-      adapter.enqueueResponse(
-        statusCode: fixture.status,
-        body: fixture.status == 206 ? const [2, 3] : const [],
-        etag: fixture.etag,
-        contentRange: fixture.status == 206 ? 'bytes 2-3/16' : null,
-      );
+      final peerFailure = archiveChangedFailureOf(read: peerRead);
+      await coordinator.peerReady;
       final poisonedRead = reader.readAt(offset: 2, length: 2);
-      final failureMatcher = isA<SeismicityPmTilesArchiveChangedException>()
-          .having((failure) => failure.expectedEtag, 'expectedEtag', '"v1"')
-          .having(
-            (failure) => failure.receivedEtag,
-            'receivedEtag',
-            fixture.etag,
-          )
-          .having(
-            (failure) => failure.statusCode,
-            'statusCode',
-            fixture.status,
-          );
-
-      await expectLater(poisonedRead, throwsA(failureMatcher));
-      await expectLater(peerRead, throwsA(failureMatcher));
-      final requestCountBeforeCachedRead = adapter.requests.length;
-      await expectLater(
-        reader.readAt(offset: 0, length: 2),
-        throwsA(failureMatcher),
+      final poisonedFailure = await archiveChangedFailureOf(
+        read: poisonedRead,
       );
+      final completedPeerFailure = await peerFailure;
+      final requestCountBeforeCachedRead = adapter.requests.length;
+      final laterFailure = await archiveChangedFailureOf(
+        read: reader.readAt(offset: 0, length: 2),
+      );
+
+      expect(poisonedFailure.expectedEtag, '"v1"');
+      expect(poisonedFailure.receivedEtag, fixture.etag);
+      expect(poisonedFailure.statusCode, fixture.status);
+      expect(identical(completedPeerFailure, poisonedFailure), isTrue);
+      expect(identical(laterFailure, poisonedFailure), isTrue);
       expect(adapter.requests, hasLength(requestCountBeforeCachedRead));
-      expect(peer.cancelled, isTrue);
     });
   }
 }

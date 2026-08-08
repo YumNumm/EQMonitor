@@ -162,6 +162,10 @@ final class SeismicityPmTilesNetworkRandomAccessReader
           statusCode: exception.response?.statusCode,
         );
       }
+      final terminalArchiveFailure = _terminalArchiveFailure;
+      if (terminalArchiveFailure != null) {
+        throw terminalArchiveFailure;
+      }
       final statusCode = response.statusCode;
       if (statusCode == null) {
         throw SeismicityPmTilesException.networkRequestFailed(
