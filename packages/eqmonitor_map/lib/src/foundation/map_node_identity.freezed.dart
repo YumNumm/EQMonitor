@@ -79,7 +79,7 @@ as MapNodeTypeId,
 
 class _MapNodeIdentity implements MapNodeIdentity {
   const _MapNodeIdentity({required this.key, required this.type});
-  
+
 
 @override final  MapNodeKey key;
 @override final  MapNodeTypeId type;
