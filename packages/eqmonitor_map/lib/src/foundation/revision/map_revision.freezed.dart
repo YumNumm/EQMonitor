@@ -1,0 +1,139 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'map_revision.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+// dart format off
+T _$identity<T>(T value) => value;
+/// @nodoc
+mixin _$MapFullRevision {
+
+ MapSourceInstanceId get source; int get revision; MapContentDigest get digest;
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapFullRevision&&(identical(other.source, source) || other.source == source)&&(identical(other.revision, revision) || other.revision == revision)&&(identical(other.digest, digest) || other.digest == digest));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,source,revision,digest);
+
+@override
+String toString() {
+  return 'MapFullRevision(source: $source, revision: $revision, digest: $digest)';
+}
+
+
+}
+
+
+
+
+
+/// @nodoc
+
+
+class _MapFullRevision implements MapFullRevision {
+  const _MapFullRevision({required this.source, required this.revision, required this.digest});
+
+
+@override final  MapSourceInstanceId source;
+@override final  int revision;
+@override final  MapContentDigest digest;
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapFullRevision&&(identical(other.source, source) || other.source == source)&&(identical(other.revision, revision) || other.revision == revision)&&(identical(other.digest, digest) || other.digest == digest));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,source,revision,digest);
+
+@override
+String toString() {
+  return 'MapFullRevision._(source: $source, revision: $revision, digest: $digest)';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+mixin _$MapDeltaRevision {
+
+ MapSourceInstanceId get source; int get baseRevision; int get targetRevision; MapContentDigest get targetDigest;
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapDeltaRevision&&(identical(other.source, source) || other.source == source)&&(identical(other.baseRevision, baseRevision) || other.baseRevision == baseRevision)&&(identical(other.targetRevision, targetRevision) || other.targetRevision == targetRevision)&&(identical(other.targetDigest, targetDigest) || other.targetDigest == targetDigest));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,source,baseRevision,targetRevision,targetDigest);
+
+@override
+String toString() {
+  return 'MapDeltaRevision(source: $source, baseRevision: $baseRevision, targetRevision: $targetRevision, targetDigest: $targetDigest)';
+}
+
+
+}
+
+
+
+
+
+/// @nodoc
+
+
+class _MapDeltaRevision implements MapDeltaRevision {
+  const _MapDeltaRevision({required this.source, required this.baseRevision, required this.targetRevision, required this.targetDigest});
+
+
+@override final  MapSourceInstanceId source;
+@override final  int baseRevision;
+@override final  int targetRevision;
+@override final  MapContentDigest targetDigest;
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapDeltaRevision&&(identical(other.source, source) || other.source == source)&&(identical(other.baseRevision, baseRevision) || other.baseRevision == baseRevision)&&(identical(other.targetRevision, targetRevision) || other.targetRevision == targetRevision)&&(identical(other.targetDigest, targetDigest) || other.targetDigest == targetDigest));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,source,baseRevision,targetRevision,targetDigest);
+
+@override
+String toString() {
+  return 'MapDeltaRevision._(source: $source, baseRevision: $baseRevision, targetRevision: $targetRevision, targetDigest: $targetDigest)';
+}
+
+
+}
+
+
+
+
+// dart format on
