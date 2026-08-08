@@ -27,7 +27,13 @@ final class SeismicityPmTilesNetworkRandomAccessReader
        _contentRangeValidator = contentRangeValidator,
        _cache = SeismicityPmTilesNetworkRangeLruCache(
          maxBytes: maxCacheBytes,
-       );
+       ) {
+    cancelToken.whenCancel.then<void>((_) {
+      for (final token in _activeRequestTokens.toList()) {
+        token.cancel('Caller cancelled request.');
+      }
+    }).ignore();
+  }
 
   final SeismicityPmTilesNetworkSource source;
   final Dio dio;
@@ -38,6 +44,7 @@ final class SeismicityPmTilesNetworkRandomAccessReader
   final SeismicityPmTilesHttpIdentityValidator _identityValidator;
   final SeismicityPmTilesContentRangeValidator _contentRangeValidator;
   final SeismicityPmTilesNetworkRangeLruCache _cache;
+  final _activeRequestTokens = <CancelToken>{};
 
   String? _strongEtag;
   Future<Uint8List>? _initialIdentityFuture;
@@ -96,6 +103,8 @@ final class SeismicityPmTilesNetworkRandomAccessReader
       return waitingRequest;
     }
 
+    final ownedCancelToken = CancelToken();
+    _activeRequestTokens.add(ownedCancelToken);
     final request = Future<Uint8List>.sync(() async {
       late final Response<Uint8List> response;
       try {
@@ -107,11 +116,11 @@ final class SeismicityPmTilesNetworkRandomAccessReader
             sizeBytes: sizeBytes,
             strongEtag: strongEtag,
           ),
-          cancelToken: cancelToken,
+          cancelToken: ownedCancelToken,
         );
       } on DioException catch (exception) {
         if (exception.type == DioExceptionType.cancel) {
-          rethrow;
+          throw SeismicityPmTilesException.cancelled(source: source);
         }
         throw SeismicityPmTilesException.networkRequestFailed(
           source: source,
@@ -162,6 +171,7 @@ final class SeismicityPmTilesNetworkRandomAccessReader
       _initialIdentityFuture = request;
     }
     request.whenComplete(() {
+      _activeRequestTokens.remove(ownedCancelToken);
       if (identical(_inFlight[key], request)) {
         final completedRequest = _inFlight.remove(key);
         completedRequest?.ignore();

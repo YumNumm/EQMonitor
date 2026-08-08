@@ -371,4 +371,70 @@ void main() {
     );
     expect(adapter.requests, hasLength(2));
   });
+
+  test(
+    'caller cancellation stops pending request and reader remains usable',
+    () async {
+      final callerToken = CancelToken();
+      final pending = adapter.enqueuePending206(
+        offset: 0,
+        total: 16,
+        etag: '"v1"',
+      );
+      final reader = await createReader(
+        adapter: adapter,
+        callerToken: callerToken,
+      );
+      addTearDown(reader.close);
+
+      final cancelledRead = reader.readAt(offset: 0, length: 2);
+      await pending.requestStarted;
+      callerToken.cancel('period changed');
+
+      await expectLater(
+        cancelledRead,
+        throwsA(
+          isA<SeismicityPmTilesCancelledException>().having(
+            (failure) => failure.source,
+            'source',
+            networkDescriptor(sizeBytes: 16).source,
+          ),
+        ),
+      );
+      expect(pending.cancelled, isTrue);
+
+      adapter.enqueueResponse(
+        statusCode: 206,
+        body: const [2, 3],
+        etag: '"v1"',
+        contentRange: 'bytes 2-3/16',
+      );
+      expect(
+        await reader.readAt(offset: 2, length: 2),
+        orderedEquals(<int>[2, 3]),
+      );
+      expect(adapter.requests, hasLength(2));
+    },
+  );
+
+  test(
+    'caller cancellation immediately returns a typed read failure',
+    () async {
+      final callerToken = CancelToken();
+      adapter.enqueuePending206(offset: 0, total: 16, etag: '"v1"');
+      final reader = await createReader(
+        adapter: adapter,
+        callerToken: callerToken,
+      );
+      addTearDown(reader.close);
+
+      final cancelledRead = reader.readAt(offset: 0, length: 2);
+      callerToken.cancel('period changed');
+
+      await expectLater(
+        cancelledRead,
+        throwsA(isA<SeismicityPmTilesCancelledException>()),
+      );
+    },
+  );
 }
