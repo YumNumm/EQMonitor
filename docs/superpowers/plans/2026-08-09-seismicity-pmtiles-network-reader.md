@@ -887,10 +887,11 @@ git push origin HEAD
 - Create: `packages/seismicity_pmtiles/lib/src/reader/seismicity_pmtiles_network_random_access_reader.dart`
 - Modify: `packages/seismicity_pmtiles/lib/src/reader/seismicity_random_access_reader_factory.dart`
 - Create: `packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
+- Modify: `packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart`
 
-**Interfaces:** A private concrete reader composes Tasks 6–8 and is returned only as `PmTilesRandomAccessReader` by the Task 9 Factory。
+**Interfaces:** A private concrete reader composes Tasks 6–8 and replaces Task 9's temporary valid-Network `unsupportedSource` branch。Both the focused reader test and public Factory routing test observe it only as `PmTilesRandomAccessReader`。
 
-- [ ] **Step 1: Write the RED happy-path reader test**
+- [ ] **Step 1: Write RED reader and Factory wiring tests**
 
 ```dart
 late NetworkRangeTestAdapter adapter;
@@ -945,24 +946,60 @@ test('pins first identity and sends If-Match next', () async {
 });
 ```
 
-Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart`
+In `seismicity_random_access_reader_factory_test.dart`, replace Task 9's valid-Network `unsupportedSource` test with this success contract:
 
-Expected RED: FAIL because valid Network still returns `unsupportedSource` and no private reader exists。
+```dart
+test('routes valid Network source to the random access reader', () async {
+  adapter.enqueueResponse(
+    statusCode: 206,
+    body: const [1, 2],
+    etag: '"v1"',
+    contentRange: 'bytes 0-1/16',
+  );
+  final source = SeismicityPmTilesSource.network(
+    archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
+  );
+  final result = await createFor(
+    factory: factory,
+    source: source,
+    sizeBytes: 16,
+  );
+  switch (result) {
+    case SeismicityPmTilesSuccess(:final value):
+      addTearDown(value.close);
+      expect(value.sizeBytes, 16);
+      expect(await value.readAt(offset: 0, length: 2), orderedEquals(<int>[1, 2]));
+    case SeismicityPmTilesFailure(:final exception):
+      fail('Expected Network reader, got $exception');
+  }
+  expect(assetLoadCount, 0);
+  expect(adapter.requests, hasLength(1));
+  final request = adapter.requests.single;
+  expect(request.method, 'GET');
+  expect(request.headers['Range'], 'bytes=0-1');
+  expect(request.headers.containsKey('If-Match'), isFalse);
+});
+```
+
+Run: `mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart`
+
+Expected RED: both tests FAIL because valid Network still returns Task 9's `unsupportedSource` and no private reader exists。
 
 - [ ] **Step 2: Implement sequential reader, verify, commit, push**
 
 The reader validates ranges before I/O, sends Dio GET with Task 6 Options, applies Tasks 7–8 validators, and fixes the first identity。It initially passes the Factory caller token directly to Dio; Task 15 introduces owned request tokens。Basic close becomes final in Task 18。
 
 ```bash
-mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
+mise exec -- flutter test packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart
 git add packages/seismicity_pmtiles/lib/src/reader/seismicity_pmtiles_network_random_access_reader.dart \
   packages/seismicity_pmtiles/lib/src/reader/seismicity_random_access_reader_factory.dart \
-  packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart
+  packages/seismicity_pmtiles/test/reader/seismicity_pmtiles_network_random_access_reader_test.dart \
+  packages/seismicity_pmtiles/test/reader/seismicity_random_access_reader_factory_test.dart
 git commit -m "Feat: PMTiles通信ReaderをFactoryへ接続"
 git push origin HEAD
 ```
 
-Expected GREEN: PASS; no concrete Network class is barrel-exported。
+Expected GREEN: both files PASS; the stale unsupported assertion is gone, one lazy Network read reaches the adapter, Asset remains unused, and no concrete Network class is barrel-exported。
 
 ### Task 12: Map unsafe responses and transport failures
 
@@ -1501,6 +1538,7 @@ git push origin HEAD
 - Spec coverage: Task 6 covers Range/bytes/validateStatus including 412 admission; Task 7 covers 206/412/ETag; Task 8 covers exact Content-Range/body; Task 13 covers LRU; Task 14 covers identity/in-flight; Task 15 covers non-terminal caller cancel; Tasks 16–17 cover initial and pinned generation poison separately; Task 18 covers close; Tasks 9 and 19 preserve File/Asset/no fallback。
 - Cancellation decision: non-terminal caller cancel is grounded in Issue #1600 requirement 7 and design lines 120–126; only 412/ETag generation change is specified as whole-reader failure。Task 15 proves pending cancellation plus successful reuse。
 - Initial-generation coverage: Task 16 sends missing and malformed `*` ETags as the first mocked `206`, asserts the first exact typed failure, rethrows the same fields on the second read, and proves no second request。Task 17 separately starts from a valid `"v1"` pin before testing `412`/`"v2"` propagation。
+- Factory ordering: Task 9 migrates constructor/create signatures while deliberately preserving the pre-reader valid-Network `unsupportedSource` assertion; Task 10 adds only invalid-input preflight。Task 11 replaces that stale assertion with an exact success/read/request contract in the same commit that creates and wires the private reader, and runs both Factory and focused reader tests RED then GREEN。
 - Literal correctness: header key is `'etag'`; every `Uri.parse` source is `final`; every RED reason names a not-yet-created file/API or an expected runtime mismatch in the current task order。
 - Type consistency: Factory returns `Result<reader>`; concrete Network reader stays private; response identity failures use `ArchiveChanged`; caller cancellation uses `Cancelled` without terminal storage; close uses `Closed`。
 - Granularity: 19 task/commit boundaries split mock support into static/failing/pending replies; split the former oversized Reader task into Factory migration, Network preflight, sequential Reader, and failure mapping; and split initial poison, pinned-generation propagation, and close。Each boundary has its own focused test cycle and push command。
