@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:test/test.dart';
 
@@ -62,5 +64,33 @@ void main() {
         ),
       ),
     );
+  });
+
+  test('pending response observes Dio cancellation', () async {
+    final adapter = NetworkRangeTestAdapter();
+    final pending = adapter.enqueuePending206(
+      offset: 0,
+      total: 16,
+      etag: '"v1"',
+    );
+    final cancelled = Completer<void>();
+    final fetch = adapter.fetch(
+      RequestOptions(path: 'https://example.com/archive.pmtiles'),
+      null,
+      cancelled.future,
+    );
+    cancelled.complete();
+
+    await expectLater(
+      fetch,
+      throwsA(
+        isA<DioException>().having(
+          (failure) => failure.type,
+          'type',
+          DioExceptionType.cancel,
+        ),
+      ),
+    );
+    expect(pending.cancelled, isTrue);
   });
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:typed_data';
 
@@ -32,6 +33,20 @@ final class NetworkRangeTestAdapter implements HttpClientAdapter {
 
   void enqueueDioFailure({required int? statusCode}) {
     _responses.add(FailingNetworkRangeReply(statusCode: statusCode));
+  }
+
+  PendingRangeResponse enqueuePending206({
+    required int offset,
+    required int total,
+    required String? etag,
+  }) {
+    final response = PendingRangeResponse(
+      offset: offset,
+      total: total,
+      etag: etag,
+    );
+    _responses.add(response);
+    return response;
   }
 
   @override
@@ -103,5 +118,53 @@ final class FailingNetworkRangeReply implements NetworkRangeReply {
         null => null,
       },
     );
+  }
+}
+
+final class PendingRangeResponse implements NetworkRangeReply {
+  PendingRangeResponse({
+    required this.offset,
+    required this.total,
+    required this.etag,
+  });
+
+  final int offset;
+  final int total;
+  final String? etag;
+  final Completer<List<int>> _bytes = Completer<List<int>>();
+  bool cancelled = false;
+
+  void complete(List<int> bytes) {
+    _bytes.complete(bytes);
+  }
+
+  @override
+  Future<ResponseBody> resolve({
+    required RequestOptions options,
+    required Future<void>? cancelFuture,
+  }) {
+    final response = _bytes.future.then<ResponseBody>(
+      (bytes) => StaticNetworkRangeReply(
+        statusCode: 206,
+        body: bytes,
+        etag: etag,
+        contentRange: 'bytes $offset-${offset + bytes.length - 1}/$total',
+      ).resolve(options: options, cancelFuture: cancelFuture),
+    );
+    final cancellation = switch (cancelFuture) {
+      final future? => future.then<ResponseBody>((_) {
+        cancelled = true;
+        throw DioException(
+          requestOptions: options,
+          type: DioExceptionType.cancel,
+        );
+      }),
+      null => null,
+    };
+
+    return Future.any(<Future<ResponseBody>>[
+      response,
+      if (cancellation case final value?) value,
+    ]);
   }
 }
