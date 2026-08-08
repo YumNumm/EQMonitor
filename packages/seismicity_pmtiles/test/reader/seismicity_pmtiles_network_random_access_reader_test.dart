@@ -570,4 +570,60 @@ void main() {
       expect(adapter.requests, isEmpty);
     },
   );
+
+  for (final fixture in <({int status, String etag})>[
+    (status: 412, etag: '"v2"'),
+    (status: 206, etag: '"v2"'),
+  ]) {
+    test('pinned generation failure ${fixture.status} is terminal', () async {
+      adapter.enqueueResponse(
+        statusCode: 206,
+        body: const [0, 1],
+        etag: '"v1"',
+        contentRange: 'bytes 0-1/16',
+      );
+      final reader = await createReader(
+        adapter: adapter,
+        callerToken: CancelToken(),
+      );
+      addTearDown(reader.close);
+      await reader.readAt(offset: 0, length: 2);
+      final peer = adapter.enqueuePending206(
+        offset: 4,
+        total: 16,
+        etag: '"v1"',
+      );
+      final peerRead = reader.readAt(offset: 4, length: 2);
+      await peer.requestStarted;
+      adapter.enqueueResponse(
+        statusCode: fixture.status,
+        body: fixture.status == 206 ? const [2, 3] : const [],
+        etag: fixture.etag,
+        contentRange: fixture.status == 206 ? 'bytes 2-3/16' : null,
+      );
+      final poisonedRead = reader.readAt(offset: 2, length: 2);
+      final failureMatcher = isA<SeismicityPmTilesArchiveChangedException>()
+          .having((failure) => failure.expectedEtag, 'expectedEtag', '"v1"')
+          .having(
+            (failure) => failure.receivedEtag,
+            'receivedEtag',
+            fixture.etag,
+          )
+          .having(
+            (failure) => failure.statusCode,
+            'statusCode',
+            fixture.status,
+          );
+
+      await expectLater(poisonedRead, throwsA(failureMatcher));
+      await expectLater(peerRead, throwsA(failureMatcher));
+      final requestCountBeforeCachedRead = adapter.requests.length;
+      await expectLater(
+        reader.readAt(offset: 0, length: 2),
+        throwsA(failureMatcher),
+      );
+      expect(adapter.requests, hasLength(requestCountBeforeCachedRead));
+      expect(peer.cancelled, isTrue);
+    });
+  }
 }

@@ -151,6 +151,10 @@ final class SeismicityPmTilesNetworkRandomAccessReader
         );
       } on DioException catch (exception) {
         if (exception.type == DioExceptionType.cancel) {
+          final terminalArchiveFailure = _terminalArchiveFailure;
+          if (terminalArchiveFailure != null) {
+            throw terminalArchiveFailure;
+          }
           throw SeismicityPmTilesException.cancelled(source: source);
         }
         throw SeismicityPmTilesException.networkRequestFailed(
@@ -180,8 +184,12 @@ final class SeismicityPmTilesNetworkRandomAccessReader
         }
         _terminalArchiveFailure = exception;
         _cache.clear();
-        final failureToThrow = _terminalArchiveFailure ?? exception;
-        throw failureToThrow;
+        for (final activeToken in _activeRequestTokens) {
+          if (!identical(activeToken, ownedCancelToken)) {
+            activeToken.cancel('PMTiles archive generation changed.');
+          }
+        }
+        rethrow;
       }
       final bytes = response.data;
       if (bytes == null) {
