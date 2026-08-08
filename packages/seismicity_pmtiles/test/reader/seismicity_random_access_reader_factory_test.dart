@@ -191,7 +191,14 @@ void main() {
       case SeismicityPmTilesSuccess():
         fail('Expected source read failure');
       case SeismicityPmTilesFailure(:final exception):
-        expect(exception, isA<SeismicityPmTilesSourceReadFailedException>());
+        expect(
+          exception,
+          isA<SeismicityPmTilesSourceReadFailedException>().having(
+            (failure) => failure.source,
+            'source',
+            source,
+          ),
+        );
     }
     expect(assetLoadCount, 0);
     expect(adapter.requests, isEmpty);
@@ -230,5 +237,52 @@ void main() {
         );
     }
     expect(adapter.requests, isEmpty);
+  });
+
+  test('unsafe Network 200 never falls back to Asset', () async {
+    var networkAssetLoadCount = 0;
+    final networkAdapter = NetworkRangeTestAdapter()
+      ..enqueueResponse(
+        statusCode: 200,
+        body: const [0, 1],
+        etag: '"v1"',
+      );
+    final networkFactory = SeismicityRandomAccessReaderFactory(
+      assetLoader: ({required assetKey}) async {
+        networkAssetLoadCount++;
+        return Uint8List(0);
+      },
+      dio: Dio()..httpClientAdapter = networkAdapter,
+      networkMaxCacheBytes: 8,
+    );
+    final result = await networkFactory.create(
+      descriptor: descriptorFor(
+        source: SeismicityPmTilesSource.network(
+          archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
+        ),
+        sizeBytes: 16,
+      ),
+      cancelToken: CancelToken(),
+    );
+    final reader = switch (result) {
+      SeismicityPmTilesSuccess(:final value) => value,
+      SeismicityPmTilesFailure(:final exception) => throw exception,
+    };
+    addTearDown(reader.close);
+
+    await expectLater(
+      reader.readAt(offset: 0, length: 2),
+      throwsA(
+        isA<SeismicityPmTilesInvalidNetworkResponseException>()
+            .having((failure) => failure.statusCode, 'statusCode', 200)
+            .having(
+              (failure) => failure.reason,
+              'reason',
+              'Expected HTTP 206 Partial Content.',
+            ),
+      ),
+    );
+    expect(networkAssetLoadCount, 0);
+    expect(networkAdapter.requests, hasLength(1));
   });
 }
