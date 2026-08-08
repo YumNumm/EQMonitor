@@ -24,6 +24,24 @@ final class SeismicityRandomAccessReaderFactory {
     final source = descriptor.source;
     switch (source) {
       case SeismicityPmTilesNetworkSource():
+        if (descriptor.expectedSizeBytes <= 0) {
+          return const SeismicityPmTilesResult<
+            PmTilesRandomAccessReader
+          >.failure(
+            exception: SeismicityPmTilesException.invalidDescriptor(
+              reason: 'Network expectedSizeBytes must be positive.',
+            ),
+          );
+        }
+        if (networkMaxCacheBytes <= 0) {
+          return const SeismicityPmTilesResult<
+            PmTilesRandomAccessReader
+          >.failure(
+            exception: SeismicityPmTilesException.invalidDescriptor(
+              reason: 'networkMaxCacheBytes must be positive.',
+            ),
+          );
+        }
         return SeismicityPmTilesResult<PmTilesRandomAccessReader>.failure(
           exception: SeismicityPmTilesException.unsupportedSource(
             source: source,

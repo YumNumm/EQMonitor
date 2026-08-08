@@ -122,6 +122,45 @@ void main() {
     expect(adapter.requests, isEmpty);
   });
 
+  for (final fixture in <({int sizeBytes, int cacheBytes, String reason})>[
+    (
+      sizeBytes: 0,
+      cacheBytes: 8,
+      reason: 'Network expectedSizeBytes must be positive.',
+    ),
+    (
+      sizeBytes: 16,
+      cacheBytes: 0,
+      reason: 'networkMaxCacheBytes must be positive.',
+    ),
+  ]) {
+    test('rejects invalid Network input ${fixture.reason}', () async {
+      final invalidFactory = SeismicityRandomAccessReaderFactory(
+        assetLoader: ({required assetKey}) async => Uint8List(0),
+        dio: Dio()..httpClientAdapter = adapter,
+        networkMaxCacheBytes: fixture.cacheBytes,
+      );
+
+      final result = await createFor(
+        factory: invalidFactory,
+        source: SeismicityPmTilesSource.network(
+          archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
+        ),
+        sizeBytes: fixture.sizeBytes,
+      );
+
+      expect(
+        result,
+        SeismicityPmTilesResult<PmTilesRandomAccessReader>.failure(
+          exception: SeismicityPmTilesException.invalidDescriptor(
+            reason: fixture.reason,
+          ),
+        ),
+      );
+      expect(adapter.requests, isEmpty);
+    });
+  }
+
   test('returns typed failure when a selected file cannot be opened', () async {
     final source = SeismicityPmTilesSource.file(
       path: '${tempDirectory.path}/missing.pmtiles',
