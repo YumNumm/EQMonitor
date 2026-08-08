@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_revision.dart';
 import 'package:eqmonitor_map/src/foundation/map_node_identity.dart';
 import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
@@ -57,6 +59,17 @@ void main() {
           revision: -1,
         ),
         throwsArgumentError,
+      );
+    });
+
+    test('does not generate an unchecked copyWith API', () {
+      final generatedSource = File(
+        'lib/src/foundation/frame/map_frame_revision.freezed.dart',
+      ).readAsStringSync();
+
+      expect(
+        RegExp(r'\bcopyWith\b').hasMatch(generatedSource),
+        isFalse,
       );
     });
   });

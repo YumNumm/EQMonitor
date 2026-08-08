@@ -15,11 +15,6 @@ T _$identity<T>(T value) => value;
 mixin _$MapFrameRevisionStamp {
 
  MapFrameRevisionScope get scope; MapSourceInstanceId get sourceInstanceId; int get revision; MapContentDigest? get contentDigest; MapNodeKey? get ownerKey;
-/// Create a copy of MapFrameRevisionStamp
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$MapFrameRevisionStampCopyWith<MapFrameRevisionStamp> get copyWith => _$MapFrameRevisionStampCopyWithImpl<MapFrameRevisionStamp>(this as MapFrameRevisionStamp, _$identity);
 
 
 
@@ -40,40 +35,7 @@ String toString() {
 
 }
 
-/// @nodoc
-abstract mixin class $MapFrameRevisionStampCopyWith<$Res>  {
-  factory $MapFrameRevisionStampCopyWith(MapFrameRevisionStamp value, $Res Function(MapFrameRevisionStamp) _then) = _$MapFrameRevisionStampCopyWithImpl;
-@useResult
-$Res call({
- MapFrameRevisionScope scope, MapSourceInstanceId sourceInstanceId, int revision, MapContentDigest? contentDigest, MapNodeKey? ownerKey
-});
 
-
-
-
-}
-/// @nodoc
-class _$MapFrameRevisionStampCopyWithImpl<$Res>
-    implements $MapFrameRevisionStampCopyWith<$Res> {
-  _$MapFrameRevisionStampCopyWithImpl(this._self, this._then);
-
-  final MapFrameRevisionStamp _self;
-  final $Res Function(MapFrameRevisionStamp) _then;
-
-/// Create a copy of MapFrameRevisionStamp
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? scope = null,Object? sourceInstanceId = null,Object? revision = null,Object? contentDigest = freezed,Object? ownerKey = freezed,}) {
-  return _then(_self.copyWith(
-scope: null == scope ? _self.scope : scope // ignore: cast_nullable_to_non_nullable
-as MapFrameRevisionScope,sourceInstanceId: null == sourceInstanceId ? _self.sourceInstanceId : sourceInstanceId // ignore: cast_nullable_to_non_nullable
-as MapSourceInstanceId,revision: null == revision ? _self.revision : revision // ignore: cast_nullable_to_non_nullable
-as int,contentDigest: freezed == contentDigest ? _self.contentDigest : contentDigest // ignore: cast_nullable_to_non_nullable
-as MapContentDigest?,ownerKey: freezed == ownerKey ? _self.ownerKey : ownerKey // ignore: cast_nullable_to_non_nullable
-as MapNodeKey?,
-  ));
-}
-
-}
 
 
 
@@ -90,11 +52,6 @@ class _MapFrameRevisionStamp implements MapFrameRevisionStamp {
 @override final  MapContentDigest? contentDigest;
 @override final  MapNodeKey? ownerKey;
 
-/// Create a copy of MapFrameRevisionStamp
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$MapFrameRevisionStampCopyWith<_MapFrameRevisionStamp> get copyWith => __$MapFrameRevisionStampCopyWithImpl<_MapFrameRevisionStamp>(this, _$identity);
 
 
 
@@ -115,40 +72,7 @@ String toString() {
 
 }
 
-/// @nodoc
-abstract mixin class _$MapFrameRevisionStampCopyWith<$Res> implements $MapFrameRevisionStampCopyWith<$Res> {
-  factory _$MapFrameRevisionStampCopyWith(_MapFrameRevisionStamp value, $Res Function(_MapFrameRevisionStamp) _then) = __$MapFrameRevisionStampCopyWithImpl;
-@override @useResult
-$Res call({
- MapFrameRevisionScope scope, MapSourceInstanceId sourceInstanceId, int revision, MapContentDigest? contentDigest, MapNodeKey? ownerKey
-});
 
 
-
-
-}
-/// @nodoc
-class __$MapFrameRevisionStampCopyWithImpl<$Res>
-    implements _$MapFrameRevisionStampCopyWith<$Res> {
-  __$MapFrameRevisionStampCopyWithImpl(this._self, this._then);
-
-  final _MapFrameRevisionStamp _self;
-  final $Res Function(_MapFrameRevisionStamp) _then;
-
-/// Create a copy of MapFrameRevisionStamp
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? scope = null,Object? sourceInstanceId = null,Object? revision = null,Object? contentDigest = freezed,Object? ownerKey = freezed,}) {
-  return _then(_MapFrameRevisionStamp(
-scope: null == scope ? _self.scope : scope // ignore: cast_nullable_to_non_nullable
-as MapFrameRevisionScope,sourceInstanceId: null == sourceInstanceId ? _self.sourceInstanceId : sourceInstanceId // ignore: cast_nullable_to_non_nullable
-as MapSourceInstanceId,revision: null == revision ? _self.revision : revision // ignore: cast_nullable_to_non_nullable
-as int,contentDigest: freezed == contentDigest ? _self.contentDigest : contentDigest // ignore: cast_nullable_to_non_nullable
-as MapContentDigest?,ownerKey: freezed == ownerKey ? _self.ownerKey : ownerKey // ignore: cast_nullable_to_non_nullable
-as MapNodeKey?,
-  ));
-}
-
-
-}
 
 // dart format on

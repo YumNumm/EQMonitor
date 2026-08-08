@@ -6,7 +6,7 @@ part 'map_frame_revision.freezed.dart';
 
 enum MapFrameRevisionScope { source, layer }
 
-@freezed
+@Freezed(copyWith: false)
 sealed class MapFrameRevisionStamp with _$MapFrameRevisionStamp {
   const factory MapFrameRevisionStamp._({
     required MapFrameRevisionScope scope,
