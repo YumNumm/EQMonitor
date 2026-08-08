@@ -49,6 +49,15 @@ final class SeismicityPmTilesNetworkRandomAccessReader
 
   @override
   Future<Uint8List> readAt({required int offset, required int length}) {
+    try {
+      const PmTilesV3RangeValidator().validate(
+        offset: offset,
+        length: length,
+        sizeBytes: sizeBytes,
+      );
+    } on PmTilesV3InvalidRangeException catch (exception, stackTrace) {
+      return Future<Uint8List>.error(exception, stackTrace);
+    }
     final strongEtag = _strongEtag;
     final cached = switch (strongEtag) {
       final strongEtag? => _cache.read(
@@ -74,9 +83,17 @@ final class SeismicityPmTilesNetworkRandomAccessReader
     }
     final initialIdentityFuture = _initialIdentityFuture;
     if (strongEtag == null && initialIdentityFuture != null) {
-      return initialIdentityFuture.then<Uint8List>(
+      final waitingRequest = initialIdentityFuture.then<Uint8List>(
         (_) => readAt(offset: offset, length: length),
       );
+      _inFlight[key] = waitingRequest;
+      waitingRequest.whenComplete(() {
+        if (identical(_inFlight[key], waitingRequest)) {
+          final completedRequest = _inFlight.remove(key);
+          completedRequest?.ignore();
+        }
+      }).ignore();
+      return waitingRequest;
     }
 
     final request = Future<Uint8List>.sync(() async {
@@ -145,8 +162,10 @@ final class SeismicityPmTilesNetworkRandomAccessReader
       _initialIdentityFuture = request;
     }
     request.whenComplete(() {
-      final completedRequest = _inFlight.remove(key);
-      completedRequest?.ignore();
+      if (identical(_inFlight[key], request)) {
+        final completedRequest = _inFlight.remove(key);
+        completedRequest?.ignore();
+      }
       if (identical(_initialIdentityFuture, request)) {
         _initialIdentityFuture = null;
       }

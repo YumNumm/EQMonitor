@@ -132,9 +132,11 @@ final class PendingRangeResponse implements NetworkRangeReply {
   final int total;
   final String? etag;
   final _bytes = Completer<List<int>>();
+  final _requestStarted = Completer<void>();
   var _cancelled = false;
 
   bool get cancelled => _cancelled;
+  Future<void> get requestStarted => _requestStarted.future;
 
   void complete(List<int> bytes) {
     _bytes.complete(bytes);
@@ -145,6 +147,7 @@ final class PendingRangeResponse implements NetworkRangeReply {
     required RequestOptions options,
     required Future<void>? cancelFuture,
   }) {
+    _requestStarted.complete();
     final response = _bytes.future.then<ResponseBody>(
       (bytes) => StaticNetworkRangeReply(
         statusCode: 206,

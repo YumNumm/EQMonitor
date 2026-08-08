@@ -79,6 +79,7 @@ void main() {
       null,
       cancelled.future,
     );
+    await pending.requestStarted;
     cancelled.complete();
 
     await expectLater(

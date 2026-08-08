@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:test/test.dart';
 
@@ -241,7 +242,7 @@ void main() {
     final second = reader.readAt(offset: 0, length: 3);
 
     expect(identical(first, second), isTrue);
-    await Future<void>.delayed(const Duration(milliseconds: 1));
+    await pending.requestStarted;
     expect(adapter.requests, hasLength(1));
     pending.complete(<int>[0, 1, 2]);
     expect(
@@ -271,11 +272,103 @@ void main() {
     final first = reader.readAt(offset: 0, length: 3);
     final second = reader.readAt(offset: 3, length: 2);
 
-    await Future<void>.delayed(const Duration(milliseconds: 1));
+    await pending.requestStarted;
     expect(adapter.requests, hasLength(1));
     pending.complete(<int>[0, 1, 2]);
     await first;
     await second;
     expect(adapter.requests[1].headers['If-Match'], '"v1"');
+  });
+
+  test(
+    'invalid initial range does not reject a concurrent valid read',
+    () async {
+      adapter.enqueueResponse(
+        statusCode: 206,
+        body: const [0, 1],
+        etag: '"v1"',
+        contentRange: 'bytes 0-1/16',
+      );
+      final reader = await createReader(
+        adapter: adapter,
+        callerToken: CancelToken(),
+      );
+      addTearDown(reader.close);
+
+      final invalid = reader.readAt(offset: -1, length: 2);
+      final valid = reader.readAt(offset: 0, length: 2);
+      final invalidExpectation = expectLater(
+        invalid,
+        throwsA(isA<PmTilesV3InvalidRangeException>()),
+      );
+      final validExpectation = expectLater(
+        valid,
+        completion(orderedEquals(<int>[0, 1])),
+      );
+
+      await Future.wait(<Future<void>>[invalidExpectation, validExpectation]);
+      expect(adapter.requests, hasLength(1));
+    },
+  );
+
+  test('same range waiting for initial identity shares one future', () async {
+    final pending = adapter.enqueuePending206(
+      offset: 0,
+      total: 16,
+      etag: '"v1"',
+    );
+    adapter.enqueueResponse(
+      statusCode: 206,
+      body: const [3, 4],
+      etag: '"v1"',
+      contentRange: 'bytes 3-4/16',
+    );
+    final reader = await createReader(
+      adapter: adapter,
+      callerToken: CancelToken(),
+    );
+    addTearDown(reader.close);
+
+    final initial = reader.readAt(offset: 0, length: 3);
+    final firstWaiting = reader.readAt(offset: 3, length: 2);
+    final secondWaiting = reader.readAt(offset: 3, length: 2);
+
+    expect(identical(firstWaiting, secondWaiting), isTrue);
+    await pending.requestStarted;
+    expect(adapter.requests, hasLength(1));
+    pending.complete(<int>[0, 1, 2]);
+    await initial;
+    expect(
+      await Future.wait(<Future<Uint8List>>[firstWaiting, secondWaiting]),
+      everyElement(orderedEquals(<int>[3, 4])),
+    );
+    expect(adapter.requests, hasLength(2));
+    expect(adapter.requests[1].headers['If-Match'], '"v1"');
+  });
+
+  test('same range retries after a transport failure', () async {
+    adapter
+      ..enqueueDioFailure(statusCode: null)
+      ..enqueueResponse(
+        statusCode: 206,
+        body: const [0, 1],
+        etag: '"v1"',
+        contentRange: 'bytes 0-1/16',
+      );
+    final reader = await createReader(
+      adapter: adapter,
+      callerToken: CancelToken(),
+    );
+    addTearDown(reader.close);
+
+    await expectLater(
+      reader.readAt(offset: 0, length: 2),
+      throwsA(isA<SeismicityPmTilesNetworkRequestFailedException>()),
+    );
+    expect(
+      await reader.readAt(offset: 0, length: 2),
+      orderedEquals(<int>[0, 1]),
+    );
+    expect(adapter.requests, hasLength(2));
   });
 }
