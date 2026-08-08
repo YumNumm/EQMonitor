@@ -17,7 +17,7 @@ void main() {
 
     final rendered = const BaseMapRenderTileResolver().resolve(
       requestedCover: [
-        requested(tileId: child, wrap: 0),
+        requested(tileId: child),
         requested(tileId: child, wrap: 1),
       ],
       sourceInstanceId: sourceId,
