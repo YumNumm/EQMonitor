@@ -1333,7 +1333,7 @@ Expected GREEN: timing/coverage/library PASS、format/analyze/diff clean。
 
 ### Task 48: public inventory core/frame/revision chunk
 
-**Files:** Modify `lib/eqmonitor_map.dart`; Create `test/foundation/foundation_public_api_test.dart`。
+**Files:** Modify `lib/eqmonitor_map.dart`; Reference existing `lib/src/geo/map_viewport.dart`; Create `test/foundation/foundation_public_api_test.dart`。
 
 **Contract:** package entrypointだけをimportし、次を各1 closureで実行する: `createMapNodeKey`、`createMapNodeTypeId`、`createMapNodeIdentity`、`MapNodeIdentity` type、`classifyMapNodeIdentity`、`MapNodeIdentityChange.values`、`MapNode` type、`MapDeclarationNode`、`MapScene`、`MapElement.identity/mount/update/unmount`、`MapElementFactory.create`、`MapChildReconciler.elements/reconcile/unmountAll`、`createMapClockDomainId`、`createMapClockCapture`、`MapClock.capture`、`SystemMapClock.start`、`createMapSourceInstanceId`、`createMapContentDigest`、`createMapFrameSourceRevisionStamp`、`createMapFrameLayerRevisionStamp`、`MapFrameRevisionStamp` type、`MapFrameRevisionScope.values`、`canonicalizeMapFrameRevisions`、`MapAppLifecycle.values`、`MapFrameSnapshot` type、`captureMapFrameSnapshot`、`MapViewport`、`createMapFullRevision`、`createMapDeltaRevision`、`createMapCommittedRevision`、`createMapFullResyncRequest`、`MapRevisionRejectReason.values`、`MapRevisionApplyResult.committed/idempotentNoOp/rejected/requiresFullResync`、`MapRevisionCandidate`、`MapRevisionStateOwner.own`、`MapRevisionCommitStore.current/commitFull/commitDelta/fullResyncRequest/needsFullResync/resyncAfterRevision`。
 
@@ -1344,10 +1344,11 @@ Expected GREEN: timing/coverage/library PASS、format/analyze/diff clean。
 cd packages/eqmonitor_map
 mise exec -- flutter test test/foundation/foundation_public_api_test.dart --plain-name "core frame revision public inventory"
 ```
-2. Task 1–18 filesを明示exportし該当inventoryをGREEN実行する。
+2. Task 1–18 filesに加え、既存pathをentrypointへexactに`export 'src/geo/map_viewport.dart';`として明示exportする。`MapViewport` closureはこのexportが欠落するとcompile failureになるため、pathとinventoryを同じGREEN gateで検証する。
 ```bash
 cd packages/eqmonitor_map
 mise exec -- dart format lib/eqmonitor_map.dart test/foundation/foundation_public_api_test.dart
+rg -n "^export 'src/geo/map_viewport.dart';$" lib/eqmonitor_map.dart
 mise exec -- flutter analyze --no-pub
 mise exec -- flutter test --no-pub test/foundation/foundation_public_api_test.dart test/eqmonitor_map_library_test.dart
 cd ../..
