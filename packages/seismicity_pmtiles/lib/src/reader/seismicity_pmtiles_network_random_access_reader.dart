@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -22,17 +23,30 @@ final class SeismicityPmTilesNetworkRandomAccessReader
         const SeismicityPmTilesHttpIdentityValidator(),
     SeismicityPmTilesContentRangeValidator contentRangeValidator =
         const SeismicityPmTilesContentRangeValidator(),
-  }) : _requestBuilder = requestBuilder,
+  }) : _callerCancellationWasPreexisting = cancelToken.isCancelled,
+       _requestBuilder = requestBuilder,
        _identityValidator = identityValidator,
        _contentRangeValidator = contentRangeValidator,
        _cache = SeismicityPmTilesNetworkRangeLruCache(
          maxBytes: maxCacheBytes,
        ) {
-    cancelToken.whenCancel.then<void>((_) {
-      for (final token in _activeRequestTokens.toList()) {
-        token.cancel('Caller cancelled request.');
-      }
-    }).ignore();
+    if (_callerCancellationWasPreexisting) {
+      _callerCancellationBarrier.complete();
+    } else {
+      cancelToken.whenCancel.then<void>((_) async {
+        final activeTokens = _activeRequestTokens.toList();
+        final activeRequests = _inFlight.values.toSet().toList();
+        for (final token in activeTokens) {
+          token.cancel('Caller cancelled request.');
+        }
+        await Future.wait(
+          activeRequests.map(
+            (request) => request.then<void>((_) {}, onError: (_, _) {}),
+          ),
+        );
+        _callerCancellationBarrier.complete();
+      }).ignore();
+    }
   }
 
   final SeismicityPmTilesNetworkSource source;
@@ -45,6 +59,8 @@ final class SeismicityPmTilesNetworkRandomAccessReader
   final SeismicityPmTilesContentRangeValidator _contentRangeValidator;
   final SeismicityPmTilesNetworkRangeLruCache _cache;
   final _activeRequestTokens = <CancelToken>{};
+  final _callerCancellationBarrier = Completer<void>();
+  final bool _callerCancellationWasPreexisting;
 
   String? _strongEtag;
   Future<Uint8List>? _initialIdentityFuture;
@@ -64,6 +80,16 @@ final class SeismicityPmTilesNetworkRandomAccessReader
       );
     } on PmTilesV3InvalidRangeException catch (exception, stackTrace) {
       return Future<Uint8List>.error(exception, stackTrace);
+    }
+    if (_callerCancellationWasPreexisting) {
+      return Future<Uint8List>.error(
+        SeismicityPmTilesException.cancelled(source: source),
+      );
+    }
+    if (cancelToken.isCancelled && !_callerCancellationBarrier.isCompleted) {
+      return _callerCancellationBarrier.future.then(
+        (_) => readAt(offset: offset, length: length),
+      );
     }
     final strongEtag = _strongEtag;
     final cached = switch (strongEtag) {
