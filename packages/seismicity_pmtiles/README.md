@@ -7,16 +7,20 @@ EQMonitor の震源カタログ向けに、PMTiles v3 archive を random access 
 
 - File source を `RandomAccessFile` から必要な byte range だけ読む
 - Asset source を注入された loader で一度読み込み、同じ random-access 契約で読む
+- Network source を Dio の HTTP byte-range request だけで読む
+- Network response の `206`、`Content-Range`、body length、strong ETag を
+  厳密に検証する
+- Network range を容量上限付き LRU で保持し、同一 range の未完了通信を共有する
+- Network request の cancel と reader の close を型付き失敗として管理する
 - PMTiles v3 の header、root directory、leaf directory を厳密に検証する
 - 指定 zoom の非空 TileID を列挙し、tile data を必要な range だけ読む
 - internal compression と tile compression の `none` / `gzip` を展開する
 - source、descriptor、状態、結果、例外を Freezed の公開契約として扱う
 
-Network source の型は先に公開していますが、reader factory は現時点では
-`unsupportedSource` を返します。Dio による HTTP Range Request、`206` /
-`Content-Range` / strong ETag の検証、`If-Match`、LRU cache、cancel は次の
-stack layer で実装します。Network archive 全体を download する fallback は
-追加しません。
+Network source は最初に完全検証できた `206` response の strong ETag を固定し、
+後続 request へ `If-Match` として渡します。Network archive 全体の download や
+Asset loader への fallback は行いません。通信・protocol・世代変更・cancel・close
+は固定値へ置き換えず、公開された型付き例外で失敗します。
 
 また、この package が返す tile は展開済みの MVT byte列です。MVT feature を
 震源の列形式 buffer に decode する処理は後続 stack layer の責務であり、この
@@ -31,16 +35,25 @@ File / Asset の具象 reader、header decoder、directory traversal などの�
 helper は公開しません。
 
 ```dart
+import 'package:dio/dio.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 
 Future<SeismicityPmTilesArchive> openSeismicityArchive({
   required SeismicityPmTilesArchiveDescriptor descriptor,
   required SeismicityPmTilesAssetLoader assetLoader,
+  required Dio dio,
+  required int networkMaxCacheBytes,
+  required CancelToken cancelToken,
 }) async {
   final factory = SeismicityRandomAccessReaderFactory(
     assetLoader: assetLoader,
+    dio: dio,
+    networkMaxCacheBytes: networkMaxCacheBytes,
   );
-  final result = await factory.create(source: descriptor.source);
+  final result = await factory.create(
+    descriptor: descriptor,
+    cancelToken: cancelToken,
+  );
   final reader = switch (result) {
     SeismicityPmTilesSuccess(:final value) => value,
     SeismicityPmTilesFailure(:final exception) => throw exception,
@@ -53,9 +66,15 @@ Future<SeismicityPmTilesArchive> openSeismicityArchive({
 ```
 
 File source には `SeismicityPmTilesSource.file(path: ...)`、Asset source には
-`SeismicityPmTilesSource.asset(assetKey: ...)` を descriptor に設定します。
-`expectedSizeBytes` と `dataZoom` は manifest 由来の値を渡してください。
+`SeismicityPmTilesSource.asset(assetKey: ...)`、Network source には
+`SeismicityPmTilesSource.network(archiveUri: ...)` を descriptor に設定します。
+`expectedSizeBytes` と `dataZoom` は検証済み manifest 由来の値を渡してください。
 値が archive と一致しない場合は、固定値へ fallback せず型付き例外で失敗します。
+
+`dio` には利用側で timeout などを設定した instance を注入します。
+`networkMaxCacheBytes` は正の aggregate byte budget、`cancelToken` はその時点で
+未完了の Network request を止める caller signal です。Factory は descriptor が
+選んだ source だけを生成し、Network failure 時に Asset loader を呼びません。
 
 `SeismicityPmTilesArchive` は渡された reader の所有権を引き継ぎます。利用後は
 必ず `close()` してください。open 中に失敗した場合も reader は閉じられます。
@@ -66,11 +85,30 @@ File source には `SeismicityPmTilesSource.file(path: ...)`、Asset source に�
 |---|---|---|
 | File | 対応済み | 必要 range のみ。並行 read は単一 file handle 上で直列化 |
 | Asset | 対応済み | loader を1回呼び、archive 全体を memory に保持して slice |
-| Network | 未実装 | 次の stack layer で Dio の strict Range Request を実装 |
+| Network | 対応済み | Dio の strict byte-range request。全体 download なし |
 
 Flutter Asset API は asset 内の byte range 読み込みを提供しないため、Asset
 source に限って全体を memory に保持します。この挙動を Network source へ
 流用してはいけません。
+
+## Network reader の契約
+
+- request は `Range: bytes=start-end` を送り、世代固定後は同じ strong ETag を
+  `If-Match` に設定する
+- response は HTTP `206`、要求と一致する `Content-Range`、正確な body length、
+  値がちょうど1個の strong ETag をすべて満たす場合だけ受理する
+- 最初の ETag を archive identity として固定し、同じ archive URI・ETag・offset・
+  length の byte列を aggregate budget 以下の LRU に保持する。budget より大きい
+  response は返すが cache しない
+- 同じ range の未完了 read は1つの通信を共有する。identity 確立前の異なる range
+  は最初の request 完了後に固定済み ETag を利用する
+- caller cancel はその時点の未完了通信だけを止め、cache と固定済み ETag は保持する。
+  `close()` は未完了 read の終了を待ち、以後の read を終端失敗にする
+- `412`、ETag の欠落・不正・0個・複数・変更は世代変更として reader を終端状態にし、
+  LRU を消去して peer request を止める。その後は最初の同じ型付き失敗を再送出する
+- transport failure、protocol failure、世代変更、cancel、close はそれぞれ
+  `networkRequestFailed`、`invalidNetworkResponse`、`archiveChanged`、`cancelled`、
+  `closed` の公開例外として返す
 
 ## Archive の制約
 
