@@ -38,20 +38,22 @@ void main() {
       revision: 5,
     );
 
-    final revisions = canonicalizeMapFrameRevisions(
-      revisions: [
-        sourceBOwnerB,
-        sourceAOwnerB,
-        sourceBStamp,
-        sourceAOwnerA,
-        sourceAStamp,
-      ],
-    );
+    final input = [
+      sourceBOwnerB,
+      sourceAOwnerB,
+      sourceBStamp,
+      sourceAOwnerA,
+      sourceAStamp,
+    ];
+    final originalInput = List<MapFrameRevisionStamp>.of(input);
+
+    final revisions = canonicalizeMapFrameRevisions(revisions: input);
 
     expect(
       revisions,
       [sourceAStamp, sourceBStamp, sourceAOwnerA, sourceAOwnerB, sourceBOwnerB],
     );
+    expect(input, originalInput);
   });
 
   test('rejects duplicate source or layer identities', () {
@@ -76,14 +78,21 @@ void main() {
       revision: 2,
     );
 
+    final duplicateSources = [source, newerSource];
+    final duplicateLayers = [layer, newerLayer];
+    final originalSources = List<MapFrameRevisionStamp>.of(duplicateSources);
+    final originalLayers = List<MapFrameRevisionStamp>.of(duplicateLayers);
+
     expect(
-      () => canonicalizeMapFrameRevisions(revisions: [source, newerSource]),
+      () => canonicalizeMapFrameRevisions(revisions: duplicateSources),
       throwsArgumentError,
     );
+    expect(duplicateSources, originalSources);
     expect(
-      () => canonicalizeMapFrameRevisions(revisions: [layer, newerLayer]),
+      () => canonicalizeMapFrameRevisions(revisions: duplicateLayers),
       throwsArgumentError,
     );
+    expect(duplicateLayers, originalLayers);
   });
 
   test('deep-owns the input list', () {
