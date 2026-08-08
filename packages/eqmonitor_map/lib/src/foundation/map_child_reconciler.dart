@@ -11,25 +11,54 @@ final class MapChildReconciler {
     required List<MapNode> nodes,
     required MapElementFactory factory,
   }) {
-    final elementsByIdentity = <MapNodeIdentity, MapElement>{
-      for (final element in _elements) element.identity: element,
+    final nextNodeKeys = <MapNodeKey>{};
+    for (final node in nodes) {
+      if (!nextNodeKeys.add(node.identity.key)) {
+        throw ArgumentError.value(
+          node.identity.key,
+          'nodes',
+          'must not contain duplicate keys',
+        );
+      }
+    }
+
+    final elementsByKey = <MapNodeKey, MapElement>{
+      for (final element in _elements) element.identity.key: element,
     };
     final nextElements = <MapElement>[];
 
     for (final node in nodes) {
-      final currentElement = elementsByIdentity[node.identity];
+      final currentElement = elementsByKey[node.identity.key];
       if (currentElement == null) {
         final newElement = factory.create(node: node);
         newElement.mount();
         nextElements.add(newElement);
-      } else {
+      } else if (currentElement.identity == node.identity) {
         currentElement.update(node: node);
         nextElements.add(currentElement);
+      } else {
+        currentElement.unmount();
+        final newElement = factory.create(node: node);
+        newElement.mount();
+        nextElements.add(newElement);
+      }
+    }
+
+    for (final element in _elements.reversed) {
+      if (!nextNodeKeys.contains(element.identity.key)) {
+        element.unmount();
       }
     }
 
     _elements
       ..clear()
       ..addAll(nextElements);
+  }
+
+  void unmountAll() {
+    for (final element in _elements.reversed) {
+      element.unmount();
+    }
+    _elements.clear();
   }
 }
