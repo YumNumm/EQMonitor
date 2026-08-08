@@ -4,7 +4,7 @@
 
 **Goal:** Issue #1589 のベースレイヤー縦切りに残る MVT extent 伝播、祖先 fallback の重複描画、camera 配線の support boundary を、自動テストで受け入れ可能な状態へ閉じる。
 
-**Architecture:** MVT source layer の `extent` を layer geometry metadata として保持し、各 `tile × layer × material` node の行列へ渡す。要求 cover は変更せず、cache の fallback 結果だけを安定順の render tile 列へ正規化し、同一祖先を一度だけ描画する。camera は実描画済みの BaseMap 経路、すなわち恒等 `scene.NodeCamera` と node の `viewProjection × tileMatrix` を #1589 の正式経路に限定し、未解決の spike/preflight は #1593 の lifecycle/renderer 作業へ分離する。
+**Architecture:** MVT source layer の `extent` を layer geometry metadata として保持し、fallback後のtile ID・extent・zoomをScene非依存のrender planへ束ねてから各 `tile × layer × material` node の行列へ渡す。要求 cover は変更せず、cache の fallback 結果だけを安定順の render tile 列へ正規化し、同一祖先を一度だけ描画する。camera は実描画済みの BaseMap 経路、すなわち恒等 `scene.NodeCamera` と node の `viewProjection × tileMatrix` を #1589 の正式経路に限定し、未解決の spike/preflight は #1593 の lifecycle/renderer 作業へ分離する。
 
 **Tech Stack:** Flutter master pin (`4dacd3fc91d96262a33e5c598e17d816f0b35641`)、Dart、flutter_scene (`7f71993b7e2a0ab1d2f59726a406098709be7291`)、vector_math、flutter_test、mise
 
@@ -259,15 +259,24 @@
 **Files:**
 
 - Create: `packages/eqmonitor_map/lib/src/tile/base_map_render_tile_resolver.dart`
-- Create: `packages/eqmonitor_map/test/tile/base_map_render_tile_resolver_test.dart`
+- Create: `packages/eqmonitor_map/lib/src/tile/base_map_render_plan_builder.dart`
+- Create: `packages/eqmonitor_map/test/tile/support/base_map_render_tile_test_support.dart`
+- Create: `packages/eqmonitor_map/test/tile/base_map_render_tile_resolver_parent_test.dart`
+- Create: `packages/eqmonitor_map/test/tile/base_map_render_tile_resolver_selection_test.dart`
+- Create: `packages/eqmonitor_map/test/tile/base_map_render_tile_resolver_identity_test.dart`
+- Create: `packages/eqmonitor_map/test/tile/base_map_render_plan_builder_test.dart`
 - Modify: `packages/eqmonitor_map/lib/src/widget/base_map_view.dart`
 
 **Interfaces:**
 
 - Consumes: ordered `List<OverscaledTileId> requestedCover` と `BaseMapTileCache.lookupWithFallback({required String sourceInstanceId, required CanonicalTileId tileId, required int maxParentSteps}) -> BaseMapTileFallbackResult`。
 - Produces: immutable `BaseMapRenderTile({required UnwrappedTileId tileId, required BaseMapTileGeometry geometry})` と `BaseMapRenderTileResolver.resolve({required List<OverscaledTileId> requestedCover, required String sourceInstanceId, required BaseMapTileCache cache, required int maxParentSteps}) -> List<BaseMapRenderTile>`。key は `UnwrappedTileId` で、最初に現れた render tile の位置を保持する。
+- Produces: `BaseMapTileTransformInput({required UnwrappedTileId tileId, required double zoom, required int extent})`、`BaseMapLayerRenderPlan({required BaseMapTileGeometry tileGeometry, required BaseMapTileLayerGeometry layerGeometry, required BaseMapTileTransformInput transformInput})`、`BaseMapRenderPlanBuilder.build({required List<BaseMapRenderTile> renderTiles, required double zoom}) -> List<BaseMapLayerRenderPlan>`。Flutter Scene型を含めない。
+- Scope: このrender planは `BaseMapView` 内部のfallback/extent wiringをunit test可能にするpackage-privateな #1589 runtime seamであり、#1590のfoundation model、public `MapScene` API、Node/Element reconcilerには昇格させない。
 
 - [ ] **Step 1: 共通 test helper と parent重複排除の failing test を書く**
+
+  `base_map_render_tile_test_support.dart` に cache helper を置く。
 
   ```dart
   const sourceId = 'source-a';
@@ -286,6 +295,12 @@
 
   OverscaledTileId requested({required CanonicalTileId tileId, int wrap = 0}) =>
       OverscaledTileId(overscaledZ: tileId.z, wrap: wrap, canonical: tileId);
+  ```
+
+  `base_map_render_tile_resolver_parent_test.dart` に最初の behavior test を置く。
+
+  ```dart
+  import 'support/base_map_render_tile_test_support.dart';
 
   test('deduplicates one ancestor selected by multiple requested tiles', () {
     final cache = BaseMapTileCache(
@@ -311,91 +326,11 @@
       const UnwrappedTileId(wrap: 0, canonical: ancestor),
     ]);
   });
-
   ```
 
-- [ ] **Step 2: resolver test を実行して RED を確認する**
+- [ ] **Step 2: exact順、miss、children順の failing tests を先に追加する**
 
-  Run: `cd packages/eqmonitor_map && mise exec -- flutter test test/tile/base_map_render_tile_resolver_test.dart`
-
-  Expected: FAIL（resolver と render tile 型が未定義）。
-
-- [ ] **Step 3: ordered set semantics の resolver を実装する**
-
-  Dart の挿入順 `Map` と `putIfAbsent` を使い、exact、parent、children の全variantを同じ `UnwrappedTileId` keyへ正規化する。
-
-  ```dart
-  @immutable
-  final class BaseMapRenderTile {
-    const BaseMapRenderTile({required this.tileId, required this.geometry});
-
-    final UnwrappedTileId tileId;
-    final BaseMapTileGeometry geometry;
-  }
-
-  final class BaseMapRenderTileResolver {
-    const BaseMapRenderTileResolver();
-
-    List<BaseMapRenderTile> resolve({
-      required List<OverscaledTileId> requestedCover,
-      required String sourceInstanceId,
-      required BaseMapTileCache cache,
-      required int maxParentSteps,
-    }) {
-      if (maxParentSteps < 0) {
-        throw ArgumentError.value(maxParentSteps, 'maxParentSteps');
-      }
-      final rendered = <UnwrappedTileId, BaseMapTileGeometry>{};
-      for (final requestedTile in requestedCover) {
-        final fallback = cache.lookupWithFallback(
-          sourceInstanceId: sourceInstanceId,
-          tileId: requestedTile.canonical,
-          maxParentSteps: maxParentSteps,
-        );
-        switch (fallback) {
-          case BaseMapTileFallbackMiss():
-            continue;
-          case BaseMapTileFallbackExact(:final geometry):
-            rendered.putIfAbsent(requestedTile.toUnwrapped(), () => geometry);
-          case BaseMapTileFallbackParent(:final tileId, :final geometry):
-            final unwrapped = UnwrappedTileId(
-              wrap: requestedTile.wrap,
-              canonical: tileId,
-            );
-            rendered.putIfAbsent(unwrapped, () => geometry);
-          case BaseMapTileFallbackChildren(:final children):
-            final childIds = requestedTile.canonical.children();
-            for (var index = 0; index < childIds.length; index++) {
-              final unwrapped = UnwrappedTileId(
-                wrap: requestedTile.wrap,
-                canonical: childIds[index],
-              );
-              rendered.putIfAbsent(unwrapped, () => children[index]);
-            }
-        }
-      }
-      return [
-        for (final entry in rendered.entries)
-          BaseMapRenderTile(tileId: entry.key, geometry: entry.value),
-      ];
-    }
-  }
-  ```
-
-- [ ] **Step 4: parent重複排除を GREEN にし、resolver core を commit する**
-
-  ```bash
-  cd packages/eqmonitor_map
-  mise exec -- flutter test test/tile/base_map_render_tile_resolver_test.dart
-  mise exec -- dart format lib/src/tile/base_map_render_tile_resolver.dart test/tile/base_map_render_tile_resolver_test.dart
-  cd ../..
-  git diff --check
-  git add packages/eqmonitor_map/lib/src/tile/base_map_render_tile_resolver.dart packages/eqmonitor_map/test/tile/base_map_render_tile_resolver_test.dart
-  git commit -m "Fix: 祖先fallbackを描画単位で重複排除"
-  git push
-  ```
-
-- [ ] **Step 5: exact順、miss、children順の executable tests を追加する**
+  `base_map_render_tile_resolver_selection_test.dart` に置き、共通helperをimportする。この時点ではresolver production codeを書かない。
 
   ```dart
   test('keeps exact hits in requested cover order', () {
@@ -464,20 +399,9 @@
 
   ```
 
-- [ ] **Step 6: exact/miss/children semantics を GREEN にして test-only commit を作る**
+- [ ] **Step 3: wrap分離とrepeat determinism の failing tests も先に追加する**
 
-  ```bash
-  cd packages/eqmonitor_map
-  mise exec -- flutter test test/tile/base_map_render_tile_resolver_test.dart test/tile/base_map_tile_cache_test.dart
-  mise exec -- dart format test/tile/base_map_render_tile_resolver_test.dart
-  cd ../..
-  git diff --check
-  git add packages/eqmonitor_map/test/tile/base_map_render_tile_resolver_test.dart
-  git commit -m "Test: fallbackのexactとchildren順を固定"
-  git push
-  ```
-
-- [ ] **Step 7: wrap分離とrepeat determinism の executable tests を追加する**
+  `base_map_render_tile_resolver_identity_test.dart` に置き、共通helperをimportする。ここまでresolver production codeは未作成のままにする。
 
   ```dart
   test('keeps the same canonical ancestor in distinct world wraps', () {
@@ -535,39 +459,357 @@
       firstRun.map((tile) => tile.tileId).toList(),
     );
   });
+
+  test('rejects a negative parent fallback limit', () {
+    final cache = BaseMapTileCache(
+      maxEntries: 16,
+      maxParentFallbackSteps: 2,
+    );
+
+    expect(
+      () => const BaseMapRenderTileResolver().resolve(
+        requestedCover: const [],
+        sourceInstanceId: sourceId,
+        cache: cache,
+        maxParentSteps: -1,
+      ),
+      throwsArgumentError,
+    );
+  });
   ```
 
-- [ ] **Step 8: wrap/determinism を GREEN にして2つ目の test-only commit を作る**
+- [ ] **Step 4: resolver の全behavior testをまとめて RED にする**
 
   ```bash
   cd packages/eqmonitor_map
-  mise exec -- flutter test test/tile/base_map_render_tile_resolver_test.dart test/tile/base_map_tile_cache_test.dart
-  mise exec -- dart format test/tile/base_map_render_tile_resolver_test.dart
+  mise exec -- flutter test \
+    test/tile/base_map_render_tile_resolver_parent_test.dart \
+    test/tile/base_map_render_tile_resolver_selection_test.dart \
+    test/tile/base_map_render_tile_resolver_identity_test.dart
+  ```
+
+  Expected: 3ファイルとも FAIL（`BaseMapRenderTileResolver` / `BaseMapRenderTile` が未定義）。3つすべてのREDを確認するまでresolverのbranchを実装しない。
+
+- [ ] **Step 5: ordered set semantics の resolver を実装する**
+
+  Dart の挿入順 `Map` と `putIfAbsent` を使い、exact、parent、children の全variantを同じ `UnwrappedTileId` keyへ正規化する。
+
+  ```dart
+  @immutable
+  final class BaseMapRenderTile {
+    const BaseMapRenderTile({required this.tileId, required this.geometry});
+
+    final UnwrappedTileId tileId;
+    final BaseMapTileGeometry geometry;
+  }
+
+  final class BaseMapRenderTileResolver {
+    const BaseMapRenderTileResolver();
+
+    List<BaseMapRenderTile> resolve({
+      required List<OverscaledTileId> requestedCover,
+      required String sourceInstanceId,
+      required BaseMapTileCache cache,
+      required int maxParentSteps,
+    }) {
+      if (maxParentSteps < 0) {
+        throw ArgumentError.value(maxParentSteps, 'maxParentSteps');
+      }
+      final rendered = <UnwrappedTileId, BaseMapTileGeometry>{};
+      for (final requestedTile in requestedCover) {
+        final fallback = cache.lookupWithFallback(
+          sourceInstanceId: sourceInstanceId,
+          tileId: requestedTile.canonical,
+          maxParentSteps: maxParentSteps,
+        );
+        switch (fallback) {
+          case BaseMapTileFallbackMiss():
+            continue;
+          case BaseMapTileFallbackExact(:final geometry):
+            rendered.putIfAbsent(requestedTile.toUnwrapped(), () => geometry);
+          case BaseMapTileFallbackParent(:final tileId, :final geometry):
+            final unwrapped = UnwrappedTileId(
+              wrap: requestedTile.wrap,
+              canonical: tileId,
+            );
+            rendered.putIfAbsent(unwrapped, () => geometry);
+          case BaseMapTileFallbackChildren(:final children):
+            final childIds = requestedTile.canonical.children();
+            for (var index = 0; index < childIds.length; index++) {
+              final unwrapped = UnwrappedTileId(
+                wrap: requestedTile.wrap,
+                canonical: childIds[index],
+              );
+              rendered.putIfAbsent(unwrapped, () => children[index]);
+            }
+        }
+      }
+      return List.unmodifiable([
+        for (final entry in rendered.entries)
+          BaseMapRenderTile(tileId: entry.key, geometry: entry.value),
+      ]);
+    }
+  }
+  ```
+
+- [ ] **Step 6: resolver の全behavior testを GREEN にし、test群と実装を同じcommitにする**
+
+  commit履歴でも「productionだけが先、behavior testが後」に見えないよう、Step 1〜5の3 testファイル・helper・resolverを1つのTDD単位としてstageする。この境界は全behaviorのRED証跡を保つため、30〜100行の目安よりatomicityを優先する。
+
+  ```bash
+  cd packages/eqmonitor_map
+  mise exec -- flutter test \
+    test/tile/base_map_render_tile_resolver_parent_test.dart \
+    test/tile/base_map_render_tile_resolver_selection_test.dart \
+    test/tile/base_map_render_tile_resolver_identity_test.dart \
+    test/tile/base_map_tile_cache_test.dart
+  mise exec -- dart format \
+    lib/src/tile/base_map_render_tile_resolver.dart \
+    test/tile/support/base_map_render_tile_test_support.dart \
+    test/tile/base_map_render_tile_resolver_parent_test.dart \
+    test/tile/base_map_render_tile_resolver_selection_test.dart \
+    test/tile/base_map_render_tile_resolver_identity_test.dart
   cd ../..
   git diff --check
-  git add packages/eqmonitor_map/test/tile/base_map_render_tile_resolver_test.dart
-  git commit -m "Test: fallbackのworld wrapと決定性を固定"
+  git add \
+    packages/eqmonitor_map/lib/src/tile/base_map_render_tile_resolver.dart \
+    packages/eqmonitor_map/test/tile/support/base_map_render_tile_test_support.dart \
+    packages/eqmonitor_map/test/tile/base_map_render_tile_resolver_parent_test.dart \
+    packages/eqmonitor_map/test/tile/base_map_render_tile_resolver_selection_test.dart \
+    packages/eqmonitor_map/test/tile/base_map_render_tile_resolver_identity_test.dart
+  git commit -m "Fix: fallback描画単位を決定的に解決"
   git push
   ```
 
-- [ ] **Step 9: BaseMapView の node 展開だけを resolver 出力へ切り替える**
+- [ ] **Step 7: decode→fallback→matrix入力の Scene非依存 failing regression test を書く**
 
-  `_refresh` の `cover`、`_visibleTileCount = cover.length`、`_requestMissingDecodes(cover)` は変更しない。`_rebuildSceneNodes` は resolver を一度呼び、layer 外側・resolved render tile 内側の順に `_nodesFor` へ渡す。既存のfallback variant switchは削除する。
-
-  同じ差分で `mvtDefaultExtent` import と固定値コメントを削除する。`_nodesFor` は対象 style layer geometry を取得し、mesh が空なら node を作らない。mesh があるのに `extent == null` なら `StateError` にし、非 null extent を `(wrap, canonical tile, extent)` key の transform cache とTask 1の `baseMapTileViewProjectionMatrixFor`へ渡す。
+  `base_map_render_plan_builder_test.dart` で、`dart:typed_data`、mesh/decode limit型、decoder/cache/resolver/builder、`mvt/support/mvt_fixture_builder.dart`、`support/base_map_render_tile_test_support.dart` をimportする。`extent: 2048` のMVTを実際にdecodeし、そのgeometryを祖先tileとしてcacheする。z5の兄弟2枚から同じz4祖先へfallbackさせたresolver出力をbuilderへ渡し、最終planが「祖先のunwrapped tile ID」「decoded layer extent」「現在zoom」を同じtransform入力に束ねることを固定する。
 
   ```dart
-  final extent = layerGeometry.extent;
-  if (meshes.isEmpty) {
-    return const [];
-  }
-  if (extent == null) {
-    throw StateError(
-      '${layerGeometry.styleLayerId} has meshes without an MVT extent.',
+  const builder = MvtFixtureBuilder();
+  const limits = BaseMapTileDecodeLimits(
+    mvtLimits: MvtDecodeLimits(
+      maxLayers: 16,
+      maxFeaturesPerLayer: 64,
+      maxRingsPerFeature: 16,
+      maxVerticesPerRing: 256,
+      maxCommandsPerFeature: 1024,
+      maxLayerNameBytes: 64,
+    ),
+    fillLimits: FillMeshBuilderLimits(
+      maxHolesPerPolygon: 16,
+      maxVerticesPerFeature: 4096,
+      maxVerticesPerSegment: 65536,
+    ),
+    lineLimits: LineMeshBuilderLimits(maxVerticesPerSegment: 65536),
+    lineMiterLimit: 4,
+  );
+
+  test('uses fallback tile ID and decoded extent as matrix input', () {
+    final feature = builder.buildFeature(
+      geomType: MvtFixtureBuilder.geomTypePolygon,
+      rawCommands: [
+        ...builder.moveTo([(0, 0)]),
+        ...builder.lineTo([(2048, 0), (-2048, 2048)]),
+        ...builder.closePath(),
+      ],
     );
-  }
-  final transform = transformFor(extent);
+    final geometry = decodeBaseMapTileSync(
+      builder.buildTile(
+        layers: [
+          builder.buildLayer(
+            name: 'countries',
+            extent: 2048,
+            features: [feature],
+          ),
+        ],
+      ),
+      limits,
+    );
+    final cache = BaseMapTileCache(
+      maxEntries: 16,
+      maxParentFallbackSteps: 2,
+    );
+    const ancestor = CanonicalTileId(z: 4, x: 7, y: 6);
+    cache.put(
+      sourceInstanceId: sourceId,
+      tileId: ancestor,
+      geometry: geometry,
+      token: cache.beginDecode(),
+    );
+    final renderTiles = const BaseMapRenderTileResolver().resolve(
+      requestedCover: [
+        requested(tileId: ancestor.children()[0]),
+        requested(tileId: ancestor.children()[1]),
+      ],
+      sourceInstanceId: sourceId,
+      cache: cache,
+      maxParentSteps: 2,
+    );
+
+    final plans = const BaseMapRenderPlanBuilder().build(
+      renderTiles: renderTiles,
+      zoom: 5.25,
+    );
+    expect(renderTiles, hasLength(1));
+    expect(
+      plans.map((plan) => plan.layerGeometry.styleLayerId),
+      ['countriesFill', 'countriesLine'],
+    );
+    final countriesFill = plans.singleWhere(
+      (plan) => plan.layerGeometry.styleLayerId == 'countriesFill',
+    );
+
+    expect(
+      countriesFill.transformInput.tileId,
+      const UnwrappedTileId(wrap: 0, canonical: ancestor),
+    );
+    expect(countriesFill.transformInput.extent, 2048);
+    expect(countriesFill.transformInput.zoom, 5.25);
+    expect(countriesFill.layerGeometry.extent, 2048);
+  });
+
+  test('rejects a mesh-bearing layer without an extent', () {
+    final renderTile = BaseMapRenderTile(
+      tileId: const UnwrappedTileId(
+        wrap: 0,
+        canonical: CanonicalTileId(z: 0, x: 0, y: 0),
+      ),
+      geometry: BaseMapTileGeometry(
+        layers: [
+          BaseMapTileFillLayerGeometry(
+            styleLayerId: 'countriesFill',
+            extent: null,
+            meshes: [
+              FillMesh(
+                positions: Float32List.fromList([0, 0, 1, 0, 0, 1]),
+                indices: Uint16List.fromList([0, 1, 2]),
+                vertexCount: 3,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    expect(
+      () => const BaseMapRenderPlanBuilder().build(
+        renderTiles: [renderTile],
+        zoom: 0,
+      ),
+      throwsA(
+        isA<StateError>().having(
+          (error) => error.message,
+          'message',
+          'countriesFill has meshes without an MVT extent.',
+        ),
+      ),
+    );
+  });
   ```
+
+- [ ] **Step 8: render-plan regression test を RED にする**
+
+  Run: `cd packages/eqmonitor_map && mise exec -- flutter test test/tile/base_map_render_plan_builder_test.dart`
+
+  Expected: FAIL（`BaseMapRenderPlanBuilder`、`BaseMapLayerRenderPlan`、`BaseMapTileTransformInput` が未定義）。resolverはすでにGREENなので、このREDはScene非依存plan境界だけを示す。
+
+- [ ] **Step 9: Scene非依存の render-plan builder を実装する**
+
+  `base_map_render_plan_builder.dart` は Flutter Scene 型をimportしない。layer順を `baseMapLayerSpecs`、tile順をresolver出力から得て、meshがあるlayerだけをplanにする。meshがあるのにextentがない状態は黙って4096へfallbackせず失敗させる。
+
+  ```dart
+  @immutable
+  final class BaseMapTileTransformInput {
+    const BaseMapTileTransformInput({
+      required this.tileId,
+      required this.zoom,
+      required this.extent,
+    });
+
+    final UnwrappedTileId tileId;
+    final double zoom;
+    final int extent;
+  }
+
+  @immutable
+  final class BaseMapLayerRenderPlan {
+    const BaseMapLayerRenderPlan({
+      required this.tileGeometry,
+      required this.layerGeometry,
+      required this.transformInput,
+    });
+
+    final BaseMapTileGeometry tileGeometry;
+    final BaseMapTileLayerGeometry layerGeometry;
+    final BaseMapTileTransformInput transformInput;
+  }
+
+  final class BaseMapRenderPlanBuilder {
+    const BaseMapRenderPlanBuilder();
+
+    List<BaseMapLayerRenderPlan> build({
+      required List<BaseMapRenderTile> renderTiles,
+      required double zoom,
+    }) {
+      final plans = <BaseMapLayerRenderPlan>[];
+      for (final spec in baseMapLayerSpecs) {
+        if (spec.kind == BaseMapLayerKind.background) {
+          continue;
+        }
+        for (final renderTile in renderTiles) {
+          final layer = renderTile.geometry.layers.singleWhere(
+            (candidate) => candidate.styleLayerId == spec.styleLayerId,
+          );
+          final meshes = switch (layer) {
+            BaseMapTileFillLayerGeometry(:final meshes) => meshes,
+            BaseMapTileLineLayerGeometry(:final meshes) => meshes,
+          };
+          if (meshes.isEmpty) {
+            continue;
+          }
+          final extent = layer.extent;
+          if (extent == null) {
+            throw StateError(
+              '${layer.styleLayerId} has meshes without an MVT extent.',
+            );
+          }
+          plans.add(
+            BaseMapLayerRenderPlan(
+              tileGeometry: renderTile.geometry,
+              layerGeometry: layer,
+              transformInput: BaseMapTileTransformInput(
+                tileId: renderTile.tileId,
+                zoom: zoom,
+                extent: extent,
+              ),
+            ),
+          );
+        }
+      }
+      return List.unmodifiable(plans);
+    }
+  }
+  ```
+
+- [ ] **Step 10: render-plan regression test を GREEN にしてcommitする**
+
+  ```bash
+  cd packages/eqmonitor_map
+  mise exec -- flutter test test/tile/base_map_render_plan_builder_test.dart
+  mise exec -- dart format lib/src/tile/base_map_render_plan_builder.dart test/tile/base_map_render_plan_builder_test.dart
+  cd ../..
+  git diff --check
+  git add packages/eqmonitor_map/lib/src/tile/base_map_render_plan_builder.dart packages/eqmonitor_map/test/tile/base_map_render_plan_builder_test.dart
+  git commit -m "Fix: fallbackとextentを描画計画へ統合"
+  git push
+  ```
+
+- [ ] **Step 11: BaseMapView を検証済みrender planへ配線する**
+
+  `_refresh` の `cover`、`_visibleTileCount = cover.length`、`_requestMissingDecodes(cover)` は変更しない。`_rebuildSceneNodes` は resolver とbuilderをそれぞれ一度だけ呼ぶ。既存のfallback variant switch、layer/tileの再解決、`mvtDefaultExtent` importと固定値コメントを削除し、BaseMapViewはplanの `transformInput` だけを行列関数へ渡す。
+
+  transform cacheのkeyは `(UnwrappedTileId, int extent)` とする。`zoom` は1回の `_rebuildSceneNodes` 中では `_camera.zoom` で固定され、`BaseMapTileTransformInput.zoom` としてplanに含まれる。`baseMapTileViewProjectionMatrixFor` のdouble精度行列は最後に一度だけ `scene_math.Matrix4.fromList` へ変換する。
 
   ```dart
   final renderTiles = const BaseMapRenderTileResolver().resolve(
@@ -576,34 +818,63 @@
     cache: _cache,
     maxParentSteps: limits.maxParentFallbackSteps,
   );
-  for (final spec in baseMapLayerSpecs) {
-    if (spec.kind == BaseMapLayerKind.background) {
-      continue;
-    }
-    for (final renderTile in renderTiles) {
-      nodes.addAll(
-        _nodesFor(
-          spec: spec,
-          wrap: renderTile.tileId.wrap,
-          tileId: renderTile.tileId.canonical,
-          geometry: renderTile.geometry,
-          materialsByStyleLayerId: materialsByStyleLayerId,
-          transformFor: (extent) => transformFor(
-            renderTile.tileId.wrap,
-            renderTile.tileId.canonical,
-            extent,
-          ),
+  final plans = const BaseMapRenderPlanBuilder().build(
+    renderTiles: renderTiles,
+    zoom: _camera.zoom,
+  );
+  final transformCache = <(UnwrappedTileId, int), scene_math.Matrix4>{};
+  scene_math.Matrix4 transformFor(BaseMapTileTransformInput input) =>
+      transformCache.putIfAbsent(
+        (input.tileId, input.extent),
+        () => scene_math.Matrix4.fromList(
+          baseMapTileViewProjectionMatrixFor(
+            camera: _camera,
+            viewport: viewport,
+            tileId: input.tileId,
+            zoom: input.zoom,
+            extent: input.extent,
+          ).storage,
         ),
       );
-    }
+  final nodes = <scene.Node>[
+    for (final plan in plans)
+      ..._nodesFor(
+        plan: plan,
+        materialsByStyleLayerId: materialsByStyleLayerId,
+        transform: transformFor(plan.transformInput),
+      ),
+  ];
+  ```
+
+  `_nodesFor` は `plan.tileGeometry` をGPU mesh cacheへ、`plan.transformInput.tileId.canonical` をcache keyへ渡し、`plan.layerGeometry.styleLayerId` のmeshだけを選ぶ。tile ID・extent・layer順はここで再計算しない。
+
+  ```dart
+  final meshesByLayer = _sceneMeshCache.getOrBuild(
+    sourceInstanceId: source.sourceInstanceId,
+    tileId: plan.transformInput.tileId.canonical,
+    geometry: plan.tileGeometry,
+    geometryFactory: _geometryFactory,
+    materialsByStyleLayerId: materialsByStyleLayerId,
+  );
+  final meshes = meshesByLayer[plan.layerGeometry.styleLayerId];
+  if (meshes == null || meshes.isEmpty) {
+    return const [];
   }
   ```
 
-- [ ] **Step 10: integrationを検証し、BaseMapView差分をcommitする**
+- [ ] **Step 12: Scene非依存境界とBaseMapView integrationを検証し、commitする**
 
   ```bash
   cd packages/eqmonitor_map
-  mise exec -- flutter test test/tile/base_map_render_tile_resolver_test.dart test/tile/base_map_tile_cache_test.dart test/tile/base_map_tile_decoder_test.dart test/geo/tile_matrix_test.dart test/widget/base_map_view_test.dart
+  mise exec -- flutter test \
+    test/tile/base_map_render_tile_resolver_parent_test.dart \
+    test/tile/base_map_render_tile_resolver_selection_test.dart \
+    test/tile/base_map_render_tile_resolver_identity_test.dart \
+    test/tile/base_map_render_plan_builder_test.dart \
+    test/tile/base_map_tile_cache_test.dart \
+    test/tile/base_map_tile_decoder_test.dart \
+    test/geo/tile_matrix_test.dart \
+    test/widget/base_map_view_test.dart
   mise exec -- dart format lib/src/widget/base_map_view.dart
   cd ../..
   git diff --check
@@ -631,7 +902,7 @@
   次を事実として記載する。
 
   - Line flood の原因は custom attribute slot/stride で、`texCoords` と NDC 半線幅へ移行済み。原因未特定・未修正という現行 warning は削除する。
-  - source layer ごとの extent は decode→`BaseMapTileLayerGeometry.extent`→layer node行列へ伝播し、2048/8192 fixture と行列testで検証済み。
+  - source layer ごとの extent は decode→`BaseMapTileLayerGeometry.extent`→Scene非依存render plan→layer node行列へ伝播し、2048/8192 fixture、祖先fallbackを通したtransform入力、行列testで検証済み。
   - fallback は要求 cover/decode を保ったまま `UnwrappedTileId` で重複排除し、同一祖先を重ねないことを unit test で検証済み。
   - #1589 の正式 camera は BaseMap の identity Scene camera + node transform だけである。
   - spike/preflight の custom NodeCamera projection は可視出力未確認の diagnostic pathであり、#1589 の supported route ではない。削除・再配線・resize/lifecycle検証は #1593 の対象である。
@@ -670,7 +941,7 @@
   ## 自動確認
 
   cd packages/eqmonitor_map
-  mise exec -- flutter test test/geo/tile_matrix_test.dart test/tile/base_map_render_tile_resolver_test.dart
+  mise exec -- flutter test test/geo/tile_matrix_test.dart test/tile/base_map_render_plan_builder_test.dart
   ```
 
 - [ ] **Step 4: repositoryの自動受け入れを実行する**
@@ -729,12 +1000,13 @@
 |---|---|---|
 | per-layer MVT extent | 2048/8192 MVT fixture、cache metadata test、tile-local center-to-clip matrix test | 非4096 production archive のGPU表示は未確認 |
 | ancestor fallback duplicate | parent重複、exact順、children順、miss、wrap、repeat determinism の literal unit tests +既存cache探索順test | pinch中の祖先差し替えを画面では未確認 |
-| camera wiring | BaseMap identity camera + node transform を正式経路としてコード・README・knowledgeで一致させ、tile matrix testを実行 | spike/preflight、resize、surface lifecycle、GPU可視性は#1593 |
+| camera wiring | decoded extent 2048 + ancestor fallbackから最終 `tileId/extent/zoom` のtransform入力を作るrender-plan test、BaseMap identity camera + node transformのコード・README・knowledge整合、tile matrix test | spike/preflight、resize、surface lifecycle、GPU可視性は#1593 |
 | regression | eqmonitor_map全test、pmtiles_v3/seismicity_pmtiles test、app/3 package analyze | device lifecycle、GPU resource rebuild、performanceは別のdeferred verification |
 
 ## Completion Criteria
 
 - `BaseMapView` から renderer 固有の `mvtDefaultExtent` 参照がなく、meshを持つ各layerのdecode済みextentがnode transformに使われる。
+- `BaseMapView` は `BaseMapRenderPlanBuilder` が確定したfallback後tile ID・extent・zoomをそのまま `baseMapTileViewProjectionMatrixFor` へ渡し、Widget内で再解決しない。
 - 同じ `(world wrap, canonical ancestor)` は1 layerにつき1回だけnode展開される。異なるwrap、layer、要求cover、decode requestは統合されない。
 - #1589の正式camera経路がBaseMap identity camera + node transformに限定され、spike/preflightを修正済み・確認済みと表現しない。
 - README、deferred verification、knowledgeが自動確認済み範囲、過去simulator履歴、未確認platform riskを正確に分ける。
