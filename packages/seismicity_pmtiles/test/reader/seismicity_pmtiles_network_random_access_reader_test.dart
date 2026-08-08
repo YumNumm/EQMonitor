@@ -587,6 +587,39 @@ void main() {
     },
   );
 
+  test('close waits for failed inflight and future reads are closed', () async {
+    final pending = adapter.enqueuePending206(
+      offset: 0,
+      total: 16,
+      etag: '"v1"',
+    );
+    final reader = await createReader(
+      adapter: adapter,
+      callerToken: CancelToken(),
+    );
+    final read = reader.readAt(offset: 0, length: 2);
+    var readCompleted = false;
+    read.whenComplete(() {
+      readCompleted = true;
+    }).ignore();
+    await pending.requestStarted;
+    final firstClose = reader.close();
+    final secondClose = reader.close();
+
+    expect(identical(firstClose, secondClose), isTrue);
+    await expectLater(firstClose, completes);
+    expect(readCompleted, isTrue);
+    expect(pending.cancelled, isTrue);
+    await expectLater(
+      read,
+      throwsA(isA<SeismicityPmTilesClosedException>()),
+    );
+    await expectLater(
+      reader.readAt(offset: 0, length: 2),
+      throwsA(isA<SeismicityPmTilesClosedException>()),
+    );
+  });
+
   for (final fixture in <({int status, String etag})>[
     (status: 412, etag: '"v2"'),
     (status: 206, etag: '"v2"'),

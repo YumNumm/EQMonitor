@@ -64,6 +64,8 @@ final class SeismicityPmTilesNetworkRandomAccessReader
 
   String? _strongEtag;
   SeismicityPmTilesArchiveChangedException? _terminalArchiveFailure;
+  SeismicityPmTilesClosedException? _terminalClosedFailure;
+  Future<void>? _closeFuture;
   Future<Uint8List>? _initialIdentityFuture;
   final _inFlight =
       <
@@ -73,6 +75,10 @@ final class SeismicityPmTilesNetworkRandomAccessReader
 
   @override
   Future<Uint8List> readAt({required int offset, required int length}) {
+    final terminalClosedFailure = _terminalClosedFailure;
+    if (terminalClosedFailure != null) {
+      return Future<Uint8List>.error(terminalClosedFailure);
+    }
     try {
       const PmTilesV3RangeValidator().validate(
         offset: offset,
@@ -151,6 +157,10 @@ final class SeismicityPmTilesNetworkRandomAccessReader
         );
       } on DioException catch (exception) {
         if (exception.type == DioExceptionType.cancel) {
+          final terminalClosedFailure = _terminalClosedFailure;
+          if (terminalClosedFailure != null) {
+            throw terminalClosedFailure;
+          }
           final terminalArchiveFailure = _terminalArchiveFailure;
           if (terminalArchiveFailure != null) {
             throw terminalArchiveFailure;
@@ -161,6 +171,10 @@ final class SeismicityPmTilesNetworkRandomAccessReader
           source: source,
           statusCode: exception.response?.statusCode,
         );
+      }
+      final terminalClosedFailure = _terminalClosedFailure;
+      if (terminalClosedFailure != null) {
+        throw terminalClosedFailure;
       }
       final terminalArchiveFailure = _terminalArchiveFailure;
       if (terminalArchiveFailure != null) {
@@ -182,6 +196,10 @@ final class SeismicityPmTilesNetworkRandomAccessReader
           expectedEtag: strongEtag,
         );
       } on SeismicityPmTilesArchiveChangedException catch (exception) {
+        final terminalClosedFailure = _terminalClosedFailure;
+        if (terminalClosedFailure != null) {
+          throw terminalClosedFailure;
+        }
         final terminalArchiveFailure = _terminalArchiveFailure;
         if (terminalArchiveFailure != null) {
           throw terminalArchiveFailure;
@@ -239,7 +257,32 @@ final class SeismicityPmTilesNetworkRandomAccessReader
   }
 
   @override
-  Future<void> close() async {}
+  Future<void> close() {
+    final existingCloseFuture = _closeFuture;
+    if (existingCloseFuture != null) {
+      return existingCloseFuture;
+    }
+    if (_terminalArchiveFailure == null) {
+      _terminalClosedFailure = SeismicityPmTilesClosedException(
+        source: source,
+      );
+    }
+    _cache.clear();
+    final activeRequests = _inFlight.values.toSet().toList();
+    final closeFuture =
+        Future.wait(
+          activeRequests.map(
+            (request) => request.then<void>((_) {}, onError: (_, _) {}),
+          ),
+        ).then<void>((_) {
+          _cache.clear();
+        });
+    _closeFuture = closeFuture;
+    for (final activeToken in _activeRequestTokens.toList()) {
+      activeToken.cancel('PMTiles reader closed.');
+    }
+    return closeFuture;
+  }
 }
 
 final class SeismicityPmTilesNetworkRangeLruCache {
