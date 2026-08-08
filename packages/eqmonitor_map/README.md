@@ -171,7 +171,7 @@ simulator (iOS 27.0)を使い、appのデバッグページ
 
 ### 修正済み: Line floodの原因
 
-海(land以外の領域)が`areaForecastLocalEwLine`(source layer:
+海(land以外の領域)が`areaForecastLocalEewLine`(source layer:
 `areaForecastLocalEew`, 名目色`0xFFFF7043`のオレンジ)の色で塗られたように見えた。
 
 当初「`countriesLine`のLine meshに縮退した巨大三角形が2枚混入している」と

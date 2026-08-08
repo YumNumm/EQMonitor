@@ -106,7 +106,8 @@ GPUレベルの実験で確認した。`base_map_line.fmat`のfragment shaderを
 ## spike/preflight camera配線は#1593で検証する
 
 上記の実験中に別の不具合が判明した。**`scene_spike_camera.dart`と同型の
-camera配線(`scene.NodeCamera` + `EqmonitorOrthographicProjection`)は、この
+camera配線（`NodeCamera` + `FlutterSceneOrthographicProjection`（内部で
+`EqmonitorOrthographicProjection`を使用））は、この
 環境で可視レンダリングを一切生成しない。** production実績のある
 `base_map_fill.fmat`を使っても何も描画されず、`BaseMapMaterialPreflightView`
 をそのままマウントしても同様だった。段階的なsanity checkで、組み込み
