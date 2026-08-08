@@ -136,4 +136,258 @@ String toString() {
 
 
 
+/// @nodoc
+mixin _$MapCommittedRevision<TState> {
+
+ MapSourceInstanceId get source; int get revision; MapContentDigest get digest; TState get state;
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapCommittedRevision<TState>&&(identical(other.source, source) || other.source == source)&&(identical(other.revision, revision) || other.revision == revision)&&(identical(other.digest, digest) || other.digest == digest)&&const DeepCollectionEquality().equals(other.state, state));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,source,revision,digest,const DeepCollectionEquality().hash(state));
+
+@override
+String toString() {
+  return 'MapCommittedRevision<$TState>(source: $source, revision: $revision, digest: $digest, state: $state)';
+}
+
+
+}
+
+
+
+
+
+/// @nodoc
+
+
+class _MapCommittedRevision<TState> implements MapCommittedRevision<TState> {
+  const _MapCommittedRevision({required this.source, required this.revision, required this.digest, required this.state});
+
+
+@override final  MapSourceInstanceId source;
+@override final  int revision;
+@override final  MapContentDigest digest;
+@override final  TState state;
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapCommittedRevision<TState>&&(identical(other.source, source) || other.source == source)&&(identical(other.revision, revision) || other.revision == revision)&&(identical(other.digest, digest) || other.digest == digest)&&const DeepCollectionEquality().equals(other.state, state));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,source,revision,digest,const DeepCollectionEquality().hash(state));
+
+@override
+String toString() {
+  return 'MapCommittedRevision<$TState>._(source: $source, revision: $revision, digest: $digest, state: $state)';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+mixin _$MapFullResyncRequest {
+
+ MapSourceInstanceId get source; int? get afterRevision;
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapFullResyncRequest&&(identical(other.source, source) || other.source == source)&&(identical(other.afterRevision, afterRevision) || other.afterRevision == afterRevision));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,source,afterRevision);
+
+@override
+String toString() {
+  return 'MapFullResyncRequest(source: $source, afterRevision: $afterRevision)';
+}
+
+
+}
+
+
+
+
+
+/// @nodoc
+
+
+class _MapFullResyncRequest implements MapFullResyncRequest {
+  const _MapFullResyncRequest({required this.source, required this.afterRevision});
+
+
+@override final  MapSourceInstanceId source;
+@override final  int? afterRevision;
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapFullResyncRequest&&(identical(other.source, source) || other.source == source)&&(identical(other.afterRevision, afterRevision) || other.afterRevision == afterRevision));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,source,afterRevision);
+
+@override
+String toString() {
+  return 'MapFullResyncRequest._(source: $source, afterRevision: $afterRevision)';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+mixin _$MapRevisionApplyResult<TState> {
+
+ MapCommittedRevision<TState>? get current; MapRevisionRejectReason? get reason; MapFullResyncRequest? get fullResyncRequest;
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapRevisionApplyResult<TState>&&(identical(other.current, current) || other.current == current)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.fullResyncRequest, fullResyncRequest) || other.fullResyncRequest == fullResyncRequest));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,current,reason,fullResyncRequest);
+
+@override
+String toString() {
+  return 'MapRevisionApplyResult<$TState>(current: $current, reason: $reason, fullResyncRequest: $fullResyncRequest)';
+}
+
+
+}
+
+
+
+
+
+/// @nodoc
+
+
+class _MapRevisionApplyResultCommitted<TState> implements MapRevisionApplyResult<TState> {
+  const _MapRevisionApplyResultCommitted({required this.current, this.reason, this.fullResyncRequest});
+
+
+@override final  MapCommittedRevision<TState> current;
+@override final  MapRevisionRejectReason? reason;
+@override final  MapFullResyncRequest? fullResyncRequest;
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapRevisionApplyResultCommitted<TState>&&(identical(other.current, current) || other.current == current)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.fullResyncRequest, fullResyncRequest) || other.fullResyncRequest == fullResyncRequest));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,current,reason,fullResyncRequest);
+
+@override
+String toString() {
+  return 'MapRevisionApplyResult<$TState>._committed(current: $current, reason: $reason, fullResyncRequest: $fullResyncRequest)';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _MapRevisionApplyResultIdempotentNoOp<TState> implements MapRevisionApplyResult<TState> {
+  const _MapRevisionApplyResultIdempotentNoOp({required this.current, this.reason, this.fullResyncRequest});
+
+
+@override final  MapCommittedRevision<TState> current;
+@override final  MapRevisionRejectReason? reason;
+@override final  MapFullResyncRequest? fullResyncRequest;
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapRevisionApplyResultIdempotentNoOp<TState>&&(identical(other.current, current) || other.current == current)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.fullResyncRequest, fullResyncRequest) || other.fullResyncRequest == fullResyncRequest));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,current,reason,fullResyncRequest);
+
+@override
+String toString() {
+  return 'MapRevisionApplyResult<$TState>._idempotentNoOp(current: $current, reason: $reason, fullResyncRequest: $fullResyncRequest)';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _MapRevisionApplyResultRejected<TState> implements MapRevisionApplyResult<TState> {
+  const _MapRevisionApplyResultRejected({required this.current, required this.reason, this.fullResyncRequest});
+
+
+@override final  MapCommittedRevision<TState>? current;
+@override final  MapRevisionRejectReason reason;
+@override final  MapFullResyncRequest? fullResyncRequest;
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapRevisionApplyResultRejected<TState>&&(identical(other.current, current) || other.current == current)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.fullResyncRequest, fullResyncRequest) || other.fullResyncRequest == fullResyncRequest));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,current,reason,fullResyncRequest);
+
+@override
+String toString() {
+  return 'MapRevisionApplyResult<$TState>._rejected(current: $current, reason: $reason, fullResyncRequest: $fullResyncRequest)';
+}
+
+
+}
+
+
+
+
 // dart format on
