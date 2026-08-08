@@ -168,5 +168,36 @@ void main() {
         MapRevisionRejectReason.noCurrentRevision,
       );
     });
+
+    test('exposes every result variant through an exhaustive public kind', () {
+      final results = <MapRevisionApplyResult<String>>[
+        MapRevisionApplyResult.committed(current: current),
+        MapRevisionApplyResult.idempotentNoOp(current: current),
+        MapRevisionApplyResult.rejected(
+          current: current,
+          reason: MapRevisionRejectReason.staleRevision,
+        ),
+      ];
+
+      expect(MapRevisionApplyResultKind.values, [
+        MapRevisionApplyResultKind.committed,
+        MapRevisionApplyResultKind.idempotentNoOp,
+        MapRevisionApplyResultKind.rejected,
+      ]);
+      expect(
+        results.map((result) => result.kind),
+        MapRevisionApplyResultKind.values,
+      );
+      expect(
+        results.map(
+          (result) => switch (result.kind) {
+            MapRevisionApplyResultKind.committed => 'committed',
+            MapRevisionApplyResultKind.idempotentNoOp => 'idempotentNoOp',
+            MapRevisionApplyResultKind.rejected => 'rejected',
+          },
+        ),
+        ['committed', 'idempotentNoOp', 'rejected'],
+      );
+    });
   });
 }

@@ -102,6 +102,8 @@ enum MapRevisionRejectReason {
   revisionBranch,
 }
 
+enum MapRevisionApplyResultKind { committed, idempotentNoOp, rejected }
+
 @Freezed(
   copyWith: false,
   map: FreezedMapOptions.none,
@@ -181,6 +183,15 @@ sealed class MapRevisionApplyResult<TState>
 extension MapRevisionApplyResultResync<TState>
     on MapRevisionApplyResult<TState> {
   bool get requiresFullResync => fullResyncRequest != null;
+}
+
+extension MapRevisionApplyResultKindValue<TState>
+    on MapRevisionApplyResult<TState> {
+  MapRevisionApplyResultKind get kind => switch (this) {
+    _MapRevisionApplyResultCommitted<TState>() => .committed,
+    _MapRevisionApplyResultIdempotentNoOp<TState>() => .idempotentNoOp,
+    _MapRevisionApplyResultRejected<TState>() => .rejected,
+  };
 }
 
 MapCommittedRevision<TState> createMapCommittedRevision<TState>({
