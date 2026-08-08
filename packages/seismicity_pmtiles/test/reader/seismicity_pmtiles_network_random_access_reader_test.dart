@@ -145,4 +145,83 @@ void main() {
       },
     );
   }
+
+  test('budget five evicts only oldest two-byte entry', () async {
+    for (final range in <({int offset, List<int> bytes})>[
+      (offset: 0, bytes: <int>[0, 1, 2]),
+      (offset: 3, bytes: <int>[3, 4]),
+      (offset: 5, bytes: <int>[5, 6]),
+      (offset: 3, bytes: <int>[3, 4]),
+    ]) {
+      adapter.enqueueResponse(
+        statusCode: 206,
+        body: range.bytes,
+        etag: '"v1"',
+        contentRange:
+            'bytes ${range.offset}-${range.offset + range.bytes.length - 1}/16',
+      );
+    }
+    final reader = await createReader(
+      adapter: adapter,
+      cacheBytes: 5,
+      callerToken: CancelToken(),
+    );
+    addTearDown(reader.close);
+
+    await reader.readAt(offset: 0, length: 3);
+    await reader.readAt(offset: 3, length: 2);
+    await reader.readAt(offset: 0, length: 3);
+    await reader.readAt(offset: 5, length: 2);
+    await reader.readAt(offset: 0, length: 3);
+    await reader.readAt(offset: 3, length: 2);
+
+    expect(adapter.requests, hasLength(4));
+  });
+
+  test('same range is served from LRU after the first read', () async {
+    adapter.enqueueResponse(
+      statusCode: 206,
+      body: const [0, 1],
+      etag: '"v1"',
+      contentRange: 'bytes 0-1/16',
+    );
+    final reader = await createReader(
+      adapter: adapter,
+      callerToken: CancelToken(),
+    );
+    addTearDown(reader.close);
+
+    expect(
+      await reader.readAt(offset: 0, length: 2),
+      orderedEquals(<int>[0, 1]),
+    );
+    expect(
+      await reader.readAt(offset: 0, length: 2),
+      orderedEquals(<int>[0, 1]),
+    );
+
+    expect(adapter.requests, hasLength(1));
+  });
+
+  test('value larger than budget is returned but not cached', () async {
+    for (var request = 0; request < 2; request++) {
+      adapter.enqueueResponse(
+        statusCode: 206,
+        body: const [0, 1, 2],
+        etag: '"v1"',
+        contentRange: 'bytes 0-2/16',
+      );
+    }
+    final reader = await createReader(
+      adapter: adapter,
+      cacheBytes: 2,
+      callerToken: CancelToken(),
+    );
+    addTearDown(reader.close);
+
+    await reader.readAt(offset: 0, length: 3);
+    await reader.readAt(offset: 0, length: 3);
+
+    expect(adapter.requests, hasLength(2));
+  });
 }

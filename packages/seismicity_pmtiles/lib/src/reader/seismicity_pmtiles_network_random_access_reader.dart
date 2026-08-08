@@ -15,6 +15,7 @@ final class SeismicityPmTilesNetworkRandomAccessReader
     required this.dio,
     required this.sizeBytes,
     required this.cancelToken,
+    required int maxCacheBytes,
     SeismicityPmTilesHttpRangeRequestBuilder requestBuilder =
         const SeismicityPmTilesHttpRangeRequestBuilder(),
     SeismicityPmTilesHttpIdentityValidator identityValidator =
@@ -23,7 +24,10 @@ final class SeismicityPmTilesNetworkRandomAccessReader
         const SeismicityPmTilesContentRangeValidator(),
   }) : _requestBuilder = requestBuilder,
        _identityValidator = identityValidator,
-       _contentRangeValidator = contentRangeValidator;
+       _contentRangeValidator = contentRangeValidator,
+       _cache = SeismicityPmTilesNetworkRangeLruCache(
+         maxBytes: maxCacheBytes,
+       );
 
   final SeismicityPmTilesNetworkSource source;
   final Dio dio;
@@ -33,11 +37,24 @@ final class SeismicityPmTilesNetworkRandomAccessReader
   final SeismicityPmTilesHttpRangeRequestBuilder _requestBuilder;
   final SeismicityPmTilesHttpIdentityValidator _identityValidator;
   final SeismicityPmTilesContentRangeValidator _contentRangeValidator;
+  final SeismicityPmTilesNetworkRangeLruCache _cache;
 
   String? _strongEtag;
 
   @override
   Future<Uint8List> readAt({required int offset, required int length}) async {
+    final cached = switch (_strongEtag) {
+      final strongEtag? => _cache.read(
+        archiveUri: source.archiveUri,
+        strongEtag: strongEtag,
+        offset: offset,
+        length: length,
+      ),
+      null => null,
+    };
+    if (cached != null) {
+      return cached;
+    }
     late final Response<Uint8List> response;
     try {
       response = await dio.getUri<Uint8List>(
@@ -89,9 +106,78 @@ final class SeismicityPmTilesNetworkRandomAccessReader
       expectedSizeBytes: sizeBytes,
     );
     _strongEtag = receivedEtag;
+    _cache.write(
+      archiveUri: source.archiveUri,
+      strongEtag: receivedEtag,
+      offset: offset,
+      length: length,
+      bytes: validated,
+    );
     return validated;
   }
 
   @override
   Future<void> close() async {}
+}
+
+final class SeismicityPmTilesNetworkRangeLruCache {
+  SeismicityPmTilesNetworkRangeLruCache({required this.maxBytes});
+
+  final int maxBytes;
+  final _entries =
+      <
+        ({Uri archiveUri, String strongEtag, int offset, int length}),
+        Uint8List
+      >{};
+  var _aggregateBytes = 0;
+
+  Uint8List? read({
+    required Uri archiveUri,
+    required String strongEtag,
+    required int offset,
+    required int length,
+  }) {
+    final key = (
+      archiveUri: archiveUri,
+      strongEtag: strongEtag,
+      offset: offset,
+      length: length,
+    );
+    final cached = _entries.remove(key);
+    if (cached == null) {
+      return null;
+    }
+    _entries[key] = cached;
+    return Uint8List.fromList(cached);
+  }
+
+  void write({
+    required Uri archiveUri,
+    required String strongEtag,
+    required int offset,
+    required int length,
+    required Uint8List bytes,
+  }) {
+    final value = Uint8List.fromList(bytes);
+    if (value.length > maxBytes) {
+      return;
+    }
+    final key = (
+      archiveUri: archiveUri,
+      strongEtag: strongEtag,
+      offset: offset,
+      length: length,
+    );
+    final replaced = _entries.remove(key);
+    if (replaced != null) {
+      _aggregateBytes -= replaced.length;
+    }
+    _entries[key] = value;
+    _aggregateBytes += value.length;
+    while (_aggregateBytes > maxBytes) {
+      final oldest = _entries.entries.first;
+      _entries.remove(oldest.key);
+      _aggregateBytes -= oldest.value.length;
+    }
+  }
 }

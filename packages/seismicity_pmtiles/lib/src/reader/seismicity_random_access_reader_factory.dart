@@ -49,6 +49,7 @@ final class SeismicityRandomAccessReaderFactory {
             dio: dio,
             sizeBytes: descriptor.expectedSizeBytes,
             cancelToken: cancelToken,
+            maxCacheBytes: networkMaxCacheBytes,
           ),
         );
       case SeismicityPmTilesFileSource():
