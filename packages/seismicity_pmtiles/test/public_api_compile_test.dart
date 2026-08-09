@@ -31,6 +31,10 @@ Future<SeismicityPmTilesArchive> openPublicApiArchive({
   );
 }
 
+SeismicityPmTilesArchiveDescriptor readPublicApiArchiveDescriptor({
+  required SeismicityPmTilesArchive archive,
+}) => archive.descriptor;
+
 SeismicityPmTilesDataset replacePublicApiChunks({
   required SeismicityPmTilesDataset dataset,
   required List<SeismicityPmTilesChunk> chunks,
@@ -54,6 +58,7 @@ void main() {
     expect(factory.assetLoader, loadPublicApiAsset);
     expect(reader.sizeBytes, 1);
     expect(openPublicApiArchive, isA<Function>());
+    expect(readPublicApiArchiveDescriptor, isA<Function>());
     expect(replacePublicApiChunks, isA<Function>());
     expect(
       const SeismicityPmTilesDecodeProgress(
