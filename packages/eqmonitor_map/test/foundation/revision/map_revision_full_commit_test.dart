@@ -107,6 +107,89 @@ void main() {
       expect(result.kind, MapRevisionApplyResultKind.idempotentNoOp);
       expect(store.current, same(before));
     });
+
+    test('rejects an equal revision carrying a conflicting digest', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commit(store: store, source: source, revision: 4, digest: 'four');
+      final before = store.current;
+
+      final result = _commit(
+        store: store,
+        source: source,
+        revision: 4,
+        digest: 'conflict',
+      );
+
+      expect(owner.callCount, 1);
+      expect(result.reason, MapRevisionRejectReason.conflictingRevision);
+      expect(store.current, same(before));
+    });
+
+    test('checks the candidate digest before stale revision rejection', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commit(store: store, source: source, revision: 4, digest: 'four');
+      final before = store.current;
+
+      final result = store.commitFull(
+        metadata: createMapFullRevision(
+          source: source,
+          revision: 3,
+          digest: createMapContentDigest(value: 'three'),
+        ),
+        validateAndBuild: () => _candidate(digest: 'wrong', values: <int>[3]),
+      );
+
+      expect(owner.callCount, 1);
+      expect(result.reason, MapRevisionRejectReason.contentDigestMismatch);
+      expect(store.current, same(before));
+    });
+
+    test('rejects a digest changed by the state owner', () {
+      var changeOwnedDigest = false;
+      final owner = _NestedStateOwner(
+        rewriteDigest: (digest) => changeOwnedDigest
+            ? createMapContentDigest(value: 'changed-by-owner')
+            : digest,
+      );
+      final store = MapRevisionCommitStore(owner);
+      _commit(store: store, source: source, revision: 4, digest: 'four');
+      final before = store.current;
+      changeOwnedDigest = true;
+
+      final result = _commit(
+        store: store,
+        source: source,
+        revision: 5,
+        digest: 'five',
+      );
+
+      expect(result.reason, MapRevisionRejectReason.contentDigestMismatch);
+      expect(result.current, same(before));
+      expect(store.current, same(before));
+    });
+
+    test('preserves current when the builder throws', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commit(store: store, source: source, revision: 4, digest: 'four');
+      final before = store.current;
+
+      expect(
+        () => store.commitFull(
+          metadata: createMapFullRevision(
+            source: source,
+            revision: 5,
+            digest: createMapContentDigest(value: 'five'),
+          ),
+          validateAndBuild: () => throw StateError('builder failed'),
+        ),
+        throwsStateError,
+      );
+      expect(owner.callCount, 1);
+      expect(store.current, same(before));
+    });
   });
 }
 
