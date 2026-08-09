@@ -2562,6 +2562,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.2"
+  vector_tile:
+    dependency: transitive
+    description:
+      name: vector_tile
+      sha256: "43e32cd8e4a1ceede6ad61fbce1ac0ecc84380b6e6fbee52883f08774b12576f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   version:
     dependency: transitive
     description:
