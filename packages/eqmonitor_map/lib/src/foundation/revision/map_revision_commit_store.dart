@@ -6,8 +6,12 @@ final class MapRevisionCommitStore<TState> {
 
   final MapRevisionStateOwner<TState> _owner;
   MapCommittedRevision<TState>? _current;
+  MapFullResyncRequest? _fullResyncRequest;
 
   MapCommittedRevision<TState>? get current => _current;
+  MapFullResyncRequest? get fullResyncRequest => _fullResyncRequest;
+  bool get needsFullResync => _fullResyncRequest != null;
+  int? get resyncAfterRevision => _fullResyncRequest?.afterRevision;
 
   MapRevisionApplyResult<TState> commitFull({
     required MapFullRevision metadata,
@@ -20,6 +24,7 @@ final class MapRevisionCommitStore<TState> {
       return MapRevisionApplyResult.rejected(
         current: currentValue,
         reason: MapRevisionRejectReason.contentDigestMismatch,
+        fullResyncRequest: _fullResyncRequest,
       );
     }
 
@@ -28,17 +33,20 @@ final class MapRevisionCommitStore<TState> {
         return MapRevisionApplyResult.rejected(
           current: currentValue,
           reason: MapRevisionRejectReason.staleRevision,
+          fullResyncRequest: _fullResyncRequest,
         );
       }
       if (metadata.revision == currentValue.revision) {
         if (metadata.digest == currentValue.digest) {
           return MapRevisionApplyResult.idempotentNoOp(
             current: currentValue,
+            fullResyncRequest: _fullResyncRequest,
           );
         }
         return MapRevisionApplyResult.rejected(
           current: currentValue,
           reason: MapRevisionRejectReason.conflictingRevision,
+          fullResyncRequest: _fullResyncRequest,
         );
       }
     }
@@ -48,12 +56,14 @@ final class MapRevisionCommitStore<TState> {
       return MapRevisionApplyResult.rejected(
         current: _current,
         reason: MapRevisionRejectReason.contentDigestMismatch,
+        fullResyncRequest: _fullResyncRequest,
       );
     }
     if (!identical(_current, currentValue)) {
       return _rejectChangedFullRevision(
         metadata: metadata,
         current: _current,
+        fullResyncRequest: _fullResyncRequest,
       );
     }
     final committed = createMapCommittedRevision(
@@ -63,6 +73,7 @@ final class MapRevisionCommitStore<TState> {
       state: owned.state,
     );
     _current = committed;
+    _fullResyncRequest = null;
     return MapRevisionApplyResult.committed(current: committed);
   }
 
@@ -74,16 +85,31 @@ final class MapRevisionCommitStore<TState> {
     validateAndBuild,
   }) {
     final currentValue = _current;
+    final latchValue = _fullResyncRequest;
     if (currentValue == null) {
+      final request = createMapFullResyncRequest(
+        source: metadata.source,
+        afterRevision: null,
+      );
+      _fullResyncRequest = request;
       return MapRevisionApplyResult.rejected(
         current: null,
         reason: MapRevisionRejectReason.noCurrentRevision,
+        fullResyncRequest: request,
       );
     }
     if (currentValue.source != metadata.source) {
       return MapRevisionApplyResult.rejected(
         current: currentValue,
         reason: MapRevisionRejectReason.sourceMismatch,
+        fullResyncRequest: _fullResyncRequest,
+      );
+    }
+    if (latchValue != null) {
+      return MapRevisionApplyResult.rejected(
+        current: currentValue,
+        reason: MapRevisionRejectReason.revisionGap,
+        fullResyncRequest: latchValue,
       );
     }
     final revisionReason = _deltaRevisionRejectReason(
@@ -91,9 +117,19 @@ final class MapRevisionCommitStore<TState> {
       current: currentValue,
     );
     if (revisionReason != null) {
+      final request = switch (revisionReason) {
+        MapRevisionRejectReason.revisionGap ||
+        MapRevisionRejectReason.revisionBranch => createMapFullResyncRequest(
+          source: currentValue.source,
+          afterRevision: currentValue.revision,
+        ),
+        _ => _fullResyncRequest,
+      };
+      _fullResyncRequest = request;
       return MapRevisionApplyResult.rejected(
         current: currentValue,
         reason: revisionReason,
+        fullResyncRequest: request,
       );
     }
     final candidate = validateAndBuild(currentState: currentValue.state);
@@ -101,12 +137,15 @@ final class MapRevisionCommitStore<TState> {
       return MapRevisionApplyResult.rejected(
         current: _current,
         reason: MapRevisionRejectReason.contentDigestMismatch,
+        fullResyncRequest: _fullResyncRequest,
       );
     }
-    if (!identical(_current, currentValue)) {
+    if (!identical(_current, currentValue) ||
+        !identical(_fullResyncRequest, latchValue)) {
       return _rejectChangedDeltaRevision(
         metadata: metadata,
         current: _current,
+        fullResyncRequest: _fullResyncRequest,
       );
     }
     final owned = _owner.own(candidate: candidate);
@@ -115,12 +154,15 @@ final class MapRevisionCommitStore<TState> {
       return MapRevisionApplyResult.rejected(
         current: _current,
         reason: MapRevisionRejectReason.contentDigestMismatch,
+        fullResyncRequest: _fullResyncRequest,
       );
     }
-    if (!identical(_current, currentValue)) {
+    if (!identical(_current, currentValue) ||
+        !identical(_fullResyncRequest, latchValue)) {
       return _rejectChangedDeltaRevision(
         metadata: metadata,
         current: _current,
+        fullResyncRequest: _fullResyncRequest,
       );
     }
     final committed = createMapCommittedRevision(
@@ -153,51 +195,64 @@ MapRevisionRejectReason? _deltaRevisionRejectReason<TState>({
 MapRevisionApplyResult<TState> _rejectChangedDeltaRevision<TState>({
   required MapDeltaRevision metadata,
   required MapCommittedRevision<TState>? current,
+  required MapFullResyncRequest? fullResyncRequest,
 }) {
   final reason = current == null
       ? MapRevisionRejectReason.noCurrentRevision
       : current.source != metadata.source
       ? MapRevisionRejectReason.sourceMismatch
+      : fullResyncRequest != null
+      ? MapRevisionRejectReason.revisionGap
       : _deltaRevisionRejectReason(metadata: metadata, current: current) ??
             MapRevisionRejectReason.revisionBranch;
   return MapRevisionApplyResult.rejected(
     current: current,
     reason: reason,
+    fullResyncRequest: fullResyncRequest,
   );
 }
 
 MapRevisionApplyResult<TState> _rejectChangedFullRevision<TState>({
   required MapFullRevision metadata,
   required MapCommittedRevision<TState>? current,
+  required MapFullResyncRequest? fullResyncRequest,
 }) {
   if (current == null) {
     return MapRevisionApplyResult.rejected(
       current: null,
       reason: MapRevisionRejectReason.noCurrentRevision,
+      fullResyncRequest: fullResyncRequest,
     );
   }
   if (current.source != metadata.source) {
     return MapRevisionApplyResult.rejected(
       current: current,
       reason: MapRevisionRejectReason.sourceMismatch,
+      fullResyncRequest: fullResyncRequest,
     );
   }
   if (metadata.revision < current.revision) {
     return MapRevisionApplyResult.rejected(
       current: current,
       reason: MapRevisionRejectReason.staleRevision,
+      fullResyncRequest: fullResyncRequest,
     );
   }
   if (metadata.revision == current.revision) {
     return metadata.digest == current.digest
-        ? MapRevisionApplyResult.idempotentNoOp(current: current)
+        ? MapRevisionApplyResult.idempotentNoOp(
+            current: current,
+            fullResyncRequest: fullResyncRequest,
+          )
         : MapRevisionApplyResult.rejected(
             current: current,
             reason: MapRevisionRejectReason.conflictingRevision,
+            fullResyncRequest: fullResyncRequest,
           );
   }
   return MapRevisionApplyResult.rejected(
     current: current,
     reason: MapRevisionRejectReason.revisionBranch,
+    fullResyncRequest: fullResyncRequest,
   );
 }
