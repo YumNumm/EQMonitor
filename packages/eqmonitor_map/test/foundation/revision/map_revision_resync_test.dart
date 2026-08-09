@@ -156,6 +156,59 @@ void main() {
       expect(store.current?.revision, 7);
       expect(store.fullResyncRequest, isNull);
     });
+
+    test('stops active-source deltas after direct or reentrant latching', () {
+      final store = MapRevisionCommitStore<int>(_IntStateOwner());
+      _commitFull(store: store, source: source, revision: 4);
+      _commitDelta(
+        store: store,
+        source: source,
+        baseRevision: 5,
+        targetRevision: 6,
+      );
+      final latch = store.fullResyncRequest;
+      var builderCalled = false;
+
+      final stopped = _commitDelta(
+        store: store,
+        source: source,
+        baseRevision: 4,
+        targetRevision: 5,
+        build: ({required currentState}) {
+          builderCalled = true;
+          return _candidate(revision: 5);
+        },
+      );
+      expect(builderCalled, isFalse);
+      expect(stopped.reason, MapRevisionRejectReason.revisionGap);
+      expect(stopped.fullResyncRequest, same(latch));
+      expect(store.current?.revision, 4);
+
+      final reentrantStore = MapRevisionCommitStore<int>(_IntStateOwner());
+      _commitFull(store: reentrantStore, source: source, revision: 4);
+      final reentrant = _commitDelta(
+        store: reentrantStore,
+        source: source,
+        baseRevision: 4,
+        targetRevision: 5,
+        build: ({required currentState}) {
+          _commitDelta(
+            store: reentrantStore,
+            source: source,
+            baseRevision: 6,
+            targetRevision: 7,
+          );
+          return _candidate(revision: 5);
+        },
+      );
+      expect(reentrant.reason, MapRevisionRejectReason.revisionGap);
+      expect(
+        reentrant.fullResyncRequest,
+        same(reentrantStore.fullResyncRequest),
+      );
+      expect(reentrantStore.current?.revision, 4);
+      expect(reentrantStore.resyncAfterRevision, 4);
+    });
   });
 }
 
