@@ -190,6 +190,98 @@ void main() {
       expect(owner.callCount, 1);
       expect(store.current, same(before));
     });
+
+    test('preserves current when ownership throws', () {
+      var failOwner = false;
+      final owner = _NestedStateOwner(failWhen: () => failOwner);
+      final store = MapRevisionCommitStore(owner);
+      _commit(store: store, source: source, revision: 4, digest: 'four');
+      final before = store.current;
+      failOwner = true;
+
+      expect(
+        () => _commit(
+          store: store,
+          source: source,
+          revision: 5,
+          digest: 'five',
+        ),
+        throwsStateError,
+      );
+      expect(owner.callCount, 2);
+      expect(store.current, same(before));
+    });
+
+    test('does not overwrite a newer revision committed during ownership', () {
+      var commitNestedRevision = false;
+      var isNestedCommit = false;
+      late final MapRevisionCommitStore<_NestedState> store;
+      final owner = _NestedStateOwner(
+        onOwn: () {
+          if (!commitNestedRevision || isNestedCommit) {
+            return;
+          }
+          isNestedCommit = true;
+          final nestedResult = _commit(
+            store: store,
+            source: source,
+            revision: 6,
+            digest: 'six',
+          );
+          expect(nestedResult.kind, MapRevisionApplyResultKind.committed);
+          isNestedCommit = false;
+        },
+      );
+      store = MapRevisionCommitStore(owner);
+      _commit(store: store, source: source, revision: 4, digest: 'four');
+      commitNestedRevision = true;
+
+      final result = _commit(
+        store: store,
+        source: source,
+        revision: 5,
+        digest: 'five',
+      );
+
+      expect(result.reason, MapRevisionRejectReason.staleRevision);
+      expect(result.current, same(store.current));
+      expect(store.current?.revision, 6);
+      expect(store.current?.digest.value, 'six');
+      expect(store.current?.state['values'], <int>[6]);
+    });
+
+    test('stores the deep-owned candidate without mutable aliases', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      final nestedValues = <int>[4];
+      final mutableState = <String, List<int>>{'values': nestedValues};
+
+      store.commitFull(
+        metadata: createMapFullRevision(
+          source: source,
+          revision: 4,
+          digest: createMapContentDigest(value: 'four'),
+        ),
+        validateAndBuild: () => MapRevisionCandidate(
+          state: mutableState,
+          digest: createMapContentDigest(value: 'four'),
+        ),
+      );
+      mutableState['other'] = <int>[5];
+      nestedValues.add(6);
+
+      expect(store.current?.state, <String, List<int>>{
+        'values': <int>[4],
+      });
+      expect(
+        () => store.current?.state['other'] = <int>[5],
+        throwsUnsupportedError,
+      );
+      expect(
+        () => store.current?.state['values']?.add(6),
+        throwsUnsupportedError,
+      );
+    });
   });
 }
 
