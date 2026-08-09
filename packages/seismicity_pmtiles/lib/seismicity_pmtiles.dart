@@ -12,5 +12,7 @@ export 'src/model/seismicity_pmtiles_exception.dart';
 export 'src/model/seismicity_pmtiles_load_state.dart';
 export 'src/model/seismicity_pmtiles_result.dart';
 export 'src/model/seismicity_pmtiles_source.dart';
+export 'src/model/seismicity_validity_bitmap.dart'
+    show SeismicityValidityBitmap;
 export 'src/reader/seismicity_pmtiles_asset_loader.dart';
 export 'src/reader/seismicity_random_access_reader_factory.dart';
