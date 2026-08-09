@@ -156,6 +156,59 @@ void main() {
       expect(store.current, same(before));
       expect(owner.callCount, 2);
     });
+
+    test('rejects a digest changed by the state owner', () {
+      var changeDigest = false;
+      final owner = _NestedStateOwner(
+        rewriteDigest: (digest) => changeDigest
+            ? createMapContentDigest(value: 'owner-rewrite')
+            : digest,
+      );
+      final store = MapRevisionCommitStore(owner);
+      _commitFull(store: store, source: source, revision: 4);
+      final before = store.current;
+      changeDigest = true;
+
+      final result = _commitDelta(
+        store: store,
+        source: source,
+        baseRevision: 4,
+        targetRevision: 5,
+      );
+
+      expect(result.reason, MapRevisionRejectReason.contentDigestMismatch);
+      expect(store.current, same(before));
+    });
+
+    test('does not overwrite a newer commit made during ownership', () {
+      var commitNestedRevision = false;
+      var isNestedCommit = false;
+      late final MapRevisionCommitStore<_NestedState> store;
+      final owner = _NestedStateOwner(
+        onOwn: () {
+          if (!commitNestedRevision || isNestedCommit) {
+            return;
+          }
+          isNestedCommit = true;
+          _commitFull(store: store, source: source, revision: 6);
+          isNestedCommit = false;
+        },
+      );
+      store = MapRevisionCommitStore(owner);
+      _commitFull(store: store, source: source, revision: 4);
+      commitNestedRevision = true;
+
+      final result = _commitDelta(
+        store: store,
+        source: source,
+        baseRevision: 4,
+        targetRevision: 5,
+      );
+
+      expect(result.reason, MapRevisionRejectReason.staleRevision);
+      expect(store.current?.revision, 6);
+      expect(store.current?.state['values'], <int>[6]);
+    });
   });
 }
 
@@ -211,9 +264,11 @@ MapRevisionCandidate<_NestedState> _candidate({
 );
 
 final class _NestedStateOwner implements MapRevisionStateOwner<_NestedState> {
-  _NestedStateOwner({this.failWhen});
+  _NestedStateOwner({this.onOwn, this.failWhen, this.rewriteDigest});
 
+  final void Function()? onOwn;
   final bool Function()? failWhen;
+  final MapContentDigest Function(MapContentDigest)? rewriteDigest;
   var _callCount = 0;
 
   int get callCount => _callCount;
@@ -223,6 +278,7 @@ final class _NestedStateOwner implements MapRevisionStateOwner<_NestedState> {
     required MapRevisionCandidate<_NestedState> candidate,
   }) {
     _callCount++;
+    onOwn?.call();
     if (failWhen?.call() ?? false) {
       throw StateError('owner failed');
     }
@@ -231,7 +287,7 @@ final class _NestedStateOwner implements MapRevisionStateOwner<_NestedState> {
         for (final entry in candidate.state.entries)
           entry.key: List<int>.unmodifiable(entry.value),
       }),
-      digest: candidate.digest,
+      digest: rewriteDigest?.call(candidate.digest) ?? candidate.digest,
     );
   }
 }
