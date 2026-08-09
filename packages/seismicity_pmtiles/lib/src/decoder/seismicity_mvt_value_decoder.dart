@@ -14,8 +14,7 @@ final class SeismicityMvtValueDecoder {
     required int featureIndex,
     required String field,
   }) {
-    validateScalarCardinality(
-      value: value,
+    value.validateScalarCardinality(
       tileId: tileId,
       featureIndex: featureIndex,
       field: field,
@@ -37,8 +36,7 @@ final class SeismicityMvtValueDecoder {
     required int featureIndex,
     required String field,
   }) {
-    validateScalarCardinality(
-      value: value,
+    value.validateScalarCardinality(
       tileId: tileId,
       featureIndex: featureIndex,
       field: field,
@@ -60,8 +58,7 @@ final class SeismicityMvtValueDecoder {
     required int featureIndex,
     required String field,
   }) {
-    validateScalarCardinality(
-      value: value,
+    value.validateScalarCardinality(
       tileId: tileId,
       featureIndex: featureIndex,
       field: field,
@@ -113,8 +110,7 @@ final class SeismicityMvtValueDecoder {
     required int featureIndex,
     required String field,
   }) {
-    validateScalarCardinality(
-      value: value,
+    value.validateScalarCardinality(
       tileId: tileId,
       featureIndex: featureIndex,
       field: field,
@@ -144,33 +140,35 @@ final class SeismicityMvtValueDecoder {
       reason: numericButUnsafe ? 'unsafe_integer' : 'wrong_scalar_type',
     );
   }
+}
 
+// 無名extensionに置き、共有validatorをimport先へ公開しない。
+extension on VectorTile_Value {
   void validateScalarCardinality({
-    required VectorTile_Value value,
     required int tileId,
     required int featureIndex,
     required String field,
   }) {
     var count = 0;
-    if (value.hasStringValue()) {
+    if (hasStringValue()) {
       count++;
     }
-    if (value.hasFloatValue()) {
+    if (hasFloatValue()) {
       count++;
     }
-    if (value.hasDoubleValue()) {
+    if (hasDoubleValue()) {
       count++;
     }
-    if (value.hasIntValue()) {
+    if (hasIntValue()) {
       count++;
     }
-    if (value.hasUintValue()) {
+    if (hasUintValue()) {
       count++;
     }
-    if (value.hasSintValue()) {
+    if (hasSintValue()) {
       count++;
     }
-    if (value.hasBoolValue()) {
+    if (hasBoolValue()) {
       count++;
     }
     if (count != 1) {
