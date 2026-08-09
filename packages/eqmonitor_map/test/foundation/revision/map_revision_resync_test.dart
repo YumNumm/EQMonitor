@@ -31,6 +31,77 @@ void main() {
       expect(store.needsFullResync, isTrue);
       expect(store.resyncAfterRevision, isNull);
     });
+
+    test('latches current-scoped requests for gaps and branches', () {
+      const cases = <({int base, MapRevisionRejectReason reason})>[
+        (base: 5, reason: MapRevisionRejectReason.revisionGap),
+        (base: 3, reason: MapRevisionRejectReason.revisionBranch),
+      ];
+
+      for (final testCase in cases) {
+        final store = MapRevisionCommitStore<int>(_IntStateOwner());
+        _commitFull(store: store, source: source, revision: 4);
+        final before = store.current;
+        final result = _commitDelta(
+          store: store,
+          source: source,
+          baseRevision: testCase.base,
+          targetRevision: 6,
+        );
+
+        expect(result.reason, testCase.reason);
+        expect(result.current, same(before));
+        expect(result.fullResyncRequest, same(store.fullResyncRequest));
+        expect(store.fullResyncRequest?.source, source);
+        expect(store.resyncAfterRevision, 4);
+      }
+    });
+
+    test('isolates another source with and without an existing latch', () {
+      final otherSource = createMapSourceInstanceId(value: 'source-b');
+      final store = MapRevisionCommitStore<int>(_IntStateOwner());
+      _commitFull(store: store, source: source, revision: 4);
+      final current = store.current;
+      var builderCalls = 0;
+
+      final withoutLatch = _commitDelta(
+        store: store,
+        source: otherSource,
+        baseRevision: 4,
+        targetRevision: 5,
+        build: ({required currentState}) {
+          builderCalls++;
+          return _candidate(revision: 5);
+        },
+      );
+      expect(withoutLatch.reason, MapRevisionRejectReason.sourceMismatch);
+      expect(withoutLatch.fullResyncRequest, isNull);
+      expect(store.current, same(current));
+
+      _commitDelta(
+        store: store,
+        source: source,
+        baseRevision: 5,
+        targetRevision: 6,
+      );
+      final latch = store.fullResyncRequest;
+      final withLatch = _commitDelta(
+        store: store,
+        source: otherSource,
+        baseRevision: 4,
+        targetRevision: 5,
+        build: ({required currentState}) {
+          builderCalls++;
+          return _candidate(revision: 5);
+        },
+      );
+
+      expect(builderCalls, 0);
+      expect(withLatch.reason, MapRevisionRejectReason.sourceMismatch);
+      expect(withLatch.fullResyncRequest, same(latch));
+      expect(store.fullResyncRequest, same(latch));
+      expect(store.current, same(current));
+    });
   });
 }
 
