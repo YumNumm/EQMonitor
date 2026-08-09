@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:eqmonitor_map/src/foundation/map_node_identity.dart';
+import 'package:eqmonitor_map/src/foundation/render/map_packed_mesh.dart';
+import 'package:eqmonitor_map/src/foundation/render/map_render_sort_key.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'map_render_packet.freezed.dart';
@@ -33,6 +35,72 @@ final class MapMaterialParameterBlock {
 
   final int version;
   final Uint8List bytes;
+}
+
+final class MapRenderPacket {
+  const MapRenderPacket._({
+    required this.contractVersion,
+    required this.sortKey,
+    required this.batchKey,
+    required this.pipeline,
+    required this.mesh,
+    required this.modelTransform,
+    required this.materialParameters,
+  });
+
+  final int contractVersion;
+  final MapRenderSortKey sortKey;
+  final MapRenderBatchKey batchKey;
+  final MapRenderPipelineKey pipeline;
+  final MapPackedMesh mesh;
+  final Float64List modelTransform;
+  final MapMaterialParameterBlock materialParameters;
+}
+
+MapRenderPacket createMapRenderPacket({
+  required int contractVersion,
+  required MapRenderSortKey sortKey,
+  required MapRenderBatchKey batchKey,
+  required MapRenderPipelineKey pipeline,
+  required MapPackedMesh mesh,
+  required Float64List modelTransform,
+  required MapMaterialParameterBlock materialParameters,
+}) {
+  if (contractVersion <= 0) {
+    throw ArgumentError.value(
+      contractVersion,
+      'contractVersion',
+      'must be positive',
+    );
+  }
+  if (modelTransform.length != 16) {
+    throw ArgumentError.value(
+      modelTransform.length,
+      'modelTransform',
+      'must contain 16 values',
+    );
+  }
+  if (modelTransform.any((value) => !value.isFinite)) {
+    throw ArgumentError.value(
+      modelTransform,
+      'modelTransform',
+      'must contain only finite values',
+    );
+  }
+  if (sortKey.phasePolicyVersion != batchKey.phasePolicyVersion ||
+      sortKey.phase != batchKey.phase) {
+    throw ArgumentError('sort and batch phase identities must match');
+  }
+
+  return MapRenderPacket._(
+    contractVersion: contractVersion,
+    sortKey: sortKey,
+    batchKey: batchKey,
+    pipeline: pipeline,
+    mesh: mesh,
+    modelTransform: Float64List.fromList(modelTransform).asUnmodifiableView(),
+    materialParameters: materialParameters,
+  );
 }
 
 MapMaterialParameterBlock createMapMaterialParameterBlock({
