@@ -15,6 +15,8 @@ void setValid({required Uint8List bytes, required int index}) {
   bytes[index >> 3] |= 1 << (index & 7);
 }
 
+// The locked public API intentionally exposes bitmap reads as a namespace.
+// ignore: avoid_classes_with_only_static_members
 abstract final class SeismicityValidityBitmap {
   static bool isValid({required Uint8List bytes, required int index}) =>
       bytes[index >> 3] & (1 << (index & 7)) != 0;

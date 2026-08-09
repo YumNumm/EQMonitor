@@ -56,6 +56,43 @@ final class SeismicityPmTilesChunkValidator {
       values: chunk.magnitudes,
       validity: chunk.magnitudeValidity,
     );
+    validateDictionary(chunk: chunk);
+  }
+}
+
+void validateDictionary({required SeismicityPmTilesChunk chunk}) {
+  final offsets = chunk.maxIntensityDictionaryOffsets;
+  final utf8Length = chunk.maxIntensityDictionaryUtf8.length;
+  if (offsets.isEmpty || offsets.first != 0) {
+    throw const SeismicityPmTilesException.corruptArchive(
+      reason: 'Dictionary offsets must start at zero.',
+    );
+  }
+  var previous = 0;
+  for (final offset in offsets) {
+    if (offset < previous || offset > utf8Length) {
+      throw const SeismicityPmTilesException.corruptArchive(
+        reason: 'Dictionary offsets are unordered or out of range.',
+      );
+    }
+    previous = offset;
+  }
+  if (previous != utf8Length) {
+    throw const SeismicityPmTilesException.corruptArchive(
+      reason: 'The terminal dictionary offset must equal its UTF-8 length.',
+    );
+  }
+  final dictionaryLength = offsets.length - 1;
+  for (var index = 0; index < chunk.latitudes.length; index++) {
+    if (SeismicityValidityBitmap.isValid(
+          bytes: chunk.maxIntensityValidity,
+          index: index,
+        ) &&
+        chunk.maxIntensityDictionaryIndexes[index] >= dictionaryLength) {
+      throw const SeismicityPmTilesException.corruptArchive(
+        reason: 'A valid dictionary index is out of range.',
+      );
+    }
   }
 }
 

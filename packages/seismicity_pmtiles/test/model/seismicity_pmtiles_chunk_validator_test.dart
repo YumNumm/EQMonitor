@@ -16,6 +16,12 @@ void main() {
       );
     }
     expect(bytes, [0x81, 0x81]);
+    expect(
+      [
+        for (final count in [0, 1, 8, 9]) requiredByteLength(valueCount: count),
+      ],
+      [0, 1, 1, 2],
+    );
     expect(() => requiredByteLength(valueCount: -1), throwsCorruptArchive);
   });
 
@@ -69,6 +75,27 @@ void main() {
       valid.copyWith(
         magnitudes: Float32List.fromList([0, double.nan]),
         magnitudeValidity: Uint8List(1),
+      ),
+    ];
+    malformed.forEach(expectCorrupt);
+  });
+
+  test('rejects invalid dictionary offsets and valid indexes', () {
+    final valid = validChunk();
+    final malformed = [
+      valid.copyWith(maxIntensityDictionaryOffsets: Uint32List(0)),
+      valid.copyWith(
+        maxIntensityDictionaryOffsets: Uint32List.fromList([1, 1]),
+      ),
+      valid.copyWith(
+        maxIntensityDictionaryOffsets: Uint32List.fromList([0, 1, 0, 1]),
+      ),
+      valid.copyWith(
+        maxIntensityDictionaryOffsets: Uint32List.fromList([0, 2]),
+      ),
+      valid.copyWith(maxIntensityDictionaryUtf8: Uint8List(2)),
+      valid.copyWith(
+        maxIntensityDictionaryIndexes: Uint32List.fromList([1, 999]),
       ),
     ];
     malformed.forEach(expectCorrupt);
