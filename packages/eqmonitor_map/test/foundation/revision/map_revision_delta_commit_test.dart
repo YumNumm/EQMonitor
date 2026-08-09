@@ -210,6 +210,36 @@ void main() {
       expect(store.current?.state['values'], <int>[6]);
     });
 
+    test('does not call the owner after a newer commit during the builder', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commitFull(store: store, source: source, revision: 4);
+      MapCommittedRevision<_NestedState>? nestedCurrent;
+
+      final result = _commitDelta(
+        store: store,
+        source: source,
+        baseRevision: 4,
+        targetRevision: 5,
+        build: ({required currentState}) {
+          _commitFull(store: store, source: source, revision: 6);
+          nestedCurrent = store.current;
+          return _candidate(digest: 'five', values: <int>[4, 5]);
+        },
+      );
+
+      expect(result.reason, MapRevisionRejectReason.staleRevision);
+      expect(result.current, same(nestedCurrent));
+      expect(store.current, same(nestedCurrent));
+      expect(nestedCurrent?.revision, 6);
+      expect(nestedCurrent?.digest.value, 'six');
+      expect(result.current?.state, same(nestedCurrent?.state));
+      expect(result.current?.state['values'], <int>[6]);
+      expect(store.current?.revision, 6);
+      expect(store.current?.state['values'], <int>[6]);
+      expect(owner.callCount, 2);
+    });
+
     test('stores the returned candidate without nested mutable aliases', () {
       final owner = _NestedStateOwner();
       final store = MapRevisionCommitStore(owner);
