@@ -102,6 +102,60 @@ void main() {
       expect(store.fullResyncRequest, same(latch));
       expect(store.current, same(current));
     });
+
+    test('only a newer valid full clears the latch before later deltas', () {
+      final store = MapRevisionCommitStore<int>(_IntStateOwner());
+      _commitFull(store: store, source: source, revision: 4);
+      _commitDelta(
+        store: store,
+        source: source,
+        baseRevision: 5,
+        targetRevision: 6,
+      );
+      final latch = store.fullResyncRequest;
+      final current = store.current;
+
+      final failed = store.commitFull(
+        metadata: createMapFullRevision(
+          source: source,
+          revision: 6,
+          digest: createMapContentDigest(value: '6'),
+        ),
+        validateAndBuild: () => _candidate(revision: 5),
+      );
+      expect(failed.reason, MapRevisionRejectReason.contentDigestMismatch);
+      expect(failed.fullResyncRequest, same(latch));
+      expect(store.fullResyncRequest, same(latch));
+      expect(store.current, same(current));
+
+      final equal = _commitFull(
+        store: store,
+        source: source,
+        revision: 4,
+      );
+      expect(equal.kind, MapRevisionApplyResultKind.idempotentNoOp);
+      expect(equal.fullResyncRequest, same(latch));
+      expect(store.fullResyncRequest, same(latch));
+
+      final newer = _commitFull(
+        store: store,
+        source: source,
+        revision: 6,
+      );
+      expect(newer.kind, MapRevisionApplyResultKind.committed);
+      expect(store.needsFullResync, isFalse);
+      expect(store.fullResyncRequest, isNull);
+
+      final delta = _commitDelta(
+        store: store,
+        source: source,
+        baseRevision: 6,
+        targetRevision: 7,
+      );
+      expect(delta.kind, MapRevisionApplyResultKind.committed);
+      expect(store.current?.revision, 7);
+      expect(store.fullResyncRequest, isNull);
+    });
   });
 }
 
