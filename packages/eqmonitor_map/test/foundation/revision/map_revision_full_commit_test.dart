@@ -39,6 +39,74 @@ void main() {
       expect(result.current?.revision, 4);
       expect(result.current?.state['values'], <int>[4]);
     });
+
+    test('commits a newer full revision for the active source', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commit(store: store, source: source, revision: 4, digest: 'four');
+
+      final result = _commit(
+        store: store,
+        source: source,
+        revision: 5,
+        digest: 'five',
+      );
+
+      expect(result.kind, MapRevisionApplyResultKind.committed);
+      expect(store.current?.revision, 5);
+      expect(store.current?.digest.value, 'five');
+      expect(owner.callCount, 2);
+    });
+
+    test('rejects stale metadata after running only the builder', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commit(store: store, source: source, revision: 4, digest: 'four');
+      final before = store.current;
+      var builderCalls = 0;
+
+      final result = store.commitFull(
+        metadata: createMapFullRevision(
+          source: source,
+          revision: 3,
+          digest: createMapContentDigest(value: 'three'),
+        ),
+        validateAndBuild: () {
+          builderCalls++;
+          return _candidate(digest: 'three', values: <int>[3]);
+        },
+      );
+
+      expect(builderCalls, 1);
+      expect(owner.callCount, 1);
+      expect(result.reason, MapRevisionRejectReason.staleRevision);
+      expect(store.current, same(before));
+    });
+
+    test('treats an equal revision with the same digest as idempotent', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commit(store: store, source: source, revision: 4, digest: 'four');
+      final before = store.current;
+      var builderCalls = 0;
+
+      final result = store.commitFull(
+        metadata: createMapFullRevision(
+          source: source,
+          revision: 4,
+          digest: createMapContentDigest(value: 'four'),
+        ),
+        validateAndBuild: () {
+          builderCalls++;
+          return _candidate(digest: 'four', values: <int>[99]);
+        },
+      );
+
+      expect(builderCalls, 1);
+      expect(owner.callCount, 1);
+      expect(result.kind, MapRevisionApplyResultKind.idempotentNoOp);
+      expect(store.current, same(before));
+    });
   });
 }
 
