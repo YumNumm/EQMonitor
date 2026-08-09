@@ -35,6 +35,36 @@ final class MapMaterialParameterBlock {
   final Uint8List bytes;
 }
 
+MapMaterialParameterBlock createMapMaterialParameterBlock({
+  required int version,
+  required Uint8List bytes,
+}) {
+  if (version <= 0) {
+    throw ArgumentError.value(version, 'version', 'must be positive');
+  }
+
+  return MapMaterialParameterBlock._(
+    version: version,
+    bytes: Uint8List.fromList(bytes).asUnmodifiableView(),
+  );
+}
+
+bool haveEqualMapMaterialParameterContent(
+  MapMaterialParameterBlock left,
+  MapMaterialParameterBlock right,
+) {
+  if (left.version != right.version ||
+      left.bytes.length != right.bytes.length) {
+    return false;
+  }
+  for (var index = 0; index < left.bytes.length; index++) {
+    if (left.bytes[index] != right.bytes[index]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 MapRenderPipelineKey createMapRenderPipelineKey({
   required int version,
   required String key,
