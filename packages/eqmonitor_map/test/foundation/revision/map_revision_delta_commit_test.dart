@@ -209,6 +209,39 @@ void main() {
       expect(store.current?.revision, 6);
       expect(store.current?.state['values'], <int>[6]);
     });
+
+    test('stores the returned candidate without nested mutable aliases', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commitFull(store: store, source: source, revision: 4);
+      final nestedValues = <int>[4, 5];
+      final mutableState = <String, List<int>>{'values': nestedValues};
+
+      _commitDelta(
+        store: store,
+        source: source,
+        baseRevision: 4,
+        targetRevision: 5,
+        build: ({required currentState}) => MapRevisionCandidate(
+          state: mutableState,
+          digest: createMapContentDigest(value: 'five'),
+        ),
+      );
+      mutableState['other'] = <int>[6];
+      nestedValues.add(7);
+
+      expect(store.current?.state, <String, List<int>>{
+        'values': <int>[4, 5],
+      });
+      expect(
+        () => store.current?.state['values']?.add(7),
+        throwsUnsupportedError,
+      );
+      expect(
+        () => store.current?.state['other'] = <int>[6],
+        throwsUnsupportedError,
+      );
+    });
   });
 }
 
