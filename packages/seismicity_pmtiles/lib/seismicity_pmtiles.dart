@@ -6,6 +6,8 @@ export 'src/archive/seismicity_pmtiles_archive.dart'
 export 'src/model/seismicity_pmtiles_archive_descriptor.dart';
 export 'src/model/seismicity_pmtiles_bounds.dart';
 export 'src/model/seismicity_pmtiles_chunk.dart';
+export 'src/model/seismicity_pmtiles_dataset.dart';
+export 'src/model/seismicity_pmtiles_decode_progress.dart';
 export 'src/model/seismicity_pmtiles_exception.dart';
 export 'src/model/seismicity_pmtiles_load_state.dart';
 export 'src/model/seismicity_pmtiles_result.dart';

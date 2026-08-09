@@ -48,6 +48,18 @@ void main() {
       maxIntensityDictionaryUtf8: intensityUtf8,
       maxIntensityDictionaryOffsets: intensityOffsets,
     );
+    final dataset = SeismicityPmTilesDataset(
+      archiveRevision: 'revision-1',
+      schemaVersion: 1,
+      dataZoom: 14,
+      featureCount: 1,
+      chunks: [chunk],
+    );
+    const progress = SeismicityPmTilesDecodeProgress(
+      decodedTileCount: 1,
+      rawFeatureCount: 2,
+      uniqueFeatureCount: 1,
+    );
     expect(chunk.hypocenterIds, same(hypocenterIds));
     expect(chunk.latitudes, same(latitudes));
     expect(chunk.longitudes, same(longitudes));
@@ -64,5 +76,15 @@ void main() {
     expect(chunk.magnitudes.single.isNaN, isTrue);
     expect(chunk.maxIntensityDictionaryIndexes.single, 4);
     expect(chunk, isNot(chunk.copyWith()));
+    expect(dataset.featureCount, 1);
+    expect(dataset, isNot(dataset.copyWith()));
+    expect(
+      progress,
+      const SeismicityPmTilesDecodeProgress(
+        decodedTileCount: 1,
+        rawFeatureCount: 2,
+        uniqueFeatureCount: 1,
+      ),
+    );
   });
 }

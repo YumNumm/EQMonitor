@@ -31,6 +31,11 @@ Future<SeismicityPmTilesArchive> openPublicApiArchive({
   );
 }
 
+SeismicityPmTilesDataset replacePublicApiChunks({
+  required SeismicityPmTilesDataset dataset,
+  required List<SeismicityPmTilesChunk> chunks,
+}) => dataset.copyWith(chunks: chunks);
+
 void main() {
   test('stable reader and archive contracts compile through the barrel', () {
     final factory = SeismicityRandomAccessReaderFactory(
@@ -49,6 +54,15 @@ void main() {
     expect(factory.assetLoader, loadPublicApiAsset);
     expect(reader.sizeBytes, 1);
     expect(openPublicApiArchive, isA<Function>());
+    expect(replacePublicApiChunks, isA<Function>());
+    expect(
+      const SeismicityPmTilesDecodeProgress(
+        decodedTileCount: 0,
+        rawFeatureCount: 0,
+        uniqueFeatureCount: 0,
+      ).uniqueFeatureCount,
+      0,
+    );
     expect(entry.runLength, 1);
   });
 }
