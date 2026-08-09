@@ -90,4 +90,88 @@ void main() {
 
     expect((batch.version, batch.packets.length), (3, 1));
   });
+
+  test('owns packets and excludes transforms from compatibility', () {
+    final packets = [
+      packet(order: 0, transformMarker: 1),
+      packet(order: 1, transformMarker: 2),
+    ];
+    final batch = createMapRenderBatch(
+      version: 3,
+      policy: policy,
+      packets: packets,
+    );
+    packets.clear();
+
+    expect(batch.packets, hasLength(2));
+    expect(batch.instanceTransforms.map((value) => value.first), [1, 2]);
+    for (final mutate in <void Function()>[
+      batch.packets.clear,
+      batch.instanceTransforms.clear,
+    ]) {
+      expect(mutate, throwsUnsupportedError);
+    }
+  });
+
+  test('rejects invalid version, cardinality, and sort order', () {
+    for (final version in [0, -1]) {
+      expect(
+        () => createMapRenderBatch(
+          version: version,
+          policy: policy,
+          packets: [packet(order: 0)],
+        ),
+        throwsArgumentError,
+      );
+    }
+    expect(
+      () => createMapRenderBatch(version: 1, policy: policy, packets: []),
+      throwsArgumentError,
+    );
+    for (final packets in [
+      [packet(order: 1), packet(order: 0)],
+      [packet(order: 0), packet(order: 0)],
+    ]) {
+      expect(
+        () => createMapRenderBatch(
+          version: 1,
+          policy: policy,
+          packets: packets,
+        ),
+        throwsArgumentError,
+      );
+    }
+  });
+
+  test('rejects every incompatible packet field', () {
+    final mismatches = <({String name, MapRenderPacket packet})>[
+      (name: 'contract version', packet: packet(order: 1, contractVersion: 2)),
+      (
+        name: 'mesh payload version',
+        packet: packet(order: 1, payloadVersion: 2),
+      ),
+      (name: 'batch phase', packet: packet(order: 1, phase: 1)),
+      (name: 'batch policy', packet: packet(order: 1, policyVersion: 8)),
+      (name: 'layout', packet: packet(order: 1, layoutVersion: 2)),
+      (name: 'pipeline version', packet: packet(order: 1, pipelineVersion: 2)),
+      (name: 'pipeline key', packet: packet(order: 1, pipelineKey: 'line')),
+      (name: 'material version', packet: packet(order: 1, materialVersion: 2)),
+      (
+        name: 'material content',
+        packet: packet(order: 1, materialBytes: [1, 3]),
+      ),
+    ];
+
+    for (final mismatch in mismatches) {
+      expect(
+        () => createMapRenderBatch(
+          version: 1,
+          policy: policy,
+          packets: [packet(order: 0), mismatch.packet],
+        ),
+        throwsArgumentError,
+        reason: mismatch.name,
+      );
+    }
+  });
 }
