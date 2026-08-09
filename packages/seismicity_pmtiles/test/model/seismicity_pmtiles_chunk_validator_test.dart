@@ -41,9 +41,37 @@ void main() {
       valid.copyWith(maxIntensityDictionaryIndexes: Uint32List(1)),
       valid.copyWith(maxIntensityValidity: Uint8List(0)),
     ];
-    for (final chunk in malformed) {
-      expectCorrupt(chunk);
-    }
+    malformed.forEach(expectCorrupt);
+  });
+
+  test('rejects tail bits and invalid numeric validity pairs', () {
+    final valid = validChunk();
+    final malformed = [
+      valid.copyWith(depthValidity: Uint8List.fromList([5])),
+      valid.copyWith(magnitudeValidity: Uint8List.fromList([5])),
+      valid.copyWith(maxIntensityValidity: Uint8List.fromList([5])),
+      for (final value in [
+        double.nan,
+        double.infinity,
+        double.negativeInfinity,
+      ])
+        valid.copyWith(depthsKm: Float32List.fromList([value, double.nan])),
+      valid.copyWith(
+        depthsKm: Float32List.fromList([0, double.nan]),
+        depthValidity: Uint8List(1),
+      ),
+      for (final value in [
+        double.nan,
+        double.infinity,
+        double.negativeInfinity,
+      ])
+        valid.copyWith(magnitudes: Float32List.fromList([value, double.nan])),
+      valid.copyWith(
+        magnitudes: Float32List.fromList([0, double.nan]),
+        magnitudeValidity: Uint8List(1),
+      ),
+    ];
+    malformed.forEach(expectCorrupt);
   });
 }
 
@@ -52,7 +80,7 @@ void expectCorrupt(SeismicityPmTilesChunk chunk) => expect(
   throwsCorruptArchive,
 );
 
-final throwsCorruptArchive = throwsA(
+final Matcher throwsCorruptArchive = throwsA(
   isA<SeismicityPmTilesCorruptArchiveException>(),
 );
 
