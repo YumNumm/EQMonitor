@@ -1,8 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:vector_tile/raw/raw_vector_tile.dart';
 
 final class SeismicityMvtValueDecoder {
   const SeismicityMvtValueDecoder();
+
+  static final _float32Buffer = Float32List(1);
 
   String requireString({
     required VectorTile_Value value,
@@ -48,6 +52,59 @@ final class SeismicityMvtValueDecoder {
       );
     }
     return value.boolValue;
+  }
+
+  ({double canonicalValue, double storageValue}) requireFiniteFloat32Number({
+    required VectorTile_Value value,
+    required int tileId,
+    required int featureIndex,
+    required String field,
+  }) {
+    validateScalarCardinality(
+      value: value,
+      tileId: tileId,
+      featureIndex: featureIndex,
+      field: field,
+    );
+    final double decoded;
+    if (value.hasFloatValue()) {
+      decoded = value.floatValue;
+    } else if (value.hasDoubleValue()) {
+      decoded = value.doubleValue;
+    } else if (value.hasIntValue()) {
+      decoded = value.intValue.toDouble();
+    } else if (value.hasUintValue() && !value.uintValue.isNegative) {
+      decoded = value.uintValue.toDouble();
+    } else if (value.hasSintValue()) {
+      decoded = value.sintValue.toDouble();
+    } else {
+      throw SeismicityPmTilesException.invalidHypocenterFeature(
+        tileId: tileId,
+        featureIndex: featureIndex,
+        field: field,
+        reason: value.hasUintValue() ? 'unsafe_integer' : 'wrong_scalar_type',
+      );
+    }
+    if (!decoded.isFinite) {
+      throw SeismicityPmTilesException.invalidHypocenterFeature(
+        tileId: tileId,
+        featureIndex: featureIndex,
+        field: field,
+        reason: 'non_finite_number',
+      );
+    }
+    final canonicalValue = decoded == 0 ? 0.0 : decoded;
+    _float32Buffer[0] = canonicalValue;
+    final storageValue = _float32Buffer[0];
+    if (!storageValue.isFinite) {
+      throw SeismicityPmTilesException.invalidHypocenterFeature(
+        tileId: tileId,
+        featureIndex: featureIndex,
+        field: field,
+        reason: 'float32_overflow',
+      );
+    }
+    return (canonicalValue: canonicalValue, storageValue: storageValue);
   }
 
   void validateScalarCardinality({
