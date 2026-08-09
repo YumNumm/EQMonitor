@@ -30,6 +30,40 @@ void main() {
       expect(store.fullResyncRequest?.afterRevision, isNull);
       expect(store.needsFullResync, isTrue);
       expect(store.resyncAfterRevision, isNull);
+      final firstRequest = store.fullResyncRequest;
+
+      final retrySources = <MapSourceInstanceId>[
+        source,
+        createMapSourceInstanceId(value: 'source-b'),
+      ];
+      for (final retrySource in retrySources) {
+        final retryResult = _commitDelta(
+          store: store,
+          source: retrySource,
+          baseRevision: 0,
+          targetRevision: 1,
+          build: ({required currentState}) {
+            builderCalled = true;
+            return _candidate(revision: 1);
+          },
+        );
+
+        expect(builderCalled, isFalse);
+        expect(retryResult.current, isNull);
+        expect(retryResult.reason, MapRevisionRejectReason.noCurrentRevision);
+        expect(retryResult.fullResyncRequest, same(firstRequest));
+        expect(store.current, isNull);
+        expect(store.fullResyncRequest, same(firstRequest));
+      }
+
+      final fullResult = _commitFull(
+        store: store,
+        source: source,
+        revision: 1,
+      );
+      expect(fullResult.kind, MapRevisionApplyResultKind.committed);
+      expect(store.current?.revision, 1);
+      expect(store.fullResyncRequest, isNull);
     });
 
     test('latches current-scoped requests for gaps and branches', () {

@@ -87,11 +87,13 @@ final class MapRevisionCommitStore<TState> {
     final currentValue = _current;
     final latchValue = _fullResyncRequest;
     if (currentValue == null) {
-      final request = createMapFullResyncRequest(
-        source: metadata.source,
-        afterRevision: null,
-      );
-      _fullResyncRequest = request;
+      final request =
+          latchValue ??
+          createMapFullResyncRequest(
+            source: metadata.source,
+            afterRevision: null,
+          );
+      _fullResyncRequest ??= request;
       return MapRevisionApplyResult.rejected(
         current: null,
         reason: MapRevisionRejectReason.noCurrentRevision,
