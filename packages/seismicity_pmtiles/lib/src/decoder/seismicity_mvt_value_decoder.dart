@@ -107,6 +107,44 @@ final class SeismicityMvtValueDecoder {
     return (canonicalValue: canonicalValue, storageValue: storageValue);
   }
 
+  int requireSafeInteger({
+    required VectorTile_Value value,
+    required int tileId,
+    required int featureIndex,
+    required String field,
+  }) {
+    validateScalarCardinality(
+      value: value,
+      tileId: tileId,
+      featureIndex: featureIndex,
+      field: field,
+    );
+    if (value.hasIntValue()) {
+      return value.intValue.toInt();
+    }
+    if (value.hasSintValue()) {
+      return value.sintValue.toInt();
+    }
+    if (value.hasUintValue() && !value.uintValue.isNegative) {
+      return value.uintValue.toInt();
+    }
+    if (value.hasDoubleValue()) {
+      final decoded = value.doubleValue;
+      if (decoded.isFinite &&
+          decoded == decoded.truncateToDouble() &&
+          decoded.abs() <= 9007199254740991) {
+        return decoded.toInt();
+      }
+    }
+    final numericButUnsafe = value.hasDoubleValue() || value.hasUintValue();
+    throw SeismicityPmTilesException.invalidHypocenterFeature(
+      tileId: tileId,
+      featureIndex: featureIndex,
+      field: field,
+      reason: numericButUnsafe ? 'unsafe_integer' : 'wrong_scalar_type',
+    );
+  }
+
   void validateScalarCardinality({
     required VectorTile_Value value,
     required int tileId,
