@@ -1,6 +1,9 @@
 import 'package:seismicity_pmtiles/src/decoder/seismicity_mvt_value_decoder.dart';
+import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:test/test.dart';
 import 'package:vector_tile/raw/raw_vector_tile.dart';
+
+typedef InvalidFeature = SeismicityPmTilesInvalidHypocenterFeatureException;
 
 void main() {
   const decoder = SeismicityMvtValueDecoder();
@@ -75,6 +78,40 @@ void main() {
     }
   });
 
+  test('keeps canonical doubles distinct before Float32 storage rounding', () {
+    final first = number(raw(double: 1.00000001));
+    final second = number(raw(double: 1.00000002));
+    expect(first.canonicalValue, isNot(second.canonicalValue));
+    expect(first.storageValue, second.storageValue);
+  });
+
+  test('rejects invalid cardinality, scalar types, and numeric values', () {
+    final cases = <(String, void Function())>[
+      ('invalid_scalar_cardinality', () => string(raw())),
+      (
+        'invalid_scalar_cardinality',
+        () => boolean(raw(string: 'x', boolean: true)),
+      ),
+      ('wrong_scalar_type', () => string(raw(boolean: true))),
+      ('wrong_scalar_type', () => boolean(raw(string: 'x'))),
+      ('wrong_scalar_type', () => number(raw(string: 'x'))),
+      ('non_finite_number', () => number(raw(double: double.nan))),
+      ('non_finite_number', () => number(raw(double: double.infinity))),
+      ('float32_overflow', () => number(raw(double: 1e100))),
+      ('float32_overflow', () => number(raw(double: -1e100))),
+      ('unsafe_integer', () => safeInteger(raw(double: 1.5))),
+      ('unsafe_integer', () => safeInteger(raw(double: 9007199254740992))),
+      (
+        'unsafe_integer',
+        () => safeInteger(integer(field: 'uintValue', value: '-1')),
+      ),
+      ('wrong_scalar_type', () => safeInteger(raw(float: 42))),
+      ('wrong_scalar_type', () => safeInteger(raw(boolean: true))),
+    ];
+    for (final (reason, call) in cases) {
+      expect(call, throwsA(invalidFeature(reason)));
+    }
+  });
 }
 
 VectorTile_Value integer({required String field, required String value}) {
@@ -98,3 +135,9 @@ VectorTile_Value raw({
   doubleValue: double,
   boolValue: boolean,
 );
+
+Matcher invalidFeature(String reason) => isA<InvalidFeature>()
+    .having((error) => error.tileId, 'tileId', 5)
+    .having((error) => error.featureIndex, 'featureIndex', 0)
+    .having((error) => error.field, 'field', 'depth_km')
+    .having((error) => error.reason, 'reason', reason);
