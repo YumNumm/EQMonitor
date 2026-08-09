@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:eqmonitor_map/src/foundation/render/map_packed_mesh_layout.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_packet.dart';
+import 'package:eqmonitor_map/src/foundation/render/map_render_phase.dart';
+import 'package:eqmonitor_map/src/foundation/render/map_render_sort_key.dart';
 
 final class MapRenderBatchCompatibility {
   const MapRenderBatchCompatibility._({
@@ -50,4 +52,68 @@ final class MapRenderBatch {
   final MapRenderBatchCompatibility compatibility;
   final List<MapRenderPacket> packets;
   final List<Float64List> instanceTransforms;
+}
+
+MapRenderBatch createMapRenderBatch({
+  required int version,
+  required MapRenderPhasePolicy policy,
+  required List<MapRenderPacket> packets,
+}) {
+  if (version <= 0) {
+    throw ArgumentError.value(version, 'version', 'must be positive');
+  }
+  if (packets.isEmpty) {
+    throw ArgumentError.value(packets, 'packets', 'must not be empty');
+  }
+
+  final compatibility = mapRenderBatchCompatibilityOf(packet: packets.first);
+  for (final (index, packet) in packets.indexed) {
+    if (packet.sortKey.phasePolicyVersion != policy.version ||
+        packet.sortKey.phase >= policy.orderedPhases.length) {
+      throw ArgumentError.value(
+        packet,
+        'packets',
+        'must conform to the phase policy',
+      );
+    }
+    if (index > 0 &&
+        compareMapRenderSortKeys(packets[index - 1].sortKey, packet.sortKey) >=
+            0) {
+      throw ArgumentError.value(
+        packets,
+        'packets',
+        'sort keys must be unique and in canonical order',
+      );
+    }
+    if (packet.contractVersion != compatibility.contractVersion ||
+        packet.mesh.payloadVersion != compatibility.payloadVersion ||
+        packet.batchKey != compatibility.batchKey ||
+        packet.sortKey.phase != compatibility.phase ||
+        packet.sortKey.phasePolicyVersion != compatibility.phasePolicyVersion ||
+        !haveCompatibleMapPackedMeshLayouts(
+          packet.mesh.layout,
+          compatibility.layout,
+        ) ||
+        packet.pipeline != compatibility.pipeline ||
+        !haveEqualMapMaterialParameterContent(
+          packet.materialParameters,
+          compatibility.materialParameters,
+        )) {
+      throw ArgumentError.value(
+        packet,
+        'packets',
+        'must be compatible with the first packet',
+      );
+    }
+  }
+
+  final ownedPackets = List<MapRenderPacket>.unmodifiable(packets);
+  return MapRenderBatch._(
+    version: version,
+    compatibility: compatibility,
+    packets: ownedPackets,
+    instanceTransforms: List<Float64List>.unmodifiable(
+      ownedPackets.map((packet) => packet.modelTransform),
+    ),
+  );
 }
