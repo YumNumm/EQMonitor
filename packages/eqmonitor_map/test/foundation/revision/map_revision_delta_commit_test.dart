@@ -90,6 +90,72 @@ void main() {
         expect(owner.callCount, 1);
       }
     });
+
+    test('rejects another source before running the builder', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commitFull(store: store, source: source, revision: 4);
+      final before = store.current;
+      var builderCalled = false;
+
+      final result = _commitDelta(
+        store: store,
+        source: createMapSourceInstanceId(value: 'another-source'),
+        baseRevision: 4,
+        targetRevision: 5,
+        build: ({required currentState}) {
+          builderCalled = true;
+          return _candidate(digest: 'five', values: <int>[4, 5]);
+        },
+      );
+
+      expect(builderCalled, isFalse);
+      expect(result.reason, MapRevisionRejectReason.sourceMismatch);
+      expect(store.current, same(before));
+      expect(owner.callCount, 1);
+    });
+
+    test('preserves current when the builder throws', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commitFull(store: store, source: source, revision: 4);
+      final before = store.current;
+
+      expect(
+        () => _commitDelta(
+          store: store,
+          source: source,
+          baseRevision: 4,
+          targetRevision: 5,
+          build: ({required currentState}) =>
+              throw StateError('builder failed'),
+        ),
+        throwsStateError,
+      );
+      expect(store.current, same(before));
+      expect(owner.callCount, 1);
+    });
+
+    test('preserves current when the owner throws', () {
+      var failOwner = false;
+      final owner = _NestedStateOwner(failWhen: () => failOwner);
+      final store = MapRevisionCommitStore(owner);
+      _commitFull(store: store, source: source, revision: 4);
+      final before = store.current;
+      failOwner = true;
+
+      expect(
+        () => _commitDelta(
+          store: store,
+          source: source,
+          baseRevision: 4,
+          targetRevision: 5,
+        ),
+        throwsStateError,
+      );
+      expect(store.current, same(before));
+      expect(owner.callCount, 2);
+    });
   });
 }
 
@@ -145,6 +211,9 @@ MapRevisionCandidate<_NestedState> _candidate({
 );
 
 final class _NestedStateOwner implements MapRevisionStateOwner<_NestedState> {
+  _NestedStateOwner({this.failWhen});
+
+  final bool Function()? failWhen;
   var _callCount = 0;
 
   int get callCount => _callCount;
@@ -154,6 +223,9 @@ final class _NestedStateOwner implements MapRevisionStateOwner<_NestedState> {
     required MapRevisionCandidate<_NestedState> candidate,
   }) {
     _callCount++;
+    if (failWhen?.call() ?? false) {
+      throw StateError('owner failed');
+    }
     return MapRevisionCandidate(
       state: Map<String, List<int>>.unmodifiable({
         for (final entry in candidate.state.entries)
