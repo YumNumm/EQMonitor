@@ -36,8 +36,85 @@ void main() {
       expect(result.current?.state['values'], <int>[4, 5]);
       expect(owner.callCount, 2);
     });
+
+    test('rejects a candidate carrying the wrong target digest', () {
+      final owner = _NestedStateOwner();
+      final store = MapRevisionCommitStore(owner);
+      _commitFull(store: store, source: source, revision: 4);
+      final before = store.current;
+
+      final result = _commitDelta(
+        store: store,
+        source: source,
+        baseRevision: 4,
+        targetRevision: 5,
+        digest: 'five',
+        build: ({required currentState}) =>
+            _candidate(digest: 'wrong', values: <int>[4, 5]),
+      );
+
+      expect(result.reason, MapRevisionRejectReason.contentDigestMismatch);
+      expect(result.current, same(before));
+      expect(store.current, same(before));
+      expect(owner.callCount, 1);
+    });
+
+    test('rejects every non-exact base before running the builder', () {
+      const cases = <({int base, int target, MapRevisionRejectReason reason})>[
+        (base: 3, target: 4, reason: MapRevisionRejectReason.staleRevision),
+        (base: 3, target: 5, reason: MapRevisionRejectReason.revisionBranch),
+        (base: 5, target: 6, reason: MapRevisionRejectReason.revisionGap),
+      ];
+
+      for (final testCase in cases) {
+        final owner = _NestedStateOwner();
+        final store = MapRevisionCommitStore(owner);
+        _commitFull(store: store, source: source, revision: 4);
+        final before = store.current;
+        var builderCalled = false;
+
+        final result = _commitDelta(
+          store: store,
+          source: source,
+          baseRevision: testCase.base,
+          targetRevision: testCase.target,
+          build: ({required currentState}) {
+            builderCalled = true;
+            return _candidate(digest: 'unused', values: <int>[]);
+          },
+        );
+
+        expect(builderCalled, isFalse);
+        expect(result.reason, testCase.reason);
+        expect(store.current, same(before));
+        expect(owner.callCount, 1);
+      }
+    });
   });
 }
+
+MapRevisionApplyResult<_NestedState> _commitDelta({
+  required MapRevisionCommitStore<_NestedState> store,
+  required MapSourceInstanceId source,
+  required int baseRevision,
+  required int targetRevision,
+  String? digest,
+  MapRevisionCandidate<_NestedState> Function({
+    required _NestedState currentState,
+  })?
+  build,
+}) => store.commitDelta(
+  metadata: createMapDeltaRevision(
+    source: source,
+    baseRevision: baseRevision,
+    targetRevision: targetRevision,
+    targetDigest: createMapContentDigest(value: digest ?? 'five'),
+  ),
+  validateAndBuild:
+      build ??
+      ({required currentState}) =>
+          _candidate(digest: digest ?? 'five', values: <int>[4, 5]),
+);
 
 void _commitFull({
   required MapRevisionCommitStore<_NestedState> store,
