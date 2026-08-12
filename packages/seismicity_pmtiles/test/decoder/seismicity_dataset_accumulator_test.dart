@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:seismicity_pmtiles/src/decoder/seismicity_chunk_builder.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_dataset_accumulator.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoded_hypocenter.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
@@ -55,12 +56,14 @@ void main() {
   });
 
   test('rejects a unique row beyond the descriptor count atomically', () {
-    final accumulator = SeismicityDatasetAccumulator(
-      expectedUniqueCount: 3,
-      chunkCapacity: 2,
-    )..add(record: row(id: 1))
-     ..add(record: row(id: 2))
-     ..add(record: row(id: 3));
+    final accumulator =
+        SeismicityDatasetAccumulator(
+            expectedUniqueCount: 3,
+            chunkCapacity: 2,
+          )
+          ..add(record: row(id: 1))
+          ..add(record: row(id: 2))
+          ..add(record: row(id: 3));
 
     expect(
       () => accumulator.add(record: row(id: 4)),
@@ -71,6 +74,40 @@ void main() {
       2,
       1,
     ]);
+  });
+
+  test('poisons every operation after a partial append or index failure', () {
+    final createAccumulators = [
+      () => SeismicityDatasetAccumulator(
+        expectedUniqueCount: 1,
+        chunkCapacity: 1,
+        createChunk: ({required capacity}) => SeismicityChunkBuilder(
+          capacity: capacity,
+          beforeCanonicalAdd: () =>
+              throw const SeismicityPmTilesException.invalidDescriptor(
+                reason: 'injected chunk failure',
+              ),
+        ),
+      ),
+      () => SeismicityDatasetAccumulator(
+        expectedUniqueCount: 1,
+        chunkCapacity: 1,
+        beforeIndexInsert: () =>
+            throw const SeismicityPmTilesException.invalidDescriptor(
+              reason: 'injected index failure',
+            ),
+      ),
+    ];
+    final invalid = throwsA(isA<SeismicityPmTilesInvalidDescriptorException>());
+
+    for (final createAccumulator in createAccumulators) {
+      final accumulator = createAccumulator();
+      expect(() => accumulator.add(record: row(id: 1)), invalid);
+      expect(() => accumulator.rawCount, invalid);
+      expect(() => accumulator.uniqueCount, invalid);
+      expect(accumulator.buildChunks, invalid);
+      expect(() => accumulator.add(record: row(id: 2)), invalid);
+    }
   });
 }
 
