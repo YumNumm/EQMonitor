@@ -624,6 +624,81 @@ lease exposes `generation/state/Future<void> retire()`; constructor consumes tra
 - [ ] **Step 5 — publish:** 2 files を addし
   `git commit -m 'Feature: GPU resource frame記録を追加' && git push`。
 
+### Task 5: before-submit stamping（fork bottom、depends Task 4）
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** registry constructor は Task 1 の before-submit listener を1回だけ登録する。
+record は `int? lastSubmission` を持ち、`markUsed` setを submission idへ atomically stampする。
+
+- [ ] **Step 1 — RED:** `beginFrame → markUsed → retire → tracker.record()` 後に state pending、
+  `lastSubmission=1`、release=0を期待する。active resource も `markUsed → record` で stampされる。
+  1 frame内2 submissionでは最終 id=2、invalidation が open frame 中でも既に mark済み record は
+  stampされ、後続markだけ拒否されることを testする。
+- [ ] **Step 2 — verify RED:** plain-name `retire during open frame stamps next submission`。
+  expected RED は record が submission待ちへ遷移せず早期releaseする assertion failure。
+- [ ] **Step 3 — GREEN:** before-submit は listener呼出時の mark snapshotを clearし、active/pending-open
+  両方へ `max(previous,id)` を記録する。frame は openのまま、release/Future settle は行わない。
+- [ ] **Step 4 — verify:** registry全test + tracker test + diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: GPU submission stampを追加' && git push`。
+
+### Task 6: completion-gated retirement（fork bottom、depends Task 5）
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** Task 1 completion listener を1回登録。`retire()` は record固有 cached Futureを返し、
+`lastSubmission <= completedThrough` の時だけ synchronous release callbackを1回呼ぶ。
+
+- [ ] **Step 1 — RED:** 次の3順序を別testにする。(a) submit→complete→retire は即 release、
+  (b) bind→retire→submit→complete は completionまで保持、(c) submit1/submit2 を2→1順にcompleteし、
+  watermark=0では保持、2へ進んだ時だけrelease。各順序で `identical(lease.retire(), lease.retire())`
+  と callback count=1 を期待する。
+- [ ] **Step 2 — verify RED:** plain-name `completion before retirement releases immediately`。
+  expected RED は completion listener未接続またはFuture未完了。
+- [ ] **Step 3 — GREEN:** release前に内部stateを `releasing`、accountingを retiringへ移す。
+  completion callback中の collection mutationを避けるため eligible record snapshotを作り順にreleaseする。
+- [ ] **Step 4 — verify:** registry/tracker tests、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: GPU completion後にresourceを解放' && git push`。
+
+### Task 7: release failure/reentrancy ordering（fork bottom、depends Task 6）
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** registry retains ordered `List<Object> failureLog` for tests; first release error is global cause。
+No public recovery API。production callback is later constrained to no-throw view clearing。
+
+- [ ] **Step 1 — RED:** injected callbackから同 lease `retire()`、owner dispose hook、global invalidate hook、
+  snapshotを reentrant に呼び、callback一回/Future同一を期待する。別testでは callbackが `firstError`
+  をthrowし reentrant hookが `secondError` をthrow、resource=`retirementFailed`、failed bytes保持、
+  global=`failed`、failureLog exact `[firstError, secondError]` を期待する。
+- [ ] **Step 2 — verify RED:** plain-name `release failure is terminal and preserves error order`。
+  expected RED は failure accounting/stateが未実装。
+- [ ] **Step 3 — GREEN:** callback前に state/accountingを進め、try/catch後にresource Futureをsettleする。
+  first errorだけを context causeにし、残りは insertion orderで保存。残る records のretirementは継続する。
+- [ ] **Step 4 — verify:** registry全test、同一Future/one-callback assertions、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Fix: GPU release失敗をterminal化' && git push`。
+
+### Task 8: global owners と snapshot projection（fork bottom、depends Task 7）
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** Produces `Future<void> disposeOwner(int ownerId)`, generation-global invalidate state storage、
+owner terminal state storage。`snapshotFor` は disposed ownerにもread-onlyで許可する。
+
+- [ ] **Step 1 — RED:** owners A/Bへ各1 recordを登録し、A disposeでAだけretiring、B active、globalは
+  activeを期待する。disposed A snapshotは final owner usageとglobal B usageを返す。Aの再disposeは
+  identical owner Future、unknown owner operationは `StateError`。全snapshot fieldをexact比較する。
+- [ ] **Step 2 — verify RED:** plain-name `owner disposal does not dispose global context`。
+  expected RED は disposeOwner未定義。
+- [ ] **Step 3 — GREEN:** owner state/Futureをregistryで管理し、disposeはそのowner current-generation
+  recordsだけretire。owner Futureはowner records settle後に resource Futureより後でsettleする。
+- [ ] **Step 4 — verify:** registry/models tests、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: GPU resource owner集計を追加' && git push`。
+
 ### Task 1: submission completion listener を追加する（fork bottom）
 
 **Files:**
