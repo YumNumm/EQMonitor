@@ -219,7 +219,50 @@ API review 中に引数名を変える場合も、次の semantics は変えな�
 10. snapshot bytes は registry が保持する logical references。global/owner と active/retiring/failed、
     total/instance を分け、driver resident bytes や即時 reclaim と表現しない。
 
-## 4. Repository と PR stack
+## 4. File responsibility map
+
+### YumNumm/flutter_scene bottom PR
+
+- `lib/src/render/frame_transients.dart`: submission id、before-submit、completion watermark 通知。
+- `lib/src/render/persistent_gpu_resource_models.dart`: public enums、usage/snapshot immutable values。
+- `lib/src/render/persistent_gpu_execution_affinity.dart`: same-isolate check と mutation reentrancy guard。
+- `lib/src/render/persistent_gpu_resource_registry.dart`: global generation/state、owner/record accounting、
+  frame marks、submission stamps、retirement/failure completion。
+- `lib/src/render/persistent_gpu_resource_lifecycle.dart`: public owner handle と operation state machine。
+- `lib/src/scene.dart`: registry `beginFrame`/`endFrame` を render frame の `try/finally` に接続。
+- `lib/scene.dart`: curated public lifecycle exports。
+- `test/render/gpu_submission_tracker_test.dart`: tracker ordering/listener tests。
+- `test/render/persistent_gpu_resource_registry_test.dart`: record/frame/submission/failure state tests。
+- `test/render/persistent_gpu_resource_lifecycle_test.dart`: multi-owner operation transition tests。
+
+### YumNumm/flutter_scene top PR
+
+- `lib/src/geometry/persistent_packed_instance_plan.dart`: defensive copy、checked arithmetic、layout/bounds/
+  index validation、immutable upload plan。
+- `lib/src/geometry/persistent_packed_instance_storage.dart`: one-shot device allocation/write/flush と
+  nullable views release。
+- `lib/src/geometry/persistent_packed_instance_geometry.dart`: public Geometry、lifecycle lease、bind/draw。
+- `lib/src/material/shader_stage.dart`: exact persistent packed material variant。
+- `lib/src/material/shader_material.dart`: variant lookup without unskinned collapse。
+- `lib/scene.dart` / `README.md`: curated Geometry export と consumer contract。
+- `test/persistent_packed_instance_plan_test.dart`: all input/mutation/overflow/index validation。
+- `test/persistent_packed_instance_storage_test.dart`: write count/failure/release、GPU-gated upload。
+- `test/persistent_packed_instance_geometry_test.dart`: state/bind/draw/material behavior。
+- `test/persistent_packed_instance_public_api_test.dart`: public-import-only compile contract。
+
+### YumNumm/EQMonitor pin PR
+
+- `packages/eqmonitor_map/pubspec.yaml`, `packages/eqmonitor_map/example/pubspec.yaml`, `pubspec.lock`:
+  one fork URL/full SHA across flutter_scene and scene。
+- `tool/verify_flutter_scene_pin.sh`, `scripts/ci/test_verify_flutter_scene_pin.sh`: machine-readable 3 descriptor
+  + 2 lock entry assertion。
+- `packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart`: resolved fork API check。
+- package/example README と既存3 knowledge docs: live SHA/provenance/lifecycle boundaries。
+
+大きな registry/validation/Geometry file を1 task で完成させない。後述 task はこの責務境界を保ち、
+隣接 task が使う signature を各 `Interfaces` block で固定する。
+
+## 5. Repository と PR stack
 
 repository を跨ぐ branch は GitHub 上の1本の stack にできない。次の2 stack と immutable
 SHA hand-off を使う。
