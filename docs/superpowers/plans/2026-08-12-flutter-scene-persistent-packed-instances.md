@@ -66,6 +66,24 @@ Flutter Scene `7f71993b7e2a0ab1d2f59726a406098709be7291`、Dart/Flutter test、
 - いずれの repository からもソースを copy しない。copy が必要になった場合は、その場で
   MIT notice の要否を再確認し、無記録で取り込まない。
 
+### 採用案と棄却案
+
+1. **採用: exact pin の compatibility branch に generic API を積む。** EQMonitor で既に compile/
+   smoke 実績がある Flutter `4dacd3fc...` + Scene `7f71993...` を保ち、必要な API だけを小さく
+   review できる。後続 stack が参照する SHA も一意になる。
+2. **棄却: bdero current master へ直接実装する。** upstream の cache memory API は利用できるが、
+   EQMonitor pin 以降の多数の変更と current Flutter master 要件を同時に取り込むため、#1602 の
+   static instance 差分と互換性リスクを分離できない。forward-port は fork完成後の別PRにする。
+3. **棄却: EQMonitor adapter で Flutter Scene internal GPU API を呼ぶ。** 最短でも fork upgrade ごとに
+   private symbol へ追従し、Issue の public API 条件を破る。`flutter_gpu` buffer を app が直接所有
+   する案も同じ理由で採らない。
+4. **棄却: per-frame billboard/InstancedMesh、chunking、固定 frames-in-flight。** 200万件の再pack/
+   upload または CPU matrix memory を残し、GPU completion を時間・frame数で推測するため、性能と
+   lifecycle の必須条件を満たさない。
+
+この選択により fork の API は「汎用2-stream packed Geometry + lifecycle」に限定し、震源の座標、
+色、LOD、24-byte record schema は #1604 の EQMonitor consumer 側に残す。
+
 ## 3. 固定する公開 API と不変条件
 
 `package:flutter_scene/scene.dart` から次だけを export する。EQMonitor は
@@ -206,29 +224,34 @@ git push origin eqmonitor/flutter-4dacd3fc:eqmonitor/flutter-4dacd3fc
 git config rerere.enabled true
 git config remote.pushDefault origin
 gh stack init --base eqmonitor/flutter-4dacd3fc \
-  feat/persistent-gpu-lifecycle feat/persistent-packed-instance-geometry
+  feat/persistent-gpu-lifecycle
 ```
 
-`gh stack init` 後は bottom の `feat/persistent-gpu-lifecycle` へ checkout して Task 1 を開始する。
-既存 branch が見つかった場合は SHA/owner を確認し、上書きや force push をしない。
+`gh stack init` 後は bottom の `feat/persistent-gpu-lifecycle` で Task 1 を開始する。top branch は
+bottom PR 作成後に Task 5 で追加する。既存 branch が見つかった場合は SHA/owner を確認し、
+上書きや force push をしない。
 
 **Step 3: pinned toolchain と baseline**
 
-fork 自体は Flutter を pin していないため、全 Flutter/Dart command は EQMonitor の mise 環境を
-注入した shell 内で実行する。以下の `<fork>` は絶対 path へ置換し、文字列のまま実行しない。
+fork 自体は Flutter を pin していないため、全 Flutter/Dart command は EQMonitor と同じ exact
+tool version を `mise exec flutter@<full-sha> --` で指定する。以下の `<fork>` は絶対 path へ
+置換し、文字列のまま実行しない。
 
 ```bash
-cd /path/to/EQMonitor
-mise exec -- bash -c 'cd <fork> && flutter --version --machine'
-mise exec -- bash -c 'cd <fork> && flutter pub get'
-mise exec -- bash -c \
-  'cd <fork>/packages/flutter_scene && flutter test --enable-impeller \
-   test/render/frame_transients_test.dart'
+cd <fork>
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter --version --machine
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter pub get
+cd packages/flutter_scene
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller test/render/frame_transients_test.dart
 ```
 
 version JSON の framework SHA が `4dacd3fc...` でなければ中断する。baseline failure は既存失敗と
 今回差分を分離して PR body に記録し、成功扱いにしない。実機、Simulator、smoke-render E2E は
-今回のユーザー指定により実行しない。
+今回のユーザー指定により実行しない。Task 1–9 の shell snippet はすべて
+`<fork>/packages/flutter_scene` から開始する。
 
 ### Task 1: submission completion listener を追加する（fork bottom）
 
@@ -246,7 +269,8 @@ version JSON の framework SHA が `4dacd3fc...` でなければ中断する。b
 **Step 2: focused test を RED で確認**
 
 ```bash
-flutter test --enable-impeller test/render/frame_transients_test.dart \
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller test/render/frame_transients_test.dart \
   --plain-name 'completion listeners observe the contiguous watermark'
 ```
 
@@ -259,10 +283,10 @@ before-submit listener と record/submit の順序を変えない。
 **Step 4: GREEN、commit、push**
 
 ```bash
-flutter test --enable-impeller test/render/frame_transients_test.dart
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller test/render/frame_transients_test.dart
 git --no-pager diff --check
-git add packages/flutter_scene/lib/src/render/frame_transients.dart \
-  packages/flutter_scene/test/render/frame_transients_test.dart
+git add lib/src/render/frame_transients.dart test/render/frame_transients_test.dart
 git commit -m 'Feature: GPU submission完了通知を追加'
 git push
 ```
@@ -281,7 +305,7 @@ git push
 - bind 済み resource は次 submission に stamp され、completion 前は release されない。
 - 複数 submission/out-of-order completion は最大 `lastSubmission` の watermark まで待つ。
 - retire request 後の mark-used は `StateError`。
-- previous frame に mark されたが submission がなかった record は `beginFrame()` で unstamped
+- frame に mark されたが submission がなかった record は `endFrame()` で unstamped
   と判定され、安全に release できる。
 - snapshot が active/retiring count、total/instance bytes、latest/completed id を正しく分離する。
 - `retire()` は同一 Future を返し、release callback は一度だけ呼ぶ。
@@ -291,16 +315,18 @@ git push
 `PersistentGpuResourceRegistry` は1個の before-submit listener と1個の completion listener を
 tracker へ登録する。`markUsed` は Set に入れ、before-submit で id を stamp、completion で
 `lastSubmission <= completedThrough` の retiring records だけ release する。固定 frames-in-flight
-や timer は入れない。public snapshot value types と state enum も同じ file に置くが、registry
-自体は `scene.dart` から export しない。
+や timer は入れない。`beginFrame`/`endFrame` で recording 範囲を明示し、`endFrame` は最後の
+submission に stamp されなかった marks を「GPUへ渡されていない」として閉じる。public snapshot
+value types と state enum も同じ file に置くが、registry 自体は `scene.dart` から export しない。
 
 **Step 3: focused tests、commit、push**
 
 ```bash
-flutter test --enable-impeller test/render/persistent_gpu_resources_test.dart
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller test/render/persistent_gpu_resources_test.dart
 git --no-pager diff --check
-git add packages/flutter_scene/lib/src/render/persistent_gpu_resources.dart \
-  packages/flutter_scene/test/render/persistent_gpu_resources_test.dart
+git add lib/src/render/persistent_gpu_resources.dart \
+  test/render/persistent_gpu_resources_test.dart
 git commit -m 'Feature: 永続GPU resource retirementを追加'
 git push
 ```
@@ -323,22 +349,25 @@ idempotence を test する。2 lifecycle が同じ global registry を使って
 **Step 2: lifecycle と frame boundary**
 
 `PersistentGpuResourceLifecycle` を実装し、Geometry 用 registration は `@internal` として
-consumer の supported surface から除外する。`Scene` の既存 transients `beginFrame()` と同じ
-位置で global registry の `beginFrame()` を一度呼び、前 frame の unsubmitted marks を閉じる。
-automatic context-loss detection や buffer 強制破棄 API は追加しない。
+consumer の supported surface から除外する。`Scene.renderViews` は既存 transients
+`beginFrame()` と同じ位置で registry の `beginFrame()` を呼び、以降の全 view encode/submit を
+`try/finally` で囲んで `endFrame()` を必ず呼ぶ。これにより encode exception や submission なしで
+frame が終わっても pending mark を残さない。automatic context-loss detection や buffer 強制破棄
+API は追加しない。
 
 **Step 3: export、GREEN、commit、push**
 
 `scene.dart` の show-list には lifecycle、2 state enums、snapshot だけを追加する。
 
 ```bash
-flutter test --enable-impeller test/render/frame_transients_test.dart \
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller test/render/frame_transients_test.dart \
   test/render/persistent_gpu_resources_test.dart
-dart analyze packages/flutter_scene
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  dart analyze .
 git --no-pager diff --check
-git add packages/flutter_scene/lib/src/render/persistent_gpu_resources.dart \
-  packages/flutter_scene/lib/src/scene.dart packages/flutter_scene/lib/scene.dart \
-  packages/flutter_scene/test/render/persistent_gpu_resources_test.dart
+git add lib/src/render/persistent_gpu_resources.dart lib/src/scene.dart \
+  lib/scene.dart test/render/persistent_gpu_resources_test.dart
 git commit -m 'Feature: GPU context generationを公開'
 git push
 ```
@@ -357,11 +386,12 @@ completion が来ない場合は fail-closed であること、snapshot が logi
 **Step 2: non-device verification**
 
 ```bash
-dart format --output=none --set-exit-if-changed \
-  packages/flutter_scene/lib packages/flutter_scene/test
-dart analyze packages/flutter_scene
-cd packages/flutter_scene
-flutter test --enable-impeller
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  dart format --output=none --set-exit-if-changed lib test
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  dart analyze .
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller
 ```
 
 すべて Task 0 の pinned mise shell から実行する。GPU unavailable による既存 conditional skip は
@@ -370,7 +400,7 @@ skip として記録し、GPU pass に読み替えない。failure が今回差�
 **Step 3: commit、push、bottom PR**
 
 ```bash
-git add packages/flutter_scene/README.md
+git add README.md
 git commit -m 'Docs: 永続GPU lifecycle契約を記載'
 git push
 gh stack submit --auto --open --remote origin
@@ -419,11 +449,12 @@ validation failure 後に lifecycle へ resource が登録されていないこ�
 **Step 4: focused GREEN、commit、push**
 
 ```bash
-flutter test --enable-impeller \
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller \
   test/persistent_packed_instance_geometry_test.dart
 git --no-pager diff --check
-git add packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart \
-  packages/flutter_scene/test/persistent_packed_instance_geometry_test.dart
+git add lib/src/geometry/persistent_packed_instance_geometry.dart \
+  test/persistent_packed_instance_geometry_test.dart
 git commit -m 'Feature: packed instance入力検証を追加'
 git push
 ```
@@ -451,16 +482,19 @@ GPU がない runner では明示 skip とする。upload 回数の重要な inv
 validation 完了後にだけ non-index buffer を確保し、base を offset 0、instance を aligned offset
 へ各1回 overwrite する。index があれば別 buffer へ1回 overwrite。全 return value を検査し、
 失敗時は registration 前に references を落として throw する。成功後に lifecycle generation と
-total/instance bytes を registry へ登録する。
+total/instance bytes を registry へ登録する。superclass の `setVertices` / `setIndices` は retirement
+後も private fields が view を保持するため使わない。この subclass が nullable な base/instance/
+index views を直接所有し、release callback で3参照を同時に clear できる構造にする。
 
 **Step 3: focused GREEN、commit、push**
 
 ```bash
-flutter test --enable-impeller \
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller \
   test/persistent_packed_instance_geometry_test.dart
 git --no-pager diff --check
-git add packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart \
-  packages/flutter_scene/test/persistent_packed_instance_geometry_test.dart
+git add lib/src/geometry/persistent_packed_instance_geometry.dart \
+  test/persistent_packed_instance_geometry_test.dart
 git commit -m 'Feature: packed instanceを永続GPU bufferへupload'
 git push
 ```
@@ -485,8 +519,9 @@ retired/old generation の bind/draw 拒否は GPU 非依存 state method で te
 `vertexStreamCount == 2`、`bindsModelTransformInstance == false`、provided layout、provided
 vertex shader、required `doubleSided` を override する。bind 順序は lifecycle current check、
 registry `markUsed`、slot 0 vertex、slot 1 instance、optional index、`FrameInfo` uniform とする。
-draw は supplied vertex/index count と immutable instance count だけを使い、引数の外部
-`instanceCount` で packed record 数を変更させない。
+既存 compat bind/draw helpers を使い、superclass の private buffer state には触れない。draw は
+supplied vertex/index count と immutable instance count だけを使う。引数の外部 `instanceCount`
+が 1 以外なら、nested `InstancedMesh` を黙って誤描画せず `StateError` にする。
 
 material-less depth/shadow pass も instance slot が必要なため position-only shortcut を返さず、
 同じ packed layout/shader を使う。custom shader は `FrameInfo` と必要な `v_*` outputs を満たす
@@ -495,14 +530,14 @@ material-less depth/shadow pass も instance slot が必要なため position-on
 **Step 3: GREEN、commit、push**
 
 ```bash
-flutter test --enable-impeller test/shader_material_vertex_test.dart \
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller test/shader_material_vertex_test.dart \
   test/persistent_packed_instance_geometry_test.dart
 git --no-pager diff --check
-git add packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart \
-  packages/flutter_scene/lib/src/material/shader_stage.dart \
-  packages/flutter_scene/lib/src/material/shader_material.dart \
-  packages/flutter_scene/test/shader_material_vertex_test.dart \
-  packages/flutter_scene/test/persistent_packed_instance_geometry_test.dart
+git add lib/src/geometry/persistent_packed_instance_geometry.dart \
+  lib/src/material/shader_stage.dart lib/src/material/shader_material.dart \
+  test/shader_material_vertex_test.dart \
+  test/persistent_packed_instance_geometry_test.dart
 git commit -m 'Feature: packed instance Geometryを描画'
 git push
 ```
@@ -529,11 +564,12 @@ scan、固定 delay、例外時の標準 Geometry fallback を入れない。
 **Step 3: focused GREEN、commit、push**
 
 ```bash
-flutter test --enable-impeller \
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller \
   test/persistent_packed_instance_public_api_test.dart
 git --no-pager diff --check
-git add packages/flutter_scene/lib/scene.dart packages/flutter_scene/README.md \
-  packages/flutter_scene/test/persistent_packed_instance_public_api_test.dart
+git add lib/scene.dart README.md \
+  test/persistent_packed_instance_public_api_test.dart
 git commit -m 'Feature: packed instance公開APIを追加'
 git push
 ```
@@ -546,8 +582,8 @@ git push
 
 ```bash
 rg -n 'instanceTransients\.emplace|List<Matrix4>|Future\.delayed|Timer\(' \
-  packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart \
-  packages/flutter_scene/lib/src/render/persistent_gpu_resources.dart
+  lib/src/geometry/persistent_packed_instance_geometry.dart \
+  lib/src/render/persistent_gpu_resources.dart
 ```
 
 期待: 0件。さらに constructor 以外から instance source の `overwrite`/copy が呼ばれず、
@@ -556,11 +592,12 @@ retirement callback だけが buffer references を clear することを diff r
 **Step 2: fork full non-device gate**
 
 ```bash
-dart format --output=none --set-exit-if-changed \
-  packages/flutter_scene/lib packages/flutter_scene/test
-dart analyze packages/flutter_scene
-cd packages/flutter_scene
-flutter test --enable-impeller
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  dart format --output=none --set-exit-if-changed lib test
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  dart analyze .
+mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+  flutter test --enable-impeller
 ```
 
 テスト件数、pass/fail/skip、Flutter framework/engine SHA を保存する。device/simulator/E2E と
@@ -597,25 +634,18 @@ active seismicity worktree を再利用しない。`origin/feat/seismicity-pmtil
 `feat/seismicity-flutter-scene-fork-pin` worktree を作る。既存同名 branch がある場合は owner/SHA を
 確認し、上書きしない。
 
-**Step 2: stack metadata を保つ**
+**Step 2: #1620 base を再確認する**
 
-まず #1620 が GitHub stack に属するか非対話で確認する。属する場合は stack number に新 branch
-を append する。属さない場合だけ、#1620 の現在 base を明示して link する。
+active worktree を切り替える `gh stack checkout` は使わない。read-only query で #1620 が OPEN、
+head が decoder branch、base が network-reader branch のままであることを確認する。
 
 ```bash
-gh stack checkout 1620
-gh stack view --json
-# existing stack:
-gh stack link <stack-number> feat/seismicity-flutter-scene-fork-pin \
-  --remote origin
-# no existing stack:
-gh stack link --base feat/seismicity-pmtiles-network-reader \
-  1620 feat/seismicity-flutter-scene-fork-pin --remote origin
+gh pr view 1620 --repo YumNumm/EQMonitor \
+  --json state,headRefName,headRefOid,baseRefName,url
 ```
 
-`<stack-number>` は JSON の実値へ置換する。#1620 の base を default `develop` へ変更しない。
-branch に commit がない段階で `link` が PR を作ろうとする場合は、Task 11 完了後まで link を
-遅らせる。
+差異があれば blocked とし、base を推測して直さない。stack link は pin branch に commit が入る
+Task 13 まで遅らせる。
 
 ### Task 11: fork URL/SHA と lockfile を atomic に更新する（EQMonitor top）
 
@@ -723,11 +753,20 @@ focused test 結果を分けて記録する。
 
 **Step 2: stack link/submit**
 
-Task 10 で link を遅延した場合はここで実行する。既存 stack ならその stack number へ append、
-未登録なら #1620 の base を明示する。次を必ず非対話で確認する。
+decoder の現在 base を明示したうえで2 branch を link する。#1620 が既存 stack に所属していれば
+`gh stack link` は additive に top branch を追加し、未所属ならこの2 layer の stack を作る。
 
 ```bash
-gh stack view --json
+gh stack link --base feat/seismicity-pmtiles-network-reader \
+  feat/seismicity-pmtiles-decoder feat/seismicity-flutter-scene-fork-pin \
+  --remote origin
+```
+
+次を必ず非対話で確認する。
+
+```bash
+gh pr view 1620 --repo YumNumm/EQMonitor \
+  --json number,url,state,baseRefName,headRefName,headRefOid
 gh pr view --repo YumNumm/EQMonitor \
   feat/seismicity-flutter-scene-fork-pin \
   --json number,url,state,isDraft,baseRefName,headRefName,headRefOid,body
@@ -758,4 +797,3 @@ status を親 agent へ返した時点で停止する。merge、#1603 着手、r
 - [ ] EQMonitor は curated public import だけを compile test で使用。
 - [ ] 3 PR の Remaining tasks が performance/device gate と後続 Issues を隠していない。
 - [ ] 全 PR 作成後に作業を停止し、merge や後続 layer へ進んでいない。
-
