@@ -654,3 +654,108 @@ git commit -m 'Package: Flutter Scene fork SHAへ固定'
 git push -u origin feat/seismicity-flutter-scene-fork-pin
 ```
 
+### Task 12: EQMonitor の public API boundary と provenance を固定する
+
+**Files:**
+- Create: `packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart`
+- Modify: `packages/eqmonitor_map/README.md`
+- Modify: `packages/eqmonitor_map/example/README.md`
+- Modify: `docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md`
+- Modify: `docs/knowledge/20260802_flutter_scene_scene_source_pin.md`
+- Modify: `docs/knowledge/20260802_flutter_scene_large_static_instances.md`
+
+**Step 1: consumer compile test**
+
+test は `package:flutter_scene/scene.dart` と `package:flutter_scene/gpu.dart` のみから lifecycle、
+snapshot、layout、Geometry type を参照する。GPU を作らず lifecycle initial snapshot を確認し、
+`package:flutter_scene/src/` import は禁止する。fork 内 test の複製ではなく「EQMonitor の解決済み
+dependency が supported symbols を export する」ことを固定する。
+
+```bash
+mise exec -- flutter test \
+  packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart
+```
+
+**Step 2: current operational docs のみ同期**
+
+package/example README の SHA、toolchain の repository/SHA、`scene` source pin の両 package
+descriptor、大量 static instance knowledge の推奨経路を更新する。過去 plan/PR draft の historical
+SHA は書き換えない。fork PR URLs、fork top full SHA、upstream base `7f71993...`、Flutter framework
+SHA を明記し、logical bytes と driver resident bytes の違いも残す。
+
+**Step 3: focused checks、commit、push**
+
+```bash
+mise exec -- dart format \
+  packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart
+mise exec -- flutter test \
+  packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart
+mise exec -- dart analyze packages/eqmonitor_map
+git --no-pager diff --check
+git add packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart
+git commit -m 'Test: Flutter Scene公開API境界を固定'
+git push
+git add packages/eqmonitor_map/README.md packages/eqmonitor_map/example/README.md \
+  docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md \
+  docs/knowledge/20260802_flutter_scene_scene_source_pin.md \
+  docs/knowledge/20260802_flutter_scene_large_static_instances.md
+git commit -m 'Docs: Flutter Scene fork provenanceを同期'
+git push
+```
+
+### Task 13: EQMonitor PR を stack へ link して停止する
+
+**Files:** 変更なし（verification/PR metadata のみ）。
+
+**Step 1: final non-device gate**
+
+```bash
+mise exec -- flutter pub get --enforce-lockfile
+mise exec -- flutter test packages/eqmonitor_map
+mise exec -- dart analyze packages/eqmonitor_map
+git --no-pager diff --check
+git status --short
+```
+
+`--enforce-lockfile` は lock 更新後の再現確認にだけ使う。root full test、実機、Simulator、E2E、
+performance run は実行しない。既存の unrelated failure が出た場合は command/error と今回の
+focused test 結果を分けて記録する。
+
+**Step 2: stack link/submit**
+
+Task 10 で link を遅延した場合はここで実行する。既存 stack ならその stack number へ append、
+未登録なら #1620 の base を明示する。次を必ず非対話で確認する。
+
+```bash
+gh stack view --json
+gh pr view --repo YumNumm/EQMonitor \
+  feat/seismicity-flutter-scene-fork-pin \
+  --json number,url,state,isDraft,baseRefName,headRefName,headRefOid,body
+```
+
+期待: base は `feat/seismicity-pmtiles-decoder`、head は pin branch、body に fork PR 2本と full
+SHA がある。PR body の Remaining tasks は次を列挙する。
+
+- #1603 scene foundation: orbit/perspective、explicit lifecycle owner wiring。
+- #1604 static renderer: 24-byte hypocenter record、shader LOD、2M initial upload。
+- #1604 physical iPhone 13 相当 profile/release 30fps/5分 memory gate（今回未実施）。
+- #1605 app integration、loading/error/retry、実機 smoke。
+- current upstream master forward-port と欠落 canonical issue spec の回収。
+
+**Step 3: stop condition**
+
+fork bottom/top と EQMonitor pin の全 PR URL、base/head、commit SHA、checks/skip/blocker、worktree
+status を親 agent へ返した時点で停止する。merge、#1603 着手、review 対応、実機確認は行わない。
+
+## 5. Completion checklist
+
+- [ ] fork が正しい parent/権限で作成され、compatibility trunk は exact `7f71993...`。
+- [ ] fork bottom PR は completion watermark、retirement、generation、memory snapshot を公開。
+- [ ] fork top PR は instance bytes を初回1回だけ upload し、per-frame bind だけを行う。
+- [ ] retire/context generation が fail-closed で、CPU frame/delay を GPU completion とみなさない。
+- [ ] fork package focused/full test と analyze が non-device 環境で完了し、skip は明示済み。
+- [ ] EQMonitor の dependency/lock/current README は YumNumm fork の同一 full SHA。
+- [ ] EQMonitor は curated public import だけを compile test で使用。
+- [ ] 3 PR の Remaining tasks が performance/device gate と後続 Issues を隠していない。
+- [ ] 全 PR 作成後に作業を停止し、merge や後続 layer へ進んでいない。
+
