@@ -3272,6 +3272,60 @@ final class DevicePersistentPackedGpuBackend
         ),
       );
 }
+
+final class DevicePersistentPackedGpuSlice
+    implements PersistentPackedGpuSlice {
+  const DevicePersistentPackedGpuSlice(this.view);
+
+  final gpu.BufferView view;
+
+  @override
+  int get lengthInBytes => view.lengthInBytes;
+}
+
+final class DevicePersistentPackedGpuBuffer
+    implements PersistentPackedGpuBuffer {
+  DevicePersistentPackedGpuBuffer(gpu.DeviceBuffer device) : _device = device;
+
+  gpu.DeviceBuffer? _device;
+
+  gpu.DeviceBuffer get device {
+    final current = _device;
+    if (current == null) throw StateError('released');
+    return current;
+  }
+
+  @override
+  bool overwrite(ByteData source, {required int destinationOffsetInBytes}) =>
+      device.overwrite(
+        source,
+        destinationOffsetInBytes: destinationOffsetInBytes,
+      );
+
+  @override
+  void flush({required int offsetInBytes, required int lengthInBytes}) =>
+      device.flush(
+        offsetInBytes: offsetInBytes,
+        lengthInBytes: lengthInBytes,
+      );
+
+  @override
+  PersistentPackedGpuSlice slice({
+    required int offsetInBytes,
+    required int lengthInBytes,
+  }) => DevicePersistentPackedGpuSlice(
+    gpu.BufferView(
+      device,
+      offsetInBytes: offsetInBytes,
+      lengthInBytes: lengthInBytes,
+    ),
+  );
+
+  @override
+  void release() {
+    _device = null;
+  }
+}
 ```
 
 **Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
@@ -3281,8 +3335,9 @@ and documentation lines are counted, while generated files and formatter-only in
   exact overwrite/flush/slice delegation,
   null-on-release, post-release StateError, and no public export. Run:
   `run_fork_red test/persistent_packed_gpu_backend_test.dart 'device backend wraps one nullable buffer without subclassing' 'RED:T31:device buffer wrapper missing'`。
-- [ ] **GREEN:** wrappers implement Task30 interfaces by composition only. `release()` clears the sole device
-  reference idempotently; no nonexistent `DeviceBuffer.dispose`. Run:
+- [ ] **GREEN:** add all three complete classes above. Wrappers implement Task30 interfaces by composition only;
+  `release()` clears the sole device reference idempotently; every operation reads the checked `device` getter and
+  no nonexistent `DeviceBuffer.dispose` is called. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_plan_test.dart test/render/frame_transients_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed DeviceBuffer境界を追加`。
 
