@@ -3878,6 +3878,19 @@ test('binding validates lifecycle before full persistent bind', () {
 **GREEN implementation snippet:**
 
 ```dart
+final class PersistentPackedInstanceBinding {
+  const PersistentPackedInstanceBinding({
+    required this.plan,
+    required this.storage,
+    required this.lease,
+    required this.defaultShader,
+  });
+
+  final PersistentPackedInstancePlan plan;
+  final PersistentPackedInstanceStorage storage;
+  final PersistentGpuResourceLease lease;
+  final gpu.Shader Function() defaultShader;
+
 void bind({
   required PersistentPackedRenderPassAdapter adapter,
   required TransientWriter transients,
@@ -3903,6 +3916,7 @@ void bind({
       modelTransform: modelTransform, cameraTransform: cameraTransform,
       cameraPosition: cameraPosition);
 }
+}
 ```
 
 **Handwritten budget:** production 38–55 + test 25–35 = 63–90 lines。
@@ -3911,7 +3925,7 @@ void bind({
   default resolver identity/override-presence without invoking either;
   terminal/old-generation/disposed/non-active/closed-frame all have adapter events0. Run
   `run_fork_red test/persistent_packed_instance_binding_test.dart 'binding validates lifecycle before full persistent bind' 'RED:T38A:lifecycle bind delegate missing'`。
-- [ ] **GREEN:** one final plain delegate with bind only; no superclass calls, source scan, overwrite or instance
+- [ ] **GREEN:** add the complete final class above with only its final fields and bind; no superclass calls, source scan, overwrite or instance
   transients. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_binding_test.dart test/persistent_packed_render_pass_test.dart test/persistent_packed_instance_storage_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed bind delegateを追加`。
@@ -3990,6 +4004,23 @@ test("typed transaction constructs only after check upload and register", () {
 **GREEN implementation snippet:** the exact production signature/statement is:
 
 ```dart
+typedef PersistentPackedCanCreate = void Function();
+typedef PersistentPackedPlanBuild = PersistentPackedInstancePlan Function();
+typedef PersistentPackedStorageUpload = PersistentPackedInstanceStorage Function({
+  required PersistentPackedGpuBackend backend,
+  required PersistentPackedInstancePlan plan,
+});
+typedef PersistentPackedLeaseRegister = PersistentGpuResourceLease Function({
+  required int totalBytes,
+  required int instanceBytes,
+  required void Function() release,
+});
+typedef PersistentPackedConstruct<T> = T Function({
+  required PersistentPackedInstancePlan plan,
+  required PersistentPackedInstanceStorage storage,
+  required PersistentGpuResourceLease lease,
+});
+
 T executePersistentPackedInstanceTransaction<T>({
   required PersistentPackedCanCreate checkCanCreate,
   required PersistentPackedPlanBuild buildPlan,
@@ -4013,7 +4044,8 @@ and documentation lines are counted, while generated files and formatter-only in
 - [ ] **RED:** typed recording closures observe exact order check→plan→upload(backend identity)→register exact
   bytes/release callback→construct exact parts and return sentinel. Run:
   `run_fork_red test/persistent_packed_instance_transaction_test.dart 'typed transaction constructs only after check upload and register' 'RED:T39:transaction order missing'`。
-- [ ] **GREEN:** straight-line typed calls only; retain `storage` local for failure cleanup added Task40. Run:
+- [ ] **GREEN:** add all five complete typed aliases plus the function above; straight-line typed calls only;
+  retain `storage` local for failure cleanup added Task40. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_transaction_test.dart test/persistent_packed_instance_binding_test.dart test/persistent_packed_instance_storage_test.dart test/persistent_packed_instance_plan_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed構築transactionを追加`。
 
@@ -4154,12 +4186,11 @@ final class PersistentPackedInstanceGeometryParts {
 **Interfaces:** Produces concrete class with `@internal` nonthrowing public named constructor
 `fromValidatedParts`. The very first instantiable revision implements abstract `bind` plus `draw`, `vertexShader`,
 bounds, `setLocalBounds`, and every layout/count/state/retire getter; no temporarily abstract or throwing
-construction state or extra test factory is committed. Tests call the named constructor directly and inspect the
-typed `parts.binding` field。
+construction state or extra test factory is committed. Tests call the named constructor directly and observe the
+typed binding through the overridden `bind`/`draw` behavior only。
 
-**Implementation shape:** `fromValidatedParts` consumes a Task41A parts holder. Public `vertexShader` resolves
-its lazy
-resolver; the internal accessor returns its same binding. `setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere)`
+**Implementation shape:** `fromValidatedParts` consumes a Task41A parts holder into private `_parts`. Public
+`vertexShader` resolves its lazy resolver. `setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere)`
 always throws `UnsupportedError`; both bounds getters return Task24 fresh copies; bind/draw use the Task37
 production adapter around the supplied pass。
 
@@ -4186,34 +4217,34 @@ final class PersistentPackedInstanceGeometry extends Geometry {
     required PersistentGpuResourceLease lease,
     required gpu.Shader Function() defaultShader,
     required bool doubleSided,
-  }) : parts = PersistentPackedInstanceGeometryParts(plan: plan,
+  }) : _parts = PersistentPackedInstanceGeometryParts(plan: plan,
          storage: storage, lease: lease, defaultShader: defaultShader,
          doubleSided: doubleSided);
 
-  final PersistentPackedInstanceGeometryParts parts;
-  @override gpu.Shader get vertexShader => parts.defaultShader();
-  @override vm.Aabb3 get localBounds => parts.plan.localBounds;
+  final PersistentPackedInstanceGeometryParts _parts;
+  @override gpu.Shader get vertexShader => _parts.defaultShader();
+  @override vm.Aabb3 get localBounds => _parts.plan.localBounds;
   @override vm.Sphere get localBoundingSphere =>
-      parts.plan.localBoundingSphere;
+      _parts.plan.localBoundingSphere;
   @override VertexLayoutDescriptor get instancedVertexLayout =>
-      parts.plan.vertexLayout;
+      _parts.plan.vertexLayout;
   @override int get vertexStreamCount => 2;
   @override bool get bindsModelTransformInstance => false;
-  @override bool get isDoubleSided => parts.doubleSided;
+  @override bool get isDoubleSided => _parts.doubleSided;
   @override
   ({gpu.Shader shader, VertexLayoutDescriptor layout})?
       get depthOnlyVertex => null;
-  int get instanceCount => parts.plan.instanceCount;
-  int get instanceStrideInBytes => parts.plan.instanceStrideInBytes;
-  int get contextGeneration => parts.lease.generation;
-  PersistentGpuResourceState get resourceState => parts.lease.state;
-  Future<void> retire() => parts.lease.retire();
+  int get instanceCount => _parts.plan.instanceCount;
+  int get instanceStrideInBytes => _parts.plan.instanceStrideInBytes;
+  int get contextGeneration => _parts.lease.generation;
+  PersistentGpuResourceState get resourceState => _parts.lease.state;
+  Future<void> retire() => _parts.lease.retire();
 
 @override
 void bind(gpu.RenderPass pass, TransientWriter transientsBuffer,
     vm.Matrix4 modelTransform, vm.Matrix4 cameraTransform,
     vm.Vector3 cameraPosition, {gpu.Shader? shaderOverride}) {
-  parts.binding.bind(adapter: GpuPersistentPackedRenderPassAdapter(pass),
+  _parts.binding.bind(adapter: GpuPersistentPackedRenderPassAdapter(pass),
       transients: transientsBuffer, modelTransform: modelTransform,
       cameraTransform: cameraTransform, cameraPosition: cameraPosition,
       shaderOverride: shaderOverride);
@@ -4221,7 +4252,7 @@ void bind(gpu.RenderPass pass, TransientWriter transientsBuffer,
 
 @override
 void draw(gpu.RenderPass pass, {int instanceCount = 1}) {
-  parts.binding.draw(adapter: GpuPersistentPackedRenderPassAdapter(pass),
+  _parts.binding.draw(adapter: GpuPersistentPackedRenderPassAdapter(pass),
       externalInstanceCount: instanceCount);
 }
 
@@ -4236,7 +4267,8 @@ void setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere) =>
 
 - [ ] **RED:** internal parts helper creates the concrete class without resolving its throwing test shader; its
   exact binding delegate bind/draws through a recording adapter; both `setLocalBounds` forms throw and mutated
-  returned bounds never alter later copies. Run
+  returned bounds never alter later copies. A public-member surface source check requires `_parts`, rejects a public
+  `parts` field/getter and permits only the Final public API getters/methods plus inherited overrides. Run
   `run_fork_red test/persistent_packed_instance_geometry_test.dart 'concrete Geometry is complete at first instantiation' 'RED:T41B:complete concrete Geometry missing'`。
 - [ ] **GREEN:** override every abstract/public contract at the first instantiation; the immutable bounds override
   is the only intentional throw. Run:
