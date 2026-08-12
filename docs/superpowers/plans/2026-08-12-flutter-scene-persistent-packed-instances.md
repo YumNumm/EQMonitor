@@ -538,3 +538,119 @@ git commit -m 'Feature: packed instance公開APIを追加'
 git push
 ```
 
+### Task 9: fork top PR を検証し、immutable SHA を引き渡す
+
+**Files:** 変更なし（検証と PR metadata のみ）。
+
+**Step 1: forbidden-path audit**
+
+```bash
+rg -n 'instanceTransients\.emplace|List<Matrix4>|Future\.delayed|Timer\(' \
+  packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart \
+  packages/flutter_scene/lib/src/render/persistent_gpu_resources.dart
+```
+
+期待: 0件。さらに constructor 以外から instance source の `overwrite`/copy が呼ばれず、
+retirement callback だけが buffer references を clear することを diff review する。
+
+**Step 2: fork full non-device gate**
+
+```bash
+dart format --output=none --set-exit-if-changed \
+  packages/flutter_scene/lib packages/flutter_scene/test
+dart analyze packages/flutter_scene
+cd packages/flutter_scene
+flutter test --enable-impeller
+```
+
+テスト件数、pass/fail/skip、Flutter framework/engine SHA を保存する。device/simulator/E2E と
+#1604 の2M performance gate はこの PR の合格証拠に含めない。
+
+**Step 3: stacked PR submit と SHA capture**
+
+```bash
+gh stack submit --auto --open --remote origin
+gh stack view --json
+git status --short
+git rev-parse HEAD
+```
+
+`gh stack view --json` で bottom/base と top/base が設計通りか、両 PR が OPEN かを確認する。
+top HEAD SHA は full 40 chars で記録し、EQMonitor pin の `ref` にだけ使う。branch 名、tag、短縮
+SHA は dependency に使わない。
+
+top PR body の Remaining tasks には bottom PR と同じ未完了事項に加え、次を書く。
+
+- EQMonitor pubspec/lock/README をこの top commit へ固定する PR。
+- EQMonitor adapter での実利用は #1604、scene lifecycle wiring は #1603。
+- physical iPhone 13 相当での 30fps/5分 memory evidence は #1604 まで明示 defer。
+- current upstream master `ed04205...` への forward-port と upstream 提案は別作業。
+
+### Task 10: EQMonitor pin branch を既存 stack の上に作る
+
+**Files:** 変更なし。
+
+**Step 1: clean worktree**
+
+active seismicity worktree を再利用しない。`origin/feat/seismicity-pmtiles-decoder` を fetch し、
+その immutable HEAD（開始時に記録）から
+`feat/seismicity-flutter-scene-fork-pin` worktree を作る。既存同名 branch がある場合は owner/SHA を
+確認し、上書きしない。
+
+**Step 2: stack metadata を保つ**
+
+まず #1620 が GitHub stack に属するか非対話で確認する。属する場合は stack number に新 branch
+を append する。属さない場合だけ、#1620 の現在 base を明示して link する。
+
+```bash
+gh stack checkout 1620
+gh stack view --json
+# existing stack:
+gh stack link <stack-number> feat/seismicity-flutter-scene-fork-pin \
+  --remote origin
+# no existing stack:
+gh stack link --base feat/seismicity-pmtiles-network-reader \
+  1620 feat/seismicity-flutter-scene-fork-pin --remote origin
+```
+
+`<stack-number>` は JSON の実値へ置換する。#1620 の base を default `develop` へ変更しない。
+branch に commit がない段階で `link` が PR を作ろうとする場合は、Task 11 完了後まで link を
+遅らせる。
+
+### Task 11: fork URL/SHA と lockfile を atomic に更新する（EQMonitor top）
+
+**Files:**
+- Modify: `packages/eqmonitor_map/pubspec.yaml`
+- Modify: `packages/eqmonitor_map/example/pubspec.yaml`
+- Modify: `pubspec.lock`
+
+**Step 1: dependency descriptors**
+
+package の `flutter_scene`、override `scene`、example の `flutter_scene` をすべて
+`https://github.com/YumNumm/flutter_scene.git` と Task 9 の top full SHA へ更新する。同じ
+monorepo の `packages/flutter_scene` / `packages/scene` path は維持する。
+
+**Step 2: resolver だけで lock を生成**
+
+手編集せず root で `mise exec -- flutter pub get` を実行する。example は workspace member のため
+別 lockfile を新規作成しない。root lock の両 package が同じ URL/ref/resolved-ref か確認する。
+
+```bash
+mise exec -- flutter pub get
+rg -n 'YumNumm/flutter_scene|resolved-ref|7f71993|bdero/flutter_scene' \
+  packages/eqmonitor_map/pubspec.yaml \
+  packages/eqmonitor_map/example/pubspec.yaml pubspec.lock
+```
+
+期待: dependency 現役3箇所と lock 2 entries は fork/full SHA、旧 URL/SHA は0件。
+
+**Step 3: commit、push**
+
+```bash
+git --no-pager diff --check
+git add packages/eqmonitor_map/pubspec.yaml \
+  packages/eqmonitor_map/example/pubspec.yaml pubspec.lock
+git commit -m 'Package: Flutter Scene fork SHAへ固定'
+git push -u origin feat/seismicity-flutter-scene-fork-pin
+```
+
