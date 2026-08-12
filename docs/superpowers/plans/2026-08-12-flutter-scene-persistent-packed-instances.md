@@ -185,8 +185,9 @@ while every old-generation lease/Geometry fails `requireCurrentActive()` before 
 
 ## Final state contracts
 
-Allocation internal states are `active`, `retirementPendingOpenFrame`,
-`retirementPendingSubmission`, `releasing`, `retired`, `retirementFailed`; public state collapses both pending。
+Allocation internal states are `active`, `pendingOpenFrame`, `pendingSubmission`, `releasing`, `retired`,
+`failed`; public state maps both pending states plus releasing to `retirementPending` and failed to
+`retirementFailed`。
 
 | current | event | result |
 |---|---|---|
@@ -195,6 +196,7 @@ Allocation internal states are `active`, `retirementPendingOpenFrame`,
 | pendingOpenFrame | beforeSubmit(id) | pendingSubmission; last=id |
 | pendingOpenFrame | endFrame without submit | releasing if its nullable prior lastSubmission is complete, otherwise pendingSubmission |
 | active | beforeSubmit(id) after mark | active; last=max(previous,id) |
+| active with incomplete `lastSubmission` | retire | pendingSubmission; cached Future; callback/buffer retained |
 | pendingSubmission | completion below last | retain |
 | pendingSubmission | completion at/above last | releasing exactly once |
 | releasing | reentrant/repeated retire | identical Future |
@@ -218,6 +220,9 @@ Allocation internal states are `active`, `retirementPendingOpenFrame`,
 The final owner may dispose while invalidating. Registry and FI remain with zero owners, finish invalidated, and a
 later recovery owner may attach and recreate. Settle order is resource Future → owner FD → global FI. First release
 error is context cause; later errors remain in test-only ordered `failureLog`。
+For `mark→submit→retire`, invalidation invoked by any two active owners returns the exact same FI object. It cannot
+settle, succeed or fail until the stamped resource completes and every registered release callback in the batch has
+been attempted; completion failure is cached and never retried by later completion notifications。
 
 ## Exact internal interfaces and file ownership
 
@@ -339,16 +344,16 @@ T executePersistentPackedInstanceTransaction<T>({
 | `lib/src/geometry/persistent_packed_instance_geometry.dart` | concrete Geometry and public factory |
 
 <!-- affinity-entrypoint-matrix-start -->
-Every registry entry/callback below calls `_affinity.check()` as its first executable statement, before lookup,
+Every registry entry/callback below calls `affinity.check()` as its first executable statement, before lookup,
 state read used for a decision, mutation, Future creation, or user callback. Each listed task changes the injected
 token, invokes the entry, restores the original token, and proves state/callback counts are unchanged:
 
 | entry/callback | task | rejected-before-mutation evidence |
 |---|---:|---|
-| `attachOwner()` | 4A | owner id/count unchanged |
-| `register(...)` | 4A | allocation/callback count unchanged |
+| `attachOwner()` | 4C | owner id/count unchanged |
+| `register(...)` | 4C | allocation/callback count unchanged |
 | lease `requireCurrentActive()` | 4B | record state and release count unchanged |
-| lease/registry `retire()` | 4B | record state, cached Future and release count unchanged |
+| lease/registry `retire()` | 4D | record state, cached Future and release count unchanged |
 | `snapshotFor(...)` | 5 | throws before reading counters; restored-token snapshot unchanged |
 | `disposeOwner(ownerId)` | 6 | owner state/FD/release count unchanged |
 | `invalidateContext(ownerId)` | 7 | context/FI/release count unchanged |
@@ -358,10 +363,11 @@ token, invokes the entry, restores the original token, and proves state/callback
 | `endFrame()` | 12 | frame-open/mark/record state unchanged |
 | tracker before-submit listener | 13 | open marks and submission stamps unchanged |
 | tracker completion listener | 14 | pending state/release count unchanged |
-| immediately before registered release callback | 4B/14/15 | callback count and record state unchanged |
+| `releaseRecord(...)` before registered callback | 4D/14/15A | callback/log/context/record unchanged; not failed |
 
 Lifecycle methods delegate to these checked entries; they do not duplicate an independently drifting affinity
-policy。
+policy. Affinity failure is an execution-contract error, never a GPU release failure: it appends no `failureLog`,
+does not change resource/context state, and leaves the same operation retryable after restoring the token。
 
 <!-- affinity-entrypoint-matrix-end -->
 
@@ -694,6 +700,22 @@ test("completion listeners observe the contiguous watermark in order", () {
 
 ```dart
 typedef GpuSubmissionCompletionListener = void Function(int completedThrough);
+
+final List<GpuSubmissionCompletionListener> _completionListeners = [];
+
+void addCompletionListener(GpuSubmissionCompletionListener listener) {
+  _completionListeners.add(listener);
+}
+
+void complete(int id) {
+  final previous = completedThrough;
+  if (!_pending.remove(id)) return;
+  final current = completedThrough;
+  if (current <= previous) return;
+  for (final listener in List.of(_completionListeners)) {
+    listener(current);
+  }
+}
 ```
 
 **Handwritten budget:** 35–65 total lines exactly as scoped in this task heading; test, production,
@@ -806,17 +828,16 @@ test("snapshot is exact and mutations stay on one isolate", () {
 
 ```dart
 final class PersistentGpuExecutionAffinity {
-  PersistentGpuExecutionAffinity({SendPort Function()? currentIsolateToken})
-      : _currentIsolateToken =
-            currentIsolateToken ?? (() => Isolate.current.controlPort),
-        _capturedToken =
-            (currentIsolateToken ?? (() => Isolate.current.controlPort))();
+  PersistentGpuExecutionAffinity({SendPort Function()? currentIsolateToken}) {
+    currentToken = currentIsolateToken ?? (() => Isolate.current.controlPort);
+    capturedToken = currentToken();
+  }
 
-  final SendPort Function() _currentIsolateToken;
-  final SendPort _capturedToken;
+  late final SendPort Function() currentToken;
+  late final SendPort capturedToken;
 
   void check() {
-    if (_currentIsolateToken() != _capturedToken) {
+    if (currentToken() != capturedToken) {
       throw StateError('persistent GPU access crossed isolate affinity');
     }
   }
@@ -842,135 +863,276 @@ and documentation lines are counted, while generated files and formatter-only in
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: GPU snapshotとisolate制約を追加`。
 
-### Task 4A: affinity-checked owner and allocation registration (depends Task 3; 50–85 lines)
+### Task 4A: registry state records (depends Task 3; 45–85 lines)
 
 **Files:** Create `lib/src/render/persistent_gpu_resource_registry.dart`; Create
 `test/render/persistent_gpu_resource_registry_test.dart`。
 
-**Interfaces:** Consumes tracker/affinity/models。Produces `int attachOwner()` and
-`PersistentGpuResourceLease register({required int ownerId, required int totalBytes, required int instanceBytes, required void Function() release})`。
-Lease initially exposes `int get generation` and `void requireCurrentActive()`; Task4B adds retirement state/API。
-
-**Implementation shape:** registry owns monotonic owner/record IDs and generation1 active state. `attachOwner`,
-`register`, and `requireCurrentActive` call `_affinity.check()` first. Registration validates active owner,
-positive bytes, `instanceBytes <= totalBytes`, and active context before it creates a record or lease。
+**Interfaces:** Produces data-only `PersistentGpuOwnerRecord` and `PersistentGpuAllocationRecord`, internal enum
+`PersistentGpuAllocationState`, and the registry constructor/fields. These classes have no methods; every mutation
+entry remains on the registry so affinity ordering has one auditable location。
 
 **RED test snippet:**
 
 ```dart
-test('owner registration checks affinity before mutation', () {
-  final registryFile = File(
-    'lib/src/render/persistent_gpu_resource_registry.dart',
-  );
-  expect(
-    registryFile.existsSync(),
-    isTrue,
-    reason: 'RED:T04A:attachOwner affinity gate missing',
+test('registry records are data only and generation starts at one', () {
+  expectRedSourceContract(
+    path: 'lib/src/render/persistent_gpu_resource_registry.dart',
+    marker: 'final class PersistentGpuAllocationRecord',
+    diagnostic: 'RED:T04A:registry records missing',
   );
 });
 ```
 
-This source-contract test compiles before the registry file exists。
-
-**GREEN implementation snippet:** the exact method prefixes are:
+**GREEN implementation snippet:**
 
 ```dart
-int attachOwner() {
-  _affinity.check();
-  final ownerId = _nextOwnerId++;
-  _owners[ownerId] = _PersistentGpuOwner.active();
-  return ownerId;
+enum PersistentGpuAllocationState {
+  active, pendingOpenFrame, pendingSubmission, releasing, retired, failed,
 }
 
-PersistentGpuResourceLease register({
-  required int ownerId,
-  required int totalBytes,
-  required int instanceBytes,
-  required void Function() release,
-}) {
-  _affinity.check();
-  final owner = _requireActiveOwner(ownerId);
-  _validateAllocationBytes(totalBytes, instanceBytes);
-  _requireActiveContext();
-  return _registerValidated(owner: owner, totalBytes: totalBytes,
-      instanceBytes: instanceBytes, release: release);
+final class PersistentGpuOwnerRecord {
+  PersistentGpuOwnerRecord({required this.id});
+  final int id;
+  PersistentGpuResourceLifecycleState state =
+      PersistentGpuResourceLifecycleState.active;
+  Completer<void>? disposal;
+}
+
+final class PersistentGpuAllocationRecord {
+  PersistentGpuAllocationRecord({required this.id, required this.ownerId,
+      required this.generation, required this.totalBytes,
+      required this.instanceBytes, required this.release});
+  final int id;
+  final int ownerId;
+  final int generation;
+  final int totalBytes;
+  final int instanceBytes;
+  final void Function() release;
+  PersistentGpuAllocationState state = PersistentGpuAllocationState.active;
+  int? lastSubmission;
+  Completer<void>? retirement;
+}
+
+final class PersistentGpuResourceRegistry {
+  PersistentGpuResourceRegistry({required this.submissions,
+      required this.affinity});
+  final GpuSubmissionTracker submissions;
+  final PersistentGpuExecutionAffinity affinity;
+  final Map<int, PersistentGpuOwnerRecord> owners = {};
+  final Map<int, PersistentGpuAllocationRecord> records = {};
+  int nextOwnerId = 1;
+  int nextRecordId = 1;
+  int contextGeneration = 1;
+  PersistentGpuContextState contextState = PersistentGpuContextState.active;
 }
 ```
 
-**Handwritten budget:** production 42 + test 28 = 70 lines。
+**Handwritten budget:** production 40–55 + test 18–30 = 58–85 lines。
 
-- [ ] **RED:** owner IDs monotonic; invalid owner/bytes and affinity mismatch fail before record/callback. Restore
-  the original token and prove counts unchanged. Run `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'owner registration checks affinity before mutation' 'RED:T04A:attachOwner affinity gate missing'`。
-- [ ] **GREEN:** implement the exact prefixes, owner/record maps and validation; no retire/frame/submission code.
-  Run: `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
-- [ ] **Commit:** `Feature: GPU allocation登録を追加`。
+- [ ] **RED:** records expose exactly the fields above, generation starts1, and there is no method declaration on
+  either record class. Run `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'registry records are data only and generation starts at one' 'RED:T04A:registry records missing'`。
+- [ ] **GREEN:** add only records, enum and registry state; no owner/allocation operation yet. Run focused model and
+  tracker regressions plus analyze/diff-check。
+- [ ] **Commit:** `Feature: GPU registry状態を追加`。
 
-### Task 4B: immediate idempotent retirement (depends Task 4A; 45–85 lines)
+### Task 4B: typed lease and current-state gate (depends Task 4A; 45–85 lines)
 
 **Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
 `test/render/persistent_gpu_resource_registry_test.dart`。
 
-**Interfaces:** Lease gains `PersistentGpuResourceState get state` and `Future<void> retire()`; registry gains one
-record retirement path reused by later dispose/invalidate/completion tasks。
+**Interfaces:** Produces final `PersistentGpuResourceLease` with `recordId`, `generation`, `state`, and
+`requireCurrentActive`; registry produces the two same-named public internal entrypoints used by the lease。
 
-**Implementation shape:** lease `retire()` calls `_affinity.check()` first. Registry publishes a record completer,
-sets `releasing`, checks affinity again immediately before invoking the release callback, then sets retired and
-completes that same Future. Reentrant/repeated calls return the already-published Future by identity。
+**RED test snippet:**
+
+```dart
+test('lease current-state check is affinity first', () {
+  expectRedSourceContract(path: 'lib/src/render/persistent_gpu_resource_registry.dart',
+      marker: 'void requireCurrentActive(PersistentGpuResourceLease lease)',
+      diagnostic: 'RED:T04B:lease state gate missing');
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+final class PersistentGpuResourceLease {
+  PersistentGpuResourceLease({required this.registry, required this.recordId,
+      required this.generation});
+  final PersistentGpuResourceRegistry registry;
+  final int recordId;
+  final int generation;
+  PersistentGpuResourceState get state => registry.resourceStateFor(this);
+  void requireCurrentActive() => registry.requireCurrentActive(this);
+}
+
+PersistentGpuResourceState resourceStateFor(PersistentGpuResourceLease lease) {
+  affinity.check();
+  final record = records[lease.recordId];
+  if (record == null || record.generation != lease.generation) {
+    throw StateError('foreign persistent GPU lease');
+  }
+  return switch (record.state) {
+    PersistentGpuAllocationState.active => PersistentGpuResourceState.active,
+    PersistentGpuAllocationState.pendingOpenFrame ||
+    PersistentGpuAllocationState.pendingSubmission ||
+    PersistentGpuAllocationState.releasing =>
+      PersistentGpuResourceState.retirementPending,
+    PersistentGpuAllocationState.retired => PersistentGpuResourceState.retired,
+    PersistentGpuAllocationState.failed =>
+      PersistentGpuResourceState.retirementFailed,
+  };
+}
+
+void requireCurrentActive(PersistentGpuResourceLease lease) {
+  affinity.check();
+  final record = records[lease.recordId];
+  if (record == null || record.generation != lease.generation ||
+      record.state != PersistentGpuAllocationState.active ||
+      contextState != PersistentGpuContextState.active ||
+      record.generation != contextGeneration ||
+      owners[record.ownerId]?.state != PersistentGpuResourceLifecycleState.active) {
+    throw StateError('persistent GPU lease is not current and active');
+  }
+}
+```
+
+**Handwritten budget:** production 35–50 + test 20–35 = 55–85 lines。
+
+- [ ] **RED:** foreign/terminal/old-generation/disposed-owner checks throw before state read exposed to caller;
+  affinity mismatch leaves every map/record unchanged. Run `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'lease current-state check is affinity first' 'RED:T04B:lease state gate missing'`。
+- [ ] **GREEN:** add the complete typed lease/state matrix only. Run registry/model tests and analyze/diff-check。
+- [ ] **Commit:** `Feature: GPU lease状態検証を追加`。
+
+### Task 4C: affinity-checked owner and allocation registration (depends Task 4B; 50–95 lines)
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** Produces `int attachOwner()` and
+`PersistentGpuResourceLease register({required int ownerId, required int totalBytes, required int instanceBytes, required void Function() release})`。
+
+**RED test snippet:**
+
+```dart
+test('owner registration validates inline after affinity', () {
+  expectRedSourceContract(path: 'lib/src/render/persistent_gpu_resource_registry.dart',
+      marker: 'PersistentGpuResourceLease register({',
+      diagnostic: 'RED:T04C:owner registration missing');
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+int attachOwner() {
+  affinity.check();
+  if (contextState == PersistentGpuContextState.invalidating ||
+      contextState == PersistentGpuContextState.failed) {
+    throw StateError('context rejects new owners');
+  }
+  final id = nextOwnerId++;
+  owners[id] = PersistentGpuOwnerRecord(id: id);
+  return id;
+}
+
+PersistentGpuResourceLease register({required int ownerId,
+    required int totalBytes, required int instanceBytes,
+    required void Function() release}) {
+  affinity.check();
+  final owner = owners[ownerId];
+  if (owner == null || owner.state != PersistentGpuResourceLifecycleState.active) {
+    throw StateError('owner is not active');
+  }
+  if (contextState != PersistentGpuContextState.active) {
+    throw StateError('context is not active');
+  }
+  if (totalBytes <= 0 || instanceBytes <= 0 || instanceBytes > totalBytes) {
+    throw ArgumentError('invalid persistent GPU allocation bytes');
+  }
+  final id = nextRecordId++;
+  records[id] = PersistentGpuAllocationRecord(id: id, ownerId: ownerId,
+      generation: contextGeneration, totalBytes: totalBytes,
+      instanceBytes: instanceBytes, release: release);
+  return PersistentGpuResourceLease(registry: this, recordId: id,
+      generation: contextGeneration);
+}
+```
+
+**Handwritten budget:** production 35–50 + test 25–40 = 60–90 lines。
+
+- [ ] **RED:** IDs monotonic; every invalid owner/context/byte row and affinity mismatch leaves IDs/maps/callbacks
+  unchanged. Run `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'owner registration validates inline after affinity' 'RED:T04C:owner registration missing'`。
+- [ ] **GREEN:** inline the small validations; add no private helper/class method. Run registry/model/tracker tests。
+- [ ] **Commit:** `Feature: GPU allocation登録を追加`。
+
+### Task 4D: immediate idempotent retirement (depends Task 4C; 50–90 lines)
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** Lease gains `Future<void> retire()`; registry gains `retire` and `releaseRecord`, both internal
+public methods so tests can audit transition order directly。
 
 **RED test snippet:**
 
 ```dart
 test('unused allocation retirement is immediate and idempotent', () {
-  final source = File(
-    'lib/src/render/persistent_gpu_resource_registry.dart',
-  ).readAsStringSync();
-  expect(
-    source,
-    contains('Future<void> retire()'),
-    reason: 'RED:T04B:immediate retirement missing',
-  );
+  expectRedSourceContract(path: 'lib/src/render/persistent_gpu_resource_registry.dart',
+      marker: 'Future<void> retire(PersistentGpuResourceLease lease)',
+      diagnostic: 'RED:T04D:immediate retirement missing');
 });
 ```
 
-Task4A's file exists, so this RED compiles without referencing the not-yet-added method。
-
-**GREEN implementation snippet:** add the complete lease delegate and synchronous release transition:
+**GREEN implementation snippet:**
 
 ```dart
-void requireCurrentActive() {
-  _registry._affinity.check();
-  _registry.requireCurrentActive(this);
-}
-
-Future<void> retire() {
-  _registry._affinity.check();
-  return _registry.retire(this);
-}
-
 Future<void> retire(PersistentGpuResourceLease lease) {
-  _affinity.check();
-  final record = _requireOwnedRecord(lease);
-  final existing = record.retirementCompleter;
-  if (existing != null) return existing.future;
-  final completer = record.retirementCompleter = Completer<void>();
-  record.internalState = _PersistentGpuAllocationState.releasing;
-  _affinity.check();
+  affinity.check();
+  final record = records[lease.recordId];
+  if (record == null || record.generation != lease.generation) {
+    throw StateError('foreign persistent GPU lease');
+  }
+  if (record.retirement case final existing) return existing.future;
+  return releaseRecord(record);
+}
+
+Future<void> releaseRecord(PersistentGpuAllocationRecord record) {
+  affinity.check();
+  final existing = record.retirement;
+  if (record.state == PersistentGpuAllocationState.releasing ||
+      record.state == PersistentGpuAllocationState.retired ||
+      record.state == PersistentGpuAllocationState.failed) {
+    if (existing == null) throw StateError('terminal record has no retirement');
+    return existing.future;
+  }
+  final completer = existing ?? Completer<void>();
+  record.retirement ??= completer;
+  record.state = PersistentGpuAllocationState.releasing;
   record.release();
-  record.internalState = _PersistentGpuAllocationState.retired;
+  record.state = PersistentGpuAllocationState.retired;
+  records.remove(record.id);
   completer.complete();
   return completer.future;
 }
 ```
 
-**Handwritten budget:** production 34 + test 32 = 66 lines。
+Lease `retire()` is the one-line `registry.retire(this)` delegate. `retire` performs lookup only after its affinity
+check and delegates the first state mutation to `releaseRecord`; that method checks affinity before publishing the
+cached completer. If either entry check throws, completer/state/callback/map all remain unchanged。
 
-- [ ] **RED:** never-marked lease releases once immediately; repeated/reentrant `retire()` returns identical
-  Future. An affinity mismatch invokes no release and mutates no state. Run `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'unused allocation retirement is immediate and idempotent' 'RED:T04B:immediate retirement missing'`。
-- [ ] **GREEN:** implement only the immediate cached transition; Task12 later adds pending-open behavior. Run:
-  `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
+**Handwritten budget:** production 30–45 + test 25–40 = 55–85 lines。
+
+- [ ] **RED:** unused lease releases once; repeated/reentrant calls return one Future. Configure affinity failure
+  independently at either public entry and assert retirement remains null, state active, callback0, map unchanged.
+  After restoring affinity, retry succeeds exactly once. Run
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'unused allocation retirement is immediate and idempotent' 'RED:T04D:immediate retirement missing'`。
+- [ ] **GREEN:** implement only never-submitted immediate release. Task12/14 extend routing without weakening the
+  pre-mutation affinity gate. Run registry/model/tracker tests and analyze/diff-check。
 - [ ] **Commit:** `Feature: GPU allocationを即時retire`。
 
-### Task 5: active logical-memory snapshot (depends Task 4B; 45–90 lines)
+### Task 5: active logical-memory snapshot (depends Task 4D; 45–90 lines)
 
 **Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
 `test/render/persistent_gpu_resource_registry_test.dart`。
@@ -979,7 +1141,7 @@ Future<void> retire(PersistentGpuResourceLease lease) {
 `PersistentGpuMemorySnapshot snapshotFor({required int ownerId, required PersistentGpuResourceLifecycleState lifecycleState})`。
 
 **Implementation shape:** initialize two nine-counter accumulators, fold each record once into global and into
-owner when IDs match, then construct immutable usages/snapshot from tracker counters. `_affinity.check()` is the
+owner when IDs match, then construct immutable usages/snapshot from tracker counters. `affinity.check()` is the
 first executable statement, before owner lookup or counter reads。
 
 **RED test snippet:**
@@ -1001,16 +1163,54 @@ PersistentGpuMemorySnapshot snapshotFor({
   required int ownerId,
   required PersistentGpuResourceLifecycleState lifecycleState,
 }) {
-  _affinity.check();
-  final owner = requireOwner(ownerId);
-  return buildPersistentGpuMemorySnapshot(
-    owner: owner,
-    lifecycleState: lifecycleState,
-    records: List.of(_records.values),
-    generation: _contextGeneration,
-    latestSubmission: _tracker.latestSubmission,
-    completedThrough: _tracker.completedThrough,
+  affinity.check();
+  if (!owners.containsKey(ownerId)) throw StateError('unknown owner');
+  final global = accumulatePersistentGpuUsage(records.values);
+  final owner = accumulatePersistentGpuUsage(
+    records.values.where((record) => record.ownerId == ownerId),
   );
+  return PersistentGpuMemorySnapshot(
+    contextState: contextState,
+    lifecycleState: lifecycleState,
+    contextGeneration: contextGeneration,
+    latestSubmission: submissions.latestSubmission,
+    completedThrough: submissions.completedThrough,
+    global: global,
+    owner: owner,
+  );
+}
+
+PersistentGpuMemoryUsage accumulatePersistentGpuUsage(
+    Iterable<PersistentGpuAllocationRecord> source) {
+  var activeCount = 0, retiringCount = 0, failedCount = 0;
+  var activeTotal = 0, retiringTotal = 0, failedTotal = 0;
+  var activeInstance = 0, retiringInstance = 0, failedInstance = 0;
+  for (final record in source) {
+    switch (record.state) {
+      case PersistentGpuAllocationState.active:
+        activeCount++; activeTotal += record.totalBytes;
+        activeInstance += record.instanceBytes;
+        break;
+      case PersistentGpuAllocationState.pendingOpenFrame ||
+            PersistentGpuAllocationState.pendingSubmission ||
+            PersistentGpuAllocationState.releasing:
+        retiringCount++; retiringTotal += record.totalBytes;
+        retiringInstance += record.instanceBytes;
+        break;
+      case PersistentGpuAllocationState.failed:
+        failedCount++; failedTotal += record.totalBytes;
+        failedInstance += record.instanceBytes;
+        break;
+      case PersistentGpuAllocationState.retired:
+        break;
+    }
+  }
+  return PersistentGpuMemoryUsage(activeResourceCount: activeCount,
+      retiringResourceCount: retiringCount, failedResourceCount: failedCount,
+      activeTotalBytes: activeTotal, retiringTotalBytes: retiringTotal,
+      failedTotalBytes: failedTotal, activeInstanceBytes: activeInstance,
+      retiringInstanceBytes: retiringInstance,
+      failedInstanceBytes: failedInstance);
 }
 ```
 
@@ -1034,7 +1234,7 @@ and documentation lines are counted, while generated files and formatter-only in
 
 **Implementation shape:** set owner disposed and publish one owner FD completer/Future before calling any retire
 path; then snapshot its records, call each cached retire path, and complete FD from their non-eager `Future.wait`.
-Repeated and release-callback-reentrant calls return FD by identity. `_affinity.check()` is first, before the
+Repeated and release-callback-reentrant calls return FD by identity. `affinity.check()` is first, before the
 owner lookup, cached-FD read, state mutation, or callback path。
 
 **RED test snippet:**
@@ -1053,13 +1253,24 @@ test("owner disposal shares resource futures and leaves other owners active", ()
 
 ```dart
 Future<void> disposeOwner(int ownerId) {
-  _affinity.check();
-  final owner = requireOwner(ownerId);
-  return disposePersistentGpuOwner(
-    owner: owner,
-    records: List.of(_records.values),
-    retire: retireRecord,
+  affinity.check();
+  final owner = owners[ownerId];
+  if (owner == null) throw StateError('unknown owner');
+  if (owner.disposal case final existing) return existing.future;
+  final completer = Completer<void>();
+  owner.disposal = completer;
+  owner.state = PersistentGpuResourceLifecycleState.disposed;
+  final retirements = records.values
+      .where((record) => record.ownerId == ownerId)
+      .map((record) => retire(PersistentGpuResourceLease(registry: this,
+          recordId: record.id, generation: record.generation)))
+      .toList(growable: false);
+  Future.wait(retirements, eagerError: false).then(
+    (_) => completer.complete(),
+    onError: (Object error, StackTrace stackTrace) =>
+        completer.completeError(error, stackTrace),
   );
+  return completer.future;
 }
 ```
 
@@ -1086,7 +1297,7 @@ and documentation lines are counted, while generated files and formatter-only in
 **Implementation shape:** set global invalidating, create and publish one generation FI completer/Future, then
 snapshot and retire every current-generation record. This publication must precede the first synchronous release
 callback so reentrant invalidation sees the same FI. Complete it only after all record Futures and any owner FD
-notifications settle, then set invalidated immediately before successful FI completion. `_affinity.check()` is
+notifications settle, then set invalidated immediately before successful FI completion. `affinity.check()` is
 the first executable statement before owner lookup, FI lookup, state mutation, or callbacks。
 
 **RED test snippet:**
@@ -1105,14 +1316,33 @@ test("one owner invalidates all immediate resources in the generation", () {
 
 ```dart
 Future<void> invalidateContext(int ownerId) {
-  _affinity.check();
-  requireActiveOwner(ownerId);
-  return invalidatePersistentGpuGeneration(
-    records: List.of(_records.values),
-    generation: _contextGeneration,
-    retire: retireRecord,
-  );
+  affinity.check();
+  final owner = owners[ownerId];
+  if (owner == null || owner.state != PersistentGpuResourceLifecycleState.active) {
+    throw StateError('owner is not active');
+  }
+  if (invalidation case final existing) return existing.future;
+  if (contextState != PersistentGpuContextState.active) {
+    throw StateError('context cannot begin invalidation');
+  }
+  final completer = Completer<void>();
+  invalidation = completer;
+  contextState = PersistentGpuContextState.invalidating;
+  final retirements = records.values
+      .where((record) => record.generation == contextGeneration)
+      .map((record) => retire(PersistentGpuResourceLease(registry: this,
+          recordId: record.id, generation: record.generation)))
+      .toList(growable: false);
+  Future.wait(retirements, eagerError: false).then((_) {
+    contextState = PersistentGpuContextState.invalidated;
+    completer.complete();
+  }, onError: (Object error, StackTrace stackTrace) {
+    completer.completeError(error, stackTrace);
+  });
+  return completer.future;
 }
+
+Completer<void>? invalidation;
 ```
 
 **Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
@@ -1137,7 +1367,7 @@ lease `requireCurrentActive()` checks record active, owner active, context activ
 
 **Implementation shape:** recovery attach creates only an owner entry; recreate verifies invalidated/no failures,
 increments generation once, clears prior FI and sets active; old records retain their original generation.
-`recreateContext` calls `_affinity.check()` first, before owner/context reads or generation mutation。
+`recreateContext` calls `affinity.check()` first, before owner/context reads or generation mutation。
 
 **RED test snippet:**
 
@@ -1155,15 +1385,17 @@ test("zero-owner invalidation recovers while old generation leases reject", () {
 
 ```dart
 void recreateContext(int ownerId) {
-  _affinity.check();
-  requireActiveOwner(ownerId);
-  if (_contextState != PersistentGpuContextState.invalidated ||
-      _failureLog.isNotEmpty) {
+  affinity.check();
+  final owner = owners[ownerId];
+  if (owner == null || owner.state != PersistentGpuResourceLifecycleState.active) {
+    throw StateError('owner is not active');
+  }
+  if (contextState != PersistentGpuContextState.invalidated) {
     throw StateError('context is not recreatable');
   }
-  _contextGeneration++;
-  _invalidationFuture = null;
-  _contextState = PersistentGpuContextState.active;
+  contextGeneration++;
+  invalidation = null;
+  contextState = PersistentGpuContextState.active;
 }
 ```
 
@@ -1329,10 +1561,10 @@ and documentation lines are counted, while generated files and formatter-only in
 `void markUsed(PersistentGpuResourceLease lease)`、`void endFrame()` and open identity set; lease produces
 `void markUsed()` as its registry-bound direct delegate for Task38。
 
-**Implementation shape:** lease `markUsed()` calls `_registry._affinity.check()` before forwarding; registry checks
-affinity/frame/lease identity/current generation before inserting the record into `_openFrameMarks`. `beginFrame`,
-`markUsed`, and `endFrame` each have `_affinity.check()` as the first executable statement; the lease delegate also
-checks registry affinity before forwarding. No check may occur after a frame flag/set read or mutation。
+**Implementation shape:** lease `markUsed()` is the one-line `registry.markUsed(this)` delegate. Registry checks
+affinity/frame/lease identity/current generation before inserting the record into `openFrameMarks`. `beginFrame`,
+`markUsed`, `retire`, and `endFrame` each call `affinity.check()` before any field/map read, Future creation,
+mutation, or callback. No lease reaches through registry internals。
 
 **RED test snippet:**
 
@@ -1349,25 +1581,63 @@ test("open frame without submission retires only at end", () {
 **GREEN implementation snippet:** the exact production signature/statement is:
 
 ```dart
+bool frameOpen = false;
+final Set<PersistentGpuAllocationRecord> openFrameMarks = {};
+
 void beginFrame() {
-  _affinity.check();
-  if (_frameOpen) throw StateError('frame already open');
-  _frameOpen = true;
+  affinity.check();
+  if (frameOpen) throw StateError('frame already open');
+  frameOpen = true;
 }
 
 void markUsed(PersistentGpuResourceLease lease) {
-  _affinity.check();
-  if (!_frameOpen) throw StateError('frame is closed');
-  final record = requireCurrentActiveRecord(lease);
-  _openFrameMarks.add(record);
+  affinity.check();
+  if (!frameOpen) throw StateError('frame is closed');
+  final record = records[lease.recordId];
+  if (record == null || record.generation != lease.generation ||
+      record.generation != contextGeneration ||
+      record.state != PersistentGpuAllocationState.active ||
+      contextState != PersistentGpuContextState.active ||
+      owners[record.ownerId]?.state !=
+          PersistentGpuResourceLifecycleState.active) {
+    throw StateError('persistent GPU lease is not current and active');
+  }
+  openFrameMarks.add(record);
+}
+
+Future<void> retire(PersistentGpuResourceLease lease) {
+  affinity.check();
+  final record = records[lease.recordId];
+  if (record == null || record.generation != lease.generation) {
+    throw StateError('foreign persistent GPU lease');
+  }
+  if (record.retirement case final existing) return existing.future;
+  if (frameOpen && openFrameMarks.contains(record)) {
+    final completer = Completer<void>();
+    record.retirement = completer;
+    record.state = PersistentGpuAllocationState.pendingOpenFrame;
+    return completer.future;
+  }
+  return releaseRecord(record);
 }
 
 void endFrame() {
-  _affinity.check();
-  if (!_frameOpen) throw StateError('frame is closed');
-  _frameOpen = false;
-  settleNoSubmissionMarks(Set.of(_openFrameMarks));
-  _openFrameMarks.clear();
+  affinity.check();
+  if (!frameOpen) throw StateError('frame is closed');
+  final marked = Set<PersistentGpuAllocationRecord>.of(openFrameMarks);
+  frameOpen = false;
+  openFrameMarks.clear();
+  for (final record in marked) {
+    if (record.state != PersistentGpuAllocationState.pendingOpenFrame) {
+      continue;
+    }
+    final last = record.lastSubmission;
+    if (last != null && submissions.completedThrough < last) {
+      record.state = PersistentGpuAllocationState.pendingSubmission;
+    } else {
+      releaseRecord(record);
+    }
+  }
 }
 ```
 
@@ -1380,7 +1650,7 @@ and documentation lines are counted, while generated files and formatter-only in
   begin/lease-mark/registry-mark/end, swap the token, assert its diagnostic and unchanged frame/record snapshots,
   restore the token, then prove the valid call succeeds. Run:
   `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'open frame without submission retires only at end' 'RED:T12:frame affinity gate missing'`。
-- [ ] **GREEN:** mark records by identity; immediate `retire()` path from Task4B becomes pending-open when marked;
+- [ ] **GREEN:** mark records by identity; immediate `retire()` path from Task4D becomes pending-open when marked;
   end clears marks and releases only when `lastSubmission == null || completedThrough >= lastSubmission`; otherwise
   it preserves that exact prior stamp as pending-submission. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -1394,9 +1664,9 @@ and documentation lines are counted, while generated files and formatter-only in
 **Interfaces:** Registry constructor registers exactly one tracker before-submit listener; record stores nullable
 `lastSubmission`; internal directly testable entrypoint is `void handleBeforeSubmit(int submissionId)`。
 
-**Implementation shape:** listener snapshots `_openFrameMarks`, clears it, and assigns each live record
+**Implementation shape:** listener snapshots `openFrameMarks`, clears it, and assigns each live record
 `lastSubmission = max(lastSubmission ?? id, id)` without settling any Future. Its callback entrypoint calls
-`_affinity.check()` first, before reading the mark set or submission id and before clearing/stamping anything。
+`affinity.check()` first, before reading the mark set or submission id and before clearing/stamping anything。
 
 **RED test snippet:**
 
@@ -1414,12 +1684,15 @@ test("retire during open frame stamps the next submission after invalidation", (
 
 ```dart
 void handleBeforeSubmit(int submissionId) {
-  _affinity.check();
-  final marked = Set<_PersistentGpuResourceRecord>.of(_openFrameMarks);
-  _openFrameMarks.clear();
+  affinity.check();
+  final marked = Set<PersistentGpuAllocationRecord>.of(openFrameMarks);
+  openFrameMarks.clear();
   for (final record in marked) {
     record.lastSubmission = max(record.lastSubmission ?? submissionId,
         submissionId);
+    if (record.state == PersistentGpuAllocationState.pendingOpenFrame) {
+      record.state = PersistentGpuAllocationState.pendingSubmission;
+    }
   }
 }
 ```
@@ -1427,7 +1700,8 @@ void handleBeforeSubmit(int submissionId) {
 **Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
-- [ ] **RED:** `begin→mark→retire→record` remains pending with last1; two submits produce last2; Task7
+- [ ] **RED:** `begin→mark→retire→record` becomes pendingSubmission with last1; an active record marked again
+  between two submits produces last2; Task7
   invalidation rejects new marks but the pre-existing mark still receives its stamp. A callback-affinity mismatch
   leaves every mark and stamp unchanged; after restoring the token, the same callback stamps normally. Run:
   `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'retire during open frame stamps the next submission after invalidation' 'RED:T13:before-submit affinity gate missing'`。
@@ -1445,10 +1719,10 @@ and documentation lines are counted, while generated files and formatter-only in
 waits `completedThrough >= lastSubmission`; internal directly testable entrypoint is
 `void handleCompletion(int completedThrough)`。
 
-**Implementation shape:** completion listener snapshots eligible pending records and invokes the existing Task4B
-release routine only when nullable stamp is absent or at/below watermark. Its callback entrypoint calls
-`_affinity.check()` first, before reading the watermark/records; the release routine checks again immediately before
-every registered release callback invocation。
+**Implementation shape:** `retire` is extended so an active record with an incomplete `lastSubmission` becomes
+`pendingSubmission` and retains its buffer/callback. Completion snapshots eligible pending records and invokes
+Task4D `releaseRecord` only at/above the watermark. Both callback and release entry call `affinity.check()` before
+reads or mutation; an affinity error propagates without becoming a GPU release failure。
 
 **RED test snippet:**
 
@@ -1462,17 +1736,36 @@ test("completion watermark releases every stamped retirement exactly once", () {
 });
 ```
 
-**GREEN implementation snippet:** the exact production signature/statement is:
+**GREEN implementation snippet:**
 
 ```dart
+Future<void> retire(PersistentGpuResourceLease lease) {
+  affinity.check();
+  final record = records[lease.recordId];
+  if (record == null || record.generation != lease.generation) {
+    throw StateError('foreign persistent GPU lease');
+  }
+  if (record.retirement case final existing) return existing.future;
+  final last = record.lastSubmission;
+  if (last != null && submissions.completedThrough < last) {
+    final completer = Completer<void>();
+    record.retirement = completer;
+    record.state = PersistentGpuAllocationState.pendingSubmission;
+    return completer.future;
+  }
+  return releaseRecord(record);
+}
+
 void handleCompletion(int completedThrough) {
-  _affinity.check();
-  final eligible = _pendingRecords.where(
-    (record) => switch (record.lastSubmission) {
-      null => true,
-      final submission => submission <= completedThrough,
-    },
-  ).toList(growable: false);
+  affinity.check();
+  final eligible = <PersistentGpuAllocationRecord>[];
+  for (final record in records.values) {
+    final last = record.lastSubmission;
+    if (record.state == PersistentGpuAllocationState.pendingSubmission &&
+        last != null && last <= completedThrough) {
+      eligible.add(record);
+    }
+  }
   for (final record in eligible) {
     releaseRecord(record);
   }
@@ -1482,30 +1775,33 @@ void handleCompletion(int completedThrough) {
 **Handwritten budget:** 55–95 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
-- [ ] **RED:** cover submit→complete→retire, mark→retire→submit→complete, and completion ids2→1; assert no
-  early callback, release once, identical Future. A completion-callback affinity mismatch invokes no release and
-  changes no record/accounting/Future; restore the token and prove the callback completes normally. Run:
+- [ ] **RED:** cover the missing active-submitted path exactly: `begin→mark→record(submit)→end→retire` yields
+  pendingSubmission, callback0, buffer retained and incomplete cached Future until completion; then release1 and
+  Future success. Also cover submit→complete→retire, mark→retire→submit→complete, ids2→1, and two owners calling
+  invalidate during the pending period return the identical FI which completes only after resource Futures and
+  owner FDs. Affinity mismatch invokes no release and changes no record/accounting/Future. Run:
   `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'completion watermark releases every stamped retirement exactly once' 'RED:T14:completion affinity gate missing'`。
-- [ ] **GREEN:** eligible snapshot only; set releasing before callback; success removes accounting then completes.
-  Run:
+- [ ] **GREEN:** route active+incomplete-last directly to pendingSubmission and never call `release` early;
+  eligible completion snapshot only, then Task4D performs the checked releasing transition. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/frame_transients_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: GPU completion後にresourceを解放`。
 
-### Task 15: release failure and ordered continuation (depends Task 14; 55–100 lines)
+### Task 15A: release failure and ordered continuation (depends Task 14; 55–100 lines)
 
 **Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
 `test/render/persistent_gpu_resource_registry_test.dart`。
 
-**Interfaces:** Produces terminal failed accounting, context cause,
-`@visibleForTesting List<AsyncError> get failureLog`, and cached terminal failure Future returned by later active-owner
-`invalidateContext`; recreate/register/bind reject failed state; disposed-owner FE/FD rules remain owner-specific。
+**Interfaces:** Produces terminal failed accounting, first context cause,
+`@visibleForTesting List<AsyncError> get failureLog`, and cached terminal failure Future returned by later
+active-owner `invalidateContext`; recreate/register/bind reject failed state; disposed-owner FE/FD rules remain
+owner-specific。
 
-**Implementation shape:** release routine catches each callback error after marking the record failed, stores the
-first as context cause/terminal Future, appends every error, and continues its precomputed release snapshot;
-`failureLog` returns `List<AsyncError>.unmodifiable(_failureLog)` so tests cannot mutate registry state. The
-release routine executes `_affinity.check()` immediately before each registered callback; an affinity failure is
-recorded as that record's release failure without invoking the callback and continuation still follows the
-precomputed snapshot order。
+**Implementation shape:** `releaseRecord` checks affinity before any state change. Only an exception thrown by the
+registered release callback after the checked transition becomes `failed`; affinity errors propagate with record,
+context, Future and log unchanged. Callback failures append every error, and a precomputed completion batch
+continues in registration order without retrying failed records. Only after the whole batch has run does it store
+the first context cause and mark the context failed. An in-flight invalidation still completes through its Task7
+coordinator after resource Futures and owner FDs; `releaseRecordsInOrder` never completes FI itself。
 
 **RED test snippet:**
 
@@ -1513,34 +1809,202 @@ precomputed snapshot order。
 test("release failures are ordered terminal and do not stop later release", () {
   expectRedSourceContract(
     path: "lib/src/render/persistent_gpu_resource_registry.dart",
-    marker: "List<AsyncError>.unmodifiable(_failureLog)",
-    diagnostic: "RED:T15:ordered release failure missing",
+    marker: "List<AsyncError>.unmodifiable(releaseFailures)",
+    diagnostic: "RED:T15A:ordered release failure missing",
   );
 });
 ```
 
-**GREEN implementation snippet:** the exact production signature/statement is:
+**GREEN implementation snippet:**
 
 ```dart
+final List<AsyncError> releaseFailures = [];
+AsyncError? terminalContextCause;
+Completer<void>? terminalFailureInvalidation;
+
 @visibleForTesting
 List<AsyncError> get failureLog =>
-    List<AsyncError>.unmodifiable(_failureLog);
+    List<AsyncError>.unmodifiable(releaseFailures);
+
+Future<void> releaseRecord(PersistentGpuAllocationRecord record) {
+  affinity.check();
+  final existing = record.retirement;
+  if (record.state == PersistentGpuAllocationState.retired ||
+      record.state == PersistentGpuAllocationState.failed ||
+      record.state == PersistentGpuAllocationState.releasing) {
+    if (existing == null) throw StateError('terminal record has no retirement');
+    return existing.future;
+  }
+  final completer = existing ?? Completer<void>();
+  record.retirement ??= completer;
+  record.state = PersistentGpuAllocationState.releasing;
+  try {
+    record.release();
+    record.state = PersistentGpuAllocationState.retired;
+    records.remove(record.id);
+    completer.complete();
+  } catch (error, stackTrace) {
+    final failure = AsyncError(error, stackTrace);
+    record.state = PersistentGpuAllocationState.failed;
+    releaseFailures.add(failure);
+    completer.completeError(error, stackTrace);
+  }
+  return completer.future;
+}
+
+void releaseRecordsInOrder(List<PersistentGpuAllocationRecord> batch) {
+  affinity.check();
+  final failureStart = releaseFailures.length;
+  for (final record in batch) {
+    releaseRecord(record);
+  }
+  if (releaseFailures.length == failureStart) return;
+  final first = releaseFailures[failureStart];
+  terminalContextCause ??= first;
+  contextState = PersistentGpuContextState.failed;
+}
 ```
 
-**Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
-and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+Task 15A replaces Task 14's per-record completion loop with
+`releaseRecordsInOrder(eligible)`; the eligible list remains the precomputed registration-order snapshot. The
+immediate branch of `retire` similarly calls `releaseRecordsInOrder([record])`, then returns the now-published
+`record.retirement.future` after a null invariant check. Owner disposal and context invalidation precompute their
+record lists before calling the same ordered entry, so all siblings are attempted even if an earlier callback
+throws。
 
-- [ ] **RED:** A callback reenters its retire/snapshot then throws first; B callback throws second. Complete the
-  shared submission; assert callbacks once, both resources/context failed, failed bytes retained, later records
-  still attempted, `failureLog.map((entry) => entry.error)` is `[first,second]`. Public lifecycle then covers
-  active/disposed failed-context rows. Run:
-  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'release failures are ordered terminal and do not stop later release' 'RED:T15:ordered release failure missing'`。
-- [ ] **GREEN:** move state/accounting before callback; first error is cause, all later errors append, continue a
-  release snapshot and return the cached terminal context Future for later invalidation. Run:
-  `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
+```dart
+releaseRecordsInOrder([record]);
+final retirement = record.retirement;
+if (retirement == null) {
+  throw StateError('release did not publish retirement');
+}
+return retirement.future;
+```
+
+**Handwritten budget:** production 55–70 + test 30–40 = 85–100 lines。
+
+- [ ] **RED:** A callback reenters its retire/snapshot then throws first; B throws second. Complete the shared
+  submission; assert callbacks once, both resources/context failed, failed bytes retained, later records still
+  attempted in registration order, `failureLog` is `[first,second]`, and each resource Future fails with its own
+  callback error. Repeated completion/retire never retries. Separately force affinity failure before
+  `releaseRecord`; assert active/pending state, Future identity, log, context and callback count are unchanged;
+  retry after restoring affinity succeeds. Run:
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'release failures are ordered terminal and do not stop later release' 'RED:T15A:ordered release failure missing'`。
+- [ ] **GREEN:** publish state before callback, preserve each resource error, store the first context cause only
+  after the whole ordered snapshot, and never complete FI here. Run focused registry/lifecycle/tracker tests plus
+  analyze/diff-check。
 - [ ] **Commit:** `Fix: GPU release失敗をterminal化`。
 
-### Task 16: encode-scope try/finally seam (depends Task 15; 35–70 lines)
+### Task 15B: failure FI waits for owner disposal (depends Task 15A; 55–100 lines)
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
+`test/render/persistent_gpu_resource_registry_test.dart`; Modify
+`test/render/persistent_gpu_resource_lifecycle_test.dart`。
+
+**Interfaces:** Replaces Task7 `invalidateContext` with the complete failed/in-flight coordinator; a later
+active-owner call on a previously failed context returns one cached terminal Future, while an already in-flight
+invalidation retains its exact FI identity。
+
+**Implementation shape:** The local continuation registers
+owner FD waits only after every resource Future settles, and it never reads or mutates registry state before its
+own affinity check:
+
+**RED test snippet:**
+
+```dart
+test('failed invalidation waits resource then owner before identical FI', () {
+  expectRedSourceContract(
+    path: 'lib/src/render/persistent_gpu_resource_registry.dart',
+    marker: 'void finishAfterOwnerDisposals(AsyncError? fallback)',
+    diagnostic: 'RED:T15B:failure FI ordering missing',
+  );
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+Future<void> invalidateContext(int ownerId) {
+  affinity.check();
+  final owner = owners[ownerId];
+  if (owner == null ||
+      owner.state != PersistentGpuResourceLifecycleState.active) {
+    throw StateError('owner is not active');
+  }
+  if (invalidation case final existing) return existing.future;
+  if (contextState == PersistentGpuContextState.failed) {
+    if (terminalFailureInvalidation case final existing) {
+      return existing.future;
+    }
+    final cause = terminalContextCause;
+    if (cause == null) throw StateError('failed context has no cause');
+    final completer = Completer<void>();
+    terminalFailureInvalidation = completer;
+    completer.completeError(cause.error, cause.stackTrace);
+    return completer.future;
+  }
+  if (contextState != PersistentGpuContextState.active) {
+    throw StateError('context cannot begin invalidation');
+  }
+  final completer = Completer<void>();
+  invalidation = completer;
+  contextState = PersistentGpuContextState.invalidating;
+  final batch = records.values
+      .where((record) => record.generation == contextGeneration)
+      .toList(growable: false);
+  final retirements = batch.map((record) => retire(
+    PersistentGpuResourceLease(registry: this, recordId: record.id,
+        generation: record.generation),
+  )).toList(growable: false);
+
+  void finishAfterOwnerDisposals(AsyncError? fallback) {
+    affinity.check();
+    final disposals = owners.values
+        .map((owner) => owner.disposal?.future)
+        .whereType<Future<void>>()
+        .toList(growable: false);
+    Future.wait(disposals, eagerError: false).then<void>((_) {
+      affinity.check();
+      final failure = terminalContextCause ?? fallback;
+      if (failure != null) {
+        contextState = PersistentGpuContextState.failed;
+        completer.completeError(failure.error, failure.stackTrace);
+      } else {
+        contextState = PersistentGpuContextState.invalidated;
+        completer.complete();
+      }
+    }, onError: (Object error, StackTrace stackTrace) {
+      affinity.check();
+      final failure = terminalContextCause ??
+          fallback ?? AsyncError(error, stackTrace);
+      contextState = PersistentGpuContextState.failed;
+      completer.completeError(failure.error, failure.stackTrace);
+    });
+  }
+
+  Future.wait(retirements, eagerError: false).then<void>(
+    (_) => finishAfterOwnerDisposals(null),
+    onError: (Object error, StackTrace stackTrace) =>
+        finishAfterOwnerDisposals(AsyncError(error, stackTrace)),
+  );
+  return completer.future;
+}
+```
+
+**Handwritten budget:** production 65–78 + tests 25–35 = 90–100 lines。
+
+- [ ] **RED:** During in-flight invalidation, A callback reentrantly disposes its owner and throws; B throws after
+  it. Assert the exact order callback A→callback B→resource Futures→owner FD→global FI, identical FI from two
+  owners and reentrant/later calls, and FI failure with the first context cause only after all callbacks. For a
+  release failure before invalidation, the first later active-owner invalidation creates one terminal Future and
+  every repeat returns that exact object. Disposed owner still returns its owner-specific FE/FD. Run:
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'failed invalidation waits resource then owner before identical FI' 'RED:T15B:failure FI ordering missing'`。
+- [ ] **GREEN:** let record Futures preserve per-callback errors; wait all record Futures non-eagerly, then all
+  published owner FDs, then settle the single FI from `terminalContextCause`. Run:
+  `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
+- [ ] **Commit:** `Fix: GPU invalidation失敗順序を固定`。
+
+### Task 16: encode-scope try/finally seam (depends Task 15B; 35–70 lines)
 
 **Files:** Create `lib/src/render/persistent_gpu_scene_frame.dart`; Create
 `test/render/persistent_gpu_scene_frame_test.dart`。
@@ -1691,7 +2155,8 @@ assertion rejects `renderViewsBody` and `_renderViewsImpl` and requires the old 
 affinity, global registry and encode seam。
 
 **Implementation shape:** `lib/src/scene.dart` imports internal files for Scene use; `lib/scene.dart` adds one
-curated export with a `show` list containing only the six public lifecycle symbols。
+curated export from the lifecycle file for the handle and a separate curated export from the models file for five
+model symbols. Dart exports are not transitive: the lifecycle file does not implicitly re-export its imports。
 
 **RED test snippet:**
 
@@ -1699,7 +2164,7 @@ curated export with a `show` list containing only the six public lifecycle symbo
 test("public lifecycle barrel hides registry internals", () {
   expectRedSourceContract(
     path: "lib/scene.dart",
-    marker: "show PersistentGpuResourceLifecycle",
+    marker: "show PersistentGpuResourceLifecycle;",
     diagnostic: "RED:T18:curated lifecycle export missing",
   );
 });
@@ -1709,11 +2174,12 @@ test("public lifecycle barrel hides registry internals", () {
 
 ```dart
 export 'src/render/persistent_gpu_resource_lifecycle.dart'
+    show PersistentGpuResourceLifecycle;
+export 'src/render/persistent_gpu_resource_models.dart'
     show
         PersistentGpuContextState,
         PersistentGpuMemorySnapshot,
         PersistentGpuMemoryUsage,
-        PersistentGpuResourceLifecycle,
         PersistentGpuResourceLifecycleState,
         PersistentGpuResourceState;
 ```
@@ -1721,8 +2187,8 @@ export 'src/render/persistent_gpu_resource_lifecycle.dart'
 **Handwritten budget:** 35–70 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
-- [ ] **RED:** public-only import constructs lifecycle and reads active/generation1/zero snapshot; source
-  assertions reject each internal symbol. Run:
+- [ ] **RED:** public-only import constructs lifecycle and reads active/generation1/zero snapshot; source requires
+  both exact source paths and show-lists, then rejects each internal symbol. Run:
   `run_fork_red test/render/persistent_gpu_lifecycle_public_api_test.dart 'public lifecycle barrel hides registry internals' 'RED:T18:curated lifecycle export missing'`。
 - [ ] **GREEN:** add curated `show` exports only. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_lifecycle_public_api_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/persistent_gpu_scene_integration_test.dart test/scene_view_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -1960,6 +2426,8 @@ final class PersistentPackedLayoutSnapshot {
           ),
         );
   final VertexLayoutDescriptor layout;
+  int get vertexStrideInBytes => layout.buffers[0].strideInBytes;
+  int get instanceStrideInBytes => layout.buffers[1].strideInBytes;
 }
 ```
 
@@ -2119,7 +2587,8 @@ and documentation lines are counted, while generated files and formatter-only in
 
 **Interfaces:** Produces
 `PersistentPackedIndexPlan.create({required ByteData? data, required gpu.IndexType type, required int vertexCount})`
-with final `hasIndices/indexCount/indexBytes`; retains no data。
+with final `hasIndices/indexType/indexCount/indexBytes`; retains no data. The exact requested `gpu.IndexType` is
+stored even for the null/no-index case so every downstream draw getter is total and typed。
 
 **Implementation shape:** null returns no-index scalars; nonnull chooses width via exhaustive enum switch,
 requires positive divisible length and positive vertex count, and stores count/byte scalars only。
@@ -2142,12 +2611,31 @@ test("index byte shape matches exact enum width", () {
 final class PersistentPackedIndexPlan {
   const PersistentPackedIndexPlan({
     required this.hasIndices,
+    required this.indexType,
     required this.indexCount,
     required this.indexBytes,
   });
   final bool hasIndices;
+  final gpu.IndexType indexType;
   final int indexCount;
   final int indexBytes;
+
+  factory PersistentPackedIndexPlan.create({required ByteData? data,
+      required gpu.IndexType type, required int vertexCount}) {
+    if (data == null) return PersistentPackedIndexPlan(hasIndices: false,
+        indexType: type, indexCount: 0, indexBytes: 0);
+    final width = switch (type) {
+      gpu.IndexType.int16 => 2,
+      gpu.IndexType.int32 => 4,
+    };
+    if (vertexCount <= 0 || data.lengthInBytes == 0 ||
+        data.lengthInBytes % width != 0) {
+      throw ArgumentError('invalid $type index byte shape');
+    }
+    return PersistentPackedIndexPlan(hasIndices: true, indexType: type,
+        indexCount: data.lengthInBytes ~/ width,
+        indexBytes: data.lengthInBytes);
+  }
 }
 ```
 
@@ -2155,7 +2643,7 @@ final class PersistentPackedIndexPlan {
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** null accepted; non-null empty, int16 odd, int32 non-multiple4, vertexCount<=0 rejected; supported
-  widths produce exact counts. Run:
+  widths produce exact counts and preserve exact `IndexType` for indexed and null cases. Run:
   `run_fork_red test/persistent_packed_instance_plan_test.dart 'index byte shape matches exact enum width' 'RED:T25:index byte shape missing'`。
 - [ ] **GREEN:** exhaustive index-type switch and exact divisibility; no fallback enum. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/geometry_test.dart test/vertex_layout_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -2270,7 +2758,8 @@ and documentation lines are counted, while generated files and formatter-only in
 exposes immutable subplans/scalars, retains no ByteData。
 
 **Implementation shape:** create layout/bounds snapshots, index and sizing in that order; validate exact lengths;
-return a final object containing only those immutable values and scalars。
+return a final object containing only those immutable values and scalars. It exposes every field consumed by
+Tasks29–44 through the exact typed getters below; no consumer reaches through a nullable or undocumented subplan。
 
 **RED test snippet:**
 
@@ -2302,14 +2791,27 @@ final class PersistentPackedInstancePlan {
   final PersistentPackedAllocationSizes sizes;
   final int vertexCount;
   final int instanceCount;
+  int get vertexBytes => sizes.vertexBytes;
+  int get instanceBytes => sizes.instanceBytes;
+  int get instanceOffset => sizes.instanceOffset;
+  int get nonIndexBytes => sizes.nonIndexBytes;
+  int get indexBytes => sizes.indexBytes;
+  int get totalBytes => sizes.totalBytes;
+  gpu.IndexType get indexType => index.indexType;
+  int get indexCount => index.indexCount;
+  VertexLayoutDescriptor get vertexLayout => layout.layout;
+  int get vertexStrideInBytes => layout.vertexStrideInBytes;
+  int get instanceStrideInBytes => layout.instanceStrideInBytes;
+  vm.Aabb3 get localBounds => bounds.localBounds;
+  vm.Sphere get localBoundingSphere => bounds.localBoundingSphere;
 }
 ```
 
 **Handwritten budget:** 50–95 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
-- [ ] **RED:** valid indexed/non-indexed plans, exact length mismatches, and post-create mutation of all source
-  objects. Run:
+- [ ] **RED:** valid indexed/non-indexed plans, exact length mismatches, post-create mutation of all source objects,
+  and a consumer-closure test that type-checks every getter used in Tasks29–44. Run:
   `run_fork_red test/persistent_packed_instance_plan_test.dart 'composite plan retains no caller-owned source' 'RED:T28:immutable plan missing'`。
 - [ ] **GREEN:** snapshot layout/bounds first; validate index/sizing; compare exact lengths; retain scalars/subplans.
   Run: `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/bounds_test.dart test/vertex_layout_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -3140,13 +3642,14 @@ final class PersistentPackedInstanceGeometryParts {
 **Files:** Modify `lib/src/geometry/persistent_packed_instance_geometry.dart`; Modify
 `test/persistent_packed_instance_geometry_test.dart`。
 
-**Interfaces:** Produces concrete class private nonthrowing `_fromParts` and internal
-`createPersistentPackedInstanceGeometryFromPartsForTesting({required PersistentPackedInstancePlan plan, required PersistentPackedInstanceStorage storage, required PersistentGpuResourceLease lease, required gpu.Shader Function() defaultShader, required bool doubleSided})`
-and `persistentPackedInstanceBindingForTesting(PersistentPackedInstanceGeometry geometry)`. The very first
-instantiable revision implements abstract `bind` plus `draw`, `vertexShader`, bounds, `setLocalBounds`, and every
-layout/count/state/retire getter; no temporarily abstract or throwing construction state is committed。
+**Interfaces:** Produces concrete class with `@internal` nonthrowing public named constructor
+`fromValidatedParts`. The very first instantiable revision implements abstract `bind` plus `draw`, `vertexShader`,
+bounds, `setLocalBounds`, and every layout/count/state/retire getter; no temporarily abstract or throwing
+construction state or extra test factory is committed. Tests call the named constructor directly and inspect the
+typed `parts.binding` field。
 
-**Implementation shape:** `_fromParts` consumes a Task41A parts holder. Public `vertexShader` resolves its lazy
+**Implementation shape:** `fromValidatedParts` consumes a Task41A parts holder. Public `vertexShader` resolves
+its lazy
 resolver; the internal accessor returns its same binding. `setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere)`
 always throws `UnsupportedError`; both bounds getters return Task24 fresh copies; bind/draw use the Task37
 production adapter around the supplied pass。
@@ -3166,11 +3669,42 @@ test('concrete Geometry is complete at first instantiation', () {
 **GREEN implementation snippet:**
 
 ```dart
+final class PersistentPackedInstanceGeometry extends Geometry {
+  @internal
+  PersistentPackedInstanceGeometry.fromValidatedParts({
+    required PersistentPackedInstancePlan plan,
+    required PersistentPackedInstanceStorage storage,
+    required PersistentGpuResourceLease lease,
+    required gpu.Shader Function() defaultShader,
+    required bool doubleSided,
+  }) : parts = PersistentPackedInstanceGeometryParts(plan: plan,
+         storage: storage, lease: lease, defaultShader: defaultShader,
+         doubleSided: doubleSided);
+
+  final PersistentPackedInstanceGeometryParts parts;
+  @override gpu.Shader get vertexShader => parts.defaultShader();
+  @override vm.Aabb3 get localBounds => parts.plan.localBounds;
+  @override vm.Sphere get localBoundingSphere =>
+      parts.plan.localBoundingSphere;
+  @override VertexLayoutDescriptor get instancedVertexLayout =>
+      parts.plan.vertexLayout;
+  @override int get vertexStreamCount => 2;
+  @override bool get bindsModelTransformInstance => false;
+  @override bool get isDoubleSided => parts.doubleSided;
+  @override
+  ({gpu.Shader shader, VertexLayoutDescriptor layout})?
+      get depthOnlyVertex => null;
+  int get instanceCount => parts.plan.instanceCount;
+  int get instanceStrideInBytes => parts.plan.instanceStrideInBytes;
+  int get contextGeneration => parts.lease.generation;
+  PersistentGpuResourceState get resourceState => parts.lease.state;
+  Future<void> retire() => parts.lease.retire();
+
 @override
 void bind(gpu.RenderPass pass, TransientWriter transientsBuffer,
     vm.Matrix4 modelTransform, vm.Matrix4 cameraTransform,
     vm.Vector3 cameraPosition, {gpu.Shader? shaderOverride}) {
-  _parts.binding.bind(adapter: GpuPersistentPackedRenderPassAdapter(pass),
+  parts.binding.bind(adapter: GpuPersistentPackedRenderPassAdapter(pass),
       transients: transientsBuffer, modelTransform: modelTransform,
       cameraTransform: cameraTransform, cameraPosition: cameraPosition,
       shaderOverride: shaderOverride);
@@ -3178,13 +3712,15 @@ void bind(gpu.RenderPass pass, TransientWriter transientsBuffer,
 
 @override
 void draw(gpu.RenderPass pass, {int instanceCount = 1}) {
-  _parts.binding.draw(adapter: GpuPersistentPackedRenderPassAdapter(pass),
+  parts.binding.draw(adapter: GpuPersistentPackedRenderPassAdapter(pass),
       externalInstanceCount: instanceCount);
 }
 
 @override
 void setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere) =>
     throw UnsupportedError('PersistentPackedInstanceGeometry is immutable');
+}
+
 ```
 
 **Handwritten budget:** production 48–65 + test 30–40 = 78–95 lines。
@@ -3205,11 +3741,11 @@ void setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere) =>
 
 **Interfaces:** Produces Final public API factory and internal exact
 `createPersistentPackedInstanceGeometry({required PersistentGpuResourceLifecycle lifecycle, required PersistentPackedGpuBackend backend, required ByteData vertexData, required int vertexCount, required ByteData? indexData, required gpu.IndexType indexType, required ByteData instanceData, required int instanceCount, required VertexLayoutDescriptor vertexLayout, required gpu.Shader vertexShader, required vm.Aabb3 localBounds, required bool doubleSided})`。
-Both call Task39 transaction and Task41B `_fromParts`。
+Both call Task39 transaction and Task41B `fromValidatedParts`。
 
 **Implementation shape:** public factory delegates with `DevicePersistentPackedGpuBackend()` and the supplied
 shader unchanged. The internal helper is the only place that supplies lifecycle check/register, source-capturing
-plan/upload, and `_fromParts(defaultShader: () => vertexShader)` construct closures to Task39. There is no second
+plan/upload, and `fromValidatedParts(defaultShader: () => vertexShader)` construct closures to Task39. There is no second
 manual plan→upload→register path。
 
 ```dart
@@ -3236,7 +3772,7 @@ return executePersistentPackedInstanceTransaction(
       ),
   register: lifecycle.registerAllocation,
   construct: ({required plan, required storage, required lease}) =>
-      PersistentPackedInstanceGeometry._fromParts(
+      PersistentPackedInstanceGeometry.fromValidatedParts(
         plan: plan,
         storage: storage,
         lease: lease,
@@ -3290,7 +3826,7 @@ PersistentPackedInstanceGeometry createPersistentPackedInstanceGeometry({
   ),
   register: lifecycle.registerAllocation,
   construct: ({required plan, required storage, required lease}) =>
-      PersistentPackedInstanceGeometry._fromParts(
+      PersistentPackedInstanceGeometry.fromValidatedParts(
         plan: plan, storage: storage, lease: lease,
         defaultShader: () => vertexShader, doubleSided: doubleSided,
       ),
@@ -3312,16 +3848,15 @@ and documentation lines are counted, while generated files and formatter-only in
 
 ### Task 43: full normal/depth/shadow/selection routes (depends Task 42; 45–90 lines)
 
-**Files:** Modify `lib/src/geometry/persistent_packed_instance_geometry.dart`; Modify
-`test/persistent_packed_instance_geometry_test.dart`; Modify
+**Files:** Modify `test/persistent_packed_instance_geometry_test.dart`; Modify
 `test/render/persistent_gpu_scene_integration_test.dart`。
 
-**Interfaces:** Geometry overrides exact
-`({gpu.Shader shader, VertexLayoutDescriptor layout})? get depthOnlyVertex => null`, `vertexStreamCount => 2`,
-`bindsModelTransformInstance => false`, `instancedVertexLayout => copied plan layout`, `isDoubleSided`。
+**Interfaces:** Audits Task41B's exact
+`depthOnlyVertex == null`, `vertexStreamCount == 2`, `bindsModelTransformInstance == false`, copied layout and
+double-sided values against every existing render route; adds no production API。
 
-**Implementation shape:** five direct getter overrides only; route behavior is inherited from existing encoders'
-null branch and the already-complete Task41 bind implementation。
+**Implementation shape:** recording-adapter tests drive the already-complete Task41B binding through normal,
+depth, shadow and selection route predicates; source assertions pin each existing encoder's null branch。
 
 **RED test snippet:**
 
@@ -3335,18 +3870,22 @@ test("depth shadow and selection use packed full bind", () {
 });
 ```
 
-**GREEN implementation snippet:** the exact production signature/statement is:
+**GREEN implementation snippet:** the route test uses the same typed expectation for each named route:
 
 ```dart
-@override
-({gpu.Shader shader, VertexLayoutDescriptor layout})? get depthOnlyVertex =>
-    null;
-
-@override
-int get vertexStreamCount => 2;
-
-@override
-bool get bindsModelTransformInstance => false;
+for (final path in [
+  'lib/src/render/object_filter.dart',
+  'lib/src/render/shadow_encoder.dart',
+  'lib/src/render/depth_prepass.dart',
+]) {
+  test('$path uses bind for null depthOnlyVertex', () {
+    final source = File(path).readAsStringSync();
+    expect(source, contains('depthOnlyVertex'));
+    expect(source, contains('.bind('));
+    expect(source, isNot(contains('depthOnlyVertex == null) {\n'
+        '      geometry.bindPositionStream')));
+  });
+}
 ```
 
 **Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
@@ -3357,9 +3896,9 @@ and documentation lines are counted, while generated files and formatter-only in
   Geometry's exact internal binding delegate through four named normal/depth/shadow/selection cases and require
   both slots plus FrameInfo each time. Run:
   `run_fork_red test/persistent_packed_instance_geometry_test.dart 'depth shadow and selection use packed full bind' 'RED:T43:full route binding missing'`。
-- [ ] **GREEN:** explicit null override only; never override/call position stream or superclass setters. Run
+- [ ] **GREEN:** add only route/source contract tests; never call position stream or superclass setters. Run
   geometry + scene integration + `shadow_cache_test.dart` + `spot_shadow_test.dart` +
-  Run: `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_geometry_test.dart test/render/persistent_gpu_scene_integration_test.dart test/shadow_cache_test.dart test/spot_shadow_test.dart test/scene_semantics_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
+  `scene_semantics_test.dart`. Run: `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_geometry_test.dart test/render/persistent_gpu_scene_integration_test.dart test/shadow_cache_test.dart test/spot_shadow_test.dart test/scene_semantics_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed Geometry全描画経路を固定`。
 
 ### Task 44: exact material vertex variant (depends Task 43; 40–80 lines)
@@ -3771,36 +4310,130 @@ All commands run from `$pin_worktree`. Dart/Flutter uses `mise exec --`。
 `https://github.com/YumNumm/flutter_scene.git`, requested/resolved `fork_top_sha`, existing paths
 `packages/flutter_scene` or `packages/scene`; consumer uses public imports only。
 
-**Implementation shape:** add consumer test first; replace only descriptor URL/ref scalars; let one root
-`flutter pub get` regenerate both git lock descriptions and preserve their package paths。
+**Implementation shape:** add the source-only consumer RED first. Export `fork_top_sha` before every `yq`
+`strenv` use. Capture and validate all six pre-change URL/ref scalars, update exactly those six scalars, then
+capture and validate all six post-change scalars before one root `flutter pub get` regenerates both git lock
+descriptions. Assert the three existing `path` scalars unchanged separately。
 
 **RED test snippet:**
 
 ```dart
-test('consumer sees the persistent packed public API', () {
-  final lifecycle = PersistentGpuResourceLifecycle();
-  expect(lifecycle.contextGeneration, 1,
+import 'dart:io';
+import 'dart:isolate';
+
+import 'package:flutter_test/flutter_test.dart';
+
+test('consumer sees the persistent packed public API', () async {
+  final uri = await Isolate.resolvePackageUri(
+    Uri.parse('package:flutter_scene/scene.dart'),
+  );
+  if (uri == null) {
+    throw StateError('RED:T47:fork public API missing');
+  }
+  final source = await File.fromUri(uri).readAsString();
+  const symbols = <String>[
+    'PersistentGpuResourceLifecycle',
+    'PersistentGpuContextState',
+    'PersistentGpuResourceLifecycleState',
+    'PersistentGpuResourceState',
+    'PersistentGpuMemoryUsage',
+    'PersistentGpuMemorySnapshot',
+    'PersistentPackedInstanceGeometry',
+  ];
+  expect(symbols.every(source.contains), isTrue,
       reason: 'RED:T47:fork public API missing');
-  final factory = PersistentPackedInstanceGeometry.new;
-  expect(factory, isNotNull);
 });
 ```
 
-**GREEN implementation snippet:** assign the already validated shell variable atomically, then regenerate locks:
+After the pin turns GREEN, replace that source probe with this compile-time public-consumer test. It imports only
+the curated barrel and references all seven public types:
+
+```dart
+import 'package:flutter_scene/scene.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+Type publicFlutterSceneType<T>() => T;
+
+test('consumer compiles against the persistent packed public API', () {
+  expect(<Type>[
+    publicFlutterSceneType<PersistentGpuResourceLifecycle>(),
+    publicFlutterSceneType<PersistentGpuContextState>(),
+    publicFlutterSceneType<PersistentGpuResourceLifecycleState>(),
+    publicFlutterSceneType<PersistentGpuResourceState>(),
+    publicFlutterSceneType<PersistentGpuMemoryUsage>(),
+    publicFlutterSceneType<PersistentGpuMemorySnapshot>(),
+    publicFlutterSceneType<PersistentPackedInstanceGeometry>(),
+  ], everyElement(isA<Type>()));
+});
+```
+
+**GREEN implementation snippet:** update and validate all six scalars, then regenerate locks:
 
 ```bash
-mise exec -- yq -i '.dependencies.flutter_scene.git.ref = strenv(fork_top_sha)' \
+set -euo pipefail
+export fork_top_sha
+export fork_url=https://github.com/YumNumm/flutter_scene.git
+upstream_url=https://github.com/bdero/flutter_scene.git
+upstream_ref=7f71993b7e2a0ab1d2f59726a406098709be7291
+test -n "${fork_top_sha:?validated fork top SHA required}"
+printf '%s\n' "$fork_top_sha" | rg -q '^[0-9a-f]{40}$'
+
+descriptor_specs=(
+  'packages/eqmonitor_map/pubspec.yaml|.dependencies.flutter_scene.git'
+  'packages/eqmonitor_map/pubspec.yaml|.dependency_overrides.scene.git'
+  'packages/eqmonitor_map/example/pubspec.yaml|.dependencies.flutter_scene.git'
+)
+read_descriptor_scalars() {
+  for spec in "${descriptor_specs[@]}"; do
+    IFS='|' read -r file query <<<"$spec"
+    mise exec -- yq -er "$query.url | select(type == \"string\")" "$file"
+    mise exec -- yq -er "$query.ref | select(type == \"string\")" "$file"
+  done
+}
+
+before=$(read_descriptor_scalars)
+test "$(wc -l <<<"$before" | tr -d ' ')" -eq 6
+test "$(rg -Fxc "$upstream_url" <<<"$before")" -eq 3
+test "$(rg -Fxc "$upstream_ref" <<<"$before")" -eq 3
+test "$(mise exec -- yq -er '.dependencies.flutter_scene.git.path' \
+  packages/eqmonitor_map/pubspec.yaml)" = packages/flutter_scene
+test "$(mise exec -- yq -er '.dependency_overrides.scene.git.path' \
+  packages/eqmonitor_map/pubspec.yaml)" = packages/scene
+test "$(mise exec -- yq -er '.dependencies.flutter_scene.git.path' \
+  packages/eqmonitor_map/example/pubspec.yaml)" = packages/flutter_scene
+
+mise exec -- yq -i \
+  '.dependencies.flutter_scene.git.url = strenv(fork_url) |
+   .dependencies.flutter_scene.git.ref = strenv(fork_top_sha) |
+   .dependency_overrides.scene.git.url = strenv(fork_url) |
+   .dependency_overrides.scene.git.ref = strenv(fork_top_sha)' \
   packages/eqmonitor_map/pubspec.yaml
+mise exec -- yq -i \
+  '.dependencies.flutter_scene.git.url = strenv(fork_url) |
+   .dependencies.flutter_scene.git.ref = strenv(fork_top_sha)' \
+  packages/eqmonitor_map/example/pubspec.yaml
+
+after=$(read_descriptor_scalars)
+test "$(wc -l <<<"$after" | tr -d ' ')" -eq 6
+test "$(rg -Fxc "$fork_url" <<<"$after")" -eq 3
+test "$(rg -Fxc "$fork_top_sha" <<<"$after")" -eq 3
+test "$(mise exec -- yq -er '.dependencies.flutter_scene.git.path' \
+  packages/eqmonitor_map/pubspec.yaml)" = packages/flutter_scene
+test "$(mise exec -- yq -er '.dependency_overrides.scene.git.path' \
+  packages/eqmonitor_map/pubspec.yaml)" = packages/scene
+test "$(mise exec -- yq -er '.dependencies.flutter_scene.git.path' \
+  packages/eqmonitor_map/example/pubspec.yaml)" = packages/flutter_scene
 mise exec -- flutter pub get
 ```
 
 **Handwritten budget:** descriptor 6–12 + test 30–48 + regenerated-lock review 9–30 = 45–90 lines。
 
-- [ ] **RED:** before pin change, test takes lifecycle/Geometry factory tear-offs and checks generation1 zero
-  snapshot. Run fail-closed:
-  `set -euo pipefail; if out=$(mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart 2>&1); then exit 1; else rc=$?; fi; test "$rc" -eq 1; test -n "$out"; rg -F 'PersistentPackedInstanceGeometry' <<<"$out"`。
-- [ ] **GREEN:** rerun top advertised-ref handoff; modify only URL/ref scalars; run `mise exec -- flutter pub get`,
-  never edit lock manually. Run:
+- [ ] **RED:** before pin change, the source-only test fails with the exact dedicated diagnostic. An unrelated
+  `rc=1` that merely prints the type name is rejected. Run fail-closed:
+  `set -euo pipefail; diagnostic='RED:T47:fork public API missing'; if out=$(mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart 2>&1); then exit 1; else rc=$?; fi; test "$rc" -eq 1; rg -F "$diagnostic" <<<"$out"; if rg -F "$diagnostic" <<<'PersistentPackedInstanceGeometry unrelated rc1'; then exit 1; else rejected_rc=$?; fi; test "$rejected_rc" -eq 1`。
+- [ ] **GREEN:** rerun top advertised-ref handoff; export the validated SHA; assert exact pre/post counts for all
+  six URL/ref scalars and the exact three paths; then run `mise exec -- flutter pub get`, never editing lock
+  manually. Run:
   `set -euo pipefail; mise exec -- flutter pub get; mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart; mise exec -- dart analyze packages/eqmonitor_map; mise exec -- dart analyze packages/eqmonitor_map/example; git --no-pager diff --check`。
 - [ ] **Commit:** `Package: Flutter Scene fork SHAへ固定`。
 
@@ -4123,19 +4756,20 @@ No merge, #1603 implementation, device/Simulator/E2E is authorized by this plan�
 
 ## Mechanical plan audit
 
-Run from the EQMonitor plan worktree before requesting plan review. This reports the requested cardinalities rather
-than inferring them visually: 55 split tasks all have snippets/budgets; the bottom has 49 RED mappings (the original
-43 plus the six independent 4A/4B, 38A/38B and 41A/41B gates); the affinity matrix has 14 independently rejected
-entry/callback rows; and a null-equals-null stack cannot pass the SHA predicate。
+Run from the EQMonitor plan worktree before requesting plan review. This reports cardinalities rather than
+inferring them visually: 58 split tasks all have snippets/budgets; the bottom has 52 unique RED mappings; the
+affinity matrix has 14 independently rejected entry/callback rows; Task28 closes every downstream plan field;
+Task18 preserves symbol provenance; no private-method/legacy undefined-helper call remains; Task47 assigns all six
+descriptor scalars after exporting the SHA; and a null-equals-null stack cannot pass the SHA predicate。
 
 ```bash
 set -euo pipefail
 plan=docs/superpowers/plans/2026-08-12-flutter-scene-persistent-packed-instances.md
-task_count=$(rg -c '^### Task [0-9]+[AB]?:' "$plan")
+task_count=$(rg -c '^### Task [0-9]+[A-D]?:' "$plan")
 red_snippet_count=$(rg -c '^\*\*RED test snippet:\*\*$' "$plan")
 green_snippet_count=$(rg -c '^\*\*GREEN implementation snippet:\*\*' "$plan")
 budget_count=$(rg -c '^\*\*Handwritten budget:\*\*' "$plan")
-test "$task_count" -eq 55
+test "$task_count" -eq 58
 test "$red_snippet_count" -eq "$task_count"
 test "$green_snippet_count" -eq "$task_count"
 test "$budget_count" -eq "$task_count"
@@ -4143,9 +4777,9 @@ test "$budget_count" -eq "$task_count"
 bottom_plan=$(sed '/^### Task 47:/q' "$plan")
 bottom_red_count=$(rg -c 'run_fork_red test/' <<<"$bottom_plan")
 bottom_red_mapping_count=$(rg -o \
-  "run_fork_red [^\x60]+ 'RED:T[0-9]+[AB]?:[^']+'" <<<"$bottom_plan" | \
-  sed -E "s/.*'(RED:T[0-9]+[AB]?):[^']+'.*/\1/" | sort -u | wc -l | tr -d ' ')
-test "$bottom_red_count" -eq 49
+  "run_fork_red [^\x60]+ 'RED:T[0-9]+[A-D]?:[^']+'" <<<"$bottom_plan" | \
+  sed -E "s/.*'(RED:T[0-9]+[A-D]?):[^']+'.*/\1/" | sort -u | wc -l | tr -d ' ')
+test "$bottom_red_count" -eq 52
 test "$bottom_red_mapping_count" -eq "$bottom_red_count"
 if rg -q 'set -euo pipefail; (title=|if out=).*flutter@4dac' <<<"$bottom_plan"; then
   exit 1
@@ -4159,6 +4793,68 @@ affinity_matrix=$(sed -n \
 affinity_entrypoint_count=$(rg -c '^\| (`|lease|tracker|immediately)' \
   <<<"$affinity_matrix")
 test "$affinity_entrypoint_count" -eq 14
+
+task28=$(sed -n '/^### Task 28:/,/^### Task 29:/p' "$plan")
+required_plan_api=(
+  vertexBytes instanceBytes instanceOffset nonIndexBytes indexBytes totalBytes
+  indexType indexCount vertexLayout vertexStrideInBytes instanceStrideInBytes
+  localBounds localBoundingSphere vertexCount instanceCount
+)
+for field in "${required_plan_api[@]}"; do
+  rg -q "(get $field\\b|final [^;]+ $field;)" <<<"$task28"
+done
+consumer_plan_fields=$(sed -n '/^### Task 29:/,/^### Task 45:/p' "$plan" | \
+  rg -o 'plan\.[A-Za-z][A-Za-z0-9_]*' | sed 's/plan\.//' | \
+  rg -v '^dart$' | sort -u)
+while IFS= read -r field; do
+  printf '%s\n' "${required_plan_api[@]}" | rg -Fxq "$field"
+done <<<"$consumer_plan_fields"
+
+task18=$(sed -n '/^### Task 18:/,/^### Task 19:/p' "$plan")
+lifecycle_export=$(sed -n "/export 'src\\/render\\/persistent_gpu_resource_lifecycle.dart'/,/;/p" \
+  <<<"$task18")
+models_export=$(sed -n "/export 'src\\/render\\/persistent_gpu_resource_models.dart'/,/;/p" \
+  <<<"$task18")
+rg -q 'show PersistentGpuResourceLifecycle;' <<<"$lifecycle_export"
+if rg -q 'PersistentGpu(ContextState|MemorySnapshot|MemoryUsage|ResourceLifecycleState|ResourceState)' \
+  <<<"$lifecycle_export"; then exit 1; else provenance_rc=$?; fi
+test "$provenance_rc" -eq 1
+for symbol in PersistentGpuContextState PersistentGpuMemorySnapshot \
+  PersistentGpuMemoryUsage PersistentGpuResourceLifecycleState \
+  PersistentGpuResourceState; do
+  rg -q "\\b$symbol\\b" <<<"$models_export"
+done
+if rg -q '\bPersistentGpuResourceLifecycle\b' <<<"$models_export"; then
+  exit 1
+else
+  lifecycle_leak_rc=$?
+fi
+test "$lifecycle_leak_rc" -eq 1
+
+if rg -q '(\b_[A-Za-z][A-Za-z0-9_]*\s*\(|\b(get|set)\s+_[A-Za-z])' "$plan"; then
+  exit 1
+else
+  private_method_rc=$?
+fi
+test "$private_method_rc" -eq 1
+for legacy_helper in requireOwner buildPersistent requireCurrentActiveRecord \
+  settleNoSubmissionMarks _fromParts; do
+  if rg -Fq "$legacy_helper(" "$plan"; then exit 1; else helper_rc=$?; fi
+  test "$helper_rc" -eq 1
+done
+
+task47=$(sed -n '/^### Task 47:/,/^### Task 48:/p' "$plan")
+descriptor_spec_count=$(rg -c \
+  "^  'packages/eqmonitor_map(/example)?/pubspec.yaml\\|\\.(dependencies.flutter_scene|dependency_overrides.scene).git'$" \
+  <<<"$task47")
+url_assignment_count=$(rg -c 'git.url = strenv\(fork_url\)' <<<"$task47")
+ref_assignment_count=$(rg -c 'git.ref = strenv\(fork_top_sha\)' <<<"$task47")
+test "$descriptor_spec_count" -eq 3
+test "$url_assignment_count" -eq 3
+test "$ref_assignment_count" -eq 3
+export_line=$(rg -n -m1 '^export fork_top_sha$' <<<"$task47" | cut -d: -f1)
+strenv_line=$(rg -n -m1 'strenv\(fork_top_sha\)' <<<"$task47" | cut -d: -f1)
+test "$export_line" -lt "$strenv_line"
 
 null_stack='{"branches":[{"base":null,"head":null},{"base":null,"head":null}]}'
 if jq -e '
@@ -4174,9 +4870,10 @@ else
   test "$stack_null_negative_exit" -eq 1
 fi
 
-printf 'task_snippets=%s red_mappings=%s affinity_entrypoints=%s stack_null_exit=%s\n' \
+printf 'task_snippets=%s red_mappings=%s affinity_entrypoints=%s plan_fields=%s descriptor_scalars=%s private_methods=%s stack_null_exit=%s\n' \
   "$task_count" "$bottom_red_mapping_count" "$affinity_entrypoint_count" \
-  "$stack_null_negative_exit"
+  "${#required_plan_api[@]}" "$((url_assignment_count + ref_assignment_count))" \
+  0 "$stack_null_negative_exit"
 ```
 
 ## Completion checklist
