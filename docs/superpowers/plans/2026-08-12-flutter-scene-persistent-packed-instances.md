@@ -1433,13 +1433,18 @@ Future<void> invalidateContext(int ownerId) {
   final currentRecords = records.values
       .where((record) => record.generation == contextGeneration)
       .toList(growable: false);
+  final ownerDisposals = owners.values
+      .map((owner) => owner.disposal)
+      .whereType<Completer<void>>()
+      .map((completer) => completer.future)
+      .toList(growable: false);
   final retirements = currentRecords
       .map((record) => retire(PersistentGpuResourceLease(registry: this,
           recordId: record.id, generation: record.generation)))
       .toList(growable: false);
   settleImmediatePersistentGpuInvalidation(
     registry: this,
-    retirements: retirements,
+    retirements: [...retirements, ...ownerDisposals],
     completer: completer,
   ).ignore();
   return completer.future;
@@ -3710,7 +3715,7 @@ and documentation lines are counted, while generated files and formatter-only in
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_storage_test.dart test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_plan_test.dart test/geometry_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed index bufferをtransaction化`。
 
-### Task 34: storage views, source independence and release (depends Task 33; 45–90 lines)
+### Task 34: storage views, source independence and release (depends Task 33; 45–85 lines)
 
 **Files:** Modify `lib/src/geometry/persistent_packed_instance_storage.dart`; Modify
 `test/persistent_packed_instance_storage_test.dart`。
@@ -3978,7 +3983,7 @@ Float32List packPersistentPackedFrameInfo({
   ..[35] = 0;
 ```
 
-**Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** run only the source contract first:
@@ -6124,7 +6129,7 @@ these 63 rows as the exhaustive set; a missing, duplicate, empty or non-later ta
 | 41A | immutable Geometry parts | Task 41B |
 | 41B | complete concrete Geometry | Task 42 |
 | 42 | shared public factory | Task 43 |
-| 43 | all-route full-bind audit | Task 44 |
+| 43 | all-route full-bind audit | Top handoff |
 | 44 | persistent material variant | Task 45 |
 | 45 | curated Geometry export | Task 46 |
 | 46 | packed Geometry README contract | Top handoff |
@@ -6161,6 +6166,31 @@ test "$task_count" -eq 63
 test "$red_snippet_count" -eq "$task_count"
 test "$green_snippet_count" -eq "$task_count"
 test "$budget_count" -eq "$task_count"
+
+exact_budget_count=$(perl -0777 - "$plan" <<'PERL'
+use strict;
+use warnings;
+my $path = shift @ARGV;
+open my $handle, '<', $path or die "$path: $!\n";
+local $/;
+my $text = <$handle>;
+my $count = 0;
+for my $section (split /(?=^### Task )/m, $text) {
+  next unless $section =~
+    /^### Task ([0-9]+[A-D]?):[^\n]*; ([0-9]+)–([0-9]+) lines\)/m;
+  my ($task, $heading_minimum, $heading_maximum) = ($1, $2, $3);
+  next unless $section =~
+    /\*\*Handwritten budget:\*\* ([0-9]+)–([0-9]+) total lines exactly/;
+  my ($budget_minimum, $budget_maximum) = ($1, $2);
+  $heading_minimum == $budget_minimum &&
+      $heading_maximum == $budget_maximum
+    or die "Task $task heading/budget mismatch\n";
+  $count++;
+}
+print "$count\n";
+PERL
+)
+test "$exact_budget_count" -eq 40
 
 dart_snippets=$(awk '
   /^```dart$/ { capture=1; next }
@@ -6456,8 +6486,8 @@ else
   test "$stack_null_negative_exit" -eq 1
 fi
 
-printf 'task_snippets=%s red_mappings=%s red_markers=%s shell_red=%s affinity_entrypoints=%s closure_rows=%s executable_green=%s dart_forbidden=%s plan_fields=%s descriptor_scalars=%s private_methods=%s stack_null_exit=%s\n' \
-  "$task_count" "$red_contract_count" "$positive_marker_count" \
+printf 'task_snippets=%s exact_budgets=%s red_mappings=%s red_markers=%s shell_red=%s affinity_entrypoints=%s closure_rows=%s executable_green=%s dart_forbidden=%s plan_fields=%s descriptor_scalars=%s private_methods=%s stack_null_exit=%s\n' \
+  "$task_count" "$exact_budget_count" "$red_contract_count" "$positive_marker_count" \
   "${#eq_shell_red_diagnostics[@]}" "$affinity_entrypoint_count" \
   "$closure_row_count" "${#executable_green_tasks[@]}" \
   "$((forbidden_dart_type_count + postfix_bang_count + retirement_delay_call_count))" \
