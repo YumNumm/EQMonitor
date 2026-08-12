@@ -51,3 +51,20 @@ git diff --check
 
 このTaskではdevice、simulator、golden、E2Eを実施していない。Flutter Scene/GPUの可視出力、
 lifecycle、実機性能は#1593以降のplatform確認として残る。
+
+## Final automated verification
+
+- Scope: #1590 only.
+- BASE: `a850f6164130a994ecdcf70a451f14054eb7b604` (after origin/develop merge; Task 51 approved was `bda33daca588b17a5ceff9e577f9aca68b085d35`)
+- RED marker check: `rg -n '^## Final automated verification$' ../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md` returned exit code 1 before this marker was added.
+- Required automated gates:
+  - `mise exec -- dart run build_runner build --delete-conflicting-outputs`: PASS
+  - `mise exec -- dart format lib test`: PASS
+  - `mise exec -- flutter analyze --no-pub`: PASS
+  - `mise exec -- flutter test --no-pub test/foundation test/renderer/map_render_submission_model_test.dart test/renderer/map_render_batch_adapter_contract_test.dart`: PASS
+  - `mise exec -- flutter test --no-pub test/widget/base_map_view_test.dart test/tile/base_map_render_plan_builder_test.dart test/tile/base_map_tile_decoder_test.dart test/geo/tile_matrix_test.dart`: PASS
+  - `mise exec -- flutter test --no-pub`: PASS (`391` tests)
+  - `if rg -n "package:(flutter_scene|scene)/" packages/eqmonitor_map/lib/src/foundation packages/eqmonitor_map/lib/src/renderer/map_render_batch_adapter.dart; then exit 1; fi`: PASS
+  - `rg -n '^## Final automated verification$' docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md`: PASS
+  - `git diff --check`: PASS
+- Device/simulator/golden/E2E: NOT run.

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'base_map_tile_decoder.dart';
@@ -9,6 +9,7 @@ part of 'base_map_tile_decoder.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -69,7 +70,7 @@ class _$BaseMapTileDecodeLimitsCopyWithImpl<$Res>
 /// Create a copy of BaseMapTileDecodeLimits
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? mvtLimits = null,Object? fillLimits = null,Object? lineLimits = null,Object? lineMiterLimit = null,}) {
-  return _then(_self.copyWith(
+  return _then(BaseMapTileDecodeLimits(
 mvtLimits: null == mvtLimits ? _self.mvtLimits : mvtLimits // ignore: cast_nullable_to_non_nullable
 as MvtDecodeLimits,fillLimits: null == fillLimits ? _self.fillLimits : fillLimits // ignore: cast_nullable_to_non_nullable
 as FillMeshBuilderLimits,lineLimits: null == lineLimits ? _self.lineLimits : lineLimits // ignore: cast_nullable_to_non_nullable
@@ -82,7 +83,7 @@ as double,
 @override
 @pragma('vm:prefer-inline')
 $MvtDecodeLimitsCopyWith<$Res> get mvtLimits {
-  
+
   return $MvtDecodeLimitsCopyWith<$Res>(_self.mvtLimits, (value) {
     return _then(_self.copyWith(mvtLimits: value));
   });
@@ -91,7 +92,7 @@ $MvtDecodeLimitsCopyWith<$Res> get mvtLimits {
 @override
 @pragma('vm:prefer-inline')
 $FillMeshBuilderLimitsCopyWith<$Res> get fillLimits {
-  
+
   return $FillMeshBuilderLimitsCopyWith<$Res>(_self.fillLimits, (value) {
     return _then(_self.copyWith(fillLimits: value));
   });
@@ -100,7 +101,7 @@ $FillMeshBuilderLimitsCopyWith<$Res> get fillLimits {
 @override
 @pragma('vm:prefer-inline')
 $LineMeshBuilderLimitsCopyWith<$Res> get lineLimits {
-  
+
   return $LineMeshBuilderLimitsCopyWith<$Res>(_self.lineLimits, (value) {
     return _then(_self.copyWith(lineLimits: value));
   });
@@ -243,7 +244,7 @@ return $default(_that.mvtLimits,_that.fillLimits,_that.lineLimits,_that.lineMite
 
 class _BaseMapTileDecodeLimits with DiagnosticableTreeMixin implements BaseMapTileDecodeLimits {
   const _BaseMapTileDecodeLimits({required this.mvtLimits, required this.fillLimits, required this.lineLimits, required this.lineMiterLimit});
-  
+
 
 @override final  MvtDecodeLimits mvtLimits;
 @override final  FillMeshBuilderLimits fillLimits;
@@ -318,7 +319,7 @@ as double,
 @override
 @pragma('vm:prefer-inline')
 $MvtDecodeLimitsCopyWith<$Res> get mvtLimits {
-  
+
   return $MvtDecodeLimitsCopyWith<$Res>(_self.mvtLimits, (value) {
     return _then(_self.copyWith(mvtLimits: value));
   });
@@ -327,7 +328,7 @@ $MvtDecodeLimitsCopyWith<$Res> get mvtLimits {
 @override
 @pragma('vm:prefer-inline')
 $FillMeshBuilderLimitsCopyWith<$Res> get fillLimits {
-  
+
   return $FillMeshBuilderLimitsCopyWith<$Res>(_self.fillLimits, (value) {
     return _then(_self.copyWith(fillLimits: value));
   });
@@ -336,7 +337,7 @@ $FillMeshBuilderLimitsCopyWith<$Res> get fillLimits {
 @override
 @pragma('vm:prefer-inline')
 $LineMeshBuilderLimitsCopyWith<$Res> get lineLimits {
-  
+
   return $LineMeshBuilderLimitsCopyWith<$Res>(_self.lineLimits, (value) {
     return _then(_self.copyWith(lineLimits: value));
   });

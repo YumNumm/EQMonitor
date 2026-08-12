@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'fill_mesh_builder_limits.dart';
@@ -9,6 +9,7 @@ part of 'fill_mesh_builder_limits.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -72,7 +73,7 @@ class _$FillMeshBuilderLimitsCopyWithImpl<$Res>
 /// Create a copy of FillMeshBuilderLimits
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? maxHolesPerPolygon = null,Object? maxVerticesPerFeature = null,Object? maxVerticesPerSegment = null,}) {
-  return _then(_self.copyWith(
+  return _then(FillMeshBuilderLimits(
 maxHolesPerPolygon: null == maxHolesPerPolygon ? _self.maxHolesPerPolygon : maxHolesPerPolygon // ignore: cast_nullable_to_non_nullable
 as int,maxVerticesPerFeature: null == maxVerticesPerFeature ? _self.maxVerticesPerFeature : maxVerticesPerFeature // ignore: cast_nullable_to_non_nullable
 as int,maxVerticesPerSegment: null == maxVerticesPerSegment ? _self.maxVerticesPerSegment : maxVerticesPerSegment // ignore: cast_nullable_to_non_nullable
@@ -218,7 +219,7 @@ return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVe
 
 class _FillMeshBuilderLimits implements FillMeshBuilderLimits {
   const _FillMeshBuilderLimits({required this.maxHolesPerPolygon, required this.maxVerticesPerFeature, required this.maxVerticesPerSegment});
-  
+
 
 /// 1つのpolygon(1つの外形とその穴の組)に含められる穴数の上限。
 /// MapLibre Nativeの`fill_generator.cpp`が`limitHoles(polygon, 500)`で
