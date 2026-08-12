@@ -353,27 +353,98 @@ fork の current master へ直接実装しない。master は upstream current �
 既存 toolchain と既存 pin を再現する compatibility trunk を `7f71993...` に作る。上流 master
 への forward-port は #1602 の completion 条件にせず、別 follow-up として記録する。
 
-### Task 0: fork 作成と clean worktree を準備する
+## 7. Execution prerequisites（commitを作らないgate）
 
-**Files:** 変更なし。
+### Gate A: fork authority — unresolvedなら必ず停止
 
-**Step 1: authority gate**
-
-owner/admin が `YumNumm/flutter_scene` を `bdero/flutter_scene` の fork として作成する。
-agent が実行する場合は org repository 作成の明示許可を得てからにする。作成後、次を確認する。
+この plan は repository/namespace 作成権限を含まない。owner/admin が GitHub UI 等で
+`YumNumm/flutter_scene` を `bdero/flutter_scene` の fork として作成した後だけ続行する。
+agent は `gh repo fork` / `gh repo create` を実行しない。
 
 ```bash
 gh repo view YumNumm/flutter_scene \
-  --json nameWithOwner,parent,defaultBranchRef,viewerPermission
+  --json nameWithOwner,parent,defaultBranchRef,viewerPermission \
+  --jq 'select(.parent.nameWithOwner == "bdero/flutter_scene") |
+        select(.viewerPermission == "ADMIN" or .viewerPermission == "MAINTAIN" or
+               .viewerPermission == "WRITE")'
 ```
 
-期待: `parent.nameWithOwner == "bdero/flutter_scene"` かつ push 権限あり。repository が見えない、
-parent が異なる、push 権限がない場合は blocked とし、代替 repository を推測しない。
+0件/errorなら authority blocker を報告して停止する。代替 repo や user fork を推測しない。
 
-**Step 2: fork worktree と compatibility trunk**
+### Gate B: non-destructive clone/remotes/worktree
 
-clone/worktree 先は active EQMonitor worktree の外に置く。fork clone の `upstream` が bdero、
-`origin` が YumNumm であることを確認し、remote branch を明示的に作る。
+clone target が存在しない場合だけ clone する。
+
+```bash
+git clone --origin origin git@github.com:YumNumm/flutter_scene.git \
+  /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene
+```
+
+既に存在する場合は clone せず、次の全 assertion を通す。dirtyでも user change を触らず、
+worktree追加だけに留める。non-git/wrong originなら停止する。
+
+```bash
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  rev-parse --is-inside-work-tree
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  remote get-url origin
+# expected: git@github.com:YumNumm/flutter_scene.git
+```
+
+`upstream` が未登録の場合だけ追加し、登録済みなら exact URL をassertする。
+
+```bash
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  remote add upstream https://github.com/bdero/flutter_scene.git
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  remote get-url upstream
+# expected: https://github.com/bdero/flutter_scene.git
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene fetch upstream master
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  cat-file -e 7f71993b7e2a0ab1d2f59726a406098709be7291^{commit}
+```
+
+fork は `.worktrees` をignoreしないため nested worktreeを作らない（次はexit 1が期待値）。
+
+```bash
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  check-ignore -q .worktrees
+```
+
+compatibility remote branch が既存なら exact SHA をassertし、異なれば停止する。未作成の場合だけ
+new refをpushする。force pushは禁止。
+
+```bash
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  fetch origin '+refs/heads/*:refs/remotes/origin/*'
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  push origin 7f71993b7e2a0ab1d2f59726a406098709be7291:refs/heads/eqmonitor/flutter-4dacd3fc
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  rev-parse origin/eqmonitor/flutter-4dacd3fc
+# expected exact 7f71993b7e2a0ab1d2f59726a406098709be7291
+```
+
+上のpushは `git ls-remote --exit-code origin refs/heads/eqmonitor/flutter-4dacd3fc` がexit 2の
+ときだけ実行する。exit 0ならfetch/assertだけにする。その他のexit codeは通信/auth blockerとして
+停止する。local compatibility branch は未作成の場合だけ remote tracking branch として作り、
+既存なら exact SHA をassertする。
+
+```bash
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  show-ref --verify --quiet refs/heads/eqmonitor/flutter-4dacd3fc
+# exit 1 only:
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  branch --track eqmonitor/flutter-4dacd3fc origin/eqmonitor/flutter-4dacd3fc
+# exit 0 route and after creation:
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  rev-parse eqmonitor/flutter-4dacd3fc
+# expected exact 7f71993b7e2a0ab1d2f59726a406098709be7291
+```
+
+worktree は fork clone の外に固定する。target が存在しない場合、branch も未作成なら `-b` route、
+branch だけ存在する resume なら branch をそのまま attach する。target が存在する場合は追加・削除
+せず、registered path、branch、origin、clean state をassertする。mismatch/dirtyなら停止し、
+`worktree remove`、`branch -D`、reset、checkout、force pushは行わない。
 
 ```bash
 git fetch upstream master
