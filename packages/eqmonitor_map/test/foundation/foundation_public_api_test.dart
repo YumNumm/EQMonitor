@@ -29,7 +29,76 @@ void main() {
     for (final action in renderPacketInventory()) {
       expect(action, returnsNormally);
     }
+    for (final action in renderBatchInventory()) {
+      expect(action, returnsNormally);
+    }
   });
+}
+
+List<void Function()> renderBatchInventory() {
+  final policy = createMapRenderPhasePolicy(
+    version: 1,
+    orderedPhases: [
+      createMapRenderPhaseId(value: 'base'),
+      MapRenderPhaseId.labelForeground,
+    ],
+  );
+  final packet = _publicRenderPacket();
+  final batch = createMapRenderBatch(
+    version: 1,
+    policy: policy,
+    packets: [packet],
+  );
+  final submission = _publicRenderSubmission(batch);
+  final MapRenderBatchAdapter adapter = _PublicRenderBatchAdapter();
+  return [
+    () => consume<MapRenderBatchCompatibility>(batch.compatibility),
+    () => consume(mapRenderBatchCompatibilityOf(packet: packet)),
+    () => consume<MapRenderBatch>(batch),
+    () => consume(
+      createMapRenderBatch(version: 1, policy: policy, packets: [packet]),
+    ),
+    () => consume(batch.instanceTransforms),
+    () => consume(
+      buildCanonicalRenderBatches(
+        version: 1,
+        policy: policy,
+        packets: [packet],
+      ),
+    ),
+    () => consume(_publicRenderSubmission(batch)),
+    () => consume<MapRenderSubmission>(submission),
+    () => adapter.submit(submission: submission),
+    () => validateMapRenderSubmission(submission: submission),
+  ];
+}
+
+MapRenderSubmission _publicRenderSubmission(MapRenderBatch batch) =>
+    createMapRenderSubmission(
+      frame: captureMapFrameSnapshot(
+        clock: SystemMapClock.start(
+          domain: createMapClockDomainId(value: 'render'),
+        ),
+        frameNumber: 1,
+        camera: const MapCamera(
+          centerLongitude: 0,
+          centerLatitude: 0,
+          zoom: 0,
+        ),
+        viewport: MapViewport(
+          logicalSize: const Size(1, 1),
+          devicePixelRatio: 1,
+        ),
+        revisions: const [],
+        lifecycle: MapAppLifecycle.active,
+        contextGeneration: 0,
+      ),
+      batches: [batch],
+    );
+
+final class _PublicRenderBatchAdapter implements MapRenderBatchAdapter {
+  @override
+  void submit({required MapRenderSubmission submission}) {}
 }
 
 List<void Function()> renderPacketInventory() {
