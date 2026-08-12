@@ -18,6 +18,8 @@ enum EarthquakeSortBy {
     .maxLpgmIntensity => '長周期階級',
     .depth => '震源の深さ',
   };
+
+  bool get showsDateHeader => this == .eventId;
 }
 
 extension EarthquakeSortByApiExtension on api.EarthquakeSortBy {
