@@ -98,7 +98,9 @@ void main() {
       final columns = SeismicityChunkFixedColumns(
         capacity: 1,
         allocate: <T>(create) {
-          if (++calls == 2) fail();
+          if (++calls == 2) {
+            fail();
+          }
           return create();
         },
       )..add(row: decoded(index: 0));
