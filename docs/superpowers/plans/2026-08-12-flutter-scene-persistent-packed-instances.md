@@ -230,3 +230,116 @@ version JSON の framework SHA が `4dacd3fc...` でなければ中断する。b
 今回差分を分離して PR body に記録し、成功扱いにしない。実機、Simulator、smoke-render E2E は
 今回のユーザー指定により実行しない。
 
+### Task 1: submission completion listener を追加する（fork bottom）
+
+**Files:**
+- Modify: `packages/flutter_scene/lib/src/render/frame_transients.dart`
+- Test: `packages/flutter_scene/test/render/frame_transients_test.dart`
+
+**Step 1: failing tests**
+
+`GpuSubmissionTracker` に completion listener の契約を追加する。out-of-order で `b` が先に
+終わっても watermark 0、`a` 完了時に watermark `b`、duplicate/unknown completion では通知
+しないことを test する。listener が見る値は completed id ではなく更新後の
+`completedThrough` とする。
+
+**Step 2: focused test を RED で確認**
+
+```bash
+flutter test --enable-impeller test/render/frame_transients_test.dart \
+  --plain-name 'completion listeners observe the contiguous watermark'
+```
+
+**Step 3: minimal implementation**
+
+`addCompletionListener(void Function(int completedThrough) listener)` を追加し、`complete(id)` は
+pending に存在した id を削除した場合だけ listener へ更新後 watermark を通知する。既存の
+before-submit listener と record/submit の順序を変えない。
+
+**Step 4: GREEN、commit、push**
+
+```bash
+flutter test --enable-impeller test/render/frame_transients_test.dart
+git --no-pager diff --check
+git add packages/flutter_scene/lib/src/render/frame_transients.dart \
+  packages/flutter_scene/test/render/frame_transients_test.dart
+git commit -m 'Feature: GPU submission完了通知を追加'
+git push
+```
+
+### Task 2: completion-aware registry と memory snapshot を作る（fork bottom）
+
+**Files:**
+- Create: `packages/flutter_scene/lib/src/render/persistent_gpu_resources.dart`
+- Create: `packages/flutter_scene/test/render/persistent_gpu_resources_test.dart`
+
+**Step 1: pure state-machine tests**
+
+実 GPU buffer ではなく release callback を持つ allocation record で次を test する。
+
+- 未使用 resource の retire は即時 release。
+- bind 済み resource は次 submission に stamp され、completion 前は release されない。
+- 複数 submission/out-of-order completion は最大 `lastSubmission` の watermark まで待つ。
+- retire request 後の mark-used は `StateError`。
+- previous frame に mark されたが submission がなかった record は `beginFrame()` で unstamped
+  と判定され、安全に release できる。
+- snapshot が active/retiring count、total/instance bytes、latest/completed id を正しく分離する。
+- `retire()` は同一 Future を返し、release callback は一度だけ呼ぶ。
+
+**Step 2: RED を確認して registry を実装**
+
+`PersistentGpuResourceRegistry` は1個の before-submit listener と1個の completion listener を
+tracker へ登録する。`markUsed` は Set に入れ、before-submit で id を stamp、completion で
+`lastSubmission <= completedThrough` の retiring records だけ release する。固定 frames-in-flight
+や timer は入れない。public snapshot value types と state enum も同じ file に置くが、registry
+自体は `scene.dart` から export しない。
+
+**Step 3: focused tests、commit、push**
+
+```bash
+flutter test --enable-impeller test/render/persistent_gpu_resources_test.dart
+git --no-pager diff --check
+git add packages/flutter_scene/lib/src/render/persistent_gpu_resources.dart \
+  packages/flutter_scene/test/render/persistent_gpu_resources_test.dart
+git commit -m 'Feature: 永続GPU resource retirementを追加'
+git push
+```
+
+### Task 3: public lifecycle と context generation を積む（fork bottom）
+
+**Files:**
+- Modify: `packages/flutter_scene/lib/src/render/persistent_gpu_resources.dart`
+- Modify: `packages/flutter_scene/lib/src/scene.dart`
+- Modify: `packages/flutter_scene/lib/scene.dart`
+- Test: `packages/flutter_scene/test/render/persistent_gpu_resources_test.dart`
+
+**Step 1: lifecycle tests**
+
+initial active/generation 1、invalidate で future use 拒否と全 retire、retirement 中の recreate
+拒否、完了後 recreate で generation +1、old record の再登録/利用拒否、dispose terminal、各操作の
+idempotence を test する。2 lifecycle が同じ global registry を使っても count/generation が
+混線しないことも含める。
+
+**Step 2: lifecycle と frame boundary**
+
+`PersistentGpuResourceLifecycle` を実装し、Geometry 用 registration は `@internal` として
+consumer の supported surface から除外する。`Scene` の既存 transients `beginFrame()` と同じ
+位置で global registry の `beginFrame()` を一度呼び、前 frame の unsubmitted marks を閉じる。
+automatic context-loss detection や buffer 強制破棄 API は追加しない。
+
+**Step 3: export、GREEN、commit、push**
+
+`scene.dart` の show-list には lifecycle、2 state enums、snapshot だけを追加する。
+
+```bash
+flutter test --enable-impeller test/render/frame_transients_test.dart \
+  test/render/persistent_gpu_resources_test.dart
+dart analyze packages/flutter_scene
+git --no-pager diff --check
+git add packages/flutter_scene/lib/src/render/persistent_gpu_resources.dart \
+  packages/flutter_scene/lib/src/scene.dart packages/flutter_scene/lib/scene.dart \
+  packages/flutter_scene/test/render/persistent_gpu_resources_test.dart
+git commit -m 'Feature: GPU context generationを公開'
+git push
+```
+
