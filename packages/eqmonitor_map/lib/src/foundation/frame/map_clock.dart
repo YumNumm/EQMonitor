@@ -50,14 +50,13 @@ abstract interface class MapMonotonicSource {
   MapMonotonicInstant capture();
 }
 
-typedef MapClockCaptureCreator =
-    MapClockCapture Function({
-      required MapClockDomainId domain,
-      required MapMonotonicSourceIdentity sourceIdentity,
-      required MapWallInstant wallInstant,
-      required MapMonotonicInstant monotonicInstant,
-      required MapMonotonicInstant? previousMonotonicInstant,
-    });
+typedef MapClockCaptureCreator = MapClockCapture Function({
+  required MapClockDomainId domain,
+  required MapMonotonicSourceIdentity sourceIdentity,
+  required MapWallInstant wallInstant,
+  required MapMonotonicInstant monotonicInstant,
+  required MapMonotonicInstant? previousMonotonicInstant,
+});
 
 final class SystemUtcWallSource implements MapUtcWallSource {
   const SystemUtcWallSource();
@@ -70,8 +69,8 @@ final class SystemMonotonicSource implements MapMonotonicSource {
   SystemMonotonicSource._({
     required this.domain,
     required this.sourceIdentity,
-    required Stopwatch stopwatch,
-  }) : _stopwatch = stopwatch;
+    required this._stopwatch,
+  });
 
   factory SystemMonotonicSource.start({required MapClockDomainId domain}) =>
       SystemMonotonicSource._(
@@ -98,14 +97,11 @@ final class SystemMonotonicSource implements MapMonotonicSource {
 
 final class SystemMapClock implements MapClock {
   SystemMapClock._({
-    required MapClockDomainId domain,
-    required MapUtcWallSource utcWallSource,
-    required MapMonotonicSource monotonicSource,
-    required MapClockCaptureCreator captureCreator,
-  }) : _domain = domain,
-       _utcWallSource = utcWallSource,
-       _monotonicSource = monotonicSource,
-       _captureCreator = captureCreator;
+    required this._domain,
+    required this._utcWallSource,
+    required this._monotonicSource,
+    required this._captureCreator,
+  });
 
   factory SystemMapClock.start({required MapClockDomainId domain}) {
     final monotonicSource = SystemMonotonicSource.start(domain: domain);

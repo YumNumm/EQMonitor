@@ -6,8 +6,8 @@ final class MapRenderPhasePolicy {
   const MapRenderPhasePolicy._({
     required this.version,
     required this.orderedPhases,
-    required Map<MapRenderPhaseId, int> rankByPhase,
-  }) : _rankByPhase = rankByPhase;
+    required this._rankByPhase,
+  });
 
   final int version;
   final List<MapRenderPhaseId> orderedPhases;
