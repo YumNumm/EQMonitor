@@ -219,7 +219,41 @@ API review 中に引数名を変える場合も、次の semantics は変えな�
 10. snapshot bytes は registry が保持する logical references。global/owner と active/retiring/failed、
     total/instance を分け、driver resident bytes や即時 reclaim と表現しない。
 
-## 4. File responsibility map
+## 4. Required state machines
+
+### Allocation record and open-frame table
+
+Internal record states are `active`, `retirementPendingOpenFrame`,
+`retirementPendingSubmission`, `releasing`, `retired`, `retirementFailed`。public state は2つの pending
+を `retirementPending` に collapse する。
+
+| current | event / guard | next | required effect |
+|---|---|---|---|
+| active | `markUsed`, frame open/current generation | active + open mark | future bind以外の state は変えない |
+| active | `retire`, open markあり | pendingOpenFrame | 同一 cached retire Future、reference保持 |
+| pendingOpenFrame | before-submit(id) | pendingSubmission | markを消し `lastSubmission=id`、reference保持 |
+| pendingOpenFrame | endFrame、submitなし | releasing または pendingSubmission | markを消し、過去in-flightがなければrelease |
+| active | before-submit後 | active + submitted id | `lastSubmission=max(old,id)` |
+| active | completion後に初めてretire | releasing | watermark済みなので即release開始 |
+| pendingSubmission | completion < lastSubmission | pendingSubmission | releaseしない |
+| pendingSubmission | completion >= lastSubmission | releasing | callbackをちょうど1回呼ぶ |
+| releasing | reentrant/repeated retire | releasing | identical Future、callback再実行なし |
+| releasing | callback success | retired | accountingから除外後にFuture success |
+| releasing | callback throws | retirementFailed | bytesをfailed accountingへ、global failed、Future error |
+| retired/failed | repeated retire | same | original identical Futureを返す |
+
+`beginFrame` は frame closed のときだけ成功し、nested begin は `StateError`。`endFrame` は open の
+ときだけ成功し `finally` から必ず1回呼ぶ。before-submit は pendingOpenFrame も stamp するため、
+bind → retire → submit の command buffer が completion 前に解放されない。global invalidation が
+open frame 中に起きた場合も全 mark は pendingOpenFrame となり、後続 `markUsed` は拒否するが、
+既に encode 済み command の before-submit/endFrame 処理は継続する。
+
+completion listener は tracker pending set を更新し watermark を計算した後、listener snapshot を
+registration順に呼ぶ。unknown/duplicate id は通知しない。registry は release callback の前に
+`releasing` を設定し、callback success/failure と accounting 更新後に resource Future、owner
+dispose Future、global invalidate Future の順で settle する。
+
+## 5. File responsibility map
 
 ### YumNumm/flutter_scene bottom PR
 
@@ -262,7 +296,7 @@ API review 中に引数名を変える場合も、次の semantics は変えな�
 大きな registry/validation/Geometry file を1 task で完成させない。後述 task はこの責務境界を保ち、
 隣接 task が使う signature を各 `Interfaces` block で固定する。
 
-## 5. Repository と PR stack
+## 6. Repository と PR stack
 
 repository を跨ぐ branch は GitHub 上の1本の stack にできない。次の2 stack と immutable
 SHA hand-off を使う。
