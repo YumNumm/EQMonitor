@@ -78,6 +78,13 @@ VectorTile _parseSeismicityVectorTile({
 }) {
   try {
     return VectorTile.fromBuffer(bytes);
+    // Protobuf reports a negative embedded-message length as ArgumentError.
+    // ignore: avoid_catching_errors
+  } on ArgumentError {
+    throw SeismicityPmTilesException.invalidVectorTile(
+      tileId: tileId,
+      reason: 'malformed_protobuf',
+    );
   } on Exception {
     throw SeismicityPmTilesException.invalidVectorTile(
       tileId: tileId,

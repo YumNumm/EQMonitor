@@ -19,6 +19,11 @@ void main() {
       tile('malformed_protobuf'),
     ),
     (
+      'negative protobuf message length',
+      const [0x1a, 0xff, 0xff, 0xff, 0xff, 0x0f],
+      tile('malformed_protobuf'),
+    ),
+    (
       'zero layers',
       corruption(catalog, 'missing_layer'),
       tile('missing_hypocenters_layer'),
