@@ -21,12 +21,53 @@ enum MapPerformanceMetricKind {
   flutterRaster,
   flutterFrameBudgetOverrun,
   instrumentationOverhead,
+  cacheHit,
+  cacheMiss,
+  tileQueueDepth,
+  gpuBucketCount,
+  labelCandidateCount,
+  labelAcceptedCount,
+  currentCpuBytes,
+  peakCpuBytes,
+  currentGpuBytes,
+  peakGpuBytes,
+  requestBytes,
+  decodeBytes,
 }
 
 MapPerformanceMetricUnit mapPerformanceMetricUnitOf(
   MapPerformanceMetricKind kind,
 ) => switch (kind) {
-  _ => .duration,
+  .frameReconciliation ||
+  .tileCover ||
+  .labelPlacement ||
+  .renderSubmission ||
+  .tileRequestQueueWait ||
+  .tileRequestExecution ||
+  .decodeQueueWait ||
+  .decodeExecution ||
+  .meshBuildQueueWait ||
+  .meshBuildExecution ||
+  .gpuUploadQueueWait ||
+  .gpuUploadExecution ||
+  .gpuSubmission ||
+  .gpuCompletion ||
+  .flutterBuild ||
+  .flutterRaster ||
+  .flutterFrameBudgetOverrun ||
+  .instrumentationOverhead => .duration,
+  .cacheHit ||
+  .cacheMiss ||
+  .tileQueueDepth ||
+  .gpuBucketCount ||
+  .labelCandidateCount ||
+  .labelAcceptedCount => .count,
+  .currentCpuBytes ||
+  .peakCpuBytes ||
+  .currentGpuBytes ||
+  .peakGpuBytes ||
+  .requestBytes ||
+  .decodeBytes => .bytes,
 };
 
 MapPerformanceSchemaVersion createMapPerformanceSchemaVersion({
