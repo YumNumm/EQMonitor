@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/src/decoder/seismicity_utf8_dictionary.dart';
+import 'package:seismicity_pmtiles/src/decoder/seismicity_uuid_index.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:test/test.dart';
 
@@ -47,8 +48,8 @@ void main() {
       maxEntries: 2,
     );
 
-    expect(seismicityUtf8Hash(valueUtf8: first), 0x5e4daa9d);
-    expect(seismicityUtf8Hash(valueUtf8: second), 0x5e4daa9d);
+    expect(seismicityUuidHash(id: first), 0x5e4daa9d);
+    expect(seismicityUuidHash(id: second), 0x5e4daa9d);
     expect(dictionary.indexFor(valueUtf8: first), 0);
     expect(dictionary.indexFor(valueUtf8: second), 1);
     expect(dictionary.indexFor(valueUtf8: Uint8List.fromList(first)), 0);
