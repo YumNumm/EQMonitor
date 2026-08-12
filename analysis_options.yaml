@@ -12,6 +12,12 @@ analyzer:
     - "**/DerivedData/**"
     - "**/build/**"
     - "build/**"
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 plugins:
   eqmonitor_lints_plugin:

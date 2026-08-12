@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descriptor.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';

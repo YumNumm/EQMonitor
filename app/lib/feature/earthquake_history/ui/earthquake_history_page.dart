@@ -128,8 +128,11 @@ class _PagingBody extends StatelessWidget {
           ),
           SliverGroupedPagingList<String?, String, EarthquakePartial>(
             dataSource: dataSource,
-            stickyHeader: true,
-            headerBuilder: (_, date, _) => _DateHeader(date: date),
+            stickyHeader: parameter.value.sortBy.showsDateHeader,
+            headerBuilder: (_, date, _) =>
+                parameter.value.sortBy.showsDateHeader
+                ? _DateHeader(date: date)
+                : const SizedBox.shrink(),
             itemBuilder: (context, item, globalIndex, localIndex) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [

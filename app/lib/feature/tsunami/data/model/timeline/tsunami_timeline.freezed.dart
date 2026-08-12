@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'tsunami_timeline.dart';
@@ -9,6 +9,7 @@ part of 'tsunami_timeline.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$TsunamiTimelineCopyWithImpl<$Res>
 /// Create a copy of TsunamiTimeline
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? telegrams = null,Object? regions = null,Object? offshoreStations = null,}) {
-  return _then(_self.copyWith(
+  return _then(TsunamiTimeline(
 telegrams: null == telegrams ? _self.telegrams : telegrams // ignore: cast_nullable_to_non_nullable
 as List<TsunamiTelegramMeta>,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<RegionTimeline>,offshoreStations: null == offshoreStations ? _self.offshoreStations : offshoreStations // ignore: cast_nullable_to_non_nullable
@@ -208,7 +209,7 @@ return $default(_that.telegrams,_that.regions,_that.offshoreStations);case _:
 
 
 class _TsunamiTimeline implements TsunamiTimeline {
-  const _TsunamiTimeline({required final  List<TsunamiTelegramMeta> telegrams, required final  List<RegionTimeline> regions, required final  List<OffshoreStationTimeline> offshoreStations}): _telegrams = telegrams,_regions = regions,_offshoreStations = offshoreStations;
+  const _TsunamiTimeline({required  List<TsunamiTelegramMeta> telegrams, required  List<RegionTimeline> regions, required  List<OffshoreStationTimeline> offshoreStations}): _telegrams = telegrams,_regions = regions,_offshoreStations = offshoreStations;
   
 
  final  List<TsunamiTelegramMeta> _telegrams;
@@ -344,7 +345,7 @@ class _$RegionTimelineCopyWithImpl<$Res>
 /// Create a copy of RegionTimeline
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? kind = null,Object? lastKind = null,Object? forecastFirstHeight = null,Object? forecastMaxHeight = null,Object? estimationFirstHeight = null,Object? estimationMaxHeight = null,Object? stations = null,}) {
-  return _then(_self.copyWith(
+  return _then(RegionTimeline(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
@@ -495,7 +496,7 @@ return $default(_that.code,_that.name,_that.kind,_that.lastKind,_that.forecastFi
 
 
 class _RegionTimeline implements RegionTimeline {
-  const _RegionTimeline({required this.code, required this.name, required final  KindTimeline kind, required final  KindTimeline lastKind, required final  FirstHeightTimeline forecastFirstHeight, required final  MaxHeightTimeline forecastMaxHeight, required final  EstimationFirstHeightTimeline estimationFirstHeight, required final  EstimationMaxHeightTimeline estimationMaxHeight, required final  List<StationTimeline> stations}): _kind = kind,_lastKind = lastKind,_forecastFirstHeight = forecastFirstHeight,_forecastMaxHeight = forecastMaxHeight,_estimationFirstHeight = estimationFirstHeight,_estimationMaxHeight = estimationMaxHeight,_stations = stations;
+  const _RegionTimeline({required this.code, required this.name, required  KindTimeline kind, required  KindTimeline lastKind, required  FirstHeightTimeline forecastFirstHeight, required  MaxHeightTimeline forecastMaxHeight, required  EstimationFirstHeightTimeline estimationFirstHeight, required  EstimationMaxHeightTimeline estimationMaxHeight, required  List<StationTimeline> stations}): _kind = kind,_lastKind = lastKind,_forecastFirstHeight = forecastFirstHeight,_forecastMaxHeight = forecastMaxHeight,_estimationFirstHeight = estimationFirstHeight,_estimationMaxHeight = estimationMaxHeight,_stations = stations;
   
 
 @override final  String code;
@@ -667,7 +668,7 @@ class _$StationTimelineCopyWithImpl<$Res>
 /// Create a copy of StationTimeline
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? forecast = null,Object? observation = null,}) {
-  return _then(_self.copyWith(
+  return _then(StationTimeline(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,forecast: null == forecast ? _self.forecast : forecast // ignore: cast_nullable_to_non_nullable
@@ -813,7 +814,7 @@ return $default(_that.code,_that.name,_that.forecast,_that.observation);case _:
 
 
 class _StationTimeline implements StationTimeline {
-  const _StationTimeline({required this.code, required this.name, required final  StationForecastTimeline forecast, required final  StationObservationTimeline observation}): _forecast = forecast,_observation = observation;
+  const _StationTimeline({required this.code, required this.name, required  StationForecastTimeline forecast, required  StationObservationTimeline observation}): _forecast = forecast,_observation = observation;
   
 
 @override final  String code;
@@ -945,7 +946,7 @@ class _$OffshoreStationTimelineCopyWithImpl<$Res>
 /// Create a copy of OffshoreStationTimeline
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? firstHeight = null,Object? maxHeight = null,}) {
-  return _then(_self.copyWith(
+  return _then(OffshoreStationTimeline(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,firstHeight: null == firstHeight ? _self.firstHeight : firstHeight // ignore: cast_nullable_to_non_nullable
@@ -1091,7 +1092,7 @@ return $default(_that.code,_that.name,_that.firstHeight,_that.maxHeight);case _:
 
 
 class _OffshoreStationTimeline implements OffshoreStationTimeline {
-  const _OffshoreStationTimeline({required this.code, required this.name, required final  ObservationFirstHeightTimeline firstHeight, required final  ObservationMaxHeightTimeline maxHeight}): _firstHeight = firstHeight,_maxHeight = maxHeight;
+  const _OffshoreStationTimeline({required this.code, required this.name, required  ObservationFirstHeightTimeline firstHeight, required  ObservationMaxHeightTimeline maxHeight}): _firstHeight = firstHeight,_maxHeight = maxHeight;
   
 
 @override final  String code;

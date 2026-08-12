@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'jma_code_table_parameter.dart';
@@ -9,6 +9,7 @@ part of 'jma_code_table_parameter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$JmaCodeTableParameterCopyWithImpl<$Res>
 /// Create a copy of JmaCodeTableParameter
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? metadata = null,Object? codeTables = null,}) {
-  return _then(_self.copyWith(
+  return _then(JmaCodeTableParameter(
 metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
 as ParameterMetadata,codeTables: null == codeTables ? _self.codeTables : codeTables // ignore: cast_nullable_to_non_nullable
 as JmaCodeTableCodeTables,
@@ -368,7 +369,7 @@ class _$JmaCodeTableCodeTablesCopyWithImpl<$Res>
 /// Create a copy of JmaCodeTableCodeTables
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? areaForecastLocalEew = null,Object? areaInformationPrefectureEarthquake = null,Object? areaInformationCity = null,Object? areaEpicenter = null,Object? areaEpicenterAbbreviation = null,Object? areaEpicenterDetail = null,}) {
-  return _then(_self.copyWith(
+  return _then(JmaCodeTableCodeTables(
 areaForecastLocalEew: null == areaForecastLocalEew ? _self.areaForecastLocalEew : areaForecastLocalEew // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableItem>,areaInformationPrefectureEarthquake: null == areaInformationPrefectureEarthquake ? _self.areaInformationPrefectureEarthquake : areaInformationPrefectureEarthquake // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableItem>,areaInformationCity: null == areaInformationCity ? _self.areaInformationCity : areaInformationCity // ignore: cast_nullable_to_non_nullable
@@ -516,7 +517,7 @@ return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthq
 @JsonSerializable()
 
 class _JmaCodeTableCodeTables implements JmaCodeTableCodeTables {
-  const _JmaCodeTableCodeTables({required final  List<JmaCodeTableItem> areaForecastLocalEew, required final  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, required final  List<JmaCodeTableCityItem> areaInformationCity, required final  List<JmaCodeTableItem> areaEpicenter, required final  List<JmaCodeTableItem> areaEpicenterAbbreviation, required final  List<JmaCodeTableItem> areaEpicenterDetail}): _areaForecastLocalEew = areaForecastLocalEew,_areaInformationPrefectureEarthquake = areaInformationPrefectureEarthquake,_areaInformationCity = areaInformationCity,_areaEpicenter = areaEpicenter,_areaEpicenterAbbreviation = areaEpicenterAbbreviation,_areaEpicenterDetail = areaEpicenterDetail;
+  const _JmaCodeTableCodeTables({required  List<JmaCodeTableItem> areaForecastLocalEew, required  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, required  List<JmaCodeTableCityItem> areaInformationCity, required  List<JmaCodeTableItem> areaEpicenter, required  List<JmaCodeTableItem> areaEpicenterAbbreviation, required  List<JmaCodeTableItem> areaEpicenterDetail}): _areaForecastLocalEew = areaForecastLocalEew,_areaInformationPrefectureEarthquake = areaInformationPrefectureEarthquake,_areaInformationCity = areaInformationCity,_areaEpicenter = areaEpicenter,_areaEpicenterAbbreviation = areaEpicenterAbbreviation,_areaEpicenterDetail = areaEpicenterDetail;
   factory _JmaCodeTableCodeTables.fromJson(Map<String, dynamic> json) => _$JmaCodeTableCodeTablesFromJson(json);
 
  final  List<JmaCodeTableItem> _areaForecastLocalEew;
@@ -682,7 +683,7 @@ class _$JmaCodeTableCityItemCopyWithImpl<$Res>
 /// Create a copy of JmaCodeTableCityItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? parentAreaForecastLocalEewCode = null,Object? parentAreaInformationPrefectureEarthquakeCode = null,}) {
-  return _then(_self.copyWith(
+  return _then(JmaCodeTableCityItem(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName,parentAreaForecastLocalEewCode: null == parentAreaForecastLocalEewCode ? _self.parentAreaForecastLocalEewCode : parentAreaForecastLocalEewCode // ignore: cast_nullable_to_non_nullable
@@ -972,7 +973,7 @@ class _$JmaCodeTableItemCopyWithImpl<$Res>
 /// Create a copy of JmaCodeTableItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? kana = freezed,Object? description = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(JmaCodeTableItem(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName,kana: freezed == kana ? _self.kana : kana // ignore: cast_nullable_to_non_nullable

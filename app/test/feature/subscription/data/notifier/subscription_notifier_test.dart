@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/model/environment.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_failure_reason.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_outcome.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
@@ -6,6 +8,22 @@ import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifi
 import 'package:eqmonitor/feature/subscription/data/repository/subscription_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+const _buildConfig = BuildConfig(
+  restApiUrl: '',
+  appIdSuffix: '',
+  appName: 'EQMonitor',
+  commitInformation: 'test',
+  flavor: Flavor.dev,
+  wsApiUrl: '',
+  googleIosClientId: '',
+  googleAndroidClientId: '',
+  buildTimestamp: '',
+  buildCommitMessage: '',
+  revenueCatApiKeyIos: '',
+  revenueCatApiKeyAndroid: '',
+  isProFeaturesEnabled: true,
+);
 
 class FakeSubscriptionRepository extends SubscriptionRepository {
   FakeSubscriptionRepository({
@@ -46,6 +64,7 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
+          buildConfigProvider.overrideWithValue(_buildConfig),
           subscriptionRepositoryProvider.overrideWith(
             (ref) async => repository,
           ),
@@ -78,6 +97,7 @@ void main() {
         );
         final container = ProviderContainer(
           overrides: [
+            buildConfigProvider.overrideWithValue(_buildConfig),
             subscriptionRepositoryProvider.overrideWith(
               (ref) async => repository,
             ),
@@ -111,6 +131,7 @@ void main() {
         );
         final container = ProviderContainer(
           overrides: [
+            buildConfigProvider.overrideWithValue(_buildConfig),
             subscriptionRepositoryProvider.overrideWith(
               (ref) async => repository,
             ),

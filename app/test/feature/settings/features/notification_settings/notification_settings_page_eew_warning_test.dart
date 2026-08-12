@@ -1,4 +1,6 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/model/environment.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
@@ -27,6 +29,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          buildConfigProvider.overrideWithValue(_buildConfig),
           firebaseMessagingProvider.overrideWithValue(
             _FakeFirebaseMessaging(
               _notificationSettings(
@@ -176,6 +179,21 @@ class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
     nationwideInterruptionLevel: null,
   );
 }
+
+const _buildConfig = BuildConfig(
+  restApiUrl: '',
+  appIdSuffix: '',
+  appName: 'EQMonitor',
+  commitInformation: 'test',
+  flavor: Flavor.dev,
+  wsApiUrl: '',
+  googleIosClientId: '',
+  googleAndroidClientId: '',
+  buildTimestamp: '',
+  buildCommitMessage: '',
+  revenueCatApiKeyIos: '',
+  revenueCatApiKeyAndroid: '',
+);
 
 const _freeConstraints = api.PlanConstraints(
   isPro: false,
