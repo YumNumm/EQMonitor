@@ -253,6 +253,42 @@ registration順に呼ぶ。unknown/duplicate id は通知しない。registry �
 `releasing` を設定し、callback success/failure と accounting 更新後に resource Future、owner
 dispose Future、global invalidate Future の順で settle する。
 
+### Public owner operation × global state table
+
+owner `dispose()` は global context disposal ではない。global state は process-wide、owner state は
+`active`/`disposed` のみ。`FI` は generationごとの cached invalidate Future、`FD` は ownerごとの
+cached dispose Future、`FE` は disposed owner の cached invalid-operation error Future とする。
+
+| owner | global | operation | result / next state |
+|---|---|---|---|
+| active | active | `invalidateContext()` | global→invalidating、全owner resource retire、`FI` |
+| active | invalidating | `invalidateContext()` | mutationなし、identical `FI` |
+| active | invalidated | `invalidateContext()` | mutationなし、完了済み identical `FI` |
+| active | failed | `invalidateContext()` | mutationなし、error完了済み identical `FI` |
+| disposed | any | `invalidateContext()` | global mutationなし、repeated callでidentical `FE` |
+| active | invalidated | `recreateContext()` | failed record 0 を再確認、generation +1、global→active |
+| active | active | `recreateContext()` | synchronous `StateError`、generation不変 |
+| active | invalidating | `recreateContext()` | synchronous `StateError`、retirement継続 |
+| active | failed | `recreateContext()` | synchronous `StateError`、process再構築を要求 |
+| disposed | any | `recreateContext()` | synchronous `StateError` |
+| active | active | `dispose()` | owner→disposed、owner resourceのみretire、`FD` |
+| active | invalidating | `dispose()` | owner→disposed、global retireと共有、owner分settleで`FD` |
+| active | invalidated | `dispose()` | owner→disposed、完了済み `FD` |
+| active | failed | `dispose()` | owner→disposed、残存owner record settle/error後 `FD` |
+| disposed | any | `dispose()` | mutationなし、identical `FD` |
+| either | any | `takeMemorySnapshot()` | read-only、disposed ownerもfinal owner/global usageを取得可 |
+
+`FI` は同じ generation ではどの owner から取得しても `identical`。recreate 後の次 invalidation は
+新しい `FI`。`FD` は owner 固有で `FI` とは別 object。dispose during invalidation は global
+invalidation をcancelせず、`FD` が先に完了しても `FI` は他 owner を待つ。1 owner の callback
+failure は global→failed とし、`FI`/該当 `FD` は全 records settle 後に同じ最初の errorで完了する。
+
+release callback から `retire()`、`dispose()`、`invalidateContext()`、snapshot を reentrant に
+呼べるが、stateを callback 前に進めてあるため二重releaseしない。callback/reentrant operation が
+別 error を投げた場合は最初の release error を context failure cause とし、後続 error は
+`Object.hash` 等で潰さず test log 用 list に順序保持する。production release callback は nullable
+buffer views を clear する同期 no-throw closure に限定する。
+
 ## 5. File responsibility map
 
 ### YumNumm/flutter_scene bottom PR
