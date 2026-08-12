@@ -343,3 +343,88 @@ git commit -m 'Feature: GPU context generationを公開'
 git push
 ```
 
+### Task 4: lifecycle PR を検証して公開する（fork bottom PR）
+
+**Files:**
+- Modify: `packages/flutter_scene/README.md`
+
+**Step 1: contract documentation**
+
+README に lifecycle state diagram、`invalidateContext → await → recreateContext` の順序、
+completion が来ない場合は fail-closed であること、snapshot が logical bytes であることを書く。
+「context loss を自動検知」「driver memory を即時 free」とは書かない。
+
+**Step 2: non-device verification**
+
+```bash
+dart format --output=none --set-exit-if-changed \
+  packages/flutter_scene/lib packages/flutter_scene/test
+dart analyze packages/flutter_scene
+cd packages/flutter_scene
+flutter test --enable-impeller
+```
+
+すべて Task 0 の pinned mise shell から実行する。GPU unavailable による既存 conditional skip は
+skip として記録し、GPU pass に読み替えない。failure が今回差分起因なら PR 作成前に修正する。
+
+**Step 3: commit、push、bottom PR**
+
+```bash
+git add packages/flutter_scene/README.md
+git commit -m 'Docs: 永続GPU lifecycle契約を記載'
+git push
+gh stack submit --auto --open --remote origin
+gh stack view --json
+```
+
+PR body の Remaining tasks に必ず次を残す。
+
+- stacked geometry PR で persistent packed upload/bind を追加する。
+- top commit を EQMonitor の固定 dependency へ渡す。
+- Flutter GPU 自動 context-loss signal と実 resident-memory reclaim は未観測。
+- #1603/#1604/#1605、特に #1604 の物理端末 30fps/5分 gate は未実施。
+- 欠落している 2026-08-07 canonical issue spec の provenance 回収。
+
+### Task 5: packed input contract を test-first で作る（fork top）
+
+**Files:**
+- Create: `packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart`
+- Create: `packages/flutter_scene/test/persistent_packed_instance_geometry_test.dart`
+
+**Step 1: top branch を追加**
+
+bottom PR の HEAD が clean/pushed であることを確認してから追加する。
+
+```bash
+gh stack checkout feat/persistent-gpu-lifecycle
+gh stack add feat/persistent-packed-instance-geometry
+```
+
+**Step 2: pure validation tests**
+
+GPU 初期化より前に検証できる upload plan を file 内に分離し、次を test する。
+
+- exactly two slots、slot 0 vertex/slot 1 instance の happy path。
+- duplicate attribute、attribute end > stride、誤 step mode を拒否。
+- vertex/instance byte length の不足と余剰、zero/negative count を拒否。
+- int16/int32 index byte alignment を拒否し、index count を正しく導出。
+- base data 後の instance offset は16-byte aligned、logical padding/total bytes が正確。
+- overflow や不正 bounds（NaN/infinity/min > max）を upload 前に拒否。
+
+**Step 3: RED の後に最小 validation を実装**
+
+`VertexLayoutDescriptor.toGpuLayout()` の既存検証を再利用し、同じ attribute 検査を複製しない。
+validation failure 後に lifecycle へ resource が登録されていないことも確認する。
+
+**Step 4: focused GREEN、commit、push**
+
+```bash
+flutter test --enable-impeller \
+  test/persistent_packed_instance_geometry_test.dart
+git --no-pager diff --check
+git add packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart \
+  packages/flutter_scene/test/persistent_packed_instance_geometry_test.dart
+git commit -m 'Feature: packed instance入力検証を追加'
+git push
+```
+
