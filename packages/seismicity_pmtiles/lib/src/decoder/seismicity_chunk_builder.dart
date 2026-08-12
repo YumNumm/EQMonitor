@@ -9,47 +9,80 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk_validator.
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 final class SeismicityChunkBuilder {
-  SeismicityChunkBuilder({required int capacity})
-    : _fixed = SeismicityChunkFixedColumns(capacity: capacity),
-      _canonical = SeismicityCanonicalPropertyChunk(capacity: capacity),
-      _intensities = SeismicityChunkIntensityDictionary(capacity: capacity);
+  SeismicityChunkBuilder({
+    required int capacity,
+    void Function()? beforeCanonicalAdd,
+    void Function()? beforeIntensityAdd,
+  }) : _beforeCanonicalAdd = beforeCanonicalAdd,
+       _beforeIntensityAdd = beforeIntensityAdd,
+       _fixed = SeismicityChunkFixedColumns(capacity: capacity),
+       _canonical = SeismicityCanonicalPropertyChunk(capacity: capacity),
+       _intensities = SeismicityChunkIntensityDictionary(capacity: capacity);
 
+  final void Function()? _beforeCanonicalAdd;
+  final void Function()? _beforeIntensityAdd;
   final SeismicityChunkFixedColumns _fixed;
   final SeismicityCanonicalPropertyChunk _canonical;
   final SeismicityChunkIntensityDictionary _intensities;
+  var _poisoned = false;
 
-  int get length => _fixed.length;
-  bool get isFull => _fixed.isFull;
+  int get length {
+    ensureSeismicityChunkBuilderUsable(poisoned: _poisoned);
+    return _fixed.length;
+  }
+
+  bool get isFull {
+    ensureSeismicityChunkBuilderUsable(poisoned: _poisoned);
+    return _fixed.isFull;
+  }
 
   void add({required SeismicityDecodedHypocenter record}) {
+    ensureSeismicityChunkBuilderUsable(poisoned: _poisoned);
     if (_fixed.isFull || _canonical.isFull || _intensities.isFull) {
       throw const SeismicityPmTilesException.invalidDescriptor(
         reason: 'Public chunk capacity exceeded.',
       );
     }
     _fixed.add(row: record);
-    _canonical.add(row: record);
-    _intensities.add(maxIntensityUtf8: record.maxIntensityUtf8);
+    try {
+      _beforeCanonicalAdd?.call();
+      _canonical.add(row: record);
+      _beforeIntensityAdd?.call();
+      _intensities.add(maxIntensityUtf8: record.maxIntensityUtf8);
+    } on SeismicityPmTilesException {
+      _poisoned = true;
+      rethrow;
+    }
   }
 
-  bool uuidEquals({required int rowIndex, required Uint8List candidate}) =>
-      _fixed.uuidEquals(rowIndex: rowIndex, candidate: candidate);
+  bool uuidEquals({required int rowIndex, required Uint8List candidate}) {
+    ensureSeismicityChunkBuilderUsable(poisoned: _poisoned);
+    return _fixed.uuidEquals(rowIndex: rowIndex, candidate: candidate);
+  }
+
+  bool originTimeEquals({required int rowIndex, required int candidate}) {
+    ensureSeismicityChunkBuilderUsable(poisoned: _poisoned);
+    return _fixed.originTimeEquals(rowIndex: rowIndex, candidate: candidate);
+  }
 
   bool matches({
     required int localIndex,
     required SeismicityDecodedHypocenter record,
-  }) =>
-      _fixed.originTimeEquals(
-        rowIndex: localIndex,
-        candidate: record.originTimeUnixMilliseconds,
-      ) &&
-      _intensities.matches(
-        localIndex: localIndex,
-        maxIntensityUtf8: record.maxIntensityUtf8,
-      ) &&
-      _canonical.matches(localIndex: localIndex, record: record);
+  }) {
+    ensureSeismicityChunkBuilderUsable(poisoned: _poisoned);
+    return _fixed.originTimeEquals(
+          rowIndex: localIndex,
+          candidate: record.originTimeUnixMilliseconds,
+        ) &&
+        _intensities.matches(
+          localIndex: localIndex,
+          maxIntensityUtf8: record.maxIntensityUtf8,
+        ) &&
+        _canonical.matches(localIndex: localIndex, record: record);
+  }
 
   SeismicityPmTilesChunk build() {
+    ensureSeismicityChunkBuilderUsable(poisoned: _poisoned);
     final fixed = _fixed.build();
     final intensities = _intensities.build();
     final chunk = SeismicityPmTilesChunk(
@@ -68,5 +101,13 @@ final class SeismicityChunkBuilder {
     );
     const SeismicityPmTilesChunkValidator().validate(chunk: chunk);
     return chunk;
+  }
+}
+
+void ensureSeismicityChunkBuilderUsable({required bool poisoned}) {
+  if (poisoned) {
+    throw const SeismicityPmTilesException.invalidDescriptor(
+      reason: 'Public chunk builder is poisoned.',
+    );
   }
 }
