@@ -27,6 +27,9 @@ class SettingsPage extends ConsumerWidget {
     final isDeveloperUiEnabled = ref.watch(
       buildConfigProvider.select((c) => c.isDeveloperUiEnabled),
     );
+    final isProFeaturesEnabled = ref.watch(
+      buildConfigProvider.select((c) => c.isProFeaturesEnabled),
+    );
     final cacheSize = ref.watch(httpCacheSizeProvider);
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
@@ -54,13 +57,15 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
                 const _AppVersionInformation(),
-                const SettingsSectionHeader(text: 'EQMonitor Pro'),
-                ListTile(
-                  title: const Text('EQMonitor Pro'),
-                  leading: const Icon(Icons.workspace_premium_outlined),
-                  onTap: () async =>
-                      const SubscriptionSettingsRoute().push<void>(context),
-                ),
+                if (isProFeaturesEnabled) ...[
+                  const SettingsSectionHeader(text: 'EQMonitor Pro'),
+                  ListTile(
+                    title: const Text('EQMonitor Pro'),
+                    leading: const Icon(Icons.workspace_premium_outlined),
+                    onTap: () async =>
+                        const SubscriptionSettingsRoute().push<void>(context),
+                  ),
+                ],
                 const SettingsSectionHeader(text: '各種設定'),
                 ListTile(
                   title: const Text('通知設定'),
