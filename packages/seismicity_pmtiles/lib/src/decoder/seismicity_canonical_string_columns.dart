@@ -1,3 +1,6 @@
+// Descriptor-bound allocation errors must remain typed at this boundary.
+// ignore_for_file: avoid_catching_errors
+
 import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/src/decoder/seismicity_utf8_dictionary.dart';
@@ -16,23 +19,39 @@ typedef SeismicityCanonicalStringColumnData = ({
   SeismicityCanonicalUtf8ColumnData earthquakeEventId,
 });
 
+typedef SeismicityStringColumnAllocator = T Function<T>(T Function() create);
+
 final class SeismicityCanonicalStringColumns {
-  SeismicityCanonicalStringColumns({required int capacity})
-    : _determinationFlags = SeismicityUtf8Dictionary(
-        maxBytes: 0xffffffff,
-        maxEntries: capacity,
-      ),
-      _earthquakeEventIds = SeismicityUtf8Dictionary(
-        maxBytes: 0xffffffff,
-        maxEntries: capacity,
-      ) {
+  SeismicityCanonicalStringColumns({
+    required int capacity,
+    SeismicityStringColumnAllocator? allocate,
+  }) : _allocate = allocate ?? allocateSeismicityStringColumn,
+       _determinationFlags = SeismicityUtf8Dictionary(
+         maxBytes: 0xffffffff,
+         maxEntries: capacity,
+       ),
+       _earthquakeEventIds = SeismicityUtf8Dictionary(
+         maxBytes: 0xffffffff,
+         maxEntries: capacity,
+       ) {
     final bitmapLength = requiredByteLength(valueCount: capacity);
-    _determinationFlagIndexes = Uint32List(capacity);
-    _determinationFlagValidity = Uint8List(bitmapLength);
-    _earthquakeEventIdIndexes = Uint32List(capacity);
-    _earthquakeEventIdValidity = Uint8List(bitmapLength);
+    final storage = translateSeismicityStringColumnAllocation(
+      allocate: () => _allocate(
+        () => (
+          determinationIndexes: Uint32List(capacity),
+          determinationValidity: Uint8List(bitmapLength),
+          eventIndexes: Uint32List(capacity),
+          eventValidity: Uint8List(bitmapLength),
+        ),
+      ),
+    );
+    _determinationFlagIndexes = storage.determinationIndexes;
+    _determinationFlagValidity = storage.determinationValidity;
+    _earthquakeEventIdIndexes = storage.eventIndexes;
+    _earthquakeEventIdValidity = storage.eventValidity;
   }
 
+  final SeismicityStringColumnAllocator _allocate;
   final SeismicityUtf8Dictionary _determinationFlags;
   final SeismicityUtf8Dictionary _earthquakeEventIds;
   late final Uint32List _determinationFlagIndexes;
@@ -71,19 +90,41 @@ final class SeismicityCanonicalStringColumns {
     final bitmapLength = requiredByteLength(valueCount: _length);
     final determinationFlags = _determinationFlags.build();
     final earthquakeEventIds = _earthquakeEventIds.build();
-    return (
-      determinationFlag: (
-        dictionaryIndexes: _determinationFlagIndexes.sublist(0, _length),
-        validity: _determinationFlagValidity.sublist(0, bitmapLength),
-        dictionaryUtf8: determinationFlags.bytes,
-        dictionaryOffsets: determinationFlags.entryOffsets,
+    return translateSeismicityStringColumnAllocation(
+      allocate: () => _allocate(
+        () => (
+          determinationFlag: (
+            dictionaryIndexes: _determinationFlagIndexes.sublist(0, _length),
+            validity: _determinationFlagValidity.sublist(0, bitmapLength),
+            dictionaryUtf8: determinationFlags.bytes,
+            dictionaryOffsets: determinationFlags.entryOffsets,
+          ),
+          earthquakeEventId: (
+            dictionaryIndexes: _earthquakeEventIdIndexes.sublist(0, _length),
+            validity: _earthquakeEventIdValidity.sublist(0, bitmapLength),
+            dictionaryUtf8: earthquakeEventIds.bytes,
+            dictionaryOffsets: earthquakeEventIds.entryOffsets,
+          ),
+        ),
       ),
-      earthquakeEventId: (
-        dictionaryIndexes: _earthquakeEventIdIndexes.sublist(0, _length),
-        validity: _earthquakeEventIdValidity.sublist(0, bitmapLength),
-        dictionaryUtf8: earthquakeEventIds.bytes,
-        dictionaryOffsets: earthquakeEventIds.entryOffsets,
-      ),
+    );
+  }
+}
+
+T allocateSeismicityStringColumn<T>(T Function() create) => create();
+
+T translateSeismicityStringColumnAllocation<T>({
+  required T Function() allocate,
+}) {
+  try {
+    return allocate();
+  } on OutOfMemoryError {
+    throw const SeismicityPmTilesException.invalidDescriptor(
+      reason: 'Cannot allocate canonical string columns.',
+    );
+  } on RangeError {
+    throw const SeismicityPmTilesException.invalidDescriptor(
+      reason: 'Cannot allocate canonical string columns.',
     );
   }
 }
