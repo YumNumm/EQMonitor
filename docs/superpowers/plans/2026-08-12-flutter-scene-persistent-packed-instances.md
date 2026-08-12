@@ -113,25 +113,52 @@ Flutter Scene `7f71993b7e2a0ab1d2f59726a406098709be7291`、Dart/Flutter test、
 import/call しない。
 
 ```dart
-enum PersistentGpuResourceLifecycleState { active, invalidated, disposed }
-enum PersistentGpuResourceState { active, retirementPending, retired }
+enum PersistentGpuContextState { active, invalidating, invalidated, failed }
+enum PersistentGpuResourceLifecycleState { active, disposed }
+enum PersistentGpuResourceState {
+  active,
+  retirementPending,
+  retired,
+  retirementFailed,
+}
 
-final class PersistentGpuMemorySnapshot {
-  final PersistentGpuResourceLifecycleState lifecycleState;
-  final int contextGeneration;
+final class PersistentGpuMemoryUsage {
+  const PersistentGpuMemoryUsage({
+    required this.activeResourceCount,
+    required this.retiringResourceCount,
+    required this.failedResourceCount,
+    required this.activeTotalBytes,
+    required this.retiringTotalBytes,
+    required this.failedTotalBytes,
+    required this.activeInstanceBytes,
+    required this.retiringInstanceBytes,
+    required this.failedInstanceBytes,
+  });
   final int activeResourceCount;
   final int retiringResourceCount;
+  final int failedResourceCount;
   final int activeTotalBytes;
   final int retiringTotalBytes;
+  final int failedTotalBytes;
   final int activeInstanceBytes;
   final int retiringInstanceBytes;
+  final int failedInstanceBytes;
+}
+
+final class PersistentGpuMemorySnapshot {
+  final PersistentGpuContextState contextState;
+  final PersistentGpuResourceLifecycleState lifecycleState;
+  final int contextGeneration;
   final int latestSubmission;
   final int completedThrough;
+  final PersistentGpuMemoryUsage global;
+  final PersistentGpuMemoryUsage owner;
 }
 
 final class PersistentGpuResourceLifecycle {
   PersistentGpuResourceLifecycle();
   int get contextGeneration;
+  PersistentGpuContextState get contextState;
   PersistentGpuResourceLifecycleState get state;
   PersistentGpuMemorySnapshot takeMemorySnapshot();
   Future<void> invalidateContext();
@@ -162,38 +189,35 @@ final class PersistentPackedInstanceGeometry extends Geometry {
 }
 ```
 
+`PersistentGpuResourceLifecycle` は owner handle であり context owner ではない。public constructor
+は process-global registry へ新 owner を attach する。test-only `@internal` constructor だけが
+injected registry を受け取る。すべての owner の `contextState` / `contextGeneration` / `global`
+snapshot は常に同じ値で、`owner` usage だけが handle ごとに異なる。
+
 API review 中に引数名を変える場合も、次の semantics は変えない。
 
-1. `vertexLayout` は slot 0 が per-vertex、slot 1 が per-instance のちょうど 2 buffers。
-   attribute 名、offset、stride は既存 `VertexLayoutDescriptor.toGpuLayout()` の検証も通す。
-2. `vertexCount` / `instanceCount` は正数。各 ByteData の長さは
-   `count * correspondingStride` と完全一致させ、余剰/不足、0 byte、index width 不整合は
-   `ArgumentError` とする。勝手な切り捨てや空 Geometry fallback はしない。
-3. bounds は caller が全 instance を pack した同じ snapshot から算出して必須指定する。
-   Geometry 側は200万件を走査せず、AABB から bounding sphere だけを定数時間で導く。
-4. base vertex と instance は同じ non-index host-visible buffer へ置き、instance offset は
-   16-byte alignment する。index は WebGL が巨大 buffer を element/non-element 用に複製
-   しないよう別 buffer とする。各 source bytes は constructor 内で一度だけ `overwrite`
-   し、まとめて一度 `flush` する。caller の ByteData は保持しない。
-5. `bind` は persistent views と小さい `FrameInfo`（camera/model matrix、camera position）だけを
-   bind する。`instanceTransients.emplace`、instance 全件 copy、camera change による再 upload
-   を禁止する。data change は旧 object の `retire()` + 新 object の生成で表す。
-6. Geometry は model transform を `FrameInfo` uniform から読むため
-   `bindsModelTransformInstance == false`。独自 `MeshVariant.persistentPackedInstances` を追加し、
-   material vertex override が誤って unskinned variant に fallback しないようにする。
-7. caller は旧 primitive/node を Scene から外してから `retire()` し、context invalidation 前は
-   render scheduling を止める。`retire()`、`invalidateContext()`、`dispose()` は同期的に future
-   bind/draw を拒否し、同じ `Future` を返す idempotent operation とする。最後に参照した
-   submission の completion watermark を越えるまでは buffer references を保持する。
-8. generation は 1 から開始する。`invalidateContext()` は active resources をすべて retire
-   して state を即時 invalidated にし、`recreateContext()` は retirement 完了後だけ generation
-   を increment して active へ戻る。古い Geometry は terminal のまま再利用しない。
-9. completion callback が来ない場合は resource と recreate を保留する。CPU frame 数や固定
-   delay で安全と推測しない。Flutter GPU が自動 context-loss event を公開していないため、
-   lifecycle 呼び出しは adapter owner の明示操作であり、自動復旧済みとは主張しない。
-10. snapshot の bytes は fork が保持する logical allocation/reference の観測値であり、driver の
-    resident bytes や即時解放を表さない。active/retiring と instance/total を分け、5分 memory
-    gate で「増加理由を説明できる」値を提供する。
+1. layout は slot 0 vertex、slot 1 instance の exactly 2 buffers。buffer/attribute List と
+   mutable `Aabb3` は constructor 冒頭で deep snapshot し、caller の後続 mutation を反映しない。
+2. count、stride、attribute offset、byte length、alignment、finite bounds、index width/value を
+   upload 前に検証する。empty/negative/overflow は `ArgumentError`、fallback は行わない。
+3. allocation policy は1 buffer/total logical allocation とも最大 `0x7fffffff` bytes。multiply、
+   16-byte align、add は除算による checked arithmetic を先に行い、overflow 後の値を使わない。
+4. base vertex と instance は同じ non-index host-visible buffer、instance offset は16-byte aligned。
+   index は WebGL duplicate を避けるため別 buffer。source bytes は各1回 overwrite/1回 flush 後に
+   保持せず、superclass private buffer field にも格納しない。
+5. bind は persistent views と小さい `FrameInfo` だけ。instance transient、camera change upload、
+   per-frame full scan を禁止する。data change は new geometry attach → old detach → old retire。
+6. Geometry は `bindsModelTransformInstance == false`、独自 material variant を使う。nested
+   `InstancedMesh` から `draw(instanceCount != 1)` された場合は `StateError` で fail closed。
+7. resource record は open-frame use と last submitted id を別々に持つ。bind後retireは次 submit の
+   stamp、または endFrame no-submit の確定まで reference を保持する。
+8. generation は process-global で1から開始。任意 owner の invalidation は global state を即時
+   `invalidating` にして全 owner の current-generation resource を retire し、全件 settle 後だけ
+   `invalidated`。recreate はその後に1回だけ generationを増やす。
+9. release callback failure は global `failed`。残る retirement は継続するが bind/register/recreate
+   は拒否し、process/Scene 再構築以外で回復したと推測しない。
+10. snapshot bytes は registry が保持する logical references。global/owner と active/retiring/failed、
+    total/instance を分け、driver resident bytes や即時 reclaim と表現しない。
 
 ## 4. Repository と PR stack
 
