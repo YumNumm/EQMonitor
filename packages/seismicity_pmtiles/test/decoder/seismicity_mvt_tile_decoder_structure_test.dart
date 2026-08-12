@@ -9,6 +9,9 @@ import '../support/seismicity_mvt_mutation.dart';
 void main() {
   final catalog = buildSeismicityMvtFixtureCatalog();
   final valid = catalog.valid;
+  final layer = VectorTile.fromBuffer(valid).layers.single;
+  final missingVersion = layer.deepCopy()..clearVersion();
+  final missingExtent = layer.deepCopy()..clearExtent();
   final cases = <(String, List<int>, Matcher)>[
     (
       'invalid protobuf',
@@ -26,6 +29,29 @@ void main() {
       tile('duplicate_hypocenters_layer'),
     ),
     ('unexpected layer', named(valid, 'other'), tile('unexpected_layer')),
+    (
+      'absent version',
+      valid.replaceMvtLayer(at: 0, layer: missingVersion),
+      tile('missing_layer_version'),
+    ),
+    ('wrong version', versioned(valid, 1), tile('unsupported_layer_version')),
+    (
+      'absent extent',
+      valid.replaceMvtLayer(at: 0, layer: missingExtent),
+      tile('missing_layer_extent'),
+    ),
+    ('wrong extent', extent(valid, 0), tile('invalid_layer_extent')),
+    ('non-Point', corruption(catalog, 'wrong_geometry'), feature('not_point')),
+    (
+      'MultiPoint',
+      geometry(valid, [17, 0, 0, 2, 2]),
+      feature('invalid_point_geometry'),
+    ),
+    (
+      'malformed Point',
+      geometry(valid, [9, 0]),
+      feature('invalid_point_geometry'),
+    ),
   ];
   for (final (name, bytes, matcher) in cases) {
     test('rejects $name before any callback', () {
@@ -37,6 +63,13 @@ void main() {
       expect(callbacks, 0);
     });
   }
+
+  test('rejects tile ID zoom different from dataZoom', () {
+    expect(
+      () => decode(bytes: valid, tileId: 1, onHypocenter: () {}),
+      throwsA(tile('tile_zoom_mismatch', tileId: 1)),
+    );
+  });
 }
 
 List<int> corruption(
@@ -50,6 +83,25 @@ List<int> named(List<int> bytes, String name) {
     ..name = name;
   return bytes.replaceMvtLayer(at: 0, layer: layer);
 }
+
+List<int> versioned(List<int> bytes, int version) {
+  final layer = VectorTile.fromBuffer(bytes).layers.single.deepCopy()
+    ..version = version;
+  return bytes.replaceMvtLayer(at: 0, layer: layer);
+}
+
+List<int> extent(List<int> bytes, int value) {
+  final layer = VectorTile.fromBuffer(bytes).layers.single.deepCopy()
+    ..extent = value;
+  return bytes.replaceMvtLayer(at: 0, layer: layer);
+}
+
+List<int> geometry(List<int> bytes, List<int> geometry) =>
+    bytes.replaceMvtFeature(
+      layerAt: 0,
+      featureAt: 0,
+      geometry: geometry,
+    );
 
 int decode({
   required List<int> bytes,
@@ -65,4 +117,11 @@ int decode({
 Matcher tile(String reason, {int tileId = 0}) =>
     isA<SeismicityPmTilesInvalidVectorTileException>()
         .having((error) => error.tileId, 'tileId', tileId)
+        .having((error) => error.reason, 'reason', reason);
+
+Matcher feature(String reason) =>
+    isA<SeismicityPmTilesInvalidHypocenterFeatureException>()
+        .having((error) => error.tileId, 'tileId', 0)
+        .having((error) => error.featureIndex, 'featureIndex', 0)
+        .having((error) => error.field, 'field', 'geometry')
         .having((error) => error.reason, 'reason', reason);
