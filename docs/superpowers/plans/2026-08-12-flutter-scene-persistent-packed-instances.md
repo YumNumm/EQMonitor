@@ -501,6 +501,129 @@ baseline failure は既存失敗と今回差分を分離して PR body に記録
 Simulator、smoke-render E2E は今回のユーザー指定により実行しない。fork実装Taskの shell snippet
 は上記 worktree の `packages/flutter_scene` から開始する。
 
+## 8. Implementation tasks
+
+各 Task は fresh subagent 1名へその Task だけを渡し、完了後に別 subagent が spec compliance、
+さらに別 subagent が code quality を reviewする。指摘修正と再reviewまで同じ Task 内で閉じる。
+実装経路は `superpowers:subagent-driven-development` だけを使い、`executing-plans` と併用しない。
+fork Task はすべて
+`/Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle/packages/flutter_scene`
+で実行し、各 commit の handwritten production+test 差分を `git --no-pager diff --stat HEAD^` で
+30–100行と確認する。範囲を超えたら責務を混ぜず次 Task へ分ける。
+
+### Task 1: completion watermark listener（fork bottom、依存なし）
+
+**Files:** Modify `lib/src/render/frame_transients.dart`; Create
+`test/render/gpu_submission_tracker_test.dart`。
+
+**Interfaces:** Produces
+`void GpuSubmissionTracker.addCompletionListener(void Function(int completedThrough) listener)`。
+listener は registration 順の snapshot で呼び、record/before-submit listener の既存 signature は維持する。
+
+- [ ] **Step 1 — RED:** 次の body を追加する。`record()` は `a=1,b=2`、`complete(b)` は通知せず、
+  `complete(a)` は `['first:2','second:2']`、duplicate/unknown は追加通知なしを期待する。
+
+  ```dart
+  test('completion listeners observe the contiguous watermark in order', () {
+    final tracker = GpuSubmissionTracker();
+    final seen = <String>[];
+    tracker.addCompletionListener((value) => seen.add('first:$value'));
+    tracker.addCompletionListener((value) => seen.add('second:$value'));
+    final a = tracker.record();
+    final b = tracker.record();
+    tracker.complete(b);
+    expect(seen, isEmpty);
+    tracker.complete(a);
+    expect(seen, ['first:2', 'second:2']);
+    tracker..complete(a)..complete(999);
+    expect(seen, ['first:2', 'second:2']);
+  });
+  ```
+
+- [ ] **Step 2 — verify RED:** `mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/gpu_submission_tracker_test.dart`。
+  expected RED は `addCompletionListener` が未定義。
+- [ ] **Step 3 — GREEN:** `_completionListeners` を追加し、`complete` が pending id を実際に削除し、
+  かつ contiguous watermark が前値より進んだ時だけ更新後値を snapshot iteration で通知する。
+- [ ] **Step 4 — verify:** 上記 focused test と既存 `test/render/frame_transients_test.dart` を通し、
+  `git --no-pager diff --check` を通す。
+- [ ] **Step 5 — publish:** `git add lib/src/render/frame_transients.dart test/render/gpu_submission_tracker_test.dart && git commit -m 'Feature: GPU submission完了通知を追加' && git push`。
+
+### Task 2: public value models と same-isolate guard（fork bottom、depends Task 1）
+
+**Files:** Create `lib/src/render/persistent_gpu_resource_models.dart`,
+`lib/src/render/persistent_gpu_execution_affinity.dart`,
+`test/render/persistent_gpu_resource_models_test.dart`。
+
+**Interfaces:** Produces section 3 の4 enum/2 immutable value class、および internal
+`PersistentGpuExecutionAffinity({int Function()? currentIsolateId})`、`void check()`。
+production default は `Isolate.current.hashCode` を capture し、test は可変 fake id を注入する。
+
+- [ ] **Step 1 — RED:** immutable usage/snapshot の全 field を exact 値で比較する test と次の guard test
+  を追加する。
+
+  ```dart
+  test('rejects a registry mutation from a different isolate identity', () {
+    var isolateId = 41;
+    final affinity = PersistentGpuExecutionAffinity(
+      currentIsolateId: () => isolateId,
+    );
+    affinity.check();
+    isolateId = 42;
+    expect(affinity.check, throwsStateError);
+  });
+  ```
+
+- [ ] **Step 2 — verify RED:** pinned `flutter test --enable-impeller test/render/persistent_gpu_resource_models_test.dart`。
+  expected RED は両 type file/import が存在しない。
+- [ ] **Step 3 — GREEN:** public values は全 field `final`/`const`、guard は生成 isolate id と現在値を
+  error に含める。lock、SendPort、cross-isolate transfer は追加しない。
+- [ ] **Step 4 — verify:** focused test、`mise exec ... -- dart analyze lib/src/render test/render`、
+  `git --no-pager diff --check`。
+- [ ] **Step 5 — publish:** 3 files を addし
+  `git commit -m 'Feature: GPU resource状態値を追加' && git push`。
+
+### Task 3: resource registration と owner accounting（fork bottom、depends Task 2）
+
+**Files:** Create `lib/src/render/persistent_gpu_resource_registry.dart`,
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** Produces internal
+`int attachOwner()`、`PersistentGpuResourceLease register({required int ownerId, required int totalBytes, required int instanceBytes, required void Function() release})`、
+`PersistentGpuMemorySnapshot snapshotFor({required int ownerId, required PersistentGpuResourceLifecycleState lifecycleState})`。
+lease exposes `generation/state/Future<void> retire()`; constructor consumes tracker と affinity。
+
+- [ ] **Step 1 — RED:** owner A に `(totalBytes: 64, instanceBytes: 24)`、owner B に `(96, 48)` を
+  registerし、global active count/bytes=`2/160/72`、owner A=`1/64/24`、generation=1、
+  latest/completed tracker values を exact 比較する。unknown/disposed owner と負 byte は
+  `ArgumentError`、異 isolate は `StateError` を期待する。
+- [ ] **Step 2 — verify RED:** pinned focused registry test。expected RED は registry/lease 未定義。
+- [ ] **Step 3 — GREEN:** record に ownerId、generation、logical bytes、release closure、cached
+  Completer/Future を持たせる。`totalBytes >= instanceBytes >= 0`、同 generation active 時だけ登録し、
+  snapshot は global と owner を active/retiring/failed で集計する。
+- [ ] **Step 4 — verify:** focused test、models test、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files を addし
+  `git commit -m 'Feature: GPU resource登録と集計を追加' && git push`。
+
+### Task 4: explicit begin/mark/endFrame（fork bottom、depends Task 3）
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** Produces `void beginFrame()`、`void markUsed(PersistentGpuResourceLease lease)`、
+`void endFrame()`。record 内部に open-frame mark を持ち、public state は増やさない。
+
+- [ ] **Step 1 — RED:** `beginFrame → markUsed → retire` で release=0/pending、`endFrame` submissionなしで
+  release=1/retiredを期待する。nested begin、closed end、closed-frame mark、retire後mark、別 registry
+  lease、別 isolate mutation はすべて `StateError`。同 lease の2回 mark は1 markとして扱う。
+- [ ] **Step 2 — verify RED:** registry focused test の `open frame without submission` を実行し、
+  expected RED は begin/mark/end API未定義。
+- [ ] **Step 3 — GREEN:** registry は `_frameOpen` と identity Set を所有する。retire が open mark を
+  見たら `retirementPendingOpenFrame`、endFrame は mark を全消去し past in-flight がなければ release。
+  `try/finally` integration はまだ行わない。
+- [ ] **Step 4 — verify:** registry全test、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files を addし
+  `git commit -m 'Feature: GPU resource frame記録を追加' && git push`。
+
 ### Task 1: submission completion listener を追加する（fork bottom）
 
 **Files:**
