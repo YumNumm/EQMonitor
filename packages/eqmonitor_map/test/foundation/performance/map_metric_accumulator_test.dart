@@ -57,9 +57,7 @@ void main() {
   test('replaces samples by sequence modulo capacity deterministically', () {
     MapMetricAggregate collect() {
       final accumulator = MapMetricAccumulator(3);
-      for (final sample in [9, 1, 7, 3, 5]) {
-        accumulator.add(sample);
-      }
+      [9, 1, 7, 3, 5].forEach(accumulator.add);
       return accumulator.snapshot(const [50, 100]);
     }
 

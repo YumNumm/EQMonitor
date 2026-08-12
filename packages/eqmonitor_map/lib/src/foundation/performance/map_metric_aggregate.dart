@@ -28,6 +28,70 @@ final class MapMetricAggregate {
   final int percentileDroppedCount;
 }
 
+final class MapMetricAccumulator {
+  MapMetricAccumulator(this._maxSamples) {
+    if (_maxSamples <= 0) {
+      throw ArgumentError.value(_maxSamples, 'maxSamples', 'must be positive');
+    }
+  }
+
+  final int _maxSamples;
+  final List<int> _samples = [];
+  var _count = 0;
+  var _sum = 0;
+  int? _min;
+  int? _max;
+
+  void add(int sample) {
+    if (_samples.length < _maxSamples) {
+      _samples.add(sample);
+    } else {
+      _samples[_count % _maxSamples] = sample;
+    }
+    _count += 1;
+    _sum += sample;
+
+    final min = _min;
+    if (min == null || sample < min) {
+      _min = sample;
+    }
+    final max = _max;
+    if (max == null || sample > max) {
+      _max = sample;
+    }
+  }
+
+  MapMetricAggregate snapshot(List<double> percentiles) {
+    final min = _min;
+    final max = _max;
+    if (min == null || max == null) {
+      throw StateError('cannot snapshot an empty accumulator');
+    }
+
+    final samples = List<int>.of(_samples)..sort();
+    final values = <MapPercentileValue>[];
+    for (final percentile in percentiles) {
+      final rank = (percentile * samples.length / 100).ceil();
+      values.add(
+        createMapPercentileValue(
+          percentile: percentile,
+          value: samples[rank - 1],
+        ),
+      );
+    }
+
+    return createMapMetricAggregate(
+      count: _count,
+      sum: _sum,
+      min: min,
+      max: max,
+      percentiles: values,
+      percentileSampleCount: samples.length,
+      percentileDroppedCount: _count - samples.length,
+    );
+  }
+}
+
 MapPercentileValue createMapPercentileValue({
   required double percentile,
   required int value,
