@@ -447,29 +447,46 @@ branch だけ存在する resume なら branch をそのまま attach する。t
 `worktree remove`、`branch -D`、reset、checkout、force pushは行わない。
 
 ```bash
-git fetch upstream master
-git cat-file -e 7f71993b7e2a0ab1d2f59726a406098709be7291^{commit}
-git branch eqmonitor/flutter-4dacd3fc \
-  7f71993b7e2a0ab1d2f59726a406098709be7291
-git push origin eqmonitor/flutter-4dacd3fc:eqmonitor/flutter-4dacd3fc
-git config rerere.enabled true
-git config remote.pushDefault origin
-gh stack init --base eqmonitor/flutter-4dacd3fc \
+mkdir -p /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+  show-ref --verify --quiet refs/heads/feat/persistent-gpu-lifecycle
+# branch exit 1 and target absent route:
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene worktree add \
+  -b feat/persistent-gpu-lifecycle \
+  /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle \
+  eqmonitor/flutter-4dacd3fc
+# branch exit 0 and target absent route:
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene worktree add \
+  /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle \
   feat/persistent-gpu-lifecycle
+# common assertion route, including pre-existing target:
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene worktree list --porcelain
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle \
+  rev-parse --abbrev-ref HEAD
+# expected: feat/persistent-gpu-lifecycle
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle \
+  merge-base --is-ancestor 7f71993b7e2a0ab1d2f59726a406098709be7291 HEAD
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle \
+  status --porcelain=v1
+# expected: empty
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene config rerere.enabled true
+git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene config remote.pushDefault origin
+cd /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle
+gh stack init --base eqmonitor/flutter-4dacd3fc feat/persistent-gpu-lifecycle
 ```
 
-`gh stack init` 後は bottom の `feat/persistent-gpu-lifecycle` で Task 1 を開始する。top branch は
-bottom PR 作成後に Task 5 で追加する。既存 branch が見つかった場合は SHA/owner を確認し、
-上書きや force push をしない。
+`gh stack init` は branch が stack metadata 未登録の場合だけ実行する。既存登録時は
+`gh stack view --json` で base が `eqmonitor/flutter-4dacd3fc` と一致することをassertし、metadataを
+上書きしない。bottom の Task 1 から開始し、top worktree/branchは bottom PR 作成後の delivery
+gate で同じ non-destructive 分岐を使って追加する。
 
-**Step 3: pinned toolchain と baseline**
+### Gate C: pinned toolchain と baseline
 
 fork 自体は Flutter を pin していないため、全 Flutter/Dart command は EQMonitor と同じ exact
-tool version を `mise exec flutter@<full-sha> --` で指定する。以下の `<fork>` は絶対 path へ
-置換し、文字列のまま実行しない。
+tool version を指定する。
 
 ```bash
-cd <fork>
+cd /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle
 mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
   flutter --version --machine
 mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
@@ -479,10 +496,10 @@ mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
   flutter test --enable-impeller test/render/frame_transients_test.dart
 ```
 
-version JSON の framework SHA が `4dacd3fc...` でなければ中断する。baseline failure は既存失敗と
-今回差分を分離して PR body に記録し、成功扱いにしない。実機、Simulator、smoke-render E2E は
-今回のユーザー指定により実行しない。Task 1–9 の shell snippet はすべて
-`<fork>/packages/flutter_scene` から開始する。
+version JSON の framework SHA が `4dacd3fc91d96262a33e5c598e17d816f0b35641` でなければ中断する。
+baseline failure は既存失敗と今回差分を分離して PR body に記録し、成功扱いにしない。実機、
+Simulator、smoke-render E2E は今回のユーザー指定により実行しない。fork実装Taskの shell snippet
+は上記 worktree の `packages/flutter_scene` から開始する。
 
 ### Task 1: submission completion listener を追加する（fork bottom）
 
