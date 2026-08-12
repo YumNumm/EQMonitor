@@ -186,6 +186,7 @@ dependencies:
     path: ../packages/assets_util
   vibration: ^3.2.0
   wakelock_plus: ^1.7.0
+  material_ui: ^1.0.0
 
 dev_dependencies:
   build_runner: ^2.11.1
