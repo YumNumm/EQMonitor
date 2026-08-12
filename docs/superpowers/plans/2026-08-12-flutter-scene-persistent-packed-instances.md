@@ -1323,6 +1323,42 @@ Future<void> disposeOwner(int ownerId) {
 }
 ```
 
+The registry test replaces the RED body with this typed two-record FD/FI regression:
+
+```dart
+test('owner disposal shares resource futures and leaves other owners active',
+    () async {
+  final registry = PersistentGpuResourceRegistry(
+    submissions: GpuSubmissionTracker(),
+    affinity: PersistentGpuExecutionAffinity(),
+  );
+  final ownerA = registry.attachOwner();
+  final ownerB = registry.attachOwner();
+  final events = <String>[];
+  registry.register(ownerId: ownerA, totalBytes: 16, instanceBytes: 8,
+      release: () => events.add('resource:a1'));
+  registry.register(ownerId: ownerA, totalBytes: 16, instanceBytes: 8,
+      release: () => events.add('resource:a2'));
+  Future<void>? callbackInvalidation;
+  registry.register(ownerId: ownerB, totalBytes: 16, instanceBytes: 8,
+      release: () {
+        events.add('resource:b');
+        callbackInvalidation = registry.invalidateContext(ownerB);
+      });
+  final disposal = registry.disposeOwner(ownerA);
+  disposal.then((_) => events.add('FD'));
+  final invalidation = registry.invalidateContext(ownerB);
+  invalidation.then((_) => events.add('FI'));
+  final repeatedInvalidation = registry.invalidateContext(ownerB);
+  expect(identical(callbackInvalidation, invalidation), isTrue);
+  expect(identical(repeatedInvalidation, invalidation), isTrue);
+  await Future.wait([disposal, invalidation]);
+  expect(events, ['resource:a1', 'resource:a2', 'resource:b', 'FD', 'FI']);
+  final snapshot = registry.snapshotFor(ownerId: ownerA);
+  expect(snapshot.owner.activeResourceCount, 0);
+});
+```
+
 **Handwritten budget:** 50–90 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
@@ -1394,8 +1430,10 @@ Future<void> invalidateContext(int ownerId) {
   final completer = Completer<void>();
   invalidation = completer;
   contextState = PersistentGpuContextState.invalidating;
-  final retirements = records.values
+  final currentRecords = records.values
       .where((record) => record.generation == contextGeneration)
+      .toList(growable: false);
+  final retirements = currentRecords
       .map((record) => retire(PersistentGpuResourceLease(registry: this,
           recordId: record.id, generation: record.generation)))
       .toList(growable: false);
@@ -1417,8 +1455,9 @@ and documentation lines are counted, while generated files and formatter-only in
   reentrant invalidation and B's call return the identical FI; register rejects; resource→FD→FI order is exact.
   Run:
   `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'one owner invalidates all immediate resources in the generation' 'RED:T07:invalidate affinity gate missing'`。
-- [ ] **GREEN:** validate active owner, publish context+FI before retiring a snapshot, finalize invalidated after
-  all record/owner Futures settle. No open-frame references exist yet. Run:
+- [ ] **GREEN:** validate active owner, publish context+FI, materialize `currentRecords`, then retire from that
+  fixed list so synchronous release cannot mutate an active map iterator; finalize invalidated after all
+  record/owner Futures settle. No open-frame references exist yet. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/gpu_submission_tracker_test.dart test/render/persistent_gpu_resource_models_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: global GPU invalidationを追加`。
 
