@@ -68,3 +68,24 @@ lifecycle、実機性能は#1593以降のplatform確認として残る。
   - `rg -n '^## Final automated verification$' docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md`: PASS
   - `git diff --check`: PASS
 - Device/simulator/golden/E2E: NOT run.
+
+### Fix round 1 reproducibility check
+
+The `f2a5988ef` generated-file state is not accepted as final GREEN evidence.
+After that commit, the final tree was checked again with:
+
+```bash
+cd packages/eqmonitor_map
+mise exec -- dart run build_runner build --delete-conflicting-outputs
+git --no-pager status --short
+git diff --check
+```
+
+Result:
+
+- `mise exec -- dart run build_runner build --delete-conflicting-outputs`: PASS, but wrote `16` `.freezed.dart` outputs again.
+- `git --no-pager status --short`: showed modified generated `.freezed.dart` files.
+- `git diff --check`: FAIL because build_runner regenerated trailing whitespace inside generated `// dart format off` blocks.
+
+Therefore Task 52 remains BLOCKED at the Freezed/build_runner generated-output boundary. The generated `.freezed.dart`
+files must not be post-processed by hand to force `git diff --check` green.
