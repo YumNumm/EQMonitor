@@ -6062,8 +6062,8 @@ these 63 rows as the exhaustive set; a missing, duplicate, empty or non-later ta
 Run from the EQMonitor plan worktree before requesting plan review. This reports cardinalities rather than
 inferring them visually: 63 split tasks all have snippets/budgets; the fork has 54 unique source-only RED mappings
 whose title/diagnostic match and 48 literal markers present in GREEN; Tasks48–50 have six fail-closed shell REDs;
-the affinity matrix has 14 independently rejected entry/callback rows; every newly produced symbol has a shown
-consumer; Task28 closes every downstream plan field; Task18 preserves symbol provenance; no private-method/legacy
+the affinity matrix has 18 independently rejected entry/callback rows; the 63-row closure ledger covers every
+task and requires a later consumer; Task28 closes every downstream plan field; Task18 preserves symbol provenance; no private-method/legacy
 undefined-helper call remains; Task47 assigns all six descriptor scalars after exporting the SHA; and a
 null-equals-null stack cannot pass the SHA predicate。
 
@@ -6175,7 +6175,50 @@ affinity_matrix=$(sed -n \
   '/affinity-entrypoint-matrix-start/,/affinity-entrypoint-matrix-end/p' "$plan")
 affinity_entrypoint_count=$(rg -c '^\| (`|lease|tracker|immediately)' \
   <<<"$affinity_matrix")
-test "$affinity_entrypoint_count" -eq 14
+test "$affinity_entrypoint_count" -eq 18
+
+closure_ledger=$(sed -n \
+  '/producer-consumer-closure-start/,/producer-consumer-closure-end/p' "$plan")
+closure_row_count=$(rg -c '^\| [0-9]+[A-D]? \|' <<<"$closure_ledger")
+test "$closure_row_count" -eq "$task_count"
+perl -0777 - "$plan" <<'PERL'
+use strict;
+use warnings;
+my $path = shift @ARGV;
+open my $handle, '<', $path or die "$path: $!\n";
+local $/;
+my $text = <$handle>;
+my (@tasks, %position);
+while ($text =~ /^### Task ([0-9]+[A-D]?):/mg) {
+  push @tasks, $1;
+  $position{$1} = $-[0];
+}
+my ($ledger) = $text =~
+  /producer-consumer-closure-start -->(.*?)<!-- producer-consumer-closure-end/s;
+defined $ledger or die "closure ledger missing\n";
+my @rows = $ledger =~
+  /^\| ([0-9]+[A-D]?) \| ([^|]+) \| (Task [0-9]+[A-D]?|Bottom delivery|Top handoff|EQ delivery) \|$/mg;
+@rows == @tasks * 3 or die "closure row shape/count mismatch\n";
+my %delivery = (
+  'Bottom delivery' => index($text, '### Bottom delivery gate'),
+  'Top handoff' => index($text, '### Top delivery'),
+  'EQ delivery' => index($text, '## EQ delivery and PR route'),
+);
+for my $index (0 .. $#tasks) {
+  my ($task, $product, $consumer) = @rows[$index * 3 .. $index * 3 + 2];
+  $task eq $tasks[$index] or die "closure order mismatch at $task\n";
+  $product =~ /\S/ or die "Task $task has empty product\n";
+  my $consumer_position;
+  if ($consumer =~ /^Task ([0-9]+[A-D]?)$/) {
+    exists $position{$1} or die "Task $task has unknown consumer $1\n";
+    $consumer_position = $position{$1};
+  } else {
+    $consumer_position = $delivery{$consumer};
+  }
+  $consumer_position > $position{$task}
+    or die "Task $task consumer is not later\n";
+}
+PERL
 
 task12b=$(sed -n '/^### Task 12B:/,/^### Task 13:/p' "$plan")
 task14=$(sed -n '/^### Task 14:/,/^### Task 15B:/p' "$plan")
