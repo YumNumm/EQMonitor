@@ -4320,48 +4320,15 @@ void setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere) =>
 **Files:** Modify `lib/src/geometry/persistent_packed_instance_geometry.dart`; Modify
 `test/persistent_packed_instance_geometry_test.dart`。
 
-**Interfaces:** Produces Final public API factory and internal exact
+**Interfaces:** Produces the Final public API factory constructor and internal exact
 `createPersistentPackedInstanceGeometry({required PersistentGpuResourceLifecycle lifecycle, required PersistentPackedGpuBackend backend, required ByteData vertexData, required int vertexCount, required ByteData? indexData, required gpu.IndexType indexType, required ByteData instanceData, required int instanceCount, required VertexLayoutDescriptor vertexLayout, required gpu.Shader vertexShader, required vm.Aabb3 localBounds, required bool doubleSided})`。
-Both call Task39 transaction and Task41B `fromValidatedParts`。
+The constructor calls the helper once with `DevicePersistentPackedGpuBackend()`; only the helper calls Task39's
+transaction and Task41B `fromValidatedParts`。
 
 **Implementation shape:** public factory delegates with `DevicePersistentPackedGpuBackend()` and the supplied
 shader unchanged. The internal helper is the only place that supplies lifecycle check/register, source-capturing
 plan/upload, and `fromValidatedParts(defaultShader: () => vertexShader)` construct closures to Task39. There is no second
 manual plan→upload→register path。
-
-```dart
-return executePersistentPackedInstanceTransaction(
-  checkCanCreate: lifecycle.checkCanCreate,
-  buildPlan: () => PersistentPackedInstancePlan.create(
-    vertexData: vertexData,
-    vertexCount: vertexCount,
-    indexData: indexData,
-    indexType: indexType,
-    instanceData: instanceData,
-    instanceCount: instanceCount,
-    vertexLayout: vertexLayout,
-    localBounds: localBounds,
-  ),
-  backend: backend,
-  upload: ({required backend, required plan}) =>
-      PersistentPackedInstanceStorage.uploadWithBackend(
-        backend: backend,
-        plan: plan,
-        vertexData: vertexData,
-        instanceData: instanceData,
-        indexData: indexData,
-      ),
-  register: lifecycle.registerAllocation,
-  construct: ({required plan, required storage, required lease}) =>
-      PersistentPackedInstanceGeometry.fromValidatedParts(
-        plan: plan,
-        storage: storage,
-        lease: lease,
-        defaultShader: () => vertexShader,
-        doubleSided: doubleSided,
-      ),
-);
-```
 
 **RED test snippet:**
 
@@ -4375,9 +4342,37 @@ test("public Geometry factory shares typed lifecycle transaction", () {
 });
 ```
 
-**GREEN implementation snippet:**
+**GREEN implementation snippet:** add this complete constructor inside
+`PersistentPackedInstanceGeometry`, followed by the complete same-library helper:
 
 ```dart
+factory PersistentPackedInstanceGeometry({
+  required PersistentGpuResourceLifecycle lifecycle,
+  required ByteData vertexData,
+  required int vertexCount,
+  ByteData? indexData,
+  gpu.IndexType indexType = gpu.IndexType.int16,
+  required ByteData instanceData,
+  required int instanceCount,
+  required VertexLayoutDescriptor vertexLayout,
+  required gpu.Shader vertexShader,
+  required vm.Aabb3 localBounds,
+  required bool doubleSided,
+}) => createPersistentPackedInstanceGeometry(
+  lifecycle: lifecycle,
+  backend: DevicePersistentPackedGpuBackend(),
+  vertexData: vertexData,
+  vertexCount: vertexCount,
+  indexData: indexData,
+  indexType: indexType,
+  instanceData: instanceData,
+  instanceCount: instanceCount,
+  vertexLayout: vertexLayout,
+  vertexShader: vertexShader,
+  localBounds: localBounds,
+  doubleSided: doubleSided,
+);
+
 PersistentPackedInstanceGeometry createPersistentPackedInstanceGeometry({
   required PersistentGpuResourceLifecycle lifecycle,
   required PersistentPackedGpuBackend backend,
@@ -4404,7 +4399,7 @@ PersistentPackedInstanceGeometry createPersistentPackedInstanceGeometry({
       PersistentPackedInstanceStorage.uploadWithBackend(
         backend: backend, plan: plan, vertexData: vertexData,
         instanceData: instanceData, indexData: indexData,
-  ),
+      ),
   register: lifecycle.registerAllocation,
   construct: ({required plan, required storage, required lease}) =>
       PersistentPackedInstanceGeometry.fromValidatedParts(
@@ -4414,7 +4409,8 @@ PersistentPackedInstanceGeometry createPersistentPackedInstanceGeometry({
 );
 ```
 
-This is the sole transaction body; no second helper/body is permitted。
+The constructor has no transaction body; the helper above is the sole transaction body and is the only
+backend-injected construction entrypoint used by tests。
 
 **Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
@@ -4423,7 +4419,9 @@ and documentation lines are counted, while generated files and formatter-only in
   has exactly one call to Task39's transaction; lifecycle rejection event precedes plan/allocation; valid fake
   backend order is check→plan→upload→register→construct; register failure cleanup comes from Task40.
   `run_fork_red test/persistent_packed_instance_geometry_test.dart 'public Geometry factory shares typed lifecycle transaction' 'RED:T42:shared factory transaction missing'`。
-- [ ] **GREEN:** public and test paths differ only by backend argument. Run:
+- [ ] **GREEN:** instantiate through the public constructor with its default int16 index type and through the
+  typed helper with a recording backend; both paths reach the one transaction body and differ only by backend.
+  Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_geometry_test.dart test/persistent_packed_instance_transaction_test.dart test/persistent_packed_instance_binding_test.dart test/persistent_packed_instance_storage_test.dart test/geometry_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed Geometryをtransaction構築`。
 
