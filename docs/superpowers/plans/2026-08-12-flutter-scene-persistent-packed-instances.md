@@ -1323,7 +1323,7 @@ Future<void> disposeOwner(int ownerId) {
 }
 ```
 
-The registry test replaces the RED body with this typed two-record FD/FI regression:
+The registry test replaces the RED body with this typed two-record FD regression:
 
 ```dart
 test('owner disposal shares resource futures and leaves other owners active',
@@ -1335,27 +1335,25 @@ test('owner disposal shares resource futures and leaves other owners active',
   final ownerA = registry.attachOwner();
   final ownerB = registry.attachOwner();
   final events = <String>[];
+  Future<void>? callbackDisposal;
   registry.register(ownerId: ownerA, totalBytes: 16, instanceBytes: 8,
-      release: () => events.add('resource:a1'));
+      release: () {
+        events.add('resource:a1');
+        callbackDisposal = registry.disposeOwner(ownerA);
+      });
   registry.register(ownerId: ownerA, totalBytes: 16, instanceBytes: 8,
       release: () => events.add('resource:a2'));
-  Future<void>? callbackInvalidation;
   registry.register(ownerId: ownerB, totalBytes: 16, instanceBytes: 8,
-      release: () {
-        events.add('resource:b');
-        callbackInvalidation = registry.invalidateContext(ownerB);
-      });
+      release: () => events.add('resource:b'));
   final disposal = registry.disposeOwner(ownerA);
   disposal.then((_) => events.add('FD'));
-  final invalidation = registry.invalidateContext(ownerB);
-  invalidation.then((_) => events.add('FI'));
-  final repeatedInvalidation = registry.invalidateContext(ownerB);
-  expect(identical(callbackInvalidation, invalidation), isTrue);
-  expect(identical(repeatedInvalidation, invalidation), isTrue);
-  await Future.wait([disposal, invalidation]);
-  expect(events, ['resource:a1', 'resource:a2', 'resource:b', 'FD', 'FI']);
-  final snapshot = registry.snapshotFor(ownerId: ownerA);
-  expect(snapshot.owner.activeResourceCount, 0);
+  final repeatedDisposal = registry.disposeOwner(ownerA);
+  expect(identical(callbackDisposal, disposal), isTrue);
+  expect(identical(repeatedDisposal, disposal), isTrue);
+  await disposal;
+  expect(events, ['resource:a1', 'resource:a2', 'FD']);
+  expect(registry.snapshotFor(ownerId: ownerA).owner.activeResourceCount, 0);
+  expect(registry.snapshotFor(ownerId: ownerB).owner.activeResourceCount, 1);
 });
 ```
 
@@ -1365,8 +1363,7 @@ and documentation lines are counted, while generated files and formatter-only in
 - [ ] **RED:** register two immediate A records and one B record. Disposing A first snapshots both A records before
   either synchronous callback removes its map entry; both callbacks run once in registration order, both resource
   Futures settle, FD settles after them, and B remains active. Repeated and first-release-callback-reentrant dispose
-  are identical; disposed A snapshot remains readable; unknown owner fails. Task7 repeats this exact two-record
-  setup and proves its FI also settles after FD, so the original lazy-map concurrent-removal regression cannot hide。
+  are identical; disposed A and active B snapshots remain readable; unknown owner fails。
   An affinity mismatch returns no Future, invokes no release, and leaves owner/record state byte-for-byte unchanged.
   Run:
   `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'owner disposal shares resource futures and leaves other owners active' 'RED:T06:dispose affinity gate missing'`。
@@ -1453,11 +1450,52 @@ Future<void> invalidateContext(int ownerId) {
 Completer<void>? invalidation;
 ```
 
+After `invalidateContext` exists, the registry test replaces the RED body with this typed FD→FI regression:
+
+```dart
+test('one owner invalidates all immediate resources in the generation',
+    () async {
+  final registry = PersistentGpuResourceRegistry(
+    submissions: GpuSubmissionTracker(),
+    affinity: PersistentGpuExecutionAffinity(),
+  );
+  final ownerA = registry.attachOwner();
+  final ownerB = registry.attachOwner();
+  final events = <String>[];
+  registry.register(ownerId: ownerA, totalBytes: 16, instanceBytes: 8,
+      release: () => events.add('resource:a1'));
+  registry.register(ownerId: ownerA, totalBytes: 16, instanceBytes: 8,
+      release: () => events.add('resource:a2'));
+  Future<void>? callbackInvalidation;
+  registry.register(ownerId: ownerB, totalBytes: 16, instanceBytes: 8,
+      release: () {
+        events.add('resource:b1');
+        callbackInvalidation = registry.invalidateContext(ownerB);
+      });
+  registry.register(ownerId: ownerB, totalBytes: 16, instanceBytes: 8,
+      release: () => events.add('resource:b2'));
+  final disposal = registry.disposeOwner(ownerA);
+  disposal.then((_) => events.add('FD'));
+  final invalidation = registry.invalidateContext(ownerB);
+  invalidation.then((_) => events.add('FI'));
+  final repeatedInvalidation = registry.invalidateContext(ownerB);
+  expect(identical(callbackInvalidation, invalidation), isTrue);
+  expect(identical(repeatedInvalidation, invalidation), isTrue);
+  await Future.wait([disposal, invalidation]);
+  expect(events,
+      ['resource:a1', 'resource:a2', 'resource:b1', 'resource:b2', 'FD', 'FI']);
+  final snapshot = registry.snapshotFor(ownerId: ownerA);
+  expect(snapshot.contextState, PersistentGpuContextState.invalidated);
+  expect(snapshot.global.activeResourceCount, 0);
+});
+```
+
 **Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
-- [ ] **RED:** A invalidates A/B records; state and cached FI exist before the first callback; that callback's
-  reentrant invalidation and B's call return the identical FI; register rejects; resource→FD→FI order is exact.
+- [ ] **RED:** dispose snapshots A's two records, then invalidation snapshots B's two current-generation records;
+  state and cached FI exist before the first B callback; its reentrant call and B's repeated call return the
+  identical FI; register rejects; resource→FD→FI order is exact.
   Run:
   `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'one owner invalidates all immediate resources in the generation' 'RED:T07:invalidate affinity gate missing'`。
 - [ ] **GREEN:** validate active owner, publish context+FI, materialize `currentRecords`, then retire from that
@@ -6087,7 +6125,7 @@ these 63 rows as the exhaustive set; a missing, duplicate, empty or non-later ta
 | 4C | owner attach and allocation register | Task 4D |
 | 4D | idempotent retirement Future | Task 6 |
 | 5 | owner/global memory snapshot | Task 9 |
-| 6 | owner disposal Future | Task 9 |
+| 6 | owner disposal Future | Task 7 |
 | 7 | context invalidation Future | Task 9 |
 | 8 | context recreation and generation gate | Task 9 |
 | 9 | public lifecycle handle | Task 10 |
