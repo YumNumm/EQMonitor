@@ -11,7 +11,20 @@ export 'package:pmtiles_v3/pmtiles_v3.dart'
 
 export 'src/eqmonitor_map_library.dart';
 export 'src/flutter_scene/base_map_material_preflight_view.dart';
+export 'src/foundation/frame/map_clock.dart';
+export 'src/foundation/frame/map_frame_revision.dart';
+export 'src/foundation/frame/map_frame_snapshot.dart';
+export 'src/foundation/map_child_reconciler.dart';
+export 'src/foundation/map_element.dart';
+export 'src/foundation/map_node.dart';
+export 'src/foundation/map_node_identity.dart';
+export 'src/foundation/map_scene.dart';
+export 'src/foundation/revision/map_revision.dart';
+export 'src/foundation/revision/map_revision_commit_store.dart';
+export 'src/foundation/revision/map_revision_state_owner.dart';
+export 'src/foundation/revision/map_source_identity.dart';
 export 'src/geo/map_camera.dart';
+export 'src/geo/map_viewport.dart';
 export 'src/mesh/fill_mesh_builder_limits.dart';
 export 'src/mesh/line_mesh_builder_limits.dart';
 export 'src/renderer/eqmonitor_orthographic_projection.dart';

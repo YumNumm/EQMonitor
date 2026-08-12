@@ -16,7 +16,61 @@ void main() {
     for (final action in revisionInventory()) {
       expect(action, returnsNormally);
     }
+    for (final action in revisionStoreInventory()) {
+      expect(action, returnsNormally);
+    }
   });
+}
+
+List<void Function()> revisionStoreInventory() {
+  final source = createMapSourceInstanceId(value: 'base-map');
+  final digest = createMapContentDigest(value: 'sha256:base-map');
+  const MapRevisionStateOwner<int> owner = _StateOwner();
+  final store = MapRevisionCommitStore<int>(owner);
+  return [
+    () => consume(MapRevisionCommitStore<int>(owner)),
+    () => consume(store.current),
+    () => consume(
+      store.commitFull(
+        metadata: createMapFullRevision(
+          source: source,
+          revision: 1,
+          digest: digest,
+        ),
+        validateAndBuild: () => MapRevisionCandidate(state: 1, digest: digest),
+      ),
+    ),
+    () => consume(_commitDelta(owner: owner, source: source, digest: digest)),
+    () => consume(store.fullResyncRequest),
+    () => consume(store.needsFullResync),
+    () => consume(store.resyncAfterRevision),
+  ];
+}
+
+MapRevisionApplyResult<int> _commitDelta({
+  required MapRevisionStateOwner<int> owner,
+  required MapSourceInstanceId source,
+  required MapContentDigest digest,
+}) {
+  final store = MapRevisionCommitStore<int>(owner);
+  store.commitFull(
+    metadata: createMapFullRevision(
+      source: source,
+      revision: 1,
+      digest: digest,
+    ),
+    validateAndBuild: () => MapRevisionCandidate(state: 1, digest: digest),
+  );
+  return store.commitDelta(
+    metadata: createMapDeltaRevision(
+      source: source,
+      baseRevision: 1,
+      targetRevision: 2,
+      targetDigest: digest,
+    ),
+    validateAndBuild: ({required currentState}) =>
+        MapRevisionCandidate(state: currentState + 1, digest: digest),
+  );
 }
 
 List<void Function()> revisionInventory() {
@@ -172,7 +226,7 @@ List<void Function()> nodeInventory() {
   final identity = createMapNodeIdentity(key: key, type: type);
   final node = MapDeclarationNode(identity: identity, children: const []);
   final MapElementFactory factory = _ElementFactory();
-  final MapElement element = factory.create(node: node);
+  final element = factory.create(node: node);
   final reconciler = MapChildReconciler();
   return [
     () => consume(createMapNodeKey(value: 'key')),
@@ -185,13 +239,13 @@ List<void Function()> nodeInventory() {
     () => consume(MapDeclarationNode(identity: identity, children: const [])),
     () => consume(MapScene(children: [node])),
     () => consume(element.identity),
-    () => element.mount(),
+    element.mount,
     () => element.update(node: node),
-    () => element.unmount(),
+    element.unmount,
     () => consume(factory.create(node: node)),
     () => consume(reconciler.elements),
     () => reconciler.reconcile(nodes: [node], factory: factory),
-    () => reconciler.unmountAll(),
+    reconciler.unmountAll,
   ];
 }
 
