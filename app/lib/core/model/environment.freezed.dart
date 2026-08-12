@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'environment.dart';
@@ -9,6 +9,7 @@ part of 'environment.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -72,7 +73,7 @@ class _$BuildConfigCopyWithImpl<$Res>
 /// Create a copy of BuildConfig
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,Object? buildTimestamp = null,Object? buildCommitMessage = null,Object? revenueCatApiKeyIos = null,Object? revenueCatApiKeyAndroid = null,Object? isBetaTesting = null,Object? isProFeaturesEnabled = null,}) {
-  return _then(_self.copyWith(
+  return _then(BuildConfig(
 restApiUrl: null == restApiUrl ? _self.restApiUrl : restApiUrl // ignore: cast_nullable_to_non_nullable
 as String,appIdSuffix: null == appIdSuffix ? _self.appIdSuffix : appIdSuffix // ignore: cast_nullable_to_non_nullable
 as String,appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable

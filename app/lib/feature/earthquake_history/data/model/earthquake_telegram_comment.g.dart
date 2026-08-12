@@ -10,26 +10,21 @@ part of 'earthquake_telegram_comment.dart';
 
 _EarthquakeTelegramComment _$EarthquakeTelegramCommentFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_EarthquakeTelegramComment',
-  json,
-  ($checkedConvert) {
-    final val = _EarthquakeTelegramComment(
-      type: $checkedConvert(
-        'type',
-        (v) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, v),
-      ),
-      reportedAt: $checkedConvert(
-        'reported_at',
-        (v) => DateTime.parse(v as String),
-      ),
-      additional: $checkedConvert('additional', (v) => v as String?),
-      free: $checkedConvert('free', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'reportedAt': 'reported_at'},
-);
+) => $checkedCreate('_EarthquakeTelegramComment', json, ($checkedConvert) {
+  final val = _EarthquakeTelegramComment(
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, v),
+    ),
+    reportedAt: $checkedConvert(
+      'reported_at',
+      (v) => DateTime.parse(v as String),
+    ),
+    additional: $checkedConvert('additional', (v) => v as String?),
+    free: $checkedConvert('free', (v) => v as String?),
+  );
+  return val;
+}, fieldKeyMap: const {'reportedAt': 'reported_at'});
 
 Map<String, dynamic> _$EarthquakeTelegramCommentToJson(
   _EarthquakeTelegramComment instance,

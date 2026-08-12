@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'shake_detection_settings.dart';
@@ -9,6 +9,7 @@ part of 'shake_detection_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$ShakeDetectionEntryCopyWithImpl<$Res>
 /// Create a copy of ShakeDetectionEntry
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? subRegionId = freezed,Object? subRegionName = freezed,Object? minLevel = null,Object? isCurrentLocation = null,Object? prefectureCode = freezed,Object? cityCode = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ShakeDetectionEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,subRegionId: freezed == subRegionId ? _self.subRegionId : subRegionId // ignore: cast_nullable_to_non_nullable
 as String?,subRegionName: freezed == subRegionName ? _self.subRegionName : subRegionName // ignore: cast_nullable_to_non_nullable
@@ -338,7 +339,7 @@ class _$ShakeDetectionSubRegionCopyWithImpl<$Res>
 /// Create a copy of ShakeDetectionSubRegion
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? code = null,Object? name = null,}) {
-  return _then(_self.copyWith(
+  return _then(ShakeDetectionSubRegion(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable

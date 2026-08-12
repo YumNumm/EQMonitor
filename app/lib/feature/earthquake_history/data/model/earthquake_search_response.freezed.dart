@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_search_response.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_search_response.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 PaginatedResponse<T> _$PaginatedResponseFromJson<T extends EarthquakePartial>(
@@ -73,7 +74,7 @@ class _$PaginatedResponseCopyWithImpl<T extends EarthquakePartial,$Res>
 /// Create a copy of PaginatedResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? nextToken = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(PaginatedResponse(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<T>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -217,7 +218,7 @@ return $default(_that.items,_that.nextToken);case _:
 @JsonSerializable(genericArgumentFactories: true)
 
 class _PaginatedSearchResponse<T extends EarthquakePartial> implements PaginatedResponse<T> {
-  const _PaginatedSearchResponse({required final  List<T> items, required this.nextToken}): _items = items;
+  const _PaginatedSearchResponse({required  List<T> items, required this.nextToken}): _items = items;
   factory _PaginatedSearchResponse.fromJson(Map<String, dynamic> json,T Function(Object?) fromJsonT) => _$PaginatedSearchResponseFromJson(json,fromJsonT);
 
  final  List<T> _items;
@@ -345,7 +346,7 @@ class _$IntensityAreaSearchItemCopyWithImpl<$Res>
 /// Create a copy of IntensityAreaSearchItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? area = null,Object? earthquake = null,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityAreaSearchItem(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,area: null == area ? _self.area : area // ignore: cast_nullable_to_non_nullable
 as IntensityAreaInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
@@ -650,7 +651,7 @@ class _$StationSearchItemCopyWithImpl<$Res>
 /// Create a copy of StationSearchItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? station = null,Object? earthquake = null,}) {
-  return _then(_self.copyWith(
+  return _then(StationSearchItem(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,station: null == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
 as StationSearchInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable

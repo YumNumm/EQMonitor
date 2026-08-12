@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'map_data_item.dart';
@@ -9,6 +9,7 @@ part of 'map_data_item.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$MapDataLatLngCopyWithImpl<$Res>
 /// Create a copy of MapDataLatLng
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? lat = null,Object? lng = null,}) {
-  return _then(_self.copyWith(
+  return _then(MapDataLatLng(
 lat: null == lat ? _self.lat : lat // ignore: cast_nullable_to_non_nullable
 as double,lng: null == lng ? _self.lng : lng // ignore: cast_nullable_to_non_nullable
 as double,
@@ -323,7 +324,7 @@ class _$MapDataBoundsCopyWithImpl<$Res>
 /// Create a copy of MapDataBounds
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? southWest = null,Object? northEast = null,}) {
-  return _then(_self.copyWith(
+  return _then(MapDataBounds(
 southWest: null == southWest ? _self.southWest : southWest // ignore: cast_nullable_to_non_nullable
 as MapDataLatLng,northEast: null == northEast ? _self.northEast : northEast // ignore: cast_nullable_to_non_nullable
 as MapDataLatLng,
@@ -619,7 +620,7 @@ class _$MapDataPropertyCopyWithImpl<$Res>
 /// Create a copy of MapDataProperty
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? nameKana = null,}) {
-  return _then(_self.copyWith(
+  return _then(MapDataProperty(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,nameKana: null == nameKana ? _self.nameKana : nameKana // ignore: cast_nullable_to_non_nullable
@@ -883,7 +884,7 @@ class _$MapDataItemCopyWithImpl<$Res>
 /// Create a copy of MapDataItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? bounds = freezed,Object? property = freezed,Object? polylabel = freezed,Object? distanceToCoastlineKm = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MapDataItem(
 bounds: freezed == bounds ? _self.bounds : bounds // ignore: cast_nullable_to_non_nullable
 as MapDataBounds?,property: freezed == property ? _self.property : property // ignore: cast_nullable_to_non_nullable
 as MapDataProperty?,polylabel: freezed == polylabel ? _self.polylabel : polylabel // ignore: cast_nullable_to_non_nullable

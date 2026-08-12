@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_activity_bin.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_activity_bin.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$EarthquakeActivityBinCopyWithImpl<$Res>
 /// Create a copy of EarthquakeActivityBin
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? start = null,Object? end = null,Object? counts = null,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeActivityBin(
 start: null == start ? _self.start : start // ignore: cast_nullable_to_non_nullable
 as DateTime,end: null == end ? _self.end : end // ignore: cast_nullable_to_non_nullable
 as DateTime,counts: null == counts ? _self.counts : counts // ignore: cast_nullable_to_non_nullable
@@ -208,7 +209,7 @@ return $default(_that.start,_that.end,_that.counts);case _:
 
 
 class _EarthquakeActivityBin extends EarthquakeActivityBin {
-  const _EarthquakeActivityBin({required this.start, required this.end, required final  Map<EarthquakeActivityIntensityCategory, int> counts}): _counts = counts,super._();
+  const _EarthquakeActivityBin({required this.start, required this.end, required  Map<EarthquakeActivityIntensityCategory, int> counts}): _counts = counts,super._();
   
 
 @override final  DateTime start;
