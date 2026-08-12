@@ -66,3 +66,91 @@ Flutter Scene `7f71993b7e2a0ab1d2f59726a406098709be7291`、Dart/Flutter test、
 - いずれの repository からもソースを copy しない。copy が必要になった場合は、その場で
   MIT notice の要否を再確認し、無記録で取り込まない。
 
+## 3. 固定する公開 API と不変条件
+
+`package:flutter_scene/scene.dart` から次だけを export する。EQMonitor は
+`package:flutter_scene/src/...`、`package:flutter_gpu/...`、internal annotation 付き API を
+import/call しない。
+
+```dart
+enum PersistentGpuResourceLifecycleState { active, invalidated, disposed }
+enum PersistentGpuResourceState { active, retirementPending, retired }
+
+final class PersistentGpuMemorySnapshot {
+  final PersistentGpuResourceLifecycleState lifecycleState;
+  final int contextGeneration;
+  final int activeResourceCount;
+  final int retiringResourceCount;
+  final int activeTotalBytes;
+  final int retiringTotalBytes;
+  final int activeInstanceBytes;
+  final int retiringInstanceBytes;
+  final int latestSubmission;
+  final int completedThrough;
+}
+
+final class PersistentGpuResourceLifecycle {
+  PersistentGpuResourceLifecycle();
+  int get contextGeneration;
+  PersistentGpuResourceLifecycleState get state;
+  PersistentGpuMemorySnapshot takeMemorySnapshot();
+  Future<void> invalidateContext();
+  void recreateContext();
+  Future<void> dispose();
+}
+
+final class PersistentPackedInstanceGeometry extends Geometry {
+  PersistentPackedInstanceGeometry({
+    required PersistentGpuResourceLifecycle lifecycle,
+    required ByteData vertexData,
+    required int vertexCount,
+    ByteData? indexData,
+    gpu.IndexType indexType = gpu.IndexType.int16,
+    required ByteData instanceData,
+    required int instanceCount,
+    required VertexLayoutDescriptor vertexLayout,
+    required gpu.Shader vertexShader,
+    required vm.Aabb3 localBounds,
+    required bool doubleSided,
+  });
+
+  int get instanceCount;
+  int get instanceStrideInBytes;
+  int get contextGeneration;
+  PersistentGpuResourceState get resourceState;
+  Future<void> retire();
+}
+```
+
+API review 中に引数名を変える場合も、次の semantics は変えない。
+
+1. `vertexLayout` は slot 0 が per-vertex、slot 1 が per-instance のちょうど 2 buffers。
+   attribute 名、offset、stride は既存 `VertexLayoutDescriptor.toGpuLayout()` の検証も通す。
+2. `vertexCount` / `instanceCount` は正数。各 ByteData の長さは
+   `count * correspondingStride` と完全一致させ、余剰/不足、0 byte、index width 不整合は
+   `ArgumentError` とする。勝手な切り捨てや空 Geometry fallback はしない。
+3. bounds は caller が全 instance を pack した同じ snapshot から算出して必須指定する。
+   Geometry 側は200万件を走査せず、AABB から bounding sphere だけを定数時間で導く。
+4. base vertex と instance は同じ non-index host-visible buffer へ置き、instance offset は
+   16-byte alignment する。index は WebGL が巨大 buffer を element/non-element 用に複製
+   しないよう別 buffer とする。各 source bytes は constructor 内で一度だけ `overwrite`
+   し、まとめて一度 `flush` する。caller の ByteData は保持しない。
+5. `bind` は persistent views と小さい `FrameInfo`（camera/model matrix、camera position）だけを
+   bind する。`instanceTransients.emplace`、instance 全件 copy、camera change による再 upload
+   を禁止する。data change は旧 object の `retire()` + 新 object の生成で表す。
+6. Geometry は model transform を `FrameInfo` uniform から読むため
+   `bindsModelTransformInstance == false`。独自 `MeshVariant.persistentPackedInstances` を追加し、
+   material vertex override が誤って unskinned variant に fallback しないようにする。
+7. `retire()`、`invalidateContext()`、`dispose()` は同期的に future bind/draw を拒否し、同じ
+   `Future` を返す idempotent operation とする。最後に参照した submission の completion
+   watermark を越えるまでは buffer references を保持する。
+8. generation は 1 から開始する。`invalidateContext()` は active resources をすべて retire
+   して state を即時 invalidated にし、`recreateContext()` は retirement 完了後だけ generation
+   を increment して active へ戻る。古い Geometry は terminal のまま再利用しない。
+9. completion callback が来ない場合は resource と recreate を保留する。CPU frame 数や固定
+   delay で安全と推測しない。Flutter GPU が自動 context-loss event を公開していないため、
+   lifecycle 呼び出しは adapter owner の明示操作であり、自動復旧済みとは主張しない。
+10. snapshot の bytes は fork が保持する logical allocation/reference の観測値であり、driver の
+    resident bytes や即時解放を表さない。active/retiring と instance/total を分け、5分 memory
+    gate で「増加理由を説明できる」値を提供する。
+
