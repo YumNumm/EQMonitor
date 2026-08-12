@@ -38,7 +38,41 @@ void main() {
     for (final action in performanceSampleInventory()) {
       expect(action, returnsNormally);
     }
+    for (final action in performancePolicyInventory()) {
+      expect(action, returnsNormally);
+    }
   });
+}
+
+List<void Function()> performancePolicyInventory() {
+  final schema = createMapPerformanceSchemaVersion(value: 1);
+  final domain = createMapClockDomainId(value: 'performance');
+  final budget = createMapFrameBudget(
+    duration: const Duration(microseconds: 16667),
+  );
+  return [
+    () => consume(MapPerformanceObservationLevel.values),
+    () => consume(MapPerformanceDropPolicy.values),
+    () => consume(
+      createMapFrameBudget(duration: const Duration(microseconds: 16667)),
+    ),
+    () => consume(
+      createMapPerformancePolicy(
+        schemaVersion: schema,
+        clockDomain: domain,
+        observationLevel: MapPerformanceObservationLevel.aggregate,
+        aggregationWindow: const Duration(seconds: 10),
+        percentiles: const [50],
+        snapshotInterval: const Duration(seconds: 2),
+        reservoirCapacity: 4,
+        sampleEveryFrames: 1,
+        minimumEventInterval: const Duration(milliseconds: 1),
+        eventBufferCapacity: 2,
+        dropPolicy: MapPerformanceDropPolicy.dropOldest,
+        frameBudget: budget,
+      ),
+    ),
+  ];
 }
 
 List<void Function()> performanceSampleInventory() {
