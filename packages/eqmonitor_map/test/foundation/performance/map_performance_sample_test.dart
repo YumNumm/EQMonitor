@@ -91,4 +91,26 @@ void main() {
       }
     }
   });
+
+  test('rejects negative monotonic time and values for every factory', () {
+    for (final entry in cases) {
+      final invalid = <MapPerformanceSample Function()>[
+        () => createSample(
+          factoryUnit: entry.unit,
+          kind: entry.kind,
+          at: const Duration(microseconds: -1),
+          value: 0,
+        ),
+        () => createSample(
+          factoryUnit: entry.unit,
+          kind: entry.kind,
+          at: monotonicAt,
+          value: -1,
+        ),
+      ];
+      for (final sample in invalid) {
+        expect(sample, throwsArgumentError);
+      }
+    }
+  });
 }
