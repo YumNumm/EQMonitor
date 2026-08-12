@@ -3430,6 +3430,31 @@ test("indexed upload publishes slices only after both flushes", () {
 **GREEN implementation snippet:** the exact production signature/statement is:
 
 ```dart
+final class PersistentPackedInstanceStorage {
+  PersistentPackedInstanceStorage.internal({
+    required PersistentPackedGpuBuffer nonIndexBuffer,
+    required PersistentPackedGpuBuffer? indexBuffer,
+    required PersistentPackedGpuSlice vertexSlice,
+    required PersistentPackedGpuSlice instanceSlice,
+    required PersistentPackedGpuSlice? indexSlice,
+    required int totalBytes,
+    required int instanceBytes,
+  }) : _nonIndexBuffer = nonIndexBuffer,
+       _indexBuffer = indexBuffer,
+       _vertexSlice = vertexSlice,
+       _instanceSlice = instanceSlice,
+       _indexSlice = indexSlice,
+       _totalBytes = totalBytes,
+       _instanceBytes = instanceBytes;
+
+  PersistentPackedGpuBuffer? _nonIndexBuffer;
+  PersistentPackedGpuBuffer? _indexBuffer;
+  PersistentPackedGpuSlice? _vertexSlice;
+  PersistentPackedGpuSlice? _instanceSlice;
+  PersistentPackedGpuSlice? _indexSlice;
+  final int _totalBytes;
+  final int _instanceBytes;
+
 static PersistentPackedInstanceStorage uploadWithBackend({
   required PersistentPackedGpuBackend backend,
   required PersistentPackedInstancePlan plan,
@@ -3457,12 +3482,15 @@ static PersistentPackedInstanceStorage uploadWithBackend({
           lengthInBytes: plan.instanceBytes),
       indexSlice: index?.slice(offsetInBytes: 0,
           lengthInBytes: plan.indexBytes),
+      totalBytes: plan.totalBytes,
+      instanceBytes: plan.instanceBytes,
     );
   } catch (_) {
     index?.release();
     nonIndex.release();
     rethrow;
   }
+}
 }
 ```
 
@@ -3473,8 +3501,9 @@ and documentation lines are counted, while generated files and formatter-only in
   index write, index flush, then exactly 3 slices. Allocation/write/each flush failures release every created buffer in
   reverse order, make no slice, run no later event. Run:
   `run_fork_red test/persistent_packed_instance_storage_test.dart 'indexed upload publishes slices only after both flushes' 'RED:T33:indexed upload transaction missing'`。
-- [ ] **GREEN:** hold wrappers in locals through both flushes; slice only afterward; catch index then non-index
-  release and rethrow original. Run:
+- [ ] **GREEN:** add the complete storage class and static method above. Hold wrappers in locals through both
+  flushes; slice only afterward; store only wrappers/slices/logical scalars; catch index then non-index release and
+  rethrow original. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_storage_test.dart test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_plan_test.dart test/geometry_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed index bufferをtransaction化`。
 
@@ -3501,19 +3530,28 @@ test("storage releases views and retains no source bytes", () {
 });
 ```
 
-**GREEN implementation snippet:** the exact production signature/statement is:
+**GREEN implementation snippet:** the complete same-library lifecycle extension is:
 
 ```dart
-void release() {
-  final indexBuffer = _indexBuffer;
-  final nonIndexBuffer = _nonIndexBuffer;
-  _vertexSlice = null;
-  _instanceSlice = null;
-  _indexSlice = null;
-  _indexBuffer = null;
-  _nonIndexBuffer = null;
-  indexBuffer?.release();
-  nonIndexBuffer?.release();
+extension PersistentPackedInstanceStorageLifecycle
+    on PersistentPackedInstanceStorage {
+  PersistentPackedGpuSlice? get vertexSlice => _vertexSlice;
+  PersistentPackedGpuSlice? get instanceSlice => _instanceSlice;
+  PersistentPackedGpuSlice? get indexSlice => _indexSlice;
+  int get totalBytes => _totalBytes;
+  int get instanceBytes => _instanceBytes;
+
+  void release() {
+    final indexBuffer = _indexBuffer;
+    final nonIndexBuffer = _nonIndexBuffer;
+    _vertexSlice = null;
+    _instanceSlice = null;
+    _indexSlice = null;
+    _indexBuffer = null;
+    _nonIndexBuffer = null;
+    indexBuffer?.release();
+    nonIndexBuffer?.release();
+  }
 }
 ```
 
@@ -3523,7 +3561,8 @@ and documentation lines are counted, while generated files and formatter-only in
 - [ ] **RED:** exact slice offsets/lengths; mutate source after upload while fake's copied upload remains fixed;
   release clears slices then index/non-index wrappers once; repeat no-op. Run:
   `run_fork_red test/persistent_packed_instance_storage_test.dart 'storage releases views and retains no source bytes' 'RED:T34:storage release contract missing'`。
-- [ ] **GREEN:** store only plan scalars/slices/wrappers; release nulls views before wrappers. Run:
+- [ ] **GREEN:** add the complete extension above; release nulls views before wrappers and exposes no caller bytes.
+  Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_storage_test.dart test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_plan_test.dart test/render/frame_transients_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed GPU storageを解放可能化`。
 
