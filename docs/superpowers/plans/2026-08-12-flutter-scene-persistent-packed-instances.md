@@ -3442,6 +3442,29 @@ final class DevicePersistentPackedGpuBuffer
 }
 ```
 
+The existing test file adds `import 'dart:io';` and replaces the RED body with:
+
+```dart
+test('device backend wraps one nullable buffer without subclassing', () {
+  final source = File(
+    'lib/src/geometry/persistent_packed_gpu_device.dart',
+  ).readAsStringSync();
+  expect(RegExp(r'gpuContext\.createDeviceBuffer\(').allMatches(source),
+      hasLength(1));
+  for (final call in [
+    'device.overwrite(',
+    'device.flush(',
+    'gpu.BufferView(',
+    '_device = null;',
+  ]) {
+    expect(source, contains(call));
+  }
+  expect(source, isNot(contains('extends gpu.DeviceBuffer')));
+  expect(source, isNot(contains('extends gpu.BufferView')));
+  expect(source, isNot(contains('.dispose()')));
+});
+```
+
 **Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
@@ -3608,6 +3631,32 @@ static PersistentPackedInstanceStorage uploadWithBackend({
 }
 ```
 
+The existing storage test replaces the RED body with this executable ordering contract:
+
+```dart
+test('indexed upload publishes slices only after both flushes', () {
+  final source = File(
+    'lib/src/geometry/persistent_packed_instance_storage.dart',
+  ).readAsStringSync();
+  final nonIndexUpload = source.indexOf('uploadPersistentPackedNonIndex(');
+  final indexAllocate = source.indexOf(
+    'backend.allocate(lengthInBytes: plan.indexBytes)', nonIndexUpload);
+  final indexFlush = source.indexOf(
+    'index.flush(offsetInBytes: 0, lengthInBytes: plan.indexBytes)');
+  final publish = source.indexOf(
+    'return PersistentPackedInstanceStorage.internal(');
+  expect(nonIndexUpload, greaterThanOrEqualTo(0));
+  expect(indexAllocate, greaterThan(nonIndexUpload));
+  expect(indexFlush, greaterThan(indexAllocate));
+  expect(publish, greaterThan(indexFlush));
+  expect(source.indexOf('vertexSlice:', publish), greaterThan(publish));
+  expect(source.indexOf('instanceSlice:', publish), greaterThan(publish));
+  expect(source.indexOf('indexSlice:', publish), greaterThan(publish));
+  expect(source.indexOf('index?.release();'), greaterThan(publish));
+  expect(source.indexOf('nonIndex.release();'), greaterThan(publish));
+});
+```
+
 **Handwritten budget:** 60–100 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
@@ -3667,6 +3716,25 @@ extension PersistentPackedInstanceStorageLifecycle
     nonIndexBuffer?.release();
   }
 }
+```
+
+The storage test adds `import 'dart:io';` if Task33 has not already done so and replaces this RED body with:
+
+```dart
+test('storage releases views and retains no source bytes', () {
+  final source = File(
+    'lib/src/geometry/persistent_packed_instance_storage.dart',
+  ).readAsStringSync();
+  final clearVertex = source.indexOf('_vertexSlice = null;');
+  final clearIndexBuffer = source.indexOf('_indexBuffer = null;');
+  final releaseIndex = source.indexOf('indexBuffer?.release();');
+  final releaseNonIndex = source.indexOf('nonIndexBuffer?.release();');
+  expect(clearVertex, greaterThanOrEqualTo(0));
+  expect(clearIndexBuffer, greaterThan(clearVertex));
+  expect(releaseIndex, greaterThan(clearIndexBuffer));
+  expect(releaseNonIndex, greaterThan(releaseIndex));
+  expect(source, isNot(matches(RegExp(r'final ByteData\??\s+_'))));
+});
 ```
 
 **Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
