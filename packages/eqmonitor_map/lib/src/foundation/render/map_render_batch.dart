@@ -85,20 +85,10 @@ MapRenderBatch createMapRenderBatch({
         'sort keys must be unique and in canonical order',
       );
     }
-    if (packet.contractVersion != compatibility.contractVersion ||
-        packet.mesh.payloadVersion != compatibility.payloadVersion ||
-        packet.batchKey != compatibility.batchKey ||
-        packet.sortKey.phase != compatibility.phase ||
-        packet.sortKey.phasePolicyVersion != compatibility.phasePolicyVersion ||
-        !haveCompatibleMapPackedMeshLayouts(
-          packet.mesh.layout,
-          compatibility.layout,
-        ) ||
-        packet.pipeline != compatibility.pipeline ||
-        !haveEqualMapMaterialParameterContent(
-          packet.materialParameters,
-          compatibility.materialParameters,
-        )) {
+    if (!_haveCompatibleMapRenderBatchProperties(
+      mapRenderBatchCompatibilityOf(packet: packet),
+      compatibility,
+    )) {
       throw ArgumentError.value(
         packet,
         'packets',
@@ -117,3 +107,63 @@ MapRenderBatch createMapRenderBatch({
     ),
   );
 }
+
+List<MapRenderBatch> buildCanonicalRenderBatches({
+  required int version,
+  required MapRenderPhasePolicy policy,
+  required List<MapRenderPacket> packets,
+}) {
+  if (version <= 0) {
+    throw ArgumentError.value(version, 'version', 'must be positive');
+  }
+  final canonical =
+      packets.indexed
+          .map((entry) => (inputOrder: entry.$1, packet: entry.$2))
+          .toList()
+        ..sort((left, right) {
+          final result = compareMapRenderSortKeys(
+            left.packet.sortKey,
+            right.packet.sortKey,
+          );
+          return result != 0
+              ? result
+              : left.inputOrder.compareTo(right.inputOrder);
+        });
+  final groups = <List<MapRenderPacket>>[];
+  for (final entry in canonical) {
+    final packet = entry.packet;
+    if (groups.isEmpty ||
+        !_haveCompatibleMapRenderBatchProperties(
+          mapRenderBatchCompatibilityOf(packet: groups.last.first),
+          mapRenderBatchCompatibilityOf(packet: packet),
+        )) {
+      groups.add(<MapRenderPacket>[]);
+    }
+    groups.last.add(packet);
+  }
+  return List<MapRenderBatch>.unmodifiable(
+    groups.map(
+      (group) => createMapRenderBatch(
+        version: version,
+        policy: policy,
+        packets: group,
+      ),
+    ),
+  );
+}
+
+bool _haveCompatibleMapRenderBatchProperties(
+  MapRenderBatchCompatibility left,
+  MapRenderBatchCompatibility right,
+) =>
+    left.contractVersion == right.contractVersion &&
+    left.payloadVersion == right.payloadVersion &&
+    left.batchKey == right.batchKey &&
+    left.phase == right.phase &&
+    left.phasePolicyVersion == right.phasePolicyVersion &&
+    haveCompatibleMapPackedMeshLayouts(left.layout, right.layout) &&
+    left.pipeline == right.pipeline &&
+    haveEqualMapMaterialParameterContent(
+      left.materialParameters,
+      right.materialParameters,
+    );
