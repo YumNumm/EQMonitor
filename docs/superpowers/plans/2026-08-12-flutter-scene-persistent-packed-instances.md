@@ -2819,16 +2819,45 @@ test("bounds validate derived values and return defensive copies", () {
 
 ```dart
 final class PersistentPackedBoundsSnapshot {
-  PersistentPackedBoundsSnapshot.create(vm.Aabb3 source)
-      : _min = vm.Vector3.copy(source.min),
-        _max = vm.Vector3.copy(source.max);
-  final vm.Vector3 _min;
-  final vm.Vector3 _max;
-  vm.Aabb3 get localBounds =>
-      vm.Aabb3.minMax(vm.Vector3.copy(_min), vm.Vector3.copy(_max));
+  const PersistentPackedBoundsSnapshot.internal({
+    required this.minX,
+    required this.minY,
+    required this.minZ,
+    required this.maxX,
+    required this.maxY,
+    required this.maxZ,
+  });
+
+  factory PersistentPackedBoundsSnapshot.create(vm.Aabb3 source) {
+    final minX = source.min.x, minY = source.min.y, minZ = source.min.z;
+    final maxX = source.max.x, maxY = source.max.y, maxZ = source.max.z;
+    if ([minX, minY, minZ, maxX, maxY, maxZ]
+            .any((value) => value.isFinite == false) ||
+        minX > maxX || minY > maxY || minZ > maxZ) {
+      throw ArgumentError.value(source, 'source', 'invalid finite bounds');
+    }
+    final dx = maxX - minX, dy = maxY - minY, dz = maxZ - minZ;
+    final centerX = minX + dx * 0.5;
+    final centerY = minY + dy * 0.5;
+    final centerZ = minZ + dz * 0.5;
+    final radius = math.sqrt(dx * dx + dy * dy + dz * dz) * 0.5;
+    if ([dx, dy, dz, centerX, centerY, centerZ, radius]
+        .any((value) => value.isFinite == false)) {
+      throw ArgumentError.value(source, 'source', 'non-finite derived bounds');
+    }
+    return PersistentPackedBoundsSnapshot.internal(
+      minX: minX, minY: minY, minZ: minZ,
+      maxX: maxX, maxY: maxY, maxZ: maxZ,
+    );
+  }
+
+  final double minX, minY, minZ, maxX, maxY, maxZ;
+  vm.Vector3 get minimum => vm.Vector3(minX, minY, minZ);
+  vm.Vector3 get maximum => vm.Vector3(maxX, maxY, maxZ);
+  vm.Aabb3 get localBounds => vm.Aabb3.minMax(minimum, maximum);
   vm.Sphere get localBoundingSphere {
-    final center = (_min + _max)..scale(0.5);
-    return vm.Sphere.centerRadius(center, (_max - _min).length * 0.5);
+    final delta = maximum - minimum;
+    return vm.Sphere.centerRadius(minimum + delta * 0.5, delta.length * 0.5);
   }
 }
 ```
@@ -2839,7 +2868,9 @@ and documentation lines are counted, while generated files and formatter-only in
 - [ ] **RED:** reject NaN/infinity/min>max and finite endpoints yielding non-finite center/radius; mutate source,
   returned Aabb3 and returned Sphere then observe canonical later copies. Run:
   `run_fork_red test/persistent_packed_instance_plan_test.dart 'bounds validate derived values and return defensive copies' 'RED:T24:defensive bounds missing'`。
-- [ ] **GREEN:** retain six finite scalars and finite derived center/radius only; construct fresh objects per getter.
+- [ ] **GREEN:** add `import 'dart:math' as math;`; retain exactly six final double scalars, expose fresh
+  `minimum`/`maximum` Vector3 values, and validate finite/min≤max/delta/center/radius before construction. Construct
+  fresh Aabb3, Vector3 and Sphere objects per getter.
   Run: `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/bounds_test.dart test/cull_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed boundsを防御的に固定`。
 
@@ -3001,7 +3032,7 @@ final class PersistentPackedAllocationSizes {
 }
 ```
 
-**Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** assert vertex multiply, align16, padding, instance multiply, non-index/index adds; reject nonpositive
