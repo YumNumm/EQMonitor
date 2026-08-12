@@ -992,6 +992,110 @@ curated exports。plan/storage/registry/lease/backends are internal。
 - [ ] `git rev-parse HEAD` のfull 40-char top SHAを immutable hand-offとして記録する。PR作成後に review
   fix commitが入った場合は古いSHAを破棄し、全gate再実行後の新しいHEADだけをEQ pinへ渡す。
 
+### Gate D: #1601 whole-branch approval と EQMonitor worktree（commitなし）
+
+EQMonitor pinは「Task 22完了」だけでは開始しない。Issue #1601 とそのimplementation PR全体が、同じ
+immutable head SHAで final review/verification済みであることを先に証明する。2026-08-12時点の#1620は
+head `cfdc8516cc21991d41ff6ff20954271f37026d01`、base
+`feat/seismicity-pmtiles-network-reader`、`BEHIND`、approvalなし、analyze/integration/Android/status check
+failureのため、現状のままならこのgateで停止する。
+
+- [ ] live queryを再実行し、#1601 requirements（non-empty tile enumeration、column chunk、isolate
+  `TransferableTypedData`、manifest count typed failure、missing depth validity bit）が同一 `headRefOid`
+  のwhole-branch reviewで承認済みであることをreview evidenceへ記録する。
+
+  ```bash
+  gh issue view 1601 --repo YumNumm/EQMonitor --json state,body,url
+  gh pr view 1620 --repo YumNumm/EQMonitor \
+    --json state,isDraft,reviewDecision,mergeStateStatus,headRefName,headRefOid,baseRefName,statusCheckRollup,url
+  ```
+
+  必須条件は OPEN/non-draft、head exact decoder、base exact network-reader、reviewDecision `APPROVED`、
+  全required checkがCOMPLETEDかつ `SUCCESS|NEUTRAL|SKIPPED`。failure/cancel/pending/BEHIND、Issue audit欠落、
+  reviewが古いSHAなら停止する。個別commitだけのapprovalをwhole-branch approvalとみなさない。
+- [ ] `decoder_final_sha` にlive full `headRefOid`を入れ `^[0-9a-f]{40}$` をassert、fetch/cat-file後、
+  exact SHA detached worktreeで `mise exec -- flutter test packages/seismicity_pmtiles
+  packages/pmtiles_v3` と `mise exec -- dart analyze packages/seismicity_pmtiles packages/pmtiles_v3` を実行する。
+  fresh verification failureなら停止し、#1620を直す権限へ拡張しない。
+- [ ] active checkoutを使わず
+  `/Users/ryotaro.onoue/dev/github.com/YumNumm/EQMonitor/.worktrees/seismicity-flutter-scene-fork-pin`
+  を使用する。target/branch不存在なら `git worktree add -b feat/seismicity-flutter-scene-fork-pin <exact-path>
+  "$decoder_final_sha"`。branchのみ既存ならattach、target既存ならregistered path/origin/branch/clean/
+  `merge-base --is-ancestor "$decoder_final_sha" HEAD` をassertする。mismatch/dirtyは停止し、delete/reset/
+  checkout/force pushしない。
+
+### Task 23: fork URL/SHA と lockをatomic更新（EQ top、depends Gate D + Task 22）
+
+**Files:** Modify `packages/eqmonitor_map/pubspec.yaml`,
+`packages/eqmonitor_map/example/pubspec.yaml`, `pubspec.lock`。
+
+**Interfaces:** All 3 active descriptors use exact URL
+`https://github.com/YumNumm/flutter_scene.git` and the Delivery Gate TOP full SHA; root lock entries
+`flutter_scene`/`scene` each have same exact `description.url/ref/resolved-ref` and existing package path。
+
+- [ ] **Step 1 — RED:** before edit, machine query asserts old bdero URL/ref then deliberately expects new exact
+  URL/SHA, yielding nonzero。`fork_top_sha` must pass 40-char regex and `git ls-remote` exact commit reachability。
+- [ ] **Step 2 — GREEN:** edit only 3 descriptor URL/ref values, then `mise exec -- flutter pub get`; lockfile is
+  resolver-generated, never hand-edited。example is workspace member so no new lockfileを作らない。
+- [ ] **Step 3 — verify:** `mise exec -- flutter pub get --enforce-lockfile`、YAML machine queryで3 descriptor +
+  2 lock entry exact URL/requested/resolved full SHA、`rg`でactive old URL/SHA 0件、diff-check。
+- [ ] **Step 4 — publish:** 3 files、`git commit -m 'Package: Flutter Scene fork SHAへ固定' &&
+  git push -u origin feat/seismicity-flutter-scene-fork-pin`。
+
+### Task 24: machine-readable exact pin verifier（EQ top、depends Task 23）
+
+**Files:** Create `tool/verify_flutter_scene_pin.sh`,
+`scripts/ci/test_verify_flutter_scene_pin.sh`。
+
+**Interfaces:** `tool/verify_flutter_scene_pin.sh EXPECTED_URL EXPECTED_FULL_SHA [REPO_ROOT]`。
+It validates the 3 descriptor tuple and both lock entries' path/url/ref/resolved-ref, using `mise exec -- yq`;
+exit 0 only when all 5 entries match exact values。
+
+- [ ] **Step 1 — RED:** test uses `mktemp -d`, trap removes only that validated temp path, copies minimal fixtures,
+  and checks happy path plus wrong descriptor URL、requested refだけwrong、resolved-refだけwrong、scene package
+  only wrong、short SHA。Each mutation expects nonzero and error naming exact file/package/field。
+- [ ] **Step 2 — verify RED:** `mise exec -- bash scripts/ci/test_verify_flutter_scene_pin.sh`。
+  expected RED は verifier不存在。
+- [ ] **Step 3 — GREEN:** args count/URL/full-SHA regex/root filesを先にvalidateし、yqでscalarを読む。
+  string grepだけ、floating ref許可、ref==resolved only checkは禁止。3 descriptor and 2 lock entriesを個別assert。
+- [ ] **Step 4 — verify:** shell testと real root verifier、`bash -n`、`git diff --check`。
+- [ ] **Step 5 — publish:** 2 executable files、`git commit -m 'Test: Flutter Scene pin検証を追加' && git push`。
+
+### Task 25: EQMonitor public API contract（EQ top、depends Task 24）
+
+**Files:** Create
+`packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart`。
+
+**Interfaces:** Consumer imports only `package:flutter_scene/scene.dart` and `gpu.dart`; no flutter_scene `src/`
+or flutter_gpu import。It references lifecycle/snapshot/layout/Geometry constructor and retire Future types without GPU。
+
+- [ ] **Step 1 — RED:** add compile test and initial lifecycle snapshot expectations active/generation=1/zero bytes。
+  Before Task 23 resolution this would fail on missing symbols; on pinned fork it must compile。Source assertion rejects
+  private imports and verifies public constructor tear-off type。
+- [ ] **Step 2 — verify:** `mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart`。
+  Any missing export is RED and fixed in fork top followed by new immutable SHA/re-pin, not via private EQ import。
+- [ ] **Step 3 — GREEN:** test-only adjustment to public signatures; no adapter/product rendering implementation。
+- [ ] **Step 4 — verify:** focused test + `mise exec -- dart analyze packages/eqmonitor_map` + diff-check。
+- [ ] **Step 5 — publish:** file、`git commit -m 'Test: Flutter Scene公開API境界を固定' && git push`。
+
+### Task 26: live provenance/lifecycle docs（EQ top、depends Task 25）
+
+**Files:** Modify `packages/eqmonitor_map/README.md`, `packages/eqmonitor_map/example/README.md`,
+`docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md`,
+`docs/knowledge/20260802_flutter_scene_scene_source_pin.md`,
+`docs/knowledge/20260802_flutter_scene_large_static_instances.md`。
+
+**Interfaces:** Current operational docs record both fork PR URLs、top full SHA、upstream base `7f71993...`、
+Flutter full SHA、global multi-owner lifecycle ordering、logical vs resident bytes。Historical plan/draft evidenceは
+rewriteしない。
+
+- [ ] **Step 1 — RED:** `rg` inventoryでactive README/knowledgeのold bdero current pinを列挙し、expected
+  fork URL/top SHA queryをfailureとして保存する。
+- [ ] **Step 2 — GREEN:** five current docsだけ同期し、#1603/#1604/#1605 boundaries、automatic context-loss
+  なし、#1604 physical 30fps/5min未実施、reference sources are patterns only/no copied codeを明記する。
+- [ ] **Step 3 — verify:** verifier、public test、analyze、old active pin 0件、diff-check。
+- [ ] **Step 4 — publish:** five files、`git commit -m 'Docs: Flutter Scene fork provenanceを同期' && git push`。
+
 ### Task 1: submission completion listener を追加する（fork bottom）
 
 **Files:**
