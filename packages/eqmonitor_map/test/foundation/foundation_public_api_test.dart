@@ -44,7 +44,56 @@ void main() {
     for (final action in performanceAggregateInventory()) {
       expect(action, returnsNormally);
     }
+    for (final action in performanceCollectorInventory()) {
+      expect(action, returnsNormally);
+    }
   });
+}
+
+List<void Function()> performanceCollectorInventory() {
+  final schema = createMapPerformanceSchemaVersion(value: 1);
+  final domain = createMapClockDomainId(value: 'performance');
+  final sample = MapPerformanceSample.count(
+    schemaVersion: schema,
+    clockDomain: domain,
+    kind: MapPerformanceMetricKind.cacheHit,
+    monotonicAt: const Duration(seconds: 1),
+    value: 1,
+  );
+  final event = createMapPerformanceEvent(frameSequence: 1, sample: sample);
+  final collector = MapPerformanceCollector(
+    policy: createMapPerformancePolicy(
+      schemaVersion: schema,
+      clockDomain: domain,
+      observationLevel: MapPerformanceObservationLevel.detailed,
+      aggregationWindow: const Duration(seconds: 10),
+      percentiles: const [50],
+      snapshotInterval: const Duration(seconds: 2),
+      reservoirCapacity: 4,
+      sampleEveryFrames: 1,
+      minimumEventInterval: const Duration(milliseconds: 1),
+      eventBufferCapacity: 2,
+      dropPolicy: MapPerformanceDropPolicy.dropOldest,
+      frameBudget: createMapFrameBudget(
+        duration: const Duration(microseconds: 16667),
+      ),
+    ),
+    windowStartedAt: Duration.zero,
+  );
+  return [
+    () => consume<MapPerformanceCollector>(collector),
+    () => consume(collector.record(event)),
+    () => consume(collector.acceptedCount),
+    () => consume(collector.aggregatedCount),
+    () => consume(collector.ignoredCount),
+    () => consume(collector.rejectedCount),
+    () => consume(collector.rateLimitedCount),
+    () => consume(collector.droppedCount),
+    () => consume(collector.bufferedEventCount),
+    () => consume(collector.takePartialSnapshot(const Duration(seconds: 2))),
+    () => consume(collector.advanceWindows(const Duration(seconds: 10))),
+    () => consume(collector.drainEvents()),
+  ];
 }
 
 List<void Function()> performanceAggregateInventory() {
