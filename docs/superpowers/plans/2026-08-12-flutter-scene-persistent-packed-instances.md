@@ -29,8 +29,10 @@ vertex/instance 2-stream Geometryは通常・depth・shadow・selectionの全経
   lock、cross-isolate transfer、background GPU callは追加しない。
 - ownerごとのcontext/generationは作らない。任意ownerのinvalidationは同generationの全owner
   resourceをretireし、全件settleまでrecreateを拒否する。
-- per-frame instance upload/full scan、`InstancedMesh` matrix pack、delay、固定frames-in-flight、
-  error時のfallback Geometryは禁止。
+- per-frame instance upload/full scan、`InstancedMesh` matrix pack、wall-clock/frame-count retirement delay、
+  固定frames-in-flight、error時のfallback Geometryは禁止。Task15Bのzero-work event-queue quiescence
+  (`Future<void>(() {})`)だけはretirement delayではなく、late owner-FD publicationを観測するscheduler
+  barrierとして許可する。`Future.delayed`と`Timer`は使わない。
 - `DeviceBuffer` reference releaseとdriver resident-memory解放を区別し、後者を保証しない。
 - fork APIはgeneric packed Geometry/lifecycleのみ。震源24-byte schema、LOD、color/radiusは#1604、
   app wiringは#1603/#1605。
@@ -358,6 +360,10 @@ token, invokes the entry, restores the original token, and proves state/callback
 | lease `requireCurrentActive()` | 4B | record state and release count unchanged |
 | lease/registry `retire()` | 4D | record state, cached Future and release count unchanged |
 | `snapshotFor(...)` | 5 | throws before reading counters; restored-token snapshot unchanged |
+| `contextGenerationFor(ownerId)` | 9 | throws before owner/context read; restored getter unchanged |
+| `contextStateFor(ownerId)` | 9 | throws before owner/context read; restored getter unchanged |
+| `ownerStateFor(ownerId)` | 9 | throws before owner record read; restored getter unchanged |
+| `checkCanCreateFor(ownerId)` | 9 | throws before owner/context read; restored call unchanged |
 | `disposeOwner(ownerId)` | 6 | owner state/FD/release count unchanged |
 | `invalidateContext(ownerId)` | 7 | context/FI/release count unchanged |
 | `recreateContext(ownerId)` | 8 | generation/context unchanged |
@@ -1289,8 +1295,10 @@ Future<void> disposeOwner(int ownerId) {
   final completer = Completer<void>();
   owner.disposal = completer;
   owner.state = PersistentGpuResourceLifecycleState.disposed;
-  final retirements = records.values
+  final ownedRecords = records.values
       .where((record) => record.ownerId == ownerId)
+      .toList(growable: false);
+  final retirements = ownedRecords
       .map((record) => retire(PersistentGpuResourceLease(registry: this,
           recordId: record.id, generation: record.generation)))
       .toList(growable: false);
@@ -1306,12 +1314,15 @@ Future<void> disposeOwner(int ownerId) {
 **Handwritten budget:** 50–90 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
-- [ ] **RED:** dispose A retires only A while B remains active; disposed A snapshot remains readable; repeated and
-  first-release-callback-reentrant dispose are identical; resource Future completes before FD; unknown owner fails.
+- [ ] **RED:** register two immediate A records and one B record. Disposing A first snapshots both A records before
+  either synchronous callback removes its map entry; both callbacks run once in registration order, both resource
+  Futures settle, FD settles after them, and B remains active. Repeated and first-release-callback-reentrant dispose
+  are identical; disposed A snapshot remains readable; unknown owner fails. Task7 repeats this exact two-record
+  setup and proves its FI also settles after FD, so the original lazy-map concurrent-removal regression cannot hide。
   An affinity mismatch returns no Future, invokes no release, and leaves owner/record state byte-for-byte unchanged.
   Run:
   `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'owner disposal shares resource futures and leaves other owners active' 'RED:T06:dispose affinity gate missing'`。
-- [ ] **GREEN:** publish owner state+FD before retiring a record snapshot; FD waits only that owner's records and
+- [ ] **GREEN:** publish owner state+FD, materialize `ownedRecords`, then invoke retire over that fixed list; FD waits only that owner's records and
   propagates first error after every callback was attempted. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: GPU resource owner破棄を追加`。
@@ -1442,7 +1453,8 @@ and documentation lines are counted, while generated files and formatter-only in
 
 ### Task 9: public lifecycle handle core (depends Task 8; 55–95 lines)
 
-**Files:** Create `lib/src/render/persistent_gpu_resource_lifecycle.dart`; Create
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Create
+`lib/src/render/persistent_gpu_resource_lifecycle.dart`; Create
 `test/render/persistent_gpu_resource_lifecycle_test.dart`。
 
 **Interfaces:** Produces public constructor attached to `persistentGpuResourceRegistry`, internal
@@ -1450,8 +1462,9 @@ and documentation lines are counted, while generated files and formatter-only in
 internal exact delegates `void checkCanCreate()` and
 `PersistentGpuResourceLease registerAllocation({required int totalBytes, required int instanceBytes, required void Function() release})`。
 
-**Implementation shape:** both constructors call `attachOwner`; every getter/delegate forwards with stored ownerId;
-the public constructor alone selects the global registry。
+**Implementation shape:** both constructors call `attachOwner`; every getter/snapshot/check/register delegates to
+one affinity-first registry entrypoint with stored ownerId. The handle reads no registry field directly; the public
+constructor alone selects the global registry。
 
 **RED test snippet:**
 
@@ -1477,16 +1490,67 @@ final class PersistentGpuResourceLifecycle {
 
   final PersistentGpuResourceRegistry _registry;
   final int _ownerId;
+
+  int get contextGeneration => _registry.contextGenerationFor(_ownerId);
+  PersistentGpuContextState get contextState =>
+      _registry.contextStateFor(_ownerId);
+  PersistentGpuResourceLifecycleState get state =>
+      _registry.ownerStateFor(_ownerId);
+  PersistentGpuMemorySnapshot takeMemorySnapshot() => _registry.snapshotFor(
+        ownerId: _ownerId,
+        lifecycleState: state,
+      );
+  void checkCanCreate() => _registry.checkCanCreateFor(_ownerId);
+  PersistentGpuResourceLease registerAllocation({
+    required int totalBytes,
+    required int instanceBytes,
+    required void Function() release,
+  }) => _registry.register(
+    ownerId: _ownerId,
+    totalBytes: totalBytes,
+    instanceBytes: instanceBytes,
+    release: release,
+  );
+}
+
+int contextGenerationFor(int ownerId) {
+  affinity.check();
+  if (!owners.containsKey(ownerId)) throw StateError('unknown owner');
+  return contextGeneration;
+}
+
+PersistentGpuContextState contextStateFor(int ownerId) {
+  affinity.check();
+  if (!owners.containsKey(ownerId)) throw StateError('unknown owner');
+  return contextState;
+}
+
+PersistentGpuResourceLifecycleState ownerStateFor(int ownerId) {
+  affinity.check();
+  final owner = owners[ownerId];
+  if (owner == null) throw StateError('unknown owner');
+  return owner.state;
+}
+
+void checkCanCreateFor(int ownerId) {
+  affinity.check();
+  final owner = owners[ownerId];
+  if (owner == null || owner.state != PersistentGpuResourceLifecycleState.active ||
+      contextState != PersistentGpuContextState.active) {
+    throw StateError('persistent GPU allocation is unavailable');
+  }
 }
 ```
 
-**Handwritten budget:** 55–95 total lines exactly as scoped in this task heading; test, production,
-and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+**Handwritten budget:** production 62–72 + test 25–28 = 87–100 lines。
 
-- [ ] **RED:** two injected handles share context/generation/global snapshot but distinct owner usage; public
-  constructor uses the global identity. Run:
+- [ ] **RED:** two injected handles share context/generation/global snapshot but distinct owner usage; exercise all
+  three getters, snapshot, `checkCanCreate`, and `registerAllocation` through typed calls. For each of the four new
+  query/check registry entrypoints and `register`, swap the affinity token, assert no owner/context/ID/map/callback
+  mutation, restore the token, then prove the same call succeeds. Public constructor uses the global identity. Run:
   `run_fork_red test/render/persistent_gpu_resource_lifecycle_test.dart 'lifecycle handles share one registry and distinct owners' 'RED:T09:lifecycle handle missing'`。
-- [ ] **GREEN:** handle stores registry/ownerId/cached FE only. No operation method is added here. Run:
+- [ ] **GREEN:** add the complete getters/snapshot/check/register surface above; handle stores only
+  registry/ownerId and adds no lifecycle operation Future yet. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_lifecycle_test.dart test/render/persistent_gpu_resource_registry_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: persistent GPU lifecycleを追加`。
 
@@ -1978,7 +2042,7 @@ Future<void> settleInvalidationWhenOwnersQuiescent({
     } catch (error, stackTrace) {
       ownerFailure ??= AsyncError(error, stackTrace);
     }
-    await Future<void>.delayed(Duration.zero);
+    await Future<void>(() {});
     affinity.check();
     if (ownerDisposalEpoch != observedEpoch) continue;
     final failure = terminalContextCause ?? fallback ?? ownerFailure;
@@ -2009,7 +2073,8 @@ owner.state = PersistentGpuResourceLifecycleState.disposed;
   `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'invalidation dynamically drains owner disposal epochs' 'RED:T15B:owner disposal epoch drain missing'`。
 - [ ] **GREEN:** replace it with typed tests proving each first-time FD publication increments once, repeats do
   not; an FD published by `scheduleMicrotask` after the first snapshot forces another epoch; FI cannot complete
-  before that FD. An affinity failure after either await fails only that coordinator invocation and leaves
+  before that FD. `Future<void>(() {})` is the sole documented zero-work event-queue barrier; no duration, timer or
+  frame-count delay is permitted. An affinity failure after either await fails only that coordinator invocation and leaves
   context/FI untouched; after restoring affinity, reinvoke it with the same completer and settle once. Run
   registry/lifecycle/tracker tests, analyze and diff-check。
 - [ ] **Commit:** `Fix: owner disposal epochをdrain`。
