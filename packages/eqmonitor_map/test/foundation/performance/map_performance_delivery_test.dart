@@ -92,4 +92,34 @@ void main() {
     expect(subject.drainEvents().map((event) => event.frameSequence), [2]);
     expect((subject.aggregatedCount, subject.acceptedCount), (2, 1));
   });
+
+  test('bounds both drop policies and transfers drained ownership', () {
+    const cases = [
+      (MapPerformanceDropPolicy.dropOldest, [2, 3]),
+      (MapPerformanceDropPolicy.dropNewest, [1, 2]),
+    ];
+    for (final (policy, expected) in cases) {
+      final subject = collector(
+        minimumEventInterval: const Duration(milliseconds: 1),
+        dropPolicy: policy,
+      );
+      for (var frame = 1; frame <= 3; frame += 1) {
+        subject.record(event(frame: frame, milliseconds: frame * 1000));
+      }
+
+      expect((subject.aggregatedCount, subject.acceptedCount), (3, 3));
+      expect((subject.droppedCount, subject.bufferedEventCount), (1, 2));
+      final drained = subject.drainEvents();
+      expect(drained.map((event) => event.frameSequence), expected);
+      expect(drained.length, 2);
+      expect(subject.bufferedEventCount, 0);
+      expect(subject.drainEvents(), isEmpty);
+
+      subject.record(event(frame: 4, milliseconds: 4000));
+      expect(subject.acceptedCount, 4);
+      expect(drained.map((event) => event.frameSequence), expected);
+      expect(subject.drainEvents().map((event) => event.frameSequence), [4]);
+      expect(subject.bufferedEventCount, 0);
+    }
+  });
 }
