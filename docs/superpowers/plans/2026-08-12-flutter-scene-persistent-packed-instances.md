@@ -2511,6 +2511,8 @@ test("checked arithmetic rejects before overflow", () {
 **GREEN implementation snippet:** the exact production signature/statement is:
 
 ```dart
+const int kMaxPersistentPackedAllocationBytes = 0x7fffffff;
+
 final class PersistentPackedCheckedMath {
   static int multiply({required int left, required int right}) {
     if (left < 0 || right < 0 ||
@@ -2527,6 +2529,12 @@ final class PersistentPackedCheckedMath {
     }
     return left + right;
   }
+
+  static int align16({required int value}) =>
+      add(left: value, right: 15) & ~15;
+
+  static int endOffset({required int offset, required int length}) =>
+      add(left: offset, right: length);
 }
 ```
 
@@ -2565,7 +2573,7 @@ test("layout is deeply snapshotted before caller mutation", () {
 });
 ```
 
-**GREEN implementation snippet:** the exact production signature/statement is:
+**GREEN implementation snippet:** the complete validator added to the Task22 constructor path is:
 
 ```dart
 final class PersistentPackedLayoutSnapshot {
@@ -2721,10 +2729,54 @@ test("layout rejects misaligned overlapping checked ranges", () {
 **GREEN implementation snippet:** the exact production signature/statement is:
 
 ```dart
-bool persistentPackedRangesOverlap({
-  required ({int start, int end}) current,
-  required ({int start, int end}) next,
-}) => next.start < current.end;
+int persistentPackedScalarAlignment(int bytesPerElement) {
+  var left = bytesPerElement;
+  var right = 4;
+  while (right != 0) {
+    final remainder = left % right;
+    left = right;
+    right = remainder;
+  }
+  return left;
+}
+
+void validatePersistentPackedAttributeRanges(VertexLayoutDescriptor layout) {
+  for (final buffer in layout.buffers) {
+    var maximumAlignment = 1;
+    final ranges = <({int start, int end, String name})>[];
+    for (final attribute in buffer.attributes) {
+      final alignment = persistentPackedScalarAlignment(
+        attribute.format.bytesPerElement,
+      );
+      final start = attribute.offsetInBytes;
+      if (start < 0 || start % alignment != 0) {
+        throw ArgumentError('misaligned packed attribute ${attribute.name}');
+      }
+      final end = PersistentPackedCheckedMath.endOffset(
+        offset: start,
+        length: attribute.format.bytesPerElement,
+      );
+      if (end > buffer.strideInBytes) {
+        throw ArgumentError('packed attribute ${attribute.name} exceeds stride');
+      }
+      if (alignment > maximumAlignment) {
+        maximumAlignment = alignment;
+      }
+      ranges.add((start: start, end: end, name: attribute.name));
+    }
+    ranges.sort((left, right) => left.start.compareTo(right.start));
+    for (var index = 1; index < ranges.length; index++) {
+      final current = ranges[index - 1];
+      final next = ranges[index];
+      if (next.start < current.end) {
+        throw ArgumentError('${current.name}/${next.name} overlap');
+      }
+    }
+    if (buffer.strideInBytes % maximumAlignment != 0) {
+      throw ArgumentError('packed stride is misaligned');
+    }
+  }
+}
 ```
 
 **Handwritten budget:** 55–95 total lines exactly as scoped in this task heading; test, production,
@@ -2734,7 +2786,9 @@ and documentation lines are counted, while generated files and formatter-only in
   `gcd(bytesPerElement,4)`, stride misaligned to slot maximum, overlap `[0,12)`/`[8,12)`; accept adjacent
   `[0,8)`/`[8,12)`; overlap is accepted before GREEN. Run:
   `run_fork_red test/persistent_packed_instance_plan_test.dart 'layout rejects misaligned overlapping checked ranges' 'RED:T23:aligned range validation missing'`。
-- [ ] **GREEN:** checked ends only; sort local `(start,end,name)` and compare adjacent ranges. Run:
+- [ ] **GREEN:** add the complete function above; Task22's constructor calls
+  `validatePersistentPackedAttributeRanges(layout);` immediately before its existing `layout.toGpuLayout()`.
+  Use checked ends only; sort local `(start,end,name)` and compare adjacent ranges. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/vertex_layout_test.dart test/geometry_builder_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed attribute範囲を検証`。
 
@@ -2947,7 +3001,7 @@ final class PersistentPackedAllocationSizes {
 }
 ```
 
-**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
+**Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** assert vertex multiply, align16, padding, instance multiply, non-index/index adds; reject nonpositive
@@ -3377,7 +3431,7 @@ void release() {
 }
 ```
 
-**Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** exact slice offsets/lengths; mutate source after upload while fake's copied upload remains fixed;
