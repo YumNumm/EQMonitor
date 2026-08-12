@@ -277,11 +277,16 @@ cached dispose Future、`FE` は disposed owner の cached invalid-operation err
 | active | failed | `dispose()` | owner→disposed、残存owner record settle/error後 `FD` |
 | disposed | any | `dispose()` | mutationなし、identical `FD` |
 | either | any | `takeMemorySnapshot()` | read-only、disposed ownerもfinal owner/global usageを取得可 |
+| new owner | active | public constructor | ownerをattachしactive handleを返す |
+| new owner | invalidating/invalidated/failed | public constructor | synchronous `StateError`、ownerを作らない |
+| either | any | state/generation getters | read-only、owner stateとshared global valuesを返す |
 
 `FI` は同じ generation ではどの owner から取得しても `identical`。recreate 後の次 invalidation は
 新しい `FI`。`FD` は owner 固有で `FI` とは別 object。dispose during invalidation は global
 invalidation をcancelせず、`FD` が先に完了しても `FI` は他 owner を待つ。1 owner の callback
 failure は global→failed とし、`FI`/該当 `FD` は全 records settle 後に同じ最初の errorで完了する。
+Future-returning public/internal methodsは `async` にせず cached Futureを直接returnする。これにより
+完了値だけでなく `identical` identityも契約に含める。
 
 release callback から `retire()`、`dispose()`、`invalidateContext()`、snapshot を reentrant に
 呼べるが、stateを callback 前に進めてあるため二重releaseしない。callback/reentrant operation が
@@ -373,34 +378,30 @@ gh repo view YumNumm/flutter_scene \
 
 ### Gate B: non-destructive clone/remotes/worktree
 
-clone target が存在しない場合だけ clone する。
+clone target が存在しない場合だけ cloneし、既存ならexact originをassertする。
 
 ```bash
-git clone --origin origin git@github.com:YumNumm/flutter_scene.git \
-  /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene
+fork_clone=/Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene
+if [ -e "$fork_clone" ]; then
+  test "$(git -C "$fork_clone" rev-parse --is-inside-work-tree)" = true
+  test "$(git -C "$fork_clone" remote get-url origin)" = \
+    git@github.com:YumNumm/flutter_scene.git
+else
+  git clone --origin origin git@github.com:YumNumm/flutter_scene.git "$fork_clone"
+fi
 ```
 
-既に存在する場合は clone せず、次の全 assertion を通す。dirtyでも user change を触らず、
-worktree追加だけに留める。non-git/wrong originなら停止する。
-
-```bash
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  rev-parse --is-inside-work-tree
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  remote get-url origin
-# expected: git@github.com:YumNumm/flutter_scene.git
-```
-
+dirtyでも user change を触らず、worktree追加だけに留める。non-git/wrong originなら停止する。
 `upstream` が未登録の場合だけ追加し、登録済みなら exact URL をassertする。
 
 ```bash
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  remote add upstream https://github.com/bdero/flutter_scene.git
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  remote get-url upstream
-# expected: https://github.com/bdero/flutter_scene.git
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene fetch upstream master
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
+if upstream_url=$(git -C "$fork_clone" remote get-url upstream 2>/dev/null); then
+  test "$upstream_url" = https://github.com/bdero/flutter_scene.git
+else
+  git -C "$fork_clone" remote add upstream https://github.com/bdero/flutter_scene.git
+fi
+git -C "$fork_clone" fetch upstream master
+git -C "$fork_clone" \
   cat-file -e 7f71993b7e2a0ab1d2f59726a406098709be7291^{commit}
 ```
 
@@ -415,30 +416,34 @@ compatibility remote branch が既存なら exact SHA をassertし、異なれ�
 new refをpushする。force pushは禁止。
 
 ```bash
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  fetch origin '+refs/heads/*:refs/remotes/origin/*'
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  push origin 7f71993b7e2a0ab1d2f59726a406098709be7291:refs/heads/eqmonitor/flutter-4dacd3fc
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  rev-parse origin/eqmonitor/flutter-4dacd3fc
-# expected exact 7f71993b7e2a0ab1d2f59726a406098709be7291
+if remote_line=$(git -C "$fork_clone" ls-remote --exit-code origin \
+  refs/heads/eqmonitor/flutter-4dacd3fc); then
+  test "${remote_line%%[[:space:]]*}" = \
+    7f71993b7e2a0ab1d2f59726a406098709be7291
+else
+  remote_status=$?
+  test "$remote_status" -eq 2
+  git -C "$fork_clone" push origin \
+    7f71993b7e2a0ab1d2f59726a406098709be7291:refs/heads/eqmonitor/flutter-4dacd3fc
+fi
+git -C "$fork_clone" fetch origin \
+  '+refs/heads/*:refs/remotes/origin/*'
+test "$(git -C "$fork_clone" rev-parse origin/eqmonitor/flutter-4dacd3fc)" = \
+  7f71993b7e2a0ab1d2f59726a406098709be7291
 ```
 
-上のpushは `git ls-remote --exit-code origin refs/heads/eqmonitor/flutter-4dacd3fc` がexit 2の
-ときだけ実行する。exit 0ならfetch/assertだけにする。その他のexit codeは通信/auth blockerとして
-停止する。local compatibility branch は未作成の場合だけ remote tracking branch として作り、
-既存なら exact SHA をassertする。
+上のpushは remote ref不存在のexit 2 routeだけ。その他のerrorは `test` で停止する。local
+compatibility branchも未作成の場合だけremote tracking branchとして作り、既存ならexact SHAをassertする。
 
 ```bash
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  show-ref --verify --quiet refs/heads/eqmonitor/flutter-4dacd3fc
-# exit 1 only:
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  branch --track eqmonitor/flutter-4dacd3fc origin/eqmonitor/flutter-4dacd3fc
-# exit 0 route and after creation:
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  rev-parse eqmonitor/flutter-4dacd3fc
-# expected exact 7f71993b7e2a0ab1d2f59726a406098709be7291
+if git -C "$fork_clone" show-ref --verify --quiet \
+  refs/heads/eqmonitor/flutter-4dacd3fc; then
+  test "$(git -C "$fork_clone" rev-parse eqmonitor/flutter-4dacd3fc)" = \
+    7f71993b7e2a0ab1d2f59726a406098709be7291
+else
+  git -C "$fork_clone" branch --track eqmonitor/flutter-4dacd3fc \
+    origin/eqmonitor/flutter-4dacd3fc
+fi
 ```
 
 worktree は fork clone の外に固定する。target が存在しない場合、branch も未作成なら `-b` route、
@@ -448,30 +453,28 @@ branch だけ存在する resume なら branch をそのまま attach する。t
 
 ```bash
 mkdir -p /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  show-ref --verify --quiet refs/heads/feat/persistent-gpu-lifecycle
-# branch exit 1 and target absent route:
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene worktree add \
-  -b feat/persistent-gpu-lifecycle \
-  /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle \
-  eqmonitor/flutter-4dacd3fc
-# branch exit 0 and target absent route:
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene worktree add \
-  /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle \
+fork_worktree=/Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle
+if [ -e "$fork_worktree" ]; then
+  git -C "$fork_clone" worktree list --porcelain | \
+    rg -F "worktree $fork_worktree"
+elif git -C "$fork_clone" show-ref --verify --quiet \
+  refs/heads/feat/persistent-gpu-lifecycle; then
+  git -C "$fork_clone" worktree add "$fork_worktree" \
+    feat/persistent-gpu-lifecycle
+else
+  git -C "$fork_clone" worktree add -b feat/persistent-gpu-lifecycle \
+    "$fork_worktree" eqmonitor/flutter-4dacd3fc
+fi
+test "$(git -C "$fork_worktree" remote get-url origin)" = \
+  git@github.com:YumNumm/flutter_scene.git
+test "$(git -C "$fork_worktree" rev-parse --abbrev-ref HEAD)" = \
   feat/persistent-gpu-lifecycle
-# common assertion route, including pre-existing target:
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene worktree list --porcelain
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle \
-  rev-parse --abbrev-ref HEAD
-# expected: feat/persistent-gpu-lifecycle
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle \
+git -C "$fork_worktree" \
   merge-base --is-ancestor 7f71993b7e2a0ab1d2f59726a406098709be7291 HEAD
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle \
-  status --porcelain=v1
-# expected: empty
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene config rerere.enabled true
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene config remote.pushDefault origin
-cd /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle
+test -z "$(git -C "$fork_worktree" status --porcelain=v1)"
+git -C "$fork_clone" config rerere.enabled true
+git -C "$fork_clone" config remote.pushDefault origin
+cd "$fork_worktree"
 gh stack init --base eqmonitor/flutter-4dacd3fc feat/persistent-gpu-lifecycle
 ```
 
@@ -555,20 +558,21 @@ listener は registration 順の snapshot で呼び、record/before-submit liste
 `test/render/persistent_gpu_resource_models_test.dart`。
 
 **Interfaces:** Produces section 3 の3 enum/2 immutable value class、および internal
-`PersistentGpuExecutionAffinity({int Function()? currentIsolateId})`、`void check()`。
-production default は `Isolate.current.hashCode` を capture し、test は可変 fake id を注入する。
+`PersistentGpuExecutionAffinity({Object Function()? currentIsolateToken})`、`void check()`。
+production default は `Isolate.current.controlPort` をtokenとしてcaptureし `==` 比較、testは可変fake
+tokenを注入する。hash collisionをsame-isolate証拠に使わない。
 
 - [ ] **Step 1 — RED:** immutable usage/snapshot の全 field を exact 値で比較する test と次の guard test
   を追加する。
 
   ```dart
   test('rejects a registry mutation from a different isolate identity', () {
-    var isolateId = 41;
+    var isolateToken = Object();
     final affinity = PersistentGpuExecutionAffinity(
-      currentIsolateId: () => isolateId,
+      currentIsolateToken: () => isolateToken,
     );
     affinity.check();
-    isolateId = 42;
+    isolateToken = Object();
     expect(affinity.check, throwsStateError);
   });
   ```
@@ -736,8 +740,9 @@ test/Geometry用に持つ。internal `registerAllocation(...)` と `markUsed(lea
   snapshot allowed、全 getter shared generation/stateをexact期待する。release callbackから同owner
   dispose/global invalidate/snapshotを呼ぶ reentrant testでも二重releaseせず、resource→FD→FI順を期待する。
 - [ ] **Step 2 — verify RED:** focused lifecycle test。expected RED は lifecycle type/import不存在。
-- [ ] **Step 3 — GREEN:** handleはownerIdとcached FD/FEだけを持ち、global stateを複製しない。
-  every public/internal operation first calls affinity。disposed checksはglobal mutationより先に行う。
+- [ ] **Step 3 — GREEN:** handleはownerIdとdisposed-invalid-operation用cached FEだけを持ち、FD/FIは
+  registryのcached objectをそのままreturnする。global state/Futureを複製しない。every public/internal
+  operation first calls affinity。disposed checksはglobal mutationより先に行う。
 - [ ] **Step 4 — verify:** lifecycle/registry/tracker全test、analyze、diff-check。
 - [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: persistent GPU lifecycleを公開' && git push`。
 
@@ -1088,23 +1093,38 @@ or flutter_gpu import。It references lifecycle/snapshot/layout/Geometry constru
 - [ ] **Step 4 — verify:** focused test + `mise exec -- dart analyze packages/eqmonitor_map` + diff-check。
 - [ ] **Step 5 — publish:** file、`git commit -m 'Test: Flutter Scene公開API境界を固定' && git push`。
 
-### Task 26: live provenance/lifecycle docs（EQ top、depends Task 25）
+### Task 26: package consumer docs（EQ top、depends Task 25）
 
-**Files:** Modify `packages/eqmonitor_map/README.md`, `packages/eqmonitor_map/example/README.md`,
-`docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md`,
-`docs/knowledge/20260802_flutter_scene_scene_source_pin.md`,
-`docs/knowledge/20260802_flutter_scene_large_static_instances.md`。
+**Files:** Modify `packages/eqmonitor_map/README.md`, `packages/eqmonitor_map/example/README.md`。
 
-**Interfaces:** Current operational docs record both fork PR URLs、top full SHA、upstream base `7f71993...`、
+**Interfaces:** Current package docs record both fork PR URLs、top full SHA、upstream base `7f71993...`、
 Flutter full SHA、global multi-owner lifecycle ordering、logical vs resident bytes。Historical plan/draft evidenceは
 rewriteしない。
 
 - [ ] **Step 1 — RED:** `rg` inventoryでactive README/knowledgeのold bdero current pinを列挙し、expected
   fork URL/top SHA queryをfailureとして保存する。
-- [ ] **Step 2 — GREEN:** five current docsだけ同期し、#1603/#1604/#1605 boundaries、automatic context-loss
+- [ ] **Step 2 — GREEN:** package/example READMEだけ同期し、#1603/#1604/#1605 boundaries、automatic context-loss
   なし、#1604 physical 30fps/5min未実施、reference sources are patterns only/no copied codeを明記する。
-- [ ] **Step 3 — verify:** verifier、public test、analyze、old active pin 0件、diff-check。
-- [ ] **Step 4 — publish:** five files、`git commit -m 'Docs: Flutter Scene fork provenanceを同期' && git push`。
+- [ ] **Step 3 — verify:** verifier、public test、package READMEのold active pin 0件、diff-check。
+- [ ] **Step 4 — publish:** two files、`git commit -m 'Docs: Flutter Scene package provenanceを同期' && git push`。
+
+### Task 27: toolchain/lifecycle knowledge docs（EQ top、depends Task 26）
+
+**Files:** Modify `docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md`,
+`docs/knowledge/20260802_flutter_scene_scene_source_pin.md`,
+`docs/knowledge/20260802_flutter_scene_large_static_instances.md`。
+
+**Interfaces:** Current knowledge records exact fork/top/toolchain SHA and operational lifecycle; source-pin doc
+asserts both lock entries' requested/resolved SHA。Historical entries remain intact and clearly labelled historical。
+
+- [ ] **Step 1 — RED:** `rg` exact old current pin lines in the 3 files and run expected fork URL/top SHA assertion
+  to nonzero; capture which lines are current instructions versus historical evidence。
+- [ ] **Step 2 — GREEN:** update current instructions only with global multi-owner invalidation、completion-gated
+  retirement、logical bytes≠resident bytes、#1604 device/performance defer、reference provenance/no copied code。
+- [ ] **Step 3 — verify:** Task 24 verifier、Task 25 public test、package analyze、current instruction old pin 0件、
+  `git diff --check`。
+- [ ] **Step 4 — publish:** three files、
+  `git commit -m 'Docs: Flutter Scene lifecycle知見を同期' && git push`。
 
 ### Delivery Gate EQ / upstack refresh / PR stop（commitなし）
 
