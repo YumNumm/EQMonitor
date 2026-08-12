@@ -45,6 +45,16 @@ remote PMTilesのidentity encoding/strong validator付きrange合成、appがsig
 
 設計の正本は[`docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`](../../docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md)です。
 
+## Foundation contract
+
+#1590のfoundationは、宣言scene、frame snapshot、source付きatomic revision、
+version付きpacked render batch、bounded performance観測だけを所有します。
+描画phaseはcallerが明示し、Flutter Scene/GPU、PMTiles I/O、地震payload、app統合は
+後続issueの境界に残します。contract、参照実装の採否、検証command、未実施の
+platform確認は
+[`docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md`](../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md)
+を参照してください。
+
 ## 設計原則
 
 - runtimeの`MapNode`を含むデータモデルは不変かつ原則Freezedとし、JSONは明示的な保存・通信DTO/specだけに要求する。
