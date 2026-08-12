@@ -30,6 +30,11 @@ void main() {
       ),
     );
 
+    expect(samples.map((sample) => sample.kind), const [
+      MapPerformanceMetricKind.flutterBuild,
+      MapPerformanceMetricKind.flutterRaster,
+      MapPerformanceMetricKind.flutterFrameBudgetOverrun,
+    ]);
     expect(samples.map((sample) => sample.value), [300, 400, 200]);
     expect(
       samples.every((sample) => sample.schemaVersion == schemaVersion),
