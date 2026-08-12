@@ -788,6 +788,80 @@ registry、lease、affinity、test constructorはexportしない。
   assertして `gh stack checkout feat/persistent-packed-instance-geometry`。bottom ancestry不一致、dirty、
   linked elsewhereなら停止し、branch delete/reset/force pushしない。
 
+### Task 13: checked allocation arithmetic（fork top、depends Task 12）
+
+**Files:** Create `lib/src/geometry/persistent_packed_instance_plan.dart`,
+`test/persistent_packed_instance_plan_test.dart`。
+
+**Interfaces:** Produces internal `const kMaxPersistentPackedAllocationBytes = 0x7fffffff` and
+`PersistentPackedCheckedMath.multiply({required int left, required int right, required String name})`、
+`add(...)`、`align16({required int value, required String name})`。
+
+- [ ] **Step 1 — RED:** table test exact cases: `0*max=0`、`max+0=max`、`align16(1)=16`、
+  negative operand、`max*2`、`max+1`、`align16(max)` は `ArgumentError` before wrapped value。
+  error messageは operation name と operandsを含む。
+- [ ] **Step 2 — verify RED:** plan focused test。expected RED は math class/constant不存在。
+- [ ] **Step 3 — GREEN:** multiplyは `left > max ~/ right`、addは `left > max-right`、alignは
+  checked add before bit-mask。すべての input/resultを0..max内に制限し、BigInt/floating pointを使わない。
+- [ ] **Step 4 — verify:** focused test、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed allocation計算を検証' && git push`。
+
+### Task 14: defensive layout snapshot/validation（fork top、depends Task 13）
+
+**Files:** Modify `lib/src/geometry/persistent_packed_instance_plan.dart`,
+`test/persistent_packed_instance_plan_test.dart`。
+
+**Interfaces:** Produces internal
+`PersistentPackedLayoutSnapshot.create(VertexLayoutDescriptor source)` with `layout`,
+`vertexStrideInBytes`, `instanceStrideInBytes`。全 buffer/attribute listを `List.unmodifiable` cloneする。
+
+- [ ] **Step 1 — RED:** happy path 2 slotと、buffers 0/1/3、slot0 non-vertex、slot1 non-instance、
+  empty attributes、stride <=0、offset <0、duplicate name、end > stride を rejectする。offset alignmentは
+  `gcd(format.bytesPerElement, 4)`、strideはslot最大alignmentの倍数を要求する。constructor後に元の
+  buffers list/attributes listをclear/addしても snapshot equality/strideが不変を期待する。
+- [ ] **Step 2 — verify RED:** plain-name `layout is deeply snapshotted before caller mutation`。
+  expected RED は snapshot class未定義。
+- [ ] **Step 3 — GREEN:** descriptor/attributeをfieldごとに再生成し unmodifiable化してから検証する。
+  `layout.toGpuLayout()` を呼び既存 duplicate/end checkを再利用し、追加policyだけを先に検査する。
+- [ ] **Step 4 — verify:** plan全test、既存 `test/vertex_layout_test.dart`、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed layoutを防御的に固定' && git push`。
+
+### Task 15: defensive bounds snapshot/validation（fork top、depends Task 14）
+
+**Files:** Modify `lib/src/geometry/persistent_packed_instance_plan.dart`,
+`test/persistent_packed_instance_plan_test.dart`。
+
+**Interfaces:** Produces internal `PersistentPackedBoundsSnapshot.create(vm.Aabb3 source)` with copied
+`vm.Aabb3 aabb` and derived copied `vm.Sphere sphere`。
+
+- [ ] **Step 1 — RED:** finite min/max happy path、NaN、±infinity、各axis min>maxをtable testする。
+  `source.min.setValues(...)` / `source.max.setValues(...)` をcreation後に呼んでも snapshot aabb/sphere
+  center/radiusが変わらず、returned getterをmutateしても次getterが変わらないことを期待する。
+- [ ] **Step 2 — verify RED:** plain-name `bounds are deeply snapshotted`。expected RED は class不存在。
+- [ ] **Step 3 — GREEN:** min/maxを `Vector3.copy` し finite/min<=maxを確認、internal canonical valuesを
+  retainし、getterは `Aabb3.copy` / `Sphere.copy` を返す。caller objectをGeometry/superclassへ渡さない。
+- [ ] **Step 4 — verify:** focused plan tests、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed boundsを防御的に固定' && git push`。
+
+### Task 16: exact index validation（fork top、depends Task 15）
+
+**Files:** Modify `lib/src/geometry/persistent_packed_instance_plan.dart`,
+`test/persistent_packed_instance_plan_test.dart`。
+
+**Interfaces:** Produces internal
+`PersistentPackedIndexPlan.create({required ByteData? data, required gpu.IndexType type, required int vertexCount})`
+with `indexCount/indexBytes/hasIndices`。non-null bytes are validation input only and are not retained。
+
+- [ ] **Step 1 — RED:** null index accepts、non-null empty rejects、int16 odd/int32 non-multiple-of-4 rejects、
+  vertexCount<=0 rejects。little-endian values `[0, vertexCount-1]` accept、value==vertexCountとlarger reject。
+  both widthsをtestし、source ByteDataをvalidation後にmutateしても derived count/bytes不変を期待する。
+- [ ] **Step 2 — verify RED:** plain-name `every index is smaller than vertexCount`。expected RED は
+  out-of-range inputが受理される/validator不存在。
+- [ ] **Step 3 — GREEN:** `getUint16/getUint32(offset, Endian.little)` で全値をscanし、width/countは
+  checked math policy内で算出。unsupported enumなら `ArgumentError`、fallback index typeなし。
+- [ ] **Step 4 — verify:** plan全test、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed index値を検証' && git push`。
+
 ### Task 1: submission completion listener を追加する（fork bottom）
 
 **Files:**
