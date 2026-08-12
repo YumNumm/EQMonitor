@@ -91,6 +91,44 @@ void main() {
     expect(output.earthquakeEventId.dictionaryUtf8, isEmpty);
     expect(output.earthquakeEventId.dictionaryOffsets, [0]);
   });
+
+  test('translates typed-column allocation failures', () {
+    for (final fail in allocationFailures) {
+      expect(
+        () => SeismicityCanonicalStringColumns(
+          capacity: 1,
+          allocate: <T>(create) => fail(),
+        ),
+        invalid,
+      );
+
+      var failBuild = true;
+      var allocationCount = 0;
+      final columns =
+          SeismicityCanonicalStringColumns(
+            capacity: 1,
+            allocate: <T>(create) {
+              allocationCount++;
+              if (allocationCount > 1 && failBuild) {
+                failBuild = false;
+                fail();
+              }
+              return create();
+            },
+          )..add(
+            determinationFlagUtf8: bytes('A'),
+            earthquakeEventIdUtf8: bytes('E'),
+          );
+      expect(columns.build, invalid);
+      expect(columns.length, 1);
+      expect(columns.build().determinationFlag.dictionaryUtf8, [65]);
+    }
+  });
 }
 
 Uint8List bytes(String value) => Uint8List.fromList(utf8.encode(value));
+
+final allocationFailures = <Never Function()>[
+  () => throw const OutOfMemoryError(),
+  () => throw RangeError('injected allocation failure'),
+];
