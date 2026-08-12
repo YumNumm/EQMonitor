@@ -26,8 +26,96 @@ void main() {
     for (final action in renderGeometryInventory()) {
       expect(action, returnsNormally);
     }
+    for (final action in renderPacketInventory()) {
+      expect(action, returnsNormally);
+    }
   });
 }
+
+List<void Function()> renderPacketInventory() {
+  final packet = _publicRenderPacket();
+  final parameters = createMapMaterialParameterBlock(
+    version: 1,
+    bytes: Uint8List(0),
+  );
+  return [
+    () => consume(createMapRenderPipelineKey(version: 1, key: 'point')),
+    () => consume(
+      createMapMaterialParameterBlock(version: 1, bytes: Uint8List(0)),
+    ),
+    () => consume(haveEqualMapMaterialParameterContent(parameters, parameters)),
+    () => consume(
+      createMapRenderBatchKey(
+        version: 1,
+        nodeKey: createMapNodeKey(value: 'map'),
+        scopeKey: 'base',
+        materialKey: 'point',
+        phasePolicyVersion: 1,
+        phase: 0,
+      ),
+    ),
+    () => consume(
+      createMapRenderPacket(
+        contractVersion: packet.contractVersion,
+        sortKey: packet.sortKey,
+        batchKey: packet.batchKey,
+        pipeline: packet.pipeline,
+        mesh: packet.mesh,
+        modelTransform: packet.modelTransform,
+        materialParameters: packet.materialParameters,
+      ),
+    ),
+  ];
+}
+
+MapRenderPacket _publicRenderPacket() => createMapRenderPacket(
+  contractVersion: 1,
+  sortKey: MapRenderSortKey(
+    phasePolicyVersion: 1,
+    phase: 0,
+    declarationOrderWithinPhase: 0,
+    sourceOrder: 0,
+    overscaledTileOrder: 0,
+    featureOrder: 0,
+  ),
+  batchKey: createMapRenderBatchKey(
+    version: 1,
+    nodeKey: createMapNodeKey(value: 'map'),
+    scopeKey: 'base',
+    materialKey: 'point',
+    phasePolicyVersion: 1,
+    phase: 0,
+  ),
+  pipeline: createMapRenderPipelineKey(version: 1, key: 'point'),
+  mesh: _publicRenderMesh(),
+  modelTransform: Float64List(16),
+  materialParameters: createMapMaterialParameterBlock(
+    version: 1,
+    bytes: Uint8List(0),
+  ),
+);
+
+MapPackedMesh _publicRenderMesh() => createMapPackedMesh(
+  payloadVersion: 1,
+  layout: createMapPackedMeshLayout(
+    version: 1,
+    topology: MapPrimitiveTopology.points,
+    byteOrder: MapPackedByteOrder.little,
+    vertexStride: 4,
+    attributes: [
+      MapVertexAttributeLayout(
+        semantic: MapVertexAttributeSemantic.featureIdUint32,
+        format: MapVertexAttributeFormat.uint32,
+        offset: 0,
+      ),
+    ],
+    indexFormat: null,
+  ),
+  vertexBytes: Uint8List(4),
+  vertexCount: 1,
+  indexBytes: null,
+  indexCount: null,
+);
 
 List<void Function()> renderGeometryInventory() {
   final base = createMapRenderPhaseId(value: 'base');
