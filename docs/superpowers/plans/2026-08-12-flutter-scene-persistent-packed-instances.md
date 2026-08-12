@@ -154,3 +154,79 @@ API review 中に引数名を変える場合も、次の semantics は変えな�
     resident bytes や即時解放を表さない。active/retiring と instance/total を分け、5分 memory
     gate で「増加理由を説明できる」値を提供する。
 
+## 4. Repository と PR stack
+
+repository を跨ぐ branch は GitHub 上の1本の stack にできない。次の2 stack と immutable
+SHA hand-off を使う。
+
+```text
+YumNumm/flutter_scene
+eqmonitor/flutter-4dacd3fc (7f71993..., compatibility trunk; PRなし)
+└─ feat/persistent-gpu-lifecycle
+   └─ feat/persistent-packed-instance-geometry
+                                      ┐
+                                      └─ top commit SHAを固定
+YumNumm/EQMonitor
+... → PR #1620 feat/seismicity-pmtiles-decoder
+      └─ feat/seismicity-flutter-scene-fork-pin
+```
+
+fork の current master へ直接実装しない。master は upstream current のまま保持し、EQMonitor の
+既存 toolchain と既存 pin を再現する compatibility trunk を `7f71993...` に作る。上流 master
+への forward-port は #1602 の completion 条件にせず、別 follow-up として記録する。
+
+### Task 0: fork 作成と clean worktree を準備する
+
+**Files:** 変更なし。
+
+**Step 1: authority gate**
+
+owner/admin が `YumNumm/flutter_scene` を `bdero/flutter_scene` の fork として作成する。
+agent が実行する場合は org repository 作成の明示許可を得てからにする。作成後、次を確認する。
+
+```bash
+gh repo view YumNumm/flutter_scene \
+  --json nameWithOwner,parent,defaultBranchRef,viewerPermission
+```
+
+期待: `parent.nameWithOwner == "bdero/flutter_scene"` かつ push 権限あり。repository が見えない、
+parent が異なる、push 権限がない場合は blocked とし、代替 repository を推測しない。
+
+**Step 2: fork worktree と compatibility trunk**
+
+clone/worktree 先は active EQMonitor worktree の外に置く。fork clone の `upstream` が bdero、
+`origin` が YumNumm であることを確認し、remote branch を明示的に作る。
+
+```bash
+git fetch upstream master
+git cat-file -e 7f71993b7e2a0ab1d2f59726a406098709be7291^{commit}
+git branch eqmonitor/flutter-4dacd3fc \
+  7f71993b7e2a0ab1d2f59726a406098709be7291
+git push origin eqmonitor/flutter-4dacd3fc:eqmonitor/flutter-4dacd3fc
+git config rerere.enabled true
+git config remote.pushDefault origin
+gh stack init --base eqmonitor/flutter-4dacd3fc \
+  feat/persistent-gpu-lifecycle feat/persistent-packed-instance-geometry
+```
+
+`gh stack init` 後は bottom の `feat/persistent-gpu-lifecycle` へ checkout して Task 1 を開始する。
+既存 branch が見つかった場合は SHA/owner を確認し、上書きや force push をしない。
+
+**Step 3: pinned toolchain と baseline**
+
+fork 自体は Flutter を pin していないため、全 Flutter/Dart command は EQMonitor の mise 環境を
+注入した shell 内で実行する。以下の `<fork>` は絶対 path へ置換し、文字列のまま実行しない。
+
+```bash
+cd /path/to/EQMonitor
+mise exec -- bash -c 'cd <fork> && flutter --version --machine'
+mise exec -- bash -c 'cd <fork> && flutter pub get'
+mise exec -- bash -c \
+  'cd <fork>/packages/flutter_scene && flutter test --enable-impeller \
+   test/render/frame_transients_test.dart'
+```
+
+version JSON の framework SHA が `4dacd3fc...` でなければ中断する。baseline failure は既存失敗と
+今回差分を分離して PR body に記録し、成功扱いにしない。実機、Simulator、smoke-render E2E は
+今回のユーザー指定により実行しない。
+
