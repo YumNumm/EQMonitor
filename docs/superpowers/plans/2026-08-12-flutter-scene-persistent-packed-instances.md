@@ -3631,7 +3631,8 @@ static PersistentPackedInstanceStorage uploadWithBackend({
 }
 ```
 
-The existing storage test replaces the RED body with this executable ordering contract:
+The existing storage test adds `import 'dart:io';` and replaces the RED body with this executable ordering
+contract:
 
 ```dart
 test('indexed upload publishes slices only after both flushes', () {
@@ -4101,6 +4102,29 @@ void bind({
 }
 ```
 
+The binding test adds `import 'dart:io';` and replaces the RED body with:
+
+```dart
+test('binding validates lifecycle before full persistent bind', () {
+  final source = File(
+    'lib/src/geometry/persistent_packed_instance_binding.dart',
+  ).readAsStringSync();
+  final active = source.indexOf('lease.requireCurrentActive();');
+  final mark = source.indexOf('lease.markUsed();', active);
+  final slot0 = source.indexOf('slot: 0', mark);
+  final slot1 = source.indexOf('slot: 1', slot0);
+  final index = source.indexOf('adapter.bindIndex(', slot1);
+  final frame = source.indexOf('adapter.bindFrameInfo(', slot1);
+  expect(active, greaterThanOrEqualTo(0));
+  expect(mark, greaterThan(active));
+  expect(slot0, greaterThan(mark));
+  expect(slot1, greaterThan(slot0));
+  expect(index, greaterThan(slot1));
+  expect(frame, greaterThan(index));
+  expect(source.substring(active, frame), isNot(contains('defaultShader()')));
+});
+```
+
 **Handwritten budget:** production 38–55 + test 25–35 = 63–90 lines。
 
 - [ ] **RED:** bind exact events requireCurrentActive→markUsed→slot0→slot1→index?→frame; fake records exact
@@ -4218,6 +4242,30 @@ T executePersistentPackedInstanceTransaction<T>({
       instanceBytes: plan.instanceBytes, release: storage.release);
   return construct(plan: plan, storage: storage, lease: lease);
 }
+```
+
+The transaction test adds `import 'dart:io';` and replaces the RED body with:
+
+```dart
+test('typed transaction constructs only after check upload and register', () {
+  final source = File(
+    'lib/src/geometry/persistent_packed_instance_transaction.dart',
+  ).readAsStringSync();
+  final body = source.substring(source.indexOf(
+    'T executePersistentPackedInstanceTransaction<T>({'),
+  );
+  final check = body.indexOf('checkCanCreate();');
+  final plan = body.indexOf('final plan = buildPlan();');
+  final upload = body.indexOf('upload(backend: backend, plan: plan)');
+  final register = body.indexOf('register(totalBytes: plan.totalBytes');
+  final construct = body.indexOf(
+    'construct(plan: plan, storage: storage, lease: lease)');
+  expect(check, greaterThanOrEqualTo(0));
+  expect(plan, greaterThan(check));
+  expect(upload, greaterThan(plan));
+  expect(register, greaterThan(upload));
+  expect(construct, greaterThan(register));
+});
 ```
 
 **Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
@@ -4553,6 +4601,32 @@ PersistentPackedInstanceGeometry createPersistentPackedInstanceGeometry({
 
 The constructor has no transaction body; the helper above is the sole transaction body and is the only
 backend-injected construction entrypoint used by tests。
+
+The Geometry test adds `import 'dart:io';` and replaces the RED body with:
+
+```dart
+test('public Geometry factory shares typed lifecycle transaction', () {
+  final source = File(
+    'lib/src/geometry/persistent_packed_instance_geometry.dart',
+  ).readAsStringSync();
+  final factory = source.indexOf('factory PersistentPackedInstanceGeometry({');
+  final helper = source.indexOf(
+    'PersistentPackedInstanceGeometry createPersistentPackedInstanceGeometry({');
+  expect(factory, greaterThanOrEqualTo(0));
+  expect(helper, greaterThan(factory));
+  final publicBody = source.substring(factory, helper);
+  expect(publicBody, contains('DevicePersistentPackedGpuBackend()'));
+  expect(publicBody, contains('gpu.IndexType indexType = gpu.IndexType.int16'));
+  expect(RegExp(r'createPersistentPackedInstanceGeometry\(')
+      .allMatches(publicBody), hasLength(1));
+  expect(RegExp(r'executePersistentPackedInstanceTransaction\(')
+      .allMatches(source), hasLength(1));
+  expect(source.indexOf('checkCanCreate: lifecycle.checkCanCreate', helper),
+      greaterThan(helper));
+  expect(source.indexOf('register: lifecycle.registerAllocation', helper),
+      greaterThan(helper));
+});
+```
 
 **Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
