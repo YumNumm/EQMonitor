@@ -428,3 +428,113 @@ git commit -m 'Feature: packed instance入力検証を追加'
 git push
 ```
 
+### Task 6: immutable buffer upload と retirement を接続する（fork top）
+
+**Files:**
+- Modify: `packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart`
+- Modify: `packages/flutter_scene/test/persistent_packed_instance_geometry_test.dart`
+
+**Step 1: GPU-gated upload tests**
+
+既存 test の `_gpuAvailable()` pattern で、GPU がある場合だけ次を確認する。
+
+- constructor 後の snapshot が instance exact bytes、padding/index を含む total bytes を示す。
+- source ByteData を constructor 後に変更しても resource metadata は変化しない。
+- 未描画 `retire()` は即時 retired、snapshot count/bytes は 0。
+- overwrite failure を test seam で発生させると、未登録のまま `StateError` となり fallback しない。
+
+GPU がない runner では明示 skip とする。upload 回数の重要な invariant は internal allocator seam
+へ fake を入れ、base once、instance once、index 0/1、flush once を pure test でも固定する。
+
+**Step 2: upload storage**
+
+validation 完了後にだけ non-index buffer を確保し、base を offset 0、instance を aligned offset
+へ各1回 overwrite する。index があれば別 buffer へ1回 overwrite。全 return value を検査し、
+失敗時は registration 前に references を落として throw する。成功後に lifecycle generation と
+total/instance bytes を registry へ登録する。
+
+**Step 3: focused GREEN、commit、push**
+
+```bash
+flutter test --enable-impeller \
+  test/persistent_packed_instance_geometry_test.dart
+git --no-pager diff --check
+git add packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart \
+  packages/flutter_scene/test/persistent_packed_instance_geometry_test.dart
+git commit -m 'Feature: packed instanceを永続GPU bufferへupload'
+git push
+```
+
+### Task 7: Geometry bind/draw と fail-closed state を実装する（fork top）
+
+**Files:**
+- Modify: `packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart`
+- Modify: `packages/flutter_scene/lib/src/material/shader_stage.dart`
+- Modify: `packages/flutter_scene/lib/src/material/shader_material.dart`
+- Modify: `packages/flutter_scene/test/shader_material_vertex_test.dart`
+- Modify: `packages/flutter_scene/test/persistent_packed_instance_geometry_test.dart`
+
+**Step 1: rendering contract tests**
+
+`MeshVariant.persistentPackedInstances` が unknown/unskinned へ collapse せず、明示設定した shader
+だけを返すことを test する。Geometry の active/current generation check、retirementPending/
+retired/old generation の bind/draw 拒否は GPU 非依存 state method で test する。
+
+**Step 2: bind/draw**
+
+`vertexStreamCount == 2`、`bindsModelTransformInstance == false`、provided layout、provided
+vertex shader、required `doubleSided` を override する。bind 順序は lifecycle current check、
+registry `markUsed`、slot 0 vertex、slot 1 instance、optional index、`FrameInfo` uniform とする。
+draw は supplied vertex/index count と immutable instance count だけを使い、引数の外部
+`instanceCount` で packed record 数を変更させない。
+
+material-less depth/shadow pass も instance slot が必要なため position-only shortcut を返さず、
+同じ packed layout/shader を使う。custom shader は `FrameInfo` と必要な `v_*` outputs を満たす
+契約を dartdoc に記載する。
+
+**Step 3: GREEN、commit、push**
+
+```bash
+flutter test --enable-impeller test/shader_material_vertex_test.dart \
+  test/persistent_packed_instance_geometry_test.dart
+git --no-pager diff --check
+git add packages/flutter_scene/lib/src/geometry/persistent_packed_instance_geometry.dart \
+  packages/flutter_scene/lib/src/material/shader_stage.dart \
+  packages/flutter_scene/lib/src/material/shader_material.dart \
+  packages/flutter_scene/test/shader_material_vertex_test.dart \
+  packages/flutter_scene/test/persistent_packed_instance_geometry_test.dart
+git commit -m 'Feature: packed instance Geometryを描画'
+git push
+```
+
+### Task 8: public export と consumer-facing example を追加する（fork top）
+
+**Files:**
+- Modify: `packages/flutter_scene/lib/scene.dart`
+- Modify: `packages/flutter_scene/README.md`
+- Create: `packages/flutter_scene/test/persistent_packed_instance_public_api_test.dart`
+
+**Step 1: public-only compile test**
+
+test は `dart:typed_data`、`vector_math`、`package:flutter_scene/scene.dart`、
+`package:flutter_scene/gpu.dart` だけを import する。lifecycle/snapshot、2-slot descriptor、Geometry
+constructor type、retire API が解決し、`src/` import が不要なことを compile で固定する。
+
+**Step 2: README example**
+
+24-byte instance record の例を使い、CPU pack → Geometry 1回生成 → camera draw → data revision
+変更時 retire/replace → lifecycle invalidate/recreate の順を記載する。サンプルに per-frame full
+scan、固定 delay、例外時の標準 Geometry fallback を入れない。
+
+**Step 3: focused GREEN、commit、push**
+
+```bash
+flutter test --enable-impeller \
+  test/persistent_packed_instance_public_api_test.dart
+git --no-pager diff --check
+git add packages/flutter_scene/lib/scene.dart packages/flutter_scene/README.md \
+  packages/flutter_scene/test/persistent_packed_instance_public_api_test.dart
+git commit -m 'Feature: packed instance公開APIを追加'
+git push
+```
+
