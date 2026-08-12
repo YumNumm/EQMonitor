@@ -6063,7 +6063,8 @@ Run from the EQMonitor plan worktree before requesting plan review. This reports
 inferring them visually: 63 split tasks all have snippets/budgets; the fork has 54 unique source-only RED mappings
 whose title/diagnostic match and 48 literal markers present in GREEN; Tasks48–50 have six fail-closed shell REDs;
 the affinity matrix has 18 independently rejected entry/callback rows; the 63-row closure ledger covers every
-task and requires a later consumer; Task28 closes every downstream plan field; Task18 preserves symbol provenance; no private-method/legacy
+task and requires a later consumer; the ten reviewed GREEN tests are executable; Dart fences contain no erased
+type, postfix null assertion or retirement-delay call; Task28 closes every downstream plan field; Task18 preserves symbol provenance; no private-method/legacy
 undefined-helper call remains; Task47 assigns all six descriptor scalars after exporting the SHA; and a
 null-equals-null stack cannot pass the SHA predicate。
 
@@ -6078,6 +6079,36 @@ test "$task_count" -eq 63
 test "$red_snippet_count" -eq "$task_count"
 test "$green_snippet_count" -eq "$task_count"
 test "$budget_count" -eq "$task_count"
+
+dart_snippets=$(awk '
+  /^```dart$/ { capture=1; next }
+  capture && /^```$/ { capture=0; next }
+  capture { print }
+' "$plan")
+forbidden_dart_type_count=$(perl -ne '
+  $count += () = /\bObject\??(?![A-Za-z0-9_])|\bdynamic\b/g;
+  END { print $count + 0 }
+' <<<"$dart_snippets")
+postfix_bang_count=$(perl -ne '
+  $count += () = /(?<=[A-Za-z0-9_\)\]])!(?=[\.\[,;\)\]\}])/g;
+  END { print $count + 0 }
+' <<<"$dart_snippets")
+retirement_delay_call_count=$(perl -ne '
+  $count += () = /Future\.delayed\s*\(|\bTimer(?:\.periodic)?\s*\(/g;
+  END { print $count + 0 }
+' <<<"$dart_snippets")
+test "$forbidden_dart_type_count" -eq 0
+test "$postfix_bang_count" -eq 0
+test "$retirement_delay_call_count" -eq 0
+
+executable_green_tasks=(20 23 24 31 33 34 38A 39 42 44)
+for task in "${executable_green_tasks[@]}"; do
+  section=$(sed -n "/^### Task $task:/,/^### Task /p" "$plan")
+  green=$(sed -n \
+    '/\*\*GREEN implementation snippet:\*\*/,/\*\*Handwritten budget:/p' \
+    <<<"$section")
+  rg -q '^test\(' <<<"$green"
+done
 
 bottom_plan=$(sed '/^### Task 47:/q' "$plan")
 bottom_red_count=$(rg -c 'run_fork_red test/' <<<"$bottom_plan")
@@ -6343,9 +6374,11 @@ else
   test "$stack_null_negative_exit" -eq 1
 fi
 
-printf 'task_snippets=%s red_mappings=%s red_markers=%s shell_red=%s affinity_entrypoints=%s plan_fields=%s descriptor_scalars=%s private_methods=%s stack_null_exit=%s\n' \
+printf 'task_snippets=%s red_mappings=%s red_markers=%s shell_red=%s affinity_entrypoints=%s closure_rows=%s executable_green=%s dart_forbidden=%s plan_fields=%s descriptor_scalars=%s private_methods=%s stack_null_exit=%s\n' \
   "$task_count" "$red_contract_count" "$positive_marker_count" \
   "${#eq_shell_red_diagnostics[@]}" "$affinity_entrypoint_count" \
+  "$closure_row_count" "${#executable_green_tasks[@]}" \
+  "$((forbidden_dart_type_count + postfix_bang_count + retirement_delay_call_count))" \
   "${#required_plan_api[@]}" "$((url_assignment_count + ref_assignment_count))" \
   0 "$stack_null_negative_exit"
 ```
